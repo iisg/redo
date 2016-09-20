@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aurelia</title>
+    <!--The FontAwesome version is locked at 4.6.3 in the package.json file to keep this from breaking.-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="/jspm_packages/npm/font-awesome@4.6.3/css/font-awesome.min.css">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+    <style type="text/css">
+        .splash {
+            text-align: center;
+            margin: 10% 0 0 0;
+            box-sizing: border-box;
+        }
+
+        .splash .message {
+            font-size: 72px;
+            line-height: 72px;
+            text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
+            text-transform: uppercase;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body aurelia-app="main">
+<div class="splash">
+    <div class="message">RePeKa</div>
+    <div class="preloader-wrapper big active">
+        <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The bluebird version is locked at 4.6.3 in the package.json file to keep this from breaking -->
+<!-- We include bluebird to bypass Edge's very slow Native Promise implementation. The Edge team -->
+<!-- has fixed the issues with their implementation with these fixes being distributed with the  -->
+<!-- Windows 10 Anniversary Update on 2 August 2016. Once that update has pushed out, you may    -->
+<!-- consider removing bluebird from your project and simply using native promises if you do     -->
+<!-- not need to support Internet Explorer.                                                      -->
+<script src="/jspm_packages/npm/bluebird@3.4.1/js/browser/bluebird.min.js"></script>
+<script src="/jspm_packages/system.js"></script>
+<script src="/admin/jspm.config.js"></script>
+<script>
+    System.import('aurelia-bootstrapper');
+</script>
+</body>
+</html>

@@ -53,6 +53,12 @@ DirectoryIndex app.php
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
+    # If it is a missing file request (something with extenstion), let it be handled with app.php.
+    RewriteRule \..{2,4}$ %{ENV:BASE}/app.php [L]
+
+    # Rewrite all admin queries to SPA.
+    RewriteRule ^admin %{ENV:BASE}/admin/index.html [L]
+
     # Rewrite all other queries to the front controller.
     RewriteRule ^ %{ENV:BASE}/app.php [L]
 </IfModule>

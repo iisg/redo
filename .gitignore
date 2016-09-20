@@ -8,8 +8,7 @@
 
 /vendor/
 
-/web/bundles/
-/web/config.php
+/web/*
 /bin/symfony_requirements
 
 node_modules/
