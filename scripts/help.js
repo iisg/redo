@@ -19,6 +19,7 @@ module.exports = {
 var runningAsScript = require.main === module;
 if (runningAsScript) {
     printHelp({
-        "install": "Install project dependencies"
+        "install": "Install project dependencies",
+        "test": "Run tests"
     });
 }

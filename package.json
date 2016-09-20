@@ -13,6 +13,7 @@
   },
   "scripts": {
     "help": "node scripts/help.js",
-    "install": "node scripts/repeka.js && (composer-runner -- install & cd src/FrontendModule && npm install)"
+    "install": "node scripts/repeka.js && (composer-runner -- install & cd src/FrontendModule && npm install)",
+    "test": "cd src/FrontendModule && npm test -s"
   }
 }
