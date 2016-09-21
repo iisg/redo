@@ -1,0 +1,4 @@
+.idea/*
+!.idea/codeStyleSettings.xml
+!.idea/misc.xml
+!.idea/watcherTasks.xml
