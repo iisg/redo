@@ -1,0 +1,4 @@
+[gerrit]
+host=apps.iisg.agh.edu.pl
+project=repeka
+defaultremote=origin
