@@ -1,0 +1,12 @@
+{
+  "name": "repeka-frontend",
+  "version": "0.0.0",
+  "description": "RePeKa",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {},
+  "scripts": {
+  },
+  "dependencies": {
+  }
+}
