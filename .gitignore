@@ -11,3 +11,6 @@
 /web/bundles/
 /web/config.php
 /bin/symfony_requirements
+
+node_modules/
+*.log
