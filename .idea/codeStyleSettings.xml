@@ -19,6 +19,11 @@
         <editorconfig>
           <option name="ENABLED" value="false" />
         </editorconfig>
+        <codeStyleSettings language="CSS">
+          <indentOptions>
+            <option name="CONTINUATION_INDENT_SIZE" value="4" />
+          </indentOptions>
+        </codeStyleSettings>
         <codeStyleSettings language="HTML">
           <option name="RIGHT_MARGIN" value="160" />
           <indentOptions>
@@ -35,7 +40,7 @@
         </codeStyleSettings>
         <codeStyleSettings language="PHP">
           <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
-          <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
+          <option name="KEEP_BLANK_LINES_IN_CODE" value="0" />
           <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="0" />
           <option name="CLASS_BRACE_STYLE" value="1" />
           <option name="METHOD_BRACE_STYLE" value="1" />
