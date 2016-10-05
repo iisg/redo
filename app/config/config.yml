@@ -1,0 +1,53 @@
+imports:
+    - { resource: security.yml }
+
+framework:
+  assets: ~
+  csrf_protection: ~
+  default_locale: "%locale%"
+  form: ~
+  fragments: ~
+  http_method_override: true
+  router:
+    resource: "%kernel.root_dir%/config/routing.yml"
+    strict_requirements: ~
+  secret: "%secret%"
+  session:
+    handler_id: session.handler.native_file
+    save_path: "%kernel.cache_dir%/../../sessions/%kernel.environment%"
+  templating:
+    engines:
+      - twig
+  trusted_hosts: ~
+  trusted_proxies: ~
+  validation:
+    enable_annotations: true
+
+parameters:
+  locale: pl
+  mailer_host: "127.0.0.1"
+  mailer_password: ~
+  mailer_transport: smtp
+  mailer_user: ~
+  secret: some_secret
+
+swiftmailer:
+  host: "%mailer_host%"
+  password: "%mailer_password%"
+  spool:
+    type: memory
+  transport: "%mailer_transport%"
+  username: "%mailer_user%"
+
+twig:
+  debug: "%kernel.debug%"
+  paths:
+    "%kernel.root_dir%/../src/FakeModule/UserInterface/Resources/views": FakeModule
+  strict_variables: "%kernel.debug%"
+
+core_module: ~
+
+fake_module:
+  admin_emails_reply_to:
+    - first@test.pl
+    - second@test.pl

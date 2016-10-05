@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Debug\Debug;
+
+set_time_limit(0);
+$loader = require __DIR__ . '/../app/autoload.php';
+$input = new ArgvInput();
+defined('REPEKA_ENV') || define('REPEKA_ENV', $input->getParameterOption(['--env', '-e'], (getenv('REPEKA_ENV') ?: 'prod')));
+$debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && REPEKA_ENV !== 'prod';
+if ($debug) {
+    Debug::enable();
+}
+$kernel = new AppKernel(REPEKA_ENV, $debug);
+$application = new Application($kernel);
+$application->run($input);
