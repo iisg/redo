@@ -1,0 +1,8 @@
+<div class="col-xs-12">
+    <p>Lista adresów email do bcc</p>
+    <ul>
+        {% for emailAddress in listAdminEmailAddress %}
+            <li>{{ emailAddress }}</li>
+        {% endfor %}
+    </ul>
+</div>

@@ -1,0 +1,4 @@
+services:
+  repeka.command_bus:
+    autowire: true
+    class: Repeka\CoreModule\Infrastructure\Application\SimpleBusCommandBusAdapter

@@ -1,0 +1,14 @@
+formatter.name: pretty
+suites:
+  core_module:
+    namespace: Repeka\CoreModule
+    psr4_prefix: Repeka\CoreModule
+    spec_path: ./src/CoreModule/Tests
+    spec_prefix: Spec
+    src_path: ./src/CoreModule
+  fake_module:
+    namespace: Repeka\FakeModule
+    psr4_prefix: Repeka\FakeModule
+    spec_path: ./src/FakeModule/Tests
+    spec_prefix: Spec
+    src_path: ./src/FakeModule

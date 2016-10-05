@@ -3,3 +3,11 @@
 !.idea/misc.xml
 !.idea/watcherTasks.xml
 !.idea/php.xml
+
+/app/config/config_local.yml
+
+/vendor/
+
+/web/bundles/
+/web/config.php
+/bin/symfony_requirements

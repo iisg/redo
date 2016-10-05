@@ -1,0 +1,4 @@
+fake_module:
+  prefix: ~
+  resource: "@FakeModuleBundle/Controller/"
+  type: annotation

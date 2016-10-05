@@ -1,0 +1,61 @@
+{
+  "name": "repeka/repeka",
+  "license": "proprietary",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Repeka\\": "src/"
+    },
+    "classmap": [
+      "app/AppKernel.php",
+      "app/AppCache.php"
+    ]
+  },
+  "require": {
+    "php": "^7.0",
+    "symfony/symfony": "3.1.*",
+    "symfony/swiftmailer-bundle": "^2.3",
+    "symfony/monolog-bundle": "^2.8",
+    "symfony/polyfill-apcu": "^1.0",
+    "sensio/distribution-bundle": "^5.0",
+    "sensio/framework-extra-bundle": "^3.0.2",
+    "ramsey/uuid": "~3.0",
+    "simple-bus/message-bus": "~2.2",
+    "simple-bus/symfony-bridge": "~4.0",
+    "beberlei/assert": "~2.0"
+  },
+  "require-dev": {
+    "symfony/phpunit-bridge": "^3.0",
+    "phpspec/phpspec": "^3.0",
+    "phpunit/phpunit": "^5.3",
+    "ramsey/uuid-console": "~1.0"
+  },
+  "scripts": {
+    "symfony-scripts": [
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+    ],
+    "post-install-cmd": [
+      "@symfony-scripts"
+    ],
+    "post-update-cmd": [
+      "@symfony-scripts"
+    ]
+  },
+  "config": {
+    "platform": {
+      "php": "7.0"
+    }
+  },
+  "extra": {
+    "symfony-app-dir": "app",
+    "symfony-bin-dir": "bin",
+    "symfony-var-dir": "var",
+    "symfony-web-dir": "web",
+    "symfony-tests-dir": "tests",
+    "symfony-assets-install": "symlink"
+  }
+}
