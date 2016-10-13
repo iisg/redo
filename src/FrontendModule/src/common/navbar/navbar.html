@@ -1,0 +1,43 @@
+<template>
+    <require from="./navbar.css"></require>
+    <md-navbar>
+        <a href="#"
+            data-activates="nav-mobile"
+            class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul>
+            <li repeat.for="item of menuItems"
+                class="${item.isActive ? 'active' : ''}"
+                md-waves>
+                <a href.bind="item.href">
+                    ${item.title}
+                </a>
+            </li>
+        </ul>
+        <ul class="right">
+            <li md-waves
+                class="hide-on-med-and-down">
+                <a>
+                    <i class="fa fa-bell-o"></i>
+                    <span class="badge green white-text"
+                        data-badge-caption=" nowe">3</span>
+                </a>
+            </li>
+            <li>
+                <a md-dropdown="activates: userDropdownMenu">
+                    <span class="hide-on-med-and-down">
+                        <i class="material-icons left">perm_identity</i>
+                        John Doe
+                    </span>
+                    <i class="fa fa-caret-down fa-fw"></i>
+                </a>
+            </li>
+        </ul>
+    </md-navbar>
+    <ul id="userDropdownMenu"
+        class="dropdown-content">
+        <li><a>Moje konto</a></li>
+        <li><a>Dashboard</a></li>
+        <li class="divider"></li>
+        <li><a>Wyloguj</a></li>
+    </ul>
+</template>

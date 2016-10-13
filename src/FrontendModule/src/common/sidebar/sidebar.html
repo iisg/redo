@@ -1,0 +1,30 @@
+<template>
+    <require from="./sidebar.css"></require>
+    <require from="common/repeka-logo/repeka-logo.html"></require>
+    <require from="common/version-display/version-display"></require>
+
+    <div class="application-version">
+        v
+        <version-display></version-display>
+    </div>
+
+    <ul id="nav-mobile"
+        class="side-nav fixed">
+        <li class="logo accent z-depth-1">
+            <div class="logo-container">
+                <repeka-logo class="admin-navbar"></repeka-logo>
+            </div>
+            RePeKa
+        </li>
+        <li repeat.for="item of router.navigation"
+            class="${item.isActive ? 'active' : ''}"
+            md-waves>
+            <a href.bind="item.href">
+                <i class="fa fa-fw fa-${item.settings.icon}"></i>
+                ${item.title}
+            </a>
+        </li>
+
+    </ul>
+
+</template>
