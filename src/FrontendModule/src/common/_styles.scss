@@ -1,0 +1,35 @@
+@import "../../jspm_packages/npm/compass-mixins@0.12.10/lib/compass";
+@import "../../jspm_packages/npm/materialize-css@0.97.7/sass/components/mixins";
+
+$small-screen: 600px;
+$medium-screen: 992px;
+$large-screen: 1200px;
+
+@mixin square($side) {
+  width: $side;
+  height: $side;
+}
+
+@mixin breakpoint($size) {
+  @media only screen and (max-width: 992px) {
+    @content;
+  }
+}
+
+@mixin breakpoint-sm {
+  @include breakpoint($small-screen) {
+    @content;
+  }
+}
+
+@mixin breakpoint-md {
+  @include breakpoint($medium-screen) {
+    @content;
+  }
+}
+
+@mixin breakpoint-lg {
+  @include breakpoint($large-screen) {
+    @content;
+  }
+}

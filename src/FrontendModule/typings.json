@@ -29,6 +29,8 @@
     "jasmine": "registry:dt/jasmine#2.5.0+20161003201800"
   },
   "globalDependencies": {
+    "jquery": "registry:dt/jquery#1.10.0+20160929162922",
+    "materialize-css": "registry:dt/materialize-css#0.97.5+20160628040906",
     "url": "github:aurelia/fetch-client/doc/url.d.ts#bbe0777ef710d889a05759a65fa2c9c3865fc618",
     "whatwg-fetch": "registry:dt/whatwg-fetch#0.0.0+20160524142046"
   }

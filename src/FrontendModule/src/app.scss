@@ -1,0 +1,20 @@
+@import "common/styles";
+
+body {
+  overflow-y: scroll;
+}
+
+.admin-content {
+  margin-left: 250px;
+}
+
+@include breakpoint-sm {
+  sidebar {
+    &, > ul.side-nav {
+      width: 300px !important;
+    }
+  }
+  .admin-content {
+    margin-left: 0;
+  }
+}

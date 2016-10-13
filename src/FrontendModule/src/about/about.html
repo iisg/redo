@@ -1,6 +1,12 @@
 <template>
-    <require from="./about.css"></require>
-    <div class="about">
-        Application version: ${version}
-    </div>
+    <require from="common/repeka-logo/repeka-logo.html"></require>
+    <require from="common/version-display/version-display"></require>
+    <repeka-logo class="about left"></repeka-logo>
+    <h1>
+        RePeKa
+    </h1>
+    <h3>
+        v
+        <version-display></version-display>
+    </h3>
 </template>
