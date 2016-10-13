@@ -8,6 +8,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var notify = require('gulp-notify');
 var typescript = require('gulp-typescript');
 var sass = require('gulp-sass');
+var jsonEditor = require("gulp-json-editor");
 
 var typescriptCompiler;
 gulp.task('build-scripts', () => {
@@ -46,10 +47,18 @@ gulp.task('copy-jspm-config', () => {
     .pipe(gulp.dest(paths.output))
 });
 
+gulp.task('build-config', () => {
+  return gulp.src(paths.root + '/config/config.json')
+    .pipe(jsonEditor({
+      "version": require("../../../../scripts/version").text
+    }))
+    .pipe(gulp.dest(paths.output + '/config'));
+});
+
 gulp.task('build', (callback) => {
   return runSequence(
     'clean',
-    ['build-scripts', 'build-html', 'build-css', 'copy-jspm-config'],
+    ['build-scripts', 'build-html', 'build-css', 'build-config', 'copy-jspm-config'],
     callback
   );
 });

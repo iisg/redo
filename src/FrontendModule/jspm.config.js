@@ -11,6 +11,8 @@ System.config({
   map: {
     "aurelia-animator-css": "npm:aurelia-animator-css@1.0.1",
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@1.0.0",
+    "aurelia-configuration": "github:vheissu/aurelia-configuration@1.0.4",
+    "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.1.0",
     "aurelia-fetch-client": "npm:aurelia-fetch-client@1.0.1",
     "aurelia-framework": "npm:aurelia-framework@1.0.6",
     "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0",
@@ -67,6 +69,11 @@ System.config({
     },
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
+    },
+    "github:vheissu/aurelia-configuration@1.0.4": {
+      "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.1.0",
+      "aurelia-loader": "npm:aurelia-loader@1.0.0",
+      "aurelia-path": "npm:aurelia-path@1.1.1"
     },
     "npm:assert@1.4.1": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",

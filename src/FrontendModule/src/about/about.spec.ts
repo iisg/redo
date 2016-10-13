@@ -1,13 +1,17 @@
 import {About} from "./about";
+import {Configure} from "aurelia-configuration";
 
 describe('About', () => {
-  let about;
+  let about: About;
+  let config: Configure;
 
   beforeEach(() => {
-    about = new About();
+    config = new Configure();
+    spyOn(config, 'get').and.returnValue('1.0');
+    about = new About(config);
   });
 
-  it('specifies the text', () => {
-    expect(about.text).toEqual("This is it.");
+  it('assigns the application version to the view', () => {
+    expect(about.version).toEqual('1.0');
   });
 });
