@@ -9,6 +9,7 @@ export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .plugin('aurelia-html-import-template-loader')
+    .plugin('aurelia-configuration')
     .plugin('aurelia-materialize-bridge', bridge => bridge.useAll());
 
   aurelia.start().then(() => aurelia.setRoot());
