@@ -1,5 +1,5 @@
 var appRoot = 'src/';
-var outputRoot = '../../web/admin/';
+var outputRoot = '../../web/';
 
 module.exports = {
   root: appRoot,
@@ -7,5 +7,6 @@ module.exports = {
   html: appRoot + '**/*.html',
   jspmConfig: 'jspm.config.js',
   scss: appRoot + '**/*.scss',
-  output: outputRoot
-}
+  output: outputRoot + 'admin/',
+  outputRoot: outputRoot
+};
