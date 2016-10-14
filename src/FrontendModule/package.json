@@ -6,8 +6,7 @@
   "private": true,
   "scripts": {
     "help": "gulp help",
-    "copy-jspm": "rm -fr ../../web/jspm_packages && cp -R jspm_packages ../../web/",
-    "install": "typings install & jspm install && npm run copy-jspm",
+    "install": "typings install & jspm install",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",
     "watch": "gulp watch"
@@ -37,6 +36,7 @@
     "karma-systemjs": "^0.14.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.2.2",
+    "symlink-or-copy": "^1.1.6",
     "systemjs": "^0.19.35",
     "tslint": "^3.15.1",
     "typescript": "^2.0.2",

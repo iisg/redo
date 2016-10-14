@@ -9,6 +9,7 @@ var notify = require('gulp-notify');
 var typescript = require('gulp-typescript');
 var sass = require('gulp-sass');
 var jsonEditor = require("gulp-json-editor");
+var symlink = require("symlink-or-copy").sync;
 
 var typescriptCompiler;
 gulp.task('build-scripts', () => {
@@ -47,6 +48,10 @@ gulp.task('copy-jspm-config', () => {
     .pipe(gulp.dest(paths.output))
 });
 
+gulp.task('symlink-jspm-packages', () => {
+  return symlink('jspm_packages', paths.outputRoot + 'jspm_packages');
+});
+
 gulp.task('build-config', () => {
   return gulp.src(paths.root + '/config/config.json')
     .pipe(jsonEditor({
@@ -58,7 +63,7 @@ gulp.task('build-config', () => {
 gulp.task('build', (callback) => {
   return runSequence(
     'clean',
-    ['build-scripts', 'build-html', 'build-css', 'build-config', 'copy-jspm-config'],
+    ['build-scripts', 'build-html', 'build-css', 'build-config', 'copy-jspm-config', 'symlink-jspm-packages'],
     callback
   );
 });

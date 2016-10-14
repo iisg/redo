@@ -4571,6 +4571,11 @@
       "from": "symbol-tree@>=3.1.0 <4.0.0",
       "resolved": "http://registry.npmjs.org/symbol-tree/-/symbol-tree-3.1.4.tgz"
     },
+    "symlink-or-copy": {
+      "version": "1.1.6",
+      "from": "symlink-or-copy@*",
+      "resolved": "http://registry.npmjs.org/symlink-or-copy/-/symlink-or-copy-1.1.6.tgz"
+    },
     "systemjs": {
       "version": "0.19.39",
       "from": "systemjs@>=0.19.35 <0.20.0",
