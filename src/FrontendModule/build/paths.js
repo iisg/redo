@@ -8,5 +8,6 @@ module.exports = {
   jspmConfig: 'jspm.config.js',
   scss: appRoot + '**/*.scss',
   output: outputRoot + 'admin/',
-  outputRoot: outputRoot
+  outputRoot: outputRoot,
+  lintReports: '../../var/reports/lints/'
 };
