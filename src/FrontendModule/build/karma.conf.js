@@ -40,7 +40,7 @@ module.exports = function (config) {
     preprocessors: {},
     reporters: ['mocha'],
     junitReporter: {
-      outputDir: '../../var/test-results',
+      outputDir: '../../var/reports/tests',
       outputFile: 'jasmine.xml',
       useBrowserName: false
     },

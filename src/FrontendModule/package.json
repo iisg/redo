@@ -28,6 +28,7 @@
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tslint": "^6.1.1",
+    "gulp-tslint-jenkins-reporter": "^1.0.4",
     "gulp-typescript": "^3.0.2",
     "jasmine-core": "^2.5.2",
     "jspm": "^0.16.45",
