@@ -4,8 +4,7 @@
   "description": "RePeKa",
   "license": "UNLICENSED",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "chalk": "1.1.3",
     "git-describe": "3.0.2",
@@ -17,6 +16,10 @@
     "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev && sh -c \"bin/console cache:clear --env=prod --no-debug\"",
     "dist:frontend": "cd src/FrontendModule && npm run dist -s",
     "install": "node scripts/repeka.js && (composer-runner -- install & cd src/FrontendModule && npm install)",
-    "test": "cd src/FrontendModule && npm test -s"
+    "test": "npm run -s test:backend && npm run -s test:frontend",
+    "test:backend": "sh -c \"vendor/bin/phpspec run\"",
+    "test:backend:junit": "sh -c \"vendor/bin/phpspec run --format=junit\" > var/test-results/phpspec.xml",
+    "test:frontend": "cd src/FrontendModule && npm test -s",
+    "test:junit": "rm -fr var/test-results/*.xml && (npm run -s test:backend:junit & (cd src/FrontendModule && npm run -s test:junit))"
   }
 }

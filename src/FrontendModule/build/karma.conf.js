@@ -39,6 +39,11 @@ module.exports = function (config) {
     exclude: [],
     preprocessors: {},
     reporters: ['mocha'],
+    junitReporter: {
+      outputDir: '../../var/test-results',
+      outputFile: 'jasmine.xml',
+      useBrowserName: false
+    },
     mochaReporter: {
       ignoreSkipped: true
     },
