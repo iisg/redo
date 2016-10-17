@@ -13,6 +13,9 @@
   },
   "scripts": {
     "help": "node scripts/help.js",
+    "dist": "node scripts/repeka.js && (npm run dist:backend & npm run dist:frontend)",
+    "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev && sh -c \"bin/console cache:clear --env=prod --no-debug\"",
+    "dist:frontend": "cd src/FrontendModule && npm run dist -s",
     "install": "node scripts/repeka.js && (composer-runner -- install & cd src/FrontendModule && npm install)",
     "test": "cd src/FrontendModule && npm test -s"
   }
