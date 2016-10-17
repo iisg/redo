@@ -10,6 +10,7 @@
     "install": "typings install & jspm install",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",
+    "test:junit": "npm test -- --reporters mocha,junit",
     "watch": "gulp watch"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-jasmine": "^1.0.2",
+    "karma-junit-reporter": "^1.1.0",
     "karma-mocha-reporter": "^2.2.0",
     "karma-systemjs": "^0.14.0",
     "require-dir": "^0.3.0",
