@@ -13,10 +13,16 @@
 
     <testsuites>
         <testsuite name="fake-module">
-            <directory>src/Repeka/FakeModule/Tests</directory>
+            <directory>src/FakeModule/Tests</directory>
         </testsuite>
         <testsuite name="core-module">
-            <directory>src/Repeka/CoreModule/Tests</directory>
+            <directory>src/CoreModule/Tests</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/*/Domain</directory>
+        </whitelist>
+    </filter>
 </phpunit>
