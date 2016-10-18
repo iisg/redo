@@ -20,6 +20,9 @@ abstract class BaseExtension extends ConfigurableExtension {
         return dirname($reflection->getFileName());
     }
 
+    /**
+     * @SuppressWarnings("unused")
+     */
     protected function configureExtension(array $mergedConfig, ContainerBuilder $container) {
     }
 }

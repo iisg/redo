@@ -2,11 +2,10 @@
 declare (strict_types = 1);
 namespace Repeka\FakeModule\UserInterface\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Repeka\FakeModule\Application\Notification\ListsAdminEmailAddresses;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class FakeController
@@ -34,11 +33,10 @@ class FakeController {
     }
 
     /**
-     * @param Request $request
      * @Route("/", name="fake_module_index", methods={"GET"})
      * @return Response
      */
-    public function indexAction(Request $request) : Response {
+    public function indexAction() : Response {
         $view = '@FakeModule/index.html.twig';
         $context = ['listAdminEmailAddress' => $this->listsAdminEmailAddresses->getAdminEmailAddresses()];
         return $this->engine->renderResponse($view, $context);

@@ -27,7 +27,8 @@
   "require-dev": {
     "symfony/phpunit-bridge": "^3.0",
     "phpunit/phpunit": "^5.3",
-    "ramsey/uuid-console": "~1.0"
+    "ramsey/uuid-console": "~1.0",
+    "phpmd/phpmd" : "@stable"
   },
   "scripts": {
     "symfony-scripts": [
