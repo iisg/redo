@@ -17,5 +17,4 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase {
         $email = new EmailAddress('valid@email.pl');
         $this->assertEquals('email.pl', $email->getDomainFromEmailAddress());
     }
-
 }

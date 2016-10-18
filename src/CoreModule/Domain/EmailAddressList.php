@@ -2,8 +2,8 @@
 declare (strict_types = 1);
 namespace Repeka\CoreModule\Domain;
 
-use \Countable;
-use \Iterator;
+use Countable;
+use Iterator;
 
 final class EmailAddressList implements Countable, Iterator {
     /**

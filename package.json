@@ -17,7 +17,7 @@
     "dist:frontend": "cd src/FrontendModule && npm run dist -s",
     "install": "node scripts/repeka.js && (composer-runner -- install & cd src/FrontendModule && npm install)",
     "lint": "rm -fr var/reports/lints/*.xml && (npm run -s lint:backend & npm run -s lint:frontend)",
-    "lint:backend": "rm -fr var/reports/phpmd/*.xml && node scripts/phpmd.js",
+    "lint:backend": "rm -fr var/reports/phpmd/*.xml && (node scripts/phpmd.js & node scripts/phpcs.js)",
     "lint:frontend": "cd src/FrontendModule && npm run -s lint",
     "test": "npm run -s test:backend && npm run -s test:frontend",
     "test:backend": "sh -c \"vendor/bin/phpunit -c phpunit.xml\"",

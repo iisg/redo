@@ -1,5 +1,6 @@
 <?php
 namespace Repeka\CoreModule\UserInterface\DependencyInjection;
+
 class Extension extends BaseExtension {
     const ALIAS = 'core_module';
 

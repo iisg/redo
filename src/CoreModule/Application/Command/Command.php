@@ -2,7 +2,7 @@
 declare (strict_types = 1);
 namespace Repeka\CoreModule\Application\Command;
 
-use \Serializable;
+use Serializable;
 
 interface Command extends Serializable {
 }
