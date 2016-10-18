@@ -18,9 +18,9 @@
     "install": "node scripts/repeka.js && (composer-runner -- install & cd src/FrontendModule && npm install)",
     "lint": "rm -fr var/reports/lints/*.xml && cd src/FrontendModule && npm run -s lint",
     "test": "npm run -s test:backend && npm run -s test:frontend",
-    "test:backend": "sh -c \"vendor/bin/phpspec run\"",
-    "test:backend:junit": "sh -c \"vendor/bin/phpspec run --format=junit\" > var/reports/tests/phpspec.xml",
+    "test:backend": "sh -c \"vendor/bin/phpunit -c phpunit.xml\"",
+    "test:backend:junit": "sh -c \"vendor/bin/phpunit -c phpunit.xml --log-junit var/reports/tests/phpunit.xml --coverage-clover var/reports/coverage/phpunit.xml\"",
     "test:frontend": "cd src/FrontendModule && npm test -s",
-    "test:junit": "rm -fr var/reports/tests/*.xml && (npm run -s test:backend:junit & (cd src/FrontendModule && npm run -s test:junit))"
+    "test:junit": "rm -f var/reports/tests/*.xml var/reports/coverage/*.xml && (npm run -s test:backend:junit & (cd src/FrontendModule && npm run -s test:junit))"
   }
 }
