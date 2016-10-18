@@ -2,9 +2,9 @@
 declare (strict_types = 1);
 namespace Repeka\CoreModule\Infrastructure\Application;
 
-use SimpleBus\Message\Bus\MessageBus;
 use Repeka\CoreModule\Application\Command\Command;
 use Repeka\CoreModule\Application\CommandBus;
+use SimpleBus\Message\Bus\MessageBus;
 
 final class SimpleBusCommandBusAdapter implements CommandBus {
     /**

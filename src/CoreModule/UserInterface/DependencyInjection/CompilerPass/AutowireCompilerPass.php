@@ -2,9 +2,9 @@
 declare (strict_types = 1);
 namespace Repeka\CoreModule\UserInterface\DependencyInjection\CompilerPass;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use SimpleBus\Message\Bus\MessageBus;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AutowireCompilerPass implements CompilerPassInterface {
     public function process(ContainerBuilder $container) {

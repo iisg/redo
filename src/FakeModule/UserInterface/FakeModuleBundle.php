@@ -1,8 +1,8 @@
 <?php
 namespace Repeka\FakeModule\UserInterface;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Repeka\FakeModule\UserInterface\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class FakeModuleBundle extends Bundle {
     public function getContainerExtension() {

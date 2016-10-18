@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\CoreModule\UserInterface;
 
+use Repeka\CoreModule\UserInterface\DependencyInjection\CompilerPass\AutowireCompilerPass;
+use Repeka\CoreModule\UserInterface\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Repeka\CoreModule\UserInterface\DependencyInjection\Extension;
-use Repeka\CoreModule\UserInterface\DependencyInjection\CompilerPass\AutowireCompilerPass;
 
 class CoreModuleBundle extends Bundle {
     public function build(ContainerBuilder $container) {
