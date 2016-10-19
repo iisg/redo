@@ -10,7 +10,7 @@
     "install": "typings install & jspm install",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",
-    "test:junit": "npm test -- --reporters mocha,junit",
+    "test:junit": "npm test -- --reporters mocha,junit --browsers chrome_no_sandbox",
     "watch": "gulp watch"
   },
   "devDependencies": {
