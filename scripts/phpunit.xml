@@ -5,7 +5,7 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="app/autoload.php">
+         bootstrap="../app/autoload.php">
     <php>
         <ini name="error_reporting" value="-1"/>
         <server name="KERNEL_DIR" value="app/"/>
@@ -13,16 +13,16 @@
 
     <testsuites>
         <testsuite name="fake-module">
-            <directory>src/FakeModule/Tests</directory>
+            <directory>../src/FakeModule/Tests</directory>
         </testsuite>
         <testsuite name="core-module">
-            <directory>src/CoreModule/Tests</directory>
+            <directory>../src/CoreModule/Tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">src/*/Domain</directory>
+            <directory suffix=".php">../src/*/Domain</directory>
         </whitelist>
     </filter>
 </phpunit>

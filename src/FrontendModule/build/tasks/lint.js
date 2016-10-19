@@ -12,7 +12,10 @@ gulp.task('lint', ['lint-ts', 'lint-aurelia-templates']);
 
 gulp.task('lint-ts', () => {
   return gulp.src(paths.scripts[0])
-    .pipe(tslint({formatter: "verbose"}))
+    .pipe(tslint({
+      formatter: "verbose",
+      configuration: "build/tslint.json"
+    }))
     .pipe(lintReporter({
       filename: paths.lintReports + 'ts.xml'
     }))
