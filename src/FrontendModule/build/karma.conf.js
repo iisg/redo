@@ -52,6 +52,12 @@ module.exports = function (config) {
     logLevel: config.LOG_WARN,
     autoWatch: true,
     browsers: ['Chrome'],
+    customLaunchers: {
+      chrome_no_sandbox: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    },
     singleRun: false
   });
 };
