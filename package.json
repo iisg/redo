@@ -12,6 +12,7 @@
   },
   "scripts": {
     "help": "node scripts/help.js",
+    "check": "npm run -s lint && npm run -s test",
     "dist": "node scripts/repeka.js && (npm run dist:backend & npm run dist:frontend)",
     "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev && sh -c \"bin/console cache:clear --env=prod --no-debug\"",
     "dist:frontend": "cd src/FrontendModule && npm run dist -s",
@@ -20,9 +21,10 @@
     "lint:backend": "rm -fr var/reports/phpmd/*.xml && (node scripts/phpmd.js & node scripts/phpcs.js)",
     "lint:frontend": "cd src/FrontendModule && npm run -s lint",
     "test": "npm run -s test:backend && npm run -s test:frontend",
-    "test:backend": "sh -c \"vendor/bin/phpunit -c phpunit.xml\"",
-    "test:backend:junit": "sh -c \"vendor/bin/phpunit -c phpunit.xml --log-junit var/reports/tests/phpunit.xml --coverage-clover var/reports/coverage/phpunit.xml\"",
+    "test:backend": "sh -c \"vendor/bin/phpunit -c scripts/phpunit.xml\"",
+    "test:backend:junit": "sh -c \"vendor/bin/phpunit -c scripts/phpunit.xml --log-junit var/reports/tests/phpunit.xml --coverage-clover var/reports/coverage/phpunit.xml\"",
     "test:frontend": "cd src/FrontendModule && npm test -s",
-    "test:junit": "rm -f var/reports/tests/*.xml var/reports/coverage/*.xml && (npm run -s test:backend:junit & (cd src/FrontendModule && npm run -s test:junit))"
+    "test:junit": "rm -f var/reports/tests/*.xml var/reports/coverage/*.xml && (npm run -s test:backend:junit & (cd src/FrontendModule && npm run -s test:junit))",
+    "watch": "cd src/FrontendModule && npm run -s watch"
   }
 }
