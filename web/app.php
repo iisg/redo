@@ -10,7 +10,9 @@ if (REPEKA_ENV === 'prod') {
     Debug::enable();
 }
 $kernel = new AppKernel(REPEKA_ENV, REPEKA_ENV === 'dev');
-$kernel->loadClassCache();
+if (REPEKA_ENV === 'prod') {
+    $kernel->loadClassCache();
+}
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
