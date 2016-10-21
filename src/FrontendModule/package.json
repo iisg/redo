@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "help": "gulp help",
+    "clean": "gulp clean",
     "dist": "npm install && gulp build",
     "install": "typings install & jspm install",
     "lint": "gulp lint",

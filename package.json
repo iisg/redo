@@ -13,8 +13,11 @@
   "scripts": {
     "help": "node scripts/help.js",
     "check": "npm run -s lint && npm run -s test",
+    "clean": "npm run -s clean:backend & npm run -s clean:frontend",
+    "clean:backend": "php bin/console cache:clear -e dev",
+    "clean:frontend": "cd src/FrontendModule && npm run -s clean",
     "dist": "node scripts/repeka.js && (npm run dist:backend & npm run dist:frontend)",
-    "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev && sh -c \"bin/console cache:clear --env=prod --no-debug\"",
+    "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev && php bin/console cache:clear -e prod --no-debug",
     "dist:frontend": "cd src/FrontendModule && npm run dist -s",
     "install": "node scripts/repeka.js && (composer-runner -- install & cd src/FrontendModule && npm install)",
     "lint": "rm -fr var/reports/lints/*.xml && (npm run -s lint:backend & npm run -s lint:frontend)",
