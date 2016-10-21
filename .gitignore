@@ -1,8 +1,4 @@
 .idea/*
-!.idea/codeStyleSettings.xml
-!.idea/misc.xml
-!.idea/watcherTasks.xml
-!.idea/php.xml
 
 /app/config/config_local.yml
 
