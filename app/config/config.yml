@@ -41,8 +41,6 @@ swiftmailer:
 
 twig:
   debug: "%kernel.debug%"
-  paths:
-    "%kernel.root_dir%/../src/FakeModule/UserInterface/Resources/views": FakeModule
   strict_variables: "%kernel.debug%"
 
 core_module: ~

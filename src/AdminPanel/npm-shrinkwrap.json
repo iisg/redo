@@ -1,5 +1,5 @@
 {
-  "name": "repeka-frontend",
+  "name": "repeka-admin-panel",
   "version": "0.0.0",
   "dependencies": {
     "@types/node": {

@@ -21,7 +21,8 @@ if (runningAsScript) {
   printHelp({
     "install": "Install project dependencies",
     "dist": "Prepare the app for production",
-    "lint": "Analyse the source code for potential erros",
+    "watch": "Watch for source code changes and build them continuously",
+    "lint": "Analyse the source code for potential errors",
     "test": "Run tests",
     "check": "lint & test"
   });

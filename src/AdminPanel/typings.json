@@ -1,5 +1,5 @@
 {
-  "name": "repeka-frontend",
+  "name": "repeka-admin-panel",
   "dependencies": {
     "aurelia-binding": "github:aurelia/binding#1.0.6",
     "aurelia-bootstrapper": "github:aurelia/bootstrapper#1.0.0",

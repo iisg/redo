@@ -1,5 +1,5 @@
 {
-  "name": "repeka-frontend",
+  "name": "repeka-admin-panel",
   "version": "0.0.0",
   "description": "RePeKa",
   "license": "UNLICENSED",
@@ -7,8 +7,8 @@
   "scripts": {
     "help": "gulp help",
     "clean": "gulp clean",
-    "dist": "npm install && gulp build",
-    "install": "typings install & jspm install",
+    "dist": "npm install",
+    "install": "(typings install & jspm install) && gulp build",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",
     "test:junit": "npm test -- --reporters mocha,junit --browsers chrome_no_sandbox",

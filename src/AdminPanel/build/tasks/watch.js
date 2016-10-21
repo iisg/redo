@@ -8,6 +8,7 @@ gulp.task('watch', ['browser-sync'], () => {
   gulp.watch(paths.html, ['build-html', browserSync.reload]);
   gulp.watch(paths.scss, ['build-css', browserSync.reload]);
   gulp.watch(paths.root + '/index.html').on('change', () => injectBrowserSyncSnippet() && browserSync.reload());
+  gulp.watch('../Repeka/**', {interval: 500}).on('change', browserSync.reload);
 });
 
 function injectBrowserSyncSnippet() {
