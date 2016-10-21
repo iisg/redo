@@ -14,7 +14,8 @@ class AppKernel extends Kernel {
             new SimpleBus\SymfonyBridge\SimpleBusCommandBusBundle(),
             new SimpleBus\SymfonyBridge\SimpleBusEventBusBundle(),
             new Repeka\CoreModule\UserInterface\CoreModuleBundle(),
-            new Repeka\FakeModule\UserInterface\FakeModuleBundle()
+            new Repeka\FakeModule\UserInterface\FakeModuleBundle(),
+            new \Repeka\WorkflowModule\Bundle\WorkflowModuleBundle()
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();

@@ -13,7 +13,8 @@
   },
   "require": {
     "php": "^7.0",
-    "symfony/symfony": "3.1.*",
+    "symfony/symfony": "3.2.x-dev",
+    "twig/twig": "2.0.x-dev",
     "symfony/swiftmailer-bundle": "^2.3",
     "symfony/monolog-bundle": "^2.8",
     "symfony/polyfill-apcu": "^1.0",

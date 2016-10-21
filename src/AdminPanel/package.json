@@ -66,6 +66,7 @@
       "aurelia-pal-browser": "npm:aurelia-pal-browser@^1.0.0",
       "aurelia-polyfills": "npm:aurelia-polyfills@^1.0.0",
       "aurelia-router": "npm:aurelia-router@^1.0.0",
+      "aurelia-templating": "npm:aurelia-templating@^1.1.2",
       "aurelia-templating-binding": "npm:aurelia-templating-binding@^1.0.0",
       "aurelia-templating-resources": "npm:aurelia-templating-resources@^1.0.0",
       "aurelia-templating-router": "npm:aurelia-templating-router@^1.0.0",
