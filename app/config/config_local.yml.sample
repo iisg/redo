@@ -1,0 +1,6 @@
+parameters:
+  secret: soo_secret
+doctrine:
+  dbal:
+    user: postgres
+    password: postgres

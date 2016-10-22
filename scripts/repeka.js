@@ -1,5 +1,6 @@
 var version = require('./version');
 var chalk = require('chalk');
+var configCheck = require('./local-config-checker');
 
 var ASCII_LOGO_WIDTH = 33;
 var LOGO =
@@ -23,4 +24,5 @@ module.exports = {
 var runningAsScript = require.main === module;
 if (runningAsScript) {
   printAsciiLogoAndVersion();
+  configCheck();
 }

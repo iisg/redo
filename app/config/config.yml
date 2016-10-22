@@ -1,6 +1,20 @@
 imports:
     - { resource: security.yml }
 
+doctrine:
+  dbal:
+    driver: pdo_pgsql
+    host: localhost
+    dbname: repeka
+    user: repeka
+    password: repeka
+  orm:
+    auto_mapping: true
+
+doctrine_migrations:
+  dir_name: "%kernel.root_dir%/DoctrineMigrations"
+  namespace: Repeka\Migrations
+
 framework:
   assets: ~
   csrf_protection: ~
@@ -25,25 +39,19 @@ framework:
 
 parameters:
   locale: pl
-  mailer_host: "127.0.0.1"
-  mailer_password: ~
-  mailer_transport: smtp
-  mailer_user: ~
   secret: some_secret
 
 swiftmailer:
-  host: "%mailer_host%"
-  password: "%mailer_password%"
+  host: "127.0.0.1"
+  password: ~
   spool:
     type: memory
-  transport: "%mailer_transport%"
-  username: "%mailer_user%"
+  transport: smtp
+  username: ~
 
 twig:
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
-
-core_module: ~
 
 fake_module:
   admin_emails_reply_to:
