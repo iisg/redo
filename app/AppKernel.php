@@ -1,6 +1,6 @@
 <?php
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel {
     public function registerBundles() {
@@ -13,6 +13,8 @@ class AppKernel extends Kernel {
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new SimpleBus\SymfonyBridge\SimpleBusCommandBusBundle(),
             new SimpleBus\SymfonyBridge\SimpleBusEventBusBundle(),
+            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Repeka\CoreModule\UserInterface\CoreModuleBundle(),
             new Repeka\FakeModule\UserInterface\FakeModuleBundle(),
             new \Repeka\WorkflowModule\Bundle\WorkflowModuleBundle()
