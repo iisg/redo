@@ -1,10 +1,18 @@
 security:
+  encoders:
+    Repeka\UserModule\Bundle\Entity\User:
+      algorithm: bcrypt
+
+  providers:
+    db_provider:
+      entity:
+        class: UserModuleBundle:User
+        property: username
+
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
     main:
-      anonymous: ~
-  providers:
-    in_memory:
-      memory: ~
+      anonymous: true
+      provider: db_provider

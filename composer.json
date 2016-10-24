@@ -33,7 +33,8 @@
     "phpunit/phpunit": "^5.3",
     "ramsey/uuid-console": "~1.0",
     "phpmd/phpmd": "@stable",
-    "squizlabs/php_codesniffer": "2.*"
+    "squizlabs/php_codesniffer": "2.*",
+    "doctrine/doctrine-fixtures-bundle": "^2.3"
   },
   "scripts": {
     "symfony-scripts": [
