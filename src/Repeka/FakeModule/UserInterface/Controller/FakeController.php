@@ -41,4 +41,14 @@ class FakeController {
         $context = ['listAdminEmailAddress' => $this->listsAdminEmailAddresses->getAdminEmailAddresses()];
         return $this->engine->renderResponse($view, $context);
     }
+
+    /**
+     * @Route("/api/secret")
+     * @return Response
+     */
+    public function secretAction() : Response {
+        $view = '@FakeModule/index.html.twig';
+        $context = ['listAdminEmailAddress' => ['secret@sec.pl']];
+        return $this->engine->renderResponse($view, $context);
+    }
 }

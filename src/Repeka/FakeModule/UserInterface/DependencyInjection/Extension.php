@@ -1,17 +1,25 @@
 <?php
 namespace Repeka\FakeModule\UserInterface\DependencyInjection;
 
-use Repeka\CoreModule\UserInterface\DependencyInjection\BaseExtension;
+use Repeka\CoreModule\UserInterface\DependencyInjection\ServicesLoaderExtension;
+use Repeka\CoreModule\UserInterface\DependencyInjection\YmlExtensionConfigLoaderTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-class Extension extends BaseExtension {
+class Extension extends ConfigurableExtension {
+    use YmlExtensionConfigLoaderTrait;
+
     const ALIAS = 'fake_module';
 
     public function getAlias() {
         return self::ALIAS;
     }
 
-    protected function configureExtension(array $mergedConfig, ContainerBuilder $container) {
+    /**
+     * @inheritdoc
+     */
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container) {
+        $this->loadYmlConfigFile('services', $container);
         $this->processAdminEmails($mergedConfig['admin_emails_reply_to'], $container);
     }
 
