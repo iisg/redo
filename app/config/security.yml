@@ -13,6 +13,26 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+
+    gettoken:
+      pattern:  ^/api/token$
+      stateless: true
+      gfreeau_get_jwt: ~
+
+    api:
+      pattern:   ^/api
+      stateless: true
+      guard:
+        authenticators:
+          - lexik_jwt_authentication.jwt_token_authenticator
+
     main:
       anonymous: true
-      provider: db_provider
+      stateless: true
+      guard:
+        authenticators:
+          - lexik_jwt_authentication.jwt_token_authenticator
+
+  access_control:
+    - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

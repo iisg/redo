@@ -37,8 +37,19 @@ framework:
   validation:
     enable_annotations: true
 
+lexik_jwt_authentication:
+  private_key_path: "%kernel.root_dir%/../var/jwt/private.pem"
+  public_key_path: "%kernel.root_dir%/../var/jwt/public.pem"
+  pass_phrase: ~
+  token_ttl: 86400
+  token_extractors:
+    cookie:
+      enabled: true
+      name: '%jwt_cookie_name%'
+
 parameters:
   locale: pl
+  jwt_cookie_name: 'bearer'
   secret: some_secret
 
 swiftmailer:
