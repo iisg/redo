@@ -1,5 +1,5 @@
-fake_module:
-  resource: "@FakeModuleBundle/Controller/"
+core:
+  resource: "@CoreModuleBundle/Controller"
   type: annotation
 
 user:

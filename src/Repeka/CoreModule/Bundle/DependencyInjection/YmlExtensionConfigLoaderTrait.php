@@ -1,6 +1,6 @@
 <?php
 declare (strict_types = 1);
-namespace Repeka\CoreModule\UserInterface\DependencyInjection;
+namespace Repeka\CoreModule\Bundle\DependencyInjection;
 
 use ReflectionClass;
 use Symfony\Component\Config\FileLocator;

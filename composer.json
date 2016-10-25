@@ -13,30 +13,25 @@
   },
   "require": {
     "php": "^7.0",
-    "symfony/symfony": "3.2.x-dev",
-    "twig/twig": "2.0.x-dev",
-    "symfony/swiftmailer-bundle": "^2.3",
-    "symfony/monolog-bundle": "^2.8",
-    "symfony/polyfill-apcu": "^1.0",
-    "sensio/distribution-bundle": "^5.0",
-    "sensio/framework-extra-bundle": "^3.0.2",
-    "ramsey/uuid": "~3.0",
-    "simple-bus/message-bus": "~2.2",
-    "simple-bus/symfony-bridge": "~4.0",
     "beberlei/assert": "~2.0",
     "doctrine/doctrine-bundle": "^1.6",
-    "doctrine/orm": "^2.5",
     "doctrine/doctrine-migrations-bundle": "^1.2",
+    "doctrine/orm": "^2.5",
+    "gfreeau/get-jwt-bundle": "2.0.x-dev",
     "lexik/jwt-authentication-bundle": "^2.0",
-    "gfreeau/get-jwt-bundle": "2.0.x-dev"
+    "sensio/distribution-bundle": "^5.0",
+    "sensio/framework-extra-bundle": "^3.0.2",
+    "symfony/monolog-bundle": "^2.8",
+    "symfony/swiftmailer-bundle": "^2.3",
+    "symfony/symfony": "3.2.x-dev",
+    "twig/twig": "2.0.x-dev"
   },
   "require-dev": {
-    "symfony/phpunit-bridge": "^3.0",
-    "phpunit/phpunit": "^5.3",
-    "ramsey/uuid-console": "~1.0",
+    "doctrine/doctrine-fixtures-bundle": "^2.3",
     "phpmd/phpmd": "@stable",
+    "phpunit/phpunit": "^5.3",
     "squizlabs/php_codesniffer": "2.*",
-    "doctrine/doctrine-fixtures-bundle": "^2.3"
+    "symfony/phpunit-bridge": "^3.0"
   },
   "scripts": {
     "symfony-scripts": [

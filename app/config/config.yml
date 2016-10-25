@@ -63,8 +63,3 @@ swiftmailer:
 twig:
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
-
-fake_module:
-  admin_emails_reply_to:
-    - first@test.pl
-    - second@test.pl

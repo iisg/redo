@@ -1,11 +1,10 @@
 <?php
-namespace Repeka\UserModule\Bundle\DependencyInjection;
+namespace Repeka\CoreModule\Bundle\DependencyInjection;
 
-use Repeka\CoreModule\Bundle\DependencyInjection\YmlExtensionConfigLoaderTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 
-class UserModuleExtension extends Extension {
+class CoreModuleExtension extends Extension {
     use YmlExtensionConfigLoaderTrait;
 
     /**

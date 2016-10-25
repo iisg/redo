@@ -11,14 +11,11 @@ class AppKernel extends Kernel {
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new SimpleBus\SymfonyBridge\SimpleBusCommandBusBundle(),
-            new SimpleBus\SymfonyBridge\SimpleBusEventBusBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
             new Gfreeau\Bundle\GetJWTBundle\GfreeauGetJWTBundle(),
-            new Repeka\CoreModule\UserInterface\CoreModuleBundle(),
-            new Repeka\FakeModule\UserInterface\FakeModuleBundle(),
+            new Repeka\CoreModule\Bundle\CoreModuleBundle(),
             new Repeka\UserModule\Bundle\UserModuleBundle(),
             new Repeka\WorkflowModule\Bundle\WorkflowModuleBundle()
         ];
@@ -27,7 +24,7 @@ class AppKernel extends Kernel {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
-            $bundles[] = new \Repeka\DeveloperBundle\DeveloperBundle();
+            $bundles[] = new Repeka\DeveloperBundle\DeveloperBundle();
         }
         return $bundles;
     }
