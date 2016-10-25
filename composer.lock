@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "25c1e77d79012c416efd060cfb13ab0f",
+    "content-hash": "039b93842c577e7eee55d81f1f9c836d",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -964,59 +964,6 @@
             "time": "2016-09-10 18:51:13"
         },
         {
-            "name": "gfreeau/get-jwt-bundle",
-            "version": "dev-master",
-            "target-dir": "Gfreeau/Bundle/GetJWTBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gfreeau/GfreeauGetJWTBundle.git",
-                "reference": "7444d2b2fa12111a49cc7c8dde9f78aa193f2725"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gfreeau/GfreeauGetJWTBundle/zipball/7444d2b2fa12111a49cc7c8dde9f78aa193f2725",
-                "reference": "7444d2b2fa12111a49cc7c8dde9f78aa193f2725",
-                "shasum": ""
-            },
-            "require": {
-                "lexik/jwt-authentication-bundle": "^1.4.3|^2.0.0@dev",
-                "php": ">=5.3.3",
-                "symfony/framework-bundle": "~2.3|~3.0",
-                "symfony/symfony": "~2.6|~3.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Gfreeau\\Bundle\\GetJWTBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Greg Freeman",
-                    "homepage": "http://www.gregfreeman.org"
-                }
-            ],
-            "description": "This Symfony2 bundle provides a security listener to return a JWT",
-            "homepage": "https://github.com/gfreeau/GfreeauGetJWTBundle",
-            "keywords": [
-                "Authentication",
-                "JWS",
-                "Symfony2",
-                "bundle",
-                "jwt"
-            ],
-            "time": "2016-03-16 10:47:47"
-        },
-        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -1065,101 +1012,6 @@
                 "sql"
             ],
             "time": "2014-01-12 16:20:24"
-        },
-        {
-            "name": "lexik/jwt-authentication-bundle",
-            "version": "v2.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lexik/LexikJWTAuthenticationBundle.git",
-                "reference": "e9f5a364b7c168a625aa14ae228ad4ee33224c4d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/e9f5a364b7c168a625aa14ae228ad4ee33224c4d",
-                "reference": "e9f5a364b7c168a625aa14ae228ad4ee33224c4d",
-                "shasum": ""
-            },
-            "require": {
-                "namshi/jose": "^7.2",
-                "php": "^5.5|^7.0",
-                "symfony/console": "^2.8|^3.0",
-                "symfony/framework-bundle": "^2.8|^3.0",
-                "symfony/security-bundle": "^2.8|^3.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.1",
-                "lcobucci/jwt": "~3.2",
-                "phpunit/phpunit": "^4.1|^5.0",
-                "symfony/browser-kit": "^2.8|^3.0",
-                "symfony/phpunit-bridge": "^2.8|^3.0"
-            },
-            "suggest": {
-                "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",
-                "lcobucci/jwt": "For using the LcobucciJWTEncoder",
-                "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Lexik\\Bundle\\JWTAuthenticationBundle\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Robin Chalas",
-                    "email": "robin.chalas@gmail.com",
-                    "homepage": "https://github.com/chalasr"
-                },
-                {
-                    "name": "Jeremy Barthe",
-                    "email": "j.barthe@lexik.fr",
-                    "homepage": "https://github.com/jeremyb"
-                },
-                {
-                    "name": "Nicolas Cabot",
-                    "email": "n.cabot@lexik.fr",
-                    "homepage": "https://github.com/slashfan"
-                },
-                {
-                    "name": "Cedric Girard",
-                    "email": "c.girard@lexik.fr",
-                    "homepage": "https://github.com/cedric-g"
-                },
-                {
-                    "name": "Lexik Community",
-                    "homepage": "https://github.com/lexik/LexikJWTAuthenticationBundle/graphs/contributors"
-                },
-                {
-                    "name": "Dev Lexik",
-                    "email": "dev@lexik.fr",
-                    "homepage": "https://github.com/lexik"
-                }
-            ],
-            "description": "This bundle provides JWT authentication for your Symfony REST API",
-            "homepage": "https://github.com/lexik/LexikJWTAuthenticationBundle",
-            "keywords": [
-                "Authentication",
-                "JWS",
-                "api",
-                "bundle",
-                "jwt",
-                "rest",
-                "symfony"
-            ],
-            "time": "2016-10-20 18:34:32"
         },
         {
             "name": "monolog/monolog",
@@ -1238,69 +1090,6 @@
                 "psr-3"
             ],
             "time": "2016-07-29 03:23:52"
-        },
-        {
-            "name": "namshi/jose",
-            "version": "7.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/namshi/jose.git",
-                "reference": "c38b5e46a9e3816a4415268ede5ed08ece558ab6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/namshi/jose/zipball/c38b5e46a9e3816a4415268ede5ed08ece558ab6",
-                "reference": "c38b5e46a9e3816a4415268ede5ed08ece558ab6",
-                "shasum": ""
-            },
-            "require": {
-                "ext-date": "*",
-                "ext-hash": "*",
-                "ext-json": "*",
-                "ext-pcre": "*",
-                "ext-spl": "*",
-                "php": ">=5.5",
-                "symfony/polyfill-php56": "^1.0"
-            },
-            "require-dev": {
-                "phpseclib/phpseclib": "^2.0",
-                "phpunit/phpunit": "^4.5|^5.0",
-                "satooshi/php-coveralls": "^1.0"
-            },
-            "suggest": {
-                "ext-openssl": "Allows to use OpenSSL as crypto engine.",
-                "phpseclib/phpseclib": "Allows to use Phpseclib as crypto engine, use version ^2.0."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Namshi\\JOSE\\": "src/Namshi/JOSE/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alessandro Nadalin",
-                    "email": "alessandro.nadalin@gmail.com"
-                },
-                {
-                    "name": "Alessandro Cinelli (cirpo)",
-                    "email": "alessandro.cinelli@gmail.com"
-                }
-            ],
-            "description": "JSON Object Signing and Encryption library for PHP.",
-            "keywords": [
-                "JSON Web Signature",
-                "JSON Web Token",
-                "JWS",
-                "json",
-                "jwt",
-                "token"
-            ],
-            "time": "2016-10-05 13:30:27"
         },
         {
             "name": "ocramius/package-versions",
@@ -2172,12 +1961,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "fdb7834f695552d4e51f2c9ea9d73eed0b77f10f"
+                "reference": "f2768dc247b60e7cc3f3992b6086da048577f20e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/fdb7834f695552d4e51f2c9ea9d73eed0b77f10f",
-                "reference": "fdb7834f695552d4e51f2c9ea9d73eed0b77f10f",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/f2768dc247b60e7cc3f3992b6086da048577f20e",
+                "reference": "f2768dc247b60e7cc3f3992b6086da048577f20e",
                 "shasum": ""
             },
             "require": {
@@ -2306,7 +2095,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-10-24 18:44:12"
+            "time": "2016-10-25 18:41:00"
         },
         {
             "name": "twig/twig",
@@ -4035,7 +3824,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "gfreeau/get-jwt-bundle": 20,
         "symfony/symfony": 20,
         "twig/twig": 20,
         "phpmd/phpmd": 0
