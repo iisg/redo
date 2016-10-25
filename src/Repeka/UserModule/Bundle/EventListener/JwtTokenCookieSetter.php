@@ -13,8 +13,12 @@ class JwtTokenCookieSetter extends ContainerAwareEventDispatcher {
         if (!$user instanceof UserInterface) {
             return;
         }
-        $cookieName = $this->getContainer()->getParameter('jwt_cookie_name');
-        $tokenCookie = new Cookie($cookieName, $data['token']);
+        $tokenCookie = $this->createTokenCookie($data['token']);
         $event->getResponse()->headers->setCookie($tokenCookie);
+    }
+
+    public function createTokenCookie(string $token): Cookie {
+        $cookieName = $this->getContainer()->getParameter('jwt_cookie_name');
+        return new Cookie($cookieName, $token);
     }
 }

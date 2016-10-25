@@ -1,0 +1,4 @@
+services:
+  repeka.core.logout_controller:
+    class: Repeka\UserModule\Bundle\Controller\LogoutController
+    autowire: true

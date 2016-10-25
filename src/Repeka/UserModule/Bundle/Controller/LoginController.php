@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class LoginController extends Controller {
     /**
-     * @Route("/login")
+     * @Route("/login", name="login")
      * @Template
      */
     public function formAction() {

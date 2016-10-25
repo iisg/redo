@@ -1,9 +1,0 @@
-services:
-  fake_controller:
-    autowire: true
-    class: Repeka\FakeModule\UserInterface\Controller\FakeController
-
-  list_admin_email_address:
-    arguments:
-      - "%repeka.fake_module.admin_email_list%"
-    class: Repeka\FakeModule\Infrastructure\Application\Notification\ListsAdminEmailAddressesFromConfig
