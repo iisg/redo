@@ -17,8 +17,6 @@
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-migrations-bundle": "^1.2",
     "doctrine/orm": "^2.5",
-    "gfreeau/get-jwt-bundle": "2.0.x-dev",
-    "lexik/jwt-authentication-bundle": "^2.0",
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "^3.0.2",
     "symfony/monolog-bundle": "^2.8",

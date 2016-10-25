@@ -20,38 +20,36 @@
                     <div class="z-depth-1 grey lighten-4 row"
                         style="padding: 32px 48px 0px 48px">
                         <form class="col s12"
-                            method="post"
-                            name="loginForm"
-                            @submit.prevent="getToken">
+                            method="post">
+                            <input type="hidden"
+                                name="_csrf_token"
+                                value="{{ csrf_token('authenticate') }}">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input name="username"
+                                    <input name="_username"
                                         type="text"
                                         id="username"
-                                        class="validate"
-                                        v-bind:class="{invalid: loginError}">
+                                        class="validate {{ error ? 'invalid' }}"
+                                        value="{{ last_username }}">
                                     <label for="username"
                                         data-error="Logowanie nieudane">Nazwa użytkownika</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input name="password"
+                                    <input name="_password"
                                         type="password"
                                         id="password"
-                                        class="validate"
-                                        v-bind:class="{invalid: loginError}">
+                                        class="validate {{ error ? 'invalid' }}">
                                     <label for="password">Hasło</label>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <button type="submit"
                                     :disabled="authenticating"
                                     class="col s12 btn btn-large waves-effect teal">
                                     Zaloguj
                                     <i class="fa fa-sign-in fa-fw right"
-                                        v-bind:class="{'fa-sign-in': !authenticating, 'fa-circle-o-notch fa-spin': authenticating}"
                                         style="margin-left: -30px;"></i>
                                 </button>
                             </div>
@@ -62,36 +60,4 @@
         </div>
     </div>
 
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        new Vue({
-            el: '#login-form',
-            data: {
-                loginError: false,
-                authenticating: false
-            },
-            methods: {
-                getToken: function () {
-                    var self = this;
-                    self.authenticating = true;
-                    self.loginError = false;
-                    $.ajax({
-                        method: 'post',
-                        url: '/api/token',
-                        data: $(document.forms.loginForm).serialize(),
-                        success: function () {
-                            window.location.href = '/';
-                        },
-                        error: function () {
-                            self.authenticating = false;
-                            self.loginError = true;
-                        }
-                    })
-                }
-            }
-        });
-    </script>
 {% endblock %}

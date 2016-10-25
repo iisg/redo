@@ -6,5 +6,5 @@ user:
   resource: "@UserModuleBundle/Controller"
   type: annotation
 
-api_login_check:
-  path: /api/login_check
+logout:
+  path: /logout
