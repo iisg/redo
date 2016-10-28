@@ -15,10 +15,10 @@ System.config({
     "aurelia-configuration": "github:vheissu/aurelia-configuration@1.0.4",
     "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.0",
     "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.0",
-    "aurelia-fetch-client": "npm:aurelia-fetch-client@1.0.1",
     "aurelia-framework": "npm:aurelia-framework@1.0.7",
     "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0",
     "aurelia-html-import-template-loader": "npm:aurelia-html-import-template-loader@1.0.0",
+    "aurelia-http-client": "npm:aurelia-http-client@1.0.2",
     "aurelia-loader-default": "npm:aurelia-loader-default@1.0.0",
     "aurelia-logging-console": "npm:aurelia-logging-console@1.0.0",
     "aurelia-pal-browser": "npm:aurelia-pal-browser@1.0.0",
@@ -140,6 +140,10 @@ System.config({
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
       "aurelia-pal": "npm:aurelia-pal@1.0.0",
       "webcomponentsjs": "npm:webcomponents.js@0.7.22"
+    },
+    "npm:aurelia-http-client@1.0.2": {
+      "aurelia-pal": "npm:aurelia-pal@1.0.0",
+      "aurelia-path": "npm:aurelia-path@1.1.1"
     },
     "npm:aurelia-loader-default@1.0.0": {
       "aurelia-loader": "npm:aurelia-loader@1.0.0",

@@ -5,7 +5,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller {
     /**
@@ -21,12 +20,5 @@ class LoginController extends Controller {
             'last_username' => $authenticationUtils->getLastUsername(),
             'error' => $authenticationUtils->getLastAuthenticationError(),
         ];
-    }
-
-    /**
-     * @Route("/api/test")
-     */
-    public function testAction() {
-        return new Response("AAA");
     }
 }

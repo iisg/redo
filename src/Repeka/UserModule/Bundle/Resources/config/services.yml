@@ -1,0 +1,6 @@
+services:
+  repeka.ajax_authentication_listener:
+    class: Repeka\UserModule\Bundle\EventListener\AjaxAuthenticationListener
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
