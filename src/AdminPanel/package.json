@@ -15,6 +15,7 @@
     "watch": "gulp watch"
   },
   "devDependencies": {
+    "access-sniff": "^2.4.7",
     "browser-sync": "^2.16.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
