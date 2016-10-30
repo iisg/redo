@@ -7,6 +7,7 @@ var TemplateLintConfig = require('aurelia-template-lint').Config;
 var gutil = require('gulp-util');
 var chalk = require('chalk');
 var fs = require('fs');
+var AccessSniff = require('access-sniff');
 
 gulp.task('lint', ['lint-ts', 'lint-aurelia-templates']);
 
@@ -20,6 +21,33 @@ gulp.task('lint-ts', () => {
       filename: paths.lintReports + 'ts.xml'
     }))
     .pipe(tslint.report());
+});
+
+gulp.task('lint-wcag', () => {
+  return AccessSniff
+    .default([paths.html, '../Repeka/**/*.html.twig'], {
+      force: true,
+      verbose: false,
+      ignore: [
+        'WCAG2A.Principle2.Guideline2_4.2_4_2.H25.1.NoTitleEl',
+        'WCAG2A.Principle3.Guideline3_1.3_1_1.H57.2'
+      ]
+    })
+    .then(function (lintErrors) {
+      if (Object.keys(lintErrors).length > 0) {
+        var xml = lintErrorsToXml(lintErrors, (error) => {
+          return {
+            line: error.position.lineNumber,
+            column: error.position.columnNumber,
+            message: error.description,
+            source: error.issue,
+            severity: 'warning'
+          };
+        });
+        fs.writeFileSync(paths.lintReports + 'wcag.xml', xml);
+        throw 'There are some WCAG rules violations';
+      }
+    });
 });
 
 gulp.task('lint-aurelia-templates', () => {
@@ -39,20 +67,26 @@ gulp.task('lint-aurelia-templates', () => {
     }))
     .on('end', () => {
       if (Object.keys(lintErrors).length > 0) {
-        fs.writeFileSync(paths.lintReports + 'aurelia-template.xml', aureliaTemplatesLintErrorsToXml(lintErrors));
+        var xml = lintErrorsToXml(lintErrors, (error) => {
+          error.source = 'aurelia-template-lint';
+          error.severity = 'error';
+          return error;
+        });
+        fs.writeFileSync(paths.lintReports + 'aurelia-template.xml', xml);
         throw 'There are some aurelia-template-lint errors';
       }
     });
 });
 
-function aureliaTemplatesLintErrorsToXml(lintErrors) {
+function lintErrorsToXml(lintErrors, errorExtractor) {
   var xml = '<?xml version="1.0" encoding="utf-8"?><checkstyle version="4.3">';
   for (var file in lintErrors) {
-    var filepath = process.cwd() + file;
+    var filepath = process.cwd() + (file[0] == '/' ? '' : '/') + file;
     xml += '<file name="' + filepath + '">';
     for (var i = 0; i < lintErrors[file].length; i++) {
-      var error = lintErrors[file][i];
-      xml += '<error line="' + error.line + '" column="' + error.column + '" severity="error" message="' + error.message + '" source="aurelia-template-lint"/>'
+      var error = errorExtractor(lintErrors[file][i]);
+      xml += '<error line="' + (error.line || 1) + '" column="' + (error.column || 1) + '" severity="' + error.severity + '" message="' + error.message
+        + '" source="' + error.source.replace(/\./g, '/') + '"/>'
     }
     xml += '</file>';
   }
