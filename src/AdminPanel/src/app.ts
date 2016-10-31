@@ -18,7 +18,14 @@ export class App implements ConfiguresRouter, ComponentAttached {
         title: 'Import danych',
         settings: {icon: 'download'}
       },
-      {route: 'data', name: 'home', moduleId: 'home', nav: true, title: 'Konfiguracja zasobów', settings: {icon: 'database'}},
+      {
+        route: 'resources-config',
+        name: 'resources-config',
+        moduleId: 'resources-config/resources-config',
+        nav: true,
+        title: 'Konfiguracja zasobów',
+        settings: {icon: 'database'}
+      },
       {route: 'users', name: 'home', moduleId: 'home', nav: true, title: 'Użytkownicy', settings: {icon: 'group'}},
       {route: 'about', name: 'about', moduleId: 'about/about', nav: true, title: 'System', settings: {icon: 'info-circle'}},
     ]);

@@ -2,6 +2,11 @@ core:
   resource: "@CoreModuleBundle/Controller"
   type: annotation
 
+data:
+  resource: "@DataModuleBundle/Controller"
+  type: annotation
+  prefix: /api
+
 user:
   resource: "@UserModuleBundle/Controller"
   type: annotation

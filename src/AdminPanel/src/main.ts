@@ -8,6 +8,7 @@ import {CurrentUser} from "./common/user/current-user";
 import {CurrentUserFetcher} from "./common/user/current-user-fetcher";
 import {MetricsCollector} from "./common/metrics/metrics-collector";
 import {MetricsEventListener} from "./common/metrics/metrics-event-listener";
+import {CustomValidationRules} from "./common/validation/custom-validation-rules";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -18,7 +19,9 @@ export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .plugin('aurelia-html-import-template-loader')
-    .plugin('aurelia-configuration');
+    .plugin('aurelia-animator-css')
+    .plugin('aurelia-configuration', config => config.setDirectory('/'))
+    .plugin('aurelia-validation');
 
   configureHttpClient(aurelia);
 
@@ -26,6 +29,7 @@ export function configure(aurelia: Aurelia) {
     .then(user => aurelia.container.registerInstance(CurrentUser, user))
     .then(() => aurelia.start())
     .then(() => aurelia.container.get(MetricsEventListener).register())
+    .then(() => aurelia.container.get(CustomValidationRules).register())
     .then(() => aurelia.setRoot())
     .then(() => MetricsCollector.timeEnd("bootstrap"));
 }

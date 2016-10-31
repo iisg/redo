@@ -1,0 +1,18 @@
+<template>
+    <require from="./multilingual-field.css"></require>
+    <require from="./language-chooser/language-chooser"></require>
+
+    <label class="control-label"
+        for.one-time="fieldId">${label}</label>
+    <div class="input-group">
+        <input type="text"
+            id.one-time="fieldId"
+            ref="textInput"
+            class="form-control"
+            blur.trigger="blur()"
+            value.bind="value[currentLanguage]">
+        <span class="input-group-btn"
+            as-element="language-chooser"
+            language.bind="currentLanguage"></span>
+    </div>
+</template>

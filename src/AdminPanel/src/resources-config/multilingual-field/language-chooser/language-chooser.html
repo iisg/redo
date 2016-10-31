@@ -1,0 +1,25 @@
+<template class="language-chooser">
+    <require from="./language-flag-svg"></require>
+    <require from="./language-chooser.css"></require>
+
+    <button type="button"
+        class="btn btn-raised dropdown-toggle"
+        data-toggle="dropdown">
+        <span class="flag-icon-sm">
+            <img src.bind="language | languageFlagSvg">
+        </span>
+        ${language}
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li repeat.for="lang of languages"
+            show.bind="lang != language">
+            <a click.delegate="setCurrentLanguage(lang)">
+                <span class="flag-icon-sm">
+                    <img src.one-time="lang | languageFlagSvg">
+                </span>
+                ${lang & oneTime}
+            </a>
+        </li>
+    </ul>
+</template>

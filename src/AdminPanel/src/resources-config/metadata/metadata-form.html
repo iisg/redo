@@ -1,0 +1,29 @@
+<template>
+    <require from="../multilingual-field/multilingual-text"></require>
+    <require from="./metadata-control-select"></require>
+
+    <form submit.delegate="validateMe()">
+        <div class="form-group label-floating">
+            <multilingual-text label="Nazwa"
+                value.bind="metadata.label & validate"></multilingual-text>
+        </div>
+        <div class="form-group label-floating">
+            <multilingual-text label="Podpowiedź"
+                value.bind="metadata.placeholder & validate"></multilingual-text>
+        </div>
+        <div class="form-group label-floating">
+            <multilingual-text label="Opis"
+                value.bind="metadata.description & validate"></multilingual-text>
+        </div>
+        <div class="form-group">
+            <metadata-control-select value.bind="metadata.control & validate"></metadata-control-select>
+        </div>
+        <div class="form-group text-right">
+            <button class="btn btn-primary"
+                disabled.bind="isRequesting">
+                <i class="fa fa-plus fa-fw"></i>
+                Dodaj
+            </button>
+        </div>
+    </form>
+</template>

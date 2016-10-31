@@ -1,0 +1,12 @@
+<template>
+    <require from="./multilingual-field.css"></require>
+    <require from="./language-chooser/language-flag-svg"></require>
+    <ul class="multilingual-display">
+        <li repeat.for="value of availableValues">
+            <span class="flag-icon-xs">
+                <img src.bind="value.language | languageFlagSvg">
+            </span>
+            ${value.text}
+        </li>
+    </ul>
+</template>
