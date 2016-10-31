@@ -3,7 +3,7 @@ import {Navbar} from "./navbar";
 import {NavModel} from "aurelia-router";
 import {UpdateNavbarButtonsEvent} from "./update-navbar-buttons-event";
 
-describe('Navbar', () => {
+describe(Navbar.name, () => {
   let eventAggregator: EventAggregator;
   let navbar: Navbar;
   let processEvent;

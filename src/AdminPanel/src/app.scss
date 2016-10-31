@@ -1,4 +1,5 @@
 @import "common/styles";
+@import "../jspm_packages/npm/compass-mixins@0.12.10/lib/animation/animate/fading";
 
 .admin-content {
   margin-left: 250px;
@@ -6,6 +7,25 @@
 
 a {
   cursor: pointer;
+}
+
+.btn-fab:focus, .btn-fab:active {
+  outline: 0 !important;
+}
+
+.has-error .help-block {
+  display: block;
+}
+
+.well > .progress:first-child {
+  margin-top: -19px;
+  margin-left: -19px;
+  margin-right: -19px;
+  height: 5px;
+}
+
+.progress-bar-full {
+  width: 100%;
 }
 
 @include on-sm-and-down {
@@ -44,4 +64,23 @@ a {
 
 .z-depth-5 {
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+// animations
+// see: http://blog.aurelia.io/2015/07/17/animating-apps-with-aurelia-part-1/
+.au-stagger {
+  -webkit-animation-delay: 50ms;
+  animation-delay: 50ms;
+}
+
+.fade-inout-updown {
+  &.au-enter {
+    opacity: 0 !important;
+  }
+  &.au-enter-active {
+    @include animation(fadeInDown .3s);
+  }
+  &.au-leave-active {
+    @include animation(fadeOutUp .3s);
+  }
 }

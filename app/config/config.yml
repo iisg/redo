@@ -2,6 +2,20 @@ imports:
   - { resource: security.yml }
   - { resource: metrics.yml }
 
+data_module:
+  supported_controls:
+    - text
+    - textarea
+    - int
+    - double
+    - date
+    - daterange
+    - boolean
+  supported_languages:
+    - PL
+    - EN
+    - DE
+
 doctrine:
   dbal:
     driver: pdo_pgsql
@@ -39,6 +53,7 @@ framework:
     enable_annotations: true
 
 parameters:
+  application_version: 0.0.666 # TODO fix in REPEKA-61
   locale: pl
   secret: some_secret
 

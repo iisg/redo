@@ -6,6 +6,6 @@ export class VersionDisplay {
   readonly version: String;
 
   constructor(config: Configure) {
-    this.version = config.get('version');
+    this.version = config.get('application_version');
   }
 }

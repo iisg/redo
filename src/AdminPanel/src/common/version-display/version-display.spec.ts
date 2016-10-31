@@ -1,7 +1,7 @@
 import {Configure} from "aurelia-configuration";
 import {VersionDisplay} from "./version-display";
 
-describe('VersionDisplay', () => {
+describe(VersionDisplay.name, () => {
   let versionDisplay: VersionDisplay;
   let config: Configure;
 

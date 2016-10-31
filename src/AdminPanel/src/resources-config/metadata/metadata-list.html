@@ -1,0 +1,70 @@
+<template class="metadata-list">
+    <require from="./metadata-list.css"></require>
+    <require from="./metadata-form"></require>
+    <require from="./control-label"></require>
+    <require from="../multilingual-field/multilingual-display"></require>
+
+    <div class="metadata-list">
+        <button class="btn btn-fab btn-raised pull-right btn-add"
+            class.bind="newMetadataFormVisible ? 'btn-warning btn-opened' : 'btn-success'"
+            click.delegate="newMetadataFormVisible = !newMetadataFormVisible">
+            <i class="fa fa-plus"></i>
+        </button>
+
+        <h1>Metadane</h1>
+
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-4 col-md-6 col-md-offset-6  col-lg-5 col-lg-offset-7 form-add">
+                <div class="well fade-inout-updown au-animate"
+                    if.bind="newMetadataFormVisible">
+                    <div class="progress progress-striped active"
+                        class.bind="isRequesting ? 'visible' : 'invisible'">
+                        <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                    </div>
+                    <metadata-form metadata.bind="newMetadata"
+                        submit.call="addNewMetadata()"
+                        validating.bind="isValidating"></metadata-form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Kontrolka</th>
+                        <th>Opis</th>
+                        <th>Podpowiedź</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr if.bind="!metadataList">
+                        <th colspan="4">
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                            </div>
+                        </th>
+                    </tr>
+                    </tfoot>
+                    <tbody class="au-stagger">
+                    <tr repeat.for="metadata of metadataList"
+                        class="au-animate fade-inout-updown flash">
+                        <td>
+                            <multilingual-display value.one-time="metadata.label"></multilingual-display>
+                        </td>
+                        <td>${metadata.control | controlLabel}</td>
+                        <td>
+                            <multilingual-display value.one-time="metadata.description"></multilingual-display>
+                        </td>
+                        <td>
+                            <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>

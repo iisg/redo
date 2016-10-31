@@ -1,0 +1,14 @@
+services:
+  validator.data_module.required_in_main_language:
+    class: Repeka\DataModule\Bundle\Validator\Constraints\RequiredInMainLanguageValidator
+    arguments:
+      - '%data_module.supported_languages%'
+    tags:
+      - { name: validator.constraint_validator }
+
+  validator.data_module.valid_metadata_control:
+      class: Repeka\DataModule\Bundle\Validator\Constraints\ValidMetadataControlValidator
+      arguments:
+        - '%data_module.supported_controls%'
+      tags:
+        - { name: validator.constraint_validator }

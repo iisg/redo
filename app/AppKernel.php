@@ -14,7 +14,10 @@ class AppKernel extends Kernel {
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
+            new Dunglas\DoctrineJsonOdm\Bundle\DunglasDoctrineJsonOdmBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
             new Repeka\CoreModule\Bundle\CoreModuleBundle(),
+            new Repeka\DataModule\Bundle\DataModuleBundle(),
             new Repeka\UserModule\Bundle\UserModuleBundle(),
             new Repeka\WorkflowModule\Bundle\WorkflowModuleBundle()
         ];
