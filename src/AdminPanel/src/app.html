@@ -6,13 +6,15 @@
     <md-colors md-primary-color="#78909C"
         md-accent-color="#ff9800"></md-colors>
 
-    <sidebar></sidebar>
+    <sidebar class="z-depth-1 hidden-xs"></sidebar>
 
     <div class="admin-content">
         <navbar></navbar>
-        <div class="row">
-            <div class="col s12">
-                <router-view></router-view>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <router-view></router-view>
+                </div>
             </div>
         </div>
     </div>

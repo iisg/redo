@@ -1,44 +1,59 @@
 <template>
-    <require from="./navbar.css"></require>
-    <md-navbar>
-        <a href="#"
-            data-activates="nav-mobile"
-            class="button-collapse"><i class="material-icons">menu</i></a>
-        <ul>
-            <li repeat.for="item of menuItems"
-                class="${item.isActive ? 'active' : ''}"
-                md-waves>
-                <a href.bind="item.href">
-                    ${item.title}
-                </a>
-            </li>
-        </ul>
-        <ul class="right">
-            <li md-waves
-                class="hide-on-med-and-down">
-                <a>
-                    <i class="fa fa-bell-o"></i>
-                    <span class="badge green white-text"
-                        data-badge-caption=" nowe">3</span>
-                </a>
-            </li>
-            <li>
-                <a md-dropdown="activates: userDropdownMenu">
-                    <span class="hide-on-med-and-down">
-                        <i class="material-icons left">perm_identity</i>
+    <div class="navbar navbar-default z-depth-1">
+        <div class="container-fluid"></div>
+        <div class="navbar-header">
+            <button type="button"
+                class="navbar-toggle"
+                data-toggle="collapse"
+                data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+            <ul class="nav navbar-nav hidden-lg hidden-md hidden-sm">
+                <li repeat.for="item of router.navigation"
+                    class="${item.isActive ? 'active' : ''}">
+                    <a href.bind="item.href">
+                        <i class="fa fa-fw fa-${item.settings.icon}"></i>
+                        ${item.title}
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav">
+                <li repeat.for="item of menuItems"
+                    class="${item.isActive ? 'active' : ''}">
+                    <a href.bind="item.href">
+                        ${item.title}
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a>
+                    <i class="fa fa-bell fa-fw"></i>
+                    <span class="badge">3</span>
+                </a></li>
+                <li class="dropdown">
+                    <a data-target="#"
+                        class="dropdown-toggle"
+                        data-toggle="dropdown">
+                        <i class="fa fa-user fa-fw"></i>
                         John Doe
-                    </span>
-                    <i class="fa fa-caret-down fa-fw"></i>
-                </a>
-            </li>
-        </ul>
-    </md-navbar>
-    <ul id="userDropdownMenu"
-        class="dropdown-content">
-        <li><a>Moje konto</a></li>
-        <li><a>Dashboard</a></li>
-        <li class="divider"></li>
-        <li><a href="/logout"
-            target="_top">Wyloguj</a></li>
-    </ul>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a>Moje konto</a></li>
+                        <li><a>Dashboard</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/"
+                            target="_top">Strona główna</a></li>
+                        <li><a href="/logout"
+                            target="_top">Wyloguj</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 </template>
