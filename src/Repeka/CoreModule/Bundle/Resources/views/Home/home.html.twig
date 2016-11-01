@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col s12">
                 <h1>Strona główna</h1>
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <p>Zalogowany jako: <b>{{ app.user.username }}</b></p>
                     <p>
                         <a class="btn btn-large waves-effect"

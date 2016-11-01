@@ -23,6 +23,10 @@ security:
       logout:
         path: /logout
         target: /
+      remember_me:
+        secret: '%secret%'
+        lifetime: 604800 # 1 week in seconds
+        path: /
 
   access_control:
-    - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api, roles: IS_AUTHENTICATED_REMEMBERED }
