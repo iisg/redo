@@ -3,10 +3,10 @@
 
     <div class="container">
         <div class="row">
-            <div class="col l6 offset-l3">
-                <div class="section center-align">
+            <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+                <div class="form-group text-center">
                     <pre class="left-align teal-text"
-                        style="display: inline-block">
+                        style="display: inline-block; border: 0; background: transparent">
 ██████╗ ███████╗██████╗ ███████╗██╗  ██╗ █████╗
 ██╔══██╗██╔════╝██╔══██╗██╔════╝██║ ██╔╝██╔══██╗
 ██████╔╝█████╗  ██████╔╝█████╗  █████╔╝ ███████║
@@ -14,51 +14,61 @@
 ██║  ██║███████╗██║     ███████╗██║  ██╗██║  ██║
 ╚═╝  ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝</pre>
                 </div>
-                <h5 class="indigo-text center-align">Formularz logowania</h5>
-                <div class="container"
-                    id="login-form">
-                    <div class="z-depth-1 grey lighten-4 row"
-                        style="padding: 32px 48px 0px 48px">
-                        <form class="col s12"
-                            method="post">
-                            <input type="hidden"
-                                name="_csrf_token"
-                                value="{{ csrf_token('authenticate') }}">
-                            <div class="row">
-                                <div class="input-field col s12">
+                <h3 class="text-center text-primary">Formularz logowania</h3>
+                <div class="well">
+                    <form method="post">
+                        <input type="hidden"
+                            name="_csrf_token"
+                            value="{{ csrf_token('authenticate') }}">
+                        <fieldset>
+                            <div class="col-xs-12">
+                                {% if error %}
+                                    <div class="alert alert-dismissible alert-danger">
+                                        <button type="button"
+                                            class="close"
+                                            data-dismiss="alert">×
+                                        </button>
+                                        <strong>Logowanie nieudane.</strong>
+                                    </div>
+                                {% endif %}
+                                <div class="form-group label-floating">
+                                    <label class="control-label"
+                                        for="username">Nazwa użytkownika</label>
                                     <input name="_username"
                                         type="text"
                                         id="username"
-                                        class="validate {{ error ? 'invalid' }}"
+                                        class="form-control input-lg"
                                         value="{{ last_username }}">
-                                    <label for="username"
-                                        data-error="Logowanie nieudane">Nazwa użytkownika</label>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
+                                <div class="form-group label-floating">
+                                    <label class="control-label"
+                                        for="password">Hasło</label>
                                     <input name="_password"
                                         type="password"
                                         id="password"
-                                        class="validate {{ error ? 'invalid' }}">
-                                    <label for="password">Hasło</label>
+                                        class="form-control input-lg">
                                 </div>
-                                <input type="checkbox"
-                                    id="remember_me"
-                                    name="_remember_me">
-                                <label for="remember_me">Zapamiętaj mnie</label>
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"
+                                                id="rememdber_me"
+                                                name="_remember_me">
+                                            Zapamiętaj mnie
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit"
+                                        class="btn btn-raised btn-primary btn-lg">
+                                        Zaloguj
+                                        <i class="fa fa-sign-in fa-fw"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="row">
-                                <button type="submit"
-                                    :disabled="authenticating"
-                                    class="col s12 btn btn-large waves-effect teal">
-                                    Zaloguj
-                                    <i class="fa fa-sign-in fa-fw right"
-                                        style="margin-left: -30px;"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        </fieldset>
+
+                    </form>
                 </div>
             </div>
         </div>

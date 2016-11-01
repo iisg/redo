@@ -4,30 +4,45 @@ sidebar {
   position: absolute;
   display: block;
   height: 100vh;
-  &, > ul.side-nav {
-    width: 250px;
-    li, a {
+  width: 250px;
+
+  li, a {
+    display: block;
+  }
+
+  .navbar {
+    background-color: $light-green !important;
+    margin-bottom: 3px !important;;
+    .navbar-header {
+      float: none;
+    }
+    .navbar-brand {
       display: block;
+      width: 100%;
+      font-size: 28px;
+      .logo-container {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        padding: 3px;
+        background: white;
+        border-radius: 50%;
+        margin-right: 15px;
+        vertical-align: middle;
+        margin-top: -10px;
+      }
     }
+  }
+
+  .nav-pills {
     li.active {
-      background: #eee;
+      a, a:focus {
+        @include border-radius(0);
+        background: $green;
+      }
     }
   }
-  .logo {
-    overflow: hidden;
-    padding: 5px;
-    font-size: 30px;
-    height: 64px;
-    .logo-container {
-      float: left;
-      width: 50px;
-      height: 50px;
-      padding: 3px;
-      background: white;
-      border-radius: 50%;
-      margin-right: 15px;
-    }
-  }
+
   .application-version {
     width: 100%;
     color: #CCC;

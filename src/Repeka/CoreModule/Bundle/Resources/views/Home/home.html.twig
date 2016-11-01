@@ -7,18 +7,18 @@
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <p>Zalogowany jako: <b>{{ app.user.username }}</b></p>
                     <p>
-                        <a class="btn btn-large waves-effect"
+                        <a class="btn btn-lg btn-primary btn-raised"
                             href="/admin">
                             Przejdź do panelu adminisracyjnego
                         </a>
-                        <a class="btn btn-large waves-effect"
+                        <a class="btn btn-lg btn-warning btn-raised"
                             href="{{ path('logout') }}">
                             Wyloguj
                         </a>
                     </p>
                 {% else %}
                     <p>
-                        <a class="btn btn-large waves-effect"
+                        <a class="btn btn-lg btn-primary btn-raised"
                             href="{{ path('login') }}">
                             Zaloguj się
                         </a>

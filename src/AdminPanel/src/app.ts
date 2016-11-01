@@ -1,6 +1,7 @@
 import {Router, RouterConfiguration, ConfiguresRouter} from "aurelia-router";
+import {ComponentAttached} from "aurelia-templating";
 
-export class App implements ConfiguresRouter {
+export class App implements ConfiguresRouter, ComponentAttached {
   router: Router;
 
   configureRouter(config: RouterConfiguration, router: Router) {
@@ -22,5 +23,9 @@ export class App implements ConfiguresRouter {
       {route: 'about', name: 'about', moduleId: 'about/about', nav: true, title: 'System', settings: {icon: 'info-circle'}},
     ]);
     this.router = router;
+  }
+
+  attached() {
+    $.material.init();
   }
 }

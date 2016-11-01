@@ -2,14 +2,26 @@
 
 {% block stylesheets %}
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+        type="text/css"
+        href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <link rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+        href="/jspm_packages/npm/font-awesome@4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet"
+        href="/jspm_packages/github/twbs/bootstrap@3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="/jspm_packages/npm/bootstrap-material-design@0.5.10/dist/css/bootstrap-material-design.min.css">
+    <link rel="stylesheet"
+        href="/jspm_packages/npm/bootstrap-material-design@0.5.10/dist/css/ripples.min.css">
 {% endblock %}
 
 {% block javascripts %}
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <script src="/jspm_packages/npm/jquery@2.2.4/dist/jquery.min.js"></script>
+    <script src="/jspm_packages/github/twbs/bootstrap@3.3.7/js/bootstrap.min.js"></script>
+    <script src="/jspm_packages/npm/bootstrap-material-design@0.5.10/dist/js/material.min.js"></script>
+    <script src="/jspm_packages/npm/bootstrap-material-design@0.5.10/dist/js/ripples.min.js"></script>
+    <script>
+        $.material.init();
+    </script>
 {% endblock %}
 
 {% block body %}

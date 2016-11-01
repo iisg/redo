@@ -3,28 +3,32 @@
     <require from="common/repeka-logo/repeka-logo.html"></require>
     <require from="common/version-display/version-display"></require>
 
-    <div class="application-version">
-        v
-        <version-display></version-display>
+    <div class="navbar navbar-default bg-info z-depth-1">
+        <div class="container-fluid"></div>
+        <div class="navbar-header">
+            <a class="navbar-brand"
+                href="/admin">
+                <div class="logo-container">
+                    <repeka-logo class="admin-navbar"></repeka-logo>
+                </div>
+                RePeKa
+            </a>
+        </div>
     </div>
 
-    <ul id="nav-mobile"
-        class="side-nav fixed">
-        <li class="logo accent z-depth-1">
-            <div class="logo-container">
-                <repeka-logo class="admin-navbar"></repeka-logo>
-            </div>
-            RePeKa
-        </li>
+    <ul class="nav nav-pills nav-stacked">
         <li repeat.for="item of router.navigation"
-            class="${item.isActive ? 'active' : ''}"
-            md-waves>
+            class="${item.isActive ? 'active' : ''}">
             <a href.bind="item.href">
                 <i class="fa fa-fw fa-${item.settings.icon}"></i>
                 ${item.title}
             </a>
         </li>
-
     </ul>
+
+    <div class="application-version">
+        v
+        <version-display></version-display>
+    </div>
 
 </template>
