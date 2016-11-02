@@ -1,32 +1,26 @@
-{% extends "layout.html.twig" %}
+{% extends "default.html.twig" %}
 
 {% set page_title = 'Strona główna' %}
 
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col s12">
-                <h1>Strona główna</h1>
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <p>Zalogowany jako: <b>{{ app.user.username }}</b></p>
-                    <p>
-                        <a class="btn btn-lg btn-primary btn-raised"
-                            href="/admin">
-                            Przejdź do panelu adminisracyjnego
-                        </a>
-                        <a class="btn btn-lg btn-warning btn-raised"
-                            href="{{ path('logout') }}">
-                            Wyloguj
-                        </a>
-                    </p>
-                {% else %}
-                    <p>
-                        <a class="btn btn-lg btn-primary btn-raised"
-                            href="{{ path('login') }}">
-                            Zaloguj się
-                        </a>
-                    </p>
-                {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group label-floating">
+                    <label class="control-label"
+                        for="resource-search">Szukaj:</label>
+                    <div class="input-group">
+                        <input type="text"
+                            id="resource-search"
+                            class="form-control">
+                        <span class="input-group-btn">
+                            <button type="button"
+                                class="btn btn-fab btn-fab-mini">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
