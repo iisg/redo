@@ -34,7 +34,9 @@ framework:
   assets: ~
   csrf_protection: ~
   default_locale: "%locale%"
-  form: ~
+  form:
+    csrf_protection:
+      enabled: false
   fragments: ~
   http_method_override: true
   router:

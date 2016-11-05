@@ -6,12 +6,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MetadataType extends AbstractType {
-    public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults([
-            'csrf_protection' => false, // TODO remove in REPEKA-66
-        ]);
-    }
-
     /**
      * @inheritdoc
      */
