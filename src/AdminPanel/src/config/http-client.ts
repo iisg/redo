@@ -1,5 +1,5 @@
 import {Aurelia} from "aurelia-framework";
-import {HttpClient, Interceptor, HttpResponseMessage} from "aurelia-http-client";
+import {HttpClient, HttpResponseMessage, Interceptor, RequestMessage} from "aurelia-http-client";
 import {MetricsSenderInterceptor} from "../common/metrics/metrics-sender-interceptor";
 
 export function configure(aurelia: Aurelia) {
@@ -10,7 +10,8 @@ export function configure(aurelia: Aurelia) {
       .withHeader('Accept', 'application/json')
       .withHeader('X-Requested-With', 'XMLHttpRequest')
       .withInterceptor(new RedirectToLoginIfUnauthenticatedInterceptor())
-      .withInterceptor(new MetricsSenderInterceptor());
+      .withInterceptor(new MetricsSenderInterceptor())
+      .withInterceptor(new CsrfHeaderInterceptor());
   });
 }
 
@@ -20,5 +21,27 @@ class RedirectToLoginIfUnauthenticatedInterceptor implements Interceptor {
       window.location.href = '/login';
     }
     throw error;
+  }
+}
+
+class CsrfHeaderInterceptor implements Interceptor {
+  private static readonly TOKEN_HEADER = 'X-CSRF-Token';
+
+  private latestCsrfToken: string;
+
+  response(response: HttpResponseMessage): HttpResponseMessage {
+    if (response.headers.has(CsrfHeaderInterceptor.TOKEN_HEADER)) {
+      this.latestCsrfToken = response.headers.get(CsrfHeaderInterceptor.TOKEN_HEADER);
+    }
+    return response;
+  }
+
+  request(request: RequestMessage): RequestMessage {
+    if (this.latestCsrfToken) {
+      if (['POST', 'PUT', 'PATCH'].indexOf(request.method) >= 0) {
+        request.headers.add(CsrfHeaderInterceptor.TOKEN_HEADER, this.latestCsrfToken);
+      }
+    }
+    return request;
   }
 }
