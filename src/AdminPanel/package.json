@@ -7,7 +7,7 @@
   "scripts": {
     "help": "gulp help",
     "clean": "gulp clean",
-    "dist": "npm install",
+    "dist": "npm install && gulp bundle",
     "install": "(typings install & jspm install) && gulp build",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",
@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "access-sniff": "^2.4.7",
+    "aurelia-bundler": "0.4.0",
     "browser-sync": "^2.16.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
@@ -62,7 +63,6 @@
       "aurelia-event-aggregator": "npm:aurelia-event-aggregator@^1.0.0",
       "aurelia-framework": "npm:aurelia-framework@^1.0.3",
       "aurelia-history-browser": "npm:aurelia-history-browser@^1.0.0",
-      "aurelia-html-import-template-loader": "npm:aurelia-html-import-template-loader@^1.0.0",
       "aurelia-http-client": "npm:aurelia-http-client@^1.0.2",
       "aurelia-loader-default": "npm:aurelia-loader-default@^1.0.0",
       "aurelia-logging": "npm:aurelia-logging@1.0.0",
@@ -83,7 +83,7 @@
       "font-awesome": "npm:font-awesome@4.6.3",
       "jquery": "npm:jquery@2.2.4",
       "region-flags": "github:behdad/region-flags@1.0.1",
-      "text": "github:systemjs/plugin-text@^0.0.8"
+      "text": "github:systemjs/plugin-text@^0.0.9"
     },
     "devDependencies": {
       "aurelia-testing": "npm:aurelia-testing@^1.0.0-beta.2.0.0",

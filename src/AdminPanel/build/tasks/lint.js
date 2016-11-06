@@ -8,6 +8,7 @@ var gutil = require('gulp-util');
 var chalk = require('chalk');
 var fs = require('fs');
 var AccessSniff = require('access-sniff');
+var path = require('path');
 
 gulp.task('lint', ['lint-ts', 'lint-aurelia-templates']);
 
@@ -18,7 +19,7 @@ gulp.task('lint-ts', () => {
       configuration: "build/tslint.json"
     }))
     .pipe(lintReporter({
-      filename: paths.lintReports + 'ts.xml'
+      filename: path.join(paths.lintReports, 'ts.xml')
     }))
     .pipe(tslint.report());
 });
@@ -44,7 +45,7 @@ gulp.task('lint-wcag', () => {
             severity: 'warning'
           };
         });
-        fs.writeFileSync(paths.lintReports + 'wcag.xml', xml);
+        fs.writeFileSync(path.join(paths.lintReports, 'wcag.xml'), xml);
         throw 'There are some WCAG rules violations';
       }
     });
@@ -72,7 +73,7 @@ gulp.task('lint-aurelia-templates', () => {
           error.severity = 'error';
           return error;
         });
-        fs.writeFileSync(paths.lintReports + 'aurelia-template.xml', xml);
+        fs.writeFileSync(path.join(paths.lintReports, 'aurelia-template.xml'), xml);
         throw 'There are some aurelia-template-lint errors';
       }
     });
