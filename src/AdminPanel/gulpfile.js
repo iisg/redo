@@ -6,7 +6,9 @@ gulp.task('help', function () {
     "clean": "Clean built files",
     "lint": "Lint sources",
     "test": "Run unit tests",
-    "watch": "Watch changes in the files and builds them continuously"
+    "watch": "Watch changes in the files and builds them continuously",
+    "build": "Build the sources once",
+    "bundle": "Bundle files for production"
   });
 });
 

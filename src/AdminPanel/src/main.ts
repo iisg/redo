@@ -19,7 +19,6 @@ LogManager.setLevel(LogManager.logLevel.info);
 export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
-    .plugin('aurelia-html-import-template-loader')
     .plugin('aurelia-animator-css')
     .plugin('aurelia-configuration', config => config.setDirectory('/'))
     .plugin('aurelia-validation');

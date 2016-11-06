@@ -9,6 +9,7 @@ var notify = require('gulp-notify');
 var typescript = require('gulp-typescript');
 var sass = require('gulp-sass');
 var symlink = require("symlink-or-copy").sync;
+var path = require('path');
 
 var typescriptCompiler;
 gulp.task('build-scripts', () => {
@@ -24,6 +25,14 @@ gulp.task('build-scripts', () => {
     .pipe(gulp.dest(paths.output));
 });
 
+gulp.task('build-index', () => {
+  return gulp.src('index.html')
+    .pipe(plumber({errorHandler: notify.onError('HTML: <%= error.message %>')}))
+    .pipe(changed(paths.output, {extension: '.html'}))
+    .pipe(htmlmin({collapseWhitespace: true}))
+    .pipe(gulp.dest(paths.webAdminRoot));
+});
+
 gulp.task('build-html', () => {
   return gulp.src(paths.html)
     .pipe(plumber({errorHandler: notify.onError('HTML: <%= error.message %>')}))
@@ -36,25 +45,30 @@ gulp.task('build-css', () => {
   return gulp.src(paths.scss)
     .pipe(plumber({errorHandler: notify.onError('SCSS: <%= error.message %>')}))
     .pipe(changed(paths.output, {extension: '.css'}))
-    .pipe(sass())
-    .pipe(gulp.dest(paths.output))
+    .pipe(sass({outputStyle: 'compressed'}))
+    .pipe(gulp.dest(paths.output));
 });
 
 gulp.task('copy-jspm-config', () => {
   return gulp.src(paths.jspmConfig)
     .pipe(plumber({errorHandler: notify.onError('HTML: <%= error.message %>')}))
     .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest(paths.output))
+    .pipe(gulp.dest(paths.webAdminRoot));
 });
 
 gulp.task('symlink-jspm-packages', () => {
-  return symlink('jspm_packages', paths.outputRoot + 'jspm_packages');
+  return symlink('jspm_packages', path.join(paths.webRoot, 'jspm_packages'));
+});
+
+gulp.task('symlink-dist', () => {
+  return symlink('dist', path.join(paths.webAdminRoot, 'dist'));
 });
 
 gulp.task('build', (callback) => {
   return runSequence(
     'clean',
-    ['build-scripts', 'build-html', 'build-css', 'copy-jspm-config', 'symlink-jspm-packages'],
+    ['build-scripts', 'build-index', 'build-html', 'build-css', 'symlink-jspm-packages'],
+    ['symlink-dist', 'copy-jspm-config'],
     callback
   );
 });
