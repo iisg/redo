@@ -22,7 +22,8 @@
     "symfony/monolog-bundle": "^2.8",
     "symfony/swiftmailer-bundle": "^2.3",
     "symfony/symfony": "3.2.x-dev",
-    "twig/twig": "2.0.x-dev"
+    "twig/twig": "2.0.x-dev",
+    "m6web/statsd-bundle": "^2.14"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^2.3",
