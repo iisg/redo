@@ -13,6 +13,7 @@ class AppKernel extends Kernel {
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
             new Repeka\CoreModule\Bundle\CoreModuleBundle(),
             new Repeka\UserModule\Bundle\UserModuleBundle(),
             new Repeka\WorkflowModule\Bundle\WorkflowModuleBundle()

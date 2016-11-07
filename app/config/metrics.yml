@@ -1,0 +1,22 @@
+m6_statsd:
+  base_collectors: true
+  servers:
+    default:
+      address: 'udp://localhost'
+      port: 8125
+  clients:
+    default:
+      servers: ["all"]
+      events:
+        security.authentication.failure:
+          increment: repeka.authentication.failure
+        security.interactive_login:
+          increment: repeka.authentication.success
+        statsd.memory_usage:
+          gauge: repeka.website.memory
+        statsd.time:
+          timing: repeka.website.time
+        statsd.exception:
+          increment: repeka.website.exception.<value>
+        kernel.terminate:
+          increment: repeka.website.page_view
