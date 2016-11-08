@@ -1,5 +1,6 @@
 import {Aurelia} from "aurelia-framework";
 import {HttpClient, Interceptor, HttpResponseMessage} from "aurelia-http-client";
+import {MetricsSenderInterceptor} from "../common/metrics/metrics-sender-interceptor";
 
 export function configure(aurelia: Aurelia) {
   let client: HttpClient = aurelia.container.get(HttpClient);
@@ -8,7 +9,8 @@ export function configure(aurelia: Aurelia) {
       .withBaseUrl("/api/")
       .withHeader('Accept', 'application/json')
       .withHeader('X-Requested-With', 'XMLHttpRequest')
-      .withInterceptor(new RedirectToLoginIfUnauthenticatedInterceptor());
+      .withInterceptor(new RedirectToLoginIfUnauthenticatedInterceptor())
+      .withInterceptor(new MetricsSenderInterceptor());
   });
 }
 

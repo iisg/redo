@@ -32,6 +32,11 @@
       "from": "access-sniff@2.4.7",
       "resolved": "http://registry.npmjs.org/access-sniff/-/access-sniff-2.4.7.tgz",
       "dependencies": {
+        "HTML_CodeSniffer": {
+          "version": "2.0.7",
+          "from": "git://github.com/squizlabs/HTML_CodeSniffer.git#d209ce54876657858a8a01528ad812cd234f37f0",
+          "resolved": "git://github.com/squizlabs/HTML_CodeSniffer.git#d209ce54876657858a8a01528ad812cd234f37f0"
+        },
         "minimist": {
           "version": "0.0.8",
           "from": "minimist@0.0.8",
@@ -1508,7 +1513,8 @@
         },
         "minimist": {
           "version": "0.0.8",
-          "from": "minimist@0.0.8"
+          "from": "minimist@0.0.8",
+          "resolved": "http://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz"
         },
         "mkdirp": {
           "version": "0.5.0",
@@ -2391,11 +2397,6 @@
       "version": "2.1.5",
       "from": "hosted-git-info@>=2.1.4 <3.0.0",
       "resolved": "http://registry.npmjs.org/hosted-git-info/-/hosted-git-info-2.1.5.tgz"
-    },
-    "HTML_CodeSniffer": {
-      "version": "2.0.7",
-      "from": "git://github.com/squizlabs/HTML_CodeSniffer.git#d209ce54876657858a8a01528ad812cd234f37f0",
-      "resolved": "git://github.com/squizlabs/HTML_CodeSniffer.git#d209ce54876657858a8a01528ad812cd234f37f0"
     },
     "http-errors": {
       "version": "1.5.0",
@@ -4033,11 +4034,13 @@
         },
         "isarray": {
           "version": "1.0.0",
-          "from": "isarray@>=1.0.0 <1.1.0"
+          "from": "isarray@1.0.0",
+          "resolved": "http://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
         },
         "readable-stream": {
           "version": "2.0.6",
-          "from": "readable-stream@>=2.0.5 <2.1.0"
+          "from": "readable-stream@2.0.6",
+          "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz"
         },
         "request": {
           "version": "2.74.0",
@@ -5013,6 +5016,11 @@
           "resolved": "http://registry.npmjs.org/glob/-/glob-7.1.0.tgz"
         }
       }
+    },
+    "tslint-jasmine-rules": {
+      "version": "0.2.1",
+      "from": "tslint-jasmine-rules@*",
+      "resolved": "http://registry.npmjs.org/tslint-jasmine-rules/-/tslint-jasmine-rules-0.2.1.tgz"
     },
     "tunnel-agent": {
       "version": "0.4.3",

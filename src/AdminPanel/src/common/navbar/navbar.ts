@@ -5,12 +5,10 @@ import {UpdateNavbarButtonsEvent} from "./update-navbar-buttons-event";
 
 @autoinject()
 export class Navbar {
-  private readonly eventAggregator: EventAggregator;
   readonly router: Router;
   menuItems: NavModel[];
 
-  constructor(eventAggregator: EventAggregator, router?: Router) {
-    this.eventAggregator = eventAggregator;
+  constructor(private eventAggregator: EventAggregator, router?: Router) {
     this.router = router;
     this.eventAggregator.subscribe("router:navigation:processing", this.clearSubmenu);
     this.eventAggregator.subscribe(UpdateNavbarButtonsEvent, this.updateSubmenu);

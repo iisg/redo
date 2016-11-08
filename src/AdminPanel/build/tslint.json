@@ -1,4 +1,7 @@
 {
+  "rulesDirectory": [
+    "../node_modules/tslint-jasmine-rules/dist"
+  ],
   "rules": {
     "class-name": true,
     "comment-format": [
@@ -41,6 +44,7 @@
     "no-unused-variable": true,
     "no-use-before-declare": true,
     "no-debugger": true,
+    "no-focused-tests": true,
     "no-console": [
       true,
       "log",

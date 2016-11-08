@@ -1,4 +1,8 @@
 services:
-  repeka.core.logout_controller:
-    class: Repeka\UserModule\Bundle\Controller\LogoutController
-    autowire: true
+  repeka.event_listener.admin_panel_metrics_request:
+      class: Repeka\CoreModule\Bundle\EventListener\AdminPanelMetricsRequestListener
+      arguments:
+        - '@m6_statsd'
+        - '%admin_panel_metrics%'
+      tags:
+        - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
