@@ -3,7 +3,8 @@
     <label for="metadata-control">Kontrolka</label>
     <select id="metadata-control"
         value.bind="value"
-        class="form-control">
+        class="form-control"
+        ref="dropdown">
         <option repeat.for="control of controls"
             value.bind="control">
             ${control | controlLabel}

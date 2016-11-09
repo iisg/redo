@@ -36,6 +36,7 @@ System.config({
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "bootstrap-material-design": "npm:bootstrap-material-design@0.5.10",
     "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.7",
+    "bootstrap-select": "npm:bootstrap-select@1.11.2",
     "compass-mixins": "npm:compass-mixins@0.12.10",
     "fetch": "github:github/fetch@1.0.0",
     "font-awesome": "npm:font-awesome@4.6.3",
@@ -244,6 +245,9 @@ System.config({
       "jquery": "npm:jquery@2.2.4",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:bootstrap-select@1.11.2": {
+      "jquery": "npm:jquery@2.2.4"
     },
     "npm:bootstrap@3.3.7": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
