@@ -1,6 +1,7 @@
 imports:
   - { resource: security.yml }
   - { resource: metrics.yml }
+  - { resource: config_build.yml}
 
 data_module:
   supported_controls:
@@ -55,7 +56,7 @@ framework:
     enable_annotations: true
 
 parameters:
-  application_version: 0.0.666 # TODO fix in REPEKA-61
+#  application_version: 0.0.666 # TODO fix in REPEKA-61
   locale: pl
   secret: some_secret
 
@@ -70,3 +71,5 @@ swiftmailer:
 twig:
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
+  globals:
+    application_version: "%application_version%"
