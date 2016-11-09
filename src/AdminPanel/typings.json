@@ -31,6 +31,7 @@
     "jasmine": "registry:dt/jasmine#2.5.0+20161003201800"
   },
   "globalDependencies": {
+    "bootstrap-select": "registry:dt/bootstrap-select#1.11.2+20161025103744",
     "jquery": "registry:dt/jquery#1.10.0+20160929162922",
     "promise.prototype.finally": "registry:dt/promise.prototype.finally#1.0.1+20160701113745",
     "url": "github:aurelia/fetch-client/doc/url.d.ts#bbe0777ef710d889a05759a65fa2c9c3865fc618",
