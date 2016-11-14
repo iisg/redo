@@ -32,6 +32,16 @@ class User implements UserInterface, \Serializable {
     private $email;
 
     /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $surname;
+
+    /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
@@ -51,12 +61,30 @@ class User implements UserInterface, \Serializable {
         return $this->username;
     }
 
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getSurname() {
+        return $this->surname;
+    }
+
     /**
      * @param mixed $username
      * @return User
      */
     public function setUsername($username) {
         $this->username = $username;
+        return $this;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function setSurname($surname) {
+        $this->surname = $surname;
         return $this;
     }
 
