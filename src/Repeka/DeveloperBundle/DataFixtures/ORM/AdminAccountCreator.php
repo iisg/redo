@@ -11,6 +11,8 @@ class AdminAccountCreator extends ContainerAwareFixture {
         $user = new User();
         $user->setUsername('admin');
         $user->setEmail('admin');
+        $user->setName('Aleksander');
+        $user->setSurname('Wszystkomogący');
         /** @var PasswordEncoderInterface $encoder */
         $encoder = $this->container->get('security.password_encoder');
         $password = $encoder->encodePassword($user, 'admin');

@@ -1,0 +1,8 @@
+<template>
+    <span if.one-time="currentUser.name && currentUser.surname">
+        ${currentUser.name} ${currentUser.surname}
+    </span>
+    <span if.one-time="!currentUser.name || !currentUser.surname">
+        ${currentUser.username}
+    </span>
+</template>

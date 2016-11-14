@@ -17,7 +17,9 @@ class CurrentUserController extends Controller {
         return new JsonResponse([
             'id' => $user->getId(),
             'username' => $user->getUsername(),
-            'email' => $user->getEmail()
+            'email' => $user->getEmail(),
+            'name' => $user->getName(),
+            'surname' => $user->getSurname(),
         ]);
     }
 }
