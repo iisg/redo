@@ -52,7 +52,7 @@ class AdminPanelMetricsRequestListener {
             $filteredMetrics[] = ['type' => 'c', 'name' => 'invalid_metrics', 'value' => count($metrics) - count($filteredMetrics)];
         }
         foreach ($filteredMetrics as $metric) {
-            $metric['name'] = 'admin_panel.' . $metric['name'];
+            $metric['name'] = 'repeka.admin_panel.' . $metric['name'];
             switch ($metric['type']) {
                 case 'c':
                     $this->storeCounter($metric);

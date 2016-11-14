@@ -18,11 +18,6 @@
     </rule>
     <rule ref="rulesets/unusedcode.xml"/>
 
-    <rule ref="rulesets/cleancode.xml/StaticAccess">
-        <properties>
-            <property name="exceptions" value="\Repeka\CoreModule\Domain\Assert\Assertion"/>
-        </properties>
-    </rule>
     <rule ref="rulesets/naming.xml/LongVariable">
         <properties>
             <property name="maximum" value="25"/>

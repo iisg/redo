@@ -2,12 +2,11 @@
 namespace Repeka\DataModule\Bundle\Controller;
 
 use Repeka\CoreModule\Bundle\Controller\ApiController;
-use Repeka\DataModule\Bundle\Entity\Metadata;
-use Repeka\DataModule\Bundle\Form\MetadataType;
+use Repeka\DataModule\Domain\UseCase\Metadata\MetadataCreateCommand;
+use Repeka\DataModule\Domain\UseCase\Metadata\MetadataListQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
 /**
  * @Route("/metadata")
@@ -18,7 +17,7 @@ class MetadataController extends ApiController {
      * @Method("GET")
      */
     public function getListAction() {
-        $metadataList = $this->getDoctrine()->getRepository('DataModuleBundle:Metadata')->findAll();
+        $metadataList = $this->commandBus->handle(new MetadataListQuery());
         return $this->createJsonResponse($metadataList);
     }
 
@@ -27,16 +26,8 @@ class MetadataController extends ApiController {
      * @Method("POST")
      */
     public function postAction(Request $request) {
-        $metadata = new Metadata();
-        $form = $this->createForm(MetadataType::class, $metadata);
-        $form->submit($request->request->all());
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($metadata);
-            $em->flush();
-            return $this->createJsonResponse($metadata, 201);
-        } else {
-            throw new PreconditionFailedHttpException();
-        }
+        $command = MetadataCreateCommand::fromArray($request->request->all());
+        $metadata = $this->commandBus->handle($command);
+        return $this->createJsonResponse($metadata, 201);
     }
 }

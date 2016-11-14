@@ -11,6 +11,7 @@ class DataModuleExtension extends ConfigurableExtension {
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container) {
         $this->loadYmlConfigFile('services', $container);
         $container->setParameter('data_module.supported_languages', $mergedConfig['supported_languages']);
+        $container->setParameter('data_module.main_language', $mergedConfig['supported_languages'][0]);
         $container->setParameter('data_module.supported_controls', $mergedConfig['supported_controls']);
     }
 }

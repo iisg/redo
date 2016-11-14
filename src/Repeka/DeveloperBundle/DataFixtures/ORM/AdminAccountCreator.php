@@ -2,7 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Repeka\UserModule\Bundle\Entity\User;
+use Repeka\UserModule\Domain\Entity\User;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
