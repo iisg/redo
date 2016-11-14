@@ -1,4 +1,29 @@
 services:
+  repeka.command_bus:
+    class: Repeka\CoreModule\Bundle\Cqrs\RepekaCommandBus
+    arguments:
+      -
+        - '@repeka.command_bus.middleware.metrics_command_bus'
+        - '@repeka.command_bus.middleware.validate_command'
+        - '@repeka.command_bus.middleware.wrap_command_with_transaction'
+        - '@repeka.command_bus.middleware.call_command'
+
+  repeka.command_bus.middleware.call_command:
+    class: Repeka\CoreModule\Bundle\Cqrs\Middleware\CallCommandHandlerMiddleware
+    autowire: true
+
+  repeka.command_bus.middleware.wrap_command_with_transaction:
+    class: Repeka\CoreModule\Bundle\Cqrs\Middleware\WrapCommandWithTransactionMiddleware
+    autowire: true
+
+  repeka.command_bus.middleware.metrics_command_bus:
+    class: Repeka\CoreModule\Bundle\Cqrs\Middleware\MetricsCommandBusMiddleware
+    autowire: true
+
+  repeka.command_bus.middleware.validate_command:
+    class: Repeka\CoreModule\Bundle\Cqrs\Middleware\ValidateCommandMiddleware
+    autowire: true
+
   repeka.event_listener.admin_panel_metrics_request:
     class: Repeka\CoreModule\Bundle\EventListener\AdminPanelMetricsRequestListener
     arguments:

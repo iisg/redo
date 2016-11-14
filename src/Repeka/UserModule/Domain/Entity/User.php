@@ -1,91 +1,54 @@
 <?php
-namespace Repeka\UserModule\Bundle\Entity;
+namespace Repeka\UserModule\Domain\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Table(name="`user`")
- * @ORM\Entity(repositoryClass="Repeka\UserModule\Bundle\Entity\UserRepository")
- */
 class User implements UserInterface, \Serializable {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=25, unique=true)
-     */
     private $username;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
     private $password;
 
-    /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     */
     private $email;
 
-    /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     */
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     */
     private $surname;
 
-    /**
-     * @ORM\Column(name="is_active", type="boolean")
-     */
     private $isActive;
 
     public function __construct() {
         $this->isActive = true;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId() {
+    public function getId(): int {
         return $this->id;
     }
 
-    public function getUsername() {
+    public function getUsername(): string {
         return $this->username;
     }
 
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getSurname() {
-        return $this->surname;
-    }
-
-    /**
-     * @param mixed $username
-     * @return User
-     */
-    public function setUsername($username) {
+    public function setUsername(string $username): User {
         $this->username = $username;
         return $this;
     }
 
-    public function setName($name) {
-        $this->name = $name;
-        return $this;
+    public function getName(): string {
+        return $this->name;
     }
 
-    public function setSurname($surname) {
+    public function setName(string $name) {
+        $this->name = $name;
+    }
+
+    public function getSurname(): string {
+        return $this->surname;
+    }
+
+    public function setSurname(string $surname) {
         $this->surname = $surname;
-        return $this;
     }
 
     public function getSalt() {

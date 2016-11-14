@@ -25,7 +25,18 @@ doctrine:
     user: repeka
     password: repeka
   orm:
-    auto_mapping: true
+    auto_mapping: false
+    mappings:
+      DataModuleBundle:
+        type: yml
+        prefix: Repeka\DataModule\Domain\Entity
+        dir: %kernel.root_dir%/../src/Repeka/DataModule/Bundle/Resources/config/doctrine
+        is_bundle: false
+      UserModuleBundle:
+        type: yml
+        prefix: Repeka\UserModule\Domain\Entity
+        dir: %kernel.root_dir%/../src/Repeka/UserModule/Bundle/Resources/config/doctrine
+        is_bundle: false
 
 doctrine_migrations:
   dir_name: "%kernel.root_dir%/DoctrineMigrations"
@@ -56,7 +67,6 @@ framework:
     enable_annotations: true
 
 parameters:
-#  application_version: 0.0.666 # TODO fix in REPEKA-61
   locale: pl
   secret: some_secret
 

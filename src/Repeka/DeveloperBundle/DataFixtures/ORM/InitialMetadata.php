@@ -2,31 +2,35 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Repeka\DataModule\Bundle\Entity\Metadata;
+use Repeka\DataModule\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class InitialMetadata extends ContainerAwareFixture {
+    /**
+     * @inheritdoc
+     */
     public function load(ObjectManager $manager) {
-        $title = new Metadata();
-        $title
-            ->setControl('text')
-            ->setName('Tytuł')
-            ->setLabel([
+        /** @var ContainerInterface $container */
+        $container = $this->container;
+        $container->get('repeka.command_bus')->handle(MetadataCreateCommand::fromArray([
+            'name' => 'Tytuł',
+            'label' => [
                 'PL' => 'Tytuł',
                 'EN' => 'Title',
                 'DE' => 'Titel',
-            ])
-            ->setDescription([
+            ],
+            'description' => [
                 'PL' => 'Tytuł zasobu',
                 'EN' => 'The title of the resource',
                 'DE' => 'Ressourcen Titel',
-            ])
-            ->setPlaceholder(([
+            ],
+            'placeholder' => [
                 'PL' => 'Znajdziesz go na okładce',
                 'EN' => 'Find it on the cover',
                 'DE' => 'Sie finden es auf der Abdeckung',
-            ]));
-        $manager->persist($title);
-        $manager->flush();
+            ],
+            'control' => 'text',
+        ]));
     }
 }

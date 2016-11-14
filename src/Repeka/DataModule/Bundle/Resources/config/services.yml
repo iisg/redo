@@ -1,14 +1,19 @@
 services:
-  validator.data_module.required_in_main_language:
-    class: Repeka\DataModule\Bundle\Validator\Constraints\RequiredInMainLanguageValidator
-    arguments:
-      - '%data_module.supported_languages%'
-    tags:
-      - { name: validator.constraint_validator }
+  repository.metadata:
+    class: Repeka\DataModule\Bundle\Repository\MetadataDoctrineRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\DataModule\Domain\Entity\Metadata]
 
-  validator.data_module.valid_metadata_control:
-      class: Repeka\DataModule\Bundle\Validator\Constraints\ValidMetadataControlValidator
-      arguments:
-        - '%data_module.supported_controls%'
-      tags:
-        - { name: validator.constraint_validator }
+  command_handler.data.metadata_list:
+    class: Repeka\DataModule\Domain\UseCase\Metadata\MetadataListQueryHandler
+    autowire: true
+
+  command_handler.data.metadata_create:
+    class: Repeka\DataModule\Domain\UseCase\Metadata\MetadataCreateCommandHandler
+    autowire: true
+
+  command_validator.data.metadata_create:
+    class: Repeka\DataModule\Domain\UseCase\Metadata\MetadataCreateCommandValidator
+    arguments:
+      - '%data_module.main_language%'
+      - '%data_module.supported_controls%'

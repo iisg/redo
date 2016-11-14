@@ -1,12 +1,12 @@
 security:
   encoders:
-    Repeka\UserModule\Bundle\Entity\User:
+    Repeka\UserModule\Domain\Entity\User:
       algorithm: bcrypt
 
   providers:
     db_provider:
       entity:
-        class: UserModuleBundle:User
+        class: Repeka\UserModule\Domain\Entity\User
         property: username
 
   firewalls:
