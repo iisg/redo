@@ -11,6 +11,7 @@ class MetadataType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
+            ->add('name')
             ->add('label')
             ->add('description')
             ->add('placeholder')

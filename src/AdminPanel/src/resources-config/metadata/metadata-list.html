@@ -35,6 +35,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nazwa</th>
+                        <th>Nazwa wyświetlana</th>
                         <th>Kontrolka</th>
                         <th>Opis</th>
                         <th>Podpowiedź</th>
@@ -42,7 +43,7 @@
                     </thead>
                     <tfoot>
                     <tr if.bind="!metadataList">
-                        <th colspan="4">
+                        <th colspan="6">
                             <div class="progress progress-striped active">
                                 <div class="progress-bar progress-bar-success progress-bar-full"></div>
                             </div>
@@ -53,6 +54,7 @@
                     <tr repeat.for="metadata of metadataList"
                         class="au-animate fade-inout-updown flash">
                         <td>${metadata.id}</td>
+                        <td>${metadata.name}</td>
                         <td>
                             <multilingual-display value.one-time="metadata.label"></multilingual-display>
                         </td>

@@ -26,6 +26,12 @@ class Metadata {
     private $control;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $name;
+
+    /**
      * @ORM\Column(type="json_document", options={"jsonb": true})
      * @RequiredInMainLanguage
      */
@@ -51,6 +57,15 @@ class Metadata {
 
     public function setControl($control): Metadata {
         $this->control = $control;
+        return $this;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function setName($name): Metadata {
+        $this->name = $name;
         return $this;
     }
 
