@@ -4,7 +4,15 @@
 
     <form submit.delegate="validateMe()">
         <div class="form-group label-floating">
-            <multilingual-text label="Nazwa"
+            <label class="control-label"
+                for="focusedInput1">Nazwa</label>
+            <input type="text"
+                value.bind="metadata.name & validate"
+                class="form-control"
+                id="focusedInput1">
+        </div>
+        <div class="form-group label-floating">
+            <multilingual-text label="Nazwa wyświetlana"
                 value.bind="metadata.label & validate"></multilingual-text>
         </div>
         <div class="form-group label-floating">

@@ -8,7 +8,9 @@ use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 class InitialMetadata extends ContainerAwareFixture {
     public function load(ObjectManager $manager) {
         $title = new Metadata();
-        $title->setControl('text')
+        $title
+            ->setControl('text')
+            ->setName('Tytuł')
             ->setLabel([
                 'PL' => 'Tytuł',
                 'EN' => 'Title',
