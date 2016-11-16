@@ -33,6 +33,7 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Nazwa</th>
                         <th>Kontrolka</th>
                         <th>Opis</th>
@@ -51,6 +52,7 @@
                     <tbody class="au-stagger">
                     <tr repeat.for="metadata of metadataList"
                         class="au-animate fade-inout-updown flash">
+                        <td>${metadata.id}</td>
                         <td>
                             <multilingual-display value.one-time="metadata.label"></multilingual-display>
                         </td>
