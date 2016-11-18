@@ -1,0 +1,70 @@
+services:
+  repeka.command_bus:
+    class: Repeka\Application\Cqrs\RepekaCommandBus
+    arguments:
+      -
+        - '@repeka.command_bus.middleware.metrics_command_bus'
+        - '@repeka.command_bus.middleware.validate_command'
+        - '@repeka.command_bus.middleware.wrap_command_with_transaction'
+        - '@repeka.command_bus.middleware.call_command'
+
+  repeka.command_bus.middleware.call_command:
+    class: Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware
+    autowire: true
+
+  repeka.command_bus.middleware.wrap_command_with_transaction:
+    class: Repeka\Application\Cqrs\Middleware\WrapCommandWithTransactionMiddleware
+    autowire: true
+
+  repeka.command_bus.middleware.metrics_command_bus:
+    class: Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware
+    autowire: true
+
+  repeka.command_bus.middleware.validate_command:
+    class: Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware
+    autowire: true
+
+  repeka.event_listener.admin_panel_metrics_request:
+    class: Repeka\Application\EventListener\AdminPanelMetricsRequestListener
+    arguments:
+      - '@m6_statsd'
+      - '%admin_panel_metrics%'
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  kernel.event_listener.json_request_transformer:
+    class: Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
+
+  repeka.event_listener.csrf_request_listener:
+    class: Repeka\Application\EventListener\CsrfRequestListener
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 0 }
+      - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 0 }
+
+  repository.metadata:
+    class: Repeka\Application\Repository\MetadataDoctrineRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\Metadata]
+
+  command_handler.metadata_list:
+    class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
+    autowire: true
+
+  command_handler.metadata_create:
+    class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler
+    autowire: true
+
+  command_validator.metadata_create:
+    class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
+    arguments:
+      - '%data_module.main_language%'
+      - '%data_module.supported_controls%'
+
+  repeka.ajax_authentication_listener:
+    class: Repeka\Application\EventListener\AjaxAuthenticationListener
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }

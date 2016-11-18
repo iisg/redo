@@ -8,18 +8,18 @@
          bootstrap="../app/autoload.php">
     <php>
         <ini name="error_reporting" value="-1"/>
-        <server name="KERNEL_DIR" value="app/"/>
+        <server name="KERNEL_DIR" value="../app/"/>
     </php>
 
     <testsuites>
         <testsuite name="repeka">
-            <directory>../src/Repeka/*/Tests</directory>
+            <directory>../src/Repeka/Tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">../src/Repeka/*/Domain</directory>
+            <directory suffix=".php">../src/Repeka/Tests/Domain</directory>
         </whitelist>
     </filter>
 </phpunit>

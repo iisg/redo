@@ -1,15 +1,11 @@
-core:
-  resource: "@CoreModuleBundle/Controller"
+site:
+  resource: "@RepekaBundle/Controller/Site"
   type: annotation
 
-data:
-  resource: "@DataModuleBundle/Controller"
+api:
+  resource: "@RepekaBundle/Controller/Api"
   type: annotation
   prefix: /api
-
-user:
-  resource: "@UserModuleBundle/Controller"
-  type: annotation
 
 logout:
   path: /logout

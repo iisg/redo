@@ -1,0 +1,31 @@
+Repeka\Domain\Entity\User:
+  type: entity
+  table: '`user`'
+  repositoryClass: Repeka\Application\Repository\UserRepository
+  id:
+    id:
+      type: integer
+      generator: {strategy: AUTO}
+  fields:
+    username:
+      type: string
+      length: 25
+      unique: true
+    password:
+      type: string
+      length: 64
+    email:
+      type: string
+      length: 60
+      unique: true
+    name:
+      type: string
+      length: 50
+      nullable: true
+    surname:
+      type: string
+      length: 50
+      nullable: true
+    isActive:
+      type: boolean
+      column: is_active
