@@ -2,7 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Repeka\DataModule\Domain\UseCase\Metadata\MetadataCreateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

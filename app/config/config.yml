@@ -3,7 +3,7 @@ imports:
   - { resource: metrics.yml }
   - { resource: config_build.yml}
 
-data_module:
+repeka:
   supported_controls:
     - text
     - textarea
@@ -27,15 +27,10 @@ doctrine:
   orm:
     auto_mapping: false
     mappings:
-      DataModuleBundle:
+      RepekaBundle:
         type: yml
-        prefix: Repeka\DataModule\Domain\Entity
-        dir: %kernel.root_dir%/../src/Repeka/DataModule/Bundle/Resources/config/doctrine
-        is_bundle: false
-      UserModuleBundle:
-        type: yml
-        prefix: Repeka\UserModule\Domain\Entity
-        dir: %kernel.root_dir%/../src/Repeka/UserModule/Bundle/Resources/config/doctrine
+        prefix: Repeka\Domain\Entity
+        dir: %kernel.root_dir%/../src/Repeka/Application/Resources/config/doctrine
         is_bundle: false
 
 doctrine_migrations:

@@ -20,7 +20,7 @@ export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .plugin('aurelia-animator-css')
-    .plugin('aurelia-configuration', config => config.setDirectory('/'))
+    .plugin('aurelia-configuration', config => config.setDirectory('/api/'))
     .plugin('aurelia-validation');
 
   configureHttpClient(aurelia);

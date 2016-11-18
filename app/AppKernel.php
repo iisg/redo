@@ -16,10 +16,8 @@ class AppKernel extends Kernel {
             new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
             new Dunglas\DoctrineJsonOdm\Bundle\DunglasDoctrineJsonOdmBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
-            new Repeka\CoreModule\Bundle\CoreModuleBundle(),
-            new Repeka\DataModule\Bundle\DataModuleBundle(),
-            new Repeka\UserModule\Bundle\UserModuleBundle(),
-            new Repeka\WorkflowModule\Bundle\WorkflowModuleBundle()
+            new Repeka\Application\RepekaBundle(),
+            new Repeka\WorkflowModule\Bundle\WorkflowModuleBundle(),
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
