@@ -3,7 +3,7 @@ export class ControlLabelValueConverter implements ToViewValueConverter {
     boolean: "Prawda / fałsz",
     date: "Data",
     daterange: "Zakres dat",
-    double: "Liczba dziesiętna",
+    double: "Liczba rzeczywista",
     int: "Liczba całkowita",
     text: "Tekst",
     textarea: "Długi tekst",
