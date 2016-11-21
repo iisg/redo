@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\CoreModule\Domain\Validator\AnnotationBasedValidator;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
 

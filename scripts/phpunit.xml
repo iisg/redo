@@ -19,7 +19,7 @@
 
     <filter>
         <whitelist>
-            <directory suffix=".php">../src/Repeka/Tests/Domain</directory>
+            <directory suffix=".php">../src/Repeka/Domain</directory>
         </whitelist>
     </filter>
 </phpunit>
