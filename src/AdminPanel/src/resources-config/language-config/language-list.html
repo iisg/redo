@@ -1,0 +1,57 @@
+<template>
+
+    <require from="./language-form"></require>
+    <require from="../multilingual-field/language-chooser/language-flag-svg"></require>
+    <require from="../multilingual-field/language-chooser/language-chooser.css"></require>
+    <require from="../multilingual-field/multilingual-field.css"></require>
+    <require from="../add-form/floating-add-form"></require>
+
+    <div class="language-list">
+        <floating-add-form controller.bind="addFormController">
+            <div class="progress progress-striped active"
+                class.bind="isRequesting ? 'visible' : 'invisible'">
+                <div class="progress-bar progress-bar-success progress-bar-full"></div>
+            </div>
+            <language-form language.bind="newLanguage"
+                submit.call="addNewLanguage()"
+                validating.bind="isValidating"></language-form>
+        </floating-add-form>
+
+        <h1>Zdefinuj język:</h1>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Flaga</th>
+                        <th>Język</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr if.bind="!languageList">
+                        <th colspan="2">
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                            </div>
+                        </th>
+                    </tr>
+                    </tfoot>
+                    <tbody class="au-stagger">
+                    <tr class="au-animate fade-inout-updown flash"
+                        repeat.for="language of languageList">
+                        <td>
+                            <span class="flag-icon-xs">
+                                <img src="${language.flag | languageFlagSvg}">
+                            </span>
+                            ${language.flag}
+                        </td>
+                        <td>${language.name}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</template>

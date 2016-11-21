@@ -21,7 +21,14 @@ export class ResourcesConfig implements RoutableComponentActivate, ConfiguresRou
         moduleId: './metadata/metadata-list',
         nav: true,
         title: 'Metadane'
-      }
+      },
+      {
+        route: 'language-list',
+        name: 'resources-config/language-list',
+        moduleId: './language-config/language-list',
+        nav: true,
+        title: 'Konfiguracja języków'
+      },
     ]);
   }
 

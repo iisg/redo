@@ -1,0 +1,15 @@
+Repeka\Domain\Entity\Language:
+  type: entity
+  table: language
+  repositoryClass: Repeka\Application\Repository\LanguageDoctrineRepository
+  id:
+    id:
+      type: integer
+      generator: {strategy: AUTO}
+  fields:
+    flag:
+      type: string
+      length: 10
+    name:
+      type: string
+      length: 255

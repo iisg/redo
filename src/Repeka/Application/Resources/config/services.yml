@@ -49,12 +49,25 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Domain\Entity\Metadata]
 
+  repository.language:
+    class: Repeka\Application\Repository\LanguageDoctrineRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\Language]
+
   command_handler.metadata_list:
     class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
     autowire: true
 
+  command_handler.language_list:
+    class: Repeka\Domain\UseCase\Language\LanguageListQueryHandler
+    autowire: true
+
   command_handler.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler
+    autowire: true
+
+  command_handler.language_create:
+    class: Repeka\Domain\UseCase\Language\LanguageCreateCommandHandler
     autowire: true
 
   command_validator.metadata_create:
@@ -62,6 +75,9 @@ services:
     arguments:
       - '%data_module.main_language%'
       - '%data_module.supported_controls%'
+
+  command_validator.language_create:
+    class: Repeka\Domain\UseCase\Language\LanguageCreateCommandValidator
 
   repeka.ajax_authentication_listener:
     class: Repeka\Application\EventListener\AjaxAuthenticationListener
