@@ -2,6 +2,7 @@ import {ValidationRules} from "aurelia-validation";
 import {RequiredInMainLanguageValidationRule} from "../../common/validation/rules/required-in-main-language";
 
 export class Metadata {
+  id: number;
   name: String = '';
   label: Object = {};
   placeholder: Object = {};

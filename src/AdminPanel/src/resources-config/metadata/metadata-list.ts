@@ -3,13 +3,14 @@ import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
 import {ComponentAttached} from "aurelia-templating";
 import {Metadata} from "./metadata";
+import {FloatingAddFormController} from "../add-form/floating-add-form";
 
 @autoinject
 export class MetadataList implements ComponentAttached {
   newMetadata: Metadata = new Metadata;
-  newMetadataFormVisible: boolean = false;
   isValidating: boolean = false;
   metadataList: Metadata[];
+  addFormController: FloatingAddFormController = {};
 
   constructor(private httpClient: HttpClient) {
   }
@@ -27,7 +28,7 @@ export class MetadataList implements ComponentAttached {
 
   addNewMetadata() {
     return this.httpClient.post('metadata', this.newMetadata).then(response => {
-      this.newMetadataFormVisible = false;
+      this.addFormController.hide();
       this.newMetadata = new Metadata;
       this.metadataList.push(response.content);
     });
