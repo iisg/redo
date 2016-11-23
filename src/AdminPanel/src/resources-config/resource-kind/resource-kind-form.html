@@ -1,0 +1,44 @@
+<template>
+    <require from="./resource-kind-metadata-chooser"></require>
+    <require from="./resource-kind-metadata-form"></require>
+    <require from="../metadata/metadata-form"></require>
+    <require from="../metadata/metadata-editable-properties.html"></require>
+    <require from="../multilingual-field/multilingual-text"></require>
+
+    <form class="well"
+        submit.delegate="validateAndSubmit()">
+        <h2>Dodaj nowy rodzaj zasobu</h2>
+        <div class="form-group label-floating">
+            <multilingual-text label="Nazwa"
+                value.bind="resourceKind.label & validate"></multilingual-text>
+        </div>
+        <div class="form-group">
+            <div class="row au-stagger">
+                <div class="col-lg-4"
+                    repeat.for="metadata of resourceKind.metadataList & validate">
+                    <div class="well">
+                        <button class="btn btn-default pull-right"
+                            type="button"
+                            click.delegate="removeMetadata(metadata)">
+                            <i class="fa fa-times"></i>
+                        </button>
+                        <resource-kind-metadata-form metadata.bind="metadata"
+                            base-metadata.bind="metadata.base"></resource-kind-metadata-form>
+                    </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label>Dodaj kolejną metadaną</label>
+                    <resource-kind-metadata-chooser change.delegate="addNewMetadata($event)"
+                        resource-kind.bind="resourceKind"></resource-kind-metadata-chooser>
+                </div>
+            </div>
+            <div class="form-group text-right">
+                <button class="btn btn-primary"
+                    disabled.bind="submitting">
+                    <i class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></i>
+                    Dodaj
+                </button>
+            </div>
+        </div>
+    </form>
+</template>

@@ -32,6 +32,12 @@ a {
   }
 }
 
+.is-focused {
+  .bootstrap-select {
+    background-image: inherit !important;
+  }
+}
+
 // z-depth helpers from MaterializeCSS
 // see https://github.com/FezVrasta/bootstrap-material-design/issues/1109
 

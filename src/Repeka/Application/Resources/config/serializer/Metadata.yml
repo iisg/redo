@@ -1,0 +1,11 @@
+Repeka\Domain\Entity\Metadata:
+  exclusion_policy: ALL
+  read_only: true
+  access_type: public_method
+  properties:
+    id: ~
+    name: {access_type: public_method}
+    control: {access_type: public_method}
+    label: {access_type: public_method}
+    description: {access_type: public_method}
+    placeholder: {access_type: public_method}

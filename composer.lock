@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c6e54f0115f2f5a18ea5243bddbeb087",
-    "content-hash": "5a95edb68daf54a358ae19a9d998c926",
+    "hash": "070e00a6fc2e752decd0739ac2b3c384",
+    "content-hash": "112cdf8d3b3be362479d12d89fb2c267",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -970,16 +970,16 @@
         },
         {
             "name": "dunglas/doctrine-json-odm",
-            "version": "dev-master",
+            "version": "dev-null-fix",
             "source": {
                 "type": "git",
-                "url": "https://github.com/dunglas/doctrine-json-odm.git",
-                "reference": "3795c70abfca32a01e24dc9ac0dadc3e65a63cb6"
+                "url": "https://github.com/fracz/doctrine-json-odm.git",
+                "reference": "3200fe61b9eb1e0f13744795d76ab0766ed81167"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dunglas/doctrine-json-odm/zipball/3795c70abfca32a01e24dc9ac0dadc3e65a63cb6",
-                "reference": "3795c70abfca32a01e24dc9ac0dadc3e65a63cb6",
+                "url": "https://api.github.com/repos/fracz/doctrine-json-odm/zipball/3200fe61b9eb1e0f13744795d76ab0766ed81167",
+                "reference": "3200fe61b9eb1e0f13744795d76ab0766ed81167",
                 "shasum": ""
             },
             "require": {
@@ -1008,7 +1008,11 @@
                     "Dunglas\\DoctrineJsonOdm\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Dunglas\\DoctrineJsonOdm\\Tests\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -1022,15 +1026,18 @@
             "description": "An object document mapper for Doctrine ORM using JSON types of modern RDBMS.",
             "homepage": "https://dunglas.fr",
             "keywords": [
-                "database",
-                "json",
-                "mysql",
-                "odm",
-                "orm",
-                "postgresql",
-                "rdbms"
+                "JSON",
+                "MySQL",
+                "ODM",
+                "ORM",
+                "PostgreSQL",
+                "RDBMS",
+                "database"
             ],
-            "time": "2016-09-06 11:41:44"
+            "support": {
+                "source": "https://github.com/fracz/doctrine-json-odm/tree/null-fix"
+            },
+            "time": "2016-12-09 10:48:56"
         },
         {
             "name": "jdorn/sql-formatter",

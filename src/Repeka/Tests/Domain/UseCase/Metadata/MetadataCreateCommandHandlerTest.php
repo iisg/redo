@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\UseCase\Metadata;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\CoreModule\Domain\Validator\AnnotationBasedValidator;
+use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler;
@@ -10,7 +11,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler;
 class MetadataCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     /** @var MetadataCreateCommand */
     private $metadataCreateCommand;
-    /** @var PHPUnit_Framework_MockObject_MockObject */
+    /** @var PHPUnit_Framework_MockObject_MockObject|MetadataRepository */
     private $metadataRepository;
     /** @var MetadataCreateCommandHandler */
     private $handler;
@@ -18,7 +19,7 @@ class MetadataCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->metadataCreateCommand = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea');
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
-        $this->handler = new MetadataCreateCommandHandler($this->metadataRepository);
+        $this->handler = new MetadataCreateCommandHandler(new MetadataFactory(), $this->metadataRepository);
     }
 
     public function testCreatingMetadata() {

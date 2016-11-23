@@ -1,0 +1,59 @@
+<template>
+    <require from="./resource-kind-form"></require>
+    <require from="./resource-kind-list.css"></require>
+    <require from="../add-form/animated-plus-button"></require>
+    <require from="../multilingual-field/multilingual-display"></require>
+
+    <h1>Rodzaje zasobów</h1>
+
+    <animated-plus-button class="pull-right"
+        opened.bind="addFormOpened"></animated-plus-button>
+
+    <resource-kind-form show.bind="addFormOpened"
+        submit.call="addNewResourceKind(resourceKind)"
+        class="fade-inout-updown au-animate"></resource-kind-form>
+
+    <div class="row"
+        show.bind="!resourceKinds || resourceKinds.length > 0">
+        <div class="col-xs-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nazwa</th>
+                    <th>Metadane</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr if.bind="!resourceKinds">
+                    <th colspan="6">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                        </div>
+                    </th>
+                </tr>
+                </tfoot>
+                <tbody class="au-stagger">
+                <tr repeat.for="resourceKind of resourceKinds"
+                    class="au-animate fade-inout-updown">
+                    <td>${resourceKind.id}</td>
+                    <td>
+                        <multilingual-display value.one-time="resourceKind.label"></multilingual-display>
+                    </td>
+                    <td>
+                        <dl class="dl-horizontal">
+                            <template repeat.for="metadata of resourceKind.metadataList & oneTime">
+                                <dt>${metadata.name}</dt>
+                                <dd>
+                                    <multilingual-display value.one-time="metadata.label"></multilingual-display>
+                                </dd>
+                            </template>
+                        </dl>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</template>

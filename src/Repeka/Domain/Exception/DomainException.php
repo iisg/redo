@@ -1,12 +1,10 @@
 <?php
 namespace Repeka\Domain\Exception;
 
-use Exception;
-
 class DomainException extends \RuntimeException {
     private $data;
 
-    public function __construct($message, Exception $previous = null) {
+    public function __construct(string $message, \Exception $previous = null) {
         parent::__construct($message, 400, $previous);
     }
 

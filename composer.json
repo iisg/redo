@@ -11,6 +11,12 @@
       "app/AppCache.php"
     ]
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/fracz/doctrine-json-odm"
+    }
+  ],
   "require": {
     "php": "^7.0",
     "beberlei/assert": "~2.0",
@@ -18,7 +24,7 @@
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-migrations-bundle": "^1.2",
     "doctrine/orm": "2.6.x-dev",
-    "dunglas/doctrine-json-odm": "1.0.x-dev",
+    "dunglas/doctrine-json-odm": "dev-null-fix",
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "^3.0.2",
     "symfony/monolog-bundle": "^2.8",

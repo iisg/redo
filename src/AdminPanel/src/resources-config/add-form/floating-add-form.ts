@@ -1,6 +1,6 @@
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 
-export class FloatingAddForm {
+export class FloatingAddForm implements ComponentAttached {
   @bindable
   controller: FloatingAddFormController;
 

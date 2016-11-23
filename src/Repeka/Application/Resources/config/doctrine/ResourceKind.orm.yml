@@ -1,0 +1,16 @@
+Repeka\Domain\Entity\ResourceKind:
+  type: entity
+  table: resource_kind
+  repositoryClass: Repeka\Application\Repository\ResourceKindDoctrineRepository
+  id:
+    id:
+      type: integer
+      generator: {strategy: AUTO}
+  oneToMany:
+    metadataList:
+      targetEntity: Repeka\Domain\Entity\Metadata
+      mappedBy: resourceKind
+  fields:
+    label:
+      type: json_document
+      options: {jsonb: true}

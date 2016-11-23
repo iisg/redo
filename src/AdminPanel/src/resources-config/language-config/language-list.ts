@@ -13,13 +13,13 @@ export class LanguageList implements ComponentAttached {
   }
 
   attached(): void {
-    this.languageRepository.findAll().then(languages => {
+    this.languageRepository.getList().then(languages => {
       this.languageList = languages;
     });
   }
 
   addNewLanguage(newLanguage: Language) {
-    return this.languageRepository.addNew(newLanguage).then(language => {
+    return this.languageRepository.post(newLanguage).then(language => {
       this.addFormController.hide();
       this.languageList.push(language);
     });

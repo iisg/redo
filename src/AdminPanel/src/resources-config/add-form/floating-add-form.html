@@ -1,12 +1,9 @@
 <template>
+    <require from="./animated-plus-button"></require>
     <require from="./floating-add-form.css"></require>
     <div class="floating-add-form">
-        <button class="btn btn-fab btn-raised pull-right btn-add"
-            class.bind="formOpened ? 'btn-warning btn-opened' : 'btn-success'"
-            click.delegate="formOpened = !formOpened">
-            <i class="fa fa-plus"></i>
-        </button>
-
+        <animated-plus-button class="pull-right"
+            opened.bind="formOpened"></animated-plus-button>
         <div class="form-add">
             <div class="col-sm-8 col-sm-offset-4 col-md-6 col-md-offset-6  col-lg-5 col-lg-offset-7">
                 <div class="well fade-inout-updown au-animate"

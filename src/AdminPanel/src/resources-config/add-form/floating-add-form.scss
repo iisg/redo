@@ -1,17 +1,4 @@
-@import "../../common/styles";
-
 .floating-add-form {
-  .btn-add {
-    position: relative;
-    z-index: 20;
-    .fa-plus {
-      @include transition(transform .3s ease-out);
-    }
-    &.btn-opened .fa-plus {
-      @include transform(rotate(45deg * 5));
-    }
-  }
-
   .form-add {
     position: relative;
     z-index: 10;
