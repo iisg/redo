@@ -6,13 +6,28 @@ Repeka\Domain\Entity\Metadata:
     id:
       type: integer
       generator: {strategy: AUTO}
+  manyToOne:
+    resourceKind:
+      targetEntity: Repeka\Domain\Entity\ResourceKind
+      inversedBy: metadataList
+      joinColumn:
+        name: resource_kind_id
+        referencedColumnName: id
+    baseMetadata:
+      targetEntity: Repeka\Domain\Entity\Metadata
+      fetch: EAGER
+      joinColumn:
+        name: base_id
+        referencedColumnName: id
   fields:
     control:
       type: string
       length: 25
+      nullable: true
     name:
       type: string
       length: 255
+      nullable: true
     label:
       type: json_document
       options: {jsonb: true}

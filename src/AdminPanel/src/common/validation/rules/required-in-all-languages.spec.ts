@@ -10,9 +10,9 @@ describe(RequiredInAllLanguagesValidationRule.name, () => {
   beforeEach((ready) => {
     languageRepository = new LanguageRepository(undefined, eventAggregator);
     eventAggregator = new EventAggregator();
-    spyOn(languageRepository, 'findAll').and.returnValue(new Promise(resolve => resolve([{code: 'PL'}, {code: 'EN'}])));
+    spyOn(languageRepository, 'getList').and.returnValue(new Promise(resolve => resolve([{code: 'PL'}, {code: 'EN'}])));
     rule = new RequiredInAllLanguagesValidationRule(languageRepository, eventAggregator);
-    languageRepository.findAll().then(ready);
+    languageRepository.getList().then(ready);
   });
 
   it('validates value that contains both languages', () => {
@@ -44,10 +44,10 @@ describe(RequiredInAllLanguagesValidationRule.name, () => {
   });
 
   it("updates the list after the languages changed event", (done) => {
-    languageRepository.findAll = jasmine.createSpy('findAll').and.returnValue(new Promise(resolve =>
+    languageRepository.getList = jasmine.createSpy('findAll').and.returnValue(new Promise(resolve =>
       resolve([{code: 'PL'}, {code: 'EN'}, {code: 'RUS'}])));
     eventAggregator.publish(new LanguagesChangedEvent());
-    languageRepository.findAll().then(() => {
+    languageRepository.getList().then(() => {
       expect(rule.validationFunction()({PL: 'text', EN: 'text', RUS: 'text'})).toBeTruthy();
       expect(rule.validationFunction()({PL: 'text', EN: 'text'})).toBeFalsy();
       done();

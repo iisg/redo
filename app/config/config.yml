@@ -63,9 +63,18 @@ framework:
   validation:
     enable_annotations: true
 
+jms_serializer:
+  metadata:
+    auto_detection: false
+    directories:
+      entities:
+        path: "@RepekaBundle/Resources/config/serializer"
+        namespace_prefix: "Repeka\\Domain\\Entity"
+
 parameters:
   locale: pl
   secret: some_secret
+  jms_serializer.json_serialization_visitor.class: Repeka\Application\Serialization\FixJsonArraySerializationVisitor
 
 swiftmailer:
   host: "127.0.0.1"

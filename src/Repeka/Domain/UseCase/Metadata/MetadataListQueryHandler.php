@@ -18,6 +18,6 @@ class MetadataListQueryHandler {
      * @return Metadata[]
      */
     public function handle(): array {
-        return $this->metadataRepository->findAll();
+        return $this->metadataRepository->findAllBase();
     }
 }

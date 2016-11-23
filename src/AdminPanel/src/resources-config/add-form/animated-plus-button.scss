@@ -1,0 +1,12 @@
+@import "../../common/styles";
+
+.animated-plus-button {
+  position: relative;
+  z-index: 20;
+  .fa-plus {
+    @include transition(transform .3s ease-out);
+  }
+  &.animated-plus-button-opened .fa-plus {
+    @include transform(rotate(45deg * 5));
+  }
+}

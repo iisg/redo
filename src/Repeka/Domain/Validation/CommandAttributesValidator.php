@@ -8,7 +8,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Exceptions\ValidationException;
 
 abstract class CommandAttributesValidator implements CommandValidator {
-    abstract protected function getValidator(): Validator;
+    abstract public function getValidator(): \Respect\Validation\Validator;
 
     /**
      * @inheritdoc
@@ -20,6 +20,10 @@ abstract class CommandAttributesValidator implements CommandValidator {
             $violations = array_map([$this, 'exceptionToViolation'], iterator_to_array($compositeException));
             throw new InvalidCommandException($violations, $compositeException);
         }
+    }
+
+    final public function isValid(Command $command) {
+        return $this->getValidator()->validate($command);
     }
 
     /**

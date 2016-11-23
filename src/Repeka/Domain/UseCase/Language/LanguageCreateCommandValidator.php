@@ -5,8 +5,7 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Validator;
 
 class LanguageCreateCommandValidator extends CommandAttributesValidator {
-
-    protected function getValidator(): Validator {
+    public function getValidator(): \Respect\Validation\Validator {
         return Validator
             ::attribute('code', Validator::regex('/^[A-Z-]*$/'))
             ->attribute('code', Validator::notBlank())

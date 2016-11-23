@@ -1,5 +1,4 @@
 <template>
-    <require from="../multilingual-field/multilingual-text"></require>
     <require from="./metadata-control-select"></require>
 
     <form submit.delegate="validateAndSubmit()">
@@ -11,18 +10,7 @@
                 class="form-control"
                 id="focusedInput1">
         </div>
-        <div class="form-group label-floating">
-            <multilingual-text label="Nazwa wyświetlana"
-                value.bind="metadata.label & validate"></multilingual-text>
-        </div>
-        <div class="form-group label-floating">
-            <multilingual-text label="Podpowiedź"
-                value.bind="metadata.placeholder & validate"></multilingual-text>
-        </div>
-        <div class="form-group label-floating">
-            <multilingual-text label="Opis"
-                value.bind="metadata.description & validate"></multilingual-text>
-        </div>
+        <compose view="./metadata-editable-properties.html"></compose>
         <div class="form-group">
             <metadata-control-select value.bind="metadata.control & validate"></metadata-control-select>
         </div>

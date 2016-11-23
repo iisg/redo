@@ -7,7 +7,7 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler;
 
 class MetadataListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
-    /** @var PHPUnit_Framework_MockObject_MockObject */
+    /** @var PHPUnit_Framework_MockObject_MockObject|MetadataRepository */
     private $metadataRepository;
     /** @var MetadataListQueryHandler */
     private $handler;
@@ -19,7 +19,7 @@ class MetadataListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingTheList() {
         $metadataList = [$this->createMock(Metadata::class)];
-        $this->metadataRepository->expects($this->once())->method('findAll')->willReturn($metadataList);
+        $this->metadataRepository->expects($this->once())->method('findAllBase')->willReturn($metadataList);
         $returnedList = $this->handler->handle();
         $this->assertSame($metadataList, $returnedList);
     }

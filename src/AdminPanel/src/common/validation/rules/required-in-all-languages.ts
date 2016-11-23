@@ -15,7 +15,7 @@ export class RequiredInAllLanguagesValidationRule implements CustomValidationRul
   }
 
   private fetchLanguages() {
-    this.languageRepository.findAll().then(languages => {
+    this.languageRepository.getList().then(languages => {
       this.knownLanguageCodes = languages.map(lang => lang.code);
     });
   }

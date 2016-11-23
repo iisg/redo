@@ -13,7 +13,7 @@ export class LanguageCodeToFlagValueConverter implements ToViewValueConverter {
   }
 
   private fetchLanguages() {
-    this.languageRepository.findAll().then(languages => {
+    this.languageRepository.getList().then(languages => {
       this.languages = languages;
     });
   }

@@ -54,12 +54,21 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Domain\Entity\Language]
 
+  repository.resource_kind:
+    class: Repeka\Application\Repository\ResourceKindDoctrineRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\ResourceKind]
+
   command_handler.metadata_list:
     class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
     autowire: true
 
   command_handler.language_list:
     class: Repeka\Domain\UseCase\Language\LanguageListQueryHandler
+    autowire: true
+
+  command_handler.resource_kind_list:
+    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindListQueryHandler
     autowire: true
 
   command_handler.metadata_create:
@@ -70,11 +79,19 @@ services:
     class: Repeka\Domain\UseCase\Language\LanguageCreateCommandHandler
     autowire: true
 
+  command_handler.resource_kind_create:
+    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandHandler
+    autowire: true
+
   command_validator.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
     arguments:
       - '@repository.language'
       - '%data_module.supported_controls%'
+
+  command_validator.resource_kind_create:
+    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator
+    autowire: true
 
   command_validator.language_create:
     class: Repeka\Domain\UseCase\Language\LanguageCreateCommandValidator

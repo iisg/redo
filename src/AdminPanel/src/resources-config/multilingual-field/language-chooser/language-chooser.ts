@@ -18,7 +18,7 @@ export class LanguageChooser implements ComponentAttached, ComponentDetached {
   }
 
   private fetchLanguages() {
-    this.languageRepository.findAll().then(languages => {
+    this.languageRepository.getList().then(languages => {
       this.languages = languages;
       this.setCurrentLanguage(this.languages[0]);
     });

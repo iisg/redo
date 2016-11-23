@@ -3,54 +3,60 @@ namespace Repeka\Domain\Entity;
 
 class Metadata {
     private $id;
-
     private $control;
-
     private $name;
-
     private $label;
-
     private $description;
-
     private $placeholder;
+    /** @var Metadata */
+    private $baseMetadata;
+    private $resourceKind;
 
-    public function __construct(string $control, string $name, array $label) {
-        $this->control = $control;
-        $this->name = $name;
-        $this->label = $label;
+    private function __construct() {
     }
 
-    public function getId(): int {
+    public static function create(string $control, string $name, array $label): Metadata {
+        $metadata = new self();
+        $metadata->control = $control;
+        $metadata->name = $name;
+        $metadata->label = $label;
+        return $metadata;
+    }
+
+    public static function createForResourceKind(array $label, ResourceKind $resourceKind, Metadata $base) {
+        $metadata = new self();
+        $metadata->label = $label;
+        $metadata->baseMetadata = $base;
+        $metadata->resourceKind = $resourceKind;
+        return $metadata;
+    }
+
+    public function getId() {
         return $this->id;
     }
 
     public function getControl(): string {
-        return $this->control;
+        return $this->baseMetadata ? $this->baseMetadata->getControl() : $this->control;
     }
 
     public function getName(): string {
-        return $this->name;
+        return $this->baseMetadata ? $this->baseMetadata->getName() : $this->name;
     }
 
     public function getLabel(): array {
-        return $this->label;
+        return array_merge($this->baseMetadata ? $this->baseMetadata->getLabel() : [], array_filter($this->label, 'trim'));
     }
 
     public function getDescription(): array {
-        return $this->description;
+        return array_merge($this->baseMetadata ? $this->baseMetadata->getDescription() : [], array_filter($this->description, 'trim'));
     }
 
     public function getPlaceholder(): array {
-        return $this->placeholder;
+        return array_merge($this->baseMetadata ? $this->baseMetadata->getPlaceholder() : [], array_filter($this->placeholder, 'trim'));
     }
 
-    public function setName(string $name) {
-        $this->name = $name;
-    }
-
-    public function setLabel(array $label): Metadata {
-        $this->label = $label;
-        return $this;
+    public function getResourceKind(): ResourceKind {
+        return $this->resourceKind;
     }
 
     public function setDescription(array $description): Metadata {
@@ -61,5 +67,9 @@ class Metadata {
     public function setPlaceholder(array $placeholder): Metadata {
         $this->placeholder = $placeholder;
         return $this;
+    }
+
+    public function isBase() {
+        return !$this->baseMetadata;
     }
 }

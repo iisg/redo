@@ -16,7 +16,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
         $this->supportedControls = $supportedControls;
     }
 
-    protected function getValidator(): Validator {
+    public function getValidator(): \Respect\Validation\Validator {
         return Validator
             ::attribute('label', Validator::notBlankInAllLanguages($this->availableLanguages))
             ->attribute('name', Validator::notBlank())

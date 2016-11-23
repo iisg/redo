@@ -1,27 +1,26 @@
-import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {ComponentAttached} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {FloatingAddFormController} from "../add-form/floating-add-form";
+import {MetadataRepository} from "./metadata-repository";
 
 @autoinject
 export class MetadataList implements ComponentAttached {
   metadataList: Metadata[];
   addFormController: FloatingAddFormController = {};
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private metadataRepository: MetadataRepository) {
   }
 
   attached(): void {
-    this.httpClient.get('metadata').then(response => {
-      this.metadataList = response.content;
-    });
+    this.metadataRepository.getList().then(metadataList => this.metadataList = metadataList);
   }
 
-  addNewMetadata(newMetadata: Metadata) {
-    return this.httpClient.post('metadata', newMetadata).then(response => {
+  addNewMetadata(newMetadata: Metadata): Promise<Metadata> {
+    return this.metadataRepository.post(newMetadata).then(metadata => {
       this.addFormController.hide();
-      this.metadataList.push(response.content);
+      this.metadataList.push(metadata);
+      return metadata;
     });
   }
 }

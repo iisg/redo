@@ -14,6 +14,9 @@ export class MultilingualText {
   value: Object = {};
 
   @bindable
+  placeholder: Object = {};
+
+  @bindable
   label: string;
 
   fieldId: string = generateId();

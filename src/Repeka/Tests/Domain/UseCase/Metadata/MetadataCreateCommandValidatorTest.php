@@ -21,9 +21,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->validator->validate($command);
     }
 
-    /**
-     * @expectedException Repeka\Domain\Exception\InvalidCommandException
-     */
+    /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailsValidationBecauseOfInvalidControl() {
         $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'blabla');
         $this->validator->validate($command);
@@ -38,17 +36,13 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @expectedException Repeka\Domain\Exception\InvalidCommandException
-     */
+    /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailsValidationBecauseOfNoLabelInMainLanguage() {
         $command = new MetadataCreateCommand('nazwa', ['EN' => 'Test'], [], [], 'text');
         $this->validator->validate($command);
     }
 
-    /**
-     * @expectedException Repeka\Domain\Exception\InvalidCommandException
-     */
+    /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailsValidationBecauseThereIsNoName() {
         $command = new MetadataCreateCommand('', ['PL' => 'Test'], [], [], 'text');
         $this->validator->validate($command);

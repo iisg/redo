@@ -10,6 +10,7 @@
             ref="textInput"
             class="form-control"
             blur.trigger="blur()"
+            placeholder.bind="placeholder[currentLanguage.code] || ''"
             value.bind="value[currentLanguage.code]">
         <span class="input-group-btn"
             as-element="language-chooser"
