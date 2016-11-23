@@ -1,6 +1,6 @@
 @import "../../common/styles";
 
-.metadata-list {
+.floating-add-form {
   .btn-add {
     position: relative;
     z-index: 20;
@@ -17,8 +17,8 @@
     z-index: 10;
     .well {
       position: absolute;
-      top: -40px;
-      right: 42px;
+      top: -25px;
+      right: 25px;
     }
   }
 }
