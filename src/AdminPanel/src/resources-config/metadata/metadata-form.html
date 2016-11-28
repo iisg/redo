@@ -2,7 +2,7 @@
     <require from="../multilingual-field/multilingual-text"></require>
     <require from="./metadata-control-select"></require>
 
-    <form submit.delegate="validateMe()">
+    <form submit.delegate="validateAndSubmit()">
         <div class="form-group label-floating">
             <label class="control-label"
                 for="focusedInput1">Nazwa</label>
@@ -28,8 +28,8 @@
         </div>
         <div class="form-group text-right">
             <button class="btn btn-primary"
-                disabled.bind="isRequesting">
-                <i class="fa fa-plus fa-fw"></i>
+                disabled.bind="submitting">
+                <i class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></i>
                 Dodaj
             </button>
         </div>

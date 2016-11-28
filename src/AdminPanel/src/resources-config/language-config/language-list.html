@@ -8,13 +8,7 @@
 
     <div class="language-list">
         <floating-add-form controller.bind="addFormController">
-            <div class="progress progress-striped active"
-                class.bind="isRequesting ? 'visible' : 'invisible'">
-                <div class="progress-bar progress-bar-success progress-bar-full"></div>
-            </div>
-            <language-form language.bind="newLanguage"
-                submit.call="addNewLanguage()"
-                validating.bind="isValidating"></language-form>
+            <language-form submit.call="addNewLanguage(language)"></language-form>
         </floating-add-form>
 
         <h1>Zdefinuj język:</h1>

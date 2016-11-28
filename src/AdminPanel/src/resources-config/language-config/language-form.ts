@@ -2,44 +2,31 @@ import {bindable} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
-import {BindingEngine, bindingMode, computedFrom} from "aurelia-binding";
 import {Language} from "./language";
 
 @autoinject
 export class LanguageForm {
-  @bindable
   language: Language = new Language;
 
   @bindable
-  submit: () => Promise<any>;
+  submit: (value: {language: Language}) => Promise<any>;
 
-  @bindable({defaultBindingMode: bindingMode.twoWay})
-  validating: boolean;
+  submitting: boolean = false;
 
-  private submitting: boolean = false;
+  private controller: ValidationController;
 
-  controller: ValidationController;
-
-  constructor(validationControllerFactory: ValidationControllerFactory, bindingEngine: BindingEngine) {
+  constructor(validationControllerFactory: ValidationControllerFactory) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
-    bindingEngine.propertyObserver(this.controller, 'validating').subscribe((validating) => this.validating = validating);
   }
 
-  @computedFrom('controller.validating', 'submitting')
-  get isRequesting() {
-    return this.controller.validating || this.submitting;
-  }
-
-  validateMe() {
+  validateAndSubmit() {
+    this.submitting = true;
     this.controller.validate().then(errors => {
       if (errors.length == 0) {
-        let promise = this.submit();
-        if (promise) {
-          this.submitting = true;
-          promise.finally(() => this.submitting = false);
-        }
+        return Promise.resolve(this.submit({language: this.language}))
+          .then(() => this.language = new Language);
       }
-    });
+    }).finally(() => this.submitting = false);
   }
 }
