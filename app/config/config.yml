@@ -16,6 +16,12 @@ repeka:
     - PL
     - EN
     - DE
+  metadata_nesting_depth: 3
+  elasticsearch:
+    index_name: repeka
+    analyzers:
+      en: english
+      de: german
 
 doctrine:
   dbal:
@@ -30,7 +36,7 @@ doctrine:
       RepekaBundle:
         type: yml
         prefix: Repeka\Domain\Entity
-        dir: %kernel.root_dir%/../src/Repeka/Application/Resources/config/doctrine
+        dir: "%kernel.root_dir%/../src/Repeka/Application/Resources/config/doctrine"
         is_bundle: false
 
 doctrine_migrations:

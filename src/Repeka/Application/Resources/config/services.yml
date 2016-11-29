@@ -84,3 +84,38 @@ services:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
+
+  elasticsearch.client:
+    class: Repeka\Application\Elasticsearch\ESClient
+    arguments:
+      - '%elasticsearch.host%'
+      - '%elasticsearch.port%'
+      - '%elasticsearch.proxy%'
+
+  elasticsearch.index_manager:
+    class: Repeka\Application\Elasticsearch\ESIndexManager
+    arguments:
+      - '@elasticsearch.client'
+      - '@elasticsearch.mapping_factory'
+      - '%elasticsearch.index_name%'
+
+  elasticsearch.mapping_factory:
+    class: Repeka\Application\Elasticsearch\Mapping\ESMappingFactory
+    arguments:
+      - '%data_module.max_nesting_depth%'
+      - '%data_module.supported_languages%'
+      - '%elasticsearch.analyzers%'
+      -
+        - 'Repeka\Application\Elasticsearch\Model\IntIndexedMetadata'
+        - 'Repeka\Application\Elasticsearch\Model\FloatIndexedMetadata'
+        - 'Repeka\Application\Elasticsearch\Model\DateTimeIndexedMetadata'
+        - 'Repeka\Application\Elasticsearch\Model\RawStringIndexedMetadata'
+        - 'Repeka\Application\Elasticsearch\Model\TokenizedStringIndexedMetadata'
+        - 'Repeka\Application\Elasticsearch\Model\AnalyzedStringIndexedMetadata'
+
+  elasticsearch.resource:
+    class: Repeka\Application\Elasticsearch\Model\ESResource
+    shared: false
+    arguments:
+      - '@elasticsearch.client'
+      - '%elasticsearch.index_name%'

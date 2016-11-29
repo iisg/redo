@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "03c5088b3669afab8cf61fe860e7d923",
-    "content-hash": "4ad6aed1f631d9ae2b7fd4f9acc4758c",
+    "hash": "c6e54f0115f2f5a18ea5243bddbeb087",
+    "content-hash": "5a95edb68daf54a358ae19a9d998c926",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1938,6 +1938,63 @@
                 "validator"
             ],
             "time": "2016-10-29 13:29:17"
+        },
+        {
+            "name": "ruflin/elastica",
+            "version": "3.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ruflin/Elastica.git",
+                "reference": "02bf2fbb8ad6b679869af145eed89436a1c50229"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/02bf2fbb8ad6b679869af145eed89436a1c50229",
+                "reference": "02bf2fbb8ad6b679869af145eed89436a1c50229",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "~3.0",
+                "guzzlehttp/guzzle": "~6.0"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "Allow using IAM authentication with Amazon ElasticSearch Service",
+                "egeloen/http-adapter": "Allow using httpadapter transport",
+                "guzzlehttp/guzzle": "Allow using guzzle 6 as the http transport (Requires php 5.5)",
+                "monolog/monolog": "Logging request"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Elastica\\": "lib/Elastica/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Ruflin",
+                    "homepage": "http://ruflin.com/"
+                }
+            ],
+            "description": "Elasticsearch Client",
+            "homepage": "http://elastica.io/",
+            "keywords": [
+                "client",
+                "search"
+            ],
+            "time": "2016-09-23 10:24:25"
         },
         {
             "name": "sensio/distribution-bundle",
