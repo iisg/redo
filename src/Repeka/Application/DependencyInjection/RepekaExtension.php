@@ -13,6 +13,14 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('data_module.supported_languages', $mergedConfig['supported_languages']);
         $container->setParameter('data_module.main_language', $mergedConfig['supported_languages'][0]);
         $container->setParameter('data_module.supported_controls', $mergedConfig['supported_controls']);
+        $container->setParameter('data_module.max_nesting_depth', $mergedConfig['metadata_nesting_depth']);
+        $container->setParameter('elasticsearch.index_name', $mergedConfig['elasticsearch']['index_name']);
+        $container->setParameter('elasticsearch.number_of_shards', $mergedConfig['elasticsearch']['number_of_shards']);
+        $container->setParameter('elasticsearch.number_of_replicas', $mergedConfig['elasticsearch']['number_of_replicas']);
+        $container->setParameter('elasticsearch.analyzers', $mergedConfig['elasticsearch']['analyzers']);
+        $container->setParameter('elasticsearch.host', $mergedConfig['elasticsearch']['host']);
+        $container->setParameter('elasticsearch.port', $mergedConfig['elasticsearch']['port']);
+        $container->setParameter('elasticsearch.proxy', $mergedConfig['elasticsearch']['proxy']);
     }
 
     private function loadYmlConfigFile(string $name, ContainerBuilder $container) {

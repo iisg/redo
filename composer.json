@@ -28,7 +28,8 @@
     "m6web/statsd-bundle": "^2.14",
     "jms/serializer-bundle": "^1.1",
     "qandidate/symfony-json-request-transformer": "^1.2",
-    "respect/validation": "^1.1"
+    "respect/validation": "^1.1",
+    "ruflin/elastica": "^3.2"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^2.3",
