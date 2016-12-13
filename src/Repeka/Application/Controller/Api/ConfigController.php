@@ -7,6 +7,7 @@ class ConfigController extends ApiController {
     const PUBLIC_PARAMETERS = [
         'application_version' => 'application_version',
         'supported_controls' => 'data_module.supported_controls',
+        'default_ui_language' => 'data_module.default_ui_language',
     ];
 
     /**

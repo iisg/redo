@@ -1,18 +1,18 @@
 <template>
-    <require from="../multilingual-field/multilingual-text"></require>
+    <require from="../multilingual-field/multilingual-editor"></require>
     <div class="form-group ${baseMetadata.label ? '' : 'label-floating'}">
-        <multilingual-text label="Nazwa wyświetlana"
+        <multilingual-editor label="${'Label' & t}"
             placeholder.bind="baseMetadata.label"
-            value.bind="metadata.label & validate"></multilingual-text>
+            value.bind="metadata.label & validate"></multilingual-editor>
     </div>
     <div class="form-group ${baseMetadata.placeholder ? '' : 'label-floating'}">
-        <multilingual-text label="Podpowiedź"
+        <multilingual-editor label="${'Hint' & t}"
             placeholder.bind="baseMetadata.placeholder"
-            value.bind="metadata.placeholder & validate"></multilingual-text>
+            value.bind="metadata.placeholder & validate"></multilingual-editor>
     </div>
     <div class="form-group ${baseMetadata.description ? '' : 'label-floating'}">
-        <multilingual-text label="Opis"
+        <multilingual-editor label="${'Description' & t}"
             placeholder.bind="baseMetadata.description"
-            value.bind="metadata.description & validate"></multilingual-text>
+            value.bind="metadata.description & validate"></multilingual-editor>
     </div>
 </template>

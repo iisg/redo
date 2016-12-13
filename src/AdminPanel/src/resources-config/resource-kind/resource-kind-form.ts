@@ -34,8 +34,8 @@ export class ResourceKindForm {
 
   validateAndSubmit() {
     this.submitting = true;
-    this.controller.validate().then(errors => {
-      if (errors.length == 0) {
+    this.controller.validate().then(result => {
+      if (result.valid) {
         return this.submit({resourceKind: this.resourceKind})
           .then(() => this.resourceKind = new ResourceKind);
       }

@@ -1,19 +1,35 @@
 import {Router, RouterConfiguration, ConfiguresRouter} from "aurelia-router";
 import {ComponentAttached} from "aurelia-templating";
+import {autoinject} from "aurelia-dependency-injection";
+import {I18N} from "aurelia-i18n";
+import {EventAggregator} from "aurelia-event-aggregator";
 import routes from "./routes";
 
+@autoinject
 export class App implements ConfiguresRouter, ComponentAttached {
   router: Router;
+
+  constructor(private i18n: I18N, private element: Element, ea: EventAggregator) {
+    ea.subscribe('i18n:locale:changed', () => {
+      this.i18n.updateTranslations(this.element);
+      if (this.router) {
+        this.router.updateTitle();
+      }
+      ea.publish('i18n:translation:finished');
+    });
+  }
 
   configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'RePeKa';
     config.options.pushState = true;
     config.options.root = '/admin';
     config.map(routes);
+    config.fallbackRoute(''); // TODO REPEKA-103
     this.router = router;
   }
 
   attached() {
     $.material.init();
+    this.i18n.updateTranslations(this.element);
   }
 }

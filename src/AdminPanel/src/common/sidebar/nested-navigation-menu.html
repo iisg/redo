@@ -8,14 +8,14 @@
             href.bind="item.href"
             class="btn btn-default btn-block">
             <i class="fa fa-fw fa-${item.settings.icon}"></i>
-            ${item.title}
+            ${'nav::' + item.title & t}
         </a>
         <a if.bind="item.children"
             class="btn btn-default btn-block"
             click.delegate="item.toggle()">
             <i class="fa fa-fw fa-angle-right pull-right ${item.expanded ? 'fa-rotate-90': ''}"></i>
             <i class="fa fa-fw fa-${item.settings.icon}"></i>
-            ${item.title}
+            ${'nav::' + item.title & t}
         </a>
         <ul if.bind="item.expanded"
             class="nav-children height-inout au-animate">
@@ -23,7 +23,7 @@
                 class="${child.isActive ? 'current' : ''}">
                 <a href.bind="child.href"
                     class="btn btn-default btn-block">
-                    ${child.title}
+                    ${'nav::' + child.title & t}
                 </a>
             </li>
         </ul>

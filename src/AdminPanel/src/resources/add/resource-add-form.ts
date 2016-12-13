@@ -20,7 +20,8 @@ export class ResourceAddForm {
   validateAndSubmit() {
     this.submitting = true;
     this.errorToDisplay = undefined;
-    this.validator.validateObject(this.newResource).then(errors => {
+    this.validator.validateObject(this.newResource).then(results => {
+      const errors = results.filter(result => !result.valid);
       if (errors.length == 0) {
         return this.submit({resource: this.newResource})
           .then(() => this.newResource = new Resource);

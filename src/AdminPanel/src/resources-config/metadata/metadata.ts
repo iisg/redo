@@ -17,8 +17,8 @@ export class ResourceKindMetadata extends Metadata {
 // ugly hack to disable the rules in the unit testing, see: https://github.com/aurelia/validation/issues/377#issuecomment-267791805
 if ((ValidationRules as any).parser) {
   ValidationRules
-    .ensure('label').displayName("Nazwa wyświetlana").satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
-    .ensure('control').displayName("Kontrolka").required()
-    .ensure('name').displayName("Nazwa").required()
+    .ensure('label').displayName('Label').satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
+    .ensure('control').displayName('Control').required()
+    .ensure('name').displayName('Name').required()
     .on(Metadata);
 }

@@ -18,7 +18,9 @@ export class FlagsSelect implements ComponentAttached {
   attached() {
     this.httpClient.get('/flags.json').then((response) => {
       this.availableFlags = response.content.available_flags;
-      setTimeout(() => $(this.dropdown).selectpicker());
+      setTimeout(() => {
+        $(this.dropdown).selectpicker();
+      });
     });
   }
 }

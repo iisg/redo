@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class RepekaExtension extends ConfigurableExtension {
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container) {
         $this->loadYmlConfigFile('services', $container);
+        $container->setParameter('data_module.default_ui_language', $mergedConfig['default_ui_language']);
         $container->setParameter('data_module.supported_controls', $mergedConfig['supported_controls']);
         $container->setParameter('data_module.max_nesting_depth', $mergedConfig['metadata_nesting_depth']);
         $container->setParameter('elasticsearch.index_name', $mergedConfig['elasticsearch']['index_name']);

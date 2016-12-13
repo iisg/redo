@@ -15,11 +15,13 @@ System.config({
     "aurelia-binding": "npm:aurelia-binding@1.1.0",
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@1.0.1",
     "aurelia-configuration": "github:vheissu/aurelia-configuration@1.0.4",
+    "aurelia-cookie": "npm:aurelia-cookie@1.0.10",
     "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
     "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
     "aurelia-framework": "npm:aurelia-framework@1.0.8",
     "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0",
     "aurelia-http-client": "npm:aurelia-http-client@1.0.3",
+    "aurelia-i18n": "npm:aurelia-i18n@1.2.3",
     "aurelia-loader-default": "npm:aurelia-loader-default@1.0.0",
     "aurelia-logging": "npm:aurelia-logging@1.2.0",
     "aurelia-logging-console": "npm:aurelia-logging-console@1.0.0",
@@ -31,7 +33,7 @@ System.config({
     "aurelia-templating-resources": "npm:aurelia-templating-resources@1.2.0",
     "aurelia-templating-router": "npm:aurelia-templating-router@1.0.1",
     "aurelia-testing": "npm:aurelia-testing@1.0.0-beta.2.0.1",
-    "aurelia-validation": "npm:aurelia-validation@0.13.1",
+    "aurelia-validation": "npm:aurelia-validation@1.0.0-beta.1.0.1",
     "bluebird": "npm:bluebird@3.4.1",
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "bootstrap-material-design": "npm:bootstrap-material-design@0.5.10",
@@ -40,6 +42,7 @@ System.config({
     "compass-mixins": "npm:compass-mixins@0.12.10",
     "fetch": "github:github/fetch@1.1.1",
     "font-awesome": "npm:font-awesome@4.6.3",
+    "i18next-xhr-backend": "npm:i18next-xhr-backend@1.2.1",
     "jquery": "npm:jquery@2.2.4",
     "region-flags": "github:behdad/region-flags@1.0.1",
     "text": "github:systemjs/plugin-text@0.0.9",
@@ -105,6 +108,10 @@ System.config({
       "aurelia-templating-resources": "npm:aurelia-templating-resources@1.2.0",
       "aurelia-templating-router": "npm:aurelia-templating-router@1.0.1"
     },
+    "npm:aurelia-dependency-injection@1.2.0": {
+      "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
+      "aurelia-pal": "npm:aurelia-pal@1.2.0"
+    },
     "npm:aurelia-dependency-injection@1.2.1": {
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
       "aurelia-pal": "npm:aurelia-pal@1.2.0"
@@ -130,6 +137,18 @@ System.config({
     "npm:aurelia-http-client@1.0.3": {
       "aurelia-pal": "npm:aurelia-pal@1.2.0",
       "aurelia-path": "npm:aurelia-path@1.1.1"
+    },
+    "npm:aurelia-i18n@1.2.3": {
+      "aurelia-binding": "npm:aurelia-binding@1.1.0",
+      "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.0",
+      "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
+      "aurelia-loader": "npm:aurelia-loader@1.0.0",
+      "aurelia-logging": "npm:aurelia-logging@1.2.0",
+      "aurelia-pal": "npm:aurelia-pal@1.2.0",
+      "aurelia-templating": "npm:aurelia-templating@1.1.4",
+      "aurelia-templating-resources": "npm:aurelia-templating-resources@1.2.0",
+      "i18next": "npm:i18next@3.5.2",
+      "intl": "npm:intl@1.2.5"
     },
     "npm:aurelia-loader-default@1.0.0": {
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
@@ -209,7 +228,7 @@ System.config({
       "aurelia-pal": "npm:aurelia-pal@1.2.0",
       "aurelia-templating": "npm:aurelia-templating@1.1.4"
     },
-    "npm:aurelia-validation@0.13.1": {
+    "npm:aurelia-validation@1.0.0-beta.1.0.1": {
       "aurelia-binding": "npm:aurelia-binding@1.1.0",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
@@ -246,8 +265,14 @@ System.config({
     "npm:font-awesome@4.6.3": {
       "css": "github:systemjs/plugin-css@0.1.32"
     },
+    "npm:i18next@3.5.2": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
+    },
+    "npm:intl@1.2.5": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:path-browserify@0.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"

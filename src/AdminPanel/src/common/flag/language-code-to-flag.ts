@@ -1,6 +1,6 @@
-import {Language} from "../../language-config/language";
+import {Language} from "../../resources-config/language-config/language";
 import {autoinject} from "aurelia-dependency-injection";
-import {LanguageRepository, LanguagesChangedEvent} from "../../language-config/language-repository";
+import {LanguageRepository, LanguagesChangedEvent} from "../../resources-config/language-config/language-repository";
 import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
@@ -19,10 +19,10 @@ export class LanguageCodeToFlagValueConverter implements ToViewValueConverter {
   }
 
   toView(languageCode: string): string {
-    if (!this.languages) {
+    if (!this.languages || !languageCode) {
       return undefined;
     }
-    let filteredLanguages = this.languages.filter(x => x.code == languageCode);
+    let filteredLanguages = this.languages.filter(x => x.code.toLowerCase() == languageCode.toLowerCase());
     return filteredLanguages[0] ? filteredLanguages[0].flag : undefined;
   }
 }

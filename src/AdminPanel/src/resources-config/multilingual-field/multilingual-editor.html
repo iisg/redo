@@ -1,5 +1,5 @@
 <template>
-    <require from="./language-chooser/language-flag-svg"></require>
+    <require from="../../common/flag/flag"></require>
     <require from="./language-chooser/language-chooser.css"></require>
 
     <h5>${label}</h5>
@@ -9,10 +9,9 @@
             <div class="form-group">
                 <label class="control-label"
                     for.one-time="fieldId">
-                    <span class="flag-icon-xs">
-                        <img src.one-time="language.flag | languageFlagSvg">
-                    </span>
-                    ${language.code}</label>
+                    <flag name.one-time="language.flag"></flag>
+                    ${language.code}
+                </label>
                 <input type="text"
                     class="form-control"
                     id.one-time="fieldId"

@@ -9,7 +9,7 @@ export class ResourceKind {
 }
 
 ValidationRules
-  .ensure('label').displayName("Nazwa wyświetlana").satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
-  .ensure('metadataList').displayName('Metadane').satisfies((metadataList: Metadata[]) => metadataList.length > 0)
-  .withMessage('Rodzaj zasobu musi posiadać metadane.')
+  .ensure('label').displayName("Label").satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
+  .ensure('metadataList').displayName('Metadata').satisfies((metadataList: Metadata[]) => metadataList.length > 0)
+  .withMessageKey('mustHaveMetadata')
   .on(ResourceKind);

@@ -10,6 +10,7 @@ module.exports = {
   html: path.join(appRoot, '**/*.html'),
   jspmConfig: 'jspm.config.js',
   scss: path.join(appRoot, '**/*.scss'),
+  locales: path.join(appRoot, 'locales'),
   output: outputRoot,
   webRoot: webRoot,
   webAdminRoot: path.join(webRoot, 'admin/'),

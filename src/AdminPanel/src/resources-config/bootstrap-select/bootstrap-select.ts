@@ -2,6 +2,7 @@ import {bindable, ComponentAttached} from "aurelia-templating";
 import {bindingMode} from "aurelia-binding";
 import {DOM} from "aurelia-framework";
 import {autoinject} from "aurelia-dependency-injection";
+import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class BootstrapSelect implements ComponentAttached {
@@ -15,7 +16,7 @@ export class BootstrapSelect implements ComponentAttached {
 
   dropdown: Element;
 
-  constructor(private element: Element) {
+  constructor(private element: Element, private ea: EventAggregator) {
   }
 
   valuesChanged() {
@@ -42,6 +43,11 @@ export class BootstrapSelect implements ComponentAttached {
         $(this.dropdown).selectpicker('val', null); // tslint:disable-line:no-null-keyword
         $(this.dropdown).selectpicker('deselectAll');
       }
+    });
+    this.ea.subscribe('i18n:translation:finished', () => {
+      setTimeout(() => {
+        $(this.dropdown).selectpicker('refresh');
+      });
     });
   }
 }

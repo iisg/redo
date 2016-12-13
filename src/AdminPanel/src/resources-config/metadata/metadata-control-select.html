@@ -1,13 +1,11 @@
 <template>
-    <require from="./control-label"></require>
-    <label for="metadata-control">Kontrolka</label>
+    <label for="metadata-control">${'Control' & t}</label>
     <select id="metadata-control"
         value.bind="value"
         class="form-control"
         ref="dropdown">
         <option repeat.for="control of controls"
-            value.bind="control">
-            ${control | controlLabel}
-        </option>
+            value.bind="control"
+            t.one-time="'controls::' + control"></option>
     </select>
 </template>

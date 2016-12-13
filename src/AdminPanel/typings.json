@@ -3,12 +3,14 @@
   "dependencies": {
     "aurelia-binding": "github:aurelia/binding#1.1.0",
     "aurelia-bootstrapper": "github:aurelia/bootstrapper#1.0.0",
+    "aurelia-cookie": "github:Vheissu/aurelia-cookie",
     "aurelia-dependency-injection": "github:aurelia/dependency-injection#1.0.0",
     "aurelia-event-aggregator": "github:aurelia/event-aggregator#1.0.0",
     "aurelia-framework": "github:aurelia/framework#1.0.5",
     "aurelia-history": "github:aurelia/history#1.0.0",
     "aurelia-history-browser": "github:aurelia/history-browser#1.0.0",
     "aurelia-http-client": "github:aurelia/http-client#1.0.2",
+    "aurelia-i18n": "github:aurelia/i18n#1.2.3",
     "aurelia-loader": "github:aurelia/loader#1.0.0",
     "aurelia-logging": "github:aurelia/logging#1.2.0",
     "aurelia-logging-console": "github:aurelia/logging-console#1.0.0",
@@ -25,15 +27,18 @@
     "aurelia-templating-resources": "github:aurelia/templating-resources#1.2.0",
     "aurelia-templating-router": "github:aurelia/templating-router#1.0.1",
     "aurelia-testing": "github:aurelia/testing#1.0.0-beta.2.0.0",
-    "aurelia-validation": "github:aurelia/validation#0.13.1"
+    "aurelia-validation": "github:aurelia/validation#1.0.0-beta.1.0.1"
   },
   "globalDevDependencies": {
     "jasmine": "registry:dt/jasmine#2.5.0+20161119044246"
   },
   "globalDependencies": {
     "bootstrap-select": "registry:dt/bootstrap-select#1.11.2+20161110161159",
+    "i18next": "github:aurelia/i18n/src/customTypings/i18next.d.ts",
+    "i18next-xhr-backend": "github:aurelia/i18n/src/customTypings/i18next-xhr-backend.d.ts",
     "jquery": "registry:dt/jquery#1.10.0+20160929162922",
     "promise.prototype.finally": "registry:dt/promise.prototype.finally#1.0.1+20161005184000",
+    "systemjs": "registry:dt/systemjs#0.19.29+20161215140219",
     "url": "github:aurelia/fetch-client/doc/url.d.ts#bbe0777ef710d889a05759a65fa2c9c3865fc618",
     "whatwg-fetch": "registry:dt/whatwg-fetch#0.0.0+20160524142046"
   }

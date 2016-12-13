@@ -1,6 +1,5 @@
 <template>
     <require from="./metadata-form"></require>
-    <require from="./control-label"></require>
     <require from="../multilingual-field/multilingual-display"></require>
     <require from="../add-form/animated-plus-button"></require>
 
@@ -17,11 +16,11 @@
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nazwa</th>
-                    <th>Nazwa wyświetlana</th>
-                    <th>Kontrolka</th>
-                    <th>Opis</th>
-                    <th>Podpowiedź</th>
+                    <th>${'Name' & t}</th>
+                    <th>${'Label' & t}</th>
+                    <th>${'Control' & t}</th>
+                    <th>${'Description' & t}</th>
+                    <th>${'Hint' & t}</th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -41,7 +40,7 @@
                     <td>
                         <multilingual-display value.one-time="metadata.label"></multilingual-display>
                     </td>
-                    <td>${metadata.control | controlLabel}</td>
+                    <td>${'controls::' + metadata.control & t}</td>
                     <td>
                         <multilingual-display value.one-time="metadata.description"></multilingual-display>
                     </td>

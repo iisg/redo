@@ -1,5 +1,5 @@
 import {BootstrapValidationRenderer} from "./bootstrap-validation-renderer";
-import {RenderInstruction, RenderErrorInstruction, ValidationError} from "aurelia-validation";
+import {RenderInstruction, ResultInstruction, ValidateResult} from "aurelia-validation";
 import "jquery";
 
 describe(BootstrapValidationRenderer.name, () => {
@@ -8,28 +8,28 @@ describe(BootstrapValidationRenderer.name, () => {
 
   class TestRenderInstruction implements RenderInstruction {
     kind;
-    render: RenderErrorInstruction[] = [];
-    unrender: RenderErrorInstruction[] = [];
+    render: ResultInstruction[] = [];
+    unrender: ResultInstruction[] = [];
 
     addRender(errorId: number, elementSelector: string): TestRenderInstruction {
-      this.render.push(this.newRenderErrorInstruction(errorId, elementSelector));
+      this.render.push(TestRenderInstruction.newResultInstruction(errorId, elementSelector));
       return this;
     }
 
     addUnrender(errorId: number, elementSelector: string): TestRenderInstruction {
-      this.unrender.push(this.newRenderErrorInstruction(errorId, elementSelector));
+      this.unrender.push(TestRenderInstruction.newResultInstruction(errorId, elementSelector));
       return this;
     }
 
-    private newRenderErrorInstruction(errorId: number, elementSelector: string) {
-      return <RenderErrorInstruction>{
-        error: this.newError(errorId),
+    private static newResultInstruction(errorId: number, elementSelector: string) {
+      return <ResultInstruction>{
+        result: TestRenderInstruction.newError(errorId),
         elements: [html.find(`${elementSelector} input`)[0]]
       };
     };
 
-    private newError(id: number): ValidationError {
-      let error = new ValidationError({}, `Error ${id}`, {});
+    private static newError(id: number): ValidateResult {
+      let error = new ValidateResult({}, {}, undefined, false, `Error ${id}`);
       error.id = id;
       return error;
     }
