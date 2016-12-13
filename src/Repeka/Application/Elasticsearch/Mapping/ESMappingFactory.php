@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Application\Elasticsearch\Mapping;
 
+use Repeka\Domain\Repository\LanguageRepository;
+
 class ESMappingFactory {
     /** @var int */
     private $nestingDepth;
@@ -11,9 +13,9 @@ class ESMappingFactory {
     /** @var string[] */
     private $metadataClasses;
 
-    public function __construct(int $nestingDepth, array $languages, array $analyzerNames, array $metadataClasses) {
+    public function __construct(int $nestingDepth, LanguageRepository $languageRepository, array $analyzerNames, array $metadataClasses) {
         $this->nestingDepth = $nestingDepth;
-        $this->languages = array_map('strtolower', $languages);
+        $this->languages = array_map('strtolower', $languageRepository->getAvailableLanguageCodes());
         $this->analyzerNames = $analyzerNames;
         $this->metadataClasses = $metadataClasses;
     }

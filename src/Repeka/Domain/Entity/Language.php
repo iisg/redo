@@ -2,19 +2,20 @@
 namespace Repeka\Domain\Entity;
 
 class Language {
-    private $id;
+    private $code;
 
     private $flag;
 
     private $name;
 
-    public function __construct(string $flag, string $name) {
+    public function __construct(string $code, string $flag, string $name) {
+        $this->code = $code;
         $this->flag = $flag;
         $this->name = $name;
     }
 
-    public function getId(): int {
-        return $this->id;
+    public function getCode(): string {
+        return $this->code;
     }
 
     public function getFlag(): string {

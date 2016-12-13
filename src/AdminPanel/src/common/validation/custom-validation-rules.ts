@@ -1,11 +1,11 @@
 import {validationMessages, ValidationRules} from "aurelia-validation";
 import {autoinject, Container} from "aurelia-dependency-injection";
-import {RequiredInMainLanguageValidationRule} from "./rules/required-in-main-language";
+import {RequiredInAllLanguagesValidationRule} from "./rules/required-in-all-languages";
 
 @autoinject
 export class CustomValidationRules {
   private static readonly CUSTOM_RULES: Function[] = [
-    RequiredInMainLanguageValidationRule
+    RequiredInAllLanguagesValidationRule
   ];
 
   constructor(private container: Container) {

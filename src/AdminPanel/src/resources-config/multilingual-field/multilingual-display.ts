@@ -13,7 +13,7 @@ export class MultilingualDisplay {
         let text = newValue[availableLanguage];
         if (text && text.trim()) {
           this.availableValues.push({
-            language: availableLanguage,
+            languageCode: availableLanguage,
             text: text
           });
         }

@@ -7,11 +7,19 @@
         </div>
         <div class="form-group label-floating">
             <label class="control-label"
-                for="focusedInput1">Język</label>
+                for="languageInput">Język</label>
             <input type="text"
                 class="form-control"
-                id="focusedInput1"
+                id="languageInput"
                 value.bind="language.name & validate">
+        </div>
+        <div class="form-group label-floating">
+            <label class="control-label"
+                for="codeNameInput">Nazwa kodowa</label>
+            <input type="text"
+                class="form-control"
+                id="codeNameInput"
+                value.bind="language.code & validate">
         </div>
         <div class="form-group text-right">
             <button class="btn btn-primary"

@@ -8,7 +8,9 @@ class LanguageCreateCommandValidator extends CommandAttributesValidator {
 
     protected function getValidator(): Validator {
         return Validator
-            ::attribute('flag', Validator::notBlank())
+            ::attribute('code', Validator::regex('/^[A-Z-]*$/'))
+            ->attribute('code', Validator::notBlank())
+            ->attribute('flag', Validator::notBlank())
             ->attribute('name', Validator::notBlank());
     }
 }

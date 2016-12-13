@@ -11,7 +11,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-// TODO remove this when actual indexing is introduced
+/**
+ * example: bin/console repeka:elasticsearch:index-file pan-tadeusz.txt pl
+ * files: https://confluence.fslab.agh.edu.pl/download/attachments/48891017/txt_it_pl.7z?api=v2
+ * TODO remove this when actual indexing is introduced
+ */
 class IndexFileCommand extends ContainerAwareCommand {
     protected function configure() {
         $this
@@ -27,7 +31,7 @@ class IndexFileCommand extends ContainerAwareCommand {
      * @inheritdoc
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $supportedLanguages = array_map('strtolower', $this->getContainer()->getParameter('data_module.supported_languages'));
+        $supportedLanguages = array_map('strtolower', $this->getContainer()->get('repository.language')->getAvailableLanguageCodes());
         $language = trim($input->getArgument('language'));
         if (!in_array($language, $supportedLanguages)) {
             throw new \Exception(sprintf("Unsupported language '%s'", $language));

@@ -20,11 +20,12 @@
                     <tr>
                         <th>Flaga</th>
                         <th>Język</th>
+                        <th>Nazwa kodowa</th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr if.bind="!languageList">
-                        <th colspan="2">
+                        <th colspan="3">
                             <div class="progress progress-striped active">
                                 <div class="progress-bar progress-bar-success progress-bar-full"></div>
                             </div>
@@ -41,6 +42,7 @@
                             ${language.flag}
                         </td>
                         <td>${language.name}</td>
+                        <td>${language.code}</td>
                     </tr>
                     </tbody>
                 </table>

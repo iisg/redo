@@ -12,10 +12,6 @@ repeka:
     - date
     - daterange
     - boolean
-  supported_languages:
-    - PL
-    - EN
-    - DE
   metadata_nesting_depth: 3
   elasticsearch:
     index_name: repeka

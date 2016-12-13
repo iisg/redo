@@ -1,27 +1,27 @@
-import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {ComponentAttached} from "aurelia-templating";
 import {Language} from "./language";
 import {FloatingAddFormController} from "../add-form/floating-add-form";
+import {LanguageRepository} from "./language-repository";
 
 @autoinject
 export class LanguageList implements ComponentAttached {
   languageList: Language[];
   addFormController: FloatingAddFormController = {};
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private languageRepository: LanguageRepository) {
   }
 
   attached(): void {
-    this.httpClient.get('languages').then(response => {
-      this.languageList = response.content;
+    this.languageRepository.findAll().then(languages => {
+      this.languageList = languages;
     });
   }
 
   addNewLanguage(newLanguage: Language) {
-    return this.httpClient.post('languages', newLanguage).then(response => {
+    return this.languageRepository.addNew(newLanguage).then(language => {
       this.addFormController.hide();
-      this.languageList.push(response.content);
+      this.languageList.push(language);
     });
   }
 }

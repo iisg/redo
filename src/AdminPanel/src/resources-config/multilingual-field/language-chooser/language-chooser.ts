@@ -1,24 +1,38 @@
-import {bindable, ComponentAttached} from "aurelia-templating";
+import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import {bindingMode} from "aurelia-binding";
-import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
+import {Language} from "../../language-config/language";
+import {LanguageRepository, LanguagesChangedEvent} from "../../language-config/language-repository";
+import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 
 @autoinject
-export class LanguageChooser implements ComponentAttached {
-  languages: String[];
-
+export class LanguageChooser implements ComponentAttached, ComponentDetached {
+  languages: Language[];
   @bindable({defaultBindingMode: bindingMode.twoWay})
-  language: String;
+  language: Language;
 
-  constructor(config: Configure) {
-    this.languages = config.get('supported_languages');
+  private readonly changeSubscriber: Subscription;
+
+  constructor(private languageRepository: LanguageRepository, private eventAggregator: EventAggregator) {
+    this.changeSubscriber = eventAggregator.subscribe(LanguagesChangedEvent, () => this.fetchLanguages());
   }
 
-  attached() {
-    this.setCurrentLanguage(this.languages[0]);
+  private fetchLanguages() {
+    this.languageRepository.findAll().then(languages => {
+      this.languages = languages;
+      this.setCurrentLanguage(this.languages[0]);
+    });
   }
 
-  setCurrentLanguage(language: String) {
+  attached(): void {
+    this.fetchLanguages();
+  }
+
+  detached(): void {
+    this.changeSubscriber.dispose();
+  }
+
+  setCurrentLanguage(language: Language) {
     this.language = language;
   }
 }

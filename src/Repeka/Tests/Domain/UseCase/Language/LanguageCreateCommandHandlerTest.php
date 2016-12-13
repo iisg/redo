@@ -15,7 +15,7 @@ class LanguageCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     private $handler;
 
     protected function setUp() {
-        $this->languageCreateCommand = new LanguageCreateCommand('PL', 'polski');
+        $this->languageCreateCommand = new LanguageCreateCommand('CA-FR', 'PL', 'polski');
         $this->languageRepository = $this->createMock(LanguageRepository::class);
         $this->handler = new LanguageCreateCommandHandler($this->languageRepository);
     }
@@ -23,6 +23,7 @@ class LanguageCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     public function testCreatingMetadata() {
         $this->languageRepository->expects($this->once())->method('save')->willReturnArgument(0);
         $language = $this->handler->handle($this->languageCreateCommand);
+        $this->assertEquals('CA-FR', $language->getCode());
         $this->assertEquals('PL', $language->getFlag());
         $this->assertEquals('polski', $language->getName());
     }

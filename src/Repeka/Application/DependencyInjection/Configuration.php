@@ -14,7 +14,6 @@ class Configuration implements ConfigurationInterface {
         // @formatter:off because indentation makes config structure way clearer
         $rootNode
             ->children()
-                ->arrayNode('supported_languages')->prototype('scalar')->end()->end()
                 ->arrayNode('supported_controls')->prototype('scalar')->end()->end()
                 ->integerNode('metadata_nesting_depth')->min(1)->end()
                 ->arrayNode('elasticsearch')

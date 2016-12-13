@@ -5,7 +5,7 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommandValidator;
 
-class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
+class LanguageCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     /** @var LanguageCreateCommandValidator */
     private $validator;
 
@@ -14,7 +14,31 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPassingValidation() {
-        $command = new LanguageCreateCommand('PL', 'polski');
+        $command = new LanguageCreateCommand('CA-FR', 'PL', 'polski');
+        $this->validator->validate($command);
+    }
+
+    /**
+     * @expectedException Repeka\Domain\Exception\InvalidCommandException
+     */
+    public function testFailsValidationBecauseUnderscore() {
+        $command = new LanguageCreateCommand('CA_FR', 'PL', 'polski');
+        $this->validator->validate($command);
+    }
+
+    /**
+     * @expectedException Repeka\Domain\Exception\InvalidCommandException
+     */
+    public function testFailsValidationBecauseNoUpperCase() {
+        $command = new LanguageCreateCommand('fr', 'PL', 'polski');
+        $this->validator->validate($command);
+    }
+
+    /**
+     * @expectedException Repeka\Domain\Exception\InvalidCommandException
+     */
+    public function testFailsValidationBecauseOfNoCode() {
+        $command = new LanguageCreateCommand('', 'PL', 'polski');
         $this->validator->validate($command);
     }
 
@@ -22,7 +46,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
      * @expectedException Repeka\Domain\Exception\InvalidCommandException
      */
     public function testFailsValidationBecauseOfNoFlag() {
-        $command = new LanguageCreateCommand('', 'polski');
+        $command = new LanguageCreateCommand('CA-FR', '', 'polski');
         $this->validator->validate($command);
     }
 
@@ -30,7 +54,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
      * @expectedException Repeka\Domain\Exception\InvalidCommandException
      */
     public function testFailsValidationBecauseOfNoLanguageName() {
-        $command = new LanguageCreateCommand('PL', '');
+        $command = new LanguageCreateCommand('CA-FR', 'PL', '');
         $this->validator->validate($command);
     }
 }

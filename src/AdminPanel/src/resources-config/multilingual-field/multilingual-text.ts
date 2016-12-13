@@ -3,11 +3,12 @@ import {bindable} from "aurelia-templating";
 import {inject} from "aurelia-dependency-injection";
 import {DOM} from "aurelia-framework";
 import {generateId} from "../../common/utils/string-utils";
+import {Language} from "../language-config/language";
 
 @inject(Element)
 export class MultilingualText {
   @observable
-  currentLanguage: string;
+  currentLanguage: Language;
 
   @bindable({defaultBindingMode: bindingMode.twoWay})
   value: Object = {};

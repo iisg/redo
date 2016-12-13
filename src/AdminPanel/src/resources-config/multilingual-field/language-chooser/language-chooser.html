@@ -6,9 +6,9 @@
         class="btn btn-raised dropdown-toggle"
         data-toggle="dropdown">
         <span class="flag-icon-sm">
-            <img src.bind="language | languageFlagSvg">
+            <img src.bind="language.flag | languageFlagSvg">
         </span>
-        ${language}
+        ${language.code}
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
@@ -16,9 +16,9 @@
             show.bind="lang != language">
             <a click.delegate="setCurrentLanguage(lang)">
                 <span class="flag-icon-sm">
-                    <img src.one-time="lang | languageFlagSvg">
+                    <img src.one-time="lang.flag | languageFlagSvg">
                 </span>
-                ${lang & oneTime}
+                ${lang.code & oneTime}
             </a>
         </li>
     </ul>

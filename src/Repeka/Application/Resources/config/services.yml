@@ -73,7 +73,7 @@ services:
   command_validator.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
     arguments:
-      - '%data_module.main_language%'
+      - '@repository.language'
       - '%data_module.supported_controls%'
 
   command_validator.language_create:
@@ -103,7 +103,7 @@ services:
     class: Repeka\Application\Elasticsearch\Mapping\ESMappingFactory
     arguments:
       - '%data_module.max_nesting_depth%'
-      - '%data_module.supported_languages%'
+      - '@repository.language'
       - '%elasticsearch.analyzers%'
       -
         - 'Repeka\Application\Elasticsearch\Model\IntIndexedMetadata'

@@ -10,7 +10,7 @@
             ref="textInput"
             class="form-control"
             blur.trigger="blur()"
-            value.bind="value[currentLanguage]">
+            value.bind="value[currentLanguage.code]">
         <span class="input-group-btn"
             as-element="language-chooser"
             language.bind="currentLanguage"></span>
