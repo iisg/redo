@@ -1,0 +1,9 @@
+{
+  "text": "Tekst",
+  "textarea": "Długi tekst",
+  "int": "Liczba całkowita",
+  "double": "Liczba rzeczywista",
+  "date": "Data",
+  "daterange": "Zakres dat",
+  "boolean": "Prawda / fałsz"
+}

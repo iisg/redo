@@ -1,14 +1,14 @@
 import {route, nested, flatten} from "./common/routes/route-utils";
 
 const routes = flatten([
-  route('', 'home', 'Przegląd', 'dashboard'),
-  route('zasoby', 'resources/resources-list', 'Zasoby', 'book'),
-  nested('Konfiguracja zasobów', 'database', [
-    route('metadane', 'resources-config/metadata/metadata-list', 'Metadane'),
-    route('rodzaje-zasobow', 'resources-config/resource-kind/resource-kind-list', 'Rodzaje zasobów'),
-    route('jezyki', 'resources-config/language-config/language-list', 'Języki')
+  route('', 'home', 'Overview', 'dashboard'),
+  route('resources', 'resources/resources-list', 'Resources', 'book'),
+  nested('Resources Setup', 'database', [
+    route('metadata', 'resources-config/metadata/metadata-list', 'Metadata'),
+    route('resource-kinds', 'resources-config/resource-kind/resource-kind-list', 'Resource Kinds'),
+    route('languages', 'resources-config/language-config/language-list', 'Languages')
   ]),
-  route('o-systemie', 'about/about', 'O systemie', 'info-circle'),
+  route('about', 'about/about', 'About', 'info-circle'),
 ]);
 
 export default routes;

@@ -22,8 +22,8 @@ export class LanguageForm {
 
   validateAndSubmit() {
     this.submitting = true;
-    this.controller.validate().then(errors => {
-      if (errors.length == 0) {
+    this.controller.validate().then(result => {
+      if (result.valid) {
         return Promise.resolve(this.submit({language: this.language}))
           .then(() => this.language = new Language);
       }

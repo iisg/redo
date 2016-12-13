@@ -6,7 +6,7 @@ import {bindingMode} from "aurelia-binding";
 import {generateId} from "../../common/utils/string-utils";
 
 @autoinject
-export class MultilingualText {
+export class MultilingualEditor {
   languages: Language[];
 
   fieldId: string = generateId();

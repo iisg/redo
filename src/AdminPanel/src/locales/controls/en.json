@@ -1,0 +1,9 @@
+{
+  "text": "Text",
+  "textarea": "Long text",
+  "int": "Integer",
+  "double": "Real number",
+  "date": "Date",
+  "daterange": "Date range",
+  "boolean": "True / false"
+}

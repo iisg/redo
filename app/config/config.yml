@@ -4,6 +4,7 @@ imports:
   - { resource: config_build.yml}
 
 repeka:
+  default_ui_language: pl
   supported_controls:
     - text
     - textarea

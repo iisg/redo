@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "translatedName": "Polski"
+  },
+  "Administration Panel": "Panel administracyjny",
+  "Data import": "Import danych",
+  "Import data from Excel": "Importuj dane z Excela",
+  "Import data from KOHA": "Importuj dane z KOHA",
+  "Name": "Nazwa",
+  "Label": "Nazwa wyświetlana",
+  "Control": "Kontrolka",
+  "Description": "Opis",
+  "Hint": "Podpowiedź",
+  "Add": "Dodaj",
+  "Flag": "Flaga",
+  "Language": "Język",
+  "Select flag": "Wybierz flagę",
+  "Code": "Kod",
+  "Metadata": "Metadane",
+  "Add new resource kind": "Dodaj nowy rodzaj zasobu",
+  "Add new metadata": "Dodaj nową metadaną",
+  "Add next metadata": "Dodaj kolejną metadaną",
+  "Select": "Wybierz",
+  "Add new resource": "Dodaj nowy zasób",
+  "No. of metadata:": "Liczba metadanych:",
+  "Resource kind": "Rodzaj zasobu"
+}

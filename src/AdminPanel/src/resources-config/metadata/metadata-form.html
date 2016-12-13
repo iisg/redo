@@ -3,11 +3,11 @@
 
     <form class="well"
         submit.delegate="validateAndSubmit()">
-        <h2>Dodaj nową metadaną</h2>
+        <h2>${'Add new metadata' & t}</h2>
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label for="metadataName">Nazwa</label>
+                    <label for="metadataName">${'Name' & t}</label>
                     <input type="text"
                         value.bind="metadata.name & validate"
                         class="form-control"
@@ -25,7 +25,7 @@
             <button class="btn btn-primary"
                 disabled.bind="submitting">
                 <i class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></i>
-                Dodaj
+                ${'Add' & t}
             </button>
         </div>
     </form>

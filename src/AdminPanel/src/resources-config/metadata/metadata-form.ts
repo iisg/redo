@@ -22,8 +22,8 @@ export class MetadataForm {
 
   validateAndSubmit() {
     this.submitting = true;
-    this.controller.validate().then(errors => {
-      if (errors.length == 0) {
+    this.controller.validate().then(result => {
+      if (result.valid) {
         return Promise.resolve(this.submit({metadata: this.metadata}))
           .then(() => this.metadata = new Metadata);
       }

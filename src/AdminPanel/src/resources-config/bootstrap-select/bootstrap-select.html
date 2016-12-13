@@ -3,7 +3,8 @@
     <select class="selectpicker show-tick form-control"
         ref="dropdown"
         change.delegate="stopPropagation($event)"
-        value.bind="value">
+        value.bind="value"
+        title="&mdash;">
         <option class="hidden">${title}</option>
         <option repeat.for="option of values"
             model.bind="option">

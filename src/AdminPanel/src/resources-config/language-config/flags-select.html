@@ -1,10 +1,11 @@
 <template>
-    <require from="../multilingual-field/language-chooser/language-flag-svg"></require>
+    <require from="../../common/flag/language-flag-svg"></require>
+    <require from="../../common/flag/flag.css"></require>
     <require from="../multilingual-field/language-chooser/language-chooser.css"></require>
     <require from="../multilingual-field/multilingual-field.css"></require>
     <select class="selectpicker show-tick form-control"
         data-live-search="true"
-        title="Wybierz flagę"
+        title="&mdash;"
         ref="dropdown"
         value.bind="value">
         <option repeat.for="flag of availableFlags"

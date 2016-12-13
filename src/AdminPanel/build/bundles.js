@@ -4,7 +4,8 @@ module.exports = {
       "includes": [
         "[**/*.js]",
         "**/*.html!text",
-        "**/*.css!text"
+        "**/*.css!text",
+        "locales/**/*.json!text"
       ],
       "excludes": [
         "[resources-config/**]",
@@ -35,11 +36,13 @@ module.exports = {
       "includes": [
         "arrive",
         "aurelia-configuration",
+        "aurelia-cookie",
         "aurelia-framework",
         "aurelia-bootstrapper",
         "aurelia-http-client",
         "aurelia-router",
         "aurelia-animator-css",
+        "aurelia-i18n",
         "aurelia-templating-binding",
         "aurelia-polyfills",
         "aurelia-templating-resources",
@@ -53,6 +56,7 @@ module.exports = {
         "bootstrap-material-design/dist/css/ripples.min.css!text",
         "bootstrap-select",
         "bootstrap-select/dist/css/bootstrap-select.min.css!text",
+        "i18next-xhr-backend",
         "jquery",
         "text"
       ],

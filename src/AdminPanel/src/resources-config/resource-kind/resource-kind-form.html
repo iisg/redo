@@ -3,14 +3,14 @@
     <require from="./resource-kind-metadata-form"></require>
     <require from="../metadata/metadata-form"></require>
     <require from="../metadata/metadata-editable-properties.html"></require>
-    <require from="../multilingual-field/multilingual-text"></require>
+    <require from="../multilingual-field/multilingual-editor"></require>
 
     <form class="well"
         submit.delegate="validateAndSubmit()">
-        <h2>Dodaj nowy rodzaj zasobu</h2>
+        <h2>${'Add new resource kind' & t}</h2>
         <div class="form-group label-floating">
-            <multilingual-text label="Nazwa"
-                value.bind="resourceKind.label & validate"></multilingual-text>
+            <multilingual-editor label="${'Name' & t}"
+                value.bind="resourceKind.label & validate"></multilingual-editor>
         </div>
         <div class="form-group">
             <div class="row au-stagger">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="container-fluid form-group">
-                    <label>Dodaj kolejną metadaną</label>
+                    <label>${'Add next metadata' & t}</label>
                     <resource-kind-metadata-chooser change.delegate="addNewMetadata($event)"
                         resource-kind.bind="resourceKind"></resource-kind-metadata-chooser>
                 </div>
@@ -36,7 +36,7 @@
                 <button class="btn btn-primary"
                     disabled.bind="submitting">
                     <i class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></i>
-                    Dodaj
+                    ${'Add' & t}
                 </button>
             </div>
         </div>

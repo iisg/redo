@@ -24,10 +24,6 @@ export class RequiredInAllLanguagesValidationRule implements CustomValidationRul
     return RequiredInAllLanguagesValidationRule.NAME;
   }
 
-  message(): string {
-    return `\${$displayName} musi posiadać wartość w każdym języku.`;
-  }
-
   validationFunction(): (object) => boolean {
     return (value) => {
       if (typeof value != 'object') {

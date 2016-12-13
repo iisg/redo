@@ -1,9 +1,6 @@
 <template>
-
     <require from="./language-form"></require>
-    <require from="../multilingual-field/language-chooser/language-flag-svg"></require>
-    <require from="../multilingual-field/language-chooser/language-chooser.css"></require>
-    <require from="../multilingual-field/multilingual-field.css"></require>
+    <require from="../../common/flag/flag"></require>
     <require from="../add-form/floating-add-form"></require>
 
     <div class="language-list">
@@ -16,9 +13,9 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Flaga</th>
-                        <th>Język</th>
-                        <th>Nazwa kodowa</th>
+                        <th>${'Flag' & t}</th>
+                        <th>${'Language' & t}</th>
+                        <th>${'Code' & t}</th>
                     </tr>
                     </thead>
                     <tfoot>
@@ -34,9 +31,7 @@
                     <tr class="au-animate fade-inout-updown flash"
                         repeat.for="language of languageList">
                         <td>
-                            <span class="flag-icon-xs">
-                                <img src="${language.flag | languageFlagSvg}">
-                            </span>
+                            <flag name.one-time="language.flag"></flag>
                             ${language.flag}
                         </td>
                         <td>${language.name}</td>
@@ -47,5 +42,4 @@
             </div>
         </div>
     </div>
-
 </template>

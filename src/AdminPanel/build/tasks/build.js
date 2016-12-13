@@ -1,17 +1,20 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var paths = require('../paths');
-var plumber = require('gulp-plumber');
-var changed = require('gulp-changed');
-var htmlmin = require('gulp-htmlmin');
-var sourcemaps = require('gulp-sourcemaps');
-var notify = require('gulp-notify');
-var typescript = require('gulp-typescript');
-var sass = require('gulp-sass');
-var symlink = require("symlink-or-copy").sync;
-var path = require('path');
+'use strict';
 
-var typescriptCompiler;
+const gulp = require('gulp');
+const runSequence = require('run-sequence');
+const paths = require('../paths');
+const plumber = require('gulp-plumber');
+const changed = require('gulp-changed');
+const htmlmin = require('gulp-htmlmin');
+const sourcemaps = require('gulp-sourcemaps');
+const notify = require('gulp-notify');
+const typescript = require('gulp-typescript');
+const sass = require('gulp-sass');
+const symlink = require("symlink-or-copy").sync;
+const path = require('path');
+const minifyJSON = require('gulp-jsonminify');
+
+let typescriptCompiler;
 gulp.task('build-scripts', () => {
   if (!typescriptCompiler) {
     typescriptCompiler = typescript.createProject('tsconfig.json');
@@ -49,9 +52,17 @@ gulp.task('build-css', () => {
     .pipe(gulp.dest(paths.output));
 });
 
+gulp.task('build-locales', () => {
+  return gulp.src(path.join(paths.locales, '**/*.json'), {base: paths.root})
+    .pipe(plumber({errorHandler: notify.onError('Locales: <%= error.message %>')}))
+    .pipe(changed(paths.output))
+    .pipe(minifyJSON())
+    .pipe(gulp.dest(paths.output));
+});
+
 gulp.task('copy-jspm-config', () => {
   return gulp.src(paths.jspmConfig)
-    .pipe(plumber({errorHandler: notify.onError('HTML: <%= error.message %>')}))
+    .pipe(plumber({errorHandler: notify.onError('JSPM config: <%= error.message %>')}))
     .pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest(paths.webAdminRoot));
 });
@@ -67,7 +78,7 @@ gulp.task('symlink-dist', () => {
 gulp.task('build', (callback) => {
   return runSequence(
     'clean',
-    ['build-scripts', 'build-index', 'build-html', 'build-css', 'symlink-jspm-packages'],
+    ['build-scripts', 'build-index', 'build-html', 'build-css', 'build-locales', 'symlink-jspm-packages'],
     ['symlink-dist', 'copy-jspm-config'],
     callback
   );

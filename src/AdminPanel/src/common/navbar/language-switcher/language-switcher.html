@@ -1,0 +1,18 @@
+<template>
+    <require from="../../flag/flag"></require>
+
+    <a data-target="#"
+        class="dropdown-toggle"
+        data-toggle="dropdown">
+        <flag code.bind="currentLanguage"></flag>
+        <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+        <li repeat.for="language of languages">
+            <a click.delegate="select(language)" show.bind="language != currentLanguage">
+                <flag code.one-time="language"></flag>
+                ${'meta//translatedName' & t: {"lng": language, "defaultValue": language.toUpperCase()} }
+            </a>
+        </li>
+    </ul>
+</template>

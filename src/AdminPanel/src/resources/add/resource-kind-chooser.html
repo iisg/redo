@@ -4,10 +4,10 @@
     <bootstrap-select values.bind="resourceKinds"
         value.bind="value"
         live-search="true"
-        title="Wybierz rodzaj zasobu">
+        title="&mdash;">
         <template replace-part="option-template">
             <multilingual-display value.one-time="option.label"></multilingual-display>
-            Liczba metadanych: ${option.metadataList.length}
+            ${'No. of metadata:' & t} ${option.metadataList.length}
         </template>
     </bootstrap-select>
 </template>
