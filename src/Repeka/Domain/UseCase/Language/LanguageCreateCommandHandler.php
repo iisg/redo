@@ -20,7 +20,7 @@ class LanguageCreateCommandHandler {
     }
 
     private function toLanguage(LanguageCreateCommand $command): Language {
-        $language = new Language($command->getFlag(), $command->getName());
+        $language = new Language($command->getCode(), $command->getFlag(), $command->getName());
         return $language;
     }
 }

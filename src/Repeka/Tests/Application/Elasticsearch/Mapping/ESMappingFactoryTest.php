@@ -4,10 +4,13 @@ namespace Repeka\Tests\Application\Elasticsearch\Mapping;
 use Repeka\Application\Elasticsearch\Mapping\ESMappingFactory;
 use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
 use Repeka\Application\Elasticsearch\Model\IndexedMetadata;
+use Repeka\Domain\Repository\LanguageRepository;
 
 class ESMappingFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testLanguageAgnosticMapping() {
-        $factory = new ESMappingFactory(1, [], [], [
+        $repository = $this->createMock(LanguageRepository::class);
+        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['PL']);
+        $factory = new ESMappingFactory(1, $repository, [], [
             'Repeka\Tests\Application\Elasticsearch\Mapping\MappingFactoryTestMetadata1',
             'Repeka\Tests\Application\Elasticsearch\Mapping\MappingFactoryTestMetadata2Value1'
         ]);
@@ -24,8 +27,10 @@ class ESMappingFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testMappingDepth() {
+        $repository = $this->createMock(LanguageRepository::class);
+        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['PL']);
         $nestingDepth = 3;
-        $factory = new ESMappingFactory($nestingDepth, [], [], [
+        $factory = new ESMappingFactory($nestingDepth, $repository, [], [
             'Repeka\Tests\Application\Elasticsearch\Mapping\MappingFactoryTestMetadata2Value1'
         ]);
         $mapping = $factory->getMappingArray();
@@ -42,7 +47,9 @@ class ESMappingFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testLanguageStringFields() {
-        $factory = new ESMappingFactory(1, ['en', 'de', 'test'], [], [
+        $repository = $this->createMock(LanguageRepository::class);
+        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['en', 'de', 'test']);
+        $factory = new ESMappingFactory(1, $repository, [], [
             'Repeka\Tests\Application\Elasticsearch\Mapping\MappingFactoryLocalizedTestMetadata'
         ]);
         $mapping = $factory->getMappingArray();
@@ -58,8 +65,10 @@ class ESMappingFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testConflictingMappingRequirements() {
+        $repository = $this->createMock(LanguageRepository::class);
+        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['PL']);
         $this->expectException('Exception');
-        $factory = new ESMappingFactory(1, [], [], [
+        $factory = new ESMappingFactory(1, $repository, [], [
             'Repeka\Tests\Application\Elasticsearch\Mapping\MappingFactoryTestMetadata2Value1',
             'Repeka\Tests\Application\Elasticsearch\Mapping\MappingFactoryTestMetadata2Value2'
         ]);
@@ -67,9 +76,11 @@ class ESMappingFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAssigningAnalyzers() {
-        $factory = new ESMappingFactory(1, ['en', 'test'], ['test' => 'testAnalyzer'], [
+        $repository = $this->createMock(LanguageRepository::class);
+        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['en', 'test']);
+        $factory = new ESMappingFactory(1, $repository, ['test' => 'testAnalyzer'], [
             'Repeka\Tests\Application\Elasticsearch\Mapping\MappingFactoryLocalizedTestMetadata'
-            ]);
+        ]);
         $mapping = $factory->getMappingArray();
         $properties = $mapping[ResourceConstants::CHILDREN]['properties'];
         $this->assertEquals('testAnalyzer', $properties[MappingFactoryLocalizedTestMetadata::field('test')]);

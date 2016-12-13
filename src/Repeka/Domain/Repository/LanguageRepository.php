@@ -9,5 +9,10 @@ interface LanguageRepository {
      */
     public function findAll();
 
+    /**
+     * @return string[]
+     */
+    public function getAvailableLanguageCodes(): array;
+
     public function save(Language $language): Language;
 }

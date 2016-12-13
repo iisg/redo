@@ -3,9 +3,10 @@ Repeka\Domain\Entity\Language:
   table: language
   repositoryClass: Repeka\Application\Repository\LanguageDoctrineRepository
   id:
-    id:
-      type: integer
-      generator: {strategy: AUTO}
+    code:
+      type: string
+      length: 5
+      unique: true
   fields:
     flag:
       type: string

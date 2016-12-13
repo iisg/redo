@@ -11,7 +11,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-// TODO remove this when actual indexing is introduced
+/**
+ * example: bin/console repeka:elasticsearch:search zosia
+ * TODO remove this when actual indexing is introduced
+ */
 class SearchCommand extends ContainerAwareCommand {
     protected function configure() {
         $this
@@ -68,7 +71,7 @@ class SearchCommand extends ContainerAwareCommand {
                 ->addMust($qb->query()->term(['metadata.' . ResourceConstants::TOKENIZED_STRING => $author]));
         }
         if ($content) {
-            $supportedLanguages = $this->getContainer()->getParameter('data_module.supported_languages');
+            $supportedLanguages = $this->getContainer()->get('repository.language')->getAvailableLanguageCodes();
             $multiLanguageContentQuery = $qb->query()->bool();
             foreach ($supportedLanguages as $language) {
                 $language = strtolower($language);

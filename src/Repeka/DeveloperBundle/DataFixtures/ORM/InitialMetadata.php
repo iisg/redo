@@ -18,17 +18,17 @@ class InitialMetadata extends ContainerAwareFixture {
             'label' => [
                 'PL' => 'Tytuł',
                 'EN' => 'Title',
-                'DE' => 'Titel',
+                'GER' => 'Titel',
             ],
             'description' => [
                 'PL' => 'Tytuł zasobu',
                 'EN' => 'The title of the resource',
-                'DE' => 'Ressourcen Titel',
+                'GER' => 'Ressourcen Titel',
             ],
             'placeholder' => [
                 'PL' => 'Znajdziesz go na okładce',
                 'EN' => 'Find it on the cover',
-                'DE' => 'Sie finden es auf der Abdeckung',
+                'GER' => 'Sie finden es auf der Abdeckung',
             ],
             'control' => 'text',
         ]));

@@ -3,7 +3,7 @@
 namespace Repeka\Domain\Validation;
 
 /**
- * @method static Validator notBlankInLanguage(string $language)
+ * @method static Validator notBlankInAllLanguages(array $languages)
  */
 class Validator extends \Respect\Validation\Validator {
 }

@@ -10,4 +10,14 @@ class LanguageDoctrineRepository extends EntityRepository implements LanguageRep
         $this->getEntityManager()->persist($language);
         return $language;
     }
+
+    /**
+     * @return string[]
+     */
+    public function getAvailableLanguageCodes(): array {
+        $availableLanguages = $this->findAll();
+        return array_map(function (Language $language) {
+            return $language->getCode();
+        }, $availableLanguages);
+    }
 }

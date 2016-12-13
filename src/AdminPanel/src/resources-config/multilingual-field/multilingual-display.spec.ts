@@ -38,5 +38,4 @@ xdescribe(MultilingualDisplay.name, () => { // ignored due to https://github.com
   afterEach(() => {
     component.dispose();
   });
-
 });

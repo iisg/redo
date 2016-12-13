@@ -14,12 +14,19 @@ class InitialLanguage extends ContainerAwareFixture {
         /** @var ContainerInterface $container */
         $container = $this->container;
         $container->get('repeka.command_bus')->handle(LanguageCreateCommand::fromArray([
+            'code' => 'PL',
             'flag' => 'PL',
             'name' => 'polski',
         ]));
         $container->get('repeka.command_bus')->handle(LanguageCreateCommand::fromArray([
+            'code' => 'EN',
             'flag' => 'GB',
             'name' => 'angielski',
+        ]));
+        $container->get('repeka.command_bus')->handle(LanguageCreateCommand::fromArray([
+            'code' => 'GER',
+            'flag' => 'DE',
+            'name' => 'niemiecki',
         ]));
     }
 }

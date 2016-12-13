@@ -3,21 +3,22 @@ namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Validator;
+use Repeka\Domain\Repository\LanguageRepository;
 
 class MetadataCreateCommandValidator extends CommandAttributesValidator {
-    /** @var string */
-    private $mainLanguage;
+    /** @var array */
+    private $availableLanguages;
     /** @var array */
     private $supportedControls;
 
-    public function __construct(string $mainLanguage, array $supportedControls) {
-        $this->mainLanguage = $mainLanguage;
+    public function __construct(LanguageRepository $languageRepository, array $supportedControls) {
+        $this->availableLanguages = $languageRepository->getAvailableLanguageCodes();
         $this->supportedControls = $supportedControls;
     }
 
     protected function getValidator(): Validator {
         return Validator
-            ::attribute('label', Validator::notBlankInLanguage($this->mainLanguage))
+            ::attribute('label', Validator::notBlankInAllLanguages($this->availableLanguages))
             ->attribute('name', Validator::notBlank())
             ->attribute('control', Validator::in($this->supportedControls));
     }

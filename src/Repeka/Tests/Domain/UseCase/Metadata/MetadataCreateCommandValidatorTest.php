@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Exception\InvalidCommandException;
+use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 
@@ -10,7 +11,9 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private $validator;
 
     protected function setUp() {
-        $this->validator = new MetadataCreateCommandValidator('PL', ['text', 'textarea']);
+        $repository = $this->createMock(LanguageRepository::class);
+        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['PL']);
+        $this->validator = new MetadataCreateCommandValidator($repository, ['text', 'textarea']);
     }
 
     public function testPassingValidation() {
