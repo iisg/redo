@@ -1,7 +1,7 @@
-Repeka\Domain\Entity\User:
+Repeka\Application\Entity\UserEntity:
   type: entity
   table: '`user`'
-  repositoryClass: Repeka\Application\Repository\UserRepository
+  repositoryClass: Repeka\Application\Repository\UserDoctrineRepository
   id:
     id:
       type: integer
