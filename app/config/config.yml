@@ -31,8 +31,16 @@ doctrine:
     mappings:
       RepekaBundle:
         type: yml
+        prefix: Repeka\Application\Entity
+        dir: "%kernel.root_dir%/../src/Repeka/Application/Resources/config/doctrine/bundle"
+        # when the is_bundle is set to false, mapping files can be placed in other than default directory
+        # (in this case it is config/doctrine/bundle instead of the default config/doctrine)
+        # https://symfony.com/doc/current/reference/configuration/doctrine.html#is-bundle
+        is_bundle: false
+      RepekaDomain:
+        type: yml
         prefix: Repeka\Domain\Entity
-        dir: "%kernel.root_dir%/../src/Repeka/Application/Resources/config/doctrine"
+        dir: "%kernel.root_dir%/../src/Repeka/Application/Resources/config/doctrine/domain"
         is_bundle: false
 
 doctrine_migrations:

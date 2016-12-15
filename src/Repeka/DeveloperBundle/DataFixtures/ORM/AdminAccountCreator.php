@@ -2,13 +2,13 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Repeka\Domain\Entity\User;
+use Repeka\Application\Entity\UserEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 class AdminAccountCreator extends ContainerAwareFixture {
     public function load(ObjectManager $manager) {
-        $user = new User();
+        $user = new UserEntity();
         $user->setUsername('admin');
         $user->setEmail('admin');
         $user->setName('Aleksander');
