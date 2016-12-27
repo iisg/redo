@@ -9,7 +9,11 @@ export abstract class ApiRepository<T> {
   }
 
   public post(entity: T): Promise<T> {
-    return this.httpClient.post(this.endpoint, entity).then(response => this.toEntity(response.content));
+    return this.httpClient.post(this.endpoint, this.toBackend(entity)).then(response => this.toEntity(response.content));
+  }
+
+  protected toBackend(entity: T): Object {
+    return entity;
   }
 
   abstract toEntity(data: Object): T;

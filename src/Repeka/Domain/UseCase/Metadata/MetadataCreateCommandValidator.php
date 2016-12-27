@@ -1,9 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
+use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Validator;
-use Repeka\Domain\Repository\LanguageRepository;
 
 class MetadataCreateCommandValidator extends CommandAttributesValidator {
     /** @var array */
@@ -16,7 +17,10 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
         $this->supportedControls = $supportedControls;
     }
 
-    public function getValidator(): \Respect\Validation\Validator {
+    /**
+     * @inheritdoc
+     */
+    public function getValidator(Command $command): \Respect\Validation\Validator {
         return Validator
             ::attribute('label', Validator::notBlankInAllLanguages($this->availableLanguages))
             ->attribute('name', Validator::notBlank())

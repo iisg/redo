@@ -2,6 +2,7 @@ import {route, nested, flatten} from "./common/routes/route-utils";
 
 const routes = flatten([
   route('', 'home', 'Przegląd', 'dashboard'),
+  route('zasoby', 'resources/resources-list', 'Zasoby', 'book'),
   nested('Konfiguracja zasobów', 'database', [
     route('metadane', 'resources-config/metadata/metadata-list', 'Metadane'),
     route('rodzaje-zasobow', 'resources-config/resource-kind/resource-kind-list', 'Rodzaje zasobów'),

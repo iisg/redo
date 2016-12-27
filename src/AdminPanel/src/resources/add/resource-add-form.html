@@ -1,0 +1,27 @@
+<template>
+    <require from="./resource-kind-chooser"></require>
+    <require from="./resource-form-generated"></require>
+
+    <form class="well"
+        submit.delegate="validateAndSubmit()">
+        <h2>Dodaj nowy zasób</h2>
+        <div class="form-group">
+            <resource-kind-chooser value.bind="newResource.kind"></resource-kind-chooser>
+        </div>
+        <resource-form-generated resource-kind.bind="newResource.kind"
+            resource.bind="newResource"></resource-form-generated>
+        <div class="has-error"
+            if.bind="errorToDisplay">
+            <div class="help-block">
+                ${errorToDisplay}
+            </div>
+        </div>
+        <div class="form-group text-right">
+            <button class="btn btn-primary"
+                disabled.bind="submitting">
+                <i class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></i>
+                Dodaj
+            </button>
+        </div>
+    </form>
+</template>

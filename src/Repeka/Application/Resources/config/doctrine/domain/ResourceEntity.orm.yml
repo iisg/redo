@@ -1,0 +1,18 @@
+Repeka\Domain\Entity\ResourceEntity:
+  type: entity
+  table: resource
+  repositoryClass: Repeka\Application\Repository\ResourceDoctrineRepository
+  id:
+    id:
+      type: integer
+      generator: {strategy: AUTO}
+  manyToOne:
+    kind:
+      targetEntity: Repeka\Domain\Entity\ResourceKind
+      joinColumn:
+        name: kind_id
+        referencedColumnName: id
+  fields:
+    contents:
+      type: json_document
+      options: {jsonb: true}

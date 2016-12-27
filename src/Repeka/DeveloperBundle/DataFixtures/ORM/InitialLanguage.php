@@ -1,12 +1,15 @@
 <?php
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class InitialLanguage extends ContainerAwareFixture {
+class InitialLanguage extends ContainerAwareFixture implements OrderedFixtureInterface {
+    const ORDER = 1;
+
     /**
      * @inheritdoc
      */
@@ -23,10 +26,9 @@ class InitialLanguage extends ContainerAwareFixture {
             'flag' => 'GB',
             'name' => 'angielski',
         ]));
-        $container->get('repeka.command_bus')->handle(LanguageCreateCommand::fromArray([
-            'code' => 'GER',
-            'flag' => 'DE',
-            'name' => 'niemiecki',
-        ]));
+    }
+
+    public function getOrder() {
+        return self::ORDER;
     }
 }

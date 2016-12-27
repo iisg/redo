@@ -7,10 +7,8 @@ repeka:
   supported_controls:
     - text
     - textarea
-    - int
-    - double
+    - integer
     - date
-    - daterange
     - boolean
   metadata_nesting_depth: 3
   elasticsearch:

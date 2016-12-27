@@ -1,28 +1,28 @@
 <template>
-    <require from="./resource-kind-form"></require>
+    <require from="./add/resource-add-form"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="resources-config/multilingual-field/multilingual-display"></require>
 
     <animated-plus-button class="pull-right"
         opened.bind="addFormOpened"></animated-plus-button>
 
-    <resource-kind-form show.bind="addFormOpened"
-        submit.call="addNewResourceKind(resourceKind)"
-        class="fade-inout-updown au-animate floating-add-form-full-width"></resource-kind-form>
+    <resource-add-form class="fade-inout-updown au-animate floating-add-form-full-width"
+        show.bind="addFormOpened"
+        submit.call="addNewResource(resource)"></resource-add-form>
 
     <div class="row"
-        show.bind="!resourceKinds || resourceKinds.length > 0">
+        show.bind="!resources || resources.length > 0">
         <div class="col-xs-12">
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nazwa</th>
-                    <th>Metadane</th>
+                    <th>Rodzaj</th>
+                    <th>Zawartość</th>
                 </tr>
                 </thead>
                 <tfoot>
-                <tr if.bind="!resourceKinds">
+                <tr if.bind="!resources">
                     <th colspan="6">
                         <div class="progress progress-striped active">
                             <div class="progress-bar progress-bar-success progress-bar-full"></div>
@@ -31,18 +31,18 @@
                 </tr>
                 </tfoot>
                 <tbody class="au-stagger">
-                <tr repeat.for="resourceKind of resourceKinds"
+                <tr repeat.for="resource of resources"
                     class="au-animate fade-inout-updown">
-                    <td>${resourceKind.id}</td>
+                    <td>${resource.id & oneTime}</td>
                     <td>
-                        <multilingual-display value.one-time="resourceKind.label"></multilingual-display>
+                        <multilingual-display value.one-time="resource.kind.label"></multilingual-display>
                     </td>
                     <td>
                         <dl class="dl-horizontal">
-                            <template repeat.for="metadata of resourceKind.metadataList & oneTime">
+                            <template repeat.for="metadata of resource.kind.metadataList & oneTime">
                                 <dt>${metadata.name}</dt>
                                 <dd>
-                                    <multilingual-display value.one-time="metadata.label"></multilingual-display>
+                                    ${resource.contents[metadata.id]}
                                 </dd>
                             </template>
                         </dl>
