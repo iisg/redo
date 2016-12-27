@@ -59,6 +59,11 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Domain\Entity\ResourceKind]
 
+  repository.resource:
+    class: Repeka\Application\Repository\ResourceDoctrineRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\ResourceEntity]
+
   command_handler.metadata_list:
     class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
     autowire: true
@@ -70,6 +75,10 @@ services:
   command_handler.resource_kind_list:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindListQueryHandler
     autowire: true
+
+  command_handler.resource_list:
+      class: Repeka\Domain\UseCase\Resource\ResourceListQueryHandler
+      autowire: true
 
   command_handler.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler
@@ -83,6 +92,10 @@ services:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandHandler
     autowire: true
 
+  command_handler.resource_create:
+    class: Repeka\Domain\UseCase\Resource\ResourceCreateCommandHandler
+    autowire: true
+
   command_validator.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
     arguments:
@@ -91,6 +104,10 @@ services:
 
   command_validator.resource_kind_create:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator
+    autowire: true
+
+  command_validator.resource_create:
+    class: Repeka\Domain\UseCase\Resource\ResourceCreateCommandValidator
     autowire: true
 
   command_validator.language_create:

@@ -11,7 +11,7 @@ export class ResourceKindList {
   constructor(private resourceKindRepository: ResourceKindRepository) {
     resourceKindRepository.getList()
       .then(resourceKinds => this.resourceKinds = resourceKinds)
-      .then(() => this.addFormOpened = this.resourceKinds.length == 0);
+      .then(() => this.addFormOpened || (this.addFormOpened = this.resourceKinds.length == 0));
   }
 
   addNewResourceKind(resourceKind: ResourceKind): Promise<ResourceKind> {

@@ -31,7 +31,7 @@ class CsrfRequestListener {
 
     public function onKernelRequest(GetResponseEvent $event) {
         $request = $event->getRequest();
-        if (!$request->isMethodSafe() && $this->isApi($request)) {
+        if (!$request->isMethodSafe(false) && $this->isApi($request)) {
             $token = new CsrfToken(self::class, $request->headers->get(self::TOKEN_HEADER));
             if (!$this->tokenManager->isTokenValid($token)) {
                 $event->setResponse(new Response('Invalid CSRF Token.', 400));

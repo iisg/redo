@@ -39,6 +39,12 @@ class MetadataCreateCommand extends Command {
     }
 
     public static function fromArray(array $data): MetadataCreateCommand {
-        return new MetadataCreateCommand($data['name'], $data['label'], $data['description'], $data['placeholder'], $data['control']);
+        return new MetadataCreateCommand(
+            $data['name'] ?? '',
+            $data['label'] ?? [],
+            $data['description'] ?? [],
+            $data['placeholder'] ?? [],
+            $data['control'] ?? 'text'
+        );
     }
 }

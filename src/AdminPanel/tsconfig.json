@@ -12,6 +12,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "src/*",
+        "./*"
+      ]
+    },
     "lib": [
       "es2015",
       "dom"

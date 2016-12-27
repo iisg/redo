@@ -2,9 +2,7 @@ export class ControlLabelValueConverter implements ToViewValueConverter {
   private static readonly LABELS = {
     boolean: "Prawda / fałsz",
     date: "Data",
-    daterange: "Zakres dat",
-    double: "Liczba rzeczywista",
-    int: "Liczba całkowita",
+    integer: "Liczba całkowita",
     text: "Tekst",
     textarea: "Długi tekst",
   };

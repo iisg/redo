@@ -1,4 +1,5 @@
 <template>
+    <require from="./bootstrap-select.css"></require>
     <select class="selectpicker show-tick form-control"
         ref="dropdown"
         change.delegate="stopPropagation($event)"
@@ -6,7 +7,10 @@
         <option class="hidden">${title}</option>
         <option repeat.for="option of values"
             model.bind="option">
-            ${option.name}
+            <template part="option-template"
+                replaceable>
+                ${option.name}
+            </template>
         </option>
     </select>
 </template>

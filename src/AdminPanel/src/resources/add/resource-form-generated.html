@@ -1,0 +1,10 @@
+<template>
+    <div class="form-group"
+        repeat.for="metadata of resourceKind.metadataList">
+        <label>${metadata.name}</label>
+        <div class="clearfix"></div>
+        <compose view-model="./controls/control-input"
+            view="./controls/control-input-${metadata.control}.html"
+            model.bind="{metadata: metadata, resource: resource}"></compose>
+    </div>
+</template>

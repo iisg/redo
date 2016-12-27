@@ -8,14 +8,14 @@ use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Exceptions\ValidationException;
 
 abstract class CommandAttributesValidator implements CommandValidator {
-    abstract public function getValidator(): \Respect\Validation\Validator;
+    abstract public function getValidator(Command $command): \Respect\Validation\Validator;
 
     /**
      * @inheritdoc
      */
     final public function validate(Command $command) {
         try {
-            $this->getValidator()->assert($command);
+            $this->getValidator($command)->assert($command);
         } catch (NestedValidationException $compositeException) {
             $violations = array_map([$this, 'exceptionToViolation'], iterator_to_array($compositeException));
             throw new InvalidCommandException($violations, $compositeException);
@@ -23,7 +23,7 @@ abstract class CommandAttributesValidator implements CommandValidator {
     }
 
     final public function isValid(Command $command) {
-        return $this->getValidator()->validate($command);
+        return $this->getValidator($command)->validate($command);
     }
 
     /**
