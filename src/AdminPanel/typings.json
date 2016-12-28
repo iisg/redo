@@ -1,7 +1,7 @@
 {
   "name": "repeka-admin-panel",
   "dependencies": {
-    "aurelia-binding": "github:aurelia/binding#1.0.9",
+    "aurelia-binding": "github:aurelia/binding#1.1.0",
     "aurelia-bootstrapper": "github:aurelia/bootstrapper#1.0.0",
     "aurelia-dependency-injection": "github:aurelia/dependency-injection#1.0.0",
     "aurelia-event-aggregator": "github:aurelia/event-aggregator#1.0.0",
@@ -10,30 +10,30 @@
     "aurelia-history-browser": "github:aurelia/history-browser#1.0.0",
     "aurelia-http-client": "github:aurelia/http-client#1.0.2",
     "aurelia-loader": "github:aurelia/loader#1.0.0",
-    "aurelia-logging": "github:aurelia/logging#1.0.0",
+    "aurelia-logging": "github:aurelia/logging#1.2.0",
     "aurelia-logging-console": "github:aurelia/logging-console#1.0.0",
     "aurelia-metadata": "github:aurelia/metadata#1.0.0",
-    "aurelia-pal": "github:aurelia/pal#1.0.0",
-    "aurelia-pal-browser": "github:aurelia/pal-browser#1.0.0",
+    "aurelia-pal": "github:aurelia/pal#1.2.0",
+    "aurelia-pal-browser": "github:aurelia/pal-browser#1.1.0",
     "aurelia-path": "github:aurelia/path#1.1.1",
     "aurelia-polyfills": "github:aurelia/polyfills#1.1.1",
     "aurelia-route-recognizer": "github:aurelia/route-recognizer#1.1.0",
-    "aurelia-router": "github:aurelia/router#1.0.5",
+    "aurelia-router": "github:aurelia/router#1.1.0",
     "aurelia-task-queue": "github:aurelia/task-queue#1.1.0",
     "aurelia-templating": "github:aurelia/templating#1.1.1",
     "aurelia-templating-binding": "github:aurelia/templating-binding#1.0.0",
-    "aurelia-templating-resources": "github:aurelia/templating-resources#1.0.0",
-    "aurelia-templating-router": "github:aurelia/templating-router#1.0.0",
+    "aurelia-templating-resources": "github:aurelia/templating-resources#1.2.0",
+    "aurelia-templating-router": "github:aurelia/templating-router#1.0.1",
     "aurelia-testing": "github:aurelia/testing#1.0.0-beta.2.0.0",
     "aurelia-validation": "github:aurelia/validation#0.13.1"
   },
   "globalDevDependencies": {
-    "jasmine": "registry:dt/jasmine#2.5.0+20161003201800"
+    "jasmine": "registry:dt/jasmine#2.5.0+20161119044246"
   },
   "globalDependencies": {
-    "bootstrap-select": "registry:dt/bootstrap-select#1.11.2+20161025103744",
+    "bootstrap-select": "registry:dt/bootstrap-select#1.11.2+20161110161159",
     "jquery": "registry:dt/jquery#1.10.0+20160929162922",
-    "promise.prototype.finally": "registry:dt/promise.prototype.finally#1.0.1+20160701113745",
+    "promise.prototype.finally": "registry:dt/promise.prototype.finally#1.0.1+20161005184000",
     "url": "github:aurelia/fetch-client/doc/url.d.ts#bbe0777ef710d889a05759a65fa2c9c3865fc618",
     "whatwg-fetch": "registry:dt/whatwg-fetch#0.0.0+20160524142046"
   }
