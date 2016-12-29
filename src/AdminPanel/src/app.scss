@@ -83,3 +83,31 @@ a {
     @include animation(fadeOutUp .3s);
   }
 }
+
+.height-inout {
+  overflow-y: hidden;
+  &.au-enter-active {
+    @include animation(heightIn .3s);
+  }
+  &.au-leave-active {
+    @include animation(heightOut .3s);
+  }
+}
+
+@include keyframes(heightIn) {
+  0% {
+    max-height: 0;
+  }
+  100% {
+    max-height: 150px;
+  }
+}
+
+@include keyframes(heightOut) {
+  0% {
+    max-height: 150px;
+  }
+  100% {
+    max-height: 0;
+  }
+}

@@ -1,5 +1,6 @@
 <template>
     <require from="./sidebar.css"></require>
+    <require from="./nested-navigation-menu"></require>
     <require from="common/repeka-logo/repeka-logo.html"></require>
     <require from="common/version-display/version-display"></require>
 
@@ -16,15 +17,8 @@
         </div>
     </div>
 
-    <ul class="nav nav-pills nav-stacked">
-        <li repeat.for="item of router.navigation"
-            class="${item.isActive ? 'active' : ''}">
-            <a href.bind="item.href">
-                <i class="fa fa-fw fa-${item.settings.icon}"></i>
-                ${item.title}
-            </a>
-        </li>
-    </ul>
+    <ul class="nav nav-pills nav-stacked"
+        as-element="nested-navigation-menu"></ul>
 
     <div class="application-version">
         v

@@ -1,0 +1,19 @@
+@import "../styles";
+
+.navbar-toggle {
+  float: left;
+}
+
+.navbar {
+  .nested-navigation-menu {
+    li > a {
+      color: white !important;
+    }
+    li.current > a {
+      color: $light-green-A200 !important;
+    }
+  }
+  navbar-title .navbar-brand {
+    font-size: 1.7em;
+  }
+}
