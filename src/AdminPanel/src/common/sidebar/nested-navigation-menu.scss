@@ -1,0 +1,23 @@
+@import "../styles";
+
+.nested-navigation-menu {
+  li.current > a {
+    color: $blue-500 !important;
+  }
+  a {
+    text-align: left;
+    font-weight: 100;
+    margin: 0;
+    @include transition(color .3s);
+    &:active, &:focus, &:hover {
+      background: inherit !important;
+    }
+  }
+  .nav-children {
+    padding-left: 7px;
+    a {
+      text-transform: none;
+    }
+  }
+}
+

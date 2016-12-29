@@ -1,5 +1,9 @@
 <template>
     <require from="common/user/current-user-label"></require>
+    <require from="../sidebar/nested-navigation-menu"></require>
+    <require from="./navbar.css"></require>
+    <require from="./navbar-title"></require>
+
     <div class="navbar navbar-default z-depth-1">
         <div class="container-fluid"></div>
         <div class="navbar-header">
@@ -13,23 +17,9 @@
             </button>
         </div>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-            <ul class="nav navbar-nav hidden-lg hidden-md hidden-sm">
-                <li repeat.for="item of router.navigation"
-                    class="${item.isActive ? 'active' : ''}">
-                    <a href.bind="item.href">
-                        <i class="fa fa-fw fa-${item.settings.icon}"></i>
-                        ${item.title}
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav">
-                <li repeat.for="item of menuItems"
-                    class="${item.isActive ? 'active' : ''}">
-                    <a href.bind="item.href">
-                        ${item.title}
-                    </a>
-                </li>
-            </ul>
+            <navbar-title></navbar-title>
+            <ul class="nav navbar-nav visible-xs"
+                as-element="nested-navigation-menu"></ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a>
                     <i class="fa fa-bell fa-fw"></i>

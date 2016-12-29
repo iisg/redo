@@ -34,15 +34,6 @@ sidebar {
     }
   }
 
-  .nav-pills {
-    li.active {
-      a, a:focus {
-        @include border-radius(0);
-        background: $green;
-      }
-    }
-  }
-
   .application-version {
     width: 100%;
     color: #CCC;

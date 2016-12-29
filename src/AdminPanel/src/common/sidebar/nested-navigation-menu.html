@@ -1,0 +1,31 @@
+<template class="nested-navigation-menu">
+    <require from="../routes/nested-navigation-value-converter"></require>
+    <require from="./nested-navigation-menu.css"></require>
+
+    <li repeat.for="item of router.navigation | nestedNavigation"
+        class="${item.isActive || item.expanded ? 'current' : ''}">
+        <a if.bind="!item.children"
+            href.bind="item.href"
+            class="btn btn-default btn-block">
+            <i class="fa fa-fw fa-${item.settings.icon}"></i>
+            ${item.title}
+        </a>
+        <a if.bind="item.children"
+            class="btn btn-default btn-block"
+            click.delegate="item.toggle()">
+            <i class="fa fa-fw fa-angle-right pull-right ${item.expanded ? 'fa-rotate-90': ''}"></i>
+            <i class="fa fa-fw fa-${item.settings.icon}"></i>
+            ${item.title}
+        </a>
+        <ul if.bind="item.expanded"
+            class="nav-children height-inout au-animate">
+            <li repeat.for="child of item.children"
+                class="${child.isActive ? 'current' : ''}">
+                <a href.bind="child.href"
+                    class="btn btn-default btn-block">
+                    ${child.title}
+                </a>
+            </li>
+        </ul>
+    </li>
+</template>
