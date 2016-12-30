@@ -53,10 +53,14 @@
 {% endblock %}
 {% block footer %}
     <nav class="navbar navbar-info navbar-fixed-bottom">
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="/about">
-                    Repeka © 2016
-                </a></li>
-        </ul>
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/about">
+                        Repeka v{{ application_version }} © 2016 - {{ 'now'|date('Y') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
     </nav>
 {% endblock %}
