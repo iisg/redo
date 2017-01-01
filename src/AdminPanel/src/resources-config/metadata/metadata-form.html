@@ -1,19 +1,26 @@
 <template>
     <require from="./metadata-control-select"></require>
 
-    <form submit.delegate="validateAndSubmit()">
-        <div class="form-group label-floating">
-            <label class="control-label"
-                for="focusedInput1">Nazwa</label>
-            <input type="text"
-                value.bind="metadata.name & validate"
-                class="form-control"
-                id="focusedInput1">
+    <form class="well"
+        submit.delegate="validateAndSubmit()">
+        <h2>Dodaj nową metadaną</h2>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="metadataName">Nazwa</label>
+                    <input type="text"
+                        value.bind="metadata.name & validate"
+                        class="form-control"
+                        id="metadataName">
+                </div>
+            </div>
+            <div class="col-sm-4 col-sm-offset-2">
+                <div class="form-group">
+                    <metadata-control-select value.bind="metadata.control & validate"></metadata-control-select>
+                </div>
+            </div>
         </div>
         <compose view="./metadata-editable-properties.html"></compose>
-        <div class="form-group">
-            <metadata-control-select value.bind="metadata.control & validate"></metadata-control-select>
-        </div>
         <div class="form-group text-right">
             <button class="btn btn-primary"
                 disabled.bind="submitting">
