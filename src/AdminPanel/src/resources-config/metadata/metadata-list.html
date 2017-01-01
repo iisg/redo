@@ -2,12 +2,17 @@
     <require from="./metadata-form"></require>
     <require from="./control-label"></require>
     <require from="../multilingual-field/multilingual-display"></require>
-    <require from="../add-form/floating-add-form"></require>
+    <require from="../add-form/animated-plus-button"></require>
 
     <div class="metadata-list">
-        <floating-add-form controller.bind="addFormController">
-            <metadata-form submit.call="addNewMetadata(metadata)"></metadata-form>
-        </floating-add-form>
+
+        <animated-plus-button class="pull-right"
+            opened.bind="addFormOpened"></animated-plus-button>
+
+        <metadata-form
+            show.bind="addFormOpened"
+            submit.call="addNewMetadata(metadata)"
+            class="fade-inout-updown au-animate"></metadata-form>
 
         <div class="row">
             <div class="col-xs-12">

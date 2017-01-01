@@ -1,19 +1,24 @@
 <template>
-    <require from="./multilingual-field.css"></require>
-    <require from="./language-chooser/language-chooser"></require>
+    <require from="./language-chooser/language-flag-svg"></require>
+    <require from="./language-chooser/language-chooser.css"></require>
 
-    <label class="control-label"
-        for.one-time="fieldId">${label}</label>
-    <div class="input-group">
-        <input type="text"
-            id.one-time="fieldId"
-            ref="textInput"
-            class="form-control"
-            blur.trigger="blur()"
-            placeholder.bind="placeholder[currentLanguage.code] || ''"
-            value.bind="value[currentLanguage.code]">
-        <span class="input-group-btn"
-            as-element="language-chooser"
-            language.bind="currentLanguage"></span>
+    <h5>${label}</h5>
+    <div class="row">
+        <div repeat.for="language of languages"
+            class="${columnClass}">
+            <div class="form-group">
+                <label class="control-label"
+                    for.one-time="fieldId">
+                    <span class="flag-icon-xs">
+                        <img src.one-time="language.flag | languageFlagSvg">
+                    </span>
+                    ${language.code}</label>
+                <input type="text"
+                    class="form-control"
+                    id.one-time="fieldId"
+                    placeholder.bind="placeholder[language.code] || ''"
+                    value.bind="value[language.code]">
+            </div>
+        </div>
     </div>
 </template>

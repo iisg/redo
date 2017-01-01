@@ -14,7 +14,7 @@
         </div>
         <div class="form-group">
             <div class="row au-stagger">
-                <div class="col-lg-4"
+                <div class="container-fluid"
                     repeat.for="metadata of resourceKind.metadataList & validate">
                     <div class="well">
                         <button class="btn btn-default pull-right"
@@ -26,7 +26,7 @@
                             base-metadata.bind="metadata.base"></resource-kind-metadata-form>
                     </div>
                 </div>
-                <div class="col-lg-4 form-group">
+                <div class="container-fluid form-group">
                     <label>Dodaj kolejną metadaną</label>
                     <resource-kind-metadata-chooser change.delegate="addNewMetadata($event)"
                         resource-kind.bind="resourceKind"></resource-kind-metadata-chooser>
