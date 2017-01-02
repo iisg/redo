@@ -4,57 +4,53 @@
     <require from="../multilingual-field/multilingual-display"></require>
     <require from="../add-form/animated-plus-button"></require>
 
-    <div class="metadata-list">
+    <animated-plus-button class="pull-right"
+        opened.bind="addFormOpened"></animated-plus-button>
 
-        <animated-plus-button class="pull-right"
-            opened.bind="addFormOpened"></animated-plus-button>
+    <metadata-form show.bind="addFormOpened"
+        submit.call="addNewMetadata(metadata)"
+        class="fade-inout-updown au-animate floating-add-form-full-width"></metadata-form>
 
-        <metadata-form
-            show.bind="addFormOpened"
-            submit.call="addNewMetadata(metadata)"
-            class="fade-inout-updown au-animate"></metadata-form>
-
-        <div class="row">
-            <div class="col-xs-12">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nazwa</th>
-                        <th>Nazwa wyświetlana</th>
-                        <th>Kontrolka</th>
-                        <th>Opis</th>
-                        <th>Podpowiedź</th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr if.bind="!metadataList">
-                        <th colspan="6">
-                            <div class="progress progress-striped active">
-                                <div class="progress-bar progress-bar-success progress-bar-full"></div>
-                            </div>
-                        </th>
-                    </tr>
-                    </tfoot>
-                    <tbody class="au-stagger">
-                    <tr repeat.for="metadata of metadataList"
-                        class="au-animate fade-inout-updown">
-                        <td>${metadata.id}</td>
-                        <td>${metadata.name}</td>
-                        <td>
-                            <multilingual-display value.one-time="metadata.label"></multilingual-display>
-                        </td>
-                        <td>${metadata.control | controlLabel}</td>
-                        <td>
-                            <multilingual-display value.one-time="metadata.description"></multilingual-display>
-                        </td>
-                        <td>
-                            <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nazwa</th>
+                    <th>Nazwa wyświetlana</th>
+                    <th>Kontrolka</th>
+                    <th>Opis</th>
+                    <th>Podpowiedź</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr if.bind="!metadataList">
+                    <th colspan="6">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                        </div>
+                    </th>
+                </tr>
+                </tfoot>
+                <tbody class="au-stagger">
+                <tr repeat.for="metadata of metadataList"
+                    class="au-animate fade-inout-updown">
+                    <td>${metadata.id}</td>
+                    <td>${metadata.name}</td>
+                    <td>
+                        <multilingual-display value.one-time="metadata.label"></multilingual-display>
+                    </td>
+                    <td>${metadata.control | controlLabel}</td>
+                    <td>
+                        <multilingual-display value.one-time="metadata.description"></multilingual-display>
+                    </td>
+                    <td>
+                        <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
