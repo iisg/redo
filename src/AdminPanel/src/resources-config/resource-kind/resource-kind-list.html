@@ -1,6 +1,5 @@
 <template>
     <require from="./resource-kind-form"></require>
-    <require from="./resource-kind-list.css"></require>
     <require from="../add-form/animated-plus-button"></require>
     <require from="../multilingual-field/multilingual-display"></require>
 
@@ -9,7 +8,7 @@
 
     <resource-kind-form show.bind="addFormOpened"
         submit.call="addNewResourceKind(resourceKind)"
-        class="fade-inout-updown au-animate"></resource-kind-form>
+        class="fade-inout-updown au-animate floating-add-form-full-width"></resource-kind-form>
 
     <div class="row"
         show.bind="!resourceKinds || resourceKinds.length > 0">

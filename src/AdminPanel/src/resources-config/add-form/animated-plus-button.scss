@@ -10,3 +10,10 @@
     @include transform(rotate(45deg * 5));
   }
 }
+
+.floating-add-form-full-width {
+  display: block;
+  position: relative;
+  margin-right: 28px;
+  top: 28px;
+}
