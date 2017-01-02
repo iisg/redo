@@ -1,0 +1,10 @@
+Repeka\Application\Entity\UserEntity:
+  exclusion_policy: ALL
+  read_only: true
+  properties:
+    id: ~
+    username: {access_type: public_method}
+    email: {access_type: public_method}
+    name: {access_type: public_method}
+    surname: {access_type: public_method}
+    staticPermissions: {access_type: public_method}

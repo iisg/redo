@@ -4,11 +4,7 @@ export class RouteDefinition {
   moduleId: string;
   nav: boolean;
   title: string;
-  settings: {
-    icon?: string;
-    parentTitle?: string;
-    parentIcon?: string;
-  };
+  settings: RouteSettings;
 }
 
 export class ActivatableNavItem extends RouteDefinition {
@@ -19,4 +15,11 @@ export interface NavItemWithChildren extends RouteDefinition {
   children: ActivatableNavItem[];
   expanded: boolean;
   toggle();
+}
+
+export interface RouteSettings {
+  icon?: string;
+  parentTitle?: string;
+  parentIcon?: string;
+  staticPermissions?: Array<string>;
 }

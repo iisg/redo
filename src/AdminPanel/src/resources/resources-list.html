@@ -3,12 +3,14 @@
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="resources-config/multilingual-field/multilingual-display"></require>
 
-    <animated-plus-button class="pull-right"
-        opened.bind="addFormOpened"></animated-plus-button>
+    <div require-static-permissions="RESOURCES">
+        <animated-plus-button class="pull-right"
+            opened.bind="addFormOpened"></animated-plus-button>
 
-    <resource-add-form class="fade-inout-updown au-animate floating-add-form-full-width"
-        show.bind="addFormOpened"
-        submit.call="addNewResource(resource)"></resource-add-form>
+        <resource-add-form class="fade-inup-outdown au-animate floating-add-form-full-width"
+            show.bind="addFormOpened"
+            submit.call="addNewResource(resource)"></resource-add-form>
+    </div>
 
     <div class="row"
         show.bind="!resources || resources.length > 0">
@@ -32,7 +34,7 @@
                 </tfoot>
                 <tbody class="au-stagger">
                 <tr repeat.for="resource of resources"
-                    class="au-animate fade-inout-updown">
+                    class="au-animate fade-inup-outdown">
                     <td>${resource.id & oneTime}</td>
                     <td>
                         <multilingual-display value.one-time="resource.kind.label"></multilingual-display>
@@ -51,6 +53,12 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="alert alert-info"
+        if.bind="resources.length === 0">
+        <span class="fa fa-info-circle fa-fw"></span>
+        ${'No resources.' & t}
     </div>
 
 </template>

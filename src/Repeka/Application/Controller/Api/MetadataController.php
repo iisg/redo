@@ -6,6 +6,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,6 +25,7 @@ class MetadataController extends ApiController {
     /**
      * @Route
      * @Method("POST")
+     * @Security("has_role('ROLE_STATIC_METADATA')")
      */
     public function postAction(Request $request) {
         $command = MetadataCreateCommand::fromArray($request->request->all());
@@ -34,6 +36,7 @@ class MetadataController extends ApiController {
     /**
      * @Route
      * @Method("PUT")
+     * @Security("has_role('ROLE_STATIC_METADATA')")
      */
     public function updateOrderAction(Request $request) {
         $ids = $request->request->all();

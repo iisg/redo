@@ -5,6 +5,7 @@ use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Language\LanguageListQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -23,6 +24,7 @@ class LanguagesController extends ApiController {
     /**
      * @Route
      * @Method("POST")
+     * @Security("has_role('ROLE_STATIC_LANGUAGES')")
      */
     public function postAction(Request $request) {
         $command = LanguageCreateCommand::fromArray($request->request->all());

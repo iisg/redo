@@ -11,6 +11,15 @@ repeka:
     - integer
     - date
     - boolean
+  static_permissions:
+    - ADMIN_PANEL
+    - METADATA
+    - RESOURCE_KINDS
+    - RESOURCES
+    - LANGUAGES
+    - USERS
+    - PERMISSIONS
+
   metadata_nesting_depth: 3
   elasticsearch:
     index_name: repeka
@@ -74,9 +83,12 @@ jms_serializer:
   metadata:
     auto_detection: false
     directories:
-      entities:
-        path: "@RepekaBundle/Resources/config/serializer"
+      domain:
+        path: "@RepekaBundle/Resources/config/serializer/domain"
         namespace_prefix: "Repeka\\Domain\\Entity"
+      bundle:
+        path: "@RepekaBundle/Resources/config/serializer/bundle"
+        namespace_prefix: "Repeka\\Application\\Entity"
 
 parameters:
   locale: pl

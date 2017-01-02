@@ -1,0 +1,9 @@
+{
+  "ADMIN_PANEL": "Admin panel access",
+  "METADATA": "Manage metadata",
+  "RESOURCE_KINDS": "Manage resource kinds",
+  "RESOURCES": "Manage resources",
+  "LANGUAGES": "Manage languages",
+  "USERS": "Manage users",
+  "PERMISSIONS": "Grant permissions"
+}

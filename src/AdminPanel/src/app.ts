@@ -4,12 +4,13 @@ import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {EventAggregator} from "aurelia-event-aggregator";
 import routes from "./routes";
+import {RouteAccessChecker} from "./common/routes/route-access-checker";
 
 @autoinject
 export class App implements ConfiguresRouter, ComponentAttached {
   router: Router;
 
-  constructor(private i18n: I18N, private element: Element, ea: EventAggregator) {
+  constructor(private i18n: I18N, private element: Element, ea: EventAggregator, private routeAccessChecker: RouteAccessChecker) {
     ea.subscribe('i18n:locale:changed', () => {
       this.i18n.updateTranslations(this.element);
       if (this.router) {
@@ -25,6 +26,7 @@ export class App implements ConfiguresRouter, ComponentAttached {
     config.options.root = '/admin';
     config.map(routes);
     config.fallbackRoute(''); // TODO REPEKA-103
+    config.addAuthorizeStep(this.routeAccessChecker);
     this.router = router;
   }
 

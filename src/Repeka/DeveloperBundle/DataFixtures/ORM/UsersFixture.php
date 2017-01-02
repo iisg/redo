@@ -6,16 +6,16 @@ use Repeka\Application\Entity\UserEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
-class AdminAccountCreator extends ContainerAwareFixture {
+class UsersFixture extends ContainerAwareFixture {
     public function load(ObjectManager $manager) {
         $user = new UserEntity();
-        $user->setUsername('admin');
-        $user->setEmail('admin');
-        $user->setName('Aleksander');
-        $user->setSurname('Wszystkomogący');
+        $user->setUsername('budynek');
+        $user->setEmail('budynek');
+        $user->setName('Piotr');
+        $user->setSurname('Budynek');
         /** @var PasswordEncoderInterface $encoder */
         $encoder = $this->container->get('security.password_encoder');
-        $password = $encoder->encodePassword($user, 'admin');
+        $password = $encoder->encodePassword($user, 'budynek');
         $user->setPassword($password);
         $manager->persist($user);
         $manager->flush();

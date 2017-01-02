@@ -1,0 +1,8 @@
+<template bindable="user">
+    <span if.bind="user.name && user.surname">
+        ${user.name} ${user.surname}
+    </span>
+    <span if.bind="!user.name || !user.surname">
+        ${user.username}
+    </span>
+</template>

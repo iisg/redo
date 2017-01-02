@@ -6,8 +6,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class ConfigController extends ApiController {
     const PUBLIC_PARAMETERS = [
         'application_version' => 'application_version',
-        'supported_controls' => 'data_module.supported_controls',
-        'default_ui_language' => 'data_module.default_ui_language',
+        'default_ui_language' => 'repeka.default_ui_language',
+        'supported_controls' => 'repeka.supported_controls',
+        'static_permissions' => 'repeka.static_permissions',
     ];
 
     /**

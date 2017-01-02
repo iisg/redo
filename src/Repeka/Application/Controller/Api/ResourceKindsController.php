@@ -5,6 +5,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -23,6 +24,7 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route
      * @Method("POST")
+     * @Security("has_role('ROLE_STATIC_RESOURCE_KINDS')")
      */
     public function postAction(Request $request) {
         $command = ResourceKindCreateCommand::fromArray($request->request->all());
