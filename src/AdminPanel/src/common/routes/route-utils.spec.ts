@@ -14,7 +14,7 @@ describe('route-utils', () => {
     });
 
     it("creates route with icon if specified", () => {
-      let def = route('url', 'module', 'title', 'icon');
+      let def = route('url', 'module', 'title', {icon: 'icon'});
       expect(def.settings.icon).toEqual('icon');
     });
   });

@@ -3,12 +3,14 @@
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="resources-config/multilingual-field/multilingual-display"></require>
 
-    <animated-plus-button class="pull-right"
-        opened.bind="addFormOpened"></animated-plus-button>
+    <div require-static-permissions="RESOURCE_KINDS">
+        <animated-plus-button class="pull-right"
+            opened.bind="addFormOpened"></animated-plus-button>
 
-    <resource-kind-form show.bind="addFormOpened"
-        submit.call="addNewResourceKind(resourceKind)"
-        class="fade-inout-updown au-animate floating-add-form-full-width"></resource-kind-form>
+        <resource-kind-form show.bind="addFormOpened"
+            submit.call="addNewResourceKind(resourceKind)"
+            class="fade-inup-outdown au-animate floating-add-form-full-width"></resource-kind-form>
+    </div>
 
     <div class="row"
         show.bind="!resourceKinds || resourceKinds.length > 0">
@@ -32,7 +34,7 @@
                 </tfoot>
                 <tbody class="au-stagger">
                 <tr repeat.for="resourceKind of resourceKinds"
-                    class="au-animate fade-inout-updown">
+                    class="au-animate fade-inup-outdown">
                     <td>${resourceKind.id}</td>
                     <td>
                         <multilingual-display value.one-time="resourceKind.label"></multilingual-display>
@@ -51,6 +53,12 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="alert alert-info"
+        if.bind="resourceKinds.length === 0">
+        <span class="fa fa-info-circle fa-fw"></span>
+        ${'No resource kinds.' & t}
     </div>
 
 </template>

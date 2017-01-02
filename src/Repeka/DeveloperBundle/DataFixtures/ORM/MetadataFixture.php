@@ -1,23 +1,26 @@
 <?php
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
-use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class InitialMetadata extends ContainerAwareFixture implements OrderedFixtureInterface {
-    const ORDER = InitialLanguage::ORDER + 1;
+class MetadataFixture extends RepekaFixture {
+    const ORDER = LanguagesFixture::ORDER + 1;
+
+    const REFERENCE_METADATA_TITLE = 'metadata-title';
+    const REFERENCE_METADATA_DESCRIPTION = 'metadata-description';
+    const REFERENCE_METADATA_PUBLISH_DATE = 'metadata-publish-date';
+    const REFERENCE_METADATA_HARD_COVER = 'metadata-hard-cover';
+    const REFERENCE_METADATA_NO_OF_PAGES = 'metadata-no-of-pages';
 
     /**
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
-        /** @var ContainerInterface $container */
-        $container = $this->container;
-        $container->get('repeka.command_bus')->handle(MetadataCreateCommand::fromArray([
+        $addedMetadata = [];
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Tytuł',
             'label' => [
                 'PL' => 'Tytuł',
@@ -32,8 +35,8 @@ class InitialMetadata extends ContainerAwareFixture implements OrderedFixtureInt
                 'EN' => 'Find it on the cover',
             ],
             'control' => 'text',
-        ]));
-        $container->get('repeka.command_bus')->handle(MetadataCreateCommand::fromArray([
+        ]), self::REFERENCE_METADATA_TITLE);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Opis',
             'label' => [
                 'PL' => 'Opis',
@@ -45,8 +48,8 @@ class InitialMetadata extends ContainerAwareFixture implements OrderedFixtureInt
             ],
             'placeholder' => [],
             'control' => 'textarea',
-        ]));
-        $container->get('repeka.command_bus')->handle(MetadataCreateCommand::fromArray([
+        ]), self::REFERENCE_METADATA_DESCRIPTION);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Data wydania',
             'label' => [
                 'PL' => 'Data wydania',
@@ -55,8 +58,8 @@ class InitialMetadata extends ContainerAwareFixture implements OrderedFixtureInt
             'description' => [],
             'placeholder' => [],
             'control' => 'date',
-        ]));
-        $container->get('repeka.command_bus')->handle(MetadataCreateCommand::fromArray([
+        ]), self::REFERENCE_METADATA_PUBLISH_DATE);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Czy ma twardą okładkę?',
             'label' => [
                 'PL' => 'Twarda okładka',
@@ -65,8 +68,8 @@ class InitialMetadata extends ContainerAwareFixture implements OrderedFixtureInt
             'description' => [],
             'placeholder' => [],
             'control' => 'boolean',
-        ]));
-        $container->get('repeka.command_bus')->handle(MetadataCreateCommand::fromArray([
+        ]), self::REFERENCE_METADATA_HARD_COVER);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Liczba stron',
             'label' => [
                 'PL' => 'Liczba stron',
@@ -75,8 +78,10 @@ class InitialMetadata extends ContainerAwareFixture implements OrderedFixtureInt
             'description' => [],
             'placeholder' => [],
             'control' => 'integer',
-        ]));
-        $container->get('repeka.command_bus')->handle(new MetadataUpdateOrderCommand([1, 2, 3, 4, 5]));
+        ]), self::REFERENCE_METADATA_NO_OF_PAGES);
+        $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
+            return $metadata->getId();
+        }, $addedMetadata)));
     }
 
     public function getOrder() {

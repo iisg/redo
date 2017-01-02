@@ -26,5 +26,10 @@
   "Resource kind": "Rodzaj zasobu",
   "Change order": "Zmień kolejność",
   "Changing order": "Zmiana kolejności",
-  "Drag to change order": "Przeciągnij, by zmienić kolejność"
+  "Drag to change order": "Przeciągnij, by zmienić kolejność",
+  "Permissions": "Uprawnienia",
+  "Save": "Zapisz",
+  "No metadata.": "Brak metadanych.",
+  "No resource kinds.": "Brak rodzajów zasobów.",
+  "No resources.": "Brak zasobów."
 }

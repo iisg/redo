@@ -30,13 +30,19 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/admin">
-                                        Panel administracyjny
-                                    </a></li>
-                                <li class="divider"></li>
-                                <li><a href="{{ path('logout') }}">
+                                {% if is_granted('ROLE_STATIC_ADMIN_PANEL') %}
+                                    <li>
+                                        <a href="/admin">
+                                            Panel administracyjny
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                {% endif %}
+                                <li>
+                                    <a href="{{ path('logout') }}">
                                         Wyloguj
-                                    </a></li>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     {% else %}

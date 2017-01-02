@@ -44,6 +44,20 @@ body > tr[oa-sortable-item] {
   display: none;
 }
 
+.page-preloader {
+  height: 0;
+  .progress {
+    height: 12px;
+  }
+}
+
+.btn-bottom-right {
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  z-index: 10;
+}
+
 // z-depth helpers from MaterializeCSS
 // see https://github.com/FezVrasta/bootstrap-material-design/issues/1109
 
@@ -78,12 +92,24 @@ body > tr[oa-sortable-item] {
   animation-delay: 50ms;
 }
 
-.fade-inout-updown {
+.fade-inup-outdown {
   &.au-enter {
     opacity: 0 !important;
   }
   &.au-enter-active {
     @include animation(fadeInDown .3s);
+  }
+  &.au-leave-active {
+    @include animation(fadeOutUp .3s);
+  }
+}
+
+.fade-inup-outup {
+  &.au-enter {
+    opacity: 0 !important;
+  }
+  &.au-enter-active {
+    @include animation(fadeInUp .3s);
   }
   &.au-leave-active {
     @include animation(fadeOutUp .3s);

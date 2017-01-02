@@ -1,0 +1,24 @@
+<template>
+    <require from="users/user-label.html"></require>
+    <require from="./user-static-permissions"></require>
+
+    <div class="au-animate fade-inup-outup page-preloader"
+        if.bind="!user">
+        <div class="progress progress-striped active">
+            <div class="progress-bar progress-bar-success progress-bar-full"></div>
+        </div>
+    </div>
+
+    <div class="au-animate fade-inup-outup"
+        if.bind="user">
+        <h1>
+            <user-label user.bind="user"></user-label>
+        </h1>
+
+        <div class="well"
+            if.bind="!isCurrentUser"
+            require-static-permissions="PERMISSIONS">
+            <user-static-permissions user.bind="user"></user-static-permissions>
+        </div>
+    </div>
+</template>

@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Application\EventListener;
 
-use Repeka\Application\Repository\User;
+use Repeka\Application\Entity\UserEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -48,7 +48,7 @@ class AjaxAuthenticationListener {
     }
 
     private function buildResponseForXmlHttpRequest(Request $request) {
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+        if ($this->tokenStorage->getToken()->getUser() instanceof UserEntity) {
             return $this->buildAccessDeniedResponse();
         } else {
             $this->saveTargetUrlIfFromAdminPanel($request);

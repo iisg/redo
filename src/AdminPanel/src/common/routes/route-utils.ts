@@ -1,15 +1,13 @@
-import {RouteDefinition} from "./route-types";
+import {RouteDefinition, RouteSettings} from "./route-types";
 
-export function route(url: string|string[], moduleId: string, title: string, icon?: string): RouteDefinition {
+export function route(url: string|string[], moduleId: string, title: string, settings: RouteSettings = {}): RouteDefinition {
   return {
     route: url,
     name: moduleId,
     moduleId: moduleId,
     nav: true,
     title: title,
-    settings: {
-      icon: icon
-    }
+    settings: settings,
   };
 }
 

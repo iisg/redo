@@ -1,7 +1,6 @@
 Repeka\Domain\Entity\Metadata:
   exclusion_policy: ALL
   read_only: true
-  access_type: public_method
   properties:
     id: ~
     name: {access_type: public_method}

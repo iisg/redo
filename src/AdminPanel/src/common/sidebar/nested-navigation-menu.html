@@ -3,7 +3,8 @@
     <require from="./nested-navigation-menu.css"></require>
 
     <li repeat.for="item of router.navigation | nestedNavigation"
-        class="${item.isActive || item.expanded ? 'current' : ''}">
+        class="${item.isActive || item.expanded ? 'current' : ''}"
+        require-static-permissions.one-time="item.settings.staticPermissions">
         <a if.bind="!item.children"
             href.bind="item.href"
             class="btn btn-default btn-block">
@@ -20,7 +21,8 @@
         <ul if.bind="item.expanded"
             class="nav-children height-inout au-animate">
             <li repeat.for="child of item.children"
-                class="${child.isActive ? 'current' : ''}">
+                class="${child.isActive ? 'current' : ''}"
+                require-static-permissions.one-time="child.settings.staticPermissions">
                 <a href.bind="child.href"
                     class="btn btn-default btn-block">
                     ${'nav::' + child.title & t}

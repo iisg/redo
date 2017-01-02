@@ -2,9 +2,10 @@
 namespace Repeka\Application\Entity;
 
 use Repeka\Domain\Entity\User;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class UserEntity implements User, UserInterface, \Serializable {
+class UserEntity implements User, UserInterface, EquatableInterface, \Serializable {
     private $id;
 
     private $username;
@@ -19,8 +20,13 @@ class UserEntity implements User, UserInterface, \Serializable {
 
     private $isActive;
 
+    private $staticPermissions;
+
+    private $roles;
+
     public function __construct() {
         $this->isActive = true;
+        $this->staticPermissions = [];
     }
 
     public function getId(): int {
@@ -69,28 +75,34 @@ class UserEntity implements User, UserInterface, \Serializable {
         return $this;
     }
 
-    public function getRoles() {
-        return ['ROLE_USER'];
+    public function getRoles(): array {
+        if (!$this->roles) {
+            $staticPermissionRoles = array_map(function ($permission) {
+                return 'ROLE_STATIC_' . $permission;
+            }, $this->staticPermissions);
+            $this->roles = array_merge($staticPermissionRoles, ['ROLE_USER']);
+        }
+        return $this->roles;
     }
 
     public function eraseCredentials() {
     }
 
-    /** @see \Serializable::serialize() */
     public function serialize() {
         return serialize([
             $this->id,
             $this->username,
             $this->password,
+            $this->roles,
         ]);
     }
 
-    /** @see \Serializable::unserialize() */
     public function unserialize($serialized) {
         list (
             $this->id,
             $this->username,
             $this->password,
+            $this->roles,
             ) = unserialize($serialized);
     }
 
@@ -108,5 +120,25 @@ class UserEntity implements User, UserInterface, \Serializable {
     public function setEmail($email) {
         $this->email = $email;
         return $this;
+    }
+
+    public function updateStaticPermissions(array $permissions) {
+        $this->staticPermissions = $permissions;
+        $this->roles = null;
+    }
+
+    public function getStaticPermissions(): array {
+        return $this->staticPermissions;
+    }
+
+    /**
+     * Ensures that the roles for the user are recalculated when they have changed.
+     * @see http://stackoverflow.com/a/13837102/878514
+     */
+    public function isEqualTo(UserInterface $user) {
+        if ($user instanceof UserEntity) {
+            return count($this->getRoles()) == count($user->getRoles()) && count(array_diff($this->getRoles(), $user->getRoles())) == 0;
+        }
+        return false;
     }
 }

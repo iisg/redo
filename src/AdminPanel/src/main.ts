@@ -6,8 +6,6 @@ import {Aurelia, LogManager} from "aurelia-framework";
 import {ConsoleAppender} from "aurelia-logging-console";
 import * as I18nBackend from "i18next-xhr-backend";
 import {configure as configureHttpClient} from "./config/http-client";
-import {CurrentUser} from "./common/user/current-user";
-import {CurrentUserFetcher} from "./common/user/current-user-fetcher";
 import {MetricsCollector} from "./common/metrics/metrics-collector";
 import {MetricsEventListener} from "./common/metrics/metrics-event-listener";
 import {CustomValidationRules} from "./common/validation/custom-validation-rules";
@@ -15,6 +13,7 @@ import {installValidationMessageLocalization} from "./common/validation/validati
 import {supportedUILanguages, languageNamespaces} from "./locales/language-constants";
 import {translationLoader} from "./locales/translation-loader";
 import {AppRouter} from "aurelia-router";
+import {CurrentUserFetcher} from "./users/current/current-user-fetcher";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -50,13 +49,16 @@ export function configure(aurelia: Aurelia) {
         router.transformTitle = title => i18n.tr('nav::' + title);
       });
     })
-    .globalResources('common/bootstrap/bootstrap-tooltip');
+    .globalResources([
+      'common/bootstrap/bootstrap-tooltip',
+      'common/authorization/require-static-permissions',
+    ]);
 
   configureHttpClient(aurelia);
   installValidationMessageLocalization(aurelia);
 
   aurelia.container.get(CurrentUserFetcher).fetch()
-    .then(user => aurelia.container.registerInstance(CurrentUser, user))
+    .then(user => aurelia.container.registerInstance(CurrentUserFetcher.CURRENT_USER_KEY, user))
     .then(() => aurelia.start())
     .then(() => aurelia.container.get(MetricsEventListener).register())
     .then(() => aurelia.container.get(CustomValidationRules).register())

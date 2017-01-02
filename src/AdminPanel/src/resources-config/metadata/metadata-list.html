@@ -3,12 +3,14 @@
     <require from="../multilingual-field/multilingual-display"></require>
     <require from="../add-form/animated-plus-button"></require>
 
-    <animated-plus-button class="pull-right"
-        opened.bind="addFormOpened"></animated-plus-button>
+    <div require-static-permissions="METADATA">
+        <animated-plus-button class="pull-right"
+            opened.bind="addFormOpened"></animated-plus-button>
 
-    <metadata-form show.bind="addFormOpened"
-        submit.call="addNewMetadata(metadata)"
-        class="fade-inout-updown au-animate floating-add-form-full-width"></metadata-form>
+        <metadata-form show.bind="addFormOpened"
+            submit.call="addNewMetadata(metadata)"
+            class="fade-inup-outdown au-animate floating-add-form-full-width"></metadata-form>
+    </div>
 
     <div class="row">
         <div class="col-xs-12">
@@ -21,7 +23,7 @@
                     <th>${'Control' & t}</th>
                     <th>${'Description' & t}</th>
                     <th>${'Hint' & t}</th>
-                    <th></th>
+                    <th require-static-permissions="METADATA"></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -37,7 +39,7 @@
                     oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); moved.call: onOrderChanged();">
                 <tr repeat.for="metadata of metadataList"
                     oa-sortable-item="item.bind: metadata"
-                    class="au-animate ${metadata.sortingClass || 'fade-inout-updown'}">
+                    class="au-animate ${metadata.sortingClass || 'fade-inup-outdown'}">
                     <td>${metadata.id}</td>
                     <td>${metadata.name}</td>
                     <td>
@@ -50,7 +52,8 @@
                     <td>
                         <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
                     </td>
-                    <td class="text-right">
+                    <td class="text-right"
+                        require-static-permissions="METADATA">
                         <div class="btn-group btn-group-xs">
                             <a class="btn btn-default drag-handle vertically-sortable"
                                 bootstrap-tooltip.bind="'Drag to change order' & t"
@@ -63,5 +66,11 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="alert alert-info"
+        if.bind="metadataList.length === 0">
+        <span class="fa fa-info-circle fa-fw"></span>
+        ${'No metadata.' & t}
     </div>
 </template>

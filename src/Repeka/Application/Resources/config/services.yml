@@ -49,6 +49,11 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Domain\Entity\Metadata]
 
+  repository.user:
+    class: Repeka\Application\Repository\UserDoctrineRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Application\Entity\UserEntity]
+
   repository.language:
     class: Repeka\Application\Repository\LanguageDoctrineRepository
     factory: ["@doctrine.orm.entity_manager", getRepository]
@@ -66,6 +71,10 @@ services:
 
   command_handler.metadata_list:
     class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
+    autowire: true
+
+  command_handler.user:
+    class: Repeka\Domain\UseCase\User\UserQueryHandler
     autowire: true
 
   command_handler.language_list:
@@ -100,11 +109,15 @@ services:
     class: Repeka\Domain\UseCase\Resource\ResourceCreateCommandHandler
     autowire: true
 
+  command_handler.user_update_static_permissions:
+    class: Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommandHandler
+    autowire: true
+
   command_validator.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
     arguments:
       - '@repository.language'
-      - '%data_module.supported_controls%'
+      - '%repeka.supported_controls%'
 
   command_validator.resource_kind_create:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator
@@ -116,6 +129,11 @@ services:
 
   command_validator.language_create:
     class: Repeka\Domain\UseCase\Language\LanguageCreateCommandValidator
+
+  command_validator.user_update_static_permissions:
+    class: Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommandValidator
+    arguments:
+      - '%repeka.static_permissions%'
 
   repeka.ajax_authentication_listener:
     class: Repeka\Application\EventListener\AjaxAuthenticationListener
@@ -140,7 +158,7 @@ services:
   elasticsearch.mapping_factory:
     class: Repeka\Application\Elasticsearch\Mapping\ESMappingFactory
     arguments:
-      - '%data_module.max_nesting_depth%'
+      - '%repeka.max_nesting_depth%'
       - '@repository.language'
       - '%elasticsearch.analyzers%'
       -

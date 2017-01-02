@@ -10,12 +10,13 @@ class Configuration implements ConfigurationInterface {
      */
     public function getConfigTreeBuilder() {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('data_module');
+        $rootNode = $treeBuilder->root('repeka');
         // @formatter:off because indentation makes config structure way clearer
         $rootNode
             ->children()
                 ->scalarNode('default_ui_language')->defaultValue('en')->end()
                 ->arrayNode('supported_controls')->prototype('scalar')->end()->end()
+                ->arrayNode('static_permissions')->prototype('scalar')->end()->end()
                 ->integerNode('metadata_nesting_depth')->min(1)->end()
                 ->arrayNode('elasticsearch')
                     ->children()

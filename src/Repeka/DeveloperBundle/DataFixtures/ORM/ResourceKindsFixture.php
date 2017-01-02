@@ -1,14 +1,12 @@
 <?php
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
-use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class InitialResourceKinds extends ContainerAwareFixture implements OrderedFixtureInterface {
-    const ORDER = InitialMetadata::ORDER + 1;
+class ResourceKindsFixture extends RepekaFixture {
+    const ORDER = MetadataFixture::ORDER + 1;
 
     /**
      * @inheritdoc
@@ -22,11 +20,11 @@ class InitialResourceKinds extends ContainerAwareFixture implements OrderedFixtu
                 'EN' => 'Book',
             ],
             'metadataList' => [
-                ['base_id' => 1],
-                ['base_id' => 2],
-                ['base_id' => 3],
-                ['base_id' => 4],
-                ['base_id' => 5],
+                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId()],
+                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getId()],
+                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE)->getId()],
+                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_HARD_COVER)->getId()],
+                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId()],
             ],
         ]));
     }
