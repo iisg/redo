@@ -31,5 +31,9 @@
   "Save": "Zapisz",
   "No metadata.": "Brak metadanych.",
   "No resource kinds.": "Brak rodzajów zasobów.",
-  "No resources.": "Brak zasobów."
+  "No resources.": "Brak zasobów.",
+  "First Name": "Imię",
+  "Last Name": "Nazwisko",
+  "Details": "Szczegóły",
+  "Username": "Nazwa użytkownika"
 }

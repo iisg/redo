@@ -14,9 +14,9 @@ class UserEntity implements User, UserInterface, EquatableInterface, \Serializab
 
     private $email;
 
-    private $name;
+    private $firstname;
 
-    private $surname;
+    private $lastname;
 
     private $isActive;
 
@@ -42,20 +42,20 @@ class UserEntity implements User, UserInterface, EquatableInterface, \Serializab
         return $this;
     }
 
-    public function getName(): string {
-        return $this->name;
+    public function getFirstname(): string {
+        return $this->firstname;
     }
 
-    public function setName(string $name) {
-        $this->name = $name;
+    public function setFirstname(string $firstname) {
+        $this->firstname = $firstname;
     }
 
-    public function getSurname(): string {
-        return $this->surname;
+    public function getLastname(): string {
+        return $this->lastname;
     }
 
-    public function setSurname(string $surname) {
-        $this->surname = $surname;
+    public function setLastname(string $lastname) {
+        $this->lastname = $lastname;
     }
 
     public function getSalt() {

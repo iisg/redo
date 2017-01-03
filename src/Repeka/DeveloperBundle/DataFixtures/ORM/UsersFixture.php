@@ -11,8 +11,8 @@ class UsersFixture extends ContainerAwareFixture {
         $user = new UserEntity();
         $user->setUsername('budynek');
         $user->setEmail('budynek');
-        $user->setName('Piotr');
-        $user->setSurname('Budynek');
+        $user->setFirstname('Piotr');
+        $user->setLastname('Budynek');
         /** @var PasswordEncoderInterface $encoder */
         $encoder = $this->container->get('security.password_encoder');
         $password = $encoder->encodePassword($user, 'budynek');
