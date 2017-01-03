@@ -5,6 +5,6 @@ Repeka\Application\Entity\UserEntity:
     id: ~
     username: {access_type: public_method}
     email: {access_type: public_method}
-    name: {access_type: public_method}
-    surname: {access_type: public_method}
+    firstname: {access_type: public_method}
+    lastname: {access_type: public_method}
     staticPermissions: {access_type: public_method}

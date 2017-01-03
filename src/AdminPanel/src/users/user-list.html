@@ -1,0 +1,40 @@
+<template>
+    <div class="user-list">
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>${'ID' & t}</th>
+                        <th>${'Username' & t}</th>
+                        <th>${'E-mail' & t}</th>
+                        <th>${'First Name' & t}</th>
+                        <th>${'Last Name' & t}</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr if.bind="!userList">
+                        <th colspan="6">
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                            </div>
+                        </th>
+                    </tr>
+                    </tfoot>
+                    <tbody class="au-stagger table-hover">
+                    <tr class="au-animate fade-inup-outdown"
+                        repeat.for="user of userList">
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.firstname}</td>
+                        <td>${user.lastname}</td>
+                        <td><a href="users/${user.id}" class="btn btn-raised btn-info btn-xs pull-right">${'Details' & t}</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>

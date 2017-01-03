@@ -77,6 +77,10 @@ services:
     class: Repeka\Domain\UseCase\User\UserQueryHandler
     autowire: true
 
+  command_handler.user_list:
+    class: Repeka\Domain\UseCase\User\UserListQueryHandler
+    autowire: true
+
   command_handler.language_list:
     class: Repeka\Domain\UseCase\Language\LanguageListQueryHandler
     autowire: true

@@ -22,11 +22,11 @@ Repeka\Application\Entity\UserEntity:
       type: string
       length: 60
       unique: true
-    name:
+    firstname:
       type: string
       length: 50
       nullable: true
-    surname:
+    lastname:
       type: string
       length: 50
       nullable: true

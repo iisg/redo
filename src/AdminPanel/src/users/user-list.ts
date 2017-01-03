@@ -1,5 +1,16 @@
-import {inlineView} from "aurelia-templating";
+import {UserRepository} from "./user-repository";
+import {User} from "./user";
+import {ComponentAttached} from "aurelia-templating";
+import {autoinject} from "aurelia-dependency-injection";
 
-@inlineView("<template>Pokaż <a href='uzytkownicy/1'>admina</a> lub <a href='uzytkownicy/2'>Budynka</a>. TODO REPEKA-99.</template>")
-export class UserList {
+@autoinject
+export class UserList implements ComponentAttached {
+  userList: User[];
+
+  constructor(private userRepository: UserRepository) {
+  }
+
+  attached(): void {
+    this.userRepository.getList().then(userList => this.userList = userList);
+  }
 }

@@ -2,6 +2,7 @@
 namespace Repeka\Application\Controller\Api;
 
 use Repeka\Application\Entity\UserEntity;
+use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 use Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -13,6 +14,16 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("/users")
  */
 class UsersController extends ApiController {
+    /**
+     * @Route
+     * @Method("GET")
+     * @Security("has_role('ROLE_STATIC_USERS')")
+     */
+    public function getListAction() {
+        $user = $this->commandBus->handle(new UserListQuery());
+        return $this->createJsonResponse($user);
+    }
+
     /**
      * @Route("/current")
      * @Method("GET")
