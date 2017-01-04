@@ -1,6 +1,10 @@
 imports:
   - { resource: config_dev.yml }
 
+doctrine:
+  dbal:
+    dbname: repeka_integration_testing
+
 framework:
   profiler:
     collect: false
@@ -8,9 +12,37 @@ framework:
     storage_id: session.storage.mock_file
   test: ~
 
+monolog:
+  handlers:
+    main:
+      channels: [!event]
+      level: notice
+      path: "%kernel.logs_dir%/%kernel.environment%.log"
+      type: stream
+
 swiftmailer:
   disable_delivery: true
 
 web_profiler:
   intercept_redirects: false
   toolbar: false
+
+security:
+  firewalls:
+    main:
+      http_basic: ~
+
+m6_statsd:
+  servers:
+    default:
+      address: 'udp://localhost'
+
+services:
+  test.client:
+    class: Repeka\Tests\TestClient
+    shared: false
+    arguments:
+      - '@kernel'
+      - '%test.client.parameters%'
+      - '@test.client.history'
+      - '@test.client.cookiejar'

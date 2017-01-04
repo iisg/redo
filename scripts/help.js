@@ -10,7 +10,7 @@ var printHelp = function (help) {
   for (var task in help) {
     console.log(chalk.yellow(task) + "\t" + help[task]);
   }
-}
+};
 
 module.exports = {
   printHelp: printHelp

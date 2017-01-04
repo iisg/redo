@@ -13,6 +13,7 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
     }
 
     public function findOne(int $id): ResourceKind {
+        /** @var ResourceKind $resourceKind */
         $resourceKind = $this->find($id);
         if (!$resourceKind) {
             throw new EntityNotFoundException("ID: $id");
