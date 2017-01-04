@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @Route("/resources")
@@ -41,7 +42,7 @@ class ResourcesController extends ApiController {
     public function postAction(Request $request) {
         $data = $request->request->all();
         if (empty($data['kind_id'])) {
-            throw $this->createNotFoundException();
+            throw new BadRequestHttpException('kind_id missing');
         }
         $resourceKind = $this->container->get('repository.resource_kind')->findOne($data['kind_id']);
         $command = new ResourceCreateCommand($resourceKind, $data['contents'] ?? []);

@@ -8,8 +8,8 @@ class Metadata {
     private $control;
     private $name;
     private $label;
-    private $description;
-    private $placeholder;
+    private $description = [];
+    private $placeholder = [];
     /** @var Metadata */
     private $baseMetadata;
     private $resourceKind;

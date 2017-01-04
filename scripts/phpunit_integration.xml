@@ -5,31 +5,19 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="../app/autoload.php">
+         bootstrap="../app/integration_tests_bootstrapper.php">
     <php>
         <ini name="error_reporting" value="-1"/>
         <server name="KERNEL_DIR" value="../app/"/>
     </php>
 
     <listeners>
-        <!--
-            Integration test listener is here because PHPStorm will use this
-            file for selective test running (for example when you run single
-            test case). For unit tests the listener doesn't do anything.
-        -->
         <listener class="Repeka\Tests\IntegrationTestListener" file="../src/Repeka/Tests/IntegrationTestListener.php"/>
     </listeners>
 
     <testsuites>
         <testsuite name="repeka">
-            <directory>../src/Repeka/Tests</directory>
-            <exclude>../src/Repeka/Tests/Integration</exclude>
+            <directory>../src/Repeka/Tests/Integration</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory suffix=".php">../src/Repeka/Domain</directory>
-        </whitelist>
-    </filter>
 </phpunit>
