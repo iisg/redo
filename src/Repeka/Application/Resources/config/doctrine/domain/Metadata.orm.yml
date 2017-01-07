@@ -37,3 +37,8 @@ Repeka\Domain\Entity\Metadata:
     placeholder:
       type: json_document
       options: {jsonb: true}
+    ordinalNumber:
+      type: integer
+      nullable: false
+      column: ordinal_number
+      options: {default: 0}

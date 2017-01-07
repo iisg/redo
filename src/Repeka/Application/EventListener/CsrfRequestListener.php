@@ -45,11 +45,12 @@ class CsrfRequestListener {
         $response = $event->getResponse();
         if ($this->isApi($request) && $request->isXmlHttpRequest() && $response && $response->isSuccessful()) {
             $tokenToSet = $this->tokenManager->getToken(self::class);
-            if (!$request->isMethodSafe()) {
-                $tokenToSet = $this->tokenManager->refreshToken(self::class);
-            }
             $response->headers->set(self::TOKEN_HEADER, $tokenToSet->getValue());
         }
+    }
+
+    public function refreshToken() {
+        $this->tokenManager->refreshToken(self::class);
     }
 
     private function isApi(Request $request) {

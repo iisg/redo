@@ -14,6 +14,7 @@ class CurrentUserController extends Controller {
         /** @var User $user */
         $user = $this->getUser();
         $this->get('m6_statsd')->increment('repeka.admin_panel.visit');
+        $this->get('repeka.event_listener.csrf_request_listener')->refreshToken();
         return new JsonResponse([
             'id' => $user->getId(),
             'username' => $user->getUsername(),

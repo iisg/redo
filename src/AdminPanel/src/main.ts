@@ -4,7 +4,7 @@ import "bootstrap-material-design";
 import "bootstrap-select";
 import {Aurelia, LogManager} from "aurelia-framework";
 import {ConsoleAppender} from "aurelia-logging-console";
-import * as I18nBackend from 'i18next-xhr-backend';
+import * as I18nBackend from "i18next-xhr-backend";
 import {configure as configureHttpClient} from "./config/http-client";
 import {CurrentUser} from "./common/user/current-user";
 import {CurrentUserFetcher} from "./common/user/current-user-fetcher";
@@ -28,6 +28,7 @@ export function configure(aurelia: Aurelia) {
     .plugin('aurelia-configuration', config => config.setDirectory('/api/'))
     .plugin('aurelia-validation')
     .plugin('aurelia-cookie')
+    .plugin("oribella-aurelia-sortable")
     .plugin('aurelia-i18n', (i18n) => {
       i18n.i18next.use(I18nBackend);
       return i18n.setup({
@@ -48,7 +49,8 @@ export function configure(aurelia: Aurelia) {
         const router = aurelia.container.get(AppRouter);
         router.transformTitle = title => i18n.tr('nav::' + title);
       });
-    });
+    })
+    .globalResources('common/bootstrap/bootstrap-tooltip');
 
   configureHttpClient(aurelia);
   installValidationMessageLocalization(aurelia);

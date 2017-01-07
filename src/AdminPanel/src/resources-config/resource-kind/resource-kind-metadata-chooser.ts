@@ -10,6 +10,9 @@ export class ResourceKindMetadataChooser implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay})
   value: Metadata;
 
+  @bindable({defaultBindingMode: bindingMode.twoWay})
+  hasMetadataToChoose: boolean;
+
   @bindable resourceKind: ResourceKind;
 
   dropdown: Element;
@@ -28,6 +31,8 @@ export class ResourceKindMetadataChooser implements ComponentAttached {
   @computedFrom("metadataList.length", "resourceKind.metadataList.length")
   get notUsedMetadata() {
     let usedIds = this.resourceKind ? this.resourceKind.metadataList.map(metadata => metadata.base.id) : [];
-    return this.metadataList ? this.metadataList.filter(metadata => usedIds.indexOf(metadata.id) < 0) : [];
+    let notUsedMetadata = this.metadataList ? this.metadataList.filter(metadata => usedIds.indexOf(metadata.id) < 0) : [];
+    this.hasMetadataToChoose = !this.metadataList || notUsedMetadata.length > 0;
+    return notUsedMetadata;
   }
 }

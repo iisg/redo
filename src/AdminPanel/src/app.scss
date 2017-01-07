@@ -32,6 +32,18 @@ a {
   }
 }
 
+.oa-sorting {
+  @include opacity(.5);
+}
+
+.vertically-sortable {
+  cursor: n-resize;
+}
+
+body > tr[oa-sortable-item] {
+  display: none;
+}
+
 // z-depth helpers from MaterializeCSS
 // see https://github.com/FezVrasta/bootstrap-material-design/issues/1109
 

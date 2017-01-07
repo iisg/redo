@@ -4,6 +4,7 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -75,6 +76,7 @@ class InitialMetadata extends ContainerAwareFixture implements OrderedFixtureInt
             'placeholder' => [],
             'control' => 'integer',
         ]));
+        $container->get('repeka.command_bus')->handle(new MetadataUpdateOrderCommand([1, 2, 3, 4, 5]));
     }
 
     public function getOrder() {

@@ -19,7 +19,7 @@
     "clean:backend:sessions": "rm -fr var/sessions/prod && rm -fr var/sessions/dev",
     "clean:admin": "cd src/AdminPanel && npm run -s clean",
     "db:create": "php bin/console doctrine:database:create --if-not-exists --no-interaction",
-    "db:fixture": "php bin/console doctrine:database:drop -e dev --force --if-exists && npm run -s db:migrate && php bin/console doctrine:fixtures:load -e dev -n",
+    "db:fixture": "php bin/console doctrine:database:drop -e dev --force --if-exists && sleep 2 && npm run -s db:migrate && php bin/console doctrine:fixtures:load -e dev -n",
     "db:migrate": "npm run -s db:create && php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration",
     "db:diff": "php bin/console doctrine:migrations:diff",
     "dist": "node scripts/repeka.js && node scripts/version-public.js && (npm run dist:backend & npm run dist:admin) && php bin/console statsd:deploy",

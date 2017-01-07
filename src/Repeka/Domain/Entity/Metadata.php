@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Domain\Entity;
 
+use Assert\Assertion;
+
 class Metadata {
     private $id;
     private $control;
@@ -11,6 +13,7 @@ class Metadata {
     /** @var Metadata */
     private $baseMetadata;
     private $resourceKind;
+    private $ordinalNumber;
 
     private function __construct() {
     }
@@ -20,6 +23,7 @@ class Metadata {
         $metadata->control = $control;
         $metadata->name = $name;
         $metadata->label = $label;
+        $metadata->ordinalNumber = -1;
         return $metadata;
     }
 
@@ -28,6 +32,7 @@ class Metadata {
         $metadata->label = $label;
         $metadata->baseMetadata = $base;
         $metadata->resourceKind = $resourceKind;
+        $metadata->ordinalNumber = -1;
         return $metadata;
     }
 
@@ -71,5 +76,14 @@ class Metadata {
 
     public function isBase() {
         return !$this->baseMetadata;
+    }
+
+    public function getOrdinalNumber() {
+        return $this->ordinalNumber;
+    }
+
+    public function updateOrdinalNumber($newOrdinalNumber) {
+        Assertion::greaterOrEqualThan($newOrdinalNumber, 0);
+        $this->ordinalNumber = $newOrdinalNumber;
     }
 }

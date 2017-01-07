@@ -84,6 +84,10 @@ services:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler
     autowire: true
 
+  command_handler.metadata_update_order:
+    class: Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommandHandler
+    autowire: true
+
   command_handler.language_create:
     class: Repeka\Domain\UseCase\Language\LanguageCreateCommandHandler
     autowire: true
