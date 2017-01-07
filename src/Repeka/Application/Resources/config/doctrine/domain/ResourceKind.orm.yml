@@ -8,6 +8,7 @@ Repeka\Domain\Entity\ResourceKind:
       generator: {strategy: AUTO}
   oneToMany:
     metadataList:
+      orderBy: {ordinalNumber: 'ASC'}
       targetEntity: Repeka\Domain\Entity\Metadata
       mappedBy: resourceKind
   fields:

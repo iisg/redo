@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Entity;
 
+use Assert\InvalidArgumentException;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 
@@ -54,5 +55,16 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $baseMetadata = Metadata::create('text', 'Prop', ['PL' => 'PL']);
         $childMetadata = Metadata::createForResourceKind(['PL' => '   '], $rk, $baseMetadata);
         $this->assertEquals('PL', $childMetadata->getLabel()['PL']);
+    }
+
+    public function testSettingOrdinalNumberLessThan0() {
+        $this->expectException(InvalidArgumentException::class);
+        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA']);
+        $metadata->updateOrdinalNumber(-1);
+    }
+
+    public function testSettingOrdinalNumberTo0() {
+        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA']);
+        $metadata->updateOrdinalNumber(0);
     }
 }

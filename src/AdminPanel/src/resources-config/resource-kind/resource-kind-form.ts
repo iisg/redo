@@ -15,6 +15,8 @@ export class ResourceKindForm {
 
   submitting = false;
 
+  sortingMetadata = false;
+
   private controller: ValidationController;
 
   constructor(validationControllerFactory: ValidationControllerFactory) {
@@ -30,6 +32,10 @@ export class ResourceKindForm {
 
   removeMetadata(metadata: ResourceKindMetadata) {
     this.resourceKind.metadataList.splice(this.resourceKind.metadataList.indexOf(metadata), 1);
+  }
+
+  isSortingMetadata() {
+    return this.sortingMetadata;
   }
 
   validateAndSubmit() {

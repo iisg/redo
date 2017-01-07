@@ -21,20 +21,23 @@
                     <th>${'Control' & t}</th>
                     <th>${'Description' & t}</th>
                     <th>${'Hint' & t}</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr if.bind="!metadataList">
-                    <th colspan="6">
+                    <th colspan="7">
                         <div class="progress progress-striped active">
                             <div class="progress-bar progress-bar-success progress-bar-full"></div>
                         </div>
                     </th>
                 </tr>
                 </tfoot>
-                <tbody class="au-stagger">
+                <tbody class="au-stagger"
+                    oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); moved.call: onOrderChanged();">
                 <tr repeat.for="metadata of metadataList"
-                    class="au-animate fade-inout-updown">
+                    oa-sortable-item="item.bind: metadata"
+                    class="au-animate ${metadata.sortingClass || 'fade-inout-updown'}">
                     <td>${metadata.id}</td>
                     <td>${metadata.name}</td>
                     <td>
@@ -46,6 +49,15 @@
                     </td>
                     <td>
                         <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group btn-group-xs">
+                            <a class="btn btn-default drag-handle vertically-sortable"
+                                bootstrap-tooltip.bind="'Drag to change order' & t"
+                                data-placement="left">
+                                <span class="fa fa-sort"></span>
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

@@ -12,7 +12,7 @@ System.config({
   map: {
     "arrive": "npm:arrive@2.3.1",
     "aurelia-animator-css": "npm:aurelia-animator-css@1.0.1",
-    "aurelia-binding": "npm:aurelia-binding@1.1.0",
+    "aurelia-binding": "npm:aurelia-binding@1.1.1",
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@1.0.1",
     "aurelia-configuration": "github:vheissu/aurelia-configuration@1.0.4",
     "aurelia-cookie": "npm:aurelia-cookie@1.0.10",
@@ -44,6 +44,7 @@ System.config({
     "font-awesome": "npm:font-awesome@4.6.3",
     "i18next-xhr-backend": "npm:i18next-xhr-backend@1.2.1",
     "jquery": "npm:jquery@2.2.4",
+    "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.8.0",
     "region-flags": "github:behdad/region-flags@1.0.1",
     "text": "github:systemjs/plugin-text@0.0.9",
     "github:jspm/nodelibs-assert@0.1.0": {
@@ -86,7 +87,7 @@ System.config({
       "aurelia-pal": "npm:aurelia-pal@1.2.0",
       "aurelia-templating": "npm:aurelia-templating@1.1.4"
     },
-    "npm:aurelia-binding@1.1.0": {
+    "npm:aurelia-binding@1.1.1": {
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
       "aurelia-pal": "npm:aurelia-pal@1.2.0",
@@ -108,10 +109,6 @@ System.config({
       "aurelia-templating-resources": "npm:aurelia-templating-resources@1.2.0",
       "aurelia-templating-router": "npm:aurelia-templating-router@1.0.1"
     },
-    "npm:aurelia-dependency-injection@1.2.0": {
-      "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
-      "aurelia-pal": "npm:aurelia-pal@1.2.0"
-    },
     "npm:aurelia-dependency-injection@1.2.1": {
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
       "aurelia-pal": "npm:aurelia-pal@1.2.0"
@@ -120,7 +117,7 @@ System.config({
       "aurelia-logging": "npm:aurelia-logging@1.2.0"
     },
     "npm:aurelia-framework@1.0.8": {
-      "aurelia-binding": "npm:aurelia-binding@1.1.0",
+      "aurelia-binding": "npm:aurelia-binding@1.1.1",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
@@ -139,8 +136,8 @@ System.config({
       "aurelia-path": "npm:aurelia-path@1.1.1"
     },
     "npm:aurelia-i18n@1.2.3": {
-      "aurelia-binding": "npm:aurelia-binding@1.1.0",
-      "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.0",
+      "aurelia-binding": "npm:aurelia-binding@1.1.1",
+      "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
       "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
@@ -186,12 +183,12 @@ System.config({
       "aurelia-pal": "npm:aurelia-pal@1.2.0"
     },
     "npm:aurelia-templating-binding@1.1.0": {
-      "aurelia-binding": "npm:aurelia-binding@1.1.0",
+      "aurelia-binding": "npm:aurelia-binding@1.1.1",
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
       "aurelia-templating": "npm:aurelia-templating@1.1.4"
     },
     "npm:aurelia-templating-resources@1.2.0": {
-      "aurelia-binding": "npm:aurelia-binding@1.1.0",
+      "aurelia-binding": "npm:aurelia-binding@1.1.1",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
@@ -202,7 +199,7 @@ System.config({
       "aurelia-templating": "npm:aurelia-templating@1.1.4"
     },
     "npm:aurelia-templating-router@1.0.1": {
-      "aurelia-binding": "npm:aurelia-binding@1.1.0",
+      "aurelia-binding": "npm:aurelia-binding@1.1.1",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
@@ -212,7 +209,7 @@ System.config({
       "aurelia-templating": "npm:aurelia-templating@1.1.4"
     },
     "npm:aurelia-templating@1.1.4": {
-      "aurelia-binding": "npm:aurelia-binding@1.1.0",
+      "aurelia-binding": "npm:aurelia-binding@1.1.1",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
@@ -229,7 +226,7 @@ System.config({
       "aurelia-templating": "npm:aurelia-templating@1.1.4"
     },
     "npm:aurelia-validation@1.0.0-beta.1.0.1": {
-      "aurelia-binding": "npm:aurelia-binding@1.1.0",
+      "aurelia-binding": "npm:aurelia-binding@1.1.1",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
       "aurelia-pal": "npm:aurelia-pal@1.2.0",
@@ -273,6 +270,44 @@ System.config({
     },
     "npm:intl@1.2.5": {
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:oribella-aurelia-sortable@0.8.0": {
+      "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.2.1",
+      "aurelia-pal": "npm:aurelia-pal@1.2.0",
+      "aurelia-pal-browser": "npm:aurelia-pal-browser@1.1.0",
+      "aurelia-templating": "npm:aurelia-templating@1.1.4",
+      "oribella-default-gestures": "npm:oribella-default-gestures@0.5.4"
+    },
+    "npm:oribella-default-gestures@0.5.4": {
+      "oribella-doubletap": "npm:oribella-doubletap@0.5.4",
+      "oribella-framework": "npm:oribella-framework@0.5.3",
+      "oribella-longtap": "npm:oribella-longtap@0.5.4",
+      "oribella-longtap-swipe": "npm:oribella-longtap-swipe@0.5.4",
+      "oribella-pinch": "npm:oribella-pinch@0.5.4",
+      "oribella-rotate": "npm:oribella-rotate@0.5.4",
+      "oribella-swipe": "npm:oribella-swipe@0.5.4",
+      "oribella-tap": "npm:oribella-tap@0.5.4"
+    },
+    "npm:oribella-doubletap@0.5.4": {
+      "oribella-framework": "npm:oribella-framework@0.5.3"
+    },
+    "npm:oribella-longtap-swipe@0.5.4": {
+      "oribella-framework": "npm:oribella-framework@0.5.3"
+    },
+    "npm:oribella-longtap@0.5.4": {
+      "oribella-framework": "npm:oribella-framework@0.5.3"
+    },
+    "npm:oribella-pinch@0.5.4": {
+      "oribella-framework": "npm:oribella-framework@0.5.3"
+    },
+    "npm:oribella-rotate@0.5.4": {
+      "oribella-framework": "npm:oribella-framework@0.5.3"
+    },
+    "npm:oribella-swipe@0.5.4": {
+      "oribella-framework": "npm:oribella-framework@0.5.3"
+    },
+    "npm:oribella-tap@0.5.4": {
+      "oribella-framework": "npm:oribella-framework@0.5.3"
     },
     "npm:path-browserify@0.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"

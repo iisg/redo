@@ -34,4 +34,12 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
         $firstMetadata = $resourceKind->getMetadataList()[0];
         $this->assertEquals('Label A', $firstMetadata->getLabel()['PL']);
     }
+
+    public function testSavingMetadataOrdinalNumbers() {
+        $this->metadataRepository->expects($this->atLeastOnce())->method('save')->willReturnArgument(0);
+        $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')->willReturn(Metadata::create('text', 'base', []));
+        $resourceKind = $this->factory->create($this->command);
+        $this->assertEquals(0, $resourceKind->getMetadataList()[0]->getOrdinalNumber());
+        $this->assertEquals(1, $resourceKind->getMetadataList()[1]->getOrdinalNumber());
+    }
 }

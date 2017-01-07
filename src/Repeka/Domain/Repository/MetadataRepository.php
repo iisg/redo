@@ -17,6 +17,9 @@ interface MetadataRepository {
      */
     public function findOne(int $id): Metadata;
 
-    /** @return Metadata[] */
+    /**
+     * Returns all metadata that have no base (i.e. are not assigned to any resoruce kind), sorted by ordinalNumber, ascending.
+     * @return Metadata[]
+     */
     public function findAllBase(): array;
 }

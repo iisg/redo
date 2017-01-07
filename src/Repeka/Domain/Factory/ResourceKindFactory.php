@@ -25,6 +25,7 @@ class ResourceKindFactory {
             $metadata = $this->metadataFactory->create(MetadataCreateCommand::fromArray($data));
             $base = $this->metadataRepository->findOne($baseId);
             $metadata = $this->metadataFactory->createForResourceKind($resourceKind, $base, $metadata);
+            $metadata->updateOrdinalNumber(count($resourceKind->getMetadataList()));
             $metadata = $this->metadataRepository->save($metadata);
             $resourceKind->addMetadata($metadata);
         }

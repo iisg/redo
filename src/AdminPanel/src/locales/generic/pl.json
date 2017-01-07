@@ -23,5 +23,8 @@
   "Select": "Wybierz",
   "Add new resource": "Dodaj nowy zasób",
   "No. of metadata:": "Liczba metadanych:",
-  "Resource kind": "Rodzaj zasobu"
+  "Resource kind": "Rodzaj zasobu",
+  "Change order": "Zmień kolejność",
+  "Changing order": "Zmiana kolejności",
+  "Drag to change order": "Przeciągnij, by zmienić kolejność"
 }

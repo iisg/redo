@@ -33,6 +33,7 @@
     "jasmine": "registry:dt/jasmine#2.5.0+20161119044246"
   },
   "globalDependencies": {
+    "bootstrap": "registry:dt/bootstrap#3.3.5+20160726204056",
     "bootstrap-select": "registry:dt/bootstrap-select#1.11.2+20161110161159",
     "i18next": "github:aurelia/i18n/src/customTypings/i18next.d.ts",
     "i18next-xhr-backend": "github:aurelia/i18n/src/customTypings/i18next-xhr-backend.d.ts",
