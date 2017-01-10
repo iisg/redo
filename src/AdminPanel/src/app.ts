@@ -25,7 +25,9 @@ export class App implements ConfiguresRouter, ComponentAttached {
     config.options.pushState = true;
     config.options.root = '/admin';
     config.map(routes);
-    config.fallbackRoute(''); // TODO REPEKA-103
+    config.map([{route: ['not-allowed'], name: 'not-allowed', moduleId: 'common/error-pages/not-allowed'}]);
+    config.fallbackRoute('');
+    config.mapUnknownRoutes('common/error-pages/not-found');
     config.addAuthorizeStep(this.routeAccessChecker);
     this.router = router;
   }

@@ -28,12 +28,17 @@
   "Changing order": "Zmiana kolejności",
   "Drag to change order": "Przeciągnij, by zmienić kolejność",
   "Permissions": "Uprawnienia",
-  "Save": "Zapisz",
   "No metadata.": "Brak metadanych.",
   "No resource kinds.": "Brak rodzajów zasobów.",
   "No resources.": "Brak zasobów.",
   "First Name": "Imię",
   "Last Name": "Nazwisko",
   "Details": "Szczegóły",
-  "Username": "Nazwa użytkownika"
+  "Username": "Nazwa użytkownika",
+  "Save": "Zapisz",
+  "You do not have permission to access this page": "Nie masz dostępu do tej strony",
+  "The page could not be found": "Nie można wyświetlić strony",
+  "Please check if you have entered correct address or use the menu on the left side.": "Sprawdź poprawność wpisanego adresu lub użyj menu po lewej stronie.",
+  "Server returned error 404 - Not Found": "Serwer zwrócił błąd 404 - Nie Znaleziono",
+  "Server returned error 403 - Forbidden": "Serwer zwrócił błąd 403 - Zabronione"
 }
