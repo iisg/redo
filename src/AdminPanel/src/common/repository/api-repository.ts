@@ -16,17 +16,17 @@ export abstract class ApiRepository<T> {
     return this.httpClient.post(this.endpoint, this.toBackend(entity)).then(response => this.toEntity(response.content));
   }
 
-  protected toBackend(entity: T): Object {
-    return entity;
-  }
-
   public patch(entity: T, patch: any) {
     return this.httpClient.patch(this.oneEntityEndpoint(entity), patch).then(response => this.toEntity(response.content));
   }
 
+  protected toBackend(entity: T): Object {
+    return entity;
+  }
+
   private oneEntityEndpoint(entity: number|string|Object) {
     let id = entity['id'] || entity;
-    return this.endpoint + `/${id}`;
+    return `${this.endpoint}/${id}`;
   }
 
   abstract toEntity(data: Object): T;

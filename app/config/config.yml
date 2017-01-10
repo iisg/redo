@@ -68,6 +68,8 @@ framework:
     resource: "%kernel.root_dir%/config/routing.yml"
     strict_requirements: ~
   secret: "%secret%"
+  serializer:
+    enabled: true
   session:
     handler_id: session.handler.native_file
     save_path: "%kernel.cache_dir%/../../sessions/%kernel.environment%"
@@ -78,17 +80,6 @@ framework:
   trusted_proxies: ~
   validation:
     enable_annotations: true
-
-jms_serializer:
-  metadata:
-    auto_detection: false
-    directories:
-      domain:
-        path: "@RepekaBundle/Resources/config/serializer/domain"
-        namespace_prefix: "Repeka\\Domain\\Entity"
-      bundle:
-        path: "@RepekaBundle/Resources/config/serializer/bundle"
-        namespace_prefix: "Repeka\\Application\\Entity"
 
 parameters:
   locale: pl

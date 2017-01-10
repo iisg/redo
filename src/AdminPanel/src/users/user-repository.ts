@@ -2,7 +2,6 @@ import {ApiRepository} from "../common/repository/api-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {User} from "./user";
 import {HttpClient} from "aurelia-http-client";
-import {propertyNamesToCamelCase} from "../common/repository/repository-utils";
 
 @autoinject
 export class UserRepository extends ApiRepository<User> {
@@ -11,10 +10,10 @@ export class UserRepository extends ApiRepository<User> {
   }
 
   updateStaticPermissions(user: User, permissions: Array<string>): Promise<User> {
-    return this.patch(user, {static_permissions: permissions});
+    return this.patch(user, {staticPermissions: permissions});
   }
 
   public toEntity(data: Object): User {
-    return $.extend(new User(), propertyNamesToCamelCase(data));
+    return $.extend(new User(), data);
   }
 }

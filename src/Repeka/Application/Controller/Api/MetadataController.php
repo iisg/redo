@@ -3,6 +3,7 @@ namespace Repeka\Application\Controller\Api;
 
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -31,6 +32,17 @@ class MetadataController extends ApiController {
         $command = MetadataCreateCommand::fromArray($request->request->all());
         $metadata = $this->commandBus->handle($command);
         return $this->createJsonResponse($metadata, 201);
+    }
+
+    /**
+     * @Route("/{id}")
+     * @Method("PATCH")
+     * @Security("has_role('ROLE_STATIC_METADATA')")
+     */
+    public function patchAction(int $id, Request $request) {
+        $command = MetadataUpdateCommand::fromArray($id, $request->request->all());
+        $updatedMetadata = $this->commandBus->handle($command);
+        return $this->createJsonResponse($updatedMetadata);
     }
 
     /**

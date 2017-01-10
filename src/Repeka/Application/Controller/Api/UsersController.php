@@ -53,7 +53,7 @@ class UsersController extends ApiController {
      * @Security("has_role('ROLE_STATIC_PERMISSIONS')")
      */
     public function updateUserAction(Request $request, int $id) {
-        $permissions = $request->request->all()['static_permissions'];
+        $permissions = $request->request->all()['staticPermissions'];
         $command = new UserUpdateStaticPermissionsCommand($id, $permissions);
         $user = $this->commandBus->handle($command);
         return $this->createJsonResponse($user);

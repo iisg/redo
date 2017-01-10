@@ -13,6 +13,14 @@ export class MetadataRepository extends ApiRepository<Metadata> {
     return this.httpClient.put(this.endpoint, metadataList.map(metadata => metadata.id));
   }
 
+  public update(updatedMetadata: Metadata): Promise<Metadata> {
+    return this.patch(updatedMetadata, {
+      label: updatedMetadata.label,
+      description: updatedMetadata.description,
+      placeholder: updatedMetadata.placeholder,
+    });
+  }
+
   public toEntity(data: Object): Metadata {
     return $.extend(new Metadata(), data);
   }

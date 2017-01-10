@@ -8,6 +8,18 @@ services:
         - '@repeka.command_bus.middleware.wrap_command_with_transaction'
         - '@repeka.command_bus.middleware.call_command'
 
+  metadata.normalizer:
+    class: Repeka\Application\Serialization\MetadataNormalizer
+    public: false
+    tags:
+      - { name: serializer.normalizer }
+
+  user.normalizer:
+    class: Repeka\Application\Serialization\UserEntityNormalizer
+    public: false
+    tags:
+      - { name: serializer.normalizer }
+
   repeka.command_bus.middleware.call_command:
     class: Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware
     autowire: true
@@ -90,11 +102,15 @@ services:
     autowire: true
 
   command_handler.resource_list:
-      class: Repeka\Domain\UseCase\Resource\ResourceListQueryHandler
-      autowire: true
+    class: Repeka\Domain\UseCase\Resource\ResourceListQueryHandler
+    autowire: true
 
   command_handler.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler
+    autowire: true
+
+  command_handler.metadata_update:
+    class: Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandHandler
     autowire: true
 
   command_handler.metadata_update_order:
@@ -122,6 +138,10 @@ services:
     arguments:
       - '@repository.language'
       - '%repeka.supported_controls%'
+
+  command_validator.metadata_update:
+    class: Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator
+    autowire: true
 
   command_validator.resource_kind_create:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator

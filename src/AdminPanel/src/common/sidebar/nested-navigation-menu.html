@@ -19,7 +19,7 @@
             ${'nav::' + item.title & t}
         </a>
         <ul if.bind="item.expanded"
-            class="nav-children height-inout au-animate">
+            class="nav-children anim-height-inout-150 au-animate">
             <li repeat.for="child of item.children"
                 class="${child.isActive ? 'current' : ''}"
                 require-static-permissions.one-time="child.settings.staticPermissions">

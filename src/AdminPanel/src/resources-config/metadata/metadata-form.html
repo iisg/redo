@@ -1,32 +1,42 @@
 <template>
     <require from="./metadata-control-select"></require>
 
-    <form class="well"
-        submit.delegate="validateAndSubmit()">
-        <h2>${'Add new metadata' & t}</h2>
+    <form submit.delegate="validateAndSubmit()">
         <div class="row">
             <div class="col-sm-6">
-                <div class="form-group">
+                <div class="form-group ${editing ? 'no-margin-top' : ''}">
                     <label for="metadataName">${'Name' & t}</label>
                     <input type="text"
+                        disabled.bind="editing"
                         value.bind="metadata.name & validate"
                         class="form-control"
                         id="metadataName">
                 </div>
             </div>
             <div class="col-sm-4 col-sm-offset-2">
-                <div class="form-group">
-                    <metadata-control-select value.bind="metadata.control & validate"></metadata-control-select>
+                <div class="form-group ${editing ? 'no-margin-top' : ''}">
+                    <metadata-control-select value.bind="metadata.control & validate"
+                        disabled.bind="editing"></metadata-control-select>
                 </div>
             </div>
         </div>
         <compose view="./metadata-editable-properties.html"></compose>
-        <div class="form-group text-right">
-            <button class="btn btn-primary"
-                disabled.bind="submitting">
-                <i class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></i>
-                ${'Add' & t}
-            </button>
+        <div class="form-group text-right no-margin-top">
+            <div class="btn-group">
+                <button type="button"
+                    class="btn btn-warning"
+                    click.delegate="cancel()"
+                    if.bind="editing"
+                    disabled.bind="submitting">
+                    <span class="fa fa-fw fa-times"></span>
+                    ${'Cancel' & t}
+                </button>
+                <button class="btn btn-primary"
+                    disabled.bind="submitting">
+                    <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : (editing ? 'fa-save' : 'fa-plus')}"></span>
+                    ${editing ? 'Save' : 'Add' & t}
+                </button>
+            </div>
         </div>
     </form>
 </template>

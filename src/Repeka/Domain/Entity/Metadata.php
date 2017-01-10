@@ -18,21 +18,31 @@ class Metadata {
     private function __construct() {
     }
 
-    public static function create(string $control, string $name, array $label): Metadata {
+    public static function create(string $control, string $name, array $label, array $placeholder = [], array $description = []): Metadata {
         $metadata = new self();
         $metadata->control = $control;
         $metadata->name = $name;
         $metadata->label = $label;
         $metadata->ordinalNumber = -1;
+        $metadata->placeholder = $placeholder;
+        $metadata->description = $description;
         return $metadata;
     }
 
-    public static function createForResourceKind(array $label, ResourceKind $resourceKind, Metadata $base) {
+    public static function createForResourceKind(
+        array $label,
+        ResourceKind $resourceKind,
+        Metadata $base,
+        array $placeholder = [],
+        array $description = []
+    ) {
         $metadata = new self();
         $metadata->label = $label;
         $metadata->baseMetadata = $base;
         $metadata->resourceKind = $resourceKind;
         $metadata->ordinalNumber = -1;
+        $metadata->placeholder = $placeholder;
+        $metadata->description = $description;
         return $metadata;
     }
 
@@ -64,16 +74,6 @@ class Metadata {
         return $this->resourceKind;
     }
 
-    public function setDescription(array $description): Metadata {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function setPlaceholder(array $placeholder): Metadata {
-        $this->placeholder = $placeholder;
-        return $this;
-    }
-
     public function isBase() {
         return !$this->baseMetadata;
     }
@@ -85,5 +85,11 @@ class Metadata {
     public function updateOrdinalNumber($newOrdinalNumber) {
         Assertion::greaterOrEqualThan($newOrdinalNumber, 0);
         $this->ordinalNumber = $newOrdinalNumber;
+    }
+
+    public function update(array $newLabel, array $newPlaceholder, array $newDescription) {
+        $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
+        $this->placeholder = $newPlaceholder;
+        $this->description = $newDescription;
     }
 }
