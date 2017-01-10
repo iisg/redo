@@ -2,6 +2,7 @@
     <label for="metadata-control">${'Control' & t}</label>
     <select id="metadata-control"
         value.bind="value"
+        disabled.bind="disabled"
         class="form-control"
         ref="dropdown">
         <option repeat.for="control of controls"

@@ -1,6 +1,6 @@
 <template>
     <require from="../multilingual-field/multilingual-editor"></require>
-    <div class="form-group ${baseMetadata.label ? '' : 'label-floating'}">
+    <div class="form-group ${baseMetadata.label ? '' : 'label-floating'} ${editing ? 'no-margin-top' : ''}">
         <multilingual-editor label="${'Label' & t}"
             placeholder.bind="baseMetadata.label"
             value.bind="metadata.label & validate"></multilingual-editor>

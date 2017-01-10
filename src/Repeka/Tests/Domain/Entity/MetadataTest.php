@@ -67,4 +67,25 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA']);
         $metadata->updateOrdinalNumber(0);
     }
+
+    public function testUpdating() {
+        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
+        $metadata->update(['PL' => 'AA1', 'EN' => 'BB'], ['PL' => 'BB'], ['EN' => 'BB']);
+        $this->assertEquals(['PL' => 'AA1', 'EN' => 'BB'], $metadata->getLabel());
+        $this->assertEquals(['PL' => 'BB'], $metadata->getPlaceholder());
+        $this->assertEquals(['EN' => 'BB'], $metadata->getDescription());
+    }
+
+    public function testDoesNotUpdateMissingValuesInLabel() {
+        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
+        $metadata->update(['EN' => 'BB'], [], []);
+        $this->assertEquals(['PL' => 'AA', 'EN' => 'BB'], $metadata->getLabel());
+    }
+
+    public function testDoesNotUpdateMissingName() {
+        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
+        $metadata->update([], [], []);
+        $this->assertEquals('Prop', $metadata->getName());
+        $this->assertEquals(['PL' => 'AA'], $metadata->getLabel());
+    }
 }

@@ -2,6 +2,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {ComponentAttached} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
+import {deepCopy} from "../../common/utils/object-utils";
 
 @autoinject
 export class MetadataList implements ComponentAttached {
@@ -29,5 +30,11 @@ export class MetadataList implements ComponentAttached {
       this.metadataList.unshift(metadata);
       return metadata;
     });
+  }
+
+  saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<Metadata> {
+    const originalMetadata = deepCopy(metadata);
+    $.extend(metadata, changedMetadata);
+    return this.metadataRepository.update(changedMetadata).catch(() => $.extend(metadata, originalMetadata));
   }
 }

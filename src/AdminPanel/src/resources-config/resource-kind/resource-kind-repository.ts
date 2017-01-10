@@ -21,10 +21,7 @@ export class ResourceKindRepository extends ApiRepository<ResourceKind> {
   }
 
   public toEntity(data: Object): ResourceKind {
-    let resourceKind = new ResourceKind;
-    resourceKind.id = data['id'];
-    resourceKind.label = data['label'];
-    resourceKind.metadataList = data['metadata_list'].map(this.metadataRepository.toEntity);
-    return resourceKind;
+    data['metadataList'] = data['metadataList'].map(this.metadataRepository.toEntity);
+    return $.extend(new ResourceKind(), data);
   }
 }

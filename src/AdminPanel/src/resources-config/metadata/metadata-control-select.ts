@@ -6,8 +6,8 @@ import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class MetadataControlSelect implements ComponentAttached {
-  @bindable({defaultBindingMode: bindingMode.twoWay})
-  value: string;
+  @bindable({defaultBindingMode: bindingMode.twoWay}) value: string;
+  @bindable disabled: boolean;
 
   controls: string[];
 

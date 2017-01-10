@@ -40,6 +40,16 @@ a {
   cursor: n-resize;
 }
 
+table {
+  .table-row-edit-form {
+    background: lighten($lime-50, 3%) !important;
+  }
+}
+
+.no-margin-top {
+  margin-top: 0 !important;
+}
+
 body > tr[oa-sortable-item] {
   display: none;
 }
@@ -56,6 +66,18 @@ body > tr[oa-sortable-item] {
   right: 25px;
   bottom: 25px;
   z-index: 10;
+}
+
+input, textarea, select {
+  &[disabled] {
+    color: #999;
+  }
+}
+
+.bootstrap-select {
+  &.disabled > button {
+    color: #999 !important;
+  }
 }
 
 // z-depth helpers from MaterializeCSS
@@ -116,30 +138,36 @@ body > tr[oa-sortable-item] {
   }
 }
 
-.height-inout {
-  overflow-y: hidden;
-  &.au-enter-active {
-    @include animation(heightIn .3s);
+// max-height animation, idea based on: http://stackoverflow.com/a/8331169/878514
+@mixin anim-height-inout($max-height) {
+  @include keyframes(heightIn#{$max-height}) {
+    0% {
+      max-height: 0;
+    }
+    100% {
+      max-height: $max-height * 1px;
+    }
   }
-  &.au-leave-active {
-    @include animation(heightOut .3s);
+
+  @include keyframes(heightOut#{$max-height}) {
+    0% {
+      max-height: $max-height * 1px;
+    }
+    100% {
+      max-height: 0;
+    }
+  }
+
+  .anim-height-inout-#{$max-height} {
+    overflow: hidden;
+    &.au-enter-active {
+      @include animation(heightIn#{$max-height} .3s);
+    }
+    &.au-leave-active {
+      @include animation(heightOut#{$max-height} .3s);
+    }
   }
 }
 
-@include keyframes(heightIn) {
-  0% {
-    max-height: 0;
-  }
-  100% {
-    max-height: 150px;
-  }
-}
-
-@include keyframes(heightOut) {
-  0% {
-    max-height: 150px;
-  }
-  100% {
-    max-height: 0;
-  }
-}
+@include anim-height-inout(150);
+@include anim-height-inout(600);

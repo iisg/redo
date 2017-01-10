@@ -28,7 +28,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testCreatingForResourceKind() {
         $metadata = $this->factory->create($this->metadataCreateCommand);
         $base = $this->factory->create($this->metadataCreateCommand);
-        $base->setPlaceholder(['PL' => 'base']);
+        $base->update([], ['PL' => 'base'], []);
         $resourceKind = new ResourceKind(['PL' => 'rodzaj']);
         $created = $this->factory->createForResourceKind($resourceKind, $base, $metadata);
         $this->assertSame($resourceKind, $created->getResourceKind());
