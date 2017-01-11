@@ -1,6 +1,7 @@
 <template>
     <require from="./only-valid-numbers"></require>
-    <input type="number"
+    <input placeholder.one-time="metadata.placeholder[currentLanguageCode] || ''"
+        type="number"
         class="form-control"
         only-valid-numbers
         value.bind="resource.contents[metadata.id]">

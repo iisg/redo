@@ -1,5 +1,6 @@
 <template>
-    <input type="text"
+    <input placeholder.one-time="metadata.placeholder[currentLanguageCode] || ''"
+        type="text"
         class="form-control"
         value.bind="resource.contents[metadata.id]">
 </template>
