@@ -14,6 +14,12 @@ services:
     tags:
       - { name: serializer.normalizer }
 
+  resource_kind.normalizer:
+    class: Repeka\Application\Serialization\ResourceKindNormalizer
+    public: false
+    tags:
+      - { name: serializer.normalizer }
+
   user.normalizer:
     class: Repeka\Application\Serialization\UserEntityNormalizer
     public: false
@@ -125,6 +131,10 @@ services:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandHandler
     autowire: true
 
+  command_handler.resource_kind_update:
+    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandHandler
+    autowire: true
+
   command_handler.resource_create:
     class: Repeka\Domain\UseCase\Resource\ResourceCreateCommandHandler
     autowire: true
@@ -145,6 +155,10 @@ services:
 
   command_validator.resource_kind_create:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator
+    autowire: true
+
+  command_validator.resource_kind_update:
+    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator
     autowire: true
 
   command_validator.resource_create:

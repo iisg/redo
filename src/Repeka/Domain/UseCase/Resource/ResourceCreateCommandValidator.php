@@ -13,7 +13,7 @@ class ResourceCreateCommandValidator extends CommandAttributesValidator {
      */
     public function getValidator(Command $command): \Respect\Validation\Validator {
         $metadataIdValidators = array_map(function (Metadata $metadata) {
-            return Validator::key($metadata->getId(), null, false);
+            return Validator::key($metadata->getBaseId(), null, false);
         }, $command->getKind()->getMetadataList());
         $contentsValidator = call_user_func_array([Validator::arrayType()->length(1), 'keySet'], $metadataIdValidators);
         return Validator

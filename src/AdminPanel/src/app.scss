@@ -159,11 +159,12 @@ input, textarea, select {
   }
 
   .anim-height-inout-#{$max-height} {
-    overflow: hidden;
     &.au-enter-active {
+      overflow: hidden;
       @include animation(heightIn#{$max-height} .3s);
     }
     &.au-leave-active {
+      overflow: hidden;
       @include animation(heightOut#{$max-height} .3s);
     }
   }

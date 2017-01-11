@@ -1,10 +1,10 @@
-import {Metadata, ResourceKindMetadata} from "../metadata/metadata";
+import {Metadata, ResourceKindMetadata, MultilingualTextType} from "../metadata/metadata";
 import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "../../common/validation/rules/required-in-all-languages";
 
 export class ResourceKind {
   id: number;
-  label: Object = {};
+  label: MultilingualTextType = {};
   metadataList: ResourceKindMetadata[] = [];
 }
 

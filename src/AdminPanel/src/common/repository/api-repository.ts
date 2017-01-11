@@ -9,7 +9,7 @@ export abstract class ApiRepository<T> {
   }
 
   public getList(): Promise<T[]> {
-    return this.httpClient.get(this.endpoint).then(response => response.content.map(item => this.toEntity(item)));
+    return this.httpClient.get(this.endpoint).then(response => Promise.all(response.content.map(item => this.toEntity(item))));
   }
 
   public post(entity: T): Promise<T> {
@@ -29,5 +29,5 @@ export abstract class ApiRepository<T> {
     return `${this.endpoint}/${id}`;
   }
 
-  abstract toEntity(data: Object): T;
+  abstract toEntity(data: Object): T|Promise<T>;
 }

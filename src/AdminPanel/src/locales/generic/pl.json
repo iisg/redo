@@ -42,5 +42,6 @@
   "Please check if you have entered correct address or use the menu on the left side.": "Sprawdź poprawność wpisanego adresu lub użyj menu po lewej stronie.",
   "Server returned error 404 - Not Found": "Serwer zwrócił błąd 404 - Nie Znaleziono",
   "Server returned error 403 - Forbidden": "Serwer zwrócił błąd 403 - Zabronione",
-  "Contents": "Zawartość"
+  "Contents": "Zawartość",
+  "No matches found for {0}": "Żaden element nie pasuje do {0}"
 }

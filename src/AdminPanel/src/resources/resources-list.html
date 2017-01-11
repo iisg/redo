@@ -8,7 +8,7 @@
             opened.bind="addFormOpened"></animated-plus-button>
 
         <resource-add-form class="fade-inup-outdown au-animate floating-add-form-full-width"
-            show.bind="addFormOpened"
+            if.bind="addFormOpened"
             submit.call="addNewResource(resource)"></resource-add-form>
     </div>
 
@@ -44,7 +44,7 @@
                             <template repeat.for="metadata of resource.kind.metadataList & oneTime">
                                 <dt>${metadata.name}</dt>
                                 <dd>
-                                    ${resource.contents[metadata.id]}
+                                    ${resource.contents[metadata.base.id]}
                                 </dd>
                             </template>
                         </dl>

@@ -20,15 +20,23 @@ class ResourceKindFactory {
 
     public function create(ResourceKindCreateCommand $command) {
         $resourceKind = new ResourceKind($command->getLabel());
-        foreach ($command->getMetadataList() as $data) {
+        $metadataList = $this->createMetadataList($resourceKind, $command->getMetadataList());
+        foreach ($metadataList as $metadata) {
+            $resourceKind->addMetadata($metadata);
+        }
+        return $resourceKind;
+    }
+
+    public function createMetadataList(ResourceKind $resourceKind, array $metadataData): array {
+        $metadataList = [];
+        foreach ($metadataData as $data) {
             $baseId = $data['base_id'];
             $metadata = $this->metadataFactory->create(MetadataCreateCommand::fromArray($data));
             $base = $this->metadataRepository->findOne($baseId);
             $metadata = $this->metadataFactory->createForResourceKind($resourceKind, $base, $metadata);
-            $metadata->updateOrdinalNumber(count($resourceKind->getMetadataList()));
-            $metadata = $this->metadataRepository->save($metadata);
-            $resourceKind->addMetadata($metadata);
+            $metadata->updateOrdinalNumber(count($metadataList));
+            $metadataList[] = $metadata;
         }
-        return $resourceKind;
+        return $metadataList;
     }
 }

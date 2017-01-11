@@ -6,10 +6,11 @@
     <div require-static-permissions="RESOURCE_KINDS">
         <animated-plus-button class="pull-right"
             opened.bind="addFormOpened"></animated-plus-button>
-
-        <resource-kind-form show.bind="addFormOpened"
-            submit.call="addNewResourceKind(resourceKind)"
-            class="fade-inup-outdown au-animate floating-add-form-full-width"></resource-kind-form>
+        <div if.bind="addFormOpened"
+            class="well fade-inup-outdown au-animate floating-add-form-full-width">
+            <h2>${'Add new resource kind' & t}</h2>
+            <resource-kind-form submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
+        </div>
     </div>
 
     <div class="row"
@@ -21,6 +22,7 @@
                     <th>${'ID' & t}</th>
                     <th>${'Name' & t}</th>
                     <th>${'Metadata' & t}</th>
+                    <th require-static-permissions="RESOURCE_KINDS"></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -34,12 +36,12 @@
                 </tfoot>
                 <tbody class="au-stagger">
                 <tr repeat.for="resourceKind of resourceKinds"
-                    class="au-animate fade-inup-outdown">
+                    class="au-animate fade-inup-outdown ${resourceKind.editing ? 'table-row-edit-form' : ''}">
                     <td>${resourceKind.id}</td>
-                    <td>
+                    <td if.bind="!resourceKind['editing']">
                         <multilingual-display value.one-time="resourceKind.label"></multilingual-display>
                     </td>
-                    <td>
+                    <td if.bind="!resourceKind['editing']">
                         <dl class="dl-horizontal">
                             <template repeat.for="metadata of resourceKind.metadataList & oneTime">
                                 <dt>${metadata.name}</dt>
@@ -48,6 +50,26 @@
                                 </dd>
                             </template>
                         </dl>
+                    </td>
+                    <td if.bind="!resourceKind['editing']"
+                        require-static-permissions="RESOURCE_KINDS"
+                        class="text-right">
+                        <div class="btn-group">
+                            <button type="button"
+                                class="btn btn-default"
+                                click.trigger="resourceKind['editing'] = true">
+                                <span class="fa fa-edit"></span>
+                            </button>
+                        </div>
+                    </td>
+                    <td if.bind="resourceKind['editing']"
+                        colspan="3">
+                        <div if.bind="resourceKind['editing']"
+                            class="au-animate anim-height-inout-600">
+                            <resource-kind-form edit.bind="resourceKind"
+                                submit.call="saveEditedResourceKind(resourceKind, savedResourceKind)"
+                                cancel.call="resourceKind.editing = false"></resource-kind-form>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
