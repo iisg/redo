@@ -16,8 +16,8 @@ class ResourceCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->resourceKind = $this->createMock(ResourceKind::class);
         $metadata1 = $this->createMock(Metadata::class);
         $metadata2 = $this->createMock(Metadata::class);
-        $metadata1->expects($this->any())->method('getId')->willReturn(1);
-        $metadata2->expects($this->any())->method('getId')->willReturn(2);
+        $metadata1->expects($this->any())->method('getBaseId')->willReturn(1);
+        $metadata2->expects($this->any())->method('getBaseId')->willReturn(2);
         $this->resourceKind->expects($this->any())->method('getId')->willReturn(1);
         $this->resourceKind->expects($this->any())->method('getMetadataList')->willReturn([$metadata1, $metadata2]);
     }

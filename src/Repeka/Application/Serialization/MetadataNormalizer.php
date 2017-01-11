@@ -17,6 +17,7 @@ class MetadataNormalizer implements NormalizerInterface {
             'label' => $metadata->getLabel(),
             'placeholder' => $this->emptyArrayAsObject($metadata->getPlaceholder()),
             'description' => $this->emptyArrayAsObject($metadata->getDescription()),
+            'baseId' => $metadata->getBaseId(),
         ];
     }
 

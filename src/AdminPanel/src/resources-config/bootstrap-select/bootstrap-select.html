@@ -5,7 +5,7 @@
         change.delegate="stopPropagation($event)"
         value.bind="value"
         title="&mdash;">
-        <option class="hidden">${title}</option>
+        <option class="hidden">&mdash;</option>
         <option repeat.for="option of values"
             model.bind="option">
             <template part="option-template"

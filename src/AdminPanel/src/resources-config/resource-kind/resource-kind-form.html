@@ -6,14 +6,12 @@
     <require from="../metadata/metadata-editable-properties.html"></require>
     <require from="../multilingual-field/multilingual-editor"></require>
 
-    <form class="well"
-        submit.delegate="validateAndSubmit()">
-        <h2>${'Add new resource kind' & t}</h2>
-        <div class="form-group label-floating">
+    <form submit.delegate="validateAndSubmit()">
+        <div class="form-group label-floating no-margin-top">
             <multilingual-editor label="${'Name' & t}"
                 value.bind="resourceKind.label & validate"></multilingual-editor>
         </div>
-        <div class="form-group ${sortingMetadata ? 'sorting-enabled' : ''}">
+        <div class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
             <div class="row">
                 <div class="col-xs-12">
                     <button type="button"
@@ -66,12 +64,22 @@
                 change.delegate="addNewMetadata($event)"
                 resource-kind.bind="resourceKind"></resource-kind-metadata-chooser>
         </div>
-        <div class="form-group text-right">
-            <button class="btn btn-primary"
-                disabled.bind="submitting">
-                <i class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></i>
-                ${'Add' & t}
-            </button>
+        <div class="form-group text-right no-margin-top">
+            <div class="btn-group">
+                <button type="button"
+                    class="btn btn-warning"
+                    click.delegate="cancel()"
+                    if.bind="editing"
+                    disabled.bind="submitting">
+                    <span class="fa fa-fw fa-times"></span>
+                    ${'Cancel' & t}
+                </button>
+                <button class="btn btn-primary"
+                    disabled.bind="submitting">
+                    <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : (editing ? 'fa-save' : 'fa-plus')}"></span>
+                    ${editing ? 'Save' : 'Add' & t}
+                </button>
+            </div>
         </div>
     </form>
 </template>

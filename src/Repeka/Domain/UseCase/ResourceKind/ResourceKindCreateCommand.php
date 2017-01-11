@@ -4,9 +4,9 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 use Repeka\Domain\Cqrs\Command;
 
 class ResourceKindCreateCommand extends Command {
-    private $label;
+    protected $label;
 
-    private $metadataList;
+    protected $metadataList;
 
     public function __construct(array $label, array $metadataList) {
         $this->label = $label;

@@ -81,11 +81,4 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $metadata->update(['EN' => 'BB'], [], []);
         $this->assertEquals(['PL' => 'AA', 'EN' => 'BB'], $metadata->getLabel());
     }
-
-    public function testDoesNotUpdateMissingName() {
-        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
-        $metadata->update([], [], []);
-        $this->assertEquals('Prop', $metadata->getName());
-        $this->assertEquals(['PL' => 'AA'], $metadata->getLabel());
-    }
 }

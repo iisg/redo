@@ -8,7 +8,7 @@
             opened.bind="addFormOpened"></animated-plus-button>
     </div>
 
-    <div show.bind="addFormOpened"
+    <div if.bind="addFormOpened"
         require-static-permissions="METADATA"
         class="well fade-inout-updown au-animate floating-add-form-full-width">
         <h2>${'Add new metadata' & t}</h2>

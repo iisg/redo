@@ -11,6 +11,8 @@ Repeka\Domain\Entity\ResourceKind:
       orderBy: {ordinalNumber: 'ASC'}
       targetEntity: Repeka\Domain\Entity\Metadata
       mappedBy: resourceKind
+      orphanRemoval: true
+      cascade: ["persist", "merge", "remove"]
   fields:
     label:
       type: json_document

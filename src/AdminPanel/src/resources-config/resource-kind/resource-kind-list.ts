@@ -21,4 +21,10 @@ export class ResourceKindList {
       return resourceKind;
     });
   }
+
+  saveEditedResourceKind(resourceKind: ResourceKind, changedResourceKind: ResourceKind): Promise<ResourceKind> {
+    return this.resourceKindRepository.update(changedResourceKind)
+      .then(updated => $.extend(resourceKind, updated))
+      .then(() => (resourceKind['editing'] = false) || resourceKind);
+  }
 }

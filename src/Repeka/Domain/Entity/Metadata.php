@@ -82,14 +82,22 @@ class Metadata {
         return $this->ordinalNumber;
     }
 
+    public function getBaseId() {
+        return $this->isBase() ? null : $this->baseMetadata->getId();
+    }
+
     public function updateOrdinalNumber($newOrdinalNumber) {
         Assertion::greaterOrEqualThan($newOrdinalNumber, 0);
         $this->ordinalNumber = $newOrdinalNumber;
     }
 
     public function update(array $newLabel, array $newPlaceholder, array $newDescription) {
-        $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
+        $this->label = $this->isBase() ? array_merge($this->label, array_filter($newLabel, 'trim')) : array_filter($newLabel, 'trim');
         $this->placeholder = $newPlaceholder;
         $this->description = $newDescription;
+    }
+
+    public static function compareOrdinalNumbers(Metadata $a, Metadata $b): int {
+        return $a->getOrdinalNumber() - $b->getOrdinalNumber();
     }
 }

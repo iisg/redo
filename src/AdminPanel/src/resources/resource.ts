@@ -4,7 +4,7 @@ import {ValidationRules} from "aurelia-validation";
 export class Resource {
   id: number;
   kind: ResourceKind;
-  contents: Object = {};
+  contents: StringAnyMap = {};
 }
 
 // ugly hack to disable the rules in the unit testing, see: https://github.com/aurelia/validation/issues/377#issuecomment-267791805

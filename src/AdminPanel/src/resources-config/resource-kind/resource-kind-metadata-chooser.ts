@@ -23,6 +23,7 @@ export class ResourceKindMetadataChooser implements ComponentAttached {
   }
 
   attached() {
+    this.metadataList = undefined;
     this.metadataRepository.getList().then((metadataList) => {
       this.metadataList = metadataList;
     });
