@@ -3,6 +3,7 @@ namespace Repeka\Application\Controller\Api;
 
 use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Language\LanguageListQuery;
+use Repeka\Domain\UseCase\Language\LanguageUpdateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -30,5 +31,16 @@ class LanguagesController extends ApiController {
         $command = LanguageCreateCommand::fromArray($request->request->all());
         $language = $this->commandBus->handle($command);
         return $this->createJsonResponse($language, 201);
+    }
+
+    /**
+     * @Route("/{code}")
+     * @Method("PATCH")
+     * @Security("has_role('ROLE_STATIC_LANGUAGES')")
+     */
+    public function patchAction(string $code, Request $request) {
+        $command = LanguageUpdateCommand::fromArray($code, $request->request->all());
+        $updatedLanguage = $this->commandBus->handle($command);
+        return $this->createJsonResponse($updatedLanguage);
     }
 }

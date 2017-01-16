@@ -1,13 +1,13 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {ComponentAttached} from "aurelia-templating";
 import {Language} from "./language";
-import {FloatingAddFormController} from "../add-form/floating-add-form";
 import {LanguageRepository} from "./language-repository";
+import {deepCopy} from "../../common/utils/object-utils";
 
 @autoinject
 export class LanguageList implements ComponentAttached {
   languageList: Language[];
-  addFormController: FloatingAddFormController = {};
+  addFormOpened: boolean = false;
 
   constructor(private languageRepository: LanguageRepository) {
   }
@@ -20,8 +20,14 @@ export class LanguageList implements ComponentAttached {
 
   addNewLanguage(newLanguage: Language) {
     return this.languageRepository.post(newLanguage).then(language => {
-      this.addFormController.hide();
+      this.addFormOpened = false;
       this.languageList.push(language);
     });
+  }
+
+  saveEditedLanguage(language: Language, changedLanguage: Language): Promise<Language> {
+    const originalLanguage = deepCopy(language);
+    $.extend(language, changedLanguage);
+    return this.languageRepository.update(changedLanguage).catch(() => $.extend(language, originalLanguage));
   }
 }

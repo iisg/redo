@@ -8,8 +8,10 @@ export class ResourceKind {
   metadataList: ResourceKindMetadata[] = [];
 }
 
-ValidationRules
-  .ensure('label').displayName("Label").satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
-  .ensure('metadataList').displayName('Metadata').satisfies((metadataList: Metadata[]) => metadataList.length > 0)
-  .withMessageKey('mustHaveMetadata')
-  .on(ResourceKind);
+export function registerResourceKindValidationRules() {
+  ValidationRules
+    .ensure('label').displayName("Label").satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
+    .ensure('metadataList').displayName('Metadata').satisfies((metadataList: Metadata[]) => metadataList.length > 0)
+    .withMessageKey('mustHaveMetadata')
+    .on(ResourceKind);
+}

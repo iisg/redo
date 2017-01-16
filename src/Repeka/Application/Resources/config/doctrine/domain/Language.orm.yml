@@ -5,7 +5,7 @@ Repeka\Domain\Entity\Language:
   id:
     code:
       type: string
-      length: 5
+      length: 10
       unique: true
   fields:
     flag:

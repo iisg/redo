@@ -24,7 +24,7 @@ export abstract class ApiRepository<T> {
     return entity;
   }
 
-  private oneEntityEndpoint(entity: number|string|Object) {
+  protected oneEntityEndpoint(entity: number|string|Object) {
     let id = entity['id'] || entity;
     return `${this.endpoint}/${id}`;
   }

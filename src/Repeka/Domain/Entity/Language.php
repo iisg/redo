@@ -25,4 +25,9 @@ class Language {
     public function getName(): string {
         return $this->name;
     }
+
+    public function update(string $newFlag, string $newName) {
+        $this->name = $newName;
+        $this->flag = $newFlag;
+    }
 }

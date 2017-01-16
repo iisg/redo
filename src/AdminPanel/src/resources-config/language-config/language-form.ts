@@ -3,14 +3,16 @@ import {ValidationController, ValidationControllerFactory} from "aurelia-validat
 import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {Language} from "./language";
+import {deepCopy} from "../../common/utils/object-utils";
 
 @autoinject
 export class LanguageForm {
+  @bindable submit: (value: {savedLanguage: Language}) => Promise<any>;
+  @bindable cancel: () => any = () => undefined;
+  @bindable edit: Language;
+  @bindable editing: boolean = false;
+
   language: Language = new Language;
-
-  @bindable
-  submit: (value: {language: Language}) => Promise<any>;
-
   submitting: boolean = false;
 
   private controller: ValidationController;
@@ -20,12 +22,16 @@ export class LanguageForm {
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
 
+  editChanged(newValue: Language) {
+    this.language = $.extend(new Language(), deepCopy(newValue));
+  }
+
   validateAndSubmit() {
     this.submitting = true;
     this.controller.validate().then(result => {
       if (result.valid) {
-        return Promise.resolve(this.submit({language: this.language}))
-          .then(() => this.language = new Language);
+        return Promise.resolve(this.submit({savedLanguage: this.language}))
+          .then(() => this.editing || (this.language = new Language));
       }
     }).finally(() => this.submitting = false);
   }
