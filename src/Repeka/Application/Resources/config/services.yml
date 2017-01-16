@@ -127,6 +127,10 @@ services:
     class: Repeka\Domain\UseCase\Language\LanguageCreateCommandHandler
     autowire: true
 
+  command_handler.language_update:
+    class: Repeka\Domain\UseCase\Language\LanguageUpdateCommandHandler
+    autowire: true
+
   command_handler.resource_kind_create:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandHandler
     autowire: true
@@ -167,6 +171,10 @@ services:
 
   command_validator.language_create:
     class: Repeka\Domain\UseCase\Language\LanguageCreateCommandValidator
+
+  command_validator.language_update:
+    class: Repeka\Domain\UseCase\Language\LanguageUpdateCommandValidator
+    autowire: true
 
   command_validator.user_update_static_permissions:
     class: Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommandValidator

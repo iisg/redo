@@ -24,6 +24,23 @@ export class LanguageRepository extends ApiRepository<Language> {
     });
   }
 
+  public update(updatedLanguage: Language): Promise<Language> {
+    return this.patch(updatedLanguage, {
+      flag: updatedLanguage.flag,
+      name: updatedLanguage.name,
+    });
+  }
+
+  @cachedResponse(900000)
+  public getAvailableFlags(): Promise<Array<string>> {
+    return this.httpClient.get('/flags.json').then((response) => response.content.available_flags);
+  }
+
+  protected oneEntityEndpoint(entity: number|string|Object): string {
+    let languageCode = entity['code'] || entity;
+    return `${this.endpoint}/${languageCode}`;
+  }
+
   toEntity(data: Object): Language {
     return $.extend(new Language(), data);
   }

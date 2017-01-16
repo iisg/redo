@@ -20,7 +20,7 @@ class LanguageCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->handler = new LanguageCreateCommandHandler($this->languageRepository);
     }
 
-    public function testCreatingMetadata() {
+    public function testCreatingLanguage() {
         $this->languageRepository->expects($this->once())->method('save')->willReturnArgument(0);
         $language = $this->handler->handle($this->languageCreateCommand);
         $this->assertEquals('CA-FR', $language->getCode());

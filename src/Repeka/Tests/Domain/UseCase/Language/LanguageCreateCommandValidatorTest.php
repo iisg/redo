@@ -57,4 +57,21 @@ class LanguageCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $command = new LanguageCreateCommand('CA-FR', 'PL', '');
         $this->validator->validate($command);
     }
+
+    /**
+     * @expectedException Repeka\Domain\Exception\InvalidCommandException
+     */
+    public function testFailsValidationBecauseOfMoreThan10CharactersInCodeUsed() {
+        $command = new LanguageCreateCommand('AAAAA-AAAAA', 'PL', 'polski');
+        $this->validator->validate($command);
+    }
+
+    /**
+     * @expectedException Repeka\Domain\Exception\InvalidCommandException
+     */
+    public function testFailsValidationBecauseOfLessThan2CharactersInCodeUsed() {
+        $command = new LanguageCreateCommand('A', 'PL', 'polski');
+        $this->validator->validate($command);
+    }
+
 }

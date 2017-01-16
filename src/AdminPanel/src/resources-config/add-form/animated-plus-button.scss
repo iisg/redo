@@ -18,3 +18,10 @@
   top: 28px;
   margin-bottom: 56px !important;
 }
+
+.floating-add-form {
+  @extend .floating-add-form-full-width;
+  position: absolute;
+  right: 20px;
+  z-index: 10;
+}

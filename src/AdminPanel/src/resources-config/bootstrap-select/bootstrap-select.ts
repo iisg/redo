@@ -18,7 +18,7 @@ export class BootstrapSelect implements ComponentAttached, ComponentDetached {
 
   valuesChanged() {
     setTimeout(() => {
-      $(this.dropdown).selectpicker('refresh');
+      this.refreshBootstrapSelect();
     });
   }
 
@@ -26,16 +26,10 @@ export class BootstrapSelect implements ComponentAttached, ComponentDetached {
     $event.stopPropagation();
   }
 
-  valueChanged() {
-    if (this.value) {
-      let changeEvent = DOM.createCustomEvent('change', new BootstrapSelectChangeEvent(this.value));
-      this.element.dispatchEvent(changeEvent);
-      if (this.clearOnSelect) {
-        this.value = undefined;
-        $(this.dropdown).selectpicker('val', null); // tslint:disable-line:no-null-keyword
-        $(this.dropdown).selectpicker('deselectAll');
-      }
-    }
+  private refreshBootstrapSelect() {
+    let value = this.values ? this.values.indexOf(this.value) : undefined;
+    $(this.dropdown).selectpicker('val', value as any);
+    $(this.dropdown).selectpicker('refresh');
   }
 
   attached() {
@@ -43,9 +37,23 @@ export class BootstrapSelect implements ComponentAttached, ComponentDetached {
       liveSearch: this.liveSearch,
       noneResultsText: this.i18n.tr("No matches found for {0}"),
     });
+    $(this.dropdown).on('change', this.updateValueFromBootstrap);
+    this.refreshBootstrapSelect();
   }
 
+  private updateValueFromBootstrap = (event) => {
+    let selectedIndex = event.currentTarget.value;
+    this.value = this.values[selectedIndex];
+    let changeEvent = DOM.createCustomEvent('change', new BootstrapSelectChangeEvent(this.value));
+    this.element.dispatchEvent(changeEvent);
+    if (this.clearOnSelect) {
+      this.value = undefined;
+      this.refreshBootstrapSelect();
+    }
+  };
+
   detached() {
+    $(this.dropdown).off('change', this.updateValueFromBootstrap);
     $(this.dropdown).selectpicker('destroy');
   }
 }

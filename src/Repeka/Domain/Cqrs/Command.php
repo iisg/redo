@@ -3,6 +3,9 @@ namespace Repeka\Domain\Cqrs;
 
 use Assert\Assertion;
 
+/**
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
 abstract class Command {
     public function getCommandName() {
         $className = get_class($this);

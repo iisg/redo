@@ -6,10 +6,10 @@ export class Language {
   name: string = '';
 }
 
-// ugly hack to disable the rules in the unit testing, see: https://github.com/aurelia/validation/issues/377#issuecomment-267791805
-if ((ValidationRules as any).parser) {
+export function registerLanguageValidationRules() {
   ValidationRules
-    .ensure('code').displayName("Code").required().matches(/^[A-Z]+(?:-[A-Z])*$/).withMessageKey('isLanguageCode')
+    .ensure('code').displayName("Code").required().matches(/^[A-Z]+-?[A-Z]*[A-Z]$/).withMessageKey('isLanguageCode')
+    .ensure('code').displayName("Code").required().maxLength(10).withMessageKey('lengthUpTo10')
     .ensure('flag').displayName("Flag").required()
     .ensure('name').displayName("Language").required()
     .on(Language);
