@@ -10,18 +10,3 @@
     @include transform(rotate(45deg * 5));
   }
 }
-
-.floating-add-form-full-width {
-  display: block;
-  position: relative;
-  margin-right: 28px;
-  top: 28px;
-  margin-bottom: 56px !important;
-}
-
-.floating-add-form {
-  @extend .floating-add-form-full-width;
-  position: absolute;
-  right: 20px;
-  z-index: 10;
-}

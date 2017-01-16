@@ -7,7 +7,7 @@
         opened.bind="addFormOpened"></animated-plus-button>
 
     <div if.bind="addFormOpened"
-        class="well fade-inup-outdown au-animate floating-add-form">
+        class="well fade-inup-outdown au-animate floating-form">
         <language-form submit.call="addNewLanguage(savedLanguage)"></language-form>
     </div>
 
@@ -33,6 +33,7 @@
                 </tfoot>
                 <tbody class="au-stagger">
                 <tr class="au-animate fade-inup-outdown ${language.editing ? 'table-row-edit-form' : ''}"
+                    hover-aware.one-time="language"
                     repeat.for="language of languageList">
                     <td>${language.code}</td>
                     <td if.bind="!language['editing']">
@@ -42,7 +43,7 @@
                     <td if.bind="!language['editing']">${language.name}</td>
                     <td if.bind="!language['editing']">
                         <button type="button"
-                            class="btn btn-default pull-right"
+                            class="btn btn-default pull-right ${language['hovered'] ? 'btn-raised' : ''}"
                             click.trigger="language['editing'] = true">
                             <span class="fa fa-edit"></span>
                         </button>

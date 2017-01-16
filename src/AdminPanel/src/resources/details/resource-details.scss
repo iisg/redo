@@ -1,0 +1,25 @@
+@import "../../common/styles";
+
+.edit-button {
+  @include transition(.3s ease-out);
+  z-index: 10;
+  top: 0;
+  box-shadow: none !important;
+  .fa {
+    @include transition(.3s);
+    &.fa-times {
+      opacity: 0;
+
+    }
+  }
+  &.editing {
+    @include transform(rotate(360deg));
+    top: 45px;
+    .fa-times {
+      opacity: 1;
+    }
+    .fa-edit {
+      opacity: 0;
+    }
+  }
+}

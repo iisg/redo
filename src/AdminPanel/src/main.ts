@@ -51,6 +51,7 @@ export function configure(aurelia: Aurelia) {
     })
     .globalResources([
       'common/bootstrap/bootstrap-tooltip',
+      'common/bootstrap/hover-aware',
       'common/authorization/require-static-permissions',
     ]);
 

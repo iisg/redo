@@ -7,7 +7,7 @@
         <animated-plus-button class="pull-right"
             opened.bind="addFormOpened"></animated-plus-button>
         <div if.bind="addFormOpened"
-            class="well fade-inup-outdown au-animate floating-add-form-full-width">
+            class="well fade-inup-outdown au-animate floating-form-full-width">
             <h2>${'Add new resource kind' | t}</h2>
             <resource-kind-form submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
         </div>
@@ -36,6 +36,7 @@
                 </tfoot>
                 <tbody class="au-stagger">
                 <tr repeat.for="resourceKind of resourceKinds"
+                    hover-aware.one-time="resourceKind"
                     class="au-animate fade-inup-outdown ${resourceKind.editing ? 'table-row-edit-form' : ''}">
                     <td>${resourceKind.id}</td>
                     <td if.bind="!resourceKind['editing']">
@@ -56,7 +57,7 @@
                         class="text-right">
                         <div class="btn-group">
                             <button type="button"
-                                class="btn btn-default"
+                                class="btn btn-default ${resourceKind['hovered'] ? 'btn-raised' : ''}"
                                 click.trigger="resourceKind['editing'] = true">
                                 <span class="fa fa-edit"></span>
                             </button>

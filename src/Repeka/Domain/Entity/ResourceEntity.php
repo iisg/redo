@@ -25,4 +25,8 @@ class ResourceEntity {
     public function getContents(): array {
         return $this->contents;
     }
+
+    public function updateContents(array $contents) {
+        $this->contents = $contents;
+    }
 }

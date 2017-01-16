@@ -18,7 +18,7 @@ abstract class CommandAttributesValidator implements CommandValidator {
             $this->getValidator($command)->assert($command);
         } catch (NestedValidationException $compositeException) {
             $violations = array_map([$this, 'exceptionToViolation'], iterator_to_array($compositeException));
-            throw new InvalidCommandException($violations, $compositeException);
+            throw new InvalidCommandException($violations, $compositeException, $compositeException->getFullMessage());
         }
     }
 

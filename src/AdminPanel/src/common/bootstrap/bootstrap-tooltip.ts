@@ -29,6 +29,7 @@ export class BootstrapTooltip {
   }
 
   valueChanged() {
+    this.$element.tooltip('hide');
     this.$element.data('bs.tooltip', false);
     this.bind();
   }
