@@ -1,5 +1,5 @@
 <template>
-    <require from="./add/resource-add-form"></require>
+    <require from="./add/resource-form"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="resources-config/multilingual-field/multilingual-display"></require>
 
@@ -7,9 +7,12 @@
         <animated-plus-button class="pull-right"
             opened.bind="addFormOpened"></animated-plus-button>
 
-        <resource-add-form class="fade-inup-outdown au-animate floating-add-form-full-width"
-            if.bind="addFormOpened"
-            submit.call="addNewResource(resource)"></resource-add-form>
+        <div if.bind="addFormOpened"
+            class="fade-inup-outdown au-animate floating-form-full-width">
+            <h2>${'Add new resource' & t}</h2>
+            <resource-form submit.call="addNewResource(savedResource)"></resource-form>
+        </div>
+
     </div>
 
     <div class="row"
@@ -21,6 +24,7 @@
                     <th>${'ID' | t}</th>
                     <th>${'Resource kind' | t}</th>
                     <th>${'Contents' | t}</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -34,6 +38,7 @@
                 </tfoot>
                 <tbody class="au-stagger">
                 <tr repeat.for="resource of resources"
+                    hover-aware.one-time="resource"
                     class="au-animate fade-inup-outdown">
                     <td>${resource.id & oneTime}</td>
                     <td>
@@ -48,6 +53,13 @@
                                 </dd>
                             </template>
                         </dl>
+                    </td>
+                    <td>
+                        <a route-href="route: resources/details; params.bind: {id: resource.id}"
+                            class="btn ${resource['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">
+                            <span class="fa fa-eye fa-fw"></span>
+                            ${'Details' & t}
+                        </a>
                     </td>
                 </tr>
                 </tbody>

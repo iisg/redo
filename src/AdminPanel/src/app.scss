@@ -80,6 +80,30 @@ input, textarea, select {
   }
 }
 
+.floating-form-full-width {
+  display: block;
+  position: relative;
+  margin-right: 28px;
+  top: 28px;
+  margin-bottom: 56px !important;
+}
+
+.floating-form {
+  @extend .floating-form-full-width;
+  position: absolute;
+  right: 20px;
+  z-index: 10;
+}
+
+a.btn-fab .fa {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  line-height: 24px;
+  width: 24px;
+  @include translate(-12px, -12px);
+}
+
 // z-depth helpers from MaterializeCSS
 // see https://github.com/FezVrasta/bootstrap-material-design/issues/1109
 
@@ -172,3 +196,4 @@ input, textarea, select {
 
 @include anim-height-inout(150);
 @include anim-height-inout(600);
+@include anim-height-inout(900);

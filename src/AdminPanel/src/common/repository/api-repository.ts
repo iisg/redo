@@ -20,6 +20,10 @@ export abstract class ApiRepository<T> {
     return this.httpClient.patch(this.oneEntityEndpoint(entity), patch).then(response => this.toEntity(response.content));
   }
 
+  public put(entity: T) {
+    return this.httpClient.put(this.oneEntityEndpoint(entity), this.toBackend(entity)).then(response => this.toEntity(response.content));
+  }
+
   protected toBackend(entity: T): Object {
     return entity;
   }

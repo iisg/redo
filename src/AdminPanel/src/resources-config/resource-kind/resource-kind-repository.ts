@@ -5,11 +5,21 @@ import {deepCopy} from "../../common/utils/object-utils";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {ApiRepository} from "../../common/repository/api-repository";
 import {ResourceKindMetadata} from "../metadata/metadata";
+import {cachedResponse} from "../../common/repository/cached-response";
 
 @autoinject
 export class ResourceKindRepository extends ApiRepository<ResourceKind> {
   constructor(httpClient: HttpClient, private metadataRepository: MetadataRepository) {
     super(httpClient, 'resource-kinds');
+  }
+
+  public get(id: number): Promise<ResourceKind> {
+    return this.getList().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
+  }
+
+  @cachedResponse(30000)
+  public getList(): Promise<ResourceKind[]> {
+    return super.getList();
   }
 
   public update(updatedResourceKind: ResourceKind): Promise<ResourceKind> {

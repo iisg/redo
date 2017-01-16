@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
+use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -9,6 +10,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 abstract class ApiController extends Controller {
     /** @var CommandBus */
     protected $commandBus;
+
+    protected function handle(Command $command) {
+        return $this->commandBus->handle($command);
+    }
 
     public function setContainer(ContainerInterface $container = null) {
         $this->container = $container;

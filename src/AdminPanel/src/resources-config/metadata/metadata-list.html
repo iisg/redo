@@ -10,7 +10,7 @@
 
     <div if.bind="addFormOpened"
         require-static-permissions="METADATA"
-        class="well fade-inout-updown au-animate floating-add-form-full-width">
+        class="well fade-inout-updown au-animate floating-form-full-width">
         <h2>${'Add new metadata kind' | t}</h2>
         <metadata-form submit.call="addNewMetadata(savedMetadata)"></metadata-form>
     </div>
@@ -41,6 +41,7 @@
                 <tbody class="au-stagger"
                     oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); moved.call: onOrderChanged();">
                 <tr repeat.for="metadata of metadataList"
+                    hover-aware.one-time="metadata"
                     oa-sortable-item="item.bind: metadata"
                     class="au-animate ${metadata.sortingClass || 'fade-inup-outdown'} ${metadata.editing ? 'table-row-edit-form' : ''}">
                     <td>${metadata.id}</td>
@@ -59,13 +60,13 @@
                         require-static-permissions="METADATA"
                         if.bind="!metadata['editing']">
                         <div class="btn-group">
-                            <a class="btn btn-default drag-handle vertically-sortable"
+                            <a class="btn btn-default drag-handle vertically-sortable ${metadata['hovered'] ? 'btn-raised' : ''}"
                                 bootstrap-tooltip.bind="'Drag to change order' | t"
                                 data-placement="left">
                                 <span class="fa fa-sort"></span>
                             </a>
                             <button type="button"
-                                class="btn btn-default"
+                                class="btn btn-default ${metadata['hovered'] ? 'btn-raised' : ''}"
                                 click.trigger="metadata['editing'] = true">
                                 <span class="fa fa-edit"></span>
                             </button>

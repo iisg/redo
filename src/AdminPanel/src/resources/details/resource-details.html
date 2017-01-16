@@ -1,0 +1,43 @@
+<template>
+    <require from="../add/resource-form"></require>
+    <require from="./resource-details.css"></require>
+
+    <div class="au-animate fade-inup-outup page-preloader"
+        if.bind="!resource">
+        <div class="progress progress-striped active">
+            <div class="progress-bar progress-bar-success progress-bar-full"></div>
+        </div>
+    </div>
+
+    <div class="au-animate fade-inup-outup"
+        if.bind="resource">
+
+        <a class="btn btn-fab pull-right edit-button btn-raised ${editing ? 'btn-warning editing' : 'btn-info'}"
+            bootstrap-tooltip.bind="editing ? 'Cancel' : 'Edit' | t"
+            click.delegate="toggleEditForm()">
+            <span class="fa fa-times"></span>
+            <span class="fa fa-edit"></span>
+        </a>
+
+        <h1>${'Resource' | t} #${ resource.id }</h1>
+
+        <div class="au-animate anim-height-inout-300"
+            if.bind="!editing">
+            <dl class="dl-horizontal">
+                <template repeat.for="metadata of resource.kind.metadataList & oneTime">
+                    <dt>${metadata.name}</dt>
+                    <dd>
+                        ${resource.contents[metadata.base.id]}
+                    </dd>
+                </template>
+            </dl>
+        </div>
+
+        <div class="au-animate anim-height-inout-900 well floating-form-full-width"
+            if.bind="editing">
+            <resource-form edit.bind="resource"
+                submit.call="saveEditedResource(savedResource)"></resource-form>
+        </div>
+
+    </div>
+</template>

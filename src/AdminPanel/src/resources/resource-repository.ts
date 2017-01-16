@@ -19,10 +19,15 @@ export class ResourceRepository extends ApiRepository<Resource> {
   }
 
   public toEntity(data: Object): Promise<Resource> {
-    let resource = $.extend(new Resource(), data);
-    return this.resourceKindRepository.toEntity(resource.kind).then(resourceKind => {
+    return this.resourceKindRepository.get(data['kindId']).then(resourceKind => {
+      delete data['kindId'];
+      let resource = $.extend(new Resource(), data);
       resource.kind = resourceKind;
       return resource;
     });
+  }
+
+  update(resource: Resource): Promise<Resource> {
+    return this.put(resource);
   }
 }

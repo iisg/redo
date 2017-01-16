@@ -24,13 +24,20 @@
                     </tfoot>
                     <tbody class="au-stagger table-hover">
                     <tr class="au-animate fade-inup-outdown"
+                        hover-aware.one-time="user"
                         repeat.for="user of userList">
                         <td>${user.id}</td>
                         <td>${user.username}</td>
                         <td>${user.email}</td>
                         <td>${user.firstname}</td>
                         <td>${user.lastname}</td>
-                        <td><a href="users/${user.id}" class="btn btn-raised btn-info btn-xs pull-right">${'Details' | t}</a></td>
+                        <td>
+                            <a route-href="route: user/details; params.bind: {id: user.id}"
+                                class="btn ${user['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">
+                                <span class="fa fa-eye fa-fw"></span>
+                                ${'Details' | t}
+                            </a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
