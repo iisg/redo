@@ -18,9 +18,9 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>${'ID' & t}</th>
-                    <th>${'Resource kind' & t}</th>
-                    <th>${'Contents' & t}</th>
+                    <th>${'ID' | t}</th>
+                    <th>${'Resource kind' | t}</th>
+                    <th>${'Contents' | t}</th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -58,7 +58,7 @@
     <div class="alert alert-info"
         if.bind="resources.length === 0">
         <span class="fa fa-info-circle fa-fw"></span>
-        ${'No resources.' & t}
+        ${'No resources.' | t}
     </div>
 
 </template>

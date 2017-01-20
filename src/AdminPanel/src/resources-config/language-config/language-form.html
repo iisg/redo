@@ -5,7 +5,7 @@
         <div class="form-group label-floating"
             if.bind="!language['editing']">
             <label class="control-label"
-                for="codeNameInput">${'Code' & t}</label>
+                for="codeNameInput">${'Code' | t}</label>
             <input type="text"
                 class="form-control"
                 id="codeNameInput"
@@ -16,7 +16,7 @@
         </div>
         <div class="form-group label-floating">
             <label class="control-label"
-                for="languageInput">${'Language' & t}</label>
+                for="languageInput">${'Language' | t}</label>
             <input type="text"
                 class="form-control"
                 id="languageInput"
@@ -30,13 +30,13 @@
                     if.bind="editing"
                     disabled.bind="submitting">
                     <span class="fa fa-fw fa-times"></span>
-                    ${'Cancel' & t}
+                    ${'Cancel' | t}
                 </button>
                 <button class="btn btn-primary"
                     type="submit"
                     disabled.bind="submitting">
                     <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : (editing ? 'fa-save' : 'fa-plus')}"></span>
-                    ${editing ? 'Save' : 'Add' & t}
+                    ${editing ? 'Save' : 'Add' | t}
                 </button>
             </div>
         </div>

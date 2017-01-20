@@ -1,17 +1,17 @@
 <template>
     <require from="../multilingual-field/multilingual-editor"></require>
     <div class="form-group ${baseMetadata.label ? '' : 'label-floating'} ${editing ? 'no-margin-top' : ''}">
-        <multilingual-editor label="${'Label' & t}"
+        <multilingual-editor label="${'Label' | t}"
             placeholder.bind="baseMetadata.label"
             value.bind="metadata.label & validate"></multilingual-editor>
     </div>
     <div class="form-group ${baseMetadata.placeholder ? '' : 'label-floating'}">
-        <multilingual-editor label="${'Hint' & t}"
+        <multilingual-editor label="${'Hint' | t}"
             placeholder.bind="baseMetadata.placeholder"
             value.bind="metadata.placeholder & validate"></multilingual-editor>
     </div>
     <div class="form-group ${baseMetadata.description ? '' : 'label-floating'}">
-        <multilingual-editor label="${'Description' & t}"
+        <multilingual-editor label="${'Description' | t}"
             placeholder.bind="baseMetadata.description"
             value.bind="metadata.description & validate"></multilingual-editor>
     </div>

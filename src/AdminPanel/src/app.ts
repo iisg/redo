@@ -2,7 +2,6 @@ import {Router, RouterConfiguration, ConfiguresRouter} from "aurelia-router";
 import {ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
-import {EventAggregator} from "aurelia-event-aggregator";
 import routes from "./routes";
 import {RouteAccessChecker} from "./common/routes/route-access-checker";
 
@@ -10,14 +9,7 @@ import {RouteAccessChecker} from "./common/routes/route-access-checker";
 export class App implements ConfiguresRouter, ComponentAttached {
   router: Router;
 
-  constructor(private i18n: I18N, private element: Element, ea: EventAggregator, private routeAccessChecker: RouteAccessChecker) {
-    ea.subscribe('i18n:locale:changed', () => {
-      this.i18n.updateTranslations(this.element);
-      if (this.router) {
-        this.router.updateTitle();
-      }
-      ea.publish('i18n:translation:finished');
-    });
+  constructor(private i18n: I18N, private element: Element, private routeAccessChecker: RouteAccessChecker) {
   }
 
   configureRouter(config: RouterConfiguration, router: Router) {

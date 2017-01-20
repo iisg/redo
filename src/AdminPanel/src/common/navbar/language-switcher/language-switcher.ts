@@ -32,7 +32,7 @@ export class LanguageSwitcher {
     this.i18n.setLocale(language);  // set i18n's locale instantly to prevent flash of untranslated content
     this.languageRepository.getList().then(() => { // wait until flags are fetched, then select language properly
       this.languages = supportedUILanguages;
-      this.select(language);
+      this.select(language, false);
     });
   }
 
@@ -40,10 +40,13 @@ export class LanguageSwitcher {
     return this.config.get('default_ui_language');
   }
 
-  select(languageCode: string) {
+  select(languageCode: string, reload: boolean = true) {
     this.currentLanguage = languageCode;
     this.i18n.setLocale(this.currentLanguage);
     this.updateCookie();
+    if (reload) {
+      window.location.reload(true);
+    }
   }
 
   private updateCookie() {

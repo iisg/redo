@@ -4,7 +4,7 @@
 
     <form class="well"
         submit.delegate="validateAndSubmit()">
-        <h2>${'Add new resource' & t}</h2>
+        <h2>${'Add new resource' | t}</h2>
         <div class="form-group">
             <resource-kind-chooser value.bind="newResource.kind"></resource-kind-chooser>
         </div>
@@ -20,7 +20,7 @@
             <button class="btn btn-primary"
                 disabled.bind="submitting">
                 <i class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></i>
-                ${'Add' & t}
+                ${'Add' | t}
             </button>
         </div>
     </form>

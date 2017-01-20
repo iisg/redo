@@ -11,7 +11,7 @@
     <div if.bind="addFormOpened"
         require-static-permissions="METADATA"
         class="well fade-inout-updown au-animate floating-add-form-full-width">
-        <h2>${'Add new metadata kind' & t}</h2>
+        <h2>${'Add new metadata kind' | t}</h2>
         <metadata-form submit.call="addNewMetadata(savedMetadata)"></metadata-form>
     </div>
 
@@ -21,11 +21,11 @@
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>${'Name' & t}</th>
-                    <th>${'Label' & t}</th>
-                    <th>${'Control' & t}</th>
-                    <th>${'Hint' & t}</th>
-                    <th>${'Description' & t}</th>
+                    <th>${'Name' | t}</th>
+                    <th>${'Label' | t}</th>
+                    <th>${'Control' | t}</th>
+                    <th>${'Hint' | t}</th>
+                    <th>${'Description' | t}</th>
                     <th require-static-permissions="METADATA"></th>
                 </tr>
                 </thead>
@@ -48,7 +48,7 @@
                     <td if.bind="!metadata['editing']">
                         <multilingual-display value.one-time="metadata.label"></multilingual-display>
                     </td>
-                    <td if.bind="!metadata['editing']">${'controls::' + metadata.control & t}</td>
+                    <td if.bind="!metadata['editing']">${'controls::' + metadata.control | t}</td>
                     <td if.bind="!metadata['editing']">
                         <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
                     </td>
@@ -60,7 +60,7 @@
                         if.bind="!metadata['editing']">
                         <div class="btn-group">
                             <a class="btn btn-default drag-handle vertically-sortable"
-                                bootstrap-tooltip.bind="'Drag to change order' & t"
+                                bootstrap-tooltip.bind="'Drag to change order' | t"
                                 data-placement="left">
                                 <span class="fa fa-sort"></span>
                             </a>
@@ -89,6 +89,6 @@
     <div class="alert alert-info"
         if.bind="metadataList.length === 0">
         <span class="fa fa-info-circle fa-fw"></span>
-        ${'No metadata kinds.' & t}
+        ${'No metadata kinds.' | t}
     </div>
 </template>
