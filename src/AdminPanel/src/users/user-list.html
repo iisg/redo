@@ -5,11 +5,11 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>${'ID' & t}</th>
-                        <th>${'Username' & t}</th>
-                        <th>${'E-mail' & t}</th>
-                        <th>${'First Name' & t}</th>
-                        <th>${'Last Name' & t}</th>
+                        <th>${'ID' | t}</th>
+                        <th>${'Username' | t}</th>
+                        <th>${'E-mail' | t}</th>
+                        <th>${'First Name' | t}</th>
+                        <th>${'Last Name' | t}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -30,7 +30,7 @@
                         <td>${user.email}</td>
                         <td>${user.firstname}</td>
                         <td>${user.lastname}</td>
-                        <td><a href="users/${user.id}" class="btn btn-raised btn-info btn-xs pull-right">${'Details' & t}</a></td>
+                        <td><a href="users/${user.id}" class="btn btn-raised btn-info btn-xs pull-right">${'Details' | t}</a></td>
                     </tr>
                     </tbody>
                 </table>

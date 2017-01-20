@@ -9,9 +9,10 @@
     </a>
     <ul class="dropdown-menu">
         <li repeat.for="language of languages">
-            <a click.delegate="select(language)" show.bind="language != currentLanguage">
+            <a click.delegate="select(language)"
+                show.bind="language != currentLanguage">
                 <flag code.one-time="language"></flag>
-                ${'meta//translatedName' & t: {"lng": language, "defaultValue": language.toUpperCase()} }
+                ${'meta//translatedName' | t: {"lng": language, "defaultValue": language.toUpperCase()} }
             </a>
         </li>
     </ul>

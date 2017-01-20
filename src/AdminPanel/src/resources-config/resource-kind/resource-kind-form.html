@@ -8,7 +8,7 @@
 
     <form submit.delegate="validateAndSubmit()">
         <div class="form-group label-floating no-margin-top">
-            <multilingual-editor label="${'Name' & t}"
+            <multilingual-editor label="${'Name' | t}"
                 value.bind="resourceKind.label & validate"></multilingual-editor>
         </div>
         <div class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
@@ -20,7 +20,7 @@
                         disabled.bind="submitting"
                         show.bind="resourceKind.metadataList.length > 1">
                         <span class="fa fa-sort-amount-asc fa-fw"></span>
-                        ${(sortingMetadata ? 'Changing order' : 'Change order') & t}
+                        ${(sortingMetadata ? 'Changing order' : 'Change order') | t}
                     </button>
                 </div>
             </div>
@@ -58,7 +58,7 @@
         </div>
         <div class="form-group"
             show.bind="hasMetadataToChoose">
-            <label>${'Add next metadata kind' & t}</label>
+            <label>${'Add next metadata kind' | t}</label>
             <resource-kind-metadata-chooser
                 has-metadata-to-choose.bind="hasMetadataToChoose"
                 change.delegate="addNewMetadata($event)"
@@ -72,12 +72,12 @@
                     if.bind="editing"
                     disabled.bind="submitting">
                     <span class="fa fa-fw fa-times"></span>
-                    ${'Cancel' & t}
+                    ${'Cancel' | t}
                 </button>
                 <button class="btn btn-primary"
                     disabled.bind="submitting">
                     <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : (editing ? 'fa-save' : 'fa-plus')}"></span>
-                    ${editing ? 'Save' : 'Add' & t}
+                    ${editing ? 'Save' : 'Add' | t}
                 </button>
             </div>
         </div>
