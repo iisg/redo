@@ -11,7 +11,7 @@
     <div if.bind="addFormOpened"
         require-static-permissions="METADATA"
         class="well fade-inout-updown au-animate floating-add-form-full-width">
-        <h2>${'Add new metadata' & t}</h2>
+        <h2>${'Add new metadata kind' & t}</h2>
         <metadata-form submit.call="addNewMetadata(savedMetadata)"></metadata-form>
     </div>
 
@@ -89,6 +89,6 @@
     <div class="alert alert-info"
         if.bind="metadataList.length === 0">
         <span class="fa fa-info-circle fa-fw"></span>
-        ${'No metadata.' & t}
+        ${'No metadata kinds.' & t}
     </div>
 </template>

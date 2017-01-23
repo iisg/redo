@@ -1,8 +1,8 @@
 {
   "required": "${$displayName} is required.",
   "isLanguageCode": "Only uppercase letters and dash (-), must start and end with a letter.",
-  "mustHaveMetadata": "Resource kind must have metadata.",
-  "atLeastOneMetadataRequired": "At least one metadata must have a value.",
+  "mustHaveMetadata": "Resource kind must have at least one metadata kind.",
+  "atLeastOneMetadataRequired": "At least one metadata kind must have a value.",
   "RequiredInAllLanguages": "${$displayName} must have a value in all languages.",
   "lengthUpTo10": "Length up to 10 characters."
 }

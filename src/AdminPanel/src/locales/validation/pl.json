@@ -1,8 +1,8 @@
 {
   "required": "Pole ${$displayName} jest wymagane.",
   "isLanguageCode": "Tylko wielkie litery i myślnik (-), musi zaczynać i kończyć się literą.",
-  "mustHaveMetadata": "Rodzaj zasobu musi posiadać metadane.",
-  "atLeastOneMetadataRequired": "Co najmniej jedna metadana musi mieć wartość.",
+  "mustHaveMetadata": "Rodzaj zasobu musi posiadać rodzaj metadanych.",
+  "atLeastOneMetadataRequired": "Co najmniej jeden rodzaj metadanych musi mieć wartość.",
   "RequiredInAllLanguages": "${$displayName} musi mieć wartość we wszystkich językach.",
   "lengthUpTo10": "Długość do 10 znaków."
 }
