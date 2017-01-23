@@ -12,7 +12,7 @@ class LanguageCreateCommandValidator extends CommandAttributesValidator {
     public function getValidator(Command $command): \Respect\Validation\Validator {
         return Validator
             ::attribute('code', Validator::regex('/^[A-Z]+-?[A-Z]*[A-Z]$/'))
-            ->attribute('code', Validator::length($min = 2, $max = 10))
+            ->attribute('code', Validator::length(2, 10))
             ->attribute('flag', Validator::notBlank())
             ->attribute('name', Validator::notBlank());
     }

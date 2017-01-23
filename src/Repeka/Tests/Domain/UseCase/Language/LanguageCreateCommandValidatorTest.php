@@ -73,5 +73,4 @@ class LanguageCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $command = new LanguageCreateCommand('A', 'PL', 'polski');
         $this->validator->validate($command);
     }
-
 }
