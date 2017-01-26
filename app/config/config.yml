@@ -22,6 +22,7 @@ repeka:
 
   metadata_nesting_depth: 3
   elasticsearch:
+    host: elasticsearch
     index_name: repeka
     analyzers:
       en: english
@@ -30,7 +31,7 @@ repeka:
 doctrine:
   dbal:
     driver: pdo_pgsql
-    host: localhost
+    host: postgres
     dbname: repeka
     user: repeka
     password: repeka

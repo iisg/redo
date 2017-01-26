@@ -6,5 +6,5 @@ var appVersion = [semver.major, semver.minor, semver.patch + version.distance].j
 
 module.exports = {
   text: appVersion,
-  full: describe
+  full: version
 };

@@ -2,7 +2,7 @@ m6_statsd:
   base_collectors: true
   servers:
     default:
-      address: 'udp://localhost'
+      address: 'udp://repeka-metrics'
       port: 8125
   clients:
     default:

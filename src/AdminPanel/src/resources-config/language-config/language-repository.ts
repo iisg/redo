@@ -33,7 +33,7 @@ export class LanguageRepository extends ApiRepository<Language> {
 
   @cachedResponse(900000)
   public getAvailableFlags(): Promise<Array<string>> {
-    return this.httpClient.get('/flags.json').then((response) => response.content.available_flags);
+    return new HttpClient().get('/files/flags.json').then((response) => response.content.available_flags);
   }
 
   protected oneEntityEndpoint(entity: number|string|Object): string {
