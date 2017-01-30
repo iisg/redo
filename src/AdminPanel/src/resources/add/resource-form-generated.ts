@@ -16,7 +16,7 @@ export class ResourceFormGenerated {
   currentLanguageCode: string;
 
   resourceKindChanged() {
-    if (!this.resourceKind.id) this.resource.contents = {};
+    if (!this.resourceKind) this.resource.contents = {};
   }
 
   constructor(i18n: I18N) {

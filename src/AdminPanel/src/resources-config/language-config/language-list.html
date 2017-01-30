@@ -44,7 +44,7 @@
                     <td if.bind="!language['editing']">
                         <button type="button"
                             class="btn btn-default pull-right ${language['hovered'] ? 'btn-raised' : ''}"
-                            click.trigger="language['editing'] = true">
+                            click.delegate="language['editing'] = true">
                             <span class="fa fa-edit"></span>
                         </button>
                     </td>
