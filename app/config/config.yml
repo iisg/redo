@@ -33,7 +33,7 @@ doctrine:
     driver: pdo_pgsql
     host: postgres
     dbname: repeka
-    user: repeka
+    user: postgres
     password: repeka
   orm:
     auto_mapping: false

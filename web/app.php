@@ -2,6 +2,8 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
 
+ini_set("log_errors", true);
+ini_set("error_log", __DIR__ . "/../var/logs/error.log");
 defined('REPEKA_ENV') || define('REPEKA_ENV', (getenv('REPEKA_ENV') ?: 'prod'));
 $loader = require __DIR__ . '/../app/autoload.php';
 if (REPEKA_ENV === 'prod') {
