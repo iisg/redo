@@ -43,10 +43,4 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.toggleEditForm();
     return this.resourceRepository.update(updatedResource).catch(() => $.extend(this.resource, originalResource));
   }
-
-  applyTransition(marking: string) {
-    this.resourceRepository.applyTransition(this.resource, marking).then((resource: Resource) => {
-      this.resource = resource;
-    });
-  }
 }

@@ -18,13 +18,10 @@ class ResourceNormalizer implements NormalizerInterface {
      * @inheritdoc
      */
     public function normalize($resource, $format = null, array $context = []) {
-        $workflow = $this->resourceWorkflowRepository->get($resource);
         return [
             'id' => $resource->getId(),
             'kindId' => $resource->getKind()->getId(),
             'contents' => $resource->getContents(),
-            'marking' => $workflow->getCurrentMarking($resource),
-            'transitions' => $workflow->getEnabledTransitions($resource),
         ];
     }
 

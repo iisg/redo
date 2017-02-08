@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Language;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class LanguageListQuery extends Command {
+class LanguageListQuery extends NonValidatedCommand {
 }

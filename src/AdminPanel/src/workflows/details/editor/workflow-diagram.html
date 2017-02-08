@@ -1,0 +1,8 @@
+<template>
+    <require from="./workflow-diagram.css"></require>
+    <require from="cytoscape-context-menus/cytoscape-context-menus.css"></require>
+    <div class="diagram-cover"
+        if.bind="!editable"></div>
+    <div ref="diagramContainer"
+        class="workflow-diagram"></div>
+</template>

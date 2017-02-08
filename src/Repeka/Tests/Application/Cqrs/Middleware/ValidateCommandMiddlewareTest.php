@@ -5,6 +5,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandValidator;
+use Repeka\Domain\Cqrs\NonValidatedCommand;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -49,10 +50,17 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testNoValidatorForCommand() {
+        $this->expectException(\InvalidArgumentException::class);
         $this->container->expects($this->once())->method('has')->with('command_validator.some_command')->willReturn(false);
         $this->container->expects($this->never())->method('get');
-        $this->middleware->handle($this->command, function ($c) {
-            $this->assertSame($c, $this->command);
+        $this->middleware->handle($this->command, function () {
+        });
+    }
+
+    public function testNoValidatorForNonValidatedCommand() {
+        $command = $this->createMock(NonValidatedCommand::class);
+        $this->middleware->handle($command, function ($c) use ($command) {
+            $this->assertSame($c, $command);
             $this->wasCalled = true;
         });
         $this->assertTrue($this->wasCalled);

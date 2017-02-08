@@ -1,0 +1,11 @@
+<template>
+    <button click.trigger="onButtonClicked()"
+        class="${stateBasedCssClass}"
+        disabled.bind="state == 'waiting'">
+        <span class="fa fa-fw ${stateBasedIcon}"></span>
+        <span show.bind="!stateBasedCaption">
+            <slot></slot>
+        </span>
+        <span if.bind="stateBasedCaption">${stateBasedCaption}</span>
+    </button>
+</template>

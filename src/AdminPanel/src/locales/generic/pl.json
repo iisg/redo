@@ -48,5 +48,16 @@
   "Resource": "Zasób",
   "Error": "Błąd",
   "Close": "Zamknij",
-  "Show Profiler": "Pokaż Profiler"
+  "Show Profiler": "Pokaż Profiler",
+  "Remove": "Usuń",
+  "Mark as initial": "Oznacz jako początkowy",
+  "New place": "Nowy stan",
+  "No transitions from current place.": "Brak wyjść z obecnego stanu.",
+  "End simulation": "Zakończ symulację",
+  "Transition": "Przejście",
+  "Place": "Stan",
+  "Choose the next transition": "Wybierz kolejne przejście",
+  "Select any element on the diagram to edit": "Zaznacz element na grafie by go edytować",
+  "Simulation": "Symulacja",
+  "Thumbnail": "Miniatura"
 }

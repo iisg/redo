@@ -1,9 +1,7 @@
 <?php
 namespace Repeka\Domain\Entity;
 
-/**
- * Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
- */
+// ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
 class ResourceEntity {
     private $id;
     private $kind;
@@ -27,7 +25,7 @@ class ResourceEntity {
         return $this->marking;
     }
 
-    public function setMarking($marking) {
+    public function setMarking(array $marking) {
         $this->marking = $marking;
     }
 

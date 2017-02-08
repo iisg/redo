@@ -1,0 +1,24 @@
+Repeka\Domain\Entity\ResourceWorkflow:
+  type: entity
+  table: workflow
+  repositoryClass: Repeka\Application\Repository\ResourceWorkflowDoctrineRepository
+  id:
+    id:
+      type: integer
+      generator: {strategy: AUTO}
+  fields:
+    name:
+      type: json_document
+      options: {jsonb: true}
+    places:
+      type: json
+      options: {default: '[]'}
+    transitions:
+      type: json
+      options: {default: '[]'}
+    diagram:
+      type: text
+      nullable: true
+    thumbnail:
+      type: text
+      nullable: true

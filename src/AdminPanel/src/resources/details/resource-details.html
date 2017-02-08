@@ -31,18 +31,6 @@
                     </dd>
                 </template>
             </dl>
-
-            <dl class="dl-horizontal">
-                <dt>${'Status'|t}</dt>
-                <dd>
-                    ${resource.marking}<br>
-                    <div class="btn-group btn-group-xs">
-                        <a class="btn btn-default"
-                            click.trigger="applyTransition(transition)"
-                            repeat.for="transition of resource.transitions">${transition}</a>
-                    </div>
-                </dd>
-            </dl>
         </div>
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"

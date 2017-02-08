@@ -2,9 +2,8 @@
 namespace Repeka\Application\Serialization;
 
 use Repeka\Domain\Entity\Metadata;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class MetadataNormalizer implements NormalizerInterface {
+class MetadataNormalizer extends AbstractNormalizer {
     /**
      * @param $metadata Metadata
      * @inheritdoc
@@ -19,16 +18,6 @@ class MetadataNormalizer implements NormalizerInterface {
             'description' => $this->emptyArrayAsObject($metadata->getDescription()),
             'baseId' => $metadata->getBaseId(),
         ];
-    }
-
-    /**
-     * Forces to serialize empty array as json object (i.e. {} instead of []).
-     */
-    private function emptyArrayAsObject(array $array) {
-        if (count($array) == 0) {
-            return new \stdClass();
-        }
-        return $array;
     }
 
     /**

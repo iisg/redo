@@ -1,0 +1,17 @@
+<template>
+    <form submit.delegate="validateAndSubmit()">
+        <div class="form-group label-floating">
+            <multilingual-editor label="${'Name' | t}"
+                class="vertical"
+                value.bind="workflow.name & validate"></multilingual-editor>
+        </div>
+        <div class="form-group text-right no-margin-top">
+            <button class="btn btn-primary"
+                type="submit"
+                disabled.bind="submitting">
+                <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></span>
+                ${'Add' | t}
+            </button>
+        </div>
+    </form>
+</template>

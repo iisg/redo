@@ -40,6 +40,10 @@ System.config({
     "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.7",
     "bootstrap-select": "npm:bootstrap-select@1.12.1",
     "compass-mixins": "npm:compass-mixins@0.12.10",
+    "cytoscape": "npm:cytoscape@2.7.14",
+    "cytoscape-autopan-on-drag": "npm:cytoscape-autopan-on-drag@2.0.1",
+    "cytoscape-context-menus": "npm:cytoscape-context-menus@2.1.1",
+    "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.9.0",
     "fetch": "github:github/fetch@1.1.1",
     "font-awesome": "npm:font-awesome@4.6.3",
     "i18next-xhr-backend": "npm:i18next-xhr-backend@1.2.1",
@@ -53,6 +57,9 @@ System.config({
     },
     "github:jspm/nodelibs-buffer@0.1.0": {
       "buffer": "npm:buffer@3.6.0"
+    },
+    "github:jspm/nodelibs-os@0.1.0": {
+      "os-browserify": "npm:os-browserify@0.1.2"
     },
     "github:jspm/nodelibs-path@0.1.0": {
       "path-browserify": "npm:path-browserify@0.0.0"
@@ -260,6 +267,34 @@ System.config({
       "isarray": "npm:isarray@1.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:cytoscape-autopan-on-drag@2.0.1": {
+      "child_process": "github:jspm/nodelibs-child_process@0.1.0",
+      "cytoscape": "npm:cytoscape@2.7.14",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:cytoscape-context-menus@2.1.1": {
+      "child_process": "github:jspm/nodelibs-child_process@0.1.0",
+      "cytoscape": "npm:cytoscape@2.7.14",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "jquery": "npm:jquery@3.1.1",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:cytoscape-edgehandles@2.9.0": {
+      "child_process": "github:jspm/nodelibs-child_process@0.1.0",
+      "cytoscape": "npm:cytoscape@2.7.14",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:cytoscape@2.7.14": {
+      "os": "github:jspm/nodelibs-os@0.1.0",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
     "npm:es6-promise@4.0.5": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
@@ -312,6 +347,9 @@ System.config({
     },
     "npm:oribella-tap@0.5.4": {
       "oribella-framework": "npm:oribella-framework@0.5.3"
+    },
+    "npm:os-browserify@0.1.2": {
+      "os": "github:jspm/nodelibs-os@0.1.0"
     },
     "npm:path-browserify@0.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"
