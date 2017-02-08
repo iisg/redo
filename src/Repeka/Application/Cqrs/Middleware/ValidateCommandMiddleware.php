@@ -3,6 +3,7 @@ namespace Repeka\Application\Cqrs\Middleware;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandValidator;
+use Repeka\Domain\Cqrs\NonValidatedCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ValidateCommandMiddleware implements CommandBusMiddleware {
@@ -13,8 +14,15 @@ class ValidateCommandMiddleware implements CommandBusMiddleware {
     }
 
     public function handle(Command $command, callable $next) {
-        if ($this->container->has($this->getValidatorId($command))) {
-            $this->validate($command);
+        if (!($command instanceof NonValidatedCommand)) {
+            $validatorId = $this->getValidatorId($command);
+            if ($this->container->has($validatorId)) {
+                $this->validate($command);
+            } else {
+                throw new \InvalidArgumentException("Could not find a validator for the {$command->getCommandName()}. "
+                    . "Looking for the {$validatorId}. "
+                    . "If the command is not meant to have a validator, it must extend the NonValidatedCommand class.");
+            }
         }
         return $next($command);
     }

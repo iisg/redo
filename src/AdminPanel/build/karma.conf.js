@@ -29,7 +29,8 @@ module.exports = function (config) {
       },
       serveFiles: [
         'src/**/*.*',
-        'jspm_packages/**/*.js'
+        'jspm_packages/**/*.js',
+        'jspm_packages/**/*.json'
       ]
     },
     files: [

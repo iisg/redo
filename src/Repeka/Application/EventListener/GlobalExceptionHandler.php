@@ -8,6 +8,11 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class GlobalExceptionHandler implements EventSubscriberInterface {
+    private $isDebug;
+
+    public function __construct($isDebug) {
+        $this->isDebug = $isDebug;
+    }
 
     public function onException(GetResponseForExceptionEvent $event) {
         $errorResponse = $this->createErrorResponse($event->getException());
@@ -18,7 +23,7 @@ class GlobalExceptionHandler implements EventSubscriberInterface {
         if (!$e instanceof DomainException) {
             return new JsonResponse([
                 'status' => 500,
-                'message' => 'Internal server error, please try again later'
+                'message' => $this->isDebug ? $e->getMessage() : 'Internal server error, please try again later'
             ]);
         } else {
             /* @var DomainException $e */

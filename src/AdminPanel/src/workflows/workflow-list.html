@@ -1,0 +1,55 @@
+<template>
+    <require from="resources-config/add-form/animated-plus-button"></require>
+    <require from="./new-workflow-form"></require>
+
+    <animated-plus-button class="pull-right"
+        opened.bind="addFormOpened"></animated-plus-button>
+
+    <div if.bind="addFormOpened"
+        class="well fade-inup-outdown au-animate floating-form">
+        <new-workflow-form></new-workflow-form>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>${'ID' | t}</th>
+                    <th>${'Name' | t}</th>
+                    <th>${'Thumbnail' | t}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr if.bind="!workflows">
+                    <th colspan="6">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                        </div>
+                    </th>
+                </tr>
+                </tfoot>
+                <tbody class="au-stagger table-hover">
+                <tr class="au-animate fade-inup-outdown"
+                    hover-aware.one-time="workflow"
+                    repeat.for="workflow of workflows">
+                    <td>${workflow.id}</td>
+                    <td>${workflow.name | inCurrentLanguage}</td>
+                    <td>
+                        <img if.bind="workflow.thumbnail"
+                            src.bind="workflow.thumbnail">
+                    </td>
+                    <td>
+                        <a route-href="route: workflow/details; params.bind: {id: workflow.id}"
+                            class="btn ${workflow['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">
+                            <span class="fa fa-eye fa-fw"></span>
+                            ${'Details' | t}
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

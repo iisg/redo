@@ -19,7 +19,7 @@ class GlobalExceptionHandlerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testHandleDomainException() {
-        $this->handler = new GlobalExceptionHandler();
+        $this->handler = new GlobalExceptionHandler(false);
         $response = $this->handler->createErrorResponse(new DomainException('Error'));
         $expectedResponse = new JsonResponse([
             'status' => 400,
@@ -30,11 +30,21 @@ class GlobalExceptionHandlerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testHandleOtherExceptions() {
-        $this->handler = new GlobalExceptionHandler();
+        $this->handler = new GlobalExceptionHandler(false);
         $response = $this->handler->createErrorResponse(new \Exception('ExceptionError'));
         $expectedResponse = new JsonResponse([
             'status' => 500,
             'message' => 'Internal server error, please try again later'
+        ]);
+        $this->assertEquals($response, $expectedResponse);
+    }
+
+    public function testDisplayingOtherExceptionMessageIfDebug() {
+        $this->handler = new GlobalExceptionHandler(true);
+        $response = $this->handler->createErrorResponse(new \Exception('ExceptionError'));
+        $expectedResponse = new JsonResponse([
+            'status' => 500,
+            'message' => 'ExceptionError'
         ]);
         $this->assertEquals($response, $expectedResponse);
     }

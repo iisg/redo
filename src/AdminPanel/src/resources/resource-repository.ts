@@ -30,8 +30,4 @@ export class ResourceRepository extends ApiRepository<Resource> {
   update(resource: Resource): Promise<Resource> {
     return this.put(resource);
   }
-
-  applyTransition(resource: Resource, transition: string): Promise<Resource> {
-    return this.patch(resource, {transition});
-  }
 }

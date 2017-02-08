@@ -20,4 +20,8 @@ abstract class Command {
     private function toSnakeCase($camelCase) {
         return strtolower(preg_replace('/(?<!^)[A-Z]+/', '_$0', $camelCase));
     }
+
+    public function __toString() {
+        return $this->getCommandName();
+    }
 }

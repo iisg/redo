@@ -1,9 +1,13 @@
 <?php
 namespace Repeka\Domain\Repository;
 
-use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
 interface ResourceWorkflowRepository {
-    public function get(ResourceEntity $resource): ResourceWorkflow;
+    public function save(ResourceWorkflow $workflow): ResourceWorkflow;
+
+    /** @return ResourceWorkflow[] */
+    public function findAll();
+
+    public function findOne($id): ResourceWorkflow;
 }

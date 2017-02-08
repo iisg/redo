@@ -3,7 +3,6 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ResourceKindsFixture extends RepekaFixture {
     const ORDER = MetadataFixture::ORDER + 1;
@@ -12,9 +11,7 @@ class ResourceKindsFixture extends RepekaFixture {
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
-        /** @var ContainerInterface $container */
-        $container = $this->container;
-        $container->get('repeka.command_bus')->handle(ResourceKindCreateCommand::fromArray([
+        $this->handleCommand(ResourceKindCreateCommand::fromArray([
             'label' => [
                 'PL' => 'Książka',
                 'EN' => 'Book',

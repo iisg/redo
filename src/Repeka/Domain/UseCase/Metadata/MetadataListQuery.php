@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class MetadataListQuery extends Command {
+class MetadataListQuery extends NonValidatedCommand {
 }

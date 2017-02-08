@@ -5,9 +5,8 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class ResourceKindNormalizer implements NormalizerInterface, NormalizerAwareInterface {
+class ResourceKindNormalizer extends AbstractNormalizer implements NormalizerAwareInterface {
     use NormalizerAwareTrait;
 
     /**
@@ -17,7 +16,7 @@ class ResourceKindNormalizer implements NormalizerInterface, NormalizerAwareInte
     public function normalize($resourceKind, $format = null, array $context = []) {
         return [
             'id' => $resourceKind->getId(),
-            'label' => $resourceKind->getLabel(),
+            'label' => $this->emptyArrayAsObject($resourceKind->getLabel()),
             'metadataList' => array_map(function (Metadata $metadata) use ($format, $context) {
                 return $this->normalizer->normalize($metadata, $format, $context);
             }, $resourceKind->getMetadataList()),

@@ -104,6 +104,10 @@ a.btn-fab .fa {
   @include translate(-12px, -12px);
 }
 
+.no-padding {
+  padding: 0 !important;
+}
+
 // z-depth helpers from MaterializeCSS
 // see https://github.com/FezVrasta/bootstrap-material-design/issues/1109
 

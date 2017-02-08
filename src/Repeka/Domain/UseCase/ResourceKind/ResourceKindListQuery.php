@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class ResourceKindListQuery extends Command {
+class ResourceKindListQuery extends NonValidatedCommand {
 }

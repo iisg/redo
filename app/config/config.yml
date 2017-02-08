@@ -1,7 +1,6 @@
 imports:
   - { resource: security.yml }
   - { resource: metrics.yml }
-  - { resource: workflow.yml }
   - { resource: config_build.yml}
 
 repeka:

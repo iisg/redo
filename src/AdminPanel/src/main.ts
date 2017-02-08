@@ -35,8 +35,8 @@ export function configure(aurelia: Aurelia) {
           loadPath: 'locales/{{ns}}/{{lng}}.json',
           ajax: translationLoader
         },
-        preload: supportedUILanguages,
-        fallbackLng: [supportedUILanguages[0], 'en'],
+        preload: supportedUILanguages(),
+        fallbackLng: [supportedUILanguages()[0], 'en'],
         ns: languageNamespaces,
         defaultNS: 'generic',
         attributes: ['t'],
@@ -53,6 +53,8 @@ export function configure(aurelia: Aurelia) {
       'common/bootstrap/bootstrap-tooltip',
       'common/bootstrap/hover-aware',
       'common/authorization/require-static-permissions',
+      'resources-config/multilingual-field/multilingual-editor',
+      'resources-config/multilingual-field/in-current-language',
     ]);
 
   configureHttpClient(aurelia);

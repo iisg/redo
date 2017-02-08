@@ -27,6 +27,27 @@ services:
     tags:
       - { name: serializer.normalizer }
 
+  resource_workflow.normalizer:
+    class: Repeka\Application\Serialization\ResourceWorkflowNormalizer
+    public: false
+    autowire: true
+    tags:
+      - { name: serializer.normalizer }
+
+  resource_workflow_place.normalizer:
+    class: Repeka\Application\Serialization\ResourceWorkflowPlaceNormalizer
+    public: false
+    autowire: true
+    tags:
+      - { name: serializer.normalizer }
+
+  resource_workflow_transition.normalizer:
+    class: Repeka\Application\Serialization\ResourceWorkflowTransitionNormalizer
+    public: false
+    autowire: true
+    tags:
+      - { name: serializer.normalizer }
+
   user.normalizer:
     class: Repeka\Application\Serialization\UserEntityNormalizer
     public: false
@@ -71,7 +92,8 @@ services:
 
   repeka.event_listener.global_exception_handler:
     class: Repeka\Application\EventListener\GlobalExceptionHandler
-    autowire: true
+    arguments:
+      - '%kernel.debug%'
     tags:
       - { name: kernel.event_subscriber }
 
@@ -101,8 +123,9 @@ services:
     arguments: [Repeka\Domain\Entity\ResourceEntity]
 
   repository.workflow:
-    class: Repeka\Application\Repository\SymfonyResourceWorkflowRepository
-    autowire: true
+    class: Repeka\Application\Repository\ResourceWorkflowDoctrineRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\ResourceWorkflow]
 
   command_handler.metadata_list:
     class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
@@ -130,6 +153,18 @@ services:
 
   command_handler.resource_list:
     class: Repeka\Domain\UseCase\Resource\ResourceListQueryHandler
+    autowire: true
+
+  command_handler.resource_workflow_create:
+    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandHandler
+    autowire: true
+
+  command_handler.resource_workflow_list:
+    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowListQueryHandler
+    autowire: true
+
+  command_handler.resource_workflow:
+    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQueryHandler
     autowire: true
 
   command_handler.resource_transition:
@@ -174,6 +209,14 @@ services:
 
   command_handler.user_update_static_permissions:
     class: Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommandHandler
+    autowire:
+
+  command_handler.resource_workflow_simulate:
+    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandHandler
+    autowire: true
+
+  command_handler.resource_workflow_update:
+    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandHandler
     autowire: true
 
   command_validator.metadata_create:
@@ -181,6 +224,9 @@ services:
     arguments:
       - '@repository.language'
       - '%repeka.supported_controls%'
+
+  resource_workflow_strategy_factory:
+    class: Repeka\Application\Factory\ResourceSymfonyWorkflowStrategyFactory
 
   command_validator.metadata_update:
     class: Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator
@@ -213,6 +259,16 @@ services:
     class: Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommandValidator
     arguments:
       - '%repeka.static_permissions%'
+
+  command_validator.resource_workflow_create:
+    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandValidator
+    autowire: true
+
+  command_validator.resource_workflow_update:
+    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandValidator
+
+  command_validator.resource_workflow_simulate:
+    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator
 
   repeka.ajax_authentication_listener:
     class: Repeka\Application\EventListener\AjaxAuthenticationListener

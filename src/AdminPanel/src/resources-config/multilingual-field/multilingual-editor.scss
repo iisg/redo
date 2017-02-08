@@ -1,0 +1,16 @@
+@import "../../common/styles";
+
+multilingual-editor {
+  &.vertical {
+    .row > div {
+      @include make-xs-column(12);
+      float: none;
+      .form-group {
+        margin: 0;
+        label {
+          position: static;
+        }
+      }
+    }
+  }
+}

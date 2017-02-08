@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Tests\UseCase\Resource;
+namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceRepository;

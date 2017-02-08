@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class ResourceListQuery extends Command {
+class ResourceListQuery extends NonValidatedCommand {
 }

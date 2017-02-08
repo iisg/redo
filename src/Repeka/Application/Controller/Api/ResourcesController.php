@@ -62,19 +62,4 @@ class ResourcesController extends ApiController {
         $resource = $this->handle($command);
         return $this->createJsonResponse($resource);
     }
-
-    /**
-     * @Route("/{resource}")
-     * @Method("PATCH")
-     * @Security("has_role('ROLE_STATIC_RESOURCES')")
-     */
-    public function patchAction(ResourceEntity $resource, Request $request) {
-        $data = $request->request->all();
-        if (!empty($data['transition'])) {
-            $command = new ResourceTransitionCommand($resource, $data['transition']);
-            $resource = $this->handle($command);
-            return $this->createJsonResponse($resource);
-        }
-        throw new BadRequestHttpException('Unsupported operation.');
-    }
 }

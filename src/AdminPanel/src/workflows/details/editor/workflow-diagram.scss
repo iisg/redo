@@ -1,0 +1,19 @@
+@import "../../../common/styles";
+
+workflow-diagram {
+  $diagramHeight: 600px;
+  display: block;
+  width: 100%;
+  position: relative;
+  .workflow-diagram {
+    height: $diagramHeight;
+    width: 100%;
+    border: 1px solid $grey-300;
+  }
+  .diagram-cover {
+    height: $diagramHeight;
+    width: 100%;
+    position: absolute;
+    z-index: 1000;
+  }
+}

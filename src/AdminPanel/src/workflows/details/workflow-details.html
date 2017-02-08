@@ -1,0 +1,17 @@
+<template>
+    <require from="./editor/workflow-editor"></require>
+
+    <div class="au-animate fade-inup-outup page-preloader"
+        if.bind="!workflow">
+        <div class="progress progress-striped active">
+            <div class="progress-bar progress-bar-success progress-bar-full"></div>
+        </div>
+    </div>
+
+    <div class="au-animate fade-inup-outup"
+        if.bind="workflow">
+        <h1>${workflow.name | inCurrentLanguage}</h1>
+        <workflow-editor workflow.bind="workflow"></workflow-editor>
+    </div>
+
+</template>

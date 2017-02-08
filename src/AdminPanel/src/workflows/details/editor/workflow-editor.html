@@ -1,0 +1,81 @@
+<template>
+    <require from="./workflow-diagram"></require>
+    <require from="./promise-button"></require>
+    <require from="./workflow-editor.css"></require>
+
+    <div class="btn-group pull-right">
+        <promise-button on-click.call="save()">
+            ${ 'Save' | t }
+        </promise-button>
+        <button class="btn btn-default ${simulating ? 'active' : ''}"
+            if.bind="workflow.places.length > 0"
+            click.delegate="toggleSimulation()">
+            <span class="fa fa-fw ${simulating ? 'fa-pause' : 'fa-play'}"></span>
+            ${ 'Simulation' | t }
+        </button>
+    </div>
+
+    <div class="col-sm-12 hidden-xs workflow-editor">
+        <div class="row">
+            <div class="col-sm-9 no-padding">
+                <workflow-diagram workflow.bind="workflow"
+                    editable.bind="!simulating"
+                    current.bind="currentSimulationPlaces"
+                    on-graph-built.call="onGraphBuilt(graph)"></workflow-diagram>
+            </div>
+            <div class="col-sm-3 no-padding">
+                <div class="well"
+                    if.bind="!simulating">
+                    <span if.bind="!selectedElement">${ 'Select any element on the diagram to edit' | t }</span>
+                    <span if.bind="selectedElement">
+                        <h3>
+                            <span if.bind="!selectedElement.froms">${ 'Place' | t }</span>
+                            <span if.bind="selectedElement.froms">${ 'Transition' | t}</span>
+                        </h3>
+                        <form submit.delegate="saveSelectedElementChanges()">
+                            <div class="form-group">
+                                <multilingual-editor label="${'Label' | t}"
+                                    class="vertical"
+                                    keyup.delegate="saveSelectedElementChanges()"
+                                    value.bind="selectedElement.label"></multilingual-editor>
+                            </div>
+                        </form>
+                    </span>
+                </div>
+                <div class="well"
+                    if.bind="simulating">
+                    <h3>${ 'Choose the next transition' | t}</h3>
+                    <div class="au-animate fade-inup-outup page-preloader"
+                        if.bind="fetchingTransitions">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                        </div>
+                    </div>
+                    <div class="btn-group-vertical au-animate fade-inup-outup btn-block"
+                        if.bind="!fetchingTransitions">
+                        <button class="btn btn-success btn-block"
+                            click.delegate="advanceSimulation(transition.id)"
+                            repeat.for="transition of availableTransitions">
+                            <span ref="transition.translatedLabel"
+                                value.one-time="transition.label | inCurrentLanguage">
+                                <span if.one-time="transition.translatedLabel.value">
+                                    ${ transition.translatedLabel.value }
+                                </span>
+                                <span if.one-time="!transition.translatedLabel.value">
+                                    <em>${ 'Transition' | t } #${ $index + 1 }</em>
+                                </span>
+                            </span>
+                        </button>
+                    </div>
+                    <div if.bind="!fetchingTransitions && availableTransitions.length === 0">
+                        ${ 'No transitions from current place.' | t }
+                        <button class="btn btn-warning btn-block"
+                            click.delegate="toggleSimulation()">
+                            ${ 'End simulation' | t }
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
