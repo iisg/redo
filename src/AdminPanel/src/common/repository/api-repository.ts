@@ -16,7 +16,7 @@ export abstract class ApiRepository<T> {
     return this.httpClient.post(this.endpoint, this.toBackend(entity)).then(response => this.toEntity(response.content));
   }
 
-  public patch(entity: T, patch: any) {
+  public patch(entity: T, patch: any): Promise<T> {
     return this.httpClient.patch(this.oneEntityEndpoint(entity), patch).then(response => this.toEntity(response.content));
   }
 

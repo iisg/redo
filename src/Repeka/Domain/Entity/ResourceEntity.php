@@ -7,6 +7,7 @@ namespace Repeka\Domain\Entity;
 class ResourceEntity {
     private $id;
     private $kind;
+    private $marking;
     private $contents;
 
     public function __construct(ResourceKind $kind, array $contents) {
@@ -20,6 +21,14 @@ class ResourceEntity {
 
     public function getKind(): ResourceKind {
         return $this->kind;
+    }
+
+    public function getMarking() {
+        return $this->marking;
+    }
+
+    public function setMarking($marking) {
+        $this->marking = $marking;
     }
 
     public function getContents(): array {

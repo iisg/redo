@@ -23,6 +23,7 @@ services:
   resource.normalizer:
     class: Repeka\Application\Serialization\ResourceNormalizer
     public: false
+    autowire: true
     tags:
       - { name: serializer.normalizer }
 
@@ -99,6 +100,10 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Domain\Entity\ResourceEntity]
 
+  repository.workflow:
+    class: Repeka\Application\Repository\SymfonyResourceWorkflowRepository
+    autowire: true
+
   command_handler.metadata_list:
     class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
     autowire: true
@@ -125,6 +130,10 @@ services:
 
   command_handler.resource_list:
     class: Repeka\Domain\UseCase\Resource\ResourceListQueryHandler
+    autowire: true
+
+  command_handler.resource_transition:
+    class: Repeka\Domain\UseCase\Resource\ResourceTransitionCommandHandler
     autowire: true
 
   command_handler.metadata_create:

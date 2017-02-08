@@ -4,6 +4,8 @@ import {ValidationRules} from "aurelia-validation";
 export class Resource {
   id: number;
   kind: ResourceKind;
+  marking: string;
+  transitions: Array<string> = [];
   contents: StringAnyMap = {};
 }
 

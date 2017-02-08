@@ -13,6 +13,10 @@ Repeka\Domain\Entity\ResourceEntity:
         name: kind_id
         referencedColumnName: id
   fields:
+    marking:
+      type: json_document
+      nullable: true
+      options: {jsonb: true}
     contents:
       type: json_document
       options: {jsonb: true}
