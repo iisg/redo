@@ -5,6 +5,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
+use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -60,5 +61,20 @@ class ResourcesController extends ApiController {
         $command = new ResourceUpdateContentsCommand($resource, $data['contents'] ?? []);
         $resource = $this->handle($command);
         return $this->createJsonResponse($resource);
+    }
+
+    /**
+     * @Route("/{resource}")
+     * @Method("PATCH")
+     * @Security("has_role('ROLE_STATIC_RESOURCES')")
+     */
+    public function patchAction(ResourceEntity $resource, Request $request) {
+        $data = $request->request->all();
+        if (!empty($data['transition'])) {
+            $command = new ResourceTransitionCommand($resource, $data['transition']);
+            $resource = $this->handle($command);
+            return $this->createJsonResponse($resource);
+        }
+        throw new BadRequestHttpException('Unsupported operation.');
     }
 }

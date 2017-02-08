@@ -1,0 +1,50 @@
+framework:
+  workflows:
+    scanning:
+        type: state_machine
+#        marking_store:
+#          type: 'multiple_state' # or 'single_state'
+#          arguments:
+#            - 'currentPlace'
+        supports:
+          - Repeka\Domain\Entity\ResourceEntity
+        places:
+          - imported
+          - ready_to_scan
+          - scanned
+          - require_rescan
+          - verified
+          - recognized
+          - approved
+          - published
+        transitions:
+          attach_metryczka:
+            from: imported
+            to: ready_to_scan
+          scan:
+            from: ready_to_scan
+            to: scanned
+          verify:
+            from: scanned
+            to: verified
+          reject:
+            from: scanned
+            to: require_rescan
+          rescan:
+            from: require_rescan
+            to: scanned
+          ocr:
+            from: verified
+            to: recognized
+          approve:
+            from: recognized
+            to: approved
+          publish:
+            from: approved
+            to: published
+          unpublish:
+            from: published
+            to: approved
+          disapprove:
+            from: approved
+            to: recognized
