@@ -88,6 +88,7 @@
       "jquery": "npm:jquery@2.2.4",
       "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@^0.8.0",
       "region-flags": "github:behdad/region-flags@1.0.1",
+      "sweetalert2": "npm:sweetalert2@^6.4.2",
       "text": "github:systemjs/plugin-text@^0.0.9"
     },
     "devDependencies": {

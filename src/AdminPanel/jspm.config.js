@@ -46,6 +46,7 @@ System.config({
     "jquery": "npm:jquery@2.2.4",
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.8.0",
     "region-flags": "github:behdad/region-flags@1.0.1",
+    "sweetalert2": "npm:sweetalert2@6.4.2",
     "text": "github:systemjs/plugin-text@0.0.9",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -259,6 +260,9 @@ System.config({
       "isarray": "npm:isarray@1.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:es6-promise@4.0.5": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:font-awesome@4.6.3": {
       "css": "github:systemjs/plugin-css@0.1.32"
     },
@@ -316,6 +320,9 @@ System.config({
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
+    },
+    "npm:sweetalert2@6.4.2": {
+      "es6-promise": "npm:es6-promise@4.0.5"
     },
     "npm:util@0.10.3": {
       "inherits": "npm:inherits@2.0.1",

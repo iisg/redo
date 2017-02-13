@@ -45,5 +45,8 @@
   "Server returned error 403 - Forbidden": "Serwer zwrócił błąd 403 - Zabronione",
   "Contents": "Zawartość",
   "No matches found for {0}": "Żaden element nie pasuje do {0}",
-  "Resource": "Zasób"
+  "Resource": "Zasób",
+  "Error": "Błąd",
+  "Close": "Zamknij",
+  "Show Profiler": "Pokaż Profiler"
 }
