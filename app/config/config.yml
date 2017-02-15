@@ -11,6 +11,7 @@ repeka:
     - integer
     - date
     - boolean
+    - relationship
   static_permissions:
     - ADMIN_PANEL
     - METADATA
@@ -85,7 +86,6 @@ framework:
 parameters:
   locale: pl
   secret: some_secret
-  jms_serializer.json_serialization_visitor.class: Repeka\Application\Serialization\FixJsonArraySerializationVisitor
 
 swiftmailer:
   host: "127.0.0.1"

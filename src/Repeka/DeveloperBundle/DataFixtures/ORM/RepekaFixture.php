@@ -8,6 +8,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class RepekaFixture extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface {
+    const ORDER = 0;
+
     /** @var ContainerInterface */
     protected $container;
 
@@ -21,5 +23,9 @@ abstract class RepekaFixture extends AbstractFixture implements OrderedFixtureIn
 
     public function setContainer(ContainerInterface $container = null) {
         $this->container = $container;
+    }
+
+    public function getOrder() {
+        return static::ORDER;
     }
 }

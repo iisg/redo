@@ -13,9 +13,10 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
     }
 
     public function findOne(int $id): Metadata {
+        /** @var Metadata $metadata */
         $metadata = $this->find($id);
         if (!$metadata) {
-            throw new EntityNotFoundException("ID: $id");
+            throw new EntityNotFoundException($this, $id);
         }
         return $metadata;
     }

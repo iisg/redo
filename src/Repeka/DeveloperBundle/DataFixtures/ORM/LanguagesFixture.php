@@ -22,8 +22,4 @@ class LanguagesFixture extends RepekaFixture {
             'name' => 'angielski',
         ]));
     }
-
-    public function getOrder() {
-        return self::ORDER;
-    }
 }

@@ -1,0 +1,10 @@
+<template>
+    <require from="resources-config/bootstrap-select/bootstrap-select"></require>
+    <bootstrap-select values.bind="resources"
+        value.bind="value"
+        title="&mdash;">
+        <template replace-part="option-template">
+            ${'Resource' | t} #${option.id}
+        </template>
+    </bootstrap-select>
+</template>

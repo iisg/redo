@@ -3,5 +3,6 @@
   "textarea": "Długi tekst",
   "integer": "Liczba całkowita",
   "date": "Data",
-  "boolean": "Prawda / fałsz"
+  "boolean": "Tak / Nie",
+  "relationship": "Relacja"
 }

@@ -8,6 +8,7 @@ use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,14 +40,15 @@ class ResourcesController extends ApiController {
      * @Route
      * @Method("POST")
      * @Security("has_role('ROLE_STATIC_RESOURCES')")
+     * @ParamConverter("resourceContents", converter="repeka.converter.resource_contents_param")
      */
-    public function postAction(Request $request) {
+    public function postAction(Request $request, array $resourceContents) {
         $data = $request->request->all();
         if (empty($data['kind_id'])) {
             throw new BadRequestHttpException('kind_id missing');
         }
         $resourceKind = $this->container->get('repository.resource_kind')->findOne($data['kind_id']);
-        $command = new ResourceCreateCommand($resourceKind, $data['contents'] ?? []);
+        $command = new ResourceCreateCommand($resourceKind, $resourceContents);
         $resource = $this->handle($command);
         return $this->createJsonResponse($resource, 201);
     }
@@ -55,10 +57,10 @@ class ResourcesController extends ApiController {
      * @Route("/{resource}")
      * @Method("PUT")
      * @Security("has_role('ROLE_STATIC_RESOURCES')")
+     * @ParamConverter("resourceContents", converter="repeka.converter.resource_contents_param")
      */
-    public function putAction(ResourceEntity $resource, Request $request) {
-        $data = $request->request->all();
-        $command = new ResourceUpdateContentsCommand($resource, $data['contents'] ?? []);
+    public function putAction(ResourceEntity $resource, array $resourceContents) {
+        $command = new ResourceUpdateContentsCommand($resource, $resourceContents);
         $resource = $this->handle($command);
         return $this->createJsonResponse($resource);
     }

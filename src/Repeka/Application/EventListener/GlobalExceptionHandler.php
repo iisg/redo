@@ -19,19 +19,17 @@ class GlobalExceptionHandler implements EventSubscriberInterface {
         $event->setResponse($errorResponse);
     }
 
-    public function createErrorResponse($e) {
+    public function createErrorResponse(\Exception $e) {
         if (!$e instanceof DomainException) {
             return new JsonResponse([
-                'status' => 500,
                 'message' => $this->isDebug ? $e->getMessage() : 'Internal server error, please try again later'
-            ]);
+            ], 500);
         } else {
             /* @var DomainException $e */
             return new JsonResponse([
-                'status' => $e->getCode(),
                 'message' => $e->getMessage(),
                 'data' => $e->getData()
-            ]);
+            ], $e->getCode());
         }
     }
 

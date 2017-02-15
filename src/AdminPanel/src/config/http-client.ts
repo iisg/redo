@@ -1,7 +1,7 @@
 import {Aurelia} from "aurelia-framework";
 import {HttpClient, HttpResponseMessage, Interceptor, RequestMessage} from "aurelia-http-client";
 import {MetricsSenderInterceptor} from "../common/metrics/metrics-sender-interceptor";
-import * as swal from 'sweetalert2';
+import * as swal from "sweetalert2";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 
@@ -59,7 +59,7 @@ class GlobalExceptionInterceptor implements Interceptor {
 
   responseError(response: HttpResponseMessage): HttpResponseMessage {
     let prodAlert = {
-      title: this.i18n.tr("Error") + ' ' + response.content.status,
+      title: this.i18n.tr("Error") + ' ' + response.statusCode,
       text: this.i18n.tr("exceptions::" + response.content.message),
       type: "error",
       confirmButtonColor: "#DD6B55",
