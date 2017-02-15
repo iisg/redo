@@ -5,9 +5,8 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 
 class ResourceUpdateContentsCommand extends Command {
-    /** @var ResourceEntity */
     private $resource;
-    /** @var array */
+
     private $contents;
 
     public function __construct(ResourceEntity $resource, array $contents) {

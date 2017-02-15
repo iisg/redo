@@ -21,14 +21,14 @@ class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCa
 
     protected function setUp() {
         $this->resource = $this->createMock(ResourceEntity::class);
-        $this->command = new ResourceUpdateContentsCommand($this->resource, ['2' => 'AA']);
+        $this->command = new ResourceUpdateContentsCommand($this->resource, ['1' => 'AA']);
         $this->resourceRepository = $this->createMock(ResourceRepository::class);
         $this->resourceRepository->expects($this->once())->method('save')->willReturnArgument(0);
         $this->handler = new ResourceUpdateContentsCommandHandler($this->resourceRepository);
     }
 
     public function testCreatingResource() {
-        $this->resource->expects($this->once())->method('updateContents')->with(['2' => 'AA']);
+        $this->resource->expects($this->once())->method('updateContents')->with(['1' => 'AA']);
         $resource = $this->handler->handle($this->command);
         $this->assertSame($this->resource, $resource);
     }

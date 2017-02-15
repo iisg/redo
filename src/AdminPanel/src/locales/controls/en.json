@@ -5,5 +5,6 @@
   "double": "Real number",
   "date": "Date",
   "daterange": "Date range",
-  "boolean": "True / false"
+  "boolean": "Yes / No",
+  "relationship": "Relationship"
 }

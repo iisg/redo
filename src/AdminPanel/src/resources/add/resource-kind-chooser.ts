@@ -3,7 +3,6 @@ import {autoinject} from "aurelia-dependency-injection";
 import {bindingMode} from "aurelia-binding";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
-import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class ResourceKindChooser implements ComponentAttached {
@@ -12,7 +11,7 @@ export class ResourceKindChooser implements ComponentAttached {
 
   resourceKinds: ResourceKind[];
 
-  constructor(private resourceKindRepository: ResourceKindRepository, private ea: EventAggregator) {
+  constructor(private resourceKindRepository: ResourceKindRepository) {
   }
 
   attached() {

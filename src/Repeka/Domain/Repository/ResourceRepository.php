@@ -9,7 +9,7 @@ interface ResourceRepository {
      */
     public function findAll();
 
-    public function findOne($id): ResourceEntity;
+    public function findOne(int $id): ResourceEntity;
 
     public function save(ResourceEntity $resource): ResourceEntity;
 }

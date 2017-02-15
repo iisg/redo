@@ -3,10 +3,11 @@ namespace Repeka\Tests\EventListener;
 
 use Repeka\Application\EventListener\GlobalExceptionHandler;
 use Repeka\Domain\Exception\DomainException;
+use Repeka\Tests\FunctionalTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
-class GlobalExceptionHandlerTest extends \PHPUnit_Framework_TestCase {
+class GlobalExceptionHandlerTest extends FunctionalTestCase {
     /** @var  GlobalExceptionHandler */
     private $handler;
 
@@ -22,30 +23,27 @@ class GlobalExceptionHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->handler = new GlobalExceptionHandler(false);
         $response = $this->handler->createErrorResponse(new DomainException('Error'));
         $expectedResponse = new JsonResponse([
-            'status' => 400,
             'message' => 'Error',
             'data' => []
-        ]);
-        $this->assertEquals($response, $expectedResponse);
+        ], 400);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testHandleOtherExceptions() {
         $this->handler = new GlobalExceptionHandler(false);
         $response = $this->handler->createErrorResponse(new \Exception('ExceptionError'));
         $expectedResponse = new JsonResponse([
-            'status' => 500,
             'message' => 'Internal server error, please try again later'
-        ]);
-        $this->assertEquals($response, $expectedResponse);
+        ], 500);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testDisplayingOtherExceptionMessageIfDebug() {
         $this->handler = new GlobalExceptionHandler(true);
         $response = $this->handler->createErrorResponse(new \Exception('ExceptionError'));
         $expectedResponse = new JsonResponse([
-            'status' => 500,
             'message' => 'ExceptionError'
-        ]);
-        $this->assertEquals($response, $expectedResponse);
+        ], 500);
+        $this->assertEquals($expectedResponse, $response);
     }
 }

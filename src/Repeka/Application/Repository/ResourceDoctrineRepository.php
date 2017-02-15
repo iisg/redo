@@ -12,10 +12,11 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         return $resource;
     }
 
-    public function findOne($id): ResourceEntity {
+    public function findOne(int $id): ResourceEntity {
+        /** @var ResourceEntity $resource */
         $resource = $this->find($id);
         if (!$resource) {
-            throw new EntityNotFoundException("ID: $id");
+            throw new EntityNotFoundException($this, $id);
         }
         return $resource;
     }

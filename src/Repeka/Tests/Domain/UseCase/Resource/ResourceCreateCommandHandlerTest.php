@@ -19,7 +19,7 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->resourceKind = new ResourceKind([]);
-        $this->command = new ResourceCreateCommand($this->resourceKind, ['2' => 'AA']);
+        $this->command = new ResourceCreateCommand($this->resourceKind, ['1' => 'AA']);
         $this->resourceRepository = $this->createMock(ResourceRepository::class);
         $this->resourceRepository->expects($this->once())->method('save')->willReturnArgument(0);
         $this->handler = new ResourceCreateCommandHandler($this->resourceRepository);
@@ -29,6 +29,6 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $resource = $this->handler->handle($this->command);
         $this->assertNotNull($resource);
         $this->assertSame($this->command->getKind(), $resource->getKind());
-        $this->assertSame($this->command->getContents(), $resource->getContents());
+        $this->assertSame([1 => 'AA'], $resource->getContents());
     }
 }

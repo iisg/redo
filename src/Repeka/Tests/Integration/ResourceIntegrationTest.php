@@ -28,7 +28,9 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->metadata = $this->resourceKind->getMetadataList()[0];
         $this->metadata->updateOrdinalNumber(0);
         $this->persistAndFlush($this->metadata);
-        $this->resource = $this->createResource($this->resourceKind, [$this->baseMetadata->getId() => 'Test value']);
+        $this->resource = $this->createResource($this->resourceKind, [
+            $this->baseMetadata->getId() => 'Test value'
+        ]);
     }
 
     public function testFetchingResources() {

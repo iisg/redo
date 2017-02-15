@@ -23,9 +23,10 @@ class LanguageDoctrineRepository extends EntityRepository implements LanguageRep
     }
 
     public function findOne(string $code): Language {
+        /** @var Language $language */
         $language = $this->find($code);
         if (!$language) {
-            throw new EntityNotFoundException("Code: $code");
+            throw new EntityNotFoundException($this, $code);
         }
         return $language;
     }

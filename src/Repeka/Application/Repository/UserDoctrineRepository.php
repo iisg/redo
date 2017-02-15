@@ -23,9 +23,10 @@ class UserDoctrineRepository extends EntityRepository implements UserRepository,
     }
 
     public function findOne($id): User {
+        /** @var User $user */
         $user = $this->find($id);
         if (!$user) {
-            throw new EntityNotFoundException("ID: $id");
+            throw new EntityNotFoundException($this, $id);
         }
         return $user;
     }

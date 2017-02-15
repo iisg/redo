@@ -17,19 +17,38 @@ export class BootstrapSelect implements ComponentAttached, ComponentDetached {
   }
 
   valuesChanged() {
-    setTimeout(() => {
-      this.refreshBootstrapSelect();
-    });
+    this.scheduleRefresh();
+  }
+
+  valueChanged() {
+    this.scheduleRefresh();
   }
 
   stopPropagation($event: Event) {
     $event.stopPropagation();
   }
 
+  private findValueIndex(value: Object): number {
+    if (!value || !this.values) {
+      return undefined;
+    }
+    let index = this.values.indexOf(this.value);
+    if (index == -1 && value.hasOwnProperty('id')) {
+      return this.values.map((v) => v['id']).indexOf(value['id']);
+    }
+    return index;
+  }
+
   private refreshBootstrapSelect() {
-    let value = this.values ? this.values.indexOf(this.value) : undefined;
-    $(this.dropdown).selectpicker('val', value as any);
+    let index = this.findValueIndex(this.value);
+    $(this.dropdown).selectpicker('val', index as any);
     $(this.dropdown).selectpicker('refresh');
+  }
+
+  private scheduleRefresh() {
+    setTimeout(() => {
+      this.refreshBootstrapSelect();
+    });
   }
 
   attached() {

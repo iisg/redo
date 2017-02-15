@@ -54,6 +54,12 @@ services:
     tags:
       - { name: serializer.normalizer }
 
+  repeka.converter.resource_contents_param:
+    class: Repeka\Application\ParamConverter\ResourceContentsParamConverter
+    autowire: true
+    tags:
+      - { name: request.param_converter, converter: repeka.converter.resource_contents_param }
+
   repeka.command_bus.middleware.call_command:
     class: Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware
     autowire: true
@@ -96,6 +102,13 @@ services:
       - '%kernel.debug%'
     tags:
       - { name: kernel.event_subscriber }
+
+  repeka.doctrine_listener.relationship_property_converter:
+    class: Repeka\Application\DoctrineListener\RelationshipPropertyConverterListener
+    autowire: true
+    tags:
+      - { name: doctrine.event_listener, event: prePersist }
+      - { name: doctrine.event_listener, event: preUpdate }
 
   repository.metadata:
     class: Repeka\Application\Repository\MetadataDoctrineRepository
@@ -165,10 +178,6 @@ services:
 
   command_handler.resource_workflow:
     class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQueryHandler
-    autowire: true
-
-  command_handler.resource_transition:
-    class: Repeka\Domain\UseCase\Resource\ResourceTransitionCommandHandler
     autowire: true
 
   command_handler.metadata_create:

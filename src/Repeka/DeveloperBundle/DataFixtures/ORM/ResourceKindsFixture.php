@@ -6,6 +6,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 
 class ResourceKindsFixture extends RepekaFixture {
     const ORDER = MetadataFixture::ORDER + 1;
+    const REFERENCE_RESOURCE_KIND_BOOK = 'resource-kind-book';
 
     /**
      * @inheritdoc
@@ -22,11 +23,8 @@ class ResourceKindsFixture extends RepekaFixture {
                 ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE)->getId()],
                 ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_HARD_COVER)->getId()],
                 ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId()],
+                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId()],
             ],
-        ]));
-    }
-
-    public function getOrder() {
-        return self::ORDER;
+        ]), self::REFERENCE_RESOURCE_KIND_BOOK);
     }
 }
