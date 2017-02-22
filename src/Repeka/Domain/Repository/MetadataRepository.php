@@ -22,4 +22,10 @@ interface MetadataRepository {
      * @return Metadata[]
      */
     public function findAllBase(): array;
+
+    /**
+     * Returns all metadata that have specific parent ID.
+     * @return Metadata[]
+     */
+    public function findAllChildren(int $parentId): array;
 }

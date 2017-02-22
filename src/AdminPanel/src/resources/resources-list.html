@@ -51,7 +51,7 @@
                             <template repeat.for="metadata of resource.kind.metadataList & oneTime">
                                 <dt>${metadata.name}</dt>
                                 <dd>
-                                    ${resource.contents[metadata.base.id]}
+                                    ${resource.contents[metadata.baseId]}
                                 </dd>
                             </template>
                         </dl>

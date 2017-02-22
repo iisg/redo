@@ -54,7 +54,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('POST', self::ENDPOINT, [
             'label' => ['TEST' => 'created'],
             'metadataList' => [[
-                'base_id' => $baseMetadata->getId(),
+                'baseId' => $baseMetadata->getId(),
                 'control' => $baseMetadata->getControl(),
                 'description' => [],
                 'label' => ['TEST' => 'created'],
@@ -79,7 +79,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('PATCH', self::joinUrl(self::ENDPOINT, $this->resourceKind->getId()), [
             'label' => ['TEST' => 'modified'],
             'metadataList' => [[
-                'base_id' => $this->metadata2->getBaseId(),
+                'baseId' => $this->metadata2->getBaseId(),
                 'control' => $this->metadata2->getControl(),
                 'description' => $this->metadata2->getDescription(),
                 'id' => $this->metadata2->getId(),
@@ -87,7 +87,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'name' => $this->metadata2->getName(),
                 'placeholder' => $this->metadata2->getPlaceholder()
             ], [
-                'base_id' => $this->metadata1->getBaseId(),
+                'baseId' => $this->metadata1->getBaseId(),
                 'control' => $this->metadata1->getControl(),
                 'description' => $this->metadata1->getDescription(),
                 'id' => $this->metadata1->getId(),

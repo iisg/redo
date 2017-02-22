@@ -1,0 +1,19 @@
+<template>
+
+    <require from="../../bootstrap-select/bootstrap-select"></require>
+
+    <form submit.delegate="submitChild()">
+        <bootstrap-select values.bind="notUsedMetadata"
+            value.bind="baseMetadata"
+            live-search="true"></bootstrap-select>
+        <div class="form-group text-right no-margin-top">
+            <div class="btn-group">
+                <button class="btn btn-primary"
+                    disabled.bind="submitting">
+                    <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></span>
+                    ${'Add' | t}
+                </button>
+            </div>
+        </div>
+    </form>
+</template>

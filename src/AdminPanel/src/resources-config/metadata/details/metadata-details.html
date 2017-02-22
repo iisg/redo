@@ -1,0 +1,71 @@
+<template>
+    <require from="../../multilingual-field/multilingual-display"></require>
+    <require from="../../add-form/animated-plus-button"></require>
+    <require from="./metadata-children-list"></require>
+    <require from="./metadata-child-form"></require>
+
+    <div class="au-animate fade-inup-outup"
+        if.bind="metadata">
+
+        <h1>${'Metadata' | t} #${ metadata.id }</h1>
+
+        <div>
+            <dl class="dl-horizontal">
+                <dt>ID</dt>
+                <dd>${metadata.id}</dd>
+                <dt>${'Name' | t}</dt>
+                <dd>${metadata.name}</dd>
+
+                <dt>${'Label' | t}</dt>
+                <dd>
+                    <multilingual-display value.one-time="metadata.label"></multilingual-display>
+                </dd>
+                <dt>${'Control' | t}</dt>
+                <dd>${'controls::' + metadata.control | t}</dd>
+                <dt>${'Hint' | t}</dt>
+                <dd>
+                    <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
+                </dd>
+                <dt>${'Description' | t}</dt>
+                <dd>
+                    <multilingual-display value.one-time="metadata.description"></multilingual-display>
+                </dd>
+            </dl>
+        </div>
+
+        <div require-static-permissions="METADATA">
+            <animated-plus-button class="pull-right"
+                opened.bind="addFormOpened"></animated-plus-button>
+        </div>
+
+        <h1>${'Submetadata kinds' | t}:</h1>
+
+        <div if.bind="addFormOpened"
+            require-static-permissions="METADATA"
+            class="well fade-inout-updown au-animate floating-form-full-width">
+            <h2>${'Add new submetadata kind' | t}</h2>
+            <metadata-child-form metadata-children-list.bind="metadataChildrenList"
+                submit.call="addNewChildMetadata(metadata.id, baseMetadata.id)"></metadata-child-form>
+        </div>
+
+        <div show.bind="!metadataChildrenList || metadataChildrenList.length > 0">
+            <div class="au-animate fade-inup-outup page-preloader"
+                if.bind="!metadata">
+                <div class="progress progress-striped active">
+                    <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                </div>
+            </div>
+
+            <div class="au-animate fade-inup-outup">
+                <metadata-children-list metadata.bind="metadata"
+                    metadata-children-list.bind="metadataChildrenList"></metadata-children-list>
+            </div>
+        </div>
+
+        <div class="alert alert-info"
+            if.bind="metadataChildrenList.length === 0">
+            <span class="fa fa-info-circle fa-fw"></span>
+            ${'No submetadata kinds.' | t}
+        </div>
+    </div>
+</template>

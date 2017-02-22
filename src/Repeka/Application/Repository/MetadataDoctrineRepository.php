@@ -22,6 +22,10 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
     }
 
     public function findAllBase(): array {
-        return $this->findBy(['baseMetadata' => null], ['ordinalNumber' => 'ASC']);
+        return $this->findBy(['baseMetadata' => null, 'parentMetadata' => null], ['ordinalNumber' => 'ASC']);
+    }
+
+    public function findAllChildren(int $parentId): array {
+        return $this->findBy(['parentMetadata' => $parentId]);
     }
 }
