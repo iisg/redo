@@ -31,7 +31,7 @@ export class ResourceKindMetadataChooser implements ComponentAttached {
 
   @computedFrom("metadataList.length", "resourceKind.metadataList.length")
   get notUsedMetadata() {
-    let usedIds = this.resourceKind ? this.resourceKind.metadataList.map(metadata => metadata.base.id) : [];
+    let usedIds = this.resourceKind ? this.resourceKind.metadataList.map(metadata => metadata.baseId) : [];
     let notUsedMetadata = this.metadataList ? this.metadataList.filter(metadata => usedIds.indexOf(metadata.id) < 0) : [];
     this.hasMetadataToChoose = !this.metadataList || notUsedMetadata.length > 0;
     return notUsedMetadata;

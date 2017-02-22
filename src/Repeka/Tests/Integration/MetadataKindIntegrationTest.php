@@ -23,7 +23,8 @@ class MetadataKindIntegrationTest extends IntegrationTestCase {
             'label' => $metadata1->getLabel(),
             'description' => [],
             'placeholder' => [],
-            'baseId' => $metadata1->getBaseId()
+            'baseId' => $metadata1->getBaseId(),
+            'parentId' => $metadata1->getParentId()
         ], [
             'id' => $metadata2->getId(),
             'control' => $metadata2->getControl(),
@@ -31,7 +32,8 @@ class MetadataKindIntegrationTest extends IntegrationTestCase {
             'label' => $metadata2->getLabel(),
             'description' => $metadata2->getDescription(),
             'placeholder' => $metadata2->getPlaceholder(),
-            'baseId' => $metadata2->getBaseId()
+            'baseId' => $metadata2->getBaseId(),
+            'parentId' => $metadata2->getParentId()
         ]], $responseContent);
     }
 

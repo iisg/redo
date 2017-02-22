@@ -108,7 +108,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     /** Creates arrays for use in createResourceKind()'s $metadataList */
     protected function resourceKindMetadata(Metadata $baseMetadata, array $label, array $description = [], array $placeholder = []): array {
         return [
-            'base_id' => $baseMetadata->getId(),
+            'baseId' => $baseMetadata->getId(),
             'label' => $label,
             'description' => $description,
             'placeholder' => $placeholder

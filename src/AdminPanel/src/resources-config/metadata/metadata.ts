@@ -11,10 +11,8 @@ export class Metadata {
   placeholder: MultilingualTextType = {};
   description: MultilingualTextType = {};
   control: String = 'text';
-}
-
-export class ResourceKindMetadata extends Metadata {
-  base: Metadata;
+  parentId: number;
+  baseId: number;
 }
 
 export function registerMetadataValidationRules() {

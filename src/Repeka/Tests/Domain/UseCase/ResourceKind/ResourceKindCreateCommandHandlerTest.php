@@ -21,8 +21,8 @@ class ResourceKindCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['base_id' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['base_id' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ]);
         $this->resourceKindRespository = $this->createMock(ResourceKindRepository::class);
         $this->resourceKindFactory = $this->createMock(ResourceKindFactory::class);

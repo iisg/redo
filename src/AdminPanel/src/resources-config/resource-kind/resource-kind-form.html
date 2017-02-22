@@ -29,7 +29,8 @@
                 <div class="col-xs-12 resource-kind-form-metadata-item ${metadata.sortingClass} ${sortingMetadata ? 'vertically-sortable' : ''}"
                     repeat.for="metadata of resourceKind.metadataList & validate"
                     oa-sortable-item="item.bind: metadata">
-                    <div class="well">
+                    <div class="well"
+                        if.bind="base(metadata) & signal:'base-metadata-fetched'">
                         <div class="btn-group pull-right top-right-buttons"
                             show.bind="!sortingMetadata">
                             <button class="btn btn-default btn-raised ${metadata.overwriteForm ? 'active' : ''}"
@@ -46,11 +47,11 @@
                         <h3>
                             <span class="pull-right fa fa-bars"
                                 show.bind="sortingMetadata"></span>
-                            ${metadata.base.name}
+                            ${base(metadata).name}
                         </h3>
                         <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
                             metadata.bind="metadata"
-                            base-metadata.bind="metadata.base"></resource-kind-metadata-form>
+                            base-metadata.bind="base(metadata)"></resource-kind-metadata-form>
                     </div>
                 </div>
             </div>

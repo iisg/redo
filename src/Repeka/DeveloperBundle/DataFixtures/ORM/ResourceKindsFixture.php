@@ -19,12 +19,12 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Book',
             ],
             [
-                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId()],
-                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getId()],
-                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE)->getId()],
-                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_HARD_COVER)->getId()],
-                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId()],
-                ['base_id' => $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId()],
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId()],
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getId()],
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE)->getId()],
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_HARD_COVER)->getId()],
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId()],
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId()],
             ],
             $workflow
         ), self::REFERENCE_RESOURCE_KIND_BOOK);

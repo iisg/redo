@@ -1,12 +1,14 @@
 import {ResourceKind} from "./resource-kind";
 import {BootstrapSelectChangeEvent} from "../bootstrap-select/bootstrap-select";
-import {Metadata, ResourceKindMetadata} from "../metadata/metadata";
+import {Metadata} from "../metadata/metadata";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentDetached} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {deepCopy} from "../../common/utils/object-utils";
+import {MetadataRepository} from "../metadata/metadata-repository";
+import {BindingSignaler} from "aurelia-templating-resources";
 
 @autoinject
 export class ResourceKindForm implements ComponentDetached {
@@ -15,23 +17,31 @@ export class ResourceKindForm implements ComponentDetached {
   @bindable edit: ResourceKind;
 
   resourceKind: ResourceKind = new ResourceKind;
+  baseMetadataMap: Map<Metadata, Metadata> = new Map();
   submitting = false;
   sortingMetadata = false;
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory) {
+  constructor(validationControllerFactory: ValidationControllerFactory,
+              private signaler: BindingSignaler,
+              private metadataRepository: MetadataRepository) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
 
   addNewMetadata(event: BootstrapSelectChangeEvent<Metadata>) {
-    let metadata = new ResourceKindMetadata;
-    metadata.base = event.detail.value;
+    let metadata = new Metadata;
+    this.baseMetadataMap.set(metadata, event.detail.value);
+    metadata.baseId = this.base(metadata).id;
     this.resourceKind.metadataList.push(metadata);
   }
 
-  removeMetadata(metadata: ResourceKindMetadata) {
+  base(metadata: Metadata): Metadata {
+    return this.baseMetadataMap.get(metadata);
+  }
+
+  removeMetadata(metadata: Metadata) {
     this.resourceKind.metadataList.splice(this.resourceKind.metadataList.indexOf(metadata), 1);
   }
 
@@ -48,20 +58,24 @@ export class ResourceKindForm implements ComponentDetached {
     this.resourceKind = new ResourceKind;
     if (newValue) {
       this.resourceKind = $.extend(this.resourceKind, deepCopy(newValue));
-      this.clearInheritedValues();
+      this.resourceKind.metadataList.forEach(metadata => {
+        this.metadataRepository.getBase(metadata).then(baseMetadata => {
+          this.baseMetadataMap.set(metadata, baseMetadata);
+          this.clearInheritedValues(metadata);
+        });
+      });
     }
   }
 
-  private clearInheritedValues() {
-    for (let metadata of this.resourceKind.metadataList) {
-      for (let overridableField of ['label', 'placeholder', 'description']) {
-        for (let languageCode in metadata[overridableField]) {
-          if (metadata[overridableField][languageCode] == metadata.base[overridableField][languageCode]) {
-            metadata[overridableField][languageCode] = '';
-          }
+  private clearInheritedValues(metadata: Metadata) {
+    for (let overridableField of ['label', 'placeholder', 'description']) {
+      for (let languageCode in metadata[overridableField]) {
+        if (metadata[overridableField][languageCode] == this.base(metadata)[overridableField][languageCode]) {
+          metadata[overridableField][languageCode] = '';
         }
       }
     }
+    this.signaler.signal('base-metadata-fetched');
   }
 
   detached() {

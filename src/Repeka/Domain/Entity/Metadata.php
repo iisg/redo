@@ -7,13 +7,15 @@ class Metadata {
     private $id;
     private $control;
     private $name;
-    private $label;
+    private $label = [];
     private $description = [];
     private $placeholder = [];
     /** @var Metadata */
     private $baseMetadata;
     private $resourceKind;
     private $ordinalNumber;
+    /** @var  Metadata */
+    private $parentMetadata;
 
     private function __construct() {
     }
@@ -29,6 +31,13 @@ class Metadata {
         return $metadata;
     }
 
+    private static function createWithBase(Metadata $base) {
+        $metadata = new self();
+        $metadata->baseMetadata = $base;
+        $metadata->ordinalNumber = -1;
+        return $metadata;
+    }
+
     public static function createForResourceKind(
         array $label,
         ResourceKind $resourceKind,
@@ -36,13 +45,17 @@ class Metadata {
         array $placeholder = [],
         array $description = []
     ) {
-        $metadata = new self();
+        $metadata = self::createWithBase($base);
         $metadata->label = $label;
-        $metadata->baseMetadata = $base;
         $metadata->resourceKind = $resourceKind;
-        $metadata->ordinalNumber = -1;
         $metadata->placeholder = $placeholder;
         $metadata->description = $description;
+        return $metadata;
+    }
+
+    public static function createChild(Metadata $base, Metadata $parent) {
+        $metadata = self::createWithBase($base);
+        $metadata->parentMetadata = $parent;
         return $metadata;
     }
 
@@ -80,6 +93,18 @@ class Metadata {
 
     public function getOrdinalNumber() {
         return $this->ordinalNumber;
+    }
+
+    public function isParent() {
+        return !$this->parentMetadata;
+    }
+
+    public function getParentId() {
+        return $this->isParent() ? null : $this->parentMetadata->getId();
+    }
+
+    public function setParent(Metadata $parent) {
+        $this->parentMetadata = $parent;
     }
 
     public function getBaseId() {

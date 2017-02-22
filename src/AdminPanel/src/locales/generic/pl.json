@@ -22,7 +22,7 @@
   "Metadata Kinds": "Rodzaje metadanych",
   "Add new resource kind": "Dodaj nowy rodzaj zasobu",
   "Add new metadata kind": "Dodaj nowy rodzaj metadanych",
-  "Add next metadata type": "Dodaj kolejny rodzaj metadanych",
+  "Add next metadata kind": "Dodaj kolejny rodzaj metadanych",
   "Select": "Wybierz",
   "Add new resource": "Dodaj nowy zasób",
   "Add metadata kind": "Dodaj rodzaj metadanej",
@@ -61,5 +61,8 @@
   "Select any element on the diagram to edit": "Zaznacz element na grafie by go edytować",
   "Simulation": "Symulacja",
   "Thumbnail": "Miniatura",
-  "Workflow": "Proces"
+  "Workflow": "Proces",
+  "Add new submetadata kind": "Dodaj nowy rodzaj podmetadanych",
+  "Submetadata kinds": "Rodzaje podmetadanych",
+  "No submetadata kinds.": "Brak rodzajów podmetadanych."
 }

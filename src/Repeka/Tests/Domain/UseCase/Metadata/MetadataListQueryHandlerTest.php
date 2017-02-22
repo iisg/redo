@@ -4,6 +4,7 @@ namespace Repeka\Tests\Domain\UseCase\Metadata;
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler;
 
 class MetadataListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
@@ -20,7 +21,14 @@ class MetadataListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
     public function testGettingTheList() {
         $metadataList = [$this->createMock(Metadata::class)];
         $this->metadataRepository->expects($this->once())->method('findAllBase')->willReturn($metadataList);
-        $returnedList = $this->handler->handle();
+        $returnedList = $this->handler->handle(new MetadataListQuery());
+        $this->assertSame($metadataList, $returnedList);
+    }
+
+    public function testGettingTheChildrenList() {
+        $metadataList = [$this->createMock(Metadata::class)];
+        $this->metadataRepository->expects($this->once())->method('findAllChildren')->willReturn($metadataList);
+        $returnedList = $this->handler->handle(new MetadataListQuery(2));
         $this->assertSame($metadataList, $returnedList);
     }
 }

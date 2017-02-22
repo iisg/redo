@@ -27,7 +27,7 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('metadataList', Validator::arrayType()->length(1)->each(Validator::allOf(
                 Validator::arrayType(),
                 Validator::length(1),
-                Validator::key('base_id', Validator::intVal())
+                Validator::key('baseId', Validator::intVal())
             )));
     }
 }

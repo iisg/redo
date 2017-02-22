@@ -15,6 +15,15 @@ export class MetadataRepository extends ApiRepository<Metadata> {
     return super.getList();
   }
 
+  public getChildren(parentId: number): Promise<Metadata[]> {
+    return this.httpClient.get(this.oneEntityEndpoint(parentId) + '/metadata')
+      .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
+  }
+
+  public saveChild(parentId: number, baseId: number) {
+    return this.httpClient.post(this.oneEntityEndpoint(parentId) + '/metadata', {baseId}).then(response => this.toEntity(response.content));
+  }
+
   public updateOrder(metadataList: Array<Metadata>): Promise<boolean> {
     return this.httpClient.put(this.endpoint, metadataList.map(metadata => metadata.id))
       .then(response => {
@@ -33,5 +42,11 @@ export class MetadataRepository extends ApiRepository<Metadata> {
 
   public toEntity(data: Object): Metadata {
     return $.extend(new Metadata(), data);
+  }
+
+  public getBase(metadata: Metadata): Promise<Metadata> {
+    return this.getList().then(metadataList => {
+      return metadataList.filter(base => metadata.baseId == base.id)[0];
+    });
   }
 }

@@ -28,8 +28,8 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidating() {
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['base_id' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['base_id' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ]);
         $this->validator->validate($command);
     }
@@ -37,8 +37,8 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailWhenNoLabel() {
         $command = new ResourceKindCreateCommand([], [
-            ['base_id' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['base_id' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ]);
         $this->validator->validate($command);
     }
@@ -46,7 +46,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailWhenNoBaseIdForOneOfTheMetadata() {
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['base_id' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
             ['name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ]);
         $this->validator->validate($command);
@@ -55,8 +55,8 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailWhenInvalidBaseId() {
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['base_id' => 'abc', 'name' => 'A', 'label' => ['PL' => 'L'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['base_id' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 'abc', 'name' => 'A', 'label' => ['PL' => 'L'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ]);
         $this->validator->validate($command);
     }
@@ -66,8 +66,8 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator = new ResourceKindCreateCommandValidator($this->languageRepository, $this->metadataCreateCommandValidator);
         $this->metadataCreateCommandValidator->expects($this->any())->method('getValidator')->willReturn(Validator::alwaysInvalid());
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['base_id' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['base_id' => 1, 'name' => 'B', 'label' => [], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'B', 'label' => [], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ]);
         $this->validator->validate($command);
     }

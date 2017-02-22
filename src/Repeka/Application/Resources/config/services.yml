@@ -150,7 +150,11 @@ services:
     class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
     autowire: true
 
-  command_handler.user:
+  command_handler.metadata_get:
+    class: Repeka\Domain\UseCase\Metadata\MetadataGetQueryHandler
+    autowire: true
+
+  command_handler.user_get:
     class: Repeka\Domain\UseCase\User\UserQueryHandler
     autowire: true
 
@@ -188,6 +192,10 @@ services:
 
   command_handler.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler
+    autowire: true
+
+  command_handler.metadata_child_create:
+    class: Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommandHandler
     autowire: true
 
   command_handler.metadata_update:

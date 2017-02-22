@@ -30,7 +30,7 @@ class ResourceKindFactory {
     public function createMetadataList(ResourceKind $resourceKind, array $metadataData): array {
         $metadataList = [];
         foreach ($metadataData as $data) {
-            $baseId = $data['base_id'];
+            $baseId = $data['baseId'];
             $metadata = $this->metadataFactory->create(MetadataCreateCommand::fromArray($data));
             $base = $this->metadataRepository->findOne($baseId);
             $metadata = $this->metadataFactory->createForResourceKind($resourceKind, $base, $metadata);

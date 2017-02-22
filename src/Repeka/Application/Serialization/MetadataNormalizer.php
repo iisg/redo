@@ -17,6 +17,7 @@ class MetadataNormalizer extends AbstractNormalizer {
             'placeholder' => $this->emptyArrayAsObject($metadata->getPlaceholder()),
             'description' => $this->emptyArrayAsObject($metadata->getDescription()),
             'baseId' => $metadata->getBaseId(),
+            'parentId' => $metadata->getParentId(),
         ];
     }
 

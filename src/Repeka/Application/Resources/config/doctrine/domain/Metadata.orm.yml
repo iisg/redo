@@ -19,6 +19,12 @@ Repeka\Domain\Entity\Metadata:
       joinColumn:
         name: base_id
         referencedColumnName: id
+    parentMetadata:
+      targetEntity: Repeka\Domain\Entity\Metadata
+      fetch: EAGER
+      joinColumn:
+        name: parent_id
+        referencedColumnName: id
   fields:
     control:
       type: string
