@@ -1,18 +1,20 @@
 'use strict';
 
+const changed = require('gulp-changed');
+const concat = require('gulp-concat');
 const gulp = require('gulp');
-const runSequence = require('run-sequence');
+const htmlmin = require('gulp-htmlmin');
+const minifyCSS = require('gulp-clean-css');
+const minifyJSON = require('gulp-jsonminify');
+const notify = require('gulp-notify');
+const path = require('path');
 const paths = require('../paths');
 const plumber = require('gulp-plumber');
-const changed = require('gulp-changed');
-const htmlmin = require('gulp-htmlmin');
-const sourcemaps = require('gulp-sourcemaps');
-const notify = require('gulp-notify');
-const typescript = require('gulp-typescript');
+const runSequence = require('run-sequence');
 const sass = require('gulp-sass');
+const sourcemaps = require('gulp-sourcemaps');
 const symlink = require("symlink-or-copy").sync;
-const path = require('path');
-const minifyJSON = require('gulp-jsonminify');
+const typescript = require('gulp-typescript');
 
 let typescriptCompiler;
 gulp.task('build-scripts', () => {
@@ -47,8 +49,11 @@ gulp.task('build-html', () => {
 gulp.task('build-css', () => {
   return gulp.src(paths.scss)
     .pipe(plumber({errorHandler: notify.onError('SCSS: <%= error.message %>')}))
-    .pipe(changed(paths.output, {extension: '.css'}))
-    .pipe(sass({outputStyle: 'compressed'}))
+    .pipe(sourcemaps.init())
+    .pipe(sass())
+    .pipe(concat('style.css'))
+    .pipe(minifyCSS())
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(paths.output));
 });
 
