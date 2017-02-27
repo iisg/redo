@@ -9,7 +9,7 @@ const replace = require('gulp-replace');
 gulp.task('watch', ['browser-sync'], () => {
   gulp.watch(paths.scripts, ['build-scripts', browserSync.reload]);
   gulp.watch(paths.html, ['build-html', browserSync.reload]);
-  gulp.watch(paths.scss, ['build-css', browserSync.reload]);
+  gulp.watch(paths.scss, ['reload-css']);
   gulp.watch(path.join(paths.locales, '**/*'), ['build-locales', browserSync.reload]);
   gulp.watch('index.html').on('change', () => injectBrowserSyncSnippet() && browserSync.reload());
 });
@@ -20,6 +20,11 @@ function injectBrowserSyncSnippet() {
     .pipe(replace('</body>', snippet + '</body>'))
     .pipe(gulp.dest(paths.webAdminRoot));
 }
+
+gulp.task('reload-css', ['build-css'], () => {
+  return gulp.src(path.join(paths.output, 'style.css'))
+    .pipe(browserSync.reload({ stream: true }));
+});
 
 gulp.task('browser-sync', ['build'], (done) => {
   browserSync.init({

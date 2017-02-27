@@ -3,7 +3,7 @@ import {StageComponent, ComponentTester} from "aurelia-testing";
 import {bootstrap} from "aurelia-bootstrapper";
 import "jquery";
 
-xdescribe(MultilingualDisplay.name, () => { // ignored due to https://github.com/aurelia/testing/issues/43
+describe(MultilingualDisplay.name, () => {
 
   let component: ComponentTester;
   let options = {theValue: {}};
