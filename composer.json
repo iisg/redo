@@ -18,13 +18,15 @@
     }
   ],
   "require": {
-    "php": "^7.0",
+    "php": ">=7.1",
     "beberlei/assert": "~2.0",
     "doctrine/dbal": "2.6.x-dev",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-migrations-bundle": "^1.2",
     "doctrine/orm": "2.6.x-dev",
     "dunglas/doctrine-json-odm": "dev-null-fix",
+    "ext-mbstring": "*",
+    "ext-pdo_pgsql": "*",
     "m6web/statsd-bundle": "^2.14",
     "qandidate/symfony-json-request-transformer": "^1.2",
     "respect/validation": "^1.1",
@@ -59,11 +61,6 @@
     "post-update-cmd": [
       "@symfony-scripts"
     ]
-  },
-  "config": {
-    "platform": {
-      "php": "7.0"
-    }
   },
   "extra": {
     "symfony-app-dir": "app",

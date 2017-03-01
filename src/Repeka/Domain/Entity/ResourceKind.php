@@ -75,7 +75,6 @@ class ResourceKind {
         $metadataList = $this->getMetadataList();
         usort($metadataList, [Metadata::class, 'compareOrdinalNumbers']);
         // do not replace it with new ArrayCollection($metadataList) as it will make Doctrine think all current metadata are orphaned!
-        // TODO integration test for editing resource kind with metadata removal should allow to delete this comment
         $this->metadataList->clear();
         foreach ($metadataList as $metadata) {
             $this->metadataList->add($metadata);
