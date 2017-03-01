@@ -24,7 +24,7 @@ abstract class FunctionalTestCase extends WebTestCase {
     protected static function joinUrl(...$parts): string {
         $url = array_shift($parts);
         while (count($parts) > 0) {
-            if ($url[strlen($url) - 1] !== '/') {   // TODO [PHP 7.1] simplify to $url[-1]
+            if ($url[-1] !== '/') {
                 $url .= '/';
             }
             $url .= array_shift($parts);
