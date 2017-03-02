@@ -58,7 +58,24 @@ module.exports = {
         "bootstrap-select/dist/css/bootstrap-select.min.css!text",
         "i18next-xhr-backend",
         "jquery",
+        "sweetalert2",
+        "sweetalert2/dist/sweetalert2.css!text",
         "text"
+      ],
+      "options": {
+        "inject": true,
+        "minify": true,
+        "depCache": false,
+        "rev": true
+      }
+    },
+    "admin/bundles/cytoscape": {
+      "includes": [
+        "cytoscape",
+        "cytoscape-autopan-on-drag",
+        "cytoscape-context-menus",
+        "cytoscape-context-menus/cytoscape-context-menus.css!text",
+        "cytoscape-edgehandles"
       ],
       "options": {
         "inject": true,
