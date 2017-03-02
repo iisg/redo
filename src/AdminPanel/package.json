@@ -8,7 +8,7 @@
     "help": "gulp help",
     "clean": "gulp clean",
     "dist": "npm install && gulp bundle",
-    "install": "(typings install & jspm install) && gulp build",
+    "install": "(typings install && jspm install) && gulp build",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",
     "test:junit": "npm test -- --reporters mocha,junit --browsers chrome_no_sandbox",
