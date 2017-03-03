@@ -55,6 +55,7 @@ export function configure(aurelia: Aurelia) {
       'common/authorization/require-static-permissions',
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
+      'workflows/details/editor/promise-button'
     ]);
 
   configureHttpClient(aurelia);

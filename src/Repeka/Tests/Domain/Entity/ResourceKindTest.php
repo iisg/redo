@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\Entity;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\IllegalEntityStateException;
 
 class ResourceKindTest extends \PHPUnit_Framework_TestCase {
@@ -68,5 +69,16 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
         $resourceKind->update([], [$metadata1, $metadata2]);
         $this->assertSame($metadata2, $resourceKind->getMetadataList()[0]);
         $this->assertSame($metadata1, $resourceKind->getMetadataList()[1]);
+    }
+
+    public function testSettingWorkflow() {
+        $workflow = new ResourceWorkflow([]);
+        $resourceKind = new ResourceKind([], $workflow);
+        $this->assertEquals($workflow, $resourceKind->getWorkflow());
+    }
+
+    public function testWorkflowIsOptional() {
+        $resourceKind = new ResourceKind([]);
+        $this->assertNull($resourceKind->getWorkflow());
     }
 }

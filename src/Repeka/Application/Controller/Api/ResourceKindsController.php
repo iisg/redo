@@ -28,7 +28,12 @@ class ResourceKindsController extends ApiController {
      * @Security("has_role('ROLE_STATIC_RESOURCE_KINDS')")
      */
     public function postAction(Request $request) {
-        $command = ResourceKindCreateCommand::fromArray($request->request->all());
+        $data = $request->request->all();
+        $command = new ResourceKindCreateCommand(
+            $data['label'] ?? [],
+            $data['metadataList'] ?? [],
+            isset($data['workflowId']) ? $this->get('repository.workflow')->findOne($data['workflowId']) : null
+        );
         $resourceKind = $this->commandBus->handle($command);
         return $this->createJsonResponse($resourceKind, 201);
     }

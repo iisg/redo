@@ -9,11 +9,14 @@ class ResourceKind {
     private $label;
     /** @var ArrayCollection|Metadata[] */
     private $metadataList;
+    /** @var ResourceWorkflow */
+    private $workflow;
 
-    public function __construct(array $label) {
+    public function __construct(array $label, ResourceWorkflow $workflow = null) {
         $this->label = $label;
         // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html#collections
         $this->metadataList = new ArrayCollection();
+        $this->workflow = $workflow;
     }
 
     public function getId() {
@@ -79,5 +82,9 @@ class ResourceKind {
         foreach ($metadataList as $metadata) {
             $this->metadataList->add($metadata);
         }
+    }
+
+    public function getWorkflow(): ?ResourceWorkflow {
+        return $this->workflow;
     }
 }
