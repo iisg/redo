@@ -1,0 +1,18 @@
+<template>
+    <require from="resources-config/bootstrap-select/bootstrap-select"></require>
+    <bootstrap-select values.bind="workflows"
+        value.bind="value"
+        live-search="true"
+        title="&mdash;">
+        <template replace-part="option-template">
+            <span class="only-when-chosen">
+                ${option.name | inCurrentLanguage}
+            </span>
+            <span class="only-in-dropdown">
+                <h4>${option.name | inCurrentLanguage}</h4>
+                <img if.bind="option.thumbnail"
+                    src.bind="option.thumbnail">
+            </span>
+        </template>
+    </bootstrap-select>
+</template>

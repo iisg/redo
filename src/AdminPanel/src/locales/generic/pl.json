@@ -25,6 +25,7 @@
   "Add next metadata type": "Dodaj kolejny rodzaj metadanych",
   "Select": "Wybierz",
   "Add new resource": "Dodaj nowy zasób",
+  "Add metadata kind": "Dodaj rodzaj metadanej",
   "No. of metadata kinds:": "Liczba rodzajów metadanych:",
   "Resource kind": "Rodzaj zasobu",
   "Change order": "Zmień kolejność",
@@ -59,5 +60,6 @@
   "Choose the next transition": "Wybierz kolejne przejście",
   "Select any element on the diagram to edit": "Zaznacz element na grafie by go edytować",
   "Simulation": "Symulacja",
-  "Thumbnail": "Miniatura"
+  "Thumbnail": "Miniatura",
+  "Workflow": "Proces"
 }

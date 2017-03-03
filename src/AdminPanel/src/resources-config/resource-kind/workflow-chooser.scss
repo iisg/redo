@@ -1,0 +1,16 @@
+workflow-chooser {
+  .dropdown-toggle {
+    img, .only-in-dropdown {
+      display: none;
+    }
+  }
+  .dropdown-menu {
+    .active a {
+      background: inherit;
+      color: inherit;
+    }
+    .only-when-chosen {
+      display: none;
+    }
+  }
+}

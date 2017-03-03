@@ -20,6 +20,7 @@ class ResourceKindNormalizer extends AbstractNormalizer implements NormalizerAwa
             'metadataList' => array_map(function (Metadata $metadata) use ($format, $context) {
                 return $this->normalizer->normalize($metadata, $format, $context);
             }, $resourceKind->getMetadataList()),
+            'workflowId' => $resourceKind->getWorkflow() ? $resourceKind->getWorkflow()->getId() : null,
         ];
     }
 

@@ -63,7 +63,7 @@ export class PromiseButton {
     }
   }
 
-  @computedFrom('state')
+  @computedFrom('state', 'idleClass', 'waitingClass', 'successClass', 'failureClass')
   get stateBasedCssClass() {
     switch (this.state) {
       case 'waiting':

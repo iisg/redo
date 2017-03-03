@@ -10,7 +10,7 @@ export class InCurrentLanguageValueConverter implements ToViewValueConverter {
   constructor(private i18n: I18N) {
   }
 
-  toView(value: MultilingualTextType): any {
+  toView(value: MultilingualTextType): string {
     this.buildDesiredLanguagesOrder();
     if (value) {
       for (let desiredLanguage of this.desiredLanguagesOrder) {

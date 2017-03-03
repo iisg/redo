@@ -29,7 +29,7 @@ class ResourceKindCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->handler = new ResourceKindCreateCommandHandler($this->resourceKindFactory, $this->resourceKindRespository);
     }
 
-    public function testCreatingMetadata() {
+    public function testCreatingResourceKind() {
         $resourceKind = new ResourceKind([]);
         $this->resourceKindFactory->expects($this->once())->method('create')->willReturn($resourceKind);
         $this->resourceKindRespository->expects($this->once())->method('save')->willReturnArgument(0);

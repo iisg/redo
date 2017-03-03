@@ -2,6 +2,7 @@
     <require from="./resource-kind-form"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="resources-config/multilingual-field/multilingual-display"></require>
+    <require from="workflows/icon/workflow-icon.html"></require>
 
     <div require-static-permissions="RESOURCE_KINDS">
         <animated-plus-button class="pull-right"
@@ -56,6 +57,15 @@
                         require-static-permissions="RESOURCE_KINDS"
                         class="text-right">
                         <div class="btn-group">
+                            <promise-button on-click.call="displayWorkflowPreview(resourceKind)"
+                                class="btn-group"
+                                if.one-time="resourceKind.workflowId"
+                                idle-icon=""
+                                waiting-icon=""
+                                reset-time="0"
+                                idle-class="btn btn-default ${resourceKind['hovered'] ? 'btn-raised' : ''}">
+                                <workflow-icon></workflow-icon>
+                            </promise-button>
                             <button type="button"
                                 class="btn btn-default ${resourceKind['hovered'] ? 'btn-raised' : ''}"
                                 click.delegate="resourceKind['editing'] = true">

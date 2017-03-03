@@ -13,6 +13,12 @@ Repeka\Domain\Entity\ResourceKind:
       mappedBy: resourceKind
       orphanRemoval: true
       cascade: ["persist", "merge", "remove"]
+  manyToOne:
+    workflow:
+      targetEntity: Repeka\Domain\Entity\ResourceWorkflow
+      joinColumn:
+        name: workflow_id
+        referencedColumnName: id
   fields:
     label:
       type: json_document

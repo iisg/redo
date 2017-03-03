@@ -1,6 +1,8 @@
 import {ResourceKindRepository} from "./resource-kind-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
+import {InCurrentLanguageValueConverter} from "../multilingual-field/in-current-language";
+import * as swal from "sweetalert2";
 
 @autoinject
 export class ResourceKindList {
@@ -8,7 +10,7 @@ export class ResourceKindList {
 
   resourceKinds: ResourceKind[];
 
-  constructor(private resourceKindRepository: ResourceKindRepository) {
+  constructor(private resourceKindRepository: ResourceKindRepository, private inCurrentLanguage: InCurrentLanguageValueConverter) {
     resourceKindRepository.getList()
       .then(resourceKinds => this.resourceKinds = resourceKinds)
       .then(() => this.addFormOpened || (this.addFormOpened = this.resourceKinds.length == 0));
@@ -19,6 +21,15 @@ export class ResourceKindList {
       this.addFormOpened = false;
       this.resourceKinds.push(resourceKind);
       return resourceKind;
+    });
+  }
+
+  displayWorkflowPreview(resourceKind: ResourceKind): Promise<any> {
+    return resourceKind.getWorkflow().then(workflow => {
+      return swal({
+        title: this.inCurrentLanguage.toView(workflow.name),
+        imageUrl: workflow.thumbnail
+      });
     });
   }
 

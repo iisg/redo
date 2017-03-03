@@ -1,5 +1,6 @@
 <template>
     <require from="./resource-kind-metadata-chooser"></require>
+    <require from="./workflow-chooser"></require>
     <require from="./resource-kind-metadata-form"></require>
     <require from="../metadata/metadata-form"></require>
     <require from="../metadata/metadata-editable-properties.html"></require>
@@ -56,11 +57,16 @@
         </div>
         <div class="form-group"
             show.bind="hasMetadataToChoose">
-            <label>${'Add next metadata kind' | t}</label>
+            <label>${'Add metadata kind' | t}</label>
             <resource-kind-metadata-chooser
                 has-metadata-to-choose.bind="hasMetadataToChoose"
                 change.delegate="addNewMetadata($event)"
                 resource-kind.bind="resourceKind"></resource-kind-metadata-chooser>
+        </div>
+        <div class="form-group"
+            if.bind="!editing">
+            <label>${'Workflow' | t}</label>
+            <workflow-chooser value.bind="resourceKind.workflow"></workflow-chooser>
         </div>
         <div class="form-group text-right no-margin-top">
             <div class="btn-group">
