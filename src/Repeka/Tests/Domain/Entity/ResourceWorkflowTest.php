@@ -86,7 +86,8 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
 
     public function testMovingToState() {
         $this->workflow->setWorkflowStrategy($this->workflowStrategy);
-        $this->workflowStrategy->expects($this->once())->method('move')->with($this->resource, ['thestate'])->willReturnArgument(0);
+        $this->workflowStrategy->expects($this->once())->method('setCurrentPlaces')
+            ->with($this->resource, ['thestate'])->willReturnArgument(0);
         $this->workflow->setCurrentPlaces($this->resource, ['thestate']);
     }
 
