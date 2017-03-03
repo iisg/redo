@@ -27,7 +27,7 @@ class ResourceWorkflowSimulateCommandHandlerTest extends \PHPUnit_Framework_Test
             [new ResourceWorkflowTransition([], [], [], 'transition')]
         );
         $this->workflowStrategy->expects($this->never())->method('apply');
-        $this->workflowStrategy->expects($this->once())->method('move')->with($this->isInstanceOf(ResourceEntity::class), []);
+        $this->workflowStrategy->expects($this->once())->method('setCurrentPlaces')->with($this->isInstanceOf(ResourceEntity::class), []);
         $result = $this->handler->handle($command);
         $this->assertCount(2, $result);
         $this->assertCount(1, $result['places']);
@@ -37,7 +37,8 @@ class ResourceWorkflowSimulateCommandHandlerTest extends \PHPUnit_Framework_Test
     public function testMovingToDesiredCurrentPlace() {
         $command = new ResourceWorkflowSimulateCommand([], [], ['current']);
         $this->workflowStrategy->expects($this->never())->method('apply');
-        $this->workflowStrategy->expects($this->once())->method('move')->with($this->isInstanceOf(ResourceEntity::class), ['current']);
+        $this->workflowStrategy->expects($this->once())->method('setCurrentPlaces')
+            ->with($this->isInstanceOf(ResourceEntity::class), ['current']);
         $this->handler->handle($command);
     }
 

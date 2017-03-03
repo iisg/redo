@@ -5,6 +5,10 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
          backupGlobals="false"
          colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         strict="true"
          bootstrap="../app/integration_tests_bootstrapper.php">
     <php>
         <ini name="error_reporting" value="-1"/>
