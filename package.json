@@ -25,7 +25,7 @@
     "db:fixture": "php bin/console doctrine:database:drop -e dev --force --if-exists && sleep 2 && npm run -s db:migrate && php bin/console doctrine:fixtures:load -e dev -n",
     "db:migrate": "npm run -s db:create && php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration",
     "db:diff": "php bin/console doctrine:migrations:diff",
-    "dist": "node scripts/repeka.js && node scripts/version-public.js && node scripts/assert-prod.js && (npm run dist:backend && npm run dist:admin) && php bin/console statsd:deploy",
+    "dist": "node scripts/repeka.js && node scripts/version-public.js && (npm run dist:backend && npm run dist:admin) && php bin/console statsd:deploy",
     "dist:admin": "cd src/AdminPanel && npm run dist -s",
     "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev && npm run -s clean:backend:cache && php bin/console cache:clear -e prod --no-debug && npm run -s db:migrate",
     "install": "node scripts/repeka.js && node scripts/version-public.js && (composer-runner -- install && npm run -s db:migrate && cd src/AdminPanel && npm install)",
