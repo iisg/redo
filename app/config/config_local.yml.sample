@@ -3,3 +3,7 @@ parameters:
 doctrine:
   dbal:
     password: postgres
+m6_statsd:
+  servers:
+    default:
+      address: 'udp://localhost'
