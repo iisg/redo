@@ -2,6 +2,8 @@
 namespace Repeka\Domain\Entity;
 
 // ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
+use Assert\Assertion;
+
 class ResourceEntity {
     private $id;
     private $kind;
@@ -35,5 +37,18 @@ class ResourceEntity {
 
     public function updateContents(array $contents) {
         $this->contents = $contents;
+    }
+
+    public function hasWorkflow() {
+        return $this->getWorkflow() != null;
+    }
+
+    public function getWorkflow(): ?ResourceWorkflow {
+        return $this->kind->getWorkflow();
+    }
+
+    public function applyTransition(string $transitionId): ResourceEntity {
+        Assertion::true($this->hasWorkflow(), 'Could not apply transition for resource without a workflow. ID: ' . $this->id);
+        return $this->getWorkflow()->apply($this, $transitionId);
     }
 }

@@ -23,8 +23,6 @@ export class WorkflowDiagram {
   }
 
   currentChanged() {
-    if (this.graph) {
-      this.graph.highlightCurrent(this.current);
-    }
+    this.graph.ready.then(() => this.graph.highlightCurrent(this.current));
   }
 }

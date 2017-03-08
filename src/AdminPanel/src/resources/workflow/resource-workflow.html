@@ -1,0 +1,36 @@
+<template>
+    <require from="workflows/details/editor/workflow-diagram"></require>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="au-animate fade-inup-outup page-preloader"
+                if.bind="fetchingTransitions">
+                <div class="progress progress-striped active">
+                    <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                </div>
+            </div>
+            <div class="btn-group-vertical au-animate fade-inup-outup btn-block"
+                if.bind="!fetchingTransitions">
+                <button class="btn btn-success btn-block"
+                    click.delegate="applyTransition(transition.id)"
+                    repeat.for="transition of resource.availableTransitions">
+                    <span ref="transition['translatedLabel']"
+                        value.one-time="transition.label | inCurrentLanguage">
+                        <span if.one-time="transition['translatedLabel']['value']">
+                            ${ transition['translatedLabel']['value'] }
+                        </span>
+                        <span if.one-time="!transition['translatedLabel']['value']">
+                            <em>${ 'Transition' | t } #${ $index + 1 }</em>
+                        </span>
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div if.bind="workflow">
+                <workflow-diagram workflow.bind="workflow"
+                    current.bind="resource.currentPlaces"></workflow-diagram>
+            </div>
+        </div>
+    </div>
+</template>

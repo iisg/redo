@@ -13,8 +13,8 @@ class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
 
     public function setUp() {
         parent::setUp();
-        self::loadFixture($this->adminFixture = new LanguagesFixture());
-        self::loadFixture($this->adminFixture = new ResourceWorkflowsFixture());
+        self::loadFixture(new LanguagesFixture());
+        self::loadFixture(new ResourceWorkflowsFixture());
         $this->workflow = $this->container->get('repository.workflow')->findAll()[0];
     }
 

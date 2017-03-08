@@ -17,6 +17,9 @@ export class WorkflowGraph {
 
   private cytoscape: Cytoscape.Instance;
 
+  private readyPromiseResolve;
+  public readonly ready = new Promise((resolve) => this.readyPromiseResolve = resolve);
+
   constructor(private i18n: I18N, private inCurrentLanguage: InCurrentLanguageValueConverter) {
   }
 
@@ -34,6 +37,7 @@ export class WorkflowGraph {
     this.drawWorkflow(workflow);
     this.edgeHandles();
     this.contextMenu();
+    this.readyPromiseResolve();
   }
 
   private drawWorkflow(workflow: Workflow) {

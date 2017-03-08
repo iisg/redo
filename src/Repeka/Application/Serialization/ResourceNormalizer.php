@@ -2,10 +2,15 @@
 namespace Repeka\Application\Serialization;
 
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
-class ResourceNormalizer implements NormalizerInterface {
+class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareInterface {
+    use NormalizerAwareTrait;
+
     /** @var ResourceWorkflowRepository */
     private $resourceWorkflowRepository;
 
@@ -18,11 +23,21 @@ class ResourceNormalizer implements NormalizerInterface {
      * @inheritdoc
      */
     public function normalize($resource, $format = null, array $context = []) {
-        return [
+        $normalized = [
             'id' => $resource->getId(),
             'kindId' => $resource->getKind()->getId(),
-            'contents' => $resource->getContents(),
+            'contents' => $resource->getContents()
         ];
+        if ($resource->hasWorkflow()) {
+            $workflow = $resource->getWorkflow();
+            $normalized['currentPlaces'] = array_map(function (ResourceWorkflowPlace $place) {
+                return $this->normalizer->normalize($place);
+            }, $workflow->getPlaces($resource));
+            $normalized['availableTransitions'] = array_map(function (ResourceWorkflowTransition $transition) {
+                return $this->normalizer->normalize($transition);
+            }, $workflow->getTransitions($resource));
+        }
+        return $normalized;
     }
 
     /**

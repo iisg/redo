@@ -1,11 +1,12 @@
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ValidationRules} from "aurelia-validation";
+import {WorkflowPlace, WorkflowTransition} from "../workflows/workflow";
 
 export class Resource {
   id: number;
   kind: ResourceKind;
-  marking: string;
-  transitions: Array<string> = [];
+  currentPlaces: Array<WorkflowPlace>;
+  availableTransitions: Array<WorkflowTransition> = [];
   contents: StringAnyMap = {};
 }
 
