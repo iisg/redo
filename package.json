@@ -18,7 +18,7 @@
     "clean": "npm run -s clean:backend && npm run -s clean:admin",
     "clean:admin": "cd src/AdminPanel && npm run -s clean",
     "clean:backend": "npm run -s clean:backend:cache && php bin/console cache:clear -e dev",
-    "clean:backend:cache": "rm -fr var/cache/prod && rm -fr var/cache/dev",
+    "clean:backend:cache": "rm -fr var/cache/prod && rm -fr var/cache/dev && rm -fr var/cache/test",
     "clean:backend:logs": "rm -fr var/logs/*.log",
     "clean:backend:sessions": "rm -fr var/sessions/prod && rm -fr var/sessions/dev",
     "db:create": "php bin/console doctrine:database:create --if-not-exists --no-interaction",

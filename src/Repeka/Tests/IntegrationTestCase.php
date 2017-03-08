@@ -21,10 +21,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class IntegrationTestCase extends FunctionalTestCase {
     /** @var ContainerInterface */
     protected $container;
-    protected $adminFixture;
 
     public function setUp() {
-        self::loadFixture($this->adminFixture = new AdminAccountFixture());
+        self::loadFixture(new AdminAccountFixture());
     }
 
     /**

@@ -2,6 +2,7 @@
     <require from="./add/resource-form"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="resources-config/multilingual-field/multilingual-display"></require>
+    <require from="./workflow/resource-place-display.html"></require>
 
     <div require-static-permissions="RESOURCES">
         <animated-plus-button class="pull-right"
@@ -24,6 +25,7 @@
                     <th>${'ID' | t}</th>
                     <th>${'Resource kind' | t}</th>
                     <th>${'Contents' | t}</th>
+                    <th>${'Place' | t}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -53,6 +55,9 @@
                                 </dd>
                             </template>
                         </dl>
+                    </td>
+                    <td>
+                        <resource-place-display resource.bind="resource"></resource-place-display>
                     </td>
                     <td>
                         <a route-href="route: resources/details; params.bind: {id: resource.id}"

@@ -1,5 +1,7 @@
 <template>
     <require from="../add/resource-form"></require>
+    <require from="../workflow/resource-workflow"></require>
+    <require from="../workflow/resource-place-display.html"></require>
 
     <div class="au-animate fade-inup-outup page-preloader"
         if.bind="!resource">
@@ -29,7 +31,15 @@
                         ${resource.contents[metadata.base.id]}
                     </dd>
                 </template>
+                <dt>${ 'Place' |t }</dt>
+                <dd>
+                    <resource-place-display resource.bind="resource"></resource-place-display>
+                </dd>
             </dl>
+
+            <div if.bind="resource.kind.workflowId">
+                <resource-workflow resource.bind="resource"></resource-workflow>
+            </div>
         </div>
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"

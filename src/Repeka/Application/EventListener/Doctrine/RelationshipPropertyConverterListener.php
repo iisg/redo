@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Application\DoctrineListener;
+namespace Repeka\Application\EventListener\Doctrine;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Repeka\Domain\Entity\ResourceEntity;

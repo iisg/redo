@@ -104,11 +104,17 @@ services:
       - { name: kernel.event_subscriber }
 
   repeka.doctrine_listener.relationship_property_converter:
-    class: Repeka\Application\DoctrineListener\RelationshipPropertyConverterListener
+    class: Repeka\Application\EventListener\Doctrine\RelationshipPropertyConverterListener
     autowire: true
     tags:
       - { name: doctrine.event_listener, event: prePersist }
       - { name: doctrine.event_listener, event: preUpdate }
+
+  repeka.doctrine_listener.resource_workflow_strategy_injector:
+    class: Repeka\Application\EventListener\Doctrine\ResourceWorkflowStrategyInjector
+    autowire: true
+    tags:
+      - { name: doctrine.event_listener, event: postLoad }
 
   repository.metadata:
     class: Repeka\Application\Repository\MetadataDoctrineRepository
@@ -212,6 +218,10 @@ services:
     class: Repeka\Domain\UseCase\Resource\ResourceCreateCommandHandler
     autowire: true
 
+  command_handler.resource_transition:
+    class: Repeka\Domain\UseCase\Resource\ResourceTransitionCommandHandler
+    autowire: true
+
   command_handler.resource_update_contents:
     class: Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandHandler
     autowire: true
@@ -251,6 +261,10 @@ services:
 
   command_validator.resource_create:
     class: Repeka\Domain\UseCase\Resource\ResourceCreateCommandValidator
+    autowire: true
+
+  command_validator.resource_transition:
+    class: Repeka\Domain\UseCase\Resource\ResourceTransitionCommandValidator
     autowire: true
 
   command_validator.resource_update_contents:
