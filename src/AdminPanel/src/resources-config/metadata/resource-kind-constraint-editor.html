@@ -1,0 +1,22 @@
+<template>
+    <require from="common/resource-kind/resource-kind-chooser"></require>
+
+    <label>${'Required resource kind' | t}</label>
+    <p if.bind="values.length === 0">${'No restrictions' | t}</p>
+    <p if.bind="values.length > 1">${'One of:' | t}</p>
+    <div class="input-group">
+        <resource-kind-chooser value.bind="values"
+            multi-select="true"
+            disabled.bind="disabled"
+            if.bind="!disabled || values.length > 0"></resource-kind-chooser>
+        <div class="input-group-addon">
+            <button type="button"
+                class="btn btn-default"
+                click.delegate="resetToBaseValues()"
+                if.bind="canInherit && wasModified">
+                <span class="fa fa-repeat"></span>
+                ${'Restore from base' | t}
+            </button>
+        </div>
+    </div>
+</template>

@@ -109,8 +109,15 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         return $this->handleCommand(new LanguageCreateCommand($code, $flag, $name));
     }
 
-    protected function createMetadata(string $name, array $label, array $description, array $placeholder, string $control): Metadata {
-        return $this->handleCommand(new MetadataCreateCommand($name, $label, $description, $placeholder, $control));
+    protected function createMetadata(
+        string $name,
+        array $label,
+        array $description,
+        array $placeholder,
+        string $control,
+        array $constraints = []
+    ): Metadata {
+        return $this->handleCommand(new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $constraints));
     }
 
     protected function createResourceKind(array $label, array $metadataList): ResourceKind {

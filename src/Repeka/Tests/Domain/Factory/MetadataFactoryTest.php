@@ -8,13 +8,16 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 
 class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     /** @var MetadataCreateCommand */
-    private $metadataCreateCommand;
+    private $textareaMetadataCreateCommand;
+    /** @var MetadataCreateCommand */
+    private $relationshipMetadataCreateCommand;
     /** @var MetadataFactory */
     private $factory;
     private $newChildMetadata;
 
     protected function setUp() {
-        $this->metadataCreateCommand = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea');
+        $this->textareaMetadataCreateCommand = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea');
+        $this->relationshipMetadataCreateCommand = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship');
         $this->factory = new MetadataFactory();
         $this->newChildMetadata = [
             'name' => 'nazwa',
@@ -26,7 +29,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testCreatingMetadata() {
-        $metadata = $this->factory->create($this->metadataCreateCommand);
+        $metadata = $this->factory->create($this->textareaMetadataCreateCommand);
         $this->assertEquals('nazwa', $metadata->getName());
         $this->assertEquals('Labelka', $metadata->getLabel()['PL']);
         $this->assertEmpty($metadata->getPlaceholder());
@@ -47,12 +50,34 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testCreatingForResourceKind() {
-        $metadata = $this->factory->create($this->metadataCreateCommand);
-        $base = $this->factory->create($this->metadataCreateCommand);
-        $base->update([], ['PL' => 'base'], []);
+        $metadata = $this->factory->create($this->textareaMetadataCreateCommand);
+        $base = $this->factory->create($this->textareaMetadataCreateCommand);
+        $base->update([], ['PL' => 'base'], [], []);
         $resourceKind = new ResourceKind(['PL' => 'rodzaj']);
         $created = $this->factory->createForResourceKind($resourceKind, $base, $metadata);
         $this->assertSame($resourceKind, $created->getResourceKind());
         $this->assertEquals('base', $created->getPlaceholder()['PL']);
+    }
+
+    public function testRemovingUnmodifiedConstraints() {
+        $originalConstraints = ['resourceKind' => [0]];
+        $filteredConstraints = $this->factory->removeUnmodifiedConstraints($originalConstraints, $originalConstraints);
+        $this->assertEmpty($filteredConstraints);
+    }
+
+    public function testKeepingModifiedConstraints() {
+        $originalConstraints = ['resourceKind' => [0]];
+        $modifiedConstraints = ['resourceKind' => [1]];
+        $filteredConstraints = $this->factory->removeUnmodifiedConstraints($modifiedConstraints, $originalConstraints);
+        $this->assertCount(1, $filteredConstraints);
+        $this->assertEquals($modifiedConstraints, $filteredConstraints);
+    }
+
+    public function testOverridingWithNoConstraints() {
+        $originalConstraints = ['resourceKind' => [0]];
+        $modifiedConstraints = ['resourceKind' => []];
+        $filteredConstraints = $this->factory->removeUnmodifiedConstraints($modifiedConstraints, $originalConstraints);
+        $this->assertCount(1, $filteredConstraints);
+        $this->assertEquals($modifiedConstraints, $filteredConstraints);
     }
 }

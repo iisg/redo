@@ -90,6 +90,9 @@ class MetadataFixture extends RepekaFixture {
             'description' => [],
             'placeholder' => [],
             'control' => 'relationship',
+            'constraints' => [
+                'resourceKind' => []
+            ],
         ]), self::REFERENCE_METADATA_SEE_ALSO);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Okładka',

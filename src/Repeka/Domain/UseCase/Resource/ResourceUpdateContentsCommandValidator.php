@@ -4,15 +4,23 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Validation\CommandAttributesValidator;
+use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Respect\Validation\Validator;
 
 class ResourceUpdateContentsCommandValidator extends CommandAttributesValidator {
     /** @var ValueSetMatchesResourceKindRule */
     private $valueSetMatchesResourceKindRule;
+    /** @var MetadataValuesSatisfyConstraintsRule */
+    private $metadataValuesSatisfyConstraintsRule;
 
-    public function __construct(ValueSetMatchesResourceKindRule $valueSetMatchesResourceKindRule) {
+    /** @SuppressWarnings("PHPMD.LongVariable") */
+    public function __construct(
+        ValueSetMatchesResourceKindRule $valueSetMatchesResourceKindRule,
+        MetadataValuesSatisfyConstraintsRule $metadataValuesSatisfyConstraintsRule
+    ) {
         $this->valueSetMatchesResourceKindRule = $valueSetMatchesResourceKindRule;
+        $this->metadataValuesSatisfyConstraintsRule = $metadataValuesSatisfyConstraintsRule;
     }
 
     /**

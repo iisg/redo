@@ -6,18 +6,14 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Rules\AbstractRule;
+use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class ValueSetMatchesResourceKindRule extends AbstractRule {
+    /** @var Validatable */
     private $contentsValidator;
 
-    public function __construct(?ResourceKind $resourceKind = null) {
-        if ($resourceKind) {
-            $this->contentsValidator = $this->buildContentsValidator($resourceKind);
-        }
-    }
-
-    private function buildContentsValidator(ResourceKind $resourceKind) {
+    private function buildContentsValidator(ResourceKind $resourceKind): Validatable {
         $metadataIdValidators = array_map(function (Metadata $metadata) {
             return Validator::key($metadata->getBaseId(), null, false);
         }, $resourceKind->getMetadataList());
@@ -25,11 +21,13 @@ class ValueSetMatchesResourceKindRule extends AbstractRule {
     }
 
     public function forResourceKind(ResourceKind $resourceKind): ValueSetMatchesResourceKindRule {
-        return new self($resourceKind);
+        $instance = new self();
+        $instance->contentsValidator = $this->buildContentsValidator($resourceKind);
+        return $instance;
     }
 
     public function validate($input) {
-        Assertion::notNull($this->contentsValidator, 'You must set resource kind with ->forResourceKind($resourceKind).');
+        Assertion::notNull($this->contentsValidator, 'Resource kind not set');
         return $this->contentsValidator->validate($input);
     }
 

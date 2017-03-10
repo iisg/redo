@@ -1,9 +1,11 @@
 <template>
-    <require from="common/components/bootstrap-select/bootstrap-select"></require>
+    <require from="common/bootstrap-select/bootstrap-select"></require>
     <bootstrap-select values.bind="resourceKinds"
         value.bind="value"
         live-search="true"
-        title="&mdash;">
+        title="&mdash;"
+        multi-select.bind="multiSelect"
+        disabled.bind="disabled">
         <template replace-part="option-template">
             ${option.label | inCurrentLanguage}
         </template>

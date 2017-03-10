@@ -16,4 +16,6 @@ interface ResourceKindRepository {
     public function findOne(int $id): ResourceKind;
 
     public function save(ResourceKind $resourceKind): ResourceKind;
+
+    public function exists(int $id): bool;
 }

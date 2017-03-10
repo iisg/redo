@@ -8,7 +8,7 @@ import {deepCopy} from "common/utils/object-utils";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {Metadata} from "../metadata/metadata";
-import {BootstrapSelectChangeEvent} from "common/components/bootstrap-select/bootstrap-select";
+import {BootstrapSelectChangeEvent} from "common/bootstrap-select/bootstrap-select";
 
 @autoinject
 export class ResourceKindForm implements ComponentDetached {
@@ -33,7 +33,10 @@ export class ResourceKindForm implements ComponentDetached {
   addNewMetadata(event: BootstrapSelectChangeEvent<Metadata>) {
     let metadata = new Metadata;
     this.baseMetadataMap.set(metadata, event.detail.value);
-    metadata.baseId = this.base(metadata).id;
+    const baseMetadata = this.base(metadata);
+    metadata.baseId = baseMetadata.id;
+    metadata.control = baseMetadata.control;
+    metadata.constraints = deepCopy(baseMetadata.constraints);
     this.resourceKind.metadataList.push(metadata);
   }
 

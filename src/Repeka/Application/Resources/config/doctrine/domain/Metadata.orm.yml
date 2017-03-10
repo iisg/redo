@@ -48,3 +48,6 @@ Repeka\Domain\Entity\Metadata:
       nullable: false
       column: ordinal_number
       options: {default: 0}
+    constraints:
+      type: json_document
+      options: {jsonb: true}

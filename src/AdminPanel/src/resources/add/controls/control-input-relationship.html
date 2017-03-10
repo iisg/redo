@@ -1,4 +1,5 @@
 <template>
     <require from="resources/add/controls/resource-picker/resource-picker"></require>
-    <resource-picker resource-id.bind="resource.contents[metadata.baseId]"></resource-picker>
+    <resource-picker resource-id.bind="resource.contents[metadata.baseId]"
+        resource-kind-filter.bind="metadata.constraints.resourceKind"></resource-picker>
 </template>

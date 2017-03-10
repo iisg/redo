@@ -313,6 +313,10 @@ services:
     class: Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator
     autowire: true
 
+  command_validator.metadata_update_order:
+    class: Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommandValidator
+    autowire: true
+
   command_validator.resource_kind_create:
     class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator
     autowire: true
@@ -378,11 +382,44 @@ services:
     arguments:
     - '%repeka.supported_controls%'
 
+  validation_rule.contains_unique_values:
+    class: Repeka\Domain\Validation\Rules\ContainsUniqueValuesRule
+
+  validation_rule.constraint_set_matches_control:
+    class: Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule
+    autowire: true
+
+  validation_rule.constraint_arguments_are_valid:
+    class: Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule
+    autowire: true
+
+  validation_rule.entity_exists:
+    class: Repeka\Domain\Validation\Rules\EntityExistsRule
+    autowire: true
+
+  validation_rule.metadata_values_satisfy_constraints:
+    class: Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule
+    autowire: true
+
+  validation_rule.resource_has_allowed_kind:
+    class: Repeka\Domain\Validation\MetadataConstraints\ResourceHasAllowedKindConstraint
+    autowire: true
+    tags:
+    - { name: repeka.metadata_constraint }
+
+  repository_provider:
+    class: Repeka\Application\Repository\ContainerAwareRepositoryProvider
+    autowire: true
+
   repeka.resource_workflow_strategy_factory:
     class: Repeka\Application\Factory\ResourceSymfonyWorkflowStrategyFactory
 
   repeka.user_factory:
     class: Repeka\Application\Factory\UserEntityFactory
+
+  repeka.metadata_constraint_provider:
+    class: Repeka\Application\Validation\ContainerAwareMetadataConstraintProvider
+    autowire: true
 
   elasticsearch.client:
     class: Repeka\Application\Elasticsearch\ESClient

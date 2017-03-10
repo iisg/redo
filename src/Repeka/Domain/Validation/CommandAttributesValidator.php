@@ -8,6 +8,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Validator;
 
+/** @SuppressWarnings(PHPMD.NumberOfChildren) */
 abstract class CommandAttributesValidator implements CommandValidator {
     abstract public function getValidator(Command $command): Validator;
 

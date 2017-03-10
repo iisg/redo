@@ -7,6 +7,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 class ResourceKindsFixture extends RepekaFixture {
     const ORDER = MetadataFixture::ORDER + ResourceWorkflowsFixture::ORDER;
     const REFERENCE_RESOURCE_KIND_BOOK = 'resource-kind-book';
+    const REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK = 'resource-kind-forbidden-book';
 
     /**
      * @inheritdoc
@@ -29,5 +30,14 @@ class ResourceKindsFixture extends RepekaFixture {
             ],
             $workflow
         ), self::REFERENCE_RESOURCE_KIND_BOOK);
+        $this->handleCommand(new ResourceKindCreateCommand(
+            [
+                'PL' => 'Zakazana książka',
+                'EN' => 'Forbidden book',
+            ],
+            [
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId()]
+            ]
+        ), self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
     }
 }
