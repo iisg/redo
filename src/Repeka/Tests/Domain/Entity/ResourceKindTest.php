@@ -5,8 +5,10 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\IllegalEntityStateException;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceKindTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
 
     public function testAddingMetadata() {
         $metadata = $this->createMock(Metadata::class);
@@ -80,5 +82,33 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     public function testWorkflowIsOptional() {
         $resourceKind = new ResourceKind([]);
         $this->assertNull($resourceKind->getWorkflow());
+    }
+
+    public function testFindsMetadataByBase() {
+        $resourceKind = new ResourceKind([]);
+        foreach ([
+                     $base = $this->createMetadataMock(2),
+                     $this->createMetadataMock(11, 1),
+                     $expectedResult = $this->createMetadataMock(12, 2),
+                     $this->createMetadataMock(13, 3),
+                 ] as $metadata) {
+            $resourceKind->addMetadata($metadata);
+        }
+        $actualResult = $resourceKind->getMetadataByBaseId($base->getId());
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function testThrowsWhenNoMetadataForBaseFound() {
+        $this->expectException(\InvalidArgumentException::class);
+        $resourceKind = new ResourceKind([]);
+        foreach ([
+                     $base = $this->createMetadataMock(0),
+                     $this->createMetadataMock(11, 1),
+                     $this->createMetadataMock(12, 2),
+                     $this->createMetadataMock(13, 3),
+                 ] as $metadata) {
+            $resourceKind->addMetadata($metadata);
+        }
+        $resourceKind->getMetadataByBaseId($base->getId());
     }
 }

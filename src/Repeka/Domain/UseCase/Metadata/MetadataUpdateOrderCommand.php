@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\NonValidatedCommand;
+use Repeka\Domain\Cqrs\Command;
 
-class MetadataUpdateOrderCommand extends NonValidatedCommand {
+class MetadataUpdateOrderCommand extends Command {
     /** @var int[] */
     private $metadataIdsInOrder;
 

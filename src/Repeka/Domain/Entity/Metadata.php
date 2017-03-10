@@ -16,11 +16,19 @@ class Metadata {
     private $ordinalNumber;
     /** @var  Metadata */
     private $parentMetadata;
+    private $constraints = [];
 
     private function __construct() {
     }
 
-    public static function create(string $control, string $name, array $label, array $placeholder = [], array $description = []): Metadata {
+    public static function create(
+        string $control,
+        string $name,
+        array $label,
+        array $placeholder = [],
+        array $description = [],
+        array $constraints = []
+    ): Metadata {
         $metadata = new self();
         $metadata->control = $control;
         $metadata->name = $name;
@@ -28,10 +36,11 @@ class Metadata {
         $metadata->ordinalNumber = -1;
         $metadata->placeholder = $placeholder;
         $metadata->description = $description;
+        $metadata->constraints = $constraints;
         return $metadata;
     }
 
-    private static function createWithBase(Metadata $base) {
+    private static function createWithBase(Metadata $base): Metadata {
         $metadata = new self();
         $metadata->baseMetadata = $base;
         $metadata->ordinalNumber = -1;
@@ -43,17 +52,19 @@ class Metadata {
         ResourceKind $resourceKind,
         Metadata $base,
         array $placeholder = [],
-        array $description = []
-    ) {
+        array $description = [],
+        array $constraints = []
+    ): Metadata {
         $metadata = self::createWithBase($base);
         $metadata->label = $label;
         $metadata->resourceKind = $resourceKind;
         $metadata->placeholder = $placeholder;
         $metadata->description = $description;
+        $metadata->constraints = $constraints;
         return $metadata;
     }
 
-    public static function createChild(Metadata $base, Metadata $parent) {
+    public static function createChild(Metadata $base, Metadata $parent): Metadata {
         $metadata = self::createWithBase($base);
         $metadata->parentMetadata = $parent;
         return $metadata;
@@ -107,6 +118,14 @@ class Metadata {
         $this->parentMetadata = $parent;
     }
 
+    public function getConstraints(): array {
+        if ($this->isBase()) {
+            return $this->constraints;
+        } else {
+            return array_merge($this->baseMetadata->constraints, $this->constraints);
+        }
+    }
+
     public function getBaseId() {
         return $this->isBase() ? null : $this->baseMetadata->getId();
     }
@@ -116,10 +135,29 @@ class Metadata {
         $this->ordinalNumber = $newOrdinalNumber;
     }
 
-    public function update(array $newLabel, array $newPlaceholder, array $newDescription) {
-        $this->label = $this->isBase() ? array_merge($this->label, array_filter($newLabel, 'trim')) : array_filter($newLabel, 'trim');
-        $this->placeholder = $newPlaceholder;
-        $this->description = $newDescription;
+    private function removeCopiedFromBase(array $array, array $baseArray): array {
+        $filtered = $array;
+        foreach ($baseArray as $key => $baseValue) {
+            if (array_key_exists($key, $array) && $array[$key] == $baseValue) {
+                // key unchanged, it will be inherited from base metadata - don't store a copy
+                unset($filtered[$key]);
+            }
+        }
+        return $filtered;
+    }
+
+    public function update(array $newLabel, array $newPlaceholder, array $newDescription, array $newConstraints) {
+        if ($this->isBase()) {
+            $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
+            $this->placeholder = $newPlaceholder;
+            $this->description = $newDescription;
+            $this->constraints = $newConstraints;
+        } else {
+            $this->label = $this->removeCopiedFromBase($newLabel, $this->baseMetadata->getLabel());
+            $this->placeholder = $this->removeCopiedFromBase($newPlaceholder, $this->baseMetadata->getPlaceholder());
+            $this->description = $this->removeCopiedFromBase($newDescription, $this->baseMetadata->getDescription());
+            $this->constraints = $this->removeCopiedFromBase($newConstraints, $this->baseMetadata->getConstraints());
+        }
     }
 
     public static function compareOrdinalNumbers(Metadata $a, Metadata $b): int {

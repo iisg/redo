@@ -22,6 +22,7 @@ describe(BootstrapValidationRenderer.name, () => {
     }
 
     private static newResultInstruction(errorId: number, elementSelector: string) {
+      // noinspection TypeScriptUnresolvedVariable
       return <ResultInstruction>{
         result: TestRenderInstruction.newError(errorId),
         elements: [html.find(`${elementSelector} input`)[0]]

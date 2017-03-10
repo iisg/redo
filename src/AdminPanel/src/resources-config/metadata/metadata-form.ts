@@ -5,6 +5,7 @@ import {BootstrapValidationRenderer} from "common/validation/bootstrap-validatio
 import {Metadata} from "./metadata";
 import {computedFrom} from "aurelia-binding";
 import {deepCopy} from "common/utils/object-utils";
+import {ResourceKindRepository} from "../resource-kind/resource-kind-repository";
 
 @autoinject
 export class MetadataForm {
@@ -17,9 +18,10 @@ export class MetadataForm {
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory) {
+  constructor(validationControllerFactory: ValidationControllerFactory, resourceKindRepository: ResourceKindRepository) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
+    this.metadata.constraints.fetchResourceKindEntities(resourceKindRepository);
   }
 
   @computedFrom('metadata.id')

@@ -2,7 +2,9 @@
     <select class="selectpicker show-tick form-control"
         ref="dropdown"
         change.delegate="stopPropagation($event)"
-        title="&mdash;">
+        title="&mdash;"
+        multiple.bind="multiSelect"
+        disabled.bind="disabled">
         <option repeat.for="option of values"
             value.bind="$index"
             model.bind="option">

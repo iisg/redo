@@ -1,8 +1,9 @@
 import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "./metadata";
-import {ApiRepository} from "common/repository/api-repository";
-import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
+import {ApiRepository} from "../../common/repository/api-repository";
+import {cachedResponse, clearCachedResponse} from "../../common/repository/cached-response";
+import {deepCopy} from "../../common/utils/object-utils";
 
 @autoinject
 export class MetadataRepository extends ApiRepository<Metadata> {
@@ -34,10 +35,13 @@ export class MetadataRepository extends ApiRepository<Metadata> {
   }
 
   public update(updatedMetadata: Metadata): Promise<Metadata> {
+    updatedMetadata = deepCopy(updatedMetadata);
+    this.replaceEntitiesWithIds(updatedMetadata);
     return this.patch(updatedMetadata, {
       label: updatedMetadata.label,
       description: updatedMetadata.description,
       placeholder: updatedMetadata.placeholder,
+      constraints: updatedMetadata.constraints,
     }).then(metadata => clearCachedResponse(this.getList) || metadata);
   }
 
@@ -49,5 +53,28 @@ export class MetadataRepository extends ApiRepository<Metadata> {
     return this.getList().then(metadataList => {
       return metadataList.filter(base => metadata.baseId == base.id)[0];
     });
+  }
+
+  public toBackend(entity: Metadata): Object {
+    entity = deepCopy(entity);
+    this.removeExcessiveConstraints(entity);
+    this.replaceEntitiesWithIds(entity);
+    return entity;
+  }
+
+  private removeExcessiveConstraints(entity: Metadata) {
+    if (entity.control != 'relationship') {
+      delete entity.constraints['resourceKind'];
+    }
+  }
+
+  private replaceEntitiesWithIds(entity: Metadata) {
+    if (entity.constraints.hasOwnProperty('resourceKind')) {
+      entity.constraints.resourceKind = (entity.constraints.resourceKind as any[]).map(this.mapToIdIfPossible);
+    }
+  }
+
+  private mapToIdIfPossible(object: Object): number {
+    return object.hasOwnProperty('id') ? object['id'] : object;
   }
 }

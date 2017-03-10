@@ -29,7 +29,8 @@ class MetadataKindIntegrationTest extends IntegrationTestCase {
             'description' => [],
             'placeholder' => [],
             'baseId' => $metadata1->getBaseId(),
-            'parentId' => $metadata1->getParentId()
+            'parentId' => $metadata1->getParentId(),
+            'constraints' => [],
         ], [
             'id' => $metadata2->getId(),
             'control' => $metadata2->getControl(),
@@ -38,7 +39,8 @@ class MetadataKindIntegrationTest extends IntegrationTestCase {
             'description' => $metadata2->getDescription(),
             'placeholder' => $metadata2->getPlaceholder(),
             'baseId' => $metadata2->getBaseId(),
-            'parentId' => $metadata2->getParentId()
+            'parentId' => $metadata2->getParentId(),
+            'constraints' => [],
         ]], $responseContent);
     }
 
@@ -84,6 +86,15 @@ class MetadataKindIntegrationTest extends IntegrationTestCase {
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals($metadata2->getId(), $response[0]->id);
         $this->assertEquals($metadata1->getId(), $response[1]->id);
+    }
+
+    public function testOrderingWithRepeatedIds() {
+        $this->createLanguage('TEST', 'TE', 'Test language');
+        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'text');
+        $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second metadata'], [], [], 'integer');
+        $client = self::createAdminClient();
+        $client->apiRequest('PUT', self::ENDPOINT, [$metadata2->getId(), $metadata1->getId(), $metadata2->getId()]);
+        $this->assertStatusCode(400, $client->getResponse());
     }
 
     public function testOrderingInvalidIds() {
@@ -142,6 +153,7 @@ class MetadataKindIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('PATCH', '/api/metadata/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());
         /** @var $metadata Metadata */
+        /** @var $updatedMetadata Metadata */
         $updatedMetadata = self::createClient()->getContainer()->get('repository.metadata')->find($metadata->getId());
         self::assertEquals($metadata->getName(), $updatedMetadata->getName());
     }

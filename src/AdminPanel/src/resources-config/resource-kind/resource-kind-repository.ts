@@ -31,6 +31,7 @@ export class ResourceKindRepository extends ApiRepository<ResourceKind> {
 
   protected toBackend(entity: ResourceKind): Object {
     let data = deepCopy(entity);
+    data.metadataList = data.metadataList.map(metadata => this.metadataRepository.toBackend(metadata));
     delete data.workflow;
     return data;
   }

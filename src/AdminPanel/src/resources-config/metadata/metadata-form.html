@@ -1,5 +1,6 @@
 <template>
     <require from="./metadata-control-select"></require>
+    <require from="./resource-kind-constraint-editor"></require>
 
     <form submit.delegate="validateAndSubmit()">
         <div class="row">
@@ -18,6 +19,12 @@
                     <metadata-control-select value.bind="metadata.control & validate"
                         disabled.bind="editing"></metadata-control-select>
                 </div>
+            </div>
+        </div>
+        <div class="row"
+            if.bind="metadata.control === 'relationship'">
+            <div class="col-sm-12">
+                <resource-kind-constraint-editor values.bind="metadata.constraints.resourceKind"></resource-kind-constraint-editor>
             </div>
         </div>
         <compose view="./metadata-editable-properties.html"></compose>

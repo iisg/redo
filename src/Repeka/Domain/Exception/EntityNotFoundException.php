@@ -17,9 +17,10 @@ class EntityNotFoundException extends DomainException {
 
     private function getEntityName($entityNameOrRepository): string {
         if (is_string($entityNameOrRepository)) {
-            return $entityNameOrRepository;
+            $className = $entityNameOrRepository;
+        } else {
+            $className = (new \ReflectionClass($entityNameOrRepository))->getShortName();
         }
-        $className = (new \ReflectionClass($entityNameOrRepository))->getShortName();
         $entityName = preg_replace('/(Doctrine)?Repository$/', '', $className);
         return $entityName;
     }

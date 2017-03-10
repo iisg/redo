@@ -27,11 +27,22 @@ class ResourceKind {
         return $this->label;
     }
 
-    /**
-     * @return Metadata[]
-     */
+    /** @return Metadata[] */
     public function getMetadataList(): array {
         return $this->metadataList->toArray();
+    }
+
+    public function getMetadataByBaseId(int $baseId): Metadata {
+        foreach ($this->getMetadataList() as $metadata) {
+            if ($metadata->getBaseId() === $baseId) {
+                return $metadata;
+            }
+        }
+        throw new \InvalidArgumentException(sprintf(
+            "Metadata not found for base metadata #%d in resource kind #%d",
+            $baseId,
+            $this->getId()
+        ));
     }
 
     public function addMetadata(Metadata $metadata) {
@@ -58,8 +69,12 @@ class ResourceKind {
         }, $newMetadataList);
         foreach ($newMetadataList as $newMetadata) {
             if (in_array($newMetadata->getBaseId(), $currentMetadataIds)) {
-                $currentMetadata[$newMetadata->getBaseId()]
-                    ->update($newMetadata->getLabel(), $newMetadata->getPlaceholder(), $newMetadata->getDescription());
+                $currentMetadata[$newMetadata->getBaseId()]->update(
+                    $newMetadata->getLabel(),
+                    $newMetadata->getPlaceholder(),
+                    $newMetadata->getDescription(),
+                    $newMetadata->getConstraints()
+                );
                 $currentMetadata[$newMetadata->getBaseId()]
                     ->updateOrdinalNumber($newMetadata->getOrdinalNumber());
             } else {

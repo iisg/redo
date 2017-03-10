@@ -3,7 +3,6 @@
     <require from="./workflow-chooser"></require>
     <require from="./resource-kind-metadata-form"></require>
     <require from="../metadata/metadata-form"></require>
-    <require from="../metadata/metadata-editable-properties.html"></require>
 
     <form submit.delegate="validateAndSubmit()">
         <div class="form-group label-floating no-margin-top">
@@ -51,7 +50,8 @@
                         </h3>
                         <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
                             metadata.bind="metadata"
-                            base-metadata.bind="base(metadata)"></resource-kind-metadata-form>
+                            base-metadata.bind="base(metadata)"
+                            editing.bind="editing"></resource-kind-metadata-form>
                     </div>
                 </div>
             </div>

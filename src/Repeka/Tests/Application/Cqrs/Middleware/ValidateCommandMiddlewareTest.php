@@ -12,12 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
     /** @var ValidateCommandMiddleware */
     private $middleware;
-    /** @var PHPUnit_Framework_MockObject_MockObject */
+    /** @var Command|PHPUnit_Framework_MockObject_MockObject */
     private $command;
-    /** @var PHPUnit_Framework_MockObject_MockObject */
+    /** @var ContainerInterface|PHPUnit_Framework_MockObject_MockObject */
     private $container;
-    /** @var PHPUnit_Framework_MockObject_MockObject */
+    /** @var CommandValidator|PHPUnit_Framework_MockObject_MockObject */
     private $validator;
+
+    private $wasCalled;
 
     protected function setUp() {
         $this->container = $this->createMock(ContainerInterface::class);
@@ -37,10 +39,8 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($this->wasCalled);
     }
 
-    /**
-     * @expectedException Repeka\Domain\Exception\InvalidCommandException
-     */
     public function testFailsValidation() {
+        $this->expectException('Repeka\Domain\Exception\InvalidCommandException');
         $this->container->expects($this->once())->method('has')->with('command_validator.some_command')->willReturn(true);
         $this->container->expects($this->once())->method('get')->with('command_validator.some_command')->willReturn($this->validator);
         $this->validator->expects($this->once())->method('validate')->with($this->command)

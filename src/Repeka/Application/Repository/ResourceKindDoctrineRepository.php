@@ -20,4 +20,8 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
         }
         return $resourceKind;
     }
+
+    public function exists(int $id): bool {
+        return !!$this->find($id);
+    }
 }

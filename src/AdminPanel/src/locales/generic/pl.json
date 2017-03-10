@@ -68,5 +68,9 @@
   "Add new": "Dodaj nowy",
   "Choose existing submetadata kind": "Wybierz istniejący rodzaj podmetadanych",
   "Roles allowed to apply transition": "Uprawnieni do wykonania przejścia",
-  "Select file": "Wybierz..."
+  "Select file": "Wybierz...",
+  "Required resource kind": "Wymagany rodzaj zasobu",
+  "No restrictions": "Bez ograniczeń",
+  "One of:": "Jeden spośród:",
+  "Restore from base": "Przywróć z bazowej"
 }

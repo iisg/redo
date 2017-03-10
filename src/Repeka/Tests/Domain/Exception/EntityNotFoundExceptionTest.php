@@ -19,6 +19,11 @@ class EntityNotFoundExceptionTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('Not found: Dummy ', $exception->getMessage());
     }
 
+    public function testStrippingSuffixes() {
+        $exception = new EntityNotFoundException('DummyRepository', '');
+        $this->assertContains('Not found: Dummy ', $exception->getMessage());
+    }
+
     public function testFormattingStringQuery() {
         $exception = new EntityNotFoundException('', 'test');
         $this->assertContains('"test"', $exception->getMessage());
