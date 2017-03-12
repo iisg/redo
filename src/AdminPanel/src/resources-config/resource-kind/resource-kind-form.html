@@ -25,7 +25,7 @@
             </div>
             <div class="row au-stagger"
                 show.bind="resourceKind.metadataList.length > 0"
-                oa-sortable="items.bind: resourceKind.metadataList; allow-move.call: isSortingMetadata(); allow-drag.call: isSortingMetadata($event); axis: 'y'; scroll: document">
+                oa-sortable="items.bind: resourceKind.metadataList; allow-drag.call: isSortingMetadata($event); axis: y">
                 <div class="col-xs-12 resource-kind-form-metadata-item ${metadata.sortingClass} ${sortingMetadata ? 'vertically-sortable' : ''}"
                     repeat.for="metadata of resourceKind.metadataList & validate"
                     oa-sortable-item="item.bind: metadata">

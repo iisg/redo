@@ -58,6 +58,7 @@ module.exports = {
         "bootstrap-select/dist/css/bootstrap-select.min.css!text",
         "i18next-xhr-backend",
         "jquery",
+        "oribella-aurelia-sortable",
         "sweetalert2",
         "sweetalert2/dist/sweetalert2.css!text",
         "text"
