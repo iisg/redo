@@ -48,7 +48,7 @@ System.config({
     "font-awesome": "npm:font-awesome@4.6.3",
     "i18next-xhr-backend": "npm:i18next-xhr-backend@1.2.1",
     "jquery": "npm:jquery@2.2.4",
-    "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.11.2",
+    "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.11.3",
     "region-flags": "github:behdad/region-flags@1.0.1",
     "sweetalert2": "npm:sweetalert2@6.4.2",
     "text": "github:systemjs/plugin-text@0.0.9",
@@ -310,7 +310,7 @@ System.config({
     "npm:intl@1.2.5": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:oribella-aurelia-sortable@0.11.2": {
+    "npm:oribella-aurelia-sortable@0.11.3": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.0",
       "aurelia-pal": "npm:aurelia-pal@1.3.0",
       "aurelia-templating": "npm:aurelia-templating@1.3.0",

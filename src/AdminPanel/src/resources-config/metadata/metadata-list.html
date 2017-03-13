@@ -39,7 +39,7 @@
                 </tr>
                 </tfoot>
                 <tbody class="au-stagger"
-                    oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); moved.call: onOrderChanged();">
+                    oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
                 <tr repeat.for="metadata of metadataList"
                     hover-aware.one-time="metadata"
                     oa-sortable-item="item.bind: metadata"
