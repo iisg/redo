@@ -16,8 +16,8 @@ export class MetadataList implements ComponentAttached {
     this.metadataRepository.getList().then(metadataList => this.metadataList = metadataList);
   }
 
-  isDragHandle(data: {event: MouseEvent}) {
-    return $(data.event.target).is('.drag-handle') || $(data.event.target).parents('.drag-handle').length > 0;
+  isDragHandle(data: {evt: MouseEvent}) {
+    return $(data.evt.target).is('.drag-handle') || $(data.evt.target).parents('.drag-handle').length > 0;
   }
 
   onOrderChanged() {
