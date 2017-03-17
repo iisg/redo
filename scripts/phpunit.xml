@@ -16,18 +16,16 @@
     </php>
 
     <listeners>
-        <!--
-            Integration test listener is here because PHPStorm will use this
-            file for selective test running (for example when you run single
-            test case). For unit tests the listener doesn't do anything.
-        -->
         <listener class="Repeka\Tests\IntegrationTestListener" file="../src/Repeka/Tests/IntegrationTestListener.php"/>
     </listeners>
 
     <testsuites>
-        <testsuite name="repeka">
+        <testsuite name="unit">
             <directory>../src/Repeka/Tests</directory>
             <exclude>../src/Repeka/Tests/Integration</exclude>
+        </testsuite>
+        <testsuite name="integration">
+            <directory>../src/Repeka/Tests/Integration</directory>
         </testsuite>
     </testsuites>
 
