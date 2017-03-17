@@ -3,7 +3,6 @@ namespace Repeka\Tests;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Language;
@@ -15,12 +14,16 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 abstract class IntegrationTestCase extends FunctionalTestCase {
     /** @var ContainerInterface */
     protected $container;
+
+    private $application;
 
     public function setUp() {
         self::loadFixture(new AdminAccountFixture());
@@ -31,21 +34,23 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
      * It's better than setUp() because we don't have to remember to call this when overriding setUp().
      */
     public function prepareIntegrationTest() {
-        if (!defined('INTEGRATION_TESTS_BOOTSTRAPPED')) {
-            $this->lateBootstrapIntegrationTests();
-        }
         $this->container = self::createClient()->getContainer();
-        $this->purgeDatabase();
+        $kernel = $this->container->get('kernel');
+        $this->application = new Application($kernel);
+        $this->application->setAutoExit(false);
+        if (!defined('INTEGRATION_TESTS_BOOTSTRAPPED')) {
+            define('INTEGRATION_TESTS_BOOTSTRAPPED', true);
+            $this->executeCommand('doctrine:database:create --if-not-exists');
+        }
+        $this->executeCommand('doctrine:schema:drop --force');
+        $this->executeCommand('doctrine:schema:create');
+        $this->executeCommand('doctrine:migrations:migrate');
     }
 
-    private function purgeDatabase() {
-        $purger = new ORMPurger($this->getEntityManager());
-        $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
-        $purger->purge();
-    }
-
-    private function lateBootstrapIntegrationTests() {
-        include_once(__DIR__ . '/../../../app/integration_tests_bootstrapper.php');
+    private function executeCommand(string $command) {
+        $input = new StringInput("$command --quiet --env=test");
+        $input->setInteractive(false);
+        $this->application->run($input);
     }
 
     protected static function createAuthenticatedClient($username, $password, array $options = [], array $server = []): TestClient {
