@@ -1,0 +1,12 @@
+Repeka\Domain\Entity\UserRole:
+  type: entity
+  table: role
+  repositoryClass: Repeka\Application\Repository\UserRoleDoctrineRepository
+  id:
+    id:
+      type: guid
+      generator: {strategy: UUID}
+  fields:
+    name:
+      type: json_document
+      options: {jsonb: true}

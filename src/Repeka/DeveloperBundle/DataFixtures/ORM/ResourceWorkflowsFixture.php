@@ -7,7 +7,7 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 
 class ResourceWorkflowsFixture extends RepekaFixture {
-    const ORDER = LanguagesFixture::ORDER + 1;
+    const ORDER = 1;
 
     const BOOK_WORKFLOW = 'bookWorkflow';
 

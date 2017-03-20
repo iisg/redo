@@ -1,10 +1,7 @@
 <?php
 namespace Repeka\Application\Command;
 
-use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\UserEntity;
-use Repeka\Domain\Entity\Language;
-use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +20,6 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
         $password = $helper->ask($input, $output, $this->passwordQuestion());
         $this->saveNewAdminAccount($username, $password);
         $output->writeln("New admin account has been created.");
-        $this->ensureAtLeastOneLanguageExists($output);
     }
 
     private function usernameQuestion():Question {
@@ -66,15 +62,5 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
         $user->updateStaticPermissions($this->getContainer()->getParameter('repeka.static_permissions'));
         $em->persist($user);
         $em->flush();
-    }
-
-    private function ensureAtLeastOneLanguageExists(OutputInterface $output) {
-        /** @var EntityRepository $languageRepository */
-        $languageRepository = $this->getContainer()->get('doctrine')->getRepository(Language::class);
-        if ($languageRepository->count([]) == 0) {
-            $this->getContainer()->get('repeka.command_bus')->handle(new LanguageCreateCommand('PL', 'PL', 'polski'));
-            $this->getContainer()->get('repeka.command_bus')->handle(new LanguageCreateCommand('EN', 'GB', 'english'));
-            $output->writeln('Automatically added languages: PL and EN.');
-        }
     }
 }

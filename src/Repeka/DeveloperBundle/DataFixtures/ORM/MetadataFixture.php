@@ -7,7 +7,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 
 class MetadataFixture extends RepekaFixture {
-    const ORDER = LanguagesFixture::ORDER + 1;
+    const ORDER = 1;
 
     const REFERENCE_METADATA_TITLE = 'metadata-title';
     const REFERENCE_METADATA_DESCRIPTION = 'metadata-description';

@@ -1,0 +1,55 @@
+<template>
+    <require from="resources-config/add-form/animated-plus-button"></require>
+    <require from="./user-role-form"></require>
+
+    <animated-plus-button class="pull-right"
+        opened.bind="addFormOpened"></animated-plus-button>
+
+    <div if.bind="addFormOpened"
+        class="well fade-inup-outdown au-animate floating-form">
+        <user-role-form submit.call="addNewRole(savedRole)"></user-role-form>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>${'Name' | t}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr if.bind="!roles">
+                    <th colspan="2">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success progress-bar-full"></div>
+                        </div>
+                    </th>
+                </tr>
+                </tfoot>
+                <tbody class="au-stagger table-hover">
+                <tr class="au-animate fade-inup-outdown"
+                    hover-aware.one-time="role"
+                    repeat.for="role of roles">
+                    <td if.bind="!role['editing']">${role.name | inCurrentLanguage}</td>
+                    <td if.bind="!role['editing']"
+                        class="text-right">
+                        <button type="button"
+                            class="btn btn-default ${role['hovered'] ? 'btn-raised' : ''}"
+                            click.delegate="role['editing'] = true">
+                            <span class="fa fa-edit"></span>
+                        </button>
+                    </td>
+                    <td if.bind="role['editing']"
+                        colspan="2">
+                        <user-role-form edit.bind="role"
+                            cancel.call="role.editing = false"
+                            submit.call="saveEditedRole(role, savedRole) && (role.editing = false)"></user-role-form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

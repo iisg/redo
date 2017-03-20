@@ -17,6 +17,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
         $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], [], 'text');
         $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], [], 'text');

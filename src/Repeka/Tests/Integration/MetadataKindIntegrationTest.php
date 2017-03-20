@@ -8,6 +8,11 @@ use Repeka\Tests\IntegrationTestCase;
 class MetadataKindIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/metadata';
 
+    public function setUp() {
+        parent::setUp();
+        $this->clearDefaultLanguages();
+    }
+
     public function testFetchingMetadataKinds() {
         $this->createLanguage('TEST', 'TE', 'Test language');
         $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First'], [], [], 'text');
