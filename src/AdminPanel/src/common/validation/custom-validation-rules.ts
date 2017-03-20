@@ -6,6 +6,7 @@ import {registerResourceValidationRules} from "../../resources/resource";
 import {registerMetadataValidationRules} from "../../resources-config/metadata/metadata";
 import {registerResourceKindValidationRules} from "../../resources-config/resource-kind/resource-kind";
 import {registerWorkflowValidationRules} from "../../workflows/workflow";
+import {registerUserRoleValidationRules} from "../../users/roles/user-role";
 
 @autoinject
 export class CustomValidationRules {
@@ -18,7 +19,8 @@ export class CustomValidationRules {
     registerResourceKindValidationRules,
     registerResourceValidationRules,
     registerLanguageValidationRules,
-    registerWorkflowValidationRules
+    registerWorkflowValidationRules,
+    registerUserRoleValidationRules,
   ];
 
   constructor(private container: Container) {

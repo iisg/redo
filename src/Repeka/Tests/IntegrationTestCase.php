@@ -45,6 +45,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $this->executeCommand('doctrine:schema:drop --force');
         $this->executeCommand('doctrine:schema:create');
         $this->executeCommand('doctrine:migrations:migrate');
+        $this->executeCommand('repeka:initialize');
     }
 
     private function executeCommand(string $command) {
@@ -91,6 +92,14 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     protected function handleCommand(Command $command) {
         $commandBus = $this->container->get('repeka.command_bus');
         return $commandBus->handle($command);
+    }
+
+    protected function clearDefaultLanguages() {
+        $languageRepository = $this->container->get('doctrine')->getRepository('RepekaDomain:Language');
+        foreach ($languageRepository->findAll() as $language) {
+            $this->getEntityManager()->remove($language);
+        }
+        $this->getEntityManager()->flush();
     }
 
     protected function createLanguage(string $code, string $flag, string $name): Language {

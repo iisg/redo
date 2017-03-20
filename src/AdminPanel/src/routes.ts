@@ -9,7 +9,10 @@ const routes = flatten([
     route('workflows', 'workflows/workflows', 'Workflows'),
     route('languages', 'resources-config/language-config/language-list', 'Languages', {staticPermissions: ['LANGUAGES']})
   ]),
-  route('users', 'users/users', 'Users', {icon: 'user', staticPermissions: ['USERS']}),
+  nested('Users', 'users', [
+    route('users', 'users/users', 'User list', {staticPermissions: ['USERS']}),
+    route('roles', 'users/roles/user-roles', 'Roles', {staticPermissions: ['USERS']}),
+  ]),
   route('about', 'about/about', 'About', {icon: 'info-circle'}),
 ]);
 

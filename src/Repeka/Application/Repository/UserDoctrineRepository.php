@@ -1,13 +1,11 @@
 <?php
 namespace Repeka\Application\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Entity\User;
-use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
-class UserDoctrineRepository extends EntityRepository implements UserRepository, UserLoaderInterface {
+class UserDoctrineRepository extends AbstractRepository implements UserRepository, UserLoaderInterface {
     public function loadUserByUsername($username) {
         return $this->createQueryBuilder('u')
             ->where('u.username = :username OR u.email = :email')
@@ -18,16 +16,10 @@ class UserDoctrineRepository extends EntityRepository implements UserRepository,
     }
 
     public function save(User $user): User {
-        $this->getEntityManager()->persist($user);
-        return $user;
+        return $this->persist($user);
     }
 
-    public function findOne($id): User {
-        /** @var User $user */
-        $user = $this->find($id);
-        if (!$user) {
-            throw new EntityNotFoundException($this, $id);
-        }
-        return $user;
+    public function findOne(int $id): User {
+        return $this->findById($id);
     }
 }

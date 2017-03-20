@@ -9,7 +9,7 @@ interface UserRepository {
      */
     public function findAll();
 
-    public function findOne($id): User;
+    public function findOne(int $id): User;
 
     public function save(User $user): User;
 }

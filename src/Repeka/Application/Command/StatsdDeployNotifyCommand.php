@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class StatsdDeployNotifyCommand extends ContainerAwareCommand {
     protected function configure() {
         $this
-            ->setName('statsd:deploy')
+            ->setName('repeka:statsd:deploy')
             ->setDescription('Notifies the configured StatsD instance about the new deploy.');
     }
 

@@ -9,20 +9,14 @@ class LanguageIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingLanguages() {
         $language1 = $this->createLanguage('TEST', 'TE', 'testing');
-        $language2 = $this->createLanguage('SCND', 'ND', 'second');
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT);
         $this->assertStatusCode(200, $client->getResponse());
-        $responseContent = $client->getResponse()->getContent();
-        $this->assertJsonStringEqualsJsonString(json_encode([[
-            'code' => $language1->getCode(),
-            'flag' => $language1->getFlag(),
-            'name' => $language1->getName()
-        ], [
-            'code' => $language2->getCode(),
-            'flag' => $language2->getFlag(),
-            'name' => $language2->getName()
-        ]]), $responseContent);
+        $responseContent = json_decode($client->getResponse()->getContent(), true);
+        $languageCodes = array_map(function ($language) {
+            return $language['code'];
+        }, $responseContent);
+        $this->assertContains($language1->getCode(), $languageCodes);
     }
 
     public function testCreatingLanguage() {
@@ -35,10 +29,9 @@ class LanguageIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
         /** @var $languageRepository LanguageRepository */
         $languageRepository = $this->container->get('repository.language');
-        $languages = $languageRepository->findAll();
-        $this->assertCount(1, $languages);
-        $this->assertEquals('TEST', $languages[0]->getCode());
-        $this->assertEquals('TE', $languages[0]->getFlag());
-        $this->assertEquals('testing', $languages[0]->getName());
+        $language = $languageRepository->findOne('TEST');
+        $this->assertEquals('TEST', $language->getCode());
+        $this->assertEquals('TE', $language->getFlag());
+        $this->assertEquals('testing', $language->getName());
     }
 }

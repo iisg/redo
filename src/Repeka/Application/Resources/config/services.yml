@@ -126,6 +126,11 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Application\Entity\UserEntity]
 
+  repository.user_role:
+    class: Repeka\Application\Repository\UserRoleDoctrineRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\UserRole]
+
   repository.language:
     class: Repeka\Application\Repository\LanguageDoctrineRepository
     factory: ["@doctrine.orm.entity_manager", getRepository]
@@ -160,6 +165,10 @@ services:
 
   command_handler.user_list:
     class: Repeka\Domain\UseCase\User\UserListQueryHandler
+    autowire: true
+
+  command_handler.user_role_list:
+    class: Repeka\Domain\UseCase\UserRole\UserRoleListQueryHandler
     autowire: true
 
   command_handler.language_list:
@@ -250,6 +259,18 @@ services:
     class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandHandler
     autowire: true
 
+  command_handler.user_role_create:
+    class: Repeka\Domain\UseCase\UserRole\UserRoleCreateCommandHandler
+    autowire: true
+
+  command_handler.user_role_update:
+    class: Repeka\Domain\UseCase\UserRole\UserRoleUpdateCommandHandler
+    autowire: true
+
+  command_validator.user_role_update:
+    class: Repeka\Domain\UseCase\UserRole\UserRoleUpdateCommandValidator
+    autowire: true
+
   command_validator.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
     arguments:
@@ -310,6 +331,10 @@ services:
 
   command_validator.resource_workflow_simulate:
     class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator
+
+  command_validator.user_role_create:
+    class: Repeka\Domain\UseCase\UserRole\UserRoleCreateCommandValidator
+    autowire: true
 
   repeka.ajax_authentication_listener:
     class: Repeka\Application\EventListener\AjaxAuthenticationListener

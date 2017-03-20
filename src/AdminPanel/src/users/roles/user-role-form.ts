@@ -2,37 +2,41 @@ import {bindable} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
-import {Language} from "./language";
 import {deepCopy} from "../../common/utils/object-utils";
+import {UserRole} from "./user-role";
+import {computedFrom} from "aurelia-binding";
 
 @autoinject
-export class LanguageForm {
-  @bindable submit: (value: {savedLanguage: Language}) => Promise<any>;
+export class UserRoleForm {
+  @bindable submit: (value: {savedRole: UserRole}) => Promise<any>;
   @bindable cancel: () => any = () => undefined;
-  @bindable edit: Language;
-  editing: boolean = false;
+  @bindable edit: UserRole;
 
-  language: Language = new Language;
+  role: UserRole = new UserRole();
   submitting: boolean = false;
 
   private controller: ValidationController;
 
   constructor(validationControllerFactory: ValidationControllerFactory) {
     this.controller = validationControllerFactory.createForCurrentScope();
-    this.controller.addRenderer(new BootstrapValidationRenderer);
+    this.controller.addRenderer(new BootstrapValidationRenderer());
   }
 
-  editChanged(newValue: Language) {
-    this.editing = !!newValue;
-    this.language = $.extend(new Language(), deepCopy(newValue));
+  @computedFrom('role.id')
+  get editing(): boolean {
+    return !!this.role.id;
+  }
+
+  editChanged(newValue: UserRole) {
+    this.role = $.extend(new UserRole(), deepCopy(newValue));
   }
 
   validateAndSubmit() {
     this.submitting = true;
     this.controller.validate().then(result => {
       if (result.valid) {
-        return Promise.resolve(this.submit({savedLanguage: this.language}))
-          .then(() => this.editing || (this.language = new Language));
+        return Promise.resolve(this.submit({savedRole: this.role}))
+          .then(() => this.editing || (this.role = new UserRole()));
       }
     }).finally(() => this.submitting = false);
   }
