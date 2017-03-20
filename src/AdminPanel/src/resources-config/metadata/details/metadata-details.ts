@@ -35,8 +35,16 @@ export class MetadataDetails implements RoutableComponentActivate {
     });
   }
 
-  addNewChildMetadata(parentId, baseID): Promise<Metadata> {
-    return this.metadataRepository.saveChild(parentId, baseID).then(metadata => {
+  createChildMetadata(parentId: number, newChildMetadata: Metadata): Promise<Metadata> {
+    return this.metadataRepository.saveChild(parentId, newChildMetadata).then(metadata => {
+      this.addFormOpened = false;
+      this.metadataChildrenList.unshift(metadata);
+      return metadata;
+    });
+  }
+
+  addChildMetadata(parentId: number, baseId: number): Promise<Metadata> {
+    return this.metadataRepository.saveChild(parentId, undefined, baseId).then(metadata => {
       this.addFormOpened = false;
       this.metadataChildrenList.unshift(metadata);
       return metadata;

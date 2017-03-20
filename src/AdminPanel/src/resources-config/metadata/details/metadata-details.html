@@ -2,7 +2,8 @@
     <require from="../../multilingual-field/multilingual-display"></require>
     <require from="../../add-form/animated-plus-button"></require>
     <require from="./metadata-children-list"></require>
-    <require from="./metadata-child-form"></require>
+    <require from="./metadata-child-select"></require>
+    <require from="../metadata-form"></require>
 
     <div class="au-animate fade-inup-outup"
         if.bind="metadata">
@@ -43,9 +44,36 @@
         <div if.bind="addFormOpened"
             require-static-permissions="METADATA"
             class="well fade-inout-updown au-animate floating-form-full-width">
-            <h2>${'Add new submetadata kind' | t}</h2>
-            <metadata-child-form metadata-children-list.bind="metadataChildrenList"
-                submit.call="addNewChildMetadata(metadata.id, baseMetadata.id)"></metadata-child-form>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-pills">
+                <li class="active">
+                    <a href="#chooseExisting"
+                        data-toggle="tab">
+                        <span class="fa fa-list fa-fw"></span>
+                        ${'Choose existing' | t}
+                    </a>
+                </li>
+                <li><a href="#addNew"
+                    data-toggle="tab">
+                    <span class="fa fa-plus fa-fw"></span>${'Add new' | t}</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade active in"
+                    id="chooseExisting">
+                    <h2>${'Choose existing submetadata kind' | t}</h2>
+                    <metadata-child-select metadata-children-list.bind="metadataChildrenList"
+                        submit.call="addChildMetadata(metadata.id, baseMetadata.id)"></metadata-child-select>
+                </div>
+                <div class="tab-pane fade"
+                    id="addNew">
+                    <h2>${'Add new submetadata kind' | t}</h2>
+                    <metadata-form submit.call="createChildMetadata(metadata.id, savedMetadata)"></metadata-form>
+                </div>
+            </div>
         </div>
 
         <div show.bind="!metadataChildrenList || metadataChildrenList.length > 0">

@@ -64,5 +64,8 @@
   "Workflow": "Proces",
   "Add new submetadata kind": "Dodaj nowy rodzaj podmetadanych",
   "Submetadata kinds": "Rodzaje podmetadanych",
-  "No submetadata kinds.": "Brak rodzajów podmetadanych."
+  "No submetadata kinds.": "Brak rodzajów podmetadanych.",
+  "Choose existing": "Wybierz istniejący",
+  "Add new": "Dodaj nowy",
+  "Choose existing submetadata kind": "Wybierz istniejący rodzaj podmetadanych"
 }

@@ -3,6 +3,7 @@ namespace Repeka\Application\Controller\Api;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
@@ -62,8 +63,13 @@ class MetadataController extends ApiController {
      */
     public function postChildAction(Metadata $parent, Request $request) {
         $data = $request->request->all();
-        $baseMetadata = $this->get('repository.metadata')->findOne($data['baseId']);
-        $command = new MetadataChildCreateCommand($baseMetadata, $parent);
+        $baseMetadata = isset($data['baseId']) ? $this->get('repository.metadata')->findOne($data['baseId']) : null;
+        $newChildMetadata = $data['newChildMetadata'] ?? [];
+        if ($baseMetadata) {
+            $command = new MetadataChildWithBaseCreateCommand($parent, $baseMetadata);
+        } else {
+            $command = new MetadataChildCreateCommand($parent, $newChildMetadata);
+        }
         $metadata = $this->commandBus->handle($command);
         return $this->createJsonResponse($metadata, 201);
     }
