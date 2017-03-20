@@ -20,8 +20,9 @@ export class MetadataRepository extends ApiRepository<Metadata> {
       .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
   }
 
-  public saveChild(parentId: number, baseId: number) {
-    return this.httpClient.post(this.oneEntityEndpoint(parentId) + '/metadata', {baseId}).then(response => this.toEntity(response.content));
+  public saveChild(parentId: number, newChildMetadata?: Metadata, baseId?: number) {
+    return this.httpClient.post(this.oneEntityEndpoint(parentId) + '/metadata', {newChildMetadata, baseId})
+      .then(response => this.toEntity(response.content));
   }
 
   public updateOrder(metadataList: Array<Metadata>): Promise<boolean> {

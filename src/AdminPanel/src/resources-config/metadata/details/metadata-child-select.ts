@@ -5,7 +5,7 @@ import {MetadataRepository} from "../metadata-repository";
 import {computedFrom, bindingMode} from "aurelia-binding";
 
 @autoinject
-export class MetadataChildForm {
+export class MetadataChildSelect {
   submitting: boolean = false;
   metadataList: Metadata[];
   baseMetadata: Metadata;
@@ -27,7 +27,7 @@ export class MetadataChildForm {
   submitChild() {
     this.submitting = true;
     return this.submit({baseMetadata: this.baseMetadata})
-      .then(() => this.baseMetadata = new Metadata()).finally(() => this.submitting = false);
+      .then(() => this.baseMetadata = undefined).finally(() => this.submitting = false);
   }
 
   @computedFrom("metadataList.length", "metadataChildrenList.length")

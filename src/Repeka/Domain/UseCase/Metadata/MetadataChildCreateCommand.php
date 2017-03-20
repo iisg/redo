@@ -1,25 +1,17 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\NonValidatedCommand;
+use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 
-class MetadataChildCreateCommand extends NonValidatedCommand {
-    /** @var Metadata */
-    private $base;
+class MetadataChildCreateCommand extends Command {
     /** @var Metadata */
     private $parent;
+    private $newChildMetadata;
 
-    public function __construct(Metadata $base, Metadata $parent) {
-        $this->base = $base;
+    public function __construct(Metadata $parent, array $newChildMetadata) {
         $this->parent = $parent;
-    }
-
-    /**
-     * @return Metadata
-     */
-    public function getBase(): Metadata {
-        return $this->base;
+        $this->newChildMetadata = $newChildMetadata;
     }
 
     /**
@@ -27,5 +19,9 @@ class MetadataChildCreateCommand extends NonValidatedCommand {
      */
     public function getParent(): Metadata {
         return $this->parent;
+    }
+
+    public function getNewChildMetadata(): array {
+        return $this->newChildMetadata;
     }
 }

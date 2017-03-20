@@ -17,6 +17,12 @@ class MetadataFactory {
         );
     }
 
+    public function createWithParent(array $newChildMetadata, Metadata $parent) {
+        $metadata = MetadataFactory::create(MetadataCreateCommand::fromArray($newChildMetadata));
+        $metadata->setParent($parent);
+        return $metadata;
+    }
+
     public function createForResourceKind(ResourceKind $resourceKind, Metadata $base, Metadata $metadata) {
         Assertion::true($base->isBase(), "Given metadata (ID: {$base->getId()}) cannot be used as base.");
         return Metadata::createForResourceKind(

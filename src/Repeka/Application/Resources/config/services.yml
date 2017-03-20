@@ -198,6 +198,10 @@ services:
     class: Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommandHandler
     autowire: true
 
+  command_handler.metadata_child_with_base_create:
+    class: Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommandHandler
+    autowire: true
+
   command_handler.metadata_update:
     class: Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandHandler
     autowire: true
@@ -248,6 +252,12 @@ services:
 
   command_validator.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
+    arguments:
+      - '@repository.language'
+      - '%repeka.supported_controls%'
+
+  command_validator.metadata_child_create:
+    class: Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommandValidator
     arguments:
       - '@repository.language'
       - '%repeka.supported_controls%'
