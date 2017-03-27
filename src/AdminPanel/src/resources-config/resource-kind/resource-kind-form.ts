@@ -1,6 +1,4 @@
 import {ResourceKind} from "./resource-kind";
-import {BootstrapSelectChangeEvent} from "../bootstrap-select/bootstrap-select";
-import {Metadata} from "../metadata/metadata";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {autoinject} from "aurelia-dependency-injection";
@@ -9,6 +7,8 @@ import {computedFrom} from "aurelia-binding";
 import {deepCopy} from "../../common/utils/object-utils";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {BindingSignaler} from "aurelia-templating-resources";
+import {Metadata} from "../metadata/metadata";
+import {BootstrapSelectChangeEvent} from "../../common/components/bootstrap-select/bootstrap-select";
 
 @autoinject
 export class ResourceKindForm implements ComponentDetached {
