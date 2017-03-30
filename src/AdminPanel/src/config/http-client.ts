@@ -3,7 +3,8 @@ import {HttpClient, HttpResponseMessage, Interceptor, RequestMessage} from "aure
 import {MetricsSenderInterceptor} from "../common/metrics/metrics-sender-interceptor";
 import * as swal from "sweetalert2";
 import {I18N} from "aurelia-i18n";
-import {autoinject} from "aurelia-dependency-injection";
+import {autoinject, Container} from "aurelia-dependency-injection";
+import {CurrentUserFetcher} from "../users/current/current-user-fetcher";
 
 export function configure(aurelia: Aurelia) {
   let client: HttpClient = aurelia.container.get(HttpClient);
@@ -54,7 +55,7 @@ class CsrfHeaderInterceptor implements Interceptor {
 @autoinject
 class GlobalExceptionInterceptor implements Interceptor {
 
-  constructor(private i18n: I18N) {
+  constructor(private i18n: I18N, private container: Container) {
   }
 
   responseError(response: HttpResponseMessage): HttpResponseMessage {
@@ -75,11 +76,13 @@ class GlobalExceptionInterceptor implements Interceptor {
     let isDebug = response.headers.has('X-Debug-Token-Link');
 
     if (response.statusCode >= 400 && response.statusCode != 401) {
-      swal(isDebug ? $.extend({}, prodAlert, devAlert) : prodAlert).then(() => {
-        if (isDebug) {
-          window.open(response.headers.get('X-Debug-Token-Link'));
-        }
-      });
+      if (this.container.get(CurrentUserFetcher.CURRENT_USER_KEY).id) {
+        swal(isDebug ? $.extend({}, prodAlert, devAlert) : prodAlert).then(() => {
+          if (isDebug) {
+            window.open(response.headers.get('X-Debug-Token-Link'));
+          }
+        });
+      }
     }
 
     throw response;
