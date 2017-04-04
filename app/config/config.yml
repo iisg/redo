@@ -12,14 +12,6 @@ repeka:
     - date
     - boolean
     - relationship
-  static_permissions:
-    - ADMIN_PANEL
-    - METADATA
-    - RESOURCE_KINDS
-    - RESOURCES
-    - LANGUAGES
-    - USERS
-    - PERMISSIONS
 
   metadata_nesting_depth: 3
   elasticsearch:

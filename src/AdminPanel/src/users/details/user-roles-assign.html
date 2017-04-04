@@ -1,0 +1,30 @@
+<template>
+    <h3>${'Roles' | t}</h3>
+
+    <promise-button on-click.call="save()"
+        if.bind="rolesChanged && roles"
+        class="btn-bottom-right au-animate fade-inup-outdown">
+        ${ 'Save' | t }
+    </promise-button>
+
+    <loading-bar if.bind="!roles"></loading-bar>
+
+    <div if.bind="roles"
+        class="au-stagger">
+        <div class="checkbox au-animate fade-inup-outup"
+            repeat.for="role of roles & oneTime">
+            <label>
+                <input type="checkbox"
+                    model.bind="role"
+                    checked.bind="selectedRoles">
+                ${ role.name | inCurrentLanguage }
+                <span class="small text-muted"
+                    if.bind="role.systemRoleName"
+                    bootstrap-tooltip.one-time="'roles::' + role.systemRoleName + '_DESCRIPTION' | t">
+                    <fa name="shield"
+                        fw></fa>
+                </span>
+            </label>
+        </div>
+    </div>
+</template>

@@ -1,6 +1,6 @@
 import {ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {UserRolesRepository} from "./user-roles-repository";
+import {UserRoleRepository} from "./user-role-repository";
 import {UserRole} from "./user-role";
 import {deepCopy} from "../../common/utils/object-utils";
 
@@ -9,15 +9,15 @@ export class UserRoles implements ComponentAttached {
   addFormOpened: boolean = false;
   roles: Array<UserRole>;
 
-  constructor(private userRolesRepository: UserRolesRepository) {
+  constructor(private userRoleRepository: UserRoleRepository) {
   }
 
   attached(): void {
-    this.userRolesRepository.getList().then(roles => this.roles = roles);
+    this.userRoleRepository.getList().then(roles => this.roles = roles);
   }
 
   addNewRole(newRole: UserRole) {
-    return this.userRolesRepository.post(newRole).then(role => {
+    return this.userRoleRepository.post(newRole).then(role => {
       this.addFormOpened = false;
       this.roles.push(role);
     });
@@ -26,6 +26,6 @@ export class UserRoles implements ComponentAttached {
   saveEditedRole(role: UserRole, changedRole: UserRole): Promise<UserRole> {
     const originalRole = deepCopy(role);
     $.extend(role, changedRole);
-    return this.userRolesRepository.put(changedRole).catch(() => $.extend(role, originalRole));
+    return this.userRoleRepository.put(changedRole).catch(() => $.extend(role, originalRole));
   }
 }

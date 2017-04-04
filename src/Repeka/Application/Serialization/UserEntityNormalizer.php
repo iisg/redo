@@ -2,9 +2,13 @@
 namespace Repeka\Application\Serialization;
 
 use Repeka\Application\Entity\UserEntity;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Repeka\Domain\Entity\UserRole;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
-class UserEntityNormalizer implements NormalizerInterface {
+class UserEntityNormalizer extends AbstractNormalizer implements NormalizerAwareInterface {
+    use NormalizerAwareTrait;
+
     /**
      * @param $user UserEntity
      * @inheritdoc
@@ -16,7 +20,9 @@ class UserEntityNormalizer implements NormalizerInterface {
             'email' => $user->getEmail(),
             'firstname' => $user->getFirstname(),
             'lastname' => $user->getLastname(),
-            'staticPermissions' => $user->getStaticPermissions(),
+            'roles' => array_map(function (UserRole $role) {
+                return $this->normalizer->normalize($role);
+            }, $user->getUserRoles()),
         ];
     }
 

@@ -54,6 +54,12 @@ services:
     tags:
       - { name: serializer.normalizer }
 
+  user_role.normalizer:
+    class: Repeka\Application\Serialization\UserRoleNormalizer
+    public: false
+    tags:
+      - { name: serializer.normalizer }
+
   repeka.converter.resource_contents_param:
     class: Repeka\Application\ParamConverter\ResourceContentsParamConverter
     autowire: true
@@ -159,7 +165,7 @@ services:
     class: Repeka\Domain\UseCase\Metadata\MetadataGetQueryHandler
     autowire: true
 
-  command_handler.user_get:
+  command_handler.user:
     class: Repeka\Domain\UseCase\User\UserQueryHandler
     autowire: true
 
@@ -247,9 +253,9 @@ services:
     class: Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandHandler
     autowire: true
 
-  command_handler.user_update_static_permissions:
-    class: Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommandHandler
-    autowire:
+  command_handler.user_update_roles:
+    class: Repeka\Domain\UseCase\User\UserUpdateRolesCommandHandler
+    autowire: true
 
   command_handler.resource_workflow_simulate:
     class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandHandler
@@ -317,10 +323,8 @@ services:
     class: Repeka\Domain\UseCase\Language\LanguageUpdateCommandValidator
     autowire: true
 
-  command_validator.user_update_static_permissions:
-    class: Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommandValidator
-    arguments:
-      - '%repeka.static_permissions%'
+  command_validator.user_update_roles:
+    class: Repeka\Domain\UseCase\User\UserUpdateRolesCommandValidator
 
   command_validator.resource_workflow_create:
     class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandValidator

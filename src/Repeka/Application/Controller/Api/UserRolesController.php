@@ -17,7 +17,7 @@ class UserRolesController extends ApiController {
     /**
      * @Route
      * @Method("GET")
-     * @Security("has_role('ROLE_STATIC_USERS')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function getListAction() {
         $userRole = $this->commandBus->handle(new UserRoleListQuery());
@@ -27,7 +27,7 @@ class UserRolesController extends ApiController {
     /**
      * @Route
      * @Method("POST")
-     * @Security("has_role('ROLE_STATIC_USERS')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function postAction(Request $request) {
         $name = $request->request->all()['name'] ?? [];
@@ -38,7 +38,7 @@ class UserRolesController extends ApiController {
     /**
      * @Route("/{userRole}")
      * @Method("PUT")
-     * @Security("has_role('ROLE_STATIC_USERS')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function putAction(UserRole $userRole, Request $request) {
         $newName = $request->request->all()['name'] ?? [];

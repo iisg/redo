@@ -20,7 +20,7 @@ class AdminAccountFixture extends ContainerAwareFixture {
         $encoder = $this->container->get('security.password_encoder');
         $password = $encoder->encodePassword($user, self::PASSWORD);
         $user->setPassword($password);
-        $user->updateStaticPermissions($this->container->getParameter('repeka.static_permissions'));
+        $user->updateRoles($this->container->get('repository.user_role')->findAll());
         $manager->persist($user);
         $manager->flush();
     }

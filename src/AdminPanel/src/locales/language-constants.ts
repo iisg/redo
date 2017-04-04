@@ -1,3 +1,3 @@
 export const supportedUILanguages: () => Array<string> = () => ['en', 'pl'];
 
-export const languageNamespaces = ['generic', 'validation', 'nav', 'controls', 'permissions', 'exceptions'];
+export const languageNamespaces = ['generic', 'validation', 'nav', 'controls', 'exceptions', 'roles'];

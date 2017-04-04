@@ -59,7 +59,7 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
         $user->setUsername($username);
         $encodedPassword = $passwordEncoder->encodePassword($user, $password);
         $user->setPassword($encodedPassword);
-        $user->updateStaticPermissions($this->getContainer()->getParameter('repeka.static_permissions'));
+        $user->updateRoles($this->getContainer()->get('repository.user_role')->findAll());
         $em->persist($user);
         $em->flush();
     }

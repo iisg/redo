@@ -10,7 +10,6 @@ use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -39,7 +38,6 @@ class ResourcesController extends ApiController {
     /**
      * @Route
      * @Method("POST")
-     * @Security("has_role('ROLE_STATIC_RESOURCES')")
      * @ParamConverter("resourceContents", converter="repeka.converter.resource_contents_param")
      */
     public function postAction(Request $request, array $resourceContents) {
@@ -56,7 +54,6 @@ class ResourcesController extends ApiController {
     /**
      * @Route("/{resource}")
      * @Method("PUT")
-     * @Security("has_role('ROLE_STATIC_RESOURCES')")
      * @ParamConverter("resourceContents", converter="repeka.converter.resource_contents_param")
      */
     public function putAction(ResourceEntity $resource, array $resourceContents) {
@@ -68,7 +65,6 @@ class ResourcesController extends ApiController {
     /**
      * @Route("/{resource}")
      * @Method("PATCH")
-     * @Security("has_role('ROLE_STATIC_RESOURCES')")
      */
     public function patchAction(ResourceEntity $resource, Request $request) {
         $data = $request->request->all();

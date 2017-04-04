@@ -7,11 +7,11 @@ const routes = flatten([
     route('metadata', 'resources-config/metadata/metadata-view', 'Metadata Kinds'),
     route('resource-kinds', 'resources-config/resource-kind/resource-kind-list', 'Resource Kinds'),
     route('workflows', 'workflows/workflows', 'Workflows'),
-    route('languages', 'resources-config/language-config/language-list', 'Languages', {staticPermissions: ['LANGUAGES']})
+    route('languages', 'resources-config/language-config/language-list', 'Languages', {requiredRoles: ['ADMIN']})
   ]),
   nested('Users', 'users', [
-    route('users', 'users/users', 'User list', {staticPermissions: ['USERS']}),
-    route('roles', 'users/roles/user-roles', 'Roles', {staticPermissions: ['USERS']}),
+    route('users', 'users/users', 'User list'),
+    route('roles', 'users/roles/user-roles', 'Roles', {requiredRoles: ['ADMIN']}),
   ]),
   route('about', 'about/about', 'About', {icon: 'info-circle'}),
 ]);

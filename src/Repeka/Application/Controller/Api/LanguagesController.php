@@ -25,7 +25,7 @@ class LanguagesController extends ApiController {
     /**
      * @Route
      * @Method("POST")
-     * @Security("has_role('ROLE_STATIC_LANGUAGES')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function postAction(Request $request) {
         $command = LanguageCreateCommand::fromArray($request->request->all());
@@ -36,7 +36,7 @@ class LanguagesController extends ApiController {
     /**
      * @Route("/{code}")
      * @Method("PATCH")
-     * @Security("has_role('ROLE_STATIC_LANGUAGES')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function patchAction(string $code, Request $request) {
         $command = LanguageUpdateCommand::fromArray($code, $request->request->all());

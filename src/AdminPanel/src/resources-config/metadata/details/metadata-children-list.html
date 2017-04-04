@@ -10,7 +10,7 @@
             <th>${'Control' | t}</th>
             <th>${'Hint' | t}</th>
             <th>${'Description' | t}</th>
-            <th require-static-permissions="METADATA"></th>
+            <th></th>
         </tr>
         </thead>
         <tfoot>
@@ -38,8 +38,7 @@
             <td>
                 <multilingual-display value.one-time="metadataChild.description"></multilingual-display>
             </td>
-            <td class="text-right"
-                require-static-permissions="METADATA">
+            <td class="text-right">
                 <div class="btn-group">
                     <a route-href="route: metadata/details; params.bind: {id: metadataChild.id}"
                         class="btn ${metadataChild['hovered'] ? 'btn-raised' : ''} btn-info btn-sm">

@@ -3,7 +3,7 @@
 
     <li repeat.for="item of router.navigation | nestedNavigation"
         class="${item.isActive || item.expanded ? 'current' : ''}"
-        require-static-permissions.one-time="item.settings.staticPermissions">
+        require-roles.one-time="item.settings.requiredRoles">
         <a if.bind="!item.children"
             href.bind="item.href"
             class="btn btn-default btn-block">
@@ -21,7 +21,7 @@
             class="nav-children anim-height-inout-150 au-animate">
             <li repeat.for="child of item.children"
                 class="${child.isActive ? 'current' : ''}"
-                require-static-permissions.one-time="child.settings.staticPermissions">
+                require-roles.one-time="child.settings.requiredRoles">
                 <a href.bind="child.href"
                     class="btn btn-default btn-block">
                     ${'nav::' + child.title | t}

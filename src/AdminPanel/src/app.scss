@@ -17,10 +17,6 @@ a {
   display: block;
 }
 
-.progress-bar-full {
-  width: 100%;
-}
-
 @include on-sm-and-down {
   sidebar {
     &, > ul.side-nav {
@@ -52,13 +48,6 @@ table {
 
 body > tr[oa-sortable-item] {
   display: none;
-}
-
-.page-preloader {
-  height: 0;
-  .progress {
-    height: 12px;
-  }
 }
 
 .btn-bottom-right {
@@ -106,6 +95,10 @@ a.btn-fab .fa {
 
 .no-padding {
   padding: 0 !important;
+}
+
+.checkbox label, .radio label {
+  color: $grey-700;
 }
 
 // z-depth helpers from MaterializeCSS
@@ -198,6 +191,7 @@ a.btn-fab .fa {
   }
 }
 
+@include anim-height-inout(15);
 @include anim-height-inout(150);
 @include anim-height-inout(600);
 @include anim-height-inout(900);

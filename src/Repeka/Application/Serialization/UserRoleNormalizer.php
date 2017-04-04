@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\Serialization;
 
-use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\UserRole;
 
 class UserRoleNormalizer extends AbstractNormalizer {
@@ -13,7 +12,7 @@ class UserRoleNormalizer extends AbstractNormalizer {
         return [
             'id' => $userRole->getId(),
             'name' => $this->emptyArrayAsObject($userRole->getName()),
-            'isSystemRole' => $userRole->isSystemRole(),
+            'systemRoleName' => $userRole->isSystemRole() ? $userRole->toSystemRole()->getKey() : null,
         ];
     }
 
@@ -21,6 +20,6 @@ class UserRoleNormalizer extends AbstractNormalizer {
      * @inheritdoc
      */
     public function supportsNormalization($data, $format = null) {
-        return $data instanceof ResourceWorkflow;
+        return $data instanceof UserRole;
     }
 }

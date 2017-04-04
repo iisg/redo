@@ -29,4 +29,4 @@ security:
         path: /
 
   access_control:
-    - { path: ^/api, roles: ROLE_STATIC_ADMIN_PANEL }
+    - { path: ^/api, roles: ROLE_OPERATOR }
