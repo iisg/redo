@@ -1,30 +1,27 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
-use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
-use Repeka\Domain\Validation\Validator;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Tests\Traits\StubsTrait;
+use Respect\Validation\Validator;
 
 class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
-    /** @var  MetadataCreateCommandValidator|PHPUnit_Framework_MockObject_MockObject */
-    private $metadataCreateCommandValidator;
-
-    /** @var  LanguageRepository|PHPUnit_Framework_MockObject_MockObject */
-    private $languageRepository;
+    use StubsTrait;
 
     /** @var ResourceKindUpdateCommandValidator */
     private $validator;
 
     protected function setUp() {
-        $this->metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
-        $this->languageRepository = $this->createMock(LanguageRepository::class);
-        $this->languageRepository->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
-        $this->validator = new ResourceKindUpdateCommandValidator($this->languageRepository, $this->metadataCreateCommandValidator);
-        $this->metadataCreateCommandValidator->expects($this->any())->method('getValidator')->willReturn(Validator::alwaysValid());
+        $languageRepository = $this->createMock(LanguageRepository::class);
+        $languageRepository->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
+        $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
+        $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $this->validator = new ResourceKindUpdateCommandValidator(new NotBlankInAllLanguagesRule($languageRepository));
     }
 
     public function testValidating() {

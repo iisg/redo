@@ -5,15 +5,19 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
+use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
+use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var MetadataUpdateCommandValidator */
     private $validator;
 
     protected function setUp() {
-        $repository = $this->createMock(LanguageRepository::class);
-        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['PL']);
-        $this->validator = new MetadataUpdateCommandValidator($repository);
+        $languageRepositoryStub = $this->createMock(LanguageRepository::class);
+        $languageRepositoryStub->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
+        $this->validator = new MetadataUpdateCommandValidator(new ContainsOnlyAvailableLanguagesRule($languageRepositoryStub));
     }
 
     public function testPassingValidation() {
@@ -32,7 +36,7 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->validator->validate($command);
     }
 
-    public function testFailingBecauseOfInvalidLanuage() {
+    public function testFailingBecauseOfInvalidLanguage() {
         $this->expectException(InvalidCommandException::class);
         $command = new MetadataUpdateCommand(1, ['X' => 'bad'], [], []);
         $this->validator->validate($command);

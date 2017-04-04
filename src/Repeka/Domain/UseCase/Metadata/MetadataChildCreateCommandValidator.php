@@ -2,32 +2,41 @@
 namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\Command;
-use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Validation\CommandAttributesValidator;
-use Repeka\Domain\Validation\Validator;
+use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
+use Repeka\Domain\Validation\Rules\IsValidControlRule;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Respect\Validation\Validator;
 
 class MetadataChildCreateCommandValidator extends CommandAttributesValidator {
-    /** @var array */
-    private $availableLanguages;
-    /** @var array */
-    private $supportedControls;
+    /** @var NotBlankInAllLanguagesRule */
+    private $notBlankInAllLanguagesRule;
+    /** @var ContainsOnlyAvailableLanguagesRule */
+    private $containsOnlyAvailableLanguagesRule;
+    /** @var IsValidControlRule */
+    private $isValidControlRule;
 
-    public function __construct(LanguageRepository $languageRepository, array $supportedControls) {
-        $this->availableLanguages = $languageRepository->getAvailableLanguageCodes();
-        $this->supportedControls = $supportedControls;
+    public function __construct(
+        NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
+        ContainsOnlyAvailableLanguagesRule $containsOnlyAvailableLanguagesRule,
+        IsValidControlRule $isValidControlRule
+    ) {
+        $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
+        $this->containsOnlyAvailableLanguagesRule = $containsOnlyAvailableLanguagesRule;
+        $this->isValidControlRule = $isValidControlRule;
     }
 
     /**
      * @inheritdoc
      * @param MetadataChildCreateCommand $command
      */
-    public function getValidator(Command $command): \Respect\Validation\Validator {
+    public function getValidator(Command $command): Validator {
         return Validator
             ::attribute('newChildMetadata', Validator
-                ::key('label', Validator::notBlankInAllLanguages($this->availableLanguages))
+                ::key('label', $this->notBlankInAllLanguagesRule)
                 ->key('name', Validator::notBlank())
-                ->key('placeholder', Validator::containsOnlyAvailableLanguages($this->availableLanguages))
-                ->key('description', Validator::containsOnlyAvailableLanguages($this->availableLanguages))
-                ->key('control', Validator::in($this->supportedControls)));
+                ->key('placeholder', $this->containsOnlyAvailableLanguagesRule)
+                ->key('description', $this->containsOnlyAvailableLanguagesRule)
+                ->key('control', $this->isValidControlRule));
     }
 }

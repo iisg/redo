@@ -2,26 +2,26 @@
 namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\Command;
-use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Validation\CommandAttributesValidator;
-use Repeka\Domain\Validation\Validator;
+use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
+use Respect\Validation\Validator;
 
 class MetadataUpdateCommandValidator extends CommandAttributesValidator {
-    /** @var array */
-    private $availableLanguages;
+    /** @var ContainsOnlyAvailableLanguagesRule */
+    private $containsOnlyAvailableLanguagesRule;
 
-    public function __construct(LanguageRepository $languageRepository) {
-        $this->availableLanguages = $languageRepository->getAvailableLanguageCodes();
+    public function __construct(ContainsOnlyAvailableLanguagesRule $containsOnlyAvailableLanguagesRule) {
+        $this->containsOnlyAvailableLanguagesRule = $containsOnlyAvailableLanguagesRule;
     }
 
     /**
      * @inheritdoc
      */
-    public function getValidator(Command $command): \Respect\Validation\Validator {
+    public function getValidator(Command $command): Validator {
         return Validator
             ::attribute('metadataId', Validator::intVal()->min(1))
-            ->attribute('newLabel', Validator::containsOnlyAvailableLanguages($this->availableLanguages))
-            ->attribute('newPlaceholder', Validator::containsOnlyAvailableLanguages($this->availableLanguages))
-            ->attribute('newDescription', Validator::containsOnlyAvailableLanguages($this->availableLanguages));
+            ->attribute('newLabel', $this->containsOnlyAvailableLanguagesRule)
+            ->attribute('newPlaceholder', $this->containsOnlyAvailableLanguagesRule)
+            ->attribute('newDescription', $this->containsOnlyAvailableLanguagesRule);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Domain\UseCase\Resource;
+namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Entity\Metadata;
@@ -8,15 +8,18 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandValidator;
+use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceUpdateContentsCommandValidatorTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceEntity|PHPUnit_Framework_MockObject_MockObject */
     private $resource;
     /** @var ResourceUpdateContentsCommandValidator */
     private $validator;
 
     protected function setUp() {
-        $this->validator = new ResourceUpdateContentsCommandValidator();
         $resourceKind = $this->createMock(ResourceKind::class);
         $metadata1 = $this->createMock(Metadata::class);
         $metadata2 = $this->createMock(Metadata::class);
@@ -26,6 +29,7 @@ class ResourceUpdateContentsCommandValidatorTest extends \PHPUnit_Framework_Test
         $this->resource = $this->createMock(ResourceEntity::class);
         $this->resource->expects($this->any())->method('getKind')->willReturn($resourceKind);
         $this->resource->expects($this->any())->method('getId')->willReturn(1);
+        $this->validator = new ResourceUpdateContentsCommandValidator(new ValueSetMatchesResourceKindRule());
     }
 
     public function testValid() {

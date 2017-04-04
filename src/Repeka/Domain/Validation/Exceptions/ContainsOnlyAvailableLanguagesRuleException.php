@@ -3,7 +3,7 @@ namespace Repeka\Domain\Validation\Exceptions;
 
 use Respect\Validation\Exceptions\ValidationException;
 
-class ContainsOnlyAvailableLanguagesException extends ValidationException {
+class ContainsOnlyAvailableLanguagesRuleException extends ValidationException {
     public static $defaultTemplates = [
         self::MODE_DEFAULT => [
             self::STANDARD => '{{name}} contains a language that does not exist.',

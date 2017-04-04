@@ -6,9 +6,10 @@ use Repeka\Domain\Cqrs\CommandValidator;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Exceptions\ValidationException;
+use Respect\Validation\Validator;
 
 abstract class CommandAttributesValidator implements CommandValidator {
-    abstract public function getValidator(Command $command): \Respect\Validation\Validator;
+    abstract public function getValidator(Command $command): Validator;
 
     /**
      * @inheritdoc

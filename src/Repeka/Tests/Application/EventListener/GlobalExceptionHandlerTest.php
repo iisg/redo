@@ -1,13 +1,12 @@
 <?php
-namespace Repeka\Tests\EventListener;
+namespace Repeka\Tests\Application\EventListener;
 
 use Repeka\Application\EventListener\GlobalExceptionHandler;
 use Repeka\Domain\Exception\DomainException;
-use Repeka\Tests\FunctionalTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
-class GlobalExceptionHandlerTest extends FunctionalTestCase {
+class GlobalExceptionHandlerTest extends \PHPUnit_Framework_TestCase {
     /** @var  GlobalExceptionHandler */
     private $handler;
 

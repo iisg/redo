@@ -6,13 +6,13 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\CommandAttributesValidator;
-use Repeka\Domain\Validation\Validator;
+use Respect\Validation\Validator;
 
 class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator {
     /**
      * @inheritdoc
      */
-    public function getValidator(Command $command): \Respect\Validation\Validator {
+    public function getValidator(Command $command): Validator {
         return Validator
             ::attribute('workflow', Validator::instance(ResourceWorkflow::class)->callback(function (ResourceWorkflow $workflow) {
                 return $workflow->getId() > 0;
@@ -21,7 +21,7 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
             ->attribute('transitions', $this->transitionsValidator());
     }
 
-    protected function placesValidator():\Respect\Validation\Validator {
+    protected function placesValidator():Validator {
         return Validator::arrayType()->each(Validator::oneOf(
             Validator::instance(ResourceWorkflowPlace::class),
             Validator::arrayType()->keySet(
@@ -31,7 +31,7 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
         ));
     }
 
-    protected function transitionsValidator():\Respect\Validation\Validator {
+    protected function transitionsValidator():Validator {
         return Validator::arrayType()->each(Validator::oneOf(
             Validator::instance(ResourceWorkflowTransition::class),
             Validator::arrayType()->keySet(
