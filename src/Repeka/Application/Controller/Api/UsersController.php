@@ -4,7 +4,7 @@ namespace Repeka\Application\Controller\Api;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
-use Repeka\Domain\UseCase\User\UserUpdateStaticPermissionsCommand;
+use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -17,7 +17,6 @@ class UsersController extends ApiController {
     /**
      * @Route
      * @Method("GET")
-     * @Security("has_role('ROLE_STATIC_USERS')")
      */
     public function getListAction() {
         $user = $this->commandBus->handle(new UserListQuery());
@@ -39,7 +38,6 @@ class UsersController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("GET")
-     * @Security("has_role('ROLE_STATIC_USERS')")
      */
     public function getUserAction(int $id) {
         $query = new UserQuery($id);
@@ -48,14 +46,21 @@ class UsersController extends ApiController {
     }
 
     /**
-     * @Route("/{id}")
+     * @Route("/{user}")
      * @Method("PATCH")
-     * @Security("has_role('ROLE_STATIC_PERMISSIONS')")
+     * @Security("has_role('ROLE_ADMIN')")
      */
-    public function updateUserAction(Request $request, int $id) {
-        $permissions = $request->request->all()['staticPermissions'];
-        $command = new UserUpdateStaticPermissionsCommand($id, $permissions);
-        $user = $this->commandBus->handle($command);
+    public function updateUserAction(UserEntity $user, Request $request) {
+        $data = $request->request->all();
+        if (isset($data['roleIds'])) {
+            $roleIds = $data['roleIds'];
+            $roleRepository = $this->getDoctrine()->getRepository('RepekaDomain:UserRole');
+            $roles = array_map(function ($roleId) use ($roleRepository) {
+                return $roleRepository->findOne($roleId);
+            }, $roleIds);
+            $command = new UserUpdateRolesCommand($user, $roles);
+            $user = $this->commandBus->handle($command);
+        }
         return $this->createJsonResponse($user);
     }
 }

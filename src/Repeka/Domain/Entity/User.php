@@ -1,16 +1,20 @@
 <?php
 namespace Repeka\Domain\Entity;
 
-interface User {
-    public function getId(): int;
+abstract class User {
+    abstract public function getId(): int;
 
-    /**
-     * @return string[]
-     */
-    public function getStaticPermissions(): array;
+    /** @param $roles UserRole */
+    abstract public function updateRoles(array $roles): void;
 
-    /**
-     * @param string[] $permissions
-     */
-    public function updateStaticPermissions(array $permissions);
+    abstract public function getUserRoles(): array;
+
+    public function hasRole(UserRole $role): bool {
+        foreach ($this->getUserRoles() as $r) {
+            if ($r->getId() === $role->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

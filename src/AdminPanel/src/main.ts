@@ -50,9 +50,11 @@ export function configure(aurelia: Aurelia) {
       });
     })
     .globalResources([
+      'common/authorization/require-role',
       'common/bootstrap/bootstrap-tooltip',
       'common/bootstrap/hover-aware',
-      'common/authorization/require-static-permissions',
+      'common/components/font-awesome/fa',
+      'common/components/loading-bar/loading-bar',
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
       'workflows/details/editor/promise-button'

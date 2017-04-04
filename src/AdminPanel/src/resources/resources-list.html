@@ -4,16 +4,13 @@
     <require from="resources-config/multilingual-field/multilingual-display"></require>
     <require from="./workflow/resource-place-display.html"></require>
 
-    <div require-static-permissions="RESOURCES">
-        <animated-plus-button class="pull-right"
-            opened.bind="addFormOpened"></animated-plus-button>
+    <animated-plus-button class="pull-right"
+        opened.bind="addFormOpened"></animated-plus-button>
 
-        <div if.bind="addFormOpened"
-            class="fade-inup-outdown au-animate floating-form-full-width">
-            <h2>${'Add new resource' & t}</h2>
-            <resource-form submit.call="addNewResource(savedResource)"></resource-form>
-        </div>
-
+    <div if.bind="addFormOpened"
+        class="fade-inup-outdown au-animate floating-form-full-width">
+        <h2>${'Add new resource' & t}</h2>
+        <resource-form submit.call="addNewResource(savedResource)"></resource-form>
     </div>
 
     <div class="row"

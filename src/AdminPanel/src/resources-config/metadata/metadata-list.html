@@ -3,13 +3,10 @@
     <require from="../multilingual-field/multilingual-display"></require>
     <require from="../add-form/animated-plus-button"></require>
 
-    <div require-static-permissions="METADATA">
-        <animated-plus-button class="pull-right"
-            opened.bind="addFormOpened"></animated-plus-button>
-    </div>
+    <animated-plus-button class="pull-right"
+        opened.bind="addFormOpened"></animated-plus-button>
 
     <div if.bind="addFormOpened"
-        require-static-permissions="METADATA"
         class="well fade-inout-updown au-animate floating-form-full-width">
         <h2>${'Add new metadata kind' | t}</h2>
         <metadata-form submit.call="addNewMetadata(savedMetadata)"></metadata-form>
@@ -26,7 +23,7 @@
                     <th>${'Control' | t}</th>
                     <th>${'Hint' | t}</th>
                     <th>${'Description' | t}</th>
-                    <th require-static-permissions="METADATA"></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -57,7 +54,6 @@
                         <multilingual-display value.one-time="metadata.description"></multilingual-display>
                     </td>
                     <td class="text-right"
-                        require-static-permissions="METADATA"
                         if.bind="!metadata['editing']">
                         <div class="btn-group">
                             <a class="btn btn-default drag-handle vertically-sortable ${metadata['hovered'] ? 'btn-raised' : ''}"

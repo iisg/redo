@@ -1,13 +1,8 @@
 <template>
     <require from="users/user-label.html"></require>
-    <require from="./user-static-permissions"></require>
+    <require from="./user-roles-assign"></require>
 
-    <div class="au-animate fade-inup-outup page-preloader"
-        if.bind="!user">
-        <div class="progress progress-striped active">
-            <div class="progress-bar progress-bar-success progress-bar-full"></div>
-        </div>
-    </div>
+    <loading-bar if.bind="!user"></loading-bar>
 
     <div class="au-animate fade-inup-outup"
         if.bind="user">
@@ -30,8 +25,8 @@
 
         <div class="well"
             if.bind="!isCurrentUser"
-            require-static-permissions="PERMISSIONS">
-            <user-static-permissions user.bind="user"></user-static-permissions>
+            require-role="ADMIN">
+            <user-roles-assign user.bind="user"></user-roles-assign>
         </div>
     </div>
 </template>

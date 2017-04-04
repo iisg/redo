@@ -5,7 +5,11 @@ import {RequiredInAllLanguagesValidationRule} from "../../common/validation/rule
 export class UserRole {
   id: string;
   name: MultilingualTextType = {};
-  systemRole: boolean = false;
+  systemRoleName: string;
+
+  get systemRoleIdentifier(): string {
+    return this.systemRoleName || this.id;
+  }
 }
 
 export function registerUserRoleValidationRules() {

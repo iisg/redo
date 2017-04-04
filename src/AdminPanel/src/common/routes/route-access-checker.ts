@@ -1,16 +1,15 @@
-import {PipelineStep, NavigationInstruction, Next} from "aurelia-router";
+import {PipelineStep, NavigationInstruction, Next, Redirect} from "aurelia-router";
 import {autoinject} from "aurelia-dependency-injection";
-import {StaticPermissionsChecker} from "../authorization/static-permissions-checker";
-import {Redirect} from "aurelia-router";
+import {UserRoleChecker} from "../authorization/user-role-checker";
 
 @autoinject
 export class RouteAccessChecker implements PipelineStep {
-  constructor(private staticPermissionsChecker: StaticPermissionsChecker) {
+  constructor(private userRoleChecker: UserRoleChecker) {
   }
 
   run(instruction: NavigationInstruction, next: Next): Promise<any> {
     for (let inst of instruction.getAllInstructions()) {
-      if (!this.staticPermissionsChecker.allAllowed(inst.config.settings && inst.config.settings.staticPermissions || [])) {
+      if (!this.userRoleChecker.hasAll(inst.config.settings && inst.config.settings.requiredRoles || [])) {
         return next.cancel(new Redirect('not-allowed'));
       }
     }

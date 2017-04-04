@@ -21,5 +21,5 @@ export interface RouteSettings {
   icon?: string;
   parentTitle?: string;
   parentIcon?: string;
-  staticPermissions?: Array<string>;
+  requiredRoles?: Array<string>;
 }

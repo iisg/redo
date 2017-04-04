@@ -22,4 +22,11 @@ class UserRoleDoctrineRepository extends AbstractRepository implements UserRoleR
             return false;
         }
     }
+
+    /** @return UserRole[] */
+    public function findSystemRoles(): array {
+        return array_filter($this->findAll(), function (UserRole $role) {
+            return $role->isSystemRole();
+        });
+    }
 }

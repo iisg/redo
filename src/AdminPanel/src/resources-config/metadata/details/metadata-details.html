@@ -34,15 +34,12 @@
             </dl>
         </div>
 
-        <div require-static-permissions="METADATA">
-            <animated-plus-button class="pull-right"
-                opened.bind="addFormOpened"></animated-plus-button>
-        </div>
+        <animated-plus-button class="pull-right"
+            opened.bind="addFormOpened"></animated-plus-button>
 
         <h1>${'Submetadata kinds' | t}:</h1>
 
         <div if.bind="addFormOpened"
-            require-static-permissions="METADATA"
             class="well fade-inout-updown au-animate floating-form-full-width">
 
             <!-- Nav tabs -->

@@ -4,7 +4,6 @@
     <require from="resources-config/multilingual-field/multilingual-display"></require>
     <require from="workflows/icon/workflow-icon.html"></require>
 
-    <div require-static-permissions="RESOURCE_KINDS">
         <animated-plus-button class="pull-right"
             opened.bind="addFormOpened"></animated-plus-button>
         <div if.bind="addFormOpened"
@@ -12,7 +11,6 @@
             <h2>${'Add new resource kind' | t}</h2>
             <resource-kind-form submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
         </div>
-    </div>
 
     <div class="row"
         show.bind="!resourceKinds || resourceKinds.length > 0">
@@ -23,7 +21,7 @@
                     <th>${'ID' | t}</th>
                     <th>${'Name' | t}</th>
                     <th>${'Metadata Kinds' | t}</th>
-                    <th require-static-permissions="RESOURCE_KINDS"></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -54,7 +52,6 @@
                         </dl>
                     </td>
                     <td if.bind="!resourceKind['editing']"
-                        require-static-permissions="RESOURCE_KINDS"
                         class="text-right">
                         <div class="btn-group">
                             <promise-button on-click.call="displayWorkflowPreview(resourceKind)"

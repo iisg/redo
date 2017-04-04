@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Entity;
 
+use Assert\Assertion;
 use Repeka\Domain\Constants\SystemUserRole;
 
 class UserRole {
@@ -25,5 +26,10 @@ class UserRole {
 
     public function isSystemRole(): bool {
         return SystemUserRole::isValid($this->id);
+    }
+
+    public function toSystemRole(): SystemUserRole {
+        Assertion::true($this->isSystemRole());
+        return new SystemUserRole($this->id);
     }
 }

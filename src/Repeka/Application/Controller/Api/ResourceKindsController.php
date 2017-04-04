@@ -6,7 +6,6 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -25,7 +24,6 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route
      * @Method("POST")
-     * @Security("has_role('ROLE_STATIC_RESOURCE_KINDS')")
      */
     public function postAction(Request $request) {
         $data = $request->request->all();
@@ -41,7 +39,6 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("PATCH")
-     * @Security("has_role('ROLE_STATIC_RESOURCE_KINDS')")
      */
     public function patchAction(int $id, Request $request) {
         $data = $request->request->all();
