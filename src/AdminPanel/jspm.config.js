@@ -296,7 +296,8 @@ System.config({
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:es6-promise@4.0.5": {
-      "process": "github:jspm/nodelibs-process@0.1.2"
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:font-awesome@4.6.3": {
       "css": "github:systemjs/plugin-css@0.1.32"
@@ -309,6 +310,9 @@ System.config({
     },
     "npm:intl@1.2.5": {
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:isarray@1.0.0": {
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:oribella-aurelia-sortable@0.11.3": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.0",

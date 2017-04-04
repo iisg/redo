@@ -1,15 +1,17 @@
 <?php
 namespace Repeka\Domain\Validation\Rules;
 
-use Repeka\Domain\Validation\Validator;
+use Repeka\Domain\Repository\LanguageRepository;
 use Respect\Validation\Rules\AbstractRule;
+use Respect\Validation\Validator;
 
-class NotBlankInAllLanguages extends AbstractRule {
+class NotBlankInAllLanguagesRule extends AbstractRule {
     private $requiredLanguagesChecks;
 
     private $requiredLanguagesCount;
 
-    public function __construct(array $availableLanguages) {
+    public function __construct(LanguageRepository $languageRepository) {
+        $availableLanguages = $languageRepository->getAvailableLanguageCodes();
         $this->requiredLanguagesChecks = array_map(function ($code) {
             return Validator::key($code, Validator::notBlank());
         }, $availableLanguages);
@@ -18,8 +20,7 @@ class NotBlankInAllLanguages extends AbstractRule {
 
     public function validate($input) {
         return Validator::allOf(
-            Validator::arrayType(),
-            Validator::length($this->requiredLanguagesCount, $this->requiredLanguagesCount),
+            Validator::arrayType()->length($this->requiredLanguagesCount, $this->requiredLanguagesCount),
             $this->requiredLanguagesChecks
         )->validate($input);
     }

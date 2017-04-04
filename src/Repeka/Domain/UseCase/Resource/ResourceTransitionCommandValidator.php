@@ -5,11 +5,11 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\CommandAttributesValidator;
-use Repeka\Domain\Validation\Validator;
+use Respect\Validation\Validator;
 
 class ResourceTransitionCommandValidator extends CommandAttributesValidator {
     /** @param ResourceTransitionCommand $command */
-    public function getValidator(Command $command): \Respect\Validation\Validator {
+    public function getValidator(Command $command): Validator {
         return Validator
             ::attribute('transitionId', Validator::notBlank())
             ->attribute(

@@ -5,15 +5,25 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
+use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
+use Repeka\Domain\Validation\Rules\IsValidControlRule;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var MetadataCreateCommandValidator */
     private $validator;
 
     protected function setUp() {
-        $repository = $this->createMock(LanguageRepository::class);
-        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['PL']);
-        $this->validator = new MetadataCreateCommandValidator($repository, ['text', 'textarea']);
+        $languageRepositoryStub = $this->createMock(LanguageRepository::class);
+        $languageRepositoryStub->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
+        $this->validator = new MetadataCreateCommandValidator(
+            new NotBlankInAllLanguagesRule($languageRepositoryStub),
+            new ContainsOnlyAvailableLanguagesRule($languageRepositoryStub),
+            new IsValidControlRule(['text', 'textarea'])
+        );
     }
 
     public function testPassingValidation() {
@@ -21,8 +31,8 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->validator->validate($command);
     }
 
-    /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailsValidationBecauseOfInvalidControl() {
+        $this->expectException(InvalidCommandException::class);
         $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'blabla');
         $this->validator->validate($command);
     }
@@ -36,14 +46,14 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailsValidationBecauseOfNoLabelInMainLanguage() {
+        $this->expectException(InvalidCommandException::class);
         $command = new MetadataCreateCommand('nazwa', ['EN' => 'Test'], [], [], 'text');
         $this->validator->validate($command);
     }
 
-    /** @expectedException Repeka\Domain\Exception\InvalidCommandException */
     public function testFailsValidationBecauseThereIsNoName() {
+        $this->expectException(InvalidCommandException::class);
         $command = new MetadataCreateCommand('', ['PL' => 'Test'], [], [], 'text');
         $this->validator->validate($command);
     }

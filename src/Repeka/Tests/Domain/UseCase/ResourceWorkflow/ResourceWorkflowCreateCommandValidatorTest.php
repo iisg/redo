@@ -5,15 +5,19 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandValidator;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceWorkflowCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceWorkflowCreateCommandValidator */
     private $validator;
 
     protected function setUp() {
-        $repository = $this->createMock(LanguageRepository::class);
-        $repository->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['PL']);
-        $this->validator = new ResourceWorkflowCreateCommandValidator($repository);
+        $languageRepositoryStub = $this->createMock(LanguageRepository::class);
+        $languageRepositoryStub->expects($this->once())->method('getAvailableLanguageCodes')->willReturn(['PL']);
+        $this->validator = new ResourceWorkflowCreateCommandValidator(new NotBlankInAllLanguagesRule($languageRepositoryStub));
     }
 
     public function testPassingValidation() {

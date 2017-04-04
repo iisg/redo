@@ -279,18 +279,11 @@ services:
 
   command_validator.metadata_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
-    arguments:
-      - '@repository.language'
-      - '%repeka.supported_controls%'
+    autowire: true
 
   command_validator.metadata_child_create:
     class: Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommandValidator
-    arguments:
-      - '@repository.language'
-      - '%repeka.supported_controls%'
-
-  resource_workflow_strategy_factory:
-    class: Repeka\Application\Factory\ResourceSymfonyWorkflowStrategyFactory
+    autowire: true
 
   command_validator.metadata_update:
     class: Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator
@@ -339,6 +332,26 @@ services:
   command_validator.user_role_create:
     class: Repeka\Domain\UseCase\UserRole\UserRoleCreateCommandValidator
     autowire: true
+
+  validation_rule.contains_only_available_languages:
+    class: Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule
+    autowire: true
+
+  validation_rule.value_set_matches_resource_kind:
+    class: Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule
+    autowire: true
+
+  validation_rule.not_blank_in_all_languages:
+    class: Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule
+    autowire: true
+
+  validation_rule.is_valid_control:
+    class: Repeka\Domain\Validation\Rules\IsValidControlRule
+    arguments:
+    - '%repeka.supported_controls%'
+
+  resource_workflow_strategy_factory:
+    class: Repeka\Application\Factory\ResourceSymfonyWorkflowStrategyFactory
 
   repeka.ajax_authentication_listener:
     class: Repeka\Application\EventListener\AjaxAuthenticationListener

@@ -2,22 +2,22 @@
 namespace Repeka\Domain\UseCase\UserRole;
 
 use Repeka\Domain\Cqrs\Command;
-use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Validation\CommandAttributesValidator;
-use Repeka\Domain\Validation\Validator;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Respect\Validation\Validator;
 
 class UserRoleCreateCommandValidator extends CommandAttributesValidator {
-    /** @var array */
-    private $availableLanguages;
+    /** @var NotBlankInAllLanguagesRule */
+    private $notBlankInAllLanguagesRule;
 
-    public function __construct(LanguageRepository $languageRepository) {
-        $this->availableLanguages = $languageRepository->getAvailableLanguageCodes();
+    public function __construct(NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule) {
+        $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
     }
 
     /**
      * @inheritdoc
      */
-    public function getValidator(Command $command): \Respect\Validation\Validator {
-        return Validator::attribute('name', Validator::notBlankInAllLanguages($this->availableLanguages));
+    public function getValidator(Command $command): Validator {
+        return Validator::attribute('name', $this->notBlankInAllLanguagesRule);
     }
 }

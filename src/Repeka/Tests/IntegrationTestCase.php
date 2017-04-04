@@ -44,7 +44,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         }
         $this->executeCommand('doctrine:schema:drop --force');
         $this->executeCommand('doctrine:schema:create');
-        $this->executeCommand('doctrine:migrations:migrate');
+        // no need to migrate DB because doctrine:schema:create creates it based on current models
         $this->executeCommand('repeka:initialize');
     }
 

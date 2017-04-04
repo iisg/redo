@@ -20,6 +20,8 @@
   "require": {
     "php": ">=7.1",
     "beberlei/assert": "~2.0",
+    "cocur/slugify": "^2.4",
+    "danielstjules/stringy": "^3.0",
     "doctrine/dbal": "2.6.x-dev",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-migrations-bundle": "^1.2",
@@ -28,6 +30,7 @@
     "ext-mbstring": "*",
     "ext-pdo_pgsql": "*",
     "m6web/statsd-bundle": "^2.14",
+    "myclabs/php-enum": "^1.5",
     "qandidate/symfony-json-request-transformer": "^1.2",
     "respect/validation": "^1.1",
     "ruflin/elastica": "^3.2",
@@ -37,9 +40,7 @@
     "symfony/serializer": "^3.2",
     "symfony/swiftmailer-bundle": "^2.3",
     "symfony/symfony": "^3.2",
-    "twig/twig": "^1.30",
-    "cocur/slugify": "^2.4",
-    "myclabs/php-enum": "^1.5"
+    "twig/twig": "^1.30"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^2.3",

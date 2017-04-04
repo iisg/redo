@@ -1,5 +1,5 @@
 <?php
-namespace Domain\UseCase\Resource;
+namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Entity\ResourceEntity;
