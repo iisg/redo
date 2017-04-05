@@ -4,41 +4,46 @@ import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {Metadata} from "./metadata";
 import {computedFrom} from "aurelia-binding";
-import {deepCopy} from "common/utils/object-utils";
 import {ResourceKindRepository} from "../resource-kind/resource-kind-repository";
 
 @autoinject
 export class MetadataForm {
-  @bindable submit: (value: {savedMetadata: Metadata}) => Promise<any>;
+  @bindable submit: (value: {editedMetadata: Metadata}) => Promise<any>;
   @bindable cancel: () => any = () => undefined;
-  @bindable edit: Metadata;
+  @bindable template: Metadata;
+  @bindable edit: boolean = false;
+  @bindable cancelButton: boolean = false;
 
   metadata: Metadata = new Metadata;
   submitting: boolean = false;
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory, resourceKindRepository: ResourceKindRepository) {
+  constructor(validationControllerFactory: ValidationControllerFactory, private resourceKindRepository: ResourceKindRepository) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
-    this.metadata.constraints.fetchResourceKindEntities(resourceKindRepository);
   }
 
   @computedFrom('metadata.id')
-  get editing(): boolean {
-    return !!this.metadata.id;
+  get fromTemplate(): boolean {
+    return this.template != undefined;
   }
 
-  editChanged(newValue: Metadata) {
-    this.metadata = $.extend(new Metadata(), deepCopy(newValue));
+  templateChanged() {
+    this.resetValues();
+  }
+
+  private resetValues() {
+    this.metadata = this.template ? Metadata.clone(this.template) : new Metadata();
+    this.metadata.constraints.fetchResourceKindEntities(this.resourceKindRepository);
   }
 
   validateAndSubmit() {
     this.submitting = true;
     this.controller.validate().then(result => {
       if (result.valid) {
-        return Promise.resolve(this.submit({savedMetadata: this.metadata}))
-          .then(() => this.editing || (this.metadata = new Metadata));
+        return Promise.resolve(this.submit({editedMetadata: this.metadata}))
+          .then(() => this.resetValues());
       }
     }).finally(() => this.submitting = false);
   }

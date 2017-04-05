@@ -1,8 +1,7 @@
 <template>
     <require from="../../add-form/animated-plus-button"></require>
     <require from="./metadata-children-list"></require>
-    <require from="./metadata-child-select"></require>
-    <require from="../metadata-form"></require>
+    <require from="./metadata-child-add"></require>
 
     <div class="au-animate fade-inup-outup"
         if.bind="metadata">
@@ -33,46 +32,17 @@
             </dl>
         </div>
 
-        <animated-plus-button class="pull-right"
-            opened.bind="addFormOpened"></animated-plus-button>
-
         <h1>${'Submetadata kinds' | t}:</h1>
 
-        <div if.bind="addFormOpened"
-            class="well fade-inout-updown au-animate floating-form-full-width">
-
-            <!-- Nav tabs -->
-            <ul class="nav nav-pills">
-                <li class="active">
-                    <a href="#chooseExisting"
-                        data-toggle="tab">
-                        <span class="fa fa-list fa-fw"></span>
-                        ${'Choose existing' | t}
-                    </a>
-                </li>
-                <li><a href="#addNew"
-                    data-toggle="tab">
-                    <span class="fa fa-plus fa-fw"></span>${'Add new' | t}</a>
-                </li>
-            </ul>
-
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div class="tab-pane fade active in"
-                    id="chooseExisting">
-                    <h2>${'Choose existing submetadata kind' | t}</h2>
-                    <metadata-child-select metadata-children-list.bind="metadataChildrenList"
-                        submit.call="addChildMetadata(metadata.id, baseMetadata.id)"></metadata-child-select>
-                </div>
-                <div class="tab-pane fade"
-                    id="addNew">
-                    <h2>${'Add new submetadata kind' | t}</h2>
-                    <metadata-form submit.call="createChildMetadata(metadata.id, savedMetadata)"></metadata-form>
-                </div>
-            </div>
+        <div>
+            <animated-plus-button class="pull-right"
+                opened.bind="addFormOpened"></animated-plus-button>
+            <metadata-child-add if.bind="addFormOpened"
+                parent-metadata.bind="metadata"
+                saved.call="childMetadataSaved(savedMetadata)"></metadata-child-add>
         </div>
 
-        <div show.bind="!metadataChildrenList || metadataChildrenList.length > 0">
+        <div>
             <div class="au-animate fade-inup-outup page-preloader"
                 if.bind="!metadata">
                 <div class="progress progress-striped active">
@@ -84,12 +54,6 @@
                 <metadata-children-list metadata.bind="metadata"
                     metadata-children-list.bind="metadataChildrenList"></metadata-children-list>
             </div>
-        </div>
-
-        <div class="alert alert-info"
-            if.bind="metadataChildrenList.length === 0">
-            <span class="fa fa-info-circle fa-fw"></span>
-            ${'No submetadata kinds.' | t}
         </div>
     </div>
 </template>

@@ -24,7 +24,8 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
             'label' => ['PL' => 'Test'],
             'placeholder' => [],
             'description' => [],
-            'control' => 'textarea'
+            'control' => 'textarea',
+            'constraints' => []
         ];
     }
 
@@ -37,7 +38,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('textarea', $metadata->getControl());
     }
 
-    public function testCreatingChildMetadata() {
+    public function testCreatingChildMetadataWithParent() {
         $parent = $this->createMock(Metadata::class);
         $parent->expects($this->atLeastOnce())->method('getId')->willReturn(1);
         $created = $this->factory->createWithParent($this->newChildMetadata, $parent);
@@ -47,6 +48,20 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($created->getPlaceholder());
         $this->assertEmpty($created->getDescription());
         $this->assertEquals('textarea', $created->getControl());
+    }
+
+    public function testCreatingChildMetadataWithBaseAndParent() {
+        $parent = $this->createMock(Metadata::class);
+        $parent->expects($this->atLeastOnce())->method('getId')->willReturn(1);
+        $base = $this->createMock(Metadata::class);
+        $base->expects($this->atLeastOnce())->method('getId')->willReturn(2);
+        $created = $this->factory->createWithBaseAndParent($base, $parent, $this->newChildMetadata);
+        $this->assertEquals(1, $created->getParentId());
+        $this->assertEquals(2, $created->getBaseId());
+        $this->assertEquals('Test', $created->getLabel()['PL']);
+        $this->assertEmpty($created->getPlaceholder());
+        $this->assertEmpty($created->getDescription());
+        $this->assertEquals([], $created->getConstraints());
     }
 
     public function testCreatingForResourceKind() {

@@ -1,10 +1,10 @@
-import {MultilingualTextType} from "resources-config/metadata/metadata";
+import {MultilingualText} from "resources-config/metadata/metadata";
 import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 
 export class UserRole {
   id: string;
-  name: MultilingualTextType = {};
+  name: MultilingualText = {};
   systemRoleName: string;
 
   get systemRoleIdentifier(): string {

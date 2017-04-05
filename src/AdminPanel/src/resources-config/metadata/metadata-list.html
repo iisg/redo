@@ -8,7 +8,7 @@
     <div if.bind="addFormOpened"
         class="well fade-inout-updown au-animate floating-form-full-width">
         <h2>${'Add new metadata kind' | t}</h2>
-        <metadata-form submit.call="addNewMetadata(savedMetadata)"></metadata-form>
+        <metadata-form submit.call="addNewMetadata(editedMetadata)"></metadata-form>
     </div>
 
     <div class="row">
@@ -76,8 +76,10 @@
                         if.bind="metadata['editing']">
                         <div if.bind="metadata['editing']"
                             class="au-animate anim-height-inout-600">
-                            <metadata-form submit.call="saveEditedMetadata(metadata, savedMetadata) && (metadata.editing = false)"
-                                edit.bind="metadata"
+                            <metadata-form submit.call="saveEditedMetadata(metadata, editedMetadata) && (metadata.editing = false)"
+                                template.bind="metadata"
+                                edit-existing="true"
+                                cancel-button="true"
                                 cancel.call="metadata.editing = false"></metadata-form>
                         </div>
                     </td>

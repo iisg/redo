@@ -4,16 +4,14 @@ import {I18N} from "aurelia-i18n";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {Metadata} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
-import {bindable} from "aurelia-templating";
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
   metadataChildrenList: Metadata[];
-  addFormOpened: boolean = false;
-  @bindable
   metadata: Metadata;
+  addFormOpened: boolean = false;
   editing = false;
-  private urlListener: Subscription;
+  urlListener: Subscription;
 
   constructor(private metadataRepository: MetadataRepository, private i18n: I18N, private router: Router, private ea: EventAggregator) {
   }
@@ -35,19 +33,8 @@ export class MetadataDetails implements RoutableComponentActivate {
     });
   }
 
-  createChildMetadata(parentId: number, newChildMetadata: Metadata): Promise<Metadata> {
-    return this.metadataRepository.saveChild(parentId, newChildMetadata).then(metadata => {
-      this.addFormOpened = false;
-      this.metadataChildrenList.unshift(metadata);
-      return metadata;
-    });
-  }
-
-  addChildMetadata(parentId: number, baseId: number): Promise<Metadata> {
-    return this.metadataRepository.saveChild(parentId, undefined, baseId).then(metadata => {
-      this.addFormOpened = false;
-      this.metadataChildrenList.unshift(metadata);
-      return metadata;
-    });
+  childMetadataSaved(savedMetadata: Metadata) {
+    this.metadataChildrenList.unshift(savedMetadata);
+    this.addFormOpened = false;
   }
 }

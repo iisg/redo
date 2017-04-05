@@ -1,6 +1,6 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
-import {MultilingualTextType} from "../metadata/metadata";
+import {MultilingualText} from "../metadata/metadata";
 import {supportedUILanguages} from "locales/language-constants";
 
 @autoinject
@@ -10,7 +10,7 @@ export class InCurrentLanguageValueConverter implements ToViewValueConverter {
   constructor(private i18n: I18N) {
   }
 
-  toView(value: MultilingualTextType): string {
+  toView(value: MultilingualText): string {
     this.buildDesiredLanguagesOrder();
     if (value) {
       for (let desiredLanguage of this.desiredLanguagesOrder) {
