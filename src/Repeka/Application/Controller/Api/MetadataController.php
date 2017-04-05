@@ -63,7 +63,7 @@ class MetadataController extends ApiController {
         $baseMetadata = isset($data['baseId']) ? $this->get('repository.metadata')->findOne($data['baseId']) : null;
         $newChildMetadata = $data['newChildMetadata'] ?? [];
         if ($baseMetadata) {
-            $command = new MetadataChildWithBaseCreateCommand($parent, $baseMetadata);
+            $command = new MetadataChildWithBaseCreateCommand($parent, $baseMetadata, $newChildMetadata);
         } else {
             $command = new MetadataChildCreateCommand($parent, $newChildMetadata);
         }

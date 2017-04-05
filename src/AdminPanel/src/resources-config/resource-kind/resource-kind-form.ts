@@ -68,21 +68,10 @@ export class ResourceKindForm implements ComponentDetached {
       this.resourceKind.metadataList.forEach(metadata => {
         this.metadataRepository.getBase(metadata).then(baseMetadata => {
           this.baseMetadataMap.set(metadata, baseMetadata);
-          this.clearInheritedValues(metadata);
+          metadata.clearInheritedValues(this.metadataRepository).then(() => this.signaler.signal('base-metadata-fetched'));
         });
       });
     }
-  }
-
-  private clearInheritedValues(metadata: Metadata) {
-    for (let overridableField of ['label', 'placeholder', 'description']) {
-      for (let languageCode in metadata[overridableField]) {
-        if (metadata[overridableField][languageCode] == this.base(metadata)[overridableField][languageCode]) {
-          metadata[overridableField][languageCode] = '';
-        }
-      }
-    }
-    this.signaler.signal('base-metadata-fetched');
   }
 
   detached() {

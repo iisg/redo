@@ -9,10 +9,12 @@ class MetadataChildWithBaseCreateCommand extends NonValidatedCommand {
     private $base;
     /** @var Metadata */
     private $parent;
+    private $newChildMetadata;
 
-    public function __construct(Metadata $parent, Metadata $base) {
+    public function __construct(Metadata $parent, Metadata $base, array $newChildMetadata) {
         $this->base = $base;
         $this->parent = $parent;
+        $this->newChildMetadata = $newChildMetadata;
     }
 
     /**
@@ -27,5 +29,9 @@ class MetadataChildWithBaseCreateCommand extends NonValidatedCommand {
      */
     public function getParent(): Metadata {
         return $this->parent;
+    }
+
+    public function getNewChildMetadata(): array {
+        return $this->newChildMetadata;
     }
 }

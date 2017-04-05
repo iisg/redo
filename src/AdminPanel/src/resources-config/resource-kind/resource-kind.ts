@@ -1,4 +1,4 @@
-import {Metadata, MultilingualTextType} from "../metadata/metadata";
+import {Metadata, MultilingualText} from "../metadata/metadata";
 import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Workflow} from "workflows/workflow";
@@ -11,7 +11,7 @@ export class ResourceKind {
   }
 
   id: number;
-  label: MultilingualTextType = {};
+  label: MultilingualText = {};
   metadataList: Metadata[] = [];
   workflowId: number;
 

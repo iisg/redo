@@ -24,6 +24,17 @@ class MetadataFactory {
         return $metadata;
     }
 
+    public function createWithBaseAndParent(Metadata $base, Metadata $parent, array $newChildMetadata) {
+        $metadata = Metadata::createChild($base, $parent);
+        $metadata->update(
+            $newChildMetadata['label'],
+            $newChildMetadata['placeholder'],
+            $newChildMetadata['description'],
+            $newChildMetadata['constraints']
+        );
+        return $metadata;
+    }
+
     public function createForResourceKind(ResourceKind $resourceKind, Metadata $base, Metadata $metadata) {
         Assertion::true($base->isBase(), "Given metadata (ID: {$base->getId()}) cannot be used as base.");
         $constraints = $this->removeUnmodifiedConstraints($metadata->getConstraints(), $base->getConstraints());

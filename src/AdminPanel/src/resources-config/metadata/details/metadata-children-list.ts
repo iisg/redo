@@ -8,9 +8,7 @@ import {bindingMode} from "aurelia-binding";
 @autoinject
 export class MetadataChildrenList implements ComponentAttached {
   @bindable metadata: Metadata;
-  @bindable(({defaultBindingMode: bindingMode.twoWay}))
-  metadataChildrenList: Metadata[];
-  addFormOpened: boolean = false;
+  @bindable({defaultBindingMode: bindingMode.twoWay}) metadataChildrenList: Metadata[];
 
   constructor(private metadataRepository: MetadataRepository) {
   }

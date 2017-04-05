@@ -5,19 +5,19 @@
     <form submit.delegate="validateAndSubmit()">
         <div class="row">
             <div class="col-sm-6">
-                <div class="form-group ${editing ? 'no-margin-top' : ''}">
+                <div class="form-group ${fromTemplate ? 'no-margin-top' : ''}">
                     <label for="metadataName">${'Name' | t}</label>
                     <input type="text"
-                        disabled.bind="editing"
+                        disabled.bind="fromTemplate"
                         value.bind="metadata.name & validate"
                         class="form-control"
                         id="metadataName">
                 </div>
             </div>
             <div class="col-sm-4 col-sm-offset-2">
-                <div class="form-group ${editing ? 'no-margin-top' : ''}">
+                <div class="form-group ${fromTemplate ? 'no-margin-top' : ''}">
                     <metadata-control-select value.bind="metadata.control & validate"
-                        disabled.bind="editing"></metadata-control-select>
+                        disabled.bind="fromTemplate"></metadata-control-select>
                 </div>
             </div>
         </div>
@@ -33,15 +33,15 @@
                 <button type="button"
                     class="btn btn-warning"
                     click.delegate="cancel()"
-                    if.bind="editing"
+                    if.bind="cancelButton"
                     disabled.bind="submitting">
                     <span class="fa fa-fw fa-times"></span>
                     ${'Cancel' | t}
                 </button>
                 <button class="btn btn-primary"
                     disabled.bind="submitting">
-                    <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : (editing ? 'fa-save' : 'fa-plus')}"></span>
-                    ${editing ? 'Save' : 'Add' | t}
+                    <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : (edit ? 'fa-save' : 'fa-plus')}"></span>
+                    ${edit ? 'Save' : 'Add' | t}
                 </button>
             </div>
         </div>

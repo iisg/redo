@@ -12,6 +12,14 @@
         </tr>
         </thead>
         <tfoot>
+        <tr if.bind="metadataChildrenList.length === 0">
+            <th colspan="7">
+                <div class="alert alert-info">
+                    <span class="fa fa-info-circle fa-fw"></span>
+                    ${'No submetadata kinds.' | t}
+                </div>
+            </th>
+        </tr>
         <tr if.bind="!metadataChildrenList">
             <th colspan="7">
                 <div class="progress progress-striped active">
