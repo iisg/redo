@@ -25,6 +25,7 @@ class ResourceKindsFixture extends RepekaFixture {
                 ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_HARD_COVER)->getId()],
                 ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId()],
                 ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId()],
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE)->getId()],
             ],
             $workflow
         ), self::REFERENCE_RESOURCE_KIND_BOOK);

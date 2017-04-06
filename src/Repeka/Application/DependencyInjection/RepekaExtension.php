@@ -21,6 +21,7 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('elasticsearch.host', $mergedConfig['elasticsearch']['host']);
         $container->setParameter('elasticsearch.port', $mergedConfig['elasticsearch']['port']);
         $container->setParameter('elasticsearch.proxy', $mergedConfig['elasticsearch']['proxy']);
+        $container->setParameter('repeka.upload_dir', $mergedConfig['upload_dir']);
     }
 
     private function loadYmlConfigFile(string $name, ContainerBuilder $container) {

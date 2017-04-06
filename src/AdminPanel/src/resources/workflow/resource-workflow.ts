@@ -23,6 +23,7 @@ export class ResourceWorkflow {
   }
 
   resourceChanged() {
-    this.resource.kind.getWorkflow().then(workflow => this.workflow = workflow);
+    this.fetchingTransitions = true;
+    this.resource.kind.getWorkflow().then(workflow => this.workflow = workflow).finally(() => this.fetchingTransitions = false);
   }
 }

@@ -1,3 +1,4 @@
 {
-  "Internal server error, please try again later": "Błąd wewnętrzny serwera, proszę spróbować później"
+  "Internal server error, please try again later": "Błąd wewnętrzny serwera, proszę spróbować później",
+  "Could not save the resource. Please try again later.": "Błąd podczas zapisu zasobu. Proszę spróbować później"
 }

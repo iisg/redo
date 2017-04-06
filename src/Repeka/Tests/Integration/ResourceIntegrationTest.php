@@ -60,7 +60,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [
             'kind_id' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => 'created']
+            'contents' => json_encode([$this->metadata->getBaseId() => 'created'])
         ]);
         $this->assertStatusCode(201, $client->getResponse());
         $repository = self::createClient()->getContainer()->get('repository.resource');
@@ -72,10 +72,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResource() {
         $client = self::createAdminClient();
-        $client->apiRequest('PUT', self::joinUrl(self::ENDPOINT, $this->resource->getId()), [
+        $client->apiRequest('POST', self::joinUrl(self::ENDPOINT, $this->resource->getId()), [
             'id' => $this->resource->getId(),
             'kind_id' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => 'edited']
+            'contents' => json_encode([$this->metadata->getBaseId() => 'edited'])
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get('repository.resource');
@@ -90,9 +90,9 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $newResourceKind->getMetadataList()[0]->updateOrdinalNumber(0);
         $this->persistAndFlush($newResourceKind->getMetadataList()[0]);
         $client = self::createAdminClient();
-        $client->apiRequest('PUT', self::joinUrl(self::ENDPOINT, $this->resource->getId()), [
+        $client->apiRequest('POST', self::joinUrl(self::ENDPOINT, $this->resource->getId()), [
             'kind_id' => $newResourceKind->getId(),
-            'contents' => $this->resource->getContents()
+            'contents' => json_encode($this->resource->getContents())
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get('repository.resource');
