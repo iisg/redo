@@ -40,7 +40,9 @@ export class ResourceDetails implements RoutableComponentActivate {
   saveEditedResource(updatedResource: Resource): Promise<Resource> {
     const originalResource = deepCopy(this.resource);
     $.extend(this.resource, updatedResource);
-    this.toggleEditForm();
-    return this.resourceRepository.update(updatedResource).catch(() => $.extend(this.resource, originalResource));
+    return this.resourceRepository.update(updatedResource).then(resourceData => {
+      this.toggleEditForm();
+      return this.resource = resourceData;
+    }) .catch(() => $.extend(this.resource, originalResource));
   }
 }

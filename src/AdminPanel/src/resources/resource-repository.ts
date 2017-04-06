@@ -10,12 +10,46 @@ export class ResourceRepository extends ApiRepository<Resource> {
     super(httpClient, 'resources');
   }
 
-  protected toBackend(entity: Resource): Object {
-    return {
-      id: entity.id,
-      kind_id: entity.kind.id,
-      contents: entity.contents,
-    };
+  public put(resource: Resource) {
+    return this.httpClient.post(this.oneEntityEndpoint(resource), this.toBackend(resource))
+      .then(response => this.toEntity(response.content));
+  }
+
+  protected toBackend(resource: Resource): Object {
+    return this.prepareFormData(resource);
+
+  }
+
+  private prepareFormData(resource: Resource): FormData {
+    let formData = new FormData();
+    let resourceCopy = new Resource();
+
+    for (let metadataId in resource.contents) {
+      if (resource.contents[metadataId] instanceof File) {
+        resourceCopy.contents[metadataId] = this.wrapFileWithFormData(formData, resource, metadataId);
+      } else
+        resourceCopy.contents[metadataId] = resource.contents[metadataId];
+    }
+    formData.append('id', resource.id);
+    formData.append('kind_id', resource.kind.id);
+    formData.append('contents', JSON.stringify(resourceCopy.contents));
+    return formData;
+  }
+
+  private wrapFileWithFormData(formData: FormData, resource: Resource, metadataId: any): string {
+    let file = resource.contents[metadataId];
+    let fileName = resource.contents[metadataId].name;
+    let resourceName;
+
+    for (let metadata of resource.kind.metadataList) {
+      if (metadata.baseId == metadataId) {
+        resourceName = metadata.id;
+        break;
+      }
+    }
+    formData.append(resourceName, file, fileName);
+
+    return resourceName.toString();
   }
 
   public toEntity(data: Object): Promise<Resource> {

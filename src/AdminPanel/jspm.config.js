@@ -262,8 +262,7 @@ System.config({
     },
     "npm:buffer@5.0.6": {
       "base64-js": "npm:base64-js@1.2.0",
-      "ieee754": "npm:ieee754@1.1.8",
-      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+      "ieee754": "npm:ieee754@1.1.8"
     },
     "npm:cytoscape-autopan-on-drag@2.0.1": {
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
@@ -303,10 +302,6 @@ System.config({
     "npm:cytoscape@3.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:es6-promise@4.0.5": {
-      "process": "github:jspm/nodelibs-process@0.1.2",
-      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
-    },
     "npm:font-awesome@4.6.3": {
       "css": "github:systemjs/plugin-css@0.1.33"
     },
@@ -324,9 +319,6 @@ System.config({
     },
     "npm:lodash.throttle@4.1.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:isarray@1.0.0": {
-      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:oribella-aurelia-sortable@0.11.3": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.1",
@@ -354,9 +346,6 @@ System.config({
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
-    },
-    "npm:sweetalert2@6.4.2": {
-      "es6-promise": "npm:es6-promise@4.0.5"
     },
     "npm:util@0.10.3": {
       "inherits": "npm:inherits@2.0.1",

@@ -4,5 +4,6 @@
   "integer": "Liczba całkowita",
   "date": "Data",
   "boolean": "Tak / Nie",
-  "relationship": "Relacja"
+  "relationship": "Relacja",
+  "file": "Plik"
 }

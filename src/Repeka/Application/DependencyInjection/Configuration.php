@@ -29,6 +29,13 @@ class Configuration implements ConfigurationInterface {
                         ->scalarNode('proxy')->defaultValue('')->end()
                     ->end()
                 ->end()
+                ->scalarNode('upload_dir')
+                    ->validate()
+                    ->ifTrue(function ($path) {
+                        return preg_match('#/$#', $path);
+                    })
+                    ->thenInvalid('Upload path should not contain slash at the end.')
+                ->end()
             ->end();
         // @formatter:on
         return $treeBuilder;

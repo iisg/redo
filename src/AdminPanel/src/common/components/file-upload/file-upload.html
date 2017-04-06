@@ -1,0 +1,19 @@
+<template>
+    <require from="./size-format"></require>
+    <require from="./blob-to-url"></require>
+
+    <input type="text"
+        readonly=""
+        class="form-control"
+        placeholder="${ 'Select file' | t }">
+    <input type="file"
+        name="usersFile"
+        files.bind="files"
+        change.delegate="addFiles(files)">
+
+    <div class="files-list" if.bind="value">
+        ${value.size | sizeFormat:2}
+        <img if.bind="isImage"
+            src.bind="value | blobToUrl"><img>
+    </div>
+</template>

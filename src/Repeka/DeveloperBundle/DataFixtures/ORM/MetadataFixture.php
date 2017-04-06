@@ -15,6 +15,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_HARD_COVER = 'metadata-hard-cover';
     const REFERENCE_METADATA_NO_OF_PAGES = 'metadata-no-of-pages';
     const REFERENCE_METADATA_SEE_ALSO = 'metadata-see-also';
+    const REFERENCE_METADATA_FILE = 'metadata-file';
 
     /**
      * @inheritdoc
@@ -90,6 +91,16 @@ class MetadataFixture extends RepekaFixture {
             'placeholder' => [],
             'control' => 'relationship',
         ]), self::REFERENCE_METADATA_SEE_ALSO);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Okładka',
+            'label' => [
+                'PL' => 'Okładka',
+                'EN' => 'Cover'
+            ],
+            'description' => [],
+            'placeholder' => [],
+            'control' => 'file',
+        ]), self::REFERENCE_METADATA_FILE);
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
             return $metadata->getId();
         }, $addedMetadata)));

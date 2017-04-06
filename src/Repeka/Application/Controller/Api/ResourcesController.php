@@ -53,8 +53,10 @@ class ResourcesController extends ApiController {
 
     /**
      * @Route("/{resource}")
-     * @Method("PUT")
+     * @Method("POST")
      * @ParamConverter("resourceContents", converter="repeka.converter.resource_contents_param")
+     * POST instead of PUT, caused by multipart data
+     * @see http://stackoverflow.com/questions/24385301/symfony-rest-file-upload-over-put-method
      */
     public function putAction(ResourceEntity $resource, array $resourceContents) {
         $command = new ResourceUpdateContentsCommand($resource, $resourceContents);

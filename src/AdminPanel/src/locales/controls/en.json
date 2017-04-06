@@ -6,5 +6,6 @@
   "date": "Date",
   "daterange": "Date range",
   "boolean": "Yes / No",
-  "relationship": "Relationship"
+  "relationship": "Relationship",
+  "file": "File"
 }
