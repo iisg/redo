@@ -1,12 +1,11 @@
 <template>
     <require from="common/components/bootstrap-select/bootstrap-select"></require>
-    <require from="resources-config/multilingual-field/multilingual-display"></require>
     <bootstrap-select values.bind="resourceKinds"
         value.bind="value"
         live-search="true"
         title="&mdash;">
         <template replace-part="option-template">
-            <multilingual-display value.one-time="option.label"></multilingual-display>
+            ${option.label | inCurrentLanguage}
             ${'No. of metadata kinds:' | t} ${option.metadataList.length}
         </template>
     </bootstrap-select>

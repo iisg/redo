@@ -1,6 +1,4 @@
 <template>
-    <require from="../../multilingual-field/multilingual-display"></require>
-
     <table class="table table-striped">
         <thead>
         <tr>
@@ -29,14 +27,14 @@
             <td>${metadataChild.id}</td>
             <td>${metadataChild.name}</td>
             <td if.bind="!metadataChild['editing']">
-                <multilingual-display value.one-time="metadataChild.label"></multilingual-display>
+                ${metadataChild.label | inCurrentLanguage}
             </td>
             <td>${'controls::' + metadataChild.control | t}</td>
             <td>
-                <multilingual-display value.one-time="metadataChild.placeholder"></multilingual-display>
+                ${metadataChild.placeholder | inCurrentLanguage}
             </td>
             <td>
-                <multilingual-display value.one-time="metadataChild.description"></multilingual-display>
+                ${metadataChild.description | inCurrentLanguage}
             </td>
             <td class="text-right">
                 <div class="btn-group">

@@ -1,6 +1,5 @@
 <template>
     <require from="./metadata-form"></require>
-    <require from="../multilingual-field/multilingual-display"></require>
     <require from="../add-form/animated-plus-button"></require>
 
     <animated-plus-button class="pull-right"
@@ -44,14 +43,14 @@
                     <td>${metadata.id}</td>
                     <td if.bind="!metadata['editing']">${metadata.name}</td>
                     <td if.bind="!metadata['editing']">
-                        <multilingual-display value.one-time="metadata.label"></multilingual-display>
+                        ${metadata.label | inCurrentLanguage}
                     </td>
                     <td if.bind="!metadata['editing']">${'controls::' + metadata.control | t}</td>
                     <td if.bind="!metadata['editing']">
-                        <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
+                        ${metadata.placeholder | inCurrentLanguage}
                     </td>
                     <td if.bind="!metadata['editing']">
-                        <multilingual-display value.one-time="metadata.description"></multilingual-display>
+                        ${metadata.description | inCurrentLanguage}
                     </td>
                     <td class="text-right"
                         if.bind="!metadata['editing']">

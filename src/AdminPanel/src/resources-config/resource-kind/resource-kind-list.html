@@ -1,7 +1,6 @@
 <template>
     <require from="./resource-kind-form"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
-    <require from="resources-config/multilingual-field/multilingual-display"></require>
     <require from="workflows/icon/workflow-icon.html"></require>
 
         <animated-plus-button class="pull-right"
@@ -39,14 +38,14 @@
                     class="au-animate fade-inup-outdown ${resourceKind.editing ? 'table-row-edit-form' : ''}">
                     <td>${resourceKind.id}</td>
                     <td if.bind="!resourceKind['editing']">
-                        <multilingual-display value.one-time="resourceKind.label"></multilingual-display>
+                        ${resourceKind.label | inCurrentLanguage}
                     </td>
                     <td if.bind="!resourceKind['editing']">
                         <dl class="dl-horizontal">
                             <template repeat.for="metadata of resourceKind.metadataList & oneTime">
                                 <dt>${metadata.name}</dt>
                                 <dd>
-                                    <multilingual-display value.one-time="metadata.label"></multilingual-display>
+                                    ${metadata.label | inCurrentLanguage}
                                 </dd>
                             </template>
                         </dl>

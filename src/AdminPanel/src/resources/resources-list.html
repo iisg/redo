@@ -1,7 +1,6 @@
 <template>
     <require from="./add/resource-form"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
-    <require from="resources-config/multilingual-field/multilingual-display"></require>
     <require from="./workflow/resource-place-display.html"></require>
 
     <animated-plus-button class="pull-right"
@@ -41,7 +40,7 @@
                     class="au-animate fade-inup-outdown">
                     <td>${resource.id & oneTime}</td>
                     <td>
-                        <multilingual-display value.one-time="resource.kind.label"></multilingual-display>
+                        ${resource.kind.label | inCurrentLanguage}
                     </td>
                     <td>
                         <dl class="dl-horizontal">
