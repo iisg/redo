@@ -1,5 +1,4 @@
 <template>
-    <require from="../../multilingual-field/multilingual-display"></require>
     <require from="../../add-form/animated-plus-button"></require>
     <require from="./metadata-children-list"></require>
     <require from="./metadata-child-select"></require>
@@ -19,17 +18,17 @@
 
                 <dt>${'Label' | t}</dt>
                 <dd>
-                    <multilingual-display value.one-time="metadata.label"></multilingual-display>
+                    ${metadata.label | inCurrentLanguage}
                 </dd>
                 <dt>${'Control' | t}</dt>
                 <dd>${'controls::' + metadata.control | t}</dd>
                 <dt>${'Hint' | t}</dt>
                 <dd>
-                    <multilingual-display value.one-time="metadata.placeholder"></multilingual-display>
+                    ${metadata.placeholder | inCurrentLanguage}
                 </dd>
                 <dt>${'Description' | t}</dt>
                 <dd>
-                    <multilingual-display value.one-time="metadata.description"></multilingual-display>
+                    ${metadata.description | inCurrentLanguage}
                 </dd>
             </dl>
         </div>
