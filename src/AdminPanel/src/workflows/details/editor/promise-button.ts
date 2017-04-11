@@ -5,6 +5,7 @@ import {computedFrom} from "aurelia-binding";
 // https://gist.github.com/fracz/1536a2db1a2eb10ae7b8e41692a0a3ed
 export class PromiseButton {
   @bindable onClick: () => any;
+  @bindable onReset: () => any;
 
   @bindable idleIcon = 'fa-save';
   @bindable waitingIcon = 'fa-spinner fa-spin';
@@ -35,7 +36,14 @@ export class PromiseButton {
   }
 
   private resetStateAfterTimeout() {
-    setTimeout(() => this.state = 'idle', this.resetTime);
+    setTimeout(() => this.reset(), this.resetTime);
+  }
+
+  private reset() {
+    this.state = 'idle';
+    if (this.onReset) {
+      this.onReset();
+    }
   }
 
   @computedFrom('state')

@@ -51,4 +51,9 @@ class ResourceEntity {
         Assertion::true($this->hasWorkflow(), 'Could not apply transition for resource without a workflow. ID: ' . $this->id);
         return $this->getWorkflow()->apply($this, $transitionId);
     }
+
+    public function canApplyTransition(User $executor, string $transitionId):bool {
+        $transition = $this->getWorkflow()->getTransition($transitionId);
+        return $transition->canApply($executor);
+    }
 }

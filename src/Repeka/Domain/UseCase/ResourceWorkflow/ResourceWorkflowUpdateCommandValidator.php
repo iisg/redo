@@ -38,6 +38,7 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
                 Validator::key('label', Validator::arrayType()),
                 Validator::key('froms', Validator::arrayType()),
                 Validator::key('tos', Validator::arrayType()),
+                Validator::key('permittedRoleIds', Validator::arrayType(), false),
                 Validator::key('id', Validator::stringType(), false)
             )
         ));

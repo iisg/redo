@@ -6,6 +6,8 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\User;
+use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
 use Repeka\Domain\Factory\ResourceWorkflowStrategy;
 
 class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
@@ -93,9 +95,9 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingTransitionsForResource() {
         $this->workflow->update([], [
-            new ResourceWorkflowTransition([], [], [], 'onetransition'),
-            new ResourceWorkflowTransition([], [], [], 'twotransition'),
-            new ResourceWorkflowTransition([], [], [], 'anothertransition'),
+            new ResourceWorkflowTransition([], [], [], [], 'onetransition'),
+            new ResourceWorkflowTransition([], [], [], [], 'twotransition'),
+            new ResourceWorkflowTransition([], [], [], [], 'anothertransition'),
         ]);
         $this->workflow->setWorkflowStrategy($this->workflowStrategy);
         $this->workflowStrategy->expects($this->once())->method('getTransitions')->with($this->resource)
@@ -119,5 +121,37 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
         $this->assertCount(2, $currentPlaces);
         $this->assertEquals('first', $currentPlaces[0]->getId());
         $this->assertEquals('third', $currentPlaces[1]->getId());
+    }
+
+    public function testGettingPermittedTransitions() {
+        $this->workflow->update([], [
+            new ResourceWorkflowTransition([], [], [], ['A'], 'first'),
+            new ResourceWorkflowTransition([], [], [], ['B'], 'second'),
+        ]);
+        $this->workflow->setWorkflowStrategy($this->workflowStrategy);
+        $this->workflowStrategy->expects($this->once())->method('getTransitions')->with($this->resource)
+            ->willReturn(['first', 'second']);
+        $user = $this->createMock(User::class);
+        $user->method('hasRole')->willReturnCallback(function ($role) {
+            return $role == 'A';
+        });
+        $permittedTransitions = $this->workflow->getPermittedTransitions($this->resource, $user);
+        $this->assertCount(1, $permittedTransitions);
+        $this->assertEquals('first', $permittedTransitions[0]->getId());
+    }
+
+    public function testGettingTransitionById() {
+        $this->workflow->update([], [
+            new ResourceWorkflowTransition([], [], [], ['A'], 'first'),
+            new ResourceWorkflowTransition([], [], [], ['B'], 'second'),
+        ]);
+        $transition = $this->workflow->getTransition('first');
+        $this->assertNotNull($transition);
+        $this->assertEquals('first', $transition->getId());
+    }
+
+    public function testGettingNotExistentTransition() {
+        $this->expectException(NoSuchTransitionException::class);
+        $this->workflow->getTransition('a');
     }
 }

@@ -5,6 +5,8 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\User;
 
 class ResourceEntityTest extends \PHPUnit_Framework_TestCase {
     /** @var ResourceKind|PHPUnit_Framework_MockObject_MockObject */
@@ -57,5 +59,15 @@ class ResourceEntityTest extends \PHPUnit_Framework_TestCase {
         $this->resourceKind->expects($this->any())->method('getWorkflow')->willReturn($workflow);
         $workflow->expects($this->once())->method('apply')->with($resource, 't1')->willReturn($resource);
         $resource->applyTransition('t1');
+    }
+
+    public function testCanApplyTransition() {
+        $resource = new ResourceEntity($this->resourceKind, []);
+        $workflow = $this->createMock(ResourceWorkflow::class);
+        $this->resourceKind->expects($this->any())->method('getWorkflow')->willReturn($workflow);
+        $transition = $this->createMock(ResourceWorkflowTransition::class);
+        $transition->method('canApply')->willReturn(true);
+        $workflow->expects($this->once())->method('getTransition')->with('AB')->willReturn($transition);
+        $resource->canApplyTransition($this->createMock(User::class), 'AB');
     }
 }

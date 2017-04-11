@@ -22,6 +22,7 @@ export interface WorkflowTransition {
   label: MultilingualTextType;
   froms: Array<string>;
   tos: Array<string>;
+  permittedRoleIds: Array<string>;
 }
 
 export function registerWorkflowValidationRules() {

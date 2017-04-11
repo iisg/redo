@@ -7,7 +7,17 @@ export class Resource {
   kind: ResourceKind;
   currentPlaces: Array<WorkflowPlace>;
   availableTransitions: Array<WorkflowTransition> = [];
+  permittedTransitions: Array<WorkflowTransition> = [];
   contents: StringAnyMap = {};
+
+  public canApplyTransition(transition: WorkflowTransition) {
+    for (let permittedTransition of this.permittedTransitions) {
+      if (permittedTransition.id == transition.id) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 export function registerResourceValidationRules() {

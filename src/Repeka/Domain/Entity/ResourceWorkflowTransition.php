@@ -8,12 +8,14 @@ class ResourceWorkflowTransition {
     private $label;
     private $fromIds;
     private $toIds;
+    private $permittedRoleIds;
 
-    public function __construct(array $label, array $fromIds, array $toIds, $id = null) {
+    public function __construct(array $label, array $fromIds, array $toIds, array $permittedRoleIds = [], $id = null) {
         $this->label = $label;
         $this->id = $id ?: (new Slugify())->slugify(current($label));
         $this->fromIds = $fromIds;
         $this->toIds = $toIds;
+        $this->permittedRoleIds = $permittedRoleIds;
     }
 
     public function getId(): string {
@@ -24,12 +26,27 @@ class ResourceWorkflowTransition {
         return $this->label;
     }
 
-    public function getFromIds() {
+    /** @return string[] */
+    public function getFromIds(): array {
         return $this->fromIds;
     }
 
-    public function getToIds() {
+    /** @return string[] */
+    public function getToIds(): array {
         return $this->toIds;
+    }
+
+    public function getPermittedRoleIds(): array {
+        return $this->permittedRoleIds;
+    }
+
+    public function canApply(User $user): bool {
+        foreach ($this->getPermittedRoleIds() as $permittedRoleId) {
+            if ($user->hasRole($permittedRoleId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function toArray(): array {
@@ -38,10 +55,11 @@ class ResourceWorkflowTransition {
             'label' => $this->getLabel(),
             'froms' => $this->getFromIds(),
             'tos' => $this->getToIds(),
+            'permittedRoleIds' => $this->getPermittedRoleIds(),
         ];
     }
 
     public static function fromArray(array $data) {
-        return new self($data['label'], $data['froms'], $data['tos'], $data['id'] ?? null);
+        return new self($data['label'], $data['froms'], $data['tos'], $data['permittedRoleIds'] ?? [], $data['id'] ?? null);
     }
 }

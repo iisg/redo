@@ -69,7 +69,7 @@ class ResourcesController extends ApiController {
     public function patchAction(ResourceEntity $resource, Request $request) {
         $data = $request->request->all();
         if (!empty($data['transitionId'])) {
-            $command = new ResourceTransitionCommand($resource, $data['transitionId']);
+            $command = new ResourceTransitionCommand($resource, $data['transitionId'], $this->getUser());
             $resource = $this->handle($command);
             return $this->createJsonResponse($resource);
         }

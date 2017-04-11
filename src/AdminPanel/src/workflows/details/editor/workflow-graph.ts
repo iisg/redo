@@ -126,7 +126,7 @@ export class WorkflowGraph {
         }
         this.cytoscape.add([{
           group: "edges",
-          data: {id: edgeId, label: deepCopy(transition.label), source: from, target: to}
+          data: {id: edgeId, label: deepCopy(transition.label), source: from, target: to, permittedRoleIds: transition.permittedRoleIds}
         }]);
         this.updateElement(this.nodeToPlace(this.cytoscape.$('#' + edgeId)));
       }
@@ -238,6 +238,7 @@ export class WorkflowGraph {
       label: edge.data('label'),
       froms: [edge.source().id()],
       tos: [edge.target().id()],
+      permittedRoleIds: edge.data('permittedRoleIds') || [],
     };
   }
 
@@ -248,7 +249,11 @@ export class WorkflowGraph {
   public updateElement(element: WorkflowPlace|WorkflowTransition) {
     let graphElement = this.$(element);
     graphElement.data('label', element.label);
-    graphElement.data('labelToDisplay', this.inCurrentLanguage.toView(graphElement.data('label')));
+    let labelToDisplay = this.inCurrentLanguage.toView(graphElement.data('label'));
+    if (element['permittedRoleIds']) {
+      graphElement.data('permittedRoleIds', element['permittedRoleIds']);
+    }
+    graphElement.data('labelToDisplay', labelToDisplay);
   }
 
   private toPng() {

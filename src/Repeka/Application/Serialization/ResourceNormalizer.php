@@ -5,6 +5,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
@@ -13,9 +14,12 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
 
     /** @var ResourceWorkflowRepository */
     private $resourceWorkflowRepository;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
-    public function __construct(ResourceWorkflowRepository $resourceWorkflowRepository) {
+    public function __construct(ResourceWorkflowRepository $resourceWorkflowRepository, TokenStorageInterface $tokenStorage) {
         $this->resourceWorkflowRepository = $resourceWorkflowRepository;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -36,6 +40,9 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             $normalized['availableTransitions'] = array_map(function (ResourceWorkflowTransition $transition) {
                 return $this->normalizer->normalize($transition);
             }, $workflow->getTransitions($resource));
+            $normalized['permittedTransitions'] = array_map(function (ResourceWorkflowTransition $transition) {
+                return $this->normalizer->normalize($transition);
+            }, $workflow->getPermittedTransitions($resource, $this->tokenStorage->getToken()->getUser()));
         }
         return $normalized;
     }
