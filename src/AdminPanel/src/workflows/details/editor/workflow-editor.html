@@ -1,5 +1,6 @@
 <template>
     <require from="./workflow-diagram"></require>
+    <require from="users/details/user-roles-chooser"></require>
 
     <div class="btn-group pull-right">
         <promise-button on-click.call="save()">
@@ -36,6 +37,12 @@
                                     class="vertical"
                                     keyup.delegate="saveSelectedElementChanges()"
                                     value.bind="selectedElement.label"></multilingual-editor>
+                            </div>
+                            <div class="form-group"
+                                if.bind="selectedElement.froms">
+                                <label>${ 'Roles allowed to apply transition' | t }</label>
+                                <user-roles-chooser role-ids.bind="selectedElement.permittedRoleIds"
+                                    change.delegate="saveSelectedElementChanges()"></user-roles-chooser>
                             </div>
                         </form>
                     </span>

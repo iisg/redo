@@ -5,6 +5,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandValidator;
@@ -28,7 +29,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->expectException(InvalidCommandException::class);
         $this->expectExceptionMessageRegExp('/blank/');
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
-        $command = new ResourceTransitionCommand($this->resource, '');
+        $command = new ResourceTransitionCommand($this->resource, '', $this->createMock(User::class));
         $this->validator->validate($command);
     }
 
@@ -36,7 +37,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->expectException(InvalidCommandException::class);
         $this->expectExceptionMessageRegExp('/greater than 0/');
         $this->resource->expects($this->once())->method('hasWorkflow')->willReturn(true);
-        $command = new ResourceTransitionCommand($this->resource, 't1');
+        $command = new ResourceTransitionCommand($this->resource, 't1', $this->createMock(User::class));
         $this->validator->validate($command);
     }
 
@@ -45,25 +46,27 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionMessageRegExp('/workflow/');
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
         $this->resource->expects($this->once())->method('hasWorkflow')->willReturn(false);
-        $command = new ResourceTransitionCommand($this->resource, 't1');
+        $command = new ResourceTransitionCommand($this->resource, 't1', $this->createMock(User::class));
         $this->validator->validate($command);
     }
 
-    public function testInvalidWhenUInvalidTransition() {
+    public function testInvalidWhenInvalidTransition() {
         $this->expectException(InvalidCommandException::class);
         $this->expectExceptionMessageRegExp('/transitionId/');
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
         $this->resource->expects($this->once())->method('hasWorkflow')->willReturn(true);
-        $this->workflow->expects($this->once())->method('getTransitions')->willReturn([new ResourceWorkflowTransition([], [], [], 't1')]);
-        $command = new ResourceTransitionCommand($this->resource, 't2');
+        $this->workflow->expects($this->once())->method('getTransitions')
+            ->willReturn([new ResourceWorkflowTransition([], [], [], [], 't1')]);
+        $command = new ResourceTransitionCommand($this->resource, 't2', $this->createMock(User::class));
         $this->validator->validate($command);
     }
 
     public function testValid() {
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
         $this->resource->expects($this->once())->method('hasWorkflow')->willReturn(true);
-        $this->workflow->expects($this->once())->method('getTransitions')->willReturn([new ResourceWorkflowTransition([], [], [], 't1')]);
-        $command = new ResourceTransitionCommand($this->resource, 't1');
+        $this->workflow->expects($this->once())->method('getTransitions')
+            ->willReturn([new ResourceWorkflowTransition([], [], [], [], 't1')]);
+        $command = new ResourceTransitionCommand($this->resource, 't1', $this->createMock(User::class));
         $this->validator->validate($command);
     }
 }

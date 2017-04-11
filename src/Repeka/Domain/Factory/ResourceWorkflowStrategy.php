@@ -10,7 +10,7 @@ interface ResourceWorkflowStrategy {
     /** @return string[] */
     public function getTransitions(ResourceEntity $resource): array;
 
-    public function apply(ResourceEntity $resource, string $transition): ResourceEntity;
+    public function apply(ResourceEntity $resource, string $transitionId): ResourceEntity;
 
     public function setCurrentPlaces(ResourceEntity $resourceEntity, array $places): ResourceEntity;
 }

@@ -2,6 +2,7 @@
 namespace Repeka\Application\Command\Initialization;
 
 use Doctrine\ORM\Id\AssignedGenerator;
+use Doctrine\ORM\Id\UuidGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\Entity\UserRole;
@@ -15,6 +16,7 @@ class SystemUserRolesInitializer implements ApplicationInitializer {
         $defaultLanguage = $container->getParameter('repeka.default_ui_language');
         $this->preventGeneratingUserRoleUids($container);
         $this->addSystemUserRoles($output, $userRolesRepository, $defaultLanguage);
+        $this->restoreUuidGenerator($container);
     }
 
     public function addSystemUserRoles(OutputInterface $output, UserRoleRepository $userRolesRepository, string $defaultLanguage) {
@@ -39,5 +41,11 @@ class SystemUserRolesInitializer implements ApplicationInitializer {
         $metadata = $container->get('doctrine')->getManager()->getClassMetaData(UserRole::class);
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
         $metadata->setIdGenerator(new AssignedGenerator());
+    }
+
+    private function restoreUuidGenerator($container) {
+        $metadata = $container->get('doctrine')->getManager()->getClassMetaData(UserRole::class);
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_UUID);
+        $metadata->setIdGenerator(new UuidGenerator());
     }
 }

@@ -9,9 +9,16 @@ abstract class User {
 
     abstract public function getUserRoles(): array;
 
-    public function hasRole(UserRole $role): bool {
+    /**
+     * @param UserRole|string $role
+     * @return bool
+     */
+    public function hasRole($role): bool {
+        if ($role instanceof UserRole) {
+            $role = $role->getId();
+        }
         foreach ($this->getUserRoles() as $r) {
-            if ($r->getId() === $role->getId()) {
+            if ($r->getId() === $role) {
                 return true;
             }
         }

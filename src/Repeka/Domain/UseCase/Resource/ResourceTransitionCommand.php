@@ -3,16 +3,20 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\User;
 
 class ResourceTransitionCommand extends Command {
     /** @var ResourceEntity */
     private $resource;
     /** @var string */
     private $transitionId;
+    /** @var User */
+    private $executor;
 
-    public function __construct(ResourceEntity $resource, string $transitionId) {
+    public function __construct(ResourceEntity $resource, string $transitionId, User $executor) {
         $this->resource = $resource;
         $this->transitionId = $transitionId;
+        $this->executor = $executor;
     }
 
     public function getResource(): ResourceEntity {
@@ -21,5 +25,9 @@ class ResourceTransitionCommand extends Command {
 
     public function getTransitionId(): string {
         return $this->transitionId;
+    }
+
+    public function getExecutor(): User {
+        return $this->executor;
     }
 }

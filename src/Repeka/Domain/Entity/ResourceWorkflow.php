@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
 use Repeka\Domain\Factory\ResourceWorkflowStrategy;
 
 class ResourceWorkflow {
@@ -53,7 +54,8 @@ class ResourceWorkflow {
         }));
     }
 
-    private function getTransitionsAsObjects() {
+    /** @return ResourceWorkflowTransition[] */
+    private function getTransitionsAsObjects(): array {
         return array_map(function (array $transition) {
             return ResourceWorkflowTransition::fromArray($transition);
         }, $this->transitions);
@@ -115,5 +117,20 @@ class ResourceWorkflow {
     private function getWorkflowStrategy(): ResourceWorkflowStrategy {
         Assertion::notNull($this->workflow, 'ResourceWorkflowStrategy has not been set. You need to use ResourceWorkflowStrategyFactory.');
         return $this->workflow;
+    }
+
+    public function getPermittedTransitions(ResourceEntity $resource, User $user) : array {
+        return array_filter($this->getTransitions($resource), function (ResourceWorkflowTransition $transition) use ($user) {
+            return $transition->canApply($user);
+        });
+    }
+
+    public function getTransition($transitionId): ResourceWorkflowTransition {
+        foreach ($this->getTransitionsAsObjects() as $transition) {
+            if ($transition->getId() == $transitionId) {
+                return $transition;
+            }
+        }
+        throw new NoSuchTransitionException($transitionId, $this);
     }
 }

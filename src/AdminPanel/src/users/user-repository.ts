@@ -2,7 +2,6 @@ import {ApiRepository} from "../common/repository/api-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {User} from "./user";
 import {HttpClient} from "aurelia-http-client";
-import {UserRole} from "./roles/user-role";
 import {UserRoleRepository} from "./roles/user-role-repository";
 
 @autoinject
@@ -17,7 +16,7 @@ export class UserRepository extends ApiRepository<User> {
     return user;
   }
 
-  updateRoles(user: User, roles: Array<UserRole>) {
-    return this.patch(user, {roleIds: roles.map(role => role.id)});
+  updateRoles(user: User, roleIds: Array<string>): Promise<User> {
+    return this.patch(user, {roleIds});
   }
 }

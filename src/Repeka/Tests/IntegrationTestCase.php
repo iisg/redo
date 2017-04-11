@@ -71,10 +71,12 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         return $this->container->get('doctrine.orm.entity_manager');
     }
 
-    protected function loadFixture(FixtureInterface $fixture) {
+    protected function loadFixture(FixtureInterface... $fixtures) {
         $executor = new ORMExecutor($this->getEntityManager());
         $loader = new ContainerAwareLoader($this->container);
-        $loader->addFixture($fixture);
+        foreach ($fixtures as $fixture) {
+            $loader->addFixture($fixture);
+        }
         $executor->execute($loader->getFixtures(), true);
     }
 

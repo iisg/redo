@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration\ResourceWorkflow;
 
 use Repeka\DeveloperBundle\DataFixtures\ORM\ResourceWorkflowsFixture;
+use Repeka\DeveloperBundle\DataFixtures\ORM\RolesFixture;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Tests\IntegrationTestCase;
@@ -12,7 +13,7 @@ class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
 
     public function setUp() {
         parent::setUp();
-        self::loadFixture(new ResourceWorkflowsFixture());
+        self::loadFixture(new RolesFixture(), new ResourceWorkflowsFixture());
         $this->workflow = $this->container->get('repository.workflow')->findAll()[0];
     }
 

@@ -1,0 +1,22 @@
+<template>
+    <loading-bar if.bind="!availableRoles"></loading-bar>
+
+    <div if.bind="availableRoles"
+        class="au-stagger">
+        <div class="checkbox au-animate fade-inup-outup"
+            repeat.for="role of availableRoles & oneTime">
+            <label>
+                <input type="checkbox"
+                    value.bind="role.id"
+                    checked.bind="roleIds">
+                ${ role.name | inCurrentLanguage }
+                <span class="small text-muted"
+                    if.bind="role.systemRoleName"
+                    bootstrap-tooltip.one-time="'roles::' + role.systemRoleName + '_DESCRIPTION' | t">
+                    <fa name="shield"
+                        fw></fa>
+                </span>
+            </label>
+        </div>
+    </div>
+</template>

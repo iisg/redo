@@ -5,8 +5,10 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Exception\ResourceWorkflow\CannotApplyTransitionException;
 use Repeka\Domain\Factory\ResourceWorkflowStrategy;
 use Symfony\Component\Workflow\DefinitionBuilder;
+use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
 
@@ -47,8 +49,12 @@ class ResourceSymfonyWorkflowStrategy implements ResourceWorkflowStrategy {
         }, $this->getWorkflow()->getEnabledTransitions($resource));
     }
 
-    public function apply(ResourceEntity $resource, string $transition): ResourceEntity {
-        $this->getWorkflow()->apply($resource, $transition);
+    public function apply(ResourceEntity $resource, string $transitionId): ResourceEntity {
+        try {
+            $this->getWorkflow()->apply($resource, $transitionId);
+        } catch (LogicException $e) {
+            throw new CannotApplyTransitionException($transitionId, $this->resourceWorkflow, $e);
+        }
         return $resource;
     }
 

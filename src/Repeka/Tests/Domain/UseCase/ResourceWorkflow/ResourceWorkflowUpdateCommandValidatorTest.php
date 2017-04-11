@@ -64,6 +64,28 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
         $this->validator->validate($command);
     }
 
+    public function testValidWithTransitionsWithRoles() {
+        $command = new ResourceWorkflowUpdateCommand(
+            $this->workflow,
+            [],
+            [['label' => [], 'froms' => [], 'tos' => [], 'permittedRoleIds' => ['AAA']]],
+            null,
+            null
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testValidWithTransitionsWithEmptyRoles() {
+        $command = new ResourceWorkflowUpdateCommand(
+            $this->workflow,
+            [],
+            [['label' => [], 'froms' => [], 'tos' => [], 'permittedRoleIds' => []]],
+            null,
+            null
+        );
+        $this->validator->validate($command);
+    }
+
     public function testValidWithTransitionsAsObjects() {
         $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [new ResourceWorkflowTransition([], [], [])], null, null);
         $this->validator->validate($command);

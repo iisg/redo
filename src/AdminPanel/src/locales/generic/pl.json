@@ -67,5 +67,6 @@
   "No submetadata kinds.": "Brak rodzajów podmetadanych.",
   "Choose existing": "Wybierz istniejący",
   "Add new": "Dodaj nowy",
-  "Choose existing submetadata kind": "Wybierz istniejący rodzaj podmetadanych"
+  "Choose existing submetadata kind": "Wybierz istniejący rodzaj podmetadanych",
+  "Roles allowed to apply transition": "Uprawnieni do wykonania przejścia"
 }

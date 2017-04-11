@@ -12,7 +12,8 @@
             <div class="btn-group-vertical au-animate fade-inup-outup btn-block"
                 if.bind="!fetchingTransitions">
                 <button class="btn btn-success btn-block"
-                    click.delegate="applyTransition(transition.id)"
+                    disabled.bind="!resource.canApplyTransition(transition)"
+                    click.trigger="applyTransition(transition.id)"
                     repeat.for="transition of resource.availableTransitions">
                     <span ref="transition['translatedLabel']"
                         value.one-time="transition.label | inCurrentLanguage">
