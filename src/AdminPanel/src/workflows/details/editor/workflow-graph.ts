@@ -259,6 +259,11 @@ export class WorkflowGraph {
     this.highlightCurrent(currentPlaces);
     return png;
   }
+
+  public destroy(): void {
+    this.cytoscape.contextMenus('get').destroy();
+    this.cytoscape.destroy();
+  }
 }
 
 if (typeof cytoscape == 'function') {
