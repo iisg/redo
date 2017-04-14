@@ -1,16 +1,18 @@
-var gulp = require('gulp');
-var paths = require('../paths');
-var tslint = require('gulp-tslint');
-var lintReporter = require('gulp-tslint-jenkins-reporter');
-var templateLinter = require('gulp-aurelia-template-lint');
-var TemplateLintConfig = require('aurelia-template-lint').Config;
-var gutil = require('gulp-util');
+var AccessSniff = require('access-sniff');
 var chalk = require('chalk');
 var fs = require('fs');
-var AccessSniff = require('access-sniff');
+var gulp = require('gulp');
+var gutil = require('gulp-util');
+var lintReporter = require('gulp-tslint-jenkins-reporter');
 var path = require('path');
+var TemplateLintConfig = require('aurelia-template-lint').Config;
+var templateLinter = require('gulp-aurelia-template-lint');
+var tslint = require('gulp-tslint');
 
-gulp.task('lint', ['lint-ts', 'lint-aurelia-templates']);
+var typingsLinter = require('../typings-linter');
+var paths = require('../paths');
+
+gulp.task('lint', ['lint-ts', 'lint-aurelia-templates', 'lint-typings']);
 
 gulp.task('lint-ts', () => {
   return gulp.src(paths.scripts[0])
@@ -77,6 +79,10 @@ gulp.task('lint-aurelia-templates', () => {
         throw 'There are some aurelia-template-lint errors';
       }
     });
+});
+
+gulp.task('lint-typings', (done) => {
+  typingsLinter('typings.json', 'jspm.config.js', done);
 });
 
 function lintErrorsToXml(lintErrors, errorExtractor) {
