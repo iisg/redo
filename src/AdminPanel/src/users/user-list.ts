@@ -10,7 +10,7 @@ export class UserList implements ComponentAttached {
   constructor(private userRepository: UserRepository) {
   }
 
-  attached(): void {
-    this.userRepository.getList().then(userList => this.userList = userList);
+  async attached() {
+    this.userList = await this.userRepository.getList();
   }
 }
