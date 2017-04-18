@@ -9,9 +9,13 @@ export class ResourcesList {
   resources: Resource[];
 
   constructor(private resourceRepository: ResourceRepository) {
-    this.resourceRepository.getList()
-      .then(resources => this.resources = resources)
-      .then(() => this.addFormOpened || (this.addFormOpened = this.resources.length == 0));
+  }
+
+  async attached() {
+    this.resources = await this.resourceRepository.getList();
+    if (!this.addFormOpened) {
+      this.addFormOpened = this.resources.length == 0;
+    }
   }
 
   addNewResource(resource: Resource): Promise<Resource> {
