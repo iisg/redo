@@ -106,8 +106,10 @@ services:
     class: Repeka\Application\EventListener\GlobalExceptionHandler
     arguments:
       - '%kernel.debug%'
+      - '@security.token_storage'
+      - '@session'
     tags:
-      - { name: kernel.event_subscriber }
+      - { name: kernel.event_listener, event: kernel.exception, method: onException, priority: 1000 }
 
   repeka.doctrine_listener.relationship_property_converter:
     class: Repeka\Application\EventListener\Doctrine\RelationshipPropertyConverterListener
@@ -352,12 +354,6 @@ services:
 
   resource_workflow_strategy_factory:
     class: Repeka\Application\Factory\ResourceSymfonyWorkflowStrategyFactory
-
-  repeka.ajax_authentication_listener:
-    class: Repeka\Application\EventListener\AjaxAuthenticationListener
-    autowire: true
-    tags:
-      - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
 
   elasticsearch.client:
     class: Repeka\Application\Elasticsearch\ESClient
