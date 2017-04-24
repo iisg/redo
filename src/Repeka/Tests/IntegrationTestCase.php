@@ -41,6 +41,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         if (!defined('INTEGRATION_TESTS_BOOTSTRAPPED')) {
             define('INTEGRATION_TESTS_BOOTSTRAPPED', true);
             $this->executeCommand('doctrine:database:create --if-not-exists');
+            $this->container->get('doctrine.orm.entity_manager')->getConnection()->exec('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
         }
         $this->executeCommand('doctrine:schema:drop --force');
         $this->executeCommand('doctrine:schema:create');
