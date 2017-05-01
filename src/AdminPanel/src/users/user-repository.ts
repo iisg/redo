@@ -1,4 +1,4 @@
-import {ApiRepository} from "../common/repository/api-repository";
+import {ApiRepository} from "common/repository/api-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {User} from "./user";
 import {HttpClient} from "aurelia-http-client";

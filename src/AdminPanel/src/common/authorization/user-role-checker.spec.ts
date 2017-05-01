@@ -1,6 +1,6 @@
-import {User} from "../../users/user";
+import {User} from "users/user";
+import {UserRole} from "users/roles/user-role";
 import {UserRoleChecker} from "./user-role-checker";
-import {UserRole} from "../../users/roles/user-role";
 
 describe(UserRoleChecker.name, () => {
   let currentUser: User;

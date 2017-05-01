@@ -1,6 +1,6 @@
-import {MultilingualTextType} from "../../resources-config/metadata/metadata";
+import {MultilingualTextType} from "resources-config/metadata/metadata";
 import {ValidationRules} from "aurelia-validation";
-import {RequiredInAllLanguagesValidationRule} from "../../common/validation/rules/required-in-all-languages";
+import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 
 export class UserRole {
   id: string;

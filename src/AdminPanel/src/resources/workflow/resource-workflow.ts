@@ -1,6 +1,6 @@
 import {Resource} from "../resource";
 import {bindable} from "aurelia-templating";
-import {Workflow} from "../../workflows/workflow";
+import {Workflow} from "workflows/workflow";
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceRepository} from "../resource-repository";
 

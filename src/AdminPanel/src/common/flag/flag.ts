@@ -1,7 +1,7 @@
 import {bindable} from "aurelia-templating";
 import {LanguageCodeToFlagValueConverter} from "./language-code-to-flag";
 import {autoinject} from "aurelia-dependency-injection";
-import {LanguageRepository} from "../../resources-config/language-config/language-repository";
+import {LanguageRepository} from "resources-config/language-config/language-repository";
 
 @autoinject
 export class Flag {

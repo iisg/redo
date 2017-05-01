@@ -3,7 +3,7 @@ import {Language} from "../language-config/language";
 import {LanguageRepository} from "../language-config/language-repository";
 import {bindable} from "aurelia-templating";
 import {bindingMode} from "aurelia-binding";
-import {generateId} from "../../common/utils/string-utils";
+import {generateId} from "common/utils/string-utils";
 
 @autoinject
 export class MultilingualEditor {

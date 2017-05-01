@@ -1,12 +1,12 @@
 import {ValidationRules} from "aurelia-validation";
 import {autoinject, Container} from "aurelia-dependency-injection";
 import {RequiredInAllLanguagesValidationRule} from "./rules/required-in-all-languages";
-import {registerLanguageValidationRules} from "../../resources-config/language-config/language";
-import {registerResourceValidationRules} from "../../resources/resource";
-import {registerMetadataValidationRules} from "../../resources-config/metadata/metadata";
-import {registerResourceKindValidationRules} from "../../resources-config/resource-kind/resource-kind";
-import {registerWorkflowValidationRules} from "../../workflows/workflow";
-import {registerUserRoleValidationRules} from "../../users/roles/user-role";
+import {registerLanguageValidationRules} from "resources-config/language-config/language";
+import {registerResourceValidationRules} from "resources/resource";
+import {registerMetadataValidationRules} from "resources-config/metadata/metadata";
+import {registerResourceKindValidationRules} from "resources-config/resource-kind/resource-kind";
+import {registerWorkflowValidationRules} from "workflows/workflow";
+import {registerUserRoleValidationRules} from "users/roles/user-role";
 
 @autoinject
 export class CustomValidationRules {

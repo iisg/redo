@@ -1,5 +1,5 @@
 import {InCurrentLanguageValueConverter} from "./in-current-language";
-import * as languageConstants from "../../locales/language-constants";
+import * as languageConstants from "locales/language-constants";
 import {I18N} from "aurelia-i18n";
 
 describe(InCurrentLanguageValueConverter.name, () => {

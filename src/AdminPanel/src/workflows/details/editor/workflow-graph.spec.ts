@@ -1,7 +1,7 @@
 import {WorkflowGraph} from "./workflow-graph";
 import {Workflow} from "../../workflow";
 import {I18N} from "aurelia-i18n";
-import {InCurrentLanguageValueConverter} from "../../../resources-config/multilingual-field/in-current-language";
+import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 
 describe(WorkflowGraph.name, () => {
   let cytoscape: Cytoscape.Instance;

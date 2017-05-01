@@ -4,7 +4,7 @@ import {ResourceRepository} from "../resource-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
-import {deepCopy} from "../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {

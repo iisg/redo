@@ -1,10 +1,10 @@
 import {bindable} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
-import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
+import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {Metadata} from "./metadata";
 import {computedFrom} from "aurelia-binding";
-import {deepCopy} from "../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 
 @autoinject
 export class MetadataForm {

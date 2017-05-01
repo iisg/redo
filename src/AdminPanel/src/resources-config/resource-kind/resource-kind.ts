@@ -1,8 +1,8 @@
 import {Metadata, MultilingualTextType} from "../metadata/metadata";
 import {ValidationRules} from "aurelia-validation";
-import {RequiredInAllLanguagesValidationRule} from "../../common/validation/rules/required-in-all-languages";
-import {Workflow} from "../../workflows/workflow";
-import {WorkflowRepository} from "../../workflows/workflow-repository";
+import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
+import {Workflow} from "workflows/workflow";
+import {WorkflowRepository} from "workflows/workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
 
 @autoinject

@@ -2,8 +2,8 @@ import {Language} from "./language";
 import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {ApiRepository} from "../../common/repository/api-repository";
-import {cachedResponse, clearCachedResponse} from "../../common/repository/cached-response";
+import {ApiRepository} from "common/repository/api-repository";
+import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
 
 @autoinject
 export class LanguageRepository extends ApiRepository<Language> {

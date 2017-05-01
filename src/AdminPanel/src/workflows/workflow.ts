@@ -1,6 +1,6 @@
 import {ValidationRules} from "aurelia-validation";
-import {MultilingualTextType} from "../resources-config/metadata/metadata";
-import {RequiredInAllLanguagesValidationRule} from "../common/validation/rules/required-in-all-languages";
+import {MultilingualTextType} from "resources-config/metadata/metadata";
+import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 
 export class Workflow {
   id: number;

@@ -2,7 +2,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {ComponentAttached} from "aurelia-templating";
 import {Language} from "./language";
 import {LanguageRepository} from "./language-repository";
-import {deepCopy} from "../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 
 @autoinject
 export class LanguageList implements ComponentAttached {

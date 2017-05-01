@@ -1,8 +1,8 @@
 import {bindable} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
-import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
-import {deepCopy} from "../../common/utils/object-utils";
+import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
+import {deepCopy} from "common/utils/object-utils";
 import {UserRole} from "./user-role";
 import {computedFrom} from "aurelia-binding";
 

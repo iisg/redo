@@ -4,11 +4,11 @@ import * as edgeHandles from "cytoscape-edgehandles";
 import * as autopanOnDrag from "cytoscape-autopan-on-drag";
 import {workflowDiagramDefaultStylesheet} from "./workflow-diagram-stylesheet";
 import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
-import {generateId} from "../../../common/utils/string-utils";
+import {generateId} from "common/utils/string-utils";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
-import {InCurrentLanguageValueConverter} from "../../../resources-config/multilingual-field/in-current-language";
-import {deepCopy} from "../../../common/utils/object-utils";
+import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
+import {deepCopy} from "common/utils/object-utils";
 
 @autoinject
 export class WorkflowGraph {

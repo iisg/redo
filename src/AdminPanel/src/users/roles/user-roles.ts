@@ -2,7 +2,7 @@ import {ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {UserRoleRepository} from "./user-role-repository";
 import {UserRole} from "./user-role";
-import {deepCopy} from "../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 
 @autoinject
 export class UserRoles implements ComponentAttached {

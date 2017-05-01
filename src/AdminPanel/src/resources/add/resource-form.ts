@@ -2,7 +2,7 @@ import {Resource} from "../resource";
 import {Validator} from "aurelia-validation";
 import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {deepCopy} from "../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 import {computedFrom} from "aurelia-binding";
 
 @autoinject

@@ -1,10 +1,10 @@
 import {Aurelia} from "aurelia-framework";
 import {HttpClient, HttpResponseMessage, Interceptor, RequestMessage} from "aurelia-http-client";
-import {MetricsSenderInterceptor} from "../common/metrics/metrics-sender-interceptor";
+import {MetricsSenderInterceptor} from "common/metrics/metrics-sender-interceptor";
 import * as swal from "sweetalert2";
 import {I18N} from "aurelia-i18n";
 import {autoinject, Container} from "aurelia-dependency-injection";
-import {CurrentUserFetcher} from "../users/current/current-user-fetcher";
+import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 
 export function configure(aurelia: Aurelia) {
   let client: HttpClient = aurelia.container.get(HttpClient);
