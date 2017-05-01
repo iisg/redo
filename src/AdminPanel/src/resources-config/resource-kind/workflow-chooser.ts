@@ -1,8 +1,8 @@
 import {ComponentAttached, bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindingMode} from "aurelia-binding";
-import {Workflow} from "../../workflows/workflow";
-import {WorkflowRepository} from "../../workflows/workflow-repository";
+import {Workflow} from "workflows/workflow";
+import {WorkflowRepository} from "workflows/workflow-repository";
 
 @autoinject
 export class WorkflowChooser implements ComponentAttached {

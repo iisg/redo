@@ -1,6 +1,6 @@
 import {CustomValidationRule} from "../custom-validation-rules";
 import {autoinject} from "aurelia-dependency-injection";
-import {LanguageRepository, LanguagesChangedEvent} from "../../../resources-config/language-config/language-repository";
+import {LanguageRepository, LanguagesChangedEvent} from "resources-config/language-config/language-repository";
 import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject

@@ -1,5 +1,5 @@
 import {ValidationRules} from "aurelia-validation";
-import {RequiredInAllLanguagesValidationRule} from "../../common/validation/rules/required-in-all-languages";
+import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 
 export interface MultilingualTextType extends StringStringMap {
 }

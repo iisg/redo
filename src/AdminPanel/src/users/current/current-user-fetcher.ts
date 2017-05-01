@@ -1,7 +1,7 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {UserRepository} from "../user-repository";
 import {User} from "../user";
-import {metricTime} from "../../common/metrics/metrics-decorators";
+import {metricTime} from "common/metrics/metrics-decorators";
 import {HttpResponseMessage} from "aurelia-http-client";
 
 @autoinject

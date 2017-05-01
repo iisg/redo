@@ -3,22 +3,20 @@ module.exports = function (config) {
     basePath: '../',
     frameworks: ['systemjs', 'jasmine'],
     systemjs: {
+      baseURL: '/base/',
       configFile: 'jspm.config.js',
       config: {
         paths: {
-          "*": "*",
+          "*": "src/*",
           "src/*": "src/*",
           "typescript": "node_modules/typescript/lib/typescript.js",
           "systemjs": "node_modules/systemjs/dist/system.js",
           'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.js'
         },
         packages: {
-          'test/unit': {
+          '/base/src': {
             defaultExtension: 'ts'
           },
-          'src': {
-            defaultExtension: 'ts'
-          }
         },
         transpiler: 'typescript',
         typescriptOptions: {

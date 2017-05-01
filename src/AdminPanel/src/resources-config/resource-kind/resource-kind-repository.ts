@@ -1,10 +1,10 @@
 import {HttpClient} from "aurelia-http-client";
 import {autoinject, Container, NewInstance} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
-import {deepCopy} from "../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 import {MetadataRepository} from "../metadata/metadata-repository";
-import {ApiRepository} from "../../common/repository/api-repository";
-import {cachedResponse} from "../../common/repository/cached-response";
+import {ApiRepository} from "common/repository/api-repository";
+import {cachedResponse} from "common/repository/cached-response";
 
 @autoinject
 export class ResourceKindRepository extends ApiRepository<ResourceKind> {

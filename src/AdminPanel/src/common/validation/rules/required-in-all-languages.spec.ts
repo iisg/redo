@@ -1,5 +1,5 @@
 import {RequiredInAllLanguagesValidationRule} from "./required-in-all-languages";
-import {LanguageRepository, LanguagesChangedEvent} from "../../../resources-config/language-config/language-repository";
+import {LanguageRepository, LanguagesChangedEvent} from "resources-config/language-config/language-repository";
 import {EventAggregator} from "aurelia-event-aggregator";
 
 describe(RequiredInAllLanguagesValidationRule.name, () => {

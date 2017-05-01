@@ -1,6 +1,6 @@
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ValidationRules} from "aurelia-validation";
-import {WorkflowPlace, WorkflowTransition} from "../workflows/workflow";
+import {WorkflowPlace, WorkflowTransition} from "workflows/workflow";
 
 export class Resource {
   id: number;

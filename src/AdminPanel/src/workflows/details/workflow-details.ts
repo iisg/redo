@@ -3,7 +3,7 @@ import {WorkflowRepository} from "../workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {RoutableComponentActivate, RouteConfig} from "aurelia-router";
 import {I18N} from "aurelia-i18n";
-import {InCurrentLanguageValueConverter} from "../../resources-config/multilingual-field/in-current-language";
+import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 
 @autoinject
 export class WorkflowDetails implements RoutableComponentActivate {

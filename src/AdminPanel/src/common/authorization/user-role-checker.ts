@@ -1,6 +1,6 @@
-import {CurrentUserFetcher} from "../../users/current/current-user-fetcher";
+import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {inject} from "aurelia-dependency-injection";
-import {User} from "../../users/user";
+import {User} from "users/user";
 
 @inject(CurrentUserFetcher.CURRENT_USER_KEY)
 export class UserRoleChecker {

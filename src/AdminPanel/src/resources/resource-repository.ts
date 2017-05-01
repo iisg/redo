@@ -2,7 +2,7 @@ import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {ApiRepository} from "common/repository/api-repository";
 import {Resource} from "./resource";
-import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
+import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 
 @autoinject
 export class ResourceRepository extends ApiRepository<Resource> {
