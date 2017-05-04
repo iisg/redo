@@ -31,10 +31,18 @@ class Configuration implements ConfigurationInterface {
                 ->end()
                 ->scalarNode('upload_dir')
                     ->validate()
-                    ->ifTrue(function ($path) {
-                        return preg_match('#/$#', $path);
-                    })
-                    ->thenInvalid('Upload path should not contain slash at the end.')
+                        ->ifTrue(function ($path) {
+                            return preg_match('#/$#', $path);
+                        })
+                        ->thenInvalid('Upload path should not contain slash at the end.')
+                    ->end()
+                ->end()
+                ->arrayNode('pk_auth')
+                    ->children()
+                        ->scalarNode('wsdl')->defaultNull()->end()
+                        ->variableNode('options')->defaultValue([])->end()
+                        ->scalarNode('local_accounts_enabled')->defaultFalse()->end()
+                    ->end()
                 ->end()
             ->end();
         // @formatter:on

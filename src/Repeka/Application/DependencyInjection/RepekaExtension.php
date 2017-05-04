@@ -22,6 +22,9 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('elasticsearch.port', $mergedConfig['elasticsearch']['port']);
         $container->setParameter('elasticsearch.proxy', $mergedConfig['elasticsearch']['proxy']);
         $container->setParameter('repeka.upload_dir', $mergedConfig['upload_dir']);
+        $container->setParameter('pk_auth.wsdl', $mergedConfig['pk_auth']['wsdl']);
+        $container->setParameter('pk_auth.options', $mergedConfig['pk_auth']['options']);
+        $container->setParameter('pk_auth.local_accounts_enabled', $mergedConfig['pk_auth']['local_accounts_enabled']);
     }
 
     private function loadYmlConfigFile(string $name, ContainerBuilder $container) {

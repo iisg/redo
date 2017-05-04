@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a293234bf068771ee4e94eb316a6acae",
+    "content-hash": "6ccb7612141f2449e9923c954c7b5465",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -528,7 +528,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-12-04T05:57:28+00:00"
+            "time": "2016-12-04 05:57:28"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -1086,7 +1086,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2016-12-26T03:41:20+00:00"
+            "time": "2016-12-26 03:41:20"
         },
         {
             "name": "dunglas/doctrine-json-odm",
@@ -1157,7 +1157,7 @@
             "support": {
                 "source": "https://github.com/fracz/doctrine-json-odm/tree/null-fix"
             },
-            "time": "2016-12-09T10:48:56+00:00"
+            "time": "2016-12-09 10:48:56"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -1850,23 +1850,20 @@
         },
         {
             "name": "qandidate/symfony-json-request-transformer",
-            "version": "1.2.2",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/qandidate-labs/symfony-json-request-transformer.git",
-                "reference": "176c37b79c29e609b01c996e9b1927b1c5b589ae"
+                "reference": "f7c98f3784b5ffea13217d888b006e2e8c255ba7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/qandidate-labs/symfony-json-request-transformer/zipball/176c37b79c29e609b01c996e9b1927b1c5b589ae",
-                "reference": "176c37b79c29e609b01c996e9b1927b1c5b589ae",
+                "url": "https://api.github.com/repos/qandidate-labs/symfony-json-request-transformer/zipball/f7c98f3784b5ffea13217d888b006e2e8c255ba7",
+                "reference": "f7c98f3784b5ffea13217d888b006e2e8c255ba7",
                 "shasum": ""
             },
             "require": {
                 "symfony/http-kernel": "~2.3|~3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8"
             },
             "type": "library",
             "autoload": {
@@ -1889,7 +1886,7 @@
                 }
             ],
             "description": "A Symfony 2 event listener for decoding JSON encoded request content",
-            "time": "2017-04-24T10:47:15+00:00"
+            "time": "2016-05-03T19:25:11+00:00"
         },
         {
             "name": "respect/validation",
@@ -4567,7 +4564,8 @@
     "platform": {
         "php": ">=7.1",
         "ext-mbstring": "*",
-        "ext-pdo_pgsql": "*"
+        "ext-pdo_pgsql": "*",
+        "ext-soap": "*"
     },
     "platform-dev": []
 }

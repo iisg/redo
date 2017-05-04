@@ -60,6 +60,24 @@ services:
     tags:
       - { name: serializer.normalizer }
 
+  repeka.pk_auth.soap_service:
+    class: Repeka\Application\Authentication\PKSoapService
+    arguments:
+      - '%pk_auth.wsdl%'
+      - '%pk_auth.options%'
+
+  repeka.pk_auth.authentication_client:
+    class: Repeka\Application\Authentication\PKAuthenticationClient
+    autowire: true
+
+  repeka.pk_auth.authenticator:
+    class: Repeka\Application\Authentication\PKAuthenticator
+    arguments:
+      - '@repeka.pk_auth.authentication_client'
+      - '@repeka.command_bus'
+      - '@security.password_encoder'
+      - '%pk_auth.local_accounts_enabled%'
+
   repeka.converter.resource_contents_param:
     class: Repeka\Application\ParamConverter\ResourceContentsParamConverter
     autowire: true
@@ -255,6 +273,10 @@ services:
     class: Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandHandler
     autowire: true
 
+  command_handler.user_create:
+    class: Repeka\Domain\UseCase\User\UserCreateCommandHandler
+    autowire: true
+
   command_handler.user_update_roles:
     class: Repeka\Domain\UseCase\User\UserUpdateRolesCommandHandler
     autowire: true
@@ -331,6 +353,10 @@ services:
   command_validator.resource_workflow_simulate:
     class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator
 
+  command_validator.user_create:
+    class: Repeka\Domain\UseCase\User\UserCreateCommandValidator
+    autowire: true
+
   command_validator.user_role_create:
     class: Repeka\Domain\UseCase\UserRole\UserRoleCreateCommandValidator
     autowire: true
@@ -352,8 +378,11 @@ services:
     arguments:
     - '%repeka.supported_controls%'
 
-  resource_workflow_strategy_factory:
+  repeka.resource_workflow_strategy_factory:
     class: Repeka\Application\Factory\ResourceSymfonyWorkflowStrategyFactory
+
+  repeka.user_factory:
+    class: Repeka\Application\Factory\UserEntityFactory
 
   elasticsearch.client:
     class: Repeka\Application\Elasticsearch\ESClient
