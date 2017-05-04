@@ -16,7 +16,8 @@ security:
 
     main:
       anonymous: true
-      form_login:
+      simple_form:
+        authenticator: repeka.pk_auth.authenticator
         login_path: login
         check_path: login
         csrf_token_generator: security.csrf.token_manager

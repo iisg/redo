@@ -29,6 +29,7 @@
     "dunglas/doctrine-json-odm": "dev-null-fix",
     "ext-mbstring": "*",
     "ext-pdo_pgsql": "*",
+    "ext-soap": "*",
     "kherge/json": "2.0",
     "m6web/statsd-bundle": "^2.14",
     "myclabs/php-enum": "^1.5",

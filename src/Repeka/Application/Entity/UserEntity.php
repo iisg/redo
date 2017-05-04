@@ -50,7 +50,7 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
         return $this;
     }
 
-    public function getFirstname(): string {
+    public function getFirstname(): ?string {
         return $this->firstname;
     }
 
@@ -58,7 +58,7 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
         $this->firstname = $firstname;
     }
 
-    public function getLastname(): string {
+    public function getLastname(): ?string {
         return $this->lastname;
     }
 
@@ -66,11 +66,11 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
         $this->lastname = $lastname;
     }
 
-    public function getSalt() {
+    public function getSalt(): ?string {
         return null;
     }
 
-    public function getPassword() {
+    public function getPassword(): ?string {
         return $this->password;
     }
 

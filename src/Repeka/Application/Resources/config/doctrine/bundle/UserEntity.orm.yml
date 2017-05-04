@@ -25,10 +25,12 @@ Repeka\Application\Entity\UserEntity:
     password:
       type: string
       length: 64
+      nullable: true
     email:
       type: string
       length: 60
       unique: true
+      nullable: true
     firstname:
       type: string
       length: 50

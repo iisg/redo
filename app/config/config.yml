@@ -23,6 +23,15 @@ repeka:
       de: german
   upload_dir: "%kernel.root_dir%/../var/uploads"
 
+  pk_auth:
+    wsdl: ~
+    options:
+      uri: pk_soap
+      location: http://localhost/
+      login: pk
+      password: qwerty
+    local_accounts_enabled: true
+
 doctrine:
   dbal:
     driver: pdo_pgsql
