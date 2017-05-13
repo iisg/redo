@@ -13,12 +13,22 @@ export class ResourceKindRepository extends ApiRepository<ResourceKind> {
   }
 
   public get(id: number): Promise<ResourceKind> {
-    return this.getList().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
+    return this.getListWithSystemResourceKind().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
   }
 
   @cachedResponse(30000)
   public getList(): Promise<ResourceKind[]> {
     return super.getList();
+  }
+
+  @cachedResponse(30000)
+  public getListWithSystemResourceKind(): Promise<ResourceKind[]> {
+    return this.httpClient
+      .createRequest(this.endpoint)
+      .asGet()
+      .withParams({systemResourceKind: true})
+      .send()
+      .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
   }
 
   public update(updatedResourceKind: ResourceKind): Promise<ResourceKind> {

@@ -16,7 +16,7 @@ class UserCreateCommandValidator extends CommandAttributesValidator {
 
     public function getValidator(Command $command): Validator {
         return Validator::attribute('username', Validator::notBlank()->callback(function ($username) {
-            return ($this->userLoader->loadUserByUsername($username) == null);
+            return $this->userLoader->loadUserByUsername($username) == null;
         }));
     }
 }

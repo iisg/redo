@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Application\Elasticsearch;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Repeka\Application\Command\Initialization\SystemUserRolesInitializer;
 use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\Entity\UserRole;
@@ -16,8 +17,9 @@ class SystemUserRolesInitializerTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->output = $this->createMock(OutputInterface::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
         $this->userRoleRepository = $this->createMock(UserRoleRepository::class);
-        $this->systemUserRolesInitializer = new SystemUserRolesInitializer();
+        $this->systemUserRolesInitializer = new SystemUserRolesInitializer($entityManager);
     }
 
     public function testAdminRoleExists() {

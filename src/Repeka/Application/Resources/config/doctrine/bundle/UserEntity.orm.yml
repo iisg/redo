@@ -17,6 +17,14 @@ Repeka\Application\Entity\UserEntity:
         inverseJoinColumns:
           role_id:
             referencedColumnName: id
+  oneToOne:
+    userData:
+      targetEntity: Repeka\Domain\Entity\ResourceEntity
+      joinColumn:
+        nullable: false
+        name: user_data_id
+        referencedColumnName: id
+        onDelete: CASCADE
   fields:
     username:
       type: string
@@ -30,15 +38,6 @@ Repeka\Application\Entity\UserEntity:
       type: string
       length: 60
       unique: true
-      nullable: true
-    firstname:
-      type: string
-      length: 50
-      nullable: true
-    lastname:
-      type: string
-      length: 50
-      nullable: true
     isActive:
       type: boolean
       column: is_active

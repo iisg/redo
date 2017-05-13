@@ -2,6 +2,7 @@
 namespace Repeka\Application\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\UserRole;
@@ -16,10 +17,6 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     private $password;
 
     private $email;
-
-    private $firstname;
-
-    private $lastname;
 
     private $isActive;
 
@@ -48,22 +45,6 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     public function setUsername(string $username): User {
         $this->username = $username;
         return $this;
-    }
-
-    public function getFirstname(): ?string {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname) {
-        $this->firstname = $firstname;
-    }
-
-    public function getLastname(): ?string {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname) {
-        $this->lastname = $lastname;
     }
 
     public function getSalt(): ?string {

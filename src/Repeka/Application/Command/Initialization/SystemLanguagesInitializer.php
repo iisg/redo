@@ -7,7 +7,7 @@ use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class SystemLanguagesInitializer implements ApplicationInitializer {
+class SystemLanguagesInitializer extends ApplicationInitializer {
     public function initialize(OutputInterface $output, ContainerInterface $container) {
         $this->ensureAtLeastOneLanguageExists($output, $container);
     }

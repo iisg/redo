@@ -19,12 +19,15 @@ class InitializeApplicationCommand extends ContainerAwareCommand {
         /** @var ApplicationInitializer[] $initializers */
         $initializers = [
             new SystemLanguagesInitializer(),
-            new SystemUserRolesInitializer(),
+            new SystemUserResourceInitializer($this->getContainer()->get('doctrine.orm.entity_manager')),
+            new SystemUserRolesInitializer($this->getContainer()->get('doctrine.orm.entity_manager')),
         ];
         foreach ($initializers as $initializer) {
+            $initializer->preEntityInitializer();
             $this->getContainer()->get('doctrine')->getManager()->transactional(function () use ($initializer, $output) {
                 $initializer->initialize($output, $this->getContainer());
             });
+            $initializer->postEntityInitializer();
         }
     }
 }

@@ -16,6 +16,6 @@ class ResourceListQueryHandler {
      * @return ResourceEntity[]
      */
     public function handle(): array {
-        return $this->resourceRepository->findAll();
+        return $this->resourceRepository->findAllNonSystemResources();
     }
 }

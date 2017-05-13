@@ -8,14 +8,12 @@
                         <th>${'ID' | t}</th>
                         <th>${'Username' | t}</th>
                         <th>${'E-mail' | t}</th>
-                        <th>${'First Name' | t}</th>
-                        <th>${'Last Name' | t}</th>
                         <th></th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr if.bind="!userList">
-                        <th colspan="6">
+                        <th colspan="4">
                             <div class="progress progress-striped active">
                                 <div class="progress-bar progress-bar-success progress-bar-full"></div>
                             </div>
@@ -29,8 +27,6 @@
                         <td>${user.id}</td>
                         <td>${user.username}</td>
                         <td>${user.email}</td>
-                        <td>${user.firstname}</td>
-                        <td>${user.lastname}</td>
                         <td>
                             <a route-href="route: user/details; params.bind: {id: user.id}"
                                 class="btn ${user['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">

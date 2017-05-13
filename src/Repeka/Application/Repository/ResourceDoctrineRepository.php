@@ -2,6 +2,7 @@
 namespace Repeka\Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -19,5 +20,14 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             throw new EntityNotFoundException($this, $id);
         }
         return $resource;
+    }
+
+    /** @return ResourceEntity[] */
+    public function findAllNonSystemResources(): array {
+        $qb = $this->createQueryBuilder('r');
+        return $qb->join('r.kind', 'rk')
+            ->where($qb->expr()->notIn('rk.id', SystemResourceKind::values()))
+            ->getQuery()
+            ->getResult();
     }
 }

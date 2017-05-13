@@ -15,7 +15,11 @@ class ResourceKindListQueryHandler {
     /**
      * @return ResourceKind[]
      */
-    public function handle(): array {
-        return $this->resourceKindRepository->findAll();
+    public function handle(ResourceKindListQuery $query): array {
+        if ($query->includeSystemResources()) {
+            return $this->resourceKindRepository->findAll();
+        } else {
+            return $this->resourceKindRepository->findAllNonSystemResourceKinds();
+        }
     }
 }

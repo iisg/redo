@@ -106,6 +106,6 @@ class MetadataFixture extends RepekaFixture {
         ]), self::REFERENCE_METADATA_FILE);
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
             return $metadata->getId();
-        }, $addedMetadata)));
+        }, $this->container->get('repository.metadata')->findAllBase())));
     }
 }
