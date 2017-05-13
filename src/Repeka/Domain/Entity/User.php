@@ -2,6 +2,9 @@
 namespace Repeka\Domain\Entity;
 
 abstract class User {
+    /** @var ResourceEntity */
+    protected $userData;
+
     abstract public function getId(): int;
 
     /** @param $roles UserRole */
@@ -23,5 +26,13 @@ abstract class User {
             }
         }
         return false;
+    }
+
+    public function getUserData(): ResourceEntity {
+        return $this->userData;
+    }
+
+    public function setUserData(ResourceEntity $userData) {
+        $this->userData = $userData;
     }
 }

@@ -416,6 +416,7 @@ services:
 
   repeka.user_factory:
     class: Repeka\Application\Factory\UserEntityFactory
+    autowire: true
 
   repeka.metadata_constraint_provider:
     class: Repeka\Application\Validation\ContainerAwareMetadataConstraintProvider

@@ -5,10 +5,11 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
 
 interface ResourceKindRepository {
-    /**
-     * @return ResourceKind[]
-     */
+    /** @return ResourceKind[] */
     public function findAll();
+
+    /** @return ResourceKind[] */
+    public function findAllNonSystemResourceKinds(): array;
 
     /**
      * @throws EntityNotFoundException if the entity could not be found

@@ -9,7 +9,12 @@ export abstract class ApiRepository<T> {
   }
 
   public getList(): Promise<T[]> {
-    return this.httpClient.get(this.endpoint).then(response => Promise.all(response.content.map(item => this.toEntity(item))));
+    return this.httpClient.get(this.endpoint).then(response => {
+      if (!response.content || !response.content.map) {
+        throw new Error(`Response from ${this.endpoint} getList endpoint should be an array, not an object or something else.`);
+      }
+      return Promise.all(response.content.map(item => this.toEntity(item)));
+    });
   }
 
   public post(entity: T): Promise<T> {

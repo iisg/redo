@@ -2,22 +2,18 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Repeka\Application\Entity\UserEntity;
+use Repeka\Domain\UseCase\User\UserCreateCommand;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class UsersFixture extends ContainerAwareFixture {
+    /**
+     * @inheritdoc
+     */
     public function load(ObjectManager $manager) {
-        $user = new UserEntity();
-        $user->setUsername('budynek');
-        $user->setEmail('budynek');
-        $user->setFirstname('Piotr');
-        $user->setLastname('Budynek');
-        /** @var PasswordEncoderInterface $encoder */
-        $encoder = $this->container->get('security.password_encoder');
-        $password = $encoder->encodePassword($user, 'budynek');
-        $user->setPassword($password);
-        $manager->persist($user);
-        $manager->flush();
+        /** @var ContainerInterface $containerInterface */
+        $container = $this->container;
+        $userCreateCommand = new UserCreateCommand('budynek', 'budynek', 'budynek@repeka.pl');
+        $container->get('repeka.command_bus')->handle($userCreateCommand);
     }
 }

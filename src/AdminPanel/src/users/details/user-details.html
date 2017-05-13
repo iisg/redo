@@ -1,6 +1,7 @@
 <template>
     <require from="users/user-label.html"></require>
     <require from="./user-roles-assign"></require>
+    <require from="resources/details/resource-property-list.html"></require>
 
     <loading-bar if.bind="!user"></loading-bar>
 
@@ -17,11 +18,9 @@
             <dd>${user.username}</dd>
             <dt>${'E-mail' | t}</dt>
             <dd>${user.email}</dd>
-            <dt>${'First Name' | t}</dt>
-            <dd>${user.firstname}</dd>
-            <dt>${'Last Name' | t}</dt>
-            <dd>${user.lastname}</dd>
         </dl>
+
+        <resource-property-list resource.one-time="user.userData"></resource-property-list>
 
         <div class="well"
             if.bind="!isCurrentUser"

@@ -2,6 +2,7 @@
     <require from="../add/resource-form"></require>
     <require from="../workflow/resource-workflow"></require>
     <require from="../workflow/resource-place-display.html"></require>
+    <require from="./resource-property-list.html"></require>
 
     <div class="au-animate fade-inup-outup page-preloader"
         if.bind="!resource">
@@ -24,13 +25,9 @@
 
         <div class="au-animate anim-height-inout-300"
             if.bind="!editing">
+            <resource-property-list resource.one-time="resource"></resource-property-list>
+
             <dl class="dl-horizontal">
-                <template repeat.for="metadata of resource.kind.metadataList & oneTime">
-                    <dt>${metadata.name}</dt>
-                    <dd>
-                        ${resource.contents[metadata.baseId]}
-                    </dd>
-                </template>
                 <dt>${ 'Place' |t }</dt>
                 <dd>
                     <resource-place-display resource.bind="resource"></resource-place-display>

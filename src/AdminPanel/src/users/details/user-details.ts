@@ -12,11 +12,11 @@ export class UserDetails implements RoutableComponentActivate {
   constructor(private userRepository: UserRepository, private currentUser: User) {
   }
 
-  activate(params: any): void {
+  async activate(params: any) {
     if (params.id == this.currentUser.id) {
       this.user = this.currentUser;
     } else {
-      this.userRepository.get(params.id).then(user => this.user = user);
+      this.user = await this.userRepository.get(params.id);
     }
   }
 

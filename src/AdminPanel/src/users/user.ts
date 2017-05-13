@@ -1,11 +1,11 @@
 import {UserRole} from "./roles/user-role";
+import {Resource} from "../resources/resource";
 
 export class User {
   id: number;
   username: string;
   email: string;
-  firstname: string;
-  lastname: string;
+  userData: Resource;
   roles: Array<UserRole>;
 
   public get roleIdentifiers() {

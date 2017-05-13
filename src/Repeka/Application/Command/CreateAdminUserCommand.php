@@ -1,7 +1,8 @@
 <?php
 namespace Repeka\Application\Command;
 
-use Repeka\Application\Entity\UserEntity;
+use Repeka\Domain\UseCase\User\UserCreateCommand;
+use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -49,18 +50,12 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
         return $question;
     }
 
-    private function saveNewAdminAccount(string $username, string $password) {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $passwordEncoder = $this->getContainer()->get('security.password_encoder');
-        $user = new UserEntity();
-        $user->setFirstname('Administrator');
-        $user->setLastname('created ' . date('Y-m-d H:i'));
-        $user->setEmail($username . '@repeka.com');
-        $user->setUsername($username);
-        $encodedPassword = $passwordEncoder->encodePassword($user, $password);
-        $user->setPassword($encodedPassword);
-        $user->updateRoles($this->getContainer()->get('repository.user_role')->findAll());
-        $em->persist($user);
-        $em->flush();
+    private function saveNewAdminAccount(string $username, string $plainPassword) {
+        $container = $this->getContainer();
+        $commandBus = $container->get('repeka.command_bus');
+        $userCreateCommand = new UserCreateCommand($username, $plainPassword);
+        $user = $commandBus->handle($userCreateCommand);
+        $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $container->get('repository.user_role')->findAll());
+        $commandBus->handle($userUpdateRolesCommand);
     }
 }

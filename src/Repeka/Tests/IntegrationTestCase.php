@@ -16,11 +16,11 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 abstract class IntegrationTestCase extends FunctionalTestCase {
-    /** @var ContainerInterface */
+    /** @var ResettableContainerInterface */
     protected $container;
 
     private $application;
@@ -40,12 +40,12 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $this->application->setAutoExit(false);
         if (!defined('INTEGRATION_TESTS_BOOTSTRAPPED')) {
             define('INTEGRATION_TESTS_BOOTSTRAPPED', true);
-            $this->executeCommand('doctrine:database:create --if-not-exists');
-            $this->container->get('doctrine.orm.entity_manager')->getConnection()->exec('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+            $this->executeCommand('doctrine:database:drop --force --if-exists');
+            $this->executeCommand('doctrine:database:create');
         }
         $this->executeCommand('doctrine:schema:drop --force');
-        $this->executeCommand('doctrine:schema:create');
-        // no need to migrate DB because doctrine:schema:create creates it based on current models
+        $this->executeCommand('doctrine:migrations:version --delete --all');
+        $this->executeCommand('doctrine:migrations:migrate');
         $this->executeCommand('repeka:initialize');
     }
 
@@ -81,6 +81,10 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $executor->execute($loader->getFixtures(), true);
     }
 
+    protected function loadAllFixtures():void {
+        $this->executeCommand('doctrine:fixtures:load --append');
+    }
+
     protected function persistAndFlush($entities) {
         if (!is_array($entities)) {
             $entities = [$entities];
@@ -106,7 +110,9 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function createLanguage(string $code, string $flag, string $name): Language {
-        return $this->handleCommand(new LanguageCreateCommand($code, $flag, $name));
+        $result = $this->handleCommand(new LanguageCreateCommand($code, $flag, $name));
+        $this->container->reset();
+        return $result;
     }
 
     protected function createMetadata(

@@ -53,7 +53,7 @@ class PKAuthenticator implements SimpleFormAuthenticatorInterface {
     }
 
     public function supportsToken(TokenInterface $token, $providerKey) {
-        return ($token instanceof UsernamePasswordToken) && ($token->getProviderKey() === $providerKey);
+        return ($token instanceof UsernamePasswordToken) && ($token->getProviderKey() === $providerKey) && $token->getCredentials();
     }
 
     /** @SuppressWarnings("PHPMD.UnusedFormalParameter") */

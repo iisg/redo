@@ -17,7 +17,12 @@ class UserCreateCommandHandler {
     }
 
     public function handle(UserCreateCommand $command): User {
-        $user = $this->userFactory->createUser($command->getUsername());
+        $user = $this->userFactory->createUser(
+            $command->getUsername(),
+            $command->getPlainPassword(),
+            $command->getEmail(),
+            $command->getUserData()
+        );
         $this->userRepository->save($user);
         return $user;
     }

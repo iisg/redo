@@ -5,7 +5,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\IntegrationTestCase;
 
-class MetadataKindIntegrationTest extends IntegrationTestCase {
+class MetadataIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/metadata';
 
     public function setUp() {
@@ -79,13 +79,13 @@ class MetadataKindIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($metadata1->getId(), $response[0]->id);
         $this->assertEquals($metadata2->getId(), $response[1]->id);
         $client = self::createAdminClient();
-        $client->apiRequest('PUT', self::ENDPOINT, [$metadata2->getId(), $metadata1->getId()]);
+        $client->apiRequest('PUT', self::ENDPOINT, [$response[0]->id, $response[1]->id]);
         $this->assertStatusCode(200, $client->getResponse());
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT);
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals($metadata2->getId(), $response[0]->id);
-        $this->assertEquals($metadata1->getId(), $response[1]->id);
+        $this->assertEquals($metadata1->getId(), $response[0]->id);
+        $this->assertEquals($metadata2->getId(), $response[1]->id);
     }
 
     public function testOrderingWithRepeatedIds() {
