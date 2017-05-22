@@ -19,20 +19,20 @@ class ResourcesFixture extends RepekaFixture {
         $forbiddenBookResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
         /** @var ResourceEntity $book1 */
         $book1 = $this->handleCommand(new ResourceCreateCommand($bookResourceKind, [
-            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() => 'PHP i MySQL',
-            $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getId() => 'Błędy młodości...',
-            $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId() => 404
+            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() => ['PHP i MySQL'],
+            $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getId() => ['Błędy młodości...'],
+            $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId() => [404]
         ]));
         $this->handleCommand(new ResourceCreateCommand($bookResourceKind, [
-            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() => 'PHP - to można leczyć!',
+            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() => ['PHP - to można leczyć!'],
             $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getId() =>
-                'Poradnik dla cierpiących na zwyrodnienie interpretera.',
-            $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId() => 1337,
-            $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId() => $book1,
-            $this->getReference(MetadataStage2Fixture::REFERENCE_METADATA_RELATED_BOOK)->getId() => $book1,
+                ['Poradnik dla cierpiących na zwyrodnienie interpretera.'],
+            $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId() => [1337],
+            $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId() => [$book1],
+            $this->getReference(MetadataStage2Fixture::REFERENCE_METADATA_RELATED_BOOK)->getId() => [$book1],
         ]));
         $this->handleCommand(new ResourceCreateCommand($forbiddenBookResourceKind, [
-            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() => 'Python dla opornych',
+            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() => ['Python dla opornych'],
         ]));
     }
 }

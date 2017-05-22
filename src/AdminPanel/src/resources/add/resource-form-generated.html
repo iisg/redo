@@ -1,12 +1,12 @@
 <template>
+    <require from="common/components/font-awesome/fa"></require>
+    <require from="./resource-metadata-values-form"></require>
+
     <div class="form-group"
         repeat.for="metadata of resourceKind.metadataList">
-        <label>${metadata.label[currentLanguageCode] || metadata.name & oneTime}</label>
+        <h4>${metadata.label[currentLanguageCode] || metadata.name & oneTime}</h4>
         <div class="clearfix"></div>
-        <compose view-model="./controls/control-input"
-            view="./controls/control-input-${metadata.control}.html"
-            model.bind="{metadata: metadata, resource: resource}"></compose>
-        <p class="help-block"
-            if.one-time="metadata.description[currentLanguageCode]">${metadata.description[currentLanguageCode]}</p>
+        <resource-metadata-values-form metadata.bind="metadata"
+            resource.bind="resource"></resource-metadata-values-form>
     </div>
 </template>

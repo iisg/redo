@@ -1,13 +1,15 @@
 import {Metadata} from "resources-config/metadata/metadata";
-import {Resource} from "resources/resource";
+import {observable} from "aurelia-binding";
 
 export class ControlInput {
   metadata: Metadata;
+  @observable valueWrapper: ValueWrapper;
 
-  resource: Resource;
-
-  activate(model: {metadata: Metadata, resource: Resource}) {
-    this.metadata = model.metadata;
-    this.resource = model.resource;
+  activate(model: Object) {
+    $.extend(this, model);
   }
+}
+
+export class ValueWrapper {
+  value: any;
 }

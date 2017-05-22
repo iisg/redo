@@ -3,17 +3,19 @@
     <require from="./blob-to-url"></require>
 
     <input type="text"
-        readonly=""
+        readonly
         class="form-control"
-        placeholder="${ 'Select file' | t }">
+        placeholder="${ 'Select file' | t }"
+        ref="fileNameInput">
     <input type="file"
         name="usersFile"
         files.bind="files"
-        change.delegate="addFiles(files)">
+        change.delegate="fileSelected(files)">
 
-    <div class="files-list" if.bind="value">
+    <div class="files-list"
+        if.bind="value">
         ${value.size | sizeFormat:2}
         <img if.bind="isImage"
-            src.bind="value | blobToUrl"><img>
+            src.bind="value | blobToUrl"/>
     </div>
 </template>

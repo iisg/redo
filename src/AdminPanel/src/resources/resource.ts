@@ -8,7 +8,7 @@ export class Resource {
   currentPlaces: Array<WorkflowPlace>;
   availableTransitions: Array<WorkflowTransition> = [];
   permittedTransitions: Array<WorkflowTransition> = [];
-  contents: StringAnyMap = {};
+  contents: StringArrayMap = {};
 
   public canApplyTransition(transition: WorkflowTransition) {
     for (let permittedTransition of this.permittedTransitions) {
@@ -23,7 +23,7 @@ export class Resource {
 export function registerResourceValidationRules() {
   ValidationRules
     .ensure('kind').displayName("Resource kind").required()
-    .ensure('contents').satisfies(contents => Object.keys(contents).filter(metadataId => !!contents[metadataId]).length > 0)
+    .ensure('contents').satisfies(contents => Object.keys(contents).filter(metadataId => contents[metadataId].length > 0).length > 0)
     .withMessageKey('atLeastOneMetadataRequired')
     .on(Resource);
 }

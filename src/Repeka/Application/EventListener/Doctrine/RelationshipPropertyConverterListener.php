@@ -17,12 +17,14 @@ class RelationshipPropertyConverterListener {
         if (!($entity instanceof ResourceEntity)) {
             return;
         }
-
         /** @var ResourceEntity $entity */
         $contents = $entity->getContents();
-        foreach ($contents as &$value) {
-            if ($value instanceof ResourceEntity) {
-                $value = $value->getId();
+        foreach ($contents as &$values) {
+            if (count($values) > 0 && $values[0] instanceof ResourceEntity) {
+                $values = array_map(function ($value) {
+                    /** @var ResourceEntity $value */
+                    return $value->getId();
+                }, $values);
             }
         }
         $entity->updateContents($contents);

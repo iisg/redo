@@ -52,30 +52,32 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
         if (!$contentsFromRequest) {
             $this->handleEmptyRequestContents($request);
         }
-        foreach ($json->decode($contentsFromRequest) ?? [] as $metadataId => $value) {
+        foreach ($json->decode($contentsFromRequest) ?? [] as $metadataId => $values) {
             $baseMetadata = $this->metadataRepository->findOne($metadataId);
             if ($baseMetadata->getControl() === 'relationship') {
-                $relatedResource = $this->resourceRepository->findOne($value);
-                $contents[$metadataId] = $relatedResource;
+                $relatedResources = array_map([$this->resourceRepository, 'findOne'], $values);
+                $contents[$metadataId] = $relatedResources;
             } elseif ($baseMetadata->getControl() === 'file') {
-                /** @var UploadedFile $file */
-                $file = $request->files->get($value);
-                if ($file) {
-                    $fileName = $file->getClientOriginalName();
-                    $directoryName = md5(uniqid());
-                    $pathToFile = $this->uploadPath . '/' . $directoryName;
-                    if (!file_exists($pathToFile)) {
-                        umask(0);
-                        mkdir($pathToFile, 0750, true);
+                $contents[$metadataId] = [];
+                foreach ($values as $value) {
+                    /** @var UploadedFile $file */
+                    $file = $request->files->get($value);
+                    if ($file) {
+                        $fileName = $file->getClientOriginalName();
+                        $directoryName = md5(uniqid());
+                        $pathToFile = $this->uploadPath . '/' . $directoryName;
+                        if (!file_exists($pathToFile)) {
+                            mkdir($pathToFile, 0660, true);
+                        }
+                        $storedFile = $file->move($pathToFile, $fileName);
+                        chmod($storedFile->getRealPath(), 0660); // make sure file isn't executable
+                        $contents[$metadataId][] = $directoryName . '/' . $fileName;
+                    } else {
+                        $contents[$metadataId][] = $value;
                     }
-                    $storedFile = $file->move($pathToFile, $fileName);
-                    chmod($storedFile->getRealPath(), 0660); // make sure file isn't executable
-                    $contents[$metadataId] = $directoryName . '/' . $fileName;
-                } else {
-                    $contents[$metadataId] = $value;
                 }
             } else {
-                $contents[$metadataId] = $value;
+                $contents[$metadataId] = $values;
             }
         }
         return $contents;

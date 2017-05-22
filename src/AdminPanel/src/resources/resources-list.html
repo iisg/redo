@@ -7,7 +7,7 @@
         opened.bind="addFormOpened"></animated-plus-button>
 
     <div if.bind="addFormOpened"
-        class="fade-inup-outdown au-animate floating-form-full-width">
+        class="fade-inup-outdown au-animate floating-form-full-width well">
         <h2>${'Add new resource' & t}</h2>
         <resource-form submit.call="addNewResource(savedResource)"></resource-form>
     </div>

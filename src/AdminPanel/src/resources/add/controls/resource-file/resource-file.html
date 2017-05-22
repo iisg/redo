@@ -1,7 +1,0 @@
-<template>
-    <require from="common/components/file-upload/file-upload"></require>
-    <p if.bind="originalFileName">
-        ${originalFileName | fileName}
-    </p>
-    <file-upload value.bind="resource.contents[metadata.baseId]"></file-upload>
-</template>
