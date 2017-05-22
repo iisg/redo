@@ -29,22 +29,22 @@ class ResourceHasAllowedKindConstraintTest extends \PHPUnit_Framework_TestCase {
 
     public function testAcceptsValueAnythingWhenNoResourceKindIdsAreProvided() {
         $this->resourceKind->expects($this->never())->method('getId');
-        $this->assertTrue($this->constraint->validateValue([], $this->resource));
+        $this->assertTrue($this->constraint->validateValue([], [$this->resource]));
     }
 
     public function testAcceptsValueWhenSoleResourceKindIdMatches() {
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->assertTrue($this->constraint->validateValue([123], $this->resource));
+        $this->assertTrue($this->constraint->validateValue([123], [$this->resource]));
     }
 
     public function testAcceptsValueWhenAnyResourceKindIdMatches() {
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->assertTrue($this->constraint->validateValue([100, 111, 123, 200], $this->resource));
+        $this->assertTrue($this->constraint->validateValue([100, 111, 123, 200], [$this->resource]));
     }
 
     public function testRejectsValueWhenResourceKindIdDoesNotMatch() {
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->assertFalse($this->constraint->validateValue([100], $this->resource));
+        $this->assertFalse($this->constraint->validateValue([100], [$this->resource]));
     }
 
     public function testRejectsValueWhenResourceDoesNotExist() {
@@ -52,7 +52,7 @@ class ResourceHasAllowedKindConstraintTest extends \PHPUnit_Framework_TestCase {
         $repository->method('findOne')->willThrowException(new EntityNotFoundException('dummy', 0));
         $constraint = new ResourceHasAllowedKindConstraint($repository, $this->createMock(EntityExistsRule::class));
         $this->resourceKind->expects($this->never())->method('getId');
-        $this->assertFalse($constraint->validateValue([100], $this->resource));
+        $this->assertFalse($constraint->validateValue([100], [$this->resource]));
     }
 
     public function testAcceptsArgumentWhenResourceKindsExist() {

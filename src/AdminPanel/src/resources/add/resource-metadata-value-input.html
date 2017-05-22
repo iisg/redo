@@ -1,0 +1,9 @@
+<template>
+    <div class="form-group">
+        <compose view-model="./controls/control-input"
+            view="./controls/control-input-${metadata.control}.html"
+            model.bind="{metadata: metadata, valueWrapper: valueWrapper}"></compose>
+        <p class="help-block"
+            if.one-time="metadata.description[currentLanguageCode]">${metadata.description[currentLanguageCode]}</p>
+    </div>
+</template>

@@ -1,0 +1,29 @@
+.resource-metadata-values-table {
+  width: 100%;
+
+  tbody > tr > td { // needs to be overspecified to override other values
+    padding-top: 0;
+    padding-bottom: 8px;
+    border-top: none;
+  }
+
+  .index {
+    width: 50px;
+    text-align: right;
+    vertical-align: top;
+    padding-right: 10px;
+    padding-top: 11px !important;
+  }
+
+  .content {
+    position: relative;
+
+    .form-group {
+      margin-top: 0;
+    }
+  }
+
+  .action {
+    width: 80px;
+  }
+}

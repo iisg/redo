@@ -1,16 +1,18 @@
 import {ComponentAttached, bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {bindingMode} from "aurelia-binding";
+import {bindingMode, observable} from "aurelia-binding";
 import {ResourceRepository} from "../../../resource-repository";
 import {Resource} from "../../../resource";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 
 @autoinject
 export class ResourcePicker implements ComponentAttached {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: Resource;
   @bindable({defaultBindingMode: bindingMode.twoWay}) resourceId: number;
   @bindable resourceKindFilter: ResourceKind[] = [];
 
+  @observable value: Resource;
+
+  initialized: boolean = false;
   allResources: Resource[];
   resources: Resource[];
 
@@ -21,7 +23,9 @@ export class ResourcePicker implements ComponentAttached {
     this.resourceRepository.getList().then((resources) => {
       this.allResources = resources;
       this.updateFilteredResources();
+      this.resourceIdChanged(this.resourceId);
     });
+    this.initialized = true;
   }
 
   private updateFilteredResources() {
@@ -45,17 +49,36 @@ export class ResourcePicker implements ComponentAttached {
   }
 
   valueChanged(newValue: Resource) {
-    if (newValue.id != this.resourceId) {
+    if (!this.initialized) {
+      return;
+    }
+    if (newValue == undefined) {
+      this.resourceId = undefined;
+    } else if (newValue.id != this.resourceId) {
       this.resourceId = newValue.id;
     }
   }
 
-  resourceIdChanged(newValueId: number) {
-    if (!this.value || newValueId != this.value.id) {
-      this.resourceRepository.get(newValueId).then((resource) => {
-        this.value = resource;
-      });
+  resourceIdChanged(newResourceId: number) {
+    if (newResourceId == undefined) {
+      this.value = undefined;
+      return;
     }
+    if (!this.value || newResourceId != this.value.id) {
+      this.value = this.findResourceById(newResourceId);
+    }
+  }
+
+  findResourceById(id: number): Resource {
+    if (this.allResources == undefined) {
+      return undefined;
+    }
+    for (let resource of this.allResources) {
+      if (resource.id == id) {
+        return resource;
+      }
+    }
+    return undefined;
   }
 
   resourceKindFilterChanged() {

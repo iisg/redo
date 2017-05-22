@@ -48,7 +48,7 @@ export class BootstrapSelect implements ComponentAttached, ComponentDetached {
   }
 
   public static findValueIndex(value: Object|number, values: Object[]|number[]): number {
-    if (value == undefined || values.length == 0) {
+    if (value == undefined || values == undefined || values.length == 0) {
       return -1;
     }
     const needle = value.hasOwnProperty('id') ? value['id'] : value;

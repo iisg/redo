@@ -1,0 +1,33 @@
+<template>
+    <require from="./resource-metadata-value-input"></require>
+
+    <table class="table resource-metadata-values-table"
+        ref="valueTable">
+        <tr repeat.for="index of resource.contents[metadata.baseId].length">
+            <td class="index">
+                ${index + 1}.
+            </td>
+            <td class="content">
+                <resource-metadata-value-input metadata.bind="metadata"
+                    value.bind="resource.contents[metadata.baseId][index]"></resource-metadata-value-input>
+            </td>
+            <td class="action">
+                <button type="button"
+                    class="btn pull-right btn-danger"
+                    click.delegate="deleteIndex(index)">
+                    <fa name="trash"
+                        fw></fa>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <button type="button"
+                    class="btn btn-action"
+                    click.delegate="addNew()">
+                    ${'Add value' | t}
+                </button>
+            </td>
+        </tr>
+    </table>
+</template>

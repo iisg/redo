@@ -30,15 +30,25 @@ class ResourceHasAllowedKindConstraint extends AbstractMetadataConstraint {
         )->validate($allowedResourceKindIds);
     }
 
-    /** @param ResourceEntity $resource */
-    public function validateValue($allowedResourceKindIds, $resource): bool {
+    /** @param ResourceEntity[] $resources */
+    public function validateValue($allowedResourceKindIds, $resources): bool {
         Assertion::allInteger($allowedResourceKindIds);
-        Assertion::isInstanceOf($resource, ResourceEntity::class);
+        Assertion::allIsInstanceOf($resources, ResourceEntity::class);
         try {
-            $resource = $this->resourceRepository->findOne($resource->getId());
+            foreach ($resources as &$resource) {
+                $resource = $this->resourceRepository->findOne($resource->getId());
+            }
         } catch (EntityNotFoundException $e) {
             return false;
         }
-        return (count($allowedResourceKindIds) == 0) || in_array($resource->getKind()->getId(), $allowedResourceKindIds);
+        if (count($allowedResourceKindIds) == 0) {
+            return true;
+        }
+        foreach ($resources as $resource) {
+            if (!in_array($resource->getKind()->getId(), $allowedResourceKindIds)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

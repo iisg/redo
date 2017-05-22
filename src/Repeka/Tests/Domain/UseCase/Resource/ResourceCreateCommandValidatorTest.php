@@ -38,17 +38,17 @@ class ResourceCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testValid() {
-        $command = new ResourceCreateCommand($this->resourceKind, [2 => 'Some value']);
+        $command = new ResourceCreateCommand($this->resourceKind, [2 => ['Some value']]);
         $this->validator->validate($command);
     }
 
     public function testInvalidForNotInitializedResourceKind() {
-        $command = new ResourceCreateCommand(new ResourceKind([]), [2 => 'Some value']);
+        $command = new ResourceCreateCommand(new ResourceKind([]), [2 => ['Some value']]);
         $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testInvalidIfNonExistingMetadataId() {
-        $command = new ResourceCreateCommand($this->resourceKind, [3 => 'Some value']);
+        $command = new ResourceCreateCommand($this->resourceKind, [3 => ['Some value']]);
         $this->assertFalse($this->validator->isValid($command));
     }
 

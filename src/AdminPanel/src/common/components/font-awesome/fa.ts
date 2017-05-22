@@ -1,6 +1,7 @@
-import {bindable, inlineView} from "aurelia-templating";
+import {bindable, inlineView, containerless} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 
+@containerless
 @inlineView('<template><span class="fa ${fontAwesomeClasses}"></span></template>')
 export class Fa {
   @bindable name: string;

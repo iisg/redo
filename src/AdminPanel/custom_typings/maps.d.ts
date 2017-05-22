@@ -10,5 +10,5 @@ interface AnyMap<T> {
 interface StringStringMap extends StringMap<string> {
 }
 
-interface StringAnyMap extends StringMap<any> {
+interface StringArrayMap extends StringMap<any[]> {
 }

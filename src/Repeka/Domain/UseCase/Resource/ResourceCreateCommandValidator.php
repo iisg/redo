@@ -29,8 +29,8 @@ class ResourceCreateCommandValidator extends CommandAttributesValidator {
             ::attribute('kind', Validator::instance(ResourceKind::class)->callback(function (ResourceKind $rk) {
                 return $rk->getId() > 0;
             }))
+            ->attribute('contents', Validator::arrayType()->notEmpty()->each(Validator::arrayType()))
             ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getKind()))
-            ->attribute('contents', Validator::length(1))
             ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResourceKind($command->getKind()));
     }
 }

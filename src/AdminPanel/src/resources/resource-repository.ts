@@ -3,6 +3,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {ApiRepository} from "common/repository/api-repository";
 import {Resource} from "./resource";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
+import {ResourceKind} from "../resources-config/resource-kind/resource-kind";
 
 @autoinject
 export class ResourceRepository extends ApiRepository<Resource> {
@@ -23,12 +24,17 @@ export class ResourceRepository extends ApiRepository<Resource> {
   private prepareFormData(resource: Resource): FormData {
     let formData = new FormData();
     let resourceCopy = new Resource();
+    let fileCounter = 0;
 
     for (let metadataId in resource.contents) {
-      if (resource.contents[metadataId] instanceof File) {
-        resourceCopy.contents[metadataId] = this.wrapFileWithFormData(formData, resource, metadataId);
-      } else
+      if (resource.contents[metadataId].length > 0 && resource.contents[metadataId][0] instanceof File) {
+        resourceCopy.contents[metadataId] = resource.contents[metadataId].map(file => {
+          fileCounter++;
+          return this.wrapFileWithFormData(formData, file, resource.kind, metadataId, fileCounter);
+        });
+      } else {
         resourceCopy.contents[metadataId] = resource.contents[metadataId];
+      }
     }
     formData.append('id', resource.id);
     formData.append('kind_id', resource.kind.id);
@@ -36,20 +42,16 @@ export class ResourceRepository extends ApiRepository<Resource> {
     return formData;
   }
 
-  private wrapFileWithFormData(formData: FormData, resource: Resource, metadataId: any): string {
-    let file = resource.contents[metadataId];
-    let fileName = resource.contents[metadataId].name;
+  private wrapFileWithFormData(formData: FormData, file: File, resourceKind: ResourceKind, metadataId: any, fileIndex: number): string {
     let resourceName;
-
-    for (let metadata of resource.kind.metadataList) {
+    for (let metadata of resourceKind.metadataList) {
       if (metadata.baseId == metadataId) {
-        resourceName = metadata.id;
-        break;
+        resourceName = `metadata${metadata.id}_file${fileIndex}`;
+        formData.append(resourceName, file, file.name);
+        return resourceName;
       }
     }
-    formData.append(resourceName, file, fileName);
-
-    return resourceName.toString();
+    throw new Error(`Matching base metadata ${metadataId} not found in resource kind ${resourceKind.id}`);
   }
 
   public toEntity(data: Object): Promise<Resource> {

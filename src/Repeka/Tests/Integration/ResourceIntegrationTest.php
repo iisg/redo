@@ -30,7 +30,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->metadata->updateOrdinalNumber(0);
         $this->persistAndFlush($this->metadata);
         $this->resource = $this->createResource($this->resourceKind, [
-            $this->baseMetadata->getId() => 'Test value'
+            $this->baseMetadata->getId() => ['Test value']
         ]);
     }
 
@@ -41,7 +41,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertJsonStringSimilarToArray([[
             'id' => $this->resource->getId(),
             'kindId' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => 'Test value']
+            'contents' => [$this->metadata->getBaseId() => ['Test value']]
         ]], $client->getResponse()->getContent());
     }
 
@@ -52,7 +52,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertJsonStringSimilarToArray([
             'id' => $this->resource->getId(),
             'kindId' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => 'Test value']
+            'contents' => [$this->metadata->getBaseId() => ['Test value']]
         ], $client->getResponse()->getContent());
     }
 
@@ -60,14 +60,14 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [
             'kind_id' => $this->resourceKind->getId(),
-            'contents' => json_encode([$this->metadata->getBaseId() => 'created'])
+            'contents' => json_encode([$this->metadata->getBaseId() => ['created']])
         ]);
         $this->assertStatusCode(201, $client->getResponse());
         $repository = self::createClient()->getContainer()->get('repository.resource');
         $createdId = json_decode($client->getResponse()->getContent())->id;
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
-        $this->assertEquals([$this->metadata->getBaseId() => 'created'], $created->getContents());
+        $this->assertEquals([$this->metadata->getBaseId() => ['created']], $created->getContents());
     }
 
     public function testEditingResource() {
@@ -75,12 +75,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('POST', self::joinUrl(self::ENDPOINT, $this->resource->getId()), [
             'id' => $this->resource->getId(),
             'kind_id' => $this->resourceKind->getId(),
-            'contents' => json_encode([$this->metadata->getBaseId() => 'edited'])
+            'contents' => json_encode([$this->metadata->getBaseId() => ['edited']])
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get('repository.resource');
         $edited = $repository->findOne($this->resource->getId());
-        $this->assertEquals([$this->metadata->getBaseId() => 'edited'], $edited->getContents());
+        $this->assertEquals([$this->metadata->getBaseId() => ['edited']], $edited->getContents());
     }
 
     public function testEditingResourceKindFails() {
