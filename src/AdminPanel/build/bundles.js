@@ -54,10 +54,9 @@ module.exports = {
         "bootstrap",
         "bootstrap-material-design",
         "bootstrap-material-design/dist/css/ripples.min.css!text",
-        "bootstrap-select",
-        "bootstrap-select/dist/css/bootstrap-select.min.css!text",
         "jquery",
         "oribella-aurelia-sortable",
+        "select2",
         "sweetalert2",
         "sweetalert2/dist/sweetalert2.css!text",
         "text"

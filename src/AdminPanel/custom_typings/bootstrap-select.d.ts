@@ -1,3 +1,0 @@
-interface BootstrapSelectOptions {
-  noneResultsText?: string;
-}

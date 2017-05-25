@@ -1,14 +1,11 @@
 <template>
-    <require from="common/components/bootstrap-select/bootstrap-select"></require>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
 
-    <bootstrap-select values.bind="resourceKinds"
+    <dropdown-select values.bind="resourceKinds"
         value.bind="value"
-        live-search="true"
-        title="&mdash;"
-        multi-select.bind="multiSelect"
-        disabled.bind="disabled">
+        allow-clear="true">
         <template replace-part="option-template">
             ${option.label | inCurrentLanguage}
         </template>
-    </bootstrap-select>
+    </dropdown-select>
 </template>

@@ -1,7 +1,6 @@
 import "bootstrap";
 import "arrive";
 import "bootstrap-material-design";
-import "bootstrap-select";
 import {Aurelia, LogManager} from "aurelia-framework";
 import {ConsoleAppender} from "aurelia-logging-console";
 import {configure as configureHttpClient} from "config/http-client";
