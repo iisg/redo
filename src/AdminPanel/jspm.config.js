@@ -38,7 +38,6 @@ System.config({
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "bootstrap-material-design": "npm:bootstrap-material-design@0.5.10",
     "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.7",
-    "bootstrap-select": "npm:bootstrap-select@1.12.2",
     "compass-mixins": "npm:compass-mixins@0.12.10",
     "cytoscape": "npm:cytoscape@2.7.17",
     "cytoscape-autopan-on-drag": "npm:cytoscape-autopan-on-drag@2.0.1",
@@ -52,6 +51,7 @@ System.config({
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.11.3",
     "region-flags": "github:behdad/region-flags@1.0.1",
     "sass-material-colors": "npm:sass-material-colors@0.0.5",
+    "select2": "github:select2/select2@4.0.3",
     "sweetalert2": "npm:sweetalert2@6.6.0",
     "text": "github:systemjs/plugin-text@0.0.9",
     "github:jspm/nodelibs-assert@0.1.0": {
@@ -74,6 +74,9 @@ System.config({
     },
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
+    },
+    "github:select2/select2@4.0.3": {
+      "jquery": "npm:jquery@2.2.4"
     },
     "github:twbs/bootstrap@3.3.7": {
       "jquery": "npm:jquery@2.2.4"
@@ -253,9 +256,6 @@ System.config({
       "jquery": "npm:jquery@2.2.4",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:bootstrap-select@1.12.2": {
-      "jquery": "npm:jquery@2.2.4"
     },
     "npm:bootstrap@3.3.7": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",

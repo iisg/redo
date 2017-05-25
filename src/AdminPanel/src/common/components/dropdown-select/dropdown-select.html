@@ -1,10 +1,7 @@
 <template>
-    <select class="selectpicker show-tick form-control"
-        ref="dropdown"
-        change.delegate="stopPropagation($event)"
-        title="&mdash;"
-        multiple.bind="multiSelect"
-        disabled.bind="disabled">
+    <require from="select2/css/select2.min.css"></require>
+    <select ref="dropdown">
+        <option></option>
         <option repeat.for="option of values"
             value.bind="$index"
             model.bind="option">

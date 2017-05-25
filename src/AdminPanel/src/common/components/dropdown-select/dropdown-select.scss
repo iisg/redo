@@ -1,0 +1,16 @@
+.select2-results {
+  .selected-option {
+    display: none;
+  }
+}
+
+.select2-selection {
+  .dropdown-option {
+    display: none;
+  }
+}
+
+.select2-container .select2-selection--single{
+  min-height: 28px;
+  height: auto !important;
+}
