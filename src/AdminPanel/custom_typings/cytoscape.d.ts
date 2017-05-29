@@ -25,6 +25,7 @@ declare namespace Cytoscape {
     png(options: any): any;
     edges(): any;
     destroy(): void;
+    resize(): void;
   }
 }
 

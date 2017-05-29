@@ -38,6 +38,7 @@ export class WorkflowGraph {
     this.edgeHandles();
     this.contextMenu();
     this.readyPromiseResolve();
+    setTimeout(() => this.cytoscape.resize(), 400); // fix misclicks due to slide-in animation; timeout was chosen by experiment
   }
 
   private drawWorkflow(workflow: Workflow) {
