@@ -28,6 +28,7 @@ class ResourceKindsStage2Fixture extends RepekaFixture {
                 ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId()],
                 ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId()],
                 ['baseId' => $this->getReference(MetadataStage2Fixture::REFERENCE_METADATA_RELATED_BOOK)->getId()],
+                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE)->getId()],
             ]
         ));
     }

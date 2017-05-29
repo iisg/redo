@@ -9,6 +9,7 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class ResourceContentsParamConverter implements ParamConverterInterface {
@@ -57,15 +58,18 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
                 $relatedResource = $this->resourceRepository->findOne($value);
                 $contents[$metadataId] = $relatedResource;
             } elseif ($baseMetadata->getControl() === 'file') {
+                /** @var UploadedFile $file */
                 $file = $request->files->get($value);
                 if ($file) {
                     $fileName = $file->getClientOriginalName();
                     $directoryName = md5(uniqid());
                     $pathToFile = $this->uploadPath . '/' . $directoryName;
                     if (!file_exists($pathToFile)) {
-                        mkdir($pathToFile, 0660, true);
+                        umask(0);
+                        mkdir($pathToFile, 0750, true);
                     }
-                    $file->move($pathToFile, $fileName);
+                    $storedFile = $file->move($pathToFile, $fileName);
+                    chmod($storedFile->getRealPath(), 0660); // make sure file isn't executable
                     $contents[$metadataId] = $directoryName . '/' . $fileName;
                 } else {
                     $contents[$metadataId] = $value;
