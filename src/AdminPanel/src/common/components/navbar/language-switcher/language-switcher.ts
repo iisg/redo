@@ -2,8 +2,8 @@ import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {containerless} from "aurelia-templating";
 import {AureliaCookie} from "aurelia-cookie";
-import {supportedUILanguages} from "locales/language-constants";
-import {LanguageRepository} from "resources-config/language-config/language-repository";
+import {supportedUILanguages} from "../../../../locales/language-constants";
+import {LanguageRepository} from "../../../../resources-config/language-config/language-repository";
 import {Configure} from "aurelia-configuration";
 
 @containerless()

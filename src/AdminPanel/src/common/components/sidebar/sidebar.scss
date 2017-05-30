@@ -1,4 +1,4 @@
-@import "../styles";
+@import "../../styles";
 
 sidebar {
   position: fixed;
@@ -38,7 +38,7 @@ sidebar {
     width: 100%;
     color: #CCC;
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     z-index: 1000;
     padding-left: 5px;
   }
