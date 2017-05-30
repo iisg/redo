@@ -1,4 +1,4 @@
-@import "../styles";
+@import "../../styles";
 
 @mixin repeka-logo($size, $firstColor: #f47920, $secondColor: #00609e) {
   @include square($size);

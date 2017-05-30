@@ -1,5 +1,5 @@
 <template class="nested-navigation-menu">
-    <require from="../routes/nested-navigation-value-converter"></require>
+    <require from="../../routes/nested-navigation-value-converter"></require>
 
     <li repeat.for="item of router.navigation | nestedNavigation"
         class="${item.isActive || item.expanded ? 'current' : ''}"
