@@ -61,7 +61,7 @@
             <label>${'Add metadata kind' | t}</label>
             <resource-kind-metadata-chooser
                 has-metadata-to-choose.bind="hasMetadataToChoose"
-                change.delegate="addNewMetadata($event)"
+                value.bind="newMetadataBase"
                 resource-kind.bind="resourceKind"></resource-kind-metadata-chooser>
         </div>
         <div class="form-group"

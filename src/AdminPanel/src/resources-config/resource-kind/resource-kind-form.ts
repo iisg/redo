@@ -8,7 +8,6 @@ import {deepCopy} from "common/utils/object-utils";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {Metadata} from "../metadata/metadata";
-import {BootstrapSelectChangeEvent} from "../../common/components/bootstrap-select/bootstrap-select";
 
 @autoinject
 export class ResourceKindForm implements ComponentDetached {
@@ -20,6 +19,7 @@ export class ResourceKindForm implements ComponentDetached {
   baseMetadataMap: Map<Metadata, Metadata> = new Map();
   submitting = false;
   sortingMetadata = false;
+  @bindable newMetadataBase: Metadata; // actually we only need @observable but for some reason setting it to undefined doesn't propagate up
 
   private controller: ValidationController;
 
@@ -30,14 +30,18 @@ export class ResourceKindForm implements ComponentDetached {
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
 
-  addNewMetadata(event: BootstrapSelectChangeEvent<Metadata>) {
+  newMetadataBaseChanged() {
+    if (this.newMetadataBase == undefined) {
+      return;
+    }
     let metadata = new Metadata;
-    this.baseMetadataMap.set(metadata, event.detail.value);
+    this.baseMetadataMap.set(metadata, this.newMetadataBase);
     const baseMetadata = this.base(metadata);
     metadata.baseId = baseMetadata.id;
     metadata.control = baseMetadata.control;
     metadata.constraints = deepCopy(baseMetadata.constraints);
     this.resourceKind.metadataList.push(metadata);
+    this.newMetadataBase = undefined;
   }
 
   base(metadata: Metadata): Metadata {

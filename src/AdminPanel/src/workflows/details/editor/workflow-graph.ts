@@ -226,7 +226,7 @@ export class WorkflowGraph {
         }
       }
       // Object.values is not available in TS until ES2017, see the proposal: https://github.com/Microsoft/TypeScript/issues/8482
-      return Object['values'](deduplicatedEdges);
+      return Object.keys(deduplicatedEdges).map(key => deduplicatedEdges[key]);
     };
     let allTransitions = this.cytoscape.edges().map(this.edgeToTransition);
     allTransitions = mergeTransitionsWithTheSameLabel(allTransitions, 'froms');
