@@ -1,6 +1,8 @@
 <template>
-    <require from="common/components/bootstrap-select/bootstrap-select"></require>
+    <require from="common/components/entity-chooser/entity-chooser"></require>
 
-    <bootstrap-select values.bind="notUsedMetadata"
-        live-search="true"></bootstrap-select>
+    <entity-chooser entities.bind="metadataList"
+        value.bind="value"
+        contains-items.bind="hasMetadataToChoose"
+        exclude-entities.bind="resourceKind.metadataList"></entity-chooser>
 </template>
