@@ -1,6 +1,7 @@
 {
   "meta": {
-    "translatedName": "Polski"
+    "translatedName": "Polski",
+    "flag": "PL"
   },
   "Administration Panel": "Panel administracyjny",
   "Data import": "Import danych",

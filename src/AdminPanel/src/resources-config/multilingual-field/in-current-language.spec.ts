@@ -1,6 +1,6 @@
 import {InCurrentLanguageValueConverter} from "./in-current-language";
-import * as languageConstants from "locales/language-constants";
 import {I18N} from "aurelia-i18n";
+import {I18nConfig} from "../../locales/i18n-config";
 
 describe(InCurrentLanguageValueConverter.name, () => {
   let i18n: I18N;
@@ -8,8 +8,9 @@ describe(InCurrentLanguageValueConverter.name, () => {
 
   beforeEach(() => {
     i18n = new I18N();
-    spyOn(languageConstants, 'supportedUILanguages').and.returnValue(['PL', 'EN', 'RU']);
-    inCurrentLanguage = new InCurrentLanguageValueConverter(i18n);
+    const config = new I18nConfig(undefined);
+    config.getSupportedUILanguages = () => ['PL', 'EN', 'RU'];
+    inCurrentLanguage = new InCurrentLanguageValueConverter(i18n, config);
   });
 
   it("returns default polish translation", () => {
