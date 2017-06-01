@@ -15,6 +15,9 @@ class ConfigController extends ApiController {
      * @Route("/config.json")
      */
     public function getConfigAction() {
-        return $this->createJsonResponse(array_map([$this, 'getParameter'], self::PUBLIC_PARAMETERS));
+        $parameters = array_map([$this, 'getParameter'], self::PUBLIC_PARAMETERS);
+        $supportedLanguages = array_map('basename', glob('../web/admin/dist/locales/*', GLOB_ONLYDIR));
+        $response = array_merge($parameters, ['supported_ui_languages' => $supportedLanguages]);
+        return $this->createJsonResponse($response);
     }
 }

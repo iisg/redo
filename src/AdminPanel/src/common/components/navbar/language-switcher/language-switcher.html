@@ -4,14 +4,14 @@
     <a data-target="#"
         class="dropdown-toggle"
         data-toggle="dropdown">
-        <flag code.bind="currentLanguage"></flag>
+        <flag name.bind="currentLanguage | languageFlag"></flag>
         <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
         <li repeat.for="language of languages">
             <a click.delegate="select(language)"
                 show.bind="language != currentLanguage">
-                <flag code.one-time="language"></flag>
+                <flag name.one-time="language | languageFlag"></flag>
                 ${'meta//translatedName' | t: {"lng": language, "defaultValue": language.toUpperCase()} }
             </a>
         </li>
