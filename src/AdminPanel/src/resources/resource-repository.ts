@@ -11,14 +11,30 @@ export class ResourceRepository extends ApiRepository<Resource> {
     super(httpClient, 'resources');
   }
 
+  protected toBackend(resource: Resource): Object {
+    return this.prepareFormData(resource);
+  }
+
+  public toEntity(data: Object): Promise<Resource> {
+    return this.resourceKindRepository.get(data['kindId']).then(resourceKind => {
+      delete data['kindId'];
+      let resource = $.extend(new Resource(), data);
+      resource.kind = resourceKind;
+      return resource;
+    });
+  }
+
   public put(resource: Resource) {
     return this.httpClient.post(this.oneEntityEndpoint(resource), this.toBackend(resource))
       .then(response => this.toEntity(response.content));
   }
 
-  protected toBackend(resource: Resource): Object {
-    return this.prepareFormData(resource);
+  update(resource: Resource): Promise<Resource> {
+    return this.put(resource);
+  }
 
+  applyTransition(resource: Resource, transitionId: string): Promise<Resource> {
+    return this.patch(resource, {transitionId});
   }
 
   private prepareFormData(resource: Resource): FormData {
@@ -52,22 +68,5 @@ export class ResourceRepository extends ApiRepository<Resource> {
       }
     }
     throw new Error(`Matching base metadata ${metadataId} not found in resource kind ${resourceKind.id}`);
-  }
-
-  public toEntity(data: Object): Promise<Resource> {
-    return this.resourceKindRepository.get(data['kindId']).then(resourceKind => {
-      delete data['kindId'];
-      let resource = $.extend(new Resource(), data);
-      resource.kind = resourceKind;
-      return resource;
-    });
-  }
-
-  update(resource: Resource): Promise<Resource> {
-    return this.put(resource);
-  }
-
-  applyTransition(resource: Resource, transitionId: string): Promise<Resource> {
-    return this.patch(resource, {transitionId});
   }
 }

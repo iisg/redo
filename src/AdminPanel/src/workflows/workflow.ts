@@ -15,6 +15,7 @@ export class Workflow {
 export interface WorkflowPlace {
   id: string;
   label: MultilingualText;
+  requiredMetadataIds: number[];
 }
 
 export interface WorkflowTransition {

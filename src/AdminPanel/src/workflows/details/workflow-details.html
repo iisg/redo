@@ -1,5 +1,6 @@
 <template>
     <require from="./editor/workflow-editor"></require>
+    <require from="./metadata-requirement-editor/workflow-metadata-requirement-editor"></require>
 
     <div class="au-animate fade-inup-outup page-preloader"
         if.bind="!workflow">
@@ -12,6 +13,7 @@
         if.bind="workflow">
         <h1>${workflow.name | inCurrentLanguage}</h1>
         <workflow-editor workflow.bind="workflow"></workflow-editor>
+        <workflow-metadata-requirement-editor workflow.bind="workflow"></workflow-metadata-requirement-editor>
     </div>
 
 </template>

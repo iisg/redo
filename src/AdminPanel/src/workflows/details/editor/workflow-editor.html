@@ -1,5 +1,5 @@
 <template>
-    <require from="./workflow-diagram"></require>
+    <require from="./workflow-graph-display"></require>
     <require from="users/details/user-roles-chooser"></require>
 
     <div class="btn-group pull-right">
@@ -17,10 +17,10 @@
     <div class="col-sm-12 hidden-xs workflow-editor">
         <div class="row">
             <div class="col-sm-9 no-padding">
-                <workflow-diagram workflow.bind="workflow"
+                <workflow-graph-display workflow.bind="workflow"
                     editable.bind="!simulating"
                     current.bind="currentSimulationPlaces"
-                    on-graph-built.call="onGraphBuilt(graph)"></workflow-diagram>
+                    on-graph-built.call="onGraphBuilt(graph)"></workflow-graph-display>
             </div>
             <div class="col-sm-3 no-padding">
                 <div class="well"
@@ -36,7 +36,8 @@
                                 <multilingual-editor label="${'Label' | t}"
                                     class="vertical"
                                     keyup.delegate="saveSelectedElementChanges()"
-                                    value.bind="selectedElement.label"></multilingual-editor>
+                                    value.bind="selectedElement.label"
+                                    change.delegate="signalWorkflowPlacesUpdated()"></multilingual-editor>
                             </div>
                             <div class="form-group"
                                 if.bind="selectedElement.froms">

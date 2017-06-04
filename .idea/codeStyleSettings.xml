@@ -12,6 +12,7 @@
         <option name="HTML_KEEP_WHITESPACES_INSIDE" value="pre,textarea" />
         <option name="FORMATTER_TAGS_ENABLED" value="true" />
         <PHPCodeStyleSettings>
+          <option name="COMMA_AFTER_LAST_ARRAY_ELEMENT" value="true" />
           <option name="LOWER_CASE_BOOLEAN_CONST" value="true" />
           <option name="LOWER_CASE_NULL_CONST" value="true" />
           <option name="FORCE_SHORT_DECLARATION_ARRAY_STYLE" value="true" />

@@ -1,5 +1,6 @@
 <template>
-    <require from="workflows/details/editor/workflow-diagram"></require>
+    <require from="workflows/details/editor/workflow-graph-display"></require>
+    <require from="./transition-button"></require>
 
     <div class="row">
         <div class="col-sm-4">
@@ -11,26 +12,18 @@
             </div>
             <div class="btn-group-vertical au-animate fade-inup-outup btn-block"
                 if.bind="!fetchingTransitions">
-                <button class="btn btn-success btn-block"
-                    disabled.bind="!resource.canApplyTransition(transition)"
-                    click.trigger="applyTransition(transition.id)"
-                    repeat.for="transition of resource.availableTransitions">
-                    <span ref="transition['translatedLabel']"
-                        value.one-time="transition.label | inCurrentLanguage">
-                        <span if.one-time="transition['translatedLabel']['value']">
-                            ${ transition['translatedLabel']['value'] }
-                        </span>
-                        <span if.one-time="!transition['translatedLabel']['value']">
-                            <em>${ 'Transition' | t } #${ $index + 1 }</em>
-                        </span>
-                    </span>
-                </button>
+                <transition-button repeat.for="transition of resource.availableTransitions"
+                    resource.bind="resource"
+                    transition.bind="transition"
+                    apply-transition.call="applyTransition(transition.id)"
+                    fallback-text="${'Transition' | t} #${$index + 1}">
+                </transition-button>
             </div>
         </div>
         <div class="col-sm-8">
             <div if.bind="workflow">
-                <workflow-diagram workflow.bind="workflow"
-                    current.bind="resource.currentPlaces"></workflow-diagram>
+                <workflow-graph-display workflow.bind="workflow"
+                    current.bind="resource.currentPlaces"></workflow-graph-display>
             </div>
         </div>
     </div>

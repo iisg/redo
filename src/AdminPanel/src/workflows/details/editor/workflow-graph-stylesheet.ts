@@ -1,4 +1,4 @@
-export function workflowDiagramDefaultStylesheet() {
+export function workflowGraphDefaultStylesheet() {
   return [
     {
       selector: 'node',

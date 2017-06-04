@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Factory;
 
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 
 abstract class ResourceWorkflowDriverFactory {
     public function setForWorkflow(ResourceWorkflow $resourceWorkflow): ResourceWorkflow {

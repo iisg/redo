@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
+use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
@@ -21,6 +22,13 @@ class ResourceKindListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $resourceKindList = [$this->createMock(ResourceKind::class)];
         $this->resourceKindRepository->expects($this->once())->method('findAll')->willReturn($resourceKindList);
         $returnedList = $this->handler->handle(new ResourceKindListQuery());
+        $this->assertSame($resourceKindList, $returnedList);
+    }
+
+    public function testGettingTheListWithoutSystemResourceKinds() {
+        $resourceKindList = [$this->createMock(ResourceKind::class)];
+        $this->resourceKindRepository->expects($this->once())->method('findAllNonSystemResourceKinds')->willReturn($resourceKindList);
+        $returnedList = $this->handler->handle(new ResourceKindListQuery(false));
         $this->assertSame($resourceKindList, $returnedList);
     }
 }

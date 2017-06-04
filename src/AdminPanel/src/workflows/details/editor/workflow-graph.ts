@@ -2,7 +2,7 @@ import * as cytoscape from "cytoscape";
 import * as contextMenus from "cytoscape-context-menus";
 import * as edgeHandles from "cytoscape-edgehandles";
 import * as autopanOnDrag from "cytoscape-autopan-on-drag";
-import {workflowDiagramDefaultStylesheet} from "./workflow-diagram-stylesheet";
+import {workflowGraphDefaultStylesheet} from "./workflow-graph-stylesheet";
 import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
 import {generateId} from "common/utils/string-utils";
 import {I18N} from "aurelia-i18n";
@@ -20,6 +20,8 @@ export class WorkflowGraph {
   private readyPromiseResolve;
   public readonly ready = new Promise((resolve) => this.readyPromiseResolve = resolve);
 
+  public onPlacesChangedByUser: () => void = () => undefined;
+
   constructor(private i18n: I18N, private inCurrentLanguage: InCurrentLanguageValueConverter) {
   }
 
@@ -29,7 +31,7 @@ export class WorkflowGraph {
       layout: {
         name: 'concentric'
       },
-      style: workflowDiagramDefaultStylesheet(),
+      style: workflowGraphDefaultStylesheet(),
       maxZoom: 4,
     });
     this.cytoscape.autopanOnDrag();
@@ -87,6 +89,7 @@ export class WorkflowGraph {
           onClickFunction: ({cyTarget: element}) => {
             this.cytoscape.remove(element);
             this.fit();
+            this.onPlacesChangedByUser();
           },
         },
         {
@@ -95,13 +98,15 @@ export class WorkflowGraph {
           onClickFunction: ({cyRenderedPosition: position}) => {
             let newPlace = this.addPlace({
               id: generateId(''),
-              label: {}
+              label: {},
+              requiredMetadataIds: []
             });
             let newNode = this.$(newPlace);
             newNode.renderedPosition(position);
             this.deselectAll();
             newNode.select();
             this.fit();
+            this.onPlacesChangedByUser();
           }
         }
       ]
@@ -209,7 +214,8 @@ export class WorkflowGraph {
   private nodeToPlace(node): WorkflowPlace {
     return {
       id: node.id(),
-      label: node.data('label')
+      label: node.data('label'),
+      requiredMetadataIds: [] // these aren't available here, assume empty and restore in parent components if necessary
     };
   }
 
@@ -225,8 +231,7 @@ export class WorkflowGraph {
           deduplicatedEdges[edgeVisualId] = transition;
         }
       }
-      // Object.values is not available in TS until ES2017, see the proposal: https://github.com/Microsoft/TypeScript/issues/8482
-      return Object.keys(deduplicatedEdges).map(key => deduplicatedEdges[key]);
+      return Object.keys(deduplicatedEdges).map(key => deduplicatedEdges[key]); // get object's values; Object.values has poor support
     };
     let allTransitions = this.cytoscape.edges().map(this.edgeToTransition);
     allTransitions = mergeTransitionsWithTheSameLabel(allTransitions, 'froms');

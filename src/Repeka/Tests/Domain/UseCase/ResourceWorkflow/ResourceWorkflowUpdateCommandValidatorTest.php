@@ -6,15 +6,19 @@ use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandValidator;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var \PHPUnit_Framework_MockObject_MockObject|ResourceWorkflow */
     private $workflow;
     /** @var ResourceWorkflowUpdateCommandValidator */
     private $validator;
 
     protected function setUp() {
-        $this->validator = new ResourceWorkflowUpdateCommandValidator();
+        $entityExistsRule = $this->createEntityExistsMock(true);
+        $this->validator = new ResourceWorkflowUpdateCommandValidator($entityExistsRule);
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->workflow->expects($this->any())->method('getId')->willReturn(1);
     }
@@ -35,7 +39,16 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
     }
 
     public function testValidWithPlaceAsArrayWithIdentifier() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [['id' => '123', 'label' => []]], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [['id' => 'fooId', 'label' => []]], [], null, null);
+        $this->validator->validate($command);
+    }
+
+    public function testValidWithPlaceAsArrayWithRequiredMetadataIds() {
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [[
+            'id' => 'fooId',
+            'label' => ['PL' => 'A'],
+            'requiredMetadataIds' => [1, 2, 3]
+        ]], [], null, null);
         $this->validator->validate($command);
     }
 
@@ -94,5 +107,25 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
     public function testInvalidWhenLackOfTransitionData() {
         $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [['label' => [], 'froms' => []]], null, null);
         $this->assertFalse($this->validator->isValid($command));
+    }
+
+    public function testInvalidWhenRequiredMetadataIdsNotAnArray() {
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [[
+            'id' => 'fooId',
+            'label' => ['PL' => 'A'],
+            'requiredMetadataIds' => 'foo'
+        ]], [], null, null);
+        $this->assertFalse($this->validator->isValid($command));
+    }
+
+    public function testInvalidWhenRequiredMetadataIdsDoNotExist() {
+        $entityExistsMock = $this->createEntityExistsMock(false);
+        $validator = new ResourceWorkflowUpdateCommandValidator($entityExistsMock);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [[
+            'id' => 'fooId',
+            'label' => ['PL' => 'A'],
+            'requiredMetadataIds' => [1, 2, 'foo', 3]
+        ]], [], null, null);
+        $this->assertFalse($validator->isValid($command));
     }
 }

@@ -5,18 +5,14 @@ import {WorkflowPlace, WorkflowTransition} from "workflows/workflow";
 export class Resource {
   id: number;
   kind: ResourceKind;
-  currentPlaces: Array<WorkflowPlace>;
-  availableTransitions: Array<WorkflowTransition> = [];
-  permittedTransitions: Array<WorkflowTransition> = [];
+  currentPlaces: WorkflowPlace[];
+  availableTransitions: WorkflowTransition[] = [];
+  possibleTransitions: WorkflowTransition[] = [];
   contents: StringArrayMap = {};
 
   public canApplyTransition(transition: WorkflowTransition) {
-    for (let permittedTransition of this.permittedTransitions) {
-      if (permittedTransition.id == transition.id) {
-        return true;
-      }
-    }
-    return false;
+    const permittedTransitionIds = this.possibleTransitions.map(transition => transition.id);
+    return permittedTransitionIds.indexOf(transition.id) != -1;
   }
 }
 

@@ -1,0 +1,25 @@
+// https://css-tricks.com/simple-css-row-column-highlighting/
+table.highlight-col-row-on-hover {
+  $highlight-color: #f0ffb4;
+  overflow: hidden;
+
+  tr:hover {
+    background-color: $highlight-color;
+  }
+
+  td, th {
+    position: relative;
+
+    &:hover::after, &:hover::after {
+      display: block;
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -5000px;
+      bottom: -5000px;
+      z-index: -1;
+      background-color: $highlight-color;
+    }
+  }
+}

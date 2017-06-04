@@ -2,7 +2,7 @@
 namespace Repeka\Tests\Domain\Factory;
 
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Factory\ResourceWorkflowDriver;
+use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 
 class ResourceWorkflowDriverFactoryTest extends \PHPUnit_Framework_TestCase {
     /** @var SampleResourceWorkflowDriverFactory */

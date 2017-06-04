@@ -124,6 +124,7 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
         return false;
     }
 
+    /** @param UserRole[] $roles */
     public function updateRoles(array $roles): void {
         $this->userRoles->clear();
         foreach ($roles as $role) {

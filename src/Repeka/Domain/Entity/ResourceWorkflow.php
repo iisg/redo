@@ -3,7 +3,8 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
-use Repeka\Domain\Factory\ResourceWorkflowDriver;
+use Repeka\Domain\Workflow\ResourceWorkflowDriver;
+use Repeka\Domain\Workflow\ResourceWorkflowTransitionHelper;
 
 class ResourceWorkflow {
     private $id;
@@ -15,6 +16,8 @@ class ResourceWorkflow {
 
     /** @var ResourceWorkflowDriver */
     private $workflow;
+    /** @var ResourceWorkflowTransitionHelper */
+    private $transitionHelper;
 
     public function __construct(array $name) {
         $this->name = $name;
@@ -119,12 +122,6 @@ class ResourceWorkflow {
         return $this->workflow;
     }
 
-    public function getPermittedTransitions(ResourceEntity $resource, User $user) : array {
-        return array_filter($this->getTransitions($resource), function (ResourceWorkflowTransition $transition) use ($user) {
-            return $transition->canApply($user);
-        });
-    }
-
     public function getTransition($transitionId): ResourceWorkflowTransition {
         foreach ($this->getTransitionsAsObjects() as $transition) {
             if ($transition->getId() == $transitionId) {
@@ -132,5 +129,13 @@ class ResourceWorkflow {
             }
         }
         throw new NoSuchTransitionException($transitionId, $this);
+    }
+
+    public function getTransitionHelper(): ResourceWorkflowTransitionHelper {
+        if ($this->transitionHelper == null) {
+            // can't be assigned in constructor because Doctrine bypasses constructors when creating objects
+            $this->transitionHelper = new ResourceWorkflowTransitionHelper($this);
+        }
+        return $this->transitionHelper;
     }
 }

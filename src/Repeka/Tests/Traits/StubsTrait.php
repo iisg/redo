@@ -53,6 +53,7 @@ trait StubsTrait {
                 throw new EntityNotFoundException($repositoryClassName . 'Mock', $id);
             }
         });
+        $repository->method('save')->willReturnArgument(0);
         return $repository;
     }
 

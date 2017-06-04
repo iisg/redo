@@ -1,0 +1,27 @@
+<template>
+    <table class="table highlight-col-row-on-hover">
+        <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th repeat.for="place of workflow.places">
+                ${place.label | inCurrentLanguage & signal:'workflow-places-updated'}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr repeat.for="metadata of metadataList">
+            <th>${metadata.label | inCurrentLanguage}</th>
+            <td repeat.for="place of workflow.places"
+                class="text-center">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"
+                            model.bind="metadata.id"
+                            checked.bind="place.requiredMetadataIds">
+                    </label>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</template>

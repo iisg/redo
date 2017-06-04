@@ -40,7 +40,16 @@ class ResourceWorkflowTransition {
         return $this->permittedRoleIds;
     }
 
-    public function canApply(User $user): bool {
+    /** @param ResourceWorkflowPlace[] $permittedPlaces */
+    public function canEnterTos(array $permittedPlaces) {
+        $permittedIds = array_map(function ($place) {
+            return $place->getId();
+        }, $permittedPlaces);
+        $extraneousIds = array_diff($this->getToIds(), $permittedIds);
+        return count($extraneousIds) == 0;
+    }
+
+    public function userHasRoleRequiredToApply(User $user): bool {
         foreach ($this->getPermittedRoleIds() as $permittedRoleId) {
             if ($user->hasRole($permittedRoleId)) {
                 return true;
