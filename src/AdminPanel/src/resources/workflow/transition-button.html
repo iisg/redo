@@ -1,0 +1,15 @@
+<template>
+    <button class="btn btn-success btn-block"
+        disabled.bind="!canApplyTransition"
+        click.trigger="applyTransition()">
+        <span ref="transition['translatedLabel']"
+            value.one-time="transition.label | inCurrentLanguage">
+            <span if.one-time="transition['translatedLabel']['value']">
+                ${transition['translatedLabel']['value']}
+            </span>
+            <span if.one-time="!transition['translatedLabel']['value']">
+                <em>${fallbackText}</em>
+            </span>
+        </span>
+    </button>
+</template>

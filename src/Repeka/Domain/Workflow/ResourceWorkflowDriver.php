@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\Factory;
+namespace Repeka\Domain\Workflow;
 
 use Repeka\Domain\Entity\ResourceEntity;
 

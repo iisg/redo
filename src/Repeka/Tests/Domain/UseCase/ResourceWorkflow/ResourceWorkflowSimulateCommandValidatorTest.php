@@ -3,13 +3,17 @@ namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceWorkflowSimulateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceWorkflowSimulateCommandValidator */
     private $validator;
 
     protected function setUp() {
-        $this->validator = new ResourceWorkflowSimulateCommandValidator();
+        $entityExistsRule = $this->createEntityExistsMock(true);
+        $this->validator = new ResourceWorkflowSimulateCommandValidator($entityExistsRule);
     }
 
     public function testValid() {

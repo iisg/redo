@@ -353,9 +353,11 @@ services:
 
   command_validator.resource_workflow_update:
     class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandValidator
+    autowire: true
 
   command_validator.resource_workflow_simulate:
     class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator
+    autowire: true
 
   command_validator.user_create:
     class: Repeka\Domain\UseCase\User\UserCreateCommandValidator

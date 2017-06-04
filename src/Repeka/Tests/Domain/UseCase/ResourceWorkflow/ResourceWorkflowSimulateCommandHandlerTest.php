@@ -3,9 +3,9 @@ namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
-use Repeka\Domain\Factory\ResourceWorkflowDriver;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandHandler;
+use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 use Repeka\Tests\Domain\Factory\SampleResourceWorkflowDriverFactory;
 
 class ResourceWorkflowSimulateCommandHandlerTest extends \PHPUnit_Framework_TestCase {

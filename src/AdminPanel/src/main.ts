@@ -57,7 +57,7 @@ export function configure(aurelia: Aurelia) {
       'common/components/loading-bar/loading-bar',
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
-      'workflows/details/editor/promise-button'
+      'common/components/promise-button/promise-button'
     ]);
 
   configureHttpClient(aurelia);

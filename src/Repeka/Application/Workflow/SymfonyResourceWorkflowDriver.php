@@ -1,12 +1,12 @@
 <?php
-namespace Repeka\Application\Factory;
+namespace Repeka\Application\Workflow;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\ResourceWorkflow\CannotApplyTransitionException;
-use Repeka\Domain\Factory\ResourceWorkflowDriver;
+use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\Transition;

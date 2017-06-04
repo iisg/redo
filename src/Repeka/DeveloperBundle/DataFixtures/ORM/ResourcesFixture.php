@@ -2,9 +2,11 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
+use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 
 class ResourcesFixture extends RepekaFixture {
     const ORDER = ResourceKindsStage2Fixture::ORDER + 1;
@@ -34,5 +36,8 @@ class ResourcesFixture extends RepekaFixture {
         $this->handleCommand(new ResourceCreateCommand($forbiddenBookResourceKind, [
             $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() => ['Python dla opornych'],
         ]));
+        $adminUser = $manager->getRepository(UserEntity::class)->findBy(['username' => 'admin'])[0];
+        $this->handleCommand(new ResourceTransitionCommand($book1, 'e7d756ed-d6b3-4f2f-9517-679311e88b17', $adminUser));
+        $this->handleCommand(new ResourceTransitionCommand($book1, 'd3f73249-d10f-4d4b-8b63-be60b4c02081', $adminUser));
     }
 }

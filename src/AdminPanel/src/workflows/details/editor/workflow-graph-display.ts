@@ -4,7 +4,7 @@ import {WorkflowGraph} from "./workflow-graph";
 import {inject, NewInstance} from "aurelia-dependency-injection";
 
 @inject(NewInstance.of(WorkflowGraph))
-export class WorkflowDiagram implements ComponentAttached, ComponentDetached {
+export class WorkflowGraphDisplay implements ComponentAttached, ComponentDetached {
   diagramContainer: HTMLElement;
   @bindable workflow: Workflow;
   @bindable current: Array<WorkflowPlace>;

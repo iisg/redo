@@ -15,7 +15,7 @@ class ResourceEntity {
         $this->contents = $contents;
     }
 
-    public function getId(): int {
+    public function getId(): ?int {
         return $this->id;
     }
 
@@ -32,11 +32,15 @@ class ResourceEntity {
     }
 
     public function getContents(): array {
-        return $this->contents;
+        return array_filter($this->contents, function ($values) {
+            return count($values) > 0;
+        });
     }
 
     public function updateContents(array $contents) {
-        $this->contents = $contents;
+        $this->contents = array_filter($contents, function ($values) {
+            return count($values) > 0;
+        });
     }
 
     public function hasWorkflow() {
@@ -50,10 +54,5 @@ class ResourceEntity {
     public function applyTransition(string $transitionId): ResourceEntity {
         Assertion::true($this->hasWorkflow(), 'Could not apply transition for resource without a workflow. ID: ' . $this->id);
         return $this->getWorkflow()->apply($this, $transitionId);
-    }
-
-    public function canApplyTransition(User $executor, string $transitionId):bool {
-        $transition = $this->getWorkflow()->getTransition($transitionId);
-        return $transition->canApply($executor);
     }
 }

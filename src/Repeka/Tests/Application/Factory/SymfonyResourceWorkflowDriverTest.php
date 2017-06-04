@@ -2,7 +2,7 @@
 namespace Repeka\Tests\Application\Factory;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use Repeka\Application\Factory\SymfonyResourceWorkflowDriver;
+use Repeka\Application\Workflow\SymfonyResourceWorkflowDriver;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;

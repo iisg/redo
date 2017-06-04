@@ -40,9 +40,9 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             $normalized['availableTransitions'] = array_map(function (ResourceWorkflowTransition $transition) {
                 return $this->normalizer->normalize($transition);
             }, $workflow->getTransitions($resource));
-            $normalized['permittedTransitions'] = array_map(function (ResourceWorkflowTransition $transition) {
+            $normalized['possibleTransitions'] = array_map(function (ResourceWorkflowTransition $transition) {
                 return $this->normalizer->normalize($transition);
-            }, $workflow->getPermittedTransitions($resource, $this->tokenStorage->getToken()->getUser()));
+            }, $workflow->getTransitionHelper()->getPossibleTransitions($resource, $this->tokenStorage->getToken()->getUser()));
         }
         return $normalized;
     }
