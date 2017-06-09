@@ -61,10 +61,10 @@ export class ResourceKindForm implements ComponentDetached {
     return !!this.resourceKind.id;
   }
 
-  editChanged(newValue: ResourceKind) {
+  editChanged() {
     this.resourceKind = new ResourceKind;
-    if (newValue) {
-      this.resourceKind = $.extend(this.resourceKind, deepCopy(newValue));
+    if (this.edit) {
+      this.resourceKind = ResourceKind.clone(this.edit);
       this.resourceKind.metadataList.forEach(metadata => {
         this.metadataRepository.getBase(metadata).then(baseMetadata => {
           this.baseMetadataMap.set(metadata, baseMetadata);

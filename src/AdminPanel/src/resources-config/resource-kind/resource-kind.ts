@@ -4,6 +4,7 @@ import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/requ
 import {Workflow} from "workflows/workflow";
 import {WorkflowRepository} from "workflows/workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
+import {deepCopy} from "../../common/utils/object-utils";
 
 @autoinject
 export class ResourceKind {
@@ -39,6 +40,12 @@ export class ResourceKind {
         return this.workflow = workflow;
       });
     }
+  }
+
+  public static clone(resourceKind: Object): ResourceKind {
+    let cloned = deepCopy(resourceKind);
+    cloned.metadataList = cloned.metadataList.map(metadata => Metadata.clone(metadata));
+    return cloned;
   }
 }
 
