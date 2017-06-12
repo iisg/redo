@@ -2,7 +2,7 @@
 namespace Repeka\Tests\Application\Factory;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use Repeka\Application\Factory\ResourceSymfonyWorkflowStrategy;
+use Repeka\Application\Factory\SymfonyResourceWorkflowDriver;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -10,13 +10,13 @@ use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\ResourceWorkflow\CannotApplyTransitionException;
 
-class ResourceSymfonyWorkflowStrategyTest extends \PHPUnit_Framework_TestCase {
+class SymfonyResourceWorkflowDriverTest extends \PHPUnit_Framework_TestCase {
     /** @var PHPUnit_Framework_MockObject_MockObject|ResourceWorkflow */
     private $resourceWorkflow;
     /** @var PHPUnit_Framework_MockObject_MockObject|ResourceEntity */
     private $resource;
-    /** @var ResourceSymfonyWorkflowStrategy */
-    private $workflowStrategy;
+    /** @var SymfonyResourceWorkflowDriver */
+    private $workflowDriver;
 
     protected function setUp() {
         $this->resourceWorkflow = $this->createMock(ResourceWorkflow::class);
@@ -31,7 +31,7 @@ class ResourceSymfonyWorkflowStrategyTest extends \PHPUnit_Framework_TestCase {
             $this->transitionMock('AC'),
         ]);
         $this->resource = new ResourceEntity($this->createMock(ResourceKind::class), []);
-        $this->workflowStrategy = new ResourceSymfonyWorkflowStrategy($this->resourceWorkflow);
+        $this->workflowDriver = new SymfonyResourceWorkflowDriver($this->resourceWorkflow);
     }
 
     private function placeMock(string $placeId) {
@@ -49,30 +49,30 @@ class ResourceSymfonyWorkflowStrategyTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetPlacesForResource() {
-        $this->assertEquals(['A'], $this->workflowStrategy->getPlaces($this->resource));
+        $this->assertEquals(['A'], $this->workflowDriver->getPlaces($this->resource));
     }
 
     public function testGetTransitionsForResource() {
-        $this->assertEquals(['AB', 'AC'], $this->workflowStrategy->getTransitions($this->resource));
+        $this->assertEquals(['AB', 'AC'], $this->workflowDriver->getTransitions($this->resource));
     }
 
     public function testSettingCurrentPlaces() {
-        $this->workflowStrategy->setCurrentPlaces($this->resource, ['B']);
-        $this->assertEquals(['B'], $this->workflowStrategy->getPlaces($this->resource));
+        $this->workflowDriver->setCurrentPlaces($this->resource, ['B']);
+        $this->assertEquals(['B'], $this->workflowDriver->getPlaces($this->resource));
     }
 
     public function testApplyingTransition() {
-        $this->workflowStrategy->apply($this->resource, 'AB');
-        $this->assertEquals(['B'], $this->workflowStrategy->getPlaces($this->resource));
+        $this->workflowDriver->apply($this->resource, 'AB');
+        $this->assertEquals(['B'], $this->workflowDriver->getPlaces($this->resource));
     }
 
     public function testApplyingTransitionWithInvalidId() {
         $this->expectException(CannotApplyTransitionException::class);
-        $this->workflowStrategy->apply($this->resource, 'ABC');
+        $this->workflowDriver->apply($this->resource, 'ABC');
     }
 
     public function testApplyingTransitionInvalidForState() {
         $this->expectException(CannotApplyTransitionException::class);
-        $this->workflowStrategy->apply($this->resource, 'BC');
+        $this->workflowDriver->apply($this->resource, 'BC');
     }
 }

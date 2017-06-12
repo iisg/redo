@@ -6,13 +6,13 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\ResourceWorkflow\CannotApplyTransitionException;
-use Repeka\Domain\Factory\ResourceWorkflowStrategy;
+use Repeka\Domain\Factory\ResourceWorkflowDriver;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
 
-class ResourceSymfonyWorkflowStrategy implements ResourceWorkflowStrategy {
+class SymfonyResourceWorkflowDriver implements ResourceWorkflowDriver {
     /** @var Workflow */
     private $workflow;
     /** @var ResourceWorkflow */

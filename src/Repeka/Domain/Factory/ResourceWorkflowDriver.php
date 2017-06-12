@@ -3,7 +3,7 @@ namespace Repeka\Domain\Factory;
 
 use Repeka\Domain\Entity\ResourceEntity;
 
-interface ResourceWorkflowStrategy {
+interface ResourceWorkflowDriver {
     /** @return string[] */
     public function getPlaces(ResourceEntity $resource): array;
 
