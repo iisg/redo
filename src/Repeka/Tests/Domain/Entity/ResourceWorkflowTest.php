@@ -8,19 +8,19 @@ use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
-use Repeka\Domain\Factory\ResourceWorkflowStrategy;
+use Repeka\Domain\Factory\ResourceWorkflowDriver;
 
 class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     /** @var ResourceWorkflow */
     private $workflow;
     private $resource;
-    /** @var \PHPUnit_Framework_MockObject_MockObject|ResourceWorkflowStrategy */
-    private $workflowStrategy;
+    /** @var \PHPUnit_Framework_MockObject_MockObject|ResourceWorkflowDriver */
+    private $workflowDriver;
 
     protected function setUp() {
         $this->workflow = new ResourceWorkflow(['EN' => 'Some workflow']);
         $this->resource = $this->createMock(ResourceEntity::class);
-        $this->workflowStrategy = $this->createMock(ResourceWorkflowStrategy::class);
+        $this->workflowDriver = $this->createMock(ResourceWorkflowDriver::class);
     }
 
     public function testSettingName() {
@@ -75,20 +75,20 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('png', $this->workflow->getThumbnail());
     }
 
-    public function testThrowsExceptionWhenNoStrategy() {
+    public function testThrowsExceptionWhenNoDriver() {
         $this->expectException(InvalidArgumentException::class);
         $this->workflow->apply($this->resource, 'letsgo');
     }
 
     public function testApplyingTransition() {
-        $this->workflow->setWorkflowStrategy($this->workflowStrategy);
-        $this->workflowStrategy->expects($this->once())->method('apply')->with($this->resource, 'letsgo')->willReturnArgument(0);
+        $this->workflow->setWorkflowDriver($this->workflowDriver);
+        $this->workflowDriver->expects($this->once())->method('apply')->with($this->resource, 'letsgo')->willReturnArgument(0);
         $this->workflow->apply($this->resource, 'letsgo');
     }
 
     public function testMovingToState() {
-        $this->workflow->setWorkflowStrategy($this->workflowStrategy);
-        $this->workflowStrategy->expects($this->once())->method('setCurrentPlaces')
+        $this->workflow->setWorkflowDriver($this->workflowDriver);
+        $this->workflowDriver->expects($this->once())->method('setCurrentPlaces')
             ->with($this->resource, ['thestate'])->willReturnArgument(0);
         $this->workflow->setCurrentPlaces($this->resource, ['thestate']);
     }
@@ -99,8 +99,8 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
             new ResourceWorkflowTransition([], [], [], [], 'twotransition'),
             new ResourceWorkflowTransition([], [], [], [], 'anothertransition'),
         ]);
-        $this->workflow->setWorkflowStrategy($this->workflowStrategy);
-        $this->workflowStrategy->expects($this->once())->method('getTransitions')->with($this->resource)
+        $this->workflow->setWorkflowDriver($this->workflowDriver);
+        $this->workflowDriver->expects($this->once())->method('getTransitions')->with($this->resource)
             ->willReturn(['onetransition', 'anothertransition']);
         $availableTransitions = $this->workflow->getTransitions($this->resource);
         $this->assertCount(2, $availableTransitions);
@@ -114,8 +114,8 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
             new ResourceWorkflowPlace([], 'second'),
             new ResourceWorkflowPlace([], 'third'),
         ], []);
-        $this->workflow->setWorkflowStrategy($this->workflowStrategy);
-        $this->workflowStrategy->expects($this->once())->method('getPlaces')->with($this->resource)
+        $this->workflow->setWorkflowDriver($this->workflowDriver);
+        $this->workflowDriver->expects($this->once())->method('getPlaces')->with($this->resource)
             ->willReturn(['first', 'third']);
         $currentPlaces = $this->workflow->getPlaces($this->resource);
         $this->assertCount(2, $currentPlaces);
@@ -128,8 +128,8 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
             new ResourceWorkflowTransition([], [], [], ['A'], 'first'),
             new ResourceWorkflowTransition([], [], [], ['B'], 'second'),
         ]);
-        $this->workflow->setWorkflowStrategy($this->workflowStrategy);
-        $this->workflowStrategy->expects($this->once())->method('getTransitions')->with($this->resource)
+        $this->workflow->setWorkflowDriver($this->workflowDriver);
+        $this->workflowDriver->expects($this->once())->method('getTransitions')->with($this->resource)
             ->willReturn(['first', 'second']);
         $user = $this->createMock(User::class);
         $user->method('hasRole')->willReturnCallback(function ($role) {

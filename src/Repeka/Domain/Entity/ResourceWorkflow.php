@@ -3,7 +3,7 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
-use Repeka\Domain\Factory\ResourceWorkflowStrategy;
+use Repeka\Domain\Factory\ResourceWorkflowDriver;
 
 class ResourceWorkflow {
     private $id;
@@ -13,7 +13,7 @@ class ResourceWorkflow {
     private $diagram;
     private $thumbnail;
 
-    /** @var ResourceWorkflowStrategy */
+    /** @var ResourceWorkflowDriver */
     private $workflow;
 
     public function __construct(array $name) {
@@ -31,7 +31,7 @@ class ResourceWorkflow {
     /** @return ResourceWorkflowPlace[] */
     public function getPlaces(ResourceEntity $resource = null): array {
         if ($resource) {
-            $available = $this->getWorkflowStrategy()->getPlaces($resource);
+            $available = $this->getWorkflowDriver()->getPlaces($resource);
             return $this->filterByIds($available, $this->getPlacesAsObjects());
         } else {
             return $this->getPlacesAsObjects();
@@ -41,7 +41,7 @@ class ResourceWorkflow {
     /** @return ResourceWorkflowTransition[] */
     public function getTransitions(ResourceEntity $resource = null): array {
         if ($resource) {
-            $available = $this->getWorkflowStrategy()->getTransitions($resource);
+            $available = $this->getWorkflowDriver()->getTransitions($resource);
             return $this->filterByIds($available, $this->getTransitionsAsObjects());
         } else {
             return $this->getTransitionsAsObjects();
@@ -68,11 +68,11 @@ class ResourceWorkflow {
     }
 
     public function apply(ResourceEntity $resource, string $transition): ResourceEntity {
-        return $this->getWorkflowStrategy()->apply($resource, $transition);
+        return $this->getWorkflowDriver()->apply($resource, $transition);
     }
 
     public function setCurrentPlaces(ResourceEntity $resourceEntity, array $places): ResourceEntity {
-        return $this->getWorkflowStrategy()->setCurrentPlaces($resourceEntity, $places);
+        return $this->getWorkflowDriver()->setCurrentPlaces($resourceEntity, $places);
     }
 
     public function getDiagram() {
@@ -110,12 +110,12 @@ class ResourceWorkflow {
         $this->transitions[] = $transition->toArray();
     }
 
-    public function setWorkflowStrategy(ResourceWorkflowStrategy $strategy) {
-        $this->workflow = $strategy;
+    public function setWorkflowDriver(ResourceWorkflowDriver $driver) {
+        $this->workflow = $driver;
     }
 
-    private function getWorkflowStrategy(): ResourceWorkflowStrategy {
-        Assertion::notNull($this->workflow, 'ResourceWorkflowStrategy has not been set. You need to use ResourceWorkflowStrategyFactory.');
+    private function getWorkflowDriver(): ResourceWorkflowDriver {
+        Assertion::notNull($this->workflow, 'ResourceWorkflowDriver has not been set. You need to use ResourceWorkflowDriverFactory.');
         return $this->workflow;
     }
 
