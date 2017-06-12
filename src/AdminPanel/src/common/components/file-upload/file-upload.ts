@@ -4,7 +4,7 @@ import {bindingMode, computedFrom} from "aurelia-binding";
 
 @autoinject
 export class FileUpload implements ComponentAttached {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: File;
+  @bindable({defaultBindingMode: bindingMode.twoWay}) value: File|string;
   files: Array<File>;
 
   fileNameInput: Element;
@@ -13,17 +13,30 @@ export class FileUpload implements ComponentAttached {
     this.value = files[0];
   }
 
-  valueChanged(file: File) {
-    $(this.fileNameInput).val(file ? file.name : '');
+  valueChanged() {
+    $(this.fileNameInput).val(this.displayName);
   }
 
   attached(): void {
     // valueChanged() might have fired before fileNameInput is assigned, make sure it fires after attaching
-    this.valueChanged(this.value);
+    this.valueChanged();
   }
 
   @computedFrom('value')
   get isImage() {
-    return this.value && this.value.type.split('/')[0] == 'image';
+    if (!this.value) {
+      return false;
+    }
+    const file = this.value as File; // it may not be a File, need to test it!
+    return file.type && file.type.split('/')[0] == 'image';
+  }
+
+  @computedFrom('value')
+  get displayName(): string {
+    if (!this.value) {
+      return '';
+    }
+    const file = this.value as File;
+    return file.name ? file.name : this.value as string;
   }
 }
