@@ -16,6 +16,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
@@ -49,10 +50,12 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $this->executeCommand('repeka:initialize');
     }
 
-    private function executeCommand(string $command) {
-        $input = new StringInput("$command --quiet --env=test");
+    protected function executeCommand(string $command): string {
+        $input = new StringInput("$command --env=test");
+        $output = new BufferedOutput();
         $input->setInteractive(false);
-        $this->application->run($input);
+        $this->application->run($input, $output);
+        return $output->fetch();
     }
 
     protected static function createAuthenticatedClient($username, $password, array $options = [], array $server = []): TestClient {
