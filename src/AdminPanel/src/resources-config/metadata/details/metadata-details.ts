@@ -25,12 +25,9 @@ export class MetadataDetails implements RoutableComponentActivate {
     this.urlListener.dispose();
   }
 
-  activate(params: any, routeConfig: RouteConfig): void {
-    this.metadata = undefined;
-    this.metadataRepository.get(params.id).then(metadata => {
-      this.metadata = metadata;
-      routeConfig.navModel.setTitle(this.i18n.tr('Metadata') + ` #${metadata.id}`);
-    });
+  async activate(params: any, routeConfig: RouteConfig) {
+    this.metadata = await this.metadataRepository.get(params.id);
+    routeConfig.navModel.setTitle(this.i18n.tr('Metadata') + ` #${this.metadata.id}`);
   }
 
   childMetadataSaved(savedMetadata: Metadata) {

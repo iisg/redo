@@ -23,12 +23,16 @@
             <div class="tab-pane fade active in"
                 id="chooseExisting">
                 <h2>${'Choose existing submetadata kind' | t}</h2>
-                <entity-chooser value.bind="baseMetadata"
-                    entities.bind="metadataList"
-                    exclude-entities.bind="parentMetadataChildren"></entity-chooser>
-                <metadata-form if.bind="baseMetadata"
-                    template.bind="baseMetadata"
-                    submit.call="addChildMetadata(parentMetadata.id, baseMetadata.id, editedMetadata)"></metadata-form>
+                <div class="form-group">
+                    <entity-chooser value.bind="baseMetadata"
+                        entities.bind="metadataList"
+                        exclude-entities.bind="parentMetadataChildren"></entity-chooser>
+                </div>
+                <div class="form-group">
+                    <metadata-form if.bind="baseMetadata"
+                        template.bind="baseMetadata"
+                        submit.call="addChildMetadata(parentMetadata.id, baseMetadata.id, editedMetadata)"></metadata-form>
+                </div>
             </div>
             <div class="tab-pane fade"
                 id="addNew">
