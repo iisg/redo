@@ -13,7 +13,7 @@ export class ResourceKindRepository extends ApiRepository<ResourceKind> {
   }
 
   public get(id: number): Promise<ResourceKind> {
-    return this.getListWithSystemResourceKind().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
+    return this.getListWithSystemResourceKinds().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
   }
 
   @cachedResponse(30000)
@@ -22,7 +22,7 @@ export class ResourceKindRepository extends ApiRepository<ResourceKind> {
   }
 
   @cachedResponse(30000)
-  public getListWithSystemResourceKind(): Promise<ResourceKind[]> {
+  public getListWithSystemResourceKinds(): Promise<ResourceKind[]> {
     return this.httpClient
       .createRequest(this.endpoint)
       .asGet()

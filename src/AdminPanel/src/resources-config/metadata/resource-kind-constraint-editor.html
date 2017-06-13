@@ -8,6 +8,7 @@
         <resource-kind-chooser value.bind="values"
             multi-select="true"
             disabled.bind="disabled"
+            system-resource-kinds.one-time="true"
             if.bind="!disabled || values.length > 0"></resource-kind-chooser>
         <div class="input-group-addon">
             <button type="button"
