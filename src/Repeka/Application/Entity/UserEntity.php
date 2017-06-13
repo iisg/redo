@@ -97,15 +97,12 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
             ) = unserialize($serialized);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEmail() {
+    public function getEmail(): ?string {
         return $this->email;
     }
 
     /**
-     * @param mixed $email
+     * @param string $email
      * @return User
      */
     public function setEmail($email) {

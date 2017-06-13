@@ -32,7 +32,7 @@ class UserCreateCommand extends Command {
         return $this->plainPassword;
     }
 
-    public function getEmail() {
+    public function getEmail(): ?string {
         return $this->email;
     }
 }

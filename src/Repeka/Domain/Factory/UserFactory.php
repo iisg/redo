@@ -38,8 +38,8 @@ abstract class UserFactory {
 
     abstract protected function createApplicationUser(
         string $username,
-        string $plainPassword,
-        string $email,
+        ?string $plainPassword,
+        ?string $email,
         ResourceEntity $userData
     ): User;
 }
