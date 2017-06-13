@@ -3,7 +3,10 @@ parameters:
 doctrine:
   dbal:
     password: postgres
-m6_statsd:
-  servers:
-    default:
-      address: 'udp://localhost'
+repeka:
+  pk_auth:
+    wsdl: http://soap.biblos.pk.edu.pl/soap.php?WSDL
+    options:
+      login: pk
+      password: qwerty
+    local_accounts_enabled: true
