@@ -15,6 +15,15 @@ export class ResourceRepository extends ApiRepository<Resource> {
     return this.prepareFormData(resource);
   }
 
+  public getListWithSystemResourceKinds(): Promise<Resource[]> {
+    return this.httpClient
+      .createRequest(this.endpoint)
+      .asGet()
+      .withParams({systemResourceKind: true})
+      .send()
+      .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
+  }
+
   public toEntity(data: Object): Promise<Resource> {
     return this.resourceKindRepository.get(data['kindId']).then(resourceKind => {
       delete data['kindId'];

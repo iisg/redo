@@ -20,7 +20,7 @@ export class ResourcePicker implements ComponentAttached {
   }
 
   attached() {
-    this.resourceRepository.getList().then((resources) => {
+    this.resourceRepository.getListWithSystemResourceKinds().then((resources) => {
       this.allResources = resources;
       this.updateFilteredResources();
       this.resourceIdChanged(this.resourceId);

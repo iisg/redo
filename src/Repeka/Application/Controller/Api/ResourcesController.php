@@ -21,8 +21,9 @@ class ResourcesController extends ApiController {
      * @Route
      * @Method("GET")
      */
-    public function getListAction() {
-        $resources = $this->handle(new ResourceListQuery());
+    public function getListAction(Request $request) {
+        $includeSystemResources = !!$request->query->get('systemResourceKind');
+        $resources = $this->handle(new ResourceListQuery($includeSystemResources));
         return $this->createJsonResponse($resources);
     }
 

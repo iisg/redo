@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
-use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
@@ -18,8 +17,8 @@ class ResourceKindsController extends ApiController {
      * @Method("GET")
      */
     public function getListAction(Request $request) {
-        $includeSystemResources = !!$request->query->get('systemResourceKind');
-        $resourceKindList = $this->commandBus->handle(new ResourceKindListQuery($includeSystemResources));
+        $includeSystemResourceKinds = !!$request->query->get('systemResourceKind');
+        $resourceKindList = $this->commandBus->handle(new ResourceKindListQuery($includeSystemResourceKinds));
         return $this->createJsonResponse($resourceKindList);
     }
 

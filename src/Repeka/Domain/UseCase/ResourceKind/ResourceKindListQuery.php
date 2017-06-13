@@ -4,14 +4,14 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 
 class ResourceKindListQuery extends NonValidatedCommand {
-    private $includeSystemResources;
+    private $includeSystemResourceKinds;
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
-    public function __construct(bool $includeSystemResources = true) {
-        $this->includeSystemResources = $includeSystemResources;
+    public function __construct(bool $includeSystemResourceKinds = true) {
+        $this->includeSystemResourceKinds = $includeSystemResourceKinds;
     }
 
-    public function includeSystemResources(): bool {
-        return $this->includeSystemResources;
+    public function includeSystemResourceKinds(): bool {
+        return $this->includeSystemResourceKinds;
     }
 }

@@ -9,6 +9,7 @@ export class ResourceKindChooser implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay}) value: ResourceKind|ResourceKind[];
   @bindable({defaultBindingMode: bindingMode.oneTime}) multiSelect: boolean = false;
   @bindable disabled: boolean = false;
+  @bindable systemResourceKinds: boolean = false;
 
   private resourceKinds: ResourceKind[] = [];
 
@@ -16,8 +17,11 @@ export class ResourceKindChooser implements ComponentAttached {
   }
 
   attached() {
-      this.resourceKindRepository.getList().then(resourceKinds => {
-        this.resourceKinds = resourceKinds;
-      });
+    const promise = this.systemResourceKinds
+      ? this.resourceKindRepository.getListWithSystemResourceKinds()
+      : this.resourceKindRepository.getList();
+    promise.then(resourceKinds => {
+      this.resourceKinds = resourceKinds;
+    });
   }
 }
