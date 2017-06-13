@@ -28,7 +28,8 @@
             </th>
         </tr>
         </tfoot>
-        <tbody class="au-stagger">
+        <tbody class="au-stagger"
+            if.bind="metadataChildrenList">
         <tr repeat.for="metadataChild of metadataChildrenList"
             hover-aware.one-time="metadataChild"
             class="au-animate fade-inup-outdown">
