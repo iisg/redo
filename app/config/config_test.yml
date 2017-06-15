@@ -15,7 +15,7 @@ framework:
 monolog:
   handlers:
     main:
-      channels: [!event]
+      channels: [!event, !exception_listener]
       level: notice
       path: "%kernel.logs_dir%/%kernel.environment%.log"
       type: stream

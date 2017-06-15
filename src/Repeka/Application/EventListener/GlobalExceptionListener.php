@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\EventListener;
 
+use Psr\Log\LoggerInterface;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Exception\DomainException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,7 +13,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class GlobalExceptionHandler {
+class GlobalExceptionListener {
     use TargetPathTrait;
 
     const FIREWALL_NAME = 'main';
@@ -20,24 +21,23 @@ class GlobalExceptionHandler {
 
     private $isDebug;
 
-    /**
-     * @var TokenStorage
-     */
+    /** @var TokenStorage */
     private $tokenStorage;
-
-    /**
-     * @var SessionInterface
-     */
+    /** @var SessionInterface */
     private $session;
+    /** @var LoggerInterface */
+    private $logger;
 
-    public function __construct($isDebug, TokenStorage $tokenStorage, SessionInterface $session) {
+    public function __construct($isDebug, TokenStorage $tokenStorage, SessionInterface $session, LoggerInterface $logger) {
         $this->isDebug = $isDebug;
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
+        $this->logger = $logger;
     }
 
     public function onException(GetResponseForExceptionEvent $event) {
         $exception = $event->getException();
+        $this->logger->error($this->getFormattedExceptionString($exception));
         $request = $event->getRequest();
         $errorResponse = $this->createErrorResponse($exception, $request);
         $event->setResponse($errorResponse);
@@ -65,7 +65,7 @@ class GlobalExceptionHandler {
 
     private function createJSONResponse($status, $message): JsonResponse {
         return new JsonResponse([
-            'message' => $message
+            'message' => $message,
         ], $status);
     }
 
@@ -75,5 +75,17 @@ class GlobalExceptionHandler {
             $path = substr($callingAddress, $offset);
             $this->saveTargetPath($this->session, self::FIREWALL_NAME, $path);
         }
+    }
+
+    private function getFormattedExceptionString(\Exception $exception): string {
+        $exceptionLines = preg_split("/[\n\r]+/", (string)$exception);
+        $outputLines = [];
+        while (count($exceptionLines) > 0 && strlen($exceptionLines[0]) > 0 && $exceptionLines[0][0] != '#') {
+            $outputLines[] = array_shift($exceptionLines); // copy lines until stack trace
+        }
+        foreach ($exceptionLines as $line) {
+            $outputLines[] = preg_replace('/\): +/', "):\n    ", $line, 2);
+        }
+        return implode("\n", $outputLines);
     }
 }
