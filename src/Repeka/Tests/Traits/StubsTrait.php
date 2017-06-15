@@ -1,7 +1,10 @@
 <?php
 namespace Repeka\Tests\Traits;
 
+use Repeka\Application\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Validation\MetadataConstraintProvider;
@@ -34,6 +37,25 @@ trait StubsTrait {
         return $metadata;
     }
 
+    /**
+     * @param Metadata[] $metadataList
+     * @return ResourceKind|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function createResourceKindMock(array $metadataList): ResourceKind {
+        $resourceKind = $this->createMock(ResourceKind::class);
+        $resourceKind->method('getMetadataList')->willReturn($metadataList);
+        return $resourceKind;
+    }
+
+    /** @return ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
+    protected function createResourceMock(int $id, ResourceKind $resourceKind, array $contents = []): ResourceEntity {
+        $mock = $this->createMock(ResourceEntity::class);
+        $mock->method('getKind')->willReturn($resourceKind);
+        $mock->method('getId')->willReturn($id);
+        $mock->method('getContents')->willReturn($contents);
+        return $mock;
+    }
+
     protected function createEntityLookupMap(array $entityList): array {
         $result = [];
         foreach ($entityList as $metadata) {
@@ -45,6 +67,7 @@ trait StubsTrait {
     protected function createRepositoryStub(string $repositoryClassName, array $entityList = []) {
         $entityList = array_values($entityList);
         $lookup = $this->createEntityLookupMap($entityList);
+        $idCounter = 1;
         $repository = $this->createMock($repositoryClassName);
         $repository->method('findOne')->willReturnCallback(function ($id) use ($lookup, $repositoryClassName) {
             if (array_key_exists($id, $lookup)) {
@@ -53,7 +76,13 @@ trait StubsTrait {
                 throw new EntityNotFoundException($repositoryClassName . 'Mock', $id);
             }
         });
-        $repository->method('save')->willReturnArgument(0);
+        $repository->method('save')->willReturnCallback(function ($entity) use (&$idCounter) {
+            if ($entity->getId() === null) {
+                // Entities returned by save() method must have an ID assigned.
+                EntityUtils::forceSetId($entity, $idCounter++);
+            }
+            return $entity;
+        });
         return $repository;
     }
 

@@ -29,7 +29,6 @@
     "ext-mbstring": "*",
     "ext-pdo_pgsql": "*",
     "ext-soap": "*",
-    "kherge/json": "2.0",
     "m6web/statsd-bundle": "^2.14",
     "myclabs/php-enum": "^1.5",
     "qandidate/symfony-json-request-transformer": "^1.2.2",

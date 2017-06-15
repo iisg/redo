@@ -2,6 +2,7 @@
 namespace Repeka\Application\Command\Initialization;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Repeka\Application\Entity\EntityUtils;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
@@ -27,7 +28,7 @@ class SystemUserResourceInitializer extends ApplicationInitializer {
             if (!$resourceKindRepository->exists($userResourceKindId)) {
                 $systemUserResourceKind = new SystemResourceKind($userResourceKindId);
                 $resourceKind = new ResourceKind([]);
-                $this->forceSetId($resourceKind, $systemUserResourceKind->getValue());
+                EntityUtils::forceSetId($resourceKind, $systemUserResourceKind->getValue());
                 $label = [];
                 $label['PL'] = $label['EN'] = strtolower($userResourceKindName);
                 $resourceKind->update($label, []);

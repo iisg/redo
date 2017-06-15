@@ -33,7 +33,7 @@ export class ResourceRepository extends ApiRepository<Resource> {
     });
   }
 
-  public put(resource: Resource) {
+  public put(resource: Resource): Promise<Resource> {
     return this.httpClient.post(this.oneEntityEndpoint(resource), this.toBackend(resource))
       .then(response => this.toEntity(response.content));
   }
@@ -52,8 +52,11 @@ export class ResourceRepository extends ApiRepository<Resource> {
     let fileCounter = 0;
 
     for (let metadataId in resource.contents) {
-      if (resource.contents[metadataId].length > 0 && resource.contents[metadataId][0] instanceof File) {
+      if (resource.contents[metadataId].length > 0) {
         resourceCopy.contents[metadataId] = resource.contents[metadataId].map(file => {
+          if (!(file instanceof File)) {
+            return file;
+          }
           fileCounter++;
           return this.wrapFileWithFormData(formData, file, resource.kind, metadataId, fileCounter);
         });

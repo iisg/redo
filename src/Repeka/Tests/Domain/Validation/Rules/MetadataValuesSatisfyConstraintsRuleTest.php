@@ -13,7 +13,7 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
 
     public function testAcceptsWhenThereAreNoConstraints() {
         $constraintlessMetadata = Metadata::create('', '', []);
-        $resourceKind = $this->createResourceKindMock($constraintlessMetadata);
+        $resourceKind = $this->createSingleMetadataResourceKindMock($constraintlessMetadata);
         $constraintProvider = $this->createMock(MetadataConstraintProvider::class);
         $constraintProvider->expects($this->never())->method('get');
         $validator = new MetadataValuesSatisfyConstraintsRule($constraintProvider);
@@ -22,7 +22,7 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
 
     public function testAcceptsWhenAllRulesAccept() {
         $metadata = Metadata::create('', '', [], [], [], ['constraint1' => 'arg1', 'constraint2' => 'arg2']);
-        $resourceKind = $this->createResourceKindMock($metadata);
+        $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
         $constraint = $this->createMock(AbstractMetadataConstraint::class);
         $constraint->expects($this->exactly(4))->method('validateValue')->willReturn(true);
         $constraintProvider = $this->createMetadataConstraintProviderStub([
@@ -35,7 +35,7 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
 
     public function testRejectsWhenAnyRuleRejects() {
         $metadata = Metadata::create('', '', [], [], [], ['constraint1' => 'arg1', 'constraint2' => 'arg2']);
-        $resourceKind = $this->createResourceKindMock($metadata);
+        $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
         $constraint = $this->createMock(AbstractMetadataConstraint::class);
         $constraint->expects($this->exactly(3))->method('validateValue')->willReturnOnConsecutiveCalls(true, true, false, true);
         $constraintProvider = $this->createMetadataConstraintProviderStub([
@@ -53,12 +53,12 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
             ->with('testConstraint')
             ->willReturn($constraint);
         $metadata = Metadata::create('', '', [], [], [], ['testConstraint' => 'testArgument']);
-        $resourceKind = $this->createResourceKindMock($metadata);
+        $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
         $validator = new MetadataValuesSatisfyConstraintsRule($constraintProvider);
         $validator->forResourceKind($resourceKind)->validate([0 => 1]);
     }
 
-    private function createResourceKindMock($metadata): \PHPUnit_Framework_MockObject_MockObject {
+    private function createSingleMetadataResourceKindMock($metadata): \PHPUnit_Framework_MockObject_MockObject {
         $resourceKind = $this->createMock(ResourceKind::class);
         $resourceKind->method('getMetadataByBaseId')->willReturn($metadata);
         return $resourceKind;

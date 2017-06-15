@@ -21,7 +21,9 @@ repeka:
     analyzers:
       en: english
       de: german
-  upload_dir: "%kernel.root_dir%/../var/uploads"
+  upload:
+    path: "%kernel.root_dir%/../var/uploads"
+    temp_folder: temp
 
   pk_auth:
     wsdl: ~

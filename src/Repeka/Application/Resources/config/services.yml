@@ -88,6 +88,19 @@ services:
     tags:
       - { name: request.param_converter, converter: repeka.converter.resource_contents_param }
 
+  repeka.upload.filesystem_driver:
+    class: Repeka\Application\Upload\FilesystemDriver
+
+  repeka.upload.resource_attachment_helper:
+    class: Repeka\Application\Upload\BasicResourceAttachmentHelper
+    autowire: true
+
+  repeka.upload.resource_attachment_path_generator:
+    class: Repeka\Application\Upload\ResourceAttachmentPathGenerator
+    arguments:
+      - '%repeka.upload.path%'
+      - '%repeka.upload.temp_folder%'
+
   repeka.command_bus.middleware.call_command:
     class: Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware
     autowire: true
@@ -428,7 +441,21 @@ services:
 
   repeka.metadata_constraint_provider:
     class: Repeka\Application\Validation\ContainerAwareMetadataConstraintProvider
+
+  repeka.metadata_value_processor:
+    class: Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor
+
+  repeka.metadata_value_processor_strategy.relationship:
+    class: Repeka\Application\ParamConverter\MetadataValueProcessor\RelationshipMetadataValueProcessorStrategy
     autowire: true
+    tags:
+    - {name: repeka.metadata_value_processor}
+
+  repeka.metadata_value_processor_strategy.file:
+    class: Repeka\Application\ParamConverter\MetadataValueProcessor\FileMetadataValueProcessorStrategy
+    autowire: true
+    tags:
+    - {name: repeka.metadata_value_processor}
 
   elasticsearch.client:
     class: Repeka\Application\Elasticsearch\ESClient

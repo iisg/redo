@@ -11,6 +11,7 @@ class Configuration implements ConfigurationInterface {
     public function getConfigTreeBuilder() {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('repeka');
+        // @codingStandardsIgnoreStart
         // @formatter:off because indentation makes config structure way clearer
         $rootNode
             ->children()
@@ -29,12 +30,16 @@ class Configuration implements ConfigurationInterface {
                         ->scalarNode('proxy')->defaultValue('')->end()
                     ->end()
                 ->end()
-                ->scalarNode('upload_dir')
-                    ->validate()
-                        ->ifTrue(function ($path) {
-                            return preg_match('#/$#', $path);
-                        })
-                        ->thenInvalid('Upload path should not contain slash at the end.')
+                ->arrayNode('upload')
+                    ->children()
+                            ->scalarNode('path')
+                            ->validate()->ifTrue(function ($path) { return preg_match('#/$#', $path); })
+                                ->thenInvalid('Upload path should not contain slash at the end.')->end()
+                        ->end()
+                        ->scalarNode('temp_folder')
+                            ->validate()->ifTrue( function ($path) { return preg_match('#/#', $path); })
+                                ->thenInvalid('Upload path should not contain slashes.')->end()
+                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('pk_auth')
@@ -46,6 +51,7 @@ class Configuration implements ConfigurationInterface {
                 ->end()
             ->end();
         // @formatter:on
+        // @codingStandardsIgnoreEnd
         return $treeBuilder;
     }
 }

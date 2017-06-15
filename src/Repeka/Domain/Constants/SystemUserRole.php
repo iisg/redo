@@ -2,8 +2,7 @@
 namespace Repeka\Domain\Constants;
 
 use MyCLabs\Enum\Enum;
-use ReflectionClass;
-use Repeka\Application\Command\Initialization\ApplicationInitializer;
+use Repeka\Application\Entity\EntityUtils;
 use Repeka\Domain\Entity\UserRole;
 
 /**
@@ -16,7 +15,7 @@ class SystemUserRole extends Enum {
 
     public function toUserRole() {
         $userRole = new UserRole([]);
-        ApplicationInitializer::forceSetId($userRole, $this->value);
+        EntityUtils::forceSetId($userRole, $this->value);
         return $userRole;
     }
 
