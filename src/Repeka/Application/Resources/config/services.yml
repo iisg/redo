@@ -1,4 +1,8 @@
 services:
+  monolog.formatter.mutliline:
+    class: Monolog\Formatter\LineFormatter
+    arguments: [~, ~, true]
+
   repeka.command_bus:
     class: Repeka\Application\Cqrs\RepekaCommandBus
     arguments:
@@ -121,13 +125,15 @@ services:
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 0 }
 
   repeka.event_listener.global_exception_handler:
-    class: Repeka\Application\EventListener\GlobalExceptionHandler
+    class: Repeka\Application\EventListener\GlobalExceptionListener
     arguments:
       - '%kernel.debug%'
       - '@security.token_storage'
       - '@session'
+      - '@logger'
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onException, priority: 1000 }
+      - { name: monolog.logger, channel: exception_listener }
 
   repeka.doctrine_listener.relationship_property_converter:
     class: Repeka\Application\EventListener\Doctrine\RelationshipPropertyConverterListener

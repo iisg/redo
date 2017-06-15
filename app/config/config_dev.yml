@@ -4,6 +4,7 @@ imports:
 framework:
   profiler:
     only_exceptions: false
+    collect: true
   router:
     resource: "%kernel.root_dir%/config/routing_dev.yml"
     strict_requirements: true
@@ -14,10 +15,16 @@ monolog:
       channels: [!event, !doctrine]
       type: console
     main:
-      channels: [!event]
+      channels: [!event, !exception_listener]
       level: debug
       path: "%kernel.logs_dir%/%kernel.environment%.log"
-      type: stream
+      type: rotating_file
+    exception_listener:
+      channels: [exception_listener]
+      level: debug
+      path: "%kernel.logs_dir%/%kernel.environment%-exception.log"
+      type: rotating_file
+      formatter: monolog.formatter.mutliline
 
 web_profiler:
   intercept_redirects: false
