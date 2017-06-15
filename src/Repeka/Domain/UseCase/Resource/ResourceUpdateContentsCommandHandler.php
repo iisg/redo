@@ -4,13 +4,17 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\ResourceWorkflow\ResourceCannotEnterPlaceException;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Upload\ResourceAttachmentHelper;
 
 class ResourceUpdateContentsCommandHandler {
     /** @var ResourceRepository */
     private $resourceRepository;
+    /** @var ResourceAttachmentHelper */
+    private $attachmentHelper;
 
-    public function __construct(ResourceRepository $resourceRepository) {
+    public function __construct(ResourceRepository $resourceRepository, ResourceAttachmentHelper $attachmentHelper) {
         $this->resourceRepository = $resourceRepository;
+        $this->attachmentHelper = $attachmentHelper;
     }
 
     public function handle(ResourceUpdateContentsCommand $command): ResourceEntity {
@@ -19,6 +23,7 @@ class ResourceUpdateContentsCommandHandler {
         if ($resource->getWorkflow()) {
             $this->ensureStillValidInPlace($resource);
         }
+        $this->attachmentHelper->moveFilesToDestinationPaths($resource);
         return $this->resourceRepository->save($resource);
     }
 

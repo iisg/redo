@@ -5,7 +5,6 @@ use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Id\SequenceGenerator;
 use Doctrine\ORM\Id\UuidGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use ReflectionClass;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -31,13 +30,6 @@ abstract class ApplicationInitializer {
     protected function restoreIdGenerator(ClassMetadata $classMetadata, string $sequenceName) {
         $classMetadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_SEQUENCE);
         $classMetadata->setIdGenerator(new SequenceGenerator($sequenceName, 1));
-    }
-
-    public static function forceSetId($entity, $id) {
-        $reflectionClass = new ReflectionClass(get_class($entity));
-        $reflectionProperty = $reflectionClass->getProperty('id');
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($entity, $id);
     }
 
     public function preEntityInitializer() {

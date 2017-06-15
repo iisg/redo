@@ -1,15 +1,15 @@
 <?php
 namespace Repeka\Application\ParamConverter;
 
-use KHerGe\JSON\JSON;
+use Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor;
+use Repeka\Application\Upload\FilesystemDriver;
+use Repeka\Application\Upload\ResourceAttachmentPathGenerator;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class ResourceContentsParamConverter implements ParamConverterInterface {
@@ -17,16 +17,25 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
     private $metadataRepository;
     /** @var ResourceRepository */
     private $resourceRepository;
-    private $uploadPath;
+    /** @var ResourceAttachmentPathGenerator */
+    private $pathGenerator;
+    /** @var FilesystemDriver */
+    private $filesystemDriver;
+    /** @var MetadataValueProcessor */
+    private $metadataValueProcessor;
 
     public function __construct(
         MetadataRepository $metadataRepository,
         ResourceRepository $resourceRepository,
-        ContainerInterface $container
+        ResourceAttachmentPathGenerator $pathGenerator,
+        FilesystemDriver $filesystemDriver,
+        MetadataValueProcessor $metadataValueProcessor
     ) {
         $this->metadataRepository = $metadataRepository;
         $this->resourceRepository = $resourceRepository;
-        $this->uploadPath = $container->getParameter('repeka.upload_dir');
+        $this->pathGenerator = $pathGenerator;
+        $this->filesystemDriver = $filesystemDriver;
+        $this->metadataValueProcessor = $metadataValueProcessor;
     }
 
     public function apply(Request $request, ParamConverter $configuration): bool {
@@ -45,40 +54,15 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
         return true;
     }
 
-    private function getContentsFromRequest(Request $request):array {
+    private function getContentsFromRequest(Request $request): array {
         $contents = [];
-        $json = new JSON();
         $contentsFromRequest = $request->get('contents');
         if (!$contentsFromRequest) {
             $this->handleEmptyRequestContents($request);
         }
-        foreach ($json->decode($contentsFromRequest) ?? [] as $metadataId => $values) {
+        foreach (json_decode($contentsFromRequest) ?? [] as $metadataId => $values) {
             $baseMetadata = $this->metadataRepository->findOne($metadataId);
-            if ($baseMetadata->getControl() === 'relationship') {
-                $relatedResources = array_map([$this->resourceRepository, 'findOne'], $values);
-                $contents[$metadataId] = $relatedResources;
-            } elseif ($baseMetadata->getControl() === 'file') {
-                $contents[$metadataId] = [];
-                foreach ($values as $value) {
-                    /** @var UploadedFile $file */
-                    $file = $request->files->get($value);
-                    if ($file) {
-                        $fileName = $file->getClientOriginalName();
-                        $directoryName = md5(uniqid());
-                        $pathToFile = $this->uploadPath . '/' . $directoryName;
-                        if (!file_exists($pathToFile)) {
-                            mkdir($pathToFile, 0660, true);
-                        }
-                        $storedFile = $file->move($pathToFile, $fileName);
-                        chmod($storedFile->getRealPath(), 0660); // make sure file isn't executable
-                        $contents[$metadataId][] = $directoryName . '/' . $fileName;
-                    } else {
-                        $contents[$metadataId][] = $value;
-                    }
-                }
-            } else {
-                $contents[$metadataId] = $values;
-            }
+            $contents[$metadataId] = $this->metadataValueProcessor->process($values, $baseMetadata->getControl(), $request);
         }
         return $contents;
     }
