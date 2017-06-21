@@ -9,7 +9,7 @@ export class Fa {
   @computedFrom('name', 'fw')
   get fontAwesomeClasses() {
     let classes = [this.name];
-    if (this.fw) {
+    if (this.fw != undefined) { // it's either undefined or empty string, both are falsy
       classes.push('fw');
     }
     return classes.map(c => `fa-${c}`).join(' ');

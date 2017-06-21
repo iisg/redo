@@ -30,10 +30,9 @@ class ResourceCreateCommandHandler {
     }
 
     private function ensureCanEnterTheFirstWorkflowState(ResourceEntity $resource): void {
-        $helper = $resource->getWorkflow()->getTransitionHelper();
-        $initialPlaceId = $resource->getWorkflow()->getPlaces()[0]->getId();
-        if (!$helper->placeIsPermittedByResourceMetadata($initialPlaceId, $resource)) {
-            throw new ResourceCannotEnterPlaceException($initialPlaceId, $resource);
+        $initialPlace = $resource->getWorkflow()->getInitialPlace();
+        if (!$initialPlace->resourceHasRequiredMetadata($resource)) {
+            throw new ResourceCannotEnterPlaceException($initialPlace->getId(), $resource);
         }
     }
 }

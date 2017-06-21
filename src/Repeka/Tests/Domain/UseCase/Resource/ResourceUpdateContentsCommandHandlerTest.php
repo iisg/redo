@@ -10,7 +10,6 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Upload\ResourceAttachmentHelper;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandHandler;
-use Repeka\Domain\Workflow\ResourceWorkflowTransitionHelper;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCase {
@@ -46,22 +45,18 @@ class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCa
 
     public function testMissingMetadataRequiredByWorkflowBlockUpdate() {
         $this->expectException(DomainException::class);
-        $helper = $this->createMock(ResourceWorkflowTransitionHelper::class);
-        $helper->expects($this->once())->method('placeIsPermittedByResourceMetadata')->willReturn(false);
         $place = $this->createMock(ResourceWorkflowPlace::class);
+        $place->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(false);
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $workflow->method('getTransitionHelper')->willReturn($helper);
         $workflow->method('getPlaces')->willReturn([$place]);
         $this->resource->method('getWorkflow')->willReturn($workflow);
         $this->handler->handle($this->command);
     }
 
     public function testUpdatingResourceWithWorkflow() {
-        $helper = $this->createMock(ResourceWorkflowTransitionHelper::class);
-        $helper->expects($this->once())->method('placeIsPermittedByResourceMetadata')->willReturn(true);
         $place = $this->createMock(ResourceWorkflowPlace::class);
+        $place->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(true);
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $workflow->method('getTransitionHelper')->willReturn($helper);
         $workflow->method('getPlaces')->willReturn([$place]);
         $this->resource->method('getWorkflow')->willReturn($workflow);
         $resource = $this->handler->handle($this->command);

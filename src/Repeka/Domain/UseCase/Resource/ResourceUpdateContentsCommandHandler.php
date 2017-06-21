@@ -28,10 +28,9 @@ class ResourceUpdateContentsCommandHandler {
     }
 
     private function ensureStillValidInPlace(ResourceEntity $resource): void {
-        $helper = $resource->getWorkflow()->getTransitionHelper();
         $currentPlaces = $resource->getWorkflow()->getPlaces($resource);
         foreach ($currentPlaces as $currentPlace) {
-            if (!$helper->placeIsPermittedByResourceMetadata($currentPlace->getId(), $resource)) {
+            if (!$currentPlace->resourceHasRequiredMetadata($resource)) {
                 throw new ResourceCannotEnterPlaceException($currentPlace->getId(), $resource);
             }
         }

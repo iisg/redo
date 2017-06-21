@@ -3,8 +3,9 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
+use Repeka\Domain\Workflow\ResourceWorkflowConditionalTransitionTrait;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
-use Repeka\Domain\Workflow\ResourceWorkflowTransitionHelper;
+use Repeka\Domain\Workflow\UnsatisfiedTransitionExplanation;
 
 class ResourceWorkflow {
     private $id;
@@ -16,8 +17,6 @@ class ResourceWorkflow {
 
     /** @var ResourceWorkflowDriver */
     private $workflow;
-    /** @var ResourceWorkflowTransitionHelper */
-    private $transitionHelper;
 
     public function __construct(array $name) {
         $this->name = $name;
@@ -41,6 +40,10 @@ class ResourceWorkflow {
         }
     }
 
+    public function getInitialPlace(): ResourceWorkflowPlace {
+        return $this->getPlaces()[0];
+    }
+
     /** @return ResourceWorkflowTransition[] */
     public function getTransitions(ResourceEntity $resource = null): array {
         if ($resource) {
@@ -49,6 +52,13 @@ class ResourceWorkflow {
         } else {
             return $this->getTransitionsAsObjects();
         }
+    }
+
+    public function isTransitionPossible(string $transitionId, ResourceEntity $resource, User $executor): bool {
+        /** @var ResourceWorkflowTransition $transition */
+        $transition = $this->getTransition($transitionId);
+        $explanation = new UnsatisfiedTransitionExplanation($this, $transition, $resource, $executor);
+        return $explanation->isSatisfied();
     }
 
     private function filterByIds(array $idsToLeave, array $objects): array {
@@ -131,11 +141,16 @@ class ResourceWorkflow {
         throw new NoSuchTransitionException($transitionId, $this);
     }
 
-    public function getTransitionHelper(): ResourceWorkflowTransitionHelper {
-        if ($this->transitionHelper == null) {
-            // can't be assigned in constructor because Doctrine bypasses constructors when creating objects
-            $this->transitionHelper = new ResourceWorkflowTransitionHelper($this);
+    /** @return UnsatisfiedTransitionExplanation[] */
+    public function getUnsatisfiedTransitionExplanations(ResourceEntity $resource, User $user): array {
+        $transitions = $this->getTransitions($resource);
+        $unsatisfiedTransitions = [];
+        foreach ($transitions as $transition) {
+            $explanation = new UnsatisfiedTransitionExplanation($this, $transition, $resource, $user);
+            if (!$explanation->isSatisfied()) {
+                $unsatisfiedTransitions[$transition->getId()] = $explanation;
+            }
         }
-        return $this->transitionHelper;
+        return $unsatisfiedTransitions;
     }
 }

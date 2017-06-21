@@ -8,7 +8,6 @@ use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandHandler;
-use Repeka\Domain\Workflow\ResourceWorkflowTransitionHelper;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceTransitionCommandHandlerTest extends \PHPUnit_Framework_TestCase {
@@ -18,33 +17,31 @@ class ResourceTransitionCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     private $resource;
     /** @var User */
     private $executor;
-    /** @var ResourceWorkflowTransitionHelper|\PHPUnit_Framework_MockObject_MockObject */
-    private $transitionHelper;
+    /** @var ResourceWorkflow|\PHPUnit_Framework_MockObject_MockObject */
+    private $workflow;
 
     /** @var ResourceTransitionCommandHandler */
     private $handler;
 
     protected function setUp() {
-        $this->transitionHelper = $this->createMock(ResourceWorkflowTransitionHelper::class);
-        $workflow = $this->createMock(ResourceWorkflow::class);
-        $workflow->method('getTransitionHelper')->willReturn($this->transitionHelper);
+        $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->resource = $this->createMock(ResourceEntity::class);
-        $this->resource->method('getWorkflow')->willReturn($workflow);
+        $this->resource->method('getWorkflow')->willReturn($this->workflow);
         $resourceRepository = $this->createRepositoryStub(ResourceRepository::class);
         $this->executor = $this->createMock(User::class);
         $this->handler = new ResourceTransitionCommandHandler($resourceRepository);
     }
 
     public function testTransition() {
-        $this->transitionHelper->method('transitionIsPossible')->willReturn(true);
+        $this->workflow->method('isTransitionPossible')->willReturn(true);
         $command = new ResourceTransitionCommand($this->resource, 't1', $this->executor);
         $this->resource->expects($this->once())->method('applyTransition')->with('t1');
         $this->handler->handle($command);
     }
 
     public function testDisallowedTransition() {
-        $this->transitionHelper->method('transitionIsPossible')->willReturn(false);
         $this->expectException(DomainException::class);
+        $this->workflow->method('isTransitionPossible')->willReturn(false);
         $command = new ResourceTransitionCommand($this->resource, 't1', $this->executor);
         $this->handler->handle($command);
     }
