@@ -1,18 +1,21 @@
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ValidationRules} from "aurelia-validation";
-import {WorkflowPlace, WorkflowTransition} from "workflows/workflow";
+import {WorkflowPlace, WorkflowTransition, UnsatisfiedTransitionExplanation} from "workflows/workflow";
 
 export class Resource {
   id: number;
   kind: ResourceKind;
   currentPlaces: WorkflowPlace[];
   availableTransitions: WorkflowTransition[] = [];
-  possibleTransitions: WorkflowTransition[] = [];
+  unsatisfiedTransitions: StringMap<UnsatisfiedTransitionExplanation> = {};
   contents: StringArrayMap = {};
 
   public canApplyTransition(transition: WorkflowTransition) {
-    const permittedTransitionIds = this.possibleTransitions.map(transition => transition.id);
-    return permittedTransitionIds.indexOf(transition.id) != -1;
+    return this.unsatisfiedTransitions[transition.id] == undefined;
+  }
+
+  public getUnsatisfiedTransitionExplanation(transition: WorkflowTransition) {
+    return this.unsatisfiedTransitions[transition.id];
   }
 }
 

@@ -9,7 +9,6 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Upload\ResourceAttachmentHelper;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommandHandler;
-use Repeka\Domain\Workflow\ResourceWorkflowTransitionHelper;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
@@ -40,24 +39,20 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testMissingMetadataRequiredByWorkflowBlockCreation() {
         $this->expectException(DomainException::class);
-        $helper = $this->createMock(ResourceWorkflowTransitionHelper::class);
-        $helper->expects($this->once())->method('placeIsPermittedByResourceMetadata')->willReturn(false);
         $initialPlace = $this->createMock(ResourceWorkflowPlace::class);
+        $initialPlace->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(false);
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $workflow->method('getTransitionHelper')->willReturn($helper);
-        $workflow->method('getPlaces')->willReturn([$initialPlace]);
+        $workflow->method('getInitialPlace')->willReturn($initialPlace);
         $resourceKind = new ResourceKind([], $workflow);
         $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']]);
         $this->handler->handle($command);
     }
 
     public function testCreatingResourceWithWorkflow() {
-        $helper = $this->createMock(ResourceWorkflowTransitionHelper::class);
-        $helper->expects($this->once())->method('placeIsPermittedByResourceMetadata')->willReturn(true);
         $initialPlace = $this->createMock(ResourceWorkflowPlace::class);
+        $initialPlace->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(true);
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $workflow->method('getTransitionHelper')->willReturn($helper);
-        $workflow->method('getPlaces')->willReturn([$initialPlace]);
+        $workflow->method('getInitialPlace')->willReturn($initialPlace);
         $resourceKind = new ResourceKind([], $workflow);
         $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']]);
         $resource = $this->handler->handle($command);

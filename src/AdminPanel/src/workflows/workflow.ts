@@ -26,6 +26,11 @@ export interface WorkflowTransition {
   permittedRoleIds: Array<string>;
 }
 
+export interface UnsatisfiedTransitionExplanation {
+  missingMetadataIds: number[];
+  userMissingRequiredRole: boolean;
+}
+
 export function registerWorkflowValidationRules() {
   ValidationRules
     .ensure('name').displayName('Name').required().satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)

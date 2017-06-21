@@ -76,5 +76,7 @@
   "Restore from base": "Przywróć z bazowej",
   "Add value": "Dodaj wartość",
   "ID in relationships": "ID dla relacji",
-  "Show in brief": "Pokazuj w streszczeniu"
+  "Show in brief": "Pokazuj w streszczeniu",
+  "You don't have required role": "Nie posiadasz wymaganej roli",
+  "Missing metadata:": "Brakująca metadana:"
 }

@@ -18,14 +18,13 @@ class ResourceTransitionCommandHandler {
     /** @return ResourceWorkflow[] */
     public function handle(ResourceTransitionCommand $command): ResourceEntity {
         $resource = $command->getResource();
-        $this->ensureExecutorHasAppropriateRole($resource, $command->getTransitionId(), $command->getExecutor());
+        $this->ensureTransitionIsPossible($resource, $command->getTransitionId(), $command->getExecutor());
         $resource->applyTransition($command->getTransitionId());
         return $this->resourceRepository->save($resource);
     }
 
-    private function ensureExecutorHasAppropriateRole(ResourceEntity $resource, string $transitionId, User $executor) {
-        $helper = $resource->getWorkflow()->getTransitionHelper();
-        if (!$helper->transitionIsPossible($transitionId, $resource, $executor)) {
+    private function ensureTransitionIsPossible(ResourceEntity $resource, string $transitionId, User $executor) {
+        if (!$resource->getWorkflow()->isTransitionPossible($transitionId, $resource, $executor)) {
             $transition = $resource->getWorkflow()->getTransition($transitionId);
             throw new ResourceCannotEnterPlaceException($transition->getToIds(), $resource);
         }

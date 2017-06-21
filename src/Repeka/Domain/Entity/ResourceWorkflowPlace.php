@@ -27,21 +27,24 @@ class ResourceWorkflowPlace {
         return $this->requiredMetadataIds;
     }
 
+    public function getMissingRequiredMetadataIds(ResourceEntity $resource):array {
+        $requiredMetadataIds = $this->getRequiredMetadataIds();
+        $presentMetadataIds = array_keys($resource->getContents());
+        $metadataIdsMissingForPlace = array_diff($requiredMetadataIds, $presentMetadataIds);
+        return array_values($metadataIdsMissingForPlace);
+    }
+
+    public function resourceHasRequiredMetadata(ResourceEntity $resource): bool {
+        $missingIds = $this->getMissingRequiredMetadataIds($resource);
+        return count($missingIds) == 0;
+    }
+
     public function toArray(): array {
         return [
             'id' => $this->getId(),
             'label' => $this->getLabel(),
             'requiredMetadataIds' => $this->getRequiredMetadataIds(),
         ];
-    }
-
-    public function isRequiredMetadataFilled(ResourceEntity $resource): bool {
-        foreach ($this->getRequiredMetadataIds() as $metadataId) {
-            if (!array_key_exists($metadataId, $resource->getContents())) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public static function fromArray(array $data) {
