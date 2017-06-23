@@ -37,6 +37,7 @@ class MetadataFixture extends RepekaFixture {
                 'EN' => 'Find it on the cover',
             ],
             'control' => 'text',
+            'shownInBrief' => true,
         ]), self::REFERENCE_METADATA_TITLE);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Opis',

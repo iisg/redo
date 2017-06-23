@@ -16,6 +16,11 @@ const sourcemaps = require('gulp-sourcemaps');
 const symlink = require("symlink-or-copy").sync;
 const typescript = require('gulp-typescript');
 
+const htmlMinifierOptions = {
+  collapseWhitespace: true,
+  conservativeCollapse: true,
+};
+
 let typescriptCompiler;
 gulp.task('build-scripts', () => {
   if (!typescriptCompiler) {
@@ -34,7 +39,7 @@ gulp.task('build-index', () => {
   return gulp.src('index.html')
     .pipe(plumber({errorHandler: notify.onError('HTML: <%= error.message %>')}))
     .pipe(changed(paths.output, {extension: '.html'}))
-    .pipe(htmlmin({collapseWhitespace: true}))
+    .pipe(htmlmin(htmlMinifierOptions))
     .pipe(gulp.dest(paths.webAdminRoot));
 });
 
@@ -42,7 +47,7 @@ gulp.task('build-html', () => {
   return gulp.src(paths.html)
     .pipe(plumber({errorHandler: notify.onError('HTML: <%= error.message %>')}))
     .pipe(changed(paths.output, {extension: '.html'}))
-    .pipe(htmlmin({collapseWhitespace: true}))
+    .pipe(htmlmin(htmlMinifierOptions))
     .pipe(gulp.dest(paths.output));
 });
 

@@ -139,7 +139,8 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
             'baseId' => $baseMetadata->getId(),
             'label' => $label,
             'description' => $description,
-            'placeholder' => $placeholder
+            'placeholder' => $placeholder,
+            'shownInBrief' => false,
         ];
     }
 

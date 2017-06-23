@@ -20,8 +20,8 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
         $this->command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            $this->metadataArray(1, 'A', ['PL' => 'Label A']),
+            $this->metadataArray(1, 'B', ['PL' => 'Label B']),
         ]);
         $this->factory = new ResourceKindFactory(new MetadataFactory(), $this->metadataRepository);
     }
@@ -47,5 +47,17 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [], $workflow);
         $resourceKind = $this->factory->create($command);
         $this->assertSame($workflow, $resourceKind->getWorkflow());
+    }
+
+    private function metadataArray(int $baseId, string $name, array $label) {
+        return [
+            'baseId' => $baseId,
+            'name' => $name,
+            'label' => $label,
+            'description' => [],
+            'placeholder' => [],
+            'control' => 'text',
+            'shownInBrief' => false,
+        ];
     }
 }

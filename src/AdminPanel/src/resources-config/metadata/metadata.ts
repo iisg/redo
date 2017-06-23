@@ -18,6 +18,7 @@ export class Metadata {
   parentId: number;
   baseId: number;
   constraints: MetadataConstraints = new MetadataConstraints();
+  shownInBrief: boolean;
 
   public clearInheritedValues(metadataRepository: MetadataRepository, baseId?: number): Promise<Metadata> {
     const baseMetadata: Promise<Metadata> = (baseId != undefined)
@@ -35,12 +36,16 @@ export class Metadata {
     });
   }
 
-  public static clone(metadata: Object) {
+  public static clone(metadata: Object): Metadata {
     let cloned = deepCopy(metadata);
-    cloned.constraints = Array.isArray(metadata['constraints']) // PHP doesn't handle empty arrays vs. empty object in JSON very well
-      ? new MetadataConstraints()
-      : $.extend(new MetadataConstraints(), metadata['constraints']);
+    cloned.constraints = $.extend(new MetadataConstraints(), metadata['constraints']);
     return $.extend(new Metadata(), cloned);
+  }
+
+  public static createFromBase(baseMetadata: Metadata): Metadata {
+    let metadata = Metadata.clone(baseMetadata);
+    metadata.baseId = baseMetadata.id;
+    return metadata;
   }
 }
 

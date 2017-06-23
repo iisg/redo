@@ -9,6 +9,8 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
  * Stage 2: depends on metadata created in stage 2, see MetadataStage2Fixture for more explanations
  */
 class ResourceKindsStage2Fixture extends RepekaFixture {
+    use ResourceKindsFixtureUtilTrait;
+
     const ORDER = MetadataStage2Fixture::ORDER + 1;
 
     /**
@@ -21,14 +23,14 @@ class ResourceKindsStage2Fixture extends RepekaFixture {
             $bookResourceKind->getId(),
             $bookResourceKind->getLabel(),
             [
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_HARD_COVER)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId()],
-                ['baseId' => $this->getReference(MetadataStage2Fixture::REFERENCE_METADATA_RELATED_BOOK)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE)->getId()],
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_HARD_COVER),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO),
+                $this->metadata(MetadataStage2Fixture::REFERENCE_METADATA_RELATED_BOOK, false),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_FILE),
             ]
         ));
     }

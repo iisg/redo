@@ -5,6 +5,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 
 class ResourceKindsFixture extends RepekaFixture {
+    use ResourceKindsFixtureUtilTrait;
+
     const ORDER = MetadataFixture::ORDER + ResourceWorkflowsFixture::ORDER;
     const REFERENCE_RESOURCE_KIND_BOOK = 'resource-kind-book';
     const REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK = 'resource-kind-forbidden-book';
@@ -20,13 +22,13 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Book',
             ],
             [
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_HARD_COVER)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId()],
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE)->getId()],
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_HARD_COVER),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_FILE),
             ],
             $workflow
         ), self::REFERENCE_RESOURCE_KIND_BOOK);
@@ -36,7 +38,7 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Forbidden book',
             ],
             [
-                ['baseId' => $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId()]
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
             ]
         ), self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
     }

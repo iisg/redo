@@ -1,7 +1,7 @@
 <template>
     <require from="users/user-label.html"></require>
     <require from="./user-roles-assign"></require>
-    <require from="resources/details/resource-property-list.html"></require>
+    <require from="resources/details/resource-metadata-values"></require>
 
     <loading-bar if.bind="!user"></loading-bar>
 
@@ -22,7 +22,7 @@
             <dd>${user.email}</dd>
         </dl>
 
-        <resource-property-list resource.one-time="user.userData"></resource-property-list>
+        <resource-metadata-values resource.one-time="user.userData"></resource-metadata-values>
 
         <div class="well"
             if.bind="!isCurrentUser"

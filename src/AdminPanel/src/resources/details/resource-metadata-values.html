@@ -1,6 +1,6 @@
-<template bindable="resource">
+<template>
     <dl class="dl-horizontal">
-        <template repeat.for="metadata of resource.kind.metadataList & oneTime">
+        <template repeat.for="metadata of metadataList">
             <dt>${metadata.name}</dt>
             <dd>
                 ${resource.contents[metadata.baseId]}

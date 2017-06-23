@@ -4,7 +4,6 @@ import {BootstrapValidationRenderer} from "common/validation/bootstrap-validatio
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentDetached} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
-import {deepCopy} from "common/utils/object-utils";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {Metadata} from "../metadata/metadata";
@@ -19,7 +18,7 @@ export class ResourceKindForm implements ComponentDetached {
   baseMetadataMap: Map<Metadata, Metadata> = new Map();
   submitting = false;
   sortingMetadata = false;
-  @bindable newMetadataBase: Metadata; // actually we only need @observable but for some reason setting it to undefined doesn't propagate up
+  @bindable newMetadataBase: Metadata; // we only need @observable but it's buggy: https://github.com/aurelia/binding/issues/594
 
   private controller: ValidationController;
 
@@ -34,12 +33,8 @@ export class ResourceKindForm implements ComponentDetached {
     if (this.newMetadataBase == undefined) {
       return;
     }
-    let metadata = new Metadata;
+    const metadata = Metadata.createFromBase(this.newMetadataBase);
     this.baseMetadataMap.set(metadata, this.newMetadataBase);
-    const baseMetadata = this.base(metadata);
-    metadata.baseId = baseMetadata.id;
-    metadata.control = baseMetadata.control;
-    metadata.constraints = deepCopy(baseMetadata.constraints);
     this.resourceKind.metadataList.push(metadata);
     this.newMetadataBase = undefined;
   }

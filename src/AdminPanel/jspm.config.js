@@ -262,7 +262,8 @@ System.config({
     },
     "npm:buffer@5.0.6": {
       "base64-js": "npm:base64-js@1.2.0",
-      "ieee754": "npm:ieee754@1.1.8"
+      "ieee754": "npm:ieee754@1.1.8",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:cytoscape-autopan-on-drag@2.0.1": {
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",

@@ -17,17 +17,20 @@ class Metadata {
     /** @var  Metadata */
     private $parentMetadata;
     private $constraints = [];
+    private $shownInBrief;
 
     private function __construct() {
     }
 
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     public static function create(
         string $control,
         string $name,
         array $label,
         array $placeholder = [],
         array $description = [],
-        array $constraints = []
+        array $constraints = [],
+        bool $shownInBrief = false
     ): Metadata {
         $metadata = new self();
         $metadata->control = $control;
@@ -37,6 +40,7 @@ class Metadata {
         $metadata->placeholder = $placeholder;
         $metadata->description = $description;
         $metadata->constraints = $constraints;
+        $metadata->shownInBrief = $shownInBrief;
         return $metadata;
     }
 
@@ -47,13 +51,17 @@ class Metadata {
         return $metadata;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     public static function createForResourceKind(
         array $label,
         ResourceKind $resourceKind,
         Metadata $base,
         array $placeholder = [],
         array $description = [],
-        array $constraints = []
+        array $constraints = [],
+        bool $shownInBrief = false
     ): Metadata {
         $metadata = self::createWithBase($base);
         $metadata->label = $label;
@@ -61,6 +69,7 @@ class Metadata {
         $metadata->placeholder = $placeholder;
         $metadata->description = $description;
         $metadata->constraints = $constraints;
+        $metadata->shownInBrief = $shownInBrief;
         return $metadata;
     }
 
@@ -126,6 +135,12 @@ class Metadata {
         }
     }
 
+    public function isShownInBrief(): bool {
+        return ($this->isBase())
+            ? $this->shownInBrief
+            : $this->shownInBrief ?? $this->baseMetadata->isShownInBrief();
+    }
+
     public function getBaseId() {
         return $this->isBase() ? null : $this->baseMetadata->getId();
     }
@@ -146,17 +161,25 @@ class Metadata {
         return $filtered;
     }
 
-    public function update(array $newLabel, array $newPlaceholder, array $newDescription, array $newConstraints) {
+    public function update(
+        array $newLabel,
+        array $newPlaceholder,
+        array $newDescription,
+        array $newConstraints,
+        bool $shownInBrief
+    ) {
         if ($this->isBase()) {
             $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
             $this->placeholder = $newPlaceholder;
             $this->description = $newDescription;
             $this->constraints = $newConstraints;
+            $this->shownInBrief = $shownInBrief;
         } else {
             $this->label = $this->removeCopiedFromBase($newLabel, $this->baseMetadata->getLabel());
             $this->placeholder = $this->removeCopiedFromBase($newPlaceholder, $this->baseMetadata->getPlaceholder());
             $this->description = $this->removeCopiedFromBase($newDescription, $this->baseMetadata->getDescription());
             $this->constraints = $this->removeCopiedFromBase($newConstraints, $this->baseMetadata->getConstraints());
+            $this->shownInBrief = ($shownInBrief == $this->baseMetadata->shownInBrief) ? null : $shownInBrief;
         }
     }
 

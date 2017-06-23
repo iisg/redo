@@ -1,17 +1,28 @@
 <template>
     <require from="./resource-kind-constraint-editor"></require>
 
-    <div class="form-group ${baseMetadata.label ? '' : 'label-floating'} ${editing ? 'no-margin-top' : ''}">
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"
+                    checked.bind="metadata.shownInBrief">
+                ${'Show in brief' | t}
+                <fa name="thumb-tack"></fa>
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group ${editing ? 'no-margin-top' : ''}">
         <multilingual-editor label="${'Label' | t}"
             placeholder.bind="baseMetadata.label"
             value.bind="metadata.label & validate"></multilingual-editor>
     </div>
-    <div class="form-group ${baseMetadata.placeholder ? '' : 'label-floating'}">
+    <div class="form-group">
         <multilingual-editor label="${'Hint' | t}"
             placeholder.bind="baseMetadata.placeholder"
             value.bind="metadata.placeholder & validate"></multilingual-editor>
     </div>
-    <div class="form-group ${baseMetadata.description ? '' : 'label-floating'}">
+    <div class="form-group">
         <multilingual-editor label="${'Description' | t}"
             placeholder.bind="baseMetadata.description"
             value.bind="metadata.description & validate"></multilingual-editor>
