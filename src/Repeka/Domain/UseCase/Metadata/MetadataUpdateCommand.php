@@ -9,13 +9,22 @@ class MetadataUpdateCommand extends Command {
     private $newDescription;
     private $newPlaceholder;
     private $newConstraints;
+    private $newShownInBrief;
 
-    public function __construct(int $metadataId, array $newLabel, array $newDescription, array $newPlaceholder, array $newConstraints) {
+    public function __construct(
+        int $metadataId,
+        array $newLabel,
+        array $newDescription,
+        array $newPlaceholder,
+        array $newConstraints,
+        bool $newShownInBrief
+    ) {
         $this->metadataId = $metadataId;
         $this->newLabel = $newLabel;
         $this->newDescription = $newDescription;
         $this->newPlaceholder = $newPlaceholder;
         $this->newConstraints = $newConstraints;
+        $this->newShownInBrief = $newShownInBrief;
     }
 
     public function getMetadataId(): int {
@@ -34,6 +43,10 @@ class MetadataUpdateCommand extends Command {
         return $this->newPlaceholder;
     }
 
+    public function getNewShownInBrief(): bool {
+        return $this->newShownInBrief;
+    }
+
     public function getNewConstraints(): array {
         return $this->newConstraints;
     }
@@ -44,7 +57,8 @@ class MetadataUpdateCommand extends Command {
             $data['label'] ?? [],
             $data['description'] ?? [],
             $data['placeholder'] ?? [],
-            $data['constraints'] ?? []
+            $data['constraints'] ?? [],
+            $data['shownInBrief'] ?? false
         );
     }
 }

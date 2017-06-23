@@ -14,7 +14,8 @@ class MetadataFactory {
             $command->getLabel(),
             $command->getPlaceholder(),
             $command->getDescription(),
-            $command->getConstraints()
+            $command->getConstraints(),
+            $command->isShownInBrief()
         );
     }
 
@@ -30,7 +31,8 @@ class MetadataFactory {
             $newChildMetadata['label'],
             $newChildMetadata['placeholder'],
             $newChildMetadata['description'],
-            $newChildMetadata['constraints']
+            $newChildMetadata['constraints'],
+            $newChildMetadata['shownInBrief']
         );
         return $metadata;
     }
@@ -44,7 +46,8 @@ class MetadataFactory {
             $base,
             $metadata->getPlaceholder(),
             $metadata->getDescription(),
-            $constraints
+            $constraints,
+            $metadata->isShownInBrief()
         );
     }
 

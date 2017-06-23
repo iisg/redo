@@ -9,7 +9,6 @@ use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
-use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
@@ -34,24 +33,24 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPassesWithoutResourceKindConstraint() {
-        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], []);
+        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [], false);
         $this->validator->validate($command);
     }
 
     public function testPassingValidationWhenNoEditAtAll() {
-        $command = new MetadataUpdateCommand(1, [], [], [], []);
+        $command = new MetadataUpdateCommand(1, [], [], [], [], false);
         $this->validator->validate($command);
     }
 
     public function testFailsWithWrongMetadataId() {
         $this->expectException(InvalidCommandException::class);
-        $command = new MetadataUpdateCommand(0, [], [], [], []);
+        $command = new MetadataUpdateCommand(0, [], [], [], [], false);
         $this->validator->validate($command);
     }
 
     public function testFailsWithInvalidLanguage() {
         $this->expectException(InvalidCommandException::class);
-        $command = new MetadataUpdateCommand(1, ['X' => 'bad'], [], [], []);
+        $command = new MetadataUpdateCommand(1, ['X' => 'bad'], [], [], [], false);
         $this->validator->validate($command);
     }
 
@@ -66,7 +65,7 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         );
         $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
             'resourceKind' => [0]
-        ]);
+        ], false);
         $validator->validate($command);
     }
 
@@ -80,7 +79,7 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             new ConstraintSetMatchesControlRule($metadataRepository),
             $this->constraintArgumentsAreValid
         );
-        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], []);
+        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [], false);
         $validator->validate($command);
     }
 }

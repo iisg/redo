@@ -8,16 +8,16 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 
 class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     /** @var MetadataCreateCommand */
-    private $textareaMetadataCreateCommand;
+    private $textareaMetadataCreateCmd;
     /** @var MetadataCreateCommand */
-    private $relationshipMetadataCreateCommand;
+    private $relationshipMetadataCreateCmd;
     /** @var MetadataFactory */
     private $factory;
     private $newChildMetadata;
 
     protected function setUp() {
-        $this->textareaMetadataCreateCommand = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea');
-        $this->relationshipMetadataCreateCommand = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship');
+        $this->textareaMetadataCreateCmd = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea', [], false);
+        $this->relationshipMetadataCreateCmd = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship', [], false);
         $this->factory = new MetadataFactory();
         $this->newChildMetadata = [
             'name' => 'nazwa',
@@ -25,12 +25,13 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
             'placeholder' => [],
             'description' => [],
             'control' => 'textarea',
-            'constraints' => []
+            'constraints' => [],
+            'shownInBrief' => false,
         ];
     }
 
     public function testCreatingMetadata() {
-        $metadata = $this->factory->create($this->textareaMetadataCreateCommand);
+        $metadata = $this->factory->create($this->textareaMetadataCreateCmd);
         $this->assertEquals('nazwa', $metadata->getName());
         $this->assertEquals('Labelka', $metadata->getLabel()['PL']);
         $this->assertEmpty($metadata->getPlaceholder());
@@ -65,9 +66,9 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testCreatingForResourceKind() {
-        $metadata = $this->factory->create($this->textareaMetadataCreateCommand);
-        $base = $this->factory->create($this->textareaMetadataCreateCommand);
-        $base->update([], ['PL' => 'base'], [], []);
+        $metadata = $this->factory->create($this->textareaMetadataCreateCmd);
+        $base = $this->factory->create($this->textareaMetadataCreateCmd);
+        $base->update([], ['PL' => 'base'], [], [], false);
         $resourceKind = new ResourceKind(['PL' => 'rodzaj']);
         $created = $this->factory->createForResourceKind($resourceKind, $base, $metadata);
         $this->assertSame($resourceKind, $created->getResourceKind());

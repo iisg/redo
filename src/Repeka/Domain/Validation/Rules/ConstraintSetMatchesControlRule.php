@@ -21,7 +21,7 @@ class ConstraintSetMatchesControlRule extends AbstractRule {
         return $instance;
     }
 
-    public function forMetadataId(int $metadataId) {
+    public function forMetadataId(int $metadataId): ConstraintSetMatchesControlRule {
         $control = $this->metadataRepository->findOne($metadataId)->getControl();
         return $this->forControl($control);
     }
@@ -29,7 +29,7 @@ class ConstraintSetMatchesControlRule extends AbstractRule {
     public function validate($input) {
         Assertion::notNull(
             $this->control,
-            'Control not set. Use forControl() or forMetadataId to create validator for specific control first.'
+            'Control not set. Use forControl() or forMetadataId() to create validator for specific control first.'
         );
         $keys = array_keys($input);
         if ($this->control == 'relationship') {

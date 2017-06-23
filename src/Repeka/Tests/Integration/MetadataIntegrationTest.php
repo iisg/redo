@@ -31,6 +31,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'baseId' => $metadata1->getBaseId(),
             'parentId' => $metadata1->getParentId(),
             'constraints' => [],
+            'shownInBrief' => null,
         ], [
             'id' => $metadata2->getId(),
             'control' => $metadata2->getControl(),
@@ -41,6 +42,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'baseId' => $metadata2->getBaseId(),
             'parentId' => $metadata2->getParentId(),
             'constraints' => [],
+            'shownInBrief' => null,
         ]], $responseContent);
     }
 

@@ -32,6 +32,7 @@ class MetadataStage2Fixture extends RepekaFixture {
             'constraints' => [
                 'resourceKind' => [$this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_BOOK)->getId()]
             ],
+            'shownInBrief' => true,
         ]), self::REFERENCE_METADATA_RELATED_BOOK);
         $allMetadata = array_merge($existingMetadata, $addedMetadata);
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {

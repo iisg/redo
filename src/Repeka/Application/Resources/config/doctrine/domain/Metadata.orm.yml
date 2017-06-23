@@ -51,3 +51,7 @@ Repeka\Domain\Entity\Metadata:
     constraints:
       type: json_document
       options: {jsonb: true}
+    shownInBrief:
+      type: boolean
+      nullable: true
+      column: shown_in_brief

@@ -40,13 +40,13 @@ export class MetadataRepository extends ApiRepository<Metadata> {
   }
 
   public update(updatedMetadata: Metadata): Promise<Metadata> {
-    updatedMetadata = deepCopy(updatedMetadata);
-    this.replaceEntitiesWithIds(updatedMetadata);
+    updatedMetadata = this.toBackend(updatedMetadata) as Metadata;
     return this.patch(updatedMetadata, {
       label: updatedMetadata.label,
       description: updatedMetadata.description,
       placeholder: updatedMetadata.placeholder,
       constraints: updatedMetadata.constraints,
+      shownInBrief: updatedMetadata.shownInBrief,
     }).then(metadata => clearCachedResponse(this.getList) || metadata);
   }
 

@@ -2,12 +2,10 @@
 namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\Command;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
-use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Respect\Validation\Validator;
@@ -49,6 +47,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('placeholder', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('description', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('control', $this->isValidControlRule)
+            ->attribute('shownInBrief', Validator::boolType())
             ->attribute('constraints', $this->constraintSetMatchesControlRule->forControl($command->getControl()))
             ->attribute('constraints', $this->constraintArgumentsAreValidRule);
     }

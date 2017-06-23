@@ -2,7 +2,7 @@
     <require from="../add/resource-form"></require>
     <require from="../workflow/resource-workflow"></require>
     <require from="../workflow/resource-place-display.html"></require>
-    <require from="./resource-property-list.html"></require>
+    <require from="./resource-metadata-values"></require>
 
     <div class="au-animate fade-inup-outup page-preloader"
         if.bind="!resource">
@@ -25,7 +25,7 @@
 
         <div class="au-animate anim-height-inout-300"
             if.bind="!editing">
-            <resource-property-list resource.one-time="resource"></resource-property-list>
+            <resource-metadata-values resource.one-time="resource"></resource-metadata-values>
 
             <dl class="dl-horizontal">
                 <dt>${ 'Place' |t }</dt>

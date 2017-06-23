@@ -2,6 +2,7 @@
     <require from="./add/resource-form"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="./workflow/resource-place-display.html"></require>
+    <require from="./details/resource-metadata-values"></require>
 
     <animated-plus-button class="pull-right"
         opened.bind="addFormOpened"></animated-plus-button>
@@ -43,14 +44,8 @@
                         ${resource.kind.label | inCurrentLanguage}
                     </td>
                     <td>
-                        <dl class="dl-horizontal">
-                            <template repeat.for="metadata of resource.kind.metadataList & oneTime">
-                                <dt>${metadata.name}</dt>
-                                <dd>
-                                    ${resource.contents[metadata.baseId]}
-                                </dd>
-                            </template>
-                        </dl>
+                        <resource-metadata-values resource.one-time="resource"
+                            brief></resource-metadata-values>
                     </td>
                     <td>
                         <resource-place-display resource.bind="resource"></resource-place-display>

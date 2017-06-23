@@ -11,6 +11,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('text', $metadata->getControl());
         $this->assertEquals('Prop', $metadata->getName());
         $this->assertEquals('AA', $metadata->getLabel()['PL']);
+        $this->assertFalse($metadata->isShownInBrief());
     }
 
     public function testCreatingForResourceKind() {
@@ -43,6 +44,15 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('Another', $childMetadata->getLabel()['PL']);
     }
 
+    public function testOverridingShownInBriefValue() {
+        $rk = new ResourceKind([]);
+        $baseMetadata = Metadata::create('text', 'Prop', ['PL' => ''], [], [], [], false);
+        $childMetadata1 = Metadata::createForResourceKind(['PL' => ''], $rk, $baseMetadata, [], [], [], false);
+        $childMetadata2 = Metadata::createForResourceKind(['PL' => ''], $rk, $baseMetadata, [], [], [], true);
+        $this->assertEquals($baseMetadata->isShownInBrief(), $childMetadata1->isShownInBrief());
+        $this->assertTrue($childMetadata2->isShownInBrief());
+    }
+
     public function testDoesNotOverrideWhenEmpty() {
         $rk = new ResourceKind([]);
         $baseMetadata = Metadata::create('text', 'Prop', ['PL' => 'PL']);
@@ -69,11 +79,13 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testUpdating() {
-        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
-        $metadata->update(['PL' => 'AA1', 'EN' => 'BB'], ['PL' => 'BB'], ['EN' => 'BB'], $metadata->getConstraints());
+        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA'], [], false);
+        $metadata->update(['PL' => 'AA1', 'EN' => 'BB'], ['PL' => 'BB'], ['EN' => 'BB'], [1 => [null]], true);
         $this->assertEquals(['PL' => 'AA1', 'EN' => 'BB'], $metadata->getLabel());
         $this->assertEquals(['PL' => 'BB'], $metadata->getPlaceholder());
         $this->assertEquals(['EN' => 'BB'], $metadata->getDescription());
+        $this->assertEquals([1 => [null]], $metadata->getConstraints());
+        $this->assertTrue($metadata->isShownInBrief());
     }
 
     /**
@@ -89,20 +101,27 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testUpdatingWithValuesSameAsInBaseCausesInheritance() {
         $original = ['PL' => 'Original'];
         $changed = ['PL' => 'Changed'];
-        $base = Metadata::create('text', 'test', $original, $original, $original, [0]);
+        $base = Metadata::create('text', 'test', $original, $original, $original, [0], false);
         $resourceKind = $this->createMock(ResourceKind::class);
         $metadata = Metadata::createForResourceKind([], $resourceKind, $base);
-        $metadata->update($metadata->getLabel(), $metadata->getPlaceholder(), $metadata->getDescription(), $metadata->getConstraints());
-        $base->update($changed, $changed, $changed, [1]);
+        $metadata->update(
+            $metadata->getLabel(),
+            $metadata->getPlaceholder(),
+            $metadata->getDescription(),
+            $metadata->getConstraints(),
+            false
+        );
+        $base->update($changed, $changed, $changed, [1], true);
         $this->assertEquals($changed, $metadata->getLabel());
         $this->assertEquals($changed, $metadata->getPlaceholder());
         $this->assertEquals($changed, $metadata->getDescription());
         $this->assertEquals([1], $metadata->getConstraints());
+        $this->assertTrue($metadata->isShownInBrief());
     }
 
     public function testDoesNotUpdateMissingValuesInLabel() {
         $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
-        $metadata->update(['EN' => 'BB'], [], [], $metadata->getConstraints());
+        $metadata->update(['EN' => 'BB'], [], [], [], false);
         $this->assertEquals(['PL' => 'AA', 'EN' => 'BB'], $metadata->getLabel());
     }
 

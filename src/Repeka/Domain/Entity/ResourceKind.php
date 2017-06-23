@@ -59,6 +59,7 @@ class ResourceKind {
      */
     public function update(array $newLabel, array $newMetadataList) {
         $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
+        /** @var Metadata[] $currentMetadata */
         $currentMetadata = [];
         foreach ($this->metadataList as $metadata) {
             $currentMetadata[$metadata->getBaseId()] = $metadata;
@@ -73,7 +74,8 @@ class ResourceKind {
                     $newMetadata->getLabel(),
                     $newMetadata->getPlaceholder(),
                     $newMetadata->getDescription(),
-                    $newMetadata->getConstraints()
+                    $newMetadata->getConstraints(),
+                    $newMetadata->isShownInBrief()
                 );
                 $currentMetadata[$newMetadata->getBaseId()]
                     ->updateOrdinalNumber($newMetadata->getOrdinalNumber());

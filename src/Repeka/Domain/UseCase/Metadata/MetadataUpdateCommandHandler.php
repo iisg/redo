@@ -20,7 +20,8 @@ class MetadataUpdateCommandHandler {
             $command->getNewLabel(),
             $command->getNewPlaceholder(),
             $command->getNewDescription(),
-            $command->getNewConstraints()
+            $command->getNewConstraints(),
+            $command->getNewShownInBrief()
         );
         return $this->metadataRepository->save($metadata);
     }

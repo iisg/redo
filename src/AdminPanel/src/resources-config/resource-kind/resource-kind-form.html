@@ -5,7 +5,7 @@
     <require from="../metadata/metadata-form"></require>
 
     <form submit.delegate="validateAndSubmit()">
-        <div class="form-group label-floating no-margin-top">
+        <div class="form-group no-margin-top">
             <multilingual-editor label="${'Name' | t}"
                 value.bind="resourceKind.label & validate"></multilingual-editor>
         </div>
@@ -47,6 +47,9 @@
                             <span class="pull-right fa fa-bars"
                                 show.bind="sortingMetadata"></span>
                             ${base(metadata).name}
+                            <fa name="thumb-tack"
+                                class="small"
+                                if.bind="metadata.shownInBrief"></fa>
                         </h3>
                         <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
                             metadata.bind="metadata"

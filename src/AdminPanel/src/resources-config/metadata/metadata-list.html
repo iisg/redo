@@ -41,7 +41,11 @@
                     oa-sortable-item="item.bind: metadata"
                     class="au-animate ${metadata.sortingClass || 'fade-inup-outdown'} ${metadata.editing ? 'table-row-edit-form' : ''}">
                     <td>${metadata.id}</td>
-                    <td if.bind="!metadata['editing']">${metadata.name}</td>
+                    <td if.bind="!metadata['editing']">
+                        ${metadata.name}
+                        <fa name="thumb-tack"
+                            if.bind="metadata.shownInBrief"></fa>
+                    </td>
                     <td if.bind="!metadata['editing']">
                         ${metadata.label | inCurrentLanguage}
                     </td>
@@ -78,7 +82,7 @@
                             class="au-animate anim-height-inout-600">
                             <metadata-form submit.call="saveEditedMetadata(metadata, editedMetadata) && (metadata.editing = false)"
                                 template.bind="metadata"
-                                edit-existing="true"
+                                edit="true"
                                 cancel-button="true"
                                 cancel.call="metadata.editing = false"></metadata-form>
                         </div>

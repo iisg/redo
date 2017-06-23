@@ -3,13 +3,13 @@
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="workflows/icon/workflow-icon.html"></require>
 
-        <animated-plus-button class="pull-right"
-            opened.bind="addFormOpened"></animated-plus-button>
-        <div if.bind="addFormOpened"
-            class="well fade-inup-outdown au-animate floating-form-full-width">
-            <h2>${'Add new resource kind' | t}</h2>
-            <resource-kind-form submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
-        </div>
+    <animated-plus-button class="pull-right"
+        opened.bind="addFormOpened"></animated-plus-button>
+    <div if.bind="addFormOpened"
+        class="well fade-inup-outdown au-animate floating-form-full-width">
+        <h2>${'Add new resource kind' | t}</h2>
+        <resource-kind-form submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
+    </div>
 
     <div class="row"
         show.bind="!resourceKinds || resourceKinds.length > 0">
@@ -45,7 +45,9 @@
                             <template repeat.for="metadata of resourceKind.metadataList & oneTime">
                                 <dt>${metadata.name}</dt>
                                 <dd>
-                                    ${metadata.label | inCurrentLanguage}
+                                    <span>${metadata.label | inCurrentLanguage}</span>
+                                    <fa name="thumb-tack"
+                                        if.bind="metadata.shownInBrief"></fa>
                                 </dd>
                             </template>
                         </dl>

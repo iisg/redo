@@ -59,7 +59,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'control' => $baseMetadata->getControl(),
                 'description' => [],
                 'label' => ['TEST' => 'created'],
-                'placeholder' => []
+                'placeholder' => [],
+                'shownInBrief' => false,
             ]]
         ]);
         $this->assertStatusCode(201, $client->getResponse());
@@ -86,7 +87,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'id' => $this->metadata2->getId(),
                 'label' => $this->metadata2->getLabel(),
                 'name' => $this->metadata2->getName(),
-                'placeholder' => $this->metadata2->getPlaceholder()
+                'placeholder' => $this->metadata2->getPlaceholder(),
+                'shownInBrief' => false,
             ], [
                 'baseId' => $this->metadata1->getBaseId(),
                 'control' => $this->metadata1->getControl(),
@@ -94,7 +96,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'id' => $this->metadata1->getId(),
                 'label' => $this->metadata1->getLabel(),
                 'name' => $this->metadata1->getName(),
-                'placeholder' => ['TEST' => 'modified']
+                'placeholder' => ['TEST' => 'modified'],
+                'shownInBrief' => false,
             ]]
         ]);
         $this->assertStatusCode(200, $client->getResponse());
