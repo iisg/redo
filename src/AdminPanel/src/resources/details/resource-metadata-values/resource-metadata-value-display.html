@@ -1,0 +1,14 @@
+<template>
+    <!-- These imports are necessary to prevent compositions from not rendering every now and then -->
+    <require from="../../controls/display/control-display-boolean.html"></require>
+    <require from="../../controls/display/control-display-date.html"></require>
+    <require from="../../controls/display/control-display-file.html"></require>
+    <require from="../../controls/display/control-display-integer.html"></require>
+    <require from="../../controls/display/control-display-relationship.html"></require>
+    <require from="../../controls/display/control-display-text.html"></require>
+    <require from="../../controls/display/control-display-textarea.html"></require>
+
+    <compose view-model="../../controls/control-strategy"
+        view="../../controls/display/control-display-${metadata.control}.html"
+        model.bind="{valueWrapper: valueWrapper}"></compose>
+</template>

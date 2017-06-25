@@ -1,3 +1,7 @@
 resource-metadata-values dd {
   white-space: normal;
+
+  & > ul {
+    margin-bottom: 0;
+  }
 }

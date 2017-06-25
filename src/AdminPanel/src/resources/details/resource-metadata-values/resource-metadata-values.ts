@@ -1,6 +1,6 @@
 import {bindable} from "aurelia-templating";
-import {Resource} from "../resource";
-import {Metadata} from "resources-config/metadata/metadata";
+import {Resource} from "../../resource";
+import {Metadata} from "../../../resources-config/metadata/metadata";
 import {computedFrom} from "aurelia-binding";
 
 export class ResourceMetadataValues {

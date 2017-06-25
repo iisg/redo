@@ -1,9 +1,11 @@
 <template>
+    <require from="resources-config/multilingual-field/in-current-language"></require>
+
     <div class="form-group">
-        <compose view-model="./controls/control-input"
-            view="./controls/control-input-${metadata.control}.html"
+        <compose view-model="../controls/control-strategy"
+            view="../controls/input/control-input-${metadata.control}.html"
             model.bind="{metadata: metadata, valueWrapper: valueWrapper}"></compose>
         <p class="help-block"
-            if.one-time="metadata.description[currentLanguageCode]">${metadata.description[currentLanguageCode]}</p>
+            if.one-time="metadata.description | inCurrentLanguage">${metadata.description | inCurrentLanguage}</p>
     </div>
 </template>

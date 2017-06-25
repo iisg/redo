@@ -27,8 +27,13 @@ export class ResourceRepository extends ApiRepository<Resource> {
   public toEntity(data: Object): Promise<Resource> {
     return this.resourceKindRepository.get(data['kindId']).then(resourceKind => {
       delete data['kindId'];
-      let resource = $.extend(new Resource(), data);
+      let resource: Resource = $.extend(new Resource(), data);
       resource.kind = resourceKind;
+      for (const metadata of resource.kind.metadataList) {
+        if (!resource.contents.hasOwnProperty(metadata.baseId)) {
+          resource.contents[metadata.baseId] = [];
+        }
+      }
       return resource;
     });
   }

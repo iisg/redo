@@ -1,8 +1,8 @@
 import {ComponentAttached, bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindingMode, observable} from "aurelia-binding";
-import {ResourceRepository} from "../../../resource-repository";
-import {Resource} from "../../../resource";
+import {ResourceRepository} from "resources/resource-repository";
+import {Resource} from "resources/resource";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 
 @autoinject

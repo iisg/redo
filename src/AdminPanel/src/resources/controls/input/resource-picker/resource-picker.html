@@ -1,13 +1,13 @@
 <template>
     <require from="common/components/bootstrap-select/bootstrap-select"></require>
-    <require from="resources/details/resource-metadata-values"></require>
+    <require from="resources/details/resource-metadata-values/resource-metadata-values"></require>
 
     <bootstrap-select values.bind="resources"
         value.bind="value"
         title="&mdash;">
         <template replace-part="option-template">
             <b>${'Resource' | t} #${option.id}</b>
-            <resource-metadata-values resource.one-time="option"
+            <resource-metadata-values resource.bind="option"
                 brief></resource-metadata-values>
         </template>
     </bootstrap-select>
