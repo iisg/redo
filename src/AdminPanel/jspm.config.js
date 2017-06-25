@@ -48,6 +48,7 @@ System.config({
     "font-awesome": "npm:font-awesome@4.6.3",
     "i18next-xhr-backend": "npm:i18next-xhr-backend@1.4.1",
     "jquery": "npm:jquery@2.2.4",
+    "moment": "npm:moment@2.18.1",
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.11.3",
     "region-flags": "github:behdad/region-flags@1.0.1",
     "sass-material-colors": "npm:sass-material-colors@0.0.5",

@@ -28,6 +28,7 @@
     "aurelia-templating-router": "github:aurelia/templating-router#1.1.0",
     "aurelia-testing": "github:aurelia/testing#1.0.0-beta.3.0.1",
     "aurelia-validation": "github:aurelia/validation#1.0.0",
+    "moment": "github:moment/moment/moment.d.ts#2.18.1",
     "sweetalert2": "registry:npm/sweetalert2#1.3.0+20160511144615"
   },
   "globalDevDependencies": {

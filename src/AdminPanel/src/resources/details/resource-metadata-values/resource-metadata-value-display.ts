@@ -1,13 +1,13 @@
-import {bindable, ComponentDetached, ComponentAttached} from "aurelia-templating";
-import {Metadata} from "resources-config/metadata/metadata";
-import {bindingMode, BindingEngine, Disposable} from "aurelia-binding";
+import {ComponentAttached, ComponentDetached, bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {ValueWrapper} from "../controls/control-strategy";
+import {Metadata} from "resources-config/metadata/metadata";
+import {ValueWrapper} from "../../controls/control-strategy";
+import {Disposable, BindingEngine} from "aurelia-binding";
 
 @autoinject
-export class ResourceMetadataValueInput implements ComponentAttached, ComponentDetached {
+export class ResourceMetadataValueDisplay implements ComponentAttached, ComponentDetached {
   @bindable metadata: Metadata;
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: any;
+  @bindable value: any;
 
   valueWrapper: ValueWrapper = new ValueWrapper();
   subscription: Disposable;
@@ -15,13 +15,13 @@ export class ResourceMetadataValueInput implements ComponentAttached, ComponentD
   constructor(private bindingEngine: BindingEngine) {
   }
 
-  attached() {
+  attached(): void {
     this.subscription = this.bindingEngine
       .propertyObserver(this.valueWrapper, 'value')
       .subscribe(() => this.wrappedValueChanged());
   }
 
-  detached() {
+  detached(): void {
     this.subscription.dispose();
   }
 

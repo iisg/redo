@@ -1,0 +1,22 @@
+<template>
+    <require from="./resource-metadata-value-display"></require>
+
+    <dl class="dl-horizontal">
+        <template repeat.for="metadata of metadataList">
+            <dt>${metadata.name}</dt>
+            <dd>
+                <ul class="list-unstyled">
+                    <li repeat.for="value of resource.contents[metadata.baseId]">
+                        <resource-metadata-value-display
+                            metadata.bind="metadata"
+                            value.bind="value"></resource-metadata-value-display>
+                    </li>
+                </ul>
+                <span if.bind="resource.contents[metadata.baseId].length == 0"
+                    class="small text-muted">
+                    <em>${'no values' | t}</em>
+                </span>
+            </dd>
+        </template>
+    </dl>
+</template>

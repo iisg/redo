@@ -4,6 +4,8 @@ import {containerless} from "aurelia-templating";
 import {AureliaCookie} from "aurelia-cookie";
 import {LanguageRepository} from "resources-config/language-config/language-repository";
 import {I18nConfig} from "locales/i18n-config";
+import {MomentLocaleLoader} from "./moment-locale-loader";
+import * as moment from "moment";
 
 @containerless()
 @autoinject
@@ -14,14 +16,17 @@ export class LanguageSwitcher {
 
   currentLanguage: string;
 
-  constructor(private i18n: I18N, private languageRepository: LanguageRepository, private config: I18nConfig) {
-    const supportedLanguages = this.config.getSupportedUILanguages();
-    const initialLanguage = AureliaCookie.get(this.COOKIE_NAME) || this.config.getDefaultUILanguage();
+  constructor(private i18n: I18N,
+              private languageRepository: LanguageRepository,
+              private i18nConfig: I18nConfig,
+              private momentLocaleLoader: MomentLocaleLoader) {
+    const supportedLanguages = this.i18nConfig.getSupportedUILanguages();
+    const initialLanguage = AureliaCookie.get(this.COOKIE_NAME) || this.i18nConfig.getDefaultUILanguage();
     if (supportedLanguages.indexOf(initialLanguage) != -1) {
       this.initialize(initialLanguage);
     } else {
       this.initialize(supportedLanguages[0]);
-      if (initialLanguage == this.config.getDefaultUILanguage()) {
+      if (initialLanguage == this.i18nConfig.getDefaultUILanguage()) {
         const supported = supportedLanguages.join(', ');
         throw new Error(`Unsupported language '${initialLanguage}' in backend configuration. Supported languages: [${supported}].`);
       }
@@ -30,8 +35,10 @@ export class LanguageSwitcher {
 
   private initialize(language: string) {
     this.i18n.setLocale(language);  // set i18n's locale instantly to prevent flash of untranslated content
-    this.languageRepository.getList().then(() => { // wait until flags are fetched, then select language properly
-      this.languages = this.config.getSupportedUILanguages();
+    const flagsPromise = this.languageRepository.getList();
+    const momentLocalePromise = this.momentLocaleLoader.load(language);
+    Promise.all([flagsPromise, momentLocalePromise]).then(() => {
+      this.languages = this.i18nConfig.getSupportedUILanguages();
       this.select(language, false);
     });
   }
@@ -39,6 +46,7 @@ export class LanguageSwitcher {
   select(languageCode: string, reload: boolean = true) {
     this.currentLanguage = languageCode;
     this.i18n.setLocale(this.currentLanguage);
+    moment.updateLocale(languageCode, {});
     this.updateCookie();
     if (reload) {
       window.location.reload(true);

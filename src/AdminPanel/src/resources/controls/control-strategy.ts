@@ -1,7 +1,7 @@
-import {Metadata} from "resources-config/metadata/metadata";
+import {Metadata} from "../../resources-config/metadata/metadata";
 import {observable} from "aurelia-binding";
 
-export class ControlInput {
+export class ControlStrategy {
   metadata: Metadata;
   @observable valueWrapper: ValueWrapper;
 
