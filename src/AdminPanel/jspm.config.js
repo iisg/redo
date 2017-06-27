@@ -50,6 +50,7 @@ System.config({
     "jquery": "npm:jquery@2.2.4",
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.11.3",
     "region-flags": "github:behdad/region-flags@1.0.1",
+    "sass-material-colors": "npm:sass-material-colors@0.0.5",
     "sweetalert2": "npm:sweetalert2@6.6.0",
     "text": "github:systemjs/plugin-text@0.0.9",
     "github:jspm/nodelibs-assert@0.1.0": {

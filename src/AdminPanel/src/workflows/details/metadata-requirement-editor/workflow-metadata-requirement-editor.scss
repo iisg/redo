@@ -1,6 +1,8 @@
+@import "../../../common/styles";
+
 // https://css-tricks.com/simple-css-row-column-highlighting/
 table.highlight-col-row-on-hover {
-  $highlight-color: #f0ffb4;
+  $highlight-color: material-color('yellow', '50');
   overflow: hidden;
 
   tr:hover {
