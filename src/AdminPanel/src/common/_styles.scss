@@ -5,6 +5,7 @@
 @import "../../jspm_packages/npm/bootstrap-material-design@0.5.10/sass/colors";
 @import "../../jspm_packages/npm/bootstrap-material-design@0.5.10/sass/mixins";
 @import "../../jspm_packages/npm/bootstrap-material-design@0.5.10/sass/shadows";
+@import "../../jspm_packages/npm/sass-material-colors@0.0.5/sass/sass-material-colors";
 
 @mixin on-and-down($size) {
   @media only screen and (max-width: $size) {

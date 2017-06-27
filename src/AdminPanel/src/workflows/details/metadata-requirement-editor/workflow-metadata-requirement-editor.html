@@ -3,7 +3,7 @@
         <thead>
         <tr>
             <th>&nbsp;</th>
-            <th repeat.for="place of workflow.places">
+            <th repeat.for="place of orderedPlaces">
                 ${place.label | inCurrentLanguage & signal:'workflow-places-updated'}
             </th>
         </tr>
@@ -11,7 +11,7 @@
         <tbody>
         <tr repeat.for="metadata of metadataList">
             <th>${metadata.label | inCurrentLanguage}</th>
-            <td repeat.for="place of workflow.places"
+            <td repeat.for="place of orderedPlaces"
                 class="text-center">
                 <div class="checkbox">
                     <label>

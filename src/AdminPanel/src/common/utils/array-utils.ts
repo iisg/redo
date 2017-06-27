@@ -5,3 +5,11 @@
 export function arraysEqual(array1: any[], array2: any[]) {
   return array1.length == array2.length && array1.every((val1, index) => val1 == array2[index]);
 }
+
+/**
+ * Removes duplicates from array.
+ * https://stackoverflow.com/a/14438954/1937994
+ */
+export function unique(values: any[]): any[] {
+  return values.filter((value, index, self) => self.indexOf(value) === index);
+}
