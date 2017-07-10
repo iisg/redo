@@ -3,7 +3,10 @@ version: '2'
 services:
   repeka:
     container_name: ${COMPOSE_PROJECT_NAME}
-    build: ./repeka
+    build:
+      context: ./repeka
+      args:
+        WWW_DATA_UID: ${UID}
     volumes:
       - ${VOLUME_SOURCES}:/var/www/html:z
     ports:
