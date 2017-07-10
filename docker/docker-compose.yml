@@ -2,40 +2,39 @@ version: '2'
 
 services:
   repeka:
-    container_name: ${REPEKA_CONTAINER_NAME}
+    container_name: ${COMPOSE_PROJECT_NAME}
     build: ./repeka
     volumes:
-      - ${REPEKA_VOLUME_SOURCES}:/var/www/html:z
+      - ${VOLUME_SOURCES}:/var/www/html:z
     ports:
-      - "${REPEKA_PORT_HTTP}:80"
-      - "${REPEKA_PORT_HTTPS}:443"
+      - "${PORT_HTTP}:80"
+      - "${PORT_HTTPS}:443"
     links:
       - repeka-elasticsearch:elasticsearch
       - repeka-postgres:postgres
       - repeka-metrics:metrics
 
   repeka-elasticsearch:
-    container_name: ${REPEKA_CONTAINER_NAME_ELASTICSEARCH}
+    container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch
     image: elasticsearch:2.4.2
     command: -Des.node.name="repeka-elasticsearch"
     volumes:
-      - ${REPEKA_VOLUME_ELASTICSEARCH}:/usr/share/elasticsearch/data:z
+      - ${VOLUME_ELASTICSEARCH}:/usr/share/elasticsearch/data:z
 
   repeka-postgres:
-    container_name: ${REPEKA_CONTAINER_NAME_POSTGRES}
+    container_name: ${COMPOSE_PROJECT_NAME}-postgres
     image: postgres:9.4
     environment:
-      POSTGRES_PASSWORD: ${REPEKA_DATABASE_PASSWORD}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
-      - ${REPEKA_VOLUME_POSTGRES}:/var/lib/postgresql/data:z
+      - ${VOLUME_POSTGRES}:/var/lib/postgresql/data:z
 
   repeka-metrics:
-    container_name: ${REPEKA_CONTAINER_NAME_METRICS}
+    container_name: ${COMPOSE_PROJECT_NAME}-metrics
     build: ./repeka-metrics
     volumes:
-      - ${REPEKA_VOLUME_METRICS}/data/whisper:/opt/graphite/storage/whisper:z
-      - ${REPEKA_VOLUME_METRICS}/data/elasticsearch:/var/lib/elasticsearch:z
-      - ${REPEKA_VOLUME_METRICS}/data/grafana:/opt/grafana/data:z
-      - ${REPEKA_VOLUME_METRICS}/log/graphite:/opt/graphite/storage/log:z
-      - ${REPEKA_VOLUME_METRICS}/log/elasticsearch:/var/log/elasticsearch:z
-
+      - ${VOLUME_METRICS}/data/whisper:/opt/graphite/storage/whisper:z
+      - ${VOLUME_METRICS}/data/elasticsearch:/var/lib/elasticsearch:z
+      - ${VOLUME_METRICS}/data/grafana:/opt/grafana/data:z
+      - ${VOLUME_METRICS}/log/graphite:/opt/graphite/storage/log:z
+      - ${VOLUME_METRICS}/log/elasticsearch:/var/log/elasticsearch:z
