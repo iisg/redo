@@ -7,6 +7,7 @@ var path = require('path');
 var async = require('async');
 var del = require('del');
 var exec = require('child_process').exec;
+var preprocess = require('preprocess');
 
 project.printAsciiLogoAndVersion();
 
@@ -50,6 +51,7 @@ function copyToReleaseDirectory() {
   [
     'app/',
     'bin/',
+    'docker/',
     'src/Repeka/Application',
     'src/Repeka/Domain',
     'vendor/',
@@ -74,6 +76,7 @@ function copyToReleaseDirectory() {
       createRequriedDirectories();
       clearLocalConfigFiles();
       copySingleRequiredFiles();
+      preprocessSources();
       spinner.succeed('Application files copied.');
       copyJsDependencies();
     }
@@ -86,6 +89,10 @@ function createRequriedDirectories() {
   });
 }
 
+function preprocessSources() {
+  preprocess.preprocessFileSync('release/docker/repeka/Dockerfile', 'release/docker/repeka/Dockerfile', {}, {type: 'shell'});
+}
+
 function copySingleRequiredFiles() {
   fs.copySync('var/bootstrap.php.cache', 'release/var/bootstrap.php.cache');
   fs.copySync('src/.htaccess', 'release/src/.htaccess');
@@ -94,6 +101,9 @@ function copySingleRequiredFiles() {
 
 function clearLocalConfigFiles() {
   del.sync([
+    'release/docker/.env',
+    'release/apache2-ssl/server.crt',
+    'release/apache2-ssl/server.key',
     'release/app/config/config_local.yml',
     'release/app/config/config_dev.yml',
     'release/app/config/config_test.yml',
@@ -103,6 +113,7 @@ function clearLocalConfigFiles() {
 
 function copyJsDependencies() {
   var spinner = ora({text: 'Copying JS dependencies.', color: 'yellow'}).start();
+  del.sync('release/web/jspm_packages');
   fs.mkdirsSync('release/web/jspm_packages');
   fs.copy('src/AdminPanel/jspm_packages', 'release/web/jspm_packages', function (err) {
     if (err) {
@@ -110,19 +121,6 @@ function copyJsDependencies() {
       console.error(err);
     } else {
       spinner.succeed('JS dependencies copied.');
-      dumpDockerConfiguration();
-    }
-  });
-}
-
-function dumpDockerConfiguration() {
-  var spinner = ora({text: 'Dumping docker configuration.', color: 'yellow'}).start();
-  exec('git fetch && git archive -o release/docker-configuration.tar.gz origin/docker', function (err) {
-    if (err) {
-      spinner.fail();
-      console.error(err);
-    } else {
-      spinner.succeed('Docker configuraiton dumped.');
       includeInstallationDocs();
     }
   });
