@@ -1,0 +1,5 @@
+# Place server.crt and server.key in this directory
+# If you don't have them, generate them with te following command:
+# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt
+*
+!.gitignore

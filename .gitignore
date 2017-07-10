@@ -16,5 +16,6 @@ node_modules/
 /*.tar.gz
 release/
 *.bak
+.env
 
 package-lock.json
