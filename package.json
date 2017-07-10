@@ -12,7 +12,8 @@
     "fs-extra": "2.0.0",
     "git-describe": "3.0.2",
     "node-composer-runner": "0.2.0",
-    "ora": "1.1.0"
+    "ora": "1.1.0",
+    "preprocess": "3.1.0"
   },
   "scripts": {
     "help": "node scripts/help.js",
@@ -30,7 +31,7 @@
     "dist": "node scripts/repeka.js && node scripts/version-public.js && node scripts/assert-prod.js && (npm run dist:backend && npm run dist:admin) && php bin/console repeka:statsd:deploy",
     "dist:admin": "cd src/AdminPanel && npm run dist -s",
     "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev && npm run -s clean:backend:cache && php bin/console cache:clear -e prod --no-debug && npm run -s db:migrate",
-    "install": "node scripts/repeka.js && node scripts/version-public.js && npm run -s clean:backend:cache && composer-runner -- install && npm run -s db:migrate && cd src/AdminPanel && npm install",
+    "install": "npm prune && node scripts/repeka.js && node scripts/version-public.js && npm run -s clean:backend:cache && composer-runner -- install && npm run -s db:migrate && cd src/AdminPanel && npm install",
     "lint": "rm -fr var/reports/lints/*.xml && (npm run -s lint:backend && npm run -s lint:admin)",
     "lint:admin": "cd src/AdminPanel && npm run -s lint",
     "lint:backend": "rm -fr var/reports/phpmd/*.xml && (npm run -s lint:backend:phpmd && npm run -s lint:backend:phpcs)",
