@@ -10,6 +10,8 @@ var exec = require('child_process').exec;
 
 project.printAsciiLogoAndVersion();
 
+var releaseFilename = process.env.RELEASE_FILENAME || 'repeka-' + version.text + '-' + version.full.hash + '.tar.gz';
+
 console.log('');
 
 function start() {
@@ -141,15 +143,14 @@ function includeInstallationDocs() {
 
 function createZipArchive() {
   var spinner = ora({text: 'Creating release archive.', color: 'yellow'}).start();
-  var filename = 'repeka-' + version.text + '-' + version.full.hash + '.tar.gz'
-  exec('tar -czf ' + filename + ' release --transform=\'s/release\\/\\{0,1\\}//g\'', function (err) {
+  exec('tar -czf ' + releaseFilename + ' release --transform=\'s/release\\/\\{0,1\\}//g\'', function (err) {
     if (err) {
       spinner.fail();
       console.log(err);
     } else {
       spinner.succeed('Release archive created.');
       console.log('');
-      console.log("Package: " + chalk.green(filename));
+      console.log("Package: " + chalk.green(releaseFilename));
     }
   });
 }
