@@ -35,8 +35,6 @@ RUN usermod --uid 1001 www-data \
 	&& groupmod --gid 1001 www-data \
 	&& chown -hR www-data:www-data /var/www
 
-VOLUME /var/www/html
-
 COPY php.ini /usr/local/etc/php/php.ini
 COPY apache2-sites/*.conf /etc/apache2/sites-available/
 COPY apache2-ssl /etc/apache2/ssl
