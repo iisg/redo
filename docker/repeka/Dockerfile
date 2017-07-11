@@ -39,6 +39,6 @@ COPY php.ini /usr/local/etc/php/php.ini
 COPY apache2-sites/*.conf /etc/apache2/sites-available/
 COPY apache2-ssl /etc/apache2/ssl
 
-RUN a2enmod ssl rewrite proxy_http expires deflate
+RUN a2enmod ssl rewrite proxy_http expires deflate && a2ensite default-ssl
 
 ENV REPEKA_ENV prod
