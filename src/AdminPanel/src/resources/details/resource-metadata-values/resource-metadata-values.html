@@ -9,6 +9,7 @@
                     <li repeat.for="value of resource.contents[metadata.baseId]">
                         <resource-metadata-value-display
                             metadata.bind="metadata"
+                            resource.bind="resource"
                             value.bind="value"></resource-metadata-value-display>
                     </li>
                 </ul>

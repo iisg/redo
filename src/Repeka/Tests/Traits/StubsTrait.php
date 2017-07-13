@@ -41,7 +41,7 @@ trait StubsTrait {
      * @param Metadata[] $metadataList
      * @return ResourceKind|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function createResourceKindMock(array $metadataList): ResourceKind {
+    protected function createResourceKindMock(array $metadataList = []): ResourceKind {
         $resourceKind = $this->createMock(ResourceKind::class);
         $resourceKind->method('getMetadataList')->willReturn($metadataList);
         return $resourceKind;

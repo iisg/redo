@@ -3,10 +3,12 @@ import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "resources-config/metadata/metadata";
 import {ValueWrapper} from "../../controls/control-strategy";
 import {Disposable, BindingEngine} from "aurelia-binding";
+import {Resource} from "../../resource";
 
 @autoinject
 export class ResourceMetadataValueDisplay implements ComponentAttached, ComponentDetached {
   @bindable metadata: Metadata;
+  @bindable resource: Resource;
   @bindable value: any;
 
   valueWrapper: ValueWrapper = new ValueWrapper();

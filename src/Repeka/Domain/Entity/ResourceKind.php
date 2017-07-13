@@ -1,4 +1,5 @@
 <?php
+
 namespace Repeka\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -43,6 +44,13 @@ class ResourceKind {
             $baseId,
             $this->getId()
         ));
+    }
+
+    /** @return Metadata[] */
+    public function getMetadataByControl(string $control): array {
+        return array_values(array_filter($this->getMetadataList(), function (Metadata $metadata) use ($control) {
+            return $control == $metadata->getControl();
+        }));
     }
 
     public function addMetadata(Metadata $metadata) {

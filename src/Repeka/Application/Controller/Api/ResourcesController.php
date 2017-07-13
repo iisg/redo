@@ -4,6 +4,7 @@ namespace Repeka\Application\Controller\Api;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
+use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
@@ -11,6 +12,7 @@ use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -85,5 +87,14 @@ class ResourcesController extends ApiController {
             return $this->createJsonResponse($resource);
         }
         throw new BadRequestHttpException('Unsupported operation.');
+    }
+
+    /**
+     * @Route("/{resource}/files/{filename}")
+     * @Method("GET")
+     */
+    public function downloadFileAction(ResourceEntity $resource, string $filename) {
+        $filePath = $this->handleCommand(new ResourceFileQuery($resource, $filename));
+        return new BinaryFileResponse($filePath);
     }
 }
