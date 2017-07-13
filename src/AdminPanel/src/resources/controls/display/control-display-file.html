@@ -1,4 +1,8 @@
 <template>
     <require from="common/value-converters/basename"></require>
-    ${valueWrapper.value | basename}
+    <require from="./resource-file-url"></require>
+    <a href.bind="valueWrapper.value | resourceFileUrl:resource"
+        target="_top">
+        ${valueWrapper.value | basename}
+    </a>
 </template>

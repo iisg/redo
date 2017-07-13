@@ -1,7 +1,7 @@
 // https://github.com/aurelia/binding/issues/533
 
 interface ToViewValueConverter {
-  toView(modelValue: any): any;
+  toView(modelValue: any, ...params): any;
 }
 
 interface FromViewValueConverter {

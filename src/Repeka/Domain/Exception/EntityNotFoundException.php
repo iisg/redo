@@ -3,7 +3,7 @@ namespace Repeka\Domain\Exception;
 
 use Doctrine\ORM\EntityRepository;
 
-class EntityNotFoundException extends DomainException {
+class EntityNotFoundException extends NotFoundException {
     /**
      * @param string|EntityRepository $entityNameOrRepository
      * @param mixed $query
@@ -12,7 +12,6 @@ class EntityNotFoundException extends DomainException {
         $entityName = $this->getEntityName($entityNameOrRepository);
         $formattedQuery = $this->getFormattedQuery($query);
         parent::__construct("Not found: $entityName $formattedQuery", $previous);
-        $this->setCode(404);
     }
 
     private function getEntityName($entityNameOrRepository): string {
@@ -31,7 +30,7 @@ class EntityNotFoundException extends DomainException {
         } elseif (is_int($query)) {
             return "#$query";
         } else {
-            return (string) $query;
+            return (string)$query;
         }
     }
 }

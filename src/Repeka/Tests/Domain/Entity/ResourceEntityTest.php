@@ -1,12 +1,16 @@
 <?php
 namespace Repeka\Tests\Domain\Entity;
 
+use Assert\InvalidArgumentException;
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceEntityTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceKind|PHPUnit_Framework_MockObject_MockObject */
     private $resourceKind;
 
@@ -65,5 +69,30 @@ class ResourceEntityTest extends \PHPUnit_Framework_TestCase {
         $this->resourceKind->expects($this->any())->method('getWorkflow')->willReturn($workflow);
         $workflow->expects($this->once())->method('apply')->with($resource, 't1')->willReturn($resource);
         $resource->applyTransition('t1');
+    }
+
+    public function testGettingValues() {
+        $this->resourceKind->method('getMetadataList')->willReturn([$this->createMetadataMock(11, 1), $this->createMetadataMock(12, 2)]);
+        $resource = new ResourceEntity($this->resourceKind, [1 => ['A', 'B']]);
+        $this->assertEquals(['A', 'B'], $resource->getValues($this->createMetadataMock(11, 1)));
+    }
+
+    public function testGettingValuesOfEmptyMetadata() {
+        $this->resourceKind->method('getMetadataList')->willReturn([$this->createMetadataMock(11, 1), $this->createMetadataMock(12, 2)]);
+        $resource = new ResourceEntity($this->resourceKind, [1 => ['A', 'B']]);
+        $this->assertEquals([], $resource->getValues($this->createMetadataMock(12, 2)));
+    }
+
+    public function testGettingValuesById() {
+        $this->resourceKind->method('getMetadataList')->willReturn([$this->createMetadataMock(11, 1), $this->createMetadataMock(12, 2)]);
+        $resource = new ResourceEntity($this->resourceKind, [1 => ['A', 'B']]);
+        $this->assertEquals(['A', 'B'], $resource->getValues($this->createMetadataMock(1)));
+    }
+
+    public function testGettingValuesOfNotExistingMetadata() {
+        $this->resourceKind->method('getMetadataList')->willReturn([$this->createMetadataMock(11, 1), $this->createMetadataMock(12, 2)]);
+        $resource = new ResourceEntity($this->resourceKind, [1 => ['A', 'B']]);
+        $this->expectException(InvalidArgumentException::class);
+        $resource->getValues($this->createMetadataMock(13, 3));
     }
 }

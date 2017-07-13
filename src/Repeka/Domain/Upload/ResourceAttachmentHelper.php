@@ -7,4 +7,6 @@ use Repeka\Domain\Entity\ResourceEntity;
 interface ResourceAttachmentHelper {
     /** @throws AttachmentsExistException */
     public function moveFilesToDestinationPaths(ResourceEntity $resource): int;
+
+    public function toAbsolutePath(string $path): string;
 }

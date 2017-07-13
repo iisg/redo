@@ -37,6 +37,15 @@ class ResourceEntity {
         });
     }
 
+    public function getValues(Metadata $metadata): array {
+        $baseId = $metadata->isBase() ? $metadata->getId() : $metadata->getBaseId();
+        $baseIds = array_map(function (Metadata $m) {
+            return $m->getBaseId();
+        }, $this->kind->getMetadataList());
+        Assertion::inArray($baseId, $baseIds);
+        return $this->getContents()[$baseId] ?? [];
+    }
+
     public function updateContents(array $contents) {
         $this->contents = array_filter($contents, function ($values) {
             return count($values) > 0;

@@ -111,4 +111,18 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
         }
         $resourceKind->getMetadataByBaseId($base->getId());
     }
+
+    public function testGettingMetadataByControl() {
+        $metadataA1 = $this->createMetadataMock(1, null, 'A');
+        $metadataA2 = $this->createMetadataMock(2, 1, 'A');
+        $metadataB = $this->createMetadataMock(3, null, 'B');
+        $resourceKind = new ResourceKind([]);
+        $resourceKind->addMetadata($metadataA1);
+        $resourceKind->addMetadata($metadataB);
+        $resourceKind->addMetadata($metadataA2);
+        $metadataWithAControl = $resourceKind->getMetadataByControl('A');
+        $this->assertCount(2, $metadataWithAControl);
+        $this->assertContains($metadataA1, $metadataWithAControl);
+        $this->assertContains($metadataA2, $metadataWithAControl);
+    }
 }

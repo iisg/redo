@@ -98,7 +98,7 @@ class BasicResourceAttachmentHelper implements ResourceAttachmentHelper {
         return $movedFilePaths;
     }
 
-    private function toAbsolutePath(string $path): string {
+    public function toAbsolutePath(string $path): string {
         return $this->pathGenerator->getUploadsRootPath() . '/' . $path;
     }
 
