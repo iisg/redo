@@ -60,7 +60,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('POST', self::ENDPOINT, $metadataArray);
         $this->assertStatusCode(201, $client->getResponse());
         /** @var $metadataRepository MetadataRepository */
-        $metadataRepository = self::createClient()->getContainer()->get('repository.metadata');
+        $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
         $metadata = $metadataRepository->findAll();
         $this->assertCount(1, $metadata);
         $this->assertEquals($metadataArray['control'], $metadata[0]->getControl());
@@ -137,7 +137,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('PATCH', '/api/metadata/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());
         /** @var $metadata Metadata */
-        $updatedMetadata = self::createClient()->getContainer()->get('repository.metadata')->find($metadata->getId());
+        $updatedMetadata = self::createClient()->getContainer()->get(MetadataRepository::class)->find($metadata->getId());
         self::assertEquals($update['label'], $updatedMetadata->getLabel());
         self::assertEquals($update['description'], $updatedMetadata->getDescription());
         self::assertEquals($update['placeholder'], $updatedMetadata->getPlaceholder());
@@ -156,7 +156,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         self::assertStatusCode(200, $client->getResponse());
         /** @var $metadata Metadata */
         /** @var $updatedMetadata Metadata */
-        $updatedMetadata = self::createClient()->getContainer()->get('repository.metadata')->find($metadata->getId());
+        $updatedMetadata = self::createClient()->getContainer()->get(MetadataRepository::class)->find($metadata->getId());
         self::assertEquals($metadata->getName(), $updatedMetadata->getName());
     }
 }

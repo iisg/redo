@@ -1,9 +1,11 @@
 <?php
+
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 
 class MetadataFixture extends RepekaFixture {
@@ -86,20 +88,20 @@ class MetadataFixture extends RepekaFixture {
             'name' => 'Zobacz też',
             'label' => [
                 'PL' => 'Zobacz też',
-                'EN' => 'See also'
+                'EN' => 'See also',
             ],
             'description' => [],
             'placeholder' => [],
             'control' => 'relationship',
             'constraints' => [
-                'resourceKind' => []
+                'resourceKind' => [],
             ],
         ]), self::REFERENCE_METADATA_SEE_ALSO);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Okładka',
             'label' => [
                 'PL' => 'Okładka',
-                'EN' => 'Cover'
+                'EN' => 'Cover',
             ],
             'description' => [],
             'placeholder' => [],
@@ -107,6 +109,6 @@ class MetadataFixture extends RepekaFixture {
         ]), self::REFERENCE_METADATA_FILE);
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
             return $metadata->getId();
-        }, $this->container->get('repository.metadata')->findAllBase())));
+        }, $this->handleCommand(new MetadataListQuery()))));
     }
 }

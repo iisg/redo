@@ -2,6 +2,7 @@
 namespace Repeka\Application\Controller\Api;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
@@ -17,12 +18,19 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("/metadata")
  */
 class MetadataController extends ApiController {
+    /** @var MetadataRepository */
+    private $metadataRepository;
+
+    public function __construct(MetadataRepository $metadataRepository) {
+        $this->metadataRepository = $metadataRepository;
+    }
+
     /**
      * @Route
      * @Method("GET")
      */
     public function getListAction() {
-        $metadataList = $this->commandBus->handle(new MetadataListQuery());
+        $metadataList = $this->handleCommand(new MetadataListQuery());
         return $this->createJsonResponse($metadataList);
     }
 
@@ -31,7 +39,7 @@ class MetadataController extends ApiController {
      * @Method("GET")
      */
     public function getAction(int $id) {
-        $metadata = $this->handle(new MetadataGetQuery($id));
+        $metadata = $this->handleCommand(new MetadataGetQuery($id));
         return $this->createJsonResponse($metadata);
     }
 
@@ -40,7 +48,7 @@ class MetadataController extends ApiController {
      * @Method("GET")
      */
     public function getAllChildrenListAction(int $parentId) {
-        $metadataChildrenList = $this->commandBus->handle(new MetadataListQuery($parentId));
+        $metadataChildrenList = $this->handleCommand(new MetadataListQuery($parentId));
         return $this->createJsonResponse($metadataChildrenList);
     }
 
@@ -50,7 +58,7 @@ class MetadataController extends ApiController {
      */
     public function postAction(Request $request) {
         $command = MetadataCreateCommand::fromArray($request->request->all());
-        $metadata = $this->commandBus->handle($command);
+        $metadata = $this->handleCommand($command);
         return $this->createJsonResponse($metadata, 201);
     }
 
@@ -60,14 +68,14 @@ class MetadataController extends ApiController {
      */
     public function postChildAction(Metadata $parent, Request $request) {
         $data = $request->request->all();
-        $baseMetadata = isset($data['baseId']) ? $this->get('repository.metadata')->findOne($data['baseId']) : null;
+        $baseMetadata = isset($data['baseId']) ? $this->metadataRepository->findOne($data['baseId']) : null;
         $newChildMetadata = $data['newChildMetadata'] ?? [];
         if ($baseMetadata) {
             $command = new MetadataChildWithBaseCreateCommand($parent, $baseMetadata, $newChildMetadata);
         } else {
             $command = new MetadataChildCreateCommand($parent, $newChildMetadata);
         }
-        $metadata = $this->commandBus->handle($command);
+        $metadata = $this->handleCommand($command);
         return $this->createJsonResponse($metadata, 201);
     }
 
@@ -77,7 +85,7 @@ class MetadataController extends ApiController {
      */
     public function patchAction(int $id, Request $request) {
         $command = MetadataUpdateCommand::fromArray($id, $request->request->all());
-        $updatedMetadata = $this->commandBus->handle($command);
+        $updatedMetadata = $this->handleCommand($command);
         return $this->createJsonResponse($updatedMetadata);
     }
 
@@ -88,7 +96,7 @@ class MetadataController extends ApiController {
     public function updateOrderAction(Request $request) {
         $ids = $request->request->all();
         $command = new MetadataUpdateOrderCommand($ids);
-        $this->commandBus->handle($command);
+        $this->handleCommand($command);
         return $this->createJsonResponse(true);
     }
 }

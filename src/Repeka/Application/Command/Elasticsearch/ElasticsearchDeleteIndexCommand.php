@@ -1,11 +1,21 @@
 <?php
+
 namespace Repeka\Application\Command\Elasticsearch;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Repeka\Application\Elasticsearch\ESIndexManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ElasticsearchDeleteIndexCommand extends ContainerAwareCommand {
+class ElasticsearchDeleteIndexCommand extends Command {
+    /** @var ESIndexManager */
+    private $esIndexManager;
+
+    public function __construct(ESIndexManager $esIndexManager) {
+        parent::__construct();
+        $this->esIndexManager = $esIndexManager;
+    }
+
     protected function configure() {
         $this
             ->setName('repeka:elasticsearch:delete-index')
@@ -16,7 +26,6 @@ class ElasticsearchDeleteIndexCommand extends ContainerAwareCommand {
      * @inheritdoc
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $im = $this->getContainer()->get('elasticsearch.index_manager');
-        $im->delete();
+        $this->esIndexManager->delete();
     }
 }

@@ -1,8 +1,10 @@
 <?php
+
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
+use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
 
 class ResourceKindsFixture extends RepekaFixture {
     use ResourceKindsFixtureUtilTrait;
@@ -15,7 +17,8 @@ class ResourceKindsFixture extends RepekaFixture {
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
-        $workflow = $this->container->get('repository.workflow')->findOne($this->getReference(ResourceWorkflowsFixture::BOOK_WORKFLOW));
+        $workflow = $this
+            ->handleCommand(new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::BOOK_WORKFLOW)->getId()));
         $this->handleCommand(new ResourceKindCreateCommand(
             [
                 'PL' => 'Książka',

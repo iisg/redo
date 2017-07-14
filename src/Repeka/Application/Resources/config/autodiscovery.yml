@@ -1,0 +1,41 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  _instanceof:
+    Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessorStrategy:
+      tags: [repeka.metadata_value_processor]
+
+  Repeka\Application\Command\:
+    resource: '../../Command'
+    public: true
+
+  Repeka\Application\Controller\:
+    resource: '../../Controller'
+    public: true
+
+  Repeka\Application\Cqrs\Middleware\:
+    resource: '../../Cqrs/Middleware'
+
+  Repeka\Application\Factory\:
+    resource: '../../Factory'
+
+  Repeka\Application\ParamConverter\MetadataValueProcessor\:
+    resource: '../../ParamConverter/MetadataValueProcessor'
+
+  Repeka\Application\Serialization\:
+    resource: '../../Serialization'
+
+  Repeka\Domain\UseCase\:
+    public: true
+    resource: '../../../Domain/UseCase'
+    exclude: '../../../Domain/UseCase/**/*{Command,Query}.php'
+
+  Repeka\Domain\Validation\MetadataConstraints\:
+    resource: '../../../Domain/Validation/MetadataConstraints'
+    tags: [repeka.metadata_constraint]
+
+  Repeka\Domain\Validation\Rules\:
+    resource: '../../../Domain/Validation/Rules'

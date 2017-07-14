@@ -10,13 +10,13 @@ monolog:
       handler: main_nested
       type: fingers_crossed
     main_nested:
-      channels: [!exception_listener]
+      channels: ['!exception_listener']
       level: debug
       path: "%kernel.logs_dir%/%kernel.environment%.log"
       type: stream
     exception_listener:
-      channels: [exception_listener]
+      channels: ['exception_listener']
       level: debug
       path: "%kernel.logs_dir%/%kernel.environment%-exception.log"
       type: stream
-      formatter: monolog.formatter.mutliline
+      formatter: Monolog\Formatter\LineFormatter

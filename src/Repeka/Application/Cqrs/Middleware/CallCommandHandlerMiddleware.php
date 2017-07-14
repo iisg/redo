@@ -1,4 +1,5 @@
 <?php
+
 namespace Repeka\Application\Cqrs\Middleware;
 
 use Repeka\Domain\Cqrs\Command;
@@ -13,7 +14,7 @@ class CallCommandHandlerMiddleware implements CommandBusMiddleware {
     }
 
     public function handle(Command $command, callable $next) {
-        $handlerName = $this->getHandlerId($command->getCommandName());
+        $handlerName = get_class($command) . 'Handler';
         try {
             $handler = $this->container->get($handlerName);
             return $handler->handle($command);
@@ -21,9 +22,5 @@ class CallCommandHandlerMiddleware implements CommandBusMiddleware {
             $message = "Could not find handler for the command {$command->getCommandName()} (looking for $handlerName).";
             throw new \InvalidArgumentException($message, 0, $e);
         }
-    }
-
-    private function getHandlerId($commandName) {
-        return 'command_handler.' . $commandName;
     }
 }

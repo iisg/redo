@@ -30,8 +30,8 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPassingValidation() {
-        $this->container->expects($this->once())->method('has')->with('command_validator.some_command')->willReturn(true);
-        $this->container->expects($this->once())->method('get')->with('command_validator.some_command')->willReturn($this->validator);
+        $this->container->expects($this->once())->method('has')->willReturn(true);
+        $this->container->expects($this->once())->method('get')->willReturn($this->validator);
         $this->middleware->handle($this->command, function ($c) {
             $this->assertSame($c, $this->command);
             $this->wasCalled = true;
@@ -41,17 +41,17 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailsValidation() {
         $this->expectException('Repeka\Domain\Exception\InvalidCommandException');
-        $this->container->expects($this->once())->method('has')->with('command_validator.some_command')->willReturn(true);
-        $this->container->expects($this->once())->method('get')->with('command_validator.some_command')->willReturn($this->validator);
+        $this->container->expects($this->once())->method('has')->willReturn(true);
+        $this->container->expects($this->once())->method('get')->willReturn($this->validator);
         $this->validator->expects($this->once())->method('validate')->with($this->command)
-            ->willThrowException(new InvalidCommandException([], new \Exception()));
+            ->willThrowException(new InvalidCommandException($this->command, [], new \Exception()));
         $this->middleware->handle($this->command, function () {
         });
     }
 
     public function testNoValidatorForCommand() {
         $this->expectException(\InvalidArgumentException::class);
-        $this->container->expects($this->once())->method('has')->with('command_validator.some_command')->willReturn(false);
+        $this->container->expects($this->once())->method('has')->willReturn(false);
         $this->container->expects($this->never())->method('get');
         $this->middleware->handle($this->command, function () {
         });

@@ -3,6 +3,8 @@ namespace Repeka\Tests\Integration;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceKindIntegrationTest extends IntegrationTestCase {
@@ -64,7 +66,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             ]]
         ]);
         $this->assertStatusCode(201, $client->getResponse());
-        $resourceKindRepository = self::createClient()->getContainer()->get('repository.resource_kind');
+        $resourceKindRepository = self::createClient()->getContainer()->get(ResourceKindRepository::class);
         $createdId = json_decode($client->getResponse()->getContent())->id;
         $createdResourceKind = $resourceKindRepository->findOne($createdId);
         $this->assertEquals(['TEST' => 'created'], $createdResourceKind->getLabel());
@@ -102,8 +104,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $client = self::createClient();
-        $resourceKindRepository = $client->getContainer()->get('repository.resource_kind');
-        $metadataRepository = $client->getContainer()->get('repository.metadata');
+        $resourceKindRepository = $client->getContainer()->get(ResourceKindRepository::class);
+        $metadataRepository = $client->getContainer()->get(MetadataRepository::class);
         $resourceKind = $resourceKindRepository->findOne($this->resourceKind->getId());
         $metadata1 = $metadataRepository->findOne($this->metadata1->getId());
         $metadata2 = $metadataRepository->findOne($this->metadata2->getId());

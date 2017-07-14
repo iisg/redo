@@ -2,6 +2,7 @@
 namespace Repeka\Application\Controller\Api;
 
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
@@ -17,13 +18,20 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * @Route("/resources")
  */
 class ResourcesController extends ApiController {
+    /** @var ResourceKindRepository */
+    private $resourceKindRepository;
+
+    public function __construct(ResourceKindRepository $resourceKindRepository) {
+        $this->resourceKindRepository = $resourceKindRepository;
+    }
+
     /**
      * @Route
      * @Method("GET")
      */
     public function getListAction(Request $request) {
         $includeSystemResources = !!$request->query->get('systemResourceKind');
-        $resources = $this->handle(new ResourceListQuery($includeSystemResources));
+        $resources = $this->handleCommand(new ResourceListQuery($includeSystemResources));
         return $this->createJsonResponse($resources);
     }
 
@@ -32,36 +40,36 @@ class ResourcesController extends ApiController {
      * @Method("GET")
      */
     public function getAction(int $id) {
-        $resource = $this->handle(new ResourceQuery($id));
+        $resource = $this->handleCommand(new ResourceQuery($id));
         return $this->createJsonResponse($resource);
     }
 
     /**
      * @Route
      * @Method("POST")
-     * @ParamConverter("resourceContents", converter="repeka.converter.resource_contents_param")
+     * @ParamConverter("resourceContents", converter="Repeka\Application\ParamConverter\ResourceContentsParamConverter")
      */
     public function postAction(Request $request, array $resourceContents) {
         $data = $request->request->all();
         if (empty($data['kind_id'])) {
             throw new BadRequestHttpException('kind_id missing');
         }
-        $resourceKind = $this->container->get('repository.resource_kind')->findOne($data['kind_id']);
+        $resourceKind = $this->resourceKindRepository->findOne($data['kind_id']);
         $command = new ResourceCreateCommand($resourceKind, $resourceContents);
-        $resource = $this->handle($command);
+        $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource, 201);
     }
 
     /**
      * @Route("/{resource}")
      * @Method("POST")
-     * @ParamConverter("resourceContents", converter="repeka.converter.resource_contents_param")
+     * @ParamConverter("resourceContents", converter="Repeka\Application\ParamConverter\ResourceContentsParamConverter")
      * POST instead of PUT, caused by multipart data
      * @see http://stackoverflow.com/questions/24385301/symfony-rest-file-upload-over-put-method
      */
     public function putAction(ResourceEntity $resource, array $resourceContents) {
         $command = new ResourceUpdateContentsCommand($resource, $resourceContents);
-        $resource = $this->handle($command);
+        $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource);
     }
 
@@ -73,7 +81,7 @@ class ResourcesController extends ApiController {
         $data = $request->request->all();
         if (!empty($data['transitionId'])) {
             $command = new ResourceTransitionCommand($resource, $data['transitionId'], $this->getUser());
-            $resource = $this->handle($command);
+            $resource = $this->handleCommand($command);
             return $this->createJsonResponse($resource);
         }
         throw new BadRequestHttpException('Unsupported operation.');

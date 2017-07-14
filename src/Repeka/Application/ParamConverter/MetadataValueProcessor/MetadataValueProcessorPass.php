@@ -6,14 +6,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 class MetadataValueProcessorPass implements CompilerPassInterface {
-    const PROCESSOR_SERVICE = 'repeka.metadata_value_processor';
     const TAG_NAME = 'repeka.metadata_value_processor';
 
     public function process(ContainerBuilder $container) {
-        if (!$container->has(self::PROCESSOR_SERVICE)) {
+        if (!$container->has(MetadataValueProcessor::class)) {
             return;
         }
-        $serviceDefinition = $container->findDefinition(self::PROCESSOR_SERVICE);
+        $serviceDefinition = $container->findDefinition(MetadataValueProcessor::class);
         $processors = $container->findTaggedServiceIds(self::TAG_NAME);
         foreach (array_keys($processors) as $id) {
             $serviceDefinition->addMethodCall('registerStrategy', [new Reference($id)]);
