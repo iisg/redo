@@ -11,21 +11,15 @@
       "app/AppCache.php"
     ]
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/fracz/doctrine-json-odm"
-    }
-  ],
   "require": {
     "php": ">=7.1",
-    "beberlei/assert": "~2.0",
-    "cocur/slugify": "^2.4",
+    "beberlei/assert": "^2.7",
+    "cocur/slugify": "^2.5",
     "doctrine/dbal": "2.6.x-dev",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-migrations-bundle": "^1.2",
     "doctrine/orm": "2.6.x-dev",
-    "dunglas/doctrine-json-odm": "dev-null-fix",
+    "dunglas/doctrine-json-odm": "^0.1",
     "ext-mbstring": "*",
     "ext-pdo_pgsql": "*",
     "ext-soap": "*",
@@ -35,12 +29,10 @@
     "respect/validation": "^1.1",
     "ruflin/elastica": "^3.2",
     "sensio/distribution-bundle": "^5.0",
-    "sensio/framework-extra-bundle": "^3.0.2",
-    "symfony/monolog-bundle": "^2.8",
-    "symfony/serializer": "^3.2",
-    "symfony/swiftmailer-bundle": "^2.3",
-    "symfony/symfony": "^3.2",
-    "twig/twig": "^1.30"
+    "sensio/framework-extra-bundle": "3.0.22",
+    "symfony/monolog-bundle": "^3.1",
+    "symfony/serializer": "^3.3",
+    "symfony/symfony": "^3.3"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^2.3",

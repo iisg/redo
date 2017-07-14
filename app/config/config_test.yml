@@ -20,9 +20,6 @@ monolog:
       path: "%kernel.logs_dir%/%kernel.environment%.log"
       type: stream
 
-swiftmailer:
-  disable_delivery: true
-
 web_profiler:
   intercept_redirects: false
   toolbar: false

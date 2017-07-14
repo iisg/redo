@@ -86,21 +86,12 @@ framework:
     engines:
       - twig
   trusted_hosts: ~
-  trusted_proxies: ~
   validation:
     enable_annotations: true
 
 parameters:
   locale: pl
   secret: some_secret
-
-swiftmailer:
-  host: "127.0.0.1"
-  password: ~
-  spool:
-    type: memory
-  transport: smtp
-  username: ~
 
 twig:
   debug: "%kernel.debug%"
