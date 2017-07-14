@@ -28,7 +28,7 @@ class LanguageIntegrationTest extends IntegrationTestCase {
         ]);
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
         /** @var $languageRepository LanguageRepository */
-        $languageRepository = $this->container->get('repository.language');
+        $languageRepository = $this->container->get(LanguageRepository::class);
         $language = $languageRepository->findOne('TEST');
         $this->assertEquals('TEST', $language->getCode());
         $this->assertEquals('TE', $language->getFlag());

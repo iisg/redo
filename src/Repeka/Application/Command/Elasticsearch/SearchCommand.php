@@ -1,10 +1,13 @@
 <?php
+
 namespace Repeka\Application\Command\Elasticsearch;
 
 use Elastica\Query\BoolQuery;
 use Elastica\QueryBuilder;
 use Elastica\Search;
+use Repeka\Application\Elasticsearch\ESClient;
 use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
+use Repeka\Domain\Repository\LanguageRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,6 +19,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  * TODO remove this when actual indexing is introduced
  */
 class SearchCommand extends ContainerAwareCommand {
+    /** @var LanguageRepository */
+    private $languageRepository;
+    /** @var ESClient */
+    private $esClient;
+
+    public function __construct(LanguageRepository $languageRepository, ESClient $esClient) {
+        parent::__construct();
+        $this->languageRepository = $languageRepository;
+        $this->esClient = $esClient;
+    }
+
     protected function configure() {
         $this
             ->setName('repeka:elasticsearch:search')
@@ -38,8 +52,7 @@ class SearchCommand extends ContainerAwareCommand {
         /** @var BoolQuery $metadataQuery */
         $metadataQuery = $this->buildMetadataQuery($qb, $language, $title, $author, $content);
         $query = $qb->query()->nested()->setPath('metadata')->setQuery($metadataQuery);
-        $client = $this->getContainer()->get('elasticsearch.client');
-        $results = (new Search($client))
+        $results = (new Search($this->esClient))
             ->addIndex($this->getContainer()->getParameter('elasticsearch.index_name'))
             ->addType(ResourceConstants::ES_DOCUMENT_TYPE)
             ->search($query);
@@ -71,7 +84,7 @@ class SearchCommand extends ContainerAwareCommand {
                 ->addMust($qb->query()->term(['metadata.' . ResourceConstants::TOKENIZED_STRING => $author]));
         }
         if ($content) {
-            $supportedLanguages = $this->getContainer()->get('repository.language')->getAvailableLanguageCodes();
+            $supportedLanguages = $this->languageRepository->getAvailableLanguageCodes();
             $multiLanguageContentQuery = $qb->query()->bool();
             foreach ($supportedLanguages as $language) {
                 $language = strtolower($language);

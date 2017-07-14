@@ -20,7 +20,7 @@ class UserRolesController extends ApiController {
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function getListAction() {
-        $userRole = $this->commandBus->handle(new UserRoleListQuery());
+        $userRole = $this->handleCommand(new UserRoleListQuery());
         return $this->createJsonResponse($userRole);
     }
 
@@ -31,7 +31,7 @@ class UserRolesController extends ApiController {
      */
     public function postAction(Request $request) {
         $name = $request->request->all()['name'] ?? [];
-        $userRole = $this->handle(new UserRoleCreateCommand($name));
+        $userRole = $this->handleCommand(new UserRoleCreateCommand($name));
         return $this->createJsonResponse($userRole, 201);
     }
 
@@ -43,7 +43,7 @@ class UserRolesController extends ApiController {
     public function putAction(UserRole $userRole, Request $request) {
         $newName = $request->request->all()['name'] ?? [];
         $command = new UserRoleUpdateCommand($userRole, $newName);
-        $updatedRole = $this->commandBus->handle($command);
+        $updatedRole = $this->handleCommand($command);
         return $this->createJsonResponse($updatedRole);
     }
 }

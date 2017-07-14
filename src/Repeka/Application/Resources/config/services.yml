@@ -1,493 +1,90 @@
+imports:
+  - {resource: autodiscovery.yml}
+  - {resource: aliases.yml}
+  - {resource: repositories.yml}
+
 services:
-  monolog.formatter.mutliline:
-    class: Monolog\Formatter\LineFormatter
-    arguments: [~, ~, true]
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
 
-  repeka.command_bus:
-    class: Repeka\Application\Cqrs\RepekaCommandBus
+  Repeka\Application\Authentication\PKAuthenticationClient: ~
+  Repeka\Application\Authentication\PKAuthenticator:
+    $localAccountsEnabled: '%pk_auth.local_accounts_enabled%'
+  Repeka\Application\Authentication\PKSoapService:
+    - '%pk_auth.wsdl%'
+    - '%pk_auth.options%'
+
+  Repeka\Application\Cqrs\RepekaCommandBus:
+    -
+      - '@Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware'
+      - '@Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware'
+      - '@Repeka\Application\Cqrs\Middleware\WrapCommandWithTransactionMiddleware'
+      - '@Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware'
+
+  Repeka\Application\Elasticsearch\ESClient:
+    - '%elasticsearch.host%'
+    - '%elasticsearch.port%'
+    - '%elasticsearch.proxy%'
+  Repeka\Application\Elasticsearch\ESIndexManager:
+    $indexName: '%elasticsearch.index_name%'
+  Repeka\Application\Elasticsearch\Mapping\ESMappingFactory:
+    $nestingDepth: '%repeka.max_nesting_depth%'
+    $analyzerNames: '%elasticsearch.analyzers%'
+    $metadataClasses:
+      - 'Repeka\Application\Elasticsearch\Model\IntIndexedMetadata'
+      - 'Repeka\Application\Elasticsearch\Model\FloatIndexedMetadata'
+      - 'Repeka\Application\Elasticsearch\Model\DateTimeIndexedMetadata'
+      - 'Repeka\Application\Elasticsearch\Model\RawStringIndexedMetadata'
+      - 'Repeka\Application\Elasticsearch\Model\TokenizedStringIndexedMetadata'
+      - 'Repeka\Application\Elasticsearch\Model\AnalyzedStringIndexedMetadata'
+  Repeka\Application\Elasticsearch\Model\ESResource:
+    shared: false
     arguments:
-      -
-        - '@repeka.command_bus.middleware.metrics_command_bus'
-        - '@repeka.command_bus.middleware.validate_command'
-        - '@repeka.command_bus.middleware.wrap_command_with_transaction'
-        - '@repeka.command_bus.middleware.call_command'
+      $indexName: '%elasticsearch.index_name%'
 
-  metadata.normalizer:
-    class: Repeka\Application\Serialization\MetadataNormalizer
-    public: false
-    tags:
-      - { name: serializer.normalizer }
+  Repeka\Application\Entity\EntityIdGeneratorHelper: ~
 
-  resource_kind.normalizer:
-    class: Repeka\Application\Serialization\ResourceKindNormalizer
-    public: false
-    tags:
-      - { name: serializer.normalizer }
-
-  resource.normalizer:
-    class: Repeka\Application\Serialization\ResourceNormalizer
-    public: false
-    autowire: true
-    tags:
-      - { name: serializer.normalizer }
-
-  resource_workflow.normalizer:
-    class: Repeka\Application\Serialization\ResourceWorkflowNormalizer
-    public: false
-    autowire: true
-    tags:
-      - { name: serializer.normalizer }
-
-  resource_workflow_place.normalizer:
-    class: Repeka\Application\Serialization\ResourceWorkflowPlaceNormalizer
-    public: false
-    autowire: true
-    tags:
-      - { name: serializer.normalizer }
-
-  resource_workflow_transition.normalizer:
-    class: Repeka\Application\Serialization\ResourceWorkflowTransitionNormalizer
-    public: false
-    autowire: true
-    tags:
-      - { name: serializer.normalizer }
-
-  user.normalizer:
-    class: Repeka\Application\Serialization\UserEntityNormalizer
-    public: false
-    tags:
-      - { name: serializer.normalizer }
-
-  user_role.normalizer:
-    class: Repeka\Application\Serialization\UserRoleNormalizer
-    public: false
-    tags:
-      - { name: serializer.normalizer }
-
-  repeka.pk_auth.soap_service:
-    class: Repeka\Application\Authentication\PKSoapService
+  Repeka\Application\EventListener\AdminPanelMetricsRequestListener:
     arguments:
-      - '%pk_auth.wsdl%'
-      - '%pk_auth.options%'
-
-  repeka.pk_auth.authentication_client:
-    class: Repeka\Application\Authentication\PKAuthenticationClient
-    autowire: true
-
-  repeka.pk_auth.authenticator:
-    class: Repeka\Application\Authentication\PKAuthenticator
-    arguments:
-      - '@repeka.pk_auth.authentication_client'
-      - '@repeka.command_bus'
-      - '@security.password_encoder'
-      - '%pk_auth.local_accounts_enabled%'
-
-  repeka.converter.resource_contents_param:
-    class: Repeka\Application\ParamConverter\ResourceContentsParamConverter
-    autowire: true
-    tags:
-      - { name: request.param_converter, converter: repeka.converter.resource_contents_param }
-
-  repeka.upload.filesystem_driver:
-    class: Repeka\Application\Upload\FilesystemDriver
-
-  repeka.upload.resource_attachment_helper:
-    class: Repeka\Application\Upload\BasicResourceAttachmentHelper
-    autowire: true
-
-  repeka.upload.resource_attachment_path_generator:
-    class: Repeka\Application\Upload\ResourceAttachmentPathGenerator
-    arguments:
-      - '%repeka.upload.path%'
-      - '%repeka.upload.temp_folder%'
-
-  repeka.command_bus.middleware.call_command:
-    class: Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware
-    autowire: true
-
-  repeka.command_bus.middleware.wrap_command_with_transaction:
-    class: Repeka\Application\Cqrs\Middleware\WrapCommandWithTransactionMiddleware
-    autowire: true
-
-  repeka.command_bus.middleware.metrics_command_bus:
-    class: Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware
-    autowire: true
-
-  repeka.command_bus.middleware.validate_command:
-    class: Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware
-    autowire: true
-
-  repeka.event_listener.admin_panel_metrics_request:
-    class: Repeka\Application\EventListener\AdminPanelMetricsRequestListener
-    arguments:
-      - '@m6_statsd'
-      - '%admin_panel_metrics%'
+      $namesWhitelist: '%admin_panel_metrics%'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-  kernel.event_listener.json_request_transformer:
-    class: Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
-
-  repeka.event_listener.csrf_request_listener:
-    class: Repeka\Application\EventListener\CsrfRequestListener
-    autowire: true
+  Repeka\Application\EventListener\CsrfRequestListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 0 }
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 0 }
-
-  repeka.event_listener.global_exception_handler:
-    class: Repeka\Application\EventListener\GlobalExceptionListener
+  Repeka\Application\EventListener\GlobalExceptionListener:
     arguments:
-      - '%kernel.debug%'
-      - '@security.token_storage'
-      - '@session'
-      - '@logger'
+      $isDebug: '%kernel.debug%'
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onException, priority: 1000 }
       - { name: monolog.logger, channel: exception_listener }
 
-  repeka.doctrine_listener.relationship_property_converter:
-    class: Repeka\Application\EventListener\Doctrine\RelationshipPropertyConverterListener
-    autowire: true
+  Repeka\Application\EventListener\Doctrine\RelationshipPropertyConverterListener:
     tags:
       - { name: doctrine.event_listener, event: prePersist }
       - { name: doctrine.event_listener, event: preUpdate }
 
-  repeka.doctrine_listener.resource_workflow_driver_injector:
-    class: Repeka\Application\EventListener\Doctrine\ResourceWorkflowDriverInjector
-    autowire: true
+  Repeka\Application\EventListener\Doctrine\ResourceWorkflowDriverInjector:
     tags:
       - { name: doctrine.event_listener, event: postLoad }
 
-  repository.metadata:
-    class: Repeka\Application\Repository\MetadataDoctrineRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Domain\Entity\Metadata]
-
-  repository.user:
-    class: Repeka\Application\Repository\UserDoctrineRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Application\Entity\UserEntity]
-
-  repository.user_role:
-    class: Repeka\Application\Repository\UserRoleDoctrineRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Domain\Entity\UserRole]
-
-  repository.language:
-    class: Repeka\Application\Repository\LanguageDoctrineRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Domain\Entity\Language]
-
-  repository.resource_kind:
-    class: Repeka\Application\Repository\ResourceKindDoctrineRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Domain\Entity\ResourceKind]
-
-  repository.resource:
-    class: Repeka\Application\Repository\ResourceDoctrineRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Domain\Entity\ResourceEntity]
-
-  repository.workflow:
-    class: Repeka\Application\Repository\ResourceWorkflowDoctrineRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Domain\Entity\ResourceWorkflow]
-
-  command_handler.metadata_list:
-    class: Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler
-    autowire: true
-
-  command_handler.metadata_get:
-    class: Repeka\Domain\UseCase\Metadata\MetadataGetQueryHandler
-    autowire: true
-
-  command_handler.user:
-    class: Repeka\Domain\UseCase\User\UserQueryHandler
-    autowire: true
-
-  command_handler.user_list:
-    class: Repeka\Domain\UseCase\User\UserListQueryHandler
-    autowire: true
-
-  command_handler.user_role_list:
-    class: Repeka\Domain\UseCase\UserRole\UserRoleListQueryHandler
-    autowire: true
-
-  command_handler.language_list:
-    class: Repeka\Domain\UseCase\Language\LanguageListQueryHandler
-    autowire: true
-
-  command_handler.resource_kind_list:
-    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindListQueryHandler
-    autowire: true
-
-  command_handler.resource:
-    class: Repeka\Domain\UseCase\Resource\ResourceQueryHandler
-    autowire: true
-
-  command_handler.resource_list:
-    class: Repeka\Domain\UseCase\Resource\ResourceListQueryHandler
-    autowire: true
-
-  command_handler.resource_workflow_create:
-    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandHandler
-    autowire: true
-
-  command_handler.resource_workflow_list:
-    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowListQueryHandler
-    autowire: true
-
-  command_handler.resource_workflow:
-    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQueryHandler
-    autowire: true
-
-  command_handler.metadata_create:
-    class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandHandler
-    autowire: true
-
-  command_handler.metadata_child_create:
-    class: Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommandHandler
-    autowire: true
-
-  command_handler.metadata_child_with_base_create:
-    class: Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommandHandler
-    autowire: true
-
-  command_handler.metadata_update:
-    class: Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandHandler
-    autowire: true
-
-  command_handler.metadata_update_order:
-    class: Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommandHandler
-    autowire: true
-
-  command_handler.language_create:
-    class: Repeka\Domain\UseCase\Language\LanguageCreateCommandHandler
-    autowire: true
-
-  command_handler.language_update:
-    class: Repeka\Domain\UseCase\Language\LanguageUpdateCommandHandler
-    autowire: true
-
-  command_handler.resource_kind_create:
-    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandHandler
-    autowire: true
-
-  command_handler.resource_kind_update:
-    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandHandler
-    autowire: true
-
-  command_handler.resource_create:
-    class: Repeka\Domain\UseCase\Resource\ResourceCreateCommandHandler
-    autowire: true
-
-  command_handler.resource_transition:
-    class: Repeka\Domain\UseCase\Resource\ResourceTransitionCommandHandler
-    autowire: true
-
-  command_handler.resource_update_contents:
-    class: Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandHandler
-    autowire: true
-
-  command_handler.user_create:
-    class: Repeka\Domain\UseCase\User\UserCreateCommandHandler
-    autowire: true
-
-  command_handler.user_update_roles:
-    class: Repeka\Domain\UseCase\User\UserUpdateRolesCommandHandler
-    autowire: true
-
-  command_handler.resource_workflow_simulate:
-    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandHandler
-    autowire: true
-
-  command_handler.resource_workflow_update:
-    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandHandler
-    autowire: true
-
-  command_handler.user_role_create:
-    class: Repeka\Domain\UseCase\UserRole\UserRoleCreateCommandHandler
-    autowire: true
-
-  command_handler.user_role_update:
-    class: Repeka\Domain\UseCase\UserRole\UserRoleUpdateCommandHandler
-    autowire: true
-
-  command_validator.user_role_update:
-    class: Repeka\Domain\UseCase\UserRole\UserRoleUpdateCommandValidator
-    autowire: true
-
-  command_validator.metadata_create:
-    class: Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator
-    autowire: true
-
-  command_validator.metadata_child_create:
-    class: Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommandValidator
-    autowire: true
-
-  command_validator.metadata_update:
-    class: Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator
-    autowire: true
-
-  command_validator.metadata_update_order:
-    class: Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommandValidator
-    autowire: true
-
-  command_validator.resource_kind_create:
-    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator
-    autowire: true
-
-  command_validator.resource_kind_update:
-    class: Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator
-    autowire: true
-
-  command_validator.resource_create:
-    class: Repeka\Domain\UseCase\Resource\ResourceCreateCommandValidator
-    autowire: true
-
-  command_validator.resource_transition:
-    class: Repeka\Domain\UseCase\Resource\ResourceTransitionCommandValidator
-    autowire: true
-
-  command_validator.resource_update_contents:
-    class: Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandValidator
-    autowire: true
-
-  command_validator.language_create:
-    class: Repeka\Domain\UseCase\Language\LanguageCreateCommandValidator
-
-  command_validator.language_update:
-    class: Repeka\Domain\UseCase\Language\LanguageUpdateCommandValidator
-    autowire: true
-
-  command_validator.user_update_roles:
-    class: Repeka\Domain\UseCase\User\UserUpdateRolesCommandValidator
-
-  command_validator.resource_workflow_create:
-    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandValidator
-    autowire: true
-
-  command_validator.resource_workflow_update:
-    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandValidator
-    autowire: true
-
-  command_validator.resource_workflow_simulate:
-    class: Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator
-    autowire: true
-
-  command_validator.user_create:
-    class: Repeka\Domain\UseCase\User\UserCreateCommandValidator
-    autowire: true
-
-  command_validator.user_role_create:
-    class: Repeka\Domain\UseCase\UserRole\UserRoleCreateCommandValidator
-    autowire: true
-
-  validation_rule.contains_only_available_languages:
-    class: Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule
-    autowire: true
-
-  validation_rule.value_set_matches_resource_kind:
-    class: Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule
-    autowire: true
-
-  validation_rule.not_blank_in_all_languages:
-    class: Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule
-    autowire: true
-
-  validation_rule.is_valid_control:
-    class: Repeka\Domain\Validation\Rules\IsValidControlRule
-    arguments:
-    - '%repeka.supported_controls%'
-
-  validation_rule.contains_unique_values:
-    class: Repeka\Domain\Validation\Rules\ContainsUniqueValuesRule
-
-  validation_rule.constraint_set_matches_control:
-    class: Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule
-    autowire: true
-
-  validation_rule.constraint_arguments_are_valid:
-    class: Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule
-    autowire: true
-
-  validation_rule.entity_exists:
-    class: Repeka\Domain\Validation\Rules\EntityExistsRule
-    autowire: true
-
-  validation_rule.metadata_values_satisfy_constraints:
-    class: Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule
-    autowire: true
-
-  validation_rule.resource_has_allowed_kind:
-    class: Repeka\Domain\Validation\MetadataConstraints\ResourceHasAllowedKindConstraint
-    autowire: true
-    tags:
-    - { name: repeka.metadata_constraint }
-
-  repository_provider:
-    class: Repeka\Application\Repository\ContainerAwareRepositoryProvider
-    autowire: true
-
-  repeka.resource_workflow_driver_factory:
-    class: Repeka\Application\Factory\SymfonyResourceWorkflowDriverFactory
-
-  repeka.user_factory:
-    class: Repeka\Application\Factory\UserEntityFactory
-    autowire: true
-
-  repeka.metadata_constraint_provider:
-    class: Repeka\Application\Validation\ContainerAwareMetadataConstraintProvider
-
-  repeka.metadata_value_processor:
-    class: Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor
-
-  repeka.metadata_value_processor_strategy.relationship:
-    class: Repeka\Application\ParamConverter\MetadataValueProcessor\RelationshipMetadataValueProcessorStrategy
-    autowire: true
-    tags:
-    - {name: repeka.metadata_value_processor}
-
-  repeka.metadata_value_processor_strategy.file:
-    class: Repeka\Application\ParamConverter\MetadataValueProcessor\FileMetadataValueProcessorStrategy
-    autowire: true
-    tags:
-    - {name: repeka.metadata_value_processor}
-
-  elasticsearch.client:
-    class: Repeka\Application\Elasticsearch\ESClient
-    arguments:
-      - '%elasticsearch.host%'
-      - '%elasticsearch.port%'
-      - '%elasticsearch.proxy%'
-
-  elasticsearch.index_manager:
-    class: Repeka\Application\Elasticsearch\ESIndexManager
-    arguments:
-      - '@elasticsearch.client'
-      - '@elasticsearch.mapping_factory'
-      - '%elasticsearch.index_name%'
-
-  elasticsearch.mapping_factory:
-    class: Repeka\Application\Elasticsearch\Mapping\ESMappingFactory
-    arguments:
-      - '%repeka.max_nesting_depth%'
-      - '@repository.language'
-      - '%elasticsearch.analyzers%'
-      -
-        - 'Repeka\Application\Elasticsearch\Model\IntIndexedMetadata'
-        - 'Repeka\Application\Elasticsearch\Model\FloatIndexedMetadata'
-        - 'Repeka\Application\Elasticsearch\Model\DateTimeIndexedMetadata'
-        - 'Repeka\Application\Elasticsearch\Model\RawStringIndexedMetadata'
-        - 'Repeka\Application\Elasticsearch\Model\TokenizedStringIndexedMetadata'
-        - 'Repeka\Application\Elasticsearch\Model\AnalyzedStringIndexedMetadata'
-
-  elasticsearch.resource:
-    class: Repeka\Application\Elasticsearch\Model\ESResource
-    shared: false
-    arguments:
-      - '@elasticsearch.client'
-      - '%elasticsearch.index_name%'
+  Repeka\Application\ParamConverter\ResourceContentsParamConverter:
+    tags: [{ name: request.param_converter, converter: Repeka\Application\ParamConverter\ResourceContentsParamConverter }]
+  Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor:
+    public: true
+
+  Repeka\Application\Upload\FilesystemDriver: ~
+  Repeka\Application\Upload\BasicResourceAttachmentHelper: ~
+  Repeka\Application\Upload\ResourceAttachmentPathGenerator:
+    - '%repeka.upload.path%'
+    - '%repeka.upload.temp_folder%'
+
+  Repeka\Application\Validation\ContainerAwareMetadataConstraintProvider: ~
+  Repeka\Domain\Validation\Rules\IsValidControlRule: ['%repeka.supported_controls%']
+
+  Monolog\Formatter\LineFormatter: [~, ~, true]
+  Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener:
+    tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }]

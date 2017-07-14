@@ -18,7 +18,7 @@ class LanguagesController extends ApiController {
      * @Method("GET")
      */
     public function getListAction() {
-        $language = $this->commandBus->handle(new LanguageListQuery());
+        $language = $this->handleCommand(new LanguageListQuery());
         return $this->createJsonResponse($language);
     }
 
@@ -29,7 +29,7 @@ class LanguagesController extends ApiController {
      */
     public function postAction(Request $request) {
         $command = LanguageCreateCommand::fromArray($request->request->all());
-        $language = $this->commandBus->handle($command);
+        $language = $this->handleCommand($command);
         return $this->createJsonResponse($language, 201);
     }
 
@@ -40,7 +40,7 @@ class LanguagesController extends ApiController {
      */
     public function patchAction(string $code, Request $request) {
         $command = LanguageUpdateCommand::fromArray($code, $request->request->all());
-        $updatedLanguage = $this->commandBus->handle($command);
+        $updatedLanguage = $this->handleCommand($command);
         return $this->createJsonResponse($updatedLanguage);
     }
 }

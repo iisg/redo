@@ -1,0 +1,35 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Repeka\Application\Repository\ContainerAwareRepositoryProvider: ~
+
+  Repeka\Application\Repository\LanguageDoctrineRepository:
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\Language]
+
+  Repeka\Application\Repository\MetadataDoctrineRepository:
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\Metadata]
+
+  Repeka\Application\Repository\ResourceDoctrineRepository:
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\ResourceEntity]
+
+  Repeka\Application\Repository\ResourceKindDoctrineRepository:
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\ResourceKind]
+
+  Repeka\Application\Repository\ResourceWorkflowDoctrineRepository:
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\ResourceWorkflow]
+
+  Repeka\Application\Repository\UserDoctrineRepository:
+   factory: ["@doctrine.orm.entity_manager", getRepository]
+   arguments: [Repeka\Application\Entity\UserEntity]
+
+  Repeka\Application\Repository\UserRoleDoctrineRepository:
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\UserRole]

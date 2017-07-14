@@ -2,12 +2,13 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\User\UserCreateCommand;
 use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
-use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
+use Repeka\Domain\UseCase\UserRole\UserRoleListQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class AdminAccountFixture extends ContainerAwareFixture {
+class AdminAccountFixture extends RepekaFixture {
     const USERNAME = 'admin';
     const PASSWORD = 'admin';
 
@@ -17,11 +18,12 @@ class AdminAccountFixture extends ContainerAwareFixture {
     public function load(ObjectManager $manager) {
         /** @var ContainerInterface $containerInterface */
         $container = $this->container;
-        if (!$container->get('repository.user')->loadUserByUsername(self::USERNAME)) {
+        if (!$container->get(UserRepository::class)->loadUserByUsername(self::USERNAME)) {
             $userCreateCommand = new UserCreateCommand(self::USERNAME, self::PASSWORD, 'admin@repeka.pl');
-            $user = $container->get('repeka.command_bus')->handle($userCreateCommand);
-            $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $container->get('repository.user_role')->findAll());
-            $container->get('repeka.command_bus')->handle($userUpdateRolesCommand);
+            $user = $this->handleCommand($userCreateCommand);
+            $allUserRoles = $this->handleCommand(new UserRoleListQuery());
+            $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $allUserRoles);
+            $this->handleCommand($userUpdateRolesCommand);
         }
     }
 }

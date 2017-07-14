@@ -1,12 +1,39 @@
 <?php
+
 namespace Repeka\Application\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Repeka\Application\Upload\ResourceAttachmentPathGenerator;
 use Repeka\Domain\Entity\ResourceEntity;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateResourceAttachmentsCommand extends ContainerAwareCommand {
+class MigrateResourceAttachmentsCommand extends Command {
+    /** @var ResourceAttachmentHelper */
+    private $resourceAttachmentHelper;
+    /** @var ResourceRepository */
+    private $resourceRepository;
+    /** @var ResourceAttachmentPathGenerator */
+    private $resourceAttachmentPathGenerator;
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    public function __construct(
+        ResourceRepository $resourceRepository,
+        ResourceAttachmentHelper $resourceAttachmentHelper,
+        ResourceAttachmentPathGenerator $resourceAttachmentPathGenerator,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct();
+        $this->resourceRepository = $resourceRepository;
+        $this->resourceAttachmentHelper = $resourceAttachmentHelper;
+        $this->resourceAttachmentPathGenerator = $resourceAttachmentPathGenerator;
+        $this->entityManager = $entityManager;
+    }
+
     protected function configure() {
         // @codingStandardsIgnoreStart
         $this
@@ -18,8 +45,7 @@ class MigrateResourceAttachmentsCommand extends ContainerAwareCommand {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         $nonAtomic = $input->getOption('nonatomic');
-        $resourceRepository = $this->getContainer()->get('repository.resource');
-        $resources = $resourceRepository->findAll();
+        $resources = $this->resourceRepository->findAll();
         $migratableResources = $this->getMigratableResources($resources, $output);
         if (count($migratableResources) == count($resources) || $nonAtomic) {
             $this->migrateResources($migratableResources, $output);
@@ -27,13 +53,12 @@ class MigrateResourceAttachmentsCommand extends ContainerAwareCommand {
         }
     }
 
-    private function getMigratableResources(array $resources, OutputInterface $output):array {
-        $attachmentHelper = $this->getContainer()->get('repeka.upload.resource_attachment_helper');
+    private function getMigratableResources(array $resources, OutputInterface $output): array {
         $migratableResources = [];
         $allMigrationsPossible = true;
         foreach ($resources as $resource) {
             /** @var ResourceEntity $resource */
-            $existingFiles = $attachmentHelper->getFilesThatWouldBeOverwrittenInDestinationPaths($resource);
+            $existingFiles = $this->resourceAttachmentHelper->getFilesThatWouldBeOverwrittenInDestinationPaths($resource);
             if (count($existingFiles) == 0) {
                 $migratableResources[] = $resource;
             } else {
@@ -52,27 +77,24 @@ class MigrateResourceAttachmentsCommand extends ContainerAwareCommand {
     }
 
     private function migrateResources(array $migratableResources, OutputInterface $output): void {
-        $attachmentHelper = $this->getContainer()->get('repeka.upload.resource_attachment_helper');
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $movedFilesCount = 0;
         $migratedResourceCount = 0;
         foreach ($migratableResources as $resource) {
-            $partialMovedCount = $attachmentHelper->moveFilesToDestinationPaths($resource);
+            $partialMovedCount = $this->resourceAttachmentHelper->moveFilesToDestinationPaths($resource);
             $movedFilesCount += $partialMovedCount;
             if ($partialMovedCount > 0) {
                 $migratedResourceCount += 1;
-                $em->persist($resource);
+                $this->entityManager->persist($resource);
             }
         }
-        $em->flush();
+        $this->entityManager->flush();
         $output->writeln("<info>Moved $movedFilesCount files attached to $migratedResourceCount resources.</info>");
     }
 
     private function pruneDirectoryTree(OutputInterface $output): void {
-        $attachmentPathGenerator = $this->getContainer()->get('repeka.upload.resource_attachment_path_generator');
         $deletedCount = 0;
         $directoryIterator = new \RecursiveDirectoryIterator(
-            $attachmentPathGenerator->getUploadsRootPath(),
+            $this->resourceAttachmentPathGenerator->getUploadsRootPath(),
             \RecursiveDirectoryIterator::SKIP_DOTS
         );
         $flatDirectoryIterator = new \RecursiveIteratorIterator(

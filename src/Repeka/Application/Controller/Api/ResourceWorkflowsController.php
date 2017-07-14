@@ -21,7 +21,7 @@ class ResourceWorkflowsController extends ApiController {
      * @Method("GET")
      */
     public function getListAction() {
-        $workflows = $this->handle(new ResourceWorkflowListQuery());
+        $workflows = $this->handleCommand(new ResourceWorkflowListQuery());
         return $this->createJsonResponse($workflows);
     }
 
@@ -38,7 +38,7 @@ class ResourceWorkflowsController extends ApiController {
             $data['fromState'] ?? [],
             $data['transition'] ?? ''
         );
-        return $this->createJsonResponse($this->handle($command));
+        return $this->createJsonResponse($this->handleCommand($command));
     }
 
     /**
@@ -46,7 +46,7 @@ class ResourceWorkflowsController extends ApiController {
      * @Method("GET")
      */
     public function getAction(int $workflow) {
-        $workflow = $this->handle(new ResourceWorkflowQuery($workflow));
+        $workflow = $this->handleCommand(new ResourceWorkflowQuery($workflow));
         return $this->createJsonResponse($workflow);
     }
 
@@ -63,7 +63,7 @@ class ResourceWorkflowsController extends ApiController {
             $data['diagram'] ?? null,
             $data['thumbnail'] ?? null
         );
-        $workflow = $this->handle($command);
+        $workflow = $this->handleCommand($command);
         return $this->createJsonResponse($workflow);
     }
 
@@ -74,7 +74,7 @@ class ResourceWorkflowsController extends ApiController {
     public function postAction(Request $request) {
         $data = $request->request->all();
         $command = new ResourceWorkflowCreateCommand($data['name'] ?? []);
-        $resource = $this->handle($command);
+        $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource, 201);
     }
 }

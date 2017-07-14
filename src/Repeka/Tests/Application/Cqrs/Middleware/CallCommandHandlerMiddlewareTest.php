@@ -24,7 +24,7 @@ class CallCommandHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase {
     public function testGettingHandlerFromContainer() {
         $this->container->expects($this->once())
             ->method('get')
-            ->with($this->equalTo('command_handler.sample'))
+            ->with($this->equalTo(SampleCommand::class . 'Handler'))
             ->willReturn(new SampleCommandHandler());
         $this->middleware->handle(new SampleCommand(), function () {
         });
@@ -35,7 +35,7 @@ class CallCommandHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase {
         $handler = new SampleCommandHandler();
         $this->container->expects($this->once())
             ->method('get')
-            ->with($this->equalTo('command_handler.sample'))
+            ->with($this->equalTo(SampleCommand::class . 'Handler'))
             ->willReturn($handler);
         $this->middleware->handle($command, function () {
         });
@@ -49,7 +49,7 @@ class CallCommandHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase {
     public function testFailsWhenContainerDoesNotKnowTheHandler() {
         $this->container->expects($this->once())
             ->method('get')
-            ->with($this->equalTo('command_handler.sample'))
+            ->with($this->equalTo(SampleCommand::class . 'Handler'))
             ->willThrowException(new ServiceNotFoundException('command_handler.sample'));
         $this->middleware->handle(new SampleCommand(), function () {
         });

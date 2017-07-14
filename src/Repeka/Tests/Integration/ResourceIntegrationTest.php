@@ -4,6 +4,7 @@ namespace Repeka\Tests\Integration;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceIntegrationTest extends IntegrationTestCase {
@@ -63,7 +64,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'contents' => json_encode([$this->metadata->getBaseId() => ['created']])
         ]);
         $this->assertStatusCode(201, $client->getResponse());
-        $repository = self::createClient()->getContainer()->get('repository.resource');
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         $createdId = json_decode($client->getResponse()->getContent())->id;
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
@@ -78,7 +79,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'contents' => json_encode([$this->metadata->getBaseId() => ['edited']])
         ]);
         $this->assertStatusCode(200, $client->getResponse());
-        $repository = self::createClient()->getContainer()->get('repository.resource');
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         $edited = $repository->findOne($this->resource->getId());
         $this->assertEquals([$this->metadata->getBaseId() => ['edited']], $edited->getContents());
     }
@@ -95,7 +96,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'contents' => json_encode($this->resource->getContents())
         ]);
         $this->assertStatusCode(200, $client->getResponse());
-        $repository = self::createClient()->getContainer()->get('repository.resource');
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         $edited = $repository->findOne($this->resource->getId());
         $this->assertEquals($this->resourceKind->getId(), $edited->getKind()->getId());
     }

@@ -11,7 +11,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->resourceRepository = $this->container->get('repository.resource');
+        $this->resourceRepository = $this->container->get(ResourceRepository::class);
         $this->loadAllFixtures();
     }
 

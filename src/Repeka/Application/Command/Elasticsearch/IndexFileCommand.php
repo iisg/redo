@@ -1,12 +1,15 @@
 <?php
+
 namespace Repeka\Application\Command\Elasticsearch;
 
 use Repeka\Application\Elasticsearch\Model\DateTimeIndexedMetadata;
+use Repeka\Application\Elasticsearch\Model\ESResource;
 use Repeka\Application\Elasticsearch\Model\IntIndexedMetadata;
 use Repeka\Application\Elasticsearch\Model\LongAnalyzedStringIndexedMetadata;
 use Repeka\Application\Elasticsearch\Model\RawStringIndexedMetadata;
 use Repeka\Application\Elasticsearch\Model\TokenizedStringIndexedMetadata;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Repeka\Domain\Repository\LanguageRepository;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,7 +19,18 @@ use Symfony\Component\Console\Output\OutputInterface;
  * files: https://confluence.fslab.agh.edu.pl/download/attachments/48891017/txt_it_pl.7z?api=v2
  * TODO remove this when actual indexing is introduced
  */
-class IndexFileCommand extends ContainerAwareCommand {
+class IndexFileCommand extends Command {
+    /** @var LanguageRepository */
+    private $languageRepository;
+    /** @var ESResource */
+    private $esResource;
+
+    public function __construct(LanguageRepository $languageRepository, ESResource $esResource) {
+        parent::__construct();
+        $this->languageRepository = $languageRepository;
+        $this->esResource = $esResource;
+    }
+
     protected function configure() {
         $this
             ->setName('repeka:elasticsearch:index-file')
@@ -31,7 +45,7 @@ class IndexFileCommand extends ContainerAwareCommand {
      * @inheritdoc
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $supportedLanguages = array_map('strtolower', $this->getContainer()->get('repository.language')->getAvailableLanguageCodes());
+        $supportedLanguages = array_map('strtolower', $this->languageRepository->getAvailableLanguageCodes());
         $language = trim($input->getArgument('language'));
         if (!in_array($language, $supportedLanguages)) {
             throw new \Exception(sprintf("Unsupported language '%s'", $language));
@@ -39,17 +53,16 @@ class IndexFileCommand extends ContainerAwareCommand {
         $fileContents = file_get_contents($input->getArgument('filePath'));
         $title = trim($input->getArgument('title'));
         $author = trim($input->getArgument('author'));
-        $resourceDocument = $this->getContainer()->get('elasticsearch.resource');
         if ($title) {
-            $resourceDocument->addMetadata(new TokenizedStringIndexedMetadata('title', $title));
+            $this->esResource->addMetadata(new TokenizedStringIndexedMetadata('title', $title));
         }
         if ($author) {
-            $resourceDocument->addMetadata(new TokenizedStringIndexedMetadata('author', $author));
+            $this->esResource->addMetadata(new TokenizedStringIndexedMetadata('author', $author));
         }
-        $resourceDocument->addMetadata($contentMetadata = new LongAnalyzedStringIndexedMetadata('content', $language, $fileContents, 1));
+        $this->esResource->addMetadata($contentMetadata = new LongAnalyzedStringIndexedMetadata('content', $language, $fileContents, 1));
         $contentMetadata->addMetadata(new RawStringIndexedMetadata('language', $language));
         $contentMetadata->addMetadata(new IntIndexedMetadata('page_count', 1));
         $contentMetadata->addMetadata(new DateTimeIndexedMetadata('created', new \DateTime()));
-        $resourceDocument->insert();
+        $this->esResource->insert();
     }
 }

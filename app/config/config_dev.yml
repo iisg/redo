@@ -12,19 +12,19 @@ framework:
 monolog:
   handlers:
     console:
-      channels: [!event, !doctrine]
+      channels: ['!event', '!doctrine']
       type: console
     main:
-      channels: [!event, !exception_listener]
+      channels: ['!event', '!exception_listener']
       level: debug
       path: "%kernel.logs_dir%/%kernel.environment%.log"
       type: rotating_file
     exception_listener:
-      channels: [exception_listener]
+      channels: ['exception_listener']
       level: debug
       path: "%kernel.logs_dir%/%kernel.environment%-exception.log"
       type: rotating_file
-      formatter: monolog.formatter.mutliline
+      formatter: Monolog\Formatter\LineFormatter
 
 web_profiler:
   intercept_redirects: false

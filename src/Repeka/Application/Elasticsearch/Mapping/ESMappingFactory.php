@@ -1,4 +1,5 @@
 <?php
+
 namespace Repeka\Application\Elasticsearch\Mapping;
 
 use Repeka\Domain\Repository\LanguageRepository;
@@ -7,17 +8,17 @@ class ESMappingFactory {
     /** @var int */
     private $nestingDepth;
     /** @var array */
-    private $languages;
-    /** @var array */
     private $analyzerNames;
     /** @var string[] */
     private $metadataClasses;
+    /** @var LanguageRepository */
+    private $languageRepository;
 
     public function __construct(int $nestingDepth, LanguageRepository $languageRepository, array $analyzerNames, array $metadataClasses) {
         $this->nestingDepth = $nestingDepth;
-        $this->languages = array_map('strtolower', $languageRepository->getAvailableLanguageCodes());
         $this->analyzerNames = $analyzerNames;
         $this->metadataClasses = $metadataClasses;
+        $this->languageRepository = $languageRepository;
     }
 
     public function getMappingArray(): array {
@@ -36,7 +37,7 @@ class ESMappingFactory {
         }
         $metadataMapping = [
             'type' => 'nested',
-            'properties' => $properties
+            'properties' => $properties,
         ];
         $metadataMappingTree = $metadataMapping;
         // We have a one-level-deep tree, now add (depth-1) more levels.
@@ -50,7 +51,8 @@ class ESMappingFactory {
     }
 
     private function getLanguagesMergedWithAnalyzers() {
-        $languageKeys = array_fill_keys($this->languages, null); // flips array, but sets values to null
+        $languages = array_map('strtolower', $this->languageRepository->getAvailableLanguageCodes());
+        $languageKeys = array_fill_keys($languages, null); // flips array, but sets values to null
         return array_merge($languageKeys, $this->analyzerNames);
     }
 }

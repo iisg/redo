@@ -1,10 +1,12 @@
 <?php
+
 namespace Repeka\Tests;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Language;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -54,14 +56,17 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $input = new StringInput("$command --env=test");
         $output = new BufferedOutput();
         $input->setInteractive(false);
-        $this->application->run($input, $output);
+        $returnCode = $this->application->run($input, $output);
+        if ($returnCode != 0) {
+            throw new \RuntimeException('Failed to execute command. ' . $output->fetch());
+        }
         return $output->fetch();
     }
 
     protected static function createAuthenticatedClient($username, $password, array $options = [], array $server = []): TestClient {
         $mergedServer = array_merge([
             'PHP_AUTH_USER' => $username,
-            'PHP_AUTH_PW' => $password
+            'PHP_AUTH_PW' => $password,
         ], $server);
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return self::createClient($options, $mergedServer);
@@ -84,7 +89,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $executor->execute($loader->getFixtures(), true);
     }
 
-    protected function loadAllFixtures():void {
+    protected function loadAllFixtures(): void {
         $this->executeCommand('doctrine:fixtures:load --append');
     }
 
@@ -100,7 +105,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function handleCommand(Command $command) {
-        $commandBus = $this->container->get('repeka.command_bus');
+        $commandBus = $this->container->get(CommandBus::class);
         return $commandBus->handle($command);
     }
 

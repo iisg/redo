@@ -1,4 +1,5 @@
 <?php
+
 namespace Repeka\Application\EventListener;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -6,14 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class CsrfRequestListener {
     const TOKEN_HEADER = 'X-CSRF-Token';
 
     /**
-     * @var CsrfTokenManager
+     * @var CsrfTokenManagerInterface
      */
     private $tokenManager;
     /**
@@ -24,7 +25,7 @@ class CsrfRequestListener {
     /**
      * CsrfRequestListener constructor.
      */
-    public function __construct(CsrfTokenManager $tokenManager, TokenStorageInterface $tokenStorage) {
+    public function __construct(CsrfTokenManagerInterface $tokenManager, TokenStorageInterface $tokenStorage) {
         $this->tokenManager = $tokenManager;
         $this->tokenStorage = $tokenStorage;
     }
