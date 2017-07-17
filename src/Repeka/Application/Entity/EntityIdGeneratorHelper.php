@@ -28,12 +28,6 @@ class EntityIdGeneratorHelper {
         $classMetadata->setIdGenerator(new AssignedGenerator());
     }
 
-    public function restoreUuidGenerator(string $className) {
-        $classMetadata = $this->getClassMetadata($className);
-        $classMetadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_UUID);
-        $classMetadata->setIdGenerator(new UuidGenerator());
-    }
-
     public function restoreIdGenerator(string $className, string $sequenceName) {
         $classMetadata = $this->getClassMetadata($className);
         $classMetadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_SEQUENCE);

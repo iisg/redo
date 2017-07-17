@@ -4,8 +4,8 @@ Repeka\Domain\Entity\UserRole:
   repositoryClass: Repeka\Application\Repository\UserRoleDoctrineRepository
   id:
     id:
-      type: guid
-      generator: {strategy: UUID}
+      type: integer
+      generator: {strategy: AUTO}
   fields:
     name:
       type: json_document

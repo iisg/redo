@@ -10,8 +10,8 @@ use Repeka\Domain\Entity\UserRole;
  * @method static SystemUserRole OPERATOR()
  */
 class SystemUserRole extends Enum {
-    const ADMIN = '11d87f9d-dd56-4ab1-afe8-9d560a8eaa9d';
-    const OPERATOR = 'c4bde879-afaf-4500-ba43-97451932c964';
+    const ADMIN = -1;
+    const OPERATOR = -2;
 
     public function toUserRole() {
         $userRole = new UserRole([]);

@@ -16,7 +16,7 @@ class UserEntityTest extends \PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->user = new UserEntity();
         $this->sampleRole = $this->createMock(UserRole::class);
-        $this->sampleRole->method('getId')->willReturn('A');
+        $this->sampleRole->method('getId')->willReturn(1);
     }
 
     public function testAddingRole() {
