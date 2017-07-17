@@ -41,7 +41,7 @@ class InitializeSystemUserRolesCommand extends TransactionalCommand {
         $firstLanguageCode = strtoupper($this->languageRepository->getAvailableLanguageCodes()[0]);
         $this->idGeneratorHelper->preventGeneratingIds(UserRole::class);
         $this->addSystemUserRoles($output, $firstLanguageCode);
-        $this->idGeneratorHelper->restoreUuidGenerator(UserRole::class);
+        $this->idGeneratorHelper->restoreIdGenerator(UserRole::class, 'role_id_seq');
     }
 
     public function addSystemUserRoles(OutputInterface $output, $defualtLabelLanguageCode) {

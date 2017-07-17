@@ -23,7 +23,6 @@ class Version20170611073853 extends AbstractMigration implements ContainerAwareI
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D6496FF8BF36 ON "user" (user_data_id)');
         $this->addSql('ALTER INDEX idx_54fcd59fa76ed395 RENAME TO IDX_2DE8C6A3A76ED395');
         $this->addSql('ALTER INDEX idx_54fcd59fd60322ac RENAME TO IDX_2DE8C6A3D60322AC');
-        $this->addSql('ALTER SEQUENCE "resource_kind_id_seq" RESTART WITH 100');
         $this->createEmptyResourcesForUsers();
         $this->addSql('ALTER TABLE "user" ALTER user_data_id SET NOT NULL');
     }
