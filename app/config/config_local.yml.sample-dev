@@ -1,0 +1,22 @@
+parameters:
+  secret: soo_secret
+doctrine:
+  dbal:
+    host: localhost
+    user: postgres
+    password: postgres
+repeka:
+  elasticsearch:
+    host: localhost
+  pk_auth:
+    wsdl: ~
+    options:
+      uri: pk_soap
+      location: http://localhost/
+      login: pk
+      password: qwerty
+    local_accounts_enabled: true
+m6_statsd:
+  servers:
+    default:
+      address: 'udp://localhost'
