@@ -53,12 +53,21 @@ DirectoryIndex app.php
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    # If it is a missing file request (something with extenstion), let it be handled with app.php.
-    RewriteRule \..{2,4}$ %{ENV:BASE}/app.php [L]
+    # Pretend that missing sourcemaps exist
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule \.map$ - [R=204]
 
-    # Rewrite all admin queries to SPA.
-    RewriteRule ^admin %{ENV:BASE}/admin/index.html [L]
+    # Pretend that missing locale files exist to suppress JS console errors
+    RewriteRule ^admin/dist/locale - [R=204]
+    # Serve static admin content, never rewrite to SPA
+    RewriteRule ^admin/dist - [L]
+    # Serve other admin requests as static content if they have a file extension
+    RewriteRule ^admin/.*\.[a-z0-9\-_]{2,}$ - [L]
+    # Rewrite other admin queries to SPA
+    RewriteRule ^admin[$/] %{ENV:BASE}/admin/index.html [L]
 
+    # Serve static admin libraries, never rewrite to SPA
+    RewriteRule ^jspm_packages/ - [L]
     # Rewrite all other queries to the front controller.
     RewriteRule ^ %{ENV:BASE}/app.php [L]
 </IfModule>
