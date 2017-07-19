@@ -11,7 +11,7 @@ services:
   Repeka\Domain\Repository\ResourceWorkflowRepository: '@Repeka\Application\Repository\ResourceWorkflowDoctrineRepository'
   Repeka\Domain\Repository\UserRepository: '@Repeka\Application\Repository\UserDoctrineRepository'
   Repeka\Domain\Repository\UserRoleRepository: '@Repeka\Application\Repository\UserRoleDoctrineRepository'
-  Repeka\Domain\Upload\ResourceAttachmentHelper: '@Repeka\Application\Upload\BasicResourceAttachmentHelper'
+  Repeka\Domain\Upload\ResourceFileHelper: '@Repeka\Application\Upload\BasicResourceFileHelper'
   Repeka\Domain\Validation\MetadataConstraintProvider: '@Repeka\Application\Validation\ContainerAwareMetadataConstraintProvider'
 
   M6Web\Component\Statsd\Client: '@m6_statsd'

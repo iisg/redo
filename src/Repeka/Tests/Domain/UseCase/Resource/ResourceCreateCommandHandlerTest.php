@@ -6,7 +6,7 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommandHandler;
 use Repeka\Tests\Traits\StubsTrait;
@@ -16,16 +16,16 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     /** @var ResourceRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $resourceRepository;
-    /** @var ResourceAttachmentHelper|\PHPUnit_Framework_MockObject_MockObject */
-    private $attachmentHelper;
+    /** @var ResourceFileHelper|\PHPUnit_Framework_MockObject_MockObject */
+    private $fileHelper;
 
     /** @var ResourceCreateCommandHandler */
     private $handler;
 
     protected function setUp() {
         $this->resourceRepository = $this->createRepositoryStub(ResourceRepository::class);
-        $this->attachmentHelper = $this->createMock(ResourceAttachmentHelper::class);
-        $this->handler = new ResourceCreateCommandHandler($this->resourceRepository, $this->attachmentHelper);
+        $this->fileHelper = $this->createMock(ResourceFileHelper::class);
+        $this->handler = new ResourceCreateCommandHandler($this->resourceRepository, $this->fileHelper);
     }
 
     public function testCreatingResourceWithoutWorkflow() {
@@ -67,7 +67,7 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         ]);
         $contents = [$fileBaseMetadataId => []];
         $command = new ResourceCreateCommand($resourceKind, $contents);
-        $this->attachmentHelper->expects($this->once())->method('moveFilesToDestinationPaths');
+        $this->fileHelper->expects($this->once())->method('moveFilesToDestinationPaths');
         $this->handler->handle($command);
     }
 }

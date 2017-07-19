@@ -2,17 +2,17 @@
 namespace Repeka\Application\ParamConverter\MetadataValueProcessor;
 
 use Repeka\Application\Upload\FilesystemDriver;
-use Repeka\Application\Upload\ResourceAttachmentPathGenerator;
+use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class FileMetadataValueProcessorStrategy implements MetadataValueProcessorStrategy {
-    /** @var ResourceAttachmentPathGenerator */
+    /** @var ResourceFilePathGenerator */
     private $pathGenerator;
     /** @var FilesystemDriver */
     private $filesystemDriver;
 
-    public function __construct(ResourceAttachmentPathGenerator $pathGenerator, FilesystemDriver $filesystemDriver) {
+    public function __construct(ResourceFilePathGenerator $pathGenerator, FilesystemDriver $filesystemDriver) {
         $this->pathGenerator = $pathGenerator;
         $this->filesystemDriver = $filesystemDriver;
     }

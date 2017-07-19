@@ -1,16 +1,17 @@
 <?php
+
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\NotFoundException;
-use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Repeka\Domain\Upload\ResourceFileHelper;
 
 class ResourceFileQueryHandler {
-    /** @var ResourceAttachmentHelper */
-    private $resourceAttachmentHelper;
+    /** @var ResourceFileHelper */
+    private $resourceFileHelper;
 
-    public function __construct(ResourceAttachmentHelper $resourceAttachmentHelper) {
-        $this->resourceAttachmentHelper = $resourceAttachmentHelper;
+    public function __construct(ResourceFileHelper $resourceFileHelper) {
+        $this->resourceFileHelper = $resourceFileHelper;
     }
 
     /**
@@ -24,7 +25,7 @@ class ResourceFileQueryHandler {
             $filePaths = $resource->getValues($metadata);
             foreach ($filePaths as $filePath) {
                 if (basename($filePath) == $filename) {
-                    return $this->resourceAttachmentHelper->toAbsolutePath($filePath);
+                    return $this->resourceFileHelper->toAbsolutePath($filePath);
                 }
             }
         }

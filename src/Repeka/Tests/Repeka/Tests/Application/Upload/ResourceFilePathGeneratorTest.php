@@ -2,15 +2,15 @@
 namespace Repeka\Tests\Application\Upload;
 
 use Assert\InvalidArgumentException;
-use Repeka\Application\Upload\ResourceAttachmentPathGenerator;
+use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Entity\ResourceEntity;
 
-class ResourceAttachmentPathGeneratorTest extends \PHPUnit_Framework_TestCase {
-    /** @var ResourceAttachmentPathGenerator */
+class ResourceFilePathGeneratorTest extends \PHPUnit_Framework_TestCase {
+    /** @var ResourceFilePathGenerator */
     private $pathGenerator;
 
     protected function setUp() {
-        $this->pathGenerator = new ResourceAttachmentPathGenerator('testUploadsRoot', 'testTempFolder');
+        $this->pathGenerator = new ResourceFilePathGenerator('testUploadsRoot', 'testTempFolder');
     }
 
     public function testFailsWhenResourceIdIsMissing() {

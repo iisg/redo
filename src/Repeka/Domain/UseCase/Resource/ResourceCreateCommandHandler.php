@@ -5,17 +5,17 @@ use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\ResourceWorkflow\ResourceCannotEnterPlaceException;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Repeka\Domain\Upload\ResourceFileHelper;
 
 class ResourceCreateCommandHandler {
     /** @var ResourceRepository */
     private $resourceRepository;
-    /** @var ResourceAttachmentHelper */
-    private $attachmentHelper;
+    /** @var ResourceFileHelper */
+    private $fileHelper;
 
-    public function __construct(ResourceRepository $resourceRepository, ResourceAttachmentHelper $attachmentHelper) {
+    public function __construct(ResourceRepository $resourceRepository, ResourceFileHelper $fileHelper) {
         $this->resourceRepository = $resourceRepository;
-        $this->attachmentHelper = $attachmentHelper;
+        $this->fileHelper = $fileHelper;
     }
 
     public function handle(ResourceCreateCommand $command): ResourceEntity {
@@ -25,7 +25,7 @@ class ResourceCreateCommandHandler {
         }
         $resource = $this->resourceRepository->save($resource);
         Assertion::integer($resource->getId());
-        $this->attachmentHelper->moveFilesToDestinationPaths($resource);
+        $this->fileHelper->moveFilesToDestinationPaths($resource);
         return $resource;
     }
 

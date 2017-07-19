@@ -7,7 +7,7 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandHandler;
 use Repeka\Tests\Traits\StubsTrait;
@@ -23,8 +23,8 @@ class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCa
 
     /** @var ResourceRepository|PHPUnit_Framework_MockObject_MockObject */
     private $resourceRepository;
-    /** @var ResourceAttachmentHelper|PHPUnit_Framework_MockObject_MockObject */
-    private $attachmentHelper;
+    /** @var ResourceFileHelper|PHPUnit_Framework_MockObject_MockObject */
+    private $fileHelper;
 
     /** @var ResourceUpdateContentsCommandHandler */
     private $handler;
@@ -33,8 +33,8 @@ class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCa
         $this->resource = $this->createMock(ResourceEntity::class);
         $this->command = new ResourceUpdateContentsCommand($this->resource, ['1' => ['AA']]);
         $this->resourceRepository = $this->createRepositoryStub(ResourceRepository::class);
-        $this->attachmentHelper = $this->createMock(ResourceAttachmentHelper::class);
-        $this->handler = new ResourceUpdateContentsCommandHandler($this->resourceRepository, $this->attachmentHelper);
+        $this->fileHelper = $this->createMock(ResourceFileHelper::class);
+        $this->handler = new ResourceUpdateContentsCommandHandler($this->resourceRepository, $this->fileHelper);
     }
 
     public function testUpdatingResource() {
@@ -66,7 +66,7 @@ class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCa
     public function testMovingFiles() {
         $resource = $this->createMock(ResourceEntity::class);
         $command = new ResourceUpdateContentsCommand($resource, []);
-        $this->attachmentHelper->expects($this->once())->method('moveFilesToDestinationPaths');
+        $this->fileHelper->expects($this->once())->method('moveFilesToDestinationPaths');
         $this->handler->handle($command);
     }
 }

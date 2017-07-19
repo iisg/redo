@@ -1,33 +1,33 @@
 <?php
 namespace Repeka\Tests\Application\Upload;
 
-use Repeka\Application\Upload\BasicResourceAttachmentHelper;
+use Repeka\Application\Upload\BasicResourceFileHelper;
 use Repeka\Application\Upload\FilesystemDriver;
-use Repeka\Application\Upload\ResourceAttachmentPathGenerator;
+use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Exception\DomainException;
-use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Tests\Traits\StubsTrait;
 
-class BasicResourceAttachmentHelperTest extends \PHPUnit_Framework_TestCase {
+class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
     // not constants because only variables work with string interpolation
     private $uploadsRoot = '/var/uploads/whatever';
     private $destinationPath = 'q/w/e/r/t/y/abcxyz';
 
-    /** @var ResourceAttachmentPathGenerator|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var ResourceFilePathGenerator|\PHPUnit_Framework_MockObject_MockObject */
     private $pathGenerator;
     /** @var FilesystemDriver|\PHPUnit_Framework_MockObject_MockObject */
     private $filesystemDriver;
-    /** @var ResourceAttachmentHelper */
+    /** @var ResourceFileHelper */
     private $helper;
 
     protected function setUp() {
-        $this->pathGenerator = $this->createMock(ResourceAttachmentPathGenerator::class);
+        $this->pathGenerator = $this->createMock(ResourceFilePathGenerator::class);
         $this->pathGenerator->method('getDestinationPath')->willReturn($this->destinationPath);
         $this->pathGenerator->method('getUploadsRootPath')->willReturn($this->uploadsRoot);
         $this->filesystemDriver = $this->createMock(FilesystemDriver::class);
-        $this->helper = new BasicResourceAttachmentHelper($this->pathGenerator, $this->filesystemDriver);
+        $this->helper = new BasicResourceFileHelper($this->pathGenerator, $this->filesystemDriver);
     }
 
     public function testMovingFilesToDestinationPaths() {

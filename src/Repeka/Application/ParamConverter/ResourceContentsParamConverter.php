@@ -3,7 +3,7 @@ namespace Repeka\Application\ParamConverter;
 
 use Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor;
 use Repeka\Application\Upload\FilesystemDriver;
-use Repeka\Application\Upload\ResourceAttachmentPathGenerator;
+use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -17,7 +17,7 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
     private $metadataRepository;
     /** @var ResourceRepository */
     private $resourceRepository;
-    /** @var ResourceAttachmentPathGenerator */
+    /** @var ResourceFilePathGenerator */
     private $pathGenerator;
     /** @var FilesystemDriver */
     private $filesystemDriver;
@@ -27,7 +27,7 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
     public function __construct(
         MetadataRepository $metadataRepository,
         ResourceRepository $resourceRepository,
-        ResourceAttachmentPathGenerator $pathGenerator,
+        ResourceFilePathGenerator $pathGenerator,
         FilesystemDriver $filesystemDriver,
         MetadataValueProcessor $metadataValueProcessor
     ) {
