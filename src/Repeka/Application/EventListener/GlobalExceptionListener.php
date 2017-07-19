@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -46,27 +47,29 @@ class GlobalExceptionListener {
     public function createErrorResponse(\Exception $e, Request $request) {
         if ($e instanceof AuthenticationException || $e instanceof AccessDeniedException) {
             return $this->buildResponseForXmlHttpRequest($request);
+        } elseif ($e instanceof NotFoundHttpException) {
+            return $this->createJsonResponse(404, $e->getMessage());
         } elseif ($e instanceof DomainException) {
-            return $this->createJSONResponse($e->getCode(), $e->getMessage());
+            return $this->createJsonResponse($e->getCode(), $e->getMessage());
         } else {
             $message = $this->isDebug ? $e->getMessage() : 'Internal server error.';
-            return $this->createJSONResponse(500, $message);
+            return $this->createJsonResponse(500, $message);
         }
     }
 
     private function buildResponseForXmlHttpRequest(Request $request) {
         if ($this->tokenStorage->getToken()->getUser() instanceof UserEntity) {
-            return $this->createJSONResponse(403, 'Forbidden');
+            return $this->createJsonResponse(403, 'Forbidden');
         } else {
             $this->saveTargetUrlIfFromAdminPanel($request);
-            return $this->createJSONResponse(401, 'Unauthorized');
+            return $this->createJsonResponse(401, 'Unauthorized');
         }
     }
 
-    private function createJSONResponse($status, $message): JsonResponse {
+    private function createJsonResponse(int $statusCode, string $message): JsonResponse {
         return new JsonResponse([
             'message' => $message,
-        ], $status);
+        ], $statusCode);
     }
 
     private function saveTargetUrlIfFromAdminPanel(Request $request) {

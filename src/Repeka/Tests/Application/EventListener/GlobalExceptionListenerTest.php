@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -68,6 +69,14 @@ class GlobalExceptionListenerTest extends \PHPUnit_Framework_TestCase {
         $this->listener = new GlobalExceptionListener(false, $mockedToken, $this->session, $this->logger);
         $response = $this->listener->createErrorResponse(new AccessDeniedException('Forbidden'), new Request());
         $expectedResponse = new JsonResponse(['message' => 'Forbidden'], 403);
+        $this->assertEquals($expectedResponse, $response);
+    }
+
+    public function testNotFoundExceptionResponse() {
+        $this->listener = new GlobalExceptionListener(false, $this->tokenStorage, $this->session, $this->logger);
+        $exception = new NotFoundHttpException('Foo not found');
+        $response = $this->listener->createErrorResponse($exception, new Request());
+        $expectedResponse = new JsonResponse(['message' => $exception->getMessage()], 404);
         $this->assertEquals($expectedResponse, $response);
     }
 

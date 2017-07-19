@@ -19,6 +19,7 @@ const typescript = require('gulp-typescript');
 const htmlMinifierOptions = {
   collapseWhitespace: true,
   conservativeCollapse: true,
+  minifyCSS: true,
 };
 
 let typescriptCompiler;
