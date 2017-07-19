@@ -3,43 +3,43 @@
 namespace Repeka\Application\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Repeka\Application\Upload\ResourceAttachmentPathGenerator;
+use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Repeka\Domain\Upload\ResourceFileHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateResourceAttachmentsCommand extends Command {
-    /** @var ResourceAttachmentHelper */
-    private $resourceAttachmentHelper;
+class MigrateResourceFilesCommand extends Command {
+    /** @var ResourceFileHelper */
+    private $resourceFileHelper;
     /** @var ResourceRepository */
     private $resourceRepository;
-    /** @var ResourceAttachmentPathGenerator */
-    private $resourceAttachmentPathGenerator;
+    /** @var ResourceFilePathGenerator */
+    private $resourceFilePathGenerator;
     /** @var EntityManagerInterface */
     private $entityManager;
 
     public function __construct(
         ResourceRepository $resourceRepository,
-        ResourceAttachmentHelper $resourceAttachmentHelper,
-        ResourceAttachmentPathGenerator $resourceAttachmentPathGenerator,
+        ResourceFileHelper $resourceFileHelper,
+        ResourceFilePathGenerator $resourceFilePathGenerator,
         EntityManagerInterface $entityManager
     ) {
         parent::__construct();
         $this->resourceRepository = $resourceRepository;
-        $this->resourceAttachmentHelper = $resourceAttachmentHelper;
-        $this->resourceAttachmentPathGenerator = $resourceAttachmentPathGenerator;
+        $this->resourceFileHelper = $resourceFileHelper;
+        $this->resourceFilePathGenerator = $resourceFilePathGenerator;
         $this->entityManager = $entityManager;
     }
 
     protected function configure() {
         // @codingStandardsIgnoreStart
         $this
-            ->setName('repeka:resources:migrate-attachments')
-            ->setDescription('Ensures all attachments are in their destination paths.')
-            ->addOption('nonatomic', null, null, "Migrate as much resources as possible, even if some have attachments that can't be migrated.");
+            ->setName('repeka:resources:migrate-files')
+            ->setDescription('Ensures all files are in their destination paths.')
+            ->addOption('nonatomic', null, null, "Migrate as much resources as possible, even if some have files that can't be migrated.");
         // @codingStandardsIgnoreEnd
     }
 
@@ -58,7 +58,7 @@ class MigrateResourceAttachmentsCommand extends Command {
         $allMigrationsPossible = true;
         foreach ($resources as $resource) {
             /** @var ResourceEntity $resource */
-            $existingFiles = $this->resourceAttachmentHelper->getFilesThatWouldBeOverwrittenInDestinationPaths($resource);
+            $existingFiles = $this->resourceFileHelper->getFilesThatWouldBeOverwrittenInDestinationPaths($resource);
             if (count($existingFiles) == 0) {
                 $migratableResources[] = $resource;
             } else {
@@ -80,7 +80,7 @@ class MigrateResourceAttachmentsCommand extends Command {
         $movedFilesCount = 0;
         $migratedResourceCount = 0;
         foreach ($migratableResources as $resource) {
-            $partialMovedCount = $this->resourceAttachmentHelper->moveFilesToDestinationPaths($resource);
+            $partialMovedCount = $this->resourceFileHelper->moveFilesToDestinationPaths($resource);
             $movedFilesCount += $partialMovedCount;
             if ($partialMovedCount > 0) {
                 $migratedResourceCount += 1;
@@ -94,7 +94,7 @@ class MigrateResourceAttachmentsCommand extends Command {
     private function pruneDirectoryTree(OutputInterface $output): void {
         $deletedCount = 0;
         $directoryIterator = new \RecursiveDirectoryIterator(
-            $this->resourceAttachmentPathGenerator->getUploadsRootPath(),
+            $this->resourceFilePathGenerator->getUploadsRootPath(),
             \RecursiveDirectoryIterator::SKIP_DOTS
         );
         $flatDirectoryIterator = new \RecursiveIteratorIterator(

@@ -1,10 +1,11 @@
 <?php
+
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\NotFoundException;
-use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceFileQueryHandler;
 use Repeka\Tests\Traits\StubsTrait;
@@ -18,11 +19,11 @@ class ResourceFileQueryHandlerTest extends \PHPUnit_Framework_TestCase {
     private $resourceKind;
 
     protected function setUp() {
-        $resourceAttachmentHelper = $this->createMock(ResourceAttachmentHelper::class);
-        $resourceAttachmentHelper->method('toAbsolutePath')->willReturnCallback(function (string $path) {
+        $fileHelper = $this->createMock(ResourceFileHelper::class);
+        $fileHelper->method('toAbsolutePath')->willReturnCallback(function (string $path) {
             return 'absolute/' . $path;
         });
-        $this->handler = new ResourceFileQueryHandler($resourceAttachmentHelper);
+        $this->handler = new ResourceFileQueryHandler($fileHelper);
         $this->resourceKind = $this->createResourceKindMock([
             $this->createMetadataMock(11, 1),
             $this->createMetadataMock(12, 2),

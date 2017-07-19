@@ -4,15 +4,15 @@ namespace Repeka\Application\Upload;
 use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Upload\ResourceAttachmentHelper;
+use Repeka\Domain\Upload\ResourceFileHelper;
 
-class BasicResourceAttachmentHelper implements ResourceAttachmentHelper {
-    /** @var ResourceAttachmentPathGenerator */
+class BasicResourceFileHelper implements ResourceFileHelper {
+    /** @var ResourceFilePathGenerator */
     private $pathGenerator;
     /** @var FilesystemDriver */
     private $filesystemDriver;
 
-    public function __construct(ResourceAttachmentPathGenerator $pathGenerator, FilesystemDriver $filesystemDriver) {
+    public function __construct(ResourceFilePathGenerator $pathGenerator, FilesystemDriver $filesystemDriver) {
         $this->pathGenerator = $pathGenerator;
         $this->filesystemDriver = $filesystemDriver;
     }
@@ -55,7 +55,7 @@ class BasicResourceAttachmentHelper implements ResourceAttachmentHelper {
         foreach ($fileMetadataIds as $metadataId) {
             try {
                 $this->ensureMovingWillNotOverwriteFiles($contents[$metadataId], $resource);
-            } catch (AttachmentsExistException $e) {
+            } catch (ResourceFilesExistException $e) {
                 $existingFiles = $existingFiles + $e->getExistingFiles();
             }
         }
@@ -73,7 +73,7 @@ class BasicResourceAttachmentHelper implements ResourceAttachmentHelper {
             }
         }
         if (count($existingFiles) > 0) {
-            throw new AttachmentsExistException($resource, $existingFiles);
+            throw new ResourceFilesExistException($resource, $existingFiles);
         }
     }
 

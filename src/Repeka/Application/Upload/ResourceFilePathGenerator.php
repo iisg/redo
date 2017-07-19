@@ -4,7 +4,7 @@ namespace Repeka\Application\Upload;
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceEntity;
 
-class ResourceAttachmentPathGenerator {
+class ResourceFilePathGenerator {
     private $uploadsRootPath;
     private $tempFolder;
 

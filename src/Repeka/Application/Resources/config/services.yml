@@ -77,8 +77,8 @@ services:
     public: true
 
   Repeka\Application\Upload\FilesystemDriver: ~
-  Repeka\Application\Upload\BasicResourceAttachmentHelper: ~
-  Repeka\Application\Upload\ResourceAttachmentPathGenerator:
+  Repeka\Application\Upload\BasicResourceFileHelper: ~
+  Repeka\Application\Upload\ResourceFilePathGenerator:
     - '%repeka.upload.path%'
     - '%repeka.upload.temp_folder%'
 

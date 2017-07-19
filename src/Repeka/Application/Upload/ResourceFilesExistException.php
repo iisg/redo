@@ -4,7 +4,7 @@ namespace Repeka\Application\Upload;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\DomainException;
 
-class AttachmentsExistException extends DomainException {
+class ResourceFilesExistException extends DomainException {
     private $existingFiles;
 
     public function __construct(ResourceEntity $resource, array $existingFiles) {
