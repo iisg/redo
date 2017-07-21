@@ -6,6 +6,7 @@ export class ControlStrategy {
   metadata: Metadata;
   resource: Resource;
   @observable valueWrapper: ValueWrapper;
+  disabled: boolean = false;
 
   activate(model: Object) {
     $.extend(this, model);

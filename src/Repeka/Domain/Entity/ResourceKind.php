@@ -3,6 +3,7 @@
 namespace Repeka\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Exception\IllegalEntityStateException;
 
 class ResourceKind {
@@ -34,6 +35,9 @@ class ResourceKind {
     }
 
     public function getMetadataByBaseId(int $baseId): Metadata {
+        if ($baseId == SystemMetadata::PARENT) {
+            return SystemMetadata::PARENT()->toMetadata();
+        }
         foreach ($this->getMetadataList() as $metadata) {
             if ($metadata->getBaseId() === $baseId) {
                 return $metadata;

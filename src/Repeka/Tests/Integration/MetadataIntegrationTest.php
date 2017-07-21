@@ -59,15 +59,15 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         ];
         $client->apiRequest('POST', self::ENDPOINT, $metadataArray);
         $this->assertStatusCode(201, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
         /** @var $metadataRepository MetadataRepository */
         $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
-        $metadata = $metadataRepository->findAll();
-        $this->assertCount(1, $metadata);
-        $this->assertEquals($metadataArray['control'], $metadata[0]->getControl());
-        $this->assertEquals($metadataArray['name'], $metadata[0]->getName());
-        $this->assertEquals($metadataArray['label'], $metadata[0]->getLabel());
-        $this->assertEquals($metadataArray['description'], $metadata[0]->getDescription());
-        $this->assertEquals($metadataArray['placeholder'], $metadata[0]->getPlaceholder());
+        $metadata = $metadataRepository->findOne($response->id);
+        $this->assertEquals($metadataArray['control'], $metadata->getControl());
+        $this->assertEquals($metadataArray['name'], $metadata->getName());
+        $this->assertEquals($metadataArray['label'], $metadata->getLabel());
+        $this->assertEquals($metadataArray['description'], $metadata->getDescription());
+        $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
     }
 
     public function testBasicOrdering() {

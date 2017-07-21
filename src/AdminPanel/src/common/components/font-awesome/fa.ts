@@ -5,13 +5,22 @@ import {computedFrom} from "aurelia-binding";
 export class Fa {
   @bindable name: string;
   @bindable fw: boolean;
+  @bindable spin: boolean;
+  @bindable flipH: boolean;
+
+  readonly REPLACEMENTS: StringMap<string> = {
+    'flipH': 'flip-horizontal',
+  };
 
   @computedFrom('name', 'fw')
   get fontAwesomeClasses() {
-    let classes = [this.name];
-    if (this.fw != undefined) { // it's either undefined or empty string, both are falsy
-      classes.push('fw');
-    }
+    let classes = [this.name].concat(this.getBooleanClasses());
     return classes.map(c => `fa-${c}`).join(' ');
+  }
+
+  private getBooleanClasses(): string[] {
+    return ['fw', 'spin', 'flipH']
+      .filter(propertyName => this[propertyName] !== undefined) // careful: <fa fw> sets fw to '' which is falsy
+      .map(propertyName => this.REPLACEMENTS.hasOwnProperty(propertyName) ? this.REPLACEMENTS[propertyName] : propertyName);
   }
 }

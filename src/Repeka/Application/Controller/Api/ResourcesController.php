@@ -3,6 +3,7 @@ namespace Repeka\Application\Controller\Api;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
@@ -43,6 +44,15 @@ class ResourcesController extends ApiController {
      */
     public function getAction(int $id) {
         $resource = $this->handleCommand(new ResourceQuery($id));
+        return $this->createJsonResponse($resource);
+    }
+
+    /**
+     * @Route("/{id}/resources")
+     * @Method("GET")
+     */
+    public function getChildrenAction(int $id) {
+        $resource = $this->handleCommand(new ResourceChildrenQuery($id == 0 ? null : $id));
         return $this->createJsonResponse($resource);
     }
 

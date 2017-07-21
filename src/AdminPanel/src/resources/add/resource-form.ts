@@ -4,11 +4,13 @@ import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {deepCopy} from "common/utils/object-utils";
 import {computedFrom} from "aurelia-binding";
+import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
 
 @autoinject
 export class ResourceForm {
   @bindable submit: (value: {savedResource: Resource}) => Promise<any>;
   @bindable edit: Resource;
+  @bindable parent: Resource;
 
   resource: Resource = new Resource;
   submitting = false;
@@ -24,6 +26,13 @@ export class ResourceForm {
 
   editChanged(newValue: Resource) {
     this.resource = $.extend(new Resource(), deepCopy(newValue));
+    this.parentChanged(this.parent);
+  }
+
+  parentChanged(newParent: Resource) {
+    if (newParent != undefined) {
+      this.resource.contents[SystemMetadata.PARENT.baseId] = [newParent.id];
+    }
   }
 
   validateAndSubmit() {

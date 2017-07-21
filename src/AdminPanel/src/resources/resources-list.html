@@ -10,7 +10,8 @@
     <div if.bind="addFormOpened"
         class="fade-inup-outdown au-animate floating-form-full-width well">
         <h2>${'Add new resource' & t}</h2>
-        <resource-form submit.call="addNewResource(savedResource)"></resource-form>
+        <resource-form submit.call="addNewResource(savedResource)"
+            parent.bind="parentResource"></resource-form>
     </div>
 
     <div class="row"

@@ -2,6 +2,7 @@ imports:
   - { resource: security.yml }
   - { resource: metrics.yml }
   - { resource: config_build.yml}
+  - { resource: postgres_json_functions.yml }
 
 repeka:
   default_ui_language: pl

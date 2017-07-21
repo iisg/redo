@@ -8,7 +8,8 @@
             <resource-kind-chooser value.bind="resource.kind"></resource-kind-chooser>
         </div>
         <resource-form-generated resource-kind.bind="resource.kind"
-            resource.bind="resource"></resource-form-generated>
+            resource.bind="resource"
+            disable-parent.bind="parent != undefined"></resource-form-generated>
         <div class="has-error"
             if.bind="errorToDisplay">
             <div class="help-block">

@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Exception\EntityNotFoundException;
@@ -22,10 +23,20 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
     }
 
     public function findAllBase(): array {
-        return $this->findBy(['baseMetadata' => null, 'parentMetadata' => null], ['ordinalNumber' => 'ASC']);
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('baseMetadata'))
+            ->andWhere(Criteria::expr()->isNull('parentMetadata'))
+            ->andWhere(Criteria::expr()->gte('id', 0))
+            ->orderBy(['ordinalNumber' => 'ASC']);
+        $result = $this->matching($criteria);
+        return $result->toArray();
     }
 
     public function findAllChildren(int $parentId): array {
         return $this->findBy(['parentMetadata' => $parentId]);
+    }
+
+    public function exists(int $id): bool {
+        return !!$this->find($id);
     }
 }

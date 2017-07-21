@@ -12,6 +12,7 @@ class ResourceKindsFixture extends RepekaFixture {
     const ORDER = MetadataFixture::ORDER + ResourceWorkflowsFixture::ORDER;
     const REFERENCE_RESOURCE_KIND_BOOK = 'resource-kind-book';
     const REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK = 'resource-kind-forbidden-book';
+    const REFERENCE_RESOURCE_KIND_CATEGORY = 'resource-kind-category';
 
     /**
      * @inheritdoc
@@ -44,5 +45,14 @@ class ResourceKindsFixture extends RepekaFixture {
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
             ]
         ), self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
+        $this->handleCommand(new ResourceKindCreateCommand(
+            [
+                'PL' => 'Kategoria',
+                'EN' => 'Category',
+            ],
+            [
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME, true),
+            ]
+        ), self::REFERENCE_RESOURCE_KIND_CATEGORY);
     }
 }

@@ -9,6 +9,7 @@ import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 export class ResourcePicker implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay}) resourceId: number;
   @bindable resourceKindFilter: ResourceKind[] = [];
+  @bindable disabled: boolean = false;
 
   @observable value: Resource;
 
@@ -44,7 +45,7 @@ export class ResourcePicker implements ComponentAttached {
       resourceKind => (resourceKind.hasOwnProperty('id') ? resourceKind.id : resourceKind) as number
     );
     return this.allResources.filter(
-      resource => allowedResourceKindIds.indexOf(resource.kind.id) != -1
+      resource => (resource.kind != undefined) && allowedResourceKindIds.indexOf(resource.kind.id) != -1
     );
   }
 

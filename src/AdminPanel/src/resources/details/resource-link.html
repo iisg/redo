@@ -1,0 +1,9 @@
+<template>
+    <require from="resources/details/resource-label"></require>
+
+    <fa if.bind="loading"
+        name="circle-o-notch"
+        spin></fa>
+    <a if.bind="!loading"
+        route-href="route: resources/details; params.bind: routerParams; replace: true">${resource | resourceLabel}</a>
+</template>

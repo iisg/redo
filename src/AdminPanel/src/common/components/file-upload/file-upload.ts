@@ -5,6 +5,8 @@ import {bindingMode, computedFrom} from "aurelia-binding";
 @autoinject
 export class FileUpload implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay}) value: File|string;
+  @bindable disabled: boolean = false;
+
   files: Array<File>;
 
   fileNameInput: Element;
@@ -15,6 +17,12 @@ export class FileUpload implements ComponentAttached {
 
   valueChanged() {
     $(this.fileNameInput).val(this.displayName);
+  }
+
+  disabledChanged() {
+    if (this.disabled as any === '') { // when used without value: <file-upload disabled>
+      this.disabled = true;
+    }
   }
 
   attached(): void {

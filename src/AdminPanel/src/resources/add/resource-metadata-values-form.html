@@ -9,18 +9,20 @@
             </td>
             <td class="content">
                 <resource-metadata-value-input metadata.bind="metadata"
-                    value.bind="resource.contents[metadata.baseId][index]"></resource-metadata-value-input>
+                    value.bind="resource.contents[metadata.baseId][index]"
+                    disabled.bind="disabled"></resource-metadata-value-input>
             </td>
             <td class="action">
                 <button type="button"
                     class="btn pull-right btn-danger"
+                    disabled.bind="disabled"
                     click.delegate="deleteIndex(index)">
                     <fa name="trash"
                         fw></fa>
                 </button>
             </td>
         </tr>
-        <tr>
+        <tr if.bind="!disabled">
             <td colspan="3">
                 <button type="button"
                     class="btn btn-action"

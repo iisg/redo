@@ -8,6 +8,7 @@ import {ValueWrapper} from "../controls/control-strategy";
 export class ResourceMetadataValueInput implements ComponentAttached, ComponentDetached {
   @bindable metadata: Metadata;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value: any;
+  @bindable disabled: boolean = false;
 
   valueWrapper: ValueWrapper = new ValueWrapper();
   subscription: Disposable;
@@ -31,5 +32,11 @@ export class ResourceMetadataValueInput implements ComponentAttached, ComponentD
 
   wrappedValueChanged() {
     this.value = this.valueWrapper.value;
+  }
+
+  disabledChanged() {
+    if (this.disabled as any === '') { // when used without value: <resource-metadata-value-input disabled>
+      this.disabled = true;
+    }
   }
 }

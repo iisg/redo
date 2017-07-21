@@ -12,6 +12,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable allowClear: boolean = false;
   @bindable placeholder: string = "-";
   @bindable multiple: boolean = false;
+  @bindable disabled: boolean = false;
 
   dropdown: Element;
 
@@ -72,6 +73,12 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   valueChanged() {
     this.updateOption();
+  }
+
+  disabledChanged() {
+    if (this.disabled as any === '') { // when used without value: <dropdown-select disabled>
+      this.disabled = true;
+    }
   }
 
   updateOption() {

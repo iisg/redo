@@ -2,9 +2,9 @@ import {RoutableComponentActivate, RouteConfig, Router, NavigationInstruction} f
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {autoinject} from "aurelia-dependency-injection";
-import {I18N} from "aurelia-i18n";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {deepCopy} from "common/utils/object-utils";
+import {ResourceLabelValueConverter} from "./resource-label";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -12,7 +12,10 @@ export class ResourceDetails implements RoutableComponentActivate {
   editing = false;
   private urlListener: Subscription;
 
-  constructor(private resourceRepository: ResourceRepository, private i18n: I18N, private router: Router, private ea: EventAggregator) {
+  constructor(private resourceRepository: ResourceRepository,
+              private resourceLabel: ResourceLabelValueConverter,
+              private router: Router,
+              private ea: EventAggregator) {
   }
 
   bind() {
@@ -27,7 +30,8 @@ export class ResourceDetails implements RoutableComponentActivate {
   activate(params: any, routeConfig: RouteConfig): void {
     this.resourceRepository.get(params.id).then(resource => {
       this.resource = resource;
-      routeConfig.navModel.setTitle(this.i18n.tr('Resource') + ` #${resource.id}`);
+      const title = this.resourceLabel.toView(resource);
+      routeConfig.navModel.setTitle(title);
     });
   }
 

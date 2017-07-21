@@ -21,7 +21,13 @@ export class ResourceRepository extends ApiRepository<Resource> {
       .asGet()
       .withParams({systemResourceKind: true})
       .send()
-      .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
+      .then(response => this.responseToEntities(response));
+  }
+
+  public getByParent(parent: Resource): Promise<Resource[]> {
+    const parentId: number = (parent == undefined) ? 0 : parent.id;
+    const endpoint = this.endpoint + `/${parentId}/resources`;
+    return this.httpClient.get(endpoint).then(response => this.responseToEntities(response));
   }
 
   public toEntity(data: Object): Promise<Resource> {

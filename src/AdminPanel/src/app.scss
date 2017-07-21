@@ -63,6 +63,10 @@ input, textarea, select {
   }
 }
 
+.togglebutton label {
+  color: #333;
+}
+
 .bootstrap-select {
   &.disabled > button {
     color: #999 !important;

@@ -6,8 +6,8 @@ import {firstLineWithContent, trimToLengthBetweenWords} from "../../../common/ut
 @autoinject
 export class CollapsibleText {
   @bindable text: string = '';
-  @bindable collapsed: boolean = false;
   @bindable maxLength: number = 60;
+  @bindable collapsed: boolean = false;
   @bindable multiLine: boolean = false;
 
   collapsedChanged() {

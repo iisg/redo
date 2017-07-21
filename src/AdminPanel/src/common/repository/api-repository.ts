@@ -1,7 +1,14 @@
-import {HttpClient} from "aurelia-http-client";
+import {HttpClient, HttpResponseMessage} from "aurelia-http-client";
 
 export abstract class ApiRepository<T> {
   constructor(protected httpClient: HttpClient, protected endpoint: string) {
+  }
+
+  protected responseToEntities(response: HttpResponseMessage): Promise<T[]> {
+    if (!response.content || !response.content.map) {
+      throw new Error(`Response from ${response.requestMessage.url} should be an array`);
+    }
+    return Promise.all(response.content.map(item => this.toEntity(item)));
   }
 
   public get(id: number|string): Promise<T> {
@@ -9,12 +16,7 @@ export abstract class ApiRepository<T> {
   }
 
   public getList(): Promise<T[]> {
-    return this.httpClient.get(this.endpoint).then(response => {
-      if (!response.content || !response.content.map) {
-        throw new Error(`Response from ${this.endpoint} getList endpoint should be an array, not an object or something else.`);
-      }
-      return Promise.all(response.content.map(item => this.toEntity(item)));
-    });
+    return this.httpClient.get(this.endpoint).then(response => this.responseToEntities(response));
   }
 
   public post(entity: T): Promise<T> {

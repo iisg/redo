@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff633288514dc89c73f61e253d432897",
+    "content-hash": "dc95499569fe26a0caaf9a5561f6dc8b",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -464,16 +464,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "dev-master",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "5c5966aae7aee4cfab8753499590c575c173015e"
+                "reference": "1a086f853425b1f5349775ce57e45a772d2d2ba5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/5c5966aae7aee4cfab8753499590c575c173015e",
-                "reference": "5c5966aae7aee4cfab8753499590c575c173015e",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/1a086f853425b1f5349775ce57e45a772d2d2ba5",
+                "reference": "1a086f853425b1f5349775ce57e45a772d2d2ba5",
                 "shasum": ""
             },
             "require": {
@@ -533,7 +533,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-07-12 06:24:58"
+            "time": "2017-07-28T10:40:18+00:00"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -1092,7 +1092,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2017-07-12 06:23:18"
+            "time": "2017-07-12T06:23:18+00:00"
         },
         {
             "name": "dunglas/doctrine-json-odm",
@@ -2709,6 +2709,59 @@
                 "framework"
             ],
             "time": "2017-07-05T13:28:34+00:00"
+        },
+        {
+            "name": "syslogic/doctrine-json-functions",
+            "version": "dev-better-postgres-support",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gronostajo/DoctrineJsonFunctions.git",
+                "reference": "995844b467100f5a4fdd947d1c1a6ec455a33afa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gronostajo/DoctrineJsonFunctions/zipball/995844b467100f5a4fdd947d1c1a6ec455a33afa",
+                "reference": "995844b467100f5a4fdd947d1c1a6ec455a33afa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "doctrine/orm": "~2.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Syslogic\\DoctrineJsonFunctions\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Doctrine Json Functions Contributors",
+                    "homepage": "https://github.com/SyslogicNL/DoctrineJsonFunctions/contributors"
+                }
+            ],
+            "description": "A set of extensions to Doctrine 2 that add support for json query functions.",
+            "keywords": [
+                "database",
+                "doctrine",
+                "dql",
+                "json",
+                "orm"
+            ],
+            "support": {
+                "source": "https://github.com/gronostajo/DoctrineJsonFunctions/tree/better-postgres-support"
+            },
+            "time": "2017-08-07 11:34:08"
         },
         {
             "name": "twig/twig",
@@ -4455,8 +4508,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "doctrine/dbal": 20,
         "doctrine/orm": 20,
+        "syslogic/doctrine-json-functions": 20,
         "phpmd/phpmd": 0
     },
     "prefer-stable": false,
