@@ -8,6 +8,7 @@ import {autoinject} from "aurelia-dependency-injection";
 export class ResourceMetadataValuesForm {
   @bindable metadata: Metadata;
   @bindable({defaultBindingMode: bindingMode.twoWay}) resource: Resource;
+  @bindable disabled: boolean = false;
 
   valueTable: Element;
 
@@ -24,12 +25,17 @@ export class ResourceMetadataValuesForm {
   }
 
   private ensureResourceHasMetadataContents() {
-    if (!this.resource.contents.hasOwnProperty(this.metadata.baseId)) {
-      this.resource.contents[this.metadata.baseId] = [];
+    const contents = this.resource.contents;
+    const baseId = this.metadata.baseId;
+    if (!contents.hasOwnProperty(baseId)) {
+      contents[baseId] = [];
     }
   }
 
   deleteIndex(index: number) {
+    if (this.disabled) {
+      return;
+    }
     this.resource.contents[this.metadata.baseId].splice(index, 1);
   }
 

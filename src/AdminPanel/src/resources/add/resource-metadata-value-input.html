@@ -4,7 +4,7 @@
     <div class="form-group">
         <compose view-model="../controls/control-strategy"
             view="../controls/input/control-input-${metadata.control}.html"
-            model.bind="{metadata: metadata, valueWrapper: valueWrapper}"></compose>
+            model.bind="{metadata: metadata, valueWrapper: valueWrapper, disabled: disabled}"></compose>
         <p class="help-block"
             if.one-time="metadata.description | inCurrentLanguage">${metadata.description | inCurrentLanguage}</p>
     </div>

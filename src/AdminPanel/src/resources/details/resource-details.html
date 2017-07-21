@@ -3,6 +3,9 @@
     <require from="../workflow/resource-workflow"></require>
     <require from="../workflow/resource-place-display.html"></require>
     <require from="./resource-metadata-values/resource-metadata-values"></require>
+    <require from="./resource-label"></require>
+    <require from="./resource-level-up"></require>
+    <require from="../resources-list"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
 
@@ -16,7 +19,10 @@
             <span class="fa fa-edit"></span>
         </a>
 
-        <h1>${'Resource' | t} #${ resource.id }</h1>
+        <h1>
+            <resource-level-up resource.bind="resource"></resource-level-up>
+            ${resource | resourceLabel}
+        </h1>
 
         <div class="au-animate anim-height-inout-300"
             if.bind="!editing">
@@ -32,6 +38,9 @@
             <div if.bind="resource.kind.workflowId">
                 <resource-workflow resource.bind="resource"></resource-workflow>
             </div>
+
+            <h3>${'Child resources' | t}</h3>
+            <resources-list parent-resource.bind="resource"></resources-list>
         </div>
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"

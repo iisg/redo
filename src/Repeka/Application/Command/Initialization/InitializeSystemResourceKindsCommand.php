@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Command\Initialization;
 
 use Repeka\Application\Command\TransactionalCommand;
@@ -32,18 +31,18 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
     /** @inheritdoc */
     protected function executeInTransaction(InputInterface $input, OutputInterface $output) {
         $this->idGeneratorHelper->preventGeneratingIds(ResourceKind::class);
-        foreach (SystemResourceKind::toArray() as $userResourceKindName => $userResourceKindId) {
-            if (!$this->resourceKindRepository->exists($userResourceKindId)) {
-                $systemUserResourceKind = new SystemResourceKind($userResourceKindId);
+        foreach (SystemResourceKind::toArray() as $resourceKindName => $resourceKindId) {
+            if (!$this->resourceKindRepository->exists($resourceKindId)) {
+                $systemResourceKind = new SystemResourceKind($resourceKindId);
                 $resourceKind = new ResourceKind([]);
-                EntityUtils::forceSetId($resourceKind, $systemUserResourceKind->getValue());
+                EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
                 $label = [];
-                $label['PL'] = $label['EN'] = strtolower($userResourceKindName);
+                $label['PL'] = $label['EN'] = strtolower($resourceKindName);
                 $resourceKind->update($label, []);
                 $this->resourceKindRepository->save($resourceKind);
-                $output->writeln("Resource $userResourceKindName has been created.");
+                $output->writeln("Resource $resourceKindName has been created.");
             } else {
-                $output->writeln("Resource $userResourceKindName already exists.");
+                $output->writeln("Resource $resourceKindName already exists.");
             }
         }
         $this->idGeneratorHelper->restoreIdGenerator(ResourceKind::class, 'resource_kind_id_seq');

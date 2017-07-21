@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Command\Initialization;
 
 use Symfony\Component\Console\Command\Command;
@@ -18,6 +17,7 @@ class InitializeApplicationCommand extends Command {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $this->getApplication()->setAutoExit(false);
         $this->getApplication()->run(new StringInput('repeka:initialize:system-languages'), $output);
+        $this->getApplication()->run(new StringInput('repeka:initialize:system-metadata'), $output);
         $this->getApplication()->run(new StringInput('repeka:initialize:system-resource-kinds'), $output);
         $this->getApplication()->run(new StringInput('repeka:initialize:system-user-roles'), $output);
     }

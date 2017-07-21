@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
@@ -21,7 +22,7 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
         return Validator
             ::attribute('label', $this->notBlankInAllLanguagesRule)
             ->attribute('metadataList', Validator::arrayType()->length(1)->each(
-                Validator::arrayType()->length(1)->key('baseId', Validator::intVal())
+                Validator::arrayType()->length(1)->key('baseId', Validator::intVal()->not(Validator::equals(SystemMetadata::PARENT)))
             ));
     }
 }

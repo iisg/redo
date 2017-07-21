@@ -5,6 +5,7 @@ import {deepCopy} from "common/utils/object-utils";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {ApiRepository} from "common/repository/api-repository";
 import {cachedResponse} from "common/repository/cached-response";
+import {SystemMetadata} from "../metadata/system-metadata";
 
 @autoinject
 export class ResourceKindRepository extends ApiRepository<ResourceKind> {
@@ -49,6 +50,7 @@ export class ResourceKindRepository extends ApiRepository<ResourceKind> {
   public toEntity(data: Object): Promise<ResourceKind> {
     let resourceKind = this.container.get(NewInstance.of(ResourceKind));
     data['metadataList'] = data['metadataList'].map(this.metadataRepository.toEntity);
+    data['metadataList'] = [SystemMetadata.PARENT].concat(data['metadataList']);
     return $.extend(resourceKind, data);
   }
 }

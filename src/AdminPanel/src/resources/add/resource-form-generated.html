@@ -1,12 +1,14 @@
 <template>
     <require from="common/components/font-awesome/fa"></require>
     <require from="./resource-metadata-values-form"></require>
+    <require from="resources-config/metadata/metadata-label"></require>
 
     <div class="form-group"
         repeat.for="metadata of resourceKind.metadataList">
-        <h4>${metadata.label[currentLanguageCode] || metadata.name & oneTime}</h4>
+        <h4>${metadata | metadataLabel}</h4>
         <div class="clearfix"></div>
         <resource-metadata-values-form metadata.bind="metadata"
-            resource.bind="resource"></resource-metadata-values-form>
+            resource.bind="resource"
+            disabled.bind="isParentMetadata(metadata) && disableParent"></resource-metadata-values-form>
     </div>
 </template>

@@ -18,6 +18,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_NO_OF_PAGES = 'metadata-no-of-pages';
     const REFERENCE_METADATA_SEE_ALSO = 'metadata-see-also';
     const REFERENCE_METADATA_FILE = 'metadata-file';
+    const REFERENCE_METADATA_CATEGORY_NAME = 'category-name';
 
     /**
      * @inheritdoc
@@ -107,6 +108,16 @@ class MetadataFixture extends RepekaFixture {
             'placeholder' => [],
             'control' => 'file',
         ]), self::REFERENCE_METADATA_FILE);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Nazwa kategorii',
+            'label' => [
+                'PL' => 'Nazwa kategorii',
+                'EN' => 'Category name',
+            ],
+            'description' => [],
+            'placeholder' => [],
+            'control' => 'text',
+        ]), self::REFERENCE_METADATA_CATEGORY_NAME);
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
             return $metadata->getId();
         }, $this->handleCommand(new MetadataListQuery()))));

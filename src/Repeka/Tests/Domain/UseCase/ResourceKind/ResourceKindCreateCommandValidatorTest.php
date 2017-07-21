@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
@@ -76,6 +77,21 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     public function testFailWhenNoMetadata() {
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], []);
+        $this->validator->validate($command);
+    }
+
+    public function testFailWithExplicitParentMetadata() {
+        $this->expectException(InvalidCommandException::class);
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
+            [
+                'baseId' => SystemMetadata::PARENT,
+                'name' => 'A',
+                'label' => ['PL' => 'Label A'],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text',
+            ],
+        ]);
         $this->validator->validate($command);
     }
 }

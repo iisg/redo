@@ -28,4 +28,6 @@ interface MetadataRepository {
      * @return Metadata[]
      */
     public function findAllChildren(int $parentId): array;
+
+    public function exists(int $id): bool;
 }

@@ -2,6 +2,7 @@
 namespace Repeka\Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\EntityNotFoundException;
@@ -20,6 +21,27 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             throw new EntityNotFoundException($this, $id);
         }
         return $resource;
+    }
+
+    /** @return ResourceEntity[] */
+    public function findTopLevel(): array {
+        $parentMetadataId = SystemMetadata::PARENT;
+        $qb = $this->createQueryBuilder('r');
+        return $qb->join('r.kind', 'rk')
+            ->where("JSON_GET(r.contents, '$parentMetadataId') = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadataId') = FALSE")
+            ->andWhere($qb->expr()->notIn('rk.id', SystemResourceKind::values()))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return ResourceEntity[] */
+    public function findChildren(int $parentId): array {
+        $parentMetadataId = SystemMetadata::PARENT;
+        return $this->createQueryBuilder('r')
+            ->where("JSONB_CONTAINS(JSON_GET(r.contents, '$parentMetadataId'), :parentId) = TRUE")
+            ->setParameter('parentId', $parentId)
+            ->getQuery()
+            ->getResult();
     }
 
     /** @return ResourceEntity[] */

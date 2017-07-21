@@ -9,6 +9,12 @@ interface ResourceRepository {
 
     public function findOne(int $id): ResourceEntity;
 
+    /** @return ResourceEntity[] */
+    public function findTopLevel(): array;
+
+    /** @return ResourceEntity[] */
+    public function findChildren(int $parentId): array;
+
     public function save(ResourceEntity $resource): ResourceEntity;
 
     /** @return ResourceEntity[] */

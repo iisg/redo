@@ -3,7 +3,7 @@ import {Configure} from "aurelia-configuration";
 
 @autoinject
 export class I18nConfig {
-  readonly namespaces = ['generic', 'validation', 'nav', 'controls', 'exceptions', 'roles'];
+  readonly namespaces = ['generic', 'validation', 'nav', 'controls', 'exceptions', 'roles', 'system_metadata'];
 
   constructor (private config: Configure) {
   }

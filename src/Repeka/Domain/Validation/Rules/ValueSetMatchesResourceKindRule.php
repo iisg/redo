@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Respect\Validation\Exceptions\NestedValidationException;
@@ -32,6 +33,7 @@ class ValueSetMatchesResourceKindRule extends AbstractRule {
     }
 
     public function assert($input) {
+        unset($input[SystemMetadata::PARENT]);
         try {
             $this->contentsValidator->assert($input);
         } catch (NestedValidationException $e) {

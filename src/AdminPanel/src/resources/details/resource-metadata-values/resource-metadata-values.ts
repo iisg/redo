@@ -7,9 +7,18 @@ export class ResourceMetadataValues {
   @bindable resource: Resource;
   @bindable brief: boolean;
 
+  briefChanged() {
+    if (this.brief as any === '') { // when used without value: <resource-metadata-values brief>
+      this.brief = true;
+    }
+  }
+
   @computedFrom('resource', 'brief')
   get metadataList(): Metadata[] {
-    return (this.brief != undefined) && (this.resource.kind.briefMetadataList.length > 0)
+    if (this.resource.kind == undefined) {
+      return [];
+    }
+    return this.brief && (this.resource.kind.briefMetadataList.length > 0)
       ? this.resource.kind.briefMetadataList
       : this.resource.kind.metadataList;
   }

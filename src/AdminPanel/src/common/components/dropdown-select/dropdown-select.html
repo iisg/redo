@@ -1,6 +1,7 @@
 <template>
     <require from="select2/css/select2.min.css"></require>
-    <select ref="dropdown">
+    <select ref="dropdown"
+        disabled.bind="disabled">
         <option></option>
         <option repeat.for="option of values"
             value.bind="$index"

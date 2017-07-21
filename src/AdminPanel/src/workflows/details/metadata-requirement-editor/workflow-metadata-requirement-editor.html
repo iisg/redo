@@ -1,4 +1,6 @@
 <template>
+    <require from="resources-config/metadata/metadata-label"></require>
+
     <table class="table highlight-col-row-on-hover">
         <thead>
         <tr>
@@ -10,7 +12,7 @@
         </thead>
         <tbody>
         <tr repeat.for="metadata of metadataList">
-            <th>${metadata.label | inCurrentLanguage}</th>
+            <th>${metadata | metadataLabel}</th>
             <td repeat.for="place of orderedPlaces"
                 class="text-center">
                 <div class="checkbox">

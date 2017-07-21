@@ -4,18 +4,24 @@
   "type": "project",
   "autoload": {
     "psr-4": {
-      "": "src/"
+      "Repeka\\": "src/Repeka"
     },
     "classmap": [
       "app/AppKernel.php",
       "app/AppCache.php"
     ]
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/gronostajo/DoctrineJsonFunctions"
+    }
+  ],
   "require": {
     "php": ">=7.1",
     "beberlei/assert": "^2.7",
     "cocur/slugify": "^2.5",
-    "doctrine/dbal": "2.6.x-dev",
+    "doctrine/dbal": "^2.6.1",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-migrations-bundle": "^1.2",
     "doctrine/orm": "2.6.x-dev",
@@ -32,7 +38,8 @@
     "sensio/framework-extra-bundle": "3.0.22",
     "symfony/monolog-bundle": "^3.1",
     "symfony/serializer": "^3.3",
-    "symfony/symfony": "^3.3"
+    "symfony/symfony": "^3.3",
+    "syslogic/doctrine-json-functions": "dev-better-postgres-support"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^2.3",

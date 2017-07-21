@@ -1,7 +1,11 @@
-resource-metadata-values dd {
-  white-space: normal;
+resource-metadata-values dl {
+  margin-bottom: 0;
 
-  & > ul {
-    margin-bottom: 0;
+  dd {
+    white-space: normal;
+
+    & > ul {
+      margin-bottom: 0;
+    }
   }
 }

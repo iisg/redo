@@ -4,22 +4,28 @@ import {Resource} from "resources/resource";
 import {bindingMode} from "aurelia-binding";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
+import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
+import {Metadata} from "../../resources-config/metadata/metadata";
 
 @autoinject
 export class ResourceFormGenerated {
-  @bindable
-  resourceKind: ResourceKind;
-
-  @bindable({defaultBindingMode: bindingMode.twoWay})
-  resource: Resource;
+  @bindable resourceKind: ResourceKind;
+  @bindable({defaultBindingMode: bindingMode.twoWay}) resource: Resource;
+  @bindable disableParent: boolean = false;
 
   currentLanguageCode: string;
 
   resourceKindChanged() {
-    if (!this.resourceKind) this.resource.contents = {};
+    if (!this.resourceKind) {
+      this.resource.contents = {};
+    }
   }
 
   constructor(i18n: I18N) {
     this.currentLanguageCode = i18n.getLocale().toUpperCase();
+  }
+
+  isParentMetadata(metadata: Metadata): boolean {
+    return metadata.baseId == SystemMetadata.PARENT.baseId;
   }
 }

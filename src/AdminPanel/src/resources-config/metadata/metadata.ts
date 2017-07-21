@@ -10,11 +10,11 @@ export interface MultilingualText extends StringStringMap {
 
 export class Metadata {
   id: number;
-  name: String = '';
+  name: string = '';
   label: MultilingualText = {};
   placeholder: MultilingualText = {};
   description: MultilingualText = {};
-  control: String = 'text';
+  control: string = 'text';
   parentId: number;
   baseId: number;
   constraints: MetadataConstraints = new MetadataConstraints();
