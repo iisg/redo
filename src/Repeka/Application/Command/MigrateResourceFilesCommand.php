@@ -1,18 +1,17 @@
 <?php
-
 namespace Repeka\Application\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Repeka\Application\Upload\BasicResourceFileHelper;
 use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceFileHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrateResourceFilesCommand extends Command {
-    /** @var ResourceFileHelper */
+    /** @var BasicResourceFileHelper */
     private $resourceFileHelper;
     /** @var ResourceRepository */
     private $resourceRepository;
@@ -20,18 +19,22 @@ class MigrateResourceFilesCommand extends Command {
     private $resourceFilePathGenerator;
     /** @var EntityManagerInterface */
     private $entityManager;
+    /** @var DirectoryContentsLister */
+    private $directoryContentsLister;
 
     public function __construct(
         ResourceRepository $resourceRepository,
-        ResourceFileHelper $resourceFileHelper,
+        BasicResourceFileHelper $resourceFileHelper,
         ResourceFilePathGenerator $resourceFilePathGenerator,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DirectoryContentsLister $directoryContentsLister
     ) {
         parent::__construct();
         $this->resourceRepository = $resourceRepository;
         $this->resourceFileHelper = $resourceFileHelper;
         $this->resourceFilePathGenerator = $resourceFilePathGenerator;
         $this->entityManager = $entityManager;
+        $this->directoryContentsLister = $directoryContentsLister;
     }
 
     protected function configure() {
@@ -93,19 +96,11 @@ class MigrateResourceFilesCommand extends Command {
 
     private function pruneDirectoryTree(OutputInterface $output): void {
         $deletedCount = 0;
-        $directoryIterator = new \RecursiveDirectoryIterator(
-            $this->resourceFilePathGenerator->getUploadsRootPath(),
-            \RecursiveDirectoryIterator::SKIP_DOTS
-        );
-        $flatDirectoryIterator = new \RecursiveIteratorIterator(
-            $directoryIterator,
-            \RecursiveIteratorIterator::CHILD_FIRST, // delete children first, so that parent is potentially emptied and deleted too
-            \RecursiveIteratorIterator::CATCH_GET_CHILD // ignore permission errors
-        );
-        foreach ($flatDirectoryIterator as $path => $fileInfo) {
-            /** @var \SplFileInfo $fileInfo */
+        $uploadsDir = $this->resourceFilePathGenerator->getUploadsRootPath();
+        $foldersToDelete = $this->directoryContentsLister->listSubfoldersRecursively($uploadsDir);
+        foreach ($foldersToDelete as $fileInfo) {
             if ($fileInfo->isDir()) {
-                $deletedCount += $this->deleteDirectoryIfEmpty($path);
+                $deletedCount += $this->deleteDirectoryIfEmpty($fileInfo->getPathname());
             }
         }
         $output->writeln("<info>Deleted $deletedCount empty folders.</info>");
