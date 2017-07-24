@@ -1,27 +1,22 @@
 <?php
 namespace Repeka\DeveloperBundle\Command;
 
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InitializeAndLoadFixturesCommand extends ContainerAwareCommand {
+class InitializeAndLoadFixturesCommand extends Command {
     protected function configure() {
         $this
-            ->setName('repeka:dev-initialize')
-            ->setDescription('Purge database, initialize app and load fixtures.');
+            ->setName('repeka:dev:initialize')
+            ->setDescription('Purge database and uploads, initialize app and load fixtures.');
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $purger = new ORMPurger($em);
-        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
-        $purger->purge();
+        $this->runCommand('repeka:dev:purge-db', ['--no-interaction' => true], $output);
+        $this->runCommand('repeka:dev:clear-uploads', ['--no-interaction' => true], $output);
         $this->runCommand('repeka:initialize', ['--no-interaction' => true], $output);
         $this->runCommand('doctrine:fixtures:load', ['--no-interaction' => true, '--append' => true], $output);
     }

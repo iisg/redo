@@ -10,7 +10,6 @@ services:
 
   Repeka\Application\Command\:
     resource: '../../Command'
-    public: true
 
   Repeka\Application\Controller\:
     resource: '../../Controller'
