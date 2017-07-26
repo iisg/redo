@@ -23,4 +23,23 @@ export class WorkflowMetadataRequirementEditor implements ComponentAttached {
   get orderedPlaces(): WorkflowPlace[] {
     return this.workflowBfs.getOrderedPlaces(this.workflow);
   }
+
+  checkboxChanged(metadata: Metadata, changedPlace: WorkflowPlace): void {
+    const checked = changedPlace.requiredMetadataIds.indexOf(metadata.id) > -1;
+    const changedPlaceIndex = this.orderedPlaces.indexOf(changedPlace);
+    const placesToUpdate = this.orderedPlaces.slice(changedPlaceIndex + 1);
+    for (const place of placesToUpdate) {
+      this.setMetadataRequirement(metadata, place, checked);
+    }
+  }
+
+  private setMetadataRequirement(metadata: Metadata, place: WorkflowPlace, required: boolean) {
+    const index = place.requiredMetadataIds.indexOf(metadata.id);
+    const currentlyRequired = index > -1;
+    if (currentlyRequired && !required) {
+      place.requiredMetadataIds.splice(index, 1);
+    } else if (!currentlyRequired && required) {
+      place.requiredMetadataIds.push(metadata.id);
+    }
+  }
 }

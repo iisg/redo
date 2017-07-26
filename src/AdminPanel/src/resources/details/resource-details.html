@@ -3,13 +3,9 @@
     <require from="../workflow/resource-workflow"></require>
     <require from="../workflow/resource-place-display.html"></require>
     <require from="./resource-metadata-values/resource-metadata-values"></require>
+    <require from="common/components/preloader/preloader.html"></require>
 
-    <div class="au-animate fade-inup-outup page-preloader"
-        if.bind="!resource">
-        <div class="progress progress-striped active">
-            <div class="progress-bar progress-bar-success progress-bar-full"></div>
-        </div>
-    </div>
+    <preloader if.bind="!resource"></preloader>
 
     <div class="au-animate fade-inup-outup"
         if.bind="resource">

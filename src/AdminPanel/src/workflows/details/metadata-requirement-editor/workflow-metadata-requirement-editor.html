@@ -1,4 +1,6 @@
 <template>
+    <require from="common/components/preloader/preloader.html"></require>
+
     <table class="table highlight-col-row-on-hover">
         <thead>
         <tr>
@@ -17,11 +19,14 @@
                     <label>
                         <input type="checkbox"
                             model.bind="metadata.id"
-                            checked.bind="place.requiredMetadataIds">
+                            checked.bind="place.requiredMetadataIds"
+                            change.delegate="checkboxChanged(metadata, place)">
                     </label>
                 </div>
             </td>
         </tr>
         </tbody>
     </table>
+
+    <preloader if.bind="metadataList == undefined"></preloader>
 </template>

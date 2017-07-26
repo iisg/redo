@@ -2,6 +2,7 @@
     <require from="../../add-form/animated-plus-button"></require>
     <require from="./metadata-children-list"></require>
     <require from="./metadata-child-add"></require>
+    <require from="common/components/preloader/preloader.html"></require>
 
     <div class="au-animate fade-inup-outup"
         if.bind="metadata">
@@ -43,12 +44,7 @@
         </div>
 
         <div>
-            <div class="au-animate fade-inup-outup page-preloader"
-                if.bind="!metadata">
-                <div class="progress progress-striped active">
-                    <div class="progress-bar progress-bar-success progress-bar-full"></div>
-                </div>
-            </div>
+            <preloader if.bind="!metadata"></preloader>
 
             <div class="au-animate fade-inup-outup">
                 <metadata-children-list metadata.bind="metadata"
