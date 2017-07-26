@@ -58,7 +58,7 @@ DirectoryIndex app.php
     RewriteRule \.map$ - [R=204]
 
     # Pretend that missing locale files exist to suppress JS console errors
-    RewriteRule ^admin/dist/locale - [R=204]
+    RewriteRule ^admin/dist/locales/[a-zA-Z_-]+/. - [R=204]  # eg. admin/dist/locales/en/whatever.json.or.not
     # Serve static admin content, never rewrite to SPA
     RewriteRule ^admin/dist - [L]
     # Serve other admin requests as static content if they have a file extension

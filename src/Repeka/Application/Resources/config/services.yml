@@ -76,6 +76,9 @@ services:
   Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor:
     public: true
 
+  Repeka\Application\Resources\FrontendLocaleProvider:
+    $defaultUiLanguage: '%repeka.default_ui_language%'
+
   Repeka\Application\Upload\FilesystemDriver: ~
   Repeka\Application\Upload\BasicResourceFileHelper: ~
   Repeka\Application\Upload\ResourceFilePathGenerator:
