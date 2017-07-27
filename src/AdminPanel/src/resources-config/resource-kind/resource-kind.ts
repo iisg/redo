@@ -18,6 +18,7 @@ export class ResourceKind extends Entity {
   label: MultilingualText = {};
   metadataList: Metadata[] = [];
   workflowId: number;
+  resourceClass: string;
 
   private workflowInstance: Workflow;
 

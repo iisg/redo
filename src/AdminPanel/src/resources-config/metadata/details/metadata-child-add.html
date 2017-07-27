@@ -31,13 +31,15 @@
                 <div class="form-group">
                     <metadata-form if.bind="baseMetadata"
                         template.bind="baseMetadata"
-                        submit.call="addChildMetadata(parentMetadata.id, baseMetadata.id, editedMetadata)"></metadata-form>
+                        submit.call="addChildMetadata(parentMetadata.id, baseMetadata.id, editedMetadata)"
+                        resource-class.bind="resourceClass"></metadata-form>
                 </div>
             </div>
             <div class="tab-pane fade"
                 id="addNew">
                 <h2>${'Add new submetadata kind' | t}</h2>
-                <metadata-form submit.call="createChildMetadata(parentMetadata.id, editedMetadata)"></metadata-form>
+                <metadata-form submit.call="createChildMetadata(parentMetadata.id, editedMetadata)"
+                    resource-class.bind="resourceClass"></metadata-form>
             </div>
         </div>
     </div>

@@ -17,6 +17,7 @@ class ResourceWorkflowCreateCommandHandler {
             $command->getName(),
             $command->getPlaces(),
             $command->getTransitions(),
+            $command->getResourceClass(),
             $command->getDiagram(),
             $command->getThumbnail()
         );

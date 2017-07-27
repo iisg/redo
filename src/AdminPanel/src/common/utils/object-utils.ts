@@ -14,3 +14,22 @@ export function keysByValue<M, V>(obj: M, value: V): string[] {
 export function numberKeysByValue<M, V>(obj: M, value: V): number[] {
   return keysByValue(obj, value).map(key => parseInt(key, 10)).filter(val => !Number.isNaN(val));
 }
+
+// https://stackoverflow.com/a/22266891
+export function shallowEquals(a: any, b: any): boolean {
+  for (let key in a) {
+    if (a.hasOwnProperty(key)) {
+      if (!(key in b) || a[key] !== b[key]) {
+        return false;
+      }
+    }
+  }
+  for (let key in b) {
+    if (b.hasOwnProperty(key)) {
+      if (!(key in a) || a[key] !== b[key]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}

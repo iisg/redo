@@ -8,7 +8,7 @@
     <div if.bind="addFormOpened"
         class="well fade-inup-outdown au-animate floating-form-full-width">
         <h2>${'Add new resource kind' | t}</h2>
-        <resource-kind-form submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
+        <resource-kind-form resource-class.bind="resourceClass" submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
     </div>
 
     <div class="row"
@@ -24,7 +24,7 @@
                 </tr>
                 </thead>
                 <tfoot>
-                <tr if.bind="!resourceKinds">
+                <tr if.bind="progressBar">
                     <th colspan="6">
                         <loading-bar></loading-bar>
                     </th>
@@ -78,7 +78,8 @@
                         colspan="3">
                         <div if.bind="resourceKind.editing"
                             class="au-animate anim-height-inout-600">
-                            <resource-kind-form edit.bind="resourceKind"
+                            <resource-kind-form resource-class.bind="resourceClass"
+                                edit.bind="resourceKind"
                                 submit.call="saveEditedResourceKind(resourceKind, savedResourceKind) && (resourceKind.editing = false)"
                                 cancel.call="resourceKind.editing = false"></resource-kind-form>
                         </div>
@@ -90,7 +91,7 @@
     </div>
 
     <div class="alert alert-info"
-        if.bind="resourceKinds.length === 0">
+        if.bind="resourceKinds.length === 0 && !progressBar">
         <span class="fa fa-info-circle fa-fw"></span>
         ${'No resource kinds.' | t}
     </div>

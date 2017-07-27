@@ -14,6 +14,7 @@ export class MetadataForm {
   @bindable(changeHandler('resetValues')) template: Metadata;
   @bindable edit: boolean = false;
   @bindable cancelButton: boolean = false;
+  @bindable resourceClass: string;
 
   metadata: Metadata = new Metadata;
   submitting: boolean = false;

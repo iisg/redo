@@ -11,6 +11,7 @@ import {WorkflowGraphManager} from "./graph/workflow-graph-manager";
 @autoinject
 export class WorkflowEditForm {
   @bindable workflow: Workflow = new Workflow;
+  @bindable resourceClass: string;
   private controller: ValidationController;
   private editor: WorkflowGraphEditor;
 

@@ -11,6 +11,7 @@ class MetadataCreateCommand extends Command {
     private $control;
     private $constraints;
     private $shownInBrief;
+    private $resourceClass;
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     public function __construct(
@@ -19,6 +20,7 @@ class MetadataCreateCommand extends Command {
         array $description,
         array $placeholder,
         string $control,
+        string $resourceClass,
         array $constraints = [],
         bool $shownInBrief = false
     ) {
@@ -29,6 +31,7 @@ class MetadataCreateCommand extends Command {
         $this->control = $control;
         $this->constraints = $constraints;
         $this->shownInBrief = $shownInBrief;
+        $this->resourceClass = $resourceClass;
     }
 
     public function getName(): string {
@@ -55,6 +58,10 @@ class MetadataCreateCommand extends Command {
         return $this->constraints;
     }
 
+    public function getResourceClass(): string {
+        return $this->resourceClass;
+    }
+
     public function isShownInBrief(): ?bool {
         return $this->shownInBrief;
     }
@@ -66,6 +73,7 @@ class MetadataCreateCommand extends Command {
             $data['description'] ?? [],
             $data['placeholder'] ?? [],
             $data['control'] ?? 'text',
+            $data['resourceClass'] ?? '',
             $data['constraints'] ?? [],
             $data['shownInBrief'] ?? false
         );

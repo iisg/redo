@@ -32,6 +32,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             'id' => $resource->getId(),
             'kindId' => $resource->getKind()->getId(),
             'contents' => $resource->getContents(),
+            'resourceClass' => $resource->getResourceClass(),
         ];
         if ($resource->hasWorkflow()) {
             $workflow = $resource->getWorkflow();

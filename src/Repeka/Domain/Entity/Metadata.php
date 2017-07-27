@@ -18,6 +18,7 @@ class Metadata implements Identifiable {
     private $parentMetadata;
     private $constraints = [];
     private $shownInBrief;
+    private $resourceClass;
 
     private function __construct() {
     }
@@ -27,6 +28,7 @@ class Metadata implements Identifiable {
         string $control,
         string $name,
         array $label,
+        string $resourceClass,
         array $placeholder = [],
         array $description = [],
         array $constraints = [],
@@ -41,6 +43,7 @@ class Metadata implements Identifiable {
         $metadata->description = $description;
         $metadata->constraints = $constraints;
         $metadata->shownInBrief = $shownInBrief;
+        $metadata->resourceClass = $resourceClass;
         return $metadata;
     }
 
@@ -58,6 +61,7 @@ class Metadata implements Identifiable {
         array $label,
         ResourceKind $resourceKind,
         Metadata $base,
+        string $resourceClass,
         array $placeholder = [],
         array $description = [],
         array $constraints = [],
@@ -70,6 +74,7 @@ class Metadata implements Identifiable {
         $metadata->description = $description;
         $metadata->constraints = $constraints;
         $metadata->shownInBrief = $shownInBrief;
+        $metadata->resourceClass = $resourceClass;
         return $metadata;
     }
 
@@ -133,6 +138,10 @@ class Metadata implements Identifiable {
         } else {
             return array_merge($this->baseMetadata->constraints, $this->constraints);
         }
+    }
+
+    public function getResourceClass(): ?string {
+        return $this->baseMetadata ? $this->baseMetadata->getResourceClass() : $this->resourceClass;
     }
 
     public function isShownInBrief(): bool {

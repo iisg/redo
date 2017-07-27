@@ -12,6 +12,7 @@ export class ResourceMetadataValueInput implements ComponentAttached, ComponentD
   @bindable metadata: Metadata;
   @bindable(twoWay) value: any;
   @bindable @booleanAttribute disabled: boolean = false;
+  @bindable resourceClass: string;
 
   valueWrapper: ValueWrapper = new ValueWrapper();
   subscription: Disposable;

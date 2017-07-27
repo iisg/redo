@@ -1,8 +1,8 @@
 <?php
 namespace Repeka\Application\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
-use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\EntityNotFoundException;
@@ -15,11 +15,19 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
     }
 
     /** @return ResourceKind[] */
-    public function findAllNonSystemResourceKinds(): array {
-        $qb = $this->createQueryBuilder('rk');
-        return $qb->where($qb->expr()->notIn('rk.id', SystemResourceKind::values()))
-            ->getQuery()
-            ->getResult();
+    public function findAllSystemResourceKinds(): array {
+        $criteria = Criteria::create()
+            ->orWhere(Criteria::expr()->lt('id', 0));
+        $result = $this->matching($criteria);
+        return $result->toArray();
+    }
+
+    /** @return ResourceKind[] */
+    public function findAllByResourceClass(string $resourceClass): array {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('resourceClass', $resourceClass));
+        $result = $this->matching($criteria);
+        return $result->toArray();
     }
 
     public function findOne(int $id): ResourceKind {

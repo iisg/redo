@@ -20,3 +20,8 @@ Repeka\Domain\Entity\ResourceEntity:
     contents:
       type: json_document
       options: {jsonb: true}
+    resourceClass:
+      type: string
+      length: 64
+      nullable: false
+      column: resource_class

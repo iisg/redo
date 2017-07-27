@@ -2,19 +2,14 @@ export class RouteDefinition {
   route: string|string[];
   name: string;
   moduleId: string;
-  nav: boolean;
   title: string;
   settings: RouteSettings;
 }
 
-export class ActivatableNavItem extends RouteDefinition {
+export interface NavItem extends RouteDefinition {
   isActive: boolean;
-}
-
-export interface NavItemWithChildren extends RouteDefinition {
-  children: ActivatableNavItem[];
+  children: NavItem[];
   expanded: boolean;
-  toggle();
 }
 
 export interface RouteSettings {
@@ -22,4 +17,6 @@ export interface RouteSettings {
   parentTitle?: string;
   parentIcon?: string;
   requiredRoles?: Array<string>;
+  params?: StringStringMap;
+  dynamicResource?: boolean;
 }

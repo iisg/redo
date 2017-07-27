@@ -55,3 +55,8 @@ Repeka\Domain\Entity\Metadata:
       type: boolean
       nullable: true
       column: shown_in_brief
+    resourceClass:
+      type: string
+      length: 64
+      nullable: true    # System metadata has null
+      column: resource_class

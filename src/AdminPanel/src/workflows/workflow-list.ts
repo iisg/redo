@@ -1,21 +1,36 @@
-import {ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {Workflow} from "./workflow";
 import {WorkflowRepository} from "./workflow-repository";
 import {removeValue} from "common/utils/array-utils";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {bindable} from "aurelia-templating";
 
 @autoinject
-export class WorkflowList implements ComponentAttached {
+export class WorkflowList {
+  @bindable resourceClass: string;
+
   addFormOpened: boolean = false;
+  progressBar: boolean;
 
   workflows: Array<Workflow>;
 
   constructor(private workflowRepository: WorkflowRepository, private deleteEntityConfirmation: DeleteEntityConfirmation) {
   }
 
-  async attached() {
-    this.workflows = await this.workflowRepository.getList();
+  activate(params: any) {
+    this.resourceClass = params.resourceClass;
+    if (this.workflows) {
+      this.workflows = [];
+    }
+    this.fetchWorkflows();
+  }
+
+  fetchWorkflows() {
+    this.progressBar = true;
+    this.workflowRepository.getListByClass(this.resourceClass).then(workflows => {
+      this.progressBar = false;
+      this.workflows = workflows;
+    });
   }
 
   deleteWorkflow(workflow: Workflow) {

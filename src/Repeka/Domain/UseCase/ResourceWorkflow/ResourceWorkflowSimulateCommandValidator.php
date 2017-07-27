@@ -9,7 +9,7 @@ class ResourceWorkflowSimulateCommandValidator extends ResourceWorkflowUpdateCom
     /** @inheritdoc */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('places', $this->placesValidator()->length(1))
-            ->attribute('transitions', $this->transitionsValidator());
+            ::attribute('places', $this->workflowPlacesDefinitionIsValidRule)
+            ->attribute('transitions', $this->workflowTransitionsDefinitionIsValidRule);
     }
 }

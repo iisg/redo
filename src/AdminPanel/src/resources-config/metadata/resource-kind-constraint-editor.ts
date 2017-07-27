@@ -13,6 +13,7 @@ export class ResourceKindConstraintEditor {
   @bindable(twoWay) metadata: Metadata;
   @bindable idsFromBaseMetadata: number[];
   @bindable(twoWay) disabled: boolean = false;
+  @bindable resourceClass: string;
 
   workflowsUsingMetadataAsAssignee: Workflow[] = [];
   loadingWorkflows: boolean = false;

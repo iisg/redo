@@ -25,6 +25,15 @@ class ResourceWorkflowDoctrineRepository extends EntityRepository implements Res
         return $workflow;
     }
 
+    /** @return ResourceWorkflow[] */
+    public function findAllByResourceClass(string $resourceClass): array {
+        $qb = $this->createQueryBuilder('w');
+        return $qb->where('w.resourceClass = :resourceClass')
+            ->setParameter('resourceClass', $resourceClass)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function delete(ResourceWorkflow $resourceWorkflow): void {
         $this->getEntityManager()->remove($resourceWorkflow);
     }

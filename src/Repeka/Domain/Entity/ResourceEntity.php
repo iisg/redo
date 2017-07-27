@@ -9,10 +9,12 @@ class ResourceEntity implements Identifiable {
     private $kind;
     private $marking;
     private $contents;
+    private $resourceClass;
 
-    public function __construct(ResourceKind $kind, array $contents) {
+    public function __construct(ResourceKind $kind, array $contents, string $resourceClass) {
         $this->kind = $kind;
         $this->contents = $contents;
+        $this->resourceClass = $resourceClass;
     }
 
     public function getId(): ?int {
@@ -50,6 +52,10 @@ class ResourceEntity implements Identifiable {
         $this->contents = array_filter($contents, function ($values) {
             return count($values) > 0;
         });
+    }
+
+    public function getResourceClass(): string {
+        return $this->resourceClass;
     }
 
     public function hasWorkflow() {

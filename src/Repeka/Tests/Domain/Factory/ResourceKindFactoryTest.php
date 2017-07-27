@@ -28,12 +28,13 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
             $this->metadataArray(1, 'A', ['PL' => 'Label A']),
             $this->metadataArray(2, 'B', ['PL' => 'Label B']),
-        ]);
+        ], 'books');
         $this->factory = new ResourceKindFactory(new MetadataFactory(), $this->metadataRepository);
     }
 
     public function testCreatingResourceKind() {
-        $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')->willReturn(Metadata::create('text', 'base', []));
+        $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')
+            ->willReturn(Metadata::create('text', 'base', [], 'books'));
         $resourceKind = $this->factory->create($this->command);
         $this->assertEquals(['PL' => 'Labelka'], $resourceKind->getLabel());
         $this->assertCount(2, $resourceKind->getMetadataList());
@@ -42,7 +43,8 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testSavingMetadataOrdinalNumbers() {
-        $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')->willReturn(Metadata::create('text', 'base', []));
+        $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')
+            ->willReturn(Metadata::create('text', 'base', [], 'books'));
         $resourceKind = $this->factory->create($this->command);
         $this->assertEquals(0, $resourceKind->getMetadataList()[0]->getOrdinalNumber());
         $this->assertEquals(1, $resourceKind->getMetadataList()[1]->getOrdinalNumber());
@@ -50,7 +52,7 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreatingResourceKindWithWorkflow() {
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [], $workflow);
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [], 'books', $workflow);
         $resourceKind = $this->factory->create($command);
         $this->assertSame($workflow, $resourceKind->getWorkflow());
     }
@@ -64,6 +66,7 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
             'placeholder' => [],
             'control' => 'text',
             'shownInBrief' => false,
+            'resourceClass' => 'books',
         ];
     }
 }

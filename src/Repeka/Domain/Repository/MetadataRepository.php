@@ -5,9 +5,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Exception\EntityNotFoundException;
 
 interface MetadataRepository {
-    /**
-     * @return Metadata[]
-     */
+    /**@return Metadata[] */
     public function findAll();
 
     public function save(Metadata $metadata): Metadata;
@@ -22,6 +20,11 @@ interface MetadataRepository {
      * @return Metadata[]
      */
     public function findAllBase(): array;
+
+    /**
+     * Returns metadata by resource class that have no base(i.e. are not assigned to any resoruce kind), sorted by ordinalNumber, ascending.
+     * @return Metadata[] */
+    public function findAllBaseByResourceClass(string $resourceClass): array;
 
     /**
      * Returns all metadata that have specific parent ID.

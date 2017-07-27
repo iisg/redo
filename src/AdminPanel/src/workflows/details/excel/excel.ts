@@ -13,6 +13,7 @@ import {deepCopy} from "common/utils/object-utils";
 export class Excel implements ComponentAttached {
   @bindable(twoWay) workflow: Workflow;
   @bindable @booleanAttribute editable: boolean = false;
+  @bindable resourceClass: string;
 
   metadataList: Metadata[];
 
@@ -20,7 +21,7 @@ export class Excel implements ComponentAttached {
   }
 
   async attached() {
-    this.metadataList = await this.metadataRepository.getList();
+    this.metadataList = await this.metadataRepository.getListByClass(this.resourceClass);
   }
 
   @computedFrom('workflow.places')

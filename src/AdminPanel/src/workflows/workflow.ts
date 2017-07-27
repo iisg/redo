@@ -12,6 +12,7 @@ export class Workflow extends Entity {
   transitions: WorkflowTransition[] = [];
   diagram: string;
   thumbnail;
+  resourceClass: string;
 
   copyFrom(workflow: Workflow) {
     $.extend(this, workflow);

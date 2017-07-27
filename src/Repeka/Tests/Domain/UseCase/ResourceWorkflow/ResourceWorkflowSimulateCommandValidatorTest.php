@@ -4,8 +4,11 @@ namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
+use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Repeka\Tests\Traits\StubsTrait;
 
+/** @SuppressWarnings("PHPMD.LongVariable") */
 class ResourceWorkflowSimulateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
@@ -15,21 +18,18 @@ class ResourceWorkflowSimulateCommandValidatorTest extends \PHPUnit_Framework_Te
     protected function setUp() {
         $entityExistsRule = $this->createEntityExistsMock(true);
         $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
-        $this->validator = new ResourceWorkflowSimulateCommandValidator($entityExistsRule, $notBlankInAllLanguagesRule);
+        $workflowPlacesDefinitionIsValidRule = new WorkflowPlacesDefinitionIsValidRule($entityExistsRule);
+        $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
+        $this->validator = new ResourceWorkflowSimulateCommandValidator(
+            $entityExistsRule,
+            $notBlankInAllLanguagesRule,
+            $workflowTransitionsDefinitionIsValidRule,
+            $workflowPlacesDefinitionIsValidRule
+        );
     }
 
     public function testValid() {
         $command = new ResourceWorkflowSimulateCommand([['label' => []]], []);
         $this->validator->validate($command);
-    }
-
-    public function testInvalidIfNoPlaces() {
-        $command = new ResourceWorkflowSimulateCommand([], []);
-        $this->assertFalse($this->validator->isValid($command));
-    }
-
-    public function testInvalidIfInvalidPlace() {
-        $command = new ResourceWorkflowSimulateCommand([[]], []);
-        $this->assertFalse($this->validator->isValid($command));
     }
 }

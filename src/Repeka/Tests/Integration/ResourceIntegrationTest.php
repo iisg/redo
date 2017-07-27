@@ -27,37 +27,39 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
-        $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'text');
+        $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'text', 'books');
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Resource kind'], [
-            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata'])
-        ]);
+            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata'], 'books'),
+        ], 'books');
         $this->metadata = $this->resourceKind->getMetadataList()[0];
         $this->metadata->updateOrdinalNumber(0);
         $this->persistAndFlush($this->metadata);
         $this->resource = $this->createResource($this->resourceKind, [
             $this->baseMetadata->getId() => ['Test value']
-        ]);
+        ], 'books');
         $this->parentResource = $this->createResource($this->resourceKind, [
             $this->baseMetadata->getId() => ['Test value for parent'],
-        ]);
+        ], 'books');
         $this->childResource = $this->createResource($this->resourceKind, [
             -1 => [$this->parentResource->getId()],
             $this->baseMetadata->getId() => ['Test value for child'],
-        ]);
+        ], 'books');
     }
 
     public function testFetchingResources() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
         $this->assertStatusCode(200, $client->getResponse());
         $this->assertJsonStringSimilarToArray([[
             'id' => $this->resource->getId(),
             'kindId' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => ['Test value']]
+            'contents' => [$this->metadata->getBaseId() => ['Test value']],
+            'resourceClass' => $this->resource->getResourceClass(),
         ], [
             'id' => $this->parentResource->getId(),
             'kindId' => $this->resourceKind->getId(),
             'contents' => [$this->metadata->getBaseId() => ['Test value for parent']],
+            'resourceClass' => $this->resource->getResourceClass(),
         ], [
             'id' => $this->childResource->getId(),
             'kindId' => $this->resourceKind->getId(),
@@ -65,7 +67,14 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 -1 => [$this->parentResource->getId()],
                 $this->metadata->getBaseId() => ['Test value for child'],
             ],
+            'resourceClass' => $this->resource->getResourceClass(),
         ],], $client->getResponse()->getContent());
+    }
+
+    public function testFetchingResourcesFailsWhenInvalidResourceClass() {
+        $client = self::createAdminClient();
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'resourceClass']);
+        $this->assertStatusCode(400, $client->getResponse());
     }
 
     public function testFetchingSingleResource() {
@@ -75,7 +84,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertJsonStringSimilarToArray([
             'id' => $this->resource->getId(),
             'kindId' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => ['Test value']]
+            'contents' => [$this->metadata->getBaseId() => ['Test value']],
+            'resourceClass' => $this->resource->getResourceClass(),
         ], $client->getResponse()->getContent());
     }
 
@@ -83,7 +93,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [
             'kind_id' => $this->resourceKind->getId(),
-            'contents' => json_encode([$this->metadata->getBaseId() => ['created']])
+            'contents' => json_encode([$this->metadata->getBaseId() => ['created']]),
+            'resourceClass' => 'books',
         ]);
         $this->assertStatusCode(201, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
@@ -99,7 +110,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
             'id' => $this->resource->getId(),
             'kind_id' => $this->resourceKind->getId(),
-            'contents' => json_encode([$this->metadata->getBaseId() => ['edited']])
+            'contents' => json_encode([$this->metadata->getBaseId() => ['edited']]),
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
@@ -110,14 +121,14 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResourceKindFails() {
         $newResourceKind = $this->createResourceKind(['TEST' => 'Replacement resource kind'], [
-            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata'])
-        ]);
+            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata'], 'books'),
+        ], 'books');
         $newResourceKind->getMetadataList()[0]->updateOrdinalNumber(0);
         $this->persistAndFlush($newResourceKind->getMetadataList()[0]);
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
             'kind_id' => $newResourceKind->getId(),
-            'contents' => json_encode($this->resource->getContents())
+            'contents' => json_encode($this->resource->getContents()),
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);

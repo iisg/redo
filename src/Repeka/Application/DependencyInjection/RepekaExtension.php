@@ -2,6 +2,7 @@
 namespace Repeka\Application\DependencyInjection;
 
 use ReflectionClass;
+use Repeka\Domain\Constants\SystemResourceClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -26,6 +27,10 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('pk_auth.wsdl', $mergedConfig['pk_auth']['wsdl']);
         $container->setParameter('pk_auth.options', $mergedConfig['pk_auth']['options']);
         $container->setParameter('pk_auth.local_accounts_enabled', $mergedConfig['pk_auth']['local_accounts_enabled']);
+        $container->setParameter(
+            'repeka.resource_classes',
+            array_merge($mergedConfig['resource_classes'], SystemResourceClass::toArray())
+        );
     }
 
     private function loadYmlConfigFile(string $name, ContainerBuilder $container) {

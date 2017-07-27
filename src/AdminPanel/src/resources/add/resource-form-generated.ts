@@ -15,6 +15,7 @@ export class ResourceFormGenerated {
   @bindable resourceKind: ResourceKind;
   @bindable(twoWay) resource: Resource;
   @bindable disableParent: boolean = false;
+  @bindable resourceClass: string;
 
   currentLanguageCode: string;
   lockedMetadataIds: number[];

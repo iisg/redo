@@ -54,7 +54,8 @@
                         <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
                             metadata.bind="metadata"
                             base-metadata.bind="base(metadata)"
-                            editing.bind="editing"></resource-kind-metadata-form>
+                            editing.bind="editing"
+                            resource-class.bind="resourceClass"></resource-kind-metadata-form>
                     </div>
                 </div>
             </div>
@@ -65,12 +66,13 @@
             <resource-kind-metadata-chooser
                 has-metadata-to-choose.bind="hasMetadataToChoose"
                 value.bind="newMetadataBase"
-                resource-kind.bind="resourceKind"></resource-kind-metadata-chooser>
+                resource-kind.bind="resourceKind"
+                resource-class.bind="resourceClass"></resource-kind-metadata-chooser>
         </div>
         <div class="form-group"
             if.bind="!editing">
             <label>${'Workflow' | t}</label>
-            <workflow-chooser value.bind="resourceKind.workflow"></workflow-chooser>
+            <workflow-chooser resource-class.bind="resourceClass" value.bind="resourceKind.workflow"></workflow-chooser>
         </div>
         <div class="form-group text-right no-margin-top">
             <div class="btn-group">

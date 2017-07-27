@@ -5,6 +5,7 @@ use Repeka\Application\Command\TransactionalCommand;
 use Repeka\Application\Entity\EntityIdGeneratorHelper;
 use Repeka\Application\Entity\EntityUtils;
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +35,7 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
         foreach (SystemResourceKind::toArray() as $resourceKindName => $resourceKindId) {
             if (!$this->resourceKindRepository->exists($resourceKindId)) {
                 $systemResourceKind = new SystemResourceKind($resourceKindId);
-                $resourceKind = new ResourceKind([]);
+                $resourceKind = new ResourceKind([], SystemResourceClass::USER);
                 EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
                 $label = [];
                 $label['PL'] = $label['EN'] = strtolower($resourceKindName);

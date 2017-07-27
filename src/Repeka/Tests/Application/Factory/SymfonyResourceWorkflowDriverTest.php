@@ -30,7 +30,7 @@ class SymfonyResourceWorkflowDriverTest extends \PHPUnit_Framework_TestCase {
             $this->transitionMock('BC'),
             $this->transitionMock('AC'),
         ]);
-        $this->resource = new ResourceEntity($this->createMock(ResourceKind::class), []);
+        $this->resource = new ResourceEntity($this->createMock(ResourceKind::class), [], 'books');
         $this->workflowDriver = new SymfonyResourceWorkflowDriver($this->resourceWorkflow);
     }
 

@@ -10,10 +10,12 @@
         class="well fade-inout-updown au-animate floating-form-full-width">
         <h2>${'Add new metadata kind' | t}</h2>
         <metadata-form submit.call="addNewMetadata(editedMetadata)"
-            if.bind="!parentMetadata"></metadata-form>
+            if.bind="!parentMetadata"
+            resource-class.bind="resourceClass"></metadata-form>
         <metadata-child-add if.bind="parentMetadata"
             parent-metadata.bind="parentMetadata"
-            saved.call="metadataAdded(savedMetadata)"></metadata-child-add>
+            saved.call="metadataAdded(savedMetadata)"
+            resource-class.bind="resourceClass"></metadata-child-add>
     </div>
 
     <div class="row">
@@ -31,7 +33,7 @@
                 </tr>
                 </thead>
                 <tfoot>
-                <tr if.bind="!metadataList">
+                <tr if.bind="progressBar">
                     <th colspan="7">
                         <loading-bar></loading-bar>
                     </th>
@@ -102,7 +104,8 @@
                                 template.bind="metadata"
                                 edit="true"
                                 cancel-button="true"
-                                cancel.call="metadata.editing = false"></metadata-form>
+                                cancel.call="metadata.editing = false"
+                                resource-class.bind="resourceClass"></metadata-form>
                         </div>
                     </td>
                 </tr>
@@ -112,7 +115,7 @@
     </div>
 
     <div class="alert alert-info"
-        if.bind="metadataList.length === 0">
+        if.bind="metadataList.length === 0 && !progressBar">
         <fa name="info-circle"></fa>
         ${'No metadata kinds.' | t}
     </div>

@@ -22,6 +22,7 @@ export class Metadata extends Entity {
   baseId: number;
   constraints: MetadataConstraints = new MetadataConstraints();
   shownInBrief: boolean;
+  resourceClass: string;
 
   @computedFrom('control', 'constraints.resourceKind')
   get canDetermineAssignees(): boolean {

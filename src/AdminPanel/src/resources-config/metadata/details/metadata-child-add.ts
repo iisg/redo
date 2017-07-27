@@ -7,6 +7,7 @@ import {autoinject} from "aurelia-dependency-injection";
 export class MetadataChildAdd implements ComponentAttached {
   @bindable saved: (value: {savedMetadata: Metadata}) => any;
   @bindable parentMetadata: Metadata;
+  @bindable resourceClass: string;
 
   metadataList: Metadata[];
   parentMetadataChildren: Metadata[];
@@ -18,7 +19,7 @@ export class MetadataChildAdd implements ComponentAttached {
   attached() {
     let metadataList, parentMetadataChildren;
     Promise.all([
-      this.metadataRepository.getList().then(metadata => metadataList = metadata),
+      this.metadataRepository.getListByClass(this.resourceClass).then(metadata => metadataList = metadata),
       this.metadataRepository.getByParent(this.parentMetadata).then(children => parentMetadataChildren = children)
     ]).then(() => {
       this.parentMetadataChildren = parentMetadataChildren;

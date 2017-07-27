@@ -13,6 +13,7 @@ export class MetadataDetails implements RoutableComponentActivate {
   addFormOpened: boolean = false;
   editing = false;
   urlListener: Subscription;
+  resourceClass: string;
 
   constructor(private metadataRepository: MetadataRepository,
               private i18n: I18N,
@@ -31,6 +32,7 @@ export class MetadataDetails implements RoutableComponentActivate {
   }
 
   async activate(params: any, routeConfig: RouteConfig) {
+    this.resourceClass = params.resourceClass;
     this.metadata = await this.metadataRepository.get(params.id);
     routeConfig.navModel.setTitle(this.i18n.tr('Metadata') + ` #${this.metadata.id}`);
   }

@@ -9,7 +9,12 @@ class ResourceWorkflowSimulateCommand extends Command {
     private $transitionId;
     private $currentPlaces;
 
-    public function __construct(array $places, array $transitions, array $currentPlaces = [], string $transitionId = '') {
+    public function __construct(
+        array $places,
+        array $transitions,
+        array $currentPlaces = [],
+        string $transitionId = ''
+    ) {
         $this->places = $places;
         $this->transitions = $transitions;
         $this->transitionId = $transitionId;

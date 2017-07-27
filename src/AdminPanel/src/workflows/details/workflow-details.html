@@ -27,12 +27,14 @@
 
         <div if.bind="!editing">
             <workflow-graph-display workflow.bind="workflow"></workflow-graph-display>
-            <excel workflow.bind="workflow"></excel>
+            <excel workflow.bind="workflow"
+                resource-class.bind="resourceClass"></excel>
         </div>
 
         <div if.bind="editing">
             <workflow-edit-form workflow.bind="workflow"
-                submit.delegate="update()"></workflow-edit-form>
+                submit.delegate="update()"
+                resource-class.bind="resourceClass"></workflow-edit-form>
         </div>
 
     </div>

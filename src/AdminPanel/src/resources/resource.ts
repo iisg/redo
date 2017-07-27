@@ -11,6 +11,7 @@ export class Resource extends Entity {
   blockedTransitions: StringMap<TransitionBlockReason> = {};
   transitionAssigneeMetadata: NumberMap<WorkflowTransition[]> = {};
   contents: StringArrayMap = {};
+  resourceClass: string;
 
   public canApplyTransition(transition: WorkflowTransition) {
     return this.blockedTransitions[transition.id] == undefined;

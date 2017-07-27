@@ -6,6 +6,7 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
+use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Respect\Validation\Validatable;
@@ -22,19 +23,23 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
     private $constraintSetMatchesControlRule;
     /** @var ConstraintArgumentsAreValidRule */
     private $constraintArgumentsAreValidRule;
+    /** @var  ResourceClassExistsRule */
+    private $resourceClassExistsRule;
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         ContainsOnlyAvailableLanguagesRule $containsOnlyAvailableLanguagesRule,
         IsValidControlRule $isValidControlRule,
         ConstraintSetMatchesControlRule $constraintSetMatchesControlRule,
-        ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule
+        ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
+        ResourceClassExistsRule $resourceClassExistsRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->containsOnlyAvailableLanguagesRule = $containsOnlyAvailableLanguagesRule;
         $this->isValidControlRule = $isValidControlRule;
         $this->constraintSetMatchesControlRule = $constraintSetMatchesControlRule;
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
+        $this->resourceClassExistsRule = $resourceClassExistsRule;
     }
 
     /**
@@ -49,6 +54,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('description', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('control', $this->isValidControlRule)
             ->attribute('shownInBrief', Validator::boolType())
+            ->attribute('resourceClass', $this->resourceClassExistsRule)
             ->attribute('constraints', $this->constraintSetMatchesControlRule->forControl($command->getControl()))
             ->attribute('constraints', $this->constraintArgumentsAreValidRule);
     }

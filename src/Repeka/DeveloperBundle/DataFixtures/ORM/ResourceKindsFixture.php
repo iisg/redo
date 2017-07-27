@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -36,6 +35,7 @@ class ResourceKindsFixture extends RepekaFixture {
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
             ],
+            'books',
             $workflow
         ), self::REFERENCE_RESOURCE_KIND_BOOK);
         $this->handleCommand(new ResourceKindCreateCommand(
@@ -45,7 +45,8 @@ class ResourceKindsFixture extends RepekaFixture {
             ],
             [
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
-            ]
+            ],
+            'books'
         ), self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
         $this->handleCommand(new ResourceKindCreateCommand(
             [
@@ -54,7 +55,8 @@ class ResourceKindsFixture extends RepekaFixture {
             ],
             [
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME, true),
-            ]
+            ],
+            'books'
         ), self::REFERENCE_RESOURCE_KIND_CATEGORY);
     }
 }

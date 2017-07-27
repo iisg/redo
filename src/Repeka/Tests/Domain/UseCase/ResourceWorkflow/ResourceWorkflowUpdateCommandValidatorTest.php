@@ -5,8 +5,11 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
+use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Repeka\Tests\Traits\StubsTrait;
 
+/** @SuppressWarnings("PHPMD.LongVariable") */
 class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
@@ -18,7 +21,14 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
     protected function setUp() {
         $entityExistsRule = $this->createEntityExistsMock(true);
         $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
-        $this->validator = new ResourceWorkflowUpdateCommandValidator($entityExistsRule, $notBlankInAllLanguagesRule);
+        $workflowPlacesDefinitionIsValidRule = new WorkflowPlacesDefinitionIsValidRule($entityExistsRule);
+        $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
+        $this->validator = new ResourceWorkflowUpdateCommandValidator(
+            $entityExistsRule,
+            $notBlankInAllLanguagesRule,
+            $workflowTransitionsDefinitionIsValidRule,
+            $workflowPlacesDefinitionIsValidRule
+        );
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->workflow->expects($this->any())->method('getId')->willReturn(1);
     }
@@ -26,11 +36,6 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
     public function testValid() {
         $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [['label' => []]], [], null, null);
         $this->validator->validate($command);
-    }
-
-    public function testInvalidWhenNoPlaces() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [], [], null, null);
-        $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testInvalidBecauseOfNotSavedWorkflow() {

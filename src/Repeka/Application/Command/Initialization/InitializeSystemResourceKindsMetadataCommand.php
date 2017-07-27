@@ -3,6 +3,7 @@ namespace Repeka\Application\Command\Initialization;
 
 use Repeka\Application\Command\TransactionalCommand;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -40,7 +41,12 @@ class InitializeSystemResourceKindsMetadataCommand extends TransactionalCommand 
         } catch (\InvalidArgumentException $e) {
             /** @var Metadata $usernameMetadata */
             $usernameMetadata = $this->metadataRepository->findOne(SystemMetadata::USERNAME);
-            $forResource = Metadata::createForResourceKind($usernameMetadata->getLabel(), $userResourceKind, $usernameMetadata);
+            $forResource = Metadata::createForResourceKind(
+                $usernameMetadata->getLabel(),
+                $userResourceKind,
+                $usernameMetadata,
+                SystemResourceClass::USER
+            );
             $userResourceKind->addMetadata($forResource);
             $this->resourceKindRepository->save($userResourceKind);
             $output->writeln("Added username metadata to user resource kind.");

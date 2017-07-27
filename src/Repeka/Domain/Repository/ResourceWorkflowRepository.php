@@ -10,6 +10,9 @@ interface ResourceWorkflowRepository {
     /** @return ResourceWorkflow[] */
     public function findAll();
 
+    /** @return ResourceWorkflow[] */
+    public function findAllByResourceClass(string $resourceClass): array;
+
     public function findOne($id): ResourceWorkflow;
 
     public function delete(ResourceWorkflow $resourceWorkflow): void;

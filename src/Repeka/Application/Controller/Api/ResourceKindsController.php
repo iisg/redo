@@ -30,7 +30,8 @@ class ResourceKindsController extends ApiController {
      */
     public function getListAction(Request $request) {
         $includeSystemResourceKinds = !!$request->query->get('systemResourceKind');
-        $resourceKindList = $this->handleCommand(new ResourceKindListQuery($includeSystemResourceKinds));
+        $resourceClass = $request->query->get('resourceClass', '');
+        $resourceKindList = $this->handleCommand(new ResourceKindListQuery($resourceClass, $includeSystemResourceKinds));
         return $this->createJsonResponse($resourceKindList);
     }
 
@@ -43,6 +44,7 @@ class ResourceKindsController extends ApiController {
         $command = new ResourceKindCreateCommand(
             $data['label'] ?? [],
             $data['metadataList'] ?? [],
+            $data['resourceClass'] ?? '',
             isset($data['workflowId']) ? $this->resourceWorkflowRepository->findOne($data['workflowId']) : null
         );
         $resourceKind = $this->handleCommand($command);

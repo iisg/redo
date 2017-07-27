@@ -13,12 +13,14 @@ class ResourceKind implements Identifiable {
     private $metadataList;
     /** @var ResourceWorkflow */
     private $workflow;
+    private $resourceClass;
 
-    public function __construct(array $label, ResourceWorkflow $workflow = null) {
+    public function __construct(array $label, string $resourceClass, ResourceWorkflow $workflow = null) {
         $this->label = $label;
         // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html#collections
         $this->metadataList = new ArrayCollection();
         $this->workflow = $workflow;
+        $this->resourceClass = $resourceClass;
     }
 
     public function getId() {
@@ -27,6 +29,10 @@ class ResourceKind implements Identifiable {
 
     public function getLabel(): array {
         return $this->label;
+    }
+
+    public function getResourceClass(): string {
+        return $this->resourceClass;
     }
 
     /** @return Metadata[] */

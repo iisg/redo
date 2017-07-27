@@ -4,7 +4,7 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
-use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 
 /**
@@ -19,24 +19,25 @@ class MetadataStage2Fixture extends RepekaFixture {
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
-        $existingMetadata = $this->handleCommand(new MetadataListQuery());
+        $existingMetadata = $this->handleCommand(new MetadataListByResourceClassQuery('books'));
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Powiązana książka',
             'label' => [
                 'PL' => 'Powiązana książka',
-                'EN' => 'Related book'
+                'EN' => 'Related book',
             ],
             'description' => [],
             'placeholder' => [],
             'control' => 'relationship',
             'constraints' => [
-                'resourceKind' => [$this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_BOOK)->getId()]
+                'resourceKind' => [$this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_BOOK)->getId()],
             ],
             'shownInBrief' => true,
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_RELATED_BOOK);
         $allMetadata = array_merge($existingMetadata, $addedMetadata);
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
             return $metadata->getId();
-        }, $allMetadata)));
+        }, $allMetadata), 'books'));
     }
 }

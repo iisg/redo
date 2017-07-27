@@ -3,31 +3,37 @@ import {autoinject, Container, NewInstance} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
 import {deepCopy} from "common/utils/object-utils";
 import {MetadataRepository} from "../metadata/metadata-repository";
-import {ApiRepository} from "common/repository/api-repository";
 import {cachedResponse} from "common/repository/cached-response";
 import {SystemMetadata} from "../metadata/system-metadata";
+import {ResourceClassApiRepository} from "../../common/repository/resource-class-api-repository";
 
 @autoinject
-export class ResourceKindRepository extends ApiRepository<ResourceKind> {
+export class ResourceKindRepository extends ResourceClassApiRepository<ResourceKind> {
   constructor(httpClient: HttpClient, private metadataRepository: MetadataRepository, private container: Container) {
     super(httpClient, 'resource-kinds');
   }
 
-  public get(id: number): Promise<ResourceKind> {
-    return this.getListWithSystemResourceKinds().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
+  public getResourceKind(id: number, resourceClass: string): Promise<ResourceKind> {
+    return this.getListWithSystemResourceKinds(resourceClass).then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
+  }
+
+  public getListByClass(resourceClass: string): Promise<ResourceKind[]> {
+    return super.getListByClass(resourceClass);
   }
 
   @cachedResponse(30000)
   public getList(): Promise<ResourceKind[]> {
-    return super.getList();
+    return this.httpClient.get(this.endpoint).then(response => this.responseToEntities(response));
   }
 
-  @cachedResponse(30000)
-  public getListWithSystemResourceKinds(): Promise<ResourceKind[]> {
+  public getListWithSystemResourceKinds(resourceClass: string): Promise<ResourceKind[]> {
     return this.httpClient
       .createRequest(this.endpoint)
       .asGet()
-      .withParams({systemResourceKind: true})
+      .withParams({
+        systemResourceKind: true,
+        resourceClass
+      })
       .send()
       .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
   }

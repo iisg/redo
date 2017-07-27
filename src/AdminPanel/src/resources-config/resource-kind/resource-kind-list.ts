@@ -8,19 +8,36 @@ import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation
 @autoinject
 export class ResourceKindList {
   addFormOpened: boolean = false;
-
+  progressBar: boolean;
+  resourceClass: string;
   resourceKinds: ResourceKind[];
 
   constructor(private resourceKindRepository: ResourceKindRepository,
               private inCurrentLanguage: InCurrentLanguageValueConverter,
               private alert: Alert,
               private deleteEntityConfirmation: DeleteEntityConfirmation) {
-    resourceKindRepository.getList()
-      .then(resourceKinds => this.resourceKinds = resourceKinds)
-      .then(() => this.addFormOpened || (this.addFormOpened = this.resourceKinds.length == 0));
+  }
+
+  activate(params: any) {
+    this.resourceClass = params.resourceClass;
+    if (this.resourceKinds) {
+      this.resourceKinds = [];
+    }
+    this.progressBar = true;
+    this.getResourceKinds();
+  }
+
+  getResourceKinds() {
+    this.resourceKindRepository.getListByClass(this.resourceClass)
+      .then(resourceKinds => {
+        this.progressBar = false;
+        this.resourceKinds = resourceKinds;
+        this.addFormOpened = this.resourceKinds.length == 0;
+      });
   }
 
   addNewResourceKind(resourceKind: ResourceKind): Promise<ResourceKind> {
+    resourceKind.resourceClass = this.resourceClass;
     return this.resourceKindRepository.post(resourceKind).then(resourceKind => {
       this.addFormOpened = false;
       this.resourceKinds.push(resourceKind);

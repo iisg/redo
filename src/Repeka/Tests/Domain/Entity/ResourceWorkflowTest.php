@@ -20,7 +20,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     private $workflowDriver;
 
     protected function setUp() {
-        $this->workflow = new ResourceWorkflow(['EN' => 'Some workflow'], [], []);
+        $this->workflow = new ResourceWorkflow(['EN' => 'Some workflow'], [], [], 'books');
         $this->resource = $this->createMock(ResourceEntity::class);
         $this->workflowDriver = $this->createMock(ResourceWorkflowDriver::class);
     }
@@ -29,13 +29,17 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['EN' => 'Some workflow'], $this->workflow->getName());
     }
 
+    public function testSettingResourceClass() {
+        $this->assertEquals('books', $this->workflow->getResourceClass());
+    }
+
     public function testNoPlacesAndTransitionsByDefault() {
         $this->assertEmpty($this->workflow->getPlaces());
         $this->assertEmpty($this->workflow->getTransitions());
     }
 
     public function testUpdatingName() {
-        $this->workflow->update(['EN' => 'New name'], [], []);
+        $this->workflow->update(['EN' => 'New name'], [], [], 'books');
         $this->assertEquals(['EN' => 'New name'], $this->workflow->getName());
     }
 
@@ -43,21 +47,21 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
         $this->workflow->update([], [
             ['label' => ['EN' => 'First place']],
             ['label' => ['EN' => 'Second place']],
-        ], []);
+        ], [], 'books');
         $this->assertCount(2, $this->workflow->getPlaces());
         $this->assertEquals(['EN' => 'First place'], $this->workflow->getPlaces()[0]->getLabel());
         $this->assertEquals(['EN' => 'Second place'], $this->workflow->getPlaces()[1]->getLabel());
     }
 
     public function testUpdatingPlacesFromInstance() {
-        $this->workflow->update([], [new ResourceWorkflowPlace(['PL' => 'Test'])], []);
+        $this->workflow->update([], [new ResourceWorkflowPlace(['PL' => 'Test'])], [], 'books');
         $this->assertCount(1, $this->workflow->getPlaces());
         $this->assertEquals(['PL' => 'Test'], $this->workflow->getPlaces()[0]->getLabel());
     }
 
     public function testUpdatingPlacesIfAlreadyExists() {
-        $this->workflow->update([], [['label' => ['EN' => 'First place']]], []);
-        $this->workflow->update([], [['label' => ['EN' => 'Another place']]], []);
+        $this->workflow->update([], [['label' => ['EN' => 'First place']]], [], 'books');
+        $this->workflow->update([], [['label' => ['EN' => 'Another place']]], [], 'books');
         $this->assertCount(1, $this->workflow->getPlaces());
         $this->assertEquals(['EN' => 'Another place'], $this->workflow->getPlaces()[0]->getLabel());
     }
@@ -66,7 +70,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
         $this->workflow->update([], [], [
             ['label' => ['EN' => 'First transition'], 'froms' => ['A'], 'tos' => ['B']],
             ['label' => ['EN' => 'Second transition'], 'froms' => ['B'], 'tos' => ['C']],
-        ]);
+        ], 'books');
         $this->assertCount(2, $this->workflow->getTransitions());
         $this->assertEquals(['EN' => 'First transition'], $this->workflow->getTransitions()[0]->getLabel());
         $this->assertEquals(['A'], $this->workflow->getTransitions()[0]->getFromIds());
@@ -105,7 +109,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
             new ResourceWorkflowTransition([], [], [], [], 'onetransition'),
             new ResourceWorkflowTransition([], [], [], [], 'twotransition'),
             new ResourceWorkflowTransition([], [], [], [], 'anothertransition'),
-        ]);
+        ], 'books');
         $this->workflow->setWorkflowDriver($this->workflowDriver);
         $this->workflowDriver->expects($this->once())->method('getTransitions')->with($this->resource)
             ->willReturn(['onetransition', 'anothertransition']);
@@ -120,7 +124,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
             new ResourceWorkflowPlace([], 'first'),
             new ResourceWorkflowPlace([], 'second'),
             new ResourceWorkflowPlace([], 'third'),
-        ], []);
+        ], [], 'books');
         $this->workflow->setWorkflowDriver($this->workflowDriver);
         $this->workflowDriver->expects($this->once())->method('getPlaces')->with($this->resource)
             ->willReturn(['first', 'third']);
@@ -134,7 +138,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
         $this->workflow->update([], [], [
             new ResourceWorkflowTransition([], [], [], ['A'], 'first'),
             new ResourceWorkflowTransition([], [], [], ['B'], 'second'),
-        ]);
+        ], 'books');
         $transition = $this->workflow->getTransition('first');
         $this->assertNotNull($transition);
         $this->assertEquals('first', $transition->getId());

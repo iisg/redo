@@ -14,12 +14,14 @@ class ResourceWorkflow implements Identifiable {
     private $transitions = [];
     private $diagram;
     private $thumbnail;
+    private $resourceClass;
 
     /** @var ResourceWorkflowDriver */
     private $workflow;
 
-    public function __construct(array $name, array $places, array $transitions, $diagram = null, $thumbnail = null) {
+    public function __construct(array $name, array $places, array $transitions, string $resourceClass, $diagram = null, $thumbnail = null) {
         $this->update($name, $places, $transitions, $diagram, $thumbnail);
+        $this->resourceClass = $resourceClass;
     }
 
     public function getId() {
@@ -81,6 +83,10 @@ class ResourceWorkflow implements Identifiable {
 
     public function getThumbnail() {
         return $this->thumbnail;
+    }
+
+    public function getResourceClass(): string {
+        return $this->resourceClass;
     }
 
     public function update(array $name, array $places, array $transitions, $diagram = null, $thumbnail = null) {

@@ -3,7 +3,7 @@ namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class MetadataListQuery extends NonValidatedCommand {
+class MetadataListByParentIdQuery extends NonValidatedCommand {
     private $parentId;
 
     public function __construct(int $parentId = null) {

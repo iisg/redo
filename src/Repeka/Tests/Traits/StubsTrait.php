@@ -62,6 +62,15 @@ trait StubsTrait {
         $mock->method('getKind')->willReturn($resourceKind);
         $mock->method('getId')->willReturn($id);
         $mock->method('getContents')->willReturn($contents);
+        if ($contents) {
+            $mock->method('getValues')->willReturnCallback(function ($metadata) use ($contents) {
+                if (array_key_exists($metadata->getBaseId(), $contents)) {
+                    return $contents[$metadata->getBaseId()];
+                } else {
+                    return [];
+                }
+            });
+        }
         return $mock;
     }
 
