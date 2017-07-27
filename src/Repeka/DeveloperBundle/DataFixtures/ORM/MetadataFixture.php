@@ -4,7 +4,7 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
-use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 
 /** @SuppressWarnings(PHPMD.ExcessiveMethodLength) */
@@ -23,6 +23,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
 
     /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
@@ -43,6 +44,7 @@ class MetadataFixture extends RepekaFixture {
             ],
             'control' => 'text',
             'shownInBrief' => true,
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_TITLE);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Opis',
@@ -56,6 +58,7 @@ class MetadataFixture extends RepekaFixture {
             ],
             'placeholder' => [],
             'control' => 'textarea',
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_DESCRIPTION);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Data wydania',
@@ -66,6 +69,7 @@ class MetadataFixture extends RepekaFixture {
             'description' => [],
             'placeholder' => [],
             'control' => 'date',
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_PUBLISH_DATE);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Czy ma twardą okładkę?',
@@ -76,6 +80,7 @@ class MetadataFixture extends RepekaFixture {
             'description' => [],
             'placeholder' => [],
             'control' => 'boolean',
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_HARD_COVER);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Liczba stron',
@@ -86,6 +91,7 @@ class MetadataFixture extends RepekaFixture {
             'description' => [],
             'placeholder' => [],
             'control' => 'integer',
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_NO_OF_PAGES);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Zobacz też',
@@ -99,6 +105,7 @@ class MetadataFixture extends RepekaFixture {
             'constraints' => [
                 'resourceKind' => [],
             ],
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_SEE_ALSO);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Okładka',
@@ -109,6 +116,7 @@ class MetadataFixture extends RepekaFixture {
             'description' => [],
             'placeholder' => [],
             'control' => 'file',
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_FILE);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Nazwa kategorii',
@@ -119,6 +127,7 @@ class MetadataFixture extends RepekaFixture {
             'description' => [],
             'placeholder' => [],
             'control' => 'text',
+            'resourceClass' => 'books',
         ]), self::REFERENCE_METADATA_CATEGORY_NAME);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Skanista',
@@ -129,6 +138,7 @@ class MetadataFixture extends RepekaFixture {
             'description' => [],
             'placeholder' => [],
             'control' => 'relationship',
+            'resourceClass' => 'books',
             'constraints' => [
                 'resourceKind' => [-1],
             ],
@@ -142,12 +152,13 @@ class MetadataFixture extends RepekaFixture {
             'description' => [],
             'placeholder' => [],
             'control' => 'relationship',
+            'resourceClass' => 'books',
             'constraints' => [
                 'resourceKind' => [-1],
             ],
         ]), self::REFERENCE_METADATA_SUPERVISOR);
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
             return $metadata->getId();
-        }, $this->handleCommand(new MetadataListQuery()))));
+        }, $this->handleCommand(new MetadataListByResourceClassQuery('books'))), 'books'));
     }
 }

@@ -15,6 +15,10 @@ repeka:
     - relationship
     - file
 
+  resource_classes:
+    - books
+    - dictionaries
+
   metadata_nesting_depth: 3
   elasticsearch:
     host: elasticsearch

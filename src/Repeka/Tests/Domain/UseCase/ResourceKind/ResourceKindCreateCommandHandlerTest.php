@@ -23,17 +23,18 @@ class ResourceKindCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
             ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-        ]);
+        ], 'books');
         $this->resourceKindRespository = $this->createMock(ResourceKindRepository::class);
         $this->resourceKindFactory = $this->createMock(ResourceKindFactory::class);
         $this->handler = new ResourceKindCreateCommandHandler($this->resourceKindFactory, $this->resourceKindRespository);
     }
 
     public function testCreatingResourceKind() {
-        $resourceKind = new ResourceKind([]);
+        $resourceKind = new ResourceKind([], 'books');
         $this->resourceKindFactory->expects($this->once())->method('create')->willReturn($resourceKind);
         $this->resourceKindRespository->expects($this->once())->method('save')->willReturnArgument(0);
         $created = $this->handler->handle($this->command);
         $this->assertSame($resourceKind, $created);
+        $this->assertSame('books', $created->getResourceClass());
     }
 }

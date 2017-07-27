@@ -9,9 +9,12 @@ class ResourceCreateCommand extends Command {
 
     private $contents;
 
-    public function __construct(ResourceKind $resourceKind, array $contents) {
+    private $resourceClass;
+
+    public function __construct(ResourceKind $resourceKind, array $contents, string $resourceClass) {
         $this->kind = $resourceKind;
         $this->contents = $contents;
+        $this->resourceClass = $resourceClass;
     }
 
     public function getKind(): ResourceKind {
@@ -20,5 +23,9 @@ class ResourceCreateCommand extends Command {
 
     public function getContents(): array {
         return $this->contents;
+    }
+
+    public function getResourceClass(): string {
+        return $this->resourceClass;
     }
 }

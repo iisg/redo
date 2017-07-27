@@ -1,38 +1,36 @@
 <template class="nested-navigation-menu">
-    <require from="../../routes/nested-navigation-value-converter"></require>
 
-    <template repeat.for="item of router.navigation | nestedNavigation">
-        <li class="${item.isActive || item.expanded ? 'current' : ''}"
-            require-role.bind="item.settings.requiredRoles">
-            <a if.bind="!item.children"
-                href.bind="item.href"
-                class="btn btn-default btn-block">
-                <fa name.bind="item.settings.icon"
-                    options="fw"></fa>
-                ${'nav::' + item.title | t}
-            </a>
-            <a if.bind="item.children"
-                class="btn btn-default btn-block"
-                click.delegate="item.toggle()">
-                <fa name="angle-right"
-                    options.bind="item.expanded ? 'fw rotate-90': 'fw'"
-                    class="pull-right"></fa>
-                <fa name.bind="item.settings.icon"
-                    options="fw"></fa>
-                ${'nav::' + item.title | t}
-            </a>
-            <ul if.bind="item.expanded"
-                class="nav-children anim-height-inout-150 au-animate">
-                <template repeat.for="child of item.children">
-                    <li class="${child.isActive ? 'current' : ''}"
-                        require-role.bind="child.settings.requiredRoles">
-                        <a href.bind="child.href"
-                            class="btn btn-default btn-block">
-                            ${'nav::' + child.title | t}
-                        </a>
-                    </li>
-                </template>
-            </ul>
-        </li>
-    </template>
+    <li repeat.for="item of siteMenu.navigation"
+        class="${item.isActive || item.expanded ? 'current' : ''}"
+        require-roles.bind="item.settings.requiredRoles">
+        <a if.bind="!item.children"
+            route-href="route.bind: item.route; params.bind: item.settings.params"
+            class="btn btn-default btn-block">
+            <fa name.bind="item.settings.icon"
+                options="fw"></fa>
+            ${item.settings.dynamicResource ? 'resource_classes::' + item.title + '//label' : 'nav::' + item.title | t}
+        </a>
+        <a if.bind="item.children"
+            class="btn btn-default btn-block"
+            click.delegate="toggle(item)">
+            <fa name="angle-right"
+                options.bind="item.expanded ? 'fw rotate-90': 'fw'"
+                class="pull-right"></fa>
+            <fa name.bind="item.settings.icon"
+                options="fw"></fa>
+            ${'resource_classes::' + item.title + '//settings' | t}
+        </a>
+        <ul if.bind="item.expanded"
+            class="nav-children anim-height-inout-150 au-animate">
+            <li repeat.for="child of item.children"
+                class="${child.isActive ? 'current' : ''}"
+                require-roles.one-time="child.settings.requiredRoles">
+                <a route-href="route.bind: child.route; params.bind: child.settings.params"
+                    class="btn btn-default btn-block">
+                    ${'nav::' + child.title | t}
+                </a>
+            </li>
+        </ul>
+    </li>
+
 </template>

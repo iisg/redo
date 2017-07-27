@@ -14,14 +14,11 @@ class ResourceKindListQueryHandler {
 
     /** @return ResourceKind[] */
     public function handle(ResourceKindListQuery $query): array {
-        return $this->getResults($query);
-    }
-
-    private function getResults(ResourceKindListQuery $query):array {
+        $resourceKinds = $this->resourceKindRepository->findAllByResourceClass($query->getResourceClass());
         if ($query->includeSystemResourceKinds()) {
-            return $this->resourceKindRepository->findAll();
-        } else {
-            return $this->resourceKindRepository->findAllNonSystemResourceKinds();
+            $systemResourceKinds = $this->resourceKindRepository->findAllSystemResourceKinds();
+            $resourceKinds = array_merge($resourceKinds, $systemResourceKinds);
         }
+        return $resourceKinds;
     }
 }

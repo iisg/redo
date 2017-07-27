@@ -6,6 +6,7 @@ use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
+use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Repeka\Tests\Traits\StubsTrait;
@@ -18,6 +19,8 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     private $rkConstraintIsUser;
     /** @var ResourceKindUpdateCommandValidator */
     private $validator;
+    /** @var ResourceClassExistsRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $containsResourceClass;
 
     protected function setUp() {
         $languageRepository = $this->createMock(LanguageRepository::class);
@@ -25,11 +28,16 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
+        $this->containsResourceClass = $this->createMock(ResourceClassExistsRule::class);
         $this->rkConstraintIsUser = $this->createRuleWithFactoryMethodMock(
             ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
             'forMetadataId'
         );
-        $this->validator = new ResourceKindUpdateCommandValidator($notBlankInAllLanguagesRule, $this->rkConstraintIsUser);
+        $this->validator = new ResourceKindUpdateCommandValidator(
+            $notBlankInAllLanguagesRule,
+            $this->rkConstraintIsUser,
+            $this->containsResourceClass
+        );
     }
 
     public function testValid() {

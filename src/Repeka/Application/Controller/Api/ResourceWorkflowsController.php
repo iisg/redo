@@ -26,9 +26,10 @@ class ResourceWorkflowsController extends ApiController {
      * @Method("GET")
      * @ParamConverter("assigneeMetadata", converter="Repeka\Application\ParamConverter\AssigneeMetadataParamConverter")
      */
-    public function getListAction(?Metadata $assigneeMetadata) {
+    public function getListAction(?Metadata $assigneeMetadata, Request $request) {
+        $resourceClass = $request->query->get('resourceClass', '');
         $command = ($assigneeMetadata == null)
-            ? new ResourceWorkflowListQuery()
+            ? new ResourceWorkflowListQuery($resourceClass)
             : new ResourceWorkflowUsingMetadataAsAssigneeQuery($assigneeMetadata);
         $workflows = $this->handleCommand($command);
         return $this->createJsonResponse($workflows);
@@ -71,7 +72,8 @@ class ResourceWorkflowsController extends ApiController {
             $data['places'] ?? [],
             $data['transitions'] ?? [],
             $data['diagram'] ?? null,
-            $data['thumbnail'] ?? null
+            $data['thumbnail'] ?? null,
+            $data['resourceClass'] ?? ''
         );
         $workflow = $this->handleCommand($command);
         return $this->createJsonResponse($workflow);
@@ -87,6 +89,7 @@ class ResourceWorkflowsController extends ApiController {
             $data['name'] ?? [],
             $data['places'] ?? [],
             $data['transitions'] ?? [],
+            $data['resourceClass'] ?? '',
             $data['diagram'] ?? null,
             $data['thumbnail'] ?? null
         );

@@ -5,15 +5,15 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
 class ResourceKindCreateCommand extends Command {
-    protected $label;
-
-    protected $metadataList;
-
+    private $label;
+    private $metadataList;
     private $workflow;
+    private $resourceClass;
 
-    public function __construct(array $label, array $metadataList, ResourceWorkflow $workflow = null) {
+    public function __construct(array $label, array $metadataList, string $resourceClass, ResourceWorkflow $workflow = null) {
         $this->label = $label;
         $this->metadataList = $metadataList;
+        $this->resourceClass = $resourceClass;
         $this->workflow = $workflow;
     }
 
@@ -23,6 +23,10 @@ class ResourceKindCreateCommand extends Command {
 
     public function getMetadataList(): array {
         return $this->metadataList;
+    }
+
+    public function getResourceClass(): string {
+        return $this->resourceClass;
     }
 
     public function getWorkflow(): ?ResourceWorkflow {

@@ -20,7 +20,10 @@ class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
     }
 
     public function testSimulationFromInitialState() {
-        $command = new ResourceWorkflowSimulateCommand($this->workflow->getPlaces(), $this->workflow->getTransitions());
+        $command = new ResourceWorkflowSimulateCommand(
+            $this->workflow->getPlaces(),
+            $this->workflow->getTransitions()
+        );
         $result = $this->handleCommand($command);
         $this->assertCount(1, $result['places']);
         $this->assertEquals('Imported', $result['places'][0]->getLabel()['EN']);

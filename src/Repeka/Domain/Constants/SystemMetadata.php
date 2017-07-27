@@ -17,9 +17,18 @@ class SystemMetadata extends Enum {
         $value = $this->getValue();
         $metadata = null;
         if ($value == self::PARENT) {
-            $metadata = Metadata::create('relationship', 'Parent', ['EN' => 'Parent', 'PL' => 'Rodzic'], [], [], [], true);
+            $metadata = Metadata::create('relationship', 'Parent', ['EN' => 'Parent', 'PL' => 'Rodzic',], '', [], [], [], true);
         } elseif ($value == self::USERNAME) {
-            $metadata = Metadata::create('text', 'Username', ['EN' => 'Username', 'PL' => 'Nazwa użytkownika'], [], [], [], true);
+            $metadata = Metadata::create(
+                'text',
+                'Username',
+                ['EN' => 'Username', 'PL' => 'Nazwa użytkownika'],
+                SystemResourceClass::USER,
+                [],
+                [],
+                [],
+                true
+            );
         }
         /** @noinspection PhpUndefinedVariableInspection */
         Assertion::notNull($metadata, "Not implemented: metadata for value $value");

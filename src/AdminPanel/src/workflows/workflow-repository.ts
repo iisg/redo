@@ -1,12 +1,12 @@
-import {ApiRepository} from "common/repository/api-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {HttpClient} from "aurelia-http-client";
 import {Workflow} from "./workflow";
 import {workflowPlaceToEntity, workflowPlaceToBackend} from "./workflow-place-converters";
 import {Metadata} from "../resources-config/metadata/metadata";
+import {ResourceClassApiRepository} from "../common/repository/resource-class-api-repository";
 
 @autoinject
-export class WorkflowRepository extends ApiRepository<Workflow> {
+export class WorkflowRepository extends ResourceClassApiRepository<Workflow> {
   constructor(httpClient: HttpClient) {
     super(httpClient, 'workflows');
   }

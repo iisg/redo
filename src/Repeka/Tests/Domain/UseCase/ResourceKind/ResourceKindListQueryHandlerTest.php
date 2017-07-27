@@ -23,15 +23,19 @@ class ResourceKindListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingTheList() {
         $resourceKindList = [$this->createMock(ResourceKind::class)];
-        $this->resourceKindRepository->expects($this->once())->method('findAll')->willReturn($resourceKindList);
-        $returnedList = $this->handler->handle(new ResourceKindListQuery());
-        $this->assertSame($resourceKindList, $returnedList);
+        $this->resourceKindRepository
+            ->expects($this->once())->method('findAllByResourceClass')->with('books')->willReturn($resourceKindList);
+        $this->resourceKindRepository->expects($this->once())->method('findAllSystemResourceKinds')->willReturn($resourceKindList);
+        $returnedList = $this->handler->handle(new ResourceKindListQuery('books'));
+        $this->assertCount(2, $returnedList);
     }
 
     public function testGettingTheListWithoutSystemResourceKinds() {
         $resourceKindList = [$this->createMock(ResourceKind::class)];
-        $this->resourceKindRepository->expects($this->once())->method('findAllNonSystemResourceKinds')->willReturn($resourceKindList);
-        $returnedList = $this->handler->handle(new ResourceKindListQuery(false));
+        $this->resourceKindRepository
+            ->expects($this->once())->method('findAllByResourceClass')->with('books')->willReturn($resourceKindList);
+        $this->resourceKindRepository->expects($this->never())->method('findAllSystemResourceKinds');
+        $returnedList = $this->handler->handle(new ResourceKindListQuery('books', false));
         $this->assertSame($resourceKindList, $returnedList);
     }
 }

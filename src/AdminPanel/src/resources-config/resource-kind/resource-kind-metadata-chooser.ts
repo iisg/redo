@@ -10,6 +10,7 @@ export class ResourceKindMetadataChooser implements ComponentAttached {
   @bindable resourceKind: ResourceKind;
   @bindable(twoWay) value: Metadata;
   @bindable(twoWay) hasMetadataToChoose: boolean;
+  @bindable resourceClass: string;
 
   metadataList: Metadata[];
 
@@ -17,6 +18,6 @@ export class ResourceKindMetadataChooser implements ComponentAttached {
   }
 
   async attached() {
-    this.metadataList = await this.metadataRepository.getList();
+    this.metadataList = await this.metadataRepository.getListByClass(this.resourceClass);
   }
 }

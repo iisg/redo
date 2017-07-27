@@ -11,6 +11,7 @@ export class ResourceForm {
   @bindable submit: (value: {savedResource: Resource}) => Promise<any>;
   @bindable edit: Resource;
   @bindable parent: Resource;
+  @bindable resourceClass: string;
 
   resource: Resource = new Resource;
   submitting = false;

@@ -17,7 +17,7 @@ class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
         $this->handler = new MetadataUpdateCommandHandler($this->metadataRepository);
-        $this->metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
+        $this->metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], 'books', ['PL' => 'AA'], ['PL' => 'AA']);
         $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')->willReturn($this->metadata);
         $this->metadataRepository->expects($this->atLeastOnce())->method('save')->with($this->metadata)->willReturnArgument(0);
     }
@@ -31,6 +31,14 @@ class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $updated = $this->handler->handle($command);
         $this->assertEquals(['PL' => 'new label'], $updated->getLabel());
         $this->assertEquals([$dummy], $updated->getConstraints());
+    }
+
+    public function testUpdatingWithChangedResourceClassDoesNotCauseChange() {
+        $command = MetadataUpdateCommand::fromArray(1, [
+            'resourceClass' => 'invalidResourceClass'
+        ]);
+        $updated = $this->handler->handle($command);
+        $this->assertEquals('books', $updated->getResourceClass());
     }
 
     public function testUpdatingWithNoValuesDoesNotCauseEntityInvalidState() {

@@ -3,14 +3,35 @@ namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
+use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
-class ResourceWorkflowUpdateCommandValidator extends ResourceWorkflowCreateCommandValidator {
-    public function __construct(EntityExistsRule $entityExistsRule, NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule) {
-        parent::__construct($entityExistsRule, $notBlankInAllLanguagesRule);
+/** @SuppressWarnings("PHPMD.LongVariable") */
+class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator {
+    /** @var EntityExistsRule */
+    private $entityExistsRule;
+    /** @var NotBlankInAllLanguagesRule */
+    private $notBlankInAllLanguagesRule;
+    /** @var WorkflowTransitionsDefinitionIsValidRule */
+    protected $workflowTransitionsDefinitionIsValidRule;
+    /** @var WorkflowPlacesDefinitionIsValidRule */
+    protected $workflowPlacesDefinitionIsValidRule;
+
+    public function __construct(
+        EntityExistsRule $entityExistsRule,
+        NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
+        WorkflowTransitionsDefinitionIsValidRule $workflowTransitionsDefinitionIsValidRule,
+        WorkflowPlacesDefinitionIsValidRule $workflowPlacesDefinitionIsValidRule
+    ) {
+        $this->entityExistsRule = $entityExistsRule;
+        $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
+        $this->workflowTransitionsDefinitionIsValidRule = $workflowTransitionsDefinitionIsValidRule;
+        $this->workflowPlacesDefinitionIsValidRule = $workflowPlacesDefinitionIsValidRule;
     }
 
     /** @inheritdoc */
@@ -22,8 +43,10 @@ class ResourceWorkflowUpdateCommandValidator extends ResourceWorkflowCreateComma
                     ->callback(function (ResourceWorkflow $workflow) {
                         return $workflow->getId() > 0;
                     })
-            ),
-            parent::getValidator($command)
+            )
+                ->attribute('name', $this->notBlankInAllLanguagesRule)
+                ->attribute('places', $this->workflowPlacesDefinitionIsValidRule)
+                ->attribute('transitions', $this->workflowTransitionsDefinitionIsValidRule)
         );
     }
 }

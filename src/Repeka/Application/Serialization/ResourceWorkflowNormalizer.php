@@ -26,6 +26,7 @@ class ResourceWorkflowNormalizer extends AbstractNormalizer implements Normalize
             }, $resourceWorkflow->getTransitions()),
             'diagram' => $resourceWorkflow->getDiagram(),
             'thumbnail' => $resourceWorkflow->getThumbnail(),
+            'resourceClass' => $resourceWorkflow->getResourceClass(),
         ];
     }
 

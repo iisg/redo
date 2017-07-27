@@ -9,6 +9,9 @@ interface ResourceRepository {
     /** @return ResourceEntity[] */
     public function findAll();
 
+    /** @return ResourceEntity[] */
+    public function findAllByResourceClass(string $resourceClass): array;
+
     public function findOne(int $id): ResourceEntity;
 
     /** @return ResourceEntity[] */
@@ -20,7 +23,7 @@ interface ResourceRepository {
     public function save(ResourceEntity $resource): ResourceEntity;
 
     /** @return ResourceEntity[] */
-    public function findAllNonSystemResources(): array;
+    public function findAllNonSystemResources(string $resourceClass): array;
 
     public function exists(int $resourceId): bool;
 

@@ -1,5 +1,5 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable, ComponentAttached} from "aurelia-templating";
+import {bindable} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
 import {deepCopy} from "common/utils/object-utils";
@@ -7,29 +7,46 @@ import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation
 import {removeValue} from "common/utils/array-utils";
 
 @autoinject
-export class MetadataList implements ComponentAttached {
+export class MetadataList {
   metadataList: Metadata[];
   @bindable parentMetadata: Metadata;
+  @bindable resourceClass: string;
   addFormOpened: boolean = false;
+  progressBar: boolean;
 
   constructor(private metadataRepository: MetadataRepository, private deleteEntityConfirmation: DeleteEntityConfirmation) {
   }
 
+  activate(params: any) {
+    this.resourceClass = params.resourceClass;
+    if (this.metadataList) {
+      this.metadataList = [];
+    }
+    this.fetchMetadata();
+  }
+
   attached() {
-    if (!this.parentMetadata) {
-      this.fetchMetadata();
+    if (this.parentMetadata) {
+      this.fetchMetadataByParent();
     }
   }
 
   parentMetadataChanged(value, oldValue) {
-    this.fetchMetadata();
+    this.fetchMetadataByParent();
   }
 
   private async fetchMetadata() {
+    this.progressBar = true;
     this.metadataList = undefined;
-    this.metadataList = this.parentMetadata
-      ? await this.metadataRepository.getByParent(this.parentMetadata)
-      : await this.metadataRepository.getList();
+    this.metadataList = await this.metadataRepository.getListByClass(this.resourceClass);
+    this.progressBar = false;
+  }
+
+  private async fetchMetadataByParent() {
+    this.progressBar = true;
+    this.metadataList = undefined;
+    this.metadataList = await this.metadataRepository.getByParent(this.parentMetadata);
+    this.progressBar = false;
   }
 
   isDragHandle(data: { evt: MouseEvent }) {
@@ -37,10 +54,11 @@ export class MetadataList implements ComponentAttached {
   }
 
   onOrderChanged() {
-    this.metadataRepository.updateOrder(this.metadataList);
+    this.metadataRepository.updateOrder(this.metadataList, this.resourceClass);
   }
 
   addNewMetadata(newMetadata: Metadata): Promise<any> {
+    newMetadata.resourceClass = this.resourceClass;
     return this.metadataRepository.post(newMetadata)
       .then(metadata => this.metadataAdded(metadata));
   }

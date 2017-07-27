@@ -9,6 +9,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
+use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Tests\Traits\StubsTrait;
@@ -22,33 +23,43 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private $validator;
     /** @var ConstraintArgumentsAreValidRule|\PHPUnit_Framework_MockObject_MockObject */
     private $constraintArgumentsAreValid;
+    /** @var ResourceClassExistsRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $containsResourceClass;
 
     protected function setUp() {
         $this->languageRepositoryStub = $this->createMock(LanguageRepository::class);
         $this->languageRepositoryStub->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
         $this->constraintArgumentsAreValid = $this->createMock(ConstraintArgumentsAreValidRule::class);
+        $this->containsResourceClass = $this->createMock(ResourceClassExistsRule::class);
         $this->validator = new MetadataCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea']),
             new ConstraintSetMatchesControlRule($this->createMock(MetadataRepository::class)),
-            $this->constraintArgumentsAreValid
+            $this->constraintArgumentsAreValid,
+            $this->containsResourceClass
         );
     }
 
     public function testPassingValidation() {
-        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'text');
+        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'text', 'books');
         $this->validator->validate($command);
     }
 
     public function testFailsValidationBecauseOfInvalidControl() {
         $this->expectException(InvalidCommandException::class);
-        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'blabla');
+        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'blabla', 'books');
+        $this->validator->validate($command);
+    }
+
+    public function testFailsValidationBecauseOfInvalidResourceClass() {
+        $this->expectException(InvalidCommandException::class);
+        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'blabla', 'invalidResourceClass');
         $this->validator->validate($command);
     }
 
     public function testTellsThatControlIsInvalid() {
-        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'blabla');
+        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'blabla', 'books');
         try {
             $this->validator->validate($command);
         } catch (InvalidCommandException $e) {
@@ -58,13 +69,13 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailsValidationBecauseOfNoLabelInMainLanguage() {
         $this->expectException(InvalidCommandException::class);
-        $command = new MetadataCreateCommand('nazwa', ['EN' => 'Test'], [], [], 'text');
+        $command = new MetadataCreateCommand('nazwa', ['EN' => 'Test'], [], [], 'text', 'books');
         $this->validator->validate($command);
     }
 
     public function testFailsValidationBecauseThereIsNoName() {
         $this->expectException(InvalidCommandException::class);
-        $command = new MetadataCreateCommand('', ['PL' => 'Test'], [], [], 'text');
+        $command = new MetadataCreateCommand('', ['PL' => 'Test'], [], [], 'text', 'books');
         $this->validator->validate($command);
     }
 
@@ -76,9 +87,10 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea']),
             new ConstraintSetMatchesControlRule($this->createMock(MetadataRepository::class)),
-            $this->constraintArgumentsAreValid
+            $this->constraintArgumentsAreValid,
+            $this->containsResourceClass
         );
-        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', ['resourceKind' => [1]]);
+        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', ['resourceKind' => [1]]);
         $validator->validate($command);
     }
 
@@ -89,14 +101,15 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea', 'relationship']),
             new ConstraintSetMatchesControlRule($this->createMock(MetadataRepository::class)),
-            $this->constraintArgumentsAreValid
+            $this->constraintArgumentsAreValid,
+            $this->containsResourceClass
         );
-        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', ['resourceKind' => [1]]);
+        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', ['resourceKind' => [1]]);
         $validator->validate($command);
     }
 
     public function testTellsThatLabelIsInvalid() {
-        $command = new MetadataCreateCommand('nazwa', [], [], [], 'text');
+        $command = new MetadataCreateCommand('nazwa', [], [], [], 'text', 'books');
         try {
             $this->validator->validate($command);
         } catch (InvalidCommandException $e) {

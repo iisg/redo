@@ -1,0 +1,14 @@
+{
+  "books": {
+    "label": "Books",
+    "settings": "Book settings"
+  },
+  "dictionaries": {
+    "label": "Dictionaries",
+    "settings": "Dictionaries settings"
+  },
+  "users": {
+    "label": "Users",
+    "settings": "Users settings"
+  }
+}

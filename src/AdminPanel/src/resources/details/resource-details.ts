@@ -15,7 +15,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
   editing: boolean = false;
   hasChildren: boolean;
-
+  resourceClass: string;
   private urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
@@ -37,6 +37,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   activate(params: any, routeConfig: RouteConfig): void {
+   this.resourceClass = params.resourceClass;
     this.resourceRepository.get(params.id).then(resource => {
       this.resource = resource;
       const title = this.resourceLabel.toView(resource);

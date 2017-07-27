@@ -8,6 +8,7 @@ import {twoWay} from "common/components/binding-mode";
 export class WorkflowChooser implements ComponentAttached {
   @bindable(twoWay)
   value: Workflow;
+  @bindable resourceClass: string;
 
   workflows: Workflow[];
 
@@ -15,7 +16,7 @@ export class WorkflowChooser implements ComponentAttached {
   }
 
   attached() {
-    this.workflowRepository.getList().then((workflows) => {
+    this.workflowRepository.getListByClass(this.resourceClass).then((workflows) => {
       this.workflows = workflows;
     });
   }

@@ -22,19 +22,19 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
-        $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], [], 'text');
-        $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], [], 'text');
+        $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], [], 'text', 'books');
+        $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], [], 'text', 'books');
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Test'], [
-            $this->resourceKindMetadata($baseMetadata1, ['TEST' => 'Metadata kind 1']),
-            $this->resourceKindMetadata($baseMetadata2, ['TEST' => 'Metadata kind 2'])
-        ]);
+            $this->resourceKindMetadata($baseMetadata1, ['TEST' => 'Metadata kind 1'], 'books'),
+            $this->resourceKindMetadata($baseMetadata2, ['TEST' => 'Metadata kind 2'], 'books')
+        ], 'books');
         $this->metadata1 = $this->resourceKind->getMetadataList()[0];
         $this->metadata2 = $this->resourceKind->getMetadataList()[1];
     }
 
     public function testFetchingResourceKinds() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
         $this->assertStatusCode(200, $client->getResponse());
         $responseContent = json_decode($client->getResponse()->getContent());
         $this->assertCount(1, $responseContent);
@@ -51,7 +51,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingResourceKind() {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $baseMetadata = Metadata::create('int', 'New base', ['TEST' => 'New base metadata']);
+        $baseMetadata = Metadata::create('int', 'New base', ['TEST' => 'New base metadata'], 'books');
         $em->persist($baseMetadata);
         $em->flush();
         $client = self::createAdminClient();
@@ -64,7 +64,9 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'label' => ['TEST' => 'created'],
                 'placeholder' => [],
                 'shownInBrief' => false,
-            ]]
+                'resourceClass' => 'books'
+            ]],
+            'resourceClass' => 'books'
         ]);
         $this->assertStatusCode(201, $client->getResponse());
         $resourceKindRepository = self::createClient()->getContainer()->get(ResourceKindRepository::class);
@@ -93,6 +95,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'name' => $this->metadata2->getName(),
                 'placeholder' => $this->metadata2->getPlaceholder(),
                 'shownInBrief' => false,
+                'resourceClass' => 'books'
             ], [
                 'baseId' => $this->metadata1->getBaseId(),
                 'control' => $this->metadata1->getControl(),
@@ -102,7 +105,9 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'name' => $this->metadata1->getName(),
                 'placeholder' => ['TEST' => 'modified'],
                 'shownInBrief' => false,
-            ]]
+                'resourceClass' => 'books'
+            ]],
+            'resourceClass' => 'books'
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $client = self::createClient();
@@ -137,7 +142,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->handleCommand(new ResourceCreateCommand($this->resourceKind, [
             $this->metadata1->getBaseId() => ['test1'],
             $this->metadata2->getBaseId() => ['test2'],
-        ]));
+        ], 'books'));
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::oneEntityEndpoint($this->resourceKind->getId()));
         $this->assertStatusCode(400, $client->getResponse());
@@ -149,5 +154,11 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->assertTrue($resourceKindRepository->exists($this->resourceKind->getId()));
         $this->assertTrue($metadataRepository->exists($this->metadata1->getId()));
         $this->assertTrue($metadataRepository->exists($this->metadata2->getId()));
+    }
+
+    public function testFetchingMetadataFailsWhenInvalidResourceClass() {
+        $client = self::createAdminClient();
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'resourceClass']);
+        $this->assertStatusCode(400, $client->getResponse());
     }
 }

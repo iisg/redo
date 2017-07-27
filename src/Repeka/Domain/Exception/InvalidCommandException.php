@@ -9,8 +9,8 @@ class InvalidCommandException extends DomainException {
     /** @var array */
     private $violations;
 
-    public function __construct(Command $command, array $violations, string $message, \Exception $previous = null) {
-        parent::__construct('invalidCommand', 400, [
+    public function __construct(Command $command, array $violations, string $message, \Exception $previous = null, int $status = 400) {
+        parent::__construct('invalidCommand', $status, [
             'command' => $command->getCommandName(),
             'violations' => $violations,
         ], $previous, $message);

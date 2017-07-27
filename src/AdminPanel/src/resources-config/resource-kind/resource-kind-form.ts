@@ -14,6 +14,7 @@ import {removeValue} from "common/utils/array-utils";
 export class ResourceKindForm implements ComponentDetached {
   @bindable submit: (value: {savedResourceKind: ResourceKind}) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
+  @bindable resourceClass: string;
   @bindable edit: ResourceKind;
 
   resourceKind: ResourceKind = new ResourceKind;

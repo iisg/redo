@@ -37,7 +37,8 @@ class ResourcesController extends ApiController {
      */
     public function getListAction(Request $request) {
         $includeSystemResources = !!$request->query->get('systemResourceKind');
-        $resources = $this->handleCommand(new ResourceListQuery($includeSystemResources));
+        $resourceClass = $request->query->get('resourceClass', '');
+        $resources = $this->handleCommand(new ResourceListQuery($resourceClass, $includeSystemResources));
         return $this->createJsonResponse($resources);
     }
 
@@ -70,7 +71,8 @@ class ResourcesController extends ApiController {
             throw new BadRequestHttpException('kind_id missing');
         }
         $resourceKind = $this->resourceKindRepository->findOne($data['kind_id']);
-        $command = new ResourceCreateCommand($resourceKind, $resourceContents);
+        $resourceClass = $data['resourceClass'] ?? '';
+        $command = new ResourceCreateCommand($resourceKind, $resourceContents, $resourceClass);
         $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource, 201);
     }

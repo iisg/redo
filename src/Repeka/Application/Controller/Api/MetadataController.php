@@ -8,7 +8,8 @@ use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataDeleteCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
-use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListByParentIdQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -17,8 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/metadata")
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @Route("/metadata")
  */
 class MetadataController extends ApiController {
     /** @var MetadataRepository */
@@ -32,8 +33,9 @@ class MetadataController extends ApiController {
      * @Route
      * @Method("GET")
      */
-    public function getListAction() {
-        $metadataList = $this->handleCommand(new MetadataListQuery());
+    public function getListAction(Request $request) {
+        $resourceClass = $request->query->get('resourceClass', '');
+        $metadataList = $this->handleCommand(new MetadataListByResourceClassQuery($resourceClass));
         return $this->createJsonResponse($metadataList);
     }
 
@@ -51,7 +53,7 @@ class MetadataController extends ApiController {
      * @Method("GET")
      */
     public function getAllChildrenListAction(int $parentId) {
-        $metadataChildrenList = $this->handleCommand(new MetadataListQuery($parentId));
+        $metadataChildrenList = $this->handleCommand(new MetadataListByParentIdQuery($parentId));
         return $this->createJsonResponse($metadataChildrenList);
     }
 
@@ -98,7 +100,8 @@ class MetadataController extends ApiController {
      */
     public function updateOrderAction(Request $request) {
         $ids = $request->request->all();
-        $command = new MetadataUpdateOrderCommand($ids);
+        $resourceClass = $request->get('resourceClass', '');
+        $command = new MetadataUpdateOrderCommand($ids, $resourceClass);
         $this->handleCommand($command);
         return $this->createJsonResponse(true);
     }

@@ -16,8 +16,9 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     private $newChildMetadata;
 
     protected function setUp() {
-        $this->textareaMetadataCreateCmd = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea', [], false);
-        $this->relationshipMetadataCreateCmd = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship', [], false);
+        $this->textareaMetadataCreateCmd = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea', 'books', [], false);
+        $this->relationshipMetadataCreateCmd =
+            new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship', 'books', [], false);
         $this->factory = new MetadataFactory();
         $this->newChildMetadata = [
             'name' => 'nazwa',
@@ -27,6 +28,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
             'control' => 'textarea',
             'constraints' => [],
             'shownInBrief' => false,
+            'resourceClass' => 'books',
         ];
     }
 
@@ -37,6 +39,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($metadata->getPlaceholder());
         $this->assertEmpty($metadata->getDescription());
         $this->assertEquals('textarea', $metadata->getControl());
+        $this->assertEquals('books', $metadata->getResourceClass());
     }
 
     public function testCreatingChildMetadataWithParent() {
@@ -69,7 +72,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $metadata = $this->factory->create($this->textareaMetadataCreateCmd);
         $base = $this->factory->create($this->textareaMetadataCreateCmd);
         $base->update([], ['PL' => 'base'], [], [], false);
-        $resourceKind = new ResourceKind(['PL' => 'rodzaj']);
+        $resourceKind = new ResourceKind(['PL' => 'rodzaj'], 'books');
         $created = $this->factory->createForResourceKind($resourceKind, $base, $metadata);
         $this->assertSame($resourceKind, $created->getResourceKind());
         $this->assertEquals('base', $created->getPlaceholder()['PL']);

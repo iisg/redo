@@ -8,6 +8,7 @@ export class ResourceKindMetadataForm {
   @bindable metadata: Metadata;
   @bindable baseMetadata: Metadata;
   @bindable editing: boolean = false;
+  @bindable resourceClass: string;
 
   private controller: ValidationController;
 

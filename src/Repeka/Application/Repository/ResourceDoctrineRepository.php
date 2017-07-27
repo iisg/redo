@@ -13,6 +13,7 @@ use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class ResourceDoctrineRepository extends EntityRepository implements ResourceRepository {
     public function __construct(EntityManagerInterface $em, ClassMetadata $class) {
         parent::__construct($em, $class);
@@ -30,6 +31,15 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             throw new EntityNotFoundException($this, $id);
         }
         return $resource;
+    }
+
+    /** @return ResourceEntity[] */
+    public function findAllByResourceClass(string $resourceClass): array {
+        $qb = $this->createQueryBuilder('r');
+        return $qb->where('r.resourceClass = :resourceClass')
+            ->setParameter('resourceClass', $resourceClass)
+            ->getQuery()
+            ->getResult();
     }
 
     /** @return ResourceEntity[] */
@@ -54,10 +64,12 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
     }
 
     /** @return ResourceEntity[] */
-    public function findAllNonSystemResources(): array {
+    public function findAllNonSystemResources(string $resourceClass): array {
         $qb = $this->createQueryBuilder('r');
         return $qb->join('r.kind', 'rk')
             ->where($qb->expr()->notIn('rk.id', SystemResourceKind::values()))
+            ->andWhere("r.resourceClass = :resourceClass")
+            ->setParameter('resourceClass', $resourceClass)
             ->getQuery()
             ->getResult();
     }

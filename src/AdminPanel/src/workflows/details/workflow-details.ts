@@ -16,6 +16,7 @@ export class WorkflowDetails implements RoutableComponentActivate {
   workflow: Workflow;
   originalWorkflow: Workflow;
   editing: boolean = false;
+  resourceClass: string;
 
   private urlListener: Subscription;
   private navModel: NavModel;
@@ -48,6 +49,7 @@ export class WorkflowDetails implements RoutableComponentActivate {
   }
 
   activate(params: any, routeConfig: RouteConfig): void {
+    this.resourceClass = params.resourceClass;
     this.workflowRepository.get(params.id).then(workflow => {
       this.workflow = workflow;
       if (this.editing) {

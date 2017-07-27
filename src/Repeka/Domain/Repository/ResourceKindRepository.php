@@ -10,7 +10,10 @@ interface ResourceKindRepository {
     public function findAll();
 
     /** @return ResourceKind[] */
-    public function findAllNonSystemResourceKinds(): array;
+    public function findAllByResourceClass(string $resourceClass);
+
+    /** @return ResourceKind[] */
+    public function findAllSystemResourceKinds(): array;
 
     /**
      * @throws EntityNotFoundException if the entity could not be found

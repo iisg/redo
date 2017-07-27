@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Tests;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
@@ -23,7 +22,10 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 
-/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
 abstract class IntegrationTestCase extends FunctionalTestCase {
     /** @var ResettableContainerInterface */
     protected $container;
@@ -149,31 +151,42 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         array $description,
         array $placeholder,
         string $control,
+        string $resourceClass,
         array $constraints = []
     ): Metadata {
-        return $this->handleCommand(new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $constraints));
+        return $this->handleCommand(
+            new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $resourceClass, $constraints)
+        );
     }
 
-    protected function createResourceKind(array $label, array $metadataList): ResourceKind {
-        return $this->handleCommand(new ResourceKindCreateCommand($label, $metadataList));
+    protected function createResourceKind(array $label, array $metadataList, string $resourceClass): ResourceKind {
+        return $this->handleCommand(new ResourceKindCreateCommand($label, $metadataList, $resourceClass));
     }
 
     /** Creates arrays for use in createResourceKind()'s $metadataList */
-    protected function resourceKindMetadata(Metadata $baseMetadata, array $label, array $description = [], array $placeholder = []): array {
+    protected function resourceKindMetadata(
+        Metadata $baseMetadata,
+        array $label,
+        string $resourceClass,
+        array $description = [],
+        array $placeholder = []
+    ): array {
         return [
             'baseId' => $baseMetadata->getId(),
             'label' => $label,
             'description' => $description,
             'placeholder' => $placeholder,
             'shownInBrief' => false,
+            'resourceClass' => $resourceClass,
         ];
     }
 
-    protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {
-        return $this->handleCommand(new ResourceCreateCommand($resourceKind, $contents));
+    protected function createResource(ResourceKind $resourceKind, array $contents, string $resourceClass): ResourceEntity {
+        return $this->handleCommand(new ResourceCreateCommand($resourceKind, $contents, $resourceClass));
     }
 
-    protected function createWorkflow(array $name) {
-        return $this->handleCommand(new ResourceWorkflowCreateCommand($name, [new ResourceWorkflowPlace([])], [], null, null));
+    protected function createWorkflow(array $name, string $resourceClass) {
+        return $this
+            ->handleCommand(new ResourceWorkflowCreateCommand($name, [new ResourceWorkflowPlace([])], [], $resourceClass, null, null));
     }
 }

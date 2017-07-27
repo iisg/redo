@@ -11,6 +11,7 @@ export class ResourceMetadataValuesForm {
   @bindable(twoWay) resource: Resource;
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable @booleanAttribute required: boolean = false;
+  @bindable resourceClass: string;
 
   valueTable: Element;
 

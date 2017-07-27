@@ -5,11 +5,13 @@
     <form submit.delegate="validateAndSubmit()">
         <div class="form-group"
             if.bind="!editing">
-            <resource-kind-chooser value.bind="resource.kind"></resource-kind-chooser>
+            <resource-kind-chooser resource-class.bind="resourceClass"
+                value.bind="resource.kind"></resource-kind-chooser>
         </div>
         <resource-form-generated resource-kind.bind="resource.kind"
             resource.bind="resource"
-            disable-parent.bind="parent != undefined"></resource-form-generated>
+            disable-parent.bind="parent != undefined"
+            resource-class.bind="resourceClass"></resource-form-generated>
         <div class="has-error"
             if.bind="errorToDisplay">
             <div class="help-block">

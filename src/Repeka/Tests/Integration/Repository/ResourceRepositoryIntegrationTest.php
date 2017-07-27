@@ -9,7 +9,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Tests\IntegrationTestCase;
@@ -34,11 +34,16 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindAllNonSystemResources() {
-        $resources = $this->resourceRepository->findAllNonSystemResources();
+        $resources = $this->resourceRepository->findAllNonSystemResources('books');
         $this->assertCount(6, $resources); // fixtures only
         foreach ($resources as $resource) {
             $this->assertNotEquals(SystemResourceKind::USER, $resource->getKind()->getId());
         }
+    }
+
+    public function testFindAllNonSystemResourcesByAnotherResourceClass() {
+        $resources = $this->resourceRepository->findAllNonSystemResources('dictionaries');
+        $this->assertCount(0, $resources); // fixtures only
     }
 
     public function testFindTopLevel() {
@@ -73,7 +78,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $user = $this->getBudynekUser();
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(0, $resultsBeforeAssigning);
-        $book = $this->getPhpBookResource();
+        $book = $this->getPhpBookResource('books');
         $scannerMetadata = $this->getScannerBaseMetadata();
         $bookContents = $book->getContents();
         $bookContents[$scannerMetadata->getId()] = [$user->getUserData()->getId()];
@@ -95,7 +100,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     private function getBookResourceKind(): ResourceKind {
-        $resourceKinds = $this->handleCommand(new ResourceKindListQuery(false));
+        $resourceKinds = $this->handleCommand(new ResourceKindListQuery('books', false));
         foreach ($resourceKinds as $resourceKind) {
             /** @var ResourceKind $resourceKind */
             if ($resourceKind->getLabel()['EN'] == 'Book') {
@@ -116,8 +121,8 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         throw new \ErrorException("User not found");
     }
 
-    private function getPhpBookResource(): ResourceEntity {
-        foreach ($this->resourceRepository->findAllNonSystemResources() as $resource) {
+    private function getPhpBookResource(string $resourceClass): ResourceEntity {
+        foreach ($this->resourceRepository->findAllNonSystemResources($resourceClass) as $resource) {
             $allValuesOfContents = call_user_func_array('array_merge', $resource->getContents());
             if (in_array('PHP - to można leczyć!', $allValuesOfContents)) {
                 return $resource;
@@ -128,7 +133,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     private function getScannerBaseMetadata(): Metadata {
         /** @var Metadata[] $metadataList */
-        $metadataList = $this->handleCommand(new MetadataListQuery());
+        $metadataList = $this->handleCommand(new MetadataListByResourceClassQuery('books'));
         foreach ($metadataList as $metadata) {
             if ($metadata->getName() == 'Skanista') {
                 return $metadata;

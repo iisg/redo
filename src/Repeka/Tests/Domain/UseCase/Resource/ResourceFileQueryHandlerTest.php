@@ -17,6 +17,9 @@ class ResourceFileQueryHandlerTest extends \PHPUnit_Framework_TestCase {
     private $handler;
     /** @var \PHPUnit_Framework_MockObject_MockObject|ResourceKind */
     private $resourceKind;
+    /** @var \PHPUnit_Framework_MockObject_MockObject|ResourceEntity */
+    private $resource;
+    private $resourceClass;
 
     protected function setUp() {
         $fileHelper = $this->createMock(ResourceFileHelper::class);
@@ -31,23 +34,23 @@ class ResourceFileQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         ]);
         $this->resourceKind->method('getMetadataByControl')
             ->willReturn([$this->createMetadataMock(11, 1), $this->createMetadataMock(12, 2)]);
+        $this->resourceClass = 'books';
+        $this->resource = $this->createResourceMock(1, $this->resourceKind, [1 => ['relative/path/test.txt']]);
     }
 
     public function testGettingFile() {
-        $resource = new ResourceEntity($this->resourceKind, [1 => ['relative/path/test.txt']]);
-        $filePath = $this->handler->handle(new ResourceFileQuery($resource, 'test.txt'));
+        $filePath = $this->handler->handle(new ResourceFileQuery($this->resource, 'test.txt'));
         $this->assertEquals('absolute/relative/path/test.txt', $filePath);
     }
 
     public function testGettingNonExistingFile() {
         $this->expectException(NotFoundException::class);
-        $resource = new ResourceEntity($this->resourceKind, [1 => ['relative/path/test.txt']]);
-        $this->handler->handle(new ResourceFileQuery($resource, 'test2.txt'));
+        $this->handler->handle(new ResourceFileQuery($this->resource, 'test2.txt'));
     }
 
     public function testGettingFileFromNotFileMetadata() {
         $this->expectException(NotFoundException::class);
-        $resource = new ResourceEntity($this->resourceKind, [3 => ['relative/path/test.txt']]);
+        $resource = new ResourceEntity($this->resourceKind, [3 => ['relative/path/test.txt']], $this->resourceClass);
         $this->handler->handle(new ResourceFileQuery($resource, 'test.txt'));
     }
 }

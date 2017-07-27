@@ -17,7 +17,7 @@ class MetadataCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     private $handler;
 
     protected function setUp() {
-        $this->metadataCreateCommand = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea');
+        $this->metadataCreateCommand = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea', 'books');
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
         $this->handler = new MetadataCreateCommandHandler(new MetadataFactory(), $this->metadataRepository);
     }
@@ -27,6 +27,7 @@ class MetadataCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $metadata = $this->handler->handle($this->metadataCreateCommand);
         $this->assertEquals('nazwa', $metadata->getName());
         $this->assertEquals('Labelka', $metadata->getLabel()['PL']);
+        $this->assertEquals('books', $metadata->getResourceClass());
         $this->assertEmpty($metadata->getPlaceholder());
         $this->assertEmpty($metadata->getDescription());
         $this->assertEquals('textarea', $metadata->getControl());

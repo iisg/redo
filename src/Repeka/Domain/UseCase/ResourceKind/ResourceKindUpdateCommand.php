@@ -1,12 +1,25 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-class ResourceKindUpdateCommand extends ResourceKindCreateCommand {
+use Repeka\Domain\Cqrs\Command;
+
+class ResourceKindUpdateCommand extends Command {
+    private $label;
+    private $metadataList;
     private $resourceKindId;
 
     public function __construct(int $resourceKindId, array $label, array $metadataList) {
-        parent::__construct($label, $metadataList);
         $this->resourceKindId = $resourceKindId;
+        $this->label = $label;
+        $this->metadataList = $metadataList;
+    }
+
+    public function getLabel(): array {
+        return $this->label;
+    }
+
+    public function getMetadataList(): array {
+        return $this->metadataList;
     }
 
     public function getResourceKindId(): int {

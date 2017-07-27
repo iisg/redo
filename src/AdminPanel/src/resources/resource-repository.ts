@@ -1,13 +1,13 @@
 import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
-import {ApiRepository} from "common/repository/api-repository";
 import {Resource} from "./resource";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {ResourceKind} from "../resources-config/resource-kind/resource-kind";
 import {workflowPlaceToEntity} from "workflows/workflow-place-converters";
+import {ResourceClassApiRepository} from "../common/repository/resource-class-api-repository";
 
 @autoinject
-export class ResourceRepository extends ApiRepository<Resource> {
+export class ResourceRepository extends ResourceClassApiRepository<Resource> {
   constructor(httpClient: HttpClient, private resourceKindRepository: ResourceKindRepository) {
     super(httpClient, 'resources');
   }
@@ -16,13 +16,20 @@ export class ResourceRepository extends ApiRepository<Resource> {
     return this.prepareFormData(resource);
   }
 
-  public getListWithSystemResourceKinds(): Promise<Resource[]> {
+  public getListByClass(resourceClass: string): Promise<Resource[]> {
+    return super.getListByClass(resourceClass);
+  }
+
+  public getListWithSystemResourceKinds(resourceClass: string): Promise<Resource[]> {
     return this.httpClient
       .createRequest(this.endpoint)
       .asGet()
-      .withParams({systemResourceKind: true})
+      .withParams({
+        systemResourceKind: true,
+        resourceClass
+      })
       .send()
-      .then(response => this.responseToEntities(response));
+      .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
   }
 
   public getByParent(parent: Resource): Promise<Resource[]> {
@@ -32,7 +39,7 @@ export class ResourceRepository extends ApiRepository<Resource> {
   }
 
   public toEntity(data: Object): Promise<Resource> {
-    return this.resourceKindRepository.get(data['kindId']).then(resourceKind => {
+    return this.resourceKindRepository.getResourceKind(data['kindId'], data['resourceClass']).then(resourceKind => {
       delete data['kindId'];
       let resource: Resource = $.extend(new Resource(), data);
       resource.kind = resourceKind;
@@ -74,6 +81,7 @@ export class ResourceRepository extends ApiRepository<Resource> {
     }
     formData.append('id', resource.id);
     formData.append('kind_id', resource.kind.id);
+    formData.append('resourceClass', resource.resourceClass);
     formData.append('contents', JSON.stringify(resourceCopy.contents));
     return formData;
   }

@@ -11,6 +11,7 @@ export class ResourcePicker implements ComponentAttached {
   @bindable(twoWay) resourceId: number;
   @bindable resourceKindFilter: ResourceKind[] = [];
   @bindable disabled: boolean = false;
+  @bindable resourceClass: string;
 
   @observable value: Resource;
 
@@ -23,7 +24,7 @@ export class ResourcePicker implements ComponentAttached {
   }
 
   attached() {
-    this.resourceRepository.getListWithSystemResourceKinds().then((resources) => {
+    this.resourceRepository.getListWithSystemResourceKinds(this.resourceClass).then((resources) => {
       this.allResources = resources;
       this.updateFilteredResources();
       this.resourceIdChanged(this.resourceId);

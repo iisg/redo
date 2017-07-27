@@ -21,20 +21,23 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     /** @var ResourceCreateCommandHandler */
     private $handler;
+    private $resourceClass;
 
     protected function setUp() {
         $this->resourceRepository = $this->createRepositoryStub(ResourceRepository::class);
         $this->fileHelper = $this->createMock(ResourceFileHelper::class);
         $this->handler = new ResourceCreateCommandHandler($this->resourceRepository, $this->fileHelper);
+        $this->resourceClass = 'books';
     }
 
     public function testCreatingResourceWithoutWorkflow() {
-        $resourceKind = new ResourceKind([]);
-        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']]);
+        $resourceKind = new ResourceKind([], 'books');
+        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']], $this->resourceClass);
         $resource = $this->handler->handle($command);
         $this->assertNotNull($resource);
         $this->assertSame($command->getKind(), $resource->getKind());
         $this->assertSame([1 => ['AA']], $resource->getContents());
+        $this->assertSame('books', $resource->getResourceClass());
     }
 
     public function testMissingMetadataRequiredByWorkflowBlockCreation() {
@@ -43,8 +46,8 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $initialPlace->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(false);
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getInitialPlace')->willReturn($initialPlace);
-        $resourceKind = new ResourceKind([], $workflow);
-        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']]);
+        $resourceKind = new ResourceKind([], 'books', $workflow);
+        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']], $this->resourceClass);
         $this->handler->handle($command);
     }
 
@@ -53,11 +56,12 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $initialPlace->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(true);
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getInitialPlace')->willReturn($initialPlace);
-        $resourceKind = new ResourceKind([], $workflow);
-        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']]);
+        $resourceKind = new ResourceKind([], 'books', $workflow);
+        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']], $this->resourceClass);
         $resource = $this->handler->handle($command);
         $this->assertNotNull($resource);
         $this->assertEquals($workflow, $resource->getWorkflow());
+        $this->assertEquals('books', $resource->getResourceClass());
     }
 
     public function testMovingFiles() {
@@ -66,7 +70,7 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
             $this->createMetadataMock(11, $fileBaseMetadataId, 'file'),
         ]);
         $contents = [$fileBaseMetadataId => []];
-        $command = new ResourceCreateCommand($resourceKind, $contents);
+        $command = new ResourceCreateCommand($resourceKind, $contents, $this->resourceClass);
         $this->fileHelper->expects($this->once())->method('moveFilesToDestinationPaths');
         $this->handler->handle($command);
     }

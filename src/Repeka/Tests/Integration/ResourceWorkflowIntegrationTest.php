@@ -15,7 +15,7 @@ class ResourceWorkflowIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
-        $this->workflow = $this->createWorkflow(['TEST' => 'Test workflow']);
+        $this->workflow = $this->createWorkflow(['TEST' => 'Test workflow'], 'books');
     }
 
     public function testRenamingWorkflow() {
@@ -26,6 +26,7 @@ class ResourceWorkflowIntegrationTest extends IntegrationTestCase {
             'places' => [
                 ['id' => "abc", 'label' => ['TEST' => 'place']],
             ],
+            'resourceClass' => 'books',
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         /** @var ResourceWorkflowRepository $repository */

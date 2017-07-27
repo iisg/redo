@@ -1,7 +1,7 @@
 <template>
     <require from="common/components/fab/fab-add"></require>
 
-    <a route-href="route: workflows/new"
+    <a route-href="route: workflows/new; params.bind: resourceClass"
         class="pull-right">
         <fab-add turn-into-cross.one-time="false"></fab-add>
     </a>
@@ -18,7 +18,7 @@
                 </tr>
                 </thead>
                 <tfoot>
-                <tr if.bind="!workflows">
+                <tr if.bind="progressBar">
                     <th colspan="6">
                         <loading-bar></loading-bar>
                     </th>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="alert alert-info"
-        if.bind="workflows.length === 0">
+        if.bind="workflows.length === 0 && !progressBar">
         <fa name="info-circle fw"></fa>
         ${'No workflows.' | t}
     </div>

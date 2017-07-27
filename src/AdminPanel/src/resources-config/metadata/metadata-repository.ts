@@ -1,19 +1,18 @@
 import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "./metadata";
-import {ApiRepository} from "common/repository/api-repository";
-import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
+import {clearCachedResponse} from "common/repository/cached-response";
 import {deepCopy} from "common/utils/object-utils";
+import {ResourceClassApiRepository} from "../../common/repository/resource-class-api-repository";
 
 @autoinject
-export class MetadataRepository extends ApiRepository<Metadata> {
+export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
   constructor(httpClient: HttpClient) {
     super(httpClient, 'metadata');
   }
 
-  @cachedResponse()
-  public getList(): Promise<Metadata[]> {
-    return super.getList();
+  public getListByClass(resourceClass: string): Promise<Metadata[]> {
+    return super.getListByClass(resourceClass);
   }
 
   public getByParent(parent: Metadata): Promise<Metadata[]> {
@@ -31,8 +30,15 @@ export class MetadataRepository extends ApiRepository<Metadata> {
       : postChild;
   }
 
-  public updateOrder(metadataList: Array<Metadata>): Promise<boolean> {
-    return this.httpClient.put(this.endpoint, metadataList.map(metadata => metadata.id))
+  public updateOrder(metadataList: Array<Metadata>, resourceClass: string): Promise<boolean> {
+    return this.httpClient
+      .createRequest(this.endpoint)
+      .asPut()
+      .withParams({
+        resourceClass
+      })
+      .withContent( metadataList.map(metadata => metadata.id))
+      .send()
       .then(response => {
         clearCachedResponse(this.getList);
         return response.content;
@@ -55,7 +61,10 @@ export class MetadataRepository extends ApiRepository<Metadata> {
   }
 
   public getBase(metadata: Metadata): Promise<Metadata> {
-    return this.getList().then(metadataList => {
+    if (metadata.id === -1) {
+      return new Promise(resolve => resolve(metadata));
+    }
+    return this.getListByClass(metadata.resourceClass).then(metadataList => {
       return metadataList.filter(base => metadata.baseId == base.id)[0];
     });
   }

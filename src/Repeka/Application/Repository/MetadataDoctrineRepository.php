@@ -32,6 +32,16 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $result->toArray();
     }
 
+    public function findAllBaseByResourceClass(string $resourceClass): array {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('baseMetadata'))
+            ->andWhere(Criteria::expr()->isNull('parentMetadata'))
+            ->andWhere(Criteria::expr()->eq('resourceClass', $resourceClass))
+            ->orderBy(['ordinalNumber' => 'ASC']);
+        $result = $this->matching($criteria);
+        return $result->toArray();
+    }
+
     public function findAllChildren(int $parentId): array {
         return $this->findBy(['parentMetadata' => $parentId]);
     }

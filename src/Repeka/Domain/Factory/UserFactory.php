@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Factory;
 
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceKindRepository;
@@ -29,7 +30,7 @@ abstract class UserFactory {
 
     public function createUser(string $username, ?string $plainPassword, array $userData = []): User {
         $resourceKind = $this->resourceKindRepository->findOne(SystemResourceKind::USER);
-        $resourceCreateCommand = new ResourceCreateCommand($resourceKind, $userData);
+        $resourceCreateCommand = new ResourceCreateCommand($resourceKind, $userData, SystemResourceClass::USER);
         /** @var ResourceEntity $userData */
         $userData = $this->resourceCreateCommandHandler->handle($resourceCreateCommand);
         $user = $this->createApplicationUser($username, $plainPassword, $userData);
