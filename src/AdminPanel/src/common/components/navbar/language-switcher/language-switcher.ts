@@ -3,7 +3,7 @@ import {I18N} from "aurelia-i18n";
 import {containerless} from "aurelia-templating";
 import {AureliaCookie} from "aurelia-cookie";
 import {LanguageRepository} from "resources-config/language-config/language-repository";
-import {I18nConfig} from "locales/i18n-config";
+import {I18nConfig} from "config/i18n";
 import {MomentLocaleLoader} from "./moment-locale-loader";
 import * as moment from "moment";
 

@@ -5,7 +5,6 @@ module.exports = {
         "[**/*.js]",
         "**/*.html!text",
         "**/*.css!text",
-        "locales/**/*.json!text"
       ],
       "excludes": [
         "[resources-config/**]",

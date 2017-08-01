@@ -22,20 +22,12 @@ class FrontendLocaleProvider {
             $this->logger->error("No frontend locale packages are available, falling back to '$fallbackLanguage'");
             return [$fallbackLanguage];
         } else {
-            return array_map('basename', $localePaths);
+            return $localePaths;
         }
     }
 
     private function getFrontendLocaleList(): array {
-        $locales = glob('admin/dist/locales/*', GLOB_ONLYDIR);
-        if (empty($locales)) {
-            $locales = $this->loadBundledLocaleNames();
-        }
-        return $locales;
-    }
-
-    private function loadBundledLocaleNames(): array {
-        $contents = file_get_contents('admin/locales.json');
-        return json_decode($contents);
+        $locales = glob('admin/res/locales/*', GLOB_ONLYDIR);
+        return array_map('basename', $locales);
     }
 }
