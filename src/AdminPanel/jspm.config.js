@@ -4,6 +4,7 @@ System.config({
   transpiler: false,
   paths: {
     "*": "admin/dist/*",
+    "res/*": "admin/res/*",
     "admin/bundles/*": "*",
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"

@@ -1,7 +1,7 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {MultilingualText} from "../metadata/metadata";
-import {I18nConfig} from "locales/i18n-config";
+import {I18nConfig} from "config/i18n";
 
 @autoinject
 export class InCurrentLanguageValueConverter implements ToViewValueConverter {

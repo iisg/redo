@@ -68,11 +68,11 @@ gulp.task('build-css', () => {
 });
 
 gulp.task('build-locales', () => {
-  return gulp.src(path.join(paths.locales, '**/*.json'), {base: paths.root})
+  return gulp.src(path.join(paths.locales, '**/*.json'), {base: paths.resourcesRoot})
     .pipe(plumber({errorHandler: notify.onError('Locales: <%= error.message %>')}))
-    .pipe(changed(paths.output))
+    .pipe(changed(paths.webAdminResources))
     .pipe(minifyJSON())
-    .pipe(gulp.dest(paths.output));
+    .pipe(gulp.dest(paths.webAdminResources));
 });
 
 gulp.task('copy-jspm-config', () => {

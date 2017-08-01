@@ -1,6 +1,6 @@
 import {InCurrentLanguageValueConverter} from "./in-current-language";
 import {I18N} from "aurelia-i18n";
-import {I18nConfig} from "../../locales/i18n-config";
+import {I18nConfig} from "../../config/i18n";
 
 describe(InCurrentLanguageValueConverter.name, () => {
   let i18n: I18N;

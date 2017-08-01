@@ -12,7 +12,7 @@ import {AppRouter} from "aurelia-router";
 import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {Backend} from "aurelia-i18n";
 import {Container} from "aurelia-dependency-injection";
-import {I18nConfig} from "locales/i18n-config";
+import {I18nConfig} from "config/i18n";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -32,7 +32,7 @@ export function configure(aurelia: Aurelia) {
       const config: I18nConfig = Container.instance.get(I18nConfig);
       return i18n.setup({
         backend: {
-          loadPath: 'locales/{{lng}}/{{lng}}_{{ns}}.json',
+          loadPath: 'res/locales/{{lng}}/{{lng}}_{{ns}}.json',
         },
         preload: config.getSupportedUILanguages(),
         fallbackLng: ['en'], // CAREFUL! Anything but 'en' here will break English translation because it's missing 99% of terms
