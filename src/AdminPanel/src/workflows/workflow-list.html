@@ -50,4 +50,11 @@
             </table>
         </div>
     </div>
+
+    <div class="alert alert-info"
+        if.bind="workflows.length === 0">
+        <span class="fa fa-info-circle fa-fw"></span>
+        ${'No workflows.' | t}
+    </div>
+
 </template>
