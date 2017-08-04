@@ -2,8 +2,7 @@
 namespace Repeka\Domain\Exception;
 
 class NotFoundException extends DomainException {
-    public function __construct($message, \Exception $previous = null) {
-        parent::__construct($message, $previous);
-        $this->setCode(404);
+    public function __construct(string $errorMessageId, array $params = []) {
+        parent::__construct($errorMessageId, 404, $params);
     }
 }

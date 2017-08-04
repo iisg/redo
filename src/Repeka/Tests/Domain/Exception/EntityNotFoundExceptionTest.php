@@ -6,32 +6,32 @@ use Repeka\Domain\Exception\EntityNotFoundException;
 class EntityNotFoundExceptionTest extends \PHPUnit_Framework_TestCase {
     public function testGettingEntityNameFromString() {
         $exception = new EntityNotFoundException('Dummy', '');
-        $this->assertContains('Not found: Dummy ', $exception->getMessage());
+        $this->assertEquals('entityNotFound', $exception->getErrorMessageId());
     }
 
     public function testGettingEntityNameFromRepository() {
         $exception = new EntityNotFoundException(new DummyRepository(), '');
-        $this->assertContains('Not found: Dummy ', $exception->getMessage());
+        $this->assertEquals('Dummy', $exception->getParams()['entityName']);
     }
 
     public function testGettingEntityNameFromDoctrineRepository() {
         $exception = new EntityNotFoundException(new DummyDoctrineRepository(), '');
-        $this->assertContains('Not found: Dummy ', $exception->getMessage());
+        $this->assertEquals('Dummy', $exception->getParams()['entityName']);
     }
 
     public function testStrippingSuffixes() {
         $exception = new EntityNotFoundException('DummyRepository', '');
-        $this->assertContains('Not found: Dummy ', $exception->getMessage());
+        $this->assertEquals('Dummy', $exception->getParams()['entityName']);
     }
 
     public function testFormattingStringQuery() {
         $exception = new EntityNotFoundException('', 'test');
-        $this->assertContains('"test"', $exception->getMessage());
+        $this->assertEquals('"test"', $exception->getParams()['query']);
     }
 
     public function testFormattingIntQuery() {
         $exception = new EntityNotFoundException('', 123);
-        $this->assertContains('#123', $exception->getMessage());
+        $this->assertEquals('#123', $exception->getParams()['query']);
     }
 }
 

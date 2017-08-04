@@ -16,7 +16,7 @@ class ResourceWorkflowDoctrineRepository extends EntityRepository implements Res
         /** @var ResourceWorkflow $workflow */
         $workflow = $this->find($id);
         if (!$workflow) {
-            throw new EntityNotFoundException("ID: $id");
+            throw new EntityNotFoundException($this, $id);
         }
         return $workflow;
     }

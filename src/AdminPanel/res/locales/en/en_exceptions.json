@@ -1,1 +1,12 @@
-{}
+{
+  "generic": "Server error occurred. Try again.",
+  "uploadLimitExceeded": "Uploaded file is too large, limit is {{limit}}",
+  "uploadFailed": "File upload failed, try again later",
+  "noSuchResourceFile": "File {{filename}} doesn't exist in resource {{resourceId}}",
+  "cannotApplyTransition": "Transition '{{transitionId}}' can't be applied in workflow {{workflowId}}",
+  "noSuchTransition": "Transition '{{transitionId}}' doesn't exist in workflow {{workflowId}}",
+  "resourceCannotEnterPlace": "Can't transition resource #{{resourceId}} to place {{placeIds}} in workflow {{workflowId}}",
+  "entityNotFound": "{{entityName, capitalized}} {{query}} not found",
+  "invalidCommand": "Data sent to server are invalid",
+  "metadataAlreadyPresent": "Metadata #{{metadataId}} is already present in resource kind #{{resourceKind}}"
+}

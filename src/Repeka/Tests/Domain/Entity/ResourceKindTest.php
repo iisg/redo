@@ -4,7 +4,7 @@ namespace Repeka\Tests\Domain\Entity;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Exception\IllegalEntityStateException;
+use Repeka\Domain\Exception\MetadataAlreadyPresentException;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceKindTest extends \PHPUnit_Framework_TestCase {
@@ -19,7 +19,7 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAddingTheSameMetadataTwice() {
-        $this->expectException(IllegalEntityStateException::class);
+        $this->expectException(MetadataAlreadyPresentException::class);
         $metadata = $this->createMock(Metadata::class);
         $resourceKind = new ResourceKind([]);
         $resourceKind->addMetadata($metadata);

@@ -29,6 +29,9 @@ class ResourceFileQueryHandler {
                 }
             }
         }
-        throw new NotFoundException("File $filename does not exist in the resource #{$resource->getId()}.");
+        throw new NotFoundException('noSuchResourceFile', [
+            'resourceId' => $resource->getId(),
+            'filename' => $filename,
+        ]);
     }
 }

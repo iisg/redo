@@ -9,7 +9,6 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
-use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Tests\Traits\StubsTrait;
@@ -53,7 +52,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         try {
             $this->validator->validate($command);
         } catch (InvalidCommandException $e) {
-            $this->assertEquals('control', $e->getData()[0]['field']);
+            $this->assertEquals('control', $e->getViolations()[0]['field']);
         }
     }
 
@@ -101,7 +100,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         try {
             $this->validator->validate($command);
         } catch (InvalidCommandException $e) {
-            $this->assertEquals('label', $e->getData()[0]['field']);
+            $this->assertEquals('label', $e->getViolations()[0]['field']);
         }
     }
 }

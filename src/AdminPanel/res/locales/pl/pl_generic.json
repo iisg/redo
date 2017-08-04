@@ -47,7 +47,7 @@
   "Contents": "Zawartość",
   "No matches found for {0}": "Żaden element nie pasuje do {0}",
   "Resource": "Zasób",
-  "Error": "Błąd",
+  "Error {{code}}": "Błąd {{code}}",
   "Close": "Zamknij",
   "Show Profiler": "Pokaż Profiler",
   "Remove": "Usuń",

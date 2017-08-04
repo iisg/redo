@@ -5,7 +5,6 @@ use Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProces
 use Repeka\Application\Upload\FilesystemDriver;
 use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Exception\DomainException;
-use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -39,12 +38,7 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
     }
 
     public function apply(Request $request, ParamConverter $configuration): bool {
-        try {
-            $contents = $this->getContentsFromRequest($request);
-        } catch (EntityNotFoundException $e) {
-            $e->setCode(400);
-            throw $e;
-        }
+        $contents = $this->getContentsFromRequest($request);
         $request->attributes->set($configuration->getName(), $contents);
         return true;
     }
@@ -79,9 +73,9 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
         $maxFileUploadSizeInBytes = (int)(str_replace('M', '', $maxFileUploadSize) * 1024 * 1024);
         $actualUploadSize = $request->server->get('CONTENT_LENGTH');
         if ($actualUploadSize > $maxFileUploadSizeInBytes) {
-            throw new DomainException("Max upload limit per request is $maxFileUploadSize");
+            throw new DomainException('uploadLimitExceeded', 413, ['limit' => $maxFileUploadSize]);
         } else {
-            throw new DomainException("Could not save the resource. Please try again later.");
+            throw new DomainException('uploadFailed', 500);
         }
     }
 }

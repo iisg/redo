@@ -3,7 +3,7 @@ import {I18N} from "aurelia-i18n";
 import {containerless} from "aurelia-templating";
 import {AureliaCookie} from "aurelia-cookie";
 import {LanguageRepository} from "resources-config/language-config/language-repository";
-import {I18nConfig} from "config/i18n";
+import {I18nParams} from "config/i18n";
 import {MomentLocaleLoader} from "./moment-locale-loader";
 import * as moment from "moment";
 
@@ -18,15 +18,15 @@ export class LanguageSwitcher {
 
   constructor(private i18n: I18N,
               private languageRepository: LanguageRepository,
-              private i18nConfig: I18nConfig,
+              private i18nParams: I18nParams,
               private momentLocaleLoader: MomentLocaleLoader) {
-    const supportedLanguages = this.i18nConfig.getSupportedUILanguages();
-    const initialLanguage = AureliaCookie.get(this.COOKIE_NAME) || this.i18nConfig.getDefaultUILanguage();
+    const supportedLanguages = this.i18nParams.supportedUiLanguages;
+    const initialLanguage = AureliaCookie.get(this.COOKIE_NAME) || this.i18nParams.defaultUiLanguage;
     if (supportedLanguages.indexOf(initialLanguage) != -1) {
       this.initialize(initialLanguage);
     } else {
       this.initialize(supportedLanguages[0]);
-      if (initialLanguage == this.i18nConfig.getDefaultUILanguage()) {
+      if (initialLanguage == this.i18nParams.defaultUiLanguage) {
         const supported = supportedLanguages.join(', ');
         throw new Error(`Unsupported language '${initialLanguage}' in backend configuration. Supported languages: [${supported}].`);
       }
@@ -38,7 +38,7 @@ export class LanguageSwitcher {
     const flagsPromise = this.languageRepository.getList();
     const momentLocalePromise = this.momentLocaleLoader.load(language);
     Promise.all([flagsPromise, momentLocalePromise]).then(() => {
-      this.languages = this.i18nConfig.getSupportedUILanguages();
+      this.languages = this.i18nParams.supportedUiLanguages;
       this.select(language, false);
     });
   }

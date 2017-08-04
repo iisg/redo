@@ -4,7 +4,7 @@ namespace Repeka\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Exception\IllegalEntityStateException;
+use Repeka\Domain\Exception\MetadataAlreadyPresentException;
 
 class ResourceKind {
     private $id;
@@ -59,7 +59,7 @@ class ResourceKind {
 
     public function addMetadata(Metadata $metadata) {
         if (in_array($metadata, $this->getMetadataList())) {
-            throw new IllegalEntityStateException('You cannot add the same metadata twice.');
+            throw new MetadataAlreadyPresentException($this, $metadata);
         }
         $this->metadataList[] = $metadata;
         $this->sortMetadataByOrdinalNumber();

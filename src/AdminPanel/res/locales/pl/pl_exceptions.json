@@ -1,4 +1,12 @@
 {
-  "Internal server error, please try again later": "Błąd wewnętrzny serwera, proszę spróbować później",
-  "Could not save the resource. Please try again later.": "Błąd podczas zapisu zasobu. Proszę spróbować później"
+  "generic": "Wystąpił błąd serwera. Spróbuj ponownie.",
+  "uploadLimitExceeded": "Przesłany plik jest zbyt duży, limit wynosi {{limit}}",
+  "uploadFailed": "Przesyłanie pliku nie powiodło się, spróbuj ponownie później",
+  "noSuchResourceFile": "Plik {{filename}} nie istnieje w zasobie {{resourceId}}",
+  "cannotApplyTransition": "Przejście '{{transitionId}}' nie może zostać wykonane w procesie {{workflowId}}",
+  "noSuchTransition": "Przejście '{{transitionId}}' nie istnieje w procesie {{workflowId}}",
+  "resourceCannotEnterPlace": "Nie można przenieść zasobu #{{resourceId}} do stanu {{placeIds}} w procesie {{workflowId}}",
+  "entityNotFound": "Nie znaleziono {{entityName}} {{query}}",
+  "invalidCommand": "Dane przesłane do serwera są nieprawidłowe",
+  "metadataAlreadyPresent": "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}"
 }
