@@ -5,6 +5,6 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 
 class CannotApplyTransitionException extends ResourceWorkflowException {
     public function __construct(string $transitionId, ResourceWorkflow $workflow, \Exception $previous = null) {
-        parent::__construct("Cannot apply transition: $transitionId", $workflow, $previous);
+        parent::__construct('cannotApplyTransition', $workflow, ['transitionId' => $transitionId], $previous);
     }
 }

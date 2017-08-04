@@ -5,8 +5,7 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\DomainException;
 
 class ResourceWorkflowException extends DomainException {
-    public function __construct(string $message, ResourceWorkflow $workflow, \Exception $previous = null) {
-        parent::__construct("Exception in workflow #{$workflow->getId()}: $message", $previous);
-        $this->setCode(409);
+    public function __construct(string $errorMessageId, ResourceWorkflow $workflow, array $params, \Exception $previous = null) {
+        parent::__construct($errorMessageId, 409, array_merge(['workflowId' => $workflow->getId()], $params), $previous);
     }
 }

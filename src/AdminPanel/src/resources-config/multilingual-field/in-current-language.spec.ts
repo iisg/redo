@@ -1,6 +1,6 @@
 import {InCurrentLanguageValueConverter} from "./in-current-language";
 import {I18N} from "aurelia-i18n";
-import {I18nConfig} from "../../config/i18n";
+import {I18nParams} from "../../config/i18n";
 
 describe(InCurrentLanguageValueConverter.name, () => {
   let i18n: I18N;
@@ -8,8 +8,7 @@ describe(InCurrentLanguageValueConverter.name, () => {
 
   beforeEach(() => {
     i18n = new I18N();
-    const config = new I18nConfig(undefined);
-    config.getSupportedUILanguages = () => ['PL', 'EN', 'RU'];
+    const config = {supportedUiLanguages: ['PL', 'EN', 'RU']} as I18nParams;
     inCurrentLanguage = new InCurrentLanguageValueConverter(i18n, config);
   });
 

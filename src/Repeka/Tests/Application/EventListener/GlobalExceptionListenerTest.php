@@ -45,9 +45,11 @@ class GlobalExceptionListenerTest extends \PHPUnit_Framework_TestCase {
 
     public function testDomainExceptionResponse() {
         $this->listener = new GlobalExceptionListener(false, $this->tokenStorage, $this->session, $this->logger);
-        $response = $this->listener->createErrorResponse(new DomainException('Error'), new Request());
-        $expectedResponse = new JsonResponse(['message' => 'Error',], 400);
-        $this->assertEquals($expectedResponse, $response);
+        $response = $this->listener->createErrorResponse(new DomainException('Error', 123, ['foo' => 'bar']), new Request());
+        $this->assertEquals(123, $response->getStatusCode());
+        $content = json_decode($response->getContent());
+        $this->assertEquals('Error', $content->errorMessageId);
+        $this->assertEquals((object)['foo' => 'bar'], $content->params);
     }
 
     public function testAuthenticationMissingExceptionResponse() {

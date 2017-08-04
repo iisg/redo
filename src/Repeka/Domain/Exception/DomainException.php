@@ -2,23 +2,30 @@
 namespace Repeka\Domain\Exception;
 
 class DomainException extends \RuntimeException {
-    private $data = [];
+    private $errorMessageId;
+    private $params;
 
-    public function __construct(string $message, \Exception $previous = null) {
-        parent::__construct($message, 400, $previous);
+    /**
+     * @param string $errorMessageId Used in front-end to build localized, user-friendly error messages
+     * @param array $params Parameters that front-end can plug into localized error messages
+     */
+    public function __construct(
+        string $errorMessageId,
+        int $code = 400,
+        array $params = [],
+        \Exception $previous = null,
+        ?string $message = null
+    ) {
+        parent::__construct($message ?: "Domain exception '$errorMessageId' (error $code)", $code, $previous);
+        $this->errorMessageId = $errorMessageId;
+        $this->params = $params;
     }
 
-    public function getData(): array {
-        return $this->data;
+    public function getErrorMessageId(): string {
+        return $this->errorMessageId;
     }
 
-    public function setData(array $data): DomainException {
-        $this->data = $data;
-        return $this;
-    }
-
-    public function setCode(int $code): DomainException {
-        $this->code = $code;
-        return $this;
+    public function getParams(): array {
+        return $this->params;
     }
 }

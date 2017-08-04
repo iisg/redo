@@ -50,7 +50,7 @@ class GlobalExceptionListener {
         } elseif ($e instanceof NotFoundHttpException) {
             return $this->createJsonResponse(404, $e->getMessage());
         } elseif ($e instanceof DomainException) {
-            return $this->createJsonResponse($e->getCode(), $e->getMessage());
+            return $this->createDomainExceptionResponse($e);
         } else {
             $message = $this->isDebug ? $e->getMessage() : 'Internal server error.';
             return $this->createJsonResponse(500, $message);
@@ -66,10 +66,17 @@ class GlobalExceptionListener {
         }
     }
 
-    private function createJsonResponse(int $statusCode, string $message): JsonResponse {
-        return new JsonResponse([
+    private function createJsonResponse(int $statusCode, string $message, array $extras = []): JsonResponse {
+        return new JsonResponse(array_merge([
             'message' => $message,
-        ], $statusCode);
+        ], $extras), $statusCode);
+    }
+
+    private function createDomainExceptionResponse(DomainException $exception): JsonResponse {
+        return $this->createJsonResponse($exception->getCode(), $exception->getMessage(), [
+            'errorMessageId' => $exception->getErrorMessageId(),
+            'params' => $exception->getParams(),
+        ]);
     }
 
     private function saveTargetUrlIfFromAdminPanel(Request $request) {
