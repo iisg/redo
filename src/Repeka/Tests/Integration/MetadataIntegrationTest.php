@@ -134,9 +134,10 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                 'PL' => 'Testowa zaślepka'
             ]
         ];
-        $client->apiRequest('PATCH', '/api/metadata/' . $metadata->getId(), $update);
+        $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());
-        /** @var $metadata Metadata */
+        /** @var Metadata $metadata */
+        /** @var Metadata $updatedMetadata */
         $updatedMetadata = self::createClient()->getContainer()->get(MetadataRepository::class)->find($metadata->getId());
         self::assertEquals($update['label'], $updatedMetadata->getLabel());
         self::assertEquals($update['description'], $updatedMetadata->getDescription());
@@ -152,7 +153,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $update = [
             'name' => 'Altered'
         ];
-        $client->apiRequest('PATCH', '/api/metadata/' . $metadata->getId(), $update);
+        $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());
         /** @var $metadata Metadata */
         /** @var $updatedMetadata Metadata */

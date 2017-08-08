@@ -7,9 +7,9 @@ import {autoinject} from "aurelia-dependency-injection";
 export class ResourceLink {
   @bindable id: number;
 
-  private routerParams = {id: undefined};
-  private resource: Resource;
-  private loading: boolean = false;
+  routerParams = {id: undefined};
+  resource: Resource;
+  loading: boolean = false;
 
   constructor(private resourceRepository: ResourceRepository) {
   }

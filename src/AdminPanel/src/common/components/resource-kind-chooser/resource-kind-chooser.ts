@@ -11,7 +11,7 @@ export class ResourceKindChooser implements ComponentAttached {
   @bindable disabled: boolean = false;
   @bindable systemResourceKinds: boolean = false;
 
-  private resourceKinds: ResourceKind[] = [];
+  resourceKinds: ResourceKind[] = [];
 
   constructor(private resourceKindRepository: ResourceKindRepository) {
   }

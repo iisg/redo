@@ -25,7 +25,8 @@ export class LanguageRepository extends ApiRepository<Language> {
   }
 
   public update(updatedLanguage: Language): Promise<Language> {
-    return this.patch(updatedLanguage, {
+    const languageData = this.toBackend(updatedLanguage);
+    return this.patch(languageData as Language, {
       flag: updatedLanguage.flag,
       name: updatedLanguage.name,
     });

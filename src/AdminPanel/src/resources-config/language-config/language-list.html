@@ -1,6 +1,7 @@
 <template>
     <require from="./language-form"></require>
     <require from="common/components/flag/flag"></require>
+    <require from="common/components/loading-bar/pending-throbber.html"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
 
     <animated-plus-button class="pull-right"
@@ -40,11 +41,21 @@
                     </td>
                     <td if.bind="!language['editing']">${language.name}</td>
                     <td if.bind="!language['editing']">
-                        <button type="button"
-                            class="btn btn-default pull-right ${language['hovered'] ? 'btn-raised' : ''}"
-                            click.delegate="language['editing'] = true">
-                            <span class="fa fa-edit"></span>
-                        </button>
+                        <div class="pull-right">
+                            <pending-throbber entity.bind="language"></pending-throbber>
+                            <button type="button"
+                                class="btn btn-danger pull-right ${language['hovered'] ? 'btn-raised' : ''}"
+                                click.delegate="deleteLanguage(language)"
+                                disabled.bind="language.pendingRequest">
+                                <fa name="trash"></fa>
+                            </button>
+                            <button type="button"
+                                class="btn btn-default pull-right ${language['hovered'] ? 'btn-raised' : ''}"
+                                click.delegate="language['editing'] = true"
+                                disabled.bind="language.pendingRequest">
+                                <fa name="edit"></fa>
+                            </button>
+                        </div>
                     </td>
                     <td colspan="3"
                         if.bind="language['editing']">

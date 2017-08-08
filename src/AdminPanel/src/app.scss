@@ -57,6 +57,11 @@ body > tr[oa-sortable-item] {
   z-index: 10;
 }
 
+.btn-invisible {
+  cursor: default;
+  background-color: transparent !important;
+}
+
 input, textarea, select {
   &[disabled] {
     color: #999;

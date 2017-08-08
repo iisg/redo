@@ -12,7 +12,9 @@ var tslint = require('gulp-tslint');
 var typingsLinter = require('../typings-linter');
 var paths = require('../paths');
 
-gulp.task('lint', ['lint-ts', 'lint-aurelia-templates', 'lint-typings']);
+// TODO Restore lint-aurelia-templates when issue is resolved: https://github.com/MeirionHughes/aurelia-template-lint/issues/178
+// gulp.task('lint', ['lint-ts', 'lint-aurelia-templates', 'lint-typings']);
+gulp.task('lint', ['lint-ts', 'lint-typings']);
 
 gulp.task('lint-ts', () => {
   return gulp.src(paths.scripts[0])

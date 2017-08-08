@@ -13,9 +13,9 @@ export class WorkflowEditor {
   selectedElement: WorkflowPlace|WorkflowTransition;
   simulating = false;
   availableTransitions: Array<string> = [];
-  private graph: WorkflowGraph;
-  private currentSimulationPlaces: Array<string>;
-  private fetchingTransitions = false;
+  graph: WorkflowGraph;
+  currentSimulationPlaces: Array<string>;
+  fetchingTransitions = false;
 
   constructor(private workflowRepository: WorkflowRepository, private signaler: BindingSignaler) {
   }

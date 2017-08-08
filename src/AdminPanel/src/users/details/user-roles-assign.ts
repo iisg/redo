@@ -9,7 +9,7 @@ export class UserRolesAssign {
 
   rolesChanged = false;
 
-  private userRoleIds: Array<string> = [];
+  userRoleIds: Array<string> = [];
 
   constructor(private userRepository: UserRepository) {
   }

@@ -12,9 +12,7 @@ class LanguageDoctrineRepository extends EntityRepository implements LanguageRep
         return $language;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getAvailableLanguageCodes(): array {
         $availableLanguages = $this->findAll();
         return array_map(function (Language $language) {
@@ -29,5 +27,14 @@ class LanguageDoctrineRepository extends EntityRepository implements LanguageRep
             throw new EntityNotFoundException($this, $code);
         }
         return $language;
+    }
+
+    public function exists(string $code): bool {
+        return !!$this->find($code);
+    }
+
+    public function delete(string $code): void {
+        $language = $this->findOne($code);
+        $this->getEntityManager()->remove($language);
     }
 }
