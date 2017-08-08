@@ -5,17 +5,27 @@ import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {deepCopy} from "common/utils/object-utils";
 import {ResourceLabelValueConverter} from "./resource-label";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {SystemMetadata} from "resources-config/metadata/system-metadata";
+import {setPendingRequest, clearPendingRequest} from "../../common/entity/entity";
+import {Alert} from "../../common/dialog/alert";
+import {I18N} from "aurelia-i18n";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
-  editing = false;
+  editing: boolean = false;
+  hasChildren: boolean;
+
   private urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceLabel: ResourceLabelValueConverter,
               private router: Router,
-              private ea: EventAggregator) {
+              private ea: EventAggregator,
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private alert: Alert,
+              private i18n: I18N) {
   }
 
   bind() {
@@ -48,5 +58,28 @@ export class ResourceDetails implements RoutableComponentActivate {
       this.toggleEditForm();
       return this.resource = resourceData;
     }) .catch(() => $.extend(this.resource, originalResource));
+  }
+
+  remove() {
+    if (this.hasChildren) {
+      const title = this.i18n.tr('Resource has children');
+      const text = this.i18n.tr('Delete or disown them first to delete this resource');
+      this.alert.show({type: 'warning'}, title, text);
+    } else {
+      this.deleteEntityConfirmation.confirm('resource', this.resource.id)
+        .then(setPendingRequest(this.resource))
+        .then(() => this.resourceRepository.remove(this.resource))
+        .then(() => this.navigateToParentOrList())
+        .finally(clearPendingRequest(this.resource));
+    }
+  }
+
+  private navigateToParentOrList() {
+    const parentId: number = this.resource.contents[SystemMetadata.PARENT.baseId][0];
+    if (parentId == undefined) {
+      this.router.navigateToRoute('resources/list');
+    } else {
+      this.router.navigateToRoute('resources/details', {id: parentId});
+    }
   }
 }

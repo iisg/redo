@@ -8,5 +8,11 @@
   "resourceCannotEnterPlace": "Nie można przenieść zasobu #{{resourceId}} do stanu {{placeIds}} w procesie {{workflowId}}",
   "entityNotFound": "Nie znaleziono {{entityName}} {{query}}",
   "invalidCommand": "Dane przesłane do serwera są nieprawidłowe",
-  "metadataAlreadyPresent": "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}"
+  "metadataAlreadyPresent": "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}",
+  "violationFields": {
+    "resource": "Zasób"
+  },
+  "rules": {
+    "resourceHasNoChildrenRule": "Zasób ma podzasoby."
+  }
 }

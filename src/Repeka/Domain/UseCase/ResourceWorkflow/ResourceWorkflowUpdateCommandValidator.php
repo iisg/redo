@@ -8,6 +8,7 @@ use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
+use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator {
@@ -19,7 +20,7 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
     }
 
     /** @inheritdoc */
-    public function getValidator(Command $command): Validator {
+    public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('workflow', Validator::instance(ResourceWorkflow::class)->callback(function (ResourceWorkflow $workflow) {
                 return $workflow->getId() > 0;

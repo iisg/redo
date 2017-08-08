@@ -5,7 +5,8 @@
     <require from="./details/resource-metadata-values/resource-metadata-values"></require>
 
     <animated-plus-button class="pull-right"
-        opened.bind="addFormOpened"></animated-plus-button>
+        opened.bind="addFormOpened"
+        disabled.bind="parentResource.pendingRequest"></animated-plus-button>
 
     <div if.bind="addFormOpened"
         class="fade-inup-outdown au-animate floating-form-full-width well">
@@ -50,11 +51,25 @@
                         <resource-place-display resource.bind="resource"></resource-place-display>
                     </td>
                     <td>
-                        <a route-href="route: resources/details; params.bind: {id: resource.id}"
-                            class="btn ${resource['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">
-                            <span class="fa fa-eye fa-fw"></span>
-                            ${'Details' & t}
-                        </a>
+                        <span class="pull-right text-nowrap">
+                            <span class="btn btn-default btn-sm btn-invisible">
+                                <throbber if.bind="resource.pendingRequest"></throbber>
+                            </span>
+                            <button class="btn ${resource.hovered ? 'btn-raised' : ''} btn-info btn-sm"
+                                click.delegate="navigate(resource)"
+                                disabled.bind="resource.pendingRequest">
+                                <fa name="eye"
+                                    fw></fa>
+                                ${'Details' & t}
+                            </button>
+                            <button type="button"
+                                class="btn btn-danger btn-sm btn-narrow ${resource.hovered ? 'btn-raised' : ''}"
+                                click.delegate="deleteResource(resource)"
+                                disabled.bind="resource.pendingRequest">
+                                <fa name="trash"
+                                    fw></fa>
+                            </button>
+                        </span>
                     </td>
                 </tr>
                 </tbody>

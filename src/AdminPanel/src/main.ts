@@ -25,6 +25,7 @@ export function configure(aurelia: Aurelia) {
     .plugin('aurelia-cookie')
     .plugin("oribella-aurelia-sortable")
     .plugin('aurelia-i18n', i18nConfigurator(aurelia))
+    .plugin('martingust/aurelia-repeat-strategies')
     .globalResources([
       'common/authorization/require-role',
       'common/bootstrap/bootstrap-tooltip',
@@ -34,7 +35,8 @@ export function configure(aurelia: Aurelia) {
       'common/components/loading-bar/throbber.html',
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
-      'common/components/promise-button/promise-button'
+      'common/components/promise-button/promise-button',
+      'common/http-client/invalid-command-message.html', // used in alerts by GlobalExceptionInterceptor
     ]);
 
   configureHttpClient(aurelia);

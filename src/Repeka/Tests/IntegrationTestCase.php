@@ -26,6 +26,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     /** @var ResettableContainerInterface */
     protected $container;
 
+    /** @var Application */
     private $application;
 
     public function setUp() {
@@ -74,6 +75,23 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
 
     protected static function createAdminClient(array $options = [], array $server = []): TestClient {
         return self::createAuthenticatedClient(AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD, $options, $server);
+    }
+
+    /** @param string[] $parts */
+    protected static function joinUrl(...$parts): string {
+        $url = array_shift($parts);
+        while (count($parts) > 0) {
+            if ($url[-1] !== '/') {
+                $url .= '/';
+            }
+            $url .= array_shift($parts);
+        }
+        return $url;
+    }
+
+    /** @param int|string $id */
+    protected static function oneEntityEndpoint($id): string {
+        return self::joinUrl(static::ENDPOINT, $id);
     }
 
     protected function getEntityManager() {

@@ -2,6 +2,6 @@
     <require from="./language-flag-svg"></require>
 
     <span class="flag-icon-${size}">
-        <img src="${name | languageFlagSvg}">
+        <img src.bind="name | languageFlagSvg">
     </span>
 </template>

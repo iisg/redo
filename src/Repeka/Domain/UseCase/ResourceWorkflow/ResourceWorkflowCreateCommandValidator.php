@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\ResourceWorkflow;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator {
@@ -17,7 +18,7 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
     /**
      * @inheritdoc
      */
-    public function getValidator(Command $command): Validator {
+    public function getValidator(Command $command): Validatable {
         return Validator::attribute('name', $this->notBlankInAllLanguagesRule);
     }
 }

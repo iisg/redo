@@ -18,6 +18,7 @@ export class ResourceLink {
     this.routerParams.id = this.id;
     this.loading = true;
     this.resourceRepository.get(this.id)
+      .catch(() => Promise.resolve(undefined))
       .then(resource => this.resource = resource)
       .finally(() => this.loading = false);
   }

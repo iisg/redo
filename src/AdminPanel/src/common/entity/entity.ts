@@ -1,6 +1,8 @@
 let strippableEntityProperties = [];
 
 export abstract class Entity {
+  @strippable hovered: boolean = false;
+  @strippable editing: boolean = false;
   @strippable pendingRequest: boolean = false;
 
   static stripFrontendProperties(entity: Object) {
@@ -10,7 +12,7 @@ export abstract class Entity {
   }
 }
 
-function strippable(target: Entity, propertyName: string) {
+function strippable(prototype: any, propertyName: string) {
   strippableEntityProperties.push(propertyName);
 }
 

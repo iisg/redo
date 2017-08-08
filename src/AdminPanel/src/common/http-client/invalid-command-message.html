@@ -1,0 +1,10 @@
+<template bindable="violationsByField">
+    <div repeat.for="[field, violations] of violationsByField | iterable">
+        ${'exceptions::violationFields//' + field | t}:
+        <ul>
+            <li repeat.for="violatiedRule of violations">
+                ${'exceptions::rules//' + violatiedRule | t}
+            </li>
+        </ul>
+    </div>
+</template>

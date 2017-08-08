@@ -92,7 +92,11 @@
   "Are you sure you want to delete {{entityType}} {{id}}?": "Czy na pewno chcesz usunąć {{entity}} {{id}}?",
   "Delete": "Usuń",
   "entityTypes": {
-    "language": "język"
+    "language": "język",
+    "resource": "zasób"
   },
-  "Child resources": "Podzasoby"
+  "Child resources": "Podzasoby",
+  "Resource doesn't exist": "Zasób nie istnieje",
+  "Resource has children": "Zasób ma podzasoby",
+  "Delete or disown them first to delete this resource": "Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób"
 }

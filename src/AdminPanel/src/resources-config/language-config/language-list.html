@@ -35,31 +35,31 @@
                     hover-aware.one-time="language"
                     repeat.for="language of languageList">
                     <td>${language.code}</td>
-                    <td if.bind="!language['editing']">
+                    <td if.bind="!language.editing">
                         <flag name.one-time="language.flag"></flag>
                         ${language.flag}
                     </td>
-                    <td if.bind="!language['editing']">${language.name}</td>
-                    <td if.bind="!language['editing']">
+                    <td if.bind="!language.editing">${language.name}</td>
+                    <td if.bind="!language.editing">
                         <div class="pull-right">
                             <pending-throbber entity.bind="language"></pending-throbber>
                             <button type="button"
-                                class="btn btn-danger pull-right ${language['hovered'] ? 'btn-raised' : ''}"
+                                class="btn btn-danger pull-right ${language.hovered ? 'btn-raised' : ''}"
                                 click.delegate="deleteLanguage(language)"
                                 disabled.bind="language.pendingRequest">
                                 <fa name="trash"></fa>
                             </button>
                             <button type="button"
-                                class="btn btn-default pull-right ${language['hovered'] ? 'btn-raised' : ''}"
-                                click.delegate="language['editing'] = true"
+                                class="btn btn-default pull-right ${language.hovered ? 'btn-raised' : ''}"
+                                click.delegate="language.editing = true"
                                 disabled.bind="language.pendingRequest">
                                 <fa name="edit"></fa>
                             </button>
                         </div>
                     </td>
                     <td colspan="3"
-                        if.bind="language['editing']">
-                        <div if.bind="language['editing']"
+                        if.bind="language.editing">
+                        <div if.bind="language.editing"
                             class="au-animate anim-height-inout-600 col-md-6 col-md-push-6 col-lg-4 col-lg-push-8">
                             <language-form submit.call="saveEditedLanguage(language, savedLanguage) && (language.editing = false)"
                                 edit.bind="language"

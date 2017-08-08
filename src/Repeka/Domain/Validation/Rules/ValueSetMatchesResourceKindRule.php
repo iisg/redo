@@ -21,7 +21,7 @@ class ValueSetMatchesResourceKindRule extends AbstractRule {
         return call_user_func_array([Validator::arrayType(), 'keySet'], $metadataIdValidators);
     }
 
-    public function forResourceKind(ResourceKind $resourceKind): ValueSetMatchesResourceKindRule {
+    public function forResourceKind(ResourceKind $resourceKind): self {
         $instance = new self();
         $instance->contentsValidator = $this->buildContentsValidator($resourceKind);
         return $instance;

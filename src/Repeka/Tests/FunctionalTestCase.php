@@ -21,17 +21,6 @@ abstract class FunctionalTestCase extends WebTestCase {
         return trim(strtok($fullResponse, "\n"));
     }
 
-    protected static function joinUrl(...$parts): string {
-        $url = array_shift($parts);
-        while (count($parts) > 0) {
-            if ($url[-1] !== '/') {
-                $url .= '/';
-            }
-            $url .= array_shift($parts);
-        }
-        return $url;
-    }
-
     private static function convertNumericArrayKeysToStrings($input) {
         if (!is_array($input)) {
             return $input;

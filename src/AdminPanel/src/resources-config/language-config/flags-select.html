@@ -5,7 +5,7 @@
     <dropdown-select values.bind="availableFlags"
         value.bind="value">
         <template replace-part="option-template">
-            <span class="flag-icon-sm"><img src='${option | languageFlagSvg}'></span>
+            <span class="flag-icon-sm"><img src.bind="option | languageFlagSvg"></span>
             ${option}
         </template>
     </dropdown-select>

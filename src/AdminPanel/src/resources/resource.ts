@@ -1,8 +1,9 @@
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ValidationRules} from "aurelia-validation";
 import {WorkflowPlace, WorkflowTransition, UnsatisfiedTransitionExplanation} from "workflows/workflow";
+import {Entity} from "common/entity/entity";
 
-export class Resource {
+export class Resource extends Entity {
   id: number;
   kind: ResourceKind;
   currentPlaces: WorkflowPlace[];

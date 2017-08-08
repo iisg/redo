@@ -8,5 +8,11 @@
   "resourceCannotEnterPlace": "Can't transition resource #{{resourceId}} to place {{placeIds}} in workflow {{workflowId}}",
   "entityNotFound": "{{entityName, capitalized}} {{query}} not found",
   "invalidCommand": "Data sent to server are invalid",
-  "metadataAlreadyPresent": "Metadata #{{metadataId}} is already present in resource kind #{{resourceKind}}"
+  "metadataAlreadyPresent": "Metadata #{{metadataId}} is already present in resource kind #{{resourceKind}}",
+  "violationFields": {
+    "resource": "Resource"
+  },
+  "rules": {
+    "resourceHasNoChildrenRule": "Resource has children resources."
+  }
 }

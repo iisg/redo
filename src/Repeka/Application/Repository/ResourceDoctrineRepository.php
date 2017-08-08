@@ -52,4 +52,12 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             ->getQuery()
             ->getResult();
     }
+
+    public function exists(int $resourceId): bool {
+        return !!$this->find($resourceId);
+    }
+
+    public function delete(ResourceEntity $resource): void {
+        $this->getEntityManager()->remove($resource);
+    }
 }
