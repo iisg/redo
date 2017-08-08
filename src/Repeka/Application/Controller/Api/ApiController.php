@@ -11,9 +11,7 @@ abstract class ApiController extends Controller {
 
     protected function createJsonResponse($data, $status = 200): JsonResponse {
         $json = $this->get('serializer')->serialize($data, 'json');
-        $response = new JsonResponse();
-        $response->setJson($json);
-        $response->setStatusCode($status);
+        $response = new JsonResponse($json, $status, [], true);
         return $response;
     }
 }

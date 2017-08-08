@@ -8,7 +8,7 @@ import {UserRole} from "../roles/user-role";
 export class UserRolesChooser implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay}) roleIds: Array<string> = [];
 
-  private availableRoles: Array<UserRole>;
+  availableRoles: Array<UserRole>;
 
   constructor(private roleRepository: UserRoleRepository) {
   }

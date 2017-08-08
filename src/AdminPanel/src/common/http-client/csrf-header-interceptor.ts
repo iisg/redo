@@ -14,7 +14,7 @@ export class CsrfHeaderInterceptor implements Interceptor {
 
   request(request: RequestMessage): RequestMessage {
     if (this.latestCsrfToken) {
-      if (['POST', 'PUT', 'PATCH'].indexOf(request.method) >= 0) {
+      if (['POST', 'PUT', 'PATCH', 'DELETE'].indexOf(request.method) >= 0) {
         request.headers.add(CsrfHeaderInterceptor.TOKEN_HEADER, this.latestCsrfToken);
       }
     }

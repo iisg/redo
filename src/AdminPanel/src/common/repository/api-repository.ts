@@ -1,4 +1,6 @@
 import {HttpClient, HttpResponseMessage} from "aurelia-http-client";
+import {deepCopy} from "../utils/object-utils";
+import {Entity} from "../entity/entity";
 
 export abstract class ApiRepository<T> {
   constructor(protected httpClient: HttpClient, protected endpoint: string) {
@@ -31,8 +33,14 @@ export abstract class ApiRepository<T> {
     return this.httpClient.put(this.oneEntityEndpoint(entity), this.toBackend(entity)).then(response => this.toEntity(response.content));
   }
 
+  public remove(entity: T): Promise<any> { // 'delete' is a reserved word in ES6 and TS2
+    return this.httpClient.delete(this.oneEntityEndpoint(entity));
+  }
+
   protected toBackend(entity: T): Object {
-    return entity;
+    const backendEntity = deepCopy(entity);
+    Entity.stripFrontendProperties(backendEntity);
+    return backendEntity;
   }
 
   protected oneEntityEndpoint(entity: number|string|Object) {

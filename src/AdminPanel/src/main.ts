@@ -31,6 +31,7 @@ export function configure(aurelia: Aurelia) {
       'common/bootstrap/hover-aware',
       'common/components/font-awesome/fa',
       'common/components/loading-bar/loading-bar.html',
+      'common/components/loading-bar/throbber.html',
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
       'common/components/promise-button/promise-button'

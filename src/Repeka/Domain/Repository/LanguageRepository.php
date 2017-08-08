@@ -21,4 +21,8 @@ interface LanguageRepository {
     public function findOne(string $code): Language;
 
     public function save(Language $language): Language;
+
+    public function exists(string $code): bool;
+
+    public function delete(string $code): void;
 }
