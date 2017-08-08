@@ -19,4 +19,8 @@ interface ResourceRepository {
 
     /** @return ResourceEntity[] */
     public function findAllNonSystemResources(): array;
+
+    public function exists(int $resourceId): bool;
+
+    public function delete(ResourceEntity $resource): void;
 }

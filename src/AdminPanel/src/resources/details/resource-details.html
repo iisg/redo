@@ -6,18 +6,29 @@
     <require from="./resource-label"></require>
     <require from="./resource-level-up"></require>
     <require from="../resources-list"></require>
+    <require from="common/components/loading-bar/pending-throbber.html"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
 
     <div class="au-animate fade-inup-outup"
         if.bind="resource">
 
-        <a class="btn btn-fab pull-right edit-button btn-raised ${editing ? 'btn-warning editing' : 'btn-info'}"
-            bootstrap-tooltip.bind="editing ? 'Cancel' : 'Edit' | t"
-            click.delegate="toggleEditForm()">
-            <span class="fa fa-times"></span>
-            <span class="fa fa-edit"></span>
-        </a>
+        <div class="pull-right">
+            <pending-throbber entity.bind="resource"></pending-throbber>
+            <button class="btn btn-fab btn-fab-mini btn-raised btn-danger"
+                click.delegate="remove()"
+                if.bind="!editing"
+                disabled.bind="resource.pendingRequest">
+                <fa name="trash"></fa>
+            </button>
+            <button class="btn btn-fab edit-button btn-raised ${editing ? 'btn-warning editing' : 'btn-info'}"
+                bootstrap-tooltip.bind="editing ? 'Cancel' : 'Edit' | t"
+                click.delegate="toggleEditForm()"
+                disabled.bind="resource.pendingRequest">
+                <fa name="times"></fa>
+                <fa name="edit"></fa>
+            </button>
+        </div>
 
         <h1>
             <resource-level-up resource.bind="resource"></resource-level-up>
@@ -40,7 +51,8 @@
             </div>
 
             <h3>${'Child resources' | t}</h3>
-            <resources-list parent-resource.bind="resource"></resources-list>
+            <resources-list parent-resource.bind="resource"
+                has-resources.bind="hasChildren"></resources-list>
         </div>
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"

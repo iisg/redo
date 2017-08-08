@@ -22,3 +22,10 @@ export function trimToLengthBetweenWords(str: string, length: number): string {
     ? hardCutStr.substr(0, length - 1) + '…'
     : hardCutStr.substr(0, lastSpaceIndex) + '…';
 }
+
+// https://stackoverflow.com/a/9251169/1937994
+export function stringToHtml(str: string): string {
+  const $e: JQuery = $('<textarea>');
+  $e.text(str);
+  return $e.html().replace(/[\n\r]/g, '<br>');
+}

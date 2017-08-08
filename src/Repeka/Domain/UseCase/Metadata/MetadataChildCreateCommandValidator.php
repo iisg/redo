@@ -6,6 +6,7 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class MetadataChildCreateCommandValidator extends CommandAttributesValidator {
@@ -30,7 +31,7 @@ class MetadataChildCreateCommandValidator extends CommandAttributesValidator {
      * @inheritdoc
      * @param MetadataChildCreateCommand $command
      */
-    public function getValidator(Command $command): Validator {
+    public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('newChildMetadata', Validator
                 ::key('label', $this->notBlankInAllLanguagesRule)

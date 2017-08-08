@@ -1,7 +1,8 @@
 <template>
     <button class="btn btn-fab btn-raised animated-plus-button"
         class.bind="opened ? 'btn-warning animated-plus-button-opened' : 'btn-success'"
-        click.delegate="opened = !opened">
-        <i class="fa fa-plus"></i>
+        click.trigger="opened = !opened"
+        disabled.bind="disabled">
+        <fa name="plus"></fa>
     </button>
 </template>

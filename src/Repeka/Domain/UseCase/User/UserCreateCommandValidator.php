@@ -3,6 +3,7 @@ namespace Repeka\Domain\UseCase\User;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
+use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
@@ -14,7 +15,7 @@ class UserCreateCommandValidator extends CommandAttributesValidator {
         $this->userLoader = $userLoader;
     }
 
-    public function getValidator(Command $command): Validator {
+    public function getValidator(Command $command): Validatable {
         return Validator::attribute('username', Validator::notBlank()->callback(function ($username) {
             return $this->userLoader->loadUserByUsername($username) == null;
         }));

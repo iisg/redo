@@ -8,6 +8,7 @@ use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class MetadataCreateCommandValidator extends CommandAttributesValidator {
@@ -40,7 +41,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
      * @inheritdoc
      * @param MetadataCreateCommand $command
      */
-    public function getValidator(Command $command): Validator {
+    public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('label', $this->notBlankInAllLanguagesRule)
             ->attribute('name', Validator::notBlank())

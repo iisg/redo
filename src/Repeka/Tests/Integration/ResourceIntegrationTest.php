@@ -18,6 +18,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     private $metadata;
     /** @var ResourceEntity */
     private $resource;
+    /** @var ResourceEntity */
+    private $parentResource;
+    /** @var ResourceEntity */
+    private $childResource;
 
     public function setUp() {
         parent::setUp();
@@ -33,6 +37,13 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->resource = $this->createResource($this->resourceKind, [
             $this->baseMetadata->getId() => ['Test value']
         ]);
+        $this->parentResource = $this->createResource($this->resourceKind, [
+            $this->baseMetadata->getId() => ['Test value for parent'],
+        ]);
+        $this->childResource = $this->createResource($this->resourceKind, [
+            -1 => [$this->parentResource->getId()],
+            $this->baseMetadata->getId() => ['Test value for child'],
+        ]);
     }
 
     public function testFetchingResources() {
@@ -43,12 +54,23 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'id' => $this->resource->getId(),
             'kindId' => $this->resourceKind->getId(),
             'contents' => [$this->metadata->getBaseId() => ['Test value']]
-        ]], $client->getResponse()->getContent());
+        ], [
+            'id' => $this->parentResource->getId(),
+            'kindId' => $this->resourceKind->getId(),
+            'contents' => [$this->metadata->getBaseId() => ['Test value for parent']],
+        ], [
+            'id' => $this->childResource->getId(),
+            'kindId' => $this->resourceKind->getId(),
+            'contents' => [
+                -1 => [$this->parentResource->getId()],
+                $this->metadata->getBaseId() => ['Test value for child'],
+            ],
+        ],], $client->getResponse()->getContent());
     }
 
     public function testFetchingSingleResource() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::joinUrl(self::ENDPOINT, $this->resource->getId()));
+        $client->apiRequest('GET', self::oneEntityEndpoint($this->resource->getId()));
         $this->assertStatusCode(200, $client->getResponse());
         $this->assertJsonStringSimilarToArray([
             'id' => $this->resource->getId(),
@@ -66,6 +88,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(201, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         $createdId = json_decode($client->getResponse()->getContent())->id;
+        /** @var ResourceEntity $created */
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
         $this->assertEquals([$this->metadata->getBaseId() => ['created']], $created->getContents());
@@ -73,13 +96,14 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResource() {
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::joinUrl(self::ENDPOINT, $this->resource->getId()), [
+        $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
             'id' => $this->resource->getId(),
             'kind_id' => $this->resourceKind->getId(),
             'contents' => json_encode([$this->metadata->getBaseId() => ['edited']])
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
         $this->assertEquals([$this->metadata->getBaseId() => ['edited']], $edited->getContents());
     }
@@ -91,13 +115,32 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $newResourceKind->getMetadataList()[0]->updateOrdinalNumber(0);
         $this->persistAndFlush($newResourceKind->getMetadataList()[0]);
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::joinUrl(self::ENDPOINT, $this->resource->getId()), [
+        $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
             'kind_id' => $newResourceKind->getId(),
             'contents' => json_encode($this->resource->getContents())
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
         $this->assertEquals($this->resourceKind->getId(), $edited->getKind()->getId());
+    }
+
+    public function testDeletingLeafResource() {
+        $client = self::createAdminClient();
+        $client->apiRequest('DELETE', self::oneEntityEndpoint($this->childResource->getId()));
+        $this->assertStatusCode(204, $client->getResponse());
+        /** @var ResourceRepository $repository */
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        $this->assertFalse($repository->exists($this->childResource->getId()));
+    }
+
+    public function testDeletingParentResource() {
+        $client = self::createAdminClient();
+        $client->apiRequest('DELETE', self::oneEntityEndpoint($this->parentResource->getId()));
+        $this->assertStatusCode(400, $client->getResponse());
+        /** @var ResourceRepository $repository */
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        $this->assertTrue($repository->exists($this->parentResource->getId()));
     }
 }

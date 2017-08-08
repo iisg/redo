@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
+use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class ResourceUpdateContentsCommandValidator extends CommandAttributesValidator {
@@ -26,7 +27,7 @@ class ResourceUpdateContentsCommandValidator extends CommandAttributesValidator 
     /**
      * @param ResourceUpdateContentsCommand $command
      */
-    public function getValidator(Command $command): Validator {
+    public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('resource', Validator::instance(ResourceEntity::class)->callback(function (ResourceEntity $r) {
                 return $r->getId() > 0;

@@ -6,6 +6,7 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
+use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class MetadataUpdateCommandValidator extends CommandAttributesValidator {
@@ -29,7 +30,7 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
     /**
      * @param MetadataUpdateCommand $command
      */
-    public function getValidator(Command $command): Validator {
+    public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('metadataId', Validator::intVal()->min(1))
             ->attribute('newLabel', $this->containsOnlyAvailableLanguagesRule)

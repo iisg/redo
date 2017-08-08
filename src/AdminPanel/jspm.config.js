@@ -48,6 +48,7 @@ System.config({
     "font-awesome": "npm:font-awesome@4.6.3",
     "i18next-xhr-backend": "npm:i18next-xhr-backend@1.4.1",
     "jquery": "npm:jquery@2.2.4",
+    "martingust/aurelia-repeat-strategies": "github:martingust/aurelia-repeat-strategies@master",
     "moment": "npm:moment@2.18.1",
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.11.3",
     "region-flags": "github:behdad/region-flags@1.0.1",
@@ -75,6 +76,9 @@ System.config({
     },
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
+    },
+    "github:martingust/aurelia-repeat-strategies@master": {
+      "aurelia-templating-resources": "npm:aurelia-templating-resources@1.4.0"
     },
     "github:select2/select2@4.0.3": {
       "jquery": "npm:jquery@2.2.4"

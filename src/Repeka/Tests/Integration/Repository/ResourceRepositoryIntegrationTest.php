@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -9,10 +10,13 @@ use Repeka\Tests\IntegrationTestCase;
 class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     /** @var EntityRepository|ResourceRepository */
     private $resourceRepository;
+    /** @var EntityManagerInterface */
+    private $em;
 
     public function setUp() {
         parent::setUp();
         $this->resourceRepository = $this->container->get(ResourceRepository::class);
+        $this->em = $this->container->get('doctrine.orm.entity_manager');
         $this->loadAllFixtures();
     }
 
@@ -35,12 +39,28 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindChildren() {
-        $connection = $this->container->get('database_connection');
-        $categoryNameMetadataId = $connection->query("SELECT id FROM metadata WHERE label->'EN' = '\"Category name\"';")->fetch()['id'];
-        $ebooksParentId = $connection
-            ->query("SELECT id FROM resource WHERE contents->'{$categoryNameMetadataId}' = '[\"E-booki\"]'")->fetch()['id'];
-        $this->assertNotNull($ebooksParentId);
-        $ebooksChildren = $this->resourceRepository->findChildren($ebooksParentId);
+        $ebooksCategoryId = $this->getEbooksCategoryResourceId();
+        $this->assertNotNull($ebooksCategoryId);
+        $ebooksChildren = $this->resourceRepository->findChildren($ebooksCategoryId);
         $this->assertCount(2, $ebooksChildren);
+    }
+
+    public function testDelete() {
+        $ebooksCategoryId = $this->getEbooksCategoryResourceId();
+        $ebooksCategory = $this->resourceRepository->findOne($ebooksCategoryId);
+        $countBefore = count($this->resourceRepository->findAll());
+        $this->resourceRepository->delete($ebooksCategory);
+        $this->em->flush();
+        $this->assertCount($countBefore - 1, $this->resourceRepository->findAll());
+        $this->assertFalse($this->resourceRepository->exists($ebooksCategoryId));
+    }
+
+    private function getEbooksCategoryResourceId(): int {
+        $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
+        $categoryNameMetadataId = $connection->query("SELECT id FROM metadata WHERE label->'EN' = '\"Category name\"';")->fetch()['id'];
+        $ebooksCategoryId = $connection
+            ->query("SELECT id FROM resource WHERE contents->'{$categoryNameMetadataId}' = '[\"E-booki\"]'")->fetch()['id'];
+        $this->assertNotNull($ebooksCategoryId);
+        return $ebooksCategoryId;
     }
 }

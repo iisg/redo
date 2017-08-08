@@ -5,6 +5,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
+use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
@@ -15,10 +16,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @Route("/resources")
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ResourcesController extends ApiController {
     /** @var ResourceKindRepository */
@@ -97,6 +100,15 @@ class ResourcesController extends ApiController {
             return $this->createJsonResponse($resource);
         }
         throw new BadRequestHttpException('Unsupported operation.');
+    }
+
+    /**
+     * @Route("/{resource}")
+     * @Method("DELETE")
+     */
+    public function deleteAction(ResourceEntity $resource) {
+        $this->handleCommand(new ResourceDeleteCommand($resource));
+        return new Response('', 204);
     }
 
     /**

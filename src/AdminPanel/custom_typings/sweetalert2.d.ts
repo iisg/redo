@@ -238,7 +238,7 @@ declare module 'sweetalert2' {
      *
      * @default null
      */
-    html?: string;
+    html?: string|JQuery;
 
     /**
      * The type of the modal.

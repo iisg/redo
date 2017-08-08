@@ -1,9 +1,18 @@
 <template>
     <require from="resources/details/resource-label"></require>
 
-    <fa if.bind="loading"
-        name="circle-o-notch"
-        spin></fa>
-    <a if.bind="!loading"
-        route-href="route: resources/details; params.bind: routerParams; replace: true">${resource | resourceLabel}</a>
+    <span if.bind="loading">
+        <throbber></throbber>
+        ${'Resource' | t} #${id}&hellip;
+    </span>
+    <a if.bind="!loading && resource != undefined"
+        route-href="route: resources/details; params.bind: routerParams; replace: true">
+        ${resource | resourceLabel}
+    </a>
+    <span if.bind="!loading && resource == undefined"
+        class="text-warning"
+        title.bind="'Resource doesn\'t exist' | t">
+        <fa name="exclamation-triangle"></fa>
+        ${'Resource' | t} #${id}
+    </span>
 </template>
