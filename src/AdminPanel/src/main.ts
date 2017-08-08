@@ -54,7 +54,7 @@ export function configure(aurelia: Aurelia) {
       'common/bootstrap/bootstrap-tooltip',
       'common/bootstrap/hover-aware',
       'common/components/font-awesome/fa',
-      'common/components/loading-bar/loading-bar',
+      'common/components/loading-bar/loading-bar.html',
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
       'common/components/promise-button/promise-button'

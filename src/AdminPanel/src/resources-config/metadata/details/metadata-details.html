@@ -2,7 +2,6 @@
     <require from="../../add-form/animated-plus-button"></require>
     <require from="./metadata-children-list"></require>
     <require from="./metadata-child-add"></require>
-    <require from="common/components/preloader/preloader.html"></require>
 
     <div class="au-animate fade-inup-outup"
         if.bind="metadata">
@@ -44,7 +43,7 @@
         </div>
 
         <div>
-            <preloader if.bind="!metadata"></preloader>
+            <loading-bar if.bind="!metadata"></loading-bar>
 
             <div class="au-animate fade-inup-outup">
                 <metadata-children-list metadata.bind="metadata"

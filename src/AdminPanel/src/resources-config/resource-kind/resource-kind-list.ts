@@ -2,7 +2,7 @@ import {ResourceKindRepository} from "./resource-kind-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
 import {InCurrentLanguageValueConverter} from "../multilingual-field/in-current-language";
-import * as swal from "sweetalert2";
+import swal from "sweetalert2";
 
 @autoinject
 export class ResourceKindList {

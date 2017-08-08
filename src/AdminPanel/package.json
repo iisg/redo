@@ -9,7 +9,7 @@
     "build": "gulp build",
     "clean": "gulp clean",
     "dist": "npm install && gulp bundle",
-    "install": "npm prune && (typings install && jspm clean && jspm install) && npm run -s build",
+    "install": "npm prune && (rm -rf typings/ && typings install && jspm clean && jspm install) && npm run -s build",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",
     "test:junit": "npm test -- --reporters mocha,junit --browsers chrome_no_sandbox",
@@ -95,7 +95,7 @@
       "region-flags": "github:behdad/region-flags@1.0.1",
       "sass-material-colors": "npm:sass-material-colors@^0.0.5",
       "select2": "github:select2/select2@^4.0.3",
-      "sweetalert2": "npm:sweetalert2@^6.4.2",
+      "sweetalert2": "npm:sweetalert2@^6.6.6",
       "text": "github:systemjs/plugin-text@^0.0.9"
     },
     "devDependencies": {

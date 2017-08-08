@@ -1,9 +1,8 @@
 <template>
     <require from="./editor/workflow-editor"></require>
     <require from="./metadata-requirement-editor/workflow-metadata-requirement-editor"></require>
-    <require from="common/components/preloader/preloader.html"></require>
 
-    <preloader if.bind="!workflow"></preloader>
+    <loading-bar if.bind="!workflow"></loading-bar>
 
     <div class="au-animate fade-inup-outup"
         if.bind="workflow">
