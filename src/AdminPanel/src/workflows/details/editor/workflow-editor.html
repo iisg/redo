@@ -1,7 +1,6 @@
 <template>
     <require from="./workflow-graph-display"></require>
     <require from="users/details/user-roles-chooser"></require>
-    <require from="common/components/preloader/preloader.html"></require>
 
     <div class="btn-group pull-right">
         <promise-button on-click.call="save()">
@@ -52,7 +51,7 @@
                 <div class="well"
                     if.bind="simulating">
                     <h3>${ 'Choose the next transition' | t}</h3>
-                    <preloader if.bind="fetchingTransitions"></preloader>
+                    <loading-bar if.bind="fetchingTransitions"></loading-bar>
                     <div class="btn-group-vertical au-animate fade-inup-outup btn-block"
                         if.bind="!fetchingTransitions">
                         <button class="btn btn-success btn-block"

@@ -1,5 +1,5 @@
 const argv = require('yargs').argv;
 
 module.exports = {
-  watch: argv._.indexOf('watch') >= 0
+  failOnTSError: argv._.indexOf('watch') >= 0 || argv._.indexOf('build-scripts') >= 0
 };

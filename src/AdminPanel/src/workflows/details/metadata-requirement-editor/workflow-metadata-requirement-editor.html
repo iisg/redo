@@ -1,6 +1,4 @@
 <template>
-    <require from="common/components/preloader/preloader.html"></require>
-
     <table class="table highlight-col-row-on-hover">
         <thead>
         <tr>
@@ -28,5 +26,5 @@
         </tbody>
     </table>
 
-    <preloader if.bind="metadataList == undefined"></preloader>
+    <loading-bar if.bind="metadataList == undefined"></loading-bar>
 </template>

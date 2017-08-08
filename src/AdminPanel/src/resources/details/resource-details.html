@@ -3,9 +3,8 @@
     <require from="../workflow/resource-workflow"></require>
     <require from="../workflow/resource-place-display.html"></require>
     <require from="./resource-metadata-values/resource-metadata-values"></require>
-    <require from="common/components/preloader/preloader.html"></require>
 
-    <preloader if.bind="!resource"></preloader>
+    <loading-bar if.bind="!resource"></loading-bar>
 
     <div class="au-animate fade-inup-outup"
         if.bind="resource">

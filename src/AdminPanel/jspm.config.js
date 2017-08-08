@@ -53,7 +53,7 @@ System.config({
     "region-flags": "github:behdad/region-flags@1.0.1",
     "sass-material-colors": "npm:sass-material-colors@0.0.5",
     "select2": "github:select2/select2@4.0.3",
-    "sweetalert2": "npm:sweetalert2@6.6.0",
+    "sweetalert2": "npm:sweetalert2@6.6.6",
     "text": "github:systemjs/plugin-text@0.0.9",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"

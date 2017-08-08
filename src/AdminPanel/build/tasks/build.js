@@ -28,7 +28,7 @@ gulp.task('build-scripts', () => {
   if (!typescriptCompiler) {
     typescriptCompiler = typescript.createProject('tsconfig.json');
   }
-  const errorHandler = buildConfig.watch ? notify.onError('Error: <%= error.message %>') : (error) => {
+  const errorHandler = buildConfig.failOnTSError ? notify.onError('Error: <%= error.message %>') : (error) => {
     throw new Error(error.message);
   };
   return typescriptCompiler.src()
