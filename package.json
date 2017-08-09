@@ -18,6 +18,7 @@
   "scripts": {
     "help": "node scripts/help.js",
     "check": "npm run -s lint && npm run -s test",
+    "build": "cd src/AdminPanel && npm run -s build",
     "clean": "npm run -s clean:backend && npm run -s clean:admin",
     "clean:admin": "cd src/AdminPanel && npm run -s clean",
     "clean:backend": "npm run -s clean:backend:cache && php bin/console cache:clear -e dev",
