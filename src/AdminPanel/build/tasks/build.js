@@ -15,6 +15,7 @@ const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const symlink = require("symlink-or-copy").sync;
 const typescript = require('gulp-typescript');
+const buildConfig = require('../build-config');
 
 const htmlMinifierOptions = {
   collapseWhitespace: true,
@@ -27,8 +28,11 @@ gulp.task('build-scripts', () => {
   if (!typescriptCompiler) {
     typescriptCompiler = typescript.createProject('tsconfig.json');
   }
+  const errorHandler = buildConfig.watch ? notify.onError('Error: <%= error.message %>') : (error) => {
+    throw new Error(error.message);
+  };
   return typescriptCompiler.src()
-    .pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
+    .pipe(plumber({errorHandler}))
     .pipe(changed(paths.output, {extension: '.js'}))
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(typescriptCompiler())
