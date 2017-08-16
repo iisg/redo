@@ -31,7 +31,17 @@ module.exports = {
         "rev": true
       }
     },
-    "admin/bundles/vendor": {
+    "admin/bundles/vendor-select2": {
+      "includes": [
+        "select2",
+      ],
+      "options": {
+        "inject": true,
+        "minify": true,
+        "depCache": false,
+        "rev": true
+      }
+    }, "admin/bundles/vendor": {
       "includes": [
         "arrive",
         "aurelia-configuration",
@@ -55,7 +65,6 @@ module.exports = {
         "bootstrap-material-design/dist/css/ripples.min.css!text",
         "jquery",
         "oribella-aurelia-sortable",
-        "select2",
         "sweetalert2",
         "sweetalert2/dist/sweetalert2.css!text",
         "text"
