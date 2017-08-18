@@ -5,10 +5,12 @@ import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {WorkflowPlaceSorter} from "./workflow-place-sorter";
+import {booleanAttribute} from "common/components/boolean-attribute";
 
 @autoinject
-export class WorkflowMetadataRequirementEditor implements ComponentAttached {
+export class WorkflowMetadataRequirements implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay}) workflow: Workflow;
+  @bindable @booleanAttribute editable: boolean = false;
 
   metadataList: Metadata[];
 

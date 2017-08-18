@@ -7,11 +7,12 @@ import {computedFrom} from "aurelia-binding";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {Metadata} from "../metadata/metadata";
+import {noop, VoidFunction} from "common/utils/function-utils";
 
 @autoinject
 export class ResourceKindForm implements ComponentDetached {
   @bindable submit: (value: {savedResourceKind: ResourceKind}) => Promise<any>;
-  @bindable cancel: () => any = () => undefined;
+  @bindable cancel: VoidFunction = noop;
   @bindable edit: ResourceKind;
 
   resourceKind: ResourceKind = new ResourceKind;

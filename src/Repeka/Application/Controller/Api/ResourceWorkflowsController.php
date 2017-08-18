@@ -58,6 +58,7 @@ class ResourceWorkflowsController extends ApiController {
         $data = $request->request->all();
         $command = new ResourceWorkflowUpdateCommand(
             $workflow,
+            $data['name'],
             $data['places'] ?? [],
             $data['transitions'] ?? [],
             $data['diagram'] ?? null,

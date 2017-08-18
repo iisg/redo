@@ -1,11 +1,12 @@
 import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
+import {VoidFunction} from "common/utils/function-utils";
 
 // I REALLY wanted to publish it as an NPM package, but I can't. Modern JS...
 // https://gist.github.com/fracz/1536a2db1a2eb10ae7b8e41692a0a3ed
 export class PromiseButton {
-  @bindable onClick: () => any;
-  @bindable onReset: () => any;
+  @bindable onClick: VoidFunction;
+  @bindable onReset: VoidFunction;
 
   @bindable idleIcon = 'fa-save';
   @bindable waitingIcon = 'fa-spinner fa-spin';

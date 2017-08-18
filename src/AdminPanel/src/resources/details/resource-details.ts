@@ -7,7 +7,7 @@ import {deepCopy} from "common/utils/object-utils";
 import {ResourceLabelValueConverter} from "./resource-label";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {Alert} from "../../common/dialog/alert";
+import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
 
 @autoinject

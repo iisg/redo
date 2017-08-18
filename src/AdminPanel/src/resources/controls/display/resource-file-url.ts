@@ -1,6 +1,6 @@
 import {Resource} from "../../resource";
 import {autoinject} from "aurelia-dependency-injection";
-import {BasenameValueConverter} from "../../../common/value-converters/basename";
+import {BasenameValueConverter} from "common/value-converters/basename";
 
 @autoinject
 export class ResourceFileUrlValueConverter implements ToViewValueConverter {

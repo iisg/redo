@@ -1,15 +1,23 @@
 import {ValidationRules} from "aurelia-validation";
 import {MultilingualText} from "resources-config/metadata/metadata";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
+import {Entity} from "common/entity/entity";
+import {deepCopy} from "common/utils/object-utils";
 
-export class Workflow {
+export class Workflow extends Entity {
   id: number;
   name: MultilingualText = {};
   enabled: boolean;
-  places: Array<WorkflowPlace> = [];
-  transitions: Array<WorkflowTransition> = [];
+  places: WorkflowPlace[] = [];
+  transitions: WorkflowTransition[] = [];
   diagram: string;
   thumbnail;
+
+  copyFrom(workflow: Workflow) {
+    $.extend(this, workflow);
+    this.places = deepCopy(workflow.places);
+    this.transitions = deepCopy(workflow.transitions);
+  }
 }
 
 export interface WorkflowPlace {
@@ -21,9 +29,9 @@ export interface WorkflowPlace {
 export interface WorkflowTransition {
   id: string;
   label: MultilingualText;
-  froms: Array<string>;
-  tos: Array<string>;
-  permittedRoleIds: Array<string>;
+  froms: string[];
+  tos: string[];
+  permittedRoleIds: string[];
 }
 
 export interface UnsatisfiedTransitionExplanation {

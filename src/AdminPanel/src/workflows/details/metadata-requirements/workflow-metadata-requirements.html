@@ -20,7 +20,8 @@
                         <input type="checkbox"
                             model.bind="metadata.id"
                             checked.bind="place.requiredMetadataIds"
-                            change.delegate="checkboxChanged(metadata, place)">
+                            change.delegate="checkboxChanged(metadata, place)"
+                            disabled.bind="!editable">
                     </label>
                 </div>
             </td>

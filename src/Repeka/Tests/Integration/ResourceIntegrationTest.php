@@ -23,7 +23,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     /** @var ResourceEntity */
     private $childResource;
 
-    public function setUp() {
+    protected function setUp() {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');

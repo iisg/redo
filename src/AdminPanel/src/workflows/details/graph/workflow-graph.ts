@@ -9,30 +9,33 @@ import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 import {deepCopy} from "common/utils/object-utils";
+import {noop, VoidFunction} from "common/utils/function-utils";
 
 @autoinject
 export class WorkflowGraph {
   // mandatory for unit testing; unit tests do not see the imports above; have no idea why
-  public static CYTOSCAPE_FACTORY;
+  public static CYTOSCAPE_FACTORY: Cytoscape.Static;
 
   private cytoscape: Cytoscape.Instance;
 
   private readyPromiseResolve;
   public readonly ready = new Promise((resolve) => this.readyPromiseResolve = resolve);
 
-  public onPlacesChangedByUser: () => void = () => undefined;
+  public onPlacesChangedByUser: VoidFunction = noop;
 
   constructor(private i18n: I18N, private inCurrentLanguage: InCurrentLanguageValueConverter) {
   }
 
-  render(workflow: Workflow, container?: HTMLElement) {
+  render(workflow: Workflow, container?: HTMLElement, editable: boolean = false) {
     this.cytoscape = WorkflowGraph.CYTOSCAPE_FACTORY({
       container: container,
       layout: {
         name: 'concentric'
       },
-      style: workflowGraphDefaultStylesheet(),
+      style: workflowGraphDefaultStylesheet,
       maxZoom: 4,
+      autoungrabify: !editable,
+      autounselectify: !editable,
     });
     this.cytoscape.autopanOnDrag();
     this.cytoscape.on('tapend', () => this.fit());
@@ -161,7 +164,7 @@ export class WorkflowGraph {
     this.cytoscape.on('select', 'edge', ({cyTarget: edge}) => callback(this.edgeToTransition(edge)));
   }
 
-  public onDeselect(callback: () => any) {
+  public onDeselect(callback: VoidFunction) {
     this.cytoscape.on('unselect', callback);
   }
 

@@ -5,11 +5,12 @@ import {BootstrapValidationRenderer} from "common/validation/bootstrap-validatio
 import {Metadata} from "./metadata";
 import {computedFrom} from "aurelia-binding";
 import {ResourceKindRepository} from "../resource-kind/resource-kind-repository";
+import {noop, VoidFunction} from "common/utils/function-utils";
 
 @autoinject
 export class MetadataForm {
   @bindable submit: (value: {editedMetadata: Metadata}) => Promise<any>;
-  @bindable cancel: () => any = () => undefined;
+  @bindable cancel: VoidFunction = noop;
   @bindable template: Metadata;
   @bindable edit: boolean = false;
   @bindable cancelButton: boolean = false;

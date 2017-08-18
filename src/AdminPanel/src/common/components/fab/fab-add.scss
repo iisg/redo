@@ -1,16 +1,16 @@
-@import "../../common/styles";
+@import "../../styles";
 
-animated-plus-button {
+fab-add {
   margin-bottom: -56px;
 }
 
-.animated-plus-button {
+fab-add > .btn {
   position: relative;
   z-index: 20;
   .fa-plus {
     @include transition(transform .3s ease-out);
   }
-  &.animated-plus-button-opened .fa-plus {
+  &.opened .fa-plus {
     @include transform(rotate(45deg * 5));
   }
 }

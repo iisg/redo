@@ -7,13 +7,15 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 class ResourceWorkflowUpdateCommand extends Command {
     /** @var ResourceWorkflow */
     private $workflow;
+    private $name;
     private $places;
     private $transitions;
     private $diagram;
     private $thumbnail;
 
-    public function __construct(ResourceWorkflow $workflow, array $places, array $transitions, $diagram, $thumbnail) {
+    public function __construct(ResourceWorkflow $workflow, array $name, array $places, array $transitions, $diagram, $thumbnail) {
         $this->workflow = $workflow;
+        $this->name = $name;
         $this->places = $places;
         $this->transitions = $transitions;
         $this->diagram = $diagram;
@@ -22,6 +24,10 @@ class ResourceWorkflowUpdateCommand extends Command {
 
     public function getWorkflow(): ResourceWorkflow {
         return $this->workflow;
+    }
+
+    public function getName(): array {
+        return $this->name;
     }
 
     public function getPlaces(): array {

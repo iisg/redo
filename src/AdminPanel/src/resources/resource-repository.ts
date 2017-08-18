@@ -44,13 +44,8 @@ export class ResourceRepository extends ApiRepository<Resource> {
     });
   }
 
-  public put(resource: Resource): Promise<Resource> {
-    return this.httpClient.post(this.oneEntityEndpoint(resource), this.toBackend(resource))
-      .then(response => this.toEntity(response.content));
-  }
-
   update(resource: Resource): Promise<Resource> {
-    return this.put(resource);
+    return this.postOne(resource);
   }
 
   applyTransition(resource: Resource, transitionId: string): Promise<Resource> {
@@ -91,5 +86,9 @@ export class ResourceRepository extends ApiRepository<Resource> {
       }
     }
     throw new Error(`Matching base metadata ${metadataId} not found in resource kind ${resourceKind.id}`);
+  }
+
+  private postOne(entity: Resource) {
+    return this.httpClient.post(this.oneEntityEndpoint(entity), this.toBackend(entity)).then(response => this.toEntity(response.content));
   }
 }

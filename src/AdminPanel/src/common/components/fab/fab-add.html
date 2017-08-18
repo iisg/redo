@@ -1,0 +1,8 @@
+<template>
+    <button class="btn btn-fab btn-raised"
+        class.bind="opened ? 'btn-warning opened' : 'btn-success'"
+        click.trigger="opened = !opened"
+        disabled.bind="disabled">
+        <fa name="plus"></fa>
+    </button>
+</template>

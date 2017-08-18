@@ -24,7 +24,7 @@ export class NewWorkflowForm {
       if (result.valid) {
         this.workflowRepository.post(this.workflow).then(workflow => {
           this.workflow = new Workflow;
-          this.router.navigateToRoute('workflow/details', {id: workflow.id});
+          this.router.navigateToRoute('workflows/details', {id: workflow.id});
         });
       }
     }).finally(() => this.submitting = false);

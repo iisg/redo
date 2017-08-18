@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceWorkflowSimulateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
@@ -13,7 +14,8 @@ class ResourceWorkflowSimulateCommandValidatorTest extends \PHPUnit_Framework_Te
 
     protected function setUp() {
         $entityExistsRule = $this->createEntityExistsMock(true);
-        $this->validator = new ResourceWorkflowSimulateCommandValidator($entityExistsRule);
+        $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
+        $this->validator = new ResourceWorkflowSimulateCommandValidator($entityExistsRule, $notBlankInAllLanguagesRule);
     }
 
     public function testValid() {

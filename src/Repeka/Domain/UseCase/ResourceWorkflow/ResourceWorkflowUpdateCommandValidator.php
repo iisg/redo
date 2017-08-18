@@ -8,15 +8,19 @@ use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator {
     /** @var EntityExistsRule */
     private $entityExistsRule;
+    /** @var NotBlankInAllLanguagesRule */
+    private $notBlankInAllLanguagesRule;
 
-    public function __construct(EntityExistsRule $entityExistsRule) {
+    public function __construct(EntityExistsRule $entityExistsRule, NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule) {
         $this->entityExistsRule = $entityExistsRule;
+        $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
     }
 
     /** @inheritdoc */
@@ -25,6 +29,7 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
             ::attribute('workflow', Validator::instance(ResourceWorkflow::class)->callback(function (ResourceWorkflow $workflow) {
                 return $workflow->getId() > 0;
             }))
+            ->attribute('name', $this->notBlankInAllLanguagesRule)
             ->attribute('places', $this->placesValidator())
             ->attribute('transitions', $this->transitionsValidator());
     }
