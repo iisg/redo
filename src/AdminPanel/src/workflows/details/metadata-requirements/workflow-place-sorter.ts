@@ -1,5 +1,5 @@
 import {Workflow, WorkflowPlace} from "../../workflow";
-import {unique} from "../../../common/utils/array-utils";
+import {unique} from "common/utils/array-utils";
 
 export class WorkflowPlaceSorter {
   getOrderedPlaces(workflow: Workflow) {

@@ -1,9 +1,9 @@
 <template>
     <require from="./metadata-form"></require>
-    <require from="../add-form/animated-plus-button"></require>
+    <require from="common/components/fab/fab-add"></require>
 
-    <animated-plus-button class="pull-right"
-        opened.bind="addFormOpened"></animated-plus-button>
+    <fab-add class="pull-right"
+        opened.bind="addFormOpened"></fab-add>
 
     <div if.bind="addFormOpened"
         class="well fade-inout-updown au-animate floating-form-full-width">

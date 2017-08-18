@@ -7,7 +7,9 @@ import {BindingSignaler} from "aurelia-templating-resources";
 import {bindingMode} from "aurelia-binding";
 
 @autoinject
-export class WorkflowEditor {
+export class WorkflowGraphEditor {
+  static readonly UPDATE_FROM_GRAPH = 'updateFromGraph';
+
   @bindable({defaultBindingMode: bindingMode.twoWay}) workflow: Workflow;
 
   selectedElement: WorkflowPlace|WorkflowTransition;
@@ -18,6 +20,13 @@ export class WorkflowEditor {
   fetchingTransitions = false;
 
   constructor(private workflowRepository: WorkflowRepository, private signaler: BindingSignaler) {
+  }
+
+  workflowChanged(newWorkflow, oldWorkflow): void {
+    newWorkflow[WorkflowGraphEditor.UPDATE_FROM_GRAPH] = () => this.updateWorkflowBasedOnGraph(true);
+    if (oldWorkflow != undefined) {
+      delete oldWorkflow[WorkflowGraphEditor.UPDATE_FROM_GRAPH];
+    }
   }
 
   onGraphBuilt(graph: WorkflowGraph) {
@@ -37,7 +46,7 @@ export class WorkflowEditor {
 
   save() {
     this.updateWorkflowBasedOnGraph(true);
-    return this.workflowRepository.put(this.workflow).then(workflow => this.workflow = workflow);
+    return this.workflowRepository.update(this.workflow).then(workflow => this.workflow = workflow);
   }
 
   private updateWorkflowBasedOnGraph(withLayout: boolean = false): void {

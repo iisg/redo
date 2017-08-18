@@ -57,6 +57,16 @@ body > tr[oa-sortable-item] {
   z-index: 10;
 }
 
+.btn-narrow {
+  padding: 8px 10px;
+  &.btn-sm {
+    padding: 5px 7px;
+  }
+  &.btn-xs {
+    padding: 4px 5px;
+  }
+}
+
 .btn-invisible {
   cursor: default;
   background-color: transparent !important;

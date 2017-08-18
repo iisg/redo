@@ -3,7 +3,7 @@ import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/requ
 import {ResourceKind} from "../resource-kind/resource-kind";
 import {ResourceKindRepository} from "../resource-kind/resource-kind-repository";
 import {MetadataRepository} from "./metadata-repository";
-import {deepCopy} from "../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 
 export interface MultilingualText extends StringStringMap {
 }

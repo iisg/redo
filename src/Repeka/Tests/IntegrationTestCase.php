@@ -15,6 +15,7 @@ use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
+use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
@@ -29,7 +30,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     /** @var Application */
     private $application;
 
-    public function setUp() {
+    protected function setUp() {
         self::loadFixture(new AdminAccountFixture());
     }
 
@@ -89,9 +90,9 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         return $url;
     }
 
-    /** @param int|string $id */
-    protected static function oneEntityEndpoint($id): string {
-        return self::joinUrl(static::ENDPOINT, $id);
+    /** @param int|string|object $entity */
+    protected static function oneEntityEndpoint($entity): string {
+        return self::joinUrl(static::ENDPOINT, is_object($entity) ? $entity->getId() : $entity);
     }
 
     protected function getEntityManager() {
@@ -169,5 +170,9 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
 
     protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {
         return $this->handleCommand(new ResourceCreateCommand($resourceKind, $contents));
+    }
+
+    protected function createWorkflow(array $name) {
+        return $this->handleCommand(new ResourceWorkflowCreateCommand($name));
     }
 }

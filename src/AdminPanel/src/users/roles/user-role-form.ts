@@ -5,11 +5,12 @@ import {BootstrapValidationRenderer} from "common/validation/bootstrap-validatio
 import {deepCopy} from "common/utils/object-utils";
 import {UserRole} from "./user-role";
 import {computedFrom} from "aurelia-binding";
+import {noop, VoidFunction} from "common/utils/function-utils";
 
 @autoinject
 export class UserRoleForm {
   @bindable submit: (value: {savedRole: UserRole}) => Promise<any>;
-  @bindable cancel: () => any = () => undefined;
+  @bindable cancel: VoidFunction = noop;
   @bindable edit: UserRole;
 
   role: UserRole = new UserRole();

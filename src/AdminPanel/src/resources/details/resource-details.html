@@ -6,6 +6,7 @@
     <require from="./resource-label"></require>
     <require from="./resource-level-up"></require>
     <require from="../resources-list"></require>
+    <require from="common/components/fab/fab-edit"></require>
     <require from="common/components/loading-bar/pending-throbber.html"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
@@ -16,18 +17,15 @@
         <div class="pull-right">
             <pending-throbber entity.bind="resource"></pending-throbber>
             <button class="btn btn-fab btn-fab-mini btn-raised btn-danger"
-                click.delegate="remove()"
+                click.trigger="remove()"
                 if.bind="!editing"
                 disabled.bind="resource.pendingRequest">
                 <fa name="trash"></fa>
             </button>
-            <button class="btn btn-fab edit-button btn-raised ${editing ? 'btn-warning editing' : 'btn-info'}"
-                bootstrap-tooltip.bind="editing ? 'Cancel' : 'Edit' | t"
-                click.delegate="toggleEditForm()"
-                disabled.bind="resource.pendingRequest">
-                <fa name="times"></fa>
-                <fa name="edit"></fa>
-            </button>
+            <fab-edit editing.bind="editing"
+                shift-down
+                on-click.call="toggleEditForm()"
+                disabled.bind="resource.pendingRequest"></fab-edit>
         </div>
 
         <h1>
@@ -40,7 +38,7 @@
             <resource-metadata-values resource.one-time="resource"></resource-metadata-values>
 
             <dl class="dl-horizontal">
-                <dt>${ 'Place' |t }</dt>
+                <dt>${'Place' | t}</dt>
                 <dd>
                     <resource-place-display resource.bind="resource"></resource-place-display>
                 </dd>

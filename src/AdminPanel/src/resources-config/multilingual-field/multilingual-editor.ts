@@ -4,7 +4,7 @@ import {LanguageRepository} from "../language-config/language-repository";
 import {bindable} from "aurelia-templating";
 import {bindingMode} from "aurelia-binding";
 import {generateId} from "common/utils/string-utils";
-import {booleanAttribute} from "../../common/components/boolean-attribute";
+import {booleanAttribute} from "common/components/boolean-attribute";
 
 @autoinject
 export class MultilingualEditor {

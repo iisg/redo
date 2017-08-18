@@ -32,8 +32,13 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($this->workflow->getTransitions());
     }
 
+    public function testUpdatingName() {
+        $this->workflow->update(['EN' => 'New name'], [], []);
+        $this->assertEquals(['EN' => 'New name'], $this->workflow->getName());
+    }
+
     public function testUpdatingPlacesFromArray() {
-        $this->workflow->update([
+        $this->workflow->update([], [
             ['label' => ['EN' => 'First place']],
             ['label' => ['EN' => 'Second place']],
         ], []);
@@ -43,20 +48,20 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testUpdatingPlacesFromInstance() {
-        $this->workflow->update([new ResourceWorkflowPlace(['PL' => 'Test'])], []);
+        $this->workflow->update([], [new ResourceWorkflowPlace(['PL' => 'Test'])], []);
         $this->assertCount(1, $this->workflow->getPlaces());
         $this->assertEquals(['PL' => 'Test'], $this->workflow->getPlaces()[0]->getLabel());
     }
 
     public function testUpdatingPlacesIfAlreadyExists() {
-        $this->workflow->update([['label' => ['EN' => 'First place']]], []);
-        $this->workflow->update([['label' => ['EN' => 'Another place']]], []);
+        $this->workflow->update([], [['label' => ['EN' => 'First place']]], []);
+        $this->workflow->update([], [['label' => ['EN' => 'Another place']]], []);
         $this->assertCount(1, $this->workflow->getPlaces());
         $this->assertEquals(['EN' => 'Another place'], $this->workflow->getPlaces()[0]->getLabel());
     }
 
     public function testUpdatingTransitionsFromArray() {
-        $this->workflow->update([], [
+        $this->workflow->update([], [], [
             ['label' => ['EN' => 'First transition'], 'froms' => ['A'], 'tos' => ['B']],
             ['label' => ['EN' => 'Second transition'], 'froms' => ['B'], 'tos' => ['C']],
         ]);
@@ -70,7 +75,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testUpdatingThumbnailAndDiagram() {
-        $this->workflow->update([], [], 'json', 'png');
+        $this->workflow->update([], [], [], 'json', 'png');
         $this->assertEquals('json', $this->workflow->getDiagram());
         $this->assertEquals('png', $this->workflow->getThumbnail());
     }
@@ -94,7 +99,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingTransitionsForResource() {
-        $this->workflow->update([], [
+        $this->workflow->update([], [], [
             new ResourceWorkflowTransition([], [], [], [], 'onetransition'),
             new ResourceWorkflowTransition([], [], [], [], 'twotransition'),
             new ResourceWorkflowTransition([], [], [], [], 'anothertransition'),
@@ -109,7 +114,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingPlacesForResource() {
-        $this->workflow->update([
+        $this->workflow->update([], [
             new ResourceWorkflowPlace([], 'first'),
             new ResourceWorkflowPlace([], 'second'),
             new ResourceWorkflowPlace([], 'third'),
@@ -124,7 +129,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingTransitionById() {
-        $this->workflow->update([], [
+        $this->workflow->update([], [], [
             new ResourceWorkflowTransition([], [], [], ['A'], 'first'),
             new ResourceWorkflowTransition([], [], [], ['B'], 'second'),
         ]);

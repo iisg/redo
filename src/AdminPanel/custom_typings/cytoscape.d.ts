@@ -16,7 +16,7 @@ declare namespace Cytoscape {
     $(selector): any;
     fit(eles: any, padding: number): void;
     layout(layout): void;
-    on(event: string, selectorOrCallback: ((e)=>any)|string, callback?: (e)=>any): void;
+    on(event: string, selectorOrCallback: ((e) => any)|string, callback?: (e) => any): void;
     elements(): any;
     autopanOnDrag(): void;
     animate(param: any): void;
@@ -26,14 +26,16 @@ declare namespace Cytoscape {
     edges(): any;
     destroy(): void;
     resize(): void;
+    autoungrabify(ungrabify?: boolean): boolean;
+    autounselectify(autounselectify?: boolean): boolean;
   }
 }
+
+declare var cytoscape: Cytoscape.Static;
 
 declare module "cytoscape" {
   export = cytoscape;
 }
-
-declare var cytoscape: Cytoscape.Static;
 
 declare namespace CytoscapeContextMenus {
   interface Static {
@@ -41,11 +43,11 @@ declare namespace CytoscapeContextMenus {
   }
 }
 
+declare var cytoscapeContextMenus: CytoscapeContextMenus.Static;
+
 declare module "cytoscape-context-menus" {
   export = cytoscapeContextMenus;
 }
-
-declare var cytoscapeContextMenus: CytoscapeContextMenus.Static;
 
 declare namespace CytoscapeEdgeHandles {
   interface Static {
@@ -53,11 +55,11 @@ declare namespace CytoscapeEdgeHandles {
   }
 }
 
+declare var cytoscapeEdgeHandles: CytoscapeEdgeHandles.Static;
+
 declare module "cytoscape-edgehandles" {
   export = cytoscapeEdgeHandles;
 }
-
-declare var cytoscapeEdgeHandles: CytoscapeEdgeHandles.Static;
 
 declare namespace AutopanOnDrag {
   interface Static {
@@ -65,8 +67,8 @@ declare namespace AutopanOnDrag {
   }
 }
 
+declare var autopanOnDrag: AutopanOnDrag.Static;
+
 declare module "cytoscape-autopan-on-drag" {
   export = autopanOnDrag;
 }
-
-declare var autopanOnDrag: AutopanOnDrag.Static;

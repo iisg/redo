@@ -1,8 +1,8 @@
 import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {firstLineWithContent, trimToLengthBetweenWords} from "../../../common/utils/string-utils";
-import {booleanAttribute} from "../../../common/components/boolean-attribute";
+import {firstLineWithContent, trimToLengthBetweenWords} from "common/utils/string-utils";
+import {booleanAttribute} from "common/components/boolean-attribute";
 
 @autoinject
 export class CollapsibleText {

@@ -1,12 +1,10 @@
 <template>
-    <require from="./workflow-graph-display"></require>
+    <require from="../graph/workflow-graph-display"></require>
     <require from="users/details/user-roles-chooser"></require>
 
     <div class="btn-group pull-right">
-        <promise-button on-click.call="save()">
-            ${ 'Save' | t }
-        </promise-button>
-        <button class="btn btn-default ${simulating ? 'active' : ''}"
+        <button type="button"
+            class="btn btn-default ${simulating ? 'active' : ''}"
             if.bind="workflow.places.length > 0"
             click.delegate="toggleSimulation()">
             <span class="fa fa-fw ${simulating ? 'fa-pause' : 'fa-play'}"></span>
@@ -54,7 +52,8 @@
                     <loading-bar if.bind="fetchingTransitions"></loading-bar>
                     <div class="btn-group-vertical au-animate fade-inup-outup btn-block"
                         if.bind="!fetchingTransitions">
-                        <button class="btn btn-success btn-block"
+                        <button type="button"
+                            class="btn btn-success btn-block"
                             click.delegate="advanceSimulation(transition.id)"
                             repeat.for="transition of availableTransitions">
                             <span ref="transition.translatedLabel"
@@ -70,7 +69,8 @@
                     </div>
                     <div if.bind="!fetchingTransitions && availableTransitions.length === 0">
                         ${ 'No transitions from current place.' | t }
-                        <button class="btn btn-warning btn-block"
+                        <button type="button"
+                            class="btn btn-warning btn-block"
                             click.delegate="toggleSimulation()">
                             ${ 'End simulation' | t }
                         </button>

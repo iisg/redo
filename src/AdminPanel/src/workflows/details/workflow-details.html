@@ -1,14 +1,41 @@
 <template>
-    <require from="./editor/workflow-editor"></require>
-    <require from="./metadata-requirement-editor/workflow-metadata-requirement-editor"></require>
+    <require from="./graph/workflow-graph-display"></require>
+    <require from="./graph/workflow-graph-editor"></require>
+    <require from="./metadata-requirements/workflow-metadata-requirements"></require>
+    <require from="common/components/fab/fab-edit"></require>
+    <require from="common/components/loading-bar/pending-throbber.html"></require>
 
     <loading-bar if.bind="!workflow"></loading-bar>
 
-    <div class="au-animate fade-inup-outup"
-        if.bind="workflow">
-        <h1>${workflow.name | inCurrentLanguage}</h1>
-        <workflow-editor workflow.bind="workflow"></workflow-editor>
-        <workflow-metadata-requirement-editor workflow.bind="workflow"></workflow-metadata-requirement-editor>
-    </div>
+    <div if.bind="workflow"
+        class="au-animate fade-inup-outup">
+        <form submit.delegate="update()">
+            <fab-edit editing.bind="editing"
+                on-click.call="toggleEditForm()"></fab-edit>
 
+            <h1>${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</h1>
+
+            <workflow-graph-display if.bind="!editing"
+                workflow.bind="workflow"></workflow-graph-display>
+
+            <div if.bind="editing">
+                <multilingual-editor value.bind="workflow.name"
+                    disabled.bind="workflow.pendingRequest"></multilingual-editor>
+                <workflow-graph-editor workflow.bind="workflow"></workflow-graph-editor>
+            </div>
+
+            <workflow-metadata-requirements workflow.bind="workflow"
+                editable.bind="editing && !workflow.pendingRequest"></workflow-metadata-requirements>
+
+            <div class="pull-right">
+                <pending-throbber entity.bind="workflow"></pending-throbber>
+                <button if.bind="editing"
+                    class="btn btn-primary btn-raised"
+                    disabled.bind="workflow.pendingRequest">
+                    <fa name="check"></fa>
+                    ${'Save' | t}
+                </button>
+            </div>
+        </form>
+    </div>
 </template>

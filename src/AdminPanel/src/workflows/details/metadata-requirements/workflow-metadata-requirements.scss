@@ -2,7 +2,7 @@
 
 // https://css-tricks.com/simple-css-row-column-highlighting/
 table.highlight-col-row-on-hover {
-  $highlight-color: material-color('yellow', '50');
+  $highlight-color: $yellow-50;
   overflow: hidden;
 
   tr:hover {

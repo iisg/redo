@@ -4,11 +4,12 @@ import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {Language} from "./language";
 import {deepCopy} from "common/utils/object-utils";
+import {noop, VoidFunction} from "common/utils/function-utils";
 
 @autoinject
 export class LanguageForm {
   @bindable submit: (value: {savedLanguage: Language}) => Promise<any>;
-  @bindable cancel: () => any = () => undefined;
+  @bindable cancel: VoidFunction = noop;
   @bindable edit: Language;
   editing: boolean = false;
 

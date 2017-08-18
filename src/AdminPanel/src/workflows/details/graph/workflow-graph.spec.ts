@@ -12,7 +12,7 @@ describe(WorkflowGraph.name, () => {
   beforeEach(() => {
     cytoscape = jasmine.createSpyObj('cytoscape', ['autopanOnDrag', 'on', 'animate', 'edgehandles', 'contextMenus', 'nodes', 'edges']);
     i18n = jasmine.createSpyObj('i18n', ['tr']);
-    WorkflowGraph.CYTOSCAPE_FACTORY = () => cytoscape;
+    WorkflowGraph.CYTOSCAPE_FACTORY = (() => cytoscape) as Cytoscape.Static;
     inCurrentLanguageValueConverter = jasmine.createSpyObj('inCurrentLanguageValueConverter', ['toView']);
     inCurrentLanguageValueConverter.toView['and'].callFake(label => label);
     graph = new WorkflowGraph(i18n, inCurrentLanguageValueConverter);

@@ -15,7 +15,13 @@ class ResourceWorkflowUpdateCommandHandler {
     /** @return ResourceWorkflow[] */
     public function handle(ResourceWorkflowUpdateCommand $command): ResourceWorkflow {
         $workflow = $command->getWorkflow();
-        $workflow->update($command->getPlaces(), $command->getTransitions(), $command->getDiagram(), $command->getThumbnail());
+        $workflow->update(
+            $command->getName(),
+            $command->getPlaces(),
+            $command->getTransitions(),
+            $command->getDiagram(),
+            $command->getThumbnail()
+        );
         return $this->workflowRepository->save($workflow);
     }
 }

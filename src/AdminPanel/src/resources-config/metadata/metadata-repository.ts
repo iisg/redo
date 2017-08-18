@@ -1,9 +1,9 @@
 import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "./metadata";
-import {ApiRepository} from "../../common/repository/api-repository";
-import {cachedResponse, clearCachedResponse} from "../../common/repository/cached-response";
-import {deepCopy} from "../../common/utils/object-utils";
+import {ApiRepository} from "common/repository/api-repository";
+import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
+import {deepCopy} from "common/utils/object-utils";
 
 @autoinject
 export class MetadataRepository extends ApiRepository<Metadata> {

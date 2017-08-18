@@ -5,12 +5,13 @@ import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
 import {InCurrentLanguageValueConverter} from "../../resources-config/multilingual-field/in-current-language";
+import {VoidFunction} from "common/utils/function-utils";
 
 @autoinject
 export class TransitionButton {
   @bindable resource: Resource;
   @bindable transition: WorkflowTransition;
-  @bindable applyTransition: () => any;
+  @bindable applyTransition: VoidFunction;
   @bindable fallbackText: string;
 
   constructor(private i18n: I18N, private inCurrentLanguage: InCurrentLanguageValueConverter) {

@@ -1,5 +1,5 @@
 <template>
-    <require from="../../add-form/animated-plus-button"></require>
+    <require from="common/components/fab/fab-add"></require>
     <require from="./metadata-children-list"></require>
     <require from="./metadata-child-add"></require>
 
@@ -35,8 +35,8 @@
         <h1>${'Submetadata kinds' | t}:</h1>
 
         <div>
-            <animated-plus-button class="pull-right"
-                opened.bind="addFormOpened"></animated-plus-button>
+            <fab-add class="pull-right"
+                opened.bind="addFormOpened"></fab-add>
             <metadata-child-add if.bind="addFormOpened"
                 parent-metadata.bind="metadata"
                 saved.call="childMetadataSaved(savedMetadata)"></metadata-child-add>

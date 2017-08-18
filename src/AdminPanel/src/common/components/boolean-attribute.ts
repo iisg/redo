@@ -1,3 +1,5 @@
+import {noop} from "common/utils/function-utils";
+
 /**
  * Decorator for boolean attributes of components.
  * Providing an attribute without a value, eg. like this:
@@ -9,7 +11,7 @@
  */
 export function booleanAttribute(prototype: any, propertyName: string) {
   const methodName = propertyName + 'Changed';
-  const originalMethod: ChangeHandler<boolean> = prototype[methodName] || (() => undefined);
+  const originalMethod: ChangeHandler<boolean> = prototype[methodName] || noop;
   prototype[methodName] = function booleanAttributeChanged(newValue: boolean|'', oldValue: boolean) {
     // this prototype-level assignment won't trigger @bindable's setter, so xxxChanged() won't fire again
     this[propertyName] = normalizeToBoolean(newValue);

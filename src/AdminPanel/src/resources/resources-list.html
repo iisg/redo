@@ -1,13 +1,12 @@
 <template>
     <require from="./add/resource-form"></require>
-    <require from="resources-config/add-form/animated-plus-button"></require>
+    <require from="common/components/fab/fab-add"></require>
     <require from="./workflow/resource-place-display.html"></require>
     <require from="./details/resource-metadata-values/resource-metadata-values"></require>
-    <require from="common/components/loading-bar/pending-throbber.html"></require>
 
-    <animated-plus-button class="pull-right"
+    <fab-add class="pull-right"
         opened.bind="addFormOpened"
-        disabled.bind="parentResource.pendingRequest"></animated-plus-button>
+        disabled.bind="parentResource.pendingRequest"></fab-add>
 
     <div if.bind="addFormOpened"
         class="fade-inup-outdown au-animate floating-form-full-width well">

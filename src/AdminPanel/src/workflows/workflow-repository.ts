@@ -20,4 +20,8 @@ export class WorkflowRepository extends ApiRepository<Workflow> {
       transition: transition
     }).then(response => response.content);
   }
+
+  update(workflow: Workflow): Promise<Workflow> {
+    return this.put(workflow);
+  }
 }

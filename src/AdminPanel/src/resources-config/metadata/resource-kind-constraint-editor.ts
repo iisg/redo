@@ -1,7 +1,7 @@
 import {bindable} from "aurelia-templating";
 import {bindingMode, computedFrom} from "aurelia-binding";
 import {ResourceKind} from "../resource-kind/resource-kind";
-import {arraysEqual} from "../../common/utils/array-utils";
+import {arraysEqual} from "common/utils/array-utils";
 
 export class ResourceKindConstraintEditor {
   @bindable({defaultBindingMode: bindingMode.twoWay}) values: ResourceKind[];

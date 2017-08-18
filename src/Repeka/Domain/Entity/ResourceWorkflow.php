@@ -3,7 +3,6 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
-use Repeka\Domain\Workflow\ResourceWorkflowConditionalTransitionTrait;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 use Repeka\Domain\Workflow\UnsatisfiedTransitionExplanation;
 
@@ -96,7 +95,8 @@ class ResourceWorkflow {
         return $this->thumbnail;
     }
 
-    public function update(array $places, array $transitions, $diagram = null, $thumbnail = null) {
+    public function update(array $name, array $places, array $transitions, $diagram = null, $thumbnail = null) {
+        $this->name = $name;
         $this->places = [];
         foreach ($places as $place) {
             if (!$place instanceof ResourceWorkflowPlace) {

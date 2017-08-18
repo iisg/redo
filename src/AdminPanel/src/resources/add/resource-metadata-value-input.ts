@@ -3,7 +3,7 @@ import {Metadata} from "resources-config/metadata/metadata";
 import {bindingMode, BindingEngine, Disposable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {ValueWrapper} from "../controls/control-strategy";
-import {booleanAttribute} from "../../common/components/boolean-attribute";
+import {booleanAttribute} from "common/components/boolean-attribute";
 
 @autoinject
 export class ResourceMetadataValueInput implements ComponentAttached, ComponentDetached {

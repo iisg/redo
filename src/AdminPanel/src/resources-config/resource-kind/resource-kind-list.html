@@ -1,11 +1,11 @@
 <template>
     <require from="./resource-kind-form"></require>
-    <require from="resources-config/add-form/animated-plus-button"></require>
+    <require from="common/components/fab/fab-add"></require>
     <require from="workflows/icon/workflow-icon.html"></require>
     <require from="common/components/loading-bar/pending-throbber.html"></require>
 
-    <animated-plus-button class="pull-right"
-        opened.bind="addFormOpened"></animated-plus-button>
+    <fab-add class="pull-right"
+        opened.bind="addFormOpened"></fab-add>
     <div if.bind="addFormOpened"
         class="well fade-inup-outdown au-animate floating-form-full-width">
         <h2>${'Add new resource kind' | t}</h2>

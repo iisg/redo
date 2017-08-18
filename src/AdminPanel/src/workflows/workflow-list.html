@@ -1,9 +1,9 @@
 <template>
-    <require from="resources-config/add-form/animated-plus-button"></require>
+    <require from="common/components/fab/fab-add"></require>
     <require from="./new-workflow-form"></require>
 
-    <animated-plus-button class="pull-right"
-        opened.bind="addFormOpened"></animated-plus-button>
+    <fab-add class="pull-right"
+        opened.bind="addFormOpened"></fab-add>
 
     <div if.bind="addFormOpened"
         class="well fade-inup-outdown au-animate floating-form">
@@ -39,7 +39,7 @@
                             src.bind="workflow.thumbnail">
                     </td>
                     <td>
-                        <a route-href="route: workflow/details; params.bind: {id: workflow.id}"
+                        <a route-href="route: workflows/details; params.bind: {id: workflow.id}"
                             class="btn ${workflow['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">
                             <span class="fa fa-eye fa-fw"></span>
                             ${'Details' | t}

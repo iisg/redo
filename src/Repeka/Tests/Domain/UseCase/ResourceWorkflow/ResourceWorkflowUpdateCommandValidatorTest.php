@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandValidator;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
@@ -18,33 +19,34 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
 
     protected function setUp() {
         $entityExistsRule = $this->createEntityExistsMock(true);
-        $this->validator = new ResourceWorkflowUpdateCommandValidator($entityExistsRule);
+        $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
+        $this->validator = new ResourceWorkflowUpdateCommandValidator($entityExistsRule, $notBlankInAllLanguagesRule);
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->workflow->expects($this->any())->method('getId')->willReturn(1);
     }
 
     public function testValid() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [], [], null, null);
         $this->validator->validate($command);
     }
 
     public function testInvalidBecauseOfNotSavedWorkflow() {
-        $command = new ResourceWorkflowUpdateCommand(new ResourceWorkflow([]), [], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand(new ResourceWorkflow([]), [], [], [], null, null);
         $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testValidWithPlaceAsArray() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [['label' => ['PL' => 'A']]], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [['label' => ['PL' => 'A']]], [], null, null);
         $this->validator->validate($command);
     }
 
     public function testValidWithPlaceAsArrayWithIdentifier() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [['id' => 'fooId', 'label' => []]], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [['id' => 'fooId', 'label' => []]], [], null, null);
         $this->validator->validate($command);
     }
 
     public function testValidWithPlaceAsArrayWithRequiredMetadataIds() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [[
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [[
             'id' => 'fooId',
             'label' => ['PL' => 'A'],
             'requiredMetadataIds' => [1, 2, 3]
@@ -53,33 +55,34 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
     }
 
     public function testValidWithPlaceAsObjects() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [new ResourceWorkflowPlace([])], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [new ResourceWorkflowPlace([])], [], null, null);
         $this->validator->validate($command);
     }
 
     public function testInvalidWithInvalidPlace() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [[]], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [[]], [], null, null);
         $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testInvalidWithExtraDataInPlace() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [['label' => [], 'extra' => '']], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [['label' => [], 'extra' => '']], [], null, null);
         $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testInvalidWithLabelNotArray() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [['label' => '']], [], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [['label' => '']], [], null, null);
         $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testValidWithTransitionsAsArray() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [['label' => [], 'froms' => [], 'tos' => []]], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [], [['label' => [], 'froms' => [], 'tos' => []]], null, null);
         $this->validator->validate($command);
     }
 
     public function testValidWithTransitionsWithRoles() {
         $command = new ResourceWorkflowUpdateCommand(
             $this->workflow,
+            [],
             [],
             [['label' => [], 'froms' => [], 'tos' => [], 'permittedRoleIds' => ['AAA']]],
             null,
@@ -92,6 +95,7 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
         $command = new ResourceWorkflowUpdateCommand(
             $this->workflow,
             [],
+            [],
             [['label' => [], 'froms' => [], 'tos' => [], 'permittedRoleIds' => []]],
             null,
             null
@@ -100,17 +104,17 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
     }
 
     public function testValidWithTransitionsAsObjects() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [new ResourceWorkflowTransition([], [], [])], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [], [new ResourceWorkflowTransition([], [], [])], null, null);
         $this->validator->validate($command);
     }
 
     public function testInvalidWhenLackOfTransitionData() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [['label' => [], 'froms' => []]], null, null);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [], [['label' => [], 'froms' => []]], null, null);
         $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testInvalidWhenRequiredMetadataIdsNotAnArray() {
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [[
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [[
             'id' => 'fooId',
             'label' => ['PL' => 'A'],
             'requiredMetadataIds' => 'foo'
@@ -120,12 +124,21 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
 
     public function testInvalidWhenRequiredMetadataIdsDoNotExist() {
         $entityExistsMock = $this->createEntityExistsMock(false);
-        $validator = new ResourceWorkflowUpdateCommandValidator($entityExistsMock);
-        $command = new ResourceWorkflowUpdateCommand($this->workflow, [[
+        $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
+        $validator = new ResourceWorkflowUpdateCommandValidator($entityExistsMock, $notBlankInAllLanguagesRule);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [[
             'id' => 'fooId',
             'label' => ['PL' => 'A'],
-            'requiredMetadataIds' => [1, 2, 'foo', 3]
+            'requiredMetadataIds' => 'foo',
         ]], [], null, null);
+        $this->assertFalse($validator->isValid($command));
+    }
+
+    public function testInvalidWhenNameLanguagesDoNotMatchSystemLanguages() {
+        $entityExistsMock = $this->createEntityExistsMock(true);
+        $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, false);
+        $validator = new ResourceWorkflowUpdateCommandValidator($entityExistsMock, $notBlankInAllLanguagesRule);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [], [], null, null);
         $this->assertFalse($validator->isValid($command));
     }
 }
