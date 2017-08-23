@@ -2,16 +2,11 @@ import {bindable} from "aurelia-templating";
 import {Resource} from "../../resource";
 import {Metadata} from "../../../resources-config/metadata/metadata";
 import {computedFrom} from "aurelia-binding";
+import {booleanAttribute} from "../../../common/components/boolean-attribute";
 
 export class ResourceMetadataValues {
   @bindable resource: Resource;
-  @bindable brief: boolean;
-
-  briefChanged() {
-    if (this.brief as any === '') { // when used without value: <resource-metadata-values brief>
-      this.brief = true;
-    }
-  }
+  @bindable @booleanAttribute brief: boolean;
 
   @computedFrom('resource', 'brief')
   get metadataList(): Metadata[] {

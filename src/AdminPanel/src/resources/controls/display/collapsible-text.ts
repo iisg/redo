@@ -2,25 +2,14 @@ import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {firstLineWithContent, trimToLengthBetweenWords} from "../../../common/utils/string-utils";
+import {booleanAttribute} from "../../../common/components/boolean-attribute";
 
 @autoinject
 export class CollapsibleText {
   @bindable text: string = '';
   @bindable maxLength: number = 60;
-  @bindable collapsed: boolean = false;
-  @bindable multiLine: boolean = false;
-
-  collapsedChanged() {
-    if (this.collapsed as any === '') { // when used without value: <collapsible collapsed>
-      this.collapsed = true;
-    }
-  }
-
-  multiLineChanged() {
-    if (this.multiLine as any === '') { // when used without value: <collapsible multi-line>
-      this.multiLine = true;
-    }
-  }
+  @bindable @booleanAttribute collapsed: boolean = false;
+  @bindable @booleanAttribute multiLine: boolean = false;
 
   @computedFrom('text', 'maxLength')
   get collapsedText(): string {

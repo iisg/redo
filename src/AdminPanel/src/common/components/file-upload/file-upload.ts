@@ -1,11 +1,12 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindingMode, computedFrom} from "aurelia-binding";
+import {booleanAttribute} from "../boolean-attribute";
 
 @autoinject
 export class FileUpload implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay}) value: File|string;
-  @bindable disabled: boolean = false;
+  @bindable @booleanAttribute disabled: boolean = false;
 
   files: Array<File>;
 
@@ -17,12 +18,6 @@ export class FileUpload implements ComponentAttached {
 
   valueChanged() {
     $(this.fileNameInput).val(this.displayName);
-  }
-
-  disabledChanged() {
-    if (this.disabled as any === '') { // when used without value: <file-upload disabled>
-      this.disabled = true;
-    }
   }
 
   attached(): void {
