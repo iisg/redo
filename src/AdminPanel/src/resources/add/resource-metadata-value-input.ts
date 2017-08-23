@@ -3,12 +3,13 @@ import {Metadata} from "resources-config/metadata/metadata";
 import {bindingMode, BindingEngine, Disposable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {ValueWrapper} from "../controls/control-strategy";
+import {booleanAttribute} from "../../common/components/boolean-attribute";
 
 @autoinject
 export class ResourceMetadataValueInput implements ComponentAttached, ComponentDetached {
   @bindable metadata: Metadata;
   @bindable({defaultBindingMode: bindingMode.twoWay}) value: any;
-  @bindable disabled: boolean = false;
+  @bindable @booleanAttribute disabled: boolean = false;
 
   valueWrapper: ValueWrapper = new ValueWrapper();
   subscription: Disposable;
@@ -32,11 +33,5 @@ export class ResourceMetadataValueInput implements ComponentAttached, ComponentD
 
   wrappedValueChanged() {
     this.value = this.valueWrapper.value;
-  }
-
-  disabledChanged() {
-    if (this.disabled as any === '') { // when used without value: <resource-metadata-value-input disabled>
-      this.disabled = true;
-    }
   }
 }

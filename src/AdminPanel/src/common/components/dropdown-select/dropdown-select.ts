@@ -4,6 +4,7 @@ import {bindingMode} from "aurelia-binding";
 import {I18N} from "aurelia-i18n";
 import * as $ from "jquery";
 import "select2";
+import {booleanAttribute} from "../boolean-attribute";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
@@ -12,7 +13,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable allowClear: boolean = false;
   @bindable placeholder: string = "-";
   @bindable multiple: boolean = false;
-  @bindable disabled: boolean = false;
+  @bindable @booleanAttribute disabled: boolean = false;
 
   dropdown: Element;
 
@@ -73,12 +74,6 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   valueChanged() {
     this.updateOption();
-  }
-
-  disabledChanged() {
-    if (this.disabled as any === '') { // when used without value: <dropdown-select disabled>
-      this.disabled = true;
-    }
   }
 
   updateOption() {

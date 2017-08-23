@@ -4,22 +4,17 @@ import {LanguageRepository} from "../language-config/language-repository";
 import {bindable} from "aurelia-templating";
 import {bindingMode} from "aurelia-binding";
 import {generateId} from "common/utils/string-utils";
+import {booleanAttribute} from "../../common/components/boolean-attribute";
 
 @autoinject
 export class MultilingualEditor {
+  @bindable label: string;
+  @bindable placeholder: Object = {};
+  @bindable({defaultBindingMode: bindingMode.twoWay}) value: Object = {};
+  @bindable @booleanAttribute disabled: boolean = false;
+
   languages: Language[];
-
   fieldId: string = generateId();
-
-  @bindable
-  label: string;
-
-  @bindable
-  placeholder: Object = {};
-
-  @bindable({defaultBindingMode: bindingMode.twoWay})
-  value: Object = {};
-
   columnClass: string;
 
   constructor(private languageRepository: LanguageRepository) {
