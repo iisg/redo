@@ -2,8 +2,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {ResourceRepository} from "./resource-repository";
 import {Resource} from "./resource";
 import {bindable} from "aurelia-templating";
-import {DeleteEntityConfirmation} from "../common/dialog/delete-entity-confirmation";
-import {setPendingRequest, clearPendingRequest} from "../common/entity/entity";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {Router} from "aurelia-router";
 import {bindingMode, observable} from "aurelia-binding";
 
@@ -47,10 +46,10 @@ export class ResourcesList {
       return;
     }
     this.deleteEntityConfirmation.confirm('resource', resource.id)
-      .then(setPendingRequest(resource))
+      .then(() => resource.pendingRequest = true)
       .then(() => this.resourceRepository.remove(resource))
       .then(() => this.removeDeletedResource(resource))
-      .finally(clearPendingRequest(resource));
+      .finally(() => resource.pendingRequest = false);
   }
 
   private removeDeletedResource(resource: Resource) {

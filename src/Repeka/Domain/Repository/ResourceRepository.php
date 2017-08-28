@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Repository;
 
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 
 interface ResourceRepository {
     /** @return ResourceEntity[] */
@@ -23,4 +24,6 @@ interface ResourceRepository {
     public function exists(int $resourceId): bool;
 
     public function delete(ResourceEntity $resource): void;
+
+    public function countByResourceKind(ResourceKind $resourceKind): int;
 }

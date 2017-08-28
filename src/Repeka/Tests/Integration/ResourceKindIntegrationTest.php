@@ -5,6 +5,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceKindIntegrationTest extends IntegrationTestCase {
@@ -68,6 +69,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(201, $client->getResponse());
         $resourceKindRepository = self::createClient()->getContainer()->get(ResourceKindRepository::class);
         $createdId = json_decode($client->getResponse()->getContent())->id;
+        /** @var ResourceKind $createdResourceKind */
         $createdResourceKind = $resourceKindRepository->findOne($createdId);
         $this->assertEquals(['TEST' => 'created'], $createdResourceKind->getLabel());
         $this->assertCount(1, $createdResourceKind->getMetadataList());
@@ -80,7 +82,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResourceKind() {
         $client = self::createAdminClient();
-        $client->apiRequest('PATCH', self::joinUrl(self::ENDPOINT, $this->resourceKind->getId()), [
+        $client->apiRequest('PATCH', self::oneEntityEndpoint($this->resourceKind->getId()), [
             'label' => ['TEST' => 'modified'],
             'metadataList' => [[
                 'baseId' => $this->metadata2->getBaseId(),
@@ -106,11 +108,46 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $client = self::createClient();
         $resourceKindRepository = $client->getContainer()->get(ResourceKindRepository::class);
         $metadataRepository = $client->getContainer()->get(MetadataRepository::class);
+        /** @var ResourceKind $resourceKind */
         $resourceKind = $resourceKindRepository->findOne($this->resourceKind->getId());
+        /** @var Metadata $metadata1 */
         $metadata1 = $metadataRepository->findOne($this->metadata1->getId());
+        /** @var Metadata $metadata2 */
         $metadata2 = $metadataRepository->findOne($this->metadata2->getId());
         $this->assertEquals(['TEST' => 'modified'], $resourceKind->getLabel());
         $this->assertTrue($metadata2->getOrdinalNumber() < $metadata1->getOrdinalNumber());
         $this->assertEquals(['TEST' => 'modified'], $metadata1->getPlaceholder());
+    }
+
+    public function testDeletingResourceKind() {
+        $client = self::createAdminClient();
+        $client->apiRequest('DELETE', self::oneEntityEndpoint($this->resourceKind->getId()));
+        $this->assertStatusCode(204, $client->getResponse());
+        $client = self::createClient();
+        /** @var ResourceKindRepository $resourceKindRepository */
+        $resourceKindRepository = $client->getContainer()->get(ResourceKindRepository::class);
+        /** @var MetadataRepository $metadataRepository */
+        $metadataRepository = $client->getContainer()->get(MetadataRepository::class);
+        $this->assertFalse($resourceKindRepository->exists($this->resourceKind->getId()));
+        $this->assertFalse($metadataRepository->exists($this->metadata1->getId()));
+        $this->assertFalse($metadataRepository->exists($this->metadata2->getId()));
+    }
+
+    public function testDeletingUsedResourceKindFails() {
+        $this->handleCommand(new ResourceCreateCommand($this->resourceKind, [
+            $this->metadata1->getBaseId() => ['test1'],
+            $this->metadata2->getBaseId() => ['test2'],
+        ]));
+        $client = self::createAdminClient();
+        $client->apiRequest('DELETE', self::oneEntityEndpoint($this->resourceKind->getId()));
+        $this->assertStatusCode(400, $client->getResponse());
+        $client = self::createClient();
+        /** @var ResourceKindRepository $resourceKindRepository */
+        $resourceKindRepository = $client->getContainer()->get(ResourceKindRepository::class);
+        /** @var MetadataRepository $metadataRepository */
+        $metadataRepository = $client->getContainer()->get(MetadataRepository::class);
+        $this->assertTrue($resourceKindRepository->exists($this->resourceKind->getId()));
+        $this->assertTrue($metadataRepository->exists($this->metadata1->getId()));
+        $this->assertTrue($metadataRepository->exists($this->metadata2->getId()));
     }
 }

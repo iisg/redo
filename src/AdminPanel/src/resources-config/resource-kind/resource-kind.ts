@@ -4,12 +4,14 @@ import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/requ
 import {Workflow} from "workflows/workflow";
 import {WorkflowRepository} from "workflows/workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
-import {deepCopy} from "../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 import {computedFrom} from "aurelia-binding";
+import {Entity} from "common/entity/entity";
 
 @autoinject
-export class ResourceKind {
+export class ResourceKind extends Entity {
   constructor(private workflowRepository?: WorkflowRepository) {
+    super();
   }
 
   id: number;

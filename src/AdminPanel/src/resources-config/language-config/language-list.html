@@ -41,7 +41,7 @@
                     </td>
                     <td if.bind="!language.editing">${language.name}</td>
                     <td if.bind="!language.editing">
-                        <div class="pull-right">
+                        <div class="pull-right text-nowrap">
                             <pending-throbber entity.bind="language"></pending-throbber>
                             <button type="button"
                                 class="btn btn-danger pull-right ${language.hovered ? 'btn-raised' : ''}"

@@ -7,7 +7,6 @@ import {deepCopy} from "common/utils/object-utils";
 import {ResourceLabelValueConverter} from "./resource-label";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {setPendingRequest, clearPendingRequest} from "../../common/entity/entity";
 import {Alert} from "../../common/dialog/alert";
 import {I18N} from "aurelia-i18n";
 
@@ -67,10 +66,10 @@ export class ResourceDetails implements RoutableComponentActivate {
       this.alert.show({type: 'warning'}, title, text);
     } else {
       this.deleteEntityConfirmation.confirm('resource', this.resource.id)
-        .then(setPendingRequest(this.resource))
+        .then(() => this.resource.pendingRequest = true)
         .then(() => this.resourceRepository.remove(this.resource))
         .then(() => this.navigateToParentOrList())
-        .finally(clearPendingRequest(this.resource));
+        .finally(() => this.resource.pendingRequest = false);
     }
   }
 

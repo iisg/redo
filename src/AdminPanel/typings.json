@@ -38,8 +38,7 @@
     "jquery": "registry:dt/jquery#1.10.0+20160929162922",
     "promise.prototype.finally": "registry:dt/promise.prototype.finally#1.0.1+20161005184000",
     "select2": "registry:dt/select2#4.0.1+20170309212512",
-    "systemjs": "registry:dt/systemjs#0.19.29+20161215140219",
-    "whatwg-fetch": "registry:dt/whatwg-fetch#0.0.0+20160524142046"
+    "systemjs": "registry:dt/systemjs#0.19.29+20161215140219"
   },
   "linterIgnored": {
     "i18next": "DT typings for i18next are broken and don't compile, Aurelia provides fixed ones"

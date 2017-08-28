@@ -33,4 +33,8 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
     public function exists(int $id): bool {
         return !!$this->find($id);
     }
+
+    public function delete(ResourceKind $resourceKind): void {
+        $this->getEntityManager()->remove($resourceKind);
+    }
 }
