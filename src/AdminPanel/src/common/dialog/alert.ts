@@ -101,6 +101,7 @@ export interface AlertOptions {
   showCancelButton?: boolean;
   cancelButtonClass?: ButtonClass;
   cancelButtonText?: string;
+  imageUrl?: string;
   aurelialize?: boolean;
   aureliaContext?: any;
   onOpen?: (modal: HTMLElement) => any;

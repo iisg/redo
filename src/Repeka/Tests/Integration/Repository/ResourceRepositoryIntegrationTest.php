@@ -4,7 +4,9 @@ namespace Repeka\Tests\Integration\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
@@ -55,6 +57,12 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertFalse($this->resourceRepository->exists($ebooksCategoryId));
     }
 
+    public function testResourceCountByKind() {
+        $bookResourceKind = $this->getBookResourceKind();
+        $booksCount = $this->resourceRepository->countByResourceKind($bookResourceKind);
+        $this->assertEquals(4, $booksCount);
+    }
+
     private function getEbooksCategoryResourceId(): int {
         $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
         $categoryNameMetadataId = $connection->query("SELECT id FROM metadata WHERE label->'EN' = '\"Category name\"';")->fetch()['id'];
@@ -62,5 +70,16 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
             ->query("SELECT id FROM resource WHERE contents->'{$categoryNameMetadataId}' = '[\"E-booki\"]'")->fetch()['id'];
         $this->assertNotNull($ebooksCategoryId);
         return $ebooksCategoryId;
+    }
+
+    private function getBookResourceKind(): ResourceKind {
+        $resourceKinds = $this->handleCommand(new ResourceKindListQuery(false));
+        foreach ($resourceKinds as $resourceKind) {
+            /** @var ResourceKind $resourceKind */
+            if ($resourceKind->getLabel()['EN'] == 'Book') {
+                return $resourceKind;
+            }
+        }
+        throw new \RuntimeException("Resource kind 'Book' not found! This is a problem with the test, not the app.");
     }
 }

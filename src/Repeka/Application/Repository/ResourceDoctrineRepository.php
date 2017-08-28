@@ -5,6 +5,7 @@ use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
 
@@ -59,5 +60,14 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
 
     public function delete(ResourceEntity $resource): void {
         $this->getEntityManager()->remove($resource);
+    }
+
+    public function countByResourceKind(ResourceKind $resourceKind): int {
+        $qb = $this->createQueryBuilder('r');
+        $query = $qb->select('COUNT(r.id)')
+            ->where('r.kind = :kind')
+            ->setParameter('kind', $resourceKind)
+            ->getQuery();
+        return $query->getSingleScalarResult();
     }
 }

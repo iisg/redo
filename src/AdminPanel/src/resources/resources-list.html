@@ -3,6 +3,7 @@
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="./workflow/resource-place-display.html"></require>
     <require from="./details/resource-metadata-values/resource-metadata-values"></require>
+    <require from="common/components/loading-bar/pending-throbber.html"></require>
 
     <animated-plus-button class="pull-right"
         opened.bind="addFormOpened"
@@ -52,9 +53,7 @@
                     </td>
                     <td>
                         <span class="pull-right text-nowrap">
-                            <span class="btn btn-default btn-sm btn-invisible">
-                                <throbber if.bind="resource.pendingRequest"></throbber>
-                            </span>
+                            <pending-throbber entity.bind="resource"></pending-throbber>
                             <button class="btn ${resource.hovered ? 'btn-raised' : ''} btn-info btn-sm"
                                 click.delegate="navigate(resource)"
                                 disabled.bind="resource.pendingRequest">

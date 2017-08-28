@@ -3,9 +3,8 @@ import {ComponentAttached} from "aurelia-templating";
 import {Language} from "./language";
 import {LanguageRepository} from "./language-repository";
 import {deepCopy} from "common/utils/object-utils";
-import {clearCachedResponse} from "../../common/repository/cached-response";
-import {DeleteEntityConfirmation} from "../../common/dialog/delete-entity-confirmation";
-import {setPendingRequest, clearPendingRequest} from "../../common/entity/entity";
+import {clearCachedResponse} from "common/repository/cached-response";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 
 @autoinject
 export class LanguageList implements ComponentAttached {
@@ -29,25 +28,25 @@ export class LanguageList implements ComponentAttached {
     });
   }
 
-  saveEditedLanguage(language: Language, changedLanguage: Language): Promise<Language> {
+  saveEditedLanguage(language: Language, changedLanguage: Language): Promise<any> {
     const originalLanguage = deepCopy(language);
     $.extend(language, changedLanguage);
     language.pendingRequest = true;
     return this.languageRepository
       .update(changedLanguage)
       .catch(() => $.extend(language, originalLanguage))
-      .finally(clearPendingRequest(language));
+      .finally(() => language.pendingRequest = false);
   }
 
-  deleteLanguage(language: Language) {
+  deleteLanguage(language: Language): Promise<any> {
     return this.deleteEntityConfirmation.confirm('language', language.code)
-      .then(setPendingRequest(language))
+      .then(() => language.pendingRequest = true)
       .then(() => this.languageRepository.remove(language))
       .then(() => {
         clearCachedResponse(this.languageRepository.getList);
         return this.languageRepository.getList();
       })
       .then(languages => this.languageList = languages)
-      .finally(clearPendingRequest(language));
+      .finally(() => language.pendingRequest = false);
   }
 }

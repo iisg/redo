@@ -2,6 +2,7 @@
     <require from="./resource-kind-form"></require>
     <require from="resources-config/add-form/animated-plus-button"></require>
     <require from="workflows/icon/workflow-icon.html"></require>
+    <require from="common/components/loading-bar/pending-throbber.html"></require>
 
     <animated-plus-button class="pull-right"
         opened.bind="addFormOpened"></animated-plus-button>
@@ -35,10 +36,10 @@
                     hover-aware.one-time="resourceKind"
                     class="au-animate fade-inup-outdown ${resourceKind.editing ? 'table-row-edit-form' : ''}">
                     <td>${resourceKind.id}</td>
-                    <td if.bind="!resourceKind['editing']">
+                    <td if.bind="!resourceKind.editing">
                         ${resourceKind.label | inCurrentLanguage}
                     </td>
-                    <td if.bind="!resourceKind['editing']">
+                    <td if.bind="!resourceKind.editing">
                         <dl class="dl-horizontal">
                             <template repeat.for="metadata of resourceKind.metadataList & oneTime">
                                 <dt>${metadata.name}</dt>
@@ -50,31 +51,36 @@
                             </template>
                         </dl>
                     </td>
-                    <td if.bind="!resourceKind['editing']"
+                    <td if.bind="!resourceKind.editing"
                         class="text-right">
-                        <div class="btn-group">
-                            <promise-button on-click.call="displayWorkflowPreview(resourceKind)"
-                                class="btn-group"
-                                if.one-time="resourceKind.workflowId"
-                                idle-icon=""
-                                waiting-icon=""
-                                reset-time="0"
-                                idle-class="btn btn-default ${resourceKind['hovered'] ? 'btn-raised' : ''}">
+                        <div class="pull-right text-nowrap">
+                            <pending-throbber entity.bind="resourceKind"></pending-throbber>
+                            <button if.one-time="resourceKind.workflowId"
+                                class="btn btn-default ${resourceKind.hovered ? 'btn-raised' : ''}"
+                                click.trigger="displayWorkflowPreview(resourceKind)"
+                                disabled.bind="resourceKind.pendingRequest">
                                 <workflow-icon></workflow-icon>
-                            </promise-button>
+                            </button>
                             <button type="button"
-                                class="btn btn-default ${resourceKind['hovered'] ? 'btn-raised' : ''}"
-                                click.delegate="resourceKind['editing'] = true">
+                                class="btn btn-default ${resourceKind.hovered ? 'btn-raised' : ''}"
+                                click.trigger="resourceKind.editing = true"
+                                disabled.bind="resourceKind.pendingRequest">
                                 <span class="fa fa-edit"></span>
+                            </button>
+                            <button type="button"
+                                class="btn btn-danger ${resourceKind.hovered ? 'btn-raised' : ''}"
+                                click.trigger="deleteResourceKind(resourceKind)"
+                                disabled.bind="resourceKind.pendingRequest">
+                                <span class="fa fa-trash"></span>
                             </button>
                         </div>
                     </td>
-                    <td if.bind="resourceKind['editing']"
+                    <td if.bind="resourceKind.editing"
                         colspan="3">
-                        <div if.bind="resourceKind['editing']"
+                        <div if.bind="resourceKind.editing"
                             class="au-animate anim-height-inout-600">
                             <resource-kind-form edit.bind="resourceKind"
-                                submit.call="saveEditedResourceKind(resourceKind, savedResourceKind)"
+                                submit.call="saveEditedResourceKind(resourceKind, savedResourceKind) && (resourceKind.editing = false)"
                                 cancel.call="resourceKind.editing = false"></resource-kind-form>
                         </div>
                     </td>

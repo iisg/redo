@@ -19,4 +19,6 @@ interface ResourceKindRepository {
     public function save(ResourceKind $resourceKind): ResourceKind;
 
     public function exists(int $id): bool;
+
+    public function delete(ResourceKind $resourceKind): void;
 }

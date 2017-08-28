@@ -2,13 +2,16 @@
 
 namespace Repeka\Application\Controller\Api;
 
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindDeleteCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/resource-kinds")
@@ -55,5 +58,14 @@ class ResourceKindsController extends ApiController {
         $command = new ResourceKindUpdateCommand($id, $data['label'], $data['metadataList']);
         $resourceKind = $this->handleCommand($command);
         return $this->createJsonResponse($resourceKind);
+    }
+
+    /**
+     * @Route("/{id}")
+     * @Method("DELETE")
+     */
+    public function deleteAction(ResourceKind $resourceKind) {
+        $this->handleCommand(new ResourceKindDeleteCommand($resourceKind));
+        return new Response('', 204);
     }
 }

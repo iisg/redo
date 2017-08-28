@@ -33,10 +33,10 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testInvalidWhereInvalidId() {
+        $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindUpdateCommand(0, ['PL' => 'Labelka'], [
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ]);
-        $this->expectException(InvalidCommandException::class);
         $this->validator->validate($command);
     }
 }

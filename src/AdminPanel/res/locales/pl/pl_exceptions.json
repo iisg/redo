@@ -10,9 +10,11 @@
   "invalidCommand": "Dane przesłane do serwera są nieprawidłowe",
   "metadataAlreadyPresent": "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}",
   "violationFields": {
-    "resource": "Zasób"
+    "resource": "Zasób",
+    "resourceKind": "Rodzaj zasobu"
   },
   "rules": {
-    "resourceHasNoChildrenRule": "Zasób ma podzasoby."
+    "resourceHasNoChildrenRule": "Zasób ma podzasoby.",
+    "noResourcesOfKindExistRule": "Istnieją zasoby tego rodzaju."
   }
 }

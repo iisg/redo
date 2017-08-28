@@ -93,7 +93,8 @@
   "Delete": "Usuń",
   "entityTypes": {
     "language": "język",
-    "resource": "zasób"
+    "resource": "zasób",
+    "resourceKind": "rodzaj zasobu"
   },
   "Child resources": "Podzasoby",
   "Resource doesn't exist": "Zasób nie istnieje",
