@@ -3,9 +3,9 @@ import {ConstraintValidator} from "./constraint-validator";
 describe(ConstraintValidator.name, () => {
   it('automatically generates constraint names', () => {
     class TestDummyConstraintValidator extends ConstraintValidator {
-      validate(values: any[], config): boolean {
+      validate(): Promise<boolean> {
         fail();
-        return false;
+        return Promise.resolve(false);
       }
     }
     const dummy = new TestDummyConstraintValidator();

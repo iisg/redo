@@ -10,7 +10,7 @@
         </div>
         <resource-form-generated resource-kind.bind="resource.kind"
             resource.bind="resource"
-            disable-parent.bind="parent != undefined"
+            disable-parent.bind="parent !== undefined"
             resource-class.bind="resourceClass"></resource-form-generated>
         <div class="has-error"
             if.bind="errorToDisplay">

@@ -7,5 +7,5 @@ export abstract class ConstraintValidator {
     return camelCase.replace(/ConstraintValidator$/, '');
   }
 
-  abstract validate(values: any[], config): boolean;
+  abstract validate(values: any[], config): boolean|Promise<boolean>;
 }
