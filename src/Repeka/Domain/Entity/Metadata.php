@@ -4,6 +4,11 @@ namespace Repeka\Domain\Entity;
 use Assert\Assertion;
 
 class Metadata implements Identifiable {
+    /**
+     * This array key is used to store names of constraints that were present in base metadata, but were removed in overriding metadata.
+     */
+    const REMOVED_CONSTRAINTS_KEY = '__removedConstraints';
+
     private $id;
     /** @var string */
     private $control;
@@ -26,16 +31,18 @@ class Metadata implements Identifiable {
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     public static function create(
+        string $resourceClass,
         MetadataControl $control,
         string $name,
         array $label,
-        string $resourceClass,
         array $placeholder = [],
         array $description = [],
         array $constraints = [],
         bool $shownInBrief = false
     ): Metadata {
+        Assertion::allNotNull($constraints);
         $metadata = new self();
+        $metadata->resourceClass = $resourceClass;
         $metadata->control = $control->getValue();  // $control must be a string internally because it's so when read from DB
         $metadata->name = $name;
         $metadata->label = $label;
@@ -44,7 +51,6 @@ class Metadata implements Identifiable {
         $metadata->description = $description;
         $metadata->constraints = $constraints;
         $metadata->shownInBrief = $shownInBrief;
-        $metadata->resourceClass = $resourceClass;
         return $metadata;
     }
 
@@ -52,22 +58,21 @@ class Metadata implements Identifiable {
         $metadata = new self();
         $metadata->baseMetadata = $base;
         $metadata->ordinalNumber = -1;
+        $metadata->resourceClass = $base->resourceClass;
         return $metadata;
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     */
+    /** @SuppressWarnings(PHPMD.BooleanArgumentFlag) */
     public static function createForResourceKind(
         array $label,
         ResourceKind $resourceKind,
         Metadata $base,
-        string $resourceClass,
         array $placeholder = [],
         array $description = [],
         array $constraints = [],
         bool $shownInBrief = null
     ): Metadata {
+        Assertion::allNotNull($constraints);
         $metadata = self::createWithBase($base);
         $metadata->label = $label;
         $metadata->resourceKind = $resourceKind;
@@ -75,7 +80,6 @@ class Metadata implements Identifiable {
         $metadata->description = $description;
         $metadata->constraints = $constraints;
         $metadata->shownInBrief = $shownInBrief;
-        $metadata->resourceClass = $resourceClass;
         return $metadata;
     }
 
@@ -134,10 +138,22 @@ class Metadata implements Identifiable {
     }
 
     public function getConstraints(): array {
-        if ($this->isBase()) {
+        if (!$this->baseMetadata) {
             return $this->constraints;
         } else {
-            return array_merge($this->baseMetadata->constraints, $this->constraints);
+            $patchedConstraints = $this->baseMetadata->constraints;
+            foreach ($this->constraints as $name => $value) {
+                if ($name == self::REMOVED_CONSTRAINTS_KEY) {
+                    continue;  // key for internal use, not an override, so skip it
+                }
+                $patchedConstraints[$name] = $value;
+            }
+            foreach ($this->constraints[self::REMOVED_CONSTRAINTS_KEY] ?? [] as $removedConstraint) {
+                if (array_key_exists($removedConstraint, $patchedConstraints)) {
+                    unset($patchedConstraints[$removedConstraint]);
+                }
+            }
+            return $patchedConstraints;
         }
     }
 
@@ -178,6 +194,7 @@ class Metadata implements Identifiable {
         array $newConstraints,
         bool $shownInBrief
     ) {
+        Assertion::allNotNull($newConstraints);
         if ($this->isBase()) {
             $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
             $this->placeholder = $newPlaceholder;
@@ -188,9 +205,24 @@ class Metadata implements Identifiable {
             $this->label = $this->removeCopiedFromBase($newLabel, $this->baseMetadata->getLabel());
             $this->placeholder = $this->removeCopiedFromBase($newPlaceholder, $this->baseMetadata->getPlaceholder());
             $this->description = $this->removeCopiedFromBase($newDescription, $this->baseMetadata->getDescription());
-            $this->constraints = $this->removeCopiedFromBase($newConstraints, $this->baseMetadata->getConstraints());
+            $this->constraints = $this->getBaseConstraintsPatch($newConstraints, $this->baseMetadata->getConstraints());
             $this->shownInBrief = ($shownInBrief == $this->baseMetadata->shownInBrief) ? null : $shownInBrief;
         }
+    }
+
+    private function getBaseConstraintsPatch(array $constraints, array $baseConstraints): array {
+        $patch = [];
+        foreach ($constraints as $name => &$value) {  // mind that $value is a reference
+            $valueIsInherited = array_key_exists($name, $baseConstraints) && $baseConstraints[$name] == $value;
+            if (!$valueIsInherited) {
+                $patch[$name] = $value;
+            }
+        }
+        $removedKeys = array_diff(array_keys($baseConstraints), array_keys($constraints));
+        if (!empty($removedKeys)) {
+            $patch[self::REMOVED_CONSTRAINTS_KEY] = $removedKeys;
+        }
+        return $patch;
     }
 
     public static function compareOrdinalNumbers(Metadata $a, Metadata $b): int {

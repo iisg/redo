@@ -40,7 +40,7 @@ export function i18nConfigurator(aurelia: Aurelia) {
 @autoinject
 export class I18nParams {
   readonly namespaces = ['generic', 'validation', 'nav', 'controls', 'exceptions', 'roles',
-    'system_metadata', 'entity_types', 'resource_classes'];
+    'system_metadata', 'entity_types', 'resource_classes', 'metadata_constraints'];
 
   constructor(private config: Configure) {
   }

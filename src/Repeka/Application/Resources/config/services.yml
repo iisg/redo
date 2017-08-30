@@ -87,7 +87,7 @@ services:
     - '%repeka.upload.path%'
     - '%repeka.upload.temp_folder%'
 
-  Repeka\Application\Validation\ContainerAwareMetadataConstraintProvider: ~
+  Repeka\Application\Validation\ContainerAwareMetadataConstraintManager: ~
   Repeka\Domain\Validation\Rules\ResourceClassExistsRule:
     $resourceClasses: '%repeka.resource_classes%'
 

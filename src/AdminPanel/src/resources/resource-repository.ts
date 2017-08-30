@@ -2,7 +2,7 @@ import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {Resource} from "./resource";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
-import {ResourceKind} from "../resources-config/resource-kind/resource-kind";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {workflowPlaceToEntity} from "workflows/workflow-place-converters";
 import {ResourceListQuery} from "./resource-list-query";
 import {ApiRepository} from "../common/repository/api-repository";

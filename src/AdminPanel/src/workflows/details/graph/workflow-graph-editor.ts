@@ -39,6 +39,7 @@ export class WorkflowGraphEditor implements ComponentUnbind {
   private disposeWorkflowPlacesSubscription(): void {
     if (this.placesSubscription !== undefined) {
       this.placesSubscription.dispose();
+      this.placesSubscription = undefined;
     }
   }
 

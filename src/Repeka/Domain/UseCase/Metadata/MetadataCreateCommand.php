@@ -19,16 +19,16 @@ class MetadataCreateCommand extends Command {
         array $label,
         array $description,
         array $placeholder,
-        string $control,
+        string $controlName,
         string $resourceClass,
-        array $constraints = ['count' => []],
+        array $constraints = [],
         bool $shownInBrief = false
     ) {
         $this->name = $name;
         $this->label = $label;
         $this->description = $description;
         $this->placeholder = $placeholder;
-        $this->controlName = $control;
+        $this->controlName = $controlName;
         $this->constraints = $constraints;
         $this->shownInBrief = $shownInBrief;
         $this->resourceClass = $resourceClass;

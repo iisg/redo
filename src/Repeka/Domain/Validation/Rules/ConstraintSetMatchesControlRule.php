@@ -4,16 +4,20 @@ namespace Repeka\Domain\Validation\Rules;
 use Assert\Assertion;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Validation\MetadataConstraintManager;
 use Respect\Validation\Rules\AbstractRule;
 
 class ConstraintSetMatchesControlRule extends AbstractRule {
     /** @var MetadataRepository */
     private $metadataRepository;
+    /** @var MetadataConstraintManager */
+    private $metadataConstraintManager;
 
     private $control;
 
-    public function __construct(MetadataRepository $metadataRepository) {
+    public function __construct(MetadataRepository $metadataRepository, MetadataConstraintManager $metadataConstraintManager) {
         $this->metadataRepository = $metadataRepository;
+        $this->metadataConstraintManager = $metadataConstraintManager;
     }
 
     /**
@@ -26,7 +30,7 @@ class ConstraintSetMatchesControlRule extends AbstractRule {
         if (!($control instanceof MetadataControl)) {
             throw new \InvalidArgumentException('Argument must be a valid control name or a control instance');
         }
-        $instance = new self($this->metadataRepository);
+        $instance = new self($this->metadataRepository, $this->metadataConstraintManager);
         $instance->control = $control;
         return $instance;
     }
@@ -41,11 +45,10 @@ class ConstraintSetMatchesControlRule extends AbstractRule {
             $this->control,
             'Control not set. Use forControl() or forMetadataId() to create validator for specific control first.'
         );
-        $keys = array_keys($input);
-        if ($this->control == MetadataControl::RELATIONSHIP()) {
-            return $keys == ['resourceKind'];
-        } else {
-            return count($keys) == 0;
-        }
+        $actualKeys = array_keys($input);
+        $requiredKeys = $this->metadataConstraintManager->getSupportedConstraintNamesForControl($this->control);
+        $missingKeys = array_diff($requiredKeys, $actualKeys);
+        $extraKeys = array_diff($actualKeys, $requiredKeys);
+        return empty($missingKeys) && empty($extraKeys);
     }
 }

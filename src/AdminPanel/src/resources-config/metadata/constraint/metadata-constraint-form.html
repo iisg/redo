@@ -1,0 +1,13 @@
+<template>
+    <require from="./metadata-constraint-editor"></require>
+
+    <h4>${'Constraints' | t}</h4>
+    <div repeat.for="constraintName of constraintNames"
+        class="form-group">
+        <label>${'metadata_constraints::' + constraintName | t}</label>
+        <metadata-constraint-editor name.bind="constraintName"
+            metadata.bind="metadata"
+            base-metadata.bind="baseMetadata"
+            resource-class.bind="resourceClass"></metadata-constraint-editor>
+    </div>
+</template>

@@ -23,13 +23,13 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
-        $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], [], 'text', 'books');
-        $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], [], 'text', 'books');
+        $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], []);
+        $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], []);
         $baseDictionaryMetadata = $this->createMetadata('Metadata', ['TEST' => 'Base metadata dictionary'], [], [], 'text', 'dictionaries');
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Test'], [
-            $this->resourceKindMetadata($baseMetadata1, ['TEST' => 'Metadata kind 1'], 'books'),
-            $this->resourceKindMetadata($baseMetadata2, ['TEST' => 'Metadata kind 2'], 'books')
-        ], 'books');
+            $this->resourceKindMetadata($baseMetadata1, ['TEST' => 'Metadata kind 1']),
+            $this->resourceKindMetadata($baseMetadata2, ['TEST' => 'Metadata kind 2']),
+        ]);
         $this->createResourceKind(['TEST' => 'Test'], [
             $this->resourceKindMetadata($baseDictionaryMetadata, ['TEST' => 'Metadata kind dictionary'], 'dictionaries')
         ], 'dictionaries');
@@ -73,7 +73,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingResourceKind() {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $baseMetadata = Metadata::create(MetadataControl::INTEGER(), 'New base', ['TEST' => 'New base metadata'], 'books');
+        $baseMetadata = Metadata::create('books', MetadataControl::INTEGER(), 'New base', ['TEST' => 'New base metadata']);
         $em->persist($baseMetadata);
         $em->flush();
         $client = self::createAdminClient();
@@ -86,9 +86,9 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'label' => ['TEST' => 'created'],
                 'placeholder' => [],
                 'shownInBrief' => false,
-                'resourceClass' => 'books'
+                'resourceClass' => 'books',
             ]],
-            'resourceClass' => 'books'
+            'resourceClass' => 'books',
         ]);
         $this->assertStatusCode(201, $client->getResponse());
         $resourceKindRepository = self::createClient()->getContainer()->get(ResourceKindRepository::class);
@@ -118,6 +118,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'placeholder' => $this->metadata2->getPlaceholder(),
                 'shownInBrief' => false,
                 'resourceClass' => 'books',
+                'constraints' => ['maxCount' => 0],
             ], [
                 'baseId' => $this->metadata1->getBaseId(),
                 'control' => $this->metadata1->getControl()->getValue(),
@@ -128,6 +129,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'placeholder' => ['TEST' => 'modified'],
                 'shownInBrief' => false,
                 'resourceClass' => 'books',
+                'constraints' => ['maxCount' => 0],
             ]],
             'resourceClass' => 'books',
         ]);

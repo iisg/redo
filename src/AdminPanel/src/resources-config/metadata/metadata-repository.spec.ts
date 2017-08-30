@@ -1,6 +1,6 @@
 import {MetadataRepository} from "./metadata-repository";
 import {HttpClient} from "aurelia-http-client";
-import {Metadata} from "./metadata";
+import {Metadata, MetadataConstraints} from "./metadata";
 import {ResourceKind} from "../resource-kind/resource-kind";
 
 describe(MetadataRepository.name, () => {
@@ -47,27 +47,12 @@ describe(MetadataRepository.name, () => {
   });
 
   describe('relationship resourceKind constraints', () => {
-    it('removes resourceKind constraint for non-relationship Metadata', () => {
-      const metadata = new Metadata();
-      metadata.control = 'not relationship';
-      expect(metadata.constraints.resourceKind).toBeDefined();
-      const result = metadataRepository.toBackend(metadata);
-      expect(result['constraints']['resourceKind']).toBeUndefined();
-    });
-
-    it('keeps resourceKind constraint for relationship Metadata', () => {
-      const metadata = new Metadata();
-      metadata.control = 'relationship';
-      const result = metadataRepository.toBackend(metadata);
-      expect(result['constraints']['resourceKind']).toBeDefined();
-    });
-
     it('replaces entity constraints with IDs', () => {
       const metadata = new Metadata();
       metadata.control = 'relationship';
       const resourceKind = new ResourceKind();
       resourceKind.id = 1;
-      metadata.constraints.resourceKind.push(resourceKind);
+      metadata.constraints = new MetadataConstraints({resourceKind: [resourceKind]});
       const result = metadataRepository.toBackend(metadata);
       const resourceKindConstraints = result['constraints']['resourceKind'];
       expect(resourceKindConstraints.length).toBe(1);
@@ -77,8 +62,12 @@ describe(MetadataRepository.name, () => {
     it('leaves IDs in constraints unchanged', () => {
       const metadata = new Metadata();
       metadata.control = 'relationship';
-      metadata.constraints.resourceKind.push(new ResourceKind());
-      metadata.constraints.resourceKind.push(123);
+      metadata.constraints = new MetadataConstraints({resourceKind: []});
+      metadata.constraints = new MetadataConstraints({
+        resourceKind: [
+          new ResourceKind(), 123
+        ]
+      });
       const result = metadataRepository.toBackend(metadata);
       const resourceKindConstraints = result['constraints']['resourceKind'];
       expect(resourceKindConstraints.length).toBe(2);

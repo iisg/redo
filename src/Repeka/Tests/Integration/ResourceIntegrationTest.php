@@ -27,10 +27,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
-        $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'text', 'books');
+        $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'text');
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Resource kind'], [
-            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata'], 'books'),
-        ], 'books');
+            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
+        ]);
         $this->metadata = $this->resourceKind->getMetadataList()[0];
         $this->metadata->updateOrdinalNumber(0);
         $this->persistAndFlush($this->metadata);
@@ -115,8 +115,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResourceKindFails() {
         $newResourceKind = $this->createResourceKind(['TEST' => 'Replacement resource kind'], [
-            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata'], 'books'),
-        ], 'books');
+            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
+        ]);
         $newResourceKind->getMetadataList()[0]->updateOrdinalNumber(0);
         $this->persistAndFlush($newResourceKind->getMetadataList()[0]);
         $client = self::createAdminClient();

@@ -24,7 +24,7 @@ export function removeValue<T>(array: T[], value: T): void {
 }
 
 // http://stackoverflow.com/a/10865042/878514
-export function flatten<T>(arrayOfArrays: Array<T | T[]>): T[] {
+export function flatten<T>(arrayOfArrays: Array<T|T[]>): T[] {
   return [].concat.apply([], arrayOfArrays);
 }
 
@@ -39,4 +39,8 @@ export function move<T>(array: T[], element: T, delta: number): void {
     desiredIndex = Math.min(Math.max(0, desiredIndex), array.length - 1);
     array.splice(desiredIndex, 0, array.splice(currentIndex, 1)[0]);
   }
+}
+
+export function diff<T>(array1: T[], array2: any[]): T[] {
+  return array1.filter(item => !inArray(item, array2));
 }

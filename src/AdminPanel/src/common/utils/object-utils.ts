@@ -33,3 +33,9 @@ export function shallowEquals(a: any, b: any): boolean {
   }
   return true;
 }
+
+export function propertyKeys(obj: Object): string[] {
+  return Object.keys(obj)
+    .filter(key => typeof obj[key] != 'function')  // remove methods
+    .filter(key => !key.startsWith('_'));  // remove internal properties like Aurelia's __observe__
+}

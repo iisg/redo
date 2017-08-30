@@ -12,7 +12,7 @@ use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
-use Repeka\Domain\Validation\MetadataConstraintProvider;
+use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Respect\Validation\Exceptions\ValidationException;
 
@@ -84,7 +84,15 @@ trait StubsTrait {
         return $mock;
     }
 
-    protected function createRepositoryStub(string $repositoryClassName, array $entityList = []) {
+    protected function createEntityLookupMap(array $entityList): array {
+        $result = [];
+        foreach ($entityList as $metadata) {
+            $result[$metadata->getId()] = $metadata;
+        }
+        return $result;
+    }
+
+    protected function createRepositoryStub(string $repositoryClassName, array $entityList = []): \PHPUnit_Framework_MockObject_MockObject {
         $entityList = array_values($entityList);
         $lookup = EntityHelper::getLookupMap($entityList);
         $idCounter = 1;
@@ -108,13 +116,13 @@ trait StubsTrait {
         return $repository;
     }
 
-    protected function createMetadataConstraintProviderStub(array $namesToConstraintsMap): MetadataConstraintProvider {
-        $stub = $this->createMock(MetadataConstraintProvider::class);
+    protected function createMetadataConstraintManagerStub(array $namesToConstraintsMap): MetadataConstraintManager {
+        $stub = $this->createMock(MetadataConstraintManager::class);
         $stub->method('get')->willReturnCallback(function ($ruleName) use ($namesToConstraintsMap) {
             if (array_key_exists($ruleName, $namesToConstraintsMap)) {
                 return $namesToConstraintsMap[$ruleName];
             } else {
-                throw new \InvalidArgumentException("MetadataConstraintProvider stub doesn't contain validator for '$ruleName'");
+                throw new \InvalidArgumentException("MetadataConstraintManager stub doesn't contain validator for '$ruleName'");
             }
         });
         return $stub;
@@ -137,21 +145,21 @@ trait StubsTrait {
         return $mock;
     }
 
+    /** @param string|string[] $methodName */
     protected function createRuleWithFactoryMethodMock(
         string $ruleClass,
-        string $methodName,
+        $methodName,
         ?bool $result = null,
         ?string $exceptionMessage = null
     ) {
-        if (!is_null($result)) {
-            $mock = $this->createRuleMock($ruleClass, $result, $exceptionMessage);
+        $methodNames = is_array($methodName) ? $methodName : [$methodName];
+        $mock = is_null($result)
+            ? $this->createMock($ruleClass)
+            : $this->createRuleMock($ruleClass, $result, $exceptionMessage);
+        foreach ($methodNames as $methodName) {
             $mock->method($methodName)->willReturnSelf();
-            return $mock;
-        } else {
-            $mock = $this->createMock($ruleClass);
-            $mock->method($methodName)->willReturnSelf();
-            return $mock;
         }
+        return $mock;
     }
 
     protected function createEntityExistsMock(bool $result, ?string $exceptionMessage = null): EntityExistsRule {

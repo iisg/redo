@@ -1,8 +1,8 @@
 import {bindable, ComponentDetached, ComponentAttached} from "aurelia-templating";
 import {Metadata} from "resources-config/metadata/metadata";
-import {BindingEngine, Disposable} from "aurelia-binding";
+import {BindingEngine} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {ValueWrapper} from "../controls/control-strategy";
+import {ValueWrapper} from "common/utils/value-wrapper";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
 import {BindingSignaler} from "aurelia-templating-resources";
@@ -15,20 +15,17 @@ export class ResourceMetadataValueInput implements ComponentAttached, ComponentD
   @bindable(twoWay) value: any;
   @bindable @booleanAttribute disabled: boolean = false;
 
-  valueWrapper: ValueWrapper = new ValueWrapper();
-  subscription: Disposable;
+  valueWrapper: ValueWrapper<any> = new ValueWrapper();
 
   constructor(private bindingEngine: BindingEngine, private bindingSignaler: BindingSignaler) {
   }
 
   attached() {
-    this.subscription = this.bindingEngine
-      .propertyObserver(this.valueWrapper, 'value')
-      .subscribe(() => this.wrappedValueChanged());
+    this.valueWrapper.onChange(this.bindingEngine, () => this.wrappedValueChanged());
   }
 
   detached() {
-    this.subscription.dispose();
+    this.valueWrapper.cancelChangeSubscriptions();
   }
 
   valueChanged() {

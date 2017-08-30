@@ -11,6 +11,20 @@ import {computedFrom} from "aurelia-binding";
 export interface MultilingualText extends StringStringMap {
 }
 
+export class MetadataConstraints {
+  constructor(initialValues: {} = {}) {  // argument intentionally untyped because object-style initializers require presence of all props
+    $.extend(this, initialValues);
+  }
+
+  resourceKind?: ResourceKind[]|number[];
+  maxCount?: number;
+}
+
+export const metadataConstraintDefaults: MetadataConstraints = {
+  resourceKind: [],
+  maxCount: 0,
+};
+
 export class Metadata extends Entity {
   id: number;
   name: string = '';
@@ -51,8 +65,8 @@ export class Metadata extends Entity {
   }
 
   static copyContents(source: Object, target: Metadata): Metadata {
-    let cloned = deepCopy(source);
-    cloned.constraints = $.extend(new MetadataConstraints(), source['constraints']);
+    let cloned: Metadata = deepCopy(source);
+    cloned.constraints = $.extend(new MetadataConstraints(), cloned.constraints);
     return $.extend(target, cloned);
   }
 
@@ -61,10 +75,6 @@ export class Metadata extends Entity {
     metadata.baseId = baseMetadata.id;
     return metadata;
   }
-}
-
-export class MetadataConstraints {
-  resourceKind: ResourceKind[]|number[] = [];
 }
 
 export function registerMetadataValidationRules() {

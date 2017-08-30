@@ -1,8 +1,8 @@
 <template>
     <require from="common/components/resource-kind-chooser/resource-kind-chooser"></require>
+    <require from="common/components/restore-from-base/restore-from-base.html"></require>
 
     <label>
-        ${'Required resource kind' | t}
         <throbber if.bind="loadingWorkflows"></throbber>
     </label>
     <div class="alert ${allowsOnlyUsers ? 'alert-info' : 'alert-danger'}"
@@ -17,7 +17,7 @@
         <fa name.bind="allowsOnlyUsers ? 'info-circle' : 'times-circle'"></fa>
         ${'This metadata must allow only for users, because workflow uses it to determine assignees:' | t}
         <ul>
-            <li repeat.for="workflow of dependingWorkflows">
+            <li repeat.for="workflow of workflowsUsingMetadataAsAssignee">
                 <a route-href="route: workflows/details; params.bind: {id: workflow.id}">
                     ${workflow.name | inCurrentLanguage}
                 </a>
@@ -34,13 +34,8 @@
             if.bind="!disabled || metadata.constraints.resourceKind.length > 0"
             resource-class.bind="resourceClass"></resource-kind-chooser>
         <div class="input-group-addon">
-            <button type="button"
-                class="btn btn-default"
-                click.delegate="resetToBaseIds()"
-                if.bind="canInherit && wasModified">
-                <fa name="repeat"></fa>
-                ${'Restore from base' | t}
-            </button>
+            <restore-from-base if.bind="canInherit && wasModified"
+                on-click.call="resetToBaseIds()"></restore-from-base>
         </div>
     </div>
 </template>

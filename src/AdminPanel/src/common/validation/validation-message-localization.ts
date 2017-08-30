@@ -10,7 +10,7 @@ function ruleNameToKey(ruleName: string): string {
   return `validation::${ruleNameRoot}`;
 }
 
-// Based on http://aurelia.io/hub.html#/doc/article/aurelia/validation/latest/validation-basics/12
+// Based on http://aurelia.io/docs/plugins/validation#integrating-with-aurelia-i18n
 export function installValidationMessageLocalization(aurelia: Aurelia) {
   const i18n = aurelia.container.get(I18N);
 

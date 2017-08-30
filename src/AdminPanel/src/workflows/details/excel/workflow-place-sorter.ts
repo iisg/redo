@@ -1,4 +1,4 @@
-import {Workflow, WorkflowPlace} from "../../workflow";
+import {Workflow, WorkflowPlace} from "workflows/workflow";
 import {unique} from "common/utils/array-utils";
 
 export class WorkflowPlaceSorter {

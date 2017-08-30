@@ -1,0 +1,41 @@
+<template>
+    <require from="common/components/restore-from-base/restore-from-base.html"></require>
+    <require from="common/value-converters/integer"></require>
+
+    <div class="input-group form-inline">
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                        name.bind="radioName"
+                        model.bind="true"
+                        checked.bind="unlimited">
+                    ${"Unlimited" | t}
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                        name.bind="radioName"
+                        model.bind="false"
+                        checked.bind="unlimited">
+                    ${"At most" | t}
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="spinner">
+                <input type="number"
+                    class="form-control"
+                    value.bind="count | integer"
+                    disabled.bind="unlimited">
+            </div>
+        </div>
+        <div class="input-group-addon">
+            <restore-from-base if.bind="hasBaseConstraint && wasModified"
+                on-click.call="resetToBaseValues()"></restore-from-base>
+        </div>
+    </div>
+</template>

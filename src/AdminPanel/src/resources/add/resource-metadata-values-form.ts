@@ -26,13 +26,33 @@ export class ResourceMetadataValuesForm {
     }
   }
 
+  get allValuesCount(): number {
+    return this.resource.contents[this.metadata.baseId].length;
+  }
+
+  isFilled(value: any): boolean {
+    return (value !== undefined) && (value !== '');
+  }
+
+  get filledValuesCount(): number {
+    return this.resource.contents[this.metadata.baseId].filter(this.isFilled).length;
+  }
+
+  private valueIsUndefined(index: number): boolean {
+    return this.resource.contents[this.metadata.baseId][index] === undefined;
+  }
+
   isDeletingDisabled(index: number): boolean {
     if (this.disabled) {
       return true;
     }
-    const filledValuesCount: number = this.resource.contents[this.metadata.baseId].filter(v => v !== undefined).length;
-    const valueIsUndefined: boolean = this.resource.contents[this.metadata.baseId][index] === undefined;
-    return this.required && filledValuesCount == 1 && !valueIsUndefined;
+
+    return this.required && this.filledValuesCount == 1 && !this.valueIsUndefined(index);
+  }
+
+  isAddingDisabled(): boolean {
+    const maxCount: number = this.metadata.constraints.maxCount || Infinity;
+    return this.allValuesCount >= maxCount;
   }
 
   private ensureResourceHasMetadataContents() {
@@ -44,9 +64,6 @@ export class ResourceMetadataValuesForm {
   }
 
   deleteIndex(index: number) {
-    if (this.disabled) {
-      return;
-    }
     this.resource.contents[this.metadata.baseId].splice(index, 1);
   }
 

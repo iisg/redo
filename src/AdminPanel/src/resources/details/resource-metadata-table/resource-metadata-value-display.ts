@@ -1,9 +1,9 @@
 import {ComponentAttached, ComponentDetached, bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "resources-config/metadata/metadata";
-import {ValueWrapper} from "../../controls/control-strategy";
-import {Disposable, BindingEngine} from "aurelia-binding";
+import {BindingEngine} from "aurelia-binding";
 import {Resource} from "../../resource";
+import {ValueWrapper} from "common/utils/value-wrapper";
 
 @autoinject
 export class ResourceMetadataValueDisplay implements ComponentAttached, ComponentDetached {
@@ -11,20 +11,17 @@ export class ResourceMetadataValueDisplay implements ComponentAttached, Componen
   @bindable resource: Resource;
   @bindable value: any;
 
-  valueWrapper: ValueWrapper = new ValueWrapper();
-  subscription: Disposable;
+  valueWrapper: ValueWrapper<any> = new ValueWrapper();
 
   constructor(private bindingEngine: BindingEngine) {
   }
 
   attached(): void {
-    this.subscription = this.bindingEngine
-      .propertyObserver(this.valueWrapper, 'value')
-      .subscribe(() => this.wrappedValueChanged());
+    this.valueWrapper.onChange(this.bindingEngine, () => this.wrappedValueChanged());
   }
 
   detached(): void {
-    this.subscription.dispose();
+    this.valueWrapper.cancelChangeSubscriptions();
   }
 
   valueChanged() {

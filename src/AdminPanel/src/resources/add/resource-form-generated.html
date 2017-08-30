@@ -2,10 +2,15 @@
     <require from="common/components/font-awesome/fa"></require>
     <require from="./resource-metadata-values-form"></require>
     <require from="resources-config/metadata/metadata-label"></require>
+    <require from="./max-count-constraint-info"></require>
 
     <div class="form-group"
         repeat.for="metadata of resourceKind.metadataList">
-        <h4>${metadata | metadataLabel}</h4>
+        <h4>
+            ${metadata | metadataLabel}
+            <max-count-constraint-info metadata.bind="metadata"
+                value-count.bind="resource.contents[metadata.baseId].length"></max-count-constraint-info>
+        </h4>
         <div class="clearfix"></div>
         <div if.bind="metadataDeterminesAssignee(metadata)"
             class="alert alert-info">
@@ -20,7 +25,7 @@
         <div if.bind="metadataIsRequired(metadata)"
             class="alert alert-info">
             <fa name="info-circle"></fa>
-            ${"This metadata is required in current state." | t}
+            ${"This metadata is required in current state" | t}
         </div>
         <div if.bind="metadataIsLocked(metadata)"
             class="alert alert-info">

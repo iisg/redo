@@ -148,18 +148,17 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     protected function createMetadata(
         string $name,
         array $label,
-        array $description,
-        array $placeholder,
-        string $control,
-        string $resourceClass,
-        array $constraints = []
+        array $description = [],
+        array $placeholder = [],
+        string $control = 'text',
+        string $resourceClass = 'books'
     ): Metadata {
         return $this->handleCommand(
-            new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $resourceClass, $constraints)
+            new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $resourceClass, ['maxCount' => 0])
         );
     }
 
-    protected function createResourceKind(array $label, array $metadataList, string $resourceClass): ResourceKind {
+    protected function createResourceKind(array $label, array $metadataList, string $resourceClass = 'books'): ResourceKind {
         return $this->handleCommand(new ResourceKindCreateCommand($label, $metadataList, $resourceClass));
     }
 
@@ -167,17 +166,17 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     protected function resourceKindMetadata(
         Metadata $baseMetadata,
         array $label,
-        string $resourceClass,
-        array $description = [],
-        array $placeholder = []
+        string $resourceClass = 'books',
+        int $maxCount = 0
     ): array {
         return [
             'baseId' => $baseMetadata->getId(),
             'label' => $label,
-            'description' => $description,
-            'placeholder' => $placeholder,
+            'description' => [],
+            'placeholder' => [],
             'shownInBrief' => false,
             'resourceClass' => $resourceClass,
+            'constraints' => ['maxCount' => $maxCount],
         ];
     }
 
@@ -186,7 +185,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function createWorkflow(array $name, string $resourceClass) {
-        return $this
-            ->handleCommand(new ResourceWorkflowCreateCommand($name, [new ResourceWorkflowPlace([])], [], $resourceClass, null, null));
+        $places = [new ResourceWorkflowPlace([])];
+        return $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, [], $resourceClass, null, null));
     }
 }

@@ -16,8 +16,8 @@ class MetadataIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingMetadataKinds() {
         $this->createLanguage('TEST', 'TE', 'Test language');
-        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First'], [], [], 'text', 'books');
-        $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second'], ['TEST' => 'Hello'], ['TEST' => 'World'], 'integer', 'books');
+        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First'], [], [], 'text');
+        $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second'], ['TEST' => 'Hello'], ['TEST' => 'World'], 'integer');
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
         $this->assertStatusCode(200, $client->getResponse());
@@ -31,7 +31,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'placeholder' => [],
             'baseId' => $metadata1->getBaseId(),
             'parentId' => $metadata1->getParentId(),
-            'constraints' => [],
+            'constraints' => ['maxCount' => 0],
             'shownInBrief' => false,
             'resourceClass' => $metadata1->getResourceClass(),
         ], [
@@ -43,13 +43,13 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'placeholder' => $metadata2->getPlaceholder(),
             'baseId' => $metadata2->getBaseId(),
             'parentId' => $metadata2->getParentId(),
-            'constraints' => [],
+            'constraints' => ['maxCount' => 0],
             'shownInBrief' => false,
             'resourceClass' => $metadata2->getResourceClass(),
         ]], $responseContent);
     }
 
-    public function testFetchingMetadataFailsWhenInvalidResourceClass() {
+    public function testFetchingMetadataWithInvalidResourceClassFails() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'resourceClass']);
         $this->assertStatusCode(400, $client->getResponse());
@@ -66,6 +66,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'description' => ['EN' => 'test description', 'PL' => 'testowy opis'],
             'placeholder' => ['EN' => 'test placeholder', 'PL' => 'testowa podpowiedź'],
             'resourceClass' => 'books',
+            'constraints' => ['maxCount' => 0],
         ];
         $client->apiRequest('POST', self::ENDPOINT, $metadataArray);
         $this->assertStatusCode(201, $client->getResponse());
@@ -83,8 +84,8 @@ class MetadataIntegrationTest extends IntegrationTestCase {
 
     public function testBasicOrdering() {
         $this->createLanguage('TEST', 'TE', 'Test language');
-        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'text', 'books');
-        $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second metadata'], [], [], 'integer', 'books');
+        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'text');
+        $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second metadata'], [], [], 'integer');
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
         $response = json_decode($client->getResponse()->getContent());
@@ -103,16 +104,16 @@ class MetadataIntegrationTest extends IntegrationTestCase {
 
     public function testOrderingWithRepeatedIds() {
         $this->createLanguage('TEST', 'TE', 'Test language');
-        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'text', 'books');
-        $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second metadata'], [], [], 'integer', 'books');
+        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'text');
+        $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second metadata'], [], [], 'integer');
         $client = self::createAdminClient();
         $client->apiRequest('PUT', self::ENDPOINT, [$metadata2->getId(), $metadata1->getId(), $metadata2->getId()]);
         $this->assertStatusCode(400, $client->getResponse());
     }
 
     public function testOrderingInvalidIds() {
-        $metadata1 = Metadata::create(MetadataControl::TEXT(), 'Metadata1', ['TEST' => 'First metadata'], 'books');
-        $metadata2 = Metadata::create(MetadataControl::INTEGER(), 'Metadata2', ['TEST' => 'Second metadata'], 'books');
+        $metadata1 = Metadata::create('books', MetadataControl::TEXT(), 'Metadata1', ['TEST' => 'First metadata']);
+        $metadata2 = Metadata::create('books', MetadataControl::INTEGER(), 'Metadata2', ['TEST' => 'Second metadata']);
         $metadata1->updateOrdinalNumber(0);
         $metadata2->updateOrdinalNumber(1);
         $this->persistAndFlush([$metadata1, $metadata2]);
@@ -128,8 +129,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             ['EN' => 'A metadata', 'PL' => '-'],
             ['EN' => 'Placeholder', 'PL' => '-'],
             ['EN' => 'Description', 'PL' => '-'],
-            'integer',
-            'books'
+            'integer'
         );
         $client = self::createAdminClient();
         $update = [
@@ -145,6 +145,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                 'EN' => 'Test placeholder',
                 'PL' => 'Testowa zaślepka',
             ],
+            'constraints' => ['maxCount' => 0],
         ];
         $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());
@@ -165,12 +166,12 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             ['EN' => 'A metadata'],
             ['EN' => 'Placeholder'],
             ['EN' => 'Description'],
-            'integer',
-            'books'
+            'integer'
         );
         $client = self::createAdminClient();
         $update = [
             'name' => 'Altered',
+            'constraints' => ['maxCount' => 0],
         ];
         $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());
@@ -178,5 +179,31 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         /** @var $updatedMetadata Metadata */
         $updatedMetadata = self::createClient()->getContainer()->get(MetadataRepository::class)->find($metadata->getId());
         self::assertEquals($metadata->getName(), $updatedMetadata->getName());
+    }
+
+    public function testCreatingWithCountConstraints() {
+        $this->createLanguage('EN', 'EN', 'Test English');
+        $this->createLanguage('PL', 'PL', 'Test Polish');
+        $client = self::createAdminClient();
+        $metadataArray = [
+            'control' => 'text',
+            'name' => 'Test metadata',
+            'label' => ['EN' => 'User-friendly label', 'PL' => 'Przyjazna użytkownikowi etykieta'],
+            'description' => ['EN' => 'test description', 'PL' => 'testowy opis'],
+            'placeholder' => ['EN' => 'test placeholder', 'PL' => 'testowa podpowiedź'],
+            'resourceClass' => 'books',
+            'constraints' => ['maxCount' => 1],
+        ];
+        $client->apiRequest('POST', self::ENDPOINT, $metadataArray);
+        $this->assertStatusCode(201, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        /** @var $metadataRepository MetadataRepository */
+        $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
+        $metadata = $metadataRepository->findOne($response->id);
+        $this->assertEquals($metadataArray['control'], $metadata->getControl());
+        $this->assertEquals($metadataArray['name'], $metadata->getName());
+        $this->assertEquals($metadataArray['label'], $metadata->getLabel());
+        $this->assertEquals($metadataArray['description'], $metadata->getDescription());
+        $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
     }
 }

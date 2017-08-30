@@ -1,4 +1,4 @@
-import {Resource} from "../../resource";
+import {Resource} from "resources/resource";
 import {autoinject} from "aurelia-dependency-injection";
 import {BasenameValueConverter} from "common/value-converters/basename";
 

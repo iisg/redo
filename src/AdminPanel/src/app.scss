@@ -149,6 +149,10 @@ input, textarea, select {
   }
 }
 
+.badge.badge-danger {
+  background-color: $red;
+}
+
 .diagram-cover {
   z-index: 999 !important; // fix UI elements like menus displaying over graphs, but not interacting with mouse
 }

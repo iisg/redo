@@ -91,7 +91,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->constraintArgumentsAreValid,
             $this->containsResourceClass
         );
-        $constraints = ['resourceKind' => [1], 'count' => []];
+        $constraints = ['resourceKind' => [1]];
         $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', $constraints);
         $validator->validate($command);
     }
@@ -106,7 +106,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->constraintArgumentsAreValid,
             $this->containsResourceClass
         );
-        $constraints = ['resourceKind' => [1], 'count' => []];
+        $constraints = ['resourceKind' => [1], 'maxCount' => 0];
         $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', $constraints);
         $validator->validate($command);
     }

@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
 use Assert\Assertion;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
@@ -9,7 +10,7 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Respect\Validation\Validator;
 
-class ResourceHasAllowedKindConstraint extends AbstractMetadataConstraint {
+class RelatedResourceKindConstraint extends AbstractMetadataConstraint {
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var EntityExistsRule */
@@ -24,14 +25,18 @@ class ResourceHasAllowedKindConstraint extends AbstractMetadataConstraint {
         return 'resourceKind';
     }
 
-    public function validateArgument($allowedResourceKindIds): bool {
+    public function getSupportedControls(): array {
+        return [MetadataControl::RELATIONSHIP];
+    }
+
+    public function isConfigValid($allowedResourceKindIds): bool {
         return Validator::each(
             $this->entityExistsRule->forEntityType(ResourceKind::class)
         )->validate($allowedResourceKindIds);
     }
 
     /** @param ResourceEntity[] $resources */
-    public function validateValue($allowedResourceKindIds, $resources): bool {
+    public function isValueValid($allowedResourceKindIds, $resources): bool {
         Assertion::allInteger($allowedResourceKindIds);
         Assertion::allIsInstanceOf($resources, ResourceEntity::class);
         try {
