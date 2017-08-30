@@ -5,7 +5,7 @@ import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class RequiredInAllLanguagesValidationRule implements CustomValidationRule {
-  static readonly NAME: string = RequiredInAllLanguagesValidationRule.name;
+  static readonly NAME: string = 'RequiredInAllLanguages';
 
   private knownLanguageCodes;
 

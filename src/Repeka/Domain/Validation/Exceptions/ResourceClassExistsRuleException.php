@@ -6,10 +6,10 @@ use Respect\Validation\Exceptions\ValidationException;
 class ResourceClassExistsRuleException extends ValidationException {
     public static $defaultTemplates = [
         self::MODE_DEFAULT => [
-            self::STANDARD => 'Resource class - {{name}} - not exists.',
+            self::STANDARD => "resource class doesn't exist.",
         ],
         self::MODE_NEGATIVE => [
-            self::STANDARD => 'Resource class - {{name}} - exists.',
+            self::STANDARD => 'resource class exists.',
         ],
     ];
 }

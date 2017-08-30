@@ -13,7 +13,7 @@ export class ResourceForm {
   @bindable parent: Resource;
   @bindable resourceClass: string;
 
-  resource: Resource = new Resource;
+  resource: Resource = new Resource();
   submitting = false;
   errorToDisplay: string;
 
@@ -44,7 +44,6 @@ export class ResourceForm {
   validateAndSubmit() {
     this.submitting = true;
     this.errorToDisplay = undefined;
-    this.resource.filterUndefinedValues();
     this.validator.validateObject(this.resource).then(results => {
       const errors = results.filter(result => !result.valid);
       if (errors.length == 0) {

@@ -6,7 +6,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {Metadata} from "resources-config/metadata/metadata";
 import {twoWay} from "common/components/binding-mode";
-import {flatten, inArray} from "common/utils/array-utils";
+import {diff, flatten, inArray} from "common/utils/array-utils";
 import {numberKeysByValue} from "common/utils/object-utils";
 import {RequirementState} from "workflows/workflow";
 
@@ -20,6 +20,7 @@ export class ResourceFormGenerated {
   currentLanguageCode: string;
   lockedMetadataIds: number[];
   requiredMetadataIds: number[];
+  removedValues: AnyMap<any[]> = {};
 
   constructor(i18n: I18N) {
     this.currentLanguageCode = i18n.getLocale().toUpperCase();
@@ -28,6 +29,23 @@ export class ResourceFormGenerated {
   resourceKindChanged() {
     if (!this.resourceKind) {
       this.resource.contents = {};
+    } else {
+      const previousMetadata = Object.keys(this.resource.contents).map(k => k);
+      const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.baseId);
+      const toBeRemoved = diff(previousMetadata, newMetadata);
+      const toBeAdded = diff(newMetadata, previousMetadata);
+      for (const metadataId of toBeRemoved) {
+        this.removedValues[metadataId] = this.resource.contents[metadataId];
+        delete this.resource.contents[metadataId];
+      }
+      for (const metadataId of toBeAdded) {
+        if (metadataId in this.removedValues) {
+          this.resource.contents[metadataId] = this.removedValues[metadataId];
+          delete this.removedValues[metadataId];
+        } else {
+          this.resource.contents[metadataId] = [];
+        }
+      }
     }
   }
 

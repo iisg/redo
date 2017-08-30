@@ -5,7 +5,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
 
 @autoinject
-export class CountConstraintInfo {
+export class MaxCountConstraintInfo {
   @bindable metadata: Metadata;
   @bindable valueCount: number;
 

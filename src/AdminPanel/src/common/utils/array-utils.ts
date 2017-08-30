@@ -16,6 +16,10 @@ export function unique(values: any[]): any[] {
   return values.filter((value, index, self) => self.indexOf(value) === index);
 }
 
+export function containsDuplicates(values: any[]): boolean {
+  return values.length != unique(values).length;
+}
+
 export function removeValue<T>(array: T[], value: T): void {
   const index = array.indexOf(value);
   if (index != -1) {

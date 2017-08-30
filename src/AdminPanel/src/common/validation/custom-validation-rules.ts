@@ -8,6 +8,7 @@ import {registerMetadataValidationRules} from "resources-config/metadata/metadat
 import {registerResourceKindValidationRules} from "resources-config/resource-kind/resource-kind";
 import {registerWorkflowValidationRules} from "workflows/workflow";
 import {registerUserRoleValidationRules} from "users/roles/user-role";
+import {containsDuplicates} from "../utils/array-utils";
 
 @autoinject
 export class CustomValidationRules {
@@ -29,8 +30,15 @@ export class CustomValidationRules {
   }
 
   register() {
-    for (let customRuleClass of CustomValidationRules.CUSTOM_RULES) {
-      const rule: CustomValidationRule = this.container.get(customRuleClass);
+    const rules: CustomValidationRule[] = CustomValidationRules.CUSTOM_RULES.map(ruleClass => this.container.get(ruleClass));
+    const ruleNames = rules.map(rule => rule.name());
+    if (containsDuplicates(ruleNames)) {
+      // Possibly someone has used RuleClass.name instead of static strings and minification lead to a name clash.
+      // Would be useful: https://github.com/Microsoft/TypeScript/issues/1579
+      throw new Error("Some rules returned identical names from their name() methods. It may be a developer mistake or a minification" +
+        " side effect. Ensure that name() return values are not calculated in runtime.");
+    }
+    for (const rule of rules) {
       ValidationRules.customRule(rule.name(), rule.validationFunction(), undefined);
     }
     for (let customRulesRegisterer of CustomValidationRules.CUSTOM_VALIDATION_RULES_REGISTERERS) {
@@ -41,5 +49,5 @@ export class CustomValidationRules {
 
 export interface CustomValidationRule {
   name(): string;
-  validationFunction(): (value: any, object?: any, ...args: any[]) => boolean | Promise<boolean>;
+  validationFunction(): (value: any, object?: any, ...args: any[]) => boolean|Promise<boolean>;
 }
