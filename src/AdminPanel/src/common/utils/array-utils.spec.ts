@@ -1,4 +1,4 @@
-import {flatten, arraysEqual, move} from "./array-utils";
+import {flatten, arraysEqual, move, diff} from "./array-utils";
 
 describe('array-utils', () => {
   describe(arraysEqual.name, () => {
@@ -61,6 +61,14 @@ describe('array-utils', () => {
       const array = ['a', 'b', 'c'];
       move(array, 'x', 1);
       expect(array).toEqual(['a', 'b', 'c']);
+    });
+  });
+
+  describe(diff.name, () => {
+    it('subtracts', () => {
+      const arr1 = ['foo', 'bar', 'baz'];
+      const arr2 = ['bar', 'quux'];
+      expect(diff(arr1, arr2)).toEqual(['foo', 'baz']);
     });
   });
 });

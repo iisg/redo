@@ -1,5 +1,5 @@
 import {UserRole} from "./roles/user-role";
-import {Resource} from "../resources/resource";
+import {Resource} from "resources/resource";
 
 export class User {
   id: number;

@@ -3,13 +3,12 @@ namespace Repeka\Application\Controller\Api;
 
 use Repeka\Application\Resources\FrontendLocaleProvider;
 use Repeka\Application\Upload\UploadSizeHelper;
+use Repeka\Application\Validation\ContainerAwareMetadataConstraintManager;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Validation\MetadataConstraintManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class ConfigController extends ApiController {
-    /** @var FrontendLocaleProvider */
-    private $frontendLocaleProvider;
-
     const PUBLIC_PARAMETERS = [
         'application_version' => 'application_version',
         'default_ui_language' => 'repeka.default_ui_language',
@@ -17,8 +16,14 @@ class ConfigController extends ApiController {
         'static_permissions' => 'repeka.static_permissions',
     ];
 
-    public function __construct(FrontendLocaleProvider $frontendLocaleProvider) {
+    /** @var FrontendLocaleProvider */
+    private $frontendLocaleProvider;
+    /** @var ContainerAwareMetadataConstraintManager */
+    private $metadataConstraintManager;
+
+    public function __construct(FrontendLocaleProvider $frontendLocaleProvider, MetadataConstraintManager $metadataConstraintManager) {
         $this->frontendLocaleProvider = $frontendLocaleProvider;
+        $this->metadataConstraintManager = $metadataConstraintManager;
     }
 
     /**
@@ -28,6 +33,7 @@ class ConfigController extends ApiController {
         $parameters = array_map([$this, 'getParameter'], self::PUBLIC_PARAMETERS);
         $uploadSizeHelper = new UploadSizeHelper();
         $response = array_merge($parameters, [
+            'control_constraints' => $this->metadataConstraintManager->getRequiredConstraintNamesMap(),
             'supported_controls' => array_values(MetadataControl::toArray()),
             'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
             'max_upload_size' => [

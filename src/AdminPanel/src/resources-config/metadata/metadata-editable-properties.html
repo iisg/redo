@@ -1,5 +1,6 @@
 <template>
-    <require from="./resource-kind-constraint-editor"></require>
+    <require from="./constraint/resource-kind/resource-kind-constraint-editor"></require>
+    <require from="./constraint/metadata-constraint-form"></require>
 
     <div class="form-group">
         <div class="checkbox">
@@ -27,10 +28,8 @@
             placeholder.bind="baseMetadata.description"
             value.bind="metadata.description & validate"></multilingual-editor>
     </div>
-    <div if.bind="baseMetadata.control === 'relationship'"
-        class="form-group label-floating">
-        <resource-kind-constraint-editor metadata.bind="metadata"
-            ids-from-base-metadata.bind="baseMetadata.constraints.resourceKind"
-            resource-class.bind="resourceClass"></resource-kind-constraint-editor>
-    </div>
+
+    <metadata-constraint-form metadata.bind="metadata"
+        base-metadata.bind="baseMetadata"
+            resource-class.bind="resourceClass"></metadata-constraint-form>
 </template>

@@ -4,7 +4,7 @@ import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {deepCopy} from "common/utils/object-utils";
 import {computedFrom} from "aurelia-binding";
-import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
+import {SystemMetadata} from "resources-config/metadata/system-metadata";
 
 @autoinject
 export class ResourceForm {
@@ -48,7 +48,7 @@ export class ResourceForm {
     this.validator.validateObject(this.resource).then(results => {
       const errors = results.filter(result => !result.valid);
       if (errors.length == 0) {
-        return Promise.resolve(this.submit({savedResource: this.resource}))
+        return this.submit({savedResource: this.resource})
           .then(() => this.editing || (this.resource = new Resource));
       } else {
         this.errorToDisplay = errors[0].message;

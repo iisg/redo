@@ -1,5 +1,5 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
 import {deepCopy} from "common/utils/object-utils";
@@ -7,7 +7,7 @@ import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation
 import {removeValue} from "common/utils/array-utils";
 
 @autoinject
-export class MetadataList {
+export class MetadataList implements ComponentAttached {
   metadataList: Metadata[];
   @bindable parentMetadata: Metadata;
   @bindable resourceClass: string;
@@ -49,7 +49,7 @@ export class MetadataList {
     this.progressBar = false;
   }
 
-  isDragHandle(data: { evt: MouseEvent }) {
+  isDragHandle(data: {evt: MouseEvent}) {
     return $(data.evt.target).is('.drag-handle') || $(data.evt.target).parents('.drag-handle').length > 0;
   }
 
@@ -71,9 +71,11 @@ export class MetadataList {
   saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<any> {
     const originalMetadata: Metadata = deepCopy(metadata);
     Metadata.copyContents(changedMetadata, metadata);
+    metadata.pendingRequest = true;
     return this.metadataRepository.update(changedMetadata)
       .then(() => metadata.editing = false)
-      .catch(() => Metadata.copyContents(originalMetadata, metadata));
+      .catch(() => Metadata.copyContents(originalMetadata, metadata))
+      .finally(() => metadata.pendingRequest = false);
   }
 
   deleteMetadata(metadata: Metadata) {

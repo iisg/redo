@@ -5,11 +5,15 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
  * @method object getReference(string $referenceName)
  * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
  */
-trait ResourceKindsFixtureUtilTrait {
-    private function metadata(string $baseReference, bool $shownInBrief = false): array {
-        return [
+trait ResourceKindsFixtureTrait {
+    private function metadata(string $baseReference, ?int $maxCount = 0, bool $shownInBrief = false): array {
+        $metadata = [
             'baseId' => $this->getReference($baseReference)->getId(),
             'shownInBrief' => $shownInBrief,
         ];
+        if ($maxCount != null) {
+            $metadata['constraints'] = ['maxCount' => $maxCount];
+        }
+        return $metadata;
     }
 }

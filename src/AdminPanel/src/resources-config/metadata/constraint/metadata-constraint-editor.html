@@ -1,0 +1,12 @@
+<template>
+    <!--
+    App may appear to work without these requires, but every now and then some
+    views may be missing. Require all constraint views here for reliability.
+    -->
+    <require from="./editor-view/resource-kind.html"></require>
+    <require from="./editor-view/max-count.html"></require>
+
+    <compose view-model="./constraint-strategy"
+        view="./editor-view/${editorViewName}.html"
+        model.bind="composeModel"></compose>
+</template>

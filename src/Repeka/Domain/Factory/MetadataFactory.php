@@ -10,10 +10,10 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 class MetadataFactory {
     public function create(MetadataCreateCommand $command) {
         return Metadata::create(
+            $command->getResourceClass(),
             new MetadataControl($command->getControlName()),
             $command->getName(),
             $command->getLabel(),
-            $command->getResourceClass(),
             $command->getPlaceholder(),
             $command->getDescription(),
             $command->getConstraints(),
@@ -46,7 +46,6 @@ class MetadataFactory {
             $metadata->getLabel(),
             $resourceKind,
             $base,
-            $metadata->getResourceClass(),
             $metadata->getPlaceholder(),
             $metadata->getDescription(),
             $constraints,
@@ -61,8 +60,12 @@ class MetadataFactory {
             }
             $baseConstraint = $baseConstraints[$constraintName];
             $concreteConstraint = $constraints[$constraintName];
-            array_multisort($baseConstraint);
-            array_multisort($concreteConstraint);
+            if (is_array($baseConstraint)) {
+                array_multisort($baseConstraint);
+            }
+            if (is_array($concreteConstraint)) {
+                array_multisort($concreteConstraint);
+            }
             if ($concreteConstraint == $baseConstraint) {
                 unset($constraints[$constraintName]);
             }

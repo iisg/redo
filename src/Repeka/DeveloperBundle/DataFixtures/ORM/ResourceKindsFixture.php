@@ -6,7 +6,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
 
 class ResourceKindsFixture extends RepekaFixture {
-    use ResourceKindsFixtureUtilTrait;
+    use ResourceKindsFixtureTrait;
 
     const ORDER = MetadataFixture::ORDER + ResourceWorkflowsFixture::ORDER;
     const REFERENCE_RESOURCE_KIND_BOOK = 'resource-kind-book';
@@ -25,12 +25,12 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Book',
             ],
             [
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, 1, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION, 1, true),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_HARD_COVER),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES),
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO, 0),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_FILE),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),

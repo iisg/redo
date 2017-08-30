@@ -19,10 +19,10 @@ class SystemMetadata extends Enum {
         $metadata = null;
         if ($value == self::PARENT) {
             $metadata = Metadata::create(
+                '',
                 MetadataControl::RELATIONSHIP(),
                 'Parent',
                 ['EN' => 'Parent', 'PL' => 'Rodzic',],
-                '',
                 [],
                 [],
                 [],
@@ -30,10 +30,10 @@ class SystemMetadata extends Enum {
             );
         } elseif ($value == self::USERNAME) {
             $metadata = Metadata::create(
+                SystemResourceClass::USER,
                 MetadataControl::TEXT(),
                 'Username',
                 ['EN' => 'Username', 'PL' => 'Nazwa użytkownika'],
-                SystemResourceClass::USER,
                 [],
                 [],
                 [],

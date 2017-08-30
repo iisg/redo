@@ -17,7 +17,7 @@
                 <button type="button"
                     class="btn pull-right btn-danger"
                     disabled.bind="isDeletingDisabled(index) & signal:'metadata-value-changed'"
-                    click.delegate="deleteIndex(index)">
+                    click.trigger="deleteIndex(index)">
                     <fa name="trash fw"></fa>
                 </button>
             </td>
@@ -26,6 +26,7 @@
             <td colspan="3">
                 <button type="button"
                     class="btn btn-action"
+                    disabled.bind="isAddingDisabled() & signal:'metadata-value-changed'"
                     click.delegate="addNew()">
                     ${'Add value' | t}
                 </button>

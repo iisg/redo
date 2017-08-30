@@ -3,8 +3,8 @@ import {autoinject} from "aurelia-dependency-injection";
 import {User} from "./user";
 import {HttpClient} from "aurelia-http-client";
 import {UserRoleRepository} from "./roles/user-role-repository";
-import {ResourceRepository} from "../resources/resource-repository";
-import {Resource} from "../resources/resource";
+import {ResourceRepository} from "resources/resource-repository";
+import {Resource} from "resources/resource";
 
 @autoinject
 export class UserRepository extends ApiRepository<User> {

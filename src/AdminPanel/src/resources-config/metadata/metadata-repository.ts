@@ -79,15 +79,8 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
 
   public toBackend(entity: Metadata): Object {
     entity = deepCopy(entity);
-    this.removeExcessiveConstraints(entity);
     this.replaceEntitiesWithIds(entity);
     return entity;
-  }
-
-  private removeExcessiveConstraints(entity: Metadata) {
-    if (entity.control != 'relationship') {
-      delete entity.constraints['resourceKind'];
-    }
   }
 
   private replaceEntitiesWithIds(entity: Metadata) {

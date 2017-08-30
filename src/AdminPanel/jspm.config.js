@@ -40,6 +40,7 @@ System.config({
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "bootstrap-material-design": "npm:bootstrap-material-design@0.5.10",
     "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.7",
+    "change-case": "npm:change-case@3.0.1",
     "compass-mixins": "npm:compass-mixins@0.12.10",
     "cytoscape": "npm:cytoscape@2.7.25",
     "cytoscape-autopan-on-drag": "npm:cytoscape-autopan-on-drag@2.0.2",
@@ -270,6 +271,34 @@ System.config({
       "base64-js": "npm:base64-js@1.2.1",
       "ieee754": "npm:ieee754@1.1.8"
     },
+    "npm:camel-case@3.0.0": {
+      "no-case": "npm:no-case@2.3.2",
+      "upper-case": "npm:upper-case@1.1.3"
+    },
+    "npm:change-case@3.0.1": {
+      "camel-case": "npm:camel-case@3.0.0",
+      "constant-case": "npm:constant-case@2.0.0",
+      "dot-case": "npm:dot-case@2.1.1",
+      "header-case": "npm:header-case@1.0.1",
+      "is-lower-case": "npm:is-lower-case@1.1.3",
+      "is-upper-case": "npm:is-upper-case@1.1.2",
+      "lower-case": "npm:lower-case@1.1.4",
+      "lower-case-first": "npm:lower-case-first@1.0.2",
+      "no-case": "npm:no-case@2.3.2",
+      "param-case": "npm:param-case@2.1.1",
+      "pascal-case": "npm:pascal-case@2.0.1",
+      "path-case": "npm:path-case@2.1.1",
+      "sentence-case": "npm:sentence-case@2.1.1",
+      "snake-case": "npm:snake-case@2.1.0",
+      "swap-case": "npm:swap-case@1.1.2",
+      "title-case": "npm:title-case@2.1.1",
+      "upper-case": "npm:upper-case@1.1.3",
+      "upper-case-first": "npm:upper-case-first@1.1.2"
+    },
+    "npm:constant-case@2.0.0": {
+      "snake-case": "npm:snake-case@2.1.0",
+      "upper-case": "npm:upper-case@1.1.3"
+    },
     "npm:cytoscape-autopan-on-drag@2.0.2": {
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
       "cytoscape": "npm:cytoscape@2.7.25",
@@ -299,8 +328,15 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:dot-case@2.1.1": {
+      "no-case": "npm:no-case@2.3.2"
+    },
     "npm:font-awesome@4.7.0": {
       "css": "github:systemjs/plugin-css@0.1.36"
+    },
+    "npm:header-case@1.0.1": {
+      "no-case": "npm:no-case@2.3.2",
+      "upper-case": "npm:upper-case@1.1.3"
     },
     "npm:i18next@3.5.2": {
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -311,11 +347,23 @@ System.config({
     "npm:intl@1.2.5": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:is-lower-case@1.1.3": {
+      "lower-case": "npm:lower-case@1.1.4"
+    },
+    "npm:is-upper-case@1.1.2": {
+      "upper-case": "npm:upper-case@1.1.3"
+    },
     "npm:lodash.debounce@4.0.8": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:lodash.throttle@4.1.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:lower-case-first@1.0.2": {
+      "lower-case": "npm:lower-case@1.1.4"
+    },
+    "npm:no-case@2.3.2": {
+      "lower-case": "npm:lower-case@1.1.4"
     },
     "npm:oribella-aurelia-sortable@0.13.0": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
@@ -336,13 +384,41 @@ System.config({
     "npm:os-browserify@0.1.2": {
       "os": "github:jspm/nodelibs-os@0.1.0"
     },
+    "npm:param-case@2.1.1": {
+      "no-case": "npm:no-case@2.3.2"
+    },
+    "npm:pascal-case@2.0.1": {
+      "camel-case": "npm:camel-case@3.0.0",
+      "upper-case-first": "npm:upper-case-first@1.1.2"
+    },
     "npm:path-browserify@0.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:path-case@2.1.1": {
+      "no-case": "npm:no-case@2.3.2"
     },
     "npm:process@0.11.10": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
+    },
+    "npm:sentence-case@2.1.1": {
+      "no-case": "npm:no-case@2.3.2",
+      "upper-case-first": "npm:upper-case-first@1.1.2"
+    },
+    "npm:snake-case@2.1.0": {
+      "no-case": "npm:no-case@2.3.2"
+    },
+    "npm:swap-case@1.1.2": {
+      "lower-case": "npm:lower-case@1.1.4",
+      "upper-case": "npm:upper-case@1.1.3"
+    },
+    "npm:title-case@2.1.1": {
+      "no-case": "npm:no-case@2.3.2",
+      "upper-case": "npm:upper-case@1.1.3"
+    },
+    "npm:upper-case-first@1.1.2": {
+      "upper-case": "npm:upper-case@1.1.3"
     },
     "npm:util@0.10.3": {
       "inherits": "npm:inherits@2.0.1",

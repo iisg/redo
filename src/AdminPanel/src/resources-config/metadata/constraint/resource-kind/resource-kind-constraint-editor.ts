@@ -1,19 +1,19 @@
 import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {arraysEqual} from "common/utils/array-utils";
-import {twoWay} from "common/components/binding-mode";
-import {SystemResourceKinds} from "../resource-kind/system-resource-kinds";
+import {twoWay, oneTime} from "common/components/binding-mode";
+import {SystemResourceKinds} from "../../../resource-kind/system-resource-kinds";
 import {Workflow} from "workflows/workflow";
-import {Metadata} from "./metadata";
+import {Metadata} from "../../metadata";
 import {WorkflowRepository} from "workflows/workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
 
 @autoinject
 export class ResourceKindConstraintEditor {
   @bindable(twoWay) metadata: Metadata;
-  @bindable idsFromBaseMetadata: number[];
+  @bindable(oneTime) idsFromBaseMetadata: number[];
   @bindable(twoWay) disabled: boolean = false;
-  @bindable resourceClass: string;
+  @bindable(oneTime) resourceClass: string;
 
   workflowsUsingMetadataAsAssignee: Workflow[] = [];
   loadingWorkflows: boolean = false;

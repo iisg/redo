@@ -1,4 +1,4 @@
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
@@ -8,7 +8,7 @@ import {noop, VoidFunction} from "common/utils/function-utils";
 import {changeHandler} from "common/components/binding-mode";
 
 @autoinject
-export class MetadataForm {
+export class MetadataForm implements ComponentAttached {
   @bindable submit: (value: {editedMetadata: Metadata}) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
   @bindable(changeHandler('resetValues')) template: Metadata;
@@ -16,7 +16,7 @@ export class MetadataForm {
   @bindable cancelButton: boolean = false;
   @bindable resourceClass: string;
 
-  metadata: Metadata = new Metadata;
+  metadata: Metadata = new Metadata();
   submitting: boolean = false;
 
   private controller: ValidationController;
@@ -29,6 +29,10 @@ export class MetadataForm {
   @computedFrom('metadata.id')
   get fromTemplate(): boolean {
     return this.template != undefined;
+  }
+
+  attached(): void {
+    this.resetValues();
   }
 
   private resetValues() {

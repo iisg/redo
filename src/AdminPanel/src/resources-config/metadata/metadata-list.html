@@ -78,7 +78,7 @@
                             </a>
                             <button type="button"
                                 class="btn btn-default btn-narrow ${metadata.hovered ? 'btn-raised' : ''}"
-                                click.delegate="metadata.editing = true"
+                                click.trigger="metadata.editing = true"
                                 disabled.bind="metadata.pendingRequest">
                                 <fa name="edit"></fa>
                             </button>

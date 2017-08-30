@@ -2,6 +2,7 @@ import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ValidationRules} from "aurelia-validation";
 import {WorkflowPlace, WorkflowTransition, TransitionBlockReason} from "workflows/workflow";
 import {Entity} from "common/entity/entity";
+import {MetadataConstraintsSatisfiedValidationRule} from "common/validation/rules/metadata-constraints-satisfied";
 
 export class Resource extends Entity {
   id: number;
@@ -29,7 +30,10 @@ export class Resource extends Entity {
 export function registerResourceValidationRules() {
   ValidationRules
     .ensure('kind').displayName("Resource kind").required()
-    .ensure('contents').satisfies(contents => Object.keys(contents).filter(metadataId => contents[metadataId].length > 0).length > 0)
+    .ensure('contents').displayName('Contents')
+    .satisfies(contents => Object.keys(contents).filter(metadataId => contents[metadataId].length > 0).length > 0)
     .withMessageKey('atLeastOneMetadataRequired')
+    .satisfiesRule(MetadataConstraintsSatisfiedValidationRule.NAME)
+    .withMessageKey('metadataConstraintsNotSatisfied')
     .on(Resource);
 }
