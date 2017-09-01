@@ -99,6 +99,5 @@
   "Child resources": "Podzasoby",
   "Resource doesn't exist": "Zasób nie istnieje",
   "Resource has children": "Zasób ma podzasoby",
-  "Delete or disown them first to delete this resource": "Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób",
-  "You aren't authorized to view user permissions.": "Nie jesteś uprawniony do wyświetlania uprawnień użytkowników."
+  "Delete or disown them first to delete this resource": "Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób"
 }

@@ -1,8 +1,9 @@
-import {CurrentUserFetcher} from "../../users/current/current-user-fetcher";
+import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {autoinject, Container} from "aurelia-dependency-injection";
 import {Interceptor, HttpResponseMessage} from "aurelia-http-client";
 import {I18N} from "aurelia-i18n";
 import {Alert, AlertOptions} from "../dialog/alert";
+import * as headers from "./headers";
 
 @autoinject
 export class GlobalExceptionInterceptor implements Interceptor {
@@ -13,14 +14,16 @@ export class GlobalExceptionInterceptor implements Interceptor {
     const options = this.getAlertOptions(response);
     const title = this.getErrorTitle(response);
     const html = this.getErrorMessage(response);
-    const isDebug = response.headers.has('X-Debug-Token-Link');
+    const isDebug = response.headers.has(headers.debugTokenLink.name);
+    const suppressError = response.requestMessage.headers.get(headers.suppressError.name) == headers.suppressError.value;
 
-    if (response.statusCode >= 400
+    if (!suppressError
+      && response.statusCode >= 400
       && response.statusCode != 401
       && this.userAuthenticated) {
       this.alert.showHtml(options, title, html).then(() => {
         if (isDebug) {
-          window.open(response.headers.get('X-Debug-Token-Link'));
+          window.open(response.headers.get(headers.debugTokenLink.name));
         }
       });
     }
@@ -40,7 +43,7 @@ export class GlobalExceptionInterceptor implements Interceptor {
       };
       prodAlert = $.extend(prodAlert, aureliaAdditions);
     }
-    const isDebug = response.headers.has('X-Debug-Token-Link');
+    const isDebug = response.headers.has(headers.debugTokenLink.name);
     if (!isDebug) {
       return prodAlert;
     } else {

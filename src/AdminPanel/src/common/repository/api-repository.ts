@@ -1,6 +1,7 @@
 import {HttpClient, HttpResponseMessage} from "aurelia-http-client";
 import {deepCopy} from "../utils/object-utils";
 import {Entity} from "../entity/entity";
+import {suppressError as suppressErrorHeader} from "common/http-client/headers";
 
 export abstract class ApiRepository<T> {
   constructor(protected httpClient: HttpClient, protected endpoint: string) {
@@ -13,8 +14,12 @@ export abstract class ApiRepository<T> {
     return Promise.all(response.content.map(item => this.toEntity(item)));
   }
 
-  public get(id: number|string): Promise<T> {
-    return this.httpClient.get(this.oneEntityEndpoint(id)).then(response => this.toEntity(response.content));
+  public get(id: number|string, suppressError: boolean = false): Promise<T> {
+    const request = this.httpClient.createRequest(this.oneEntityEndpoint(id)).asGet();
+    if (suppressError) {
+      request.withHeader(suppressErrorHeader.name, suppressErrorHeader.value);
+    }
+    return request.send().then(response => this.toEntity(response.content));
   }
 
   public getList(): Promise<T[]> {
