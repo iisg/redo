@@ -4,15 +4,17 @@ import {I18N} from "aurelia-i18n";
 import * as $ from "jquery";
 import "select2";
 import {booleanAttribute} from "../boolean-attribute";
-import {twoWay} from "../binding-mode";
+import {twoWay, changeHandler} from "../binding-mode";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable(twoWay) value: Object|Object[];
   @bindable values: Object[];
-  @bindable allowClear: boolean = false;
-  @bindable placeholder: string = "-";
-  @bindable multiple: boolean = false;
+
+  @bindable(changeHandler('recreateDropdown')) placeholder: string = "—";
+  @bindable @booleanAttribute multiple: boolean = false;
+  @bindable @booleanAttribute allowClear: boolean = false;  // allows nothing in single-select dropdown
+
   @bindable @booleanAttribute disabled: boolean = false;
 
   dropdown: Element;
@@ -21,40 +23,53 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   }
 
   attached(): void {
-    $(this.dropdown).select2({
+    this.recreateDropdown();
+    $(this.dropdown).on('select2:select', () => this.onSelectedItem());
+    // timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049
+    $(this.dropdown).on('select2:unselect', () => setTimeout(() => this.onSelectedItem()));
+  }
+
+  detached(): void {
+    $(this.dropdown).select2('destroy');
+  }
+
+  multipleChanged() {  // @booleanAttributes enforce default handler name
+    this.recreateDropdown();
+  }
+
+  allowClearChanged() {  // @booleanAttributes enforce default handler name
+    this.recreateDropdown();
+  }
+
+  private recreateDropdown(): JQuery {
+    const $element = $(this.dropdown).select2({
       placeholder: this.placeholder,
       allowClear: this.allowClear,
       multiple: this.multiple,
       width: '100%',
-      "language": {
-        "noResults": () => this.setNoResultText()
+      language: {
+        "noResults": () => this.i18n.tr("No results")
       },
-      escapeMarkup: this.escapeMarkup,
-      templateResult: data => this.formatOption(data),
-      templateSelection: data => this.formatOption(data)
+      escapeMarkup: v => v,
+      templateResult: item => this.getItemHtml(item),
+      templateSelection: item => this.getItemHtml(item)
     });
+    this.updateSelectedItem();
+    return $element;
+  }
 
-    $(this.dropdown).on('select2:select', () => {
-      this.onSelectedValue();
+  valuesChanged() {
+    this.recreateDropdown();
+    this.valueChanged();
+  }
+
+  valueChanged() {
+    setTimeout(() => {
+      this.updateSelectedItem();
     });
   }
 
-  escapeMarkup(markup) {
-    return markup;
-  }
-
-  setNoResultText() {
-    return this.i18n.tr("No results");
-  }
-
-  formatOption(data) {
-    if (data.id) {
-      return $(this.dropdown).find(`option[value=${data.id}]`).html();
-    }
-    return '';
-  }
-
-  onSelectedValue() {
+  onSelectedItem() {  // copy value from DOM to VM
     let selectedIndex = $(this.dropdown).val();
     if (selectedIndex == undefined && this.multiple) {
       selectedIndex = [];
@@ -64,41 +79,28 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
       : this.values[selectedIndex];
   }
 
-  refreshSelect() {
-    $(this.dropdown).select2('data');
-  }
-
-  valuesChanged() {
-    this.refreshSelect();
-  }
-
-  valueChanged() {
-    this.updateOption();
-  }
-
-  updateOption() {
-    let values = [];
-    if (this.multiple) {
-      for (let i in this.values) {
-        for (let j in this.value) {
-          if (this.values[i] === this.value[j]) {
-            values.push(i.toString());
-            break;
-          }
-        }
-      }
-    } else {
-      for (let i in this.values) {
-        if (this.values[i] === this.value) {
-          values.push(i.toString());
-          break;
-        }
-      }
+  updateSelectedItem() {  // copy value from VM to DOM
+    if (this.value == undefined || this.values == undefined || this.values.length == 0) {
+      return;
     }
-    $(this.dropdown).val(values);
+    const needles: number[] = Array.isArray(this.value)
+      ? (this.value as Object[]).map(value => this.getIndex(value))
+      : [this.getIndex(this.value)];
+    const haystack: number[] = this.values.map(this.getIndex);
+    const values: number[] = needles.map(id => haystack.indexOf(id)).filter(index => index != -1);
+    const value: number|number[] = Array.isArray(this.value)
+      ? values
+      : values[0];
+    $(this.dropdown).val(value as any).trigger('change');
   }
 
-  detached(): void {
-    $(this.dropdown).select2('destroy');
+  getIndex(value: any) {
+    return value !== undefined && value.hasOwnProperty('id')
+      ? value['id']
+      : value;
+  }
+
+  getItemHtml(item: Select2SelectionObject): string {
+    return item.element ? $(item.element).html() : item.text;
   }
 }
