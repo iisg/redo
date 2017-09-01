@@ -10,15 +10,20 @@ interface BindableConfig {
 }
 
 class BindableArgument implements BindableConfig {
-  constructor(public defaultBindingMode: bindingMode) {
+  constructor(config: BindableConfig) {
+    $.extend(this, config);
   }
 
   and(options: BindableConfig): BindableArgument {
-    let instance = new BindableArgument(this.defaultBindingMode);
+    let instance = new BindableArgument(this);
     $.extend(instance, options);
     return instance;
   }
 }
 
-export const oneTime: BindableArgument = new BindableArgument(bindingMode.oneTime);
-export const twoWay: BindableArgument = new BindableArgument(bindingMode.twoWay);
+export const oneTime: BindableArgument = new BindableArgument({defaultBindingMode: bindingMode.oneTime});
+export const twoWay: BindableArgument = new BindableArgument({defaultBindingMode: bindingMode.twoWay});
+
+export function changeHandler(methodName: string): BindableArgument {
+  return new BindableArgument({changeHandler: methodName});
+}

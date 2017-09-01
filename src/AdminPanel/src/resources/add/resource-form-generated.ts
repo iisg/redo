@@ -29,7 +29,9 @@ export class ResourceFormGenerated {
   }
 
   resourceChanged() {
-    const currentPlaces = Object.keys(this.resource.currentPlaces).map(key => this.resource.currentPlaces[key]);
+    const currentPlaces = this.resource.currentPlaces !== undefined
+      ? Object.keys(this.resource.currentPlaces).map(key => this.resource.currentPlaces[key])
+      : [];
     this.requiredMetadataIds = flatten(currentPlaces.map(place => place.requiredMetadataIds));
     this.lockedMetadataIds = flatten(currentPlaces.map(place => place.lockedMetadataIds));
   }

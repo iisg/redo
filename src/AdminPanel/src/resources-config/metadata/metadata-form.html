@@ -38,11 +38,8 @@
                     <fa name="times fw"></fa>
                     ${'Cancel' | t}
                 </button>
-                <button class="btn btn-primary"
-                    disabled.bind="submitting">
-                    <submit-button submitting.bind="submitting"
-                        editing.bind="edit"></submit-button>
-                </button>
+                <submit-button submitting.bind="submitting"
+                    editing.bind="edit"></submit-button>
             </div>
         </div>
     </form>

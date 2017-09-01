@@ -30,7 +30,7 @@ export class ResourceKind extends Entity {
 
   public set workflow(workflow: Workflow) {
     this.workflowInstance = workflow;
-    this.workflowId = workflow.id;
+    this.workflowId = (workflow !== undefined) ? workflow.id : undefined;
   }
 
   public getWorkflow(): Promise<Workflow> {
