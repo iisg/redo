@@ -85,5 +85,4 @@ describe(MetadataRepository.name, () => {
       expect(resourceKindConstraints[1]).toBe(123);
     });
   });
-})
-;
+});

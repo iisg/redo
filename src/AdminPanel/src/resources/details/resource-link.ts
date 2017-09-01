@@ -17,7 +17,7 @@ export class ResourceLink {
   idChanged(): void {
     this.routerParams.id = this.id;
     this.loading = true;
-    this.resourceRepository.get(this.id)
+    this.resourceRepository.get(this.id, true)
       .catch(() => Promise.resolve(undefined))
       .then(resource => this.resource = resource)
       .finally(() => this.loading = false);
