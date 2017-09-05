@@ -1,16 +1,16 @@
 import {bindable} from "aurelia-templating";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {Resource} from "resources/resource";
-import {bindingMode} from "aurelia-binding";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
-import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
-import {Metadata} from "../../resources-config/metadata/metadata";
+import {SystemMetadata} from "resources-config/metadata/system-metadata";
+import {Metadata} from "resources-config/metadata/metadata";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class ResourceFormGenerated {
   @bindable resourceKind: ResourceKind;
-  @bindable({defaultBindingMode: bindingMode.twoWay}) resource: Resource;
+  @bindable(twoWay) resource: Resource;
   @bindable disableParent: boolean = false;
 
   currentLanguageCode: string;

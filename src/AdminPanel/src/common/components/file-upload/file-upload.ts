@@ -1,11 +1,12 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {bindingMode, computedFrom} from "aurelia-binding";
+import {computedFrom} from "aurelia-binding";
 import {booleanAttribute} from "../boolean-attribute";
+import {twoWay} from "../binding-mode";
 
 @autoinject
 export class FileUpload implements ComponentAttached {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: File|string;
+  @bindable(twoWay) value: File|string;
   @bindable @booleanAttribute disabled: boolean = false;
 
   files: Array<File>;

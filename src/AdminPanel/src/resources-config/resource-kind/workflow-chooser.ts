@@ -1,12 +1,12 @@
 import {ComponentAttached, bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {bindingMode} from "aurelia-binding";
 import {Workflow} from "workflows/workflow";
 import {WorkflowRepository} from "workflows/workflow-repository";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class WorkflowChooser implements ComponentAttached {
-  @bindable({defaultBindingMode: bindingMode.twoWay})
+  @bindable(twoWay)
   value: Workflow;
 
   workflows: Workflow[];

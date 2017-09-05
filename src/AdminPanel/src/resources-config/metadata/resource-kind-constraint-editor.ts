@@ -1,12 +1,13 @@
 import {bindable} from "aurelia-templating";
-import {bindingMode, computedFrom} from "aurelia-binding";
+import {computedFrom} from "aurelia-binding";
 import {ResourceKind} from "../resource-kind/resource-kind";
 import {arraysEqual} from "common/utils/array-utils";
+import {twoWay} from "common/components/binding-mode";
 
 export class ResourceKindConstraintEditor {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) values: ResourceKind[];
-  @bindable({defaultBindingMode: bindingMode.twoWay}) baseValues: ResourceKind[];
-  @bindable({defaultBindingMode: bindingMode.twoWay}) disabled: boolean = false;
+  @bindable(twoWay) values: ResourceKind[];
+  @bindable(twoWay) baseValues: ResourceKind[];
+  @bindable(twoWay) disabled: boolean = false;
 
   private resetToBaseValues() { // tslint:disable-line
     this.values = (this.baseValues || []).slice();
