@@ -1,13 +1,13 @@
 import {bindable} from "aurelia-templating";
-import {Metadata} from "../../resources-config/metadata/metadata";
+import {Metadata} from "resources-config/metadata/metadata";
 import {Resource} from "../resource";
-import {bindingMode} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class ResourceMetadataValuesForm {
   @bindable metadata: Metadata;
-  @bindable({defaultBindingMode: bindingMode.twoWay}) resource: Resource;
+  @bindable(twoWay) resource: Resource;
   @bindable disabled: boolean = false;
 
   valueTable: Element;

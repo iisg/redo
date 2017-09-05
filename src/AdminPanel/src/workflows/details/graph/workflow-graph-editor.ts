@@ -4,13 +4,13 @@ import {autoinject} from "aurelia-dependency-injection";
 import {WorkflowRepository} from "../../workflow-repository";
 import {WorkflowGraph} from "./workflow-graph";
 import {BindingSignaler} from "aurelia-templating-resources";
-import {bindingMode} from "aurelia-binding";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class WorkflowGraphEditor {
   static readonly UPDATE_FROM_GRAPH = 'updateFromGraph';
 
-  @bindable({defaultBindingMode: bindingMode.twoWay}) workflow: Workflow;
+  @bindable(twoWay) workflow: Workflow;
 
   selectedElement: WorkflowPlace|WorkflowTransition;
   simulating = false;

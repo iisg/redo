@@ -1,11 +1,11 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
-import {bindingMode} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {LanguageRepository} from "./language-repository";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class FlagsSelect implements ComponentAttached {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: string;
+  @bindable(twoWay) value: string;
 
   availableFlags: string[];
 

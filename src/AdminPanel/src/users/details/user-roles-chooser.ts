@@ -1,12 +1,12 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {bindingMode} from "aurelia-binding";
 import {UserRoleRepository} from "../roles/user-role-repository";
 import {UserRole} from "../roles/user-role";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class UserRolesChooser implements ComponentAttached {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) roleIds: Array<string> = [];
+  @bindable(twoWay) roleIds: Array<string> = [];
 
   availableRoles: Array<UserRole>;
 

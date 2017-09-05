@@ -1,15 +1,16 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
-import {bindingMode, computedFrom} from "aurelia-binding";
+import {computedFrom} from "aurelia-binding";
 import {Workflow, WorkflowPlace} from "../../workflow";
 import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {WorkflowPlaceSorter} from "./workflow-place-sorter";
 import {booleanAttribute} from "common/components/boolean-attribute";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class WorkflowMetadataRequirements implements ComponentAttached {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) workflow: Workflow;
+  @bindable(twoWay) workflow: Workflow;
   @bindable @booleanAttribute editable: boolean = false;
 
   metadataList: Metadata[];

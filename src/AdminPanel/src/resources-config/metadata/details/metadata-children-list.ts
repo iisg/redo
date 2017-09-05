@@ -2,12 +2,12 @@ import {autoinject} from "aurelia-dependency-injection";
 import {bindable} from "aurelia-templating";
 import {Metadata} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
-import {bindingMode} from "aurelia-binding";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class MetadataChildrenList {
   @bindable metadata: Metadata;
-  @bindable({defaultBindingMode: bindingMode.twoWay}) metadataChildrenList: Metadata[];
+  @bindable(twoWay) metadataChildrenList: Metadata[];
 
   constructor(private metadataRepository: MetadataRepository) {
   }

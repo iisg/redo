@@ -1,11 +1,12 @@
 import {bindable} from "aurelia-templating";
-import {bindingMode, computedFrom} from "aurelia-binding";
+import {computedFrom} from "aurelia-binding";
+import {twoWay} from "../binding-mode";
 
 export class EntityChooser {
   @bindable entities: Entity[] = [];
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: Entity;
+  @bindable(twoWay) value: Entity;
   @bindable excludeEntities: Entity[]|AnyMap<Entity>;
-  @bindable({defaultBindingMode: bindingMode.twoWay}) containsItems: boolean;
+  @bindable(twoWay) containsItems: boolean;
 
   @computedFrom('entities.length', 'excludeEntities.length')
   get values(): Entity[] {

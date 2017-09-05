@@ -1,14 +1,15 @@
 import {bindable, ComponentDetached, ComponentAttached} from "aurelia-templating";
 import {Metadata} from "resources-config/metadata/metadata";
-import {bindingMode, BindingEngine, Disposable} from "aurelia-binding";
+import {BindingEngine, Disposable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {ValueWrapper} from "../controls/control-strategy";
 import {booleanAttribute} from "common/components/boolean-attribute";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class ResourceMetadataValueInput implements ComponentAttached, ComponentDetached {
   @bindable metadata: Metadata;
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: any;
+  @bindable(twoWay) value: any;
   @bindable @booleanAttribute disabled: boolean = false;
 
   valueWrapper: ValueWrapper = new ValueWrapper();

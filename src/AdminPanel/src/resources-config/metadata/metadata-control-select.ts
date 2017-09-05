@@ -1,11 +1,11 @@
 import {bindable} from "aurelia-templating";
 import {Configure} from "aurelia-configuration";
-import {bindingMode} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class MetadataControlSelect {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: string;
+  @bindable(twoWay) value: string;
   @bindable disabled: boolean;
 
   controls: string[];

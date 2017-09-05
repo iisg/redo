@@ -1,14 +1,14 @@
 import {ComponentAttached, ComponentDetached, bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {bindingMode} from "aurelia-binding";
 import {I18N} from "aurelia-i18n";
 import * as $ from "jquery";
 import "select2";
 import {booleanAttribute} from "../boolean-attribute";
+import {twoWay} from "../binding-mode";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
-  @bindable({defaultBindingMode: bindingMode.twoWay}) value: Object|Object[];
+  @bindable(twoWay) value: Object|Object[];
   @bindable values: Object[];
   @bindable allowClear: boolean = false;
   @bindable placeholder: string = "-";

@@ -1,14 +1,14 @@
 import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
-import {bindingMode} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {Language} from "../../language-config/language";
 import {LanguageRepository, LanguagesChangedEvent} from "../../language-config/language-repository";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
+import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class LanguageChooser implements ComponentAttached, ComponentDetached {
   languages: Language[];
-  @bindable({defaultBindingMode: bindingMode.twoWay})
+  @bindable(twoWay)
   language: Language;
 
   private readonly changeSubscriber: Subscription;
