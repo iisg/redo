@@ -28,21 +28,35 @@ export class WorkflowMetadataRequirements implements ComponentAttached {
   }
 
   checkboxChanged(metadata: Metadata, changedPlace: WorkflowPlace): void {
-    const checked = changedPlace.requiredMetadataIds.indexOf(metadata.id) > -1;
+    const required = changedPlace.requiredMetadataIds.indexOf(metadata.id) > -1;
+    const locked = changedPlace.lockedMetadataIds.indexOf(metadata.id) > -1;
     const changedPlaceIndex = this.orderedPlaces.indexOf(changedPlace);
     const placesToUpdate = this.orderedPlaces.slice(changedPlaceIndex + 1);
     for (const place of placesToUpdate) {
-      this.setMetadataRequirement(metadata, place, checked);
+      this.setMetadataRequirement(metadata, place, required, locked);
     }
   }
 
-  private setMetadataRequirement(metadata: Metadata, place: WorkflowPlace, required: boolean) {
-    const index = place.requiredMetadataIds.indexOf(metadata.id);
+  private setMetadataRequirement(metadata: Metadata, place: WorkflowPlace, required: boolean, locked: boolean) {
+    // Array properties don't trigger bindings on modification, only on assignment - hence extra complicated operations here
+    // https://github.com/aurelia/templating/issues/561
+    let index = place.requiredMetadataIds.indexOf(metadata.id);
     const currentlyRequired = index > -1;
     if (currentlyRequired && !required) {
-      place.requiredMetadataIds.splice(index, 1);
+      const newArray = place.requiredMetadataIds.concat();
+      newArray.splice(index, 1);
+      place.requiredMetadataIds = newArray;
     } else if (!currentlyRequired && required) {
-      place.requiredMetadataIds.push(metadata.id);
+      place.requiredMetadataIds = place.requiredMetadataIds.concat(metadata.id);
+    }
+    index = place.lockedMetadataIds.indexOf(metadata.id);
+    const currentlyLocked = index > -1;
+    if (currentlyLocked && !locked) {
+      const newArray = place.lockedMetadataIds.concat();
+      newArray.splice(index, 1);
+      place.lockedMetadataIds = newArray;
+    } else if (!currentlyLocked && locked) {
+      place.lockedMetadataIds = place.lockedMetadataIds.concat(metadata.id);
     }
   }
 }

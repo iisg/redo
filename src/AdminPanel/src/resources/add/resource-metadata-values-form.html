@@ -15,7 +15,7 @@
             <td class="action">
                 <button type="button"
                     class="btn pull-right btn-danger"
-                    disabled.bind="disabled"
+                    disabled.bind="isDeletingDisabled(index) & signal:'metadata-value-changed'"
                     click.delegate="deleteIndex(index)">
                     <fa name="trash fw"></fa>
                 </button>

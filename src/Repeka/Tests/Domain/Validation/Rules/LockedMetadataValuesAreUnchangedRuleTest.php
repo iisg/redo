@@ -1,0 +1,82 @@
+<?php
+namespace Repeka\Tests\Domain\Validation\Rules;
+
+use Assert\AssertionFailedException;
+use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Entity\ResourceWorkflowPlace;
+use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
+
+class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCase {
+    /** @var ResourceWorkflow|\PHPUnit_Framework_MockObject_MockObject */
+    private $workflow;
+    /** @var ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
+    private $resource;
+    /** @var LockedMetadataValuesAreUnchangedRule */
+    private $rule;
+
+    protected function setUp() {
+        $this->workflow = $this->createMock(ResourceWorkflow::class);
+        $this->resource = $this->createMock(ResourceEntity::class);
+        $this->resource->method('getWorkflow')->willReturn($this->workflow);
+        $this->rule = new LockedMetadataValuesAreUnchangedRule();
+    }
+
+    public function testFailsWithoutResource() {
+        $this->expectException(AssertionFailedException::class);
+        $this->rule->validate([]);
+    }
+
+    public function testAcceptsNoWorkflow() {
+        $resource = $this->createMock(ResourceEntity::class);
+        $resource->method('getWorkflow')->willReturn(null);
+        $this->assertTrue($this->rule->forResource($resource)->validate([]));
+    }
+
+    public function testAcceptsForNoLockedMetadata() {
+        $place = new ResourceWorkflowPlace([]);
+        $this->workflow->expects($this->once())->method('getPlaces')->willReturn([$place, $place, $place]);
+        $this->resource->method('getContents')->willReturn([0 => ['foo'], 1 => ['bar']]);
+        $newContents = [2 => ['baz'], 3 => ['quux']];
+        $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testAcceptsUnchangedLockedMetadata() {
+        $place = new ResourceWorkflowPlace([], null, [], [1]);
+        $this->workflow->method('getPlaces')->willReturn([$place]);
+        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = [1 => ['foo', 'bar'], 2 => ['quux']];
+        $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testRejectsChangedLockedMetadata() {
+        $place = new ResourceWorkflowPlace([], null, [], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place]);
+        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = [1 => ['foo', 'bar'], 2 => ['quux']];
+        $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testRejectsChangedLockedMetadataForMultiplePlaces() {
+        $place1 = new ResourceWorkflowPlace([], null, [], [1]);
+        $place2 = new ResourceWorkflowPlace([], null, [], []);
+        $place3 = new ResourceWorkflowPlace([], null, [], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place1, $place2, $place3]);
+        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = [1 => ['foo', 'bar'], 2 => ['quux']];
+        $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testRejectsWithNiceErrorMessage() {
+        $this->expectExceptionMessage("Metadata 1, 2");
+        $place = new ResourceWorkflowPlace([], null, [], [1, 2]);
+        $this->workflow->method('getPlaces')->willReturn([$place]);
+        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = [1 => ['foo', 'bar', 'ni'], 2 => ['quux']];
+        $this->rule->forResource($this->resource)->assert($newContents);
+    }
+}

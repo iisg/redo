@@ -1,7 +1,8 @@
 import {NestedNavigationValueConverter} from "./nested-navigation-value-converter";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {route, nested, flatten} from "./route-utils";
+import {route, nested} from "./route-utils";
 import {NavItemWithChildren} from "./route-types";
+import {flatten} from "../utils/array-utils";
 
 describe(NestedNavigationValueConverter.name, () => {
   let eventAggregator: EventAggregator;

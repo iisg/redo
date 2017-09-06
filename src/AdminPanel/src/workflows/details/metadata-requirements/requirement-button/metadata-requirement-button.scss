@@ -1,0 +1,18 @@
+@import "../../../../common/styles";
+
+metadata-requirement-button {
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  color: $teal-500;
+
+  .disabled {
+    cursor: not-allowed;
+    color: $grey-700;
+  }
+
+  .fa-stack {
+    display: block;
+    margin: 0 auto;
+  }
+}

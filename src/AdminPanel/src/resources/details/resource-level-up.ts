@@ -1,6 +1,6 @@
 import {bindable} from "aurelia-templating";
 import {Resource} from "../resource";
-import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
+import {SystemMetadata} from "resources-config/metadata/system-metadata";
 
 export class ResourceLevelUp {
   @bindable resource: Resource;

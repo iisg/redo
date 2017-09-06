@@ -3,6 +3,7 @@ import {MultilingualText} from "resources-config/metadata/metadata";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Entity} from "common/entity/entity";
 import {deepCopy} from "common/utils/object-utils";
+import {VoidFunction} from "common/utils/function-utils";
 
 export class Workflow extends Entity {
   id: number;
@@ -12,6 +13,7 @@ export class Workflow extends Entity {
   transitions: WorkflowTransition[] = [];
   diagram: string;
   thumbnail;
+  updateFromGraph?: VoidFunction;
 
   copyFrom(workflow: Workflow) {
     $.extend(this, workflow);
@@ -24,6 +26,7 @@ export interface WorkflowPlace {
   id: string;
   label: MultilingualText;
   requiredMetadataIds: number[];
+  lockedMetadataIds: number[];
 }
 
 export interface WorkflowTransition {

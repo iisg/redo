@@ -18,8 +18,3 @@ export function nested(title: string, icon: string, children: RouteDefinition[])
   }
   return children;
 }
-
-// http://stackoverflow.com/a/10865042/878514
-export function flatten<T>(arrayOfArrays: Array<T|T[]>): Array<T> {
-  return [].concat.apply([], arrayOfArrays);
-}

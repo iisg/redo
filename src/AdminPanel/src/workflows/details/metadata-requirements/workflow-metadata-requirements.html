@@ -1,5 +1,7 @@
 <template>
     <require from="resources-config/metadata/metadata-label"></require>
+    <require from="./requirement-button/metadata-requirement-button"></require>
+    <require from="./requirement-button/metadata-requirement-button"></require>
 
     <table class="table highlight-col-row-on-hover">
         <thead>
@@ -15,19 +17,38 @@
             <th>${metadata | metadataLabel}</th>
             <td repeat.for="place of orderedPlaces"
                 class="text-center">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"
-                            model.bind="metadata.id"
-                            checked.bind="place.requiredMetadataIds"
-                            change.delegate="checkboxChanged(metadata, place)"
-                            disabled.bind="!editable">
-                    </label>
-                </div>
+                <metadata-requirement-button model.bind="metadata.id"
+                    required-array.bind="place.requiredMetadataIds"
+                    locked-array.bind="place.lockedMetadataIds"
+                    on-change.call="checkboxChanged(metadata, place)"
+                    disabled.bind="!editable"></metadata-requirement-button>
             </td>
         </tr>
         </tbody>
     </table>
 
     <loading-bar if.bind="metadataList == undefined"></loading-bar>
+
+    <div if.bind="metadataList != undefined"
+        class="legend">
+        <h3>${'Legend:' | t}</h3>
+        <dl class="dl-horizontal">
+            <dt>
+                <metadata-requirement-button disabled></metadata-requirement-button>
+            </dt>
+            <dd>${'Optional' | t:{context: 'female'}}</dd>
+            <dt>
+                <metadata-requirement-button model.one-time="1"
+                    required-array.one-time="[1]"
+                    disabled></metadata-requirement-button>
+            </dt>
+            <dd>${'Required' | t:{context: 'female'}}</dd>
+            <dt>
+                <metadata-requirement-button model.one-time="1"
+                    locked-array.one-time="[1]"
+                    disabled></metadata-requirement-button>
+            </dt>
+            <dd>${'Locked' | t:{context: 'female'}}</dd>
+        </dl>
+    </div>
 </template>

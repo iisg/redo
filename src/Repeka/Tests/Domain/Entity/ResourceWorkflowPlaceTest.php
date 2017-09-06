@@ -28,7 +28,8 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
         $array = [
             'id' => 'B',
             'label' => ['PL' => 'AA'],
-            'requiredMetadataIds' => [1, 2, 3]
+            'requiredMetadataIds' => [1, 2, 3],
+            'lockedMetadataIds' => [4, 5],
         ];
         $this->assertEquals($array, ResourceWorkflowPlace::fromArray($array)->toArray());
     }

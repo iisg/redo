@@ -94,5 +94,11 @@
   "Child resources": "Podzasoby",
   "Resource #{{id}} doesn't exist": "Zasób #{{id}} nie istnieje",
   "Resource has children": "Zasób ma podzasoby",
-  "Delete or disown them first to delete this resource": "Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób"
+  "Delete or disown them first to delete this resource": "Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób",
+  "Resource's state prevents modification of these values.": "Stan zasobu uniemożliwia modyfikację tych wartości.",
+  "This metadata is required in current state.": "Ta metadana jest wymagana w bieżącym stanie.",
+  "Legend:": "Legenda:",
+  "Optional_female": "Opcjonalna",
+  "Required_female": "Wymagana",
+  "Locked_female": "Zablokowana"
 }

@@ -1,4 +1,4 @@
-import {route, nested, flatten} from "./route-utils";
+import {route, nested} from "./route-utils";
 
 describe('route-utils', () => {
   describe(route.name, () => {
@@ -32,21 +32,6 @@ describe('route-utils', () => {
       expect(def[1].settings.parentIcon).toEqual('parent icon');
       expect(def[0].settings.parentTitle).toEqual('parent title');
       expect(def[1].settings.parentTitle).toEqual('parent title');
-    });
-  });
-
-  describe(flatten.name, () => {
-    it("flattens", () => {
-      const def = [
-        route('url', 'module', 'title'),
-        nested('parent title', 'parent icon', [
-          route('url1', 'module1', 'title1'),
-          route('url2', 'module2', 'title2'),
-        ])
-      ];
-      const flattened = flatten(def);
-      expect(flattened.length).toBe(3);
-      expect(flattened.map(r => r.route)).toEqual(['url', 'url1', 'url2']);
     });
   });
 });

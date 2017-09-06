@@ -19,7 +19,7 @@ System.config({
     "aurelia-cookie": "npm:aurelia-cookie@1.0.10",
     "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
     "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
-    "aurelia-framework": "npm:aurelia-framework@1.1.2",
+    "aurelia-framework": "npm:aurelia-framework@1.1.4",
     "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0",
     "aurelia-http-client": "npm:aurelia-http-client@1.1.1",
     "aurelia-i18n": "npm:aurelia-i18n@1.6.2",
@@ -112,7 +112,7 @@ System.config({
     },
     "npm:aurelia-bootstrapper@1.0.1": {
       "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
-      "aurelia-framework": "npm:aurelia-framework@1.1.2",
+      "aurelia-framework": "npm:aurelia-framework@1.1.4",
       "aurelia-history": "npm:aurelia-history@1.0.0",
       "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0",
       "aurelia-loader-default": "npm:aurelia-loader-default@1.0.2",
@@ -133,7 +133,7 @@ System.config({
     "npm:aurelia-event-aggregator@1.0.1": {
       "aurelia-logging": "npm:aurelia-logging@1.3.1"
     },
-    "npm:aurelia-framework@1.1.2": {
+    "npm:aurelia-framework@1.1.4": {
       "aurelia-binding": "npm:aurelia-binding@1.2.2",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
@@ -238,7 +238,7 @@ System.config({
     },
     "npm:aurelia-testing@1.0.0-beta.3.0.1": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
-      "aurelia-framework": "npm:aurelia-framework@1.1.2",
+      "aurelia-framework": "npm:aurelia-framework@1.1.4",
       "aurelia-logging": "npm:aurelia-logging@1.3.1",
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
       "aurelia-templating": "npm:aurelia-templating@1.4.2"

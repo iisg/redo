@@ -66,7 +66,7 @@
       "aurelia-cookie": "npm:aurelia-cookie@^1.0.10",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
       "aurelia-event-aggregator": "npm:aurelia-event-aggregator@^1.0.1",
-      "aurelia-framework": "npm:aurelia-framework@1.1.2",
+      "aurelia-framework": "npm:aurelia-framework@1.1.4",
       "aurelia-history-browser": "npm:aurelia-history-browser@^1.0.0",
       "aurelia-http-client": "npm:aurelia-http-client@^1.1.1",
       "aurelia-i18n": "npm:aurelia-i18n@^1.6.2",

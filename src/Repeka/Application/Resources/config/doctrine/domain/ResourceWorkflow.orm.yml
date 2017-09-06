@@ -12,10 +12,10 @@ Repeka\Domain\Entity\ResourceWorkflow:
       options: {jsonb: true}
     places:
       type: json
-      options: {default: '[]'}
+      options: {default: '[]', jsonb: true}
     transitions:
       type: json
-      options: {default: '[]'}
+      options: {default: '[]', jsonb: true}
     diagram:
       type: text
       nullable: true

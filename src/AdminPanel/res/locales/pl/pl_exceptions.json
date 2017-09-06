@@ -5,7 +5,7 @@
   "noSuchResourceFile": "Plik {{filename}} nie istnieje w zasobie {{resourceId}}",
   "cannotApplyTransition": "Przejście '{{transitionId}}' nie może zostać wykonane w procesie {{workflowId}}",
   "noSuchTransition": "Przejście '{{transitionId}}' nie istnieje w procesie {{workflowId}}",
-  "resourceCannotEnterPlace": "Nie można przenieść zasobu #{{resourceId}} do stanu {{placeIds}} w procesie {{workflowId}}",
+  "resourceCannotEnterPlace": "Zasób #{{resourceId}} nie może znajdować się w tym stanie",
   "entityNotFound": "Nie znaleziono {{entityName}} {{query}}",
   "invalidCommand": "Dane przesłane do serwera są nieprawidłowe",
   "metadataAlreadyPresent": "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}",

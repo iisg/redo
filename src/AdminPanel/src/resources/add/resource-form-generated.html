@@ -7,8 +7,19 @@
         repeat.for="metadata of resourceKind.metadataList">
         <h4>${metadata | metadataLabel}</h4>
         <div class="clearfix"></div>
+        <div if.bind="metadataIsRequired(metadata)"
+            class="alert alert-info">
+            <fa name="circle-info"></fa>
+            ${"This metadata is required in current state." | t}
+        </div>
+        <div if.bind="metadataIsLocked(metadata)"
+            class="alert alert-info">
+            <fa name="circle-info"></fa>
+            ${"Resource's state prevents modification of these values." | t}
+        </div>
         <resource-metadata-values-form metadata.bind="metadata"
             resource.bind="resource"
-            disabled.bind="isParentMetadata(metadata) && disableParent"></resource-metadata-values-form>
+            disabled.bind="editingDisabledForMetadata(metadata)"
+            required.bind="metadataIsRequired(metadata)"></resource-metadata-values-form>
     </div>
 </template>

@@ -5,7 +5,7 @@
   "noSuchResourceFile": "File {{filename}} doesn't exist in resource {{resourceId}}",
   "cannotApplyTransition": "Transition '{{transitionId}}' can't be applied in workflow {{workflowId}}",
   "noSuchTransition": "Transition '{{transitionId}}' doesn't exist in workflow {{workflowId}}",
-  "resourceCannotEnterPlace": "Can't transition resource #{{resourceId}} to place {{placeIds}} in workflow {{workflowId}}",
+  "resourceCannotEnterPlace": "Resource #{{resourceId}} can't be in this state",
   "entityNotFound": "{{entityName, capitalized}} {{query}} not found",
   "invalidCommand": "Data sent to server are invalid",
   "metadataAlreadyPresent": "Metadata #{{metadataId}} is already present in resource kind #{{resourceKind}}",
