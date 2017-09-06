@@ -8,7 +8,7 @@ class ResourceCannotEnterPlaceException extends ResourceWorkflowException {
         $placeIds = is_array($placeIds) ? implode(', ', $placeIds) : $placeIds;
         parent::__construct('resourceCannotEnterPlace', $resource->getWorkflow(), [
             'placeIds' => $placeIds,
-            'resourceId' => $resource,
+            'resourceId' => $resource->getId(),
         ], $previous);
     }
 }

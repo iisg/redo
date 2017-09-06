@@ -7,8 +7,7 @@ import {InCurrentLanguageValueConverter} from "resources-config/multilingual-fie
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {deepCopy} from "common/utils/object-utils";
 import {BindingSignaler} from "aurelia-templating-resources";
-import {WorkflowGraphEditor} from "./graph/workflow-graph-editor";
-import {DeleteEntityConfirmation} from "../../common/dialog/delete-entity-confirmation";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 
 @autoinject
 export class WorkflowDetails implements RoutableComponentActivate {
@@ -31,12 +30,12 @@ export class WorkflowDetails implements RoutableComponentActivate {
   }
 
   bind() {
-    this.urlListener = this.ea.subscribe("router:navigation:success", (event: { instruction: NavigationInstruction }) => {
+    this.urlListener = this.ea.subscribe("router:navigation:success", (event: {instruction: NavigationInstruction}) => {
       this.editing = (event.instruction.queryParams.action == 'edit');
       if (this.workflow != undefined) {
         if (this.editing) {  // read-only -> editing
           this.originalWorkflow = deepCopy(this.workflow);
-        } else {  // editing -> read-only
+        } else if (this.originalWorkflow != undefined) {  // editing -> read-only or loading
           this.workflow.copyFrom(this.originalWorkflow);
           this.updateWindowTitle();
         }
@@ -71,7 +70,7 @@ export class WorkflowDetails implements RoutableComponentActivate {
 
   update(): Promise<any> {
     this.workflow.pendingRequest = true;
-    this.workflow[WorkflowGraphEditor.UPDATE_FROM_GRAPH]();
+    this.workflow.updateFromGraph();
     return this.workflowRepository
       .update(this.workflow)
       .then(() => {

@@ -7,11 +7,13 @@ class ResourceWorkflowPlace {
     private $id;
     private $label;
     private $requiredMetadataIds;
+    private $lockedMetadataIds;
 
-    public function __construct(array $label, $id = null, array $requiredMetadataIds = []) {
+    public function __construct(array $label, $id = null, array $requiredMetadataIds = [], array $lockedMetadataIds = []) {
         $this->label = $label;
         $this->id = $id ?: (new Slugify())->slugify(current($label));
         $this->requiredMetadataIds = $requiredMetadataIds;
+        $this->lockedMetadataIds = $lockedMetadataIds;
     }
 
     public function getId(): string {
@@ -25,6 +27,11 @@ class ResourceWorkflowPlace {
     /** @return int[] */
     public function getRequiredMetadataIds(): array {
         return $this->requiredMetadataIds;
+    }
+
+    /** @return int[] */
+    public function getLockedMetadataIds(): array {
+        return $this->lockedMetadataIds;
     }
 
     public function getMissingRequiredMetadataIds(ResourceEntity $resource):array {
@@ -44,10 +51,16 @@ class ResourceWorkflowPlace {
             'id' => $this->getId(),
             'label' => $this->getLabel(),
             'requiredMetadataIds' => $this->getRequiredMetadataIds(),
+            'lockedMetadataIds' => $this->getLockedMetadataIds(),
         ];
     }
 
     public static function fromArray(array $data) {
-        return new self($data['label'], $data['id'] ?? null, $data['requiredMetadataIds'] ?? []);
+        return new self(
+            $data['label'],
+            $data['id'] ?? null,
+            $data['requiredMetadataIds'] ?? [],
+            $data['lockedMetadataIds'] ?? []
+        );
     }
 }

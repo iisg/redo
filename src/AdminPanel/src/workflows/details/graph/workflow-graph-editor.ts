@@ -8,8 +8,6 @@ import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class WorkflowGraphEditor {
-  static readonly UPDATE_FROM_GRAPH = 'updateFromGraph';
-
   @bindable(twoWay) workflow: Workflow;
 
   selectedElement: WorkflowPlace|WorkflowTransition;
@@ -22,11 +20,8 @@ export class WorkflowGraphEditor {
   constructor(private workflowRepository: WorkflowRepository, private signaler: BindingSignaler) {
   }
 
-  workflowChanged(newWorkflow, oldWorkflow): void {
-    newWorkflow[WorkflowGraphEditor.UPDATE_FROM_GRAPH] = () => this.updateWorkflowBasedOnGraph(true);
-    if (oldWorkflow != undefined) {
-      delete oldWorkflow[WorkflowGraphEditor.UPDATE_FROM_GRAPH];
-    }
+  workflowChanged(newWorkflow: Workflow): void {
+    newWorkflow.updateFromGraph = () => this.updateWorkflowBasedOnGraph(true);
   }
 
   onGraphBuilt(graph: WorkflowGraph) {
@@ -69,6 +64,7 @@ export class WorkflowGraphEditor {
     for (const target of targets) {
       const source = sourceMap[target.id];
       target.requiredMetadataIds = source ? source.requiredMetadataIds : [];
+      target.lockedMetadataIds = source ? source.lockedMetadataIds : [];
     }
   }
 

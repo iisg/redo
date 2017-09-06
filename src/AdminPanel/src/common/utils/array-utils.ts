@@ -20,3 +20,8 @@ export function removeByValue<T>(array: T[], value: T): void {
     array.splice(index, 1);
   }
 }
+
+// http://stackoverflow.com/a/10865042/878514
+export function flatten<T>(arrayOfArrays: Array<T|T[]>): T[] {
+  return [].concat.apply([], arrayOfArrays);
+}

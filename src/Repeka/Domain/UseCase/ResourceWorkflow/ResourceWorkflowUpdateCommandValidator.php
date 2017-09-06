@@ -41,7 +41,8 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
             Validator::arrayType()->keySet(
                 Validator::key('label', Validator::arrayType()),
                 Validator::key('id', Validator::stringType(), false),
-                Validator::key('requiredMetadataIds', Validator::arrayType()->each($metadataExistsRule), false)
+                Validator::key('requiredMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
+                Validator::key('lockedMetadataIds', Validator::arrayType()->each($metadataExistsRule), false)
             )
         ));
     }

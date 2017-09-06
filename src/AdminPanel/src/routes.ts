@@ -1,4 +1,5 @@
-import {route, nested, flatten} from "./common/routes/route-utils";
+import {route, nested} from "./common/routes/route-utils";
+import {flatten} from "./common/utils/array-utils";
 
 const routes = flatten([
   route('', 'home', 'Overview', {icon: 'dashboard'}),

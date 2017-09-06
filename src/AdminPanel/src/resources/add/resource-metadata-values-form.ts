@@ -3,12 +3,14 @@ import {Metadata} from "resources-config/metadata/metadata";
 import {Resource} from "../resource";
 import {autoinject} from "aurelia-dependency-injection";
 import {twoWay} from "common/components/binding-mode";
+import {booleanAttribute} from "common/components/boolean-attribute";
 
 @autoinject
 export class ResourceMetadataValuesForm {
   @bindable metadata: Metadata;
   @bindable(twoWay) resource: Resource;
-  @bindable disabled: boolean = false;
+  @bindable @booleanAttribute disabled: boolean = false;
+  @bindable @booleanAttribute required: boolean = false;
 
   valueTable: Element;
 
@@ -22,6 +24,15 @@ export class ResourceMetadataValuesForm {
     if (this.metadata != undefined) {
       this.ensureResourceHasMetadataContents();
     }
+  }
+
+  isDeletingDisabled(index: number): boolean {
+    if (this.disabled) {
+      return true;
+    }
+    const filledValuesCount: number = this.resource.contents[this.metadata.baseId].filter(v => v !== undefined).length;
+    const valueIsUndefined: boolean = this.resource.contents[this.metadata.baseId][index] === undefined;
+    return this.required && filledValuesCount == 1 && !valueIsUndefined;
   }
 
   private ensureResourceHasMetadataContents() {

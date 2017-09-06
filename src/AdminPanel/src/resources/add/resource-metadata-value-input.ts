@@ -5,6 +5,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {ValueWrapper} from "../controls/control-strategy";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
+import {BindingSignaler} from "aurelia-templating-resources";
 
 @autoinject
 export class ResourceMetadataValueInput implements ComponentAttached, ComponentDetached {
@@ -15,7 +16,7 @@ export class ResourceMetadataValueInput implements ComponentAttached, ComponentD
   valueWrapper: ValueWrapper = new ValueWrapper();
   subscription: Disposable;
 
-  constructor(private bindingEngine: BindingEngine) {
+  constructor(private bindingEngine: BindingEngine, private bindingSignaler: BindingSignaler) {
   }
 
   attached() {
@@ -30,9 +31,15 @@ export class ResourceMetadataValueInput implements ComponentAttached, ComponentD
 
   valueChanged() {
     this.valueWrapper.value = this.value;
+    this.sendChangeSignal();
   }
 
   wrappedValueChanged() {
     this.value = this.valueWrapper.value;
+    this.sendChangeSignal();
+  }
+
+  private sendChangeSignal(): void {
+    this.bindingSignaler.signal('metadata-value-changed');
   }
 }
