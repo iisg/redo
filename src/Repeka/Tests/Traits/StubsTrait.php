@@ -41,8 +41,9 @@ trait StubsTrait {
      * @param Metadata[] $metadataList
      * @return ResourceKind|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function createResourceKindMock(array $metadataList = []): ResourceKind {
+    protected function createResourceKindMock(array $metadataList = [], int $id = 1): ResourceKind {
         $resourceKind = $this->createMock(ResourceKind::class);
+        $resourceKind->method('getId')->willReturn($id);
         $resourceKind->method('getMetadataList')->willReturn($metadataList);
         return $resourceKind;
     }
@@ -98,15 +99,37 @@ trait StubsTrait {
         return $stub;
     }
 
-    protected function createEntityExistsMock(bool $result, ?string $exceptionMessage = null) {
-        $stub = $this->createMock(EntityExistsRule::class);
-        $stub->method('validate')->willReturn($result);
-        if ($result) {
-            $stub->method('assert')->willReturn(true);
-        } else {
-            $stub->method('assert')->willThrowException(new ValidationException($exceptionMessage));
-        }
-        $stub->method('forEntityType')->willReturnSelf();
-        return $stub;
+    /**
+     * Make sure mocked rule doesn't have factory methods, such as forResourceKind(). These methods will return broken mocks by default,
+     * which can produce false positives. If rule has factory methods, use createRuleWithFactoryMethodMock();
+     */
+    protected function createRuleMock(string $validatorClass, bool $result, ?string $exceptionMessage = null) {
+        $mock = $this->createMock($validatorClass);
+        $mock->method('validate')->willReturn($result);
+        $mock->method('assert')->willReturnCallback(function () use ($result, $exceptionMessage) {
+            if ($result) {
+                return true;
+            } else {
+                throw new ValidationException($exceptionMessage);
+            }
+        });
+        return $mock;
+    }
+
+    protected function createRuleWithFactoryMethodMock(
+        string $validatorClass,
+        string $methodName,
+        bool $result,
+        ?string $exceptionMessage = null
+    ) {
+        $mock = $this->createRuleMock($validatorClass, $result, $exceptionMessage);
+        $mock->method($methodName)->willReturnSelf();
+        return $mock;
+    }
+
+    protected function createEntityExistsMock(bool $result, ?string $exceptionMessage = null): EntityExistsRule {
+        $mock = $this->createRuleWithFactoryMethodMock(EntityExistsRule::class, 'forEntityType', $result, $exceptionMessage);
+        $mock->method('forEntityType')->willReturnSelf();
+        return $mock;
     }
 }

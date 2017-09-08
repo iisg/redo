@@ -32,6 +32,7 @@ class ResourceUpdateContentsCommandValidator extends CommandAttributesValidator 
                 return $r->getId() > 0;
             }))
             ->attribute('contents', Validator::length(1))
-            ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getResource()->getKind()));
+            ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getResource()->getKind()))
+            ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResourceKind($command->getResource()->getKind()));
     }
 }
