@@ -1,5 +1,5 @@
 <template>
-    <require from="./size-format"></require>
+    <require from="./filesize-value-converter"></require>
     <require from="./blob-to-url"></require>
 
     <input type="text"
@@ -15,7 +15,7 @@
 
     <div class="files-list"
         if.bind="value">
-        ${value.size | sizeFormat:2}
+        ${value.size | filesize:2}
         <img if.bind="isImage"
             src.bind="value | blobToUrl"/>
     </div>
