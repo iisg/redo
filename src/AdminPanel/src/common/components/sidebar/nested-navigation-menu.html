@@ -7,14 +7,18 @@
             <a if.bind="!item.children"
                 href.bind="item.href"
                 class="btn btn-default btn-block">
-                <i class="fa fa-fw fa-${item.settings.icon}"></i>
+                <fa name.bind="item.settings.icon"
+                    options="fw"></fa>
                 ${'nav::' + item.title | t}
             </a>
             <a if.bind="item.children"
                 class="btn btn-default btn-block"
                 click.delegate="item.toggle()">
-                <i class="fa fa-fw fa-angle-right pull-right ${item.expanded ? 'fa-rotate-90': ''}"></i>
-                <i class="fa fa-fw fa-${item.settings.icon}"></i>
+                <fa name="angle-right"
+                    options.bind="item.expanded ? 'fw rotate-90': 'fw'"
+                    class="pull-right"></fa>
+                <fa name.bind="item.settings.icon"
+                    options="fw"></fa>
                 ${'nav::' + item.title | t}
             </a>
             <ul if.bind="item.expanded"

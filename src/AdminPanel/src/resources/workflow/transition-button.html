@@ -14,13 +14,10 @@
         <span if.bind="!canApplyTransition"
             bootstrap-tooltip.bind="transitionInactiveReason">
             <span if.bind="transitionInactiveReason">
-                <fa name="info-circle"
-                    fw></fa>
+                <fa name="info-circle fw"></fa>
             </span>
             <span if.bind="!transitionInactiveReason">
-                <fa name="spinner"
-                    spin
-                    fw></fa>
+                <fa name="spinner spin fw"></fa>
             </span>
         </span>
     </button>

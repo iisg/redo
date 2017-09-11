@@ -60,16 +60,16 @@
                             <a class="btn btn-default drag-handle vertically-sortable ${metadata['hovered'] ? 'btn-raised' : ''}"
                                 bootstrap-tooltip.bind="'Drag to change order' | t"
                                 data-placement="left">
-                                <span class="fa fa-sort"></span>
+                                <fa name="sort"></fa>
                             </a>
                             <button type="button"
                                 class="btn btn-default ${metadata['hovered'] ? 'btn-raised' : ''}"
                                 click.delegate="metadata['editing'] = true">
-                                <span class="fa fa-edit"></span>
+                                <fa name="edit"></fa>
                             </button>
                             <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
                                 class="btn ${metadata['hovered'] ? 'btn-raised' : ''} btn-info">
-                                <span class="fa fa-eye fa-fw"></span>
+                                <fa name="eye fw"></fa>
                                 ${'Details' | t}
                             </a>
                         </div>
@@ -93,7 +93,7 @@
 
     <div class="alert alert-info"
         if.bind="metadataList.length === 0">
-        <span class="fa fa-info-circle fa-fw"></span>
+        <fa name="info-circle"></fa>
         ${'No metadata kinds.' | t}
     </div>
 </template>

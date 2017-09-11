@@ -65,13 +65,13 @@
                                 class="btn btn-default ${resourceKind.hovered ? 'btn-raised' : ''}"
                                 click.trigger="resourceKind.editing = true"
                                 disabled.bind="resourceKind.pendingRequest">
-                                <span class="fa fa-edit"></span>
+                                <fa name="edit"></fa>
                             </button>
                             <button type="button"
                                 class="btn btn-danger ${resourceKind.hovered ? 'btn-raised' : ''}"
                                 click.trigger="deleteResourceKind(resourceKind)"
                                 disabled.bind="resourceKind.pendingRequest">
-                                <span class="fa fa-trash"></span>
+                                <fa name="trash"></fa>
                             </button>
                         </div>
                     </td>

@@ -41,7 +41,7 @@
                     <td>
                         <a route-href="route: workflows/details; params.bind: {id: workflow.id}"
                             class="btn ${workflow['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">
-                            <span class="fa fa-eye fa-fw"></span>
+                            <fa name="eye fw"></fa>
                             ${'Details' | t}
                         </a>
                     </td>
@@ -53,7 +53,7 @@
 
     <div class="alert alert-info"
         if.bind="workflows.length === 0">
-        <span class="fa fa-info-circle fa-fw"></span>
+        <fa name="info-circle fw"></fa>
         ${'No workflows.' | t}
     </div>
 

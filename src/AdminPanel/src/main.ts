@@ -36,6 +36,7 @@ export function configure(aurelia: Aurelia) {
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
       'common/components/promise-button/promise-button',
+      'common/components/submit-button/submit-button.html',
       'common/http-client/invalid-command-message.html', // used in alerts by GlobalExceptionInterceptor
     ]);
 

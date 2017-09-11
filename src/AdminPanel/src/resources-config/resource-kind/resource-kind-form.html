@@ -17,7 +17,7 @@
                         click.delegate="sortingMetadata = !sortingMetadata"
                         disabled.bind="submitting"
                         show.bind="resourceKind.metadataList.length > 1">
-                        <span class="fa fa-sort-amount-asc fa-fw"></span>
+                        <fa name="sort-amount-asc fw"></fa>
                         ${(sortingMetadata ? 'Changing order' : 'Change order') | t}
                     </button>
                 </div>
@@ -35,12 +35,12 @@
                             <button class="btn btn-default btn-raised ${metadata.overwriteForm ? 'active' : ''}"
                                 type="button"
                                 click.delegate="metadata.overwriteForm = !metadata.overwriteForm">
-                                <span class="fa fa-edit"></span>
+                                <fa name="edit"></fa>
                             </button>
                             <button class="btn btn-danger btn-raised"
                                 type="button"
                                 click.delegate="removeMetadata(metadata)">
-                                <span class="fa fa-times"></span>
+                                <fa name="times"></fa>
                             </button>
                         </div>
                         <h3>
@@ -79,13 +79,13 @@
                     click.delegate="cancel()"
                     if.bind="editing"
                     disabled.bind="submitting">
-                    <span class="fa fa-fw fa-times"></span>
+                    <fa name="times fw"></fa>
                     ${'Cancel' | t}
                 </button>
                 <button class="btn btn-primary"
                     disabled.bind="submitting">
-                    <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : (editing ? 'fa-save' : 'fa-plus')}"></span>
-                    ${editing ? 'Save' : 'Add' | t}
+                    <submit-button submitting.bind="submitting"
+                        editing.bind="editing"></submit-button>
                 </button>
             </div>
         </div>
