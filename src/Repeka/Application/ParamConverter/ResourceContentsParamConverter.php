@@ -4,6 +4,7 @@ namespace Repeka\Application\ParamConverter;
 use Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor;
 use Repeka\Application\Upload\FilesystemDriver;
 use Repeka\Application\Upload\ResourceFilePathGenerator;
+use Repeka\Application\Upload\UploadSizeHelper;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -69,11 +70,10 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
      * @see http://ca2.php.net/manual/en/ini.core.php#66801 idea of comparison to $_SERVER['CONTENT_LENGTH']
      */
     private function handleEmptyRequestContents(Request $request) {
-        $maxFileUploadSize = ini_get('post_max_size');
-        $maxFileUploadSizeInBytes = (int)(str_replace('M', '', $maxFileUploadSize) * 1024 * 1024);
+        $maxFileUploadSizeInBytes = (new UploadSizeHelper())->getMaxUploadSize();
         $actualUploadSize = $request->server->get('CONTENT_LENGTH');
         if ($actualUploadSize > $maxFileUploadSizeInBytes) {
-            throw new DomainException('uploadLimitExceeded', 413, ['limit' => $maxFileUploadSize]);
+            throw new DomainException('uploadLimitExceeded', 413, ['limit' => $maxFileUploadSizeInBytes / 1024]);
         } else {
             throw new DomainException('uploadFailed', 500);
         }
