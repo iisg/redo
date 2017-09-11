@@ -15,7 +15,7 @@
         <tr if.bind="metadataChildrenList.length === 0">
             <th colspan="7">
                 <div class="alert alert-info">
-                    <span class="fa fa-info-circle fa-fw"></span>
+                    <fa name="info-circle fw"></fa>
                     ${'No submetadata kinds.' | t}
                 </div>
             </th>
@@ -47,7 +47,7 @@
                 <div class="btn-group">
                     <a route-href="route: metadata/details; params.bind: {id: metadataChild.id}"
                         class="btn ${metadataChild['hovered'] ? 'btn-raised' : ''} btn-info btn-sm">
-                        <span class="fa fa-eye fa-fw"></span>
+                        <fa name="eye fw"></fa>
                         ${'Details' | t}
                     </a>
                 </div>

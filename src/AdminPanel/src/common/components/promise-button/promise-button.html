@@ -2,8 +2,9 @@
     <button click.trigger="onButtonClicked()"
         class="${stateBasedCssClass}"
         disabled.bind="state == 'waiting'">
-        <span class="fa fa-fw ${stateBasedIcon}"
-            show.bind="stateBasedIcon"></span>
+        <fa name.bind="stateBasedIcon"
+            options="fw"
+            show.bind="stateBasedIcon"></fa>
         <span show.bind="!stateBasedCaption">
             <slot></slot>
         </span>

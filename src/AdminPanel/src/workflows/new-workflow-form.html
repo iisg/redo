@@ -9,7 +9,7 @@
             <button class="btn btn-primary"
                 type="submit"
                 disabled.bind="submitting">
-                <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : 'fa-plus'}"></span>
+                <fa name.bind="submitting ? 'circle-o-notch spin' : 'plus'"></fa>
                 ${'Add' | t}
             </button>
         </div>

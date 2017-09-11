@@ -29,15 +29,11 @@
                     click.delegate="cancel()"
                     if.bind="editing"
                     disabled.bind="submitting">
-                    <span class="fa fa-fw fa-times"></span>
+                    <fa name="times fw"></fa>
                     ${'Cancel' | t}
                 </button>
-                <button class="btn btn-primary"
-                    type="submit"
-                    disabled.bind="submitting">
-                    <span class="fa fa-fw ${submitting ? 'fa-circle-o-notch fa-spin' : (editing ? 'fa-save' : 'fa-plus')}"></span>
-                    ${editing ? 'Save' : 'Add' | t}
-                </button>
+                <submit-button submitting.bind="submitting"
+                    editing.bind="editing"></submit-button>
             </div>
         </div>
     </form>
