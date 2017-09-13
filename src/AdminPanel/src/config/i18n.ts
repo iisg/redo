@@ -22,7 +22,12 @@ export function i18nConfigurator(aurelia: Aurelia) {
       nsSeparator: '::',
       keySeparator: '//',
       interpolation: {
-        capitalized: str => str.charAt(0).toUpperCase() + str.slice(1)
+        format: (value: string, format: string, language: string) => {
+          format = format.toLowerCase();
+          if (format == 'capitalized') {
+            return value.charAt(0).toUpperCase() + value.slice(1);
+          }
+        }
       },
       debug: false
     }).then(() => {
@@ -34,7 +39,7 @@ export function i18nConfigurator(aurelia: Aurelia) {
 
 @autoinject
 export class I18nParams {
-  readonly namespaces = ['generic', 'validation', 'nav', 'controls', 'exceptions', 'roles', 'system_metadata'];
+  readonly namespaces = ['generic', 'validation', 'nav', 'controls', 'exceptions', 'roles', 'systemMetadata', 'entityTypes'];
 
   constructor(private config: Configure) {
   }

@@ -17,6 +17,7 @@ export class ResourcePicker implements ComponentAttached {
   initialized: boolean = false;
   allResources: Resource[];
   resources: Resource[];
+  invalidValue: boolean = false;
 
   constructor(private resourceRepository: ResourceRepository) {
   }
@@ -31,7 +32,7 @@ export class ResourcePicker implements ComponentAttached {
   }
 
   private updateFilteredResources() {
-    if (!this.allResources) {
+    if (this.allResources == undefined) {
       return;
     }
     if (this.resourceKindFilter.length == 0) {
@@ -62,12 +63,19 @@ export class ResourcePicker implements ComponentAttached {
   }
 
   resourceIdChanged(newResourceId: number) {
+    this.invalidValue = false;
     if (newResourceId == undefined) {
       this.value = undefined;
       return;
     }
     if (!this.value || newResourceId != this.value.id) {
-      this.value = this.findResourceById(newResourceId);
+      const value = this.findResourceById(newResourceId);
+      if (value == undefined) {
+        this.invalidValue = (this.allResources != undefined);
+      }
+      else {
+        this.value = value;
+      }
     }
   }
 

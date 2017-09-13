@@ -15,7 +15,7 @@ export class MetadataLabelValueConverter implements ToViewValueConverter {
   }
 
   private getSystemMetadataLabel(metadata: Metadata): string {
-    return this.i18n.tr(`system_metadata::${metadata.id}`);
+    return this.i18n.tr(`systemMetadata::${metadata.id}`);
   }
 
   private getRegularMetadataLabel(metadata: Metadata): string {
