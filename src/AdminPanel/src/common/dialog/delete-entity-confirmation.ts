@@ -11,7 +11,7 @@ export class DeleteEntityConfirmation {
     if (Number.isInteger(id)) {
       id = `#${id}`;
     }
-    const translatedEntityType = this.i18n.tr('entityTypes//' + entityName);
+    const translatedEntityType = this.i18n.tr('entityTypes::' + entityName);
     const title = this.i18n.tr('Confirm deletion');
     const text = this.i18n.tr('Are you sure you want to delete {{entityType}} {{id}}?', {entity: translatedEntityType, id});
     const options: AlertOptions = {

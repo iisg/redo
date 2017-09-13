@@ -22,7 +22,7 @@ System.config({
     "aurelia-framework": "npm:aurelia-framework@1.1.2",
     "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0",
     "aurelia-http-client": "npm:aurelia-http-client@1.1.1",
-    "aurelia-i18n": "npm:aurelia-i18n@1.6.1",
+    "aurelia-i18n": "npm:aurelia-i18n@1.6.2",
     "aurelia-loader-default": "npm:aurelia-loader-default@1.0.2",
     "aurelia-logging": "npm:aurelia-logging@1.3.1",
     "aurelia-logging-console": "npm:aurelia-logging-console@1.0.0",
@@ -59,7 +59,7 @@ System.config({
       "assert": "npm:assert@1.4.1"
     },
     "github:jspm/nodelibs-buffer@0.1.1": {
-      "buffer": "npm:buffer@5.0.6"
+      "buffer": "npm:buffer@5.0.7"
     },
     "github:jspm/nodelibs-os@0.1.0": {
       "os-browserify": "npm:os-browserify@0.1.2"
@@ -152,7 +152,7 @@ System.config({
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
       "aurelia-path": "npm:aurelia-path@1.1.1"
     },
-    "npm:aurelia-i18n@1.6.1": {
+    "npm:aurelia-i18n@1.6.2": {
       "aurelia-binding": "npm:aurelia-binding@1.2.2",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
       "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
@@ -266,10 +266,9 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:buffer@5.0.6": {
-      "base64-js": "npm:base64-js@1.2.0",
-      "ieee754": "npm:ieee754@1.1.8",
-      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    "npm:buffer@5.0.7": {
+      "base64-js": "npm:base64-js@1.2.1",
+      "ieee754": "npm:ieee754@1.1.8"
     },
     "npm:cytoscape-autopan-on-drag@2.0.1": {
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",

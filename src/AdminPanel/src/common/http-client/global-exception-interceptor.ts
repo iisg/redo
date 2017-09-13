@@ -66,7 +66,10 @@ export class GlobalExceptionInterceptor implements Interceptor {
   private getErrorMessage(response: HttpResponseMessage): string {
     const responseContent: ExceptionContent = response.content;
     const errorMessageId: string = responseContent.errorMessageId || 'generic';
-    let params: any = responseContent.params;
+    let params: any = responseContent.params || {};
+    if (params.hasOwnProperty('entityName')) {
+      params['entityName'] = this.i18n.tr('entityTypes::' + params['entityName'].toLowerCase(), {context: 'genitive'});
+    }
     return (responseContent.errorMessageId == 'invalidCommand')
       ? '<invalid-command-message violations-by-field.bind="violations"></invalid-command-message>'
       : this.i18n.tr(`exceptions::${errorMessageId}`, {replace: params});

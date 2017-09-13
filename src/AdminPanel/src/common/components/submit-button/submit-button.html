@@ -1,8 +1,8 @@
 <template bindable="submitting,editing">
+    <throbber if.bind="submitting"></throbber>
     <button class="btn btn-primary"
         type="submit"
         disabled.bind="submitting">
-        <throbber if.bind="submitting"></throbber>
         <fa else
             name.bind="editing ? 'save' : 'plus'"></fa>
         ${editing ? 'Save' : 'Add' | t}
