@@ -45,7 +45,7 @@ System.config({
     "cytoscape-context-menus": "npm:cytoscape-context-menus@2.1.1",
     "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.11.0",
     "fetch": "github:github/fetch@1.1.1",
-    "font-awesome": "npm:font-awesome@4.6.3",
+    "font-awesome": "npm:font-awesome@4.7.0",
     "i18next-xhr-backend": "npm:i18next-xhr-backend@1.4.1",
     "jquery": "npm:jquery@2.2.4",
     "martingust/aurelia-repeat-strategies": "github:martingust/aurelia-repeat-strategies@master",
@@ -308,8 +308,8 @@ System.config({
     "npm:cytoscape@3.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:font-awesome@4.6.3": {
-      "css": "github:systemjs/plugin-css@0.1.33"
+    "npm:font-awesome@4.7.0": {
+      "css": "github:systemjs/plugin-css@0.1.36"
     },
     "npm:i18next@3.5.2": {
       "process": "github:jspm/nodelibs-process@0.1.2"

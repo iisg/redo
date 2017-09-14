@@ -11,11 +11,12 @@ export class UserRepository extends ApiRepository<User> {
     super(httpClient, 'users');
   }
 
-  public async toEntity(data: Object): Promise<User> {
-    let user = $.extend(new User(), data);
+  public toEntity(data: Object): Promise<User> {
+    let user: User = $.extend(new User(), data);
     user.roles = user.roles.map(role => this.userRoleRepository.toEntity(role));
-    user.userData = await this.resourceRepository.toEntity(user.userData);
-    return user;
+    return this.resourceRepository.toEntity(user.userData).then(userData => {
+      user.userData = userData;
+    }).then(() => user);
   }
 
   updateRoles(user: User, roleIds: Array<string>): Promise<User> {

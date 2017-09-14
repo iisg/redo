@@ -4,6 +4,7 @@ import {ApiRepository} from "common/repository/api-repository";
 import {Resource} from "./resource";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {ResourceKind} from "../resources-config/resource-kind/resource-kind";
+import {workflowPlaceToEntity} from "workflows/workflow-place-converters";
 
 @autoinject
 export class ResourceRepository extends ApiRepository<Resource> {
@@ -35,6 +36,7 @@ export class ResourceRepository extends ApiRepository<Resource> {
       delete data['kindId'];
       let resource: Resource = $.extend(new Resource(), data);
       resource.kind = resourceKind;
+      resource.currentPlaces = (data['currentPlaces'] || []).map(workflowPlaceToEntity);
       for (const metadata of resource.kind.metadataList) {
         if (!resource.contents.hasOwnProperty(metadata.baseId)) {
           resource.contents[metadata.baseId] = [];

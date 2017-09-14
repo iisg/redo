@@ -4,14 +4,14 @@ import {WorkflowPlaceSorter} from "./workflow-place-sorter";
 describe('workflow-place-sorter', () => {
   function createWorkflowMock(places: string[], transitions: StringMap<string[]>): Workflow {
     const placeObjects: WorkflowPlace[] = places.map(id => {
-      return {id, label: {}, requiredMetadataIds: []};
+      return {id, label: {}, restrictingMetadataIds: {}};
     });
     const transitionObjects: WorkflowTransition[] = Object.keys(transitions).map(from => {
       const tos = transitions[from];
       return {id: `_${from}_`, label: {}, froms: [from], tos, permittedRoleIds: []};
     });
     const id: number = Math.floor(Math.random() * 10000);
-    return {id, name: {}, enabled: true, places: placeObjects, transitions: transitionObjects, diagram: undefined, thumbnail: undefined};
+    return $.extend(new Workflow(), { id, name: {}, enabled: true, places: placeObjects, transitions: transitionObjects});
   }
 
   let sorter: WorkflowPlaceSorter;

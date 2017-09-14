@@ -25,8 +25,16 @@ export class Workflow extends Entity {
 export interface WorkflowPlace {
   id: string;
   label: MultilingualText;
-  requiredMetadataIds: number[];
-  lockedMetadataIds: number[];
+  restrictingMetadataIds: RestrictingMetadataIdMap;
+}
+
+export type RestrictingMetadataIdMap = NumberMap<RequirementState>;
+
+export enum RequirementState {
+  OPTIONAL,
+  REQUIRED,
+  LOCKED,
+  ASSIGNEE,
 }
 
 export interface WorkflowTransition {

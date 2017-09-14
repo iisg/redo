@@ -7,6 +7,8 @@ import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {Metadata} from "resources-config/metadata/metadata";
 import {twoWay} from "common/components/binding-mode";
 import {flatten} from "common/utils/array-utils";
+import {keysByValue} from "common/utils/object-utils";
+import {RequirementState} from "workflows/workflow";
 
 @autoinject
 export class ResourceFormGenerated {
@@ -29,11 +31,9 @@ export class ResourceFormGenerated {
   }
 
   resourceChanged() {
-    const currentPlaces = this.resource.currentPlaces !== undefined
-      ? Object.keys(this.resource.currentPlaces).map(key => this.resource.currentPlaces[key])
-      : [];
-    this.requiredMetadataIds = flatten(currentPlaces.map(place => place.requiredMetadataIds));
-    this.lockedMetadataIds = flatten(currentPlaces.map(place => place.lockedMetadataIds));
+    const currentPlaces = this.resource.currentPlaces || [];
+    this.requiredMetadataIds = flatten(currentPlaces.map(place => keysByValue(place.restrictingMetadataIds, RequirementState.REQUIRED)));
+    this.lockedMetadataIds = flatten(currentPlaces.map(place => keysByValue(place.restrictingMetadataIds, RequirementState.LOCKED)));
   }
 
   editingDisabledForMetadata(metadata: Metadata): boolean {

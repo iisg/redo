@@ -72,6 +72,11 @@ body > tr[oa-sortable-item] {
   background-color: transparent !important;
 }
 
+button.unstyled {
+  background: none;
+  border: none;
+}
+
 .btn-narrow {
   padding: 8px 10px;
   &.btn-sm {

@@ -1,0 +1,18 @@
+<template>
+    <require from="common/components/font-awesome/fa-stack"></require>
+
+    <button type="button"
+        disabled.bind="disabled"
+        click.trigger="nextState()"
+        class="unstyled ${disabled ? 'disabled' : ''}"
+        ref="container">
+        <fa-stack large-icon="square-o"
+            if.bind="isOptional"></fa-stack>
+        <fa-stack small-icon="check"
+            if.bind="isRequired"></fa-stack>
+        <fa-stack small-icon="lock"
+            if.bind="isLocked"></fa-stack>
+        <fa-stack small-icon="user"
+            if.bind="isAssignee"></fa-stack>
+    </button>
+</template>

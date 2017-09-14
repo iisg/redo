@@ -10,7 +10,7 @@ use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 
 class ResourcesFixture extends RepekaFixture {
-    const ORDER = ResourceKindsStage2Fixture::ORDER + 1;
+    const ORDER = ResourceKindsStage2Fixture::ORDER + UsersFixture::ORDER;
 
     /**
      * @inheritdoc
@@ -22,11 +22,14 @@ class ResourcesFixture extends RepekaFixture {
         $forbiddenBookResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
         /** @var ResourceKind $categoryResourceKind */
         $categoryResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CATEGORY);
+        /** @var UserEntity $userBudynek */
+        $userBudynek = $this->getReference(UsersFixture::REFERENCE_USER_BUDYNEK);
         /** @var ResourceEntity $book1 */
         $book1 = $this->handleCommand(new ResourceCreateCommand($bookResourceKind, $this->contents([
             MetadataFixture::REFERENCE_METADATA_TITLE => ['PHP i MySQL'],
             MetadataFixture::REFERENCE_METADATA_DESCRIPTION => ['Błędy młodości...'],
             MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [404],
+            MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userBudynek->getUserData()],
         ])));
         $this->handleCommand(new ResourceCreateCommand($bookResourceKind, $this->contents([
             MetadataFixture::REFERENCE_METADATA_TITLE => ['PHP - to można leczyć!'],
@@ -51,9 +54,9 @@ class ResourcesFixture extends RepekaFixture {
             SystemMetadata::PARENT => [$ebooks->getId()],
             MetadataFixture::REFERENCE_METADATA_TITLE => ['Pair programming: jak równocześnie pisać na jednej klawiaturze w dwie osoby'],
         ])));
-        $adminUser = $manager->getRepository(UserEntity::class)->findBy(['username' => 'admin'])[0];
-        $this->handleCommand(new ResourceTransitionCommand($book1, 'e7d756ed-d6b3-4f2f-9517-679311e88b17', $adminUser));
-        $this->handleCommand(new ResourceTransitionCommand($book1, 'd3f73249-d10f-4d4b-8b63-be60b4c02081', $adminUser));
+        $userAdmin = $manager->getRepository(UserEntity::class)->findBy(['username' => 'admin'])[0];
+        $this->handleCommand(new ResourceTransitionCommand($book1, 'e7d756ed-d6b3-4f2f-9517-679311e88b17', $userAdmin));
+        $this->handleCommand(new ResourceTransitionCommand($book1, 'd3f73249-d10f-4d4b-8b63-be60b4c02081', $userAdmin));
     }
 
     private function contents(array $data): array {

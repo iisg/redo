@@ -50,7 +50,8 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
             'id' => 'fooId',
             'label' => ['PL' => 'A'],
             'requiredMetadataIds' => [1, 2, 3],
-            'lockedMetadataIds' => [1, 2],
+            'lockedMetadataIds' => [4, 5],
+            'assigneeMetadataIds' => [6],
         ]], [], null, null);
         $this->validator->validate($command);
     }
@@ -156,11 +157,47 @@ class ResourceWorkflowUpdateCommandValidatorTest extends \PHPUnit_Framework_Test
         $this->assertFalse($validator->isValid($command));
     }
 
+    public function testInvalidWhenAssigneeMetadataIdsDoNotExist() {
+        $entityExistsMock = $this->createEntityExistsMock(false);
+        $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
+        $validator = new ResourceWorkflowUpdateCommandValidator($entityExistsMock, $notBlankInAllLanguagesRule);
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [[
+            'id' => 'fooId',
+            'label' => ['PL' => 'A'],
+            'assigneeMetadataIds' => [1],
+        ]], [], null, null);
+        $this->assertFalse($validator->isValid($command));
+    }
+
     public function testInvalidWhenNameLanguagesDoNotMatchSystemLanguages() {
         $entityExistsMock = $this->createEntityExistsMock(true);
         $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, false);
         $validator = new ResourceWorkflowUpdateCommandValidator($entityExistsMock, $notBlankInAllLanguagesRule);
         $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [], [], null, null);
         $this->assertFalse($validator->isValid($command));
+    }
+
+    public function testInvalidWithCommonMetadataIds() {
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [[
+            'id' => 'fooId',
+            'label' => ['PL' => 'A'],
+            'requiredMetadataIds' => [1, 2, 3],
+            'lockedMetadataIds' => [2],
+        ]], [], null, null);
+        $this->assertFalse($this->validator->isValid($command));
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [[
+            'id' => 'fooId',
+            'label' => ['PL' => 'A'],
+            'lockededMetadataIds' => [1, 2, 3],
+            'assigneeMetadataIds' => [2],
+        ]], [], null, null);
+        $this->assertFalse($this->validator->isValid($command));
+        $command = new ResourceWorkflowUpdateCommand($this->workflow, [], [[
+            'id' => 'fooId',
+            'label' => ['PL' => 'A'],
+            'requiredMetadataIds' => [1, 2, 3],
+            'assigneeMetadataIds' => [2],
+        ]], [], null, null);
+        $this->assertFalse($this->validator->isValid($command));
     }
 }

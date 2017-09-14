@@ -1,0 +1,28 @@
+<template>
+    <require from="./excel-checkbox/read-only-excel-checkbox"></require>
+
+    <div class="legend">
+        <h3>${'Legend:' | t}</h3>
+        <dl class="dl-horizontal">
+            <dt>
+                <read-only-excel-checkbox></read-only-excel-checkbox>
+            </dt>
+            <dd>${'Optional' | t:{context: 'female'}}</dd>
+            <dt>
+                <read-only-excel-checkbox value="required"></read-only-excel-checkbox>
+            </dt>
+            <dd>${'Required' | t:{context: 'female'}}</dd>
+            <dt>
+                <read-only-excel-checkbox value="locked"></read-only-excel-checkbox>
+            </dt>
+            <dd>${'Locked' | t:{context: 'female'}}</dd>
+            <dt>
+                <read-only-excel-checkbox value="assignee"></read-only-excel-checkbox>
+            </dt>
+            <dd>
+                ${'Specifies assignee' | t:{context: 'female'}}
+                <span class="text-muted">(${'only for relationships with users' | t})</span>
+            </dd>
+        </dl>
+    </div>
+</template>

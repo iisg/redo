@@ -1,0 +1,38 @@
+<template>
+    <require from="resources-config/metadata/metadata-label"></require>
+    <require from="./excel-checkbox/excel-checkbox"></require>
+    <require from="./excel-legend.html"></require>
+
+    <table class="table highlight-col-row-on-hover">
+        <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th repeat.for="place of orderedPlaces">
+                ${place.label | inCurrentLanguage & signal:'workflow-places-updated'}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr repeat.for="metadata of metadataList">
+            <th>
+                ${metadata | metadataLabel}
+                <fa name="user"
+                    if.bind="metadataIsUserRelationship(metadata)"
+                    bootstrap-tooltip.one-time="'This metadata can be used to specify assignees' | t"></fa>
+            </th>
+            <td repeat.for="place of orderedPlaces"
+                class="text-center">
+                <excel-checkbox model.bind="metadata.id"
+                    states.bind="place.restrictingMetadataIds"
+                    assignee-allowed.bind="metadataIsUserRelationship(metadata)"
+                    on-change.call="checkboxChanged(metadata, place)"
+                    disabled.bind="!editable"></excel-checkbox>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <loading-bar if.bind="metadataList == undefined"></loading-bar>
+
+    <excel-legend if.bind="metadataList != undefined"></excel-legend>
+</template>

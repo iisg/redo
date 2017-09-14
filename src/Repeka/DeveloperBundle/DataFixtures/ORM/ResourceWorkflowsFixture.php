@@ -18,27 +18,30 @@ class ResourceWorkflowsFixture extends RepekaFixture {
     public function load(ObjectManager $manager) {
         $fileMetadata = $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE);
         $fileMetadataId = $fileMetadata->getId();
+        $scannerMetadata = $this->getReference(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER);
+        $scannerMetadataId = $scannerMetadata->getId();
         $workflowCreateCommand = new ResourceWorkflowCreateCommand([
             'PL' => 'Pełny obieg książki',
             'EN' => 'Book workflow',
         ]);
         $workflow = $this->handleCommand($workflowCreateCommand);
+        $places = json_decode(<<<JSON
+[
+  {"id": "y1oosxtgf", "label": {"PL": "Zaimportowana", "EN":"Imported"}},
+  {"id": "lb1ovdqcy", "label": {"PL": "Do skanowania", "EN":"Ready to scan"},                 "requiredMetadataIds": [$scannerMetadataId]},
+  {"id": "qqd3yk499", "label": {"PL": "Zeskanowana", "EN":"Scanned"},                         "assigneeMetadataIds": [$scannerMetadataId]},
+  {"id": "9qq9ipqa3", "label": {"PL": "Wymaga ponownego skanowania", "EN":"Require rescan"},  "lockedMetadataIds": [$scannerMetadataId]},
+  {"id": "ss9qm7r78", "label": {"PL": "Zweryfikowana", "EN":"Verified"},                      "requiredMetadataIds": [$fileMetadataId], "lockedMetadataIds": [$scannerMetadataId]},
+  {"id": "jvz160sl4", "label": {"PL": "Rozpoznana", "EN":"Recognized"},                       "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId]},
+  {"id": "xo77kutzk", "label": {"PL": "Zaakceptowana", "EN":"Accepted"},                      "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId]},
+  {"id": "j70hlpsvu", "label": {"PL": "Opublikowana", "EN":"Published"},                      "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId]}
+]
+JSON
+            , true);
         $this->handleCommand(new ResourceWorkflowUpdateCommand(
             $workflow,
             $workflowCreateCommand->getName(),
-            json_decode(<<<JSON
-[
-  {"id":"y1oosxtgf","label":{"PL":"Zaimportowana","EN":"Imported"}},
-  {"id":"lb1ovdqcy","label":{"PL":"Do skanowania","EN":"Ready to scan"}},
-  {"id":"qqd3yk499","label":{"PL":"Zeskanowana","EN":"Scanned"}},
-  {"id":"9qq9ipqa3","label":{"PL":"Wymaga ponownego skanowania","EN":"Require rescan"}},
-  {"id":"ss9qm7r78","label":{"PL":"Zweryfikowana","EN":"Verified"},"requiredMetadataIds":[$fileMetadataId]},
-  {"id":"jvz160sl4","label":{"PL":"Rozpoznana","EN":"Recognized"},"lockedMetadataIds":[$fileMetadataId]},
-  {"id":"xo77kutzk","label":{"PL":"Zaakceptowana","EN":"Accepted"},"lockedMetadataIds":[$fileMetadataId]},
-  {"id":"j70hlpsvu","label":{"PL":"Opublikowana","EN":"Published"},"lockedMetadataIds":[$fileMetadataId]}
-]
-JSON
-                , true),
+            $places,
             $this->getTransitions(),
             '{"y1oosxtgf":{"x":51.01815994306967,"y":175.384765625},"lb1ovdqcy":{"x":252.21875,"y":175.60595703125},"qqd3yk499":{"x":266.026612773572,"y":59.700392994713134},"9qq9ipqa3":{"x":44.82338335188286,"y":70.47171223529797},"ss9qm7r78":{"x":405.75008979779426,"y":58.87617816576146},"jvz160sl4":{"x":558.795899588251,"y":55.28335247948525},"xo77kutzk":{"x":554.1022011563498,"y":203.39161358806604},"j70hlpsvu":{"x":378.4111711160704,"y":135.956784665596}}',
 // region base64_thumbnail

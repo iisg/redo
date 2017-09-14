@@ -42,9 +42,19 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
                 Validator::key('label', Validator::arrayType()),
                 Validator::key('id', Validator::stringType(), false),
                 Validator::key('requiredMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
-                Validator::key('lockedMetadataIds', Validator::arrayType()->each($metadataExistsRule), false)
-            )
+                Validator::key('lockedMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
+                Validator::key('assigneeMetadataIds', Validator::arrayType()->each($metadataExistsRule), false)
+            )->callback([$this, 'noCommonValuesBetweenRequirements'])
         ));
+    }
+
+    public function noCommonValuesBetweenRequirements($place): bool {
+        $merged = ($place instanceof ResourceWorkflowPlace)
+            ? array_merge($place->getRequiredMetadataIds(), $place->getLockedMetadataIds(), $place->getAssigneeMetadataIds())
+            : array_merge($place['requiredMetadataIds'] ?? [], $place['lockedMetadataIds'] ?? [], $place['assigneeMetadataIds'] ?? []);
+        $allCount = count($merged);
+        $uniqueCount = count(array_unique($merged));
+        return $allCount == $uniqueCount;
     }
 
     protected function transitionsValidator(): Validator {
