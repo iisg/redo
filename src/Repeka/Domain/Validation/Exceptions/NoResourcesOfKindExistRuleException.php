@@ -6,10 +6,10 @@ use Respect\Validation\Exceptions\ValidationException;
 class NoResourcesOfKindExistRuleException extends ValidationException {
     public static $defaultTemplates = [
         self::MODE_DEFAULT => [
-            self::STANDARD => "{{name}} resource kind is used by some resources.",
+            self::STANDARD => "resources of this kind exist",
         ],
         self::MODE_NEGATIVE => [
-            self::STANDARD => "{{name}} resource kind is used by no resources.",
+            self::STANDARD => "resources of this kind do not exist",
         ],
     ];
 }

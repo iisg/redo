@@ -81,7 +81,7 @@ export class GlobalExceptionInterceptor implements Interceptor {
       if (!violationsByField.hasOwnProperty(violation.field)) {
         violationsByField[violation.field] = [];
       }
-      violationsByField[violation.field].push(violation.rule);
+      violationsByField[violation.field].push(violation.message);
     }
     return violationsByField;
   }
@@ -105,7 +105,7 @@ interface InvalidCommandParams {
 }
 
 interface Violation {
-  defaultMessage: string; // eg. "resource has no children."
-  field: string;          // eg. "resource"
-  rule: string;           // eg. "resourceHasNoChildrenRule"
+  message: string; // eg. "resource has no children."
+  field: string;   // eg. "resource"
+  rule: string;    // eg. "resourceHasNoChildrenRule"
 }

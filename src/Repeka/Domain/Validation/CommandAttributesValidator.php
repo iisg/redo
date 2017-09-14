@@ -35,7 +35,7 @@ abstract class CommandAttributesValidator implements CommandValidator {
         return [
             'field' => $exception->getName(),
             'rule' => $exception->getId(),
-            'defaultMessage' => $exception->getMessage(),
+            'message' => $exception->getMessage(),
         ];
     }
 }
