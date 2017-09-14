@@ -3,7 +3,6 @@ import {ResourceRepository} from "./resource-repository";
 import {Resource} from "./resource";
 import {bindable} from "aurelia-templating";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
-import {Router} from "aurelia-router";
 import {bindingMode, observable} from "aurelia-binding";
 
 @autoinject
@@ -16,8 +15,7 @@ export class ResourcesList {
   @observable resources: Resource[];
 
   constructor(private resourceRepository: ResourceRepository,
-              private deleteEntityConfirmation: DeleteEntityConfirmation,
-              private router: Router) {
+              private deleteEntityConfirmation: DeleteEntityConfirmation) {
   }
 
   attached(): void {
@@ -57,9 +55,5 @@ export class ResourcesList {
     if (index != -1) {
       this.resources.splice(index, 1);
     }
-  }
-
-  navigate(resource: Resource) {
-    this.router.navigateToRoute('resources/details', {id: resource.id});
   }
 }
