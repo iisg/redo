@@ -11,7 +11,7 @@
         class="au-animate fade-inup-outup">
         <form submit.delegate="update()">
             <fab-edit editing.bind="editing"
-                on-click.call="toggleEditForm()"></fab-edit>
+                click.delegate="toggleEditForm()"></fab-edit>
 
             <h1>${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</h1>
 

@@ -1,8 +1,9 @@
 <template>
-    <a class="btn btn-fab pull-right btn-raised ${classes}"
+    <button class="btn btn-fab pull-right btn-raised ${classes}"
+        type="button"
         bootstrap-tooltip.bind="editing ? 'Cancel' : 'Edit' | t"
-        click.delegate="click()">
+        disabled.bind="disabled">
         <fa name="times"></fa>
         <fa name="edit"></fa>
-    </a>
+    </button>
 </template>

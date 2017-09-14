@@ -24,7 +24,7 @@
             </button>
             <fab-edit editing.bind="editing"
                 shift-down
-                on-click.call="toggleEditForm()"
+                click.trigger="toggleEditForm()"
                 disabled.bind="resource.pendingRequest"></fab-edit>
         </div>
 

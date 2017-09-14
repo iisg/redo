@@ -54,12 +54,12 @@
                     <td>
                         <span class="pull-right text-nowrap">
                             <pending-throbber entity.bind="resource"></pending-throbber>
-                            <button class="btn ${resource.hovered ? 'btn-raised' : ''} btn-info btn-sm"
-                                click.delegate="navigate(resource)"
-                                disabled.bind="resource.pendingRequest">
+                            <a class="btn ${resource.hovered ? 'btn-raised' : ''} btn-info btn-sm"
+                                route-href="route: resources/details; params.bind: {id: resource.id}"
+                                disabled-link.bind="resource.pendingRequest">
                                 <fa name="eye fw"></fa>
                                 ${'Details' | t}
-                            </button>
+                            </a>
                             <button type="button"
                                 class="btn btn-danger btn-sm btn-narrow ${resource.hovered ? 'btn-raised' : ''}"
                                 click.delegate="deleteResource(resource)"
