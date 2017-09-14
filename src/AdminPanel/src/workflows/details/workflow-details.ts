@@ -1,13 +1,14 @@
 import {Workflow} from "../workflow";
 import {WorkflowRepository} from "../workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
-import {RoutableComponentActivate, RouteConfig, NavigationInstruction, Router, NavModel} from "aurelia-router";
+import {NavigationInstruction, NavModel, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
 import {I18N} from "aurelia-i18n";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
-import {Subscription, EventAggregator} from "aurelia-event-aggregator";
+import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {deepCopy} from "common/utils/object-utils";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {WorkflowGraphEditor} from "./graph/workflow-graph-editor";
+import {DeleteEntityConfirmation} from "../../common/dialog/delete-entity-confirmation";
 
 @autoinject
 export class WorkflowDetails implements RoutableComponentActivate {
@@ -25,11 +26,12 @@ export class WorkflowDetails implements RoutableComponentActivate {
               private i18n: I18N,
               private inCurrentLanguage: InCurrentLanguageValueConverter,
               private router: Router,
-              private signaler: BindingSignaler) {
+              private signaler: BindingSignaler,
+              private deleteEntityConfirmation: DeleteEntityConfirmation) {
   }
 
   bind() {
-    this.urlListener = this.ea.subscribe("router:navigation:success", (event: {instruction: NavigationInstruction}) => {
+    this.urlListener = this.ea.subscribe("router:navigation:success", (event: { instruction: NavigationInstruction }) => {
       this.editing = (event.instruction.queryParams.action == 'edit');
       if (this.workflow != undefined) {
         if (this.editing) {  // read-only -> editing
@@ -78,6 +80,14 @@ export class WorkflowDetails implements RoutableComponentActivate {
         this.toggleEditForm();
         this.signaler.signal(this.UPDATE_SIGNAL);
       })
+      .finally(() => this.workflow.pendingRequest = false);
+  }
+
+  deleteWorkflow(): Promise<any> {
+    return this.deleteEntityConfirmation.confirm('workflow', this.workflow.id)
+      .then(() => this.workflow.pendingRequest = true)
+      .then(() => this.workflowRepository.remove(this.workflow))
+      .then(() => this.router.navigateToRoute('workflows/list'))
       .finally(() => this.workflow.pendingRequest = false);
   }
 }

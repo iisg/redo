@@ -3,16 +3,27 @@
     <require from="./graph/workflow-graph-editor"></require>
     <require from="./metadata-requirements/workflow-metadata-requirements"></require>
     <require from="common/components/fab/fab-edit"></require>
-    <require from="common/components/loading-bar/pending-throbber.html"></require>
 
     <loading-bar if.bind="!workflow"></loading-bar>
 
     <div if.bind="workflow"
         class="au-animate fade-inup-outup">
-        <form submit.delegate="update()">
-            <fab-edit editing.bind="editing"
-                click.delegate="toggleEditForm()"></fab-edit>
 
+        <div class="pull-right">
+            <pending-throbber entity.bind="workflow"></pending-throbber>
+            <button class="btn btn-fab btn-fab-mini btn-raised btn-danger"
+                type="button"
+                click.trigger="deleteWorkflow()"
+                if.bind="!editing"
+                disabled.bind="workflow.pendingRequest">
+                <fa name="trash"></fa>
+            </button>
+            <fab-edit editing.bind="editing"
+                disabled.bind="workflow.pendingRequest"
+                click.trigger="toggleEditForm()"></fab-edit>
+        </div>
+
+        <form submit.delegate="update()">
             <h1>${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</h1>
 
             <workflow-graph-display if.bind="!editing"

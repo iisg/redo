@@ -20,4 +20,8 @@ class ResourceWorkflowDoctrineRepository extends EntityRepository implements Res
         }
         return $workflow;
     }
+
+    public function delete(ResourceWorkflow $resourceWorkflow): void {
+        $this->getEntityManager()->remove($resourceWorkflow);
+    }
 }

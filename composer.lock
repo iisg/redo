@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc95499569fe26a0caaf9a5561f6dc8b",
+    "content-hash": "22f79126bf2f171b3405ef693e90bbbe",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1927,33 +1927,35 @@
         },
         {
             "name": "respect/validation",
-            "version": "1.1.12",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Respect/Validation.git",
-                "reference": "5ab87d1dd932872f6670136a513f72ff9ea41c67"
+                "reference": "b83f55e3e97d7103b6eb2eea69e7c4bf66750a0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Respect/Validation/zipball/5ab87d1dd932872f6670136a513f72ff9ea41c67",
-                "reference": "5ab87d1dd932872f6670136a513f72ff9ea41c67",
+                "url": "https://api.github.com/repos/Respect/Validation/zipball/b83f55e3e97d7103b6eb2eea69e7c4bf66750a0b",
+                "reference": "b83f55e3e97d7103b6eb2eea69e7c4bf66750a0b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4",
+                "php": ">=7.0",
                 "symfony/polyfill-mbstring": "^1.2"
             },
             "require-dev": {
-                "egulias/email-validator": "~1.2",
-                "malkusch/bav": "~1.0",
-                "mikey179/vfsstream": "^1.5",
-                "phpunit/phpunit": "~4.0",
-                "symfony/validator": "~2.6.9",
-                "zendframework/zend-validator": "~2.3"
+                "egulias/email-validator": "^2.0",
+                "malkusch/bav": "^1.1",
+                "malukenho/docheader": "^0.1.4",
+                "mikey179/vfsstream": "^1.6",
+                "phpunit/phpunit": "^5.6",
+                "symfony/validator": "^3.0",
+                "zendframework/zend-validator": "^2.0"
             },
             "suggest": {
                 "egulias/email-validator": "Strict (RFC compliant) email validation",
                 "ext-bcmath": "Arbitrary Precision Mathematics",
+                "ext-fileinfo": "File Information",
                 "ext-mbstring": "Multibyte String Functions",
                 "fabpot/php-cs-fixer": "Fix PSR2 and other coding style issues",
                 "malkusch/bav": "German bank account validation",
@@ -1963,7 +1965,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "autoload": {
@@ -1988,7 +1990,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2017-03-14T09:44:11+00:00"
+            "time": "2017-06-29T13:48:49+00:00"
         },
         {
             "name": "ruflin/elastica",
@@ -4509,6 +4511,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "doctrine/orm": 20,
+        "respect/validation": 20,
         "syslogic/doctrine-json-functions": 20,
         "phpmd/phpmd": 0
     },

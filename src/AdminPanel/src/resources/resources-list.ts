@@ -4,6 +4,7 @@ import {Resource} from "./resource";
 import {bindable} from "aurelia-templating";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {bindingMode, observable} from "aurelia-binding";
+import {removeByValue} from "../common/utils/array-utils";
 
 @autoinject
 export class ResourcesList {
@@ -40,20 +41,10 @@ export class ResourcesList {
   }
 
   deleteResource(resource: Resource) {
-    if (resource.pendingRequest) {
-      return;
-    }
     this.deleteEntityConfirmation.confirm('resource', resource.id)
       .then(() => resource.pendingRequest = true)
       .then(() => this.resourceRepository.remove(resource))
-      .then(() => this.removeDeletedResource(resource))
+      .then(() => removeByValue(this.resources, resource))
       .finally(() => resource.pendingRequest = false);
-  }
-
-  private removeDeletedResource(resource: Resource) {
-    const index = this.resources.map(resource => resource.id).indexOf(resource.id);
-    if (index != -1) {
-      this.resources.splice(index, 1);
-    }
   }
 }

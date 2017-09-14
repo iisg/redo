@@ -4,6 +4,7 @@ namespace Repeka\Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceKindRepository;
 
@@ -36,5 +37,14 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
 
     public function delete(ResourceKind $resourceKind): void {
         $this->getEntityManager()->remove($resourceKind);
+    }
+
+    public function countByResourceWorkflow(ResourceWorkflow $resourceWorkflow): int {
+        $qb = $this->createQueryBuilder('rk');
+        $query = $qb->select('COUNT(rk.id)')
+            ->where('rk.workflow = :workflow')
+            ->setParameter('workflow', $resourceWorkflow)
+            ->getQuery();
+        return $query->getSingleScalarResult();
     }
 }

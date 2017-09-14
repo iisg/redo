@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Repository;
 
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\EntityNotFoundException;
 
 interface ResourceKindRepository {
@@ -21,4 +22,6 @@ interface ResourceKindRepository {
     public function exists(int $id): bool;
 
     public function delete(ResourceKind $resourceKind): void;
+
+    public function countByResourceWorkflow(ResourceWorkflow $resourceWorkflow): int;
 }

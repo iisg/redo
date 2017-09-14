@@ -11,6 +11,7 @@
   "metadataAlreadyPresent": "Metadata #{{metadataId}} is already present in resource kind #{{resourceKind}}",
   "violationFields": {
     "resource": "Resource",
-    "resourceKind": "Resource kind"
+    "resourceKind": "Resource kind",
+    "resourceWorkflow": "Workflow"
   }
 }

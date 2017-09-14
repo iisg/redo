@@ -33,6 +33,7 @@ export function configure(aurelia: Aurelia) {
       'common/components/font-awesome/fa',
       'common/components/loading-bar/loading-bar.html',
       'common/components/loading-bar/throbber.html',
+      'common/components/loading-bar/pending-throbber.html',
       'common/components/disabled-link/disabled-link',
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
