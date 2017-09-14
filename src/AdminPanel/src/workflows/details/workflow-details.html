@@ -1,7 +1,7 @@
 <template>
     <require from="./graph/workflow-graph-display"></require>
     <require from="./graph/workflow-graph-editor"></require>
-    <require from="./metadata-requirements/workflow-metadata-requirements"></require>
+    <require from="./excel/excel"></require>
     <require from="common/components/fab/fab-edit"></require>
 
     <loading-bar if.bind="!workflow"></loading-bar>
@@ -35,8 +35,8 @@
                 <workflow-graph-editor workflow.bind="workflow"></workflow-graph-editor>
             </div>
 
-            <workflow-metadata-requirements workflow.bind="workflow"
-                editable.bind="editing && !workflow.pendingRequest"></workflow-metadata-requirements>
+            <excel workflow.bind="workflow"
+                editable.bind="editing && !workflow.pendingRequest"></excel>
 
             <div class="pull-right">
                 <pending-throbber entity.bind="workflow"></pending-throbber>

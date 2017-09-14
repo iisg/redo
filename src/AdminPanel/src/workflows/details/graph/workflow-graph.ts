@@ -102,8 +102,7 @@ export class WorkflowGraph {
             let newPlace = this.addPlace({
               id: generateId(''),
               label: {},
-              requiredMetadataIds: [],
-              lockedMetadataIds: [],
+              restrictingMetadataIds: {},
             });
             let newNode = this.$(newPlace);
             newNode.renderedPosition(position);
@@ -219,8 +218,7 @@ export class WorkflowGraph {
     return {
       id: node.id(),
       label: node.data('label'),
-      requiredMetadataIds: [],  // these aren't available here, assume empty and restore in parent components if necessary
-      lockedMetadataIds: [],
+      restrictingMetadataIds: {},
     };
   }
 

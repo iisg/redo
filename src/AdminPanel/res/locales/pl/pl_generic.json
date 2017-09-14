@@ -100,5 +100,8 @@
   "Legend:": "Legenda:",
   "Optional_female": "Opcjonalna",
   "Required_female": "Wymagana",
-  "Locked_female": "Zablokowana"
+  "Locked_female": "Zablokowana",
+  "Specifies assignee": "Określa osobę odpowiedzialną",
+  "only for relationships with users": "tylko dla relacji z użytkownikami",
+  "This metadata can be used to specify assignees": "Ta metadana może być używana do określania osoby odpowiedzialnej"
 }

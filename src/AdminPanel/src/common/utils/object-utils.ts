@@ -6,3 +6,7 @@ export function deepCopy(object: any): any {
 export function isObject(object: any): boolean {
   return typeof object == 'object';
 }
+
+export function keysByValue<M, V>(obj: M, value: V): any[] {
+  return Object.keys(obj).filter(key => obj[key] === value);
+}

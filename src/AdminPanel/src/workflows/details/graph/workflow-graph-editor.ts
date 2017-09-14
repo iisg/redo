@@ -46,7 +46,7 @@ export class WorkflowGraphEditor {
 
   private updateWorkflowBasedOnGraph(withLayout: boolean = false): void {
     const workflow = withLayout ? this.graph.toWorkflowWithLayout() : this.graph.toWorkflow();
-    this.copyRequiredMetadataIds(this.workflow.places, workflow.places);
+    this.copyPlaceRequirementArrays(this.workflow.places, workflow.places);
     this.workflow.places = workflow.places;
     this.workflow.transitions = workflow.transitions;
     this.workflow.diagram = workflow.diagram;
@@ -55,16 +55,15 @@ export class WorkflowGraphEditor {
 
   private updateWorkflowPlacesBasedOnGraph() {
     const places: WorkflowPlace[] = this.graph.getPlaces();
-    this.copyRequiredMetadataIds(this.workflow.places, places);
+    this.copyPlaceRequirementArrays(this.workflow.places, places);
     this.workflow.places = places;
   }
 
-  private copyRequiredMetadataIds(sources: WorkflowPlace[], targets: WorkflowPlace[]): void {
+  private copyPlaceRequirementArrays(sources: WorkflowPlace[], targets: WorkflowPlace[]): void {
     const sourceMap = this.getPlacesLookupMap(sources);
     for (const target of targets) {
       const source = sourceMap[target.id];
-      target.requiredMetadataIds = source ? source.requiredMetadataIds : [];
-      target.lockedMetadataIds = source ? source.lockedMetadataIds : [];
+      target.restrictingMetadataIds = source ? source.restrictingMetadataIds : {};
     }
   }
 

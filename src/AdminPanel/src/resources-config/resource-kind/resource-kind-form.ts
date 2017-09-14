@@ -8,7 +8,7 @@ import {MetadataRepository} from "../metadata/metadata-repository";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {Metadata} from "../metadata/metadata";
 import {noop, VoidFunction} from "common/utils/function-utils";
-import {removeByValue} from "../../common/utils/array-utils";
+import {removeValue} from "common/utils/array-utils";
 
 @autoinject
 export class ResourceKindForm implements ComponentDetached {
@@ -46,7 +46,7 @@ export class ResourceKindForm implements ComponentDetached {
   }
 
   removeMetadata(metadata: Metadata) {
-    removeByValue(this.resourceKind.metadataList, metadata);
+    removeValue(this.resourceKind.metadataList, metadata);
   }
 
   isSortingMetadata() {

@@ -3,8 +3,8 @@ import {bindable, ComponentAttached} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
 import {deepCopy} from "common/utils/object-utils";
-import {removeByValue} from "../../common/utils/array-utils";
-import {DeleteEntityConfirmation} from "../../common/dialog/delete-entity-confirmation";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {removeValue} from "common/utils/array-utils";
 
 @autoinject
 export class MetadataList implements ComponentAttached {
@@ -62,7 +62,7 @@ export class MetadataList implements ComponentAttached {
     this.deleteEntityConfirmation.confirm('metadata', metadata.name)
       .then(() => metadata.pendingRequest = true)
       .then(() => this.metadataRepository.remove(metadata))
-      .then(() => removeByValue(this.metadataList, metadata))
+      .then(() => removeValue(this.metadataList, metadata))
       .finally(() => metadata.pendingRequest = false);
   }
 }
