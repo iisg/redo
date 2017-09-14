@@ -3,7 +3,6 @@
     <require from="common/components/fab/fab-add"></require>
     <require from="./workflow/resource-place-display.html"></require>
     <require from="./details/resource-metadata-values/resource-metadata-values"></require>
-    <require from="common/components/loading-bar/pending-throbber.html"></require>
 
     <fab-add class="pull-right"
         opened.bind="addFormOpened"
@@ -62,7 +61,7 @@
                             </a>
                             <button type="button"
                                 class="btn btn-danger btn-sm btn-narrow ${resource.hovered ? 'btn-raised' : ''}"
-                                click.delegate="deleteResource(resource)"
+                                click.trigger="deleteResource(resource)"
                                 disabled.bind="resource.pendingRequest">
                                 <fa name="trash fw"></fa>
                             </button>

@@ -4,6 +4,7 @@ namespace Repeka\Application\Controller\Api;
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
+use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowDeleteCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowListQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
@@ -11,6 +12,7 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/workflows")
@@ -77,5 +79,14 @@ class ResourceWorkflowsController extends ApiController {
         $command = new ResourceWorkflowCreateCommand($data['name'] ?? []);
         $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource, 201);
+    }
+
+    /**
+     * @Route("/{workflow}")
+     * @Method("DELETE")
+     */
+    public function deleteAction(ResourceWorkflow $workflow) {
+        $this->handleCommand(new ResourceWorkflowDeleteCommand($workflow));
+        return new Response('', 204);
     }
 }

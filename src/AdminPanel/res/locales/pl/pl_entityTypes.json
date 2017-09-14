@@ -4,5 +4,7 @@
   "resource": "zasób",
   "resource_genitive": "zasobu",
   "resourceKind": "rodzaj zasobu",
-  "resourceKind_genitive": "rodzaju zasobu"
+  "resourceKind_genitive": "rodzaju zasobu",
+  "workflow": "proces",
+  "workflow_genitive": "procesu"
 }

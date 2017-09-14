@@ -13,3 +13,10 @@ export function arraysEqual(array1: any[], array2: any[]) {
 export function unique(values: any[]): any[] {
   return values.filter((value, index, self) => self.indexOf(value) === index);
 }
+
+export function removeByValue<T>(array: T[], value: T): void {
+  const index = array.indexOf(value);
+  if (index != -1) {
+    array.splice(index, 1);
+  }
+}

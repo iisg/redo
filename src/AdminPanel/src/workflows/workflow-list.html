@@ -39,11 +39,21 @@
                             src.bind="workflow.thumbnail">
                     </td>
                     <td>
-                        <a route-href="route: workflows/details; params.bind: {id: workflow.id}"
-                            class="btn ${workflow['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">
-                            <fa name="eye fw"></fa>
-                            ${'Details' | t}
-                        </a>
+                        <span class="pull-right text-nowrap">
+                            <pending-throbber entity.bind="workflow"></pending-throbber>
+                            <a route-href="route: workflows/details; params.bind: {id: workflow.id}"
+                                disabled-link.bind="workflow.pendingRequest"
+                                class="btn ${workflow.hovered ? 'btn-raised' : ''} btn-info btn-sm">
+                                <fa name="eye fw"></fa>
+                                ${'Details' | t}
+                            </a>
+                            <button type="button"
+                                class="btn btn-danger btn-sm btn-narrow ${workflow.hovered ? 'btn-raised' : ''}"
+                                click.trigger="deleteWorkflow(workflow)"
+                                disabled.bind="workflow.pendingRequest">
+                                <fa name="trash fw"></fa>
+                            </button>
+                        </span>
                     </td>
                 </tr>
                 </tbody>

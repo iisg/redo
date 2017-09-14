@@ -89,7 +89,7 @@
   "No results": "Brak wyników",
   "No workflows.": "Brak procesów",
   "Confirm deletion": "Potwierdź usunięcie",
-  "Are you sure you want to delete {{entityType}} {{id}}?": "Czy na pewno chcesz usunąć {{entity}} {{id}}?",
+  "Are you sure you want to delete {{entityType}} {{caption}}?": "Czy na pewno chcesz usunąć {{entity}} {{caption}}?",
   "Delete": "Usuń",
   "Child resources": "Podzasoby",
   "Resource #{{id}} doesn't exist": "Zasób #{{id}} nie istnieje",
