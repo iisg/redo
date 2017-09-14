@@ -10,9 +10,7 @@
   "invalidCommand": "Data sent to server are invalid",
   "metadataAlreadyPresent": "Metadata #{{metadataId}} is already present in resource kind #{{resourceKind}}",
   "violationFields": {
-    "resource": "Resource"
-  },
-  "rules": {
-    "resourceHasNoChildrenRule": "Resource has children resources."
+    "resource": "Resource",
+    "resourceKind": "Resource kind"
   }
 }

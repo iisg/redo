@@ -13,8 +13,6 @@
     "resource": "Zasób",
     "resourceKind": "Rodzaj zasobu"
   },
-  "rules": {
-    "resourceHasNoChildrenRule": "Zasób ma podzasoby.",
-    "noResourcesOfKindExistRule": "Istnieją zasoby tego rodzaju."
-  }
+  "resource has children": "zasób ma podzasoby.",
+  "resources of this kind exist": "istnieją zasoby tego rodzaju."
 }
