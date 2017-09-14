@@ -4,11 +4,12 @@ import {ResourceKind} from "../resource-kind/resource-kind";
 import {ResourceKindRepository} from "../resource-kind/resource-kind-repository";
 import {MetadataRepository} from "./metadata-repository";
 import {deepCopy} from "common/utils/object-utils";
+import {Entity} from "../../common/entity/entity";
 
 export interface MultilingualText extends StringStringMap {
 }
 
-export class Metadata {
+export class Metadata extends Entity {
   id: number;
   name: string = '';
   label: MultilingualText = {};

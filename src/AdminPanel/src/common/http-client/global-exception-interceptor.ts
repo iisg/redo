@@ -1,9 +1,10 @@
 import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {autoinject, Container} from "aurelia-dependency-injection";
-import {Interceptor, HttpResponseMessage} from "aurelia-http-client";
+import {HttpResponseMessage, Interceptor} from "aurelia-http-client";
 import {I18N} from "aurelia-i18n";
 import {Alert, AlertOptions} from "../dialog/alert";
 import * as headers from "./headers";
+import {inArray} from "../utils/array-utils";
 
 @autoinject
 export class GlobalExceptionInterceptor implements Interceptor {
@@ -76,8 +77,9 @@ export class GlobalExceptionInterceptor implements Interceptor {
   }
 
   private groupViolationsByField(responseContent: ExceptionContent): StringMap<string[]> {
-    let violationsByField: StringMap<string[]> = {};
-    for (const violation of responseContent.params.violations) {
+    const violationsByField: StringMap<string[]> = {};
+    const mutedRules = ['allOf'];
+    for (const violation of responseContent.params.violations.filter(violation => !inArray(violation.rule, mutedRules))) {
       if (!violationsByField.hasOwnProperty(violation.field)) {
         violationsByField[violation.field] = [];
       }

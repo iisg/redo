@@ -6,6 +6,7 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataDeleteCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
@@ -13,6 +14,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/metadata")
@@ -98,5 +100,14 @@ class MetadataController extends ApiController {
         $command = new MetadataUpdateOrderCommand($ids);
         $this->handleCommand($command);
         return $this->createJsonResponse(true);
+    }
+
+    /**
+     * @Route("/{metadata}")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Metadata $metadata) {
+        $this->handleCommand(new MetadataDeleteCommand($metadata));
+        return new Response('', 204);
     }
 }

@@ -39,4 +39,26 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
     public function exists(int $id): bool {
         return !!$this->find($id);
     }
+
+    public function delete(Metadata $metadata): void {
+        $this->getEntityManager()->remove($metadata);
+    }
+
+    public function countByParent(Metadata $parent): int {
+        $qb = $this->createQueryBuilder('m');
+        $query = $qb->select('COUNT(m.id)')
+            ->where('m.parentMetadata = :parent')
+            ->setParameter('parent', $parent)
+            ->getQuery();
+        return $query->getSingleScalarResult();
+    }
+
+    public function countByBase(Metadata $base): int {
+        $qb = $this->createQueryBuilder('m');
+        $query = $qb->select('COUNT(m.id)')
+            ->where('m.baseMetadata = :base')
+            ->setParameter('base', $base)
+            ->getQuery();
+        return $query->getSingleScalarResult();
+    }
 }

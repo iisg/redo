@@ -10,6 +10,7 @@
   "invalidCommand": "Data sent to server are invalid",
   "metadataAlreadyPresent": "Metadata #{{metadataId}} is already present in resource kind #{{resourceKind}}",
   "violationFields": {
+    "metadata": "Metadata kind",
     "resource": "Resource",
     "resourceKind": "Resource kind",
     "resourceWorkflow": "Workflow"
