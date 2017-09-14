@@ -30,4 +30,10 @@ interface MetadataRepository {
     public function findAllChildren(int $parentId): array;
 
     public function exists(int $id): bool;
+
+    public function delete(Metadata $metadata): void;
+
+    public function countByParent(Metadata $parent): int;
+
+    public function countByBase(Metadata $base): int;
 }

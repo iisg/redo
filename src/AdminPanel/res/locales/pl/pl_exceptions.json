@@ -10,11 +10,14 @@
   "invalidCommand": "Dane przesłane do serwera są nieprawidłowe",
   "metadataAlreadyPresent": "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}",
   "violationFields": {
+    "metadata": "Rodzaj metadanej",
     "resource": "Zasób",
     "resourceKind": "Rodzaj zasobu",
     "resourceWorkflow": "Proces"
   },
   "resource has children": "zasób ma podzasoby.",
   "resources of this kind exist": "istnieją zasoby tego rodzaju.",
-  "workflow is assigned to one of resource kinds": "proces jest przypisany do jednego z rodzajów zasobów"
+  "workflow is assigned to one of resource kinds": "proces jest przypisany do jednego z rodzajów zasobów",
+  "metadata kind is used in some resource kinds": "rodzaj metadanej jest używany przez niektóre rodzaje zasobów",
+  "metadata kind has submetadata kinds": "rodzaj metadanej ma podmetadane"
 }

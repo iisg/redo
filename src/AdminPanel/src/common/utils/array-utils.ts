@@ -25,3 +25,7 @@ export function removeByValue<T>(array: T[], value: T): void {
 export function flatten<T>(arrayOfArrays: Array<T|T[]>): T[] {
   return [].concat.apply([], arrayOfArrays);
 }
+
+export function inArray<T>(needle: T, haystack: T[]): boolean {
+  return haystack && haystack.indexOf(needle) >= 0;
+}

@@ -1,6 +1,8 @@
 {
   "language": "język",
   "language_genitive": "języka",
+  "metadata": "rodzaj metadanej",
+  "metadata_genitive": "rodzaju metadanej",
   "resource": "zasób",
   "resource_genitive": "zasobu",
   "resourceKind": "rodzaj zasobu",

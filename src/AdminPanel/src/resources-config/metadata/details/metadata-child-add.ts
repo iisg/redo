@@ -19,7 +19,7 @@ export class MetadataChildAdd implements ComponentAttached {
     let metadataList, parentMetadataChildren;
     Promise.all([
       this.metadataRepository.getList().then(metadata => metadataList = metadata),
-      this.metadataRepository.getChildren(this.parentMetadata.id).then(children => parentMetadataChildren = children)
+      this.metadataRepository.getByParent(this.parentMetadata).then(children => parentMetadataChildren = children)
     ]).then(() => {
       this.parentMetadataChildren = parentMetadataChildren;
       this.metadataList = metadataList;
