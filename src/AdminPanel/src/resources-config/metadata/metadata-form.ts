@@ -4,14 +4,14 @@ import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {Metadata} from "./metadata";
 import {computedFrom} from "aurelia-binding";
-import {ResourceKindRepository} from "../resource-kind/resource-kind-repository";
 import {noop, VoidFunction} from "common/utils/function-utils";
+import {changeHandler} from "common/components/binding-mode";
 
 @autoinject
 export class MetadataForm {
   @bindable submit: (value: {editedMetadata: Metadata}) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
-  @bindable template: Metadata;
+  @bindable(changeHandler('resetValues')) template: Metadata;
   @bindable edit: boolean = false;
   @bindable cancelButton: boolean = false;
 
@@ -20,7 +20,7 @@ export class MetadataForm {
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory, private resourceKindRepository: ResourceKindRepository) {
+  constructor(validationControllerFactory: ValidationControllerFactory) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
@@ -30,13 +30,9 @@ export class MetadataForm {
     return this.template != undefined;
   }
 
-  templateChanged() {
-    this.resetValues();
-  }
-
   private resetValues() {
     this.metadata = this.template ? Metadata.clone(this.template) : new Metadata();
-    this.metadata.constraints.fetchResourceKindEntities(this.resourceKindRepository);
+    delete this.metadata['editing'];  // would interfere when $.extend()ing other objects with this one
   }
 
   validateAndSubmit() {

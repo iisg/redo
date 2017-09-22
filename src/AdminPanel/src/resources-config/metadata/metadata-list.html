@@ -92,9 +92,8 @@
                     </td>
                     <td colspan="6"
                         if.bind="metadata.editing">
-                        <div if.bind="metadata.editing"
-                            class="au-animate anim-height-inout-600">
-                            <metadata-form submit.call="saveEditedMetadata(metadata, editedMetadata) && (metadata.editing = false)"
+                        <div class="au-animate anim-height-inout-600">
+                            <metadata-form submit.call="saveEditedMetadata(metadata, editedMetadata)"
                                 template.bind="metadata"
                                 edit="true"
                                 cancel-button="true"

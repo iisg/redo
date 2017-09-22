@@ -50,10 +50,12 @@ export class MetadataList implements ComponentAttached {
     this.metadataList.unshift(newMetadata);
   }
 
-  saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<Metadata> {
-    const originalMetadata = deepCopy(metadata);
+  saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<any> {
+    const originalMetadata: Metadata = deepCopy(metadata);
     $.extend(metadata, changedMetadata);
-    return this.metadataRepository.update(changedMetadata).catch(() => $.extend(metadata, originalMetadata));
+    return this.metadataRepository.update(changedMetadata)
+      .then(() => metadata.editing = false)
+      .catch(() => $.extend(metadata, originalMetadata));
   }
 
   deleteMetadata(metadata: Metadata) {
