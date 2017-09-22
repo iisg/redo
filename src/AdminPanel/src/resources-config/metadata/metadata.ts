@@ -1,10 +1,9 @@
 import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {ResourceKind} from "../resource-kind/resource-kind";
-import {ResourceKindRepository} from "../resource-kind/resource-kind-repository";
 import {MetadataRepository} from "./metadata-repository";
 import {deepCopy} from "common/utils/object-utils";
-import {Entity} from "../../common/entity/entity";
+import {Entity} from "common/entity/entity";
 
 export interface MultilingualText extends StringStringMap {
 }
@@ -52,20 +51,6 @@ export class Metadata extends Entity {
 
 export class MetadataConstraints {
   resourceKind: ResourceKind[]|number[] = [];
-
-  fetchResourceKindEntities(repository: ResourceKindRepository): Promise<ResourceKind[]> {
-    return repository.getList().then(resourceKinds => {
-      let idToResourceKind = new Map<number, ResourceKind>();
-      for (let resourceKind of resourceKinds) {
-        idToResourceKind[resourceKind.id] = resourceKind;
-      }
-      const entities: ResourceKind[] = [];
-      for (let id of this.resourceKind as number[]) {
-        entities.push(idToResourceKind[id]);
-      }
-      return this.resourceKind = entities;
-    });
-  }
 }
 
 export function registerMetadataValidationRules() {
