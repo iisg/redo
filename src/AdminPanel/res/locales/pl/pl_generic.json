@@ -107,5 +107,8 @@
   "only for relationships with users": "tylko dla relacji z użytkownikami",
   "This metadata can be used to specify assignees": "Ta metadana może być używana do określania osoby odpowiedzialnej",
   "This metadata determines who can perform these actions:": "Ta metadana określa, kto może wykonać następujące czynności:",
-  "New workflow": "Nowy proces"
+  "New workflow": "Nowy proces",
+  "Your assignments": "Twoje zadania",
+  "Show": "Pokaż",
+  "No assignments!": "Brak zadań!"
 }
