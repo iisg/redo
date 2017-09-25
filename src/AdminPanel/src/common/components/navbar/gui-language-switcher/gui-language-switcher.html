@@ -8,6 +8,9 @@
         <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
+        <li if.bind="languages === undefined">
+            <throbber></throbber>
+        </li>
         <li repeat.for="language of languages">
             <a click.delegate="select(language)"
                 show.bind="language != currentLanguage">
