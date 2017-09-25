@@ -1,0 +1,59 @@
+<template>
+    <require from="resources/workflow/resource-place-display.html"></require>
+    <require from="resources/details/resource-metadata-values/resource-metadata-values"></require>
+
+    <loading-bar if.bind="assignments === undefined"></loading-bar>
+
+    <div if.bind="assignments !== undefined">
+        <h3>${"Your assignments" | t}</h3>
+        <div class="col-xs-12">
+
+            <table class="table table-striped"
+                if.bind="assignments.length > 0">
+                <thead>
+                <tr>
+                    <th>${'ID' | t}</th>
+                    <th>${'Resource kind' | t}</th>
+                    <th>${'Contents' | t}</th>
+                    <th>${'Place' | t}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody class="au-stagger">
+                <tr repeat.for="resource of assignments"
+                    hover-aware.one-time="resource"
+                    class="au-animate fade-inup-outdown">
+                    <td>${resource.id & oneTime}</td>
+                    <td>
+                        ${resource.kind.label | inCurrentLanguage}
+                    </td>
+                    <td>
+                        <resource-metadata-values resource.one-time="resource"
+                            brief></resource-metadata-values>
+                    </td>
+                    <td>
+                        <resource-place-display resource.bind="resource"></resource-place-display>
+                    </td>
+                    <td>
+                        <span class="pull-right text-nowrap">
+                            <a class="btn ${resource.hovered ? 'btn-raised' : ''} btn-info btn-sm"
+                                route-href="route: resources/details; params.bind: {id: resource.id}">
+                                <fa name="eye fw"></fa>
+                                ${'Show' | t}
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div if.bind="assignments.length == 0"
+                class="alert alert-success">
+                <fa name="check-circle"></fa>
+                ${"No assignments!" | t}
+            </div>
+
+        </div>
+
+    </div>
+</template>

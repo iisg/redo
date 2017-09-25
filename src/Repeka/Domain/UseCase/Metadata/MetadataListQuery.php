@@ -10,7 +10,7 @@ class MetadataListQuery extends NonValidatedCommand {
         $this->parentId = $parentId;
     }
 
-    public function getId() {
+    public function getParentId() {
         return $this->parentId;
     }
 }
