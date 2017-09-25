@@ -10,6 +10,8 @@ import {CustomValidationRules} from "common/validation/custom-validation-rules";
 import {installValidationMessageLocalization} from "common/validation/validation-message-localization";
 import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {i18nConfigurator} from "config/i18n";
+import {GuiLanguage} from "./common/i18n/gui-language";
+import {Configure} from "aurelia-configuration";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -48,8 +50,17 @@ export function configure(aurelia: Aurelia) {
   aurelia.container.get(CurrentUserFetcher).fetch()
     .then(user => aurelia.container.registerInstance(CurrentUserFetcher.CURRENT_USER_KEY, user))
     .then(() => aurelia.start())
-    .then(() => aurelia.container.get(MetricsEventListener).register())
-    .then(() => aurelia.container.get(CustomValidationRules).register())
+    .then(() => onAureliaStarted(aurelia))
     .then(() => aurelia.setRoot())
     .then(() => MetricsCollector.timeEnd("bootstrap"));
+}
+
+function onAureliaStarted(aurelia: Aurelia): Promise<void> {
+  aurelia.container.get(MetricsEventListener).register();
+  aurelia.container.get(CustomValidationRules).register();
+  const config: Configure = aurelia.container.get(Configure);
+  return config.loadConfig().then(() => {
+    const guiLanguage: GuiLanguage = aurelia.container.get(GuiLanguage);
+    guiLanguage.apply();
+  });
 }
