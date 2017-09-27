@@ -11,13 +11,13 @@
                 <em>${fallbackText}</em>
             </span>
         </span>
-        <span if.bind="!canApplyTransition"
-            bootstrap-tooltip.bind="transitionInactiveReason">
-            <span if.bind="transitionInactiveReason">
-                <fa name="info-circle fw"></fa>
+        <span if.bind="!canApplyTransition">
+            <span if.bind="transitionInactiveReasons === undefined">
+                <throbber></throbber>
             </span>
-            <span if.bind="!transitionInactiveReason">
-                <fa name="spinner spin fw"></fa>
+            <span repeat.for="reason of transitionInactiveReasons"
+                bootstrap-tooltip.bind="reasonTooltip(reason)">
+                <fa name.bind="reason.icon"></fa>
             </span>
         </span>
     </button>

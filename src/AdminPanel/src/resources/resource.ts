@@ -1,6 +1,6 @@
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ValidationRules} from "aurelia-validation";
-import {WorkflowPlace, WorkflowTransition, UnsatisfiedTransitionExplanation} from "workflows/workflow";
+import {WorkflowPlace, WorkflowTransition, TransitionBlockReason} from "workflows/workflow";
 import {Entity} from "common/entity/entity";
 
 export class Resource extends Entity {
@@ -8,15 +8,12 @@ export class Resource extends Entity {
   kind: ResourceKind;
   currentPlaces: WorkflowPlace[];
   availableTransitions: WorkflowTransition[] = [];
-  unsatisfiedTransitions: StringMap<UnsatisfiedTransitionExplanation> = {};
+  blockedTransitions: StringMap<TransitionBlockReason> = {};
+  transitionAssigneeMetadata: NumberMap<WorkflowTransition[]>;
   contents: StringArrayMap = {};
 
   public canApplyTransition(transition: WorkflowTransition) {
-    return this.unsatisfiedTransitions[transition.id] == undefined;
-  }
-
-  public getUnsatisfiedTransitionExplanation(transition: WorkflowTransition) {
-    return this.unsatisfiedTransitions[transition.id];
+    return this.blockedTransitions[transition.id] == undefined;
   }
 }
 

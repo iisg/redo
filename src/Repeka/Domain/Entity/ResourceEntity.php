@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Domain\Entity;
 
-// ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
 use Assert\Assertion;
 
-class ResourceEntity {
+// ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
+class ResourceEntity implements Identifiable {
     private $id;
     private $kind;
     private $marking;

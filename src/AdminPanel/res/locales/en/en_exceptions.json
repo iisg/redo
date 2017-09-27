@@ -13,6 +13,8 @@
     "metadata": "Metadata kind",
     "resource": "Resource",
     "resourceKind": "Resource kind",
-    "resourceWorkflow": "Workflow"
+    "resourceWorkflow": "Workflow",
+    "newConstraints": "Constraints",
+    "metadataList": "Metadata list"
   }
 }

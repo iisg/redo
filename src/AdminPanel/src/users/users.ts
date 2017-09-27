@@ -9,7 +9,7 @@ export class Users implements ConfiguresRouter {
     this.router = router;
     config.map([
       {route: '', name: 'users/list', moduleId: './user-list'},
-      {route: '/:id', name: 'user/details', moduleId: './details/user-details'},
+      {route: '/:id', name: 'users/details', moduleId: './details/user-details'},
     ]);
   }
 }

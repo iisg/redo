@@ -4,6 +4,9 @@ import {ResourceKind} from "../resource-kind/resource-kind";
 import {MetadataRepository} from "./metadata-repository";
 import {deepCopy} from "common/utils/object-utils";
 import {Entity} from "common/entity/entity";
+import {SystemResourceKinds} from "../resource-kind/system-resource-kinds";
+import {arraysEqual} from "common/utils/array-utils";
+import {computedFrom} from "aurelia-binding";
 
 export interface MultilingualText extends StringStringMap {
 }
@@ -20,7 +23,13 @@ export class Metadata extends Entity {
   constraints: MetadataConstraints = new MetadataConstraints();
   shownInBrief: boolean;
 
-  public clearInheritedValues(metadataRepository: MetadataRepository, baseId?: number): Promise<Metadata> {
+  @computedFrom('control', 'constraints.resourceKind')
+  get canDetermineAssignees(): boolean {
+    return this.control == 'relationship'
+      && arraysEqual(this.constraints.resourceKind, [SystemResourceKinds.USER_ID]);
+  }
+
+  clearInheritedValues(metadataRepository: MetadataRepository, baseId?: number): Promise<Metadata> {
     const baseMetadata: Promise<Metadata> = (baseId != undefined)
       ? metadataRepository.get(baseId)
       : metadataRepository.getBase(this);
@@ -36,13 +45,13 @@ export class Metadata extends Entity {
     });
   }
 
-  public static clone(metadata: Object): Metadata {
+  static clone(metadata: Object): Metadata {
     let cloned = deepCopy(metadata);
     cloned.constraints = $.extend(new MetadataConstraints(), metadata['constraints']);
     return $.extend(new Metadata(), cloned);
   }
 
-  public static createFromBase(baseMetadata: Metadata): Metadata {
+  static createFromBase(baseMetadata: Metadata): Metadata {
     let metadata = Metadata.clone(baseMetadata);
     metadata.baseId = baseMetadata.id;
     return metadata;

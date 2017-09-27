@@ -1,15 +1,14 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\Metadata;
 
+use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQueryHandler;
-use PHPUnit_Framework_MockObject_MockObject;
 
 class MetadataGetQueryHandlerTest extends \PHPUnit_Framework_TestCase {
     /** @var PHPUnit_Framework_MockObject_MockObject|MetadataRepository */
     private $metadataRepository;
-
     /** @var MetadataGetQueryHandler */
     private $handler;
 

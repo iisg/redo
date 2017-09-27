@@ -3,7 +3,7 @@ namespace Repeka\Domain\Entity;
 
 use Cocur\Slugify\Slugify;
 
-class ResourceWorkflowPlace {
+class ResourceWorkflowPlace implements Identifiable {
     private $id;
     private $label;
     private $requiredMetadataIds;
@@ -53,7 +53,7 @@ class ResourceWorkflowPlace {
         return $this->assigneeMetadataIds;
     }
 
-    public function getMissingRequiredMetadataIds(ResourceEntity $resource):array {
+    public function getMissingRequiredMetadataIds(ResourceEntity $resource): array {
         $requiredMetadataIds = $this->getRequiredMetadataIds();
         $presentMetadataIds = array_keys($resource->getContents());
         $metadataIdsMissingForPlace = array_diff($requiredMetadataIds, $presentMetadataIds);

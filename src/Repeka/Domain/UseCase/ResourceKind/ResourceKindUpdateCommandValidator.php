@@ -6,9 +6,7 @@ use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class ResourceKindUpdateCommandValidator extends ResourceKindCreateCommandValidator {
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function getValidator(Command $command): Validatable {
         return Validator::allOf(
             parent::getValidator($command),

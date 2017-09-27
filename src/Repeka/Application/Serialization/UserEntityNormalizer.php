@@ -25,9 +25,7 @@ class UserEntityNormalizer extends AbstractNormalizer implements NormalizerAware
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function supportsNormalization($data, $format = null) {
         return $data instanceof UserEntity;
     }

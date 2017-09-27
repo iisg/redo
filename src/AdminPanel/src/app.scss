@@ -141,6 +141,14 @@ input, textarea, select {
   color: $grey-700;
 }
 
+.alert > .btn {
+  margin-top: -8px;
+
+  &.btn-sm {
+    margin-top: -4px;
+  }
+}
+
 // z-depth helpers from MaterializeCSS
 // see https://github.com/FezVrasta/bootstrap-material-design/issues/1109
 

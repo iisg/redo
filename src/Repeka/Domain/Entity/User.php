@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Domain\Entity;
 
-abstract class User {
+abstract class User implements Identifiable {
     /** @var ResourceEntity */
     protected $userData;
 

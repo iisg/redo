@@ -17,4 +17,9 @@ export class ResourceMetadataValues {
       ? this.resource.kind.briefMetadataList
       : this.resource.kind.metadataList;
   }
+
+  determinesAssignee(resource: Resource, metadata: Metadata): boolean {
+    return resource.transitionAssigneeMetadata !== undefined
+      && resource.transitionAssigneeMetadata.hasOwnProperty(metadata.baseId);
+  }
 }

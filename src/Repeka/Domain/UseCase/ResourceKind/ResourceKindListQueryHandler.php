@@ -12,10 +12,12 @@ class ResourceKindListQueryHandler {
         $this->resourceKindRepository = $resourceKindRepository;
     }
 
-    /**
-     * @return ResourceKind[]
-     */
+    /** @return ResourceKind[] */
     public function handle(ResourceKindListQuery $query): array {
+        return $this->getResults($query);
+    }
+
+    private function getResults(ResourceKindListQuery $query): array {
         if ($query->includeSystemResourceKinds()) {
             return $this->resourceKindRepository->findAll();
         } else {

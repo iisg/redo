@@ -4,9 +4,8 @@ namespace Repeka\Domain\Entity;
 use Assert\Assertion;
 use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
-use Repeka\Domain\Workflow\UnsatisfiedTransitionExplanation;
 
-class ResourceWorkflow {
+class ResourceWorkflow implements Identifiable {
     private $id;
     private $name;
     private $places = [];
@@ -32,8 +31,8 @@ class ResourceWorkflow {
     /** @return ResourceWorkflowPlace[] */
     public function getPlaces(ResourceEntity $resource = null): array {
         if ($resource) {
-            $available = $this->getWorkflowDriver()->getPlaces($resource);
-            return $this->filterByIds($available, $this->getPlacesAsObjects());
+            $availablePlaceIds = $this->getWorkflowDriver()->getPlaces($resource);
+            return EntityHelper::filterByIds($availablePlaceIds, $this->getPlacesAsObjects());
         } else {
             return $this->getPlacesAsObjects();
         }
@@ -46,24 +45,11 @@ class ResourceWorkflow {
     /** @return ResourceWorkflowTransition[] */
     public function getTransitions(ResourceEntity $resource = null): array {
         if ($resource) {
-            $available = $this->getWorkflowDriver()->getTransitions($resource);
-            return $this->filterByIds($available, $this->getTransitionsAsObjects());
+            $availableTransitionIds = $this->getWorkflowDriver()->getTransitions($resource);
+            return EntityHelper::filterByIds($availableTransitionIds, $this->getTransitionsAsObjects());
         } else {
             return $this->getTransitionsAsObjects();
         }
-    }
-
-    public function isTransitionPossible(string $transitionId, ResourceEntity $resource, User $executor): bool {
-        /** @var ResourceWorkflowTransition $transition */
-        $transition = $this->getTransition($transitionId);
-        $explanation = new UnsatisfiedTransitionExplanation($this, $transition, $resource, $executor);
-        return $explanation->isSatisfied();
-    }
-
-    private function filterByIds(array $idsToLeave, array $objects): array {
-        return array_values(array_filter($objects, function ($objectWithId) use ($idsToLeave) {
-            return in_array($objectWithId->getId(), $idsToLeave);
-        }));
     }
 
     /** @return ResourceWorkflowTransition[] */
@@ -139,18 +125,5 @@ class ResourceWorkflow {
             }
         }
         throw new NoSuchTransitionException($transitionId, $this);
-    }
-
-    /** @return UnsatisfiedTransitionExplanation[] */
-    public function getUnsatisfiedTransitionExplanations(ResourceEntity $resource, User $user): array {
-        $transitions = $this->getTransitions($resource);
-        $unsatisfiedTransitions = [];
-        foreach ($transitions as $transition) {
-            $explanation = new UnsatisfiedTransitionExplanation($this, $transition, $resource, $user);
-            if (!$explanation->isSatisfied()) {
-                $unsatisfiedTransitions[$transition->getId()] = $explanation;
-            }
-        }
-        return $unsatisfiedTransitions;
     }
 }

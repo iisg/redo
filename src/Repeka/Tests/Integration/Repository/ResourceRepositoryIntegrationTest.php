@@ -24,7 +24,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindAll() {
         $resources = $this->resourceRepository->findAll();
-        $this->assertCount(9, $resources); // 1 per every user + fixtures
+        $this->assertCount(10, $resources); // 1 per every user + fixtures
     }
 
     public function testFindAllNonSystemResources() {

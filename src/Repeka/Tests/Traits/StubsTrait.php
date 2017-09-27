@@ -2,9 +2,12 @@
 namespace Repeka\Tests\Traits;
 
 use Repeka\Application\Entity\EntityUtils;
+use Repeka\Domain\Entity\EntityHelper;
+use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Validation\MetadataConstraintProvider;
@@ -27,6 +30,7 @@ trait StubsTrait {
         return $metadata;
     }
 
+    /** @return Metadata|\PHPUnit_Framework_MockObject_MockObject */
     protected function createMetadataMock(int $id, ?int $baseId = null, string $control = 'dummy', array $constraints = []): Metadata {
         /** @var Metadata|\PHPUnit_Framework_MockObject_MockObject $metadata */
         $metadata = $this->createMockEntity(Metadata::class, $id);
@@ -45,11 +49,14 @@ trait StubsTrait {
         $resourceKind = $this->createMock(ResourceKind::class);
         $resourceKind->method('getId')->willReturn($id);
         $resourceKind->method('getMetadataList')->willReturn($metadataList);
+        $resourceKind->method('getBaseMetadataIds')->willReturn(array_values(array_map(function (Metadata $v) {
+            return $v->getBaseId();
+        }, $metadataList)));
         return $resourceKind;
     }
 
     /** @return ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
-    protected function createResourceMock(int $id, ResourceKind $resourceKind, array $contents = []): ResourceEntity {
+    protected function createResourceMock(int $id, ?ResourceKind $resourceKind = null, array $contents = []): ResourceEntity {
         $mock = $this->createMock(ResourceEntity::class);
         $mock->method('getKind')->willReturn($resourceKind);
         $mock->method('getId')->willReturn($id);
@@ -57,19 +64,12 @@ trait StubsTrait {
         return $mock;
     }
 
-    protected function createEntityLookupMap(array $entityList): array {
-        $result = [];
-        foreach ($entityList as $metadata) {
-            $result[$metadata->getId()] = $metadata;
-        }
-        return $result;
-    }
-
     protected function createRepositoryStub(string $repositoryClassName, array $entityList = []) {
         $entityList = array_values($entityList);
-        $lookup = $this->createEntityLookupMap($entityList);
+        $lookup = EntityHelper::getLookupMap($entityList);
         $idCounter = 1;
         $repository = $this->createMock($repositoryClassName);
+        $repository->method('findAll')->willReturn($entityList);
         $repository->method('findOne')->willReturnCallback(function ($id) use ($lookup, $repositoryClassName) {
             if (array_key_exists($id, $lookup)) {
                 return $lookup[$id];
@@ -78,6 +78,7 @@ trait StubsTrait {
             }
         });
         $repository->method('save')->willReturnCallback(function ($entity) use (&$idCounter) {
+            /** @var Identifiable $entity */
             if ($entity->getId() === null) {
                 // Entities returned by save() method must have an ID assigned.
                 EntityUtils::forceSetId($entity, $idCounter++);
@@ -103,8 +104,8 @@ trait StubsTrait {
      * Make sure mocked rule doesn't have factory methods, such as forResourceKind(). These methods will return broken mocks by default,
      * which can produce false positives. If rule has factory methods, use createRuleWithFactoryMethodMock();
      */
-    protected function createRuleMock(string $validatorClass, bool $result, ?string $exceptionMessage = null) {
-        $mock = $this->createMock($validatorClass);
+    protected function createRuleMock(string $ruleClass, bool $result, ?string $exceptionMessage = null) {
+        $mock = $this->createMock($ruleClass);
         $mock->method('validate')->willReturn($result);
         $mock->method('assert')->willReturnCallback(function () use ($result, $exceptionMessage) {
             if ($result) {
@@ -117,19 +118,39 @@ trait StubsTrait {
     }
 
     protected function createRuleWithFactoryMethodMock(
-        string $validatorClass,
+        string $ruleClass,
         string $methodName,
-        bool $result,
+        ?bool $result = null,
         ?string $exceptionMessage = null
     ) {
-        $mock = $this->createRuleMock($validatorClass, $result, $exceptionMessage);
-        $mock->method($methodName)->willReturnSelf();
-        return $mock;
+        if (!is_null($result)) {
+            $mock = $this->createRuleMock($ruleClass, $result, $exceptionMessage);
+            $mock->method($methodName)->willReturnSelf();
+            return $mock;
+        } else {
+            $mock = $this->createMock($ruleClass);
+            $mock->method($methodName)->willReturnSelf();
+            return $mock;
+        }
     }
 
     protected function createEntityExistsMock(bool $result, ?string $exceptionMessage = null): EntityExistsRule {
         $mock = $this->createRuleWithFactoryMethodMock(EntityExistsRule::class, 'forEntityType', $result, $exceptionMessage);
         $mock->method('forEntityType')->willReturnSelf();
+        return $mock;
+    }
+
+    /** @return ResourceWorkflowPlace|\PHPUnit_Framework_MockObject_MockObject */
+    protected function createWorkflowPlaceMock(
+        string $id = '',
+        array $missingMetadataIds = [],
+        array $assigneeMetadataIds = []
+    ): ResourceWorkflowPlace {
+        $mock = $this->createMock(ResourceWorkflowPlace::class);
+        $mock->method('getId')->willReturn($id);
+        $mock->method('getMissingRequiredMetadataIds')->willReturn($missingMetadataIds);
+        $mock->method('resourceHasRequiredMetadata')->willReturn(empty($missingMetadataIds));
+        $mock->method('getAssigneeMetadataIds')->willReturn($assigneeMetadataIds);
         return $mock;
     }
 }

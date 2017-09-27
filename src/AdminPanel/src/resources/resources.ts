@@ -19,6 +19,11 @@ export class Resources implements ConfiguresRouter {
         moduleId: './details/resource-details',
         activationStrategy: activationStrategy.replace
       },
+      {
+        route: '/../users/:id',
+        name: 'users/details',
+        moduleId: 'users/details/user-details'
+      },
     ]);
   }
 }

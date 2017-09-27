@@ -5,9 +5,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
 
 class MetadataGetQueryHandler {
-    /**
-     * @var MetadataRepository
-     */
+    /** @var MetadataRepository */
     private $metadataRepository;
 
     public function __construct(MetadataRepository $metadataRepository) {

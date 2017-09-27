@@ -54,7 +54,7 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->validator->validate($command);
     }
 
-    public function testPassesWithValidResourceKindConstraint() {
+    public function testPasses() {
         $metadata = $this->createMetadataMock(1, null, 'relationship');
         $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
         $this->constraintArgumentsAreValid->method('validate')->willReturn(true);
@@ -80,6 +80,36 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->constraintArgumentsAreValid
         );
         $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [], false);
+        $validator->validate($command);
+    }
+
+    public function testFailsForInvalidConstraintArguments() {
+        $metadata = $this->createMetadataMock(1, null, 'relationship');
+        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
+        $this->constraintArgumentsAreValid->method('validate')->willReturn(false);
+        $validator = new MetadataUpdateCommandValidator(
+            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
+            new ConstraintSetMatchesControlRule($metadataRepository),
+            $this->constraintArgumentsAreValid
+        );
+        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
+            'resourceKind' => [0],
+        ], false);
+        $validator->validate($command);
+    }
+
+    public function testFailsForFailedRelationshipRequirement() {
+        $metadata = $this->createMetadataMock(1, null, 'relationship');
+        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
+        $this->constraintArgumentsAreValid->method('validate')->willReturn(true);
+        $validator = new MetadataUpdateCommandValidator(
+            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
+            new ConstraintSetMatchesControlRule($metadataRepository),
+            $this->constraintArgumentsAreValid
+        );
+        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
+            'resourceKind' => [0],
+        ], false);
         $validator->validate($command);
     }
 }

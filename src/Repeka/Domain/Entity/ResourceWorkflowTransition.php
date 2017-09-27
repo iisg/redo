@@ -3,7 +3,7 @@ namespace Repeka\Domain\Entity;
 
 use Cocur\Slugify\Slugify;
 
-class ResourceWorkflowTransition {
+class ResourceWorkflowTransition implements Identifiable {
     private $id;
     private $label;
     private $fromIds;

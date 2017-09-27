@@ -3,7 +3,7 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 
-class Metadata {
+class Metadata implements Identifiable {
     private $id;
     private $control;
     private $name;
@@ -14,7 +14,7 @@ class Metadata {
     private $baseMetadata;
     private $resourceKind;
     private $ordinalNumber;
-    /** @var  Metadata */
+    /** @var Metadata */
     private $parentMetadata;
     private $constraints = [];
     private $shownInBrief;
@@ -141,7 +141,7 @@ class Metadata {
             : $this->shownInBrief ?? $this->baseMetadata->isShownInBrief();
     }
 
-    public function getBaseId() {
+    public function getBaseId(): ?int {
         return $this->isBase() ? null : $this->baseMetadata->getId();
     }
 

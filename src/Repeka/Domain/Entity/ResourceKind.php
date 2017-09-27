@@ -1,12 +1,12 @@
 <?php
-
 namespace Repeka\Domain\Entity;
 
+use Assert\Assertion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Exception\MetadataAlreadyPresentException;
 
-class ResourceKind {
+class ResourceKind implements Identifiable {
     private $id;
     private $label;
     /** @var ArrayCollection|Metadata[] */
@@ -58,7 +58,8 @@ class ResourceKind {
     }
 
     public function addMetadata(Metadata $metadata) {
-        if (in_array($metadata, $this->getMetadataList())) {
+        Assertion::notNull($metadata->getBaseId());
+        if (in_array($metadata->getBaseId(), $this->getBaseMetadataIds())) {
             throw new MetadataAlreadyPresentException($this, $metadata);
         }
         $this->metadataList[] = $metadata;
@@ -115,5 +116,12 @@ class ResourceKind {
 
     public function getWorkflow(): ?ResourceWorkflow {
         return $this->workflow;
+    }
+
+    /** @return int[] */
+    public function getBaseMetadataIds(): array {
+        return array_map(function (Metadata $metadata) {
+            return $metadata->getBaseId();
+        }, $this->getMetadataList());
     }
 }
