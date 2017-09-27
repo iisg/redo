@@ -7,9 +7,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {WorkflowPlaceSorter} from "./workflow-place-sorter";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
-import {SystemResourceKinds} from "../../../resources-config/resource-kind/system-resource-kinds";
-import {arraysEqual} from "../../../common/utils/array-utils";
-import {deepCopy} from "../../../common/utils/object-utils";
+import {deepCopy} from "common/utils/object-utils";
 
 @autoinject
 export class Excel implements ComponentAttached {
@@ -28,10 +26,6 @@ export class Excel implements ComponentAttached {
   @computedFrom('workflow.places')
   get orderedPlaces(): WorkflowPlace[] {
     return this.workflowPlaceSorter.getOrderedPlaces(this.workflow);
-  }
-
-  metadataIsUserRelationship(metadata: Metadata): boolean {
-    return metadata.control == 'relationship' && arraysEqual(metadata.constraints.resourceKind, [SystemResourceKinds.USER.id]);
   }
 
   checkboxChanged(metadata: Metadata, changedPlace: WorkflowPlace): void {

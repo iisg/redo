@@ -6,7 +6,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {Metadata} from "resources-config/metadata/metadata";
 import {twoWay} from "common/components/binding-mode";
-import {flatten} from "common/utils/array-utils";
+import {flatten, inArray} from "common/utils/array-utils";
 import {keysByValue} from "common/utils/object-utils";
 import {RequirementState} from "workflows/workflow";
 
@@ -41,11 +41,16 @@ export class ResourceFormGenerated {
     return (isParent && this.disableParent) || this.metadataIsLocked(metadata);
   }
 
-  metadataIsRequired(metadata: Metadata) {
-    return this.requiredMetadataIds.indexOf(metadata.baseId) != -1;
+  metadataIsRequired(metadata: Metadata): boolean {
+    return inArray(metadata.baseId, this.requiredMetadataIds);
   }
 
-  metadataIsLocked(metadata: Metadata) {
-    return this.lockedMetadataIds.indexOf(metadata.baseId) != -1;
+  metadataIsLocked(metadata: Metadata): boolean {
+    return inArray(metadata.baseId, this.lockedMetadataIds);
+  }
+
+  metadataDeterminesAssignee(metadata: Metadata): boolean {
+    return this.resource.transitionAssigneeMetadata[metadata.baseId] !== undefined
+      && this.resource.transitionAssigneeMetadata[metadata.baseId].length > 0;
   }
 }

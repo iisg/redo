@@ -43,9 +43,10 @@ export interface WorkflowTransition {
   permittedRoleIds: string[];
 }
 
-export interface UnsatisfiedTransitionExplanation {
+export interface TransitionBlockReason {
   missingMetadataIds: number[];
   userMissingRequiredRole: boolean;
+  otherUserAssigned: boolean;
 }
 
 export function registerWorkflowValidationRules() {

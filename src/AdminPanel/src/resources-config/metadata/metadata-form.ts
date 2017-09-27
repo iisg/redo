@@ -39,8 +39,8 @@ export class MetadataForm {
     this.submitting = true;
     this.controller.validate().then(result => {
       if (result.valid) {
-        return Promise.resolve(this.submit({editedMetadata: this.metadata}))
-          .then(() => this.resetValues());
+        return this.submit({editedMetadata: this.metadata})
+          .then(() => this.resetValues());  // resets values to updated ones provided via binding
       }
     }).finally(() => this.submitting = false);
   }

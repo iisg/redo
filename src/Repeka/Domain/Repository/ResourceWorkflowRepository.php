@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Repository;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
 interface ResourceWorkflowRepository {

@@ -5,28 +5,33 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\CommandAttributesValidator;
+use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class ResourceTransitionCommandValidator extends CommandAttributesValidator {
+    /** @var TransitionPossibilityChecker */
+    private $transitionPossibilityChecker;
+
+    public function __construct(TransitionPossibilityChecker $transitionPossibilityChecker) {
+        $this->transitionPossibilityChecker = $transitionPossibilityChecker;
+    }
+
     /** @param ResourceTransitionCommand $command */
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('transitionId', Validator::notBlank())
-            ->attribute(
-                'resource',
-                Validator::allOf(
-                    Validator::instance(ResourceEntity::class),
-                    Validator::callback(function (ResourceEntity $resource) {
-                        return $resource->getId() > 0;
-                    })->setName('Resource ID must be greater than 0'),
-                    Validator::callback(function (ResourceEntity $resource) {
-                        return $resource->hasWorkflow();
-                    })->setName('Resource must have a workflow'),
-                    Validator::callback($this->assertHasTransition($command->getTransitionId()))
-                        ->setName('Given transitionId does not exist')
-                )
-            );
+            ->attribute('resource', Validator::allOf(
+                Validator::instance(ResourceEntity::class),
+                Validator::callback(function (ResourceEntity $resource) {
+                    return $resource->getId() > 0;
+                })->setTemplate('Resource ID must be greater than 0'),
+                Validator::callback(function (ResourceEntity $resource) {
+                    return $resource->hasWorkflow();
+                })->setTemplate('Resource must have a workflow'),
+                Validator::callback($this->assertHasTransition($command->getTransitionId()))
+                    ->setTemplate('Given transitionId does not exist')
+            ))->callback([$this, 'transitionIsPossible']);
     }
 
     private function assertHasTransition(string $transitionId) {
@@ -36,5 +41,13 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
                 return $transition->getId();
             }, $transitions));
         };
+    }
+
+    public function transitionIsPossible(ResourceTransitionCommand $command): bool {
+        $workflow = $command->getResource()->getWorkflow();
+        $transition = $workflow->getTransition($command->getTransitionId());
+        return $this->transitionPossibilityChecker
+            ->check($command->getResource(), $transition, $command->getExecutor())
+            ->isTransitionPossible();
     }
 }

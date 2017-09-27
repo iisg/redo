@@ -1,10 +1,11 @@
 <?php
-
 namespace Repeka\Application\Controller\Api;
 
 use M6Web\Component\Statsd\Client;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\EventListener\CsrfRequestListener;
+use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\UseCase\User\UserByUserDataQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
@@ -56,6 +57,15 @@ class UsersController extends ApiController {
         $query = new UserQuery($id);
         $user = $this->handleCommand($query);
         return $this->createJsonResponse($user);
+    }
+
+    /**
+     * @Route("/byData/{resource}")
+     * @Method("GET")
+     */
+    public function getUserByDataAction(ResourceEntity $resource) {
+        $relatedUser = $this->handleCommand(new UserByUserDataQuery($resource));
+        return $this->createJsonResponse($relatedUser);
     }
 
     /**

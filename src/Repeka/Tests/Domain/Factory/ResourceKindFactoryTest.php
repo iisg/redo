@@ -8,8 +8,11 @@ use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\Factory\ResourceKindFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var PHPUnit_Framework_MockObject_MockObject|MetadataRepository */
     private $metadataRepository;
     /** @var ResourceKindFactory */
@@ -18,10 +21,13 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
     private $command;
 
     protected function setUp() {
-        $this->metadataRepository = $this->createMock(MetadataRepository::class);
+        $this->metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [
+            $this->createMetadataMock(1),
+            $this->createMetadataMock(2),
+        ]);
         $this->command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
             $this->metadataArray(1, 'A', ['PL' => 'Label A']),
-            $this->metadataArray(1, 'B', ['PL' => 'Label B']),
+            $this->metadataArray(2, 'B', ['PL' => 'Label B']),
         ]);
         $this->factory = new ResourceKindFactory(new MetadataFactory(), $this->metadataRepository);
     }

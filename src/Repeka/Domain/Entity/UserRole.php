@@ -4,7 +4,7 @@ namespace Repeka\Domain\Entity;
 use Assert\Assertion;
 use Repeka\Domain\Constants\SystemUserRole;
 
-class UserRole {
+class UserRole implements Identifiable {
     private $id;
     private $name;
 

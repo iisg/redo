@@ -52,7 +52,12 @@
                     <td if.bind="!metadata.editing">
                         ${metadata.label | inCurrentLanguage}
                     </td>
-                    <td if.bind="!metadata.editing">${'controls::' + metadata.control | t}</td>
+                    <td if.bind="!metadata.editing">
+                        ${'controls::' + metadata.control | t}
+                        <fa name="user"
+                            if.bind="metadata.canDetermineAssignees"
+                            bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></fa>
+                    </td>
                     <td if.bind="!metadata.editing">
                         ${metadata.placeholder | inCurrentLanguage}
                     </td>

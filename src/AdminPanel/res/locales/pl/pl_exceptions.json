@@ -14,7 +14,9 @@
     "name": "Nazwa",
     "resource": "Zasób",
     "resourceKind": "Rodzaj zasobu",
-    "resourceWorkflow": "Proces"
+    "resourceWorkflow": "Proces",
+    "newConstraints": "Ograniczenia",
+    "metadataList": "Lista metadanych"
   },
   "resource has children": "zasób ma podzasoby.",
   "resources of this kind exist": "istnieją zasoby tego rodzaju.",

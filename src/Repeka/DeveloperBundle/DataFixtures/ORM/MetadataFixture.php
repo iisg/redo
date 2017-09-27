@@ -7,7 +7,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 
-/** @SuppressWarnings("PHPMD.ExcessiveMethodLength") */
+/** @SuppressWarnings(PHPMD.ExcessiveMethodLength) */
 class MetadataFixture extends RepekaFixture {
     const ORDER = 1;
 
@@ -18,8 +18,9 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_NO_OF_PAGES = 'metadata-no-of-pages';
     const REFERENCE_METADATA_SEE_ALSO = 'metadata-see-also';
     const REFERENCE_METADATA_FILE = 'metadata-file';
-    const REFERENCE_METADATA_CATEGORY_NAME = 'category-name';
-    const REFERENCE_METADATA_ASSIGNED_SCANNER = 'assigned-scanner';
+    const REFERENCE_METADATA_CATEGORY_NAME = 'metadata-category-name';
+    const REFERENCE_METADATA_ASSIGNED_SCANNER = 'metadata-assigned-scanner';
+    const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
 
     /**
      * @inheritdoc
@@ -132,6 +133,19 @@ class MetadataFixture extends RepekaFixture {
                 'resourceKind' => [-1],
             ],
         ]), self::REFERENCE_METADATA_ASSIGNED_SCANNER);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Nadzorujący',
+            'label' => [
+                'PL' => 'Nadzorujący',
+                'EN' => 'Supervisor',
+            ],
+            'description' => [],
+            'placeholder' => [],
+            'control' => 'relationship',
+            'constraints' => [
+                'resourceKind' => [-1],
+            ],
+        ]), self::REFERENCE_METADATA_SUPERVISOR);
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
             return $metadata->getId();
         }, $this->handleCommand(new MetadataListQuery()))));

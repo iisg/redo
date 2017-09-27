@@ -6,8 +6,11 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataListQueryHandler;
+use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var PHPUnit_Framework_MockObject_MockObject|MetadataRepository */
     private $metadataRepository;
     /** @var MetadataListQueryHandler */

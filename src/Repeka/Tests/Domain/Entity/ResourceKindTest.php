@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Entity;
 
+use Assert\InvalidArgumentException;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -11,7 +12,7 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
     public function testAddingMetadata() {
-        $metadata = $this->createMock(Metadata::class);
+        $metadata = $this->createMetadataMock(11, 1);
         $resourceKind = new ResourceKind([]);
         $resourceKind->addMetadata($metadata);
         $this->assertCount(1, $resourceKind->getMetadataList());
@@ -20,10 +21,26 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
 
     public function testAddingTheSameMetadataTwice() {
         $this->expectException(MetadataAlreadyPresentException::class);
-        $metadata = $this->createMock(Metadata::class);
+        $metadata = $this->createMetadataMock(11, 1);
         $resourceKind = new ResourceKind([]);
         $resourceKind->addMetadata($metadata);
         $resourceKind->addMetadata($metadata);
+    }
+
+    public function testAddingTheSameBaseMetadataTwice() {
+        $this->expectException(MetadataAlreadyPresentException::class);
+        $metadata1 = $this->createMetadataMock(11, 1);
+        $metadata2 = $this->createMetadataMock(12, 1);
+        $resourceKind = new ResourceKind([]);
+        $resourceKind->addMetadata($metadata1);
+        $resourceKind->addMetadata($metadata2);
+    }
+
+    public function testAddingBaselessMetadata() {
+        $this->expectException(InvalidArgumentException::class);
+        $metadata1 = $this->createMetadataMock(11);
+        $resourceKind = new ResourceKind([]);
+        $resourceKind->addMetadata($metadata1);
     }
 
     public function testUpdatesLabel() {
@@ -33,7 +50,7 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAddingNewMetadataWithUpdate() {
-        $metadata = $this->createMock(Metadata::class);
+        $metadata = $this->createMetadataMock(11, 1);
         $resourceKind = new ResourceKind([]);
         $resourceKind->update([], [$metadata]);
         $this->assertCount(1, $resourceKind->getMetadataList());
@@ -54,7 +71,7 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testUpdatingExistingMetadata() {
-        $metadata = $this->createMock(Metadata::class);
+        $metadata = $this->createMetadataMock(11, 1);
         $resourceKind = new ResourceKind([]);
         $metadata->expects($this->once())->method('update');
         $metadata->expects($this->once())->method('updateOrdinalNumber');
@@ -63,8 +80,8 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testUpdatingOrderOfMetadata() {
-        $metadata1 = $this->createMock(Metadata::class);
-        $metadata2 = $this->createMock(Metadata::class);
+        $metadata1 = $this->createMetadataMock(10, 1);
+        $metadata2 = $this->createMetadataMock(20, 2);
         $metadata1->expects($this->any())->method('getOrdinalNumber')->willReturn(1);
         $metadata2->expects($this->any())->method('getOrdinalNumber')->willReturn(0);
         $resourceKind = new ResourceKind([]);
@@ -86,8 +103,8 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
 
     public function testFindsMetadataByBase() {
         $resourceKind = new ResourceKind([]);
+        $base = $this->createMetadataMock(2);
         foreach ([
-                     $base = $this->createMetadataMock(2),
                      $this->createMetadataMock(11, 1),
                      $expectedResult = $this->createMetadataMock(12, 2),
                      $this->createMetadataMock(13, 3),
@@ -113,9 +130,9 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingMetadataByControl() {
-        $metadataA1 = $this->createMetadataMock(1, null, 'A');
-        $metadataA2 = $this->createMetadataMock(2, 1, 'A');
-        $metadataB = $this->createMetadataMock(3, null, 'B');
+        $metadataA1 = $this->createMetadataMock(10, 1, 'A');
+        $metadataA2 = $this->createMetadataMock(20, 2, 'A');
+        $metadataB = $this->createMetadataMock(30, 3, 'B');
         $resourceKind = new ResourceKind([]);
         $resourceKind->addMetadata($metadataA1);
         $resourceKind->addMetadata($metadataB);
@@ -124,5 +141,16 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
         $this->assertCount(2, $metadataWithAControl);
         $this->assertContains($metadataA1, $metadataWithAControl);
         $this->assertContains($metadataA2, $metadataWithAControl);
+    }
+
+    public function testGettingBaseMetadataIds() {
+        $metadata1 = $this->createMetadataMock(10, 1);
+        $metadata2 = $this->createMetadataMock(20, 2);
+        $metadata3 = $this->createMetadataMock(30, 3);
+        $resourceKind = new ResourceKind([]);
+        $resourceKind->addMetadata($metadata1);
+        $resourceKind->addMetadata($metadata2);
+        $resourceKind->addMetadata($metadata3);
+        $this->assertEquals([1, 2, 3], $resourceKind->getBaseMetadataIds());
     }
 }

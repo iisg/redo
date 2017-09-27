@@ -6,11 +6,13 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\ResourceWorkflowTransition;
-use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceWorkflow */
     private $workflow;
     private $resource;
@@ -141,78 +143,5 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     public function testGettingNotExistentTransition() {
         $this->expectException(NoSuchTransitionException::class);
         $this->workflow->getTransition('a');
-    }
-
-    public function testGettingUnsatisfiedTransitionExplanations() {
-        $workflow = $this->createPartiallyStubbedWorkflow([
-            $this->createPlaceMock('nothingRequired'),
-            $this->createPlaceMock('somethingMissing', [1]),
-        ], [
-            $this->createTransitionMock('possible1', true),
-            $this->createTransitionMock('possible2', true, ['nothingRequired']),
-            $inactive1 = $this->createTransitionMock('missingRoles', false),
-            $inactive2 = $this->createTransitionMock('missingMetadata', true, ['somethingMissing']),
-        ]);
-        $user = $this->createMock(User::class);
-        $resource = $this->createMock(ResourceEntity::class);
-        $resource->method('getContents')->willReturn([]);
-        $result = $workflow->getUnsatisfiedTransitionExplanations($resource, $user);
-        $this->assertCount(2, $result);
-        $this->assertArrayHasKey($inactive1->getId(), $result);
-        $this->assertArrayHasKey($inactive2->getId(), $result);
-    }
-
-    public function testCheckingTransitionPossibility() {
-        $workflow = $this->createPartiallyStubbedWorkflow([
-            $this->createPlaceMock('nothingRequired'),
-            $this->createPlaceMock('somethingMissing', [1]),
-        ], [
-            $this->createTransitionMock('possible1', true),
-            $this->createTransitionMock('possible2', true, ['nothingRequired']),
-            $this->createTransitionMock('missingRoles', false),
-            $this->createTransitionMock('missingMetadata', true, ['somethingMissing']),
-        ]);
-        $user = $this->createMock(User::class);
-        $resource = $this->createMock(ResourceEntity::class);
-        $resource->method('getContents')->willReturn([]);
-        $this->assertTrue($workflow->isTransitionPossible('possible1', $resource, $user));
-        $this->assertTrue($workflow->isTransitionPossible('possible2', $resource, $user));
-        $this->assertFalse($workflow->isTransitionPossible('missingRoles', $resource, $user));
-        $this->assertFalse($workflow->isTransitionPossible('missingMetadata', $resource, $user));
-    }
-
-    /** @return ResourceWorkflowPlace|\PHPUnit_Framework_MockObject_MockObject */
-    private function createPlaceMock(string $id = '', array $missingMetadata = []): ResourceWorkflowPlace {
-        $mock = $this->createMock(ResourceWorkflowPlace::class);
-        $mock->method('getId')->willReturn($id);
-        $mock->method('getMissingRequiredMetadataIds')->willReturn($missingMetadata);
-        $mock->method('resourceHasRequiredMetadata')->willReturn(empty($missingMetadata));
-        return $mock;
-    }
-
-    /** @return ResourceWorkflowTransition|\PHPUnit_Framework_MockObject_MockObject */
-    private function createTransitionMock(string $id, bool $userHasRoleRequiredToApply, array $tos = []): ResourceWorkflowTransition {
-        $mock = $this->createMock(ResourceWorkflowTransition::class);
-        $mock->method('getId')->willReturn($id);
-        $mock->method('userHasRoleRequiredToApply')->willReturn($userHasRoleRequiredToApply);
-        $mock->method('getToIds')->willReturn($tos);
-        return $mock;
-    }
-
-    /** @return ResourceWorkflow|\PHPUnit_Framework_MockObject_MockObject */
-    private function createPartiallyStubbedWorkflow(array $places, array $transitions) {
-        $mock = $this->getMockBuilder(ResourceWorkflow::class)
-            ->setMethods(['getPlaces', 'getTransitions', 'getTransition'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mock->method('getPlaces')->willReturn($places);
-        $mock->method('getTransitions')->willReturn($transitions);
-        $transitionIds = array_map(function (ResourceWorkflowTransition $transition) {
-            return $transition->getId();
-        }, $transitions);
-        $mock->method('getTransition')->willReturnCallback(function ($id) use ($transitions, $transitionIds) {
-            return array_combine($transitionIds, $transitions)[$id];
-        });
-        return $mock;
     }
 }

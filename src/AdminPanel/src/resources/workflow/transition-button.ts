@@ -1,10 +1,10 @@
 import {bindable} from "aurelia-templating";
 import {Resource} from "../resource";
-import {WorkflowTransition} from "../../workflows/workflow";
+import {WorkflowTransition} from "workflows/workflow";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
-import {InCurrentLanguageValueConverter} from "../../resources-config/multilingual-field/in-current-language";
+import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 import {VoidFunction} from "common/utils/function-utils";
 
 @autoinject
@@ -26,17 +26,26 @@ export class TransitionButton {
   }
 
   @computedFrom('resource', 'transition')
-  get transitionInactiveReason(): string {
-    const explanation = this.resource.getUnsatisfiedTransitionExplanation(this.transition);
-    let reasons = [];
-    if (explanation.userMissingRequiredRole) {
-      reasons.push(this.i18n.tr("You don't have required role"));
+  get transitionInactiveReasons(): TransitionInactiveReason[] {
+    if (this.resource === undefined || this.transition === undefined) {
+      return undefined;
     }
-    for (const metadataId of explanation.missingMetadataIds) {
-      const label = this.getMetadataLabelForBaseId(metadataId);
-      reasons.push(this.i18n.tr('Missing metadata:') + ' ' + label);
+    const reasonCollection = this.resource.blockedTransitions[this.transition.id];
+    const reasons: TransitionInactiveReason[] = [];
+    if (reasonCollection.userMissingRequiredRole) {
+      reasons.push({icon: 'user-circle', message: "You don't have required role"});
     }
-    return reasons.join('\n');
+    if (reasonCollection.otherUserAssigned) {
+      reasons.push({icon: 'user-circle', message: "Someone else is assigned this action"});
+    }
+    for (const metadataId of reasonCollection.missingMetadataIds) {
+      reasons.push({
+        icon: 'times-circle',
+        message: 'Missing metadata',
+        detail: this.getMetadataLabelForBaseId(metadataId),
+      });
+    }
+    return reasons;
   }
 
   private getMetadataLabelForBaseId(baseMetadataId: number): string {
@@ -46,4 +55,17 @@ export class TransitionButton {
       }
     }
   }
+
+  reasonTooltip(reason: TransitionInactiveReason) {
+    const message = this.i18n.tr(reason.message);
+    return (reason.detail !== undefined)
+      ? `${message} (${reason.detail})`
+      : message;
+  }
+}
+
+interface TransitionInactiveReason {
+  icon: string;
+  message: string;
+  detail?: string;
 }

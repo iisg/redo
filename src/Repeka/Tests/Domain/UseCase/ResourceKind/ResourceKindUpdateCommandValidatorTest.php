@@ -18,16 +18,18 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp() {
         $languageRepository = $this->createMock(LanguageRepository::class);
-        $languageRepository->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
+        $languageRepository->method('getAvailableLanguageCodes')->willReturn(['PL']);
         $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
-        $this->validator = new ResourceKindUpdateCommandValidator(new NotBlankInAllLanguagesRule($languageRepository));
+        $notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
+        $this->validator = new ResourceKindUpdateCommandValidator($notBlankInAllLanguagesRule);
     }
 
-    public function testValidating() {
+    public function testValid() {
         $command = new ResourceKindUpdateCommand(1, ['PL' => 'Labelka'], [
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [],
+                'control' => 'relationship', 'constraints' => ['resourceKind' => [123]]],
         ]);
         $this->validator->validate($command);
     }

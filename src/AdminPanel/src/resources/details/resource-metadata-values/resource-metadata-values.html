@@ -4,7 +4,11 @@
 
     <dl class="dl-horizontal">
         <template repeat.for="metadata of metadataList">
-            <dt>${metadata | metadataLabel}</dt>
+            <dt>
+                <fa name="user"
+                    if.bind="determinesAssignee(resource, metadata)"></fa>
+                ${metadata | metadataLabel}
+            </dt>
             <dd>
                 <ul class="list-unstyled">
                     <li repeat.for="value of resource.contents[metadata.baseId]">

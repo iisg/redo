@@ -17,14 +17,14 @@
             <th>
                 ${metadata | metadataLabel}
                 <fa name="user"
-                    if.bind="metadataIsUserRelationship(metadata)"
+                    if.bind="metadata.canDetermineAssignees"
                     bootstrap-tooltip.one-time="'This metadata can be used to specify assignees' | t"></fa>
             </th>
             <td repeat.for="place of orderedPlaces"
                 class="text-center">
                 <excel-checkbox model.bind="metadata.id"
                     states.bind="place.restrictingMetadataIds"
-                    assignee-allowed.bind="metadataIsUserRelationship(metadata)"
+                    assignee-allowed.bind="metadata.canDetermineAssignees"
                     on-change.call="checkboxChanged(metadata, place)"
                     disabled.bind="!editable"></excel-checkbox>
             </td>

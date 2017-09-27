@@ -29,7 +29,7 @@
     </div>
     <div if.bind="baseMetadata.control === 'relationship'"
         class="form-group label-floating">
-        <resource-kind-constraint-editor values.bind="metadata.constraints.resourceKind"
-            base-values.bind="baseMetadata.constraints.resourceKind"></resource-kind-constraint-editor>
+        <resource-kind-constraint-editor selected-ids.bind="metadata.constraints.resourceKind"
+            ids-from-base-metadata.bind="baseMetadata.constraints.resourceKind"></resource-kind-constraint-editor>
     </div>
 </template>

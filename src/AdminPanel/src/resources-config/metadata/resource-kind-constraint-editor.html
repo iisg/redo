@@ -2,18 +2,18 @@
     <require from="common/components/resource-kind-chooser/resource-kind-chooser"></require>
 
     <label>${'Required resource kind' | t}</label>
-    <p if.bind="values.length === 0">${'No restrictions' | t}</p>
-    <p if.bind="values.length > 1">${'One of:' | t}</p>
+    <p if.bind="selectedIds.length === 0">${'No restrictions' | t}</p>
+    <p if.bind="selectedIds.length > 1">${'One of:' | t}</p>
     <div class="input-group">
-        <resource-kind-chooser value.bind="values"
+        <resource-kind-chooser value.bind="selectedIds"
             multi-select="true"
             disabled.bind="disabled"
             system-resource-kinds.one-time="true"
-            if.bind="!disabled || values.length > 0"></resource-kind-chooser>
+            if.bind="!disabled || selectedIds.length > 0"></resource-kind-chooser>
         <div class="input-group-addon">
             <button type="button"
                 class="btn btn-default"
-                click.delegate="resetToBaseValues()"
+                click.delegate="resetToBaseIds()"
                 if.bind="canInherit && wasModified">
                 <fa name="repeat"></fa>
                 ${'Restore from base' | t}
