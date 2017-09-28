@@ -1,8 +1,8 @@
 <?php
-namespace Repeka\Tests\Domain\Entity;
+namespace Repeka\Tests\Domain\Entity\Workflow;
 
-use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Entity\User;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 
 class ResourceWorkflowTransitionTest extends \PHPUnit_Framework_TestCase {
     public function testCannotApplyIfNoRolesExplicitlyPermitted() {

@@ -106,9 +106,11 @@
   "Specifies assignee": "Określa osobę odpowiedzialną",
   "only for relationships with users": "tylko dla relacji z użytkownikami",
   "This metadata can be used to specify assignees": "Ta metadana może być używana do określania osoby odpowiedzialnej",
-  "This metadata determines who can perform these actions:": "Ta metadana określa, kto może wykonać następujące czynności:",
   "New workflow": "Nowy proces",
   "Your assignments": "Twoje zadania",
   "Show": "Pokaż",
-  "No assignments!": "Brak zadań!"
+  "No assignments!": "Brak zadań!",
+  "This metadata determines who can perform these actions:": "Ta metadana określa, kto może wykonać następujące czynności:",
+  "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:",
+  "Fix": "Napraw"
 }

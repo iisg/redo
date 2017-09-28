@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Application\Serialization;
 
-use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 
-class ResourceWorkflowTransitionNormalizer extends ResourceWorkflowPlaceNormalizer {
+class ResourceWorkflowTransitionNormalizer extends LabeledNormalizer {
     /** @param ResourceWorkflowTransition $resourceWorkflowTransition */
     public function normalize($resourceWorkflowTransition, $format = null, array $context = []) {
         $data = parent::normalize($resourceWorkflowTransition, $format, $context);
@@ -11,9 +11,7 @@ class ResourceWorkflowTransitionNormalizer extends ResourceWorkflowPlaceNormaliz
         return $data;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function supportsNormalization($data, $format = null) {
         return $data instanceof ResourceWorkflowTransition;
     }

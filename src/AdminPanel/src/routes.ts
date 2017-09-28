@@ -6,7 +6,7 @@ const routes = flatten([
   route('resources', 'resources/resources', 'Resources', {icon: 'book'}),
   nested('Resources Setup', 'database', [
     route('metadata', 'resources-config/metadata/metadata-view', 'Metadata Kinds'),
-    route('resource-kinds', 'resources-config/resource-kind/resource-kind-list', 'Resource Kinds'),
+    route('resource-kinds', 'resources-config/resource-kind/resource-kind-view', 'Resource Kinds'),
     route('workflows', 'workflows/workflows', 'Workflows'),
     route('languages', 'resources-config/language-config/language-list', 'Languages', {requiredRoles: ['ADMIN']})
   ]),

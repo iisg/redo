@@ -6,8 +6,8 @@ use Repeka\Application\Workflow\SymfonyResourceWorkflowDriver;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
-use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\ResourceWorkflow\CannotApplyTransitionException;
 
 class SymfonyResourceWorkflowDriverTest extends \PHPUnit_Framework_TestCase {

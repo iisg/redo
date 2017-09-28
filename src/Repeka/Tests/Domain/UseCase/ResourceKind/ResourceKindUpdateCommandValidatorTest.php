@@ -7,12 +7,15 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Repeka\Tests\Traits\StubsTrait;
 use Respect\Validation\Validator;
 
 class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
+    /** @var ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $rkConstraintIsUser;
     /** @var ResourceKindUpdateCommandValidator */
     private $validator;
 
@@ -22,10 +25,15 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
-        $this->validator = new ResourceKindUpdateCommandValidator($notBlankInAllLanguagesRule);
+        $this->rkConstraintIsUser = $this->createRuleWithFactoryMethodMock(
+            ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
+            'forMetadataId'
+        );
+        $this->validator = new ResourceKindUpdateCommandValidator($notBlankInAllLanguagesRule, $this->rkConstraintIsUser);
     }
 
     public function testValid() {
+        $this->rkConstraintIsUser->expects($this->once())->method('validate')->willReturn(true);
         $command = new ResourceKindUpdateCommand(1, ['PL' => 'Labelka'], [
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
             ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [],
@@ -38,6 +46,17 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindUpdateCommand(0, ['PL' => 'Labelka'], [
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+        ]);
+        $this->validator->validate($command);
+    }
+
+    public function testInvalidWhenRelationshipRequirementFails() {
+        $this->expectException(InvalidCommandException::class);
+        $this->rkConstraintIsUser->expects($this->once())->method('validate')->willReturn(false);
+        $command = new ResourceKindUpdateCommand(1, ['PL' => 'Labelka'], [
+            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [],
+                'control' => 'relationship', 'constraints' => ['resourceKind' => [123]]],
         ]);
         $this->validator->validate($command);
     }

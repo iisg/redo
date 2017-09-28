@@ -2,8 +2,8 @@
 namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
-use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;

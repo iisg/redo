@@ -3,6 +3,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {HttpClient} from "aurelia-http-client";
 import {Workflow} from "./workflow";
 import {workflowPlaceToEntity, workflowPlaceToBackend} from "./workflow-place-converters";
+import {Metadata} from "../resources-config/metadata/metadata";
 
 @autoinject
 export class WorkflowRepository extends ApiRepository<Workflow> {
@@ -31,5 +32,10 @@ export class WorkflowRepository extends ApiRepository<Workflow> {
 
   update(workflow: Workflow): Promise<Workflow> {
     return this.put(workflow);
+  }
+
+  getByAssigneeMetadata(metadata: Metadata): Promise<Workflow[]> {
+    const endpoint = `${this.endpoint}?assigneeMetadata=${metadata.id}`;
+    return this.httpClient.get(endpoint).then(response => this.responseToEntities(response));
   }
 }

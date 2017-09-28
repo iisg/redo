@@ -1,15 +1,37 @@
 <template>
     <require from="common/components/resource-kind-chooser/resource-kind-chooser"></require>
 
-    <label>${'Required resource kind' | t}</label>
-    <p if.bind="selectedIds.length === 0">${'No restrictions' | t}</p>
-    <p if.bind="selectedIds.length > 1">${'One of:' | t}</p>
+    <label>
+        ${'Required resource kind' | t}
+        <throbber if.bind="loadingWorkflows"></throbber>
+    </label>
+    <div class="alert ${allowsOnlyUsers ? 'alert-info' : 'alert-danger'}"
+        if.bind="workflowsUsingMetadataAsAssignee.length > 0">
+        <button type="button"
+            if.bind="!allowsOnlyUsers"
+            class="btn btn-sm btn-raised btn-default pull-right"
+            click.delegate="setToUserOnly()">
+            <fa name="wrench"></fa>
+            ${"Fix" | t}
+        </button>
+        <fa name.bind="allowsOnlyUsers ? 'info-circle' : 'times-circle'"></fa>
+        ${'This metadata must allow only for users, because workflow uses it to determine assignees:' | t}
+        <ul>
+            <li repeat.for="workflow of dependingWorkflows">
+                <a route-href="route: workflows/details; params.bind: {id: workflow.id}">
+                    ${workflow.name | inCurrentLanguage}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <p if.bind="metadata.constraints.resourceKind.length === 0">${'No restrictions' | t}</p>
+    <p if.bind="metadata.constraints.resourceKind.length > 1">${'One of:' | t}</p>
     <div class="input-group">
-        <resource-kind-chooser value.bind="selectedIds"
+        <resource-kind-chooser value.bind="metadata.constraints.resourceKind"
             multi-select="true"
-            disabled.bind="disabled"
+            disabled.bind="dropdownDisabled"
             system-resource-kinds.one-time="true"
-            if.bind="!disabled || selectedIds.length > 0"></resource-kind-chooser>
+            if.bind="!disabled || metadata.constraints.resourceKind.length > 0"></resource-kind-chooser>
         <div class="input-group-addon">
             <button type="button"
                 class="btn btn-default"

@@ -3,7 +3,7 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Respect\Validation\Validatable;

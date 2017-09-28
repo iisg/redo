@@ -2,7 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandHandler;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
