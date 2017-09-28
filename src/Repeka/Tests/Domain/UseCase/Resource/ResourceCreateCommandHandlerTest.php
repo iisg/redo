@@ -3,7 +3,7 @@ namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Upload\ResourceFileHelper;

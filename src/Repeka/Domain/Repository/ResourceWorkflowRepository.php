@@ -13,4 +13,10 @@ interface ResourceWorkflowRepository {
     public function findOne($id): ResourceWorkflow;
 
     public function delete(ResourceWorkflow $resourceWorkflow): void;
+
+    /**
+     * @param Metadata|int $metadata
+     * @return ResourceWorkflow[]
+     */
+    public function findByAssigneeMetadata($metadata): array;
 }

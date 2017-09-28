@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/metadata")
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class MetadataController extends ApiController {
     /** @var MetadataRepository */

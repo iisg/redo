@@ -1,9 +1,12 @@
 <?php
-namespace Repeka\Domain\Entity;
+namespace Repeka\Domain\Entity\Workflow;
 
 use Cocur\Slugify\Slugify;
+use Repeka\Domain\Entity\Identifiable;
+use Repeka\Domain\Entity\Labeled;
+use Repeka\Domain\Entity\User;
 
-class ResourceWorkflowTransition implements Identifiable {
+class ResourceWorkflowTransition implements Identifiable, Labeled {
     private $id;
     private $label;
     private $fromIds;

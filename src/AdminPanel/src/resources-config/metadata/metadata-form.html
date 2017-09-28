@@ -24,7 +24,7 @@
         <div class="row"
             if.bind="metadata.control === 'relationship'">
             <div class="col-sm-12">
-                <resource-kind-constraint-editor selected-ids.bind="metadata.constraints.resourceKind"></resource-kind-constraint-editor>
+                <resource-kind-constraint-editor metadata.bind="metadata"></resource-kind-constraint-editor>
             </div>
         </div>
         <compose view="./metadata-editable-properties.html"></compose>

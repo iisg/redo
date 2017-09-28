@@ -34,13 +34,4 @@ class ResourceKindListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $returnedList = $this->handler->handle(new ResourceKindListQuery(false));
         $this->assertSame($resourceKindList, $returnedList);
     }
-
-    public function testResultsIncludeDependingWorkflows() {
-        $resourceKinds = [
-            $this->createMock(ResourceKind::class),
-            $this->createMock(ResourceKind::class),
-        ];
-        $this->resourceKindRepository->method('findAll')->willReturn($resourceKinds);
-        $this->handler->handle(new ResourceKindListQuery());
-    }
 }

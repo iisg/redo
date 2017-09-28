@@ -4,9 +4,9 @@ namespace Repeka\Domain\Workflow;
 use Repeka\Domain\Entity\EntityHelper;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
-use Repeka\Domain\Entity\ResourceWorkflowTransition;
 use Repeka\Domain\Entity\User;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 
 class TransitionPossibilityChecker {
     public function check(
@@ -51,7 +51,7 @@ class TransitionPossibilityChecker {
         $transitionTos = EntityHelper::getByIds($transition->getToIds(), $workflow->getPlaces());
         $assigneeMetadataIds = [];
         foreach ($transitionTos as $place) {
-            $assigneeMetadataIds = array_merge($assigneeMetadataIds, $place->getAssigneeMetadataIds());
+            $assigneeMetadataIds = array_merge($assigneeMetadataIds, $place->restrictingMetadataIds()->assignees()->get());
         }
         $assigneeMetadataIds = array_unique($assigneeMetadataIds);
         return $assigneeMetadataIds;

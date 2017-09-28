@@ -13,6 +13,7 @@ class MetadataGetQueryHandler {
     }
 
     public function handle(MetadataGetQuery $query): Metadata {
-        return $this->metadataRepository->findOne($query->getId());
+        $metadata = $this->metadataRepository->findOne($query->getId());
+        return $metadata;
     }
 }

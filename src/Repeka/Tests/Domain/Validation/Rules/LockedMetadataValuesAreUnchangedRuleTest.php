@@ -2,9 +2,10 @@
 namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Assert\AssertionFailedException;
+use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
 
 class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCase {
@@ -78,5 +79,28 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
         $this->resource->method('getContents')->willReturn($oldContents);
         $newContents = [1 => ['foo', 'bar', 'ni'], 2 => ['quux']];
         $this->rule->forResource($this->resource)->assert($newContents);
+    }
+
+    public function testObjectsAreEqualToTheirIds() {
+        /** @var Identifiable|\PHPUnit_Framework_MockObject_MockObject $identifiable */
+        $identifiable = $this->createMock(Identifiable::class);
+        $identifiable->method('getId')->willReturn(123);
+        $place1 = new ResourceWorkflowPlace([], null, [], [1]);
+        $place2 = new ResourceWorkflowPlace([], null, [], []);
+        $place3 = new ResourceWorkflowPlace([], null, [], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place1, $place2, $place3]);
+        $oldContents = [1 => ['foo', 'bar'], 2 => [$identifiable->getId()]];
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = [1 => ['foo', 'bar'], 2 => [$identifiable]];
+        $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testConsidersAssigneeMetadataLocked() {
+        $place1 = new ResourceWorkflowPlace([], null, [], [1], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place1]);
+        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = [1 => ['foo', 'bar'], 2 => ['quux']];
+        $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
     }
 }

@@ -3,8 +3,8 @@ namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
-use Repeka\Domain\Entity\ResourceWorkflowTransition;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
@@ -46,7 +46,7 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
 
     public function noCommonValuesBetweenRequirements($place): bool {
         $merged = ($place instanceof ResourceWorkflowPlace)
-            ? array_merge($place->getRequiredMetadataIds(), $place->getLockedMetadataIds(), $place->getAssigneeMetadataIds())
+            ? array_merge($place->restrictingMetadataIds()->all()->get())
             : array_merge($place['requiredMetadataIds'] ?? [], $place['lockedMetadataIds'] ?? [], $place['assigneeMetadataIds'] ?? []);
         $allCount = count($merged);
         $uniqueCount = count(array_unique($merged));

@@ -1,22 +1,10 @@
 <?php
 namespace Repeka\Application\Serialization;
 
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 
-class ResourceWorkflowPlaceNormalizer extends AbstractNormalizer {
-    /**
-     * @param $resourceWorkflowPlace ResourceWorkflowPlace
-     * @inheritdoc
-     */
-    public function normalize($resourceWorkflowPlace, $format = null, array $context = []) {
-        $data = $resourceWorkflowPlace->toArray();
-        $data['label'] = $this->emptyArrayAsObject($resourceWorkflowPlace->getLabel());
-        return $data;
-    }
-
-    /**
-     * @inheritdoc
-     */
+class ResourceWorkflowPlaceNormalizer extends LabeledNormalizer {
+    /** @inheritdoc */
     public function supportsNormalization($data, $format = null) {
         return $data instanceof ResourceWorkflowPlace;
     }

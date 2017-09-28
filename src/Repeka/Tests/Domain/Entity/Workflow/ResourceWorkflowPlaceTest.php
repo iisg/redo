@@ -1,8 +1,8 @@
 <?php
-namespace Repeka\Tests\Domain\Entity;
+namespace Repeka\Tests\Domain\Entity\Workflow;
 
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 
 class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
     public function testFromArray() {
@@ -13,7 +13,7 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
         ]);
         $this->assertEquals('B', $place->getId());
         $this->assertEquals(['PL' => 'AA'], $place->getLabel());
-        $this->assertEquals([1, 2, 3], $place->getRequiredMetadataIds());
+        $this->assertEquals([1, 2, 3], $place->restrictingMetadataIds()->all()->get());
     }
 
     public function testFromArrayWithMinimalFields() {
@@ -21,7 +21,7 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
             'label' => ['PL' => 'AA'],
         ]);
         $this->assertEquals(['PL' => 'AA'], $place->getLabel());
-        $this->assertEquals([], $place->getRequiredMetadataIds());
+        $this->assertEquals([], $place->restrictingMetadataIds()->all()->get());
     }
 
     public function testToArray() {

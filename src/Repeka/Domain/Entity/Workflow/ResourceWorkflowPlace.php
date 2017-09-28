@@ -1,9 +1,12 @@
 <?php
-namespace Repeka\Domain\Entity;
+namespace Repeka\Domain\Entity\Workflow;
 
 use Cocur\Slugify\Slugify;
+use Repeka\Domain\Entity\Identifiable;
+use Repeka\Domain\Entity\Labeled;
+use Repeka\Domain\Entity\ResourceEntity;
 
-class ResourceWorkflowPlace implements Identifiable {
+class ResourceWorkflowPlace implements Identifiable, Labeled {
     private $id;
     private $label;
     private $requiredMetadataIds;
@@ -32,29 +35,12 @@ class ResourceWorkflowPlace implements Identifiable {
         return $this->label;
     }
 
-    /** @return int[] */
-    public function getRequiredMetadataIds(): array {
-        return $this->requiredMetadataIds;
-    }
-
-    /**
-     * @return int[]
-     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
-     */
-    public function getLockedMetadataIds(): array {
-        return $this->lockedMetadataIds;
-    }
-
-    /**
-     * @return int[]
-     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
-     */
-    public function getAssigneeMetadataIds(): array {
-        return $this->assigneeMetadataIds;
+    public function restrictingMetadataIds(): FluentRestrictingMetadataSelector {
+        return new FluentRestrictingMetadataSelector($this->requiredMetadataIds, $this->lockedMetadataIds, $this->assigneeMetadataIds);
     }
 
     public function getMissingRequiredMetadataIds(ResourceEntity $resource): array {
-        $requiredMetadataIds = $this->getRequiredMetadataIds();
+        $requiredMetadataIds = $this->restrictingMetadataIds()->required()->assignees()->get();
         $presentMetadataIds = array_keys($resource->getContents());
         $metadataIdsMissingForPlace = array_diff($requiredMetadataIds, $presentMetadataIds);
         return array_values($metadataIdsMissingForPlace);
@@ -69,9 +55,9 @@ class ResourceWorkflowPlace implements Identifiable {
         return [
             'id' => $this->getId(),
             'label' => $this->getLabel(),
-            'requiredMetadataIds' => $this->getRequiredMetadataIds(),
-            'lockedMetadataIds' => $this->getLockedMetadataIds(),
-            'assigneeMetadataIds' => $this->getAssigneeMetadataIds(),
+            'requiredMetadataIds' => $this->requiredMetadataIds,
+            'lockedMetadataIds' => $this->lockedMetadataIds,
+            'assigneeMetadataIds' => $this->assigneeMetadataIds,
         ];
     }
 

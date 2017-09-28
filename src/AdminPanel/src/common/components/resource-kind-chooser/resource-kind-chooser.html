@@ -3,7 +3,8 @@
 
     <dropdown-select values.bind="resourceKinds"
         value.bind="value"
-        multiple.bind="multiSelect">
+        multiple.bind="multiSelect"
+        disabled.bind="disabled">
         <template replace-part="option-template">
             ${option.label | inCurrentLanguage}
         </template>

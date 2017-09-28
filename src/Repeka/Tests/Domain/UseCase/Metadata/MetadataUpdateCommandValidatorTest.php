@@ -9,6 +9,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
+use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
@@ -18,6 +19,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private $languageRepositoryStub;
     /** @var ConstraintArgumentsAreValidRule|\PHPUnit_Framework_MockObject_MockObject */
     private $constraintArgumentsAreValid;
+    /** @var ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $rkConstraintIsUserRule;
     /** @var MetadataUpdateCommandValidator */
     private $validator;
 
@@ -25,10 +28,12 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->languageRepositoryStub = $this->createMock(LanguageRepository::class);
         $this->languageRepositoryStub->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
         $this->constraintArgumentsAreValid = $this->createMock(ConstraintArgumentsAreValidRule::class);
+        $this->rkConstraintIsUserRule = $this->createMock(ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class);
         $this->validator = new MetadataUpdateCommandValidator(
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new ConstraintSetMatchesControlRule($this->createMock(MetadataRepository::class)),
-            $this->constraintArgumentsAreValid
+            $this->constraintArgumentsAreValid,
+            $this->rkConstraintIsUserRule
         );
     }
 
@@ -58,10 +63,12 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $metadata = $this->createMetadataMock(1, null, 'relationship');
         $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
         $this->constraintArgumentsAreValid->method('validate')->willReturn(true);
+        $this->rkConstraintIsUserRule->method('validate')->willReturn(true);
         $validator = new MetadataUpdateCommandValidator(
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new ConstraintSetMatchesControlRule($metadataRepository),
-            $this->constraintArgumentsAreValid
+            $this->constraintArgumentsAreValid,
+            $this->rkConstraintIsUserRule
         );
         $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
             'resourceKind' => [0]
@@ -77,7 +84,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $validator = new MetadataUpdateCommandValidator(
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new ConstraintSetMatchesControlRule($metadataRepository),
-            $this->constraintArgumentsAreValid
+            $this->constraintArgumentsAreValid,
+            $this->rkConstraintIsUserRule
         );
         $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [], false);
         $validator->validate($command);
@@ -87,10 +95,12 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $metadata = $this->createMetadataMock(1, null, 'relationship');
         $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
         $this->constraintArgumentsAreValid->method('validate')->willReturn(false);
+        $this->rkConstraintIsUserRule->method('validate')->willReturn(true);
         $validator = new MetadataUpdateCommandValidator(
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new ConstraintSetMatchesControlRule($metadataRepository),
-            $this->constraintArgumentsAreValid
+            $this->constraintArgumentsAreValid,
+            $this->rkConstraintIsUserRule
         );
         $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
             'resourceKind' => [0],
@@ -102,10 +112,12 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $metadata = $this->createMetadataMock(1, null, 'relationship');
         $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
         $this->constraintArgumentsAreValid->method('validate')->willReturn(true);
+        $this->rkConstraintIsUserRule->method('validate')->willReturn(false);
         $validator = new MetadataUpdateCommandValidator(
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new ConstraintSetMatchesControlRule($metadataRepository),
-            $this->constraintArgumentsAreValid
+            $this->constraintArgumentsAreValid,
+            $this->rkConstraintIsUserRule
         );
         $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
             'resourceKind' => [0],

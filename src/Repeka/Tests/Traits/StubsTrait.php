@@ -7,7 +7,8 @@ use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Entity\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Validation\MetadataConstraintProvider;
@@ -150,7 +151,7 @@ trait StubsTrait {
         $mock->method('getId')->willReturn($id);
         $mock->method('getMissingRequiredMetadataIds')->willReturn($missingMetadataIds);
         $mock->method('resourceHasRequiredMetadata')->willReturn(empty($missingMetadataIds));
-        $mock->method('getAssigneeMetadataIds')->willReturn($assigneeMetadataIds);
+        $mock->method('restrictingMetadataIds')->willReturn(new FluentRestrictingMetadataSelector([], [], $assigneeMetadataIds));
         return $mock;
     }
 }
