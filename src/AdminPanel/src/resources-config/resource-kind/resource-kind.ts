@@ -5,7 +5,6 @@ import {Workflow} from "workflows/workflow";
 import {WorkflowRepository} from "workflows/workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {deepCopy} from "common/utils/object-utils";
-import {computedFrom} from "aurelia-binding";
 import {Entity} from "common/entity/entity";
 
 @autoinject
@@ -50,11 +49,6 @@ export class ResourceKind extends Entity {
     let cloned = deepCopy(resourceKind);
     cloned.metadataList = cloned.metadataList.map(metadata => Metadata.clone(metadata));
     return cloned;
-  }
-
-  @computedFrom('metadataList')
-  get briefMetadataList(): Metadata[] {
-    return this.metadataList.filter(metadata => metadata.shownInBrief);
   }
 }
 

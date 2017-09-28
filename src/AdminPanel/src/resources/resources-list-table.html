@@ -1,6 +1,7 @@
 <template>
     <require from="resources/workflow/resource-place-display.html"></require>
     <require from="resources/details/resource-metadata-values/resource-metadata-values"></require>
+    <require from="resources-config/metadata/metadata-label"></require>
 
     <div class="col-xs-12">
         <table class="table table-striped"
@@ -9,7 +10,9 @@
             <tr>
                 <th>${'ID' | t}</th>
                 <th>${'Resource kind' | t}</th>
-                <th>${'Contents' | t}</th>
+                <th repeat.for="metadata of columnMetadata">
+                    ${metadata | metadataLabel}
+                </th>
                 <th>${'Place' | t}</th>
                 <th repeat.for="name of extraColumnNames">${name | t}</th>
                 <th></th>
@@ -30,9 +33,9 @@
                 <td>
                     ${resource.kind.label | inCurrentLanguage}
                 </td>
-                <td>
+                <td repeat.for="metadata of columnMetadata">
                     <resource-metadata-values resource.one-time="resource"
-                        brief></resource-metadata-values>
+                        metadata.one-time="metadata"></resource-metadata-values>
                 </td>
                 <td>
                     <resource-place-display resource.bind="resource"></resource-place-display>

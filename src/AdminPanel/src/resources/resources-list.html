@@ -2,6 +2,8 @@
     <require from="./add/resource-form"></require>
     <require from="common/components/fab/fab-add"></require>
     <require from="./resources-list-table"></require>
+    <require from="./workflow/resource-place-display.html"></require>
+    <require from="./details/resource-metadata-values/resource-metadata-values"></require>
 
     <fab-add class="pull-right"
         opened.bind="addFormOpened"
@@ -9,7 +11,7 @@
 
     <div if.bind="addFormOpened"
         class="fade-inup-outdown au-animate floating-form-full-width well">
-        <h2>${'Add new resource' & t}</h2>
+        <h2>${'Add new resource' | t}</h2>
         <resource-form resource-class.bind="resourceClass"
             submit.call="addNewResource(savedResource)"
             parent.bind="parentResource"></resource-form>
@@ -20,7 +22,8 @@
     <div class="row"
         show.bind="!resources || resources.length > 0">
         <resources-list-table resources.bind="resources"
-            delete-resource.call="deleteResource(resource)"></resources-list-table>
+            delete-resource.call="deleteResource(resource)"
+            column-metadata.bind="briefMetadata"></resources-list-table>
     </div>
 
     <div class="alert alert-info"
