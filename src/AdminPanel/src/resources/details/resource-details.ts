@@ -9,16 +9,21 @@ import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
+import {Metadata} from "../../resources-config/metadata/metadata";
+import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
+import {getMergedMetadata} from "../../common/utils/metadata-utils";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
+  allMetadata: Metadata[];
   editing: boolean = false;
   hasChildren: boolean;
   resourceClass: string;
   private urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
+              private resourceKindRepository: ResourceKindRepository,
               private resourceLabel: ResourceLabelValueConverter,
               private router: Router,
               private ea: EventAggregator,
@@ -42,6 +47,13 @@ export class ResourceDetails implements RoutableComponentActivate {
       this.resource = resource;
       const title = this.resourceLabel.toView(resource);
       routeConfig.navModel.setTitle(title);
+    });
+    this.fetchMetadata();
+  }
+
+  fetchMetadata() {
+    this.resourceKindRepository.getListByClass(this.resourceClass).then(resourceKindList => {
+      this.allMetadata = getMergedMetadata(resourceKindList);
     });
   }
 

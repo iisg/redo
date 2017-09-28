@@ -6,6 +6,9 @@ import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation
 import {bindingMode, observable} from "aurelia-binding";
 import {removeValue} from "common/utils/array-utils";
 import {ComponentAttached} from "aurelia-templating";
+import {Metadata} from "../resources-config/metadata/metadata";
+import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
+import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
 
 @autoinject
 export class ResourcesList implements ComponentAttached {
@@ -16,11 +19,14 @@ export class ResourcesList implements ComponentAttached {
 
   addFormOpened: boolean;
 
+  briefMetadata: Metadata[];
+
   progressBar: boolean;
 
   @observable resources: Resource[];
 
   constructor(private resourceRepository: ResourceRepository,
+              private resourceKindRepository: ResourceKindRepository,
               private deleteEntityConfirmation: DeleteEntityConfirmation) {
   }
 
@@ -30,11 +36,14 @@ export class ResourcesList implements ComponentAttached {
       this.resources = [];
     }
     this.addFormOpened = false;
+    this.briefMetadata = [];
+    this.fetchBriefMetadata();
     this.fetchResources();
   }
 
   attached() {
     if (this.parentResource) {
+      this.fetchBriefMetadata();
       this.fetchResourcesByParent();
     }
   }
@@ -54,6 +63,12 @@ export class ResourcesList implements ComponentAttached {
       if (!this.addFormOpened) {
         this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);
       }
+    });
+  }
+
+  fetchBriefMetadata() {
+    this.resourceKindRepository.getListByClass(this.resourceClass).then(resourceKindList => {
+      this.briefMetadata = getMergedBriefMetadata(resourceKindList);
     });
   }
 

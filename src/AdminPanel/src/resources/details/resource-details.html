@@ -7,6 +7,7 @@
     <require from="./resource-level-up"></require>
     <require from="../resources-list"></require>
     <require from="common/components/fab/fab-edit"></require>
+    <require from="resources-config/metadata/metadata-label"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
 
@@ -34,9 +35,17 @@
 
         <div class="au-animate anim-height-inout-300"
             if.bind="!editing">
-            <resource-metadata-values resource.one-time="resource"></resource-metadata-values>
+            <dl class="dl-horizontal resource-details">
+                <template repeat.for="metadata of allMetadata">
+                    <dt>${metadata | metadataLabel}</dt>
+                    <dd>
+                        <resource-metadata-values resource.one-time="resource"
+                            metadata.one-time="metadata"></resource-metadata-values>
+                    </dd>
+                </template>
+            </dl>
 
-            <dl class="dl-horizontal">
+            <dl class="dl-horizontal resource-details">
                 <dt>${'Place' | t}</dt>
                 <dd>
                     <resource-place-display resource.bind="resource"></resource-place-display>

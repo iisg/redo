@@ -2,27 +2,18 @@
     <require from="./resource-metadata-value-display"></require>
     <require from="resources-config/metadata/metadata-label"></require>
 
-    <dl class="dl-horizontal">
-        <template repeat.for="metadata of metadataList">
-            <dt>
-                <fa name="user"
-                    if.bind="determinesAssignee(resource, metadata)"></fa>
-                ${metadata | metadataLabel}
-            </dt>
-            <dd>
-                <ul class="list-unstyled">
-                    <li repeat.for="value of resource.contents[metadata.baseId]">
-                        <resource-metadata-value-display
-                            metadata.bind="metadata"
-                            resource.bind="resource"
-                            value.bind="value"></resource-metadata-value-display>
-                    </li>
-                </ul>
-                <span if.bind="resource.contents[metadata.baseId].length == 0"
-                    class="small text-muted">
-                    <em>${'no values' | t}</em>
-                </span>
-            </dd>
-        </template>
-    </dl>
+    <fa name="user"
+        if.bind="determinesAssignee(resource, metadata)"></fa>
+    <ul class="list-unstyled">
+        <li repeat.for="value of resource.contents[metadata.baseId]">
+            <resource-metadata-value-display
+                metadata.bind="metadata"
+                resource.bind="resource"
+                value.bind="value"></resource-metadata-value-display>
+        </li>
+    </ul>
+    <span if.bind="resource.contents[metadata.baseId].length == 0 || resource.contents[metadata.baseId] == undefined"
+        class="small text-muted">
+        <em>&mdash;</em>
+    </span>
 </template>
