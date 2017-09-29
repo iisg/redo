@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Command;
 
 use Repeka\Domain\Cqrs\CommandBus;
@@ -8,6 +7,7 @@ use Repeka\Domain\Repository\UserRoleRepository;
 use Repeka\Domain\UseCase\User\UserCreateCommand;
 use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -30,13 +30,21 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
     protected function configure() {
         $this
             ->setName('repeka:create-admin-user')
+            ->addArgument('username', InputArgument::OPTIONAL)
+            ->addArgument('password', InputArgument::OPTIONAL)
             ->setDescription('Create user account for administrator.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         $helper = $this->getHelper('question');
-        $username = $helper->ask($input, $output, $this->usernameQuestion());
-        $password = $helper->ask($input, $output, $this->passwordQuestion());
+        $username = $input->getArgument('username');
+        if (!$username) {
+            $username = $helper->ask($input, $output, $this->usernameQuestion());
+        }
+        $password = $input->getArgument('password');
+        if (!$password) {
+            $password = $helper->ask($input, $output, $this->passwordQuestion());
+        }
         $this->saveNewAdminAccount($username, $password);
         $output->writeln("New admin account has been created.");
     }
