@@ -5,7 +5,6 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 
 class ResourceWorkflowsFixture extends RepekaFixture {
     const ORDER = RolesFixture::ORDER + 1;
@@ -20,11 +19,6 @@ class ResourceWorkflowsFixture extends RepekaFixture {
         $fileMetadataId = $fileMetadata->getId();
         $scannerMetadata = $this->getReference(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER);
         $scannerMetadataId = $scannerMetadata->getId();
-        $workflowCreateCommand = new ResourceWorkflowCreateCommand([
-            'PL' => 'Pełny obieg książki',
-            'EN' => 'Book workflow',
-        ]);
-        $workflow = $this->handleCommand($workflowCreateCommand);
         $places = json_decode(<<<JSON
 [
   {"id": "y1oosxtgf", "label": {"PL": "Zaimportowana", "EN":"Imported"}},
@@ -38,9 +32,11 @@ class ResourceWorkflowsFixture extends RepekaFixture {
 ]
 JSON
             , true);
-        $this->handleCommand(new ResourceWorkflowUpdateCommand(
-            $workflow,
-            $workflowCreateCommand->getName(),
+        $this->handleCommand(new ResourceWorkflowCreateCommand(
+            [
+                'PL' => 'Pełny obieg książki',
+                'EN' => 'Book workflow',
+            ],
             $places,
             $this->getTransitions(),
             '{"y1oosxtgf":{"x":51.01815994306967,"y":175.384765625},"lb1ovdqcy":{"x":252.21875,"y":175.60595703125},"qqd3yk499":{"x":266.026612773572,"y":59.700392994713134},"9qq9ipqa3":{"x":44.82338335188286,"y":70.47171223529797},"ss9qm7r78":{"x":405.75008979779426,"y":58.87617816576146},"jvz160sl4":{"x":558.795899588251,"y":55.28335247948525},"xo77kutzk":{"x":554.1022011563498,"y":203.39161358806604},"j70hlpsvu":{"x":378.4111711160704,"y":135.956784665596}}',

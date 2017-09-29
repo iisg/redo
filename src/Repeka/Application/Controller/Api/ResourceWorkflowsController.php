@@ -60,7 +60,7 @@ class ResourceWorkflowsController extends ApiController {
         $data = $request->request->all();
         $command = new ResourceWorkflowUpdateCommand(
             $workflow,
-            $data['name'],
+            $data['name'] ?? [],
             $data['places'] ?? [],
             $data['transitions'] ?? [],
             $data['diagram'] ?? null,
@@ -76,7 +76,13 @@ class ResourceWorkflowsController extends ApiController {
      */
     public function postAction(Request $request) {
         $data = $request->request->all();
-        $command = new ResourceWorkflowCreateCommand($data['name'] ?? []);
+        $command = new ResourceWorkflowCreateCommand(
+            $data['name'] ?? [],
+            $data['places'] ?? [],
+            $data['transitions'] ?? [],
+            $data['diagram'] ?? null,
+            $data['thumbnail'] ?? null
+        );
         $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource, 201);
     }

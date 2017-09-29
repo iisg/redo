@@ -17,8 +17,8 @@ class ResourceWorkflow {
     /** @var ResourceWorkflowDriver */
     private $workflow;
 
-    public function __construct(array $name) {
-        $this->name = $name;
+    public function __construct(array $name, array $places, array $transitions, $diagram = null, $thumbnail = null) {
+        $this->update($name, $places, $transitions, $diagram, $thumbnail);
     }
 
     public function getId() {

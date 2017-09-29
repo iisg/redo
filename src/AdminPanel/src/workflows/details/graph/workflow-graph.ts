@@ -40,8 +40,10 @@ export class WorkflowGraph {
     this.cytoscape.autopanOnDrag();
     this.cytoscape.on('tapend', () => this.fit());
     this.drawWorkflow(workflow);
-    this.edgeHandles();
-    this.contextMenu();
+    if (editable) {
+      this.edgeHandles();
+      this.contextMenu();
+    }
     this.readyPromiseResolve();
     setTimeout(() => this.cytoscape.resize(), 400); // fix misclicks due to slide-in animation; timeout was chosen by experiment
   }

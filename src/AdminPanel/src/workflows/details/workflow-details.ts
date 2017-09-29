@@ -70,7 +70,6 @@ export class WorkflowDetails implements RoutableComponentActivate {
 
   update(): Promise<any> {
     this.workflow.pendingRequest = true;
-    this.workflow.updateFromGraph();
     return this.workflowRepository
       .update(this.workflow)
       .then(() => {

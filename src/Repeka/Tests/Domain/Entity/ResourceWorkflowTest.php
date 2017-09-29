@@ -18,7 +18,7 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     private $workflowDriver;
 
     protected function setUp() {
-        $this->workflow = new ResourceWorkflow(['EN' => 'Some workflow']);
+        $this->workflow = new ResourceWorkflow(['EN' => 'Some workflow'], [], []);
         $this->resource = $this->createMock(ResourceEntity::class);
         $this->workflowDriver = $this->createMock(ResourceWorkflowDriver::class);
     }

@@ -16,8 +16,7 @@ class ResourceWorkflowSimulateCommandHandler {
 
     /** @return ResourceWorkflow[] */
     public function handle(ResourceWorkflowSimulateCommand $command): array {
-        $simulatedWorkflow = new ResourceWorkflow([]);
-        $simulatedWorkflow->update([], $command->getPlaces(), $command->getTransitions());
+        $simulatedWorkflow = new ResourceWorkflow([], $command->getPlaces(), $command->getTransitions());
         $this->workflowDriverFactory->setForWorkflow($simulatedWorkflow);
         $tempResource = new ResourceEntity(new ResourceKind([]), []);
         $simulatedWorkflow->setCurrentPlaces($tempResource, $command->getCurrentPlaces());

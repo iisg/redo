@@ -11,6 +11,7 @@ use Repeka\Domain\Entity\Language;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceWorkflowPlace;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
@@ -173,6 +174,6 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function createWorkflow(array $name) {
-        return $this->handleCommand(new ResourceWorkflowCreateCommand($name));
+        return $this->handleCommand(new ResourceWorkflowCreateCommand($name, [new ResourceWorkflowPlace([])], [], null, null));
     }
 }

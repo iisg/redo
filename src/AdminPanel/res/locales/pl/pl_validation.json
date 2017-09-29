@@ -4,5 +4,6 @@
   "mustHaveMetadata": "Rodzaj zasobu musi posiadać rodzaj metadanych.",
   "atLeastOneMetadataRequired": "Co najmniej jeden rodzaj metadanych musi mieć wartość.",
   "RequiredInAllLanguages": "${$displayName} musi mieć wartość we wszystkich językach.",
-  "lengthUpTo10": "Długość do 10 znaków."
+  "lengthUpTo10": "Długość do 10 znaków.",
+  "Workflow must consist of at least one place": "Proces musi zawierać co najmniej jeden stan"
 }

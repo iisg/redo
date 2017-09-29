@@ -74,7 +74,7 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testSettingWorkflow() {
-        $workflow = new ResourceWorkflow([]);
+        $workflow = $this->createMock(ResourceWorkflow::class);
         $resourceKind = new ResourceKind([], $workflow);
         $this->assertEquals($workflow, $resourceKind->getWorkflow());
     }

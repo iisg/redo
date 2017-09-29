@@ -1,8 +1,8 @@
 <template>
     <require from="./graph/workflow-graph-display"></require>
-    <require from="./graph/workflow-graph-editor"></require>
     <require from="./excel/excel"></require>
     <require from="common/components/fab/fab-edit"></require>
+    <require from="./workflow-edit-form"></require>
 
     <loading-bar if.bind="!workflow"></loading-bar>
 
@@ -23,30 +23,17 @@
                 click.trigger="toggleEditForm()"></fab-edit>
         </div>
 
-        <form submit.delegate="update()">
-            <h1>${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</h1>
+        <h1>${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</h1>
 
-            <workflow-graph-display if.bind="!editing"
-                workflow.bind="workflow"></workflow-graph-display>
+        <div if.bind="!editing">
+            <workflow-graph-display workflow.bind="workflow"></workflow-graph-display>
+            <excel workflow.bind="workflow"></excel>
+        </div>
 
-            <div if.bind="editing">
-                <multilingual-editor value.bind="workflow.name"
-                    disabled.bind="workflow.pendingRequest"></multilingual-editor>
-                <workflow-graph-editor workflow.bind="workflow"></workflow-graph-editor>
-            </div>
+        <div if.bind="editing">
+            <workflow-edit-form workflow.bind="workflow"
+                submit.delegate="update()"></workflow-edit-form>
+        </div>
 
-            <excel workflow.bind="workflow"
-                editable.bind="editing && !workflow.pendingRequest"></excel>
-
-            <div class="pull-right">
-                <pending-throbber entity.bind="workflow"></pending-throbber>
-                <button if.bind="editing"
-                    class="btn btn-primary btn-raised"
-                    disabled.bind="workflow.pendingRequest">
-                    <fa name="check"></fa>
-                    ${'Save' | t}
-                </button>
-            </div>
-        </form>
     </div>
 </template>

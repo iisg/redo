@@ -16,7 +16,7 @@ class ResourceWorkflowCreateCommandHandlerTest extends \PHPUnit_Framework_TestCa
     private $handler;
 
     protected function setUp() {
-        $this->command = new ResourceWorkflowCreateCommand(['EN' => 'New workflow']);
+        $this->command = new ResourceWorkflowCreateCommand(['EN' => 'New workflow'], [[]], [[]], 'diagram', 'thumb');
         $this->workflowRepository = $this->createMock(ResourceWorkflowRepository::class);
         $this->workflowRepository->expects($this->once())->method('save')->willReturnArgument(0);
         $this->handler = new ResourceWorkflowCreateCommandHandler($this->workflowRepository);
@@ -26,9 +26,9 @@ class ResourceWorkflowCreateCommandHandlerTest extends \PHPUnit_Framework_TestCa
         $workflow = $this->handler->handle($this->command);
         $this->assertNotNull($workflow);
         $this->assertSame($this->command->getName(), $workflow->getName());
-        $this->assertEmpty($workflow->getPlaces());
-        $this->assertEmpty($workflow->getTransitions());
-        $this->assertNull($workflow->getDiagram());
-        $this->assertNull($workflow->getThumbnail());
+        $this->assertCount(1, $workflow->getPlaces());
+        $this->assertCount(1, $workflow->getTransitions());
+        $this->assertEquals('diagram', $workflow->getDiagram());
+        $this->assertEquals('thumb', $workflow->getThumbnail());
     }
 }

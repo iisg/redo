@@ -9,6 +9,7 @@ export class Workflows implements ConfiguresRouter {
     this.router = router;
     config.map([
       {route: '', name: 'workflows/list', moduleId: './workflow-list'},
+      {route: '/new', name: 'workflows/new', moduleId: './details/workflow-new'},
       {route: '/:id', name: 'workflows/details', moduleId: './details/workflow-details'},
     ]);
   }

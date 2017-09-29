@@ -77,7 +77,7 @@ class ResourceWorkflowPlace {
 
     public static function fromArray(array $data) {
         return new self(
-            $data['label'],
+            $data['label'] ?? [],
             $data['id'] ?? null,
             $data['requiredMetadataIds'] ?? [],
             $data['lockedMetadataIds'] ?? [],
