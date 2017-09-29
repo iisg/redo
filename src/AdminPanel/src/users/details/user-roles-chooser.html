@@ -7,7 +7,7 @@
             repeat.for="role of availableRoles & oneTime">
             <label>
                 <input type="checkbox"
-                    value.bind="role.id"
+                    model.bind="role.id"
                     checked.bind="roleIds">
                 ${ role.name | inCurrentLanguage }
                 <span class="small text-muted"

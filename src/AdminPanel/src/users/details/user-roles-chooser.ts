@@ -6,7 +6,7 @@ import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class UserRolesChooser implements ComponentAttached {
-  @bindable(twoWay) roleIds: Array<string> = [];
+  @bindable(twoWay) roleIds: number[] = [];
 
   availableRoles: Array<UserRole>;
 
