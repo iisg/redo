@@ -19,7 +19,7 @@
                 <workflow-graph-display workflow.bind="workflow"
                     editable.bind="!simulating"
                     current.bind="currentSimulationPlaces"
-                    on-graph-built.call="onGraphBuilt(graph)"></workflow-graph-display>
+                    workflow-graph-ready.delegate="onGraphBuilt($event)"></workflow-graph-display>
             </div>
             <div class="col-sm-3 no-padding">
                 <div class="well"

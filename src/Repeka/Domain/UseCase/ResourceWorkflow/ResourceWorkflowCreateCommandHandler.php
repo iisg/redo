@@ -13,7 +13,13 @@ class ResourceWorkflowCreateCommandHandler {
     }
 
     public function handle(ResourceWorkflowCreateCommand $command): ResourceWorkflow {
-        $workflow = new ResourceWorkflow($command->getName());
+        $workflow = new ResourceWorkflow(
+            $command->getName(),
+            $command->getPlaces(),
+            $command->getTransitions(),
+            $command->getDiagram(),
+            $command->getThumbnail()
+        );
         return $this->workflowRepository->save($workflow);
     }
 }

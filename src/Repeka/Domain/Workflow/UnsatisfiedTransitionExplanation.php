@@ -32,8 +32,7 @@ class UnsatisfiedTransitionExplanation {
      * @param ResourceWorkflow $workflow
      * Type omitted intentionally for prettier testing
      */
-    private function calculateMissingMetadataIds($workflow, ResourceWorkflowTransition $transition, ResourceEntity $resource
-    ): array {
+    private function calculateMissingMetadataIds($workflow, ResourceWorkflowTransition $transition, ResourceEntity $resource): array {
         $placeIds = $this->mapToIds($workflow->getPlaces());
         $placesById = array_combine($placeIds, $workflow->getPlaces());
         $targetPlaces = array_map(function (string $toId) use ($placesById) {

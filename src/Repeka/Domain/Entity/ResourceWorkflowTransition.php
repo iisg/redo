@@ -60,6 +60,12 @@ class ResourceWorkflowTransition {
     }
 
     public static function fromArray(array $data) {
-        return new self($data['label'], $data['froms'], $data['tos'], $data['permittedRoleIds'] ?? [], $data['id'] ?? null);
+        return new self(
+            $data['label'] ?? [],
+            $data['froms'] ?? [],
+            $data['tos'] ?? [],
+            $data['permittedRoleIds'] ?? [],
+            $data['id'] ?? null
+        );
     }
 }

@@ -23,6 +23,9 @@ class ResourceWorkflowIntegrationTest extends IntegrationTestCase {
         $newName = ['TEST' => 'New test name'];
         $client->apiRequest('PUT', $this->oneEntityEndpoint($this->workflow), [
             'name' => $newName,
+            'places' => [
+                ['id' => "abc", 'label' => ['TEST' => 'place']],
+            ],
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         /** @var ResourceWorkflowRepository $repository */

@@ -5,6 +5,7 @@ import {WorkflowRepository} from "../../workflow-repository";
 import {WorkflowGraph} from "./workflow-graph";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {twoWay} from "common/components/binding-mode";
+import {WorkflowGraphEditorReady, WorkflowGraphReady} from "./workflow-graph-events";
 
 @autoinject
 export class WorkflowGraphEditor {
@@ -17,15 +18,11 @@ export class WorkflowGraphEditor {
   currentSimulationPlaces: Array<string>;
   fetchingTransitions = false;
 
-  constructor(private workflowRepository: WorkflowRepository, private signaler: BindingSignaler) {
+  constructor(private workflowRepository: WorkflowRepository, private signaler: BindingSignaler, private element: Element) {
   }
 
-  workflowChanged(newWorkflow: Workflow): void {
-    newWorkflow.updateFromGraph = () => this.updateWorkflowBasedOnGraph(true);
-  }
-
-  onGraphBuilt(graph: WorkflowGraph) {
-    this.graph = graph;
+  onGraphBuilt(event: WorkflowGraphReady) {
+    this.graph = event.detail.graph;
     this.graph.onPlaceSelect(place => {
       this.updateWorkflowPlacesBasedOnGraph();
       this.selectedElement = this.findMatchingPlace(place);
@@ -33,18 +30,14 @@ export class WorkflowGraphEditor {
     this.graph.onTransitionSelect(transition => this.selectedElement = transition);
     this.graph.onDeselect(() => this.selectedElement = undefined);
     this.graph.onPlacesChangedByUser = () => this.updateWorkflowBasedOnGraph();
+    this.element.dispatchEvent(WorkflowGraphEditorReady.newInstance(this));
   }
 
   saveSelectedElementChanges() {
     this.graph.updateElement(this.selectedElement);
   }
 
-  save() {
-    this.updateWorkflowBasedOnGraph(true);
-    return this.workflowRepository.update(this.workflow).then(workflow => this.workflow = workflow);
-  }
-
-  private updateWorkflowBasedOnGraph(withLayout: boolean = false): void {
+  public updateWorkflowBasedOnGraph(withLayout: boolean = false): void {
     const workflow = withLayout ? this.graph.toWorkflowWithLayout() : this.graph.toWorkflow();
     this.copyPlaceRequirementArrays(this.workflow.places, workflow.places);
     this.workflow.places = workflow.places;

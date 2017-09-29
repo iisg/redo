@@ -11,6 +11,7 @@
   "metadataAlreadyPresent": "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}",
   "violationFields": {
     "metadata": "Rodzaj metadanej",
+    "name": "Nazwa",
     "resource": "Zasób",
     "resourceKind": "Rodzaj zasobu",
     "resourceWorkflow": "Proces"

@@ -1,14 +1,10 @@
 <template>
     <require from="common/components/fab/fab-add"></require>
-    <require from="./new-workflow-form"></require>
 
-    <fab-add class="pull-right"
-        opened.bind="addFormOpened"></fab-add>
-
-    <div if.bind="addFormOpened"
-        class="well fade-inup-outdown au-animate floating-form">
-        <new-workflow-form></new-workflow-form>
-    </div>
+    <a route-href="route: workflows/new"
+        class="pull-right">
+        <fab-add turn-into-cross.one-time="false"></fab-add>
+    </a>
 
     <div class="row">
         <div class="col-xs-12">

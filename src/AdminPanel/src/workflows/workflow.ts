@@ -3,7 +3,6 @@ import {MultilingualText} from "resources-config/metadata/metadata";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Entity} from "common/entity/entity";
 import {deepCopy} from "common/utils/object-utils";
-import {VoidFunction} from "common/utils/function-utils";
 
 export class Workflow extends Entity {
   id: number;
@@ -13,7 +12,6 @@ export class Workflow extends Entity {
   transitions: WorkflowTransition[] = [];
   diagram: string;
   thumbnail;
-  updateFromGraph?: VoidFunction;
 
   copyFrom(workflow: Workflow) {
     $.extend(this, workflow);
@@ -53,5 +51,7 @@ export interface UnsatisfiedTransitionExplanation {
 export function registerWorkflowValidationRules() {
   ValidationRules
     .ensure('name').displayName('Name').required().satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
+    .ensure('places').displayName('Places').required().satisfies(places => places.length > 0)
+    .withMessageKey('Workflow must consist of at least one place')
     .on(Workflow);
 }
