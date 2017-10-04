@@ -29,6 +29,7 @@ export class GuiLanguage {
   }
 
   private setLanguage(language: string) {
+    this.language = language;
     this.setCookie(language);
     this.i18n.setLocale(language);
     this.momentLocaleLoader.load(language).then(() => {
