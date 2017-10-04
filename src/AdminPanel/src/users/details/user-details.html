@@ -24,13 +24,12 @@
 
         <resource-metadata-values resource.one-time="user.userData"></resource-metadata-values>
 
-        <div class="form-group">
-            <template if.bind="!isCurrentUser">
-                <div class="well"
-                    require-role="ADMIN">
-                    <user-roles-assign user.bind="user"></user-roles-assign>
-                </div>
-            </template>
+        <div class="form-group"
+            if.bind="!isCurrentUser">
+            <div class="well"
+                require-role="ADMIN">
+                <user-roles-assign user.bind="user"></user-roles-assign>
+            </div>
         </div>
     </div>
 </template>
