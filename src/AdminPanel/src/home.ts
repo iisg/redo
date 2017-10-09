@@ -11,10 +11,10 @@ export class Home implements ConfiguresRouter {
       {
         route: '',
         name: 'home',
-        moduleId: 'assignments/assignments'
+        moduleId: 'tasks/tasks'
       },
       {
-        route: '/../resources/:id',
+        route: 'resources/:id',
         name: 'resources/details',
         moduleId: 'resources/details/resource-details',
       },

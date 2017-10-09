@@ -1,19 +1,19 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
-use Repeka\Domain\UseCase\Assignment\AssignmentListQuery;
+use Repeka\Domain\UseCase\Assignment\TaskListQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
-/** @Route("/assignment") */
-class AssignmentController extends ApiController {
+/** @Route("/tasks") */
+class TasksController extends ApiController {
     /**
      * @Route
      * @Method("GET")
      */
     public function getListAction() {
         $user = $this->getUser();
-        $assignments = $this->handleCommand(new AssignmentListQuery($user));
-        return $this->createJsonResponse($assignments);
+        $tasks = $this->handleCommand(new TaskListQuery($user));
+        return $this->createJsonResponse($tasks);
     }
 }

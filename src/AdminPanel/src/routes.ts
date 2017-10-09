@@ -2,7 +2,7 @@ import {route, nested} from "./common/routes/route-utils";
 import {flatten} from "./common/utils/array-utils";
 
 const routes = flatten([
-  route('', 'home', 'Overview', {icon: 'dashboard'}),
+  route('', 'home', 'Tasks', {icon: 'tasks'}),
   route('resources', 'resources/resources', 'Resources', {icon: 'book'}),
   nested('Resources Setup', 'database', [
     route('metadata', 'resources-config/metadata/metadata-view', 'Metadata Kinds'),

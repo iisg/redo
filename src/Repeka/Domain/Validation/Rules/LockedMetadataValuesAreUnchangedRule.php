@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
+use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
