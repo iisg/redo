@@ -9,7 +9,7 @@ export class Resource extends Entity {
   currentPlaces: WorkflowPlace[];
   availableTransitions: WorkflowTransition[] = [];
   blockedTransitions: StringMap<TransitionBlockReason> = {};
-  transitionAssigneeMetadata: NumberMap<WorkflowTransition[]>;
+  transitionAssigneeMetadata: NumberMap<WorkflowTransition[]> = {};
   contents: StringArrayMap = {};
 
   public canApplyTransition(transition: WorkflowTransition) {
