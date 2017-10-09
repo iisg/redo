@@ -1,6 +1,6 @@
 <template>
     <require from="./resource-label"></require>
-    <require from="./user-label"></require>
+    <require from="users/details/username-value-converter"></require>
 
     <span if.bind="loading">
         <throbber></throbber>
@@ -13,7 +13,7 @@
         </a>
         <a if.bind="isUserLink"
             route-href="route: users/details; params.bind: routerParams">
-            ${relatedUser | userLabel}
+            ${relatedUser | username}
         </a>
     </template>
     <span if.bind="!loading && resource == undefined"

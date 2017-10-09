@@ -16,8 +16,6 @@ class UserEntityNormalizer extends AbstractNormalizer implements NormalizerAware
     public function normalize($user, $format = null, array $context = []) {
         return [
             'id' => $user->getId(),
-            'username' => $user->getUsername(),
-            'email' => $user->getEmail(),
             'userData' => $this->normalizer->normalize($user->getUserData()),
             'roles' => array_map(function (UserRole $role) {
                 return $this->normalizer->normalize($role);

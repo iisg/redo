@@ -55,7 +55,7 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
             if (!is_string($answer) || strlen($answer) < 4 || !preg_match('#^[a-z0-9-_]+$#i', $answer)) {
                 throw new \RuntimeException('Invalid username');
             }
-            if ($this->userRepository->findOneBy(['username' => $answer])) {
+            if ($this->userRepository->loadUserByUsername($answer)) {
                 throw new \RuntimeException("User already exists! Choose different username.");
             }
             return $answer;

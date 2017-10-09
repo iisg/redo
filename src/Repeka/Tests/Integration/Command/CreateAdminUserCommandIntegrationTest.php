@@ -12,6 +12,13 @@ class CreateAdminUserCommandIntegrationTest extends IntegrationTestCase {
         $this->assertContains('New admin account has been created.', $output);
     }
 
+    public function testDuplicateUsernameError() {
+        $this->expectException(\RuntimeException::class);
+        $credentials = implode(' ', ['testadmin', 'adadmin']);
+        $this->executeCommand('repeka:create-admin-user ' . $credentials);
+        $this->executeCommand('repeka:create-admin-user ' . $credentials);
+    }
+
     public function testCreatedAdminHasAllSystemRoles() {
         $this->testSuccess();
         $createdAdmin = $this->container->get(UserRepository::class)->loadUserByUsername('testadmin');

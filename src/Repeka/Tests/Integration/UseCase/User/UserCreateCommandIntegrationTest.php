@@ -7,12 +7,11 @@ use Repeka\Tests\IntegrationTestCase;
 
 class UserCreateCommandIntegrationTest extends IntegrationTestCase {
     public function testCreatingUser() {
-        $command = new UserCreateCommand('budynek', 'piotr', 'piotr@budynek.pl');
+        $command = new UserCreateCommand('budynek', 'piotr');
         /** @var User $user */
         $user = $this->handleCommand($command);
         $this->assertNotNull($user->getId());
         $this->assertEquals('budynek', $user->getUsername());
-        $this->assertEquals('piotr@budynek.pl', $user->getEmail());
     }
 
     public function testCreatingUserWithoutPassword() {

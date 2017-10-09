@@ -35,8 +35,4 @@ abstract class User implements Identifiable {
     public function setUserData(ResourceEntity $userData) {
         $this->userData = $userData;
     }
-
-    abstract public function getUsername(): string;
-
-    abstract public function getEmail(): ?string;
 }

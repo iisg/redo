@@ -23,15 +23,14 @@ class UserEntityFactory extends UserFactory {
     }
 
     /** @return UserEntity */
-    protected function createApplicationUser(string $username, ?string $plainPassword, ?string $email, ResourceEntity $userData): User {
+    protected function createApplicationUser(string $username, ?string $plainPassword, ResourceEntity $userData): User {
         $user = new UserEntity();
+        $user->setUserData($userData);
         $user->setUsername($username);
         if ($plainPassword) {
             $encodedPassword = $this->passwordEncoder->encodePassword($user, $plainPassword);
             $user->setPassword($encodedPassword);
         }
-        $user->setEmail($email);
-        $user->setUserData($userData);
         return $user;
     }
 }

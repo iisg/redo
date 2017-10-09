@@ -20,7 +20,6 @@ class UserCreateCommandHandler {
         $user = $this->userFactory->createUser(
             $command->getUsername(),
             $command->getPlainPassword(),
-            $command->getEmail(),
             $command->getUserData()
         );
         $this->userRepository->save($user);

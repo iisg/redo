@@ -7,7 +7,6 @@ security:
     db_provider:
       entity:
         class: Repeka\Application\Entity\UserEntity
-        property: username
 
   firewalls:
     dev:

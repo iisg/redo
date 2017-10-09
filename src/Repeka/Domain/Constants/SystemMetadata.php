@@ -11,12 +11,15 @@ use Repeka\Domain\Entity\Metadata;
  */
 class SystemMetadata extends Enum {
     const PARENT = -1;
+    const USERNAME = -2;
 
     public function toMetadata() {
         $value = $this->getValue();
         $metadata = null;
         if ($value == self::PARENT) {
-            $metadata = Metadata::create('relationship', 'Parent', ['EN' => 'Parent', 'PL' => 'Rodzic',], [], [], [], true);
+            $metadata = Metadata::create('relationship', 'Parent', ['EN' => 'Parent', 'PL' => 'Rodzic'], [], [], [], true);
+        } elseif ($value == self::USERNAME) {
+            $metadata = Metadata::create('text', 'Username', ['EN' => 'Username', 'PL' => 'Nazwa użytkownika'], [], [], [], true);
         }
         /** @noinspection PhpUndefinedVariableInspection */
         Assertion::notNull($metadata, "Not implemented: metadata for value $value");

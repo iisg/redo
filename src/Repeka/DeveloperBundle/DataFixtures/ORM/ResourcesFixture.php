@@ -57,7 +57,7 @@ class ResourcesFixture extends RepekaFixture {
             SystemMetadata::PARENT => [$ebooks->getId()],
             MetadataFixture::REFERENCE_METADATA_TITLE => ['Pair programming: jak równocześnie pisać na jednej klawiaturze w dwie osoby'],
         ])));
-        $userAdmin = $manager->getRepository(UserEntity::class)->findBy(['username' => 'admin'])[0];
+        $userAdmin = $manager->getRepository(UserEntity::class)->loadUserByUsername('admin');
         $this->handleCommand(new ResourceTransitionCommand($book1, 'e7d756ed-d6b3-4f2f-9517-679311e88b17', $userAdmin));
         $this->handleCommand(new ResourceTransitionCommand($book1, 'd3f73249-d10f-4d4b-8b63-be60b4c02081', $userScanner));
     }

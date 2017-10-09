@@ -27,19 +27,18 @@ abstract class UserFactory {
         $this->resourceCreateCommandHandler = $resourceCreateCommandHandler;
     }
 
-    public function createUser(string $username, ?string $plainPassword, ?string $email, array $userData = []): User {
+    public function createUser(string $username, ?string $plainPassword, array $userData = []): User {
         $resourceKind = $this->resourceKindRepository->findOne(SystemResourceKind::USER);
         $resourceCreateCommand = new ResourceCreateCommand($resourceKind, $userData);
         /** @var ResourceEntity $userData */
         $userData = $this->resourceCreateCommandHandler->handle($resourceCreateCommand);
-        $user = $this->createApplicationUser($username, $plainPassword, $email, $userData);
+        $user = $this->createApplicationUser($username, $plainPassword, $userData);
         return $user;
     }
 
     abstract protected function createApplicationUser(
         string $username,
         ?string $plainPassword,
-        ?string $email,
         ResourceEntity $userData
     ): User;
 }
