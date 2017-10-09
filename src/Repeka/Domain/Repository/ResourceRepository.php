@@ -3,6 +3,7 @@ namespace Repeka\Domain\Repository;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\User;
 
 interface ResourceRepository {
     /** @return ResourceEntity[] */
@@ -26,4 +27,7 @@ interface ResourceRepository {
     public function delete(ResourceEntity $resource): void;
 
     public function countByResourceKind(ResourceKind $resourceKind): int;
+
+    /** @return ResourceEntity[] */
+    public function findAssignedTo(User $user): array;
 }

@@ -1,0 +1,7 @@
+<template>
+    <ul class="list-unstyled">
+        <li repeat.for="transition of resource.availableTransitions">
+            ${transition.label | inCurrentLanguage}
+        </li>
+    </ul>
+</template>

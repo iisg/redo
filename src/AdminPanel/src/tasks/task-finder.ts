@@ -5,9 +5,9 @@ import {autoinject} from "aurelia-dependency-injection";
 import {ResourceRepository} from "../resources/resource-repository";
 
 @autoinject
-export class AssignmentFinder extends ApiRepository<Resource> {
+export class TaskFinder extends ApiRepository<Resource> {
   constructor(httpClient: HttpClient, private resourceRepository: ResourceRepository) {
-    super(httpClient, 'assignment');
+    super(httpClient, 'tasks');
   }
 
   toEntity(data: Object): Promise<Resource> {
