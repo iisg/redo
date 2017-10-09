@@ -2,7 +2,7 @@
 namespace Repeka\Application\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\UserRole;
@@ -12,11 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserEntity extends User implements UserInterface, EquatableInterface, \Serializable {
     private $id;
 
-    private $username;
-
     private $password;
-
-    private $email;
 
     private $isActive;
 
@@ -39,11 +35,13 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     }
 
     public function getUsername(): string {
-        return $this->username;
+        return $this->getUserData()->getContents()[SystemMetadata::USERNAME][0];
     }
 
     public function setUsername(string $username): User {
-        $this->username = $username;
+        $contents = $this->getUserData()->getContents();
+        $contents[SystemMetadata::USERNAME] = [$username];
+        $this->getUserData()->updateContents($contents);
         return $this;
     }
 
@@ -82,7 +80,6 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     public function serialize() {
         return serialize([
             $this->id,
-            $this->username,
             $this->password,
             $this->roles,
         ]);
@@ -91,23 +88,9 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     public function unserialize($serialized) {
         list (
             $this->id,
-            $this->username,
             $this->password,
             $this->roles,
             ) = unserialize($serialized);
-    }
-
-    public function getEmail(): ?string {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email) {
-        $this->email = $email;
-        return $this;
     }
 
     /**

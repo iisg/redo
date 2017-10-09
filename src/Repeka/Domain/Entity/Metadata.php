@@ -61,7 +61,7 @@ class Metadata implements Identifiable {
         array $placeholder = [],
         array $description = [],
         array $constraints = [],
-        bool $shownInBrief = false
+        bool $shownInBrief = null
     ): Metadata {
         $metadata = self::createWithBase($base);
         $metadata->label = $label;

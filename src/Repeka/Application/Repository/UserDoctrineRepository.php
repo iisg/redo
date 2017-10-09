@@ -2,6 +2,8 @@
 namespace Repeka\Application\Repository;
 
 use Assert\Assertion;
+use Repeka\Application\Entity\ResultSetMappings;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
@@ -11,12 +13,19 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
 class UserDoctrineRepository extends AbstractRepository implements UserRepository, UserLoaderInterface {
     public function loadUserByUsername($username) {
-        return $this->createQueryBuilder('u')
-            ->where('u.username = :username OR u.email = :email')
-            ->setParameter('username', $username)
-            ->setParameter('email', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $usernameMetadataId = SystemMetadata::USERNAME;
+
+        $resultSetMapping = ResultSetMappings::user($this->getEntityManager());
+        $query = $this->getEntityManager()->createNativeQuery(<<<SQL
+SELECT "user".* FROM "user"
+  INNER JOIN "resource" user_data ON "user".user_data_id = user_data.id
+  WHERE (contents->'$usernameMetadataId')::jsonb @> :username
+SQL
+            , $resultSetMapping);
+        // the value needs to be double quoted for @> operator
+        // see: https://stackoverflow.com/a/38328942/878514
+        $query->setParameter('username', '"' . $username . '"');
+        return $query->getOneOrNullResult();
     }
 
     public function save(User $user): User {

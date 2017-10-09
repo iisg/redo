@@ -1,4 +1,6 @@
 <template>
+    <require from="resources/details/resource-metadata-values/resource-metadata-values"></require>
+
     <div class="user-list">
         <div class="row">
             <div class="col-xs-12">
@@ -6,8 +8,7 @@
                     <thead>
                     <tr>
                         <th>${'ID' | t}</th>
-                        <th>${'Username' | t}</th>
-                        <th>${'E-mail' | t}</th>
+                        <th>${'Details' | t}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -23,8 +24,10 @@
                         hover-aware.one-time="user"
                         repeat.for="user of userList">
                         <td>${user.id}</td>
-                        <td>${user.username}</td>
-                        <td>${user.email}</td>
+                        <td>
+                            <resource-metadata-values resource.one-time="user.userData"
+                                brief></resource-metadata-values>
+                        </td>
                         <td>
                             <a route-href="route: users/details; params.bind: {id: user.id}"
                                 class="btn ${user['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">

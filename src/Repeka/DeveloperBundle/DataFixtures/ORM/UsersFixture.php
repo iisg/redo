@@ -15,9 +15,9 @@ class UsersFixture extends RepekaFixture {
     const REFERENCE_USER_SCANNER = 'user-scanner';
 
     public function load(ObjectManager $manager) {
-        $this->handleCommand(new UserCreateCommand('budynek', 'budynek', 'budynek@repeka.dev'), self::REFERENCE_USER_BUDYNEK);
-        $tester = $this->handleCommand(new UserCreateCommand('tester', 'tester', 'tester@repeka.dev'), self::REFERENCE_USER_TESTER);
-        $scanner = $this->handleCommand(new UserCreateCommand('skaner', 'skaner', 'skaner@repeka.dev'), self::REFERENCE_USER_SCANNER);
+        $this->handleCommand(new UserCreateCommand('budynek', 'budynek'), self::REFERENCE_USER_BUDYNEK);
+        $tester = $this->handleCommand(new UserCreateCommand('tester', 'tester'), self::REFERENCE_USER_TESTER);
+        $scanner = $this->handleCommand(new UserCreateCommand('skaner', 'skaner'), self::REFERENCE_USER_SCANNER);
         $operatorRole = $manager->getRepository(UserRole::class)->findOne(SystemUserRole::OPERATOR);
         $testerRole = $this->getReference(RolesFixture::ROLE_TESTER);
         $scannerRole = $this->getReference(RolesFixture::ROLE_SCANNER);

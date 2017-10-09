@@ -19,7 +19,7 @@ class AdminAccountFixture extends RepekaFixture {
         /** @var ContainerInterface $containerInterface */
         $container = $this->container;
         if (!$container->get(UserRepository::class)->loadUserByUsername(self::USERNAME)) {
-            $userCreateCommand = new UserCreateCommand(self::USERNAME, self::PASSWORD, 'admin@repeka.pl');
+            $userCreateCommand = new UserCreateCommand(self::USERNAME, self::PASSWORD);
             $user = $this->handleCommand($userCreateCommand);
             $allUserRoles = $this->handleCommand(new UserRoleListQuery());
             $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $allUserRoles);

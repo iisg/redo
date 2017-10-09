@@ -13,6 +13,7 @@ export class ResourceMetadataValues {
     if (this.resource.kind == undefined) {
       return [];
     }
+
     return this.brief && (this.resource.kind.briefMetadataList.length > 0)
       ? this.resource.kind.briefMetadataList
       : this.resource.kind.metadataList;

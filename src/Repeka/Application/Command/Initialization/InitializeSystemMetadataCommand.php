@@ -37,7 +37,7 @@ class InitializeSystemMetadataCommand extends TransactionalCommand {
         foreach (SystemMetadata::toArray() as $metadataName => $metadataId) {
             if (!$this->metadataRepository->exists($metadataId)) {
                 $systemMetadata = new SystemMetadata($metadataId);
-                $metadata = SystemMetadata::PARENT()->toMetadata();
+                $metadata = $systemMetadata->toMetadata();
                 EntityUtils::forceSetId($metadata, $systemMetadata->getValue());
                 $this->metadataRepository->save($metadata);
                 $output->writeln("Metadata $metadataName has been created.");

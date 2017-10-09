@@ -1,5 +1,5 @@
 <template>
-    <require from="users/user-label.html"></require>
+    <require from="./username-value-converter"></require>
     <require from="./user-roles-assign"></require>
     <require from="resources/details/resource-metadata-values/resource-metadata-values"></require>
 
@@ -8,7 +8,7 @@
     <div class="au-animate fade-inup-outup"
         if.bind="user">
         <h1>
-            <user-label user.bind="user"></user-label>
+            ${ user | username }
         </h1>
 
         <dl class="dl-horizontal">
@@ -16,10 +16,6 @@
             <dd>${user.id}</dd>
             <dt>${'ID in relationships' | t}</dt>
             <dd>${user.userData.id}</dd>
-            <dt>${'Username' | t}</dt>
-            <dd>${user.username}</dd>
-            <dt>${'E-mail' | t}</dt>
-            <dd>${user.email}</dd>
         </dl>
 
         <resource-metadata-values resource.one-time="user.userData"></resource-metadata-values>

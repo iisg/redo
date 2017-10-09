@@ -19,36 +19,36 @@ class ResourceWorkflowRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindsByMetadataDependency() {
-        list($scanner, $overseer) = $this->getScannerAndOverseerMetadata();
-        $overseerDependants = $this->workflowRepository->findByAssigneeMetadata($overseer);
-        $this->assertEmpty($overseerDependants);
+        list($scanner, $supervisor) = $this->getScannerAndSupervisorMetadata();
+        $supervisorDependants = $this->workflowRepository->findByAssigneeMetadata($supervisor);
+        $this->assertEmpty($supervisorDependants);
         $scannerDependants = $this->workflowRepository->findByAssigneeMetadata($scanner);
         $this->assertCount(1, $scannerDependants);
     }
 
     public function testFindsByMetadataIdDependency() {
         /** @var Metadata $scanner */
-        /** @var Metadata $overseer */
-        list($scanner, $overseer) = $this->getScannerAndOverseerMetadata();
-        $overseerDependants = $this->workflowRepository->findByAssigneeMetadata($overseer->getId());
-        $this->assertEmpty($overseerDependants);
+        /** @var Metadata $supervisor */
+        list($scanner, $supervisor) = $this->getScannerAndSupervisorMetadata();
+        $supervisorDependants = $this->workflowRepository->findByAssigneeMetadata($supervisor->getId());
+        $this->assertEmpty($supervisorDependants);
         $scannerDependants = $this->workflowRepository->findByAssigneeMetadata($scanner->getId());
         $this->assertCount(1, $scannerDependants);
     }
 
     /** @return Metadata[] */
-    private function getScannerAndOverseerMetadata(): array {
+    private function getScannerAndSupervisorMetadata(): array {
         /** @var Metadata[] $allMetadata */
         $allMetadata = $this->handleCommand(new MetadataListQuery());
-        $scanner = $overseer = null;
+        $scanner = $supervisor = null;
         foreach ($allMetadata as $metadata) {
             if ($metadata->getName() == 'Skanista') {
                 $scanner = $metadata;
             } elseif ($metadata->getName() == 'Nadzorujący') {
-                $overseer = $metadata;
+                $supervisor = $metadata;
             }
         }
-        Assertion::allNotNull([$scanner, $overseer]);
-        return [$scanner, $overseer];
+        Assertion::allNotNull([$scanner, $supervisor]);
+        return [$scanner, $supervisor];
     }
 }

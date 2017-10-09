@@ -8,15 +8,12 @@ class UserCreateCommand extends Command {
     private $username;
     /** @var null|string */
     private $plainPassword;
-    /** @var null|string */
-    private $email;
     /** @var array */
     private $userData;
 
-    public function __construct(string $username, string $plainPassword = null, string $email = null, array $userData = []) {
+    public function __construct(string $username, string $plainPassword = null, array $userData = []) {
         $this->username = $username;
         $this->plainPassword = $plainPassword;
-        $this->email = $email;
         $this->userData = $userData;
     }
 
@@ -30,9 +27,5 @@ class UserCreateCommand extends Command {
 
     public function getPlainPassword(): ?string {
         return $this->plainPassword;
-    }
-
-    public function getEmail(): ?string {
-        return $this->email;
     }
 }
