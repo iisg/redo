@@ -29,6 +29,7 @@ System.config({
     "aurelia-pal-browser": "npm:aurelia-pal-browser@1.2.1",
     "aurelia-polyfills": "npm:aurelia-polyfills@1.2.1",
     "aurelia-router": "npm:aurelia-router@1.3.0",
+    "aurelia-task-queue": "npm:aurelia-task-queue@1.2.0",
     "aurelia-templating": "npm:aurelia-templating@1.4.2",
     "aurelia-templating-binding": "npm:aurelia-templating-binding@1.3.0",
     "aurelia-templating-resources": "npm:aurelia-templating-resources@1.4.0",

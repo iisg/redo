@@ -49,7 +49,7 @@ export class WorkflowGraph {
   }
 
   recalculatePosition(): void {
-    setTimeout(() => this.cytoscape.resize(), 400); // fix misclicks due to slide-in animation; timeout was chosen by experiment
+    setTimeout(() => this.cytoscape.resize(), 500); // fix misclicks due to slide-in animation; timeout was chosen by experiment
   }
 
   private drawWorkflow(workflow: Workflow) {

@@ -1,14 +1,16 @@
 import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentUnbind} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {WorkflowRepository} from "../../workflow-repository";
 import {WorkflowGraph} from "./workflow-graph";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {twoWay} from "common/components/binding-mode";
 import {WorkflowGraphEditorReady, WorkflowGraphReady} from "./workflow-graph-events";
+import {Disposable, BindingEngine} from "aurelia-binding";
+import {WorkflowGraphManager} from "./workflow-graph-manager";
 
 @autoinject
-export class WorkflowGraphEditor {
+export class WorkflowGraphEditor implements ComponentUnbind {
   @bindable(twoWay) workflow: Workflow;
 
   selectedElement: WorkflowPlace|WorkflowTransition;
@@ -18,7 +20,38 @@ export class WorkflowGraphEditor {
   currentSimulationPlaces: Array<string>;
   fetchingTransitions = false;
 
-  constructor(private workflowRepository: WorkflowRepository, private signaler: BindingSignaler, private element: Element) {
+  private placesSubscription: Disposable;
+
+  constructor(private workflowRepository: WorkflowRepository,
+              private signaler: BindingSignaler,
+              private element: Element,
+              private bindingEngine: BindingEngine,
+              private graphManager: WorkflowGraphManager) {
+  }
+
+  private observeWorkflowPlaces(): void {
+    this.disposeWorkflowPlacesSubscription();
+    this.placesSubscription = this.bindingEngine
+      .propertyObserver(this.workflow, 'places')
+      .subscribe(() => this.workflowPlacesChanged());
+  }
+
+  private disposeWorkflowPlacesSubscription(): void {
+    if (this.placesSubscription !== undefined) {
+      this.placesSubscription.dispose();
+    }
+  }
+
+  workflowChanged(): void {
+    this.observeWorkflowPlaces();
+  }
+
+  workflowPlacesChanged(): void {
+    this.graphManager.forEach(graph => graph.recalculateGraphPosition());
+  }
+
+  unbind(): void {
+    this.disposeWorkflowPlacesSubscription();
   }
 
   onGraphBuilt(event: WorkflowGraphReady) {
