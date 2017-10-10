@@ -78,7 +78,7 @@ function copyToReleaseDirectory() {
       copySingleRequiredFiles();
       preprocessSources();
       spinner.succeed('Application files copied.');
-      copyJsDependencies();
+      deleteUnwantedSources();
     }
   });
 }
@@ -109,6 +109,31 @@ function clearLocalConfigFiles() {
     'release/app/config/config_test.yml',
     'release/app/config/routing_dev.yml',
   ]);
+}
+
+function deleteUnwantedSources() {
+  var spinner = ora({text: 'Deleting unneeded sources.', color: 'yellow'}).start();
+  del([
+    'release/backend/vendor/**/test/**',
+    'release/backend/vendor/**/tests/**',
+    'release/backend/vendor/**/doc/**',
+    'release/backend/vendor/**/docs/**',
+    'release/backend/vendor/**/.idea/**',
+    'release/backend/vendor/**/img/**',
+    'release/backend/vendor/**/composer.json',
+    'release/backend/vendor/**/composer.lock',
+    'release/backend/vendor/**/*.md',
+    'release/backend/vendor/**/LICENSE',
+    'release/backend/vendor/**/*.dist',
+  ])
+    .then(() => {
+      spinner.succeed('Unneeded sources deleted.');
+      copyJsDependencies();
+    })
+    .catch((err) => {
+      console.log(err);
+      spinner.fail();
+    })
 }
 
 function copyJsDependencies() {
