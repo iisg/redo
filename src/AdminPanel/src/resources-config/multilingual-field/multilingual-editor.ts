@@ -5,6 +5,7 @@ import {bindable} from "aurelia-templating";
 import {generateId} from "common/utils/string-utils";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
+import {VoidFunction} from "common/utils/function-utils";
 
 @autoinject
 export class MultilingualEditor {
@@ -12,6 +13,8 @@ export class MultilingualEditor {
   @bindable placeholder: Object = {};
   @bindable(twoWay) value: Object = {};
   @bindable @booleanAttribute disabled: boolean = false;
+  @bindable onLoaded: VoidFunction = () => {
+  };
 
   languages: Language[];
   fieldId: string = generateId();
@@ -21,6 +24,7 @@ export class MultilingualEditor {
     this.languageRepository.getList().then(languages => {
       this.languages = languages;
       this.columnClass = 'col-sm-' + Math.round(12 / Math.min(this.languages.length, 4));
+      this.onLoaded();
     });
   }
 }

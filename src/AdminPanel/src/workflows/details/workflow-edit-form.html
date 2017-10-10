@@ -5,7 +5,8 @@
     <form submit.delegate="onSubmit($event)">
         <div class="form-group">
             <multilingual-editor value.bind="workflow.name & validate"
-                disabled.bind="workflow.pendingRequest"></multilingual-editor>
+                disabled.bind="workflow.pendingRequest"
+                on-loaded.call="updateGraphPosition()"></multilingual-editor>
         </div>
 
         <div class="form-group clearfix">

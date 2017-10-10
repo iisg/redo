@@ -45,6 +45,10 @@ export class WorkflowGraph {
       this.contextMenu();
     }
     this.readyPromiseResolve();
+    this.recalculatePosition();
+  }
+
+  recalculatePosition(): void {
     setTimeout(() => this.cytoscape.resize(), 400); // fix misclicks due to slide-in animation; timeout was chosen by experiment
   }
 
