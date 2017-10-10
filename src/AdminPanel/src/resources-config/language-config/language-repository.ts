@@ -34,7 +34,9 @@ export class LanguageRepository extends ApiRepository<Language> {
 
   @cachedResponse(900000)
   public getAvailableFlags(): Promise<Array<string>> {
-    return new HttpClient().get('/files/flags.json').then((response) => response.content.available_flags);
+    return new HttpClient().get('/files/flags.json')
+      .then(response => response.content.available_flags)
+      .then(flags => flags.sort());
   }
 
   protected oneEntityEndpoint(entity: number|string|Object): string {
