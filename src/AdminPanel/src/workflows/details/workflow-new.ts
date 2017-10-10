@@ -15,6 +15,6 @@ export class WorkflowNew {
     this.workflow.pendingRequest = true;
     const savedWorkflow = await this.workflowRepository.post(this.workflow);
     this.workflow.pendingRequest = false;
-    this.router.navigateToRoute('workflows/details', savedWorkflow);
+    this.router.navigateToRoute('workflows/details', {id: savedWorkflow.id});
   }
 }
