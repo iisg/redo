@@ -21,6 +21,9 @@ export class ResourceKindConstraintEditor {
   }
 
   metadataChanged(): void {
+    if (this.metadata === undefined || this.metadata.id === undefined) {
+      return;
+    }
     this.workflowsUsingMetadataAsAssignee = [];
     this.loadingWorkflows = true;
     this.workflowRepository.getByAssigneeMetadata(this.metadata)
