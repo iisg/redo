@@ -17,12 +17,22 @@ export class LanguageRepository extends ApiRepository<Language> {
   }
 
   public post(language: Language): Promise<Language> {
-    return super.post(language).then((addedLanguage) => {
-      clearCachedResponse(this.getList);
-      this.eventAggregator.publish(new LanguagesChangedEvent());
-      return addedLanguage;
-    });
+    return super.post(language).then(v => this.clearCachedList(v));
   }
+
+  public patch(language: Language, patch: any): Promise<Language> {
+    return super.patch(language, patch).then(v => this.clearCachedList(v));
+  }
+
+  public remove(entity: Language): Promise<void> {
+    return super.remove(entity).then(v => this.clearCachedList(v));
+  }
+
+  private clearCachedList<T>(arg: T): T {
+    clearCachedResponse(this.getList);
+    this.eventAggregator.publish(new LanguagesChangedEvent());
+    return arg;
+  };
 
   public update(updatedLanguage: Language): Promise<Language> {
     const languageData = this.toBackend(updatedLanguage);
