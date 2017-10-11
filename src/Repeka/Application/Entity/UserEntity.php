@@ -99,7 +99,8 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
      */
     public function isEqualTo(UserInterface $user) {
         if ($user instanceof UserEntity) {
-            return count($this->getRoles()) == count($user->getRoles()) && count(array_diff($this->getRoles(), $user->getRoles())) == 0;
+            return $user->id == $this->id; // TODO this line is a temporary fix REPEKA-257
+//            return count($this->getRoles()) == count($user->getRoles()) && count(array_diff($this->getRoles(), $user->getRoles())) == 0;
         }
         return false;
     }
