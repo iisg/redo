@@ -1,6 +1,6 @@
 import {MultilingualText} from "../resources-config/metadata/metadata";
 import {WorkflowPlace, RequirementState} from "./workflow";
-import {keysByValue} from "../common/utils/object-utils";
+import {numberKeysByValue} from "common/utils/object-utils";
 
 export function workflowPlaceToEntity(backendPlace: BackendPlace): WorkflowPlace {
   const place: WorkflowPlace = {
@@ -28,9 +28,9 @@ export function workflowPlaceToBackend(place: WorkflowPlace): BackendPlace {
     lockedMetadataIds: [],
     assigneeMetadataIds: []
   };
-  backendPlace.requiredMetadataIds = keysByValue(place.restrictingMetadataIds, RequirementState.REQUIRED);
-  backendPlace.lockedMetadataIds = keysByValue(place.restrictingMetadataIds, RequirementState.LOCKED);
-  backendPlace.assigneeMetadataIds = keysByValue(place.restrictingMetadataIds, RequirementState.ASSIGNEE);
+  backendPlace.requiredMetadataIds = numberKeysByValue(place.restrictingMetadataIds, RequirementState.REQUIRED);
+  backendPlace.lockedMetadataIds = numberKeysByValue(place.restrictingMetadataIds, RequirementState.LOCKED);
+  backendPlace.assigneeMetadataIds = numberKeysByValue(place.restrictingMetadataIds, RequirementState.ASSIGNEE);
   return backendPlace;
 }
 

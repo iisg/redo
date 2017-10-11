@@ -1,4 +1,4 @@
-import {keysByValue} from "./object-utils";
+import {keysByValue, numberKeysByValue} from "./object-utils";
 describe('object-utils', () => {
   describe(keysByValue.name, () => {
     const testObject = {
@@ -13,6 +13,7 @@ describe('object-utils', () => {
       i: 0,
       j: 'test',
       k: 'test2',
+      10: 'number',
     };
 
     it('counts ints properly', () => {
@@ -33,6 +34,26 @@ describe('object-utils', () => {
 
     it('counts undefined properly', () => {
       expect(keysByValue(testObject, undefined)).toEqual(['h']);
+    });
+
+    it('returns numbers as strings', () => {
+      expect(keysByValue(testObject, 'number')).toEqual(['10']);
+    });
+  });
+
+  describe(numberKeysByValue.name, () => {
+    const testObject = {
+      a: 'xyz',
+      1: 'xyz',
+      10: 'number',
+    };
+
+    it('returns numbers as numbers', () => {
+      expect(numberKeysByValue(testObject, 'number')).toEqual([10]);
+    });
+
+    it('filters out non-numbers', () => {
+      expect(numberKeysByValue(testObject, 'xyz')).toEqual([1]);
     });
   });
 });
