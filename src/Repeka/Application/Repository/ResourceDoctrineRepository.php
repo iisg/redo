@@ -83,35 +83,37 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         $em = $this->getEntityManager();
         $resultSetMapping = ResultSetMappings::resourceEntity($em);
         $query = $em->createNativeQuery(<<<SQL
-SELECT *
-FROM resource
-WHERE id IN (
-  SELECT resource_id
-  FROM (
-         SELECT
-           resource_id,
-           resource_contents -> metadata_id :: CHAR AS assignee_ids
-         FROM (
-                SELECT
-                  jsonb_array_elements(place -> 'assigneeMetadataIds') AS metadata_id,
-                  resource_id,
-                  resource_contents
-                FROM (
-                       SELECT
-                         jsonb_array_elements(places) AS place,
-                         resource.id                  AS resource_id,
-                         resource.contents            AS resource_contents
-                       FROM workflow
-                         LEFT JOIN resource_kind ON workflow.id = resource_kind.workflow_id
-                         LEFT JOIN resource ON resource_kind.id = resource.kind_id
-                     ) AS with_places_as_rows
-              ) AS with_metadata
-       ) AS with_assignee_ids
-  WHERE assignee_ids @> :userId :: CHAR :: JSONB
-)
+-- Filters rows by user data IDs (ie. ID of user's resource, not user's entity!)
+-- Returns only resource IDs
+SELECT resources.*
+FROM (
+       -- Picks only metadata_id from resource_contents object
+       -- Each row contains a resource ID and an array of users it's assigned to
+       SELECT
+         resources_with_assignee_metadata_ids.*,
+         resources_with_assignee_metadata_ids.contents -> metadata_id :: VARCHAR AS assignee_ids
+       FROM (
+              -- Extracts arrays of assigneeMetadataIds from places and splits them into rows.
+              -- Rows are basically a cross join of resources with all assigneeMetadataIds
+              SELECT
+                jsonb_array_elements(place -> 'assigneeMetadataIds') AS metadata_id,
+                resources_with_places.*
+              FROM (
+                     -- Left-joins each place in each workflow with resources using these workflows
+                     -- Rows represent all possible combinations of resources and places in their workflows
+                     SELECT
+                       jsonb_array_elements(workflow.places) AS place,
+                       resource.*
+                     FROM workflow
+                       LEFT JOIN resource_kind ON workflow.id = resource_kind.workflow_id
+                       LEFT JOIN resource ON resource_kind.id = resource.kind_id
+                   ) AS resources_with_places
+            ) AS resources_with_assignee_metadata_ids
+     ) AS resources
+WHERE assignee_ids @> :userId :: VARCHAR :: JSONB
 SQL
             , $resultSetMapping);
-        $query->setParameter('userId', $user->getUserData());
+        $query->setParameter('userId', $user->getUserData()->getId());
         return $query->getResult();
     }
 }
