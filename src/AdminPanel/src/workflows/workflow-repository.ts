@@ -22,9 +22,9 @@ export class WorkflowRepository extends ApiRepository<Workflow> {
     return backendEntity;
   }
 
-  public simulate(workflow: Workflow, fromState?: Array<string>, transition?: string): Promise<any> {
+  public simulate(workflow: Workflow, fromState?: string[], transition?: string): Promise<any> {
     return this.httpClient.post(this.endpoint + '/simulation', {
-      workflow: workflow,
+      workflow: this.toBackend(workflow),
       fromState: fromState,
       transition: transition
     }).then(response => response.content);
