@@ -6,9 +6,7 @@ use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class ResourceWorkflowSimulateCommandValidator extends ResourceWorkflowUpdateCommandValidator {
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('places', $this->placesValidator()->length(1))
