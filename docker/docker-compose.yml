@@ -26,7 +26,7 @@ services:
 
   repeka-postgres:
     container_name: ${COMPOSE_PROJECT_NAME}-postgres
-    image: postgres:9.4
+    image: postgres:9.5
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
