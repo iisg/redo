@@ -1,14 +1,15 @@
-import {ComponentAttached, ComponentDetached, bindable} from "aurelia-templating";
+import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import * as $ from "jquery";
 import "select2";
 import {booleanAttribute} from "../boolean-attribute";
-import {twoWay, changeHandler} from "../binding-mode";
+import {changeHandler, twoWay} from "../binding-mode";
+import {computedFrom} from "aurelia-binding";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
-  @bindable(twoWay) value: Object|Object[];
+  @bindable(twoWay) value: Object | Object[];
   @bindable values: Object[];
 
   @bindable(changeHandler('recreateDropdown')) placeholder: string = "—";
@@ -23,10 +24,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   }
 
   attached(): void {
-    this.recreateDropdown();
-    $(this.dropdown).on('select2:select', () => this.onSelectedItem());
-    // timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049
-    $(this.dropdown).on('select2:unselect', () => setTimeout(() => this.onSelectedItem()));
+    this.createDropdown();
   }
 
   detached(): void {
@@ -39,6 +37,13 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   allowClearChanged() {  // @booleanAttributes enforce default handler name
     this.recreateDropdown();
+  }
+
+  private createDropdown() {
+    this.recreateDropdown();
+    $(this.dropdown).on('select2:select', () => this.onSelectedItem());
+    // timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049
+    $(this.dropdown).on('select2:unselect', () => setTimeout(() => this.onSelectedItem()));
   }
 
   private recreateDropdown(): JQuery {
@@ -59,7 +64,9 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   }
 
   valuesChanged() {
-    this.recreateDropdown();
+    setTimeout(() => {
+      this.createDropdown();
+    });
     this.valueChanged();
   }
 
@@ -88,7 +95,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
       : [this.getIndex(this.value)];
     const haystack: number[] = this.values.map(this.getIndex);
     const values: number[] = needles.map(id => haystack.indexOf(id)).filter(index => index != -1);
-    const value: number|number[] = Array.isArray(this.value)
+    const value: number | number[] = Array.isArray(this.value)
       ? values
       : values[0];
     $(this.dropdown).val(value as any).trigger('change');
@@ -102,5 +109,10 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   getItemHtml(item: Select2SelectionObject): string {
     return item.element ? $(item.element).html() : item.text;
+  }
+
+  @computedFrom('values')
+  get isFetchingOptions() {
+    return !this.values || this.values.length == 0;
   }
 }
