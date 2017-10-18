@@ -1,7 +1,12 @@
 <template>
     <require from="select2/css/select2.min.css"></require>
-    <select ref="dropdown"
-        disabled.bind="disabled">
+    <div class="dropdown-select-throbber" if.bind="isFetchingOptions">
+        <throbber></throbber>
+    </div>
+
+    <select
+        ref="dropdown"
+        disabled.bind="disabled || isFetchingOptions">
         <option></option>
         <option repeat.for="option of values"
             value.bind="$index"

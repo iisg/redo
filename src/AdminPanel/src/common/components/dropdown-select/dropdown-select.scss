@@ -10,7 +10,17 @@
   }
 }
 
-.select2-container .select2-selection--single{
+.select2-container .select2-selection--single {
   min-height: 28px;
   height: auto !important;
+}
+
+.dropdown-select-throbber {
+  throbber {
+    display: block;
+    position: absolute;
+    z-index: 50;
+    right: 20px;
+    top: 5px;
+  }
 }
