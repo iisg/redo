@@ -3,12 +3,13 @@ namespace Repeka\Tests\Domain\Entity;
 
 use Assert\InvalidArgumentException;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 
 class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testCreatingMetadata() {
-        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], 'books');
-        $this->assertEquals('text', $metadata->getControl());
+        $metadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], 'books');
+        $this->assertEquals(MetadataControl::TEXT(), $metadata->getControl());
         $this->assertEquals('Prop', $metadata->getName());
         $this->assertEquals('AA', $metadata->getLabel()['PL']);
         $this->assertEquals('books', $metadata->getResourceClass());
@@ -17,22 +18,22 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreatingForResourceKind() {
         $rk = new ResourceKind([], 'books');
-        $baseMetadata = Metadata::create('text', 'Prop', ['PL' => 'PL'], 'books');
+        $baseMetadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'PL'], 'books');
         $childMetadata = Metadata::createForResourceKind(['EN' => 'EN'], $rk, $baseMetadata, 'books');
         $this->assertSame($rk, $childMetadata->getResourceKind());
     }
 
     public function testGettingControlAndNameOfBaseMetadata() {
         $rk = new ResourceKind([], 'books');
-        $baseMetadata = Metadata::create('text', 'Prop', ['PL' => 'PL'], 'books');
+        $baseMetadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'PL'], 'books');
         $childMetadata = Metadata::createForResourceKind(['EN' => 'EN'], $rk, $baseMetadata, 'books');
-        $this->assertEquals('text', $childMetadata->getControl());
+        $this->assertEquals(MetadataControl::TEXT(), $childMetadata->getControl());
         $this->assertEquals('Prop', $childMetadata->getName());
     }
 
     public function testExtendingLanguageValues() {
         $rk = new ResourceKind([], 'books');
-        $baseMetadata = Metadata::create('text', 'Prop', ['PL' => 'PL'], 'books');
+        $baseMetadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'PL'], 'books');
         $childMetadata = Metadata::createForResourceKind(['EN' => 'EN'], $rk, $baseMetadata, 'books');
         $this->assertEquals('PL', $childMetadata->getLabel()['PL']);
         $this->assertEquals('EN', $childMetadata->getLabel()['EN']);
@@ -40,14 +41,14 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
 
     public function testOverridingLanguageValues() {
         $rk = new ResourceKind([], 'books');
-        $baseMetadata = Metadata::create('text', 'Prop', ['PL' => 'PL'], 'books');
+        $baseMetadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'PL'], 'books');
         $childMetadata = Metadata::createForResourceKind(['PL' => 'Another'], $rk, $baseMetadata, 'books');
         $this->assertEquals('Another', $childMetadata->getLabel()['PL']);
     }
 
     public function testOverridingShownInBriefValue() {
         $rk = new ResourceKind([], 'books');
-        $baseMetadata = Metadata::create('text', 'Prop', ['PL' => ''], 'books', [], [], [], false);
+        $baseMetadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => ''], 'books', [], [], [], false);
         $childMetadata1 = Metadata::createForResourceKind(['PL' => ''], $rk, $baseMetadata, 'books', [], [], [], false);
         $childMetadata2 = Metadata::createForResourceKind(['PL' => ''], $rk, $baseMetadata, 'books', [], [], [], true);
         $this->assertEquals($baseMetadata->isShownInBrief(), $childMetadata1->isShownInBrief());
@@ -56,31 +57,31 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
 
     public function testDoesNotOverrideWhenEmpty() {
         $rk = new ResourceKind([], 'books');
-        $baseMetadata = Metadata::create('text', 'Prop', ['PL' => 'PL'], 'books');
+        $baseMetadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'PL'], 'books');
         $childMetadata = Metadata::createForResourceKind(['PL' => ''], $rk, $baseMetadata, 'books');
         $this->assertEquals('PL', $childMetadata->getLabel()['PL']);
     }
 
     public function testDoesNotOverrideWhenBlank() {
         $rk = new ResourceKind([], 'books');
-        $baseMetadata = Metadata::create('text', 'Prop', ['PL' => 'PL'], 'books');
+        $baseMetadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'PL'], 'books');
         $childMetadata = Metadata::createForResourceKind(['PL' => '   '], $rk, $baseMetadata, 'books');
         $this->assertEquals('PL', $childMetadata->getLabel()['PL']);
     }
 
     public function testSettingOrdinalNumberLessThan0() {
         $this->expectException(InvalidArgumentException::class);
-        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], 'books');
+        $metadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], 'books');
         $metadata->updateOrdinalNumber(-1);
     }
 
     public function testSettingOrdinalNumberTo0() {
-        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], 'books');
+        $metadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], 'books');
         $metadata->updateOrdinalNumber(0);
     }
 
     public function testUpdating() {
-        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], 'books', ['PL' => 'AA'], ['PL' => 'AA'], [], false);
+        $metadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], 'books', ['PL' => 'AA'], ['PL' => 'AA'], [], false);
         $metadata->update(['PL' => 'AA1', 'EN' => 'BB'], ['PL' => 'BB'], ['EN' => 'BB'], [1 => [null]], true);
         $this->assertEquals(['PL' => 'AA1', 'EN' => 'BB'], $metadata->getLabel());
         $this->assertEquals(['PL' => 'BB'], $metadata->getPlaceholder());
@@ -102,7 +103,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testUpdatingWithValuesSameAsInBaseCausesInheritance() {
         $original = ['PL' => 'Original'];
         $changed = ['PL' => 'Changed'];
-        $base = Metadata::create('text', 'test', $original, 'books', $original, $original, [0], false);
+        $base = Metadata::create(MetadataControl::TEXT(), 'test', $original, 'books', $original, $original, [0], false);
         $resourceKind = $this->createMock(ResourceKind::class);
         $metadata = Metadata::createForResourceKind([], $resourceKind, $base, 'books');
         $metadata->update(
@@ -121,7 +122,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testDoesNotUpdateMissingValuesInLabel() {
-        $metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], 'books', ['PL' => 'AA'], ['PL' => 'AA']);
+        $metadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], 'books', ['PL' => 'AA'], ['PL' => 'AA']);
         $metadata->update(['EN' => 'BB'], [], [], [], false);
         $this->assertEquals(['PL' => 'AA', 'EN' => 'BB'], $metadata->getLabel());
     }
@@ -131,7 +132,8 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $overridingResourceKindIds = [101];
         /** @var ResourceKind $dummyResourceKind */
         $dummyResourceKind = $this->createMock(ResourceKind::class);
-        $baseMetadata = Metadata::create('relationship', 'base', [], 'books', [], [], ['resourceKind' => $initialResourceKindIds]);
+        $constraints = ['resourceKind' => $initialResourceKindIds];
+        $baseMetadata = Metadata::create(MetadataControl::RELATIONSHIP(), 'base', [], 'books', [], [], $constraints);
         // @codingStandardsIgnoreStart
         $concreteMetadata = Metadata::createForResourceKind([], $dummyResourceKind, $baseMetadata, 'books', [], [],
             ['resourceKind' => $overridingResourceKindIds]);
@@ -144,7 +146,8 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $overridingResourceKindIds = [];
         /** @var ResourceKind $dummyResourceKind */
         $dummyResourceKind = $this->createMock(ResourceKind::class);
-        $baseMetadata = Metadata::create('relationship', 'base', [], 'books', [], [], ['resourceKind' => $initialResourceKindIds]);
+        $constraints = ['resourceKind' => $initialResourceKindIds];
+        $baseMetadata = Metadata::create(MetadataControl::RELATIONSHIP(), 'base', [], 'books', [], [], $constraints);
         // @codingStandardsIgnoreStart
         $concreteMetadata = Metadata::createForResourceKind([], $dummyResourceKind, $baseMetadata, 'books', [], [],
             ['resourceKind' => $overridingResourceKindIds]);
@@ -156,7 +159,8 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $initialResourceKindIds = [100];
         /** @var ResourceKind $dummyResourceKind */
         $dummyResourceKind = $this->createMock(ResourceKind::class);
-        $baseMetadata = Metadata::create('relationship', 'base', [], 'books', [], [], ['resourceKind' => $initialResourceKindIds]);
+        $constraints = ['resourceKind' => $initialResourceKindIds];
+        $baseMetadata = Metadata::create(MetadataControl::RELATIONSHIP(), 'base', [], 'books', [], [], $constraints);
         $concreteMetadata = Metadata::createForResourceKind([], $dummyResourceKind, $baseMetadata, 'books', [], [], [/* nothing here */]);
         $this->assertEquals($initialResourceKindIds, $concreteMetadata->getConstraints()['resourceKind']);
     }

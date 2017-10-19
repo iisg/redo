@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration;
 
+use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Tests\IntegrationTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -10,6 +11,7 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
 
     public function testAuthSuccess() {
         $client = $this->authenticate(AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD);
+        /** @var UserEntity $user */
         $user = $this->getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());

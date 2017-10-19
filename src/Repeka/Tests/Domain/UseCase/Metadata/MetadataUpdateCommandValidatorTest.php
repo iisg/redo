@@ -2,8 +2,6 @@
 namespace Repeka\Tests\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Exception\InvalidCommandException;
-use Repeka\Domain\Repository\LanguageRepository;
-use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
@@ -15,113 +13,93 @@ use Repeka\Tests\Traits\StubsTrait;
 class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
-    /** @var LanguageRepository|\PHPUnit_Framework_MockObject_MockObject */
-    private $languageRepositoryStub;
+    /** @var ContainsOnlyAvailableLanguagesRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $languagesRule;
+    /** @var ConstraintSetMatchesControlRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $constraintSetRule;
     /** @var ConstraintArgumentsAreValidRule|\PHPUnit_Framework_MockObject_MockObject */
-    private $constraintArgumentsAreValid;
+    private $constraintArgumentsRule;
     /** @var ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule|\PHPUnit_Framework_MockObject_MockObject */
-    private $rkConstraintIsUserRule;
-    /** @var MetadataUpdateCommandValidator */
-    private $validator;
+    private $rkConstraintRule;
 
-    protected function setUp() {
-        $this->languageRepositoryStub = $this->createMock(LanguageRepository::class);
-        $this->languageRepositoryStub->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
-        $this->constraintArgumentsAreValid = $this->createMock(ConstraintArgumentsAreValidRule::class);
-        $this->rkConstraintIsUserRule = $this->createMock(ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class);
-        $this->validator = new MetadataUpdateCommandValidator(
-            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
-            new ConstraintSetMatchesControlRule($this->createMock(MetadataRepository::class)),
-            $this->constraintArgumentsAreValid,
-            $this->rkConstraintIsUserRule
+    /** @var MetadataUpdateCommand */
+    private $command;
+
+    private function constraintSetMatchesControlRule(bool $result): ConstraintSetMatchesControlRule {
+        /** @var ConstraintSetMatchesControlRule|\PHPUnit_Framework_MockObject_MockObject $rule */
+        $rule = $this->createRuleMock(ConstraintSetMatchesControlRule::class, $result);
+        $rule->method('forMetadataId')->willReturnSelf();
+        $rule->method('forControl')->willReturnSelf();
+        return $rule;
+    }
+
+    private function resourceKindConstraintIsUser(bool $result): ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule {
+        return $this->createRuleWithFactoryMethodMock(
+            ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
+            'forMetadataId',
+            $result
         );
     }
 
-    public function testPassesWithoutResourceKindConstraint() {
-        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [], false);
-        $this->validator->validate($command);
-    }
-
-    public function testPassingValidationWhenNoEditAtAll() {
-        $command = new MetadataUpdateCommand(1, [], [], [], [], false);
-        $this->validator->validate($command);
-    }
-
-    public function testFailsWithWrongMetadataId() {
-        $this->expectException(InvalidCommandException::class);
-        $command = new MetadataUpdateCommand(0, [], [], [], [], false);
-        $this->validator->validate($command);
-    }
-
-    public function testFailsWithInvalidLanguage() {
-        $this->expectException(InvalidCommandException::class);
-        $command = new MetadataUpdateCommand(1, ['X' => 'bad'], [], [], [], false);
-        $this->validator->validate($command);
+    protected function setUp() {
+        $this->languagesRule = $this->createRuleMock(ContainsOnlyAvailableLanguagesRule::class, true);
+        $this->constraintSetRule = $this->constraintSetMatchesControlRule(true);
+        $this->constraintArgumentsRule = $this->createRuleMock(ConstraintArgumentsAreValidRule::class, true);
+        $this->rkConstraintRule = $this->resourceKindConstraintIsUser(true);
+        $this->command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], ['resourceKind' => [0],], false);
     }
 
     public function testPasses() {
-        $metadata = $this->createMetadataMock(1, null, 'relationship');
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
-        $this->constraintArgumentsAreValid->method('validate')->willReturn(true);
-        $this->rkConstraintIsUserRule->method('validate')->willReturn(true);
         $validator = new MetadataUpdateCommandValidator(
-            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
-            new ConstraintSetMatchesControlRule($metadataRepository),
-            $this->constraintArgumentsAreValid,
-            $this->rkConstraintIsUserRule
+            $this->languagesRule,
+            $this->constraintSetRule,
+            $this->constraintArgumentsRule,
+            $this->rkConstraintRule
         );
-        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
-            'resourceKind' => [0]
-        ], false);
-        $validator->validate($command);
+        $validator->validate($this->command);
     }
 
-    public function testFailsForRelationshipWithoutResourceKindConstraint() {
+    public function testFailsWithInvalidLanguages() {
         $this->expectException(InvalidCommandException::class);
-        $metadata = $this->createMetadataMock(1, null, 'relationship');
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
-        $this->constraintArgumentsAreValid->expects($this->never())->method('validate');
         $validator = new MetadataUpdateCommandValidator(
-            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
-            new ConstraintSetMatchesControlRule($metadataRepository),
-            $this->constraintArgumentsAreValid,
-            $this->rkConstraintIsUserRule
+            $this->createRuleMock(ContainsOnlyAvailableLanguagesRule::class, false),
+            $this->constraintSetRule,
+            $this->constraintArgumentsRule,
+            $this->rkConstraintRule
         );
-        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [], false);
-        $validator->validate($command);
+        $validator->validate($this->command);
     }
 
-    public function testFailsForInvalidConstraintArguments() {
-        $metadata = $this->createMetadataMock(1, null, 'relationship');
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
-        $this->constraintArgumentsAreValid->method('validate')->willReturn(false);
-        $this->rkConstraintIsUserRule->method('validate')->willReturn(true);
+    public function testFailsWithInvalidConstraintSet() {
+        $this->expectException(InvalidCommandException::class);
         $validator = new MetadataUpdateCommandValidator(
-            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
-            new ConstraintSetMatchesControlRule($metadataRepository),
-            $this->constraintArgumentsAreValid,
-            $this->rkConstraintIsUserRule
+            $this->languagesRule,
+            $this->constraintSetMatchesControlRule(false),
+            $this->constraintArgumentsRule,
+            $this->rkConstraintRule
         );
-        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
-            'resourceKind' => [0],
-        ], false);
-        $validator->validate($command);
+        $validator->validate($this->command);
     }
 
-    public function testFailsForFailedRelationshipRequirement() {
-        $metadata = $this->createMetadataMock(1, null, 'relationship');
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [1 => $metadata]);
-        $this->constraintArgumentsAreValid->method('validate')->willReturn(true);
-        $this->rkConstraintIsUserRule->method('validate')->willReturn(false);
+    public function testFailsWithInvalidConstraintArguments() {
+        $this->expectException(InvalidCommandException::class);
         $validator = new MetadataUpdateCommandValidator(
-            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
-            new ConstraintSetMatchesControlRule($metadataRepository),
-            $this->constraintArgumentsAreValid,
-            $this->rkConstraintIsUserRule
+            $this->languagesRule,
+            $this->constraintSetRule,
+            $this->createRuleMock(ConstraintArgumentsAreValidRule::class, false),
+            $this->rkConstraintRule
         );
-        $command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], [
-            'resourceKind' => [0],
-        ], false);
-        $validator->validate($command);
+        $validator->validate($this->command);
+    }
+
+    public function testFailsWithInvalidResourceKindConstraint() {
+        $this->expectException(InvalidCommandException::class);
+        $validator = new MetadataUpdateCommandValidator(
+            $this->languagesRule,
+            $this->constraintSetRule,
+            $this->constraintArgumentsRule,
+            $this->resourceKindConstraintIsUser(false)
+        );
+        $validator->validate($this->command);
     }
 }

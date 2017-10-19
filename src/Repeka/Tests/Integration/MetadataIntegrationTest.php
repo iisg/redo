@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -23,7 +24,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $responseContent = $client->getResponse()->getContent();
         $this->assertJsonStringSimilarToArray([[
             'id' => $metadata1->getId(),
-            'control' => $metadata1->getControl(),
+            'control' => $metadata1->getControl()->getValue(),
             'name' => $metadata1->getName(),
             'label' => $metadata1->getLabel(),
             'description' => [],
@@ -35,7 +36,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'resourceClass' => $metadata1->getResourceClass(),
         ], [
             'id' => $metadata2->getId(),
-            'control' => $metadata2->getControl(),
+            'control' => $metadata2->getControl()->getValue(),
             'name' => $metadata2->getName(),
             'label' => $metadata2->getLabel(),
             'description' => $metadata2->getDescription(),
@@ -72,7 +73,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         /** @var $metadataRepository MetadataRepository */
         $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
         $metadata = $metadataRepository->findOne($response->id);
-        $this->assertEquals($metadataArray['control'], $metadata->getControl());
+        $this->assertEquals($metadataArray['control'], $metadata->getControl()->getValue());
         $this->assertEquals($metadataArray['name'], $metadata->getName());
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
@@ -110,8 +111,8 @@ class MetadataIntegrationTest extends IntegrationTestCase {
     }
 
     public function testOrderingInvalidIds() {
-        $metadata1 = Metadata::create('text', 'Metadata1', ['TEST' => 'First metadata'], 'books');
-        $metadata2 = Metadata::create('integer', 'Metadata2', ['TEST' => 'Second metadata'], 'books');
+        $metadata1 = Metadata::create(MetadataControl::TEXT(), 'Metadata1', ['TEST' => 'First metadata'], 'books');
+        $metadata2 = Metadata::create(MetadataControl::INTEGER(), 'Metadata2', ['TEST' => 'Second metadata'], 'books');
         $metadata1->updateOrdinalNumber(0);
         $metadata2->updateOrdinalNumber(1);
         $this->persistAndFlush([$metadata1, $metadata2]);

@@ -4,6 +4,7 @@ namespace Repeka\Tests\Application\Upload;
 use Repeka\Application\Upload\BasicResourceFileHelper;
 use Repeka\Application\Upload\FilesystemDriver;
 use Repeka\Application\Upload\ResourceFilePathGenerator;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Tests\Traits\StubsTrait;
@@ -34,8 +35,8 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $fileBaseMetadataId = 1;
         $otherBaseMetadataId = $fileBaseMetadataId + 1;
         $resourceKind = $this->createResourceKindMock([
-            $this->createMetadataMock(11, $fileBaseMetadataId, 'file'),
-            $this->createMetadataMock(12, $otherBaseMetadataId, 'dummy'),
+            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
+            $this->createMetadataMock(12, $otherBaseMetadataId, MetadataControl::TEXTAREA()),
         ]);
         $contents = [
             $fileBaseMetadataId => ['somewhere/todo.list', 'somewhere/cuteCat.jpg'],
@@ -64,7 +65,7 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
     public function testFilesAreNotMovedWhenTheyAreInCorrectPath() {
         $fileBaseMetadataId = 1;
         $resourceKind = $this->createResourceKindMock([
-            $this->createMetadataMock(11, $fileBaseMetadataId, 'file'),
+            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
         ]);
         $contents = [
             $fileBaseMetadataId => ["$this->destinationPath/todo.list"],
@@ -80,7 +81,7 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $this->expectException(DomainException::class);
         $fileBaseMetadataId = 1;
         $resourceKind = $this->createResourceKindMock([
-            $this->createMetadataMock(11, $fileBaseMetadataId, 'file'),
+            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
         ]);
         $contents = [
             $fileBaseMetadataId => [

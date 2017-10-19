@@ -4,6 +4,7 @@ namespace Repeka\Tests\Domain\UseCase\Metadata;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommand;
@@ -47,6 +48,6 @@ class MetadataChildCreateCommandHandlerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('Test', $metadataChild->getLabel()['PL']);
         $this->assertEmpty($metadataChild->getPlaceholder());
         $this->assertEmpty($metadataChild->getDescription());
-        $this->assertEquals('textarea', $metadataChild->getControl());
+        $this->assertEquals(MetadataControl::TEXTAREA(), $metadataChild->getControl());
     }
 }

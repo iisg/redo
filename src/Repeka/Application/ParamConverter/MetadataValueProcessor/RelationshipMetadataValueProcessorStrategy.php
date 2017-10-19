@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\ParamConverter\MetadataValueProcessor;
 
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\ResourceRepository;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,7 +17,7 @@ class RelationshipMetadataValueProcessorStrategy implements MetadataValueProcess
         return array_values(array_map([$this->resourceRepository, 'findOne'], $values));
     }
 
-    public function getSupportedControl(): string {
-        return 'relationship';
+    public function getSupportedControl(): MetadataControl {
+        return MetadataControl::RELATIONSHIP();
     }
 }

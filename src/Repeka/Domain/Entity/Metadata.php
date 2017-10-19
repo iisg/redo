@@ -5,6 +5,7 @@ use Assert\Assertion;
 
 class Metadata implements Identifiable {
     private $id;
+    /** @var string */
     private $control;
     private $name;
     private $label = [];
@@ -25,7 +26,7 @@ class Metadata implements Identifiable {
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     public static function create(
-        string $control,
+        MetadataControl $control,
         string $name,
         array $label,
         string $resourceClass,
@@ -35,7 +36,7 @@ class Metadata implements Identifiable {
         bool $shownInBrief = false
     ): Metadata {
         $metadata = new self();
-        $metadata->control = $control;
+        $metadata->control = $control->getValue();  // $control must be a string internally because it's so when read from DB
         $metadata->name = $name;
         $metadata->label = $label;
         $metadata->ordinalNumber = -1;
@@ -88,8 +89,8 @@ class Metadata implements Identifiable {
         return $this->id;
     }
 
-    public function getControl(): string {
-        return $this->baseMetadata ? $this->baseMetadata->getControl() : $this->control;
+    public function getControl(): MetadataControl {
+        return $this->baseMetadata ? $this->baseMetadata->getControl() : new MetadataControl($this->control);
     }
 
     public function getName(): string {

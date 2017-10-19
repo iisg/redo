@@ -3,6 +3,7 @@ namespace Repeka\Application\Upload;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Upload\ResourceFileHelper;
 
@@ -38,7 +39,7 @@ class BasicResourceFileHelper implements ResourceFileHelper {
         $fileMetadataList = array_values(array_filter(
             $resource->getKind()->getMetadataList(),
             function (Metadata $metadata) {
-                return $metadata->getControl() == 'file';
+                return $metadata->getControl() == MetadataControl::FILE();
             }
         ));
         $fileMetadataBaseIds = array_map(function (Metadata $metadata) {

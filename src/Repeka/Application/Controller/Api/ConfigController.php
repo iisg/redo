@@ -2,6 +2,7 @@
 namespace Repeka\Application\Controller\Api;
 
 use Repeka\Application\Resources\FrontendLocaleProvider;
+use Repeka\Domain\Entity\MetadataControl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class ConfigController extends ApiController {
@@ -11,7 +12,6 @@ class ConfigController extends ApiController {
     const PUBLIC_PARAMETERS = [
         'application_version' => 'application_version',
         'default_ui_language' => 'repeka.default_ui_language',
-        'supported_controls' => 'repeka.supported_controls',
         'resource_classes' => 'repeka.resource_classes',
         'static_permissions' => 'repeka.static_permissions',
     ];
@@ -26,6 +26,7 @@ class ConfigController extends ApiController {
     public function getConfigAction() {
         $parameters = array_map([$this, 'getParameter'], self::PUBLIC_PARAMETERS);
         $response = array_merge($parameters, [
+            'supported_controls' => MetadataControl::toArray(),
             'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
         ]);
         return $this->createJsonResponse($response);

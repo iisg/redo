@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandHandler;
@@ -17,7 +18,7 @@ class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
         $this->handler = new MetadataUpdateCommandHandler($this->metadataRepository);
-        $this->metadata = Metadata::create('text', 'Prop', ['PL' => 'AA'], 'books', ['PL' => 'AA'], ['PL' => 'AA']);
+        $this->metadata = Metadata::create(MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], 'books', ['PL' => 'AA'], ['PL' => 'AA']);
         $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')->willReturn($this->metadata);
         $this->metadataRepository->expects($this->atLeastOnce())->method('save')->with($this->metadata)->willReturnArgument(0);
     }
