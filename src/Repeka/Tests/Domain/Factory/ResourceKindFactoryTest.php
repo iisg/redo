@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\Factory;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\Factory\ResourceKindFactory;
@@ -34,7 +35,7 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreatingResourceKind() {
         $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')
-            ->willReturn(Metadata::create('text', 'base', [], 'books'));
+            ->willReturn(Metadata::create(MetadataControl::TEXT(), 'base', [], 'books'));
         $resourceKind = $this->factory->create($this->command);
         $this->assertEquals(['PL' => 'Labelka'], $resourceKind->getLabel());
         $this->assertCount(2, $resourceKind->getMetadataList());
@@ -44,7 +45,7 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testSavingMetadataOrdinalNumbers() {
         $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')
-            ->willReturn(Metadata::create('text', 'base', [], 'books'));
+            ->willReturn(Metadata::create(MetadataControl::TEXT(), 'base', [], 'books'));
         $resourceKind = $this->factory->create($this->command);
         $this->assertEquals(0, $resourceKind->getMetadataList()[0]->getOrdinalNumber());
         $this->assertEquals(1, $resourceKind->getMetadataList()[1]->getOrdinalNumber());

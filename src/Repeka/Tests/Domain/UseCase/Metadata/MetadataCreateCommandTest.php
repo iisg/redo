@@ -16,6 +16,6 @@ class MetadataCreateCommandTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($createCommand->getLabel()['PL'], 'Labelka');
         $this->assertEmpty($createCommand->getPlaceholder());
         $this->assertEmpty($createCommand->getDescription());
-        $this->assertEquals('text', $createCommand->getControl());
+        $this->assertEquals('text', $createCommand->getControlName());
     }
 }

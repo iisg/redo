@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
@@ -51,7 +52,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingResourceKind() {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $baseMetadata = Metadata::create('int', 'New base', ['TEST' => 'New base metadata'], 'books');
+        $baseMetadata = Metadata::create(MetadataControl::INTEGER(), 'New base', ['TEST' => 'New base metadata'], 'books');
         $em->persist($baseMetadata);
         $em->flush();
         $client = self::createAdminClient();
@@ -59,7 +60,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             'label' => ['TEST' => 'created'],
             'metadataList' => [[
                 'baseId' => $baseMetadata->getId(),
-                'control' => $baseMetadata->getControl(),
+                'control' => $baseMetadata->getControl()->getValue(),
                 'description' => [],
                 'label' => ['TEST' => 'created'],
                 'placeholder' => [],
@@ -88,26 +89,26 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             'label' => ['TEST' => 'modified'],
             'metadataList' => [[
                 'baseId' => $this->metadata2->getBaseId(),
-                'control' => $this->metadata2->getControl(),
+                'control' => $this->metadata2->getControl()->getValue(),
                 'description' => $this->metadata2->getDescription(),
                 'id' => $this->metadata2->getId(),
                 'label' => $this->metadata2->getLabel(),
                 'name' => $this->metadata2->getName(),
                 'placeholder' => $this->metadata2->getPlaceholder(),
                 'shownInBrief' => false,
-                'resourceClass' => 'books'
+                'resourceClass' => 'books',
             ], [
                 'baseId' => $this->metadata1->getBaseId(),
-                'control' => $this->metadata1->getControl(),
+                'control' => $this->metadata1->getControl()->getValue(),
                 'description' => $this->metadata1->getDescription(),
                 'id' => $this->metadata1->getId(),
                 'label' => $this->metadata1->getLabel(),
                 'name' => $this->metadata1->getName(),
                 'placeholder' => ['TEST' => 'modified'],
                 'shownInBrief' => false,
-                'resourceClass' => 'books'
+                'resourceClass' => 'books',
             ]],
-            'resourceClass' => 'books'
+            'resourceClass' => 'books',
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $client = self::createClient();

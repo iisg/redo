@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\Entity;
 
 use Assert\InvalidArgumentException;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\MetadataAlreadyPresentException;
@@ -135,14 +136,14 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingMetadataByControl() {
-        $metadataA1 = $this->createMetadataMock(10, 1, 'A');
-        $metadataA2 = $this->createMetadataMock(20, 2, 'A');
-        $metadataB = $this->createMetadataMock(30, 3, 'B');
+        $metadataA1 = $this->createMetadataMock(10, 1, MetadataControl::TEXTAREA());
+        $metadataA2 = $this->createMetadataMock(20, 2, MetadataControl::TEXTAREA());
+        $metadataB = $this->createMetadataMock(30, 3, MetadataControl::BOOLEAN());
         $resourceKind = new ResourceKind([], 'books');
         $resourceKind->addMetadata($metadataA1);
         $resourceKind->addMetadata($metadataB);
         $resourceKind->addMetadata($metadataA2);
-        $metadataWithAControl = $resourceKind->getMetadataByControl('A');
+        $metadataWithAControl = $resourceKind->getMetadataByControl(MetadataControl::TEXTAREA());
         $this->assertCount(2, $metadataWithAControl);
         $this->assertContains($metadataA1, $metadataWithAControl);
         $this->assertContains($metadataA2, $metadataWithAControl);

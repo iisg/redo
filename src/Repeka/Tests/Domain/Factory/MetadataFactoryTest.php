@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\Factory;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
@@ -38,7 +39,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('Labelka', $metadata->getLabel()['PL']);
         $this->assertEmpty($metadata->getPlaceholder());
         $this->assertEmpty($metadata->getDescription());
-        $this->assertEquals('textarea', $metadata->getControl());
+        $this->assertEquals(MetadataControl::TEXTAREA(), $metadata->getControl());
         $this->assertEquals('books', $metadata->getResourceClass());
     }
 
@@ -51,7 +52,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('Test', $created->getLabel()['PL']);
         $this->assertEmpty($created->getPlaceholder());
         $this->assertEmpty($created->getDescription());
-        $this->assertEquals('textarea', $created->getControl());
+        $this->assertEquals(MetadataControl::TEXTAREA(), $created->getControl());
     }
 
     public function testCreatingChildMetadataWithBaseAndParent() {

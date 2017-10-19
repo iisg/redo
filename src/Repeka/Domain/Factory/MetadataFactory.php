@@ -3,13 +3,14 @@ namespace Repeka\Domain\Factory;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 
 class MetadataFactory {
     public function create(MetadataCreateCommand $command) {
         return Metadata::create(
-            $command->getControl(),
+            new MetadataControl($command->getControlName()),
             $command->getName(),
             $command->getLabel(),
             $command->getResourceClass(),

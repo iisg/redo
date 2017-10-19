@@ -3,6 +3,7 @@ namespace Repeka\Application\ParamConverter\MetadataValueProcessor;
 
 use Repeka\Application\Upload\FilesystemDriver;
 use Repeka\Application\Upload\ResourceFilePathGenerator;
+use Repeka\Domain\Entity\MetadataControl;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,7 +39,7 @@ class FileMetadataValueProcessorStrategy implements MetadataValueProcessorStrate
         return $processedValues;
     }
 
-    public function getSupportedControl(): string {
-        return 'file';
+    public function getSupportedControl(): MetadataControl {
+        return MetadataControl::FILE();
     }
 }

@@ -8,7 +8,7 @@ class MetadataCreateCommand extends Command {
     private $label;
     private $description;
     private $placeholder;
-    private $control;
+    private $controlName;
     private $constraints;
     private $shownInBrief;
     private $resourceClass;
@@ -21,14 +21,14 @@ class MetadataCreateCommand extends Command {
         array $placeholder,
         string $control,
         string $resourceClass,
-        array $constraints = [],
+        array $constraints = ['count' => []],
         bool $shownInBrief = false
     ) {
         $this->name = $name;
         $this->label = $label;
         $this->description = $description;
         $this->placeholder = $placeholder;
-        $this->control = $control;
+        $this->controlName = $control;
         $this->constraints = $constraints;
         $this->shownInBrief = $shownInBrief;
         $this->resourceClass = $resourceClass;
@@ -50,8 +50,8 @@ class MetadataCreateCommand extends Command {
         return $this->placeholder;
     }
 
-    public function getControl(): string {
-        return $this->control;
+    public function getControlName(): string {
+        return $this->controlName;
     }
 
     public function getConstraints(): array {

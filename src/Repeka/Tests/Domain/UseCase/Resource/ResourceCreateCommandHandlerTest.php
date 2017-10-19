@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\Resource;
 
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
@@ -67,7 +68,7 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     public function testMovingFiles() {
         $fileBaseMetadataId = 1;
         $resourceKind = $this->createResourceKindMock([
-            $this->createMetadataMock(11, $fileBaseMetadataId, 'file'),
+            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
         ]);
         $contents = [$fileBaseMetadataId => []];
         $command = new ResourceCreateCommand($resourceKind, $contents, $this->resourceClass);

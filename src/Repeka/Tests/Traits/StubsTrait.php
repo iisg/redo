@@ -5,6 +5,7 @@ use Repeka\Application\Entity\EntityUtils;
 use Repeka\Domain\Entity\EntityHelper;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
@@ -32,7 +33,15 @@ trait StubsTrait {
     }
 
     /** @return Metadata|\PHPUnit_Framework_MockObject_MockObject */
-    protected function createMetadataMock(int $id, ?int $baseId = null, string $control = 'dummy', array $constraints = []): Metadata {
+    protected function createMetadataMock(
+        int $id,
+        ?int $baseId = null,
+        MetadataControl $control = null,
+        array $constraints = []
+    ): Metadata {
+        if ($control == null) {
+            $control = MetadataControl::TEXTAREA();
+        }
         /** @var Metadata|\PHPUnit_Framework_MockObject_MockObject $metadata */
         $metadata = $this->createMockEntity(Metadata::class, $id);
         $metadata->method('getBaseId')->willReturn($baseId);
@@ -64,6 +73,7 @@ trait StubsTrait {
         $mock->method('getContents')->willReturn($contents);
         if ($contents) {
             $mock->method('getValues')->willReturnCallback(function ($metadata) use ($contents) {
+                /** @var Metadata $metadata */
                 if (array_key_exists($metadata->getBaseId(), $contents)) {
                     return $contents[$metadata->getBaseId()];
                 } else {

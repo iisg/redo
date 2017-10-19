@@ -57,7 +57,7 @@ class ResourceKind implements Identifiable {
     }
 
     /** @return Metadata[] */
-    public function getMetadataByControl(string $control): array {
+    public function getMetadataByControl(MetadataControl $control): array {
         return array_values(array_filter($this->getMetadataList(), function (Metadata $metadata) use ($control) {
             return $control == $metadata->getControl();
         }));

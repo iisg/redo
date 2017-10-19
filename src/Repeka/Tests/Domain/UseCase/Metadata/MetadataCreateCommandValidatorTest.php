@@ -3,16 +3,16 @@ namespace Repeka\Tests\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\LanguageRepository;
-use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Tests\Traits\StubsTrait;
+use Respect\Validation\Exceptions\ValidationException;
 
 class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
@@ -35,7 +35,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea']),
-            new ConstraintSetMatchesControlRule($this->createMock(MetadataRepository::class)),
+            $this->createMock(ConstraintSetMatchesControlRule::class),
             $this->constraintArgumentsAreValid,
             $this->containsResourceClass
         );
@@ -63,7 +63,7 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         try {
             $this->validator->validate($command);
         } catch (InvalidCommandException $e) {
-            $this->assertEquals('control', $e->getViolations()[0]['field']);
+            $this->assertEquals('controlName', $e->getViolations()[0]['field']);
         }
     }
 
@@ -82,15 +82,17 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testFailsValidationWhenReferencedResourceKindDoesNotExist() {
         $this->expectException(InvalidCommandException::class);
         $this->constraintArgumentsAreValid->method('validate')->willReturn(false);
+        $this->constraintArgumentsAreValid->method('assert')->willThrowException(new ValidationException());
         $validator = new MetadataCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea']),
-            new ConstraintSetMatchesControlRule($this->createMock(MetadataRepository::class)),
+            $this->createMock(ConstraintSetMatchesControlRule::class),
             $this->constraintArgumentsAreValid,
             $this->containsResourceClass
         );
-        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', ['resourceKind' => [1]]);
+        $constraints = ['resourceKind' => [1], 'count' => []];
+        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', $constraints);
         $validator->validate($command);
     }
 
@@ -100,11 +102,12 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
             new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea', 'relationship']),
-            new ConstraintSetMatchesControlRule($this->createMock(MetadataRepository::class)),
+            $this->createMock(ConstraintSetMatchesControlRule::class),
             $this->constraintArgumentsAreValid,
             $this->containsResourceClass
         );
-        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', ['resourceKind' => [1]]);
+        $constraints = ['resourceKind' => [1], 'count' => []];
+        $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', $constraints);
         $validator->validate($command);
     }
 

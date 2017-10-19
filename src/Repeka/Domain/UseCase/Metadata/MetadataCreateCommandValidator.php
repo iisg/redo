@@ -2,13 +2,14 @@
 namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
@@ -52,10 +53,12 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('name', Validator::notBlank())
             ->attribute('placeholder', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('description', $this->containsOnlyAvailableLanguagesRule)
-            ->attribute('control', $this->isValidControlRule)
+            ->attribute('controlName', Validator::callback(function ($control) {
+                return MetadataControl::isValid($control);
+            }))
             ->attribute('shownInBrief', Validator::boolType())
             ->attribute('resourceClass', $this->resourceClassExistsRule)
-            ->attribute('constraints', $this->constraintSetMatchesControlRule->forControl($command->getControl()))
+            ->attribute('constraints', $this->constraintSetMatchesControlRule->forControl($command->getControlName()))
             ->attribute('constraints', $this->constraintArgumentsAreValidRule);
     }
 }

@@ -2,7 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\Metadata;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use Repeka\CoreModule\Domain\Validator\AnnotationBasedValidator;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
@@ -30,6 +30,6 @@ class MetadataCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('books', $metadata->getResourceClass());
         $this->assertEmpty($metadata->getPlaceholder());
         $this->assertEmpty($metadata->getDescription());
-        $this->assertEquals('textarea', $metadata->getControl());
+        $this->assertEquals(MetadataControl::TEXTAREA(), $metadata->getControl());
     }
 }

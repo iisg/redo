@@ -12,7 +12,7 @@ class MetadataNormalizer extends AbstractNormalizer {
         return [
             'id' => $metadata->getId(),
             'name' => $metadata->getName(),
-            'control' => $metadata->getControl(),
+            'control' => $metadata->getControl()->getValue(),
             'label' => $metadata->getLabel(),
             'placeholder' => $this->emptyArrayAsObject($metadata->getPlaceholder()),
             'description' => $this->emptyArrayAsObject($metadata->getDescription()),

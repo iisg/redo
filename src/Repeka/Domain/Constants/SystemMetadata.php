@@ -5,6 +5,7 @@ use Assert\Assertion;
 use MyCLabs\Enum\Enum;
 use Repeka\Application\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 
 /**
  * @method static SystemMetadata PARENT()
@@ -17,10 +18,19 @@ class SystemMetadata extends Enum {
         $value = $this->getValue();
         $metadata = null;
         if ($value == self::PARENT) {
-            $metadata = Metadata::create('relationship', 'Parent', ['EN' => 'Parent', 'PL' => 'Rodzic',], '', [], [], [], true);
+            $metadata = Metadata::create(
+                MetadataControl::RELATIONSHIP(),
+                'Parent',
+                ['EN' => 'Parent', 'PL' => 'Rodzic',],
+                '',
+                [],
+                [],
+                [],
+                true
+            );
         } elseif ($value == self::USERNAME) {
             $metadata = Metadata::create(
-                'text',
+                MetadataControl::TEXT(),
                 'Username',
                 ['EN' => 'Username', 'PL' => 'Nazwa użytkownika'],
                 SystemResourceClass::USER,
