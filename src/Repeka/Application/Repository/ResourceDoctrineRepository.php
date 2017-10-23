@@ -97,10 +97,7 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         $query = $em->createNativeQuery(<<<SQL
 -- Filters rows by user data IDs (ie. ID of user's resource, not user's entity!)
 SELECT
-  resources_with_assignees.id       AS id,
-  resources_with_assignees.kind_id  AS kind_id,
-  resources_with_assignees.contents AS contents,
-  resources_with_assignees.marking  AS marking
+  resources_with_assignees.*
 FROM (
        -- Picks only metadata_id from resource_contents object
        -- Each row contains a resource ID and an array of users it's assigned to
