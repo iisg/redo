@@ -46,6 +46,7 @@ doctrine:
     dbname: repeka
     user: postgres
     password: repeka
+    server_version: 10.0
   orm:
     auto_mapping: false
     mappings:
