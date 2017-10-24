@@ -9,6 +9,8 @@ Repeka\Application\Entity\UserEntity:
   manyToMany:
     userRoles:
       targetEntity: Repeka\Domain\Entity\UserRole
+      inversedBy: users
+      cascade: ["persist"]
       joinTable:
         name: user_role
         joinColumns:

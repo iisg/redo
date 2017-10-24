@@ -15,4 +15,6 @@ interface UserRoleRepository {
     public function save(UserRole $user): UserRole;
 
     public function exists(string $id): bool;
+
+    public function delete(UserRole $resource): void;
 }

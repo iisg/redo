@@ -1,8 +1,9 @@
 import {MultilingualText} from "resources-config/metadata/metadata";
 import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
+import {Entity} from "../../common/entity/entity";
 
-export class UserRole {
+export class UserRole extends Entity {
   id: string;
   name: MultilingualText = {};
   systemRoleName: string;

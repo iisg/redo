@@ -92,7 +92,7 @@
                             <button type="button"
                                 class="btn btn-danger btn-narrow ${metadata.hovered ? 'btn-raised' : ''}"
                                 click.trigger="deleteMetadata(metadata)"
-                                disabled.bind="metadata.pendingRequest">
+                                disabled.bind="metadata.pendingRequest || metadata.id < 0">
                                 <fa name="trash fw"></fa>
                             </button>
                         </span>
