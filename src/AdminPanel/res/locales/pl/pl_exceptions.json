@@ -16,8 +16,10 @@
     "resourceKind": "Rodzaj zasobu",
     "resourceWorkflow": "Proces",
     "newConstraints": "Ograniczenia",
-    "metadataList": "Lista metadanych"
+    "metadataList": "Lista metadanych",
+    "userRole": "Rola użytkownika"
   },
+  "user role is in use": "Rola jest w użyciu.",
   "resource has children": "zasób ma podzasoby.",
   "resources of this kind exist": "istnieją zasoby tego rodzaju.",
   "workflow is assigned to one of resource kinds": "proces jest przypisany do jednego z rodzajów zasobów",

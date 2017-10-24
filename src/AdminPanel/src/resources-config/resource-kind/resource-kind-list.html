@@ -69,7 +69,7 @@
                             <button type="button"
                                 class="btn btn-danger ${resourceKind.hovered ? 'btn-raised' : ''}"
                                 click.trigger="deleteResourceKind(resourceKind)"
-                                disabled.bind="resourceKind.pendingRequest">
+                                disabled.bind="resourceKind.pendingRequest || resourceKind.id < 0">
                                 <fa name="trash"></fa>
                             </button>
                         </div>

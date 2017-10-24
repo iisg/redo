@@ -20,7 +20,7 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     private $roles;
 
     /**
-     * OneToMany with custom UserRoles.
+     * ManyToMany with custom UserRoles.
      * @var ArrayCollection|UserRole[]
      */
     private $userRoles;

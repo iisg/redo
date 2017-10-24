@@ -30,16 +30,24 @@
                 <tr class="au-animate fade-inup-outdown"
                     hover-aware.one-time="role"
                     repeat.for="role of roles">
-                    <td if.bind="!role['editing']">${role.name | inCurrentLanguage}</td>
-                    <td if.bind="!role['editing']"
+                    <td if.bind="!role.editing">${role.name | inCurrentLanguage}</td>
+                    <td if.bind="!role.editing"
                         class="text-right">
+                        <pending-throbber entity.bind="role"></pending-throbber>
                         <button type="button"
-                            class="btn btn-default ${role['hovered'] ? 'btn-raised' : ''}"
-                            click.delegate="role['editing'] = true">
+                            class="btn btn-default ${role.hovered ? 'btn-raised' : ''}"
+                            click.trigger="role.editing = true"
+                            disabled.bind="role.pendingRequest">
                             <fa name="edit"></fa>
                         </button>
+                        <button type="button"
+                            class="btn btn-danger btn-narrow ${role.hovered ? 'btn-raised' : ''}"
+                            click.trigger="deleteRole(role)"
+                            disabled.bind="role.pendingRequest || role.id < 0">
+                            <fa name="trash fw"></fa>
+                        </button>
                     </td>
-                    <td if.bind="role['editing']"
+                    <td if.bind="role.editing"
                         colspan="2">
                         <user-role-form edit.bind="role"
                             cancel.call="role.editing = false"

@@ -6,6 +6,10 @@ Repeka\Domain\Entity\UserRole:
     id:
       type: integer
       generator: {strategy: AUTO}
+  manyToMany:
+    users:
+      targetEntity: Repeka\Application\Entity\UserEntity
+      mappedBy: userRoles
   fields:
     name:
       type: json_document

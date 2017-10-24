@@ -2,14 +2,23 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemUserRole;
 
 class UserRole implements Identifiable {
     private $id;
     private $name;
+    /**
+     * ManyToMany with UserEntity.
+     * @var ArrayCollection|UserEntity[]
+     */
+    private $users;
 
     public function __construct(array $name) {
         $this->name = $name;
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): int {
@@ -31,5 +40,9 @@ class UserRole implements Identifiable {
     public function toSystemRole(): SystemUserRole {
         Assertion::true($this->isSystemRole());
         return new SystemUserRole($this->id);
+    }
+
+    public function getUsers(): Collection {
+        return $this->users;
     }
 }

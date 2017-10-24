@@ -15,6 +15,7 @@
     "resourceKind": "Resource kind",
     "resourceWorkflow": "Workflow",
     "newConstraints": "Constraints",
-    "metadataList": "Metadata list"
+    "metadataList": "Metadata list",
+    "userRole": "User role"
   }
 }
