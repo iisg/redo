@@ -23,10 +23,10 @@
                 </div>
             </div>
             <div class="row au-stagger"
-                show.bind="resourceKind.metadataList.length > 0"
-                oa-sortable="items.bind: resourceKind.metadataList; allow-drag.call: isSortingMetadata($event); axis: y">
+                show.bind="editableMetadataList.length > 0"
+                oa-sortable="items.bind: editableMetadataList; allow-drag.call: isSortingMetadata($event); axis: y">
                 <div class="col-xs-12 resource-kind-form-metadata-item ${metadata.sortingClass} ${sortingMetadata ? 'vertically-sortable' : ''}"
-                    repeat.for="metadata of resourceKind.metadataList & validate"
+                    repeat.for="metadata of editableMetadataList & validate"
                     oa-sortable-item="item.bind: metadata">
                     <div class="well"
                         if.bind="base(metadata) & signal:'base-metadata-fetched'">
