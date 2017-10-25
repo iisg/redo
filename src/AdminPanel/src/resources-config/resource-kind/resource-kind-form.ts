@@ -59,6 +59,11 @@ export class ResourceKindForm implements ComponentDetached {
     return !!this.resourceKind.id;
   }
 
+  @computedFrom('resourceKind.metadataList')
+  get editableMetadataList(): Metadata[] {
+    return this.resourceKind.metadataList.filter(metadata => metadata.id > 0);
+  }
+
   editChanged() {
     this.resourceKind = new ResourceKind;
     if (this.edit) {

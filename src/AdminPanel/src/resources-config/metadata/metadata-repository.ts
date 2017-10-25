@@ -61,7 +61,7 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
   }
 
   public getBase(metadata: Metadata): Promise<Metadata> {
-    if (metadata.id === -1) {
+    if (metadata.id < 0) {
       return new Promise(resolve => resolve(metadata));
     }
     return this.getListByClass(metadata.resourceClass).then(metadataList => {
