@@ -40,7 +40,7 @@
                     </td>
                     <td if.bind="!resourceKind.editing">
                         <dl class="dl-horizontal">
-                            <template repeat.for="metadata of resourceKind.metadataList & oneTime">
+                            <template repeat.for="metadata of resourceKind.metadataList">
                                 <dt>${metadata.name}</dt>
                                 <dd>
                                     <span>${metadata.label | inCurrentLanguage}</span>
