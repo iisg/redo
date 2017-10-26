@@ -26,7 +26,7 @@ class ConfigController extends ApiController {
     public function getConfigAction() {
         $parameters = array_map([$this, 'getParameter'], self::PUBLIC_PARAMETERS);
         $response = array_merge($parameters, [
-            'supported_controls' => MetadataControl::toArray(),
+            'supported_controls' => array_values(MetadataControl::toArray()),
             'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
         ]);
         return $this->createJsonResponse($response);
