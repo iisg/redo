@@ -1,8 +1,12 @@
 <?php
+
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel {
+    const APP_PATH = __DIR__;
+    const VAR_PATH = __DIR__ . '/../var';
+
     public function registerBundles() {
         $bundles = [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
@@ -34,20 +38,21 @@ class AppKernel extends Kernel {
         if (($env = getenv('REPEKA_CACHE_DIR')) !== false) {
             return $env . $this->getEnvironment();
         }
-        return dirname(__DIR__) . '/var/cache/' . $this->getEnvironment();
+        return self::VAR_PATH . '/cache/' . $this->getEnvironment();
     }
 
     public function getLogDir() {
         if (($env = getenv('REPEKA_LOG_DIR')) !== false) {
             return $env;
         }
-        return dirname(__DIR__) . '/var/logs';
+        return self::VAR_PATH . '/logs';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader) {
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
-        if (file_exists($this->getRootDir() . '/config/config_local.yml')) {
-            $loader->load($this->getRootDir() . '/config/config_local.yml');
+        $localConfigPath = self::VAR_PATH . '/config/config_local.yml';
+        if (file_exists($localConfigPath)) {
+            $loader->load($localConfigPath);
         }
     }
 }

@@ -46,6 +46,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $kernel = $this->container->get('kernel');
         $this->application = new Application($kernel);
         $this->application->setAutoExit(false);
+        $this->application->setCatchExceptions(false);
         if (!defined('INTEGRATION_TESTS_BOOTSTRAPPED')) {
             define('INTEGRATION_TESTS_BOOTSTRAPPED', true);
             $this->executeCommand('doctrine:database:drop --force --if-exists');
@@ -53,8 +54,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         }
         $this->executeCommand('doctrine:schema:drop --force');
         $this->executeCommand('doctrine:migrations:version --delete --all');
-        $this->executeCommand('doctrine:migrations:migrate');
-        $this->executeCommand('repeka:initialize');
+        $this->executeCommand('repeka:initialize --skip-backup --skip-cache-clear');
     }
 
     protected function executeCommand(string $command): string {

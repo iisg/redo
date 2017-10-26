@@ -14,6 +14,7 @@ services:
   Repeka\Domain\Upload\ResourceFileHelper: '@Repeka\Application\Upload\BasicResourceFileHelper'
   Repeka\Domain\Validation\MetadataConstraintProvider: '@Repeka\Application\Validation\ContainerAwareMetadataConstraintProvider'
 
+  Doctrine\ORM\EntityManagerInterface: '@doctrine.orm.entity_manager'
   M6Web\Component\Statsd\Client: '@m6_statsd'
   Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface: '@Repeka\Domain\Repository\UserRepository'
   Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface: '@security.authentication.manager'

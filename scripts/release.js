@@ -1,17 +1,20 @@
-var project = require("./repeka");
-var version = require('./version');
-var chalk = require('chalk');
+'use strict';
+
+const project = require("./repeka");
+const version = require('./version');
+
+const async = require('async');
+const chalk = require('chalk');
+const del = require('del');
+const dos2unix = require('@dpwolfe/dos2unix').dos2unix;
+const exec = require('child_process').exec;
+const fs = require('fs-extra');
 const ora = require('ora');
-var fs = require('fs-extra');
-var path = require('path');
-var async = require('async');
-var del = require('del');
-var exec = require('child_process').exec;
-var preprocess = require('preprocess');
+const preprocess = require('preprocess');
 
 project.printAsciiLogoAndVersion();
 
-var releaseFilename = process.env.RELEASE_FILENAME || 'repeka-' + version.text + '-' + version.full.hash + '.tar.gz';
+const releaseFilename = process.env.RELEASE_FILENAME || 'repeka-' + version.text + '-' + version.full.hash + '.tar.gz';
 
 console.log('');
 
@@ -54,6 +57,7 @@ function copyToReleaseDirectory() {
     'docker/',
     'src/Repeka/Application',
     'src/Repeka/Domain',
+    'var/ssl/generate-self-signed-certs.sh',
     'vendor/',
     'web/',
   ].forEach(function (filename) {
@@ -68,12 +72,17 @@ function copyToReleaseDirectory() {
       });
     });
   });
+  calls.push(function (callback) {
+    (new dos2unix()).on('error', (err) => {
+      callback(err);
+    }).on('end', stats => callback(null, stats)).process(['release/**/*.sh'])
+  });
   async.series(calls, function (err) {
     if (err) {
       spinner.fail();
       console.error(err);
     } else {
-      createRequriedDirectories();
+      createRequiredDirectories();
       clearLocalConfigFiles();
       copySingleRequiredFiles();
       preprocessSources();
@@ -83,8 +92,23 @@ function copyToReleaseDirectory() {
   });
 }
 
-function createRequriedDirectories() {
-  ['var/cache', 'var/logs', 'var/sessions'].forEach(function (dirname) {
+function createRequiredDirectories() {
+  [
+    'var/backups',
+    'var/cache',
+    'var/config',
+    'var/logs',
+    'var/sessions',
+    'var/ssl',
+    'var/uploads',
+    'var/volumes/elasticsearch',
+    'var/volumes/metrics/data/whisper',
+    'var/volumes/metrics/data/elasticsearch',
+    'var/volumes/metrics/data/grafana',
+    'var/volumes/metrics/log/graphite/webapp',
+    'var/volumes/metrics/log/elasticsearch',
+    'var/volumes/postgres'
+  ].forEach(function (dirname) {
     fs.mkdirsSync('release/' + dirname);
   });
 }
@@ -94,6 +118,8 @@ function preprocessSources() {
 }
 
 function copySingleRequiredFiles() {
+  fs.copySync('var/config/config_local.yml.sample', 'release/var/config/config_local.yml.sample');
+  fs.copySync('var/config/docker.env.sample', 'release/var/config/docker.env.sample');
   fs.copySync('var/bootstrap.php.cache', 'release/var/bootstrap.php.cache');
   fs.copySync('src/.htaccess', 'release/src/.htaccess');
   fs.copySync('src/.htaccess', 'release/var/.htaccess');
@@ -102,31 +128,30 @@ function copySingleRequiredFiles() {
 function clearLocalConfigFiles() {
   del.sync([
     'release/docker/.env',
-    'release/apache2-ssl/server.crt',
-    'release/apache2-ssl/server.key',
-    'release/app/config/config_local.yml',
     'release/app/config/config_dev.yml',
     'release/app/config/config_test.yml',
     'release/app/config/routing_dev.yml',
+    'release/**/.gitignore',
+    'release/composer.*',
+    'release/**/package.json',
   ]);
 }
 
 function deleteUnwantedSources() {
   var spinner = ora({text: 'Deleting unneeded sources.', color: 'yellow'}).start();
   del([
-    'release/backend/vendor/**/test/**',
-    'release/backend/vendor/**/tests/**',
-    'release/backend/vendor/**/doc/**',
-    'release/backend/vendor/**/docs/**',
-    'release/backend/vendor/**/.idea/**',
-    'release/backend/vendor/**/img/**',
-    'release/backend/vendor/**/composer.json',
-    'release/backend/vendor/**/composer.lock',
-    'release/backend/vendor/**/*.md',
-    'release/backend/vendor/**/LICENSE',
-    'release/backend/vendor/**/*.dist',
-  ])
-    .then(() => {
+    'release/**/composer.json',
+    'release/**/composer.lock',
+    'release/vendor/**/*.md',
+    'release/vendor/**/*.dist',
+    'release/vendor/**/.idea/**',
+    'release/vendor/**/doc/**',
+    'release/vendor/**/docs/**',
+    'release/vendor/**/img/**',
+    'release/vendor/**/LICENSE',
+    'release/vendor/**/test/**',
+    'release/vendor/**/tests/**',
+  ]).then(() => {
       spinner.succeed('Unneeded sources deleted.');
       copyJsDependencies();
     })
@@ -174,6 +199,8 @@ function createZipArchive() {
       spinner.succeed('Release archive created.');
       console.log('');
       console.log("Package: " + chalk.green(releaseFilename));
+      var fileSizeInBytes = fs.statSync(releaseFilename).size;
+      console.log('Size: ' + Math.round(fileSizeInBytes / 1024) + 'kB (' + Math.round(fileSizeInBytes * 10 / 1024 / 1024) / 10 + 'MB)');
     }
   });
 }

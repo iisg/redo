@@ -39,7 +39,8 @@
     "symfony/monolog-bundle": "^3.1",
     "symfony/serializer": "^3.3",
     "symfony/symfony": "^3.3",
-    "syslogic/doctrine-json-functions": "dev-better-postgres-support"
+    "syslogic/doctrine-json-functions": "dev-better-postgres-support",
+    "symfony/process": "^3.3"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^2.3",
@@ -51,7 +52,6 @@
   "scripts": {
     "symfony-scripts": [
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
