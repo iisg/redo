@@ -7,9 +7,7 @@
 
     <div class="au-animate fade-inup-outup"
         if.bind="user">
-        <h1>
-            ${ user | username }
-        </h1>
+        <h1>${ user | username }</h1>
 
         <dl class="dl-horizontal">
             <dt>${'ID' | t}</dt>
@@ -20,10 +18,8 @@
 
         <resource-metadata-table resource.bind="user.userData"></resource-metadata-table>
 
-        <div class="form-group"
-            if.bind="!isCurrentUser">
-            <div class="well"
-                require-role="ADMIN">
+        <div class="form-group" require-role="ADMIN">
+            <div class="well">
                 <user-roles-assign user.bind="user"></user-roles-assign>
             </div>
         </div>

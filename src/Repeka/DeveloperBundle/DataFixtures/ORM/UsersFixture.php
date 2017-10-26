@@ -21,7 +21,7 @@ class UsersFixture extends RepekaFixture {
         $operatorRole = $manager->getRepository(UserRole::class)->findOne(SystemUserRole::OPERATOR);
         $testerRole = $this->getReference(RolesFixture::ROLE_TESTER);
         $scannerRole = $this->getReference(RolesFixture::ROLE_SCANNER);
-        $this->handleCommand(new UserUpdateRolesCommand($tester, [$operatorRole, $testerRole]));
-        $this->handleCommand(new UserUpdateRolesCommand($scanner, [$operatorRole, $scannerRole]));
+        $this->handleCommand(new UserUpdateRolesCommand($tester, [$operatorRole, $testerRole], $tester));
+        $this->handleCommand(new UserUpdateRolesCommand($scanner, [$operatorRole, $scannerRole], $tester));
     }
 }

@@ -34,7 +34,7 @@ class UserUpdateRolesCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testHandling() {
         $role = $this->createMock(UserRole::class);
-        $command = new UserUpdateRolesCommand($this->user, [$role]);
+        $command = new UserUpdateRolesCommand($this->user, [$role], $this->user);
         $this->user->expects($this->once())->method('updateRoles')->with([$role]);
         $this->assertSame($this->user, $this->handler->handle($command));
     }
@@ -42,7 +42,7 @@ class UserUpdateRolesCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     public function testAddingImpliedRoles() {
         $adminRole = SystemUserRole::ADMIN()->toUserRole();
         $operatorRole = SystemUserRole::OPERATOR()->toUserRole();
-        $command = new UserUpdateRolesCommand($this->user, [$adminRole]);
+        $command = new UserUpdateRolesCommand($this->user, [$adminRole], $this->user);
         $this->user->expects($this->once())->method('updateRoles')->with([$adminRole, $operatorRole]);
         $this->assertSame($this->user, $this->handler->handle($command));
     }
