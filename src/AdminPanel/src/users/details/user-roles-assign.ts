@@ -1,9 +1,11 @@
 import {bindable} from "aurelia-templating";
 import {User} from "../user";
-import {autoinject} from "aurelia-dependency-injection";
+import {inject} from "aurelia-dependency-injection";
 import {UserRepository} from "../user-repository";
+import {computedFrom} from "aurelia-binding";
+import {CurrentUserFetcher} from "../current/current-user-fetcher";
 
-@autoinject
+@inject(UserRepository, CurrentUserFetcher.CURRENT_USER_KEY)
 export class UserRolesAssign {
   @bindable user: User;
 
@@ -11,7 +13,7 @@ export class UserRolesAssign {
 
   userRoleIds: Array<string> = [];
 
-  constructor(private userRepository: UserRepository) {
+  constructor(private userRepository: UserRepository, private currentUser: User) {
   }
 
   userChanged() {
@@ -22,5 +24,10 @@ export class UserRolesAssign {
     return this.userRepository.updateRoles(this.user, this.userRoleIds).then(user => {
       this.user = user;
     });
+  }
+
+  @computedFrom('user')
+  get isCurrentUser() {
+    return this.user.id === this.currentUser.id;
   }
 }

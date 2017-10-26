@@ -10,6 +10,7 @@ abstract class User implements Identifiable {
     /** @param $roles UserRole */
     abstract public function updateRoles(array $roles): void;
 
+    /** @return UserRole[] */
     abstract public function getUserRoles(): array;
 
     /**

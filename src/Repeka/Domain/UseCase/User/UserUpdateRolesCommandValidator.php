@@ -10,13 +10,36 @@ use Respect\Validation\Validator;
 
 class UserUpdateRolesCommandValidator extends CommandAttributesValidator {
     /**
-     * @inheritdoc
+     * @param UserUpdateRolesCommand $command
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('user', Validator::instance(User::class)->callback(function (User $u) {
+            ::attribute('user', Validator::callback(function (User $u) {
                 return $u->getId() > 0;
             }))
-            ->attribute('roles', Validator::arrayType()->each(Validator::instance(UserRole::class)));
+            ->attribute(
+                'roles',
+                Validator::arrayType()
+                    ->each(Validator::instance(UserRole::class))
+                    ->callback($this->doesNotRevokeSystemRolesFromMyself($command))
+                    ->setTemplate('You cannot revoke any of the system roles from yourself')
+            );
+    }
+
+    public function doesNotRevokeSystemRolesFromMyself(UserUpdateRolesCommand $command) {
+        return function () use ($command) {
+            if ($command->getUser()->getId() != $command->getExecutor()->getId()) {
+                return true;
+            }
+            $currentSystemRoles = array_filter($command->getUser()->getUserRoles(), function (UserRole $userRole) {
+                return $userRole->isSystemRole();
+            });
+            $mapToRoleId = function (UserRole $userRole) {
+                return $userRole->getId();
+            };
+            $currentSystemRoleIds = array_map($mapToRoleId, $currentSystemRoles);
+            $newRoleIds = array_map($mapToRoleId, $command->getRoles());
+            return count(array_diff($currentSystemRoleIds, $newRoleIds)) === 0;
+        };
     }
 }

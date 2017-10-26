@@ -113,6 +113,7 @@
   "Possible actions": "Możliwe czynności",
   "This metadata determines who can perform these actions:": "Ta metadana określa, kto może wykonać następujące czynności:",
   "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:",
+  "Resource doesn't exist": "Zasób nie istnieje",
   "Fix": "Napraw",
-  "Resource doesn't exist": "Zasób nie istnieje"
+  "You cannot revoke system roles from yourself.": "Nie możesz odebrać sobie roli systemowej."
 }

@@ -1,4 +1,4 @@
-import {customAttribute} from "aurelia-templating";
+import {ComponentAttached, customAttribute} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 
 /**
@@ -6,19 +6,23 @@ import {autoinject} from "aurelia-dependency-injection";
  */
 @autoinject
 @customAttribute('bootstrap-tooltip')
-export class BootstrapTooltip {
+export class BootstrapTooltip implements ComponentAttached {
   private $element: JQuery;
-
   value: string;
 
   constructor(element: Element) {
     this.$element = $(element);
   }
 
-  bind() {
+  attached() {
+    this.attachTooltip();
+  }
+
+  private attachTooltip(): void {
     this.$element.tooltip({
         title: this.value,
         container: 'body',
+        placement: this.$element.attr('tooltip-placement') || 'top',
         delay: {show: 700, hide: 100}
       }
     );
@@ -31,6 +35,6 @@ export class BootstrapTooltip {
   valueChanged() {
     this.$element.tooltip('hide');
     this.$element.data('bs.tooltip', false);
-    this.bind();
+    this.attachTooltip();
   }
 }

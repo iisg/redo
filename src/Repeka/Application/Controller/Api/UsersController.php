@@ -1,14 +1,18 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
+use Assert\Assert;
+use Assert\Assertion;
 use M6Web\Component\Statsd\Client;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\EventListener\CsrfRequestListener;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\UserRole;
 use Repeka\Domain\UseCase\User\UserByUserDataQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
+use Repeka\Domain\UseCase\UserRole\UserRoleQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -76,12 +80,11 @@ class UsersController extends ApiController {
     public function updateUserAction(UserEntity $user, Request $request) {
         $data = $request->request->all();
         if (isset($data['roleIds'])) {
-            $roleIds = $data['roleIds'];
-            $roleRepository = $this->getDoctrine()->getRepository('RepekaDomain:UserRole');
-            $roles = array_map(function ($roleId) use ($roleRepository) {
-                return $roleRepository->findOne($roleId);
-            }, $roleIds);
-            $command = new UserUpdateRolesCommand($user, $roles);
+            Assertion::isArray($data['roleIds']);
+            $roles = array_map(function ($roleId) {
+                return $this->handleCommand(new UserRoleQuery($roleId));
+            }, $data['roleIds']);
+            $command = new UserUpdateRolesCommand($user, $roles, $this->getUser());
             $user = $this->handleCommand($command);
         }
         return $this->createJsonResponse($user);

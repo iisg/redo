@@ -79,7 +79,7 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
     private function saveNewAdminAccount(string $username, string $plainPassword) {
         $userCreateCommand = new UserCreateCommand($username, $plainPassword);
         $user = $this->commandBus->handle($userCreateCommand);
-        $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $this->userRoleRepository->findAll());
+        $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $this->userRoleRepository->findAll(), $user);
         $this->commandBus->handle($userUpdateRolesCommand);
     }
 }

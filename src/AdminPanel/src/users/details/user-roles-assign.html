@@ -11,5 +11,6 @@
     </promise-button>
 
     <user-roles-chooser role-ids.bind="userRoleIds"
-        change.trigger="rolesChanged = true"></user-roles-chooser>
+        change.trigger="rolesChanged = true"
+        disable-system-roles.bind="isCurrentUser"></user-roles-chooser>
 </template>

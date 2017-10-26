@@ -22,7 +22,7 @@ class AdminAccountFixture extends RepekaFixture {
             $userCreateCommand = new UserCreateCommand(self::USERNAME, self::PASSWORD);
             $user = $this->handleCommand($userCreateCommand);
             $allUserRoles = $this->handleCommand(new UserRoleListQuery());
-            $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $allUserRoles);
+            $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $allUserRoles, $user);
             $this->handleCommand($userUpdateRolesCommand);
         }
     }
