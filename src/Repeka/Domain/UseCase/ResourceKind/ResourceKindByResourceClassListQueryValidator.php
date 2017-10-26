@@ -7,7 +7,7 @@ use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
-class ResourceKindListQueryValidator extends CommandAttributesValidator {
+class ResourceKindByResourceClassListQueryValidator extends CommandAttributesValidator {
 
     /** @var ResourceClassExistsRule */
     private $resourceClassExistsRule;
