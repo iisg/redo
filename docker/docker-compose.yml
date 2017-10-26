@@ -8,7 +8,8 @@ services:
       args:
         WWW_DATA_UID: ${UID}
     volumes:
-      - ${VOLUME_SOURCES}:/var/www/html:z
+      - ../:/var/www/html:z
+      - ../var/ssl:/etc/apache2/ssl:z
     ports:
       - "${PORT_HTTP}:80"
       - "${PORT_HTTPS}:443"

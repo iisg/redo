@@ -1,7 +1,7 @@
 var fs = require('fs');
 var chalk = require('chalk');
 
-var localConfigPath = "app/config/config_local.yml";
+var localConfigPath = "var/config/config_local.yml";
 
 function check() {
   try {

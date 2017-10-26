@@ -1,0 +1,4 @@
+# Place server.crt and server.key in this directory
+*
+!.gitignore
+!*.sh

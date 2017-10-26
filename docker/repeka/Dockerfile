@@ -1,9 +1,8 @@
 FROM php:7.1-apache
 
-RUN apt-get update \
-# @exclude
-  && curl -sL https://deb.nodesource.com/setup_4.x | bash - \
-# @endexclude
+RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" >> /etc/apt/sources.list.d/pgdg.list \
+  && apt-get update \
   && apt-get install -y --no-install-recommends \
      libicu-dev \
      libpq-dev \
@@ -16,9 +15,8 @@ RUN apt-get update \
      bzip2 \
      netcat-openbsd \
      libfontconfig1 \
-# @exclude
-     nodejs \
-# @endexclude
+     zlib1g-dev \
+     postgresql-client-10 \
   && update-ca-certificates \
   && docker-php-ext-install \
      pdo_pgsql \
@@ -30,6 +28,15 @@ RUN apt-get update \
      soap \
   && apt-get autoremove \
   && rm -r /var/lib/apt/lists/*
+  && apt-get clean
+
+# @exclude
+RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - \
+  && apt-get install -y --no-install-recommends nodejs \
+  && apt-get autoremove \
+  && rm -r /var/lib/apt/lists/*
+  && apt-get clean
+# @endexclude
 
 ARG WWW_DATA_UID=1001
 RUN usermod --uid "$WWW_DATA_UID" www-data \
@@ -38,7 +45,6 @@ RUN usermod --uid "$WWW_DATA_UID" www-data \
 
 COPY php.ini /usr/local/etc/php/php.ini
 COPY apache2-sites/*.conf /etc/apache2/sites-available/
-COPY apache2-ssl /etc/apache2/ssl
 
 RUN a2enmod ssl rewrite proxy_http expires deflate && a2ensite default-ssl
 
