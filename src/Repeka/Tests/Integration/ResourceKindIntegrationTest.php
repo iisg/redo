@@ -25,15 +25,36 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->createLanguage('TEST', 'te_ST', 'Test language');
         $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], [], 'text', 'books');
         $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], [], 'text', 'books');
+        $baseDictionaryMetadata = $this->createMetadata('Metadata', ['TEST' => 'Base metadata dictionary'], [], [], 'text', 'dictionaries');
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Test'], [
             $this->resourceKindMetadata($baseMetadata1, ['TEST' => 'Metadata kind 1'], 'books'),
             $this->resourceKindMetadata($baseMetadata2, ['TEST' => 'Metadata kind 2'], 'books')
         ], 'books');
+        $this->createResourceKind(['TEST' => 'Test'], [
+            $this->resourceKindMetadata($baseDictionaryMetadata, ['TEST' => 'Metadata kind dictionary'], 'dictionaries')
+        ], 'dictionaries');
         $this->metadata1 = $this->resourceKind->getMetadataList()[0];
         $this->metadata2 = $this->resourceKind->getMetadataList()[1];
     }
 
-    public function testFetchingResourceKinds() {
+    public function testFetchingAllResourceKinds() {
+        $client = self::createAdminClient();
+        $client->apiRequest('GET', self::ENDPOINT, [], ['allResourceKinds' => true]);
+        $this->assertStatusCode(200, $client->getResponse());
+        $responseContent = json_decode($client->getResponse()->getContent());
+        $this->assertCount(3, $responseContent);
+        $responseItem = $responseContent[1];
+        $this->assertEquals($this->resourceKind->getId(), $responseItem->id);
+        $this->assertEquals($this->resourceKind->getLabel(), self::objectToArray($responseItem->label));
+        $this->assertCount(2, $responseItem->metadataList);
+        $sortedMetadata = ($responseItem->metadataList[0]->id == $this->metadata1->getId())
+            ? $responseItem->metadataList
+            : array_reverse($responseItem->metadataList);
+        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[0]->id);
+        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[1]->id);
+    }
+
+    public function testFetchingResourceKindsWithResourceClass() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
         $this->assertStatusCode(200, $client->getResponse());
@@ -157,7 +178,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->assertTrue($metadataRepository->exists($this->metadata2->getId()));
     }
 
-    public function testFetchingMetadataFailsWhenInvalidResourceClass() {
+    public function testFetchingResourceKindsFailsWhenInvalidResourceClass() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'resourceClass']);
         $this->assertStatusCode(400, $client->getResponse());

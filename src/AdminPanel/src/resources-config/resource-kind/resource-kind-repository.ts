@@ -13,8 +13,8 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
     super(httpClient, 'resource-kinds');
   }
 
-  public getResourceKind(id: number, resourceClass: string): Promise<ResourceKind> {
-    return this.getListWithSystemResourceKinds(resourceClass).then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
+  public getResourceKind(id: number): Promise<ResourceKind> {
+    return this.getList().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
   }
 
   public getListByClass(resourceClass: string): Promise<ResourceKind[]> {
@@ -24,18 +24,6 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
   @cachedResponse(30000)
   public getList(): Promise<ResourceKind[]> {
     return this.httpClient.get(this.endpoint).then(response => this.responseToEntities(response));
-  }
-
-  public getListWithSystemResourceKinds(resourceClass: string): Promise<ResourceKind[]> {
-    return this.httpClient
-      .createRequest(this.endpoint)
-      .asGet()
-      .withParams({
-        systemResourceKind: true,
-        resourceClass
-      })
-      .send()
-      .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
   }
 
   public update(updatedResourceKind: ResourceKind): Promise<ResourceKind> {

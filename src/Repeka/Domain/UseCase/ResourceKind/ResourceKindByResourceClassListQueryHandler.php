@@ -4,7 +4,7 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 
-class ResourceKindListQueryHandler {
+class ResourceKindByResourceClassListQueryHandler {
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
 
@@ -12,11 +12,8 @@ class ResourceKindListQueryHandler {
         $this->resourceKindRepository = $resourceKindRepository;
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     * @return ResourceKind[]
-     */
-    public function handle(): array {
-        return $this->resourceKindRepository->findAll();
+    /** @return ResourceKind[] */
+    public function handle(ResourceKindByResourceClassListQuery $query): array {
+        return $this->resourceKindRepository->findAllByResourceClass($query->getResourceClass());
     }
 }

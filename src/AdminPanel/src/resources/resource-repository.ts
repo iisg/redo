@@ -39,7 +39,7 @@ export class ResourceRepository extends ResourceClassApiRepository<Resource> {
   }
 
   public toEntity(data: Object): Promise<Resource> {
-    return this.resourceKindRepository.getResourceKind(data['kindId'], data['resourceClass']).then(resourceKind => {
+    return this.resourceKindRepository.getResourceKind(data['kindId']).then(resourceKind => {
       delete data['kindId'];
       let resource: Resource = $.extend(new Resource(), data);
       resource.kind = resourceKind;

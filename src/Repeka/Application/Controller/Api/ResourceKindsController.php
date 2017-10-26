@@ -4,6 +4,7 @@ namespace Repeka\Application\Controller\Api;
 
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindByResourceClassListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindDeleteCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
@@ -29,9 +30,12 @@ class ResourceKindsController extends ApiController {
      * @Method("GET")
      */
     public function getListAction(Request $request) {
-        $includeSystemResourceKinds = !!$request->query->get('systemResourceKind');
         $resourceClass = $request->query->get('resourceClass', '');
-        $resourceKindList = $this->handleCommand(new ResourceKindListQuery($resourceClass, $includeSystemResourceKinds));
+        if (empty($resourceClass)) {
+            $resourceKindList = $this->handleCommand(new ResourceKindListQuery());
+        } else {
+            $resourceKindList = $this->handleCommand(new ResourceKindByResourceClassListQuery($resourceClass));
+        }
         return $this->createJsonResponse($resourceKindList);
     }
 
