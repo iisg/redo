@@ -38,7 +38,9 @@ class BackupDbCommand extends ContainerAwareCommand {
             $connection->getHost(),
             $connection->getDatabase(),
             $backupPath
-        ));
+        ), null, [
+            'PGPASSWORD' => $connection->getPassword(),
+        ]);
         $process->run();
         $errorOutput = trim($process->getErrorOutput());
         if ($process->isSuccessful() && !$errorOutput) {
