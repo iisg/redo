@@ -27,14 +27,14 @@ RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - 
      zip \
      soap \
   && apt-get autoremove \
-  && rm -r /var/lib/apt/lists/*
+  && rm -r /var/lib/apt/lists/* \
   && apt-get clean
 
 # @exclude
 RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - \
   && apt-get install -y --no-install-recommends nodejs \
   && apt-get autoremove \
-  && rm -r /var/lib/apt/lists/*
+  && rm -r /var/lib/apt/lists/* \
   && apt-get clean
 # @endexclude
 
