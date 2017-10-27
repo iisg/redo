@@ -19,12 +19,12 @@ class InitializeApplicationCommand extends Command {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $this->getApplication()->setAutoExit(false);
         $this->getApplication()->setCatchExceptions(false);
-        if (!$input->hasOption('skip-cache-clear')) {
+        if (!$input->getOption('skip-cache-clear')) {
             $this->getApplication()->run(new StringInput('cache:clear --no-warmup -e prod'), $output);
             $this->getApplication()->run(new StringInput('cache:warmup -e prod'), $output);
         }
         $this->getApplication()->run(new StringInput('doctrine:database:create --if-not-exists --no-interaction'), $output);
-        if (!$input->hasOption('skip-backup')) {
+        if (!$input->getOption('skip-backup')) {
             $this->getApplication()->run(new StringInput('db:backup'), $output);
         }
         $this->getApplication()->run(new StringInput('doctrine:migrations:migrate --no-interaction --allow-no-migration'), $output);
