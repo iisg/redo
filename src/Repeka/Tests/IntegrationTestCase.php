@@ -54,7 +54,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         }
         $this->executeCommand('doctrine:schema:drop --force');
         $this->executeCommand('doctrine:migrations:version --delete --all');
-        $this->executeCommand('repeka:initialize --skip-backup --skip-cache-clear');
+        $this->executeCommand('repeka:initialize --skip-backup');
     }
 
     protected function executeCommand(string $command): string {
