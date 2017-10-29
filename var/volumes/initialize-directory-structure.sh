@@ -8,4 +8,5 @@ mkdir -p \
   metrics/data/grafana \
   metrics/log/graphite/webapp \
   metrics/log/elasticsearch \
-  postgres
+  postgres \
+  elasticsearch
