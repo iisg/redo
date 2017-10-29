@@ -12,8 +12,7 @@ class InitializeApplicationCommand extends Command {
             ->setName('repeka:initialize')
             ->setDescription('Initializes data in database required for the app to work properly.')
             ->addOption('skip-backup')
-            ->addOption('skip-cache-clear')
-            ->addOption('skip-cache-warmup');
+            ->addOption('skip-cache-clear');
     }
 
     /** @inheritdoc */
@@ -22,9 +21,7 @@ class InitializeApplicationCommand extends Command {
         $this->getApplication()->setCatchExceptions(false);
         if (!$input->getOption('skip-cache-clear')) {
             $this->getApplication()->run(new StringInput('cache:clear --no-warmup -e prod'), $output);
-            if (!$input->getOption('skip-cache-warmup')) {
-                $this->getApplication()->run(new StringInput('cache:warmup -e prod'), $output);
-            }
+
         }
         $this->getApplication()->run(new StringInput('doctrine:database:create --if-not-exists --no-interaction'), $output);
         if (!$input->getOption('skip-backup')) {
