@@ -28,7 +28,11 @@ if [ "$1" = "start" ]; then
   docker-compose up --build -d
 
   sleep 1
-  docker exec -u www-data "$CONTAINER_NAME" php bin/console repeka:initialize && echo -e "${GREEN}Repeka containers have been started.${NC}"
+
+  docker exec -u www-data "$CONTAINER_NAME" php bin/console cache:clear --no-warmup -e prod
+  docker exec -u www-data "$CONTAINER_NAME" php bin/console repeka:initialize
+  docker exec -u www-data "$CONTAINER_NAME" php bin/console cache:warmup -e prod
+  echo -e "${GREEN}Repeka containers have been started.${NC}"
 
 elif [ "$1" = "stop" ]; then
   echo -e "${GREEN}Stopping Repeka containers${NC}"
