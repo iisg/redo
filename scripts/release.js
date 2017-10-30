@@ -57,7 +57,6 @@ function copyToReleaseDirectory() {
     'docker/',
     'src/Repeka/Application',
     'src/Repeka/Domain',
-    'var/ssl/generate-self-signed-certs.sh',
     'vendor/',
     'web/',
   ].forEach(function (filename) {
@@ -72,27 +71,22 @@ function copyToReleaseDirectory() {
       });
     });
   });
-  calls.push(function (callback) {
-    (new dos2unix()).on('error', (err) => {
-      callback(err);
-    }).on('end', stats => callback(null, stats)).process(['release/**/*.sh'])
-  });
   async.series(calls, function (err) {
     if (err) {
       spinner.fail();
       console.error(err);
     } else {
-      createRequiredDirectories();
-      clearLocalConfigFiles();
+      createVarDirectoryStructure();
       copySingleRequiredFiles();
+      clearLocalConfigFiles();
       preprocessSources();
       spinner.succeed('Application files copied.');
-      deleteUnwantedSources();
+      convertToUnixLineEndings();
     }
   });
 }
 
-function createRequiredDirectories() {
+function createVarDirectoryStructure() {
   [
     'var/backups',
     'var/cache',
@@ -113,16 +107,18 @@ function createRequiredDirectories() {
   });
 }
 
-function preprocessSources() {
-  preprocess.preprocessFileSync('release/docker/repeka/Dockerfile', 'release/docker/repeka/Dockerfile', {}, {type: 'shell'});
-}
-
 function copySingleRequiredFiles() {
-  fs.copySync('var/config/config_local.yml.sample', 'release/var/config/config_local.yml.sample');
-  fs.copySync('var/config/docker.env.sample', 'release/var/config/docker.env.sample');
-  fs.copySync('var/bootstrap.php.cache', 'release/var/bootstrap.php.cache');
-  fs.copySync('src/.htaccess', 'release/src/.htaccess');
-  fs.copySync('src/.htaccess', 'release/var/.htaccess');
+  [
+    'src/.htaccess',
+    'var/.htaccess',
+    'var/bootstrap.php.cache',
+    'var/config/config_local.yml.sample',
+    'var/config/docker.env.sample',
+    'var/ssl/generate-self-signed-certs.sh',
+    'var/volumes/initialize-directory-structure.sh',
+  ].forEach((filepath) => {
+    fs.copySync(filepath, 'release/' + filepath);
+  });
 }
 
 function clearLocalConfigFiles() {
@@ -135,6 +131,24 @@ function clearLocalConfigFiles() {
     'release/composer.*',
     'release/**/package.json',
   ]);
+}
+
+function preprocessSources() {
+  preprocess.preprocessFileSync('release/docker/repeka/Dockerfile', 'release/docker/repeka/Dockerfile', {}, {type: 'shell'});
+}
+
+function convertToUnixLineEndings() {
+  var spinner = ora({text: 'Converting all line endings to unix.', color: 'yellow'}).start();
+  new dos2unix()
+    .on('error', (err) => {
+      console.log(err);
+      spinner.fail();
+    })
+    .on('end', () => {
+      spinner.succeed('All line endings converted to unix.');
+      deleteUnwantedSources();
+    })
+    .process(['release/app/**', 'release/docker/**', 'release/src/**', 'release/var/**']);
 }
 
 function deleteUnwantedSources() {
@@ -152,9 +166,9 @@ function deleteUnwantedSources() {
     'release/vendor/**/test/**',
     'release/vendor/**/tests/**',
   ]).then(() => {
-      spinner.succeed('Unneeded sources deleted.');
-      copyJsDependencies();
-    })
+    spinner.succeed('Unneeded sources deleted.');
+    copyJsDependencies();
+  })
     .catch((err) => {
       console.log(err);
       spinner.fail();
