@@ -8,6 +8,7 @@ export class ResourceMetadataValues {
 
   determinesAssignee(resource: Resource, metadata: Metadata): boolean {
     return resource.transitionAssigneeMetadata !== undefined
+      && metadata != undefined
       && resource.transitionAssigneeMetadata.hasOwnProperty(metadata.baseId);
   }
 }

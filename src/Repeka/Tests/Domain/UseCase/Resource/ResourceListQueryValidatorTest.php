@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\Resource;
 
+use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQueryValidator;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
@@ -17,30 +19,29 @@ class ResourceListQueryValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->validator = new ResourceListQueryValidator($this->resourceClassExistsRule);
     }
 
-    public function testPassWhenResourceClassExists() {
-        $this->resourceClassExistsRule->method('validate')->with('books')->willReturn(true);
-        $command = new ResourceListQuery('books');
+    public function testPassWhenNoFilters() {
+        $command = ResourceListQuery::builder()->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
-    public function testPassWithSystemResourceKindsAndWhenResourceClassExists() {
+    public function testPassWhenResourceClassExists() {
         $this->resourceClassExistsRule->method('validate')->with('books')->willReturn(true);
-        $command = new ResourceListQuery('books', true);
+        $command = ResourceListQuery::builder()->filterByResourceClass('books')->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testInvalidWhenInvalidResourceClass() {
-        $command = new ResourceListQuery('resourceClass');
+        $command = ResourceListQuery::builder()->filterByResourceClass('invalidResourceClass')->build();
         $this->assertFalse($this->validator->isValid($command));
     }
 
-    public function testInvalidWithSystemResourceKindsAndWhenInvalidResourceClass() {
-        $command = new ResourceListQuery('resourceClass', true);
-        $this->assertFalse($this->validator->isValid($command));
+    public function testValidIfFilterByResourceKind() {
+        $command = ResourceListQuery::builder()->filterByResourceKinds([$this->createMock(ResourceKind::class)])->build();
+        $this->assertTrue($this->validator->isValid($command));
     }
 
-    public function testInvalidWhenBlankResourceClass() {
-        $command = new ResourceListQuery('', true);
+    public function testInvalidIfFilterByNotResourceKind() {
+        $command = ResourceListQuery::builder()->filterByResourceKinds([$this->createMock(ResourceEntity::class)])->build();
         $this->assertFalse($this->validator->isValid($command));
     }
 }

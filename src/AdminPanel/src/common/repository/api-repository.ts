@@ -4,7 +4,7 @@ import {Entity} from "../entity/entity";
 import {suppressError as suppressErrorHeader} from "common/http-client/headers";
 
 export abstract class ApiRepository<T> {
-  constructor(protected httpClient: HttpClient, protected endpoint: string) {
+  constructor(protected httpClient: HttpClient, public readonly endpoint: string) {
   }
 
   protected responseToEntities(response: HttpResponseMessage): Promise<T[]> {

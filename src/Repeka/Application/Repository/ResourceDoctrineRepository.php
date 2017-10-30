@@ -12,6 +12,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class ResourceDoctrineRepository extends EntityRepository implements ResourceRepository {
@@ -34,26 +35,6 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
     }
 
     /** @return ResourceEntity[] */
-    public function findAllByResourceClass(string $resourceClass): array {
-        $qb = $this->createQueryBuilder('r');
-        return $qb->where('r.resourceClass = :resourceClass')
-            ->setParameter('resourceClass', $resourceClass)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /** @return ResourceEntity[] */
-    public function findTopLevel(): array {
-        $parentMetadataId = SystemMetadata::PARENT;
-        $qb = $this->createQueryBuilder('r');
-        return $qb->join('r.kind', 'rk')
-            ->where("JSON_GET(r.contents, '$parentMetadataId') = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadataId') = FALSE")
-            ->andWhere($qb->expr()->notIn('rk.id', SystemResourceKind::values()))
-            ->getQuery()
-            ->getResult();
-    }
-
-    /** @return ResourceEntity[] */
     public function findChildren(int $parentId): array {
         $parentMetadataId = SystemMetadata::PARENT;
         return $this->createQueryBuilder('r')
@@ -64,14 +45,20 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
     }
 
     /** @return ResourceEntity[] */
-    public function findAllNonSystemResources(string $resourceClass): array {
-        $qb = $this->createQueryBuilder('r');
-        return $qb->join('r.kind', 'rk')
-            ->where($qb->expr()->notIn('rk.id', SystemResourceKind::values()))
-            ->andWhere("r.resourceClass = :resourceClass")
-            ->setParameter('resourceClass', $resourceClass)
-            ->getQuery()
-            ->getResult();
+    public function findByQuery(ResourceListQuery $query): array {
+        $qb = $this->createQueryBuilder('r')->join('r.kind', 'rk');
+        if ($query->getResourceClasses()) {
+            $qb->andWhere($qb->expr()->in('r.resourceClass', $query->getResourceClasses()));
+        }
+        if ($query->getResourceKinds()) {
+            $qb->andWhere($qb->expr()->in('rk', ':resourceKinds'));
+            $qb->setParameter('resourceKinds', $query->getResourceKinds());
+        }
+        if ($query->onlyTopLevel()) {
+            $parentMetadataId = SystemMetadata::PARENT;
+            $qb->andWhere("JSON_GET(r.contents, '$parentMetadataId') = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadataId') = FALSE");
+        }
+        return $qb->getQuery()->getResult();
     }
 
     public function exists(int $resourceId): bool {

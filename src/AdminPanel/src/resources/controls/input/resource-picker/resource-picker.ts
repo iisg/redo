@@ -1,22 +1,19 @@
-import {ComponentAttached, bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {observable} from "aurelia-binding";
 import {ResourceRepository} from "resources/resource-repository";
 import {Resource} from "resources/resource";
-import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class ResourcePicker implements ComponentAttached {
   @bindable(twoWay) resourceId: number;
-  @bindable resourceKindFilter: ResourceKind[] = [];
+  @bindable resourceKindIds: number[] = [];
   @bindable disabled: boolean = false;
-  @bindable resourceClass: string;
 
   @observable value: Resource;
 
   initialized: boolean = false;
-  allResources: Resource[];
   resources: Resource[];
   invalidValue: boolean = false;
 
@@ -24,32 +21,15 @@ export class ResourcePicker implements ComponentAttached {
   }
 
   attached() {
-    this.resourceRepository.getListWithSystemResourceKinds(this.resourceClass).then((resources) => {
-      this.allResources = resources;
-      this.updateFilteredResources();
+    const query = this.resourceRepository.getListQuery();
+    if (this.resourceKindIds.length > 0) {
+      query.filterByResourceKindIds(this.resourceKindIds);
+    }
+    query.get().then(resources => {
+      this.resources = resources;
       this.resourceIdChanged(this.resourceId);
     });
     this.initialized = true;
-  }
-
-  private updateFilteredResources() {
-    if (this.allResources == undefined) {
-      return;
-    }
-    if (this.resourceKindFilter.length == 0) {
-      this.resources = this.allResources;
-    } else {
-      this.resources = this.filterResourcesByKinds(this.resourceKindFilter);
-    }
-  }
-
-  private filterResourcesByKinds(resourceKindFilter: ResourceKind[]) {
-    const allowedResourceKindIds: number[] = resourceKindFilter.map(
-      resourceKind => (resourceKind.hasOwnProperty('id') ? resourceKind.id : resourceKind) as number
-    );
-    return this.allResources.filter(
-      resource => (resource.kind != undefined) && allowedResourceKindIds.indexOf(resource.kind.id) != -1
-    );
   }
 
   valueChanged(newValue: Resource) {
@@ -72,7 +52,7 @@ export class ResourcePicker implements ComponentAttached {
     if (!this.value || newResourceId != this.value.id) {
       const value = this.findResourceById(newResourceId);
       if (value == undefined) {
-        this.invalidValue = (this.allResources != undefined);
+        this.invalidValue = (this.resources != undefined);
       }
       else {
         this.value = value;
@@ -81,18 +61,14 @@ export class ResourcePicker implements ComponentAttached {
   }
 
   findResourceById(id: number): Resource {
-    if (this.allResources == undefined) {
+    if (this.resources == undefined) {
       return undefined;
     }
-    for (let resource of this.allResources) {
+    for (let resource of this.resources) {
       if (resource.id == id) {
         return resource;
       }
     }
     return undefined;
-  }
-
-  resourceKindFilterChanged() {
-    this.updateFilteredResources();
   }
 }

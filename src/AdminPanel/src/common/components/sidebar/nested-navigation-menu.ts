@@ -25,7 +25,11 @@ export class NestedNavigationMenu {
 
   private isItemActive(item: RouteConfig): boolean {
     const currentInstruction = this.router.currentInstruction;
-    return item.route == currentInstruction.config.name && shallowEquals(item.settings.params, currentInstruction.params);
+    if (currentInstruction) {
+      return item.route == currentInstruction.config.name && shallowEquals(item.settings.params, currentInstruction.params);
+    } else {
+      return false;
+    }
   }
 
   toggle(item: NavItem) {

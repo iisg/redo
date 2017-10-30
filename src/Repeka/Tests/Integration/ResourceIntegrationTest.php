@@ -35,7 +35,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->metadata->updateOrdinalNumber(0);
         $this->persistAndFlush($this->metadata);
         $this->resource = $this->createResource($this->resourceKind, [
-            $this->baseMetadata->getId() => ['Test value']
+            $this->baseMetadata->getId() => ['Test value'],
         ], 'books');
         $this->parentResource = $this->createResource($this->resourceKind, [
             $this->baseMetadata->getId() => ['Test value for parent'],
@@ -48,32 +48,26 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingResources() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => 'books']);
         $this->assertStatusCode(200, $client->getResponse());
-        $this->assertJsonStringSimilarToArray([[
-            'id' => $this->resource->getId(),
-            'kindId' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => ['Test value']],
-            'resourceClass' => $this->resource->getResourceClass(),
-        ], [
-            'id' => $this->parentResource->getId(),
-            'kindId' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => ['Test value for parent']],
-            'resourceClass' => $this->resource->getResourceClass(),
-        ], [
-            'id' => $this->childResource->getId(),
-            'kindId' => $this->resourceKind->getId(),
-            'contents' => [
-                -1 => [$this->parentResource->getId()],
-                $this->metadata->getBaseId() => ['Test value for child'],
+        $this->assertJsonStringSimilarToArray([
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => [$this->metadata->getBaseId() => ['Test value']],
+                'resourceClass' => $this->resource->getResourceClass(),
+            ], [
+                'id' => $this->parentResource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => [$this->metadata->getBaseId() => ['Test value for parent']],
+                'resourceClass' => $this->resource->getResourceClass(),
             ],
-            'resourceClass' => $this->resource->getResourceClass(),
-        ],], $client->getResponse()->getContent());
+        ], $client->getResponse()->getContent());
     }
 
     public function testFetchingResourcesFailsWhenInvalidResourceClass() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'resourceClass']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => 'resourceClass']);
         $this->assertStatusCode(400, $client->getResponse());
     }
 

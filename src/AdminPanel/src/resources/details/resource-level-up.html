@@ -1,11 +1,11 @@
 <template>
     <span class="btn btn-default btn-raised">
         <a if.bind="parentId != undefined"
-            route-href="route: resources/details; params.bind: routerParams; replace: true">
+            route-href="route: resources/details; params.bind: {id: parentId}; replace: true">
             <fa name="level-up fw flip-horizontal"></fa>
         </a>
-        <a if.bind="parentId == undefined"
-            route-href="route: resources/list">
+        <a else
+            route-href="route: resources/list; params.bind: {resourceClass: resource.resourceClass}">
             <fa name="list fw"></fa>
         </a>
     </span>

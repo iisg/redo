@@ -4,14 +4,14 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 
 class ResourceChildrenQuery extends NonValidatedCommand {
-    /** @var int|null */
-    private $id;
+    /** @var int */
+    private $parentId;
 
-    public function __construct(?int $id) {
-        $this->id = $id;
+    public function __construct(int $parentId) {
+        $this->parentId = $parentId;
     }
 
-    public function getId(): ?int {
-        return $this->id;
+    public function getParentId(): int {
+        return $this->parentId;
     }
 }

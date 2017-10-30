@@ -12,8 +12,6 @@ class ResourceChildrenQueryHandler {
     }
 
     public function handle(ResourceChildrenQuery $query): array {
-        return ($query->getId() === null)
-            ? $this->resourceRepository->findTopLevel()
-            : $this->resourceRepository->findChildren($query->getId());
+        return $this->resourceRepository->findChildren($query->getParentId());
     }
 }

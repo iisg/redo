@@ -18,7 +18,6 @@ export class ResourceDetails implements RoutableComponentActivate {
   allMetadata: Metadata[];
   editing: boolean = false;
   hasChildren: boolean;
-  resourceClass: string;
   private urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
@@ -33,7 +32,7 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   bind() {
     this.urlListener = this.ea.subscribe("router:navigation:success",
-      (event: {instruction: NavigationInstruction}) => this.editing = event.instruction.queryParams.action == 'edit');
+      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit');
   }
 
   unbind() {
@@ -41,7 +40,6 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   activate(params: any, routeConfig: RouteConfig): void {
-   this.resourceClass = params.resourceClass;
     this.resourceRepository.get(params.id).then(resource => {
       this.resource = resource;
       this.allMetadata = this.resource.kind.metadataList;
@@ -62,7 +60,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     return this.resourceRepository.update(updatedResource).then(resourceData => {
       this.toggleEditForm();
       return this.resource = resourceData;
-    }) .catch(() => $.extend(this.resource, originalResource));
+    }).catch(() => $.extend(this.resource, originalResource));
   }
 
   remove() {

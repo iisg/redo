@@ -8,8 +8,10 @@ use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Tests\IntegrationTestCase;
@@ -33,22 +35,33 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(10, $resources); // 1 per every user + fixtures
     }
 
-    public function testFindAllNonSystemResources() {
-        $resources = $this->resourceRepository->findAllNonSystemResources('books');
-        $this->assertCount(6, $resources); // fixtures only
+    public function testFindAllByBookResourceClass() {
+        $query = ResourceListQuery::builder()->filterByResourceClass('books')->build();
+        $resources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(6, $resources);
         foreach ($resources as $resource) {
             $this->assertNotEquals(SystemResourceKind::USER, $resource->getKind()->getId());
         }
     }
 
-    public function testFindAllNonSystemResourcesByAnotherResourceClass() {
-        $resources = $this->resourceRepository->findAllNonSystemResources('dictionaries');
-        $this->assertCount(0, $resources); // fixtures only
+    public function testFindAllByDictionaryResourceClass() {
+        $query = ResourceListQuery::builder()->filterByResourceClass('dictionaries')->build();
+        $resources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(0, $resources);
+    }
+
+    public function testFindAllByResourceKind() {
+        $userResourceKind = $this->container->get(ResourceKindRepository::class)->findOne(SystemResourceKind::USER);
+        $query = ResourceListQuery::builder()->filterByResourceKind($userResourceKind)->build();
+        $resources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(4, $resources);
     }
 
     public function testFindTopLevel() {
-        $topLevelResources = $this->resourceRepository->findTopLevel();
-        $this->assertCount(4, $topLevelResources);
+        $topLevelResources = $this->resourceRepository->findByQuery(ResourceListQuery::builder()->onlyTopLevel()->build());
+        foreach ($topLevelResources as $topLevelResource) {
+            $this->assertFalse($topLevelResource->hasParent());
+        }
     }
 
     public function testFindChildren() {
@@ -122,7 +135,8 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     private function getPhpBookResource(string $resourceClass): ResourceEntity {
-        foreach ($this->resourceRepository->findAllNonSystemResources($resourceClass) as $resource) {
+        $query = ResourceListQuery::builder()->filterByResourceClasses([$resourceClass])->build();
+        foreach ($this->resourceRepository->findByQuery($query) as $resource) {
             $allValuesOfContents = call_user_func_array('array_merge', $resource->getContents());
             if (in_array('PHP - to można leczyć!', $allValuesOfContents)) {
                 return $resource;

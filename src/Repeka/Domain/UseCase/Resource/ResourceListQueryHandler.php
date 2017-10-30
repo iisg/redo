@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
-use Psr\Container\ContainerInterface;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
 
@@ -17,10 +16,6 @@ class ResourceListQueryHandler {
      * @return ResourceEntity[]
      */
     public function handle(ResourceListQuery $query): array {
-        if ($query->includeResourcesWithSystemResourceKinds()) {
-            return $this->resourceRepository->findAllByResourceClass($query->getResourceClass());
-        } else {
-            return $this->resourceRepository->findAllNonSystemResources($query->getResourceClass());
-        }
+        return $this->resourceRepository->findByQuery($query);
     }
 }

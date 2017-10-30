@@ -5,7 +5,6 @@ import {Resource} from "../resource";
 export class ControlStrategy {
   metadata: Metadata;
   resource: Resource;
-  resourceClass: string;
   @observable valueWrapper: ValueWrapper;
   disabled: boolean = false;
 

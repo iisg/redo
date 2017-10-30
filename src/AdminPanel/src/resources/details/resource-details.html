@@ -58,16 +58,13 @@
 
             <h3>${'Child resources' | t}</h3>
             <resources-list parent-resource.bind="resource"
-                has-resources.bind="hasChildren"
-                resource-class.bind="resourceClass"></resources-list>
+                has-resources.bind="hasChildren"></resources-list>
         </div>
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"
             if.bind="editing">
             <resource-form edit.bind="resource"
-                submit.call="saveEditedResource(savedResource)"
-                resource-class.bind="resourceClass"></resource-form>
+                submit.call="saveEditedResource(savedResource)"></resource-form>
         </div>
-
     </div>
 </template>

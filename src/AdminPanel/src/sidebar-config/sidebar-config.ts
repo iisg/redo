@@ -7,7 +7,7 @@ export class SidebarConfig {
   public getRoutes() {
     return [
       route('', 'home', 'Tasks'),
-      route('resources/:resourceClass', 'resources/resources', 'Resources'),
+      route('resources', 'resources/resources', 'Resources'),
       route('metadata/:resourceClass', 'resources-config/metadata/metadata-view', 'Metadata Kinds'),
       route('resource-kinds/:resourceClass', 'resources-config/resource-kind/resource-kind-list', 'Resource Kinds'),
       route('workflows/:resourceClass', 'workflows/workflows', 'Workflows'),
