@@ -113,6 +113,6 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   @computedFrom('values')
   get isFetchingOptions() {
-    return !this.values || this.values.length == 0;
+    return !this.values;
   }
 }
