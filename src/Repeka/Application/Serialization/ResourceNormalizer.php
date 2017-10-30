@@ -61,6 +61,11 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
         return $failedPossibilityChecks;
     }
 
+    /**
+     * Gets possible transitions from resource's current state and returns them grouped by IDs of metadata that determine their assignees.
+     * Useful for displaying which transitions are made available for users related to resource through given metadata.
+     * @return array in form of metadataId => transition[]
+     */
     private function getTransitionAssigneeMetadata(ResourceWorkflow $workflow, ResourceEntity $resource): array {
         $metadataTransitionMap = [];
         foreach ($workflow->getTransitions($resource) as $transition) {

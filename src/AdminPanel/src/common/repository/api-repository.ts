@@ -1,10 +1,12 @@
 import {HttpClient, HttpResponseMessage} from "aurelia-http-client";
-import {deepCopy} from "../utils/object-utils";
-import {Entity} from "../entity/entity";
 import {suppressError as suppressErrorHeader} from "common/http-client/headers";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 export abstract class ApiRepository<T> {
-  constructor(protected httpClient: HttpClient, public endpoint: string) {
+  constructor(protected httpClient: HttpClient,
+              protected entitySerializer: EntitySerializer,
+              protected entityClass: Function,
+              protected endpoint: string) {
   }
 
   protected responseToEntities(response: HttpResponseMessage): Promise<T[]> {
@@ -43,9 +45,7 @@ export abstract class ApiRepository<T> {
   }
 
   protected toBackend(entity: T): Object {
-    const backendEntity = deepCopy(entity);
-    Entity.stripFrontendProperties(backendEntity);
-    return backendEntity;
+    return this.entitySerializer.serialize(entity);
   }
 
   protected oneEntityEndpoint(entity: number|string|Object) {
@@ -53,5 +53,7 @@ export abstract class ApiRepository<T> {
     return `${this.endpoint}/${id}`;
   }
 
-  abstract toEntity(data: Object): T|Promise<T>;
+  protected toEntity(data: Object): Promise<T> {
+    return this.entitySerializer.deserialize(this.entityClass, data);
+  }
 }

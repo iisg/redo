@@ -36,7 +36,7 @@ export class Alert {
     swal.setDefaults(sweetAlertDefaults);
   }
 
-  showHtml(options: AlertOptions, title: string, html: string = undefined): Promise<string> {
+  showHtml(options: AlertOptions, title: string, html?: string): Promise<string> {
     const defaultButtonLabels: SweetAlertOptions = {
       confirmButtonText: this.i18n.tr('OK'),
       cancelButtonText: this.i18n.tr('Cancel'),
@@ -79,7 +79,7 @@ export class Alert {
     return swal(mergedOptions);
   }
 
-  show(options: AlertOptions, title: string, text: string = undefined): Promise<string> {
+  show(options: AlertOptions, title: string, text?: string): Promise<string> {
     const html = stringToHtml(text);
     return this.showHtml(options, title, html);
   }

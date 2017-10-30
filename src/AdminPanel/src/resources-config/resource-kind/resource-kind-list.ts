@@ -46,13 +46,8 @@ export class ResourceKindList {
   }
 
   displayWorkflowPreview(resourceKind: ResourceKind): Promise<any> {
-    resourceKind.pendingRequest = true;
-    return resourceKind.getWorkflow()
-      .then(workflow => (resourceKind.pendingRequest = false) || workflow)
-      .then(workflow => {
-        const title = this.inCurrentLanguage.toView(workflow.name);
-        return this.alert.show({imageUrl: workflow.thumbnail}, title);
-      });
+    const title = this.inCurrentLanguage.toView(resourceKind.workflow.name);
+    return this.alert.show({imageUrl: resourceKind.workflow.thumbnail}, title);
   }
 
   saveEditedResourceKind(resourceKind: ResourceKind, changedResourceKind: ResourceKind): Promise<any> {

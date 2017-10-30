@@ -3,16 +3,18 @@ import {MultilingualText} from "resources-config/metadata/metadata";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Entity} from "common/entity/entity";
 import {deepCopy} from "common/utils/object-utils";
+import {automapped, map} from "common/dto/decorators";
+import {RestrictingMetadataMapper} from "./workflow-mapping";
 
+@automapped(() => new Workflow())
 export class Workflow extends Entity {
-  id: number;
-  name: MultilingualText = {};
-  enabled: boolean;
-  places: WorkflowPlace[] = [];
-  transitions: WorkflowTransition[] = [];
-  diagram: string;
-  thumbnail;
-  resourceClass: string;
+  @map id: number;
+  @map name: MultilingualText = {};
+  @map('WorkflowPlace[]') places: WorkflowPlace[] = [];
+  @map('WorkflowTransition[]') transitions: WorkflowTransition[] = [];
+  @map diagram: string;
+  @map thumbnail;
+  @map resourceClass: string;
 
   copyFrom(workflow: Workflow) {
     $.extend(this, workflow);
@@ -21,10 +23,17 @@ export class Workflow extends Entity {
   }
 }
 
-export interface WorkflowPlace {
-  id: string;
-  label: MultilingualText;
-  restrictingMetadataIds: RestrictingMetadataIdMap;
+@automapped(() => new WorkflowPlace())
+export class WorkflowPlace {
+  @map id: string;
+  @map label: MultilingualText;
+  @map(RestrictingMetadataMapper) restrictingMetadataIds: RestrictingMetadataIdMap;
+
+  constructor(id?: string, label?: MultilingualText, restrictingMetadataIds?: RestrictingMetadataIdMap) {
+    this.id = id;
+    this.label = label;
+    this.restrictingMetadataIds = restrictingMetadataIds;
+  }
 }
 
 export type RestrictingMetadataIdMap = NumberMap<RequirementState>;
@@ -36,12 +45,13 @@ export enum RequirementState {
   ASSIGNEE,
 }
 
-export interface WorkflowTransition {
-  id: string;
-  label: MultilingualText;
-  froms: string[];
-  tos: string[];
-  permittedRoleIds: string[];
+@automapped(() => new WorkflowTransition())
+export class WorkflowTransition {
+  @map id: string;
+  @map label: MultilingualText;
+  @map('string[]') froms: string[];
+  @map('string[]') tos: string[];
+  @map('string[]') permittedRoleIds: string[];
 }
 
 export interface TransitionBlockReason {

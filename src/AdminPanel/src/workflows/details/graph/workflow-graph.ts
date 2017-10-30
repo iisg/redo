@@ -221,11 +221,7 @@ export class WorkflowGraph {
   }
 
   private nodeToPlace(node): WorkflowPlace {
-    return {
-      id: node.id(),
-      label: node.data('label'),
-      restrictingMetadataIds: {},
-    };
+    return new WorkflowPlace(node.id(), node.data('label'), {});
   }
 
   public getTransitions(): Array<WorkflowTransition> {

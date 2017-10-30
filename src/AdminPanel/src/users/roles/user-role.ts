@@ -1,12 +1,14 @@
 import {MultilingualText} from "resources-config/metadata/metadata";
 import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
-import {Entity} from "../../common/entity/entity";
+import {Entity} from "common/entity/entity";
+import {automapped, map} from "common/dto/decorators";
 
+@automapped(() => new UserRole())
 export class UserRole extends Entity {
-  id: string;
-  name: MultilingualText = {};
-  systemRoleName: string;
+  @map id: string;
+  @map(Object.name) name: MultilingualText = {};
+  @map systemRoleName: string;
 
   get systemRoleIdentifier(): string {
     return this.systemRoleName || this.id;

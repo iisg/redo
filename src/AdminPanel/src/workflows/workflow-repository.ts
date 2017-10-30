@@ -1,25 +1,14 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {HttpClient} from "aurelia-http-client";
 import {Workflow} from "./workflow";
-import {workflowPlaceToEntity, workflowPlaceToBackend} from "./workflow-place-converters";
-import {Metadata} from "../resources-config/metadata/metadata";
-import {ResourceClassApiRepository} from "../common/repository/resource-class-api-repository";
+import {Metadata} from "resources-config/metadata/metadata";
+import {ResourceClassApiRepository} from "common/repository/resource-class-api-repository";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class WorkflowRepository extends ResourceClassApiRepository<Workflow> {
-  constructor(httpClient: HttpClient) {
-    super(httpClient, 'workflows');
-  }
-
-  public toEntity(data: Object): Workflow {
-    data['places'] = data['places'].map(workflowPlaceToEntity);
-    return $.extend(new Workflow(), data);
-  }
-
-  protected toBackend(entity: Workflow): Object {
-    const backendEntity = super.toBackend(entity);
-    backendEntity['places'] = backendEntity['places'].map(workflowPlaceToBackend);
-    return backendEntity;
+  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer) {
+    super(httpClient, entitySerializer, Workflow, 'workflows');
   }
 
   public simulate(workflow: Workflow, fromState?: string[], transition?: string): Promise<any> {

@@ -4,11 +4,12 @@ import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {ApiRepository} from "common/repository/api-repository";
 import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class LanguageRepository extends ApiRepository<Language> {
-  constructor(httpClient: HttpClient, private eventAggregator: EventAggregator) {
-    super(httpClient, 'languages');
+  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer, private eventAggregator: EventAggregator) {
+    super(httpClient, entitySerializer, Language, 'languages');
   }
 
   @cachedResponse()
@@ -52,10 +53,6 @@ export class LanguageRepository extends ApiRepository<Language> {
   protected oneEntityEndpoint(entity: number|string|Object): string {
     let languageCode = entity['code'] || entity;
     return `${this.endpoint}/${languageCode}`;
-  }
-
-  toEntity(data: Object): Language {
-    return $.extend(new Language(), data);
   }
 }
 

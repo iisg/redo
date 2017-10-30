@@ -2,13 +2,13 @@ import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "./metadata";
 import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
-import {deepCopy} from "common/utils/object-utils";
-import {ResourceClassApiRepository} from "../../common/repository/resource-class-api-repository";
+import {ResourceClassApiRepository} from "common/repository/resource-class-api-repository";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
-  constructor(httpClient: HttpClient) {
-    super(httpClient, 'metadata');
+  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer) {
+    super(httpClient, entitySerializer, Metadata, 'metadata');
   }
 
   @cachedResponse(30000)
@@ -64,10 +64,6 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
     }).then(metadata => clearCachedResponse(this.getListByClass) || metadata);
   }
 
-  public toEntity(data: Object): Metadata {
-    return Metadata.clone(data);
-  }
-
   public getBase(metadata: Metadata): Promise<Metadata> {
     if (metadata.id < 0) {
       return new Promise(resolve => resolve(metadata));
@@ -75,21 +71,5 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
     return this.getListByClass(metadata.resourceClass).then(metadataList => {
       return metadataList.filter(base => metadata.baseId == base.id)[0];
     });
-  }
-
-  public toBackend(entity: Metadata): Object {
-    entity = deepCopy(entity);
-    this.replaceEntitiesWithIds(entity);
-    return entity;
-  }
-
-  private replaceEntitiesWithIds(entity: Metadata) {
-    if (entity.constraints.hasOwnProperty('resourceKind')) {
-      entity.constraints.resourceKind = (entity.constraints.resourceKind as any[]).map(this.mapToIdIfPossible);
-    }
-  }
-
-  private mapToIdIfPossible(object: Object): number {
-    return object.hasOwnProperty('id') ? object['id'] : object;
   }
 }

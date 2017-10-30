@@ -21,9 +21,4 @@ export class ResourceWorkflow {
       $.extend(this.resource, resource);
     }).finally(() => this.fetchingTransitions = false);
   }
-
-  resourceChanged() {
-    this.fetchingTransitions = true;
-    this.resource.kind.getWorkflow().then(workflow => this.workflow = workflow).finally(() => this.fetchingTransitions = false);
-  }
 }

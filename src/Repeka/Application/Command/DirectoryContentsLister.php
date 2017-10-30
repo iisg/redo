@@ -4,6 +4,9 @@ namespace Repeka\Application\Command;
 class DirectoryContentsLister {
     /** @return \SplFileInfo[] */
     public function listRecursively(string $path): array {
+        if (!is_dir($path)) {
+            return [];
+        }
         $directoryIterator = new \RecursiveDirectoryIterator(
             $path,
             \RecursiveDirectoryIterator::SKIP_DOTS

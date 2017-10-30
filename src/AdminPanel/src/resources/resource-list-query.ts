@@ -1,14 +1,14 @@
 import {HttpClient} from "aurelia-http-client";
 import {Resource} from "./resource";
-import {ResourceRepository} from "./resource-repository";
 import {deepCopy} from "common/utils/object-utils";
 import {cachedResponse} from "common/repository/cached-response";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 export class ResourceListQuery {
 
   private params: any = {};
 
-  constructor(private httpClient: HttpClient, private resoruceRepository: ResourceRepository) {
+  constructor(private httpClient: HttpClient, private endpoint: string, private entitySerializer: EntitySerializer) {
   }
 
   public filterByResourceKindIds(resourceKindIds: number | number[]): ResourceListQuery {
@@ -48,10 +48,10 @@ export class ResourceListQuery {
   @cachedResponse(20000)
   private makeRequest(params): Promise<Resource[]> {
     return this.httpClient
-      .createRequest(this.resoruceRepository.endpoint)
+      .createRequest(this.endpoint)
       .asGet()
       .withParams(params)
       .send()
-      .then(response => Promise.all(response.content.map(item => this.resoruceRepository.toEntity(item))));
+      .then(response => Promise.all(response.content.map(resource => this.entitySerializer.deserialize(Resource, resource))));
   }
 }

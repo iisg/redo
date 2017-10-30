@@ -12,6 +12,13 @@ import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {i18nConfigurator} from "config/i18n";
 import {GuiLanguage} from "./common/i18n/gui-language";
 import {Configure} from "aurelia-configuration";
+import {Language} from "./resources-config/language-config/language";
+import {Metadata} from "./resources-config/metadata/metadata";
+import {ResourceKind} from "./resources-config/resource-kind/resource-kind";
+import {Resource} from "./resources/resource";
+import {User} from "./users/user";
+import {UserRole} from "./users/roles/user-role";
+import {Workflow} from "./workflows/workflow";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -44,6 +51,7 @@ export function configure(aurelia: Aurelia) {
       'common/http-client/invalid-command-message.html', // used in alerts by GlobalExceptionInterceptor
     ]);
 
+  preloadEntityTypes();
   configureHttpClient(aurelia);
   installValidationMessageLocalization(aurelia);
 
@@ -63,4 +71,9 @@ function onAureliaStarted(aurelia: Aurelia): Promise<void> {
     const guiLanguage: GuiLanguage = aurelia.container.get(GuiLanguage);
     guiLanguage.apply();
   });
+}
+
+function preloadEntityTypes() {
+  // This function does nothing, but its presence and dependence on these classes ensures that their decorators are evaluated.
+  return [User, UserRole, Language, Metadata, ResourceKind, Resource, Workflow] && undefined;
 }

@@ -1,16 +1,14 @@
 import {HttpClient} from "aurelia-http-client";
-import {autoinject, Container, NewInstance} from "aurelia-dependency-injection";
+import {autoinject} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
-import {deepCopy} from "common/utils/object-utils";
-import {MetadataRepository} from "../metadata/metadata-repository";
 import {cachedResponse} from "common/repository/cached-response";
-import {SystemMetadata} from "../metadata/system-metadata";
-import {ResourceClassApiRepository} from "../../common/repository/resource-class-api-repository";
+import {ResourceClassApiRepository} from "common/repository/resource-class-api-repository";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class ResourceKindRepository extends ResourceClassApiRepository<ResourceKind> {
-  constructor(httpClient: HttpClient, private metadataRepository: MetadataRepository, private container: Container) {
-    super(httpClient, 'resource-kinds');
+  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer) {
+    super(httpClient, entitySerializer, ResourceKind, 'resource-kinds');
   }
 
   public getResourceKind(id: number): Promise<ResourceKind> {
@@ -24,7 +22,7 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
 
   @cachedResponse(30000)
   public getList(): Promise<ResourceKind[]> {
-    return this.httpClient.get(this.endpoint).then(response => this.responseToEntities(response));
+    return super.getList();
   }
 
   public update(updatedResourceKind: ResourceKind): Promise<ResourceKind> {
@@ -33,21 +31,5 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
       label: updatedResourceKind.label,
       metadataList: backendRepresentation['metadataList'],
     });
-  }
-
-  protected toBackend(entity: ResourceKind): Object {
-    let data = deepCopy(entity);
-    data.metadataList = data.metadataList
-      .map(metadata => this.metadataRepository.toBackend(metadata))
-      .filter(metadata => metadata.baseId != SystemMetadata.PARENT.id);
-    delete data.workflow;
-    return data;
-  }
-
-  public toEntity(data: Object): Promise<ResourceKind> {
-    let resourceKind = this.container.get(NewInstance.of(ResourceKind));
-    data['metadataList'] = data['metadataList'].map(this.metadataRepository.toEntity);
-    data['metadataList'] = [SystemMetadata.PARENT].concat(data['metadataList']);
-    return $.extend(resourceKind, data);
   }
 }
