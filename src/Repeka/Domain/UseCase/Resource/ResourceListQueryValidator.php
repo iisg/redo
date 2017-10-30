@@ -2,6 +2,7 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Respect\Validation\Validatable;
@@ -21,6 +22,7 @@ class ResourceListQueryValidator extends CommandAttributesValidator {
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('resourceClass', $this->resourceClassExistsRule);
+            ::attribute('resourceClasses', Validator::arrayType()->each($this->resourceClassExistsRule))
+            ->attribute('resourceKinds', Validator::arrayType()->each(Validator::instance(ResourceKind::class)));
     }
 }

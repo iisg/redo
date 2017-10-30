@@ -47,7 +47,7 @@
                     <span class="pull-right text-nowrap">
                         <pending-throbber entity.bind="resource"></pending-throbber>
                         <a class="btn ${resource.hovered ? 'btn-raised' : ''} btn-info btn-sm"
-                            route-href="route: resources/details; params.bind: {resourceClass: resource.resourceClass, id: resource.id}"
+                            route-href="route: resources/details; params.bind: {id: resource.id}"
                             disabled-link.bind="resource.pendingRequest">
                             <fa name="eye fw"></fa>
                             ${'Details' | t}

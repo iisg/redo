@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use Repeka\Domain\Constants\SystemMetadata;
 
 // ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
 class ResourceEntity implements Identifiable {
@@ -37,6 +38,10 @@ class ResourceEntity implements Identifiable {
         return array_filter($this->contents, function ($values) {
             return count($values) > 0;
         });
+    }
+
+    public function hasParent(): bool {
+        return isset($this->getContents()[SystemMetadata::PARENT]);
     }
 
     public function getValues(Metadata $metadata): array {

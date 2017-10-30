@@ -20,15 +20,8 @@ class ResourceListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingTheList() {
         $resources = [$this->createMock(ResourceEntity::class)];
-        $this->resourceRepository->expects($this->once())->method('findAllNonSystemResources')->willReturn($resources);
-        $returnedList = $this->handler->handle(new ResourceListQuery('books'));
-        $this->assertSame($resources, $returnedList);
-    }
-
-    public function testGettingTheListWithSystemResources() {
-        $resources = [$this->createMock(ResourceEntity::class)];
-        $this->resourceRepository->expects($this->once())->method('findAllByResourceClass')->with('users')->willReturn($resources);
-        $returnedList = $this->handler->handle(new ResourceListQuery('users', true));
+        $this->resourceRepository->expects($this->once())->method('findByQuery')->willReturn($resources);
+        $returnedList = $this->handler->handle(ResourceListQuery::builder()->build());
         $this->assertSame($resources, $returnedList);
     }
 }

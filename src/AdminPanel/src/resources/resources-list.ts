@@ -9,6 +9,8 @@ import {ComponentAttached} from "aurelia-templating";
 import {Metadata} from "../resources-config/metadata/metadata";
 import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
 import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
+import {NavigationInstruction} from "aurelia-router";
+import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 
 @autoinject
 export class ResourcesList implements ComponentAttached {
@@ -16,22 +18,27 @@ export class ResourcesList implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay}) hasResources: boolean = undefined;
 
   @bindable resourceClass: string;
-
   addFormOpened: boolean;
-
   briefMetadata: Metadata[];
-
   progressBar: boolean;
-
   @observable resources: Resource[];
+  urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceKindRepository: ResourceKindRepository,
-              private deleteEntityConfirmation: DeleteEntityConfirmation) {
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private ea: EventAggregator) {
   }
 
   activate(params: any) {
-    this.resourceClass = params.resourceClass;
+    if (!params.resourceClass) {
+      throw new Error("You have to specify resourceClass!"); // TODO redirect to 404 when it exists
+    }
+    this.fetchList(params.resourceClass);
+  }
+
+  private fetchList(resourceClass: string) {
+    this.resourceClass = resourceClass;
     if (this.resources) {
       this.resources = [];
     }
@@ -41,8 +48,23 @@ export class ResourcesList implements ComponentAttached {
     this.fetchResources();
   }
 
+  bind() {
+    this.urlListener = this.ea.subscribe("router:navigation:success",
+      (event: { instruction: NavigationInstruction }) => {
+        const newResourceClass = event.instruction.queryParams.resourceClass;
+        if (newResourceClass && newResourceClass != this.resourceClass) {
+          this.fetchList(newResourceClass);
+        }
+      });
+  }
+
+  unbind() {
+    this.urlListener.dispose();
+  }
+
   attached() {
     if (this.parentResource) {
+      this.resourceClass = this.parentResource.resourceClass;
       this.fetchBriefMetadata();
       this.fetchResourcesByParent();
     }
@@ -50,7 +72,7 @@ export class ResourcesList implements ComponentAttached {
 
   fetchResources() {
     this.progressBar = true;
-    this.resourceRepository.getListByClass(this.resourceClass).then(resources => {
+    this.resourceRepository.getListQuery().filterByResourceClasses(this.resourceClass).get().then(resources => {
       this.progressBar = false;
       this.resources = resources;
       this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);

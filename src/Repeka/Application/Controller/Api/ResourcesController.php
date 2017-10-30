@@ -1,8 +1,8 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
+use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
@@ -11,6 +11,7 @@ use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,21 +25,23 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ResourcesController extends ApiController {
-    /** @var ResourceKindRepository */
-    private $resourceKindRepository;
-
-    public function __construct(ResourceKindRepository $resourceKindRepository) {
-        $this->resourceKindRepository = $resourceKindRepository;
-    }
-
     /**
      * @Route
      * @Method("GET")
      */
     public function getListAction(Request $request) {
-        $includeSystemResources = !!$request->query->get('systemResourceKind');
-        $resourceClass = $request->query->get('resourceClass', '');
-        $resources = $this->handleCommand(new ResourceListQuery($resourceClass, $includeSystemResources));
+        $resourceClasses = array_filter(explode(',', $request->query->get('resourceClasses', '')));
+        $resourceKindIds = array_filter(explode(',', $request->query->get('resourceKinds', '')));
+        $resourceKinds = array_map(function ($resourceKindId) {
+            return $this->handleCommand(new ResourceKindQuery($resourceKindId));
+        }, $resourceKindIds);
+        $resources = $this->handleCommand(
+            ResourceListQuery::builder()
+                ->onlyTopLevel()
+                ->filterByResourceClasses($resourceClasses)
+                ->filterByResourceKinds($resourceKinds)
+                ->build()
+        );
         return $this->createJsonResponse($resources);
     }
 
@@ -56,7 +59,7 @@ class ResourcesController extends ApiController {
      * @Method("GET")
      */
     public function getChildrenAction(int $id) {
-        $resource = $this->handleCommand(new ResourceChildrenQuery($id == 0 ? null : $id));
+        $resource = $this->handleCommand(new ResourceChildrenQuery($id));
         return $this->createJsonResponse($resource);
     }
 
@@ -67,10 +70,9 @@ class ResourcesController extends ApiController {
      */
     public function postAction(Request $request, array $resourceContents) {
         $data = $request->request->all();
-        if (empty($data['kind_id'])) {
-            throw new BadRequestHttpException('kind_id missing');
-        }
-        $resourceKind = $this->resourceKindRepository->findOne($data['kind_id']);
+        Assertion::keyExists($data, 'kind_id', 'kind_id is missing');
+        Assertion::numeric($data['kind_id']);
+        $resourceKind = $this->handleCommand(new ResourceKindQuery($data['kind_id']));
         $resourceClass = $data['resourceClass'] ?? '';
         $command = new ResourceCreateCommand($resourceKind, $resourceContents, $resourceClass);
         $resource = $this->handleCommand($command);

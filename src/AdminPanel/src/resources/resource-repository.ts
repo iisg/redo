@@ -4,10 +4,11 @@ import {Resource} from "./resource";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {ResourceKind} from "../resources-config/resource-kind/resource-kind";
 import {workflowPlaceToEntity} from "workflows/workflow-place-converters";
-import {ResourceClassApiRepository} from "../common/repository/resource-class-api-repository";
+import {ResourceListQuery} from "./resource-list-query";
+import {ApiRepository} from "../common/repository/api-repository";
 
 @autoinject
-export class ResourceRepository extends ResourceClassApiRepository<Resource> {
+export class ResourceRepository extends ApiRepository<Resource> {
   constructor(httpClient: HttpClient, private resourceKindRepository: ResourceKindRepository) {
     super(httpClient, 'resources');
   }
@@ -16,20 +17,8 @@ export class ResourceRepository extends ResourceClassApiRepository<Resource> {
     return this.prepareFormData(resource);
   }
 
-  public getListByClass(resourceClass: string): Promise<Resource[]> {
-    return super.getListByClass(resourceClass);
-  }
-
-  public getListWithSystemResourceKinds(resourceClass: string): Promise<Resource[]> {
-    return this.httpClient
-      .createRequest(this.endpoint)
-      .asGet()
-      .withParams({
-        systemResourceKind: true,
-        resourceClass
-      })
-      .send()
-      .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
+  public getListQuery(): ResourceListQuery {
+    return new ResourceListQuery(this.httpClient, this);
   }
 
   public getByParent(parent: Resource): Promise<Resource[]> {
