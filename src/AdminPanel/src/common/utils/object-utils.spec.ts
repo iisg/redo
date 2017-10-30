@@ -1,4 +1,4 @@
-import {keysByValue, numberKeysByValue} from "./object-utils";
+import {keysByValue, numberKeysByValue, zip} from "./object-utils";
 describe('object-utils', () => {
   describe(keysByValue.name, () => {
     const testObject = {
@@ -54,6 +54,27 @@ describe('object-utils', () => {
 
     it('filters out non-numbers', () => {
       expect(numberKeysByValue(testObject, 'xyz')).toEqual([1]);
+    });
+  });
+
+  describe(zip.name, () => {
+    it('zips arrays', () => {
+      const result = zip([1, 'a', 'Z'], ['one', 'letter a', 'uppercase z']);
+      expect(Object.keys(result).length).toEqual(3);
+      expect(result[1]).toEqual('one');
+      expect(result['a']).toEqual('letter a');
+      expect(result['Z']).toEqual('uppercase z');
+    });
+
+    it('throws when array lengths differ', () => {
+      const mistake = () => {
+        zip(['a', 'b'], ['X']);
+      };
+      expect(mistake).toThrow();
+    });
+
+    it('works with empty arrays', () => {
+      expect(zip([], [])).toEqual({});
     });
   });
 });

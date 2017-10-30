@@ -1,6 +1,8 @@
 import {ValidationRules} from "aurelia-validation";
 import {Entity} from "common/entity/entity";
+import {copyable} from "common/dto/decorators";
 
+@copyable
 export class Language extends Entity {
   code: string = '';
   flag: string = '';

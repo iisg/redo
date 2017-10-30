@@ -3,16 +3,19 @@ import {ValidationRules} from "aurelia-validation";
 import {WorkflowPlace, WorkflowTransition, TransitionBlockReason} from "workflows/workflow";
 import {Entity} from "common/entity/entity";
 import {MetadataConstraintsSatisfiedValidationRule} from "common/validation/rules/metadata-constraints-satisfied";
+import {map, copy, mappedWith} from "common/dto/decorators";
+import {ResourceMapper, ResourceKindIdMapper} from "./resource-mapping";
 
+@mappedWith(ResourceMapper, () => new Resource())
 export class Resource extends Entity {
-  id: number;
-  kind: ResourceKind;
-  currentPlaces: WorkflowPlace[];
-  availableTransitions: WorkflowTransition[] = [];
-  blockedTransitions: StringMap<TransitionBlockReason> = {};
-  transitionAssigneeMetadata: NumberMap<WorkflowTransition[]> = {};
-  contents: StringArrayMap = {};
-  resourceClass: string;
+  @map id: number;
+  @map(ResourceKindIdMapper) kind: ResourceKind;
+  @map('WorkflowPlace[]') currentPlaces: WorkflowPlace[];
+  @map('WorkflowTransition[]') availableTransitions: WorkflowTransition[] = [];
+  @map blockedTransitions: StringMap<TransitionBlockReason> = {};
+  @map('{WorkflowTransition[]}') transitionAssigneeMetadata: NumberMap<WorkflowTransition[]> = {};
+  @copy contents: StringArrayMap = {};
+  @map resourceClass: string;
 
   public canApplyTransition(transition: WorkflowTransition) {
     return this.blockedTransitions[transition.id] == undefined;

@@ -9,6 +9,7 @@ import {BindingSignaler} from "aurelia-templating-resources";
 import {Metadata} from "../metadata/metadata";
 import {noop, VoidFunction} from "common/utils/function-utils";
 import {move, removeValue} from "common/utils/array-utils";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class ResourceKindForm implements ComponentDetached {
@@ -27,7 +28,8 @@ export class ResourceKindForm implements ComponentDetached {
 
   constructor(validationControllerFactory: ValidationControllerFactory,
               private signaler: BindingSignaler,
-              private metadataRepository: MetadataRepository) {
+              private metadataRepository: MetadataRepository,
+              private entitySerializer: EntitySerializer) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
@@ -36,7 +38,8 @@ export class ResourceKindForm implements ComponentDetached {
     if (this.newMetadataBase == undefined) {
       return;
     }
-    const metadata = Metadata.createFromBase(this.newMetadataBase);
+    const metadata = this.entitySerializer.clone(this.newMetadataBase);
+    metadata.baseId = this.newMetadataBase.id;
     this.baseMetadataMap.set(metadata, this.newMetadataBase);
     this.resourceKind.metadataList.push(metadata);
     this.newMetadataBase = undefined;
@@ -71,7 +74,7 @@ export class ResourceKindForm implements ComponentDetached {
   editChanged() {
     this.resourceKind = new ResourceKind;
     if (this.edit) {
-      this.resourceKind = ResourceKind.clone(this.edit);
+      this.resourceKind = this.entitySerializer.clone(this.edit);
       this.resourceKind.metadataList.forEach(metadata => {
         this.metadataRepository.getBase(metadata).then(baseMetadata => {
           this.baseMetadataMap.set(metadata, baseMetadata);

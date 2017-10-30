@@ -1,12 +1,14 @@
 import {UserRole} from "./roles/user-role";
-import {Resource} from "resources/resource";
+import {Resource} from "../resources/resource";
+import {automapped, map} from "common/dto/decorators";
 
+@automapped(() => new User())
 export class User {
-  id: number;
-  username: string;
-  email: string;
-  userData: Resource;
-  roles: Array<UserRole>;
+  @map id: number;
+  @map username: string;
+  @map email: string;
+  @map userData: Resource = new Resource();
+  @map('UserRole[]') roles: UserRole[] = [];
 
   public get roleIdentifiers() {
     return this.roles.map(role => role.systemRoleIdentifier);

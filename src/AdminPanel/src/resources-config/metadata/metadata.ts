@@ -7,17 +7,20 @@ import {Entity} from "common/entity/entity";
 import {SystemResourceKinds} from "../resource-kind/system-resource-kinds";
 import {arraysEqual} from "common/utils/array-utils";
 import {computedFrom} from "aurelia-binding";
+import {automapped, map, mappedWith} from "common/dto/decorators";
+import {ResourceKindConstraintMapper, MetadataMapper} from "./metadata-mapping";
 
 export interface MultilingualText extends StringStringMap {
 }
 
+@automapped(() => new MetadataConstraints())
 export class MetadataConstraints {
-  constructor(initialValues: {} = {}) {  // argument intentionally untyped because object-style initializers require presence of all props
+  @map maxCount?: number;
+  @map(ResourceKindConstraintMapper) resourceKind?: ResourceKind[]|number[] = [];
+
+  constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
   }
-
-  resourceKind?: ResourceKind[]|number[];
-  maxCount?: number;
 }
 
 export const metadataConstraintDefaults: MetadataConstraints = {
@@ -25,18 +28,19 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   maxCount: 0,
 };
 
+@mappedWith(MetadataMapper, () => new Metadata())
 export class Metadata extends Entity {
-  id: number;
-  name: string = '';
-  label: MultilingualText = {};
-  placeholder: MultilingualText = {};
-  description: MultilingualText = {};
-  control: string = 'text';
-  parentId: number;
-  baseId: number;
-  constraints: MetadataConstraints = new MetadataConstraints();
-  shownInBrief: boolean;
-  resourceClass: string;
+  @map id: number;
+  @map name: string = '';
+  @map label: MultilingualText = {};
+  @map placeholder: MultilingualText = {};
+  @map description: MultilingualText = {};
+  @map control: string = 'text';
+  @map parentId: number;
+  @map baseId: number;
+  @map(MetadataConstraints.name) constraints: MetadataConstraints = new MetadataConstraints();
+  @map shownInBrief: boolean;
+  @map resourceClass: string;
 
   @computedFrom('control', 'constraints.resourceKind')
   get canDetermineAssignees(): boolean {
@@ -60,20 +64,10 @@ export class Metadata extends Entity {
     });
   }
 
-  static clone(metadata: Object): Metadata {
-    return Metadata.copyContents(metadata, new Metadata());
-  }
-
   static copyContents(source: Object, target: Metadata): Metadata {
     let cloned: Metadata = deepCopy(source);
     cloned.constraints = $.extend(new MetadataConstraints(), cloned.constraints);
     return $.extend(target, cloned);
-  }
-
-  static createFromBase(baseMetadata: Metadata): Metadata {
-    let metadata = Metadata.clone(baseMetadata);
-    metadata.baseId = baseMetadata.id;
-    return metadata;
   }
 }
 

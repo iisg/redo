@@ -6,6 +6,7 @@ import {Metadata} from "./metadata";
 import {computedFrom} from "aurelia-binding";
 import {noop, VoidFunction} from "common/utils/function-utils";
 import {changeHandler} from "common/components/binding-mode";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class MetadataForm implements ComponentAttached {
@@ -21,7 +22,7 @@ export class MetadataForm implements ComponentAttached {
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory) {
+  constructor(validationControllerFactory: ValidationControllerFactory, private entitySerializer: EntitySerializer) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
@@ -36,7 +37,7 @@ export class MetadataForm implements ComponentAttached {
   }
 
   private resetValues() {
-    this.metadata = this.template ? Metadata.clone(this.template) : new Metadata();
+    this.metadata = this.template ? this.entitySerializer.clone(this.template) : new Metadata();
     delete this.metadata['editing'];  // would interfere when $.extend()ing other objects with this one
   }
 

@@ -1,19 +1,7 @@
-let strippableEntityProperties = [];
-
 export class Entity { // Why not abstract? See explanation at the bottom.
-  @strippable hovered: boolean = false;
-  @strippable editing: boolean = false;
-  @strippable pendingRequest: boolean = false;
-
-  static stripFrontendProperties(entity: Object) {
-    for (const propertyName of strippableEntityProperties) {
-      delete entity[propertyName];
-    }
-  }
-}
-
-function strippable(prototype: any, propertyName: string) {
-  strippableEntityProperties.push(propertyName);
+  hovered: boolean = false;
+  editing: boolean = false;
+  pendingRequest: boolean = false;
 }
 
 /*

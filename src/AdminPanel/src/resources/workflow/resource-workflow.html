@@ -17,10 +17,8 @@
             </div>
         </div>
         <div class="col-sm-8">
-            <div if.bind="workflow">
-                <workflow-graph-display workflow.bind="workflow"
-                    current.bind="resource.currentPlaces"></workflow-graph-display>
-            </div>
+            <workflow-graph-display workflow.bind="resource.kind.workflow"
+                current.bind="resource.currentPlaces"></workflow-graph-display>
         </div>
     </div>
 </template>

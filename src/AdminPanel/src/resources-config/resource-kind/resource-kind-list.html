@@ -54,7 +54,7 @@
                         class="text-right">
                         <div class="pull-right text-nowrap">
                             <pending-throbber entity.bind="resourceKind"></pending-throbber>
-                            <button if.one-time="resourceKind.workflowId"
+                            <button if.one-time="resourceKind.workflow"
                                 class="btn btn-default ${resourceKind.hovered ? 'btn-raised' : ''}"
                                 click.trigger="displayWorkflowPreview(resourceKind)"
                                 disabled.bind="resourceKind.pendingRequest">

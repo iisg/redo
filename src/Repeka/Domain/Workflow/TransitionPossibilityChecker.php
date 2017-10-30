@@ -46,7 +46,11 @@ class TransitionPossibilityChecker {
         return !in_array($executor->getUserData()->getId(), $assigneeUserIds);
     }
 
-    public function getAssigneeMetadataIds(ResourceWorkflow $workflow, ResourceWorkflowTransition $transition):array {
+    /**
+     * Gets assignee metadata list for each of transition tos, merges these lists, removes duplicates and returns only IDs
+     * @return int[]
+     */
+    public function getAssigneeMetadataIds(ResourceWorkflow $workflow, ResourceWorkflowTransition $transition): array {
         /** @var ResourceWorkflowPlace[] $transitionTos */
         $transitionTos = EntityHelper::getByIds($transition->getToIds(), $workflow->getPlaces());
         $assigneeMetadataIds = [];
