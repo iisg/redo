@@ -1,8 +1,8 @@
 import {HttpClient} from "aurelia-http-client";
 import {Resource} from "./resource";
 import {ResourceRepository} from "./resource-repository";
-import {deepCopy} from "../common/utils/object-utils";
-import {cachedResponse} from "../common/repository/cached-response";
+import {deepCopy} from "common/utils/object-utils";
+import {cachedResponse} from "common/repository/cached-response";
 
 export class ResourceListQuery {
 
@@ -13,23 +13,23 @@ export class ResourceListQuery {
 
   public filterByResourceKindIds(resourceKindIds: number | number[]): ResourceListQuery {
     if (!Array.isArray(resourceKindIds)) {
-      resourceKindIds = [resourceKindIds];
+      resourceKindIds = [resourceKindIds as number];
     }
     if (!this.params.resourceKinds) {
       this.params.resourceKinds = [];
     }
-    resourceKindIds.forEach(rkId => this.params.resourceKinds.push(rkId));
+    (resourceKindIds as number[]).forEach(rkId => this.params.resourceKinds.push(rkId));
     return this;
   }
 
   public filterByResourceClasses(resourceClasses: string | string[]): ResourceListQuery {
     if (!Array.isArray(resourceClasses)) {
-      resourceClasses = [resourceClasses];
+      resourceClasses = [resourceClasses as string];
     }
     if (!this.params.resourceClasses) {
       this.params.resourceClasses = [];
     }
-    resourceClasses.forEach(resourceClass => this.params.resourceClasses.push(resourceClass));
+    (resourceClasses as string[]).forEach(resourceClass => this.params.resourceClasses.push(resourceClass));
     return this;
   }
 

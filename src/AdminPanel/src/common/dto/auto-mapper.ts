@@ -1,0 +1,57 @@
+import {inject, Lazy} from "aurelia-dependency-injection";
+import {Mapper} from "./mappers";
+import {TypeRegistry} from "./registry";
+import {getDtoProperties} from "./class-metadata-utils";
+
+/**
+ * Copies object using mapping instructions provided by @map and other property decorators. Non-decorated properties are omitted.
+ */
+@inject(Lazy.of(TypeRegistry))
+export class AutoMapper<V> extends Mapper<V> {
+  constructor(private typeRegistry: () => TypeRegistry) {
+    super();
+  }
+
+  fromBackendValue(dto: any, entity: V): Promise<V> {
+    const typeProperties = getDtoProperties(entity);
+    const promises = [];
+    for (const propertyName in typeProperties) {
+      const handlingInstruction = typeProperties[propertyName];
+      const mapper = this.typeRegistry().getMapper(handlingInstruction);
+      if (mapper === undefined) {
+        const typeName = (handlingInstruction as Function).name || handlingInstruction;
+        throw new Error(`Mapper not found for type '${typeName}'`);
+      }
+      const promise = mapper.fromBackendProperty(propertyName, dto, entity)
+        .then(value => entity[propertyName] = value);
+      promises.push(promise);
+    }
+    return Promise.all(promises).then(() => entity);
+  }
+
+  toBackendValue(entity: V): Object {
+    const dto = {};
+    const typeProperties = getDtoProperties(entity);
+    for (const propertyName in typeProperties) {
+      const handlingInstruction = typeProperties[propertyName];
+      const mapper = this.typeRegistry().getMapper(handlingInstruction);
+      if (mapper === undefined) {
+        const typeName = (handlingInstruction as Function).name || handlingInstruction;
+        throw new Error(`Mapper not found for type '${typeName}'`);
+      }
+      mapper.toBackendProperty(propertyName, entity, dto);
+    }
+    return dto;
+  }
+
+  protected clone(source: V): V {
+    const typeProperties = getDtoProperties(source);
+    const target = this.typeRegistry().getEntityByType(source.constructor.name);
+    for (const propertyName in typeProperties) {
+      const handlingInstruction = typeProperties[propertyName];
+      const mapper = this.typeRegistry().getMapper(handlingInstruction);
+      target[propertyName] = mapper.nullSafeClone(source[propertyName]);
+    }
+    return target;
+  }
+}
