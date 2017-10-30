@@ -39,3 +39,12 @@ export function propertyKeys(obj: Object): string[] {
     .filter(key => typeof obj[key] != 'function')  // remove methods
     .filter(key => !key.startsWith('_'));  // remove internal properties like Aurelia's __observe__
 }
+
+export function zip<V>(keys: Array<number|string>, values: V[]): AnyMap<V> {
+  if (keys.length != values.length) {
+    throw new Error(`Key and value arrays must be of the same length, actually are ${keys.length} and ${values.length} items long.`);
+  }
+  const obj = {};
+  keys.forEach((key, i) => obj[key] = values[i]);
+  return obj;
+}
