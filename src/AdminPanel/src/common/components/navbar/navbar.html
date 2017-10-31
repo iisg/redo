@@ -21,29 +21,22 @@
             <ul class="nav navbar-nav visible-xs"
                 as-element="nested-navigation-menu"></ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a>
-                    <fa name="bell fw"></fa>
-                    <span class="badge">3</span>
-                </a></li>
                 <li class="dropdown">
                     <gui-language-switcher></gui-language-switcher>
                 </li>
                 <li class="dropdown">
-                    <a data-target="#"
-                        class="dropdown-toggle"
+                    <a class="dropdown-toggle"
                         data-toggle="dropdown">
                         <fa name="user fw"></fa>
                         <current-user-label></current-user-label>
-                        <b class="caret"></b>
+                        <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a>${'nav::My Account' | t}</a></li>
                         <li><a>${'nav::Dashboard' | t}</a></li>
                         <li class="divider"></li>
-                        <li><a href="/"
-                            target="_top">${'nav::Front Page' | t}</a></li>
-                        <li><a href="/logout"
-                            target="_top">${'nav::Log Out' | t}</a></li>
+                        <li><a href="/">${'nav::Front Page' | t}</a></li>
+                        <li><a href="/logout">${'nav::Log Out' | t}</a></li>
                     </ul>
                 </li>
             </ul>

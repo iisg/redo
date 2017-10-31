@@ -21,13 +21,12 @@ class DevInitializeCommand extends Command {
         if ($input->getOption('drop')) {
             $this->runCommand('doctrine:database:drop', ['--force' => true, '--if-exists' => true], $output);
             $this->runCommand('doctrine:database:create', [], $output);
-            $this->runCommand('doctrine:migrations:migrate', [], $output);
         } else {
             $this->runCommand('repeka:dev:purge-db', [], $output);
             $output->writeln('Database purged');
         }
         $this->runCommand('repeka:dev:clear-uploads', [], $output);
-        $this->runCommand('repeka:initialize', [], $output);
+        $this->runCommand('repeka:initialize', ['--skip-backup' => true], $output);
         if (!$input->getOption('no-fixtures')) {
             $this->runCommand('doctrine:fixtures:load', ['--append' => true], $output);
         } else {
