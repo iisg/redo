@@ -8,6 +8,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindByResourceClassListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindDeleteCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,6 +24,15 @@ class ResourceKindsController extends ApiController {
 
     public function __construct(ResourceWorkflowRepository $resourceWorkflowRepository) {
         $this->resourceWorkflowRepository = $resourceWorkflowRepository;
+    }
+
+    /**
+     * @Route("/{id}")
+     * @Method("GET")
+     */
+    public function getAction(int $id) {
+        $resourceKind = $this->handleCommand(new ResourceKindQuery($id));
+        return $this->createJsonResponse($resourceKind);
     }
 
     /**

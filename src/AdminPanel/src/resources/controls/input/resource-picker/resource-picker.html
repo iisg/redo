@@ -1,5 +1,5 @@
 <template>
-    <require from="resources/details/resource-metadata-values/resource-metadata-values"></require>
+    <require from="resources/details/resource-metadata-table/resource-metadata-table"></require>
     <require from="common/components/dropdown-select/dropdown-select"></require>
     <require from="resources/details/resource-label"></require>
 
@@ -8,8 +8,9 @@
         disabled.bind="disabled">
         <template replace-part="option-template">
             <b>${option | resourceLabel}</b>
-            <resource-metadata-values resource.one-time="option"
-                brief></resource-metadata-values>
+            <resource-metadata-table resource.one-time="option"
+                hide-empty-metadata
+                brief-only></resource-metadata-table>
         </template>
     </dropdown-select>
     <p if.bind="invalidValue"

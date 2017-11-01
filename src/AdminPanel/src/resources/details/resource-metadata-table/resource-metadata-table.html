@@ -1,0 +1,14 @@
+<template>
+    <require from="./resource-metadata-values"></require>
+    <require from="resources-config/metadata/metadata-label"></require>
+
+    <dl class="dl-horizontal resource-details">
+        <template repeat.for="metadata of metadataList">
+            <dt>${metadata | metadataLabel}</dt>
+            <dd>
+                <resource-metadata-values resource.one-time="resource"
+                    metadata.one-time="metadata"></resource-metadata-values>
+            </dd>
+        </template>
+    </dl>
+</template>

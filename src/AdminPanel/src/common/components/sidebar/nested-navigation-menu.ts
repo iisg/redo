@@ -1,8 +1,7 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {SiteMenu} from "./site-menu";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {Router} from "aurelia-router";
-import {RouteConfig} from "aurelia-router";
+import {Router, RouteConfig} from "aurelia-router";
 import {shallowEquals} from "../../utils/object-utils";
 import {NavItem} from "../../routes/route-types";
 
@@ -25,11 +24,10 @@ export class NestedNavigationMenu {
 
   private isItemActive(item: RouteConfig): boolean {
     const currentInstruction = this.router.currentInstruction;
-    if (currentInstruction) {
-      return item.route == currentInstruction.config.name && shallowEquals(item.settings.params, currentInstruction.params);
-    } else {
-      return false;
-    }
+    return currentInstruction
+      && item.route == currentInstruction.config.name
+      && item.settings.params !== undefined
+      && shallowEquals(item.settings.params, currentInstruction.params);
   }
 
   toggle(item: NavItem) {

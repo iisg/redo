@@ -3,7 +3,7 @@
     <require from="resources-config/metadata/metadata-label"></require>
 
     <fa name="user"
-        if.bind="determinesAssignee(resource, metadata)"></fa>
+        if.bind="determinesAssignee"></fa>
     <ul class="list-unstyled">
         <li repeat.for="value of resource.contents[metadata.baseId]">
             <resource-metadata-value-display
