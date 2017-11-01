@@ -2,12 +2,11 @@
     <require from="../add/resource-form"></require>
     <require from="../workflow/resource-workflow"></require>
     <require from="../workflow/resource-place-display.html"></require>
-    <require from="./resource-metadata-values/resource-metadata-values"></require>
+    <require from="./resource-metadata-table/resource-metadata-table"></require>
     <require from="./resource-label"></require>
     <require from="./resource-level-up"></require>
     <require from="../resources-list"></require>
     <require from="common/components/fab/fab-edit"></require>
-    <require from="resources-config/metadata/metadata-label"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
 
@@ -35,15 +34,7 @@
 
         <div class="au-animate anim-height-inout-300"
             if.bind="!editing">
-            <dl class="dl-horizontal resource-details">
-                <template repeat.for="metadata of allMetadata">
-                    <dt>${metadata | metadataLabel}</dt>
-                    <dd>
-                        <resource-metadata-values resource.one-time="resource"
-                            metadata.one-time="metadata"></resource-metadata-values>
-                    </dd>
-                </template>
-            </dl>
+            <resource-metadata-table resource.bind="resource"></resource-metadata-table>
 
             <dl class="dl-horizontal resource-details">
                 <dt>${'Place' | t}</dt>
