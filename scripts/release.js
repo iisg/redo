@@ -111,7 +111,6 @@ function copySingleRequiredFiles() {
   [
     'src/.htaccess',
     'var/.htaccess',
-    'var/bootstrap.php.cache',
     'var/config/config_local.yml.sample',
     'var/config/docker.env.sample',
     'var/ssl/generate-self-signed-certs.sh',
