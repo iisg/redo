@@ -16,12 +16,12 @@ monolog:
       type: console
     main:
       channels: ['!event', '!exception_listener']
-      level: debug
+      level: notice
       path: "%kernel.logs_dir%/%kernel.environment%.log"
       type: rotating_file
     exception_listener:
       channels: ['exception_listener']
-      level: debug
+      level: notice
       path: "%kernel.logs_dir%/%kernel.environment%-exception.log"
       type: rotating_file
       formatter: Monolog\Formatter\LineFormatter
