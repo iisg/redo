@@ -53,7 +53,7 @@
         </div>
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"
-            if.bind="editing">
+            else>
             <resource-form edit.bind="resource"
                 submit.call="saveEditedResource(savedResource)"></resource-form>
         </div>

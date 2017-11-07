@@ -4,7 +4,7 @@ import {Aurelia} from "aurelia-framework";
 import {I18N, Backend} from "aurelia-i18n";
 import {AppRouter} from "aurelia-router";
 
-export function i18nConfigurator(aurelia: Aurelia) {
+export function i18nConfiguratorFactory(aurelia: Aurelia) {
   return (i18n: I18N) => {
     i18n.i18next.use(Backend.with(aurelia.loader));
     const config: I18nParams = aurelia.container.get(I18nParams);

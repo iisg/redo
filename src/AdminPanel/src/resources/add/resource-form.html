@@ -2,6 +2,16 @@
     <require from="common/components/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="./resource-form-generated"></require>
 
+    <div class="pull-right button-parent"
+        if.bind="resource.kind !== undefined">
+        <button class="btn btn-fab btn-raised"
+            type="button"
+            click.trigger="openImportDialog()"
+            bootstrap-tooltip.bind="'Import data from KOHA' | t">
+            <fa name="barcode"></fa>
+        </button>
+    </div>
+
     <form submit.delegate="validateAndSubmit()">
         <div class="form-group"
             if.bind="!editing">

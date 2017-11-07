@@ -2,6 +2,7 @@ services:
   Repeka\Domain\Cqrs\CommandBus: '@Repeka\Application\Cqrs\RepekaCommandBus'
   Repeka\Domain\Factory\ResourceWorkflowDriverFactory: '@Repeka\Application\Factory\SymfonyResourceWorkflowDriverFactory'
   Repeka\Domain\Factory\UserFactory: '@Repeka\Application\Factory\UserEntityFactory'
+  Repeka\Domain\XmlImport\XmlResourceDownloader: '@Repeka\Application\XmlImport\ContainerAwareXmlResourceDownloader'
   Repeka\Domain\Repository\MetadataRepository: '@Repeka\Application\Repository\MetadataDoctrineRepository'
   Repeka\Domain\Repository\LanguageRepository: '@Repeka\Application\Repository\LanguageDoctrineRepository'
   Repeka\Domain\Repository\RepositoryProvider: '@Repeka\Application\Repository\ContainerAwareRepositoryProvider'

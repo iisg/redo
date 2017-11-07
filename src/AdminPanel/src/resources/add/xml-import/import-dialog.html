@@ -1,0 +1,59 @@
+<template>
+    <div class="modal-content width-400">
+        <form submit.delegate="downloadResource()">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    click.delegate="dialogController.cancel()">
+                    <span>&times;</span>
+                </button>
+                <h3 class="modal-title">${"Import data from KOHA" | t}</h3>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group label-static ${configFileError ? 'has-error' : ''}">
+                    <label for="importConfigFile">
+                        ${"Configuration file" | t}
+                    </label>
+                    <input type="file"
+                        id="importConfigFile"
+                        files.bind="configFile | singleFileList"
+                        accept="application/json">
+                    <input type="text"
+                        class="form-control"
+                        value.bind="configFile ? '' : importConfig.fileName"
+                        readonly>
+                    <span class="help-block"
+                        if.bind="configFileError !== undefined">
+                        ${configFileError.message | t:{replace:configFileError.replacements}}
+                    </span>
+                </div>
+                <div class="form-group label-static ${notFoundResourceId ? 'has-error' : ''}"
+                    if.bind="importConfig !== undefined">
+                    <label for="barcodeInput">
+                        ${"Resource code" | t}
+                    </label>
+                    <input type="number"
+                        placeholder.bind="'Digits only' | t"
+                        id="barcodeInput"
+                        class="form-control"
+                        value.bind="resourceId"
+                        attach-focus="true">
+                    <span class="help-block"
+                        if.bind="notFoundResourceId !== undefined">
+                        ${"Resource with barcode {{barcode}} doesn't exist." | t:{barcode: notFoundResourceId}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <throbber if.bind="downloadPending"></throbber>
+                <button type="submit"
+                    class="btn btn-primary btn-raised"
+                    disabled.bind="downloadPending || resourceId.length === 0">
+                    ${"Import" | t}
+                </button>
+            </div>
+        </form>
+    </div>
+</template>

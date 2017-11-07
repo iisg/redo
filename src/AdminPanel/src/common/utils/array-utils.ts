@@ -48,3 +48,18 @@ export function move<T>(array: T[], element: T, delta: number): void {
 export function diff<T>(array1: T[], array2: any[]): T[] {
   return array1.filter(item => !inArray(item, array2));
 }
+
+export class ArrayPartition<T> {
+  readonly truthy: T[] = [];
+  readonly falsy: T[] = [];
+
+  constructor(input: T[], predicate: (T) => boolean) {
+    for (const value of input) {
+      if (predicate(value)) {
+        this.truthy.push(value);
+      } else {
+        this.falsy.push(value);
+      }
+    }
+  }
+}
