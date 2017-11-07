@@ -18,6 +18,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_PUBLISH_DATE = 'metadata-publish-date';
     const REFERENCE_METADATA_HARD_COVER = 'metadata-hard-cover';
     const REFERENCE_METADATA_NO_OF_PAGES = 'metadata-no-of-pages';
+    const REFERENCE_METADATA_LANGUAGE = 'metadata-language';
     const REFERENCE_METADATA_SEE_ALSO = 'metadata-see-also';
     const REFERENCE_METADATA_FILE = 'metadata-file';
     const REFERENCE_METADATA_CATEGORY_NAME = 'metadata-category-name';
@@ -37,8 +38,8 @@ class MetadataFixture extends RepekaFixture {
                 'EN' => 'Title',
             ],
             'description' => [
-                'PL' => 'Tytuł zasobu',
-                'EN' => 'The title of the resource',
+                'PL' => 'Tytuł książki',
+                'EN' => 'The title of the book',
             ],
             'placeholder' => [
                 'PL' => 'Znajdziesz go na okładce',
@@ -100,6 +101,17 @@ class MetadataFixture extends RepekaFixture {
             'resourceClass' => 'books',
             'constraints' => $this->constraints(1),
         ]), self::REFERENCE_METADATA_NO_OF_PAGES);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Język',
+            'label' => [
+                'PL' => 'Język',
+                'EN' => 'Language',
+            ],
+            'control' => 'text',
+            'shownInBrief' => false,
+            'resourceClass' => 'books',
+            'constraints' => $this->textConstraints(1, '^[a-z]{3}$'),
+        ]), self::REFERENCE_METADATA_LANGUAGE);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Zobacz też',
             'label' => [

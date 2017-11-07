@@ -13,6 +13,11 @@ a {
   outline: 0 !important;
 }
 
+.button-parent {
+  position: relative;
+  z-index: 1;
+}
+
 .has-error .help-block {
   display: block;
 }
@@ -155,6 +160,10 @@ input, textarea, select {
 
 .diagram-cover {
   z-index: 999 !important; // fix UI elements like menus displaying over graphs, but not interacting with mouse
+}
+
+ux-dialog-overlay {
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 // z-depth helpers from MaterializeCSS

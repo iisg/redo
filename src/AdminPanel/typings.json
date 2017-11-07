@@ -5,6 +5,7 @@
     "aurelia-bootstrapper": "github:aurelia/bootstrapper#1.0.1",
     "aurelia-cookie": "github:Vheissu/aurelia-cookie#1.0.10",
     "aurelia-dependency-injection": "github:aurelia/dependency-injection#1.3.2",
+    "aurelia-dialog": "github:aurelia/dialog#1.0.0-rc.1.0.3",
     "aurelia-event-aggregator": "github:aurelia/event-aggregator#1.0.1",
     "aurelia-framework": "github:aurelia/framework#1.1.4",
     "aurelia-history": "github:aurelia/history#1.1.0",

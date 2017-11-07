@@ -9,7 +9,7 @@ import {MetricsEventListener} from "common/metrics/metrics-event-listener";
 import {CustomValidationRules} from "common/validation/custom-validation-rules";
 import {installValidationMessageLocalization} from "common/validation/validation-message-localization";
 import {CurrentUserFetcher} from "users/current/current-user-fetcher";
-import {i18nConfigurator} from "config/i18n";
+import {i18nConfiguratorFactory} from "config/i18n";
 import {GuiLanguage} from "./common/i18n/gui-language";
 import {Configure} from "aurelia-configuration";
 import {Language} from "./resources-config/language-config/language";
@@ -20,6 +20,7 @@ import {User} from "./users/user";
 import {UserRole} from "./users/roles/user-role";
 import {Workflow} from "./workflows/workflow";
 import {WorkflowIdMapper} from "./resources-config/resource-kind/resource-kind-mapping";
+import {dialogConfigurator} from "./config/dialog";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -33,8 +34,9 @@ export function configure(aurelia: Aurelia) {
     .plugin('aurelia-configuration', config => config.setDirectory('/api/'))
     .plugin('aurelia-validation')
     .plugin('aurelia-cookie')
+    .plugin('aurelia-i18n', i18nConfiguratorFactory(aurelia))
+    .plugin('aurelia-dialog', dialogConfigurator)
     .plugin("oribella-aurelia-sortable")
-    .plugin('aurelia-i18n', i18nConfigurator(aurelia))
     .plugin('martingust/aurelia-repeat-strategies')
     .globalResources([
       'common/authorization/require-role',

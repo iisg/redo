@@ -18,6 +18,7 @@ System.config({
     "aurelia-configuration": "github:vheissu/aurelia-configuration@1.0.4",
     "aurelia-cookie": "npm:aurelia-cookie@1.0.10",
     "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
+    "aurelia-dialog": "npm:aurelia-dialog@1.0.0-rc.1.0.3",
     "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
     "aurelia-framework": "npm:aurelia-framework@1.1.4",
     "aurelia-history-browser": "npm:aurelia-history-browser@1.1.0",
@@ -131,6 +132,12 @@ System.config({
     "npm:aurelia-dependency-injection@1.3.2": {
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
       "aurelia-pal": "npm:aurelia-pal@1.4.0"
+    },
+    "npm:aurelia-dialog@1.0.0-rc.1.0.3": {
+      "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
+      "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
+      "aurelia-pal": "npm:aurelia-pal@1.4.0",
+      "aurelia-templating": "npm:aurelia-templating@1.6.0"
     },
     "npm:aurelia-event-aggregator@1.0.1": {
       "aurelia-logging": "npm:aurelia-logging@1.3.1"

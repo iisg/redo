@@ -1,0 +1,17 @@
+ux-dialog-container {
+  .modal-content {
+    max-width: 90vw;
+
+    &.width-400 {
+      width: 400px;
+    }
+
+    &.width-600 {
+      width: 600px;
+    }
+
+    &.width-900 {
+      width: 900px;
+    }
+  }
+}

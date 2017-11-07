@@ -15,6 +15,9 @@ services:
   Repeka\Application\Authentication\TokenAuthenticator\LocalDatabaseAuthenticator:
     $localAccountsEnabled: '%pk_auth.local_accounts_enabled%'
 
+  Repeka\Application\XmlImport\ContainerAwareXmlResourceDownloader:
+    - '%xml_import.url%'
+
   Repeka\Application\Cqrs\RepekaCommandBus:
     -
       - '@Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware'

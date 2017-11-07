@@ -48,6 +48,11 @@ class Configuration implements ConfigurationInterface {
                         ->scalarNode('local_accounts_enabled')->defaultFalse()->end()
                     ->end()
                 ->end()
+                ->arrayNode('xml_import')
+                    ->children()
+                        ->scalarNode('url')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('resource_classes')->prototype('scalar')->end()->end()
             ->end();
         // @formatter:on

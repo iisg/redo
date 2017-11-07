@@ -50,7 +50,7 @@ export abstract class ApiRepository<T> {
     return this.entitySerializer.serialize(entity);
   }
 
-  protected oneEntityEndpoint(entity: number | string | Object) {
+  protected oneEntityEndpoint(entity: number | string | Object): string {
     let id = entity['id'] || entity;
     return `${this.endpoint}/${id}`;
   }

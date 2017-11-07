@@ -1,4 +1,4 @@
-import {keysByValue, numberKeysByValue, zip} from "./object-utils";
+import {keysByValue, numberKeysByValue, zip, filterByValues} from "./object-utils";
 describe('object-utils', () => {
   describe(keysByValue.name, () => {
     const testObject = {
@@ -75,6 +75,19 @@ describe('object-utils', () => {
 
     it('works with empty arrays', () => {
       expect(zip([], [])).toEqual({});
+    });
+  });
+
+  describe(filterByValues.name, () => {
+    it('works', () => {
+      expect(filterByValues({
+        1: 1,
+        two: 2,
+        'three': 3,
+      }, v => v % 2 == 1)).toEqual({
+        1: 1,
+        'three': 3,
+      });
     });
   });
 });

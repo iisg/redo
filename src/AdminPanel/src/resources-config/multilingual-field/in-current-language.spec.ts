@@ -30,9 +30,15 @@ describe(InCurrentLanguageValueConverter.name, () => {
     expect(translated).toEqual('angielski');
   });
 
-  it("returns empty string if no locale found", () => {
+  it("returns any value if no locale found", () => {
     spyOn(i18n, 'getLocale').and.returnValue('EN');
-    let translated = inCurrentLanguage.toView({'XYZ': 'polski'});
+    let translated = inCurrentLanguage.toView({'XYZ': 'xyzzy'});
+    expect(translated).toEqual('xyzzy');
+  });
+
+  it("returns empty string if no locale found and no values provided", () => {
+    spyOn(i18n, 'getLocale').and.returnValue('EN');
+    let translated = inCurrentLanguage.toView({});
     expect(translated).toEqual('');
   });
 

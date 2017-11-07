@@ -21,7 +21,7 @@ export function propertyKeys(obj: Object): string[] {
     .filter(key => !key.startsWith('_'));  // remove internal properties like Aurelia's __observe__
 }
 
-export function zip<V>(keys: Array<number|string>, values: V[]): AnyMap<V> {
+export function zip<V>(keys: Array<number | string>, values: V[]): AnyMap<V> {
   if (keys.length != values.length) {
     throw new Error(`Key and value arrays must be of the same length, actually are ${keys.length} and ${values.length} items long.`);
   }
@@ -32,4 +32,14 @@ export function zip<V>(keys: Array<number|string>, values: V[]): AnyMap<V> {
 
 export function values<T>(map: AnyMap<T>): T[] {
   return Object.keys(map).map(k => map[k]);
+}
+
+export function filterByValues<T>(obj: AnyMap<T>, predicate: (values: T) => boolean): AnyMap<T> {
+  const result = {};
+  for (const key in obj) {
+    if (predicate(obj[key])) {
+      result[key] = obj[key];
+    }
+  }
+  return result;
 }

@@ -19,7 +19,9 @@ export class InCurrentLanguageValueConverter implements ToViewValueConverter {
         }
       }
     }
-    return '';
+
+    const anyLanguage = Object.keys(value)[0];
+    return (anyLanguage === undefined) ? '' : value[anyLanguage];
   }
 
   private buildDesiredLanguagesOrder() {
