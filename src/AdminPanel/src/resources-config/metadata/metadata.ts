@@ -47,9 +47,13 @@ export class Metadata extends Entity {
   }
 
   static clone(metadata: Object): Metadata {
-    let cloned = deepCopy(metadata);
-    cloned.constraints = $.extend(new MetadataConstraints(), metadata['constraints']);
-    return $.extend(new Metadata(), cloned);
+    return Metadata.copyContents(metadata, new Metadata());
+  }
+
+  static copyContents(source: Object, target: Metadata): Metadata {
+    let cloned = deepCopy(source);
+    cloned.constraints = $.extend(new MetadataConstraints(), source['constraints']);
+    return $.extend(target, cloned);
   }
 
   static createFromBase(baseMetadata: Metadata): Metadata {

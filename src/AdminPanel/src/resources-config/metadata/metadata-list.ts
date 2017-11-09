@@ -31,7 +31,7 @@ export class MetadataList {
     }
   }
 
-  parentMetadataChanged(value, oldValue) {
+  parentMetadataChanged() {
     this.fetchMetadataByParent();
   }
 
@@ -70,10 +70,10 @@ export class MetadataList {
 
   saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<any> {
     const originalMetadata: Metadata = deepCopy(metadata);
-    $.extend(metadata, changedMetadata);
+    Metadata.copyContents(changedMetadata, metadata);
     return this.metadataRepository.update(changedMetadata)
       .then(() => metadata.editing = false)
-      .catch(() => $.extend(metadata, originalMetadata));
+      .catch(() => Metadata.copyContents(originalMetadata, metadata));
   }
 
   deleteMetadata(metadata: Metadata) {
