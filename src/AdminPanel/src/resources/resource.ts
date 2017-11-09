@@ -16,6 +16,14 @@ export class Resource extends Entity {
   public canApplyTransition(transition: WorkflowTransition) {
     return this.blockedTransitions[transition.id] == undefined;
   }
+
+  public filterUndefinedValues() {
+    for (let metadataId in this.contents) {
+      if (this.contents[metadataId].length > 0) {
+        this.contents[metadataId] = this.contents[metadataId].filter(item => item !== undefined);
+      }
+    }
+  }
 }
 
 export function registerResourceValidationRules() {

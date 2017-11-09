@@ -44,6 +44,7 @@ export class ResourceForm {
   validateAndSubmit() {
     this.submitting = true;
     this.errorToDisplay = undefined;
+    this.resource.filterUndefinedValues();
     this.validator.validateObject(this.resource).then(results => {
       const errors = results.filter(result => !result.valid);
       if (errors.length == 0) {

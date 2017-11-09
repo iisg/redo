@@ -57,15 +57,15 @@ export class ResourceRepository extends ApiRepository<Resource> {
 
     for (let metadataId in resource.contents) {
       if (resource.contents[metadataId].length > 0) {
-        resourceCopy.contents[metadataId] = resource.contents[metadataId].map(file => {
-          if (!(file instanceof File)) {
-            return file;
+        resourceCopy.contents[metadataId] = resource.contents[metadataId].map(item => {
+          if (!(item instanceof File)) {
+            return item;
           }
           fileCounter++;
-          return this.wrapFileWithFormData(formData, file, resource.kind, metadataId, fileCounter);
+          return this.wrapFileWithFormData(formData, item, resource.kind, metadataId, fileCounter);
         });
       } else {
-        resourceCopy.contents[metadataId] = resource.contents[metadataId];
+        resourceCopy.contents[metadataId] = [];
       }
     }
     formData.append('id', resource.id);
