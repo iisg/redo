@@ -22,7 +22,6 @@ export class ResourceLink {
   idChanged(): void {
     this.loading = true;
     this.resourceRepository.get(this.id, true)
-      .catch(() => Promise.resolve(undefined))
       .then(resource => this.onResourceFetched(resource))
       .finally(() => this.loading = false);
   }
