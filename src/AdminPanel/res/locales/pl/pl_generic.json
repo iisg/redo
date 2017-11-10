@@ -113,5 +113,6 @@
   "Possible actions": "Możliwe czynności",
   "This metadata determines who can perform these actions:": "Ta metadana określa, kto może wykonać następujące czynności:",
   "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:",
-  "Fix": "Napraw"
+  "Fix": "Napraw",
+  "Resource doesn't exist": "Zasób nie istnieje"
 }
