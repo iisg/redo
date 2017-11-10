@@ -3,13 +3,15 @@
     <require from="./workflow-chooser"></require>
     <require from="./resource-kind-metadata-form"></require>
     <require from="../metadata/metadata-form"></require>
+    <require from="./move-up-down-buttons"></require>
 
     <form submit.delegate="validateAndSubmit()">
         <div class="form-group no-margin-top">
             <multilingual-editor label="${'Name' | t}"
                 value.bind="resourceKind.label & validate"></multilingual-editor>
         </div>
-        <div class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
+        <div if.bind="editableMetadataList.length === 0 || base(editableMetadataList[0]) & signal:'base-metadata-fetched'"
+            class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
             <div class="row">
                 <div class="col-xs-12">
                     <button type="button"
@@ -22,14 +24,10 @@
                     </button>
                 </div>
             </div>
-            <div class="row au-stagger"
-                show.bind="editableMetadataList.length > 0"
-                oa-sortable="items.bind: editableMetadataList; allow-drag.call: isSortingMetadata($event); axis: y">
-                <div class="col-xs-12 resource-kind-form-metadata-item ${metadata.sortingClass} ${sortingMetadata ? 'vertically-sortable' : ''}"
-                    repeat.for="metadata of editableMetadataList & validate"
-                    oa-sortable-item="item.bind: metadata">
-                    <div class="well"
-                        if.bind="base(metadata) & signal:'base-metadata-fetched'">
+            <div class="row">
+                <div class="col-xs-12 resource-kind-form-metadata-item"
+                    repeat.for="metadata of editableMetadataList & validate">
+                    <div class="well">
                         <div class="btn-group pull-right top-right-buttons"
                             show.bind="!sortingMetadata">
                             <button class="btn btn-default btn-raised ${metadata.overwriteForm ? 'active' : ''}"
@@ -44,8 +42,12 @@
                             </button>
                         </div>
                         <h3>
-                            <span class="pull-right fa fa-bars"
-                                show.bind="sortingMetadata"></span>
+                            <move-up-down-buttons class="pull-right"
+                                show-up.bind="!$first"
+                                show-down.bind="!$last"
+                                up.delegate="moveUp(metadata)"
+                                down.delegate="moveDown(metadata)"
+                                show.bind="sortingMetadata"></move-up-down-buttons>
                             ${base(metadata).name}
                             <fa name="thumb-tack"
                                 class="small"
@@ -60,6 +62,7 @@
                 </div>
             </div>
         </div>
+        <loading-bar else></loading-bar>
         <div class="form-group"
             show.bind="hasMetadataToChoose">
             <label>${'Add metadata kind' | t}</label>
@@ -72,7 +75,8 @@
         <div class="form-group"
             if.bind="!editing">
             <label>${'Workflow' | t}</label>
-            <workflow-chooser resource-class.bind="resourceClass" value.bind="resourceKind.workflow"></workflow-chooser>
+            <workflow-chooser resource-class.bind="resourceClass"
+                value.bind="resourceKind.workflow"></workflow-chooser>
         </div>
         <div class="form-group text-right no-margin-top">
             <div class="btn-group">

@@ -39,12 +39,11 @@
                     </th>
                 </tr>
                 </tfoot>
-                <tbody class="au-stagger"
-                    oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
+                <tbody oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
                 <tr repeat.for="metadata of metadataList"
                     hover-aware.one-time="metadata"
                     oa-sortable-item="item.bind: metadata"
-                    class="au-animate ${metadata.sortingClass || 'fade-inup-outdown'} ${metadata.editing ? 'table-row-edit-form' : ''}">
+                    class="${metadata.sortingClass} ${metadata.editing ? 'table-row-edit-form' : ''}">
                     <td>${metadata.id}</td>
                     <td if.bind="!metadata.editing">
                         ${metadata.name}

@@ -24,10 +24,19 @@ export function removeValue<T>(array: T[], value: T): void {
 }
 
 // http://stackoverflow.com/a/10865042/878514
-export function flatten<T>(arrayOfArrays: Array<T|T[]>): T[] {
+export function flatten<T>(arrayOfArrays: Array<T | T[]>): T[] {
   return [].concat.apply([], arrayOfArrays);
 }
 
 export function inArray<T>(needle: T, haystack: T[]): boolean {
   return haystack && haystack.indexOf(needle) >= 0;
+}
+
+export function move<T>(array: T[], element: T, delta: number): void {
+  const currentIndex = array.indexOf(element);
+  if (currentIndex >= 0) {
+    let desiredIndex = currentIndex + delta;
+    desiredIndex = Math.min(Math.max(0, desiredIndex), array.length - 1);
+    array.splice(desiredIndex, 0, array.splice(currentIndex, 1)[0]);
+  }
 }
