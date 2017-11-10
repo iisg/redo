@@ -1,0 +1,16 @@
+<template>
+    <div class="btn-group pull-right">
+        <button class="btn btn-default"
+            type="button"
+            if.bind="showUp"
+            click.trigger="dispatchUp()">
+            <fa name="chevron-up"></fa>
+        </button>
+        <button class="btn btn-default"
+            type="button"
+            if.bind="showDown"
+            click.trigger="dispatchDown()">
+            <fa name="chevron-down"></fa>
+        </button>
+    </div>
+</template>

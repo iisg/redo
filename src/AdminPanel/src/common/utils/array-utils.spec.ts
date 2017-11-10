@@ -1,4 +1,4 @@
-import {flatten, arraysEqual} from "./array-utils";
+import {flatten, arraysEqual, move} from "./array-utils";
 
 describe('array-utils', () => {
   describe(arraysEqual.name, () => {
@@ -29,6 +29,38 @@ describe('array-utils', () => {
       const flattened = flatten(nested);
       expect(flattened.length).toBe(4);
       expect(flattened).toEqual(['one', 'two', 'three', 'four']);
+    });
+  });
+
+  describe(move.name, () => {
+    it("moves the element backward", () => {
+      const array = ['a', 'b', 'c'];
+      move(array, 'b', -1);
+      expect(array).toEqual(['b', 'a', 'c']);
+    });
+
+    it("moves the element forward", () => {
+      const array = ['a', 'b', 'c'];
+      move(array, 'b', 1);
+      expect(array).toEqual(['a', 'c', 'b']);
+    });
+
+    it("moves the element to the beginning if can't more", () => {
+      const array = ['a', 'b', 'c'];
+      move(array, 'b', -100);
+      expect(array).toEqual(['b', 'a', 'c']);
+    });
+
+    it("moves the element to the end if can't more", () => {
+      const array = ['a', 'b', 'c'];
+      move(array, 'b', 100);
+      expect(array).toEqual(['a', 'c', 'b']);
+    });
+
+    it("does not move non existing elements", () => {
+      const array = ['a', 'b', 'c'];
+      move(array, 'x', 1);
+      expect(array).toEqual(['a', 'b', 'c']);
     });
   });
 });
