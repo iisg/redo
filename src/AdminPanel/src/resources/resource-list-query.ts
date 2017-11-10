@@ -2,6 +2,7 @@ import {HttpClient} from "aurelia-http-client";
 import {Resource} from "./resource";
 import {ResourceRepository} from "./resource-repository";
 import {deepCopy} from "../common/utils/object-utils";
+import {cachedResponse} from "../common/repository/cached-response";
 
 export class ResourceListQuery {
 
@@ -41,6 +42,11 @@ export class ResourceListQuery {
         }
       }
     }
+    return this.makeRequest(params);
+  }
+
+  @cachedResponse(20000)
+  private makeRequest(params): Promise<Resource[]> {
     return this.httpClient
       .createRequest(this.resoruceRepository.endpoint)
       .asGet()

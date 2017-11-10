@@ -17,6 +17,7 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
     return this.getList().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
   }
 
+  @cachedResponse(30000)
   public getListByClass(resourceClass: string): Promise<ResourceKind[]> {
     return super.getListByClass(resourceClass);
   }
