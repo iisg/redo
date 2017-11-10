@@ -20,7 +20,7 @@
     "aurelia-polyfills": "github:aurelia/polyfills#1.2.2",
     "aurelia-route-recognizer": "github:aurelia/route-recognizer#1.1.1",
     "aurelia-router": "github:aurelia/router#1.4.0",
-    "aurelia-task-queue": "github:aurelia/task-queue#1.2.0",
+    "aurelia-task-queue": "github:aurelia/task-queue#1.2.1",
     "aurelia-templating": "github:aurelia/templating#1.6.0",
     "aurelia-templating-binding": "github:aurelia/templating-binding#1.4.0",
     "aurelia-templating-resources": "github:aurelia/templating-resources#1.5.4",

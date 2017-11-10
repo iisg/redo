@@ -13,7 +13,7 @@ System.config({
   map: {
     "arrive": "npm:arrive@2.4.1",
     "aurelia-animator-css": "npm:aurelia-animator-css@1.0.4",
-    "aurelia-binding": "npm:aurelia-binding@1.2.2",
+    "aurelia-binding": "npm:aurelia-binding@1.5.0",
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@1.0.1",
     "aurelia-configuration": "github:vheissu/aurelia-configuration@1.0.4",
     "aurelia-cookie": "npm:aurelia-cookie@1.0.10",
@@ -29,7 +29,7 @@ System.config({
     "aurelia-pal-browser": "npm:aurelia-pal-browser@1.3.0",
     "aurelia-polyfills": "npm:aurelia-polyfills@1.2.2",
     "aurelia-router": "npm:aurelia-router@1.4.0",
-    "aurelia-task-queue": "npm:aurelia-task-queue@1.2.0",
+    "aurelia-task-queue": "npm:aurelia-task-queue@1.2.1",
     "aurelia-templating": "npm:aurelia-templating@1.6.0",
     "aurelia-templating-binding": "npm:aurelia-templating-binding@1.4.0",
     "aurelia-templating-resources": "npm:aurelia-templating-resources@1.5.4",
@@ -44,17 +44,16 @@ System.config({
     "cytoscape": "npm:cytoscape@2.7.25",
     "cytoscape-autopan-on-drag": "npm:cytoscape-autopan-on-drag@2.0.2",
     "cytoscape-context-menus": "npm:cytoscape-context-menus@2.1.1",
-    "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.14.0",
+    "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.15.0",
     "fetch": "github:github/fetch@1.1.1",
     "font-awesome": "npm:font-awesome@4.7.0",
-    "i18next-xhr-backend": "npm:i18next-xhr-backend@1.4.1",
-    "jquery": "npm:jquery@2.2.4",
+    "jquery": "npm:jquery@3.2.1",
     "martingust/aurelia-repeat-strategies": "github:martingust/aurelia-repeat-strategies@master",
     "moment": "npm:moment@2.19.1",
-    "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.11.3",
+    "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.13.0",
     "region-flags": "github:behdad/region-flags@1.0.1",
     "select2": "github:select2/select2@4.0.5",
-    "sweetalert2": "npm:sweetalert2@6.11.3",
+    "sweetalert2": "npm:sweetalert2@6.11.5",
     "text": "github:systemjs/plugin-text@0.0.9",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -81,7 +80,7 @@ System.config({
       "aurelia-templating-resources": "npm:aurelia-templating-resources@1.5.4"
     },
     "github:select2/select2@4.0.5": {
-      "jquery": "npm:jquery@2.2.4"
+      "jquery": "npm:jquery@3.2.1"
     },
     "github:twbs/bootstrap@3.3.7": {
       "jquery": "npm:jquery@3.2.1"
@@ -105,17 +104,11 @@ System.config({
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
       "aurelia-templating": "npm:aurelia-templating@1.6.0"
     },
-    "npm:aurelia-binding@1.2.2": {
-      "aurelia-logging": "npm:aurelia-logging@1.3.1",
-      "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
-      "aurelia-pal": "npm:aurelia-pal@1.4.0",
-      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.0"
-    },
     "npm:aurelia-binding@1.5.0": {
       "aurelia-logging": "npm:aurelia-logging@1.3.1",
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
-      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.0"
+      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.1"
     },
     "npm:aurelia-bootstrapper@1.0.1": {
       "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
@@ -141,14 +134,14 @@ System.config({
       "aurelia-logging": "npm:aurelia-logging@1.3.1"
     },
     "npm:aurelia-framework@1.1.4": {
-      "aurelia-binding": "npm:aurelia-binding@1.2.2",
+      "aurelia-binding": "npm:aurelia-binding@1.5.0",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
       "aurelia-logging": "npm:aurelia-logging@1.3.1",
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
       "aurelia-path": "npm:aurelia-path@1.1.1",
-      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.0",
+      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.1",
       "aurelia-templating": "npm:aurelia-templating@1.6.0"
     },
     "npm:aurelia-history-browser@1.1.0": {
@@ -160,7 +153,7 @@ System.config({
       "aurelia-path": "npm:aurelia-path@1.1.1"
     },
     "npm:aurelia-i18n@1.6.2": {
-      "aurelia-binding": "npm:aurelia-binding@1.2.2",
+      "aurelia-binding": "npm:aurelia-binding@1.5.0",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
       "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
@@ -204,7 +197,7 @@ System.config({
       "aurelia-path": "npm:aurelia-path@1.1.1",
       "aurelia-route-recognizer": "npm:aurelia-route-recognizer@1.1.1"
     },
-    "npm:aurelia-task-queue@1.2.0": {
+    "npm:aurelia-task-queue@1.2.1": {
       "aurelia-pal": "npm:aurelia-pal@1.4.0"
     },
     "npm:aurelia-templating-binding@1.4.0": {
@@ -220,7 +213,7 @@ System.config({
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
       "aurelia-path": "npm:aurelia-path@1.1.1",
-      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.0",
+      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.1",
       "aurelia-templating": "npm:aurelia-templating@1.6.0"
     },
     "npm:aurelia-templating-router@1.2.0": {
@@ -241,7 +234,7 @@ System.config({
       "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
       "aurelia-path": "npm:aurelia-path@1.1.1",
-      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.0"
+      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.1"
     },
     "npm:aurelia-testing@1.0.0-beta.3.0.1": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
@@ -255,7 +248,7 @@ System.config({
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
       "aurelia-logging": "npm:aurelia-logging@1.3.1",
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
-      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.0",
+      "aurelia-task-queue": "npm:aurelia-task-queue@1.2.1",
       "aurelia-templating": "npm:aurelia-templating@1.6.0"
     },
     "npm:bluebird@3.4.1": {
@@ -264,7 +257,7 @@ System.config({
     "npm:bootstrap-material-design@0.5.10": {
       "bootstrap": "npm:bootstrap@3.3.7",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "jquery": "npm:jquery@2.2.4",
+      "jquery": "npm:jquery@3.2.1",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
@@ -279,7 +272,7 @@ System.config({
     },
     "npm:cytoscape-autopan-on-drag@2.0.2": {
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
-      "cytoscape": "npm:cytoscape@3.2.5",
+      "cytoscape": "npm:cytoscape@2.7.25",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -292,9 +285,9 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:cytoscape-edgehandles@2.14.0": {
+    "npm:cytoscape-edgehandles@2.15.0": {
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
-      "cytoscape": "npm:cytoscape@3.2.5",
+      "cytoscape": "npm:cytoscape@2.7.25",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "lodash.debounce": "npm:lodash.debounce@4.0.8",
       "lodash.throttle": "npm:lodash.throttle@4.1.1",
@@ -305,13 +298,6 @@ System.config({
       "os": "github:jspm/nodelibs-os@0.1.0",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:cytoscape@3.2.5": {
-      "heap": "npm:heap@0.2.6",
-      "lodash.debounce": "npm:lodash.debounce@4.0.8",
-      "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.2",
-      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:font-awesome@4.7.0": {
       "css": "github:systemjs/plugin-css@0.1.36"
@@ -331,7 +317,7 @@ System.config({
     "npm:lodash.throttle@4.1.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:oribella-aurelia-sortable@0.11.3": {
+    "npm:oribella-aurelia-sortable@0.13.0": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
       "aurelia-pal": "npm:aurelia-pal@1.4.0",
       "aurelia-templating": "npm:aurelia-templating@1.6.0",
