@@ -1,7 +1,7 @@
 import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "./metadata";
-import {clearCachedResponse} from "common/repository/cached-response";
+import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
 import {deepCopy} from "common/utils/object-utils";
 import {ResourceClassApiRepository} from "../../common/repository/resource-class-api-repository";
 
@@ -11,8 +11,16 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
     super(httpClient, 'metadata');
   }
 
+  @cachedResponse(30000)
   public getListByClass(resourceClass: string): Promise<Metadata[]> {
     return super.getListByClass(resourceClass);
+  }
+
+  public post(entity: Metadata): Promise<Metadata> {
+    return super.post(entity).then(metadata => {
+      clearCachedResponse(this.getListByClass);
+      return metadata;
+    });
   }
 
   public getByParent(parent: Metadata): Promise<Metadata[]> {
@@ -37,10 +45,10 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
       .withParams({
         resourceClass
       })
-      .withContent( metadataList.map(metadata => metadata.id))
+      .withContent(metadataList.map(metadata => metadata.id))
       .send()
       .then(response => {
-        clearCachedResponse(this.getList);
+        clearCachedResponse(this.getListByClass);
         return response.content;
       });
   }
@@ -53,7 +61,7 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
       placeholder: updatedMetadata.placeholder,
       constraints: updatedMetadata.constraints,
       shownInBrief: updatedMetadata.shownInBrief,
-    }).then(metadata => clearCachedResponse(this.getList) || metadata);
+    }).then(metadata => clearCachedResponse(this.getListByClass) || metadata);
   }
 
   public toEntity(data: Object): Metadata {

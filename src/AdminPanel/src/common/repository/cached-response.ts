@@ -5,12 +5,14 @@ export function cachedResponse(expirationTimeMs = 60000) {
     if (descriptor.value) {
       const originalMethod = descriptor.value;
       let fn = function (...args: any[]) {
-        if (!fn[CACHED_VALUE_KEY]) {
-          fn[CACHED_VALUE_KEY] = originalMethod.apply(this, args);
-          setTimeout(() => clearCachedResponse(fn), expirationTimeMs);
+        const argumentsHash = getCachedArgumentsHash(args);
+        if (!fn[CACHED_VALUE_KEY][argumentsHash]) {
+          fn[CACHED_VALUE_KEY][argumentsHash] = originalMethod.apply(this, args);
+          setTimeout(() => clearCachedResponse(fn, argumentsHash), expirationTimeMs);
         }
-        return fn[CACHED_VALUE_KEY];
+        return fn[CACHED_VALUE_KEY][argumentsHash];
       };
+      fn[CACHED_VALUE_KEY] = {};
       descriptor.value = fn;
       return descriptor;
     }
@@ -20,6 +22,16 @@ export function cachedResponse(expirationTimeMs = 60000) {
   };
 }
 
-export function clearCachedResponse(method) {
-  delete method[CACHED_VALUE_KEY];
+export function getCachedArgumentsHash(args: any[]): string {
+  return JSON.stringify(args);
+}
+
+export function clearCachedResponse(method, argumentsHash: string = undefined) {
+  if (method[CACHED_VALUE_KEY]) {
+    if (argumentsHash) {
+      delete method[CACHED_VALUE_KEY][argumentsHash];
+    } else {
+      method[CACHED_VALUE_KEY] = {};
+    }
+  }
 }
