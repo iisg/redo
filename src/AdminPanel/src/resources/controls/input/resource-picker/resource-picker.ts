@@ -9,6 +9,7 @@ import {twoWay} from "common/components/binding-mode";
 export class ResourcePicker implements ComponentAttached {
   @bindable(twoWay) resourceId: number;
   @bindable resourceKindIds: number[] = [];
+  @bindable resourceClass: string;
   @bindable disabled: boolean = false;
 
   @observable value: Resource;
@@ -24,6 +25,9 @@ export class ResourcePicker implements ComponentAttached {
     const query = this.resourceRepository.getListQuery();
     if (this.resourceKindIds.length > 0) {
       query.filterByResourceKindIds(this.resourceKindIds);
+    }
+    if (this.resourceClass) {
+      query.filterByResourceClasses(this.resourceClass);
     }
     query.get().then(resources => {
       this.resources = resources;
