@@ -39,7 +39,7 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
     let data = deepCopy(entity);
     data.metadataList = data.metadataList
       .map(metadata => this.metadataRepository.toBackend(metadata))
-      .filter(metadata => metadata.baseId != -1);
+      .filter(metadata => metadata.baseId != SystemMetadata.PARENT.id);
     delete data.workflow;
     return data;
   }

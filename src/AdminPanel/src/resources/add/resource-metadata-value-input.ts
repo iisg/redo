@@ -6,10 +6,12 @@ import {ValueWrapper} from "../controls/control-strategy";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
 import {BindingSignaler} from "aurelia-templating-resources";
+import {Resource} from "../resource";
 
 @autoinject
 export class ResourceMetadataValueInput implements ComponentAttached, ComponentDetached {
   @bindable metadata: Metadata;
+  @bindable resource: Resource;
   @bindable(twoWay) value: any;
   @bindable @booleanAttribute disabled: boolean = false;
 

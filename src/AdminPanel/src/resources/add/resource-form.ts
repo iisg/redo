@@ -25,6 +25,10 @@ export class ResourceForm {
     return !!this.resource.id;
   }
 
+  resourceClassChanged() {
+    this.resource.resourceClass = this.resourceClass;
+  }
+
   editChanged(newValue: Resource) {
     this.resource = $.extend(new Resource(), deepCopy(newValue));
     this.resourceClass = this.resource.resourceClass;
