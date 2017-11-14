@@ -3,6 +3,7 @@ import {Metadata} from "resources-config/metadata/metadata";
 import {Resource} from "resources/resource";
 import {ConstraintValidator} from "./constraints/constraint-validator";
 import {MaxCountConstraintValidator} from "./constraints/max-count";
+import {RegexConstraintValidator} from "./constraints/regex";
 import {autoinject, Container} from "aurelia-dependency-injection";
 
 @autoinject
@@ -11,6 +12,7 @@ export class MetadataConstraintsSatisfiedValidationRule implements CustomValidat
 
   private readonly constraintValidatorClasses: any[] = [
     MaxCountConstraintValidator,
+    RegexConstraintValidator,
   ];
 
   private readonly constraintValidators: ConstraintValidator[];

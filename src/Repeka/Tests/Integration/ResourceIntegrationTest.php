@@ -27,7 +27,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
-        $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'text');
+        $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'textarea');
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Resource kind'], [
             $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
         ]);

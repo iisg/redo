@@ -47,7 +47,7 @@ class MetadataFixture extends RepekaFixture {
             'control' => 'text',
             'shownInBrief' => true,
             'resourceClass' => 'books',
-            'constraints' => $this->constraints(1),
+            'constraints' => $this->textConstraints(1),
         ]), self::REFERENCE_METADATA_TITLE);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Opis',
@@ -134,7 +134,7 @@ class MetadataFixture extends RepekaFixture {
             'placeholder' => [],
             'control' => 'text',
             'resourceClass' => 'books',
-            'constraints' => $this->constraints(1),
+            'constraints' => $this->textConstraints(1),
         ]), self::REFERENCE_METADATA_CATEGORY_NAME);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Skanista',
