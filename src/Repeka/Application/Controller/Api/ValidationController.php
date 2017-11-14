@@ -12,5 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
  * @Route("/validation")
  */
 class ValidationController extends ApiController {
-    // TODO add some validation endpoints here...
+    /**
+     * @Route("/regex")
+     * @Method("POST")
+     * @Security("has_role('ROLE_OPERATOR')")
+     */
+    public function regexMatchAll(Request $request) {
+        $query = MatchAgainstRegexQuery::fromArray($request->request->all());
+        $result = $this->handleCommand($query);
+        return new Response('', $result ? Response::HTTP_NO_CONTENT : Response::HTTP_BAD_REQUEST);
+    }
 }

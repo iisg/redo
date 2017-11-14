@@ -16,7 +16,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingMetadataKinds() {
         $this->createLanguage('TEST', 'TE', 'Test language');
-        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First'], [], [], 'text');
+        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First'], [], [], 'textarea');
         $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second'], ['TEST' => 'Hello'], ['TEST' => 'World'], 'integer');
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
@@ -60,7 +60,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->createLanguage('PL', 'PL', 'Test Polish');
         $client = self::createAdminClient();
         $metadataArray = [
-            'control' => 'text',
+            'control' => 'textarea',
             'name' => 'Test metadata',
             'label' => ['EN' => 'User-friendly label', 'PL' => 'Przyjazna użytkownikowi etykieta'],
             'description' => ['EN' => 'test description', 'PL' => 'testowy opis'],
@@ -84,7 +84,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
 
     public function testBasicOrdering() {
         $this->createLanguage('TEST', 'TE', 'Test language');
-        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'text');
+        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'textarea');
         $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second metadata'], [], [], 'integer');
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
@@ -104,7 +104,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
 
     public function testOrderingWithRepeatedIds() {
         $this->createLanguage('TEST', 'TE', 'Test language');
-        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'text');
+        $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'textarea');
         $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second metadata'], [], [], 'integer');
         $client = self::createAdminClient();
         $client->apiRequest('PUT', self::ENDPOINT, [$metadata2->getId(), $metadata1->getId(), $metadata2->getId()]);
@@ -112,7 +112,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
     }
 
     public function testOrderingInvalidIds() {
-        $metadata1 = Metadata::create('books', MetadataControl::TEXT(), 'Metadata1', ['TEST' => 'First metadata']);
+        $metadata1 = Metadata::create('books', MetadataControl::TEXTAREA(), 'Metadata1', ['TEST' => 'First metadata']);
         $metadata2 = Metadata::create('books', MetadataControl::INTEGER(), 'Metadata2', ['TEST' => 'Second metadata']);
         $metadata1->updateOrdinalNumber(0);
         $metadata2->updateOrdinalNumber(1);
@@ -186,7 +186,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->createLanguage('PL', 'PL', 'Test Polish');
         $client = self::createAdminClient();
         $metadataArray = [
-            'control' => 'text',
+            'control' => 'textarea',
             'name' => 'Test metadata',
             'label' => ['EN' => 'User-friendly label', 'PL' => 'Przyjazna użytkownikowi etykieta'],
             'description' => ['EN' => 'test description', 'PL' => 'testowy opis'],

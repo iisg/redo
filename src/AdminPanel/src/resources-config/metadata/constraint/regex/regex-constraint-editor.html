@@ -1,0 +1,11 @@
+<template>
+    <require from="common/components/restore-from-base/restore-from-base.html"></require>
+
+    <div class="form-group">
+        <input type="text"
+            class="form-control"
+            value.bind="regex">
+        <restore-from-base if.bind="canInherit && wasModified"
+            on-click.call="resetToBaseValues()"></restore-from-base>
+    </div>
+</template>

@@ -23,15 +23,22 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
-        $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], []);
-        $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], []);
-        $baseDictionaryMetadata = $this->createMetadata('Metadata', ['TEST' => 'Base metadata dictionary'], [], [], 'text', 'dictionaries');
+        $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], [], MetadataControl::TEXTAREA());
+        $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], [], MetadataControl::TEXTAREA());
+        $baseDictionaryMetadata = $this->createMetadata(
+            'Metadata',
+            ['TEST' => 'Base metadata dictionary'],
+            [],
+            [],
+            MetadataControl::TEXTAREA,
+            'dictionaries'
+        );
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Test'], [
             $this->resourceKindMetadata($baseMetadata1, ['TEST' => 'Metadata kind 1']),
             $this->resourceKindMetadata($baseMetadata2, ['TEST' => 'Metadata kind 2']),
         ]);
         $this->createResourceKind(['TEST' => 'Test'], [
-            $this->resourceKindMetadata($baseDictionaryMetadata, ['TEST' => 'Metadata kind dictionary'], 'dictionaries')
+            $this->resourceKindMetadata($baseDictionaryMetadata, ['TEST' => 'Metadata kind dictionary'], 'dictionaries'),
         ], 'dictionaries');
         $this->metadata1 = $this->resourceKind->getMetadataList()[0];
         $this->metadata2 = $this->resourceKind->getMetadataList()[1];
@@ -73,7 +80,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingResourceKind() {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $baseMetadata = Metadata::create('books', MetadataControl::INTEGER(), 'New base', ['TEST' => 'New base metadata']);
+        $baseMetadata = $this->createMetadata('New base', ['TEST' => 'New base metadata'], [], [], MetadataControl::TEXTAREA());
         $em->persist($baseMetadata);
         $em->flush();
         $client = self::createAdminClient();
