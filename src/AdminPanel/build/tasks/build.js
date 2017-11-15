@@ -2,6 +2,7 @@
 
 const changed = require('gulp-changed');
 const concat = require('gulp-concat');
+const convert = require('gulp-convert');
 const gulp = require('gulp');
 const htmlmin = require('gulp-htmlmin');
 const minifyCSS = require('gulp-clean-css');
@@ -68,9 +69,11 @@ gulp.task('build-css', () => {
 });
 
 gulp.task('build-locales', () => {
-  return gulp.src(path.join(paths.locales, '**/*.json'), {base: paths.resourcesRoot})
+  //noinspection JSCheckFunctionSignatures
+  return gulp.src(path.join(paths.locales, '**/*.yml'), {base: paths.resourcesRoot})
     .pipe(plumber({errorHandler: notify.onError('Locales: <%= error.message %>')}))
     .pipe(changed(paths.webAdminResources))
+    .pipe(convert({from: 'yml', to: 'json'}))
     .pipe(minifyJSON())
     .pipe(gulp.dest(paths.webAdminResources));
 });

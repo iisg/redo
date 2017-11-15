@@ -17,7 +17,7 @@
             </label>
             <span class="small text-muted"
                 if.bind="role.systemRoleName"
-                bootstrap-tooltip.one-time="'roles::' + role.systemRoleName + '_DESCRIPTION' | t"
+                bootstrap-tooltip.one-time="'roles::description//' + role.systemRoleName | t"
                 tooltip-placement="right">
                 <fa name="shield fw"></fa>
             </span>

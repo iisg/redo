@@ -1,9 +1,0 @@
-{
-  "text": "Tekst",
-  "textarea": "Długi tekst",
-  "integer": "Liczba całkowita",
-  "date": "Data",
-  "boolean": "Tak / Nie",
-  "relationship": "Relacja",
-  "file": "Plik"
-}
