@@ -17,8 +17,7 @@ export function installValidationMessageLocalization(aurelia: Aurelia) {
   ValidationMessageProvider.prototype.getMessage = function (ruleName) {
     const key = ruleNameToKey(ruleName);
     let translation = i18n.tr(key);
-    // noinspection TypeScriptUnresolvedVariable (faulty typings)
-    return this.parser.parseMessage(translation);
+    return this.parser.parse(translation);
   };
 
   ValidationMessageProvider.prototype.getDisplayName = function (propertyName, displayName) {

@@ -17,7 +17,7 @@ describe(installValidationMessageLocalization.name, () => {
     const aureliaMock = {container};
     installValidationMessageLocalization(aureliaMock as Aurelia);
     this.validationMessageProvider = new ValidationMessageProvider({
-      'parseMessage': m => m
+      'parse': m => m
     });
   });
 
