@@ -149,6 +149,10 @@ input, textarea, select {
   }
 }
 
+.diagram-cover {
+  z-index: 999 !important; // fix UI elements like menus displaying over graphs, but not interacting with mouse
+}
+
 // z-depth helpers from MaterializeCSS
 // see https://github.com/FezVrasta/bootstrap-material-design/issues/1109
 
