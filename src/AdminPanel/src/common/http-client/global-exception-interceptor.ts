@@ -69,7 +69,7 @@ export class GlobalExceptionInterceptor implements Interceptor {
     const errorMessageId: string = responseContent.errorMessageId || 'generic';
     let params: any = responseContent.params || {};
     if (params.hasOwnProperty('entityName')) {
-      params['entityName'] = this.i18n.tr('entityTypes::' + params['entityName'].toLowerCase(), {context: 'genitive'});
+      params['entityName'] = this.i18n.tr('entity_types::' + params['entityName'].toLowerCase(), {context: 'genitive'});
     }
     return (responseContent.errorMessageId == 'invalidCommand')
       ? '<invalid-command-message violations-by-field.bind="violations"></invalid-command-message>'

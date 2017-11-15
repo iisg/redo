@@ -1,0 +1,6 @@
+meta:
+  translatedName: "English"
+  flag: "GB"
+bool:
+  true: "Yes"
+  false: "No"

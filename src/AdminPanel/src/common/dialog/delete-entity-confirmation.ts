@@ -16,7 +16,7 @@ export class DeleteEntityConfirmation {
     } else if (isObject(caption)) {
       caption = this.inCurrentLanguage.toView(caption as MultilingualText);
     }
-    const translatedEntityType = this.i18n.tr('entityTypes::' + entityName, {context: 'accusative'});
+    const translatedEntityType = this.i18n.tr('entity_types::' + entityName, {context: 'accusative'});
     const title = this.i18n.tr('Confirm deletion');
     const text = this.i18n.tr('Are you sure you want to delete {{entityType}} {{caption}}?', {entity: translatedEntityType, caption});
     const options: AlertOptions = {
