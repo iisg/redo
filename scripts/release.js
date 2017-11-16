@@ -191,7 +191,10 @@ function copyJsDependencies() {
 
 function includeInstallationDocs() {
   var spinner = ora({text: 'Including installation docs.', color: 'yellow'}).start();
-  exec('git fetch && git show origin/docs:Installation.pdf > release/Installation.pdf && git show origin/docs:Upgrading.pdf > release/Upgrading.pdf', function (err) {
+  exec('git fetch ' +
+    '&& git show origin/docs:Installation.pdf > release/Installation.pdf ' +
+    '&& git show origin/docs:Upgrading.pdf > release/Upgrading.pdf ' +
+    '&& git show origin/docs:Changelog.pdf > release/Changelog.pdf', function (err) {
     if (err) {
       spinner.fail();
       console.error(err);
