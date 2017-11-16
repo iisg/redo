@@ -15,7 +15,6 @@ abstract class User implements Identifiable {
 
     /**
      * @param UserRole|string $role
-     * @return bool
      */
     public function hasRole($role): bool {
         if ($role instanceof UserRole) {
