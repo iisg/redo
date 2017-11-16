@@ -97,10 +97,10 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
      * Ensures that the roles for the user are recalculated when they have changed.
      * @see http://stackoverflow.com/a/13837102/878514
      */
-    public function isEqualTo(UserInterface $user) {
-        if ($user instanceof UserEntity) {
-            return $user->id == $this->id; // TODO this line is a temporary fix REPEKA-257
-//            return count($this->getRoles()) == count($user->getRoles()) && count(array_diff($this->getRoles(), $user->getRoles())) == 0;
+    public function isEqualTo(UserInterface $otherUser) {
+        if ($otherUser instanceof UserEntity) {
+            return count($this->getRoles()) == count($otherUser->getRoles())             // count of roles hasn't changed...
+                && count(array_diff($this->getRoles(), $otherUser->getRoles())) == 0;    // ... and there are no new roles
         }
         return false;
     }

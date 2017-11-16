@@ -9,12 +9,11 @@ services:
     autoconfigure: true
     public: false
 
-  Repeka\Application\Authentication\PKAuthenticationClient: ~
-  Repeka\Application\Authentication\PKAuthenticator:
-    $localAccountsEnabled: '%pk_auth.local_accounts_enabled%'
   Repeka\Application\Authentication\PKSoapService:
     - '%pk_auth.wsdl%'
     - '%pk_auth.options%'
+  Repeka\Application\Authentication\TokenAuthenticator\LocalDatabaseAuthenticator:
+    $localAccountsEnabled: '%pk_auth.local_accounts_enabled%'
 
   Repeka\Application\Cqrs\RepekaCommandBus:
     -

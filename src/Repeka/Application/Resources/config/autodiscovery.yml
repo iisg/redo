@@ -8,6 +8,9 @@ services:
     Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessorStrategy:
       tags: [repeka.metadata_value_processor]
 
+  Repeka\Application\Authentication\:
+    resource: '../../Authentication'
+
   Repeka\Application\Command\:
     resource: '../../Command'
 
