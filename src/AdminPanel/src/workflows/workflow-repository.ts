@@ -1,18 +1,18 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {HttpClient} from "aurelia-http-client";
 import {Workflow} from "./workflow";
 import {Metadata} from "resources-config/metadata/metadata";
 import {ResourceClassApiRepository} from "common/repository/resource-class-api-repository";
 import {EntitySerializer} from "common/dto/entity-serializer";
-import {cachedResponse} from "../common/repository/cached-response";
+import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
+import {cachedResponse, forSeconds} from "common/repository/cached-response";
 
 @autoinject
 export class WorkflowRepository extends ResourceClassApiRepository<Workflow> {
-  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer) {
+  constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer) {
     super(httpClient, entitySerializer, Workflow, 'workflows');
   }
 
-  @cachedResponse(30000)
+  @cachedResponse(forSeconds(30))
   public get(id: number|string, suppressError: boolean = false): Promise<Workflow> {
     return super.get(id, suppressError);
   }

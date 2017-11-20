@@ -1,17 +1,40 @@
-import {cachedResponse, clearCachedResponse, getCachedArgumentsHash} from "./cached-response";
+import Promise from "bluebird";
+import {cachedResponse, clearCachedResponse, getCachedArgumentsHash, forSeconds, untilPromiseCompleted} from "./cached-response";
 
-describe("cached response decorator", () => {
-  class MyClass {
-    @cachedResponse(5)
-    getNumber(a: string = undefined) {
+describe(cachedResponse.name, () => {
+  class TestClass {
+    @cachedResponse()
+    getNumber(whatever?: any): number {
+      whatever;
       return Math.random();
+    }
+
+    @cachedResponse(forSeconds(0.01))
+    getNumberTimeout(): number {
+      return Math.random();
+    }
+
+    @cachedResponse(untilPromiseCompleted)
+    getNumberPromise(): Promise<number> {
+      return Promise.resolve(Math.random());
+    }
+
+    @cachedResponse(untilPromiseCompleted)
+    getRejectedPromise(): Promise<number> {
+      return Promise.reject(new Error());
+    }
+
+    @cachedResponse(untilPromiseCompleted)
+    getDelayedNumberPromise(): Promise<number> {
+      return new Promise(resolve => setTimeout(resolve, 0.01));
     }
   }
 
-  let a: MyClass;
+  let a: TestClass;
 
   beforeEach(() => {
-    a = new MyClass;
+    a = new TestClass();
+    clearCachedResponse(a.getNumber);
   });
 
   it("caches the value", () => {
@@ -38,11 +61,36 @@ describe("cached response decorator", () => {
     expect(a.getNumber('b')).toEqual(bValue);
   });
 
-  it("clears the value automatically after timeout", (done) => {
-    let first = a.getNumber();
+  it("clears after timeout", done => {
+    const first = a.getNumberTimeout();
+    expect(a.getNumberTimeout()).toEqual(first);
     setTimeout(() => {
-      expect(a.getNumber()).not.toEqual(first);
+      expect(a.getNumberTimeout()).not.toEqual(first);
       done();
-    }, 6);
+    }, 100);
+  });
+
+  it("clears when promise is resolved", done => {
+    const first = a.getNumberPromise();
+    expect(a.getNumberPromise()).toBe(first);
+    first.then(() => {
+      expect(a.getNumberPromise()).not.toBe(first);
+    }).then(done);
+  });
+
+  it("clears when promise is rejected", done => {
+    const first = a.getRejectedPromise();
+    expect(a.getRejectedPromise()).toBe(first);
+    first.catch(() => {
+      expect(a.getRejectedPromise()).not.toBe(first);
+    }).then(done);
+  });
+
+  it("clears when non-immediate promise is resolved", done => {
+    const first = a.getDelayedNumberPromise();
+    expect(a.getDelayedNumberPromise()).toBe(first);
+    first.then(() => {
+      expect(a.getDelayedNumberPromise()).not.toBe(first);
+    }).then(done);
   });
 });

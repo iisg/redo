@@ -1,13 +1,13 @@
 import {ApiRepository} from "common/repository/api-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {User} from "./user";
-import {HttpClient} from "aurelia-http-client";
 import {Resource} from "../resources/resource";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 
 @autoinject
 export class UserRepository extends ApiRepository<User> {
-  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer) {
+  constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer) {
     super(httpClient, entitySerializer, User, 'users');
   }
 

@@ -1,25 +1,37 @@
+import {VoidFunction} from "../utils/function-utils";
 const CACHED_VALUE_KEY = '_cachedValue';
 
-export function cachedResponse(expirationTimeMs = 60000) {
+export function cachedResponse(expirationPolicy?: (returnValue: any, clearCallback: VoidFunction) => void) {
   return (target: any, propertyName: string, descriptor: TypedPropertyDescriptor<any>) => {
     if (descriptor.value) {
       const originalMethod = descriptor.value;
       let fn = function (...args: any[]) {
         const argumentsHash = getCachedArgumentsHash(args);
-        if (!fn[CACHED_VALUE_KEY][argumentsHash]) {
-          fn[CACHED_VALUE_KEY][argumentsHash] = originalMethod.apply(this, args);
-          setTimeout(() => clearCachedResponse(fn, argumentsHash), expirationTimeMs);
+        let returnValue = fn[CACHED_VALUE_KEY][argumentsHash];
+        if (returnValue === undefined) {
+          returnValue = fn[CACHED_VALUE_KEY][argumentsHash] = originalMethod.apply(this, args);
+          if (expirationPolicy !== undefined) {
+            const clearCallback = () => clearCachedResponse(fn, argumentsHash);
+            expirationPolicy(returnValue, clearCallback);
+          }
         }
-        return fn[CACHED_VALUE_KEY][argumentsHash];
+        return returnValue;
       };
       fn[CACHED_VALUE_KEY] = {};
       descriptor.value = fn;
       return descriptor;
-    }
-    else {
+    } else {
       throw "Only put a cachedResponse decorator on a method.";
     }
   };
+}
+
+export function forSeconds(seconds: number = 60): (returnValue: any, clearCallback: VoidFunction) => void {
+  return (_, clearCallback: VoidFunction) => setTimeout(clearCallback, seconds * 1000);
+}
+
+export function untilPromiseCompleted(returnedPromise: Promise<any>, clearCallback: VoidFunction) {
+  returnedPromise.finally(clearCallback);
 }
 
 export function getCachedArgumentsHash(args: any[]): string {

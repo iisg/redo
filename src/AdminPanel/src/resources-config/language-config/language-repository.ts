@@ -3,12 +3,13 @@ import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {ApiRepository} from "common/repository/api-repository";
-import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
+import {cachedResponse, clearCachedResponse, forSeconds} from "common/repository/cached-response";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 
 @autoinject
 export class LanguageRepository extends ApiRepository<Language> {
-  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer, private eventAggregator: EventAggregator) {
+  constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer, private eventAggregator: EventAggregator) {
     super(httpClient, entitySerializer, Language, 'languages');
   }
 
@@ -43,7 +44,7 @@ export class LanguageRepository extends ApiRepository<Language> {
     });
   }
 
-  @cachedResponse(900000)
+  @cachedResponse(forSeconds(90))
   public getAvailableFlags(): Promise<Array<string>> {
     return new HttpClient().get('/files/flags.json')
       .then(response => response.content.available_flags)
