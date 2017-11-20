@@ -1,36 +1,39 @@
 <template class="nested-navigation-menu">
+    <ul class="nav nav-pills nav-stacked">
 
-    <li repeat.for="item of siteMenu.navigation"
-        class="${item.isActive || item.expanded ? 'current' : ''}"
-        require-roles.bind="item.settings.requiredRoles">
-        <a if.bind="!item.children"
-            route-href="route.bind: item.route; params.bind: item.settings.params"
-            class="btn btn-default btn-block">
-            <fa name.bind="item.settings.icon"
-                options="fw"></fa>
-            ${item.settings.dynamicResource ? 'resource_classes::' + item.title + '//label' : 'nav::' + item.title | t}
-        </a>
-        <a if.bind="item.children"
-            class="btn btn-default btn-block"
-            click.delegate="toggle(item)">
-            <fa name="angle-right"
-                options.bind="item.expanded ? 'fw rotate-90': 'fw'"
-                class="pull-right"></fa>
-            <fa name.bind="item.settings.icon"
-                options="fw"></fa>
-            ${'resource_classes::' + item.title + '//settings' | t}
-        </a>
-        <ul if.bind="item.expanded"
-            class="nav-children anim-height-inout-150 au-animate">
-            <li repeat.for="child of item.children"
-                class="${child.isActive ? 'current' : ''}"
-                require-roles.one-time="child.settings.requiredRoles">
-                <a route-href="route.bind: child.route; params.bind: child.settings.params"
-                    class="btn btn-default btn-block">
-                    ${'nav::' + child.title | t}
+        <li repeat.for="item of items"
+            class="${item.active ? 'current' : ''}"
+            require-roles.bind="item.requiredRoles">
+
+            <a if.bind="!item.items"
+                route-href="route.bind: item.routeName; params.bind: item.params"
+                class="btn btn-default btn-block">
+                <fa name.bind="item.icon"
+                    options="fw"></fa>
+                ${item.labelKey | t}
+            </a>
+
+            <template else>
+                <a class="btn btn-default btn-block"
+                    click.delegate="item.toggle()">
+                    <fa name="angle-right"
+                        options.bind="item.expanded ? 'fw rotate-90' : 'fw'"></fa>
+                    ${item.labelKey | t}
                 </a>
-            </li>
-        </ul>
-    </li>
+                <ul if.bind="item.expanded"
+                    class="nav-children anim-height-inout-150 au-animate">
+                    <li repeat.for="child of item.items"
+                        class="${child.active ? 'current' : ''}"
+                        require-roles.bind="item.requiredRoles">
+                        <a route-href="route.bind: child.routeName; params.bind: child.params"
+                            class="btn btn-default btn-block">
+                            ${child.labelKey | t}
+                        </a>
+                    </li>
+                </ul>
+            </template>
 
+        </li>
+
+    </ul>
 </template>

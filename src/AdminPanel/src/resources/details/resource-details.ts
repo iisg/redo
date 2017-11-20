@@ -35,12 +35,10 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.urlListener.dispose();
   }
 
-  activate(params: any, routeConfig: RouteConfig): void {
-    this.resourceRepository.get(params.id).then(resource => {
-      this.resource = resource;
-      const title = this.resourceLabel.toView(resource);
-      routeConfig.navModel.setTitle(title);
-    });
+  async activate(params: any, routeConfig: RouteConfig) {
+    this.resource = await this.resourceRepository.get(params.id);
+    const title = this.resourceLabel.toView(this.resource);
+    routeConfig.navModel.setTitle(title);
   }
 
   toggleEditForm() {

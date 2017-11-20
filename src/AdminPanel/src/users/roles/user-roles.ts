@@ -3,8 +3,8 @@ import {autoinject} from "aurelia-dependency-injection";
 import {UserRoleRepository} from "./user-role-repository";
 import {UserRole} from "./user-role";
 import {deepCopy} from "common/utils/object-utils";
-import {DeleteEntityConfirmation} from "../../common/dialog/delete-entity-confirmation";
-import {removeValue} from "../../common/utils/array-utils";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {removeValue} from "common/utils/array-utils";
 
 @autoinject
 export class UserRoles implements ComponentAttached {

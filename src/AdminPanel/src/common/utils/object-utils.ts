@@ -15,25 +15,6 @@ export function numberKeysByValue<M, V>(obj: M, value: V): number[] {
   return keysByValue(obj, value).map(key => parseInt(key, 10)).filter(val => !Number.isNaN(val));
 }
 
-// https://stackoverflow.com/a/22266891
-export function shallowEquals(a: any, b: any): boolean {
-  for (let key in a) {
-    if (a.hasOwnProperty(key)) {
-      if (!(key in b) || a[key] !== b[key]) {
-        return false;
-      }
-    }
-  }
-  for (let key in b) {
-    if (b.hasOwnProperty(key)) {
-      if (!(key in a) || a[key] !== b[key]) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
 export function propertyKeys(obj: Object): string[] {
   return Object.keys(obj)
     .filter(key => typeof obj[key] != 'function')  // remove methods
@@ -47,4 +28,8 @@ export function zip<V>(keys: Array<number|string>, values: V[]): AnyMap<V> {
   const obj = {};
   keys.forEach((key, i) => obj[key] = values[i]);
   return obj;
+}
+
+export function values<T>(map: AnyMap<T>): T[] {
+  return Object.keys(map).map(k => map[k]);
 }
