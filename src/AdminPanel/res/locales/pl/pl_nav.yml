@@ -1,15 +1,14 @@
-"Tasks": "Zadania",
-"Resources": "Zasoby",
-"Resources Setup": "Ustawienia zasobów",
-"Metadata Kinds": "Rodzaje metadanych",
-"Resource Kinds": "Rodzaje zasobów",
-"Workflows": "Procesy",
-"Languages": "Języki",
-"Users": "Użytkownicy",
-"User list": "Lista użytkowników",
-"Roles": "Role",
-"About": "O systemie",
-"My Account": "Moje konto",
-"Dashboard": "Tablica",
-"Front Page": "Strona główna",
+# sidebar
+"Tasks": "Zadania"
+"Metadata Kinds": "Rodzaje metadanych"
+"Resource Kinds": "Rodzaje zasobów"
+"Workflows": "Procesy"
+"Languages": "Języki"
+"Roles": "Role"
+"About": "O systemie"
+
+# navbar
+"My Account": "Moje konto"
+"Dashboard": "Tablica"
+"Front Page": "Strona główna"
 "Log Out": "Wyloguj"

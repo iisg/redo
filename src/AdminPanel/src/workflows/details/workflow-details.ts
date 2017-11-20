@@ -16,7 +16,6 @@ export class WorkflowDetails implements RoutableComponentActivate {
   workflow: Workflow;
   originalWorkflow: Workflow;
   editing: boolean = false;
-  resourceClass: string;
 
   private urlListener: Subscription;
   private navModel: NavModel;
@@ -48,16 +47,13 @@ export class WorkflowDetails implements RoutableComponentActivate {
     this.urlListener.dispose();
   }
 
-  activate(params: any, routeConfig: RouteConfig): void {
-    this.resourceClass = params.resourceClass;
-    this.workflowRepository.get(params.id).then(workflow => {
-      this.workflow = workflow;
-      if (this.editing) {
-        this.originalWorkflow = deepCopy(this.workflow);
-      }
-      this.navModel = routeConfig.navModel;
-      this.updateWindowTitle();
-    });
+  async activate(params: any, routeConfig: RouteConfig) {
+    this.workflow = await this.workflowRepository.get(params.id);
+    if (this.editing) {
+      this.originalWorkflow = deepCopy(this.workflow);
+    }
+    this.navModel = routeConfig.navModel;
+    this.updateWindowTitle();
   }
 
   private updateWindowTitle() {

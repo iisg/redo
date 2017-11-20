@@ -1,11 +1,10 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceRepository} from "./resource-repository";
 import {Resource} from "./resource";
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {bindingMode, observable} from "aurelia-binding";
 import {removeValue} from "common/utils/array-utils";
-import {ComponentAttached} from "aurelia-templating";
 import {Metadata} from "../resources-config/metadata/metadata";
 import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
 import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
@@ -31,9 +30,6 @@ export class ResourcesList implements ComponentAttached {
   }
 
   activate(params: any) {
-    if (!params.resourceClass) {
-      throw new Error("You have to specify resourceClass!"); // TODO redirect to 404 when it exists
-    }
     this.fetchList(params.resourceClass);
   }
 
