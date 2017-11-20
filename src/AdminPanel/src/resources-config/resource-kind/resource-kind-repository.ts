@@ -1,27 +1,22 @@
-import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
-import {cachedResponse} from "common/repository/cached-response";
+import {cachedResponse, forSeconds} from "common/repository/cached-response";
 import {ResourceClassApiRepository} from "common/repository/resource-class-api-repository";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 
 @autoinject
 export class ResourceKindRepository extends ResourceClassApiRepository<ResourceKind> {
-  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer) {
+  constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer) {
     super(httpClient, entitySerializer, ResourceKind, 'resource-kinds');
   }
 
-  @cachedResponse(30000)
-  public get(id: number|string, suppressError: boolean = false): Promise<ResourceKind> {
-    return super.get(id, suppressError);
-  }
-
-  @cachedResponse(30000)
+  @cachedResponse(forSeconds(30))
   public getListByClass(resourceClass: string): Promise<ResourceKind[]> {
     return super.getListByClass(resourceClass);
   }
 
-  @cachedResponse(30000)
+  @cachedResponse(forSeconds(30))
   public getList(): Promise<ResourceKind[]> {
     return super.getList();
   }

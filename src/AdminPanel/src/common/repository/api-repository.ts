@@ -1,10 +1,11 @@
-import {HttpClient, HttpResponseMessage} from "aurelia-http-client";
+import {HttpResponseMessage} from "aurelia-http-client";
 import {suppressError as suppressErrorHeader} from "common/http-client/headers";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {EntityClass} from "../dto/contracts";
+import {DeduplicatingHttpClient} from "../http-client/deduplicating-http-client";
 
 export abstract class ApiRepository<T> {
-  constructor(protected httpClient: HttpClient,
+  constructor(protected httpClient: DeduplicatingHttpClient,
               protected entitySerializer: EntitySerializer,
               protected entityClass: EntityClass<T>,
               protected endpoint: string) {
@@ -17,7 +18,7 @@ export abstract class ApiRepository<T> {
     return Promise.all(response.content.map(item => this.toEntity(item)));
   }
 
-  public get(id: number|string, suppressError: boolean = false): Promise<T> {
+  public get(id: number | string, suppressError: boolean = false): Promise<T> {
     const request = this.httpClient.createRequest(this.oneEntityEndpoint(id)).asGet();
     if (suppressError) {
       request.withHeader(suppressErrorHeader.name, suppressErrorHeader.value);
@@ -49,7 +50,7 @@ export abstract class ApiRepository<T> {
     return this.entitySerializer.serialize(entity);
   }
 
-  protected oneEntityEndpoint(entity: number|string|Object) {
+  protected oneEntityEndpoint(entity: number | string | Object) {
     let id = entity['id'] || entity;
     return `${this.endpoint}/${id}`;
   }

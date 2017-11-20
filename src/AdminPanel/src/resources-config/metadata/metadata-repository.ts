@@ -1,17 +1,17 @@
-import {HttpClient} from "aurelia-http-client";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "./metadata";
-import {cachedResponse, clearCachedResponse} from "common/repository/cached-response";
+import {cachedResponse, clearCachedResponse, forSeconds} from "common/repository/cached-response";
 import {ResourceClassApiRepository} from "common/repository/resource-class-api-repository";
+import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
-  constructor(httpClient: HttpClient, entitySerializer: EntitySerializer) {
+  constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer) {
     super(httpClient, entitySerializer, Metadata, 'metadata');
   }
 
-  @cachedResponse(30000)
+  @cachedResponse(forSeconds(30))
   public getListByClass(resourceClass: string): Promise<Metadata[]> {
     return super.getListByClass(resourceClass);
   }
@@ -39,14 +39,7 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
   }
 
   public updateOrder(metadataList: Array<Metadata>, resourceClass: string): Promise<boolean> {
-    return this.httpClient
-      .createRequest(this.endpoint)
-      .asPut()
-      .withParams({
-        resourceClass
-      })
-      .withContent(metadataList.map(metadata => metadata.id))
-      .send()
+    return this.httpClient.put(this.endpoint, metadataList.map(metadata => metadata.id), {resourceClass})
       .then(response => {
         clearCachedResponse(this.getListByClass);
         return response.content;

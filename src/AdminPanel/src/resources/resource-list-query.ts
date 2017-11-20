@@ -1,17 +1,15 @@
-import {HttpClient} from "aurelia-http-client";
 import {Resource} from "./resource";
 import {deepCopy} from "common/utils/object-utils";
-import {cachedResponse} from "common/repository/cached-response";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 
 export class ResourceListQuery {
-
   private params: any = {};
 
-  constructor(private httpClient: HttpClient, private endpoint: string, private entitySerializer: EntitySerializer) {
+  constructor(private httpClient: DeduplicatingHttpClient, private endpoint: string, private entitySerializer: EntitySerializer) {
   }
 
-  public filterByResourceKindIds(resourceKindIds: number | number[]): ResourceListQuery {
+  public filterByResourceKindIds(resourceKindIds: number|number[]): ResourceListQuery {
     if (!Array.isArray(resourceKindIds)) {
       resourceKindIds = [resourceKindIds as number];
     }
@@ -22,7 +20,7 @@ export class ResourceListQuery {
     return this;
   }
 
-  public filterByResourceClasses(resourceClasses: string | string[]): ResourceListQuery {
+  public filterByResourceClasses(resourceClasses: string|string[]): ResourceListQuery {
     if (!Array.isArray(resourceClasses)) {
       resourceClasses = [resourceClasses as string];
     }
@@ -45,13 +43,8 @@ export class ResourceListQuery {
     return this.makeRequest(params);
   }
 
-  @cachedResponse(20000)
   private makeRequest(params): Promise<Resource[]> {
-    return this.httpClient
-      .createRequest(this.endpoint)
-      .asGet()
-      .withParams(params)
-      .send()
-      .then(response => Promise.all(response.content.map(resource => this.entitySerializer.deserialize(Resource, resource))));
+    return this.httpClient.get(this.endpoint, params)
+      .then(response => Promise.all(response.content.map(item => this.entitySerializer.deserialize(Resource, item))));
   }
 }
