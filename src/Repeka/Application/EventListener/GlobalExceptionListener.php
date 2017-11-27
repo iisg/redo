@@ -68,7 +68,7 @@ class GlobalExceptionListener {
 
     private function createJsonResponse(int $statusCode, string $message, array $extras = []): JsonResponse {
         return new JsonResponse(array_merge([
-            'message' => $message,
+            'message' => mb_convert_encoding($message, 'UTF-8', 'UTF-8'),
         ], $extras), $statusCode);
     }
 
