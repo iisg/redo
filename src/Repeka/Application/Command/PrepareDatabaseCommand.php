@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CheckDatabaseConnectionCommand extends DoctrineCommand {
+class PrepareDatabaseCommand extends DoctrineCommand {
     protected function configure() {
         $this
             ->setName('repeka:prepare-database')
