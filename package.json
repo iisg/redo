@@ -1,4 +1,3 @@
-
 {
   "name": "repeka",
   "version": "0.4.0",
@@ -40,6 +39,7 @@
     "lint:backend:phpcbf": "sh -c \"vendor/bin/phpcbf src/Repeka --standard=scripts/phpcs-rules.xml\" || true",
     "lint:backend:phpcs": "sh -c \"vendor/bin/phpcs src/Repeka --standard=scripts/phpcs-rules.xml --report=checkstyle --report-file=var/reports/lints/phpcs.xml\"",
     "lint:backend:phpmd": "sh -c \"vendor/bin/phpmd src/Repeka xml scripts/phpmd-rules.xml --reportfile var/reports/phpmd/phpmd.xml\"",
+    "publish": "curl -v --user repeka:AizoJoonoh5oidoo --upload-file ./repeka-0.4.0-gf01b977.tar.gz https://repo.fslab.agh.edu.pl/repository/repeka/",
     "release": "cross-env REPEKA_ENV=prod npm run -s dist && node scripts/release.js",
     "test": "npm run -s test:backend && npm run -s test:admin",
     "test:admin": "cd src/AdminPanel && npm test -s",

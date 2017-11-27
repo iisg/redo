@@ -162,8 +162,6 @@ function deleteUnwantedSources() {
     'release/vendor/**/docs/**',
     'release/vendor/**/img/**',
     'release/vendor/**/LICENSE',
-    'release/vendor/**/test/**',
-    'release/vendor/**/tests/**',
   ]).then(() => {
     spinner.succeed('Unneeded sources deleted.');
     copyJsDependencies();
