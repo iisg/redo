@@ -1,11 +1,12 @@
 import {HttpClient, HttpResponseMessage} from "aurelia-http-client";
 import {suppressError as suppressErrorHeader} from "common/http-client/headers";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {EntityClass} from "../dto/contracts";
 
 export abstract class ApiRepository<T> {
   constructor(protected httpClient: HttpClient,
               protected entitySerializer: EntitySerializer,
-              protected entityClass: Function,
+              protected entityClass: EntityClass<T>,
               protected endpoint: string) {
   }
 

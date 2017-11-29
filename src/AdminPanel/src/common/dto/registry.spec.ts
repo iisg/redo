@@ -1,5 +1,6 @@
 import {TypeRegistry} from "./registry";
 import {Container} from "aurelia-dependency-injection";
+import {MapperClass} from "./contracts";
 import createSpyObj = jasmine.createSpyObj;
 import Spy = jasmine.Spy;
 import createSpy = jasmine.createSpy;
@@ -9,9 +10,9 @@ describe(TypeRegistry.name, () => {
     const container: Container = createSpyObj('container', ['get']);
     (container.get as Spy).and.returnValue('mapper instance');
     const registry = new TypeRegistry(container);
-    const specificMapper: Function = 'specific' as any;
-    const arrayItemMapper: Function = 'array' as any;
-    const mapValueMapper: Function = 'map' as any;
+    const specificMapper: MapperClass<any> = 'specific' as any;
+    const arrayItemMapper: MapperClass<any> = 'array' as any;
+    const mapValueMapper: MapperClass<any> = 'map' as any;
     registry.register('specific1[]', specificMapper);
     registry.register('{specific2}', specificMapper);
     registry.register('arrayItem', arrayItemMapper);
@@ -29,9 +30,9 @@ describe(TypeRegistry.name, () => {
     (container.get as Spy).and.returnValues('mapper1', 'mapper2');
     const registry = new TypeRegistry(container);
     const mapperClass1 = function () {
-    };
+    } as any;
     const mapperClass2 = function () {
-    };
+    } as any;
     let mapper = registry.getMapper(mapperClass1);
     expect((container.get as Spy).calls.allArgs()).toEqual([[mapperClass1]]);
     expect(mapper).toEqual('mapper1');

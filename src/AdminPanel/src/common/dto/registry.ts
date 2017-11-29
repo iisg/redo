@@ -1,9 +1,10 @@
 import {autoinject, Container} from "aurelia-dependency-injection";
-import {Mapper, CopyMapper, ArrayMapper, IdentityMapper, TypedMapMapper} from "./mappers";
+import {ArrayMapper, CopyMapper, IdentityMapper, Mapper, TypedMapMapper} from "./mappers";
+import {EntityClass, MapperClass} from "./contracts";
 
 @autoinject
 export class TypeRegistry {
-  private mappers: StringMap<Function> = {};
+  private mappers: StringMap<MapperClass<any>> = {};
   private factories: StringMap<FactoryFunction<any>> = {};
 
   constructor(private container: Container) {
@@ -23,7 +24,7 @@ export class TypeRegistry {
     });
   }
 
-  register(type: string, mapperClass: Function, factory?: FactoryFunction<any>): void {
+  register<T>(type: string, mapperClass: MapperClass<T>, factory?: FactoryFunction<T>): void {
     if (type in this.mappers) {
       throw new Error(`'${type}' already has mapper registered: '${this.mappers[type].name}'`);
     }
@@ -53,7 +54,7 @@ export class TypeRegistry {
   }
 
   private extractMapValueType(mapType: string): string {
-    const match = mapType.match(/^\{(.+)}$/);
+    const match = mapType.match(/^{(.+)}$/);
     return match ? match[1] : undefined;
   }
 
@@ -67,13 +68,13 @@ export class TypeRegistry {
     return valueMapper && new TypedMapMapper<V>(valueMapper as any, this.getFactoryByType(valueType));
   }
 
-  private instantiateMapper(mapperClass: Function) {
+  private instantiateMapper<T>(mapperClass: MapperClass<T>): Mapper<T> {
     return this.container.get(mapperClass);
   }
 
-  getMapper(typeOrClass: string|Function) {
+  getMapper<T>(typeOrClass: string | MapperClass<T>): Mapper<T> {
     return (typeOrClass['apply'])
-      ? this.instantiateMapper(typeOrClass as Function)
+      ? this.instantiateMapper(typeOrClass as MapperClass<T>)
       : this.getMapperByType(typeOrClass as string);
   }
 
@@ -101,7 +102,7 @@ export class TypeRegistry {
 
 export type FactoryFunction<T> = () => T;
 
-export function registerMapper(mapperClass: Function, typesOrTypeNames: Array<string|Function>): void {
+export function registerMapper<T>(mapperClass: MapperClass<T>, typesOrTypeNames: Array<string | EntityClass<T>>): void {
   if (Container.instance === undefined) {  // not available in tests
     return;
   }
@@ -110,7 +111,7 @@ export function registerMapper(mapperClass: Function, typesOrTypeNames: Array<st
   }
   const registry: TypeRegistry = Container.instance.get(TypeRegistry);
   for (const typeOrName of typesOrTypeNames) {
-    const typeName = (typeof typeOrName == 'string') ? typeOrName as string : (typeOrName as Function).name;
+    const typeName = (typeof typeOrName == 'string') ? typeOrName as string : (typeOrName as EntityClass<T>).NAME;
     registry.register(typeName, mapperClass);
   }
 }

@@ -4,8 +4,10 @@ import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/requ
 import {Entity} from "common/entity/entity";
 import {automapped, map} from "common/dto/decorators";
 
-@automapped(() => new UserRole())
+@automapped
 export class UserRole extends Entity {
+  static NAME = 'UserRole';
+
   @map id: string;
   @map(Object.name) name: MultilingualText = {};
   @map systemRoleName: string;

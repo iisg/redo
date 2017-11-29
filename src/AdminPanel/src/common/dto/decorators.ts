@@ -1,9 +1,10 @@
-import {TypeRegistry, FactoryFunction, registerMapper} from "./registry";
+import {FactoryFunction, registerMapper, TypeRegistry} from "./registry";
 import {Container} from "aurelia-dependency-injection";
 import {AutoMapper} from "./auto-mapper";
 import {CopyMapper} from "./mappers";
 import {addDtoProperty, inferHandlingInstruction} from "./class-metadata-utils";
 import {propertyKeys} from "../utils/object-utils";
+import {EntityClass, MapperClass} from "./contracts";
 
 // A SHORT TUTORIAL FOR DECORATORS
 //
@@ -12,10 +13,18 @@ import {propertyKeys} from "../utils/object-utils";
 // When used with parentheses, ie. @foo(), it's a decorator factory. It receives arguments and should return a plain decorator.
 // If a functions is intended to be used both with and without parentheses, it has to guess which case it is by inspecting its arguments.
 // That's why some decorator functions have complex ifs, return themselves if first argument is undefined etc.
+//
+// Decorator targets (ie. the first argument of decorator function) are tricky. Class decorators receive class itself. Property decorators
+// receive prototype of instance objects. Some (in-)equalities to help you wrap your head about this and show the difference:
+//   @deco class Foo {  // target === Foo
+//     @deco bar;       // target === Foo.prototype === Object.getPrototypeOf(new Foo())
+//   }
+//   Foo !== Foo.prototype !== Object.getPrototypeOf(Foo);
+//   (new Foo()).constructor === Foo === Foo.prototype.constructor
 
-/*******************************/
-/*   ENTITY CLASS DECORATORS   */
-/*******************************/
+/* *****************************
+ *   ENTITY CLASS DECORATORS   *
+ *******************************/
 
 /**
  * Registers a mapper for that class.
@@ -23,51 +32,63 @@ import {propertyKeys} from "../utils/object-utils";
  * won't use mapper registered with @mappedWith() and most likely will fail. To avoid it, make sure entities are preloaded or declare
  * converters explicitly on properties.
  * Optionally, a factory function can be registered. These are used to create new entities for hydration when no instance is available,
- * for example when mapping deserializing arrays of annotated object type.
+ * for example when deserializing arrays of annotated object type.
  */
-export function mappedWith(mapper: Function, factory?: FactoryFunction<any>): (entityClass: Object) => void {
-  return (entityClass: Object) => {
+export function mappedWith<T>(mapper: MapperClass<T>, factory?: FactoryFunction<T>): (entityClass: EntityClass<T>) => void {
+  return (entityClass: EntityClass<T>) => {
     if (Container.instance === undefined) {  // not available in tests
       return;
     }
+    if (factory === undefined) {
+      factory = () => new entityClass();
+    }
     const registry: TypeRegistry = Container.instance.get(TypeRegistry);
-    const className = (entityClass as Function).name || entityClass.constructor.name;
-    registry.register(className, mapper, factory);
+    registry.register(entityClass.NAME, mapper, factory);
   };
 }
 
 /**
  * Shorthand for @mappedWith(CopyMapper).
  */
-export function copyable(entityClass: Object): void {
+export function copyable(entityClass: EntityClass<any>): void {
   mappedWith(CopyMapper, () => {
-    return {};
+    return new entityClass();
   })(entityClass);
 }
 
 /**
- * Shorthand for @mappedWith(AnnotatedMapper, ...).
- * FactoryFunction may be left undefined, but deserialization and array mapping won't work for that class. Hydration will still work.
+ * Shorthand for @mappedWith(AutoMapper, ...).
+ * FactoryFunction may be omitted if class has an argument-less constructor.
  * Example:
- * @automapped(() => new Foo()) Foo {...}
+ * @automapped Foo {...}
+ * @automapped(() => new Bar('baz')) Bar {...}
  */
-export function automapped(factory: FactoryFunction<any>): (entityClass: Object) => void {
-  return mappedWith(AutoMapper, factory);
+export function automapped(factory?: FactoryFunction<any> | EntityClass<any>): any {
+  if ('prototype' in factory) {
+    // Used as a decorator factory, factory is actually EntityClass, not a factory.
+    const entityClass = factory as any as EntityClass<any>;
+    mappedWith(AutoMapper)(entityClass);
+  } else {
+    // Used as a decorator, factory is really a factory (or undefined, which is also fine).
+    return mappedWith(AutoMapper, factory as FactoryFunction<any>);
+  }
 }
 
-export function allPropertiesAutomapped(factoryFunction: FactoryFunction<Object>): (entityClass: Object) => void {
-  const instance = factoryFunction();
-  return (entityClass: Object) => {
-    for (const key of propertyKeys(instance)) {
-      map(entityClass, key);
-    }
-    automapped(factoryFunction)(entityClass);
-  };
+/**
+ * Equivalent of decorating class with @automapped and all its properties with @map.
+ * This decorator doesn't support factory functions and must be applied without parentheses.
+ */
+export function allPropertiesAutomapped(entityClass: EntityClass<any>): void {
+  const instance = new entityClass();
+  for (const key of propertyKeys(instance)) {
+    map(entityClass.prototype, key);
+  }
+  automapped(entityClass);
 }
 
-/***************************/
-/*   PROPERTY DECORATORS   */
-/***************************/
+/* *************************
+ *   PROPERTY DECORATORS   *
+ ***************************/
 
 /**
  * Marks a property as having corresponding DTO fields. Property may map to multiple DTO fields or fields named differently, it's up to
@@ -85,40 +106,77 @@ export function allPropertiesAutomapped(factoryFunction: FactoryFunction<Object>
  *   @map name: string;
  *   @map('Number') refCount: number;           // optional explicit type
  *   @map(Number.name) childrenCount: number;   // this is okay too
+ *   @map(Foo) foo: Foo;                        // custom classes can be referenced directly
  *   @map('String[]') childrenNames: string[];  // arrays require explicit typing
+ *   @map(arrayOf(Foo)) children: Foo[];        // helper function for arrays
  *   @map(CopyMapper) children: Object[];       // use specified mapper, ignore type
  * }
  */
-export function map(typeOrMapper: any, propertyName?: string): any {
+export function map<T>(typeOrMapper: MapperClass<T> | string | EntityClass<any> | T, propertyName?: string): any {
   if (propertyName === undefined) {
-    // Used as a decorator factory, typeOrMapper is mapper's class or name of property's type.
-    return (entityClass: Object, propertyName: string) => {
-      addDtoProperty(entityClass, propertyName, typeOrMapper);
+    // Used as a decorator factory, typeOrMapper is mapper's class or name of property's class or class itself.
+    if (typeOrMapper === undefined) {
+      throw new Error("Received undefined type/mapper argument. Possibly a mapper for field is defined further in the bundle. "
+        + "Tag problematic mapper with @maps('someName') and use @map('someName') on problematic property.");
+    }
+    if ((typeof typeOrMapper !== 'string') && ('NAME' in typeOrMapper)) {
+      typeOrMapper = (typeOrMapper as EntityClass<T>).NAME;
+    }
+    return (entityClass: EntityClass<T>, propertyName: string) => {
+      addDtoProperty(entityClass, propertyName, typeOrMapper as MapperClass<any> | string);
     };
   } else {
-    // used as a decorator, typeOrMapper is entity type. Appropriate mapping method has to be guessed from TS type metadata.
-    const handlingInstruction = inferHandlingInstruction(typeOrMapper as Function, propertyName);
-    addDtoProperty(typeOrMapper, propertyName, handlingInstruction);
+    // Used as a decorator, typeOrMapper is entity prototype. Appropriate mapping method has to be guessed from TS type metadata.
+    const prototype = (typeOrMapper as T);
+    const handlingInstruction = inferHandlingInstruction(prototype, propertyName);
+    addDtoProperty(prototype, propertyName, handlingInstruction);
   }
+}
+
+function assertHelperArgumentNotUndefined(arg: any): void {
+  if (arg === undefined) {
+    throw new Error("Helper argument is undefined. Maybe it's declared later in the same file?");
+  }
+}
+
+/**
+ * Helper for creating @map() arguments.
+ * @map(arrayOf('string')) names: string[];
+ */
+export function arrayOf(type: string | EntityClass<any>): string {
+  assertHelperArgumentNotUndefined(type);
+  const name = (typeof type == 'string') ? type as string : (type as EntityClass<any>).NAME;
+  return name + '[]';
+}
+
+/**
+ * Helper for creating @map() arguments.
+ * @map(dictOf('string')) types: AnyMap<string>;
+ */
+export function dictOf(type: string | EntityClass<any>): string {
+  assertHelperArgumentNotUndefined(type);
+  const name = (typeof type == 'string') ? type as string : (type as EntityClass<any>).NAME;
+  return `{${name}}`;
 }
 
 /**
  * Shorthand for @map(CopyMapper). Indicates that a property can be deep-copied. It will strip all methods!
  */
-export function copy(entityClass: Object, propertyName: string): void {
+export function copy(entityClass: any, propertyName: string): void {
   map(CopyMapper)(entityClass, propertyName);
 }
 
-/**********************************/
-/*   CONVERTER CLASS DECORATORS   */
-/**********************************/
+/* ********************************
+ *   CONVERTER CLASS DECORATORS   *
+ **********************************/
 
 /**
  * Inverse of @mappedWith - used on Mapper implementation to declare supported types.
- * Useful for converting interfaces because they can't be decorated.
+ * Handy when you want to map arrays, hashmaps etc. in unusual way - it will override default behavior.
+ * Ensure that decorated mappers are loaded before they are used, otherwise type registry won't know about them.
  */
-export function maps(...typesOrTypeNames: Array<string|Function>): (entityClass: Object) => void {
-  return (entityClass: Object) => {
-    registerMapper(entityClass as any, typesOrTypeNames);
+export function maps<T>(...typesOrTypeNames: Array<string | EntityClass<T>>): (mapperClass: MapperClass<T>) => void {
+  return (mapperClass: MapperClass<T>) => {
+    registerMapper(mapperClass, typesOrTypeNames);
   };
 }

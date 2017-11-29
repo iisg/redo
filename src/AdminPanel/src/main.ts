@@ -19,6 +19,7 @@ import {Resource} from "./resources/resource";
 import {User} from "./users/user";
 import {UserRole} from "./users/roles/user-role";
 import {Workflow} from "./workflows/workflow";
+import {WorkflowIdMapper} from "./resources-config/resource-kind/resource-kind-mapping";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -75,5 +76,5 @@ function onAureliaStarted(aurelia: Aurelia): Promise<void> {
 
 function preloadEntityTypes() {
   // This function does nothing, but its presence and dependence on these classes ensures that their decorators are evaluated.
-  return [User, UserRole, Language, Metadata, ResourceKind, Resource, Workflow] && undefined;
+  return [User, UserRole, Language, Metadata, ResourceKind, Resource, Workflow, WorkflowIdMapper] && undefined;
 }

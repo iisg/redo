@@ -7,9 +7,32 @@ module.exports = {
         "**/*.css!text",
       ],
       "excludes": [
+        "common/dto/**",
         "[resources-config/**]",
         "resources-config/**/*.html!text",
         "resources-config/**/*.css!text",
+      ],
+      "options": {
+        "inject": true,
+        "minify": true,
+        "depCache": true,
+        "rev": true
+      }
+    },
+    "admin/bundles/res": {
+      "includes": [
+        "[res/**/*!text]",
+      ],
+      "options": {
+        "inject": true,
+        "minify": true,
+        "depCache": true,
+        "rev": true
+      }
+    },
+    "admin/bundles/dto": {
+      "includes": [
+        "[common/dto/**/*.js]",
       ],
       "options": {
         "inject": true,
@@ -63,6 +86,7 @@ module.exports = {
         "bootstrap",
         "bootstrap-material-design",
         "bootstrap-material-design/dist/css/ripples.min.css!text",
+        "change-case",
         "jquery",
         "oribella-aurelia-sortable",
         "sweetalert2",

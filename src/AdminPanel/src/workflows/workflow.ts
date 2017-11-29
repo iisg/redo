@@ -3,28 +3,13 @@ import {MultilingualText} from "resources-config/metadata/metadata";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Entity} from "common/entity/entity";
 import {deepCopy} from "common/utils/object-utils";
-import {automapped, map} from "common/dto/decorators";
+import {automapped, map, arrayOf} from "common/dto/decorators";
 import {RestrictingMetadataMapper} from "./workflow-mapping";
 
-@automapped(() => new Workflow())
-export class Workflow extends Entity {
-  @map id: number;
-  @map name: MultilingualText = {};
-  @map('WorkflowPlace[]') places: WorkflowPlace[] = [];
-  @map('WorkflowTransition[]') transitions: WorkflowTransition[] = [];
-  @map diagram: string;
-  @map thumbnail;
-  @map resourceClass: string;
-
-  copyFrom(workflow: Workflow) {
-    $.extend(this, workflow);
-    this.places = deepCopy(workflow.places);
-    this.transitions = deepCopy(workflow.transitions);
-  }
-}
-
-@automapped(() => new WorkflowPlace())
+@automapped
 export class WorkflowPlace {
+  static NAME = 'WorkflowPlace';
+
   @map id: string;
   @map label: MultilingualText;
   @map(RestrictingMetadataMapper) restrictingMetadataIds: RestrictingMetadataIdMap;
@@ -45,13 +30,34 @@ export enum RequirementState {
   ASSIGNEE,
 }
 
-@automapped(() => new WorkflowTransition())
+@automapped
 export class WorkflowTransition {
+  static NAME = 'WorkflowTransition';
+
   @map id: string;
   @map label: MultilingualText;
-  @map('string[]') froms: string[];
-  @map('string[]') tos: string[];
-  @map('string[]') permittedRoleIds: string[];
+  @map(arrayOf('string')) froms: string[];
+  @map(arrayOf('string')) tos: string[];
+  @map(arrayOf('string')) permittedRoleIds: string[];
+}
+
+@automapped
+export class Workflow extends Entity {
+  static NAME = 'Workflow';
+
+  @map id: number;
+  @map name: MultilingualText = {};
+  @map(arrayOf(WorkflowPlace)) places: WorkflowPlace[] = [];
+  @map(arrayOf(WorkflowTransition)) transitions: WorkflowTransition[] = [];
+  @map diagram: string;
+  @map thumbnail;
+  @map resourceClass: string;
+
+  copyFrom(workflow: Workflow) {
+    $.extend(this, workflow);
+    this.places = deepCopy(workflow.places);
+    this.transitions = deepCopy(workflow.transitions);
+  }
 }
 
 export interface TransitionBlockReason {

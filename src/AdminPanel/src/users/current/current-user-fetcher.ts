@@ -13,9 +13,15 @@ export class CurrentUserFetcher {
 
   @metricTime("fetching_user")
   fetch(): Promise<User> {
-    return this.userRepository.get('current').catch((response: HttpResponseMessage) => {
-      if (response.statusCode == 403)
-        window.location.assign('/403');
+    return this.userRepository.get('current').catch((e: any) => {
+      if ('statusCode' in e) {
+        const response = e as HttpResponseMessage;
+        if (response.statusCode == 403) {
+          window.location.assign('/403');
+        }
+      } else {
+        return Promise.reject(e);
+      }
     });
   }
 }
