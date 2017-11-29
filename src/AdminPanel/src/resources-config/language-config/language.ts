@@ -4,6 +4,8 @@ import {copyable} from "common/dto/decorators";
 
 @copyable
 export class Language extends Entity {
+  static NAME = 'Language';
+
   code: string = '';
   flag: string = '';
   name: string = '';

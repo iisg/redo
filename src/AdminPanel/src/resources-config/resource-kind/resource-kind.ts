@@ -3,15 +3,16 @@ import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Workflow} from "workflows/workflow";
 import {Entity} from "common/entity/entity";
-import {automapped, map} from "common/dto/decorators";
-import {WorkflowIdMapper} from "./resource-kind-mapping";
+import {automapped, map, arrayOf} from "common/dto/decorators";
 
-@automapped(() => new ResourceKind())
+@automapped
 export class ResourceKind extends Entity {
+  static NAME = 'ResourceKind';
+
   @map id: number;
   @map label: MultilingualText = {};
-  @map('Metadata[]') metadataList: Metadata[] = [];
-  @map(WorkflowIdMapper) workflow: Workflow;
+  @map(arrayOf(Metadata)) metadataList: Metadata[] = [];
+  @map('WorkflowId') workflow: Workflow;
   @map resourceClass: string;
 }
 

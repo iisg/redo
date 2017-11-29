@@ -8,15 +8,17 @@ import {SystemResourceKinds} from "../resource-kind/system-resource-kinds";
 import {arraysEqual} from "common/utils/array-utils";
 import {computedFrom} from "aurelia-binding";
 import {automapped, map, mappedWith} from "common/dto/decorators";
-import {ResourceKindConstraintMapper, MetadataMapper} from "./metadata-mapping";
+import {MetadataMapper, ResourceKindConstraintMapper} from "./metadata-mapping";
 
 export interface MultilingualText extends StringStringMap {
 }
 
-@automapped(() => new MetadataConstraints())
+@automapped
 export class MetadataConstraints {
+  static NAME = 'MetadataConstraints';
+
   @map maxCount?: number;
-  @map(ResourceKindConstraintMapper) resourceKind?: ResourceKind[]|number[] = [];
+  @map(ResourceKindConstraintMapper) resourceKind?: ResourceKind[] | number[] = [];
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
@@ -28,8 +30,10 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   maxCount: 0,
 };
 
-@mappedWith(MetadataMapper, () => new Metadata())
+@mappedWith(MetadataMapper)
 export class Metadata extends Entity {
+  static NAME = 'Metadata';
+
   @map id: number;
   @map name: string = '';
   @map label: MultilingualText = {};
@@ -38,7 +42,7 @@ export class Metadata extends Entity {
   @map control: string = 'text';
   @map parentId: number;
   @map baseId: number;
-  @map(MetadataConstraints.name) constraints: MetadataConstraints = new MetadataConstraints();
+  @map(MetadataConstraints) constraints: MetadataConstraints = new MetadataConstraints();
   @map shownInBrief: boolean;
   @map resourceClass: string;
 

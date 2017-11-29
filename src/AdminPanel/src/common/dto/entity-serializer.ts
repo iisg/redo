@@ -1,6 +1,7 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {TypeRegistry} from "./registry";
 import {Mapper} from "./mappers";
+import {EntityClass} from "./contracts";
 
 @autoinject
 export class EntitySerializer {
@@ -13,10 +14,10 @@ export class EntitySerializer {
     return this.getMapper(entity).fromBackendValue(dto, entity);
   }
 
-  deserialize<E>(entityClassOrTypeName: string|Function, dto: Object): Promise<E> {
+  deserialize<E>(entityClassOrTypeName: string | EntityClass<any>, dto: Object): Promise<E> {
     const typeName = (typeof entityClassOrTypeName == 'string')
       ? entityClassOrTypeName as string
-      : (entityClassOrTypeName as Function).name;
+      : (entityClassOrTypeName as EntityClass<any>).NAME;
     const entity = this.typeRegistry.getEntityByType(typeName);
     return this.hydrate(entity, dto);
   }
@@ -27,13 +28,13 @@ export class EntitySerializer {
 
   clone<E>(entity: E, type?: string): E {
     if (type === undefined) {
-      type = entity.constructor.name;
+      type = (entity.constructor as EntityClass<E>).NAME;
     }
     return this.typeRegistry.getMapperByType(type).nullSafeClone(entity);
   }
 
-  private getMapper<E>(entity: E|string): Mapper<E> {
-    const typeName = (typeof entity === 'string') ? entity : entity.constructor.name;
+  private getMapper<E>(entity: E | string): Mapper<E> {
+    const typeName = (typeof entity === 'string') ? entity : (entity.constructor as EntityClass<E>).NAME;
     const mapper = this.typeRegistry.getMapperByType(typeName);
     if (mapper === undefined) {
       throw new MapperMissingError(typeName);

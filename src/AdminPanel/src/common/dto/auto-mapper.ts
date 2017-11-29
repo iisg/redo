@@ -2,6 +2,7 @@ import {inject, Lazy} from "aurelia-dependency-injection";
 import {Mapper} from "./mappers";
 import {TypeRegistry} from "./registry";
 import {getDtoProperties} from "./class-metadata-utils";
+import {MapperClass, EntityClass} from "./contracts";
 
 /**
  * Copies object using mapping instructions provided by @map and other property decorators. Non-decorated properties are omitted.
@@ -19,7 +20,7 @@ export class AutoMapper<V> extends Mapper<V> {
       const handlingInstruction = typeProperties[propertyName];
       const mapper = this.typeRegistry().getMapper(handlingInstruction);
       if (mapper === undefined) {
-        const typeName = (handlingInstruction as Function).name || handlingInstruction;
+        const typeName = (handlingInstruction as MapperClass<any>).name || handlingInstruction as string;
         throw new Error(`Mapper not found for type '${typeName}'`);
       }
       const promise = mapper.fromBackendProperty(propertyName, dto, entity)
@@ -36,7 +37,7 @@ export class AutoMapper<V> extends Mapper<V> {
       const handlingInstruction = typeProperties[propertyName];
       const mapper = this.typeRegistry().getMapper(handlingInstruction);
       if (mapper === undefined) {
-        const typeName = (handlingInstruction as Function).name || handlingInstruction;
+        const typeName = (handlingInstruction as MapperClass<any>).name || handlingInstruction as string;
         throw new Error(`Mapper not found for type '${typeName}'`);
       }
       mapper.toBackendProperty(propertyName, entity, dto);
@@ -46,7 +47,7 @@ export class AutoMapper<V> extends Mapper<V> {
 
   protected clone(source: V): V {
     const typeProperties = getDtoProperties(source);
-    const target = this.typeRegistry().getEntityByType(source.constructor.name);
+    const target = this.typeRegistry().getEntityByType((source.constructor as EntityClass<any>).NAME);
     for (const propertyName in typeProperties) {
       const handlingInstruction = typeProperties[propertyName];
       const mapper = this.typeRegistry().getMapper(handlingInstruction);

@@ -9,6 +9,7 @@ import {TypeRegistry} from "common/dto/registry";
 import {SystemMetadata} from "../metadata/system-metadata";
 
 @autoinject
+@maps('WorkflowId')  // avoid circular dependency issues
 export class WorkflowIdMapper extends AdvancedMapper<Workflow> {
   constructor(private workflowRepository: WorkflowRepository, private autoMapper: AutoMapper<Workflow>) {
     super();
@@ -34,7 +35,7 @@ export class WorkflowIdMapper extends AdvancedMapper<Workflow> {
 @maps('Metadata[]')
 class MetadataListMapper extends ArrayMapper<Metadata> {
   constructor(typeRegistry: TypeRegistry) {
-    super(typeRegistry.getMapperByType(Metadata.name), typeRegistry.getFactoryByType(Metadata.name));
+    super(typeRegistry.getMapperByType(Metadata.NAME), typeRegistry.getFactoryByType(Metadata.NAME));
   }
 
   fromBackendValue(items: any[]): Promise<Metadata[]> {
