@@ -46,14 +46,25 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
 
     public function testUpdatesLabel() {
         $resourceKind = new ResourceKind(['PL' => '1'], 'books');
-        $resourceKind->update(['PL' => '2'], []);
+        $resourceKind->update(['PL' => '2'], [], []);
         $this->assertEquals('2', $resourceKind->getLabel()['PL']);
+    }
+
+    public function testUpdatesDisplayStrategies() {
+        $resourceKind = new ResourceKind(['PL' => '1'], 'books');
+        $resourceKind->update(['PL' => '2'], [], ['header' => 'AA']);
+        $this->assertEquals(['header' => 'AA'], $resourceKind->getDisplayStrategies());
+    }
+
+    public function testDoesNotSaveEmptyDisplayStrategies() {
+        $resourceKind = new ResourceKind(['PL' => '1'], 'books', ['header' => '']);
+        $this->assertEmpty($resourceKind->getDisplayStrategies());
     }
 
     public function testAddingNewMetadataWithUpdate() {
         $metadata = $this->createMetadataMock(11, 1);
         $resourceKind = new ResourceKind([], 'books');
-        $resourceKind->update([], [$metadata]);
+        $resourceKind->update([], [$metadata], []);
         $this->assertCount(1, $resourceKind->getMetadataList());
         $this->assertContains($metadata, $resourceKind->getMetadataList());
     }
@@ -65,7 +76,7 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
         $metadata2->expects($this->any())->method('getBaseId')->willReturn(2);
         $resourceKind = new ResourceKind([], 'books');
         $resourceKind->addMetadata($metadata1);
-        $resourceKind->update([], [$metadata2]);
+        $resourceKind->update([], [$metadata2], []);
         $this->assertCount(1, $resourceKind->getMetadataList());
         $this->assertNotContains($metadata1, $resourceKind->getMetadataList());
         $this->assertContains($metadata2, $resourceKind->getMetadataList());
@@ -77,7 +88,7 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
         $metadata->expects($this->once())->method('update');
         $metadata->expects($this->once())->method('updateOrdinalNumber');
         $resourceKind->addMetadata($metadata);
-        $resourceKind->update([], [$metadata]);
+        $resourceKind->update([], [$metadata], []);
     }
 
     public function testUpdatingOrderOfMetadata() {
@@ -86,7 +97,7 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
         $metadata1->expects($this->any())->method('getOrdinalNumber')->willReturn(1);
         $metadata2->expects($this->any())->method('getOrdinalNumber')->willReturn(0);
         $resourceKind = new ResourceKind([], 'books');
-        $resourceKind->update([], [$metadata1, $metadata2]);
+        $resourceKind->update([], [$metadata1, $metadata2], []);
         $this->assertSame($metadata2, $resourceKind->getMetadataList()[0]);
         $this->assertSame($metadata1, $resourceKind->getMetadataList()[1]);
     }
@@ -98,8 +109,13 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
 
     public function testSettingWorkflow() {
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $resourceKind = new ResourceKind([], 'books', $workflow);
+        $resourceKind = new ResourceKind([], 'books', [], $workflow);
         $this->assertEquals($workflow, $resourceKind->getWorkflow());
+    }
+
+    public function testSettingDisplayStrategies() {
+        $resourceKind = new ResourceKind([], 'books', ['header' => 'AA']);
+        $this->assertEquals(['header' => 'AA'], $resourceKind->getDisplayStrategies());
     }
 
     public function testWorkflowIsOptional() {

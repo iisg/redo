@@ -1,7 +1,7 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {Configure} from "aurelia-configuration";
 import {Aurelia} from "aurelia-framework";
-import {I18N, Backend} from "aurelia-i18n";
+import {Backend, I18N} from "aurelia-i18n";
 import {AppRouter} from "aurelia-router";
 
 export function i18nConfiguratorFactory(aurelia: Aurelia) {
@@ -39,8 +39,19 @@ export function i18nConfiguratorFactory(aurelia: Aurelia) {
 
 @autoinject
 export class I18nParams {
-  readonly namespaces = ['generic', 'validation', 'nav', 'controls', 'exceptions', 'roles',
-    'system_metadata', 'entity_types', 'resource_classes', 'metadata_constraints'];
+  readonly namespaces = [
+    'controls',
+    'display_strategies',
+    'entity_types',
+    'exceptions',
+    'generic',
+    'metadata_constraints',
+    'nav',
+    'resource_classes',
+    'roles',
+    'system_metadata',
+    'validation',
+  ];
 
   constructor(private config: Configure) {
   }

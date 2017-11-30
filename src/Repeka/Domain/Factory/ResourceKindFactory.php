@@ -19,7 +19,12 @@ class ResourceKindFactory {
     }
 
     public function create(ResourceKindCreateCommand $command) {
-        $resourceKind = new ResourceKind($command->getLabel(), $command->getResourceClass(), $command->getWorkflow());
+        $resourceKind = new ResourceKind(
+            $command->getLabel(),
+            $command->getResourceClass(),
+            $command->getDisplayStrategies(),
+            $command->getWorkflow()
+        );
         $metadataList = $this->createMetadataList($resourceKind, $command->getMetadataList());
         foreach ($metadataList as $metadata) {
             $resourceKind->addMetadata($metadata);

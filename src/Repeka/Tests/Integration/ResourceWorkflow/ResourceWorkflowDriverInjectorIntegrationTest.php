@@ -31,7 +31,7 @@ class ResourceWorkflowDriverInjectorIntegrationTest extends IntegrationTestCase 
     }
 
     public function testTheDriverIsInjectedForWorkflowThatBelongsToResourceKind() {
-        $resourceKind = $this->container->get(ResourceKindRepository::class)->save(new ResourceKind([], 'books', $this->workflow));
+        $resourceKind = $this->container->get(ResourceKindRepository::class)->save(new ResourceKind([], 'books', [], $this->workflow));
         $resourceKind = $this->container->get(ResourceKindRepository::class)->findOne($resourceKind->getId());
         $places = $resourceKind->getWorkflow()->getPlaces(new ResourceEntity(new ResourceKind([], 'books'), [], $this->resourceClass));
         $this->assertCount(1, $places);

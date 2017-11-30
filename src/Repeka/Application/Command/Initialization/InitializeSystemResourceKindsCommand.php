@@ -4,8 +4,9 @@ namespace Repeka\Application\Command\Initialization;
 use Repeka\Application\Command\TransactionalCommand;
 use Repeka\Application\Entity\EntityIdGeneratorHelper;
 use Repeka\Application\Entity\EntityUtils;
-use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceClass;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,11 +36,14 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
         foreach (SystemResourceKind::toArray() as $resourceKindName => $resourceKindId) {
             if (!$this->resourceKindRepository->exists($resourceKindId)) {
                 $systemResourceKind = new SystemResourceKind($resourceKindId);
-                $resourceKind = new ResourceKind([], SystemResourceClass::USER);
+                $usernameDisplayTemplate = '{{m' . SystemMetadata::USERNAME . '}}';
+                $resourceKind = new ResourceKind([], SystemResourceClass::USER, [
+                    'header' => $usernameDisplayTemplate, 'dropdown' => $usernameDisplayTemplate,
+                ]);
                 EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
                 $label = [];
                 $label['PL'] = $label['EN'] = strtolower($resourceKindName);
-                $resourceKind->update($label, []);
+                $resourceKind->update($label, $resourceKind->getMetadataList(), $resourceKind->getDisplayStrategies());
                 $this->resourceKindRepository->save($resourceKind);
                 $output->writeln("Resource $resourceKindName has been created.");
             } else {

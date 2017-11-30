@@ -14,13 +14,14 @@ class ResourceKind implements Identifiable {
     /** @var ResourceWorkflow */
     private $workflow;
     private $resourceClass;
+    private $displayStrategies = [];
 
-    public function __construct(array $label, string $resourceClass, ResourceWorkflow $workflow = null) {
+    public function __construct(array $label, string $resourceClass, array $displayStrategies = [], ResourceWorkflow $workflow = null) {
         $this->label = $label;
-        // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html#collections
         $this->metadataList = new ArrayCollection();
-        $this->workflow = $workflow;
         $this->resourceClass = $resourceClass;
+        $this->setDisplayStrategies($displayStrategies);
+        $this->workflow = $workflow;
     }
 
     public function getId() {
@@ -50,6 +51,10 @@ class ResourceKind implements Identifiable {
             }
         }
         throw new \InvalidArgumentException(sprintf("Metadata not found for ID #%d in resource kind #%d", $id, $this->getId()));
+    }
+
+    public function getDisplayStrategies(): array {
+        return $this->displayStrategies;
     }
 
     public function getMetadataByBaseId(int $baseId): Metadata {
@@ -97,8 +102,9 @@ class ResourceKind implements Identifiable {
      * @param string[] $newLabel
      * @param Metadata[] $newMetadataList
      */
-    public function update(array $newLabel, array $newMetadataList) {
+    public function update(array $newLabel, array $newMetadataList, array $newDisplayStrategies) {
         $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
+        $this->setDisplayStrategies($newDisplayStrategies);
         /** @var Metadata[] $currentMetadata */
         $currentMetadata = [];
         foreach ($this->metadataList as $metadata) {
@@ -150,5 +156,9 @@ class ResourceKind implements Identifiable {
         return array_map(function (Metadata $metadata) {
             return $metadata->getBaseId();
         }, $this->getMetadataList());
+    }
+
+    private function setDisplayStrategies(array $displayStrategies) {
+        $this->displayStrategies = array_filter(array_map('trim', $displayStrategies));
     }
 }

@@ -28,3 +28,7 @@ Repeka\Domain\Entity\ResourceKind:
       length: 64
       nullable: false
       column: resource_class
+    displayStrategies:
+      type: json_document
+      options: {jsonb: true}
+      column: display_strategies

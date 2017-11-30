@@ -7,11 +7,13 @@ class ResourceKindUpdateCommand extends Command {
     private $label;
     private $metadataList;
     private $resourceKindId;
+    private $displayStrategies;
 
-    public function __construct(int $resourceKindId, array $label, array $metadataList) {
+    public function __construct(int $resourceKindId, array $label, array $metadataList, array $displayStrategies) {
         $this->resourceKindId = $resourceKindId;
         $this->label = $label;
         $this->metadataList = $metadataList;
+        $this->displayStrategies = $displayStrategies;
     }
 
     public function getLabel(): array {
@@ -24,5 +26,9 @@ class ResourceKindUpdateCommand extends Command {
 
     public function getResourceKindId(): int {
         return $this->resourceKindId;
+    }
+
+    public function getDisplayStrategies(): array {
+        return $this->displayStrategies;
     }
 }

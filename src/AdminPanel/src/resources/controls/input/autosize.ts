@@ -18,6 +18,6 @@ export class AutosizeCustomAttribute implements ComponentAttached {
   private resizeTextarea() {
     this.$textarea
       .css('height', 'auto')
-      .css('height', this.$textarea[0].scrollHeight);
+      .css('height', Math.max(this.$textarea[0].scrollHeight, 50));
   }
 }

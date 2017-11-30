@@ -4,6 +4,7 @@
     <require from="./resource-kind-metadata-form"></require>
     <require from="../metadata/metadata-form"></require>
     <require from="./move-up-down-buttons"></require>
+    <require from="./display-strategies/resource-display-strategies-form"></require>
 
     <form submit.delegate="validateAndSubmit()">
         <div class="form-group no-margin-top">
@@ -49,6 +50,7 @@
                                 down.delegate="moveDown(metadata)"
                                 show.bind="sortingMetadata"></move-up-down-buttons>
                             ${base(metadata).name}
+                            <span class="small text-muted">ID: ${base(metadata).id}</span>
                             <fa name="thumb-tack"
                                 class="small"
                                 if.bind="metadata.shownInBrief"></fa>
@@ -77,6 +79,9 @@
             <label>${'Workflow' | t}</label>
             <workflow-chooser resource-class.bind="resourceClass"
                 value.bind="resourceKind.workflow"></workflow-chooser>
+        </div>
+        <div class="form-group">
+            <resource-display-strategies-form resource-kind.bind="resourceKind"></resource-display-strategies-form>
         </div>
         <div class="form-group text-right no-margin-top">
             <div class="btn-group">

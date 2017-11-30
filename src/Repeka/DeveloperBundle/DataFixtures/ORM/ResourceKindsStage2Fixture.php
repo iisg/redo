@@ -35,7 +35,7 @@ class ResourceKindsStage2Fixture extends RepekaFixture {
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
             ],
-            'books'
+            $bookResourceKind->getDisplayStrategies()
         ));
     }
 }

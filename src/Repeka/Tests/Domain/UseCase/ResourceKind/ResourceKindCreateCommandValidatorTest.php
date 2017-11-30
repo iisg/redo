@@ -4,15 +4,21 @@ namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Exception\InvalidCommandException;
+use Repeka\Domain\Exception\InvalidResourceDisplayStrategyException;
 use Repeka\Domain\Repository\LanguageRepository;
+use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator;
+use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Tests\Traits\StubsTrait;
 use Respect\Validation\Validator;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
@@ -24,6 +30,8 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     private $validator;
     /** @var ResourceClassExistsRule|\PHPUnit_Framework_MockObject_MockObject */
     private $containsResourceClass;
+    /** @var PHPUnit_Framework_MockObject_MockObject|ResourceDisplayStrategyEvaluator */
+    private $resourceDisplayStrategyEvaluator;
 
     protected function setUp() {
         $this->languageRepository = $this->createMock(LanguageRepository::class);
@@ -31,9 +39,11 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->containsResourceClass = $this->createMock(ResourceClassExistsRule::class);
         $this->metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $this->metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $this->resourceDisplayStrategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
         $this->validator = new ResourceKindCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepository),
-            new ResourceClassExistsRule(['books', 'dictionaries'])
+            new ResourceClassExistsRule(['books', 'dictionaries']),
+            new CorrectResourceDisplayStrategySyntaxRule($this->resourceDisplayStrategyEvaluator)
         );
     }
 
@@ -114,6 +124,19 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 'control' => 'text',
             ],
         ], 'resourceClass');
+        $this->validator->validate($command);
+    }
+
+    public function testFailsWhenInvalidDisplayStrategy() {
+        $this->expectException(InvalidCommandException::class);
+        $this->expectExceptionMessage('incorrectResourceDisplayStrategy');
+        $this->resourceDisplayStrategyEvaluator
+            ->method('validateTemplate')
+            ->with('This is the header')
+            ->willThrowException(new InvalidResourceDisplayStrategyException('Syntax error'));
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
+            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+        ], 'books', ['header' => 'This is the header']);
         $this->validator->validate($command);
     }
 }

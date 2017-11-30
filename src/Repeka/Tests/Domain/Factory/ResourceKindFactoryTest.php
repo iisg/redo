@@ -53,7 +53,7 @@ class ResourceKindFactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreatingResourceKindWithWorkflow() {
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [], 'books', $workflow);
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [], 'books', [], $workflow);
         $resourceKind = $this->factory->create($command);
         $this->assertSame($workflow, $resourceKind->getWorkflow());
     }

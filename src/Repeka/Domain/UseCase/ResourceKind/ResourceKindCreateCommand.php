@@ -9,12 +9,20 @@ class ResourceKindCreateCommand extends Command {
     private $metadataList;
     private $workflow;
     private $resourceClass;
+    private $displayStrategies;
 
-    public function __construct(array $label, array $metadataList, string $resourceClass, ResourceWorkflow $workflow = null) {
+    public function __construct(
+        array $label,
+        array $metadataList,
+        string $resourceClass,
+        array $displayStrategies = [],
+        ResourceWorkflow $workflow = null
+    ) {
         $this->label = $label;
         $this->metadataList = $metadataList;
         $this->resourceClass = $resourceClass;
         $this->workflow = $workflow;
+        $this->displayStrategies = $displayStrategies;
     }
 
     public function getLabel(): array {
@@ -27,6 +35,10 @@ class ResourceKindCreateCommand extends Command {
 
     public function getResourceClass(): string {
         return $this->resourceClass;
+    }
+
+    public function getDisplayStrategies(): array {
+        return $this->displayStrategies;
     }
 
     public function getWorkflow(): ?ResourceWorkflow {

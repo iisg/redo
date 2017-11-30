@@ -2,8 +2,9 @@
     <div repeat.for="[field, violations] of violationsByField | iterable">
         ${'exceptions::violationFields//' + field | t}:
         <ul>
-            <li repeat.for="violationMessage of violations">
-                ${'exceptions::' + violationMessage | t}
+            <li repeat.for="violation of violations">
+                <span t.bind="'exceptions::' + violation.message"
+                    t-params.bind="violation.params"></span>
             </li>
         </ul>
     </div>

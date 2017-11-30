@@ -13,7 +13,7 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class ResourceKindForm implements ComponentDetached {
-  @bindable submit: (value: {savedResourceKind: ResourceKind}) => Promise<any>;
+  @bindable submit: (value: { savedResourceKind: ResourceKind }) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
   @bindable resourceClass: string;
   @bindable edit: ResourceKind;

@@ -1,7 +1,7 @@
 <?php
-
 namespace Repeka\Application\Controller\Api;
 
+use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindByResourceClassListQuery;
@@ -59,6 +59,7 @@ class ResourceKindsController extends ApiController {
             $data['label'] ?? [],
             $data['metadataList'] ?? [],
             $data['resourceClass'] ?? '',
+            $data['displayStrategies'] ?? [],
             isset($data['workflowId']) ? $this->resourceWorkflowRepository->findOne($data['workflowId']) : null
         );
         $resourceKind = $this->handleCommand($command);
@@ -71,7 +72,10 @@ class ResourceKindsController extends ApiController {
      */
     public function patchAction(int $id, Request $request) {
         $data = $request->request->all();
-        $command = new ResourceKindUpdateCommand($id, $data['label'], $data['metadataList']);
+        Assertion::keyExists($data, 'label');
+        Assertion::keyExists($data, 'metadataList');
+        Assertion::keyExists($data, 'displayStrategies');
+        $command = new ResourceKindUpdateCommand($id, $data['label'], $data['metadataList'], $data['displayStrategies']);
         $resourceKind = $this->handleCommand($command);
         return $this->createJsonResponse($resourceKind);
     }

@@ -31,6 +31,7 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
     return this.patch(updatedResourceKind, {
       label: updatedResourceKind.label,
       metadataList: backendRepresentation['metadataList'],
+      displayStrategies: backendRepresentation['displayStrategies'],
     });
   }
 }
