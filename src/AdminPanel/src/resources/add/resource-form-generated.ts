@@ -16,6 +16,7 @@ export class ResourceFormGenerated {
   @bindable(twoWay) resource: Resource;
   @bindable disableParent: boolean = false;
   @bindable resourceClass: string;
+  @bindable requiredMetadataIdsForTransition: number[];
 
   currentLanguageCode: string;
   lockedMetadataIds: number[];
@@ -69,7 +70,7 @@ export class ResourceFormGenerated {
   }
 
   metadataIsRequired(metadata: Metadata): boolean {
-    return inArray(metadata.baseId, this.requiredMetadataIds);
+    return inArray(metadata.baseId, this.requiredMetadataIds) || inArray(metadata.baseId, this.requiredMetadataIdsForTransition);
   }
 
   metadataIsLocked(metadata: Metadata): boolean {

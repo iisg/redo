@@ -1,0 +1,22 @@
+<template>
+    <dt>
+        ${'Edit resource with transition from' | t}
+    </dt>
+    <dl>
+        <ul class="list-unstyled">
+            <li repeat.for="place of froms">
+                ${place.label | inCurrentLanguage}
+            </li>
+        </ul>
+    </dl>
+    <dt>
+        ${'To states' | t}
+    </dt>
+    <dl>
+        <ul class="list-unstyled">
+            <li repeat.for="place of tos">
+                ${place.label | inCurrentLanguage}
+            </li>
+        </ul>
+    </dl>
+</template>

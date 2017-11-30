@@ -7,12 +7,14 @@ import {ResourceRepository} from "../resource-repository";
 @autoinject
 export class ResourceWorkflow {
   @bindable resource: Resource;
-
   workflow: Workflow;
-
   fetchingTransitions = false;
 
   constructor(private resourceRepository: ResourceRepository) {
+  }
+
+  resourceChanged() {
+    this.workflow = this.resource.kind.workflow;
   }
 
   applyTransition(transitionId: string) {

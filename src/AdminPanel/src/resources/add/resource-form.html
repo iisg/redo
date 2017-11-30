@@ -1,18 +1,36 @@
 <template>
     <require from="common/components/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="./resource-form-generated"></require>
+    <require from="../metadata/required-metadata-list"></require>
+    <require from="workflows/details/transitions/workflow-froms-tos-display"></require>
+    <require from="../workflow/transition-button"></require>
 
-    <div class="pull-right button-parent"
-        if.bind="resource.kind !== undefined">
-        <button class="btn btn-fab btn-raised"
-            type="button"
-            click.trigger="openImportDialog()"
-            bootstrap-tooltip.bind="'Import data from KOHA' | t">
-            <fa name="barcode"></fa>
-        </button>
+    <div>
+        <div class="row">
+            <div if.bind="editing && transition"
+                class="col-md-4">
+                <workflow-froms-tos-display transition.bind="transition"
+                    places.bind="edit.kind.workflow.places"></workflow-froms-tos-display>
+            </div>
+            <div class="${edit ? 'col-md-4' : 'col-md-8'}">
+                <required-metadata-list if.bind="requiredMetadataIds.length > 0"
+                    all-metadata-list.bind="resource.kind.metadataList"
+                    required-metadata-ids.bind="resource.kind ? requiredMetadataIds : []"></required-metadata-list>
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right button-parent"
+                    if.bind="resource.kind !== undefined">
+                    <button class="btn btn-fab btn-raised"
+                        type="button"
+                        click.trigger="openImportDialog()"
+                        bootstrap-tooltip.bind="'Import data from KOHA' | t">
+                        <fa name="barcode"></fa>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <form submit.delegate="validateAndSubmit()">
+    <form submit.delegate="saveResource()">
         <div class="form-group"
             if.bind="!editing">
             <resource-kind-chooser resource-class.bind="resourceClass"
@@ -21,7 +39,8 @@
         <resource-form-generated resource-kind.bind="resource.kind"
             resource.bind="resource"
             disable-parent.bind="parent !== undefined"
-            resource-class.bind="resourceClass"></resource-form-generated>
+            resource-class.bind="resourceClass"
+            required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
         <div class="has-error"
             if.bind="errorToDisplay">
             <div class="help-block">
@@ -30,8 +49,16 @@
         </div>
         <div class="form-group text-right">
             <div class="btn-group">
-                <submit-button submitting.bind="submitting"
+                <submit-button class="resource-form-button"
+                    submitting.bind="submitting"
                     editing.bind="editing"></submit-button>
+                <transition-button class="resource-form-button"
+                    if.bind="editing && transition"
+                    submitting.bind="submitting"
+                    can-apply-transition.bind="canApplyTransition"
+                    apply-transition.call="applyTransition()"
+                    transition.bind="transition"
+                    places.bind="edit.kind.workflow.places"></transition-button>
             </div>
         </div>
     </form>

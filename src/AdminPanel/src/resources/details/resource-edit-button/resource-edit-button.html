@@ -1,0 +1,15 @@
+<template>
+    <button class="btn btn-success btn-block"
+        disabled.bind="!canEditResource">
+        ${transition.label | inCurrentLanguage}
+        <span>
+            <span if.bind="transitionInactiveReasons === undefined">
+                <throbber></throbber>
+            </span>
+            <span repeat.for="reason of transitionInactiveReasons"
+                bootstrap-tooltip.bind="reasonTooltip(reason)">
+                <fa name.bind="reason.icon"></fa>
+            </span>
+        </span>
+    </button>
+</template>

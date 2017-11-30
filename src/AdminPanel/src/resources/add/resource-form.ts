@@ -8,26 +8,81 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {ImportDialog} from "./xml-import/import-dialog";
 import {Modal} from "common/dialog/modal";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
-import {inArray} from "common/utils/array-utils";
 import {ImportResult} from "./xml-import/xml-import-client";
+import {inArray, flatten} from "common/utils/array-utils";
+import {WorkflowTransition, RequirementState} from "../../workflows/workflow";
+import {Router} from "aurelia-router";
+import {numberKeysByValue} from "../../common/utils/object-utils";
 
 @autoinject
 export class ResourceForm {
-  @bindable submit: (value: { savedResource: Resource }) => Promise<any>;
-  @bindable edit: Resource;
-  @bindable parent: Resource;
   @bindable resourceClass: string;
-
+  @bindable parent: Resource;
+  @bindable edit: Resource;
+  @bindable submit: (value: {savedResource: Resource, transitionId: string}) => Promise<any>;
   resource: Resource = new Resource();
   submitting: boolean = false;
   errorToDisplay: string;
+  transition: WorkflowTransition;
 
-  constructor(private validator: Validator, private entitySerializer: EntitySerializer, private modal: Modal) {
+  constructor(private validator: Validator, private entitySerializer: EntitySerializer, private modal: Modal, private router: Router) {
+  }
+
+  attached() {
+    if (this.edit) {
+      let params = this.router.currentInstruction.queryParams;
+      this.transition = this.edit.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
+    }
   }
 
   @computedFrom('resource.id')
   get editing(): boolean {
     return !!this.resource.id;
+  }
+
+  get requiredMetadataIds(): number[] {
+    if (this.edit && this.transition) {
+      return this.requiredMetadataIdsForTransition();
+    }
+    return this.requiredMetadataIdsForAdding();
+  }
+
+  requiredMetadataIdsForTransition(): number[] {
+    const reasonCollection = this.resource.blockedTransitions[this.transition.id];
+    return reasonCollection ? reasonCollection.missingMetadataIds : [];
+  }
+
+  requiredMetadataIdsForAdding(): number[] {
+    let restrictingMetadataIds = [];
+    if (this.resource.kind && this.resource.kind.workflow) {
+      const metadataListIds = this.resource.kind.metadataList.map(metadata => metadata.baseId);
+      const restrictingMetadata = this.resource.kind.workflow.places[0].restrictingMetadataIds;
+      restrictingMetadataIds = flatten(
+        numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED)
+      ).filter(v => inArray(v, metadataListIds));
+    }
+    return restrictingMetadataIds;
+  }
+
+  get canApplyTransition(): boolean {
+    if (this.transition) {
+      const contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
+      for (const metadatId of this.requiredMetadataIdsForTransition()) {
+        let array = contents[metadatId] !== undefined ? contents[metadatId] : [];
+        if (!array.length) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+
+  private copyContentsAndFilterEmptyValues(contents: StringArrayMap): StringArrayMap {
+    let copiedContents = {};
+    for (let index in contents) {
+      copiedContents[index] = contents[index].filter(v => v !== undefined && v !== "");
+    }
+    return copiedContents;
   }
 
   resourceClassChanged() {
@@ -46,13 +101,23 @@ export class ResourceForm {
     }
   }
 
-  validateAndSubmit() {
+  applyTransition() {
+    if (this.transition) {
+      this.validateAndSubmit(this.transition.id);
+    }
+  }
+
+  saveResource() {
+    this.validateAndSubmit();
+  }
+
+  private validateAndSubmit(transitionId?: string) {
     this.submitting = true;
     this.errorToDisplay = undefined;
     this.validator.validateObject(this.resource).then(results => {
       const errors = results.filter(result => !result.valid);
       if (errors.length == 0) {
-        return this.submit({savedResource: this.resource})
+        return this.submit({savedResource: this.resource, transitionId: transitionId})
           .then(() => this.editing || (this.resource = new Resource));
       } else {
         this.errorToDisplay = errors[0].message;

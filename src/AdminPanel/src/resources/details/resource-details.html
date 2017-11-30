@@ -2,6 +2,7 @@
     <require from="../add/resource-form"></require>
     <require from="../workflow/resource-workflow"></require>
     <require from="../workflow/resource-place-display.html"></require>
+    <require from="./resource-edit-button/resource-edit-button"></require>
     <require from="./resource-metadata-table/resource-metadata-table"></require>
     <require from="./resource-label"></require>
     <require from="./resource-level-up"></require>
@@ -43,8 +44,19 @@
                 </dd>
             </dl>
 
-            <div if.bind="resource.kind.workflow">
-                <resource-workflow resource.bind="resource"></resource-workflow>
+            <div class="row"
+                if.bind="resource.kind.workflow">
+                <div class="col-sm-4">
+                    <div class="btn-group-vertical au-animate fade-inup-outup btn-block">
+                        <resource-edit-button repeat.for="transition of resource.availableTransitions"
+                            resource.bind="resource"
+                            transition.bind="transition"
+                            click.trigger="toggleEditForm(transition)"></resource-edit-button>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <resource-workflow resource.bind="resource"></resource-workflow>
+                </div>
             </div>
 
             <h3>${'Child resources' | t}</h3>
@@ -55,7 +67,7 @@
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"
             else>
             <resource-form edit.bind="resource"
-                submit.call="saveEditedResource(savedResource)"></resource-form>
+                submit.call="saveEditedResource(savedResource, transitionId)"></resource-form>
         </div>
     </div>
 </template>

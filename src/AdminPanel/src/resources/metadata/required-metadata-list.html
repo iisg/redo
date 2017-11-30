@@ -1,0 +1,14 @@
+<template>
+    <div if.bind="requiredMetadataIds">
+        <dt>
+            ${'List of required metadata' | t}
+        </dt>
+        <dl>
+            <ul class="list-unstyled">
+                <li repeat.for="metadata of requiredMetadataList">
+                    ${metadata.label | inCurrentLanguage}
+                </li>
+            </ul>
+        </dl>
+    </div>
+</template>
