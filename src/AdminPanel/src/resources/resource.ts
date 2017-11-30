@@ -19,8 +19,12 @@ export class Resource extends Entity {
   @copy contents: StringArrayMap = {};
   @map resourceClass: string;
 
-  public canApplyTransition(transition: WorkflowTransition) {
-    return this.blockedTransitions[transition.id] == undefined;
+  public canApplyTransition(transition: WorkflowTransition): boolean {
+    const blockedTransitionReason = this.blockedTransitions[transition.id];
+    if (blockedTransitionReason) {
+      return !(blockedTransitionReason.userMissingRequiredRole || blockedTransitionReason.otherUserAssigned);
+    }
+    return true;
   }
 }
 

@@ -1,24 +1,7 @@
 <template>
     <require from="workflows/details/graph/workflow-graph-display"></require>
-    <require from="./transition-button"></require>
+    <require from="../details/resource-edit-button/resource-edit-button"></require>
 
-    <div class="row">
-        <div class="col-sm-4">
-            <loading-bar if.bind="fetchingTransitions"></loading-bar>
-
-            <div class="btn-group-vertical au-animate fade-inup-outup btn-block"
-                if.bind="!fetchingTransitions">
-                <transition-button repeat.for="transition of resource.availableTransitions"
-                    resource.bind="resource"
-                    transition.bind="transition"
-                    apply-transition.call="applyTransition(transition.id)"
-                    fallback-text="${'Transition' | t} #${$index + 1}">
-                </transition-button>
-            </div>
-        </div>
-        <div class="col-sm-8">
-            <workflow-graph-display workflow.bind="resource.kind.workflow"
-                current.bind="resource.currentPlaces"></workflow-graph-display>
-        </div>
-    </div>
+    <workflow-graph-display workflow.bind="workflow"
+        current.bind="resource.currentPlaces"></workflow-graph-display>
 </template>

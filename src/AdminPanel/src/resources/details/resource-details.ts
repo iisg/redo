@@ -9,11 +9,13 @@ import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {WorkflowTransition} from "../../workflows/workflow";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
   editing: boolean = false;
+  selectedTransition: WorkflowTransition;
   hasChildren: boolean;
   private urlListener: Subscription;
 
@@ -42,19 +44,30 @@ export class ResourceDetails implements RoutableComponentActivate {
     routeConfig.navModel.setTitle(title);
   }
 
-  toggleEditForm() {
+  toggleEditForm(transition?: WorkflowTransition) {
     // link can't be generated in the view with route-href because it is impossible to set replace:true there
     // see https://github.com/aurelia/templating-router/issues/54
-    this.router.navigateToRoute('resources/details', {id: this.resource.id, action: this.editing ? undefined : 'edit'}, {replace: true});
+    this.selectedTransition = transition ? transition : new WorkflowTransition();
+    this.router.navigateToRoute('resources/details',
+      {id: this.resource.id, action: this.editing ? undefined : 'edit', transitionId: this.selectedTransition.id}, {replace: true});
   }
 
-  saveEditedResource(updatedResource: Resource): Promise<Resource> {
+  saveEditedResource(updatedResource: Resource, transitionId: string): Promise<Resource> {
     const originalResource = this.entitySerializer.clone(this.resource);
     $.extend(this.resource, updatedResource);
     return this.resourceRepository.update(updatedResource).then(resourceData => {
+      if (transitionId) {
+        return this.applyTransition(resourceData, transitionId);
+      }
+      return resourceData;
+    }).then(resourceData => {
       this.toggleEditForm();
       return this.resource = resourceData;
     }).catch(() => $.extend(this.resource, originalResource));
+  }
+
+  applyTransition(resource: Resource, transitionId: string): Promise<Resource> {
+    return this.resourceRepository.applyTransition(resource, transitionId);
   }
 
   remove() {

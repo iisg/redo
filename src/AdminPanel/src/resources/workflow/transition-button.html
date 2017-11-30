@@ -1,24 +1,11 @@
 <template>
     <button class="btn btn-success btn-block"
-        disabled.bind="!canApplyTransition"
+        disabled.bind="!canApplyTransition || submitting"
         click.trigger="applyTransition()">
-        <span ref="transition['translatedLabel']"
-            value.one-time="transition.label | inCurrentLanguage">
-            <span if.one-time="transition['translatedLabel']['value']">
-                ${transition['translatedLabel']['value']}
-            </span>
-            <span if.one-time="!transition['translatedLabel']['value']">
-                <em>${fallbackText}</em>
-            </span>
+        <span if.bind="transition">${transition.label | inCurrentLanguage}</span>
+        <span class="transition-to-state">${'And move to state' | t}: <span repeat.for="place of tos">
+            ${place.label | inCurrentLanguage}
         </span>
-        <span if.bind="!canApplyTransition">
-            <span if.bind="transitionInactiveReasons === undefined">
-                <throbber></throbber>
-            </span>
-            <span repeat.for="reason of transitionInactiveReasons"
-                bootstrap-tooltip.bind="reasonTooltip(reason)">
-                <fa name.bind="reason.icon"></fa>
-            </span>
         </span>
     </button>
 </template>

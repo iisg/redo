@@ -137,3 +137,7 @@ bool:
 "Ignored values unsuitable for their metadata controls:": "Zignorowane wartości nieodpowiadające kontrolkom metadanych:"
 "Ignored values that have no matching metadata in this resource kind:": "Zignorowane wartości nie mające odpowiadającej im metadanej w rodzaju zasobu:"
 "File is not a valid import configuration": "Plik nie jest poprawną konfiguracją importu."
+"Edit resource with transition from": "Edycja zasobu przy przejściu ze stanu:"
+"To states": "Do stanu:"
+"List of required metadata": "Lista metadanych wymaganych do przejścia:"
+"And move to state": "i przejdź do stanu"
