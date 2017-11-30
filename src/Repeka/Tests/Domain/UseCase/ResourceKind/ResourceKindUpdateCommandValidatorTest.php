@@ -6,7 +6,7 @@ use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
+use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Repeka\Tests\Traits\StubsTrait;
@@ -19,8 +19,8 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     private $rkConstraintIsUser;
     /** @var ResourceKindUpdateCommandValidator */
     private $validator;
-    /** @var ResourceClassExistsRule|\PHPUnit_Framework_MockObject_MockObject */
-    private $containsResourceClass;
+    /** @var CorrectResourceDisplayStrategySyntaxRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $correctResourceDisplayStrategySyntaxRule;
 
     protected function setUp() {
         $languageRepository = $this->createMock(LanguageRepository::class);
@@ -28,7 +28,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
-        $this->containsResourceClass = $this->createMock(ResourceClassExistsRule::class);
+        $this->correctResourceDisplayStrategySyntaxRule = $this->createMock(CorrectResourceDisplayStrategySyntaxRule::class);
         $this->rkConstraintIsUser = $this->createRuleWithFactoryMethodMock(
             ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
             'forMetadataId'
@@ -36,7 +36,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator = new ResourceKindUpdateCommandValidator(
             $notBlankInAllLanguagesRule,
             $this->rkConstraintIsUser,
-            $this->containsResourceClass
+            $this->correctResourceDisplayStrategySyntaxRule
         );
     }
 
@@ -46,15 +46,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
             ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [],
                 'control' => 'relationship', 'constraints' => ['resourceKind' => [123]]],
-        ]);
-        $this->validator->validate($command);
-    }
-
-    public function testInvalidWhereInvalidId() {
-        $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindUpdateCommand(0, ['PL' => 'Labelka'], [
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-        ]);
+        ], []);
         $this->validator->validate($command);
     }
 
@@ -65,7 +57,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
             ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [],
                 'control' => 'relationship', 'constraints' => ['resourceKind' => [123]]],
-        ]);
+        ], []);
         $this->validator->validate($command);
     }
 }

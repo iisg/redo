@@ -83,14 +83,14 @@ export class GlobalExceptionInterceptor implements Interceptor {
     return mapValues(params, v => this.sanitizeHtml.toView(v));
   }
 
-  private groupViolationsByField(responseContent: ExceptionContent): StringMap<string[]> {
-    const violationsByField: StringMap<string[]> = {};
+  private groupViolationsByField(responseContent: ExceptionContent): StringMap<Violation[]> {
+    const violationsByField: StringMap<Violation[]> = {};
     const mutedRules = ['allOf'];
     for (const violation of responseContent.params.violations.filter(violation => !inArray(violation.rule, mutedRules))) {
       if (!violationsByField.hasOwnProperty(violation.field)) {
         violationsByField[violation.field] = [];
       }
-      violationsByField[violation.field].push(violation.message);
+      violationsByField[violation.field].push(violation);
     }
     return violationsByField;
   }
@@ -117,4 +117,5 @@ interface Violation {
   message: string; // eg. "resource has no children."
   field: string;   // eg. "resource"
   rule: string;    // eg. "resourceHasNoChildrenRule"
+  params: StringStringMap; // eg. "field": "resourceId"
 }

@@ -3,13 +3,13 @@ import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
-import {ResourceLabelValueConverter} from "./resource-label";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {WorkflowTransition} from "../../workflows/workflow";
+import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -20,7 +20,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   private urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
-              private resourceLabel: ResourceLabelValueConverter,
+              private resourceDisplayStrategy: ResourceDisplayStrategyValueConverter,
               private router: Router,
               private ea: EventAggregator,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
@@ -40,7 +40,7 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   async activate(params: any, routeConfig: RouteConfig) {
     this.resource = await this.resourceRepository.get(params.id);
-    const title = this.resourceLabel.toView(this.resource);
+      const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
     routeConfig.navModel.setTitle(title);
   }
 

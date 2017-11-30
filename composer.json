@@ -41,7 +41,8 @@
     "symfony/process": "^3.3",
     "symfony/serializer": "^3.3",
     "symfony/symfony": "^3.3",
-    "syslogic/doctrine-json-functions": "dev-better-postgres-support"
+    "syslogic/doctrine-json-functions": "dev-better-postgres-support",
+    "zordius/lightncandy": "^1.2"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^2.3",

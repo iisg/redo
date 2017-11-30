@@ -4,7 +4,6 @@
     <require from="../workflow/resource-place-display.html"></require>
     <require from="./resource-edit-button/resource-edit-button"></require>
     <require from="./resource-metadata-table/resource-metadata-table"></require>
-    <require from="./resource-label"></require>
     <require from="./resource-level-up"></require>
     <require from="../resources-list"></require>
     <require from="common/components/fab/fab-edit"></require>
@@ -30,7 +29,7 @@
 
         <h1>
             <resource-level-up resource.bind="resource"></resource-level-up>
-            ${resource | resourceLabel}
+            ${resource | resourceDisplayStrategy:'header'}
         </h1>
 
         <div class="au-animate anim-height-inout-300"

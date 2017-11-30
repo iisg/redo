@@ -37,6 +37,10 @@ class ResourceKindsFixture extends RepekaFixture {
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
             ],
             'books',
+            [
+                'header' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)['baseId'] . '}}',
+                'dropdown' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)['baseId'] . '}} (ID: {{id}})',
+            ],
             $workflow
         ), self::REFERENCE_RESOURCE_KIND_BOOK);
         $this->handleCommand(new ResourceKindCreateCommand(
@@ -47,7 +51,11 @@ class ResourceKindsFixture extends RepekaFixture {
             [
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
             ],
-            'books'
+            'books',
+            [
+                'header' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)['baseId'] . '}}',
+                'dropdown' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)['baseId'] . '}} (ID: {{id}})',
+            ]
         ), self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
         $this->handleCommand(new ResourceKindCreateCommand(
             [
@@ -57,7 +65,11 @@ class ResourceKindsFixture extends RepekaFixture {
             [
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME, true),
             ],
-            'books'
+            'books',
+            [
+                'header' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME)['baseId'] . '}}',
+                'dropdown' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME)['baseId'] . '}} (ID: {{id}})',
+            ]
         ), self::REFERENCE_RESOURCE_KIND_CATEGORY);
     }
 }

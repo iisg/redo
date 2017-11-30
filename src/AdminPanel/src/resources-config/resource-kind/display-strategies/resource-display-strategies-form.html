@@ -1,0 +1,20 @@
+<template>
+    <require from="resources/controls/input/autosize"></require>
+
+    <ul class="nav nav-pills">
+        <li repeat.for="strategyId of displayStrategies & oneTime"
+            class.bind="currentlyEditedDisplayStrategy == strategyId ? 'active' : ''"
+            click.delegate="currentlyEditedDisplayStrategy = strategyId">
+            <a>${ ('display_strategies::' + strategyId + '//title') | t}</a>
+        </li>
+    </ul>
+    <div class="form-group"
+        repeat.for="strategyId of displayStrategies & oneTime"
+        show.bind="strategyId == currentlyEditedDisplayStrategy">
+        <label>${ ('display_strategies::' + strategyId + '//description') | t}</label>
+        <textarea class="form-control"
+            autosize
+            value.bind="resourceKind.displayStrategies[strategyId] & validateOnChangeOrBlur"></textarea>
+        <p>${ sampleResource | resourceDisplayStrategy:strategyId }</p>
+    </div>
+</template>

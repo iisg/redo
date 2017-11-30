@@ -17,7 +17,7 @@ unclosedStringLiteral: "Niedomknięty nawias w mapowaniu '{{mappingKey}}': {{lit
 invalidMapping: "Mapowanie '{{key}}' ma niepoprawną definicję"
 invalidSelector: "Mapowanie '{{mappingKey}}' ma nieprawidłowy selektor: {{selector}}"
 invalidTransform: "Nieprawidłowa definicja transformacji '{{name}}' z parametrami: {{params}}"
-
+incorrectResourceDisplayStrategy: Niepoprawna strategia prezentacji zasobu. Błąd zwrócony przez kompilator szablonów: {{error}}
 violationFields:
   metadata: "Rodzaj metadanej"
   name: "Nazwa"
@@ -27,7 +27,7 @@ violationFields:
   newConstraints: "Ograniczenia"
   metadataList: "Lista metadanych"
   userRole: "Rola użytkownika"
-
+  displayStrategies: Strategia prezentacji zasobu
 "user role is in use": "Rola jest w użyciu."
 "resource has children": "zasób ma podzasoby."
 "resources of this kind exist": "istnieją zasoby tego rodzaju."

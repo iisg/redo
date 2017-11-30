@@ -138,7 +138,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'resourceClass' => 'books',
                 'constraints' => ['maxCount' => 0],
             ]],
-            'resourceClass' => 'books',
+            'displayStrategies' => [],
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $client = self::createClient();

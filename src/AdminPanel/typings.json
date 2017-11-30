@@ -36,6 +36,7 @@
   },
   "globalDependencies": {
     "bootstrap": "registry:dt/bootstrap#3.3.5+20160726204056",
+    "handlebars": "registry:dt/handlebars#4.0.5+20170310072326",
     "i18next": "github:aurelia/i18n/src/customTypings/i18next.d.ts#1.6.2",
     "jquery": "registry:dt/jquery#1.10.0+20160929162922",
     "promise.prototype.finally": "registry:dt/promise.prototype.finally#1.0.1+20161005184000",

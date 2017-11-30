@@ -17,7 +17,7 @@ unclosedStringLiteral: "Unclosed quote in mapping '{{mappingKey}}': {{literal}}"
 invalidMapping: "Mapping '{{key}}' has invalid definition"
 invalidSelector: "Mapping '{{mappingKey}}' has invalid selector: {{selector}}"
 invalidTransform: "Invalid transform definition '{{name}}' with parameters: {{params}}"
-
+incorrectResourceDisplayStrategy: Incorrect resource display strategy. Error: {{error}}
 violationFields:
   metadata: "Metadata kind"
   resource: "Resource"
@@ -26,3 +26,4 @@ violationFields:
   newConstraints: "Constraints"
   metadataList: "Metadata list"
   userRole: "User role"
+  displayStrategies: Resource presentation strategy

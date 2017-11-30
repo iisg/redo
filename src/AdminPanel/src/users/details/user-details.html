@@ -7,7 +7,7 @@
 
     <div class="au-animate fade-inup-outup"
         if.bind="user">
-        <h1>${ user | username }</h1>
+        <h1>${ user.userData | resourceDisplayStrategy:'header' }</h1>
 
         <dl class="dl-horizontal">
             <dt>${'ID' | t}</dt>

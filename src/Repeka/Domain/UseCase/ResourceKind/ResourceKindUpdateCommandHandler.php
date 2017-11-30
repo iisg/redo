@@ -19,7 +19,7 @@ class ResourceKindUpdateCommandHandler {
     public function handle(ResourceKindUpdateCommand $command): ResourceKind {
         $resourceKind = $this->resourceKindRepository->findOne($command->getResourceKindId());
         $newMetadataList = $this->resourceKindFactory->createMetadataList($resourceKind, $command->getMetadataList());
-        $resourceKind->update($command->getLabel(), $newMetadataList);
+        $resourceKind->update($command->getLabel(), $newMetadataList, $command->getDisplayStrategies());
         return $this->resourceKindRepository->save($resourceKind);
     }
 }

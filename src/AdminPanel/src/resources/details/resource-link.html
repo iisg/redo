@@ -1,5 +1,4 @@
 <template>
-    <require from="./resource-label"></require>
     <require from="users/details/username-value-converter"></require>
 
     <span if.bind="loading">
@@ -9,7 +8,7 @@
     <template if.bind="!loading && resource != undefined">
         <a if.bind="!isUserLink"
             route-href="route: resources/details; params.bind: routerParams; replace: true">
-            ${resource | resourceLabel}
+            ${resource | resourceDisplayStrategy:'header'}
         </a>
         <a if.bind="isUserLink"
             route-href="route: users/details; params.bind: routerParams">

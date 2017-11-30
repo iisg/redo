@@ -47,7 +47,7 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $initialPlace->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(false);
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getInitialPlace')->willReturn($initialPlace);
-        $resourceKind = new ResourceKind([], 'books', $workflow);
+        $resourceKind = new ResourceKind([], 'books', [], $workflow);
         $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']], $this->resourceClass);
         $this->handler->handle($command);
     }
@@ -57,7 +57,7 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $initialPlace->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(true);
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getInitialPlace')->willReturn($initialPlace);
-        $resourceKind = new ResourceKind([], 'books', $workflow);
+        $resourceKind = new ResourceKind([], 'books', [], $workflow);
         $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']], $this->resourceClass);
         $resource = $this->handler->handle($command);
         $this->assertNotNull($resource);

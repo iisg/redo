@@ -14,6 +14,7 @@ export class ResourceKind extends Entity {
   @map('Metadata[]') metadataList: Metadata[] = [];
   @map('WorkflowId') workflow: Workflow;
   @map resourceClass: string;
+  @map displayStrategies: StringStringMap = {};
 }
 
 export function registerResourceKindValidationRules() {
