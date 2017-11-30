@@ -11,8 +11,9 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
     super(httpClient, entitySerializer, ResourceKind, 'resource-kinds');
   }
 
-  public getResourceKind(id: number): Promise<ResourceKind> {
-    return this.getList().then(resourceKindList => resourceKindList.filter(rk => rk.id == id)[0]);
+  @cachedResponse(30000)
+  public get(id: number|string, suppressError: boolean = false): Promise<ResourceKind> {
+    return super.get(id, suppressError);
   }
 
   @cachedResponse(30000)
