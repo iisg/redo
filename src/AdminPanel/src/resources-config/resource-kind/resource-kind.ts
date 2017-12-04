@@ -3,7 +3,7 @@ import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Workflow} from "workflows/workflow";
 import {Entity} from "common/entity/entity";
-import {automapped, map, arrayOf} from "common/dto/decorators";
+import {automapped, map} from "common/dto/decorators";
 
 @automapped
 export class ResourceKind extends Entity {
@@ -11,7 +11,7 @@ export class ResourceKind extends Entity {
 
   @map id: number;
   @map label: MultilingualText = {};
-  @map(arrayOf(Metadata)) metadataList: Metadata[] = [];
+  @map('Metadata') metadataList: Metadata[] = [];
   @map('WorkflowId') workflow: Workflow;
   @map resourceClass: string;
 }

@@ -7,7 +7,7 @@ module.exports = {
         "**/*.css!text",
       ],
       "excludes": [
-        "common/dto/**",
+        "[common/dto/**]",
         "[resources-config/**]",
         "resources-config/**/*.html!text",
         "resources-config/**/*.css!text",
@@ -21,7 +21,7 @@ module.exports = {
     },
     "admin/bundles/res": {
       "includes": [
-        "[res/**/*!text]",
+        "res/**/*!text",
       ],
       "options": {
         "inject": true,
@@ -88,6 +88,7 @@ module.exports = {
         "bootstrap-material-design/dist/css/ripples.min.css!text",
         "change-case",
         "jquery",
+        // "martingust/aurelia-repeat-strategies",  // causes "Unable to dynamically transpile ES module" error
         "oribella-aurelia-sortable",
         "sweetalert2",
         "sweetalert2/dist/sweetalert2.css!text",
