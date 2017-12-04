@@ -9,7 +9,7 @@ export class UserRole extends Entity {
   static NAME = 'UserRole';
 
   @map id: string;
-  @map(Object.name) name: MultilingualText = {};
+  @map name: MultilingualText = {};
   @map systemRoleName: string;
 
   get systemRoleIdentifier(): string {

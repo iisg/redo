@@ -3,7 +3,7 @@ import {MultilingualText} from "resources-config/metadata/metadata";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Entity} from "common/entity/entity";
 import {deepCopy} from "common/utils/object-utils";
-import {automapped, map, arrayOf} from "common/dto/decorators";
+import {automapped, map} from "common/dto/decorators";
 import {RestrictingMetadataMapper} from "./workflow-mapping";
 
 @automapped
@@ -36,9 +36,9 @@ export class WorkflowTransition {
 
   @map id: string;
   @map label: MultilingualText;
-  @map(arrayOf('string')) froms: string[];
-  @map(arrayOf('string')) tos: string[];
-  @map(arrayOf('string')) permittedRoleIds: string[];
+  @map('string[]') froms: string[];
+  @map('string[]') tos: string[];
+  @map('string[]') permittedRoleIds: string[];
 }
 
 @automapped
@@ -47,8 +47,8 @@ export class Workflow extends Entity {
 
   @map id: number;
   @map name: MultilingualText = {};
-  @map(arrayOf(WorkflowPlace)) places: WorkflowPlace[] = [];
-  @map(arrayOf(WorkflowTransition)) transitions: WorkflowTransition[] = [];
+  @map('WorkflowPlace[]') places: WorkflowPlace[] = [];
+  @map('WorkflowTransition[]') transitions: WorkflowTransition[] = [];
   @map diagram: string;
   @map thumbnail;
   @map resourceClass: string;

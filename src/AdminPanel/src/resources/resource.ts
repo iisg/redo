@@ -3,7 +3,7 @@ import {ValidationRules} from "aurelia-validation";
 import {TransitionBlockReason, WorkflowPlace, WorkflowTransition} from "workflows/workflow";
 import {Entity} from "common/entity/entity";
 import {MetadataConstraintsSatisfiedValidationRule} from "common/validation/rules/metadata-constraints-satisfied";
-import {copy, map, mappedWith, arrayOf, dictOf} from "common/dto/decorators";
+import {copy, map, mappedWith} from "common/dto/decorators";
 import {ResourceKindIdMapper, ResourceMapper} from "./resource-mapping";
 
 @mappedWith(ResourceMapper)
@@ -12,10 +12,10 @@ export class Resource extends Entity {
 
   @map id: number;
   @map(ResourceKindIdMapper) kind: ResourceKind;
-  @map(arrayOf(WorkflowPlace)) currentPlaces: WorkflowPlace[];
-  @map(arrayOf(WorkflowTransition)) availableTransitions: WorkflowTransition[] = [];
+  @map('WorkflowPlace[]') currentPlaces: WorkflowPlace[];
+  @map('WorkflowTransition[]') availableTransitions: WorkflowTransition[] = [];
   @map blockedTransitions: StringMap<TransitionBlockReason> = {};
-  @map(dictOf(arrayOf(WorkflowTransition))) transitionAssigneeMetadata: NumberMap<WorkflowTransition[]> = {};
+  @map('{WorkflowTransition[]}') transitionAssigneeMetadata: NumberMap<WorkflowTransition[]> = {};
   @copy contents: StringArrayMap = {};
   @map resourceClass: string;
 

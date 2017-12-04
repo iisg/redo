@@ -42,7 +42,7 @@ export class Metadata extends Entity {
   @map control: string = 'text';
   @map parentId: number;
   @map baseId: number;
-  @map(MetadataConstraints) constraints: MetadataConstraints = new MetadataConstraints();
+  @map('MetadataConstraints') constraints: MetadataConstraints = new MetadataConstraints();
   @map shownInBrief: boolean;
   @map resourceClass: string;
 

@@ -105,22 +105,17 @@ export function allPropertiesAutomapped(entityClass: EntityClass<any>): void {
  *   @map id: number;
  *   @map name: string;
  *   @map('Number') refCount: number;           // optional explicit type
- *   @map(Number.name) childrenCount: number;   // this is okay too
- *   @map(Foo) foo: Foo;                        // custom classes can be referenced directly
+ *   @map('Foo') foo: Foo;                      // custom class type (avoid Foo.NAME as it may cause declaration order issues)
  *   @map('String[]') childrenNames: string[];  // arrays require explicit typing
- *   @map(arrayOf(Foo)) children: Foo[];        // helper function for arrays
  *   @map(CopyMapper) children: Object[];       // use specified mapper, ignore type
  * }
  */
-export function map<T>(typeOrMapper: MapperClass<T> | string | EntityClass<any> | T, propertyName?: string): any {
+export function map<T>(typeOrMapper: MapperClass<T> | string | T, propertyName?: string): any {
   if (propertyName === undefined) {
     // Used as a decorator factory, typeOrMapper is mapper's class or name of property's class or class itself.
     if (typeOrMapper === undefined) {
       throw new Error("Received undefined type/mapper argument. Possibly a mapper for field is defined further in the bundle. "
         + "Tag problematic mapper with @maps('someName') and use @map('someName') on problematic property.");
-    }
-    if ((typeof typeOrMapper !== 'string') && ('NAME' in typeOrMapper)) {
-      typeOrMapper = (typeOrMapper as EntityClass<T>).NAME;
     }
     return (entityClass: EntityClass<T>, propertyName: string) => {
       addDtoProperty(entityClass, propertyName, typeOrMapper as MapperClass<any> | string);
@@ -131,32 +126,6 @@ export function map<T>(typeOrMapper: MapperClass<T> | string | EntityClass<any> 
     const handlingInstruction = inferHandlingInstruction(prototype, propertyName);
     addDtoProperty(prototype, propertyName, handlingInstruction);
   }
-}
-
-function assertHelperArgumentNotUndefined(arg: any): void {
-  if (arg === undefined) {
-    throw new Error("Helper argument is undefined. Maybe it's declared later in the same file?");
-  }
-}
-
-/**
- * Helper for creating @map() arguments.
- * @map(arrayOf('string')) names: string[];
- */
-export function arrayOf(type: string | EntityClass<any>): string {
-  assertHelperArgumentNotUndefined(type);
-  const name = (typeof type == 'string') ? type as string : (type as EntityClass<any>).NAME;
-  return name + '[]';
-}
-
-/**
- * Helper for creating @map() arguments.
- * @map(dictOf('string')) types: AnyMap<string>;
- */
-export function dictOf(type: string | EntityClass<any>): string {
-  assertHelperArgumentNotUndefined(type);
-  const name = (typeof type == 'string') ? type as string : (type as EntityClass<any>).NAME;
-  return `{${name}}`;
 }
 
 /**
