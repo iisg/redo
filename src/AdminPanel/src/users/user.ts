@@ -9,8 +9,8 @@ export class User {
   @map id: number;
   @map username: string;
   @map email: string;
-  @map userData: Resource = new Resource();
-  @map('UserRole') roles: UserRole[] = [];
+  @map('Resource') userData: Resource = new Resource();
+  @map('UserRole[]') roles: UserRole[] = [];
 
   public get roleIdentifiers() {
     return this.roles.map(role => role.systemRoleIdentifier);
