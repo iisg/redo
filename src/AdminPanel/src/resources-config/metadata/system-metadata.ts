@@ -1,4 +1,4 @@
-import {Metadata} from "./metadata";
+import {Metadata, MetadataConstraints} from "./metadata";
 
 export class SystemMetadata {
   // Do not move these to Metadata class. It won't work. TypeScript, yay.
@@ -6,9 +6,7 @@ export class SystemMetadata {
     id: -1,
     control: 'relationship',
     baseId: -1,
-    constraints: {
-      count: {min: 0, max: 1}
-    },
+    constraints: new MetadataConstraints({maxCount: 1}),
   });
   static readonly USERNAME: Metadata = $.extend(new Metadata(), {
     id: -2,

@@ -2,9 +2,9 @@ import {Resource} from "../resource";
 import {Validator} from "aurelia-validation";
 import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {deepCopy} from "common/utils/object-utils";
 import {computedFrom} from "aurelia-binding";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class ResourceForm {
@@ -17,7 +17,7 @@ export class ResourceForm {
   submitting = false;
   errorToDisplay: string;
 
-  constructor(private validator: Validator) {
+  constructor(private validator: Validator, private entitySerializer: EntitySerializer) {
   }
 
   @computedFrom('resource.id')
@@ -30,7 +30,7 @@ export class ResourceForm {
   }
 
   editChanged(newValue: Resource) {
-    this.resource = $.extend(new Resource(), deepCopy(newValue));
+    this.resource = this.entitySerializer.clone(newValue);
     this.resourceClass = this.resource.resourceClass;
     this.parentChanged(this.parent);
   }

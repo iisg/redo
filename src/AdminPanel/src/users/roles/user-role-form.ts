@@ -2,10 +2,10 @@ import {bindable} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
-import {deepCopy} from "common/utils/object-utils";
 import {UserRole} from "./user-role";
 import {computedFrom} from "aurelia-binding";
 import {noop, VoidFunction} from "common/utils/function-utils";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class UserRoleForm {
@@ -18,7 +18,7 @@ export class UserRoleForm {
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory) {
+  constructor(validationControllerFactory: ValidationControllerFactory, private entitySerializer: EntitySerializer) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer());
   }
@@ -29,7 +29,7 @@ export class UserRoleForm {
   }
 
   editChanged(newValue: UserRole) {
-    this.role = $.extend(new UserRole(), deepCopy(newValue));
+    this.role = this.entitySerializer.clone(newValue);
   }
 
   validateAndSubmit() {

@@ -5,9 +5,9 @@ import {NavigationInstruction, NavModel, RoutableComponentActivate, RouteConfig,
 import {I18N} from "aurelia-i18n";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
-import {deepCopy} from "common/utils/object-utils";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class WorkflowDetails implements RoutableComponentActivate {
@@ -26,7 +26,8 @@ export class WorkflowDetails implements RoutableComponentActivate {
               private inCurrentLanguage: InCurrentLanguageValueConverter,
               private router: Router,
               private signaler: BindingSignaler,
-              private deleteEntityConfirmation: DeleteEntityConfirmation) {
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private entitySerializer: EntitySerializer) {
   }
 
   bind() {
@@ -34,9 +35,9 @@ export class WorkflowDetails implements RoutableComponentActivate {
       this.editing = (event.instruction.queryParams.action == 'edit');
       if (this.workflow != undefined) {
         if (this.editing) {  // read-only -> editing
-          this.originalWorkflow = deepCopy(this.workflow);
+          this.originalWorkflow = this.entitySerializer.clone(this.workflow);
         } else if (this.originalWorkflow != undefined) {  // editing -> read-only or loading
-          this.workflow.copyFrom(this.originalWorkflow);
+          this.entitySerializer.hydrateClone(this.originalWorkflow, this.workflow);
           this.updateWindowTitle();
         }
       }
@@ -50,7 +51,7 @@ export class WorkflowDetails implements RoutableComponentActivate {
   async activate(params: any, routeConfig: RouteConfig) {
     this.workflow = await this.workflowRepository.get(params.id);
     if (this.editing) {
-      this.originalWorkflow = deepCopy(this.workflow);
+      this.originalWorkflow = this.entitySerializer.clone(this.workflow);
     }
     this.navModel = routeConfig.navModel;
     this.updateWindowTitle();
@@ -71,7 +72,7 @@ export class WorkflowDetails implements RoutableComponentActivate {
     return this.workflowRepository
       .update(this.workflow)
       .then(() => {
-        this.originalWorkflow = deepCopy(this.workflow);
+        this.originalWorkflow = this.entitySerializer.clone(this.workflow);
         this.originalWorkflow.pendingRequest = false;
         this.toggleEditForm();
         this.signaler.signal(this.UPDATE_SIGNAL);

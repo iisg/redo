@@ -2,9 +2,9 @@ import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
-import {deepCopy} from "common/utils/object-utils";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {removeValue} from "common/utils/array-utils";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class MetadataList implements ComponentAttached {
@@ -14,7 +14,9 @@ export class MetadataList implements ComponentAttached {
   addFormOpened: boolean = false;
   progressBar: boolean;
 
-  constructor(private metadataRepository: MetadataRepository, private deleteEntityConfirmation: DeleteEntityConfirmation) {
+  constructor(private metadataRepository: MetadataRepository,
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private entitySerializer: EntitySerializer) {
   }
 
   activate(params: any) {
@@ -49,7 +51,7 @@ export class MetadataList implements ComponentAttached {
     this.progressBar = false;
   }
 
-  isDragHandle(data: {evt: MouseEvent}) {
+  isDragHandle(data: { evt: MouseEvent }) {
     return $(data.evt.target).is('.drag-handle') || $(data.evt.target).parents('.drag-handle').length > 0;
   }
 
@@ -69,12 +71,12 @@ export class MetadataList implements ComponentAttached {
   }
 
   saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<any> {
-    const originalMetadata: Metadata = deepCopy(metadata);
-    Metadata.copyContents(changedMetadata, metadata);
+    const originalMetadata: Metadata = this.entitySerializer.clone(metadata);
+    this.entitySerializer.hydrateClone(changedMetadata, metadata);
     metadata.pendingRequest = true;
     return this.metadataRepository.update(changedMetadata)
       .then(() => metadata.editing = false)
-      .catch(() => Metadata.copyContents(originalMetadata, metadata))
+      .catch(() => this.entitySerializer.hydrateClone(originalMetadata, metadata))
       .finally(() => metadata.pendingRequest = false);
   }
 

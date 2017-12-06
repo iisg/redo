@@ -2,16 +2,18 @@ import {ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {UserRoleRepository} from "./user-role-repository";
 import {UserRole} from "./user-role";
-import {deepCopy} from "common/utils/object-utils";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {removeValue} from "common/utils/array-utils";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class UserRoles implements ComponentAttached {
   addFormOpened: boolean = false;
   roles: Array<UserRole>;
 
-  constructor(private userRoleRepository: UserRoleRepository, private deleteEntityConfirmation: DeleteEntityConfirmation) {
+  constructor(private userRoleRepository: UserRoleRepository,
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private entitySerializer: EntitySerializer) {
   }
 
   attached(): void {
@@ -26,9 +28,10 @@ export class UserRoles implements ComponentAttached {
   }
 
   saveEditedRole(role: UserRole, changedRole: UserRole): Promise<UserRole> {
-    const originalRole = deepCopy(role);
-    $.extend(role, changedRole);
-    return this.userRoleRepository.put(changedRole).catch(() => $.extend(role, originalRole));
+    const originalRole = this.entitySerializer.clone(role);
+    this.entitySerializer.hydrateClone(changedRole, role);
+    return this.userRoleRepository.put(changedRole)
+      .catch(() => this.entitySerializer.hydrateClone(originalRole, role));
   }
 
   deleteRole(userRole: UserRole) {

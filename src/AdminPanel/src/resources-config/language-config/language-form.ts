@@ -3,8 +3,8 @@ import {ValidationController, ValidationControllerFactory} from "aurelia-validat
 import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {Language} from "./language";
-import {deepCopy} from "common/utils/object-utils";
 import {noop, VoidFunction} from "common/utils/function-utils";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class LanguageForm {
@@ -18,14 +18,14 @@ export class LanguageForm {
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory) {
+  constructor(validationControllerFactory: ValidationControllerFactory, private entitySerializer: EntitySerializer) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
 
   editChanged(newValue: Language) {
     this.editing = !!newValue;
-    this.language = $.extend(new Language(), deepCopy(newValue));
+    this.language = this.entitySerializer.clone(newValue);
   }
 
   validateAndSubmit() {

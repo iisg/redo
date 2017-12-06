@@ -33,6 +33,19 @@ export class EntitySerializer {
     return this.typeRegistry.getMapperByType(type).nullSafeClone(entity);
   }
 
+  hydrateClone<T>(source: T, target: T): T {
+    const sourceType = (source.constructor as EntityClass<T>).NAME;
+    const targetType = (target.constructor as EntityClass<T>).NAME;
+    if (!sourceType || sourceType != targetType) {
+      throw new Error('Both objects must be instances of the same entity class');
+    }
+    const sourceClone = this.clone(source);
+    for (const propertyName of Object.keys(sourceClone)) {  // unlike for(key in obj) loops, this won't iterate over getters/setters
+      target[propertyName] = sourceClone[propertyName];
+    }
+    return target;
+  }
+
   private getMapper<E>(entity: E | string): Mapper<E> {
     const typeName = (typeof entity === 'string') ? entity : (entity.constructor as EntityClass<E>).NAME;
     const mapper = this.typeRegistry.getMapperByType(typeName);
@@ -45,6 +58,6 @@ export class EntitySerializer {
 
 class MapperMissingError extends Error {
   constructor(typeName: string) {
-    super(`No mapper registered for type '${typeName}'. Did you forget to decorate it with @automapped or @copyable?`);
+    super(`No mapper registered for type '${typeName}'. Did you forget to decorate it with @mappedWith or @automapped?`);
   }
 }

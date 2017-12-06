@@ -187,7 +187,7 @@ export class WorkflowGraph {
     return this.cytoscape.$(".current").map(this.nodeToPlace);
   }
 
-  private $(element: WorkflowPlace|WorkflowTransition): any {
+  private $(element: WorkflowPlace | WorkflowTransition): any {
     return this.cytoscape.$(`#${element.id}`);
   }
 
@@ -224,40 +224,41 @@ export class WorkflowGraph {
     return new WorkflowPlace(node.id(), node.data('label'), {});
   }
 
-  public getTransitions(): Array<WorkflowTransition> {
-    let mergeTransitionsWithTheSameLabel = (transitions, whatToDeduplicate: 'froms'|'tos') => {
-      let deduplicatedEdges: {[s: string]: WorkflowTransition} = {};
-      let opposite = whatToDeduplicate == 'froms' ? 'tos' : 'froms';
-      for (let transition of transitions) {
-        let edgeVisualId = transition[whatToDeduplicate][0] + '_' + this.inCurrentLanguage.toView(transition.label);
-        if (deduplicatedEdges[edgeVisualId]) {
-          deduplicatedEdges[edgeVisualId][opposite].push(transition[opposite][0]);
-        } else {
-          deduplicatedEdges[edgeVisualId] = transition;
-        }
+  private mergeTransitionsByLabel(transitions: WorkflowTransition[], mergeBy: 'froms' | 'tos'): WorkflowTransition[] {
+    const deduplicatedEdges: { [s: string]: WorkflowTransition } = {};
+    const opposite = mergeBy == 'froms' ? 'tos' : 'froms';
+    for (let transition of transitions) {
+      let edgeVisualId = transition[mergeBy][0] + '_' + this.inCurrentLanguage.toView(transition.label);
+      if (deduplicatedEdges[edgeVisualId]) {
+        deduplicatedEdges[edgeVisualId][opposite].push(transition[opposite][0]);
+      } else {
+        deduplicatedEdges[edgeVisualId] = transition;
       }
-      return Object.keys(deduplicatedEdges).map(key => deduplicatedEdges[key]); // get object's values; Object.values has poor support
-    };
-    let allTransitions = this.cytoscape.edges().map(this.edgeToTransition);
-    allTransitions = mergeTransitionsWithTheSameLabel(allTransitions, 'froms');
-    return mergeTransitionsWithTheSameLabel(allTransitions, 'tos');
+    }
+    return Object.keys(deduplicatedEdges).map(key => deduplicatedEdges[key]);
+  }
+
+  public getTransitions(): Array<WorkflowTransition> {
+    let allTransitions: WorkflowTransition[] = this.cytoscape.edges().map(this.edgeToTransition);
+    allTransitions = this.mergeTransitionsByLabel(allTransitions, 'froms');
+    return this.mergeTransitionsByLabel(allTransitions, 'tos');
   }
 
   private edgeToTransition(edge): WorkflowTransition {
-    return {
+    return $.extend(new WorkflowTransition(), {
       id: edge.id(),
       label: edge.data('label'),
       froms: [edge.source().id()],
       tos: [edge.target().id()],
       permittedRoleIds: edge.data('permittedRoleIds') || [],
-    };
+    });
   }
 
   private deselectAll() {
     this.cytoscape.elements().unselect();
   }
 
-  public updateElement(element: WorkflowPlace|WorkflowTransition) {
+  public updateElement(element: WorkflowPlace | WorkflowTransition) {
     let graphElement = this.$(element);
     graphElement.data('label', element.label);
     let labelToDisplay = this.inCurrentLanguage.toView(graphElement.data('label'));

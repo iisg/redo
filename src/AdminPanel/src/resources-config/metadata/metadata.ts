@@ -2,7 +2,6 @@ import {ValidationRules} from "aurelia-validation";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {ResourceKind} from "../resource-kind/resource-kind";
 import {MetadataRepository} from "./metadata-repository";
-import {deepCopy} from "common/utils/object-utils";
 import {Entity} from "common/entity/entity";
 import {SystemResourceKinds} from "../resource-kind/system-resource-kinds";
 import {arraysEqual} from "common/utils/array-utils";
@@ -42,7 +41,7 @@ export class Metadata extends Entity {
   @map control: string = 'text';
   @map parentId: number;
   @map baseId: number;
-  @map('MetadataConstraints') constraints: MetadataConstraints = new MetadataConstraints();
+  @map constraints: MetadataConstraints = new MetadataConstraints();
   @map shownInBrief: boolean;
   @map resourceClass: string;
 
@@ -66,12 +65,6 @@ export class Metadata extends Entity {
       }
       return this;
     });
-  }
-
-  static copyContents(source: Object, target: Metadata): Metadata {
-    let cloned: Metadata = deepCopy(source);
-    cloned.constraints = $.extend(new MetadataConstraints(), cloned.constraints);
-    return $.extend(target, cloned);
   }
 }
 

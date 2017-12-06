@@ -2,7 +2,6 @@ import {ValidationRules} from "aurelia-validation";
 import {MultilingualText} from "resources-config/metadata/metadata";
 import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/required-in-all-languages";
 import {Entity} from "common/entity/entity";
-import {deepCopy} from "common/utils/object-utils";
 import {automapped, map} from "common/dto/decorators";
 import {RestrictingMetadataMapper} from "./workflow-mapping";
 
@@ -52,12 +51,6 @@ export class Workflow extends Entity {
   @map diagram: string;
   @map thumbnail;
   @map resourceClass: string;
-
-  copyFrom(workflow: Workflow) {
-    $.extend(this, workflow);
-    this.places = deepCopy(workflow.places);
-    this.transitions = deepCopy(workflow.transitions);
-  }
 }
 
 export interface TransitionBlockReason {

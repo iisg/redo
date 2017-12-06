@@ -38,7 +38,6 @@ export class MetadataForm implements ComponentAttached {
 
   private resetValues() {
     this.metadata = this.template ? this.entitySerializer.clone(this.template) : new Metadata();
-    delete this.metadata['editing'];  // would interfere when $.extend()ing other objects with this one
   }
 
   validateAndSubmit() {
