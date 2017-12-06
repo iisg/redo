@@ -1,12 +1,11 @@
 import {bindable, inlineView} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {inArray, unique} from "common/utils/array-utils";
-import {changeHandler} from "../binding-mode";
 
 @inlineView('<template><span class="fa ${classes}"></span></template>')
 export class Fa {
-  @bindable(changeHandler('updateClasses')) name: string;
-  @bindable(changeHandler('updateClasses')) options: string;
+  @bindable name: string;
+  @bindable options: string;
 
   readonly AVAILABLE_OPTIONS: string[] =
     'lg 2x 3x 4x 5x quote-left pull-left border fw spin pulse flip-horizontal flip-vertical rotate-90 rotate-180 rotate-270'.split(/ +/g);

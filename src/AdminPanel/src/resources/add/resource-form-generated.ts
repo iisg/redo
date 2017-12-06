@@ -27,6 +27,9 @@ export class ResourceFormGenerated {
   }
 
   resourceKindChanged() {
+    if (!this.resource) {
+      return;
+    }
     if (!this.resourceKind) {
       this.resource.contents = {};
     } else {
@@ -57,6 +60,7 @@ export class ResourceFormGenerated {
     this.lockedMetadataIds = flatten(
       currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.LOCKED))
     );
+    this.resourceKindChanged();
   }
 
   editingDisabledForMetadata(metadata: Metadata): boolean {
