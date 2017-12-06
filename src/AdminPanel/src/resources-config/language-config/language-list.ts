@@ -2,9 +2,9 @@ import {autoinject} from "aurelia-dependency-injection";
 import {ComponentAttached} from "aurelia-templating";
 import {Language} from "./language";
 import {LanguageRepository} from "./language-repository";
-import {deepCopy} from "common/utils/object-utils";
 import {clearCachedResponse} from "common/repository/cached-response";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class LanguageList implements ComponentAttached {
@@ -12,7 +12,8 @@ export class LanguageList implements ComponentAttached {
   addFormOpened: boolean = false;
 
   constructor(private languageRepository: LanguageRepository,
-              private deleteEntityConfirmation: DeleteEntityConfirmation) {
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private entitySerializer: EntitySerializer) {
   }
 
   attached(): void {
@@ -29,7 +30,7 @@ export class LanguageList implements ComponentAttached {
   }
 
   saveEditedLanguage(language: Language, changedLanguage: Language): Promise<any> {
-    const originalLanguage = deepCopy(language);
+    const originalLanguage = this.entitySerializer.clone(language);
     $.extend(language, changedLanguage);
     language.pendingRequest = true;
     return this.languageRepository

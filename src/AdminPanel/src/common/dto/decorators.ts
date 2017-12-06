@@ -3,7 +3,6 @@ import {Container} from "aurelia-dependency-injection";
 import {AutoMapper} from "./auto-mapper";
 import {CopyMapper} from "./mappers";
 import {addDtoProperty, inferHandlingInstruction} from "./class-metadata-utils";
-import {propertyKeys} from "../utils/object-utils";
 import {EntityClass, MapperClass} from "./contracts";
 
 // A SHORT TUTORIAL FOR DECORATORS
@@ -48,15 +47,6 @@ export function mappedWith<T>(mapper: MapperClass<T>, factory?: FactoryFunction<
 }
 
 /**
- * Shorthand for @mappedWith(CopyMapper).
- */
-export function copyable(entityClass: EntityClass<any>): void {
-  mappedWith(CopyMapper, () => {
-    return new entityClass();
-  })(entityClass);
-}
-
-/**
  * Shorthand for @mappedWith(AutoMapper, ...).
  * FactoryFunction may be omitted if class has an argument-less constructor.
  * Example:
@@ -72,18 +62,6 @@ export function automapped(factory?: FactoryFunction<any> | EntityClass<any>): a
     // Used as a decorator, factory is really a factory (or undefined, which is also fine).
     return mappedWith(AutoMapper, factory as FactoryFunction<any>);
   }
-}
-
-/**
- * Equivalent of decorating class with @automapped and all its properties with @map.
- * This decorator doesn't support factory functions and must be applied without parentheses.
- */
-export function allPropertiesAutomapped(entityClass: EntityClass<any>): void {
-  const instance = new entityClass();
-  for (const key of propertyKeys(instance)) {
-    map(entityClass.prototype, key);
-  }
-  automapped(entityClass);
 }
 
 /* *************************

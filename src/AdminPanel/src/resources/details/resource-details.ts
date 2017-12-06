@@ -1,14 +1,14 @@
-import {RoutableComponentActivate, RouteConfig, Router, NavigationInstruction} from "aurelia-router";
+import {NavigationInstruction, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
-import {deepCopy} from "common/utils/object-utils";
 import {ResourceLabelValueConverter} from "./resource-label";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -23,7 +23,8 @@ export class ResourceDetails implements RoutableComponentActivate {
               private ea: EventAggregator,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private alert: Alert,
-              private i18n: I18N) {
+              private i18n: I18N,
+              private entitySerializer: EntitySerializer) {
   }
 
   bind() {
@@ -48,7 +49,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   saveEditedResource(updatedResource: Resource): Promise<Resource> {
-    const originalResource = deepCopy(this.resource);
+    const originalResource = this.entitySerializer.clone(this.resource);
     $.extend(this.resource, updatedResource);
     return this.resourceRepository.update(updatedResource).then(resourceData => {
       this.toggleEditForm();
