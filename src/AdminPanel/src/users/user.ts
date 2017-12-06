@@ -9,7 +9,7 @@ export class User {
   @map id: number;
   @map username: string;
   @map email: string;
-  @map('Resource') userData: Resource = new Resource();
+  @map userData: Resource = new Resource();
   @map('UserRole[]') roles: UserRole[] = [];
 
   public get roleIdentifiers() {

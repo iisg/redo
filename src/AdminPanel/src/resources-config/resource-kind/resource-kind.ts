@@ -11,7 +11,7 @@ export class ResourceKind extends Entity {
 
   @map id: number;
   @map label: MultilingualText = {};
-  @map('Metadata') metadataList: Metadata[] = [];
+  @map('Metadata[]') metadataList: Metadata[] = [];
   @map('WorkflowId') workflow: Workflow;
   @map resourceClass: string;
 }

@@ -7,8 +7,11 @@
 "Roles": "Role"
 "About": "O systemie"
 
-# navbar
+# navbar menu
 "My Account": "Moje konto"
 "Dashboard": "Tablica"
 "Front Page": "Strona główna"
 "Log Out": "Wyloguj"
+
+# navbar title
+"Resources": "Zasoby"
