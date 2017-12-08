@@ -43,7 +43,8 @@
                 <tr repeat.for="metadata of metadataList"
                     hover-aware.one-time="metadata"
                     oa-sortable-item="item.bind: metadata"
-                    class="${metadata.sortingClass} ${metadata.editing ? 'table-row-edit-form' : ''}">
+                    class="${metadata.sortingClass} ${metadata.editing ? 'table-row-edit-form' : ''}"
+                    go-to-link-on-row-click=".btn-details">
                     <td>${metadata.id}</td>
                     <td if.bind="!metadata.editing">
                         ${metadata.name}
@@ -83,17 +84,10 @@
                                 <fa name="edit"></fa>
                             </button>
                             <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
-                                class="btn ${metadata.hovered ? 'btn-raised' : ''} btn-info"
+                                class="btn ${metadata.hovered ? 'btn-raised' : ''} btn-info btn-details"
                                 disabled-link.bind="metadata.pendingRequest">
                                 <fa name="eye fw"></fa>
-                                ${'Details' | t}
                             </a>
-                            <button type="button"
-                                class="btn btn-danger btn-narrow ${metadata.hovered ? 'btn-raised' : ''}"
-                                click.trigger="deleteMetadata(metadata)"
-                                disabled.bind="metadata.pendingRequest || metadata.id < 0">
-                                <fa name="trash fw"></fa>
-                            </button>
                         </span>
                     </td>
                     <td colspan="6"

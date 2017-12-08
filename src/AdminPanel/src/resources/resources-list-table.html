@@ -28,7 +28,8 @@
             <tbody class="au-stagger">
             <tr repeat.for="resource of resources"
                 hover-aware.one-time="resource"
-                class="au-animate fade-inup-outdown">
+                class="au-animate fade-inup-outdown"
+                go-to-link-on-row-click>
                 <td>${resource.id & oneTime}</td>
                 <td>
                     ${resource.kind.label | inCurrentLanguage}
@@ -50,15 +51,7 @@
                             route-href="route: resources/details; params.bind: {id: resource.id}"
                             disabled-link.bind="resource.pendingRequest">
                             <fa name="eye fw"></fa>
-                            ${'Details' | t}
                         </a>
-                        <button type="button"
-                            if.bind="deleteResource !== undefined"
-                            class="btn btn-danger btn-sm btn-narrow ${resource.hovered ? 'btn-raised' : ''}"
-                            click.trigger="deleteResource({resource: resource})"
-                            disabled.bind="resource.pendingRequest">
-                            <fa name="trash fw"></fa>
-                        </button>
                     </span>
                 </td>
             </tr>

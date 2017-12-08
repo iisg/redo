@@ -25,7 +25,8 @@
                     <tbody class="au-stagger table-hover">
                     <tr class="au-animate fade-inup-outdown"
                         hover-aware.one-time="user"
-                        repeat.for="user of userList">
+                        repeat.for="user of userList"
+                        go-to-link-on-row-click>
                         <td>${user.id}</td>
                         <td repeat.for="metadata of briefMetadata">
                             <resource-metadata-values resource.one-time="user.userData"
@@ -35,7 +36,6 @@
                             <a route-href="route: users/details; params.bind: {id: user.id}"
                                 class="btn ${user['hovered'] ? 'btn-raised' : ''} btn-info btn-sm pull-right">
                                 <fa name="eye fw"></fa>
-                                ${'Details' | t}
                             </a>
                         </td>
                     </tr>

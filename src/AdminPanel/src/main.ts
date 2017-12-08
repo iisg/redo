@@ -41,6 +41,7 @@ export function configure(aurelia: Aurelia) {
       'common/bootstrap/bootstrap-tooltip',
       'common/bootstrap/hover-aware',
       'common/components/font-awesome/fa',
+      'common/components/go-to-link-on-row-click/go-to-link-on-row-click',
       'common/components/loading-bar/loading-bar.html',
       'common/components/loading-bar/throbber.html',
       'common/components/loading-bar/pending-throbber.html',
