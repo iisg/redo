@@ -4,6 +4,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {RouteAccessChecker} from "./common/routes/route-access-checker";
 import {routes} from "common/routes/routes";
+import {supportMiddleClickInLinks} from "./common/routes/middle-link-opener";
 
 @autoinject
 export class App implements ConfiguresRouter, ComponentAttached {
@@ -21,6 +22,7 @@ export class App implements ConfiguresRouter, ComponentAttached {
     config.fallbackRoute('');
     config.mapUnknownRoutes('common/error-pages/not-found');
     config.addAuthorizeStep(this.routeAccessChecker);
+    supportMiddleClickInLinks(config);
   }
 
   attached() {
