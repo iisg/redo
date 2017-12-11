@@ -4,6 +4,7 @@ import {Resource} from "../resource";
 import {autoinject} from "aurelia-dependency-injection";
 import {twoWay} from "common/components/binding-mode";
 import {booleanAttribute} from "common/components/boolean-attribute";
+import {BindingSignaler} from "aurelia-templating-resources";
 
 @autoinject
 export class ResourceMetadataValuesForm {
@@ -13,6 +14,11 @@ export class ResourceMetadataValuesForm {
   @bindable @booleanAttribute required: boolean = false;
 
   valueTable: Element;
+
+  private readonly VALUES_CHANGED_SIGNAL = 'metadata-values-changed';
+
+  constructor(private bindingSignaler: BindingSignaler) {
+  }
 
   metadataChanged() {
     if (this.resource != undefined) {
@@ -65,10 +71,12 @@ export class ResourceMetadataValuesForm {
 
   deleteIndex(index: number) {
     this.resource.contents[this.metadata.baseId].splice(index, 1);
+    this.bindingSignaler.signal(this.VALUES_CHANGED_SIGNAL);
   }
 
   addNew() {
     this.resource.contents[this.metadata.baseId].push(undefined);
+    this.bindingSignaler.signal(this.VALUES_CHANGED_SIGNAL);
     // queueMicroTask and queueTask fire too early and the <input> doesn't exist yet.
     // setTimeout(..., 0) fires at right time, but something steals the focus later.
     // setTimeout + queue[Micro]Task isn't reliable, it works for second and subsequent inputs but not first one

@@ -39,6 +39,6 @@ export class ResourceMetadataValueInput implements ComponentAttached, ComponentD
   }
 
   private sendChangeSignal(): void {
-    this.bindingSignaler.signal('metadata-value-changed');
+    this.bindingSignaler.signal('metadata-values-changed');
   }
 }
