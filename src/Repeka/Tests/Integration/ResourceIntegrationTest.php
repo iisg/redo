@@ -86,7 +86,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     public function testCreatingResource() {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [
-            'kind_id' => $this->resourceKind->getId(),
+            'kindId' => $this->resourceKind->getId(),
             'contents' => json_encode([$this->metadata->getBaseId() => ['created']]),
             'resourceClass' => 'books',
         ]);
@@ -103,7 +103,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
             'id' => $this->resource->getId(),
-            'kind_id' => $this->resourceKind->getId(),
+            'kindId' => $this->resourceKind->getId(),
             'contents' => json_encode([$this->metadata->getBaseId() => ['edited']]),
         ]);
         $this->assertStatusCode(200, $client->getResponse());
@@ -121,7 +121,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->persistAndFlush($newResourceKind->getMetadataList()[0]);
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
-            'kind_id' => $newResourceKind->getId(),
+            'kindId' => $newResourceKind->getId(),
             'contents' => json_encode($this->resource->getContents()),
         ]);
         $this->assertStatusCode(200, $client->getResponse());
