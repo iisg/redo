@@ -60,7 +60,7 @@ abstract class FunctionalTestCase extends WebTestCase {
     protected static function assertStatusCode($expectedStatus, Response $clientResponse) {
         $actualStatus = $clientResponse->getStatusCode();
         $fullStatusLine = self::getStatusLine($clientResponse);
-        $message = "Response status $actualStatus isn't %s: $fullStatusLine";
+        $message = "Response status $actualStatus isn't %s: $fullStatusLine. Response content: \n" . $clientResponse->getContent();
         if (is_int($expectedStatus)) {
             static::assertEquals($expectedStatus, $actualStatus, sprintf($message, $expectedStatus));
         } elseif (preg_match('/^[1-5]xx$/', $expectedStatus)) {

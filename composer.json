@@ -22,7 +22,7 @@
     "beberlei/assert": "^2.7",
     "cocur/slugify": "^2.5",
     "danielstjules/stringy": "^3.1",
-    "doctrine/dbal": "^2.6.1",
+    "doctrine/dbal": "^2.6.3",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-migrations-bundle": "^1.2",
     "doctrine/orm": "2.6.x-dev",

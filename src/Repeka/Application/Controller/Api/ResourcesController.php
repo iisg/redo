@@ -70,9 +70,9 @@ class ResourcesController extends ApiController {
      */
     public function postAction(Request $request, array $resourceContents) {
         $data = $request->request->all();
-        Assertion::keyExists($data, 'kind_id', 'kind_id is missing');
-        Assertion::numeric($data['kind_id']);
-        $resourceKind = $this->handleCommand(new ResourceKindQuery($data['kind_id']));
+        Assertion::keyExists($data, 'kindId', 'kindId is missing');
+        Assertion::numeric($data['kindId']);
+        $resourceKind = $this->handleCommand(new ResourceKindQuery($data['kindId']));
         $resourceClass = $data['resourceClass'] ?? '';
         $command = new ResourceCreateCommand($resourceKind, $resourceContents, $resourceClass);
         $resource = $this->handleCommand($command);
