@@ -84,4 +84,8 @@ export class ResourceMetadataValuesForm {
       $(this.valueTable).find('td.content').last().find('input, textarea').first().focus();
     }, 50);
   }
+
+  isDragHandle(data: { evt: MouseEvent }) {
+    return $(data.evt.target).is('.drag-handle') || $(data.evt.target).parents('.drag-handle').length > 0;
+  }
 }
