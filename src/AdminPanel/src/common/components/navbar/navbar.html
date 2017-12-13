@@ -1,6 +1,7 @@
 <template>
     <require from="users/current/current-user-label"></require>
     <require from="./gui-language-switcher/gui-language-switcher"></require>
+    <require from="./notification-bell/notification-bell"></require>
     <require from="../sidebar/nested-navigation-menu"></require>
     <require from="./navbar-title"></require>
 
@@ -21,6 +22,9 @@
             <ul class="nav navbar-nav visible-xs"
                 as-element="nested-navigation-menu"></ul>
             <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <notification-bell></notification-bell>
+                </li>
                 <li class="dropdown">
                     <gui-language-switcher></gui-language-switcher>
                 </li>
