@@ -3,21 +3,29 @@
 
     <table class="table resource-metadata-values-table"
         ref="valueTable">
-        <tr repeat.for="index of resource.contents[metadata.baseId].length">
+        <tbody oa-sortable="items.bind: resource.contents[metadata.baseId]; allow-drag.call: isDragHandle($event);">
+        <tr repeat.for="item of resource.contents[metadata.baseId]"
+            oa-sortable-item="item.bind: item">
             <td class="index">
-                ${index + 1}.
+                ${$index + 1}.
             </td>
             <td class="content">
                 <resource-metadata-value-input metadata.bind="metadata"
                     resource.bind="resource"
-                    value.bind="resource.contents[metadata.baseId][index]"
+                    value.bind="resource.contents[metadata.baseId][$index]"
                     disabled.bind="disabled"></resource-metadata-value-input>
             </td>
             <td class="action">
+                <a class="btn btn-default btn-narrow drag-handle vertically-sortable ${metadata.hovered ? 'btn-raised' : ''}"
+                    bootstrap-tooltip.bind="'Drag to change order' | t"
+                    data-placement="left"
+                    if.bind="resource.contents[metadata.baseId].length > 1">
+                    <fa name="sort"></fa>
+                </a>
                 <button type="button"
                     class="btn pull-right btn-danger"
-                    disabled.bind="isDeletingDisabled(index) & signal:VALUES_CHANGED_SIGNAL"
-                    click.trigger="deleteIndex(index)">
+                    disabled.bind="isDeletingDisabled($index) & signal:VALUES_CHANGED_SIGNAL"
+                    click.trigger="deleteIndex($index)">
                     <fa name="trash fw"></fa>
                 </button>
             </td>
@@ -32,5 +40,6 @@
                 </button>
             </td>
         </tr>
+        </tbody>
     </table>
 </template>

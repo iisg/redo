@@ -17,6 +17,11 @@ export class ResourceKindRepository extends ResourceClassApiRepository<ResourceK
   }
 
   @cachedResponse(forSeconds(30))
+  public get(id: number|string, suppressError?: boolean): Promise<ResourceKind> {
+    return super.get(id, suppressError);
+  }
+
+  @cachedResponse(forSeconds(30))
   public getList(): Promise<ResourceKind[]> {
     return super.getList();
   }
