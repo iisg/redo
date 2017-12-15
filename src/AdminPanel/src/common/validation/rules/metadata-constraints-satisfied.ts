@@ -38,10 +38,12 @@ export class MetadataConstraintsSatisfiedValidationRule implements CustomValidat
         const values = contents[baseMetadataId];
         const metadata = baseMetadataMap[baseMetadataId];
         for (const constraintName in metadata.constraints) {
-          const constraintArgument = metadata.constraints[constraintName];
-          const validator = this.constraintValidatorMap[constraintName];
-          if (validator !== undefined) {
-            validationResults.push(validator.validate(values, constraintArgument));
+          if (metadata.constraints.hasOwnProperty(constraintName)) {
+            const constraintArgument = metadata.constraints[constraintName];
+            const validator = this.constraintValidatorMap[constraintName];
+            if (validator !== undefined) {
+              validationResults.push(validator.validate(values, constraintArgument));
+            }
           }
         }
       }
