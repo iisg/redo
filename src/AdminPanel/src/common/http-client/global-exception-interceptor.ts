@@ -5,10 +5,12 @@ import {I18N} from "aurelia-i18n";
 import {Alert, AlertOptions} from "../dialog/alert";
 import * as headers from "./headers";
 import {inArray} from "../utils/array-utils";
+import {SanitizeHTMLValueConverter} from "aurelia-templating-resources";
+import {mapValues} from "../utils/object-utils";
 
 @autoinject
 export class GlobalExceptionInterceptor implements Interceptor {
-  constructor(private i18n: I18N, private container: Container, private alert: Alert) {
+  constructor(private i18n: I18N, private container: Container, private alert: Alert, private sanitizeHtml: SanitizeHTMLValueConverter) {
   }
 
   responseError(response: HttpResponseMessage): HttpResponseMessage {
@@ -64,16 +66,21 @@ export class GlobalExceptionInterceptor implements Interceptor {
       : this.i18n.tr("Error {{code}}", {code: response.statusCode});
   }
 
-  private getErrorMessage(response: HttpResponseMessage): string {
+  public getErrorMessage(response: HttpResponseMessage): string {
     const responseContent: ExceptionContent = response.content;
     const errorMessageId: string = responseContent.errorMessageId || 'generic';
     let params: any = responseContent.params || {};
     if (params.hasOwnProperty('entityName')) {
-      params['entityName'] = this.i18n.tr('entity_types::' + params['entityName'].toLowerCase(), {context: 'genitive'});
+      params['entityName'] = this.i18n.tr('entity_types::' + params['entityName'], {context: 'genitive'});
     }
+    params = this.sanitizeValues(params);
     return (responseContent.errorMessageId == 'invalidCommand')
       ? '<invalid-command-message violations-by-field.bind="violations"></invalid-command-message>'
       : this.i18n.tr(`exceptions::${errorMessageId}`, {replace: params});
+  }
+
+  private sanitizeValues(params: AnyMap<any>): Object {
+    return mapValues(params, v => this.sanitizeHtml.toView(v));
   }
 
   private groupViolationsByField(responseContent: ExceptionContent): StringMap<string[]> {

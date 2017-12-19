@@ -3,7 +3,7 @@ namespace Repeka\Domain\Exception;
 
 class DomainException extends \RuntimeException {
     private $errorMessageId;
-    private $params;
+    protected $params;
 
     /**
      * @param string $errorMessageId Used in front-end to build localized, user-friendly error messages

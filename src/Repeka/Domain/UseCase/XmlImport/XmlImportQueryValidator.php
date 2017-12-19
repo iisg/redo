@@ -9,6 +9,8 @@ use Respect\Validation\Validator;
 class XmlImportQueryValidator extends CommandAttributesValidator {
     /** @param XmlImportQuery $query */
     public function getValidator(Command $query): Validatable {
-        return Validator::attribute('id', Validator::stringType()->digit());
+        return Validator
+            ::attribute('id', Validator::stringType()->digit())
+            ->attribute('config', Validator::arrayVal());
     }
 }

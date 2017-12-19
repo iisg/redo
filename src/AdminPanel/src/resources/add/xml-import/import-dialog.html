@@ -1,5 +1,6 @@
 <template>
-    <div class="modal-content width-400">
+    <div class="modal-content width-400"
+        id="import-dialog">
         <form submit.delegate="downloadResource()">
             <div class="modal-header">
                 <button type="button"
@@ -11,7 +12,7 @@
             </div>
 
             <div class="modal-body">
-                <div class="form-group label-static ${configFileError ? 'has-error' : ''}">
+                <div class="form-group label-static ${configFileError || serverError ? 'has-error' : ''}">
                     <label for="importConfigFile">
                         ${"Configuration file" | t}
                     </label>
@@ -24,11 +25,15 @@
                         value.bind="configFile ? '' : importConfig.fileName"
                         readonly>
                     <span class="help-block"
-                        if.bind="configFileError !== undefined">
-                        ${configFileError.message | t:{replace:configFileError.replacements}}
+                        if.bind="configFileError">
+                        ${"File is not a valid import configuration" | t}
+                    </span>
+                    <span class="help-block"
+                        if.bind="serverError"
+                        innerhtml.bind="serverError">
                     </span>
                 </div>
-                <div class="form-group label-static ${notFoundResourceId ? 'has-error' : ''}"
+                <div class="form-group label-static"
                     if.bind="importConfig !== undefined">
                     <label for="barcodeInput">
                         ${"Resource code" | t}
@@ -40,17 +45,17 @@
                         value.bind="resourceId"
                         attach-focus="true">
                     <span class="help-block"
-                        if.bind="notFoundResourceId !== undefined">
-                        ${"Resource with barcode {{barcode}} doesn't exist." | t:{barcode: notFoundResourceId}}
+                        if.bind="notFoundError">
+                        ${"Resource doesn't exist" | t}
                     </span>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <throbber if.bind="downloadPending"></throbber>
+                <throbber if.bind="importPending"></throbber>
                 <button type="submit"
                     class="btn btn-primary btn-raised"
-                    disabled.bind="downloadPending || resourceId.length === 0">
+                    disabled.bind="importPending || resourceId.length === 0">
                     ${"Import" | t}
                 </button>
             </div>

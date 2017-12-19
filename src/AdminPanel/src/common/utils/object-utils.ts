@@ -43,3 +43,13 @@ export function filterByValues<T>(obj: AnyMap<T>, predicate: (values: T) => bool
   }
   return result;
 }
+
+export function mapValues<T, U>(obj: AnyMap<T>, mapperFn: (value: T) => U): AnyMap<U> {
+  const out = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      out[key] = mapperFn(obj[key]);
+    }
+  }
+  return out;
+}

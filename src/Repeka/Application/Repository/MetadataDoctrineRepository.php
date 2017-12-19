@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class MetadataDoctrineRepository extends EntityRepository implements MetadataRepository {
     public function save(Metadata $metadata): Metadata {
         $this->getEntityManager()->persist($metadata);
@@ -18,6 +19,15 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         $metadata = $this->find($id);
         if (!$metadata) {
             throw new EntityNotFoundException($this, $id);
+        }
+        return $metadata;
+    }
+
+    public function findByName(string $name): Metadata {
+        /** @var Metadata $metadata */
+        $metadata = $this->findOneBy(['name' => $name]);
+        if (!$metadata) {
+            throw new EntityNotFoundException($this, $name);
         }
         return $metadata;
     }
