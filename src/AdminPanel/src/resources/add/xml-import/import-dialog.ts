@@ -1,28 +1,39 @@
 import {DialogController} from "aurelia-dialog";
 import {autoinject} from "aurelia-dependency-injection";
-import {XmlImportClient} from "./xml-import-repository";
+import {XmlImportClient} from "./xml-import-client";
 import {observable} from "aurelia-binding";
-import {XmlImportConfig, XmlImportConfigExecutor} from "./import-config";
-import {XmlImportError} from "./import-config-evaluator";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
+import {GlobalExceptionInterceptor} from "common/http-client/global-exception-interceptor";
+import {HttpResponseMessage} from "aurelia-http-client";
 
 @autoinject
 export class ImportDialog {
+  resourceKind: ResourceKind;
+
   importConfig: XmlImportConfig;
   resourceId: string = '';
 
   @observable configFile: File = undefined;
-  downloadPending: boolean = false;
-  notFoundResourceId: string = undefined;
-  configFileError: Error | XmlImportError = undefined;
+  importPending: boolean = false;
+  configFileError: boolean = false;
+  notFoundError: boolean = false;
+  serverError: string;
 
   private readonly MOST_RECENT_CONFIG_KEY = 'mostRecentXmlImportConfig';
 
-  constructor(private dialogController: DialogController, private xmlImportClient: XmlImportClient) {
+  constructor(private dialogController: DialogController,
+              private xmlImportClient: XmlImportClient,
+              private globalExceptionInterceptor: GlobalExceptionInterceptor) {
     dialogController.settings.lock = false;
-    const storedConfig = localStorage[this.MOST_RECENT_CONFIG_KEY];
-    if (storedConfig !== undefined) {
+    const storedJson = localStorage[this.MOST_RECENT_CONFIG_KEY];
+    if (storedJson !== undefined) {
       try {
-        this.importConfig = JSON.parse(storedConfig);
+        const storedConfig = JSON.parse(storedJson);
+        if (!('fileName' in storedConfig) || !('json' in storedConfig) || Object.keys(storedConfig).length > 2) {
+          delete localStorage[this.MOST_RECENT_CONFIG_KEY];
+        } else {
+          this.importConfig = storedConfig;
+        }
       } catch (_) {
         // value is invalid, erase it
         delete localStorage[this.MOST_RECENT_CONFIG_KEY];
@@ -30,43 +41,48 @@ export class ImportDialog {
     }
   }
 
+  activate(model: ImportDialogModel): void {
+    this.resourceKind = model.resourceKind;
+  }
+
   configFileChanged(): void {
     // Ideally, this should be done in a value converter, but FileReader is asynchronous and value converters are not
     const reader = new FileReader();
     reader.readAsText(this.configFile);
     reader.onload = () => {
-      this.configFileError = undefined;
+      this.configFileError = false;
       this.importConfig = undefined;
       try {
-        this.importConfig = JSON.parse(reader.result);
-        this.importConfig.fileName = this.configFile.name;
-        localStorage[this.MOST_RECENT_CONFIG_KEY] = JSON.stringify(this.importConfig);
+        JSON.parse(reader.result);
       } catch (e) {
-        // instanceof doesn't work for classes extending Error and hacks that set prototype in constructor make Karma tests fail silently!
-        this.configFileError = ('replacements' in e) ? e : new Error("File is not a valid import configuration");
+        this.configFileError = true;
       }
+      this.importConfig = {
+        fileName: this.configFile.name,
+        json: reader.result,
+      };
+      localStorage[this.MOST_RECENT_CONFIG_KEY] = JSON.stringify(this.importConfig);
     };
   }
 
   downloadResource() {
-    this.downloadPending = true;
-    this.notFoundResourceId = undefined;
-    this.configFileError = undefined;
-    this.xmlImportClient.get(this.resourceId)
-      .then(xml => {
-        this.tryImport(xml);
+    this.importPending = true;
+    this.notFoundError = false;
+    this.serverError = undefined;
+    this.xmlImportClient.getMetadataValues(this.resourceId, this.importConfig.json, this.resourceKind)
+      .then(importResult => {
+        this.dialogController.ok(importResult);
       })
-      .catch(() => this.notFoundResourceId = this.resourceId)
-      .finally(() => this.downloadPending = false);
-  }
-
-  private tryImport(xml: XMLDocument) {
-    try {
-      const importedValues: StringMap<string[]> = new XmlImportConfigExecutor(this.importConfig).execute(xml);
-      this.dialogController.ok(importedValues);
-    } catch (e) {
-      this.configFileError = e;
-    }
+      .catch((response: HttpResponseMessage) => {
+        if (response.statusCode == 404) {
+          this.notFoundError = true;
+        } else if (response.statusCode == 400) {
+          this.serverError = this.globalExceptionInterceptor.getErrorMessage(response);
+        } else {
+          this.globalExceptionInterceptor.responseError(response);
+        }
+      })
+      .finally(() => this.importPending = false);
   }
 }
 
@@ -74,4 +90,13 @@ export class SingleFileListValueConverter implements FromViewValueConverter {
   fromView(fileList: FileList): File {
     return fileList.length > 0 ? fileList.item(0) : undefined;
   }
+}
+
+interface ImportDialogModel {
+  resourceKind: ResourceKind;
+}
+
+interface XmlImportConfig {
+  fileName: string;
+  json: string;
 }

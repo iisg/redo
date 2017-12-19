@@ -16,23 +16,22 @@
         <div class="modal-body">
             <div class="form-group">
                 <p>${"Values that are already present will be omitted." | t}</p>
-                <fake-resource-display values.bind="acceptedValues"
+                <fake-resource-display values.bind="importResult.acceptedValues"
                     metadata-list.bind="metadataList"></fake-resource-display>
             </div>
             <div class="form-group"
-                if.bind="rejectedValues !== undefined">
+                if.bind="importResult.unfitTypeValues">
                 <p>${"Ignored values unsuitable for their metadata controls:" | t}</p>
-                <fake-resource-display values.bind="rejectedValues"
+                <fake-resource-display values.bind="importResult.unfitTypeValues"
                     metadata-list.bind="metadataList"
                     omit-missing></fake-resource-display>
             </div>
             <div class="form-group"
-                if.bind="extraValues !== undefined">
-                <p>${"Ignored values that have no matching metadata in this resource:" | t}</p>
-                <fake-resource-display values.bind="extraValues"
-                    metadata-list.bind="metadataList"
-                    resource-class.bind="resourceClass"
-                    omit-missing></fake-resource-display>
+                if.bind="importResult.invalidMetadataKeys">
+                <p>${"Ignored values that have no matching metadata in this resource kind:" | t}</p>
+                <ul>
+                    <li repeat.for="metadataKey of importResult.invalidMetadataKeys">${metadataKey}</li>
+                </ul>
             </div>
         </div>
 

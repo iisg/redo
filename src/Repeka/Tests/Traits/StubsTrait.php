@@ -12,6 +12,7 @@ use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Respect\Validation\Exceptions\ValidationException;
@@ -20,7 +21,8 @@ use Respect\Validation\Exceptions\ValidationException;
  * @method \PHPUnit_Framework_MockObject_MockObject createMock(string $originalClassName)
  */
 trait StubsTrait {
-    protected function createLanguageRepositoryMock(array $languages): LanguageRepository {
+    /** @return LanguageRepository */
+    protected function createLanguageRepositoryMock(array $languages): \PHPUnit_Framework_MockObject_MockObject {
         $mock = $this->createMock(LanguageRepository::class);
         $mock->method('getAvailableLanguageCodes')->willReturn($languages);
         return $mock;
@@ -92,6 +94,10 @@ trait StubsTrait {
         return $result;
     }
 
+    /**
+     * @param Metadata[] $metadataList
+     * @return MetadataRepository
+     */
     protected function createRepositoryStub(string $repositoryClassName, array $entityList = []): \PHPUnit_Framework_MockObject_MockObject {
         $entityList = array_values($entityList);
         $lookup = EntityHelper::getLookupMap($entityList);
@@ -116,7 +122,25 @@ trait StubsTrait {
         return $repository;
     }
 
-    protected function createMetadataConstraintManagerStub(array $namesToConstraintsMap): MetadataConstraintManager {
+    /**
+     * @param Metadata[] $metadataList
+     * @return MetadataRepository
+     */
+    protected function createMetadataRepositoryStub(array $metadataList = []): \PHPUnit_Framework_MockObject_MockObject {
+        $repository = $this->createRepositoryStub(MetadataRepository::class, $metadataList);
+        $repository->method('findByName')->willReturnCallback(function (string $name) use ($metadataList) {
+            foreach ($metadataList as $metadata) {
+                if ($metadata->getName() === $name) {
+                    return $metadata;
+                }
+            }
+            throw new EntityNotFoundException('Metadata', $name);
+        });
+        return $repository;
+    }
+
+    /** @return MetadataConstraintManager */
+    protected function createMetadataConstraintManagerStub(array $namesToConstraintsMap): \PHPUnit_Framework_MockObject_MockObject {
         $stub = $this->createMock(MetadataConstraintManager::class);
         $stub->method('get')->willReturnCallback(function ($ruleName) use ($namesToConstraintsMap) {
             if (array_key_exists($ruleName, $namesToConstraintsMap)) {

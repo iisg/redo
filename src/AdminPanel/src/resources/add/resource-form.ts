@@ -9,6 +9,7 @@ import {ImportDialog} from "./xml-import/import-dialog";
 import {Modal} from "common/dialog/modal";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {inArray} from "common/utils/array-utils";
+import {ImportResult} from "./xml-import/xml-import-client";
 
 @autoinject
 export class ResourceForm {
@@ -60,10 +61,11 @@ export class ResourceForm {
   }
 
   openImportDialog() {
-    this.modal.open(ImportDialog).then(values => {
+    this.modal.open(ImportDialog, {resourceKind: this.resource.kind}).then((importResult: ImportResult) => {
       const model: ImportConfirmationDialogModel = {
         metadataList: this.resource.kind.metadataList,
-        values,
+        importResult,
+        invalidMetadataKeys: importResult.invalidMetadataKeys,
         resourceClass: this.resourceClass,
       };
       return this.modal.open(ImportConfirmationDialog, model);

@@ -8,6 +8,16 @@ resourceCannotEnterPlace: "Zasób #{{resourceId}} nie może znajdować się w ty
 entityNotFound: "Nie znaleziono {{entityName}} {{query}}"
 invalidCommand: "Dane przesłane do serwera są nieprawidłowe"
 metadataAlreadyPresent: "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}"
+invalidTopKeys: "Plik konfiguracyjny jest nieprawidłowy"
+missingTransforms: "Transformacje są używane, ale nie zdefiniowane w pliku konfiguracyjnym: {{names}}"
+missingSubfields: "Podpola są używane w mapowaniu '{{mapping}}', ale nie ma ich w zaimportowanych danych: {{names}}"
+invalidSubfieldName: "Nieprawidłowa nazwa podpola w mapowaniu '{{mappingKey}}': {{subfield}}"
+invalidTransformName: "Nieprawidłowa nazwa transformacji w mapowaniu '{{mappingKey}}': {{transform}}"
+unclosedStringLiteral: "Niedomknięty nawias w mapowaniu '{{mappingKey}}': {{literal}}"
+invalidMapping: "Mapowanie '{{key}}' ma niepoprawną definicję"
+invalidSelector: "Mapowanie '{{mappingKey}}' ma nieprawidłowy selektor: {{selector}}"
+invalidTransform: "Nieprawidłowa definicja transformacji '{{name}}' z parametrami: {{params}}"
+
 violationFields:
   metadata: "Rodzaj metadanej"
   name: "Nazwa"
@@ -17,6 +27,7 @@ violationFields:
   newConstraints: "Ograniczenia"
   metadataList: "Lista metadanych"
   userRole: "Rola użytkownika"
+
 "user role is in use": "Rola jest w użyciu."
 "resource has children": "zasób ma podzasoby."
 "resources of this kind exist": "istnieją zasoby tego rodzaju."

@@ -1,4 +1,4 @@
-import {flatten, arraysEqual, move, diff, ArrayPartition} from "./array-utils";
+import {arraysEqual, diff, flatten, move} from "./array-utils";
 
 describe('array-utils', () => {
   describe(arraysEqual.name, () => {
@@ -69,16 +69,6 @@ describe('array-utils', () => {
       const arr1 = ['foo', 'bar', 'baz'];
       const arr2 = ['bar', 'quux'];
       expect(diff(arr1, arr2)).toEqual(['foo', 'baz']);
-    });
-  });
-
-  describe(ArrayPartition.name, () => {
-    it('works', () => {
-      const input = [0, 1, 2, 3, 4, 5, 6];
-      const evenPredicate = (i: number) => (i > 0) && (i % 2 == 0);
-      const partition = new ArrayPartition(input, evenPredicate);
-      expect(partition.truthy).toEqual([2, 4, 6]);
-      expect(partition.falsy).toEqual([0, 1, 3, 5]);
     });
   });
 });

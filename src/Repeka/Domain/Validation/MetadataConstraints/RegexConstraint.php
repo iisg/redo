@@ -2,8 +2,16 @@
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Service\RegexNormalizer;
 
 class RegexConstraint extends AbstractMetadataConstraint {
+    /** @var RegexNormalizer */
+    private $regexNormalizer;
+
+    public function __construct(RegexNormalizer $regexNormalizer) {
+        $this->regexNormalizer = $regexNormalizer;
+    }
+
     public function getSupportedControls(): array {
         return [MetadataControl::TEXT];
     }
@@ -18,7 +26,7 @@ class RegexConstraint extends AbstractMetadataConstraint {
         } elseif (!is_string($pattern)) {
             return false;
         }
-        $phpRegex = $this->toPhpRegex($pattern);
+        $phpRegex = $this->regexNormalizer->normalize($pattern);
         return @preg_match($phpRegex, null) !== false;
     }
 
@@ -30,18 +38,12 @@ class RegexConstraint extends AbstractMetadataConstraint {
         if ($pattern === '') {
             return true;
         }
-        $phpRegex = $this->toPhpRegex($pattern);
+        $phpRegex = $this->regexNormalizer->normalize($pattern);
         foreach ($input as $value) {
             if (!preg_match($phpRegex, $value)) {
                 return false;
             }
         }
         return true;
-    }
-
-    private function toPhpRegex(string $pattern): string {
-        // Order of replacements matters, don't swap them!
-        $escaped = str_replace(['\\', '/'], ['\\\\', '\\/'], $pattern);
-        return "/$escaped/";
     }
 }

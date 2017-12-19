@@ -135,5 +135,5 @@ bool:
 "Import successful": "Import udany"
 "Values that are already present will be omitted.": "Wartości, które są już obecne zostaną pominięte."
 "Ignored values unsuitable for their metadata controls:": "Zignorowane wartości nieodpowiadające kontrolkom metadanych:"
-"Ignored values that have no matching metadata in this resource:": "Zignorowane wartości nie mające odpowiadającej im metadanej w zasobie:"
+"Ignored values that have no matching metadata in this resource kind:": "Zignorowane wartości nie mające odpowiadającej im metadanej w rodzaju zasobu:"
 "File is not a valid import configuration": "Plik nie jest poprawną konfiguracją importu."

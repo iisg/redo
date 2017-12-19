@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Validation\MetadataConstraints;
 
+use Repeka\Application\Service\PhpRegexNormalizer;
 use Repeka\Domain\Validation\MetadataConstraints\RegexConstraint;
 
 class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
@@ -8,7 +9,7 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
     private $constraint;
 
     protected function setUp() {
-        $this->constraint = new RegexConstraint();
+        $this->constraint = new RegexConstraint(new PhpRegexNormalizer());
     }
 
     public function testRejectsBadArguments() {

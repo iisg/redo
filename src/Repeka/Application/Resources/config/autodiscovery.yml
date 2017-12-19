@@ -30,6 +30,12 @@ services:
   Repeka\Application\Serialization\:
     resource: '../../Serialization'
 
+  Repeka\Application\Service\:
+    resource: '../../Service'
+
+  Repeka\Application\XmlImport\:
+    resource: '../../XmlImport'
+
   Repeka\Domain\UseCase\:
     public: true
     resource: '../../../Domain/UseCase'
@@ -41,3 +47,6 @@ services:
 
   Repeka\Domain\Validation\Rules\:
     resource: '../../../Domain/Validation/Rules'
+
+  Repeka\Domain\XmlImport\:
+    resource: '../../../Domain/XmlImport'

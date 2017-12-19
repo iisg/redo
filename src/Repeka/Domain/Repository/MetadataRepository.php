@@ -16,6 +16,11 @@ interface MetadataRepository {
     public function findOne(int $id): Metadata;
 
     /**
+     * @throws EntityNotFoundException if the entity could not be found
+     */
+    public function findByName(string $name): Metadata;
+
+    /**
      * Returns all metadata that have no base (i.e. are not assigned to any resoruce kind), sorted by ordinalNumber, ascending.
      * @return Metadata[]
      */
