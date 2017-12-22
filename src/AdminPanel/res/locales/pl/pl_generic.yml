@@ -140,3 +140,5 @@ Edit resource with transition from: Edycja zasobu przy przejściu ze stanu
 To states: Do stanu
 List of required metadata: Lista metadanych wymaganych do przejścia
 And move to state: i przejdź do stanu
+No more values are allowed: Wprowadzono maksymalną liczbę wartości
+Some metadata constraints have not been met. Check the form error and try again.: W formularzu pojawiły się błędy. Przejrzyj je i spróbuj ponownie.

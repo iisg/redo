@@ -5,6 +5,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {twoWay} from "common/components/binding-mode";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {BindingSignaler} from "aurelia-templating-resources";
+import {ValidationController} from "aurelia-validation";
 
 @autoinject
 export class ResourceMetadataValuesForm {
@@ -12,6 +13,7 @@ export class ResourceMetadataValuesForm {
   @bindable(twoWay) resource: Resource;
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable @booleanAttribute required: boolean = false;
+  @bindable validationController: ValidationController;
 
   valueTable: Element;
 
@@ -56,9 +58,9 @@ export class ResourceMetadataValuesForm {
     return this.required && this.filledValuesCount == 1 && !this.valueIsUndefined(index);
   }
 
-  isAddingDisabled(): boolean {
+  canAddMoreValues(): boolean {
     const maxCount: number = this.metadata.constraints.maxCount || Infinity;
-    return this.allValuesCount >= maxCount;
+    return this.allValuesCount < maxCount;
   }
 
   private ensureResourceHasMetadataContents() {

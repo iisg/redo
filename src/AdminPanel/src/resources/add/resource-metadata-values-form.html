@@ -12,6 +12,7 @@
             <td class="content">
                 <resource-metadata-value-input metadata.bind="metadata"
                     resource.bind="resource"
+                    validation-controller.bind="validationController"
                     value.bind="resource.contents[metadata.baseId][$index]"
                     disabled.bind="disabled"></resource-metadata-value-input>
             </td>
@@ -34,10 +35,14 @@
             <td colspan="3">
                 <button type="button"
                     class="btn btn-action"
-                    disabled.bind="isAddingDisabled() & signal:VALUES_CHANGED_SIGNAL"
+                    disabled.bind="!canAddMoreValues() & signal:VALUES_CHANGED_SIGNAL"
                     click.delegate="addNew()">
                     ${'Add value' | t}
                 </button>
+                <span if.bind="!canAddMoreValues() & signal:VALUES_CHANGED_SIGNAL"
+                    class="small">
+                    ${'No more values are allowed' | t}
+                </span>
             </td>
         </tr>
         </tbody>

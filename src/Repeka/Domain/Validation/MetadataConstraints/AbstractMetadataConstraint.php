@@ -21,8 +21,11 @@ abstract class AbstractMetadataConstraint {
      */
     abstract public function isConfigValid($config): bool;
 
-    /**
-     * Validates constrained value using metadata-specific configuration.
-     */
-    abstract public function isValueValid($config, $input): bool;
+    public function validateAll($config, array $metadataValues) {
+        foreach ($metadataValues as $metadataValue) {
+            $this->validateSingle($config, $metadataValue);
+        }
+    }
+
+    abstract public function validateSingle($config, $metadataValue);
 }

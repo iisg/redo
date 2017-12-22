@@ -1,8 +1,9 @@
 <?php
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
-use Assert\Assertion;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Exception\RespectValidationFailedException;
+use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator;
 
 class MaxCountConstraint extends AbstractMetadataConstraint {
@@ -14,9 +15,17 @@ class MaxCountConstraint extends AbstractMetadataConstraint {
         return Validator::intType()->min(0)->validate($maxCount);
     }
 
-    public function isValueValid($maxCount, $resource): bool {
-        Assertion::isArray($resource);
-        $count = count($resource);
-        return ($maxCount == 0) || ($count <= $maxCount);
+    public function validateAll($maxCount, array $metadataValues) {
+        if ($maxCount != 0) {
+            try {
+                Validator::length(0, $maxCount)->assert($metadataValues);
+            } catch (NestedValidationException $e) {
+                throw new RespectValidationFailedException($e);
+            }
+        }
+    }
+
+    public function validateSingle($config, $metadataValue) {
+        throw new \BadMethodCallException('This validator can validate only the whole array of metadata');
     }
 }

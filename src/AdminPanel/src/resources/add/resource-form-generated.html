@@ -2,15 +2,10 @@
     <require from="common/components/font-awesome/fa"></require>
     <require from="./resource-metadata-values-form"></require>
     <require from="resources-config/metadata/metadata-label"></require>
-    <require from="./max-count-constraint-info"></require>
 
     <div class="form-group"
         repeat.for="metadata of metadataList">
-        <h4>
-            ${metadata | metadataLabel}
-            <max-count-constraint-info metadata.bind="metadata"
-                value-count.bind="resource.contents[metadata.baseId].length"></max-count-constraint-info>
-        </h4>
+        <h4>${metadata | metadataLabel}</h4>
         <div class="clearfix"></div>
         <div if.bind="metadataDeterminesAssignee(metadata)"
             class="alert alert-info">
@@ -34,7 +29,10 @@
         </div>
         <resource-metadata-values-form metadata.bind="metadata"
             resource.bind="resource"
+            validation-controller.bind="validationController"
             disabled.bind="editingDisabledForMetadata(metadata)"
+            values-validation.bind="resource.contents[metadata.baseId] & validate:contentsValidator[metadata.baseId]"
             required.bind="metadataIsRequired(metadata)"></resource-metadata-values-form>
     </div>
+
 </template>

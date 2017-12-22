@@ -2,7 +2,7 @@
     <require from="./autosize"></require>
     <textarea class="form-control"
         placeholder.one-time="metadata.placeholder[currentLanguageCode] || ''"
-        value.bind="valueWrapper.value"
+        value.bind="valueWrapper.value & validate:validationController:validationRules"
         disabled.bind="disabled"
         autosize></textarea>
 </template>

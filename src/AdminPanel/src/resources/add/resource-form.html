@@ -34,20 +34,22 @@
         <div class="form-group"
             if.bind="!editing">
             <resource-kind-chooser resource-class.bind="resourceClass"
-                value.bind="resource.kind"></resource-kind-chooser>
+                value.bind="resource.kind & validate"></resource-kind-chooser>
         </div>
-        <resource-form-generated resource-kind.bind="resource.kind"
-            resource.bind="resource"
-            parent.bind="parent"
-            resource-class.bind="resourceClass"
-            required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
-        <div class="has-error"
-            if.bind="errorToDisplay">
-            <div class="help-block">
-                ${errorToDisplay}
-            </div>
+        <div class="form-group">
+            <resource-form-generated resource-kind.bind="resource.kind"
+                resource.bind="resource"
+                validation-controller.bind="validationController"
+                contents-validation.bind="resource.contents & validate"
+                parent.bind="parent"
+                resource-class.bind="resourceClass"
+                required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
         </div>
         <div class="form-group text-right">
+            <span class="text-danger"
+                if.bind="hasValidationError">
+                ${'Some metadata constraints have not been met. Check the form error and try again.' | t}
+            </span>
             <div class="btn-group">
                 <submit-button class="resource-form-button"
                     submitting.bind="submitting"
