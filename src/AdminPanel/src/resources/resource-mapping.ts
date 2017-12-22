@@ -41,8 +41,8 @@ export class ResourceMapper extends AutoMapper<Resource> {
       }
     }
 
-    formData.append('id', resource.id);
-    formData.append('kindId', resource.kind.id);
+    formData.append('id', resource.id + '');
+    formData.append('kindId', resource.kind.id + '');
     formData.append('resourceClass', resource.resourceClass);
     formData.append('contents', JSON.stringify(resourceCopy.contents));
     return formData;

@@ -10,8 +10,8 @@ export class EntitySerializer {
 
   // We can't simply create deserialize(dto: Object) because we want to preserve methods and types of classes in returned object,
   // hence hydrateEntity which receives entity with all its bells and whistles and hydrates it with data, preserving that stuff.
-  hydrate<E>(entity: E, dto: Object): Promise<E> {
-    return this.getMapper(entity).fromBackendValue(dto, entity);
+  hydrate<E>(entity: E, dto: Object, mapper?: Mapper<E>): Promise<E> {
+    return (mapper || this.getMapper(entity)).fromBackendValue(dto, entity);
   }
 
   deserialize<E>(entityClassOrTypeName: string | EntityClass<any>, dto: Object): Promise<E> {
@@ -19,7 +19,8 @@ export class EntitySerializer {
       ? entityClassOrTypeName as string
       : (entityClassOrTypeName as EntityClass<any>).NAME;
     const entity = this.typeRegistry.getEntityByType(typeName);
-    return this.hydrate(entity, dto);
+    const mapper = this.getMapper(typeName);
+    return this.hydrate(entity, dto, mapper);
   }
 
   serialize(entity: any): Object {

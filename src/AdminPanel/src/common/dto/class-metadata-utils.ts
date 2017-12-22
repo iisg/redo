@@ -34,6 +34,6 @@ export function inferHandlingInstruction(entityOrClass: EntityClass<any> | Objec
   return (inferredType as EntityClass<any>).NAME || inferredType.name;
 }
 
-function toClass<T, C extends Class<T>>(objectOrClass: C | T): C {
+function toClass<T extends Object, C extends Class<T>>(objectOrClass: C | T): C {
   return ('prototype' in objectOrClass) ? objectOrClass as C : objectOrClass.constructor as C;
 }

@@ -9,7 +9,7 @@ export class ResourceListQuery {
   constructor(private httpClient: DeduplicatingHttpClient, private endpoint: string, private entitySerializer: EntitySerializer) {
   }
 
-  public filterByResourceKindIds(resourceKindIds: number|number[]): ResourceListQuery {
+  public filterByResourceKindIds(resourceKindIds: number | number[]): ResourceListQuery {
     if (!Array.isArray(resourceKindIds)) {
       resourceKindIds = [resourceKindIds as number];
     }
@@ -20,7 +20,7 @@ export class ResourceListQuery {
     return this;
   }
 
-  public filterByResourceClasses(resourceClasses: string|string[]): ResourceListQuery {
+  public filterByResourceClasses(resourceClasses: string | string[]): ResourceListQuery {
     if (!Array.isArray(resourceClasses)) {
       resourceClasses = [resourceClasses as string];
     }
@@ -45,6 +45,6 @@ export class ResourceListQuery {
 
   private makeRequest(params): Promise<Resource[]> {
     return this.httpClient.get(this.endpoint, params)
-      .then(response => Promise.all(response.content.map(item => this.entitySerializer.deserialize(Resource, item))));
+      .then(response => this.entitySerializer.deserialize<Resource[]>('Resource[]', response.content));
   }
 }
