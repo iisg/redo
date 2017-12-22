@@ -11,7 +11,7 @@ class MatchAgainstRegexQueryHandler {
         $this->regexConstraint = $regexConstraint;
     }
 
-    public function handle(MatchAgainstRegexQuery $query): bool {
-        return $this->regexConstraint->isValueValid($query->getRegex(), $query->getValues());
+    public function handle(MatchAgainstRegexQuery $query) {
+        $this->regexConstraint->validateSingle($query->getRegex(), $query->getValue());
     }
 }

@@ -1,4 +1,4 @@
-required: ${$displayName} is required.
+required: This value is required.
 isLanguageCode: Only uppercase letters and dash (-), must start and end with a letter.
 mustHaveMetadata: Resource kind must have at least one metadata kind.
 atLeastOneMetadataRequired: At least one metadata kind must have a value.

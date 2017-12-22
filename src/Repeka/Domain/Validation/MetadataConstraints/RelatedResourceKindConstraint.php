@@ -1,16 +1,13 @@
 <?php
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
-use Assert\Assertion;
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Respect\Validation\Validator;
 
-class RelatedResourceKindConstraint extends AbstractMetadataConstraint {
+class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint {
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var EntityExistsRule */
@@ -30,30 +27,18 @@ class RelatedResourceKindConstraint extends AbstractMetadataConstraint {
     }
 
     public function isConfigValid($allowedResourceKindIds): bool {
-        return Validator::each(
+        return Validator::arrayType()->each(
             $this->entityExistsRule->forEntityType(ResourceKind::class)
         )->validate($allowedResourceKindIds);
     }
 
-    /** @param ResourceEntity[] $resources */
-    public function isValueValid($allowedResourceKindIds, $resources): bool {
-        Assertion::allInteger($allowedResourceKindIds);
-        Assertion::allIsInstanceOf($resources, ResourceEntity::class);
-        try {
-            foreach ($resources as &$resource) {
-                $resource = $this->resourceRepository->findOne($resource->getId());
-            }
-        } catch (EntityNotFoundException $e) {
-            return false;
-        }
-        if (count($allowedResourceKindIds) == 0) {
-            return true;
-        }
-        foreach ($resources as $resource) {
-            if (!in_array($resource->getKind()->getId(), $allowedResourceKindIds)) {
-                return false;
+    public function getValidator($allowedResourceKindIds, $resource) {
+        if ($allowedResourceKindIds) {
+            $resource = $this->resourceRepository->findOne($resource->getId());
+            $valid = Validator::in($allowedResourceKindIds)->validate($resource->getKind()->getId());
+            if (!$valid) {
+                return Validator::alwaysInvalid();
             }
         }
-        return true;
     }
 }

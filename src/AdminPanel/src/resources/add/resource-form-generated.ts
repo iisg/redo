@@ -10,6 +10,8 @@ import {diff, flatten, inArray} from "common/utils/array-utils";
 import {numberKeysByValue} from "common/utils/object-utils";
 import {RequirementState} from "workflows/workflow";
 import {computedFrom} from "aurelia-binding";
+import {AllMetadataValueValidator} from "common/validation/rules/all-metadata-value-validator";
+import {ValidationController} from "aurelia-validation";
 
 @autoinject
 export class ResourceFormGenerated {
@@ -18,13 +20,16 @@ export class ResourceFormGenerated {
   @bindable parent: Resource;
   @bindable resourceClass: string;
   @bindable requiredMetadataIdsForTransition: number[];
+  @bindable validationController: ValidationController;
 
   currentLanguageCode: string;
   lockedMetadataIds: number[];
   requiredMetadataIds: number[];
   removedValues: AnyMap<any[]> = {};
 
-  constructor(i18n: I18N) {
+  contentsValidator: any;
+
+  constructor(i18n: I18N, private allMetadataValidator: AllMetadataValueValidator) {
     this.currentLanguageCode = i18n.getLocale().toUpperCase();
   }
 
@@ -47,6 +52,10 @@ export class ResourceFormGenerated {
     if (!this.resourceKind) {
       this.resource.contents = {};
     } else {
+      this.contentsValidator = {};
+      for (let metadata of this.resourceKind.metadataList) {
+        this.contentsValidator[metadata.baseId] = this.allMetadataValidator.createRules(metadata).rules;
+      }
       const previousMetadata = Object.keys(this.resource.contents).map(k => k);
       const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.baseId);
       const toBeRemoved = diff(previousMetadata, newMetadata);

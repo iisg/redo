@@ -1,3 +1,4 @@
-maxCount: Max value count
-regex: Regular expression
-resourceKind: Required resource kind
+labels:
+  maxCount: Max value count
+  regex: Regular expression
+  resourceKind: Required resource kind

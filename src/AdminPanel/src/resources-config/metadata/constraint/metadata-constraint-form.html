@@ -4,7 +4,7 @@
     <h4>${'Constraints' | t}</h4>
     <div repeat.for="constraintName of constraintNames"
         class="form-group">
-        <label>${'metadata_constraints::' + constraintName | t}</label>
+        <label>${'metadata_constraints::labels//' + constraintName | t}</label>
         <metadata-constraint-editor name.bind="constraintName"
             metadata.bind="metadata"
             base-metadata.bind="baseMetadata"

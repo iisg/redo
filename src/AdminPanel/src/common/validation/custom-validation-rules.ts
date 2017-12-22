@@ -1,7 +1,6 @@
 import {ValidationRules} from "aurelia-validation";
 import {autoinject, Container} from "aurelia-dependency-injection";
 import {RequiredInAllLanguagesValidationRule} from "./rules/required-in-all-languages";
-import {MetadataConstraintsSatisfiedValidationRule} from "./rules/metadata-constraints-satisfied";
 import {registerLanguageValidationRules} from "resources-config/language-config/language";
 import {registerResourceValidationRules} from "resources/resource";
 import {registerMetadataValidationRules} from "resources-config/metadata/metadata";
@@ -14,7 +13,6 @@ import {containsDuplicates} from "../utils/array-utils";
 export class CustomValidationRules {
   private static readonly CUSTOM_RULES: Function[] = [
     RequiredInAllLanguagesValidationRule,
-    MetadataConstraintsSatisfiedValidationRule,
   ];
 
   private static readonly CUSTOM_VALIDATION_RULES_REGISTERERS: Function[] = [

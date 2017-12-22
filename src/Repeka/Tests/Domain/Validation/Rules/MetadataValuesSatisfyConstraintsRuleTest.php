@@ -26,27 +26,29 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
         $metadata = Metadata::create('books', MetadataControl::TEXTAREA(), '', [], [], [], $constraints);
         $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
         $constraint = $this->createMock(AbstractMetadataConstraint::class);
-        $constraint->expects($this->exactly(4))->method('isValueValid')->willReturn(true);
+        $constraint->expects($this->exactly(4))->method('validateAll');
         $constraintManager = $this->createMetadataConstraintManagerStub([
             'constraint1' => $constraint,
             'constraint2' => $constraint,
         ]);
         $validator = new MetadataValuesSatisfyConstraintsRule($constraintManager);
-        $this->assertTrue($validator->forResourceKind($resourceKind)->validate([0 => 'value1', 1 => 'value2']));
+        $this->assertTrue($validator->forResourceKind($resourceKind)->validate([0 => ['value1'], 1 => ['value2']]));
     }
 
     public function testRejectsWhenAnyRuleRejects() {
+        $this->expectException(\InvalidArgumentException::class);
         $constraints = ['constraint1' => 'arg1', 'constraint2' => 'arg2'];
         $metadata = Metadata::create('books', MetadataControl::TEXTAREA(), '', [], [], [], $constraints);
         $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
         $constraint = $this->createMock(AbstractMetadataConstraint::class);
-        $constraint->expects($this->exactly(3))->method('isValueValid')->willReturnOnConsecutiveCalls(true, true, false, true);
+        $constraint->method('validateAll');
+        $constraint->method('validateAll')->willThrowException(new \InvalidArgumentException());
         $constraintManager = $this->createMetadataConstraintManagerStub([
             'constraint1' => $constraint,
             'constraint2' => $constraint,
         ]);
         $validator = new MetadataValuesSatisfyConstraintsRule($constraintManager);
-        $this->assertFalse($validator->forResourceKind($resourceKind)->validate([0 => 'value1', 1 => 'value2']));
+        $this->assertFalse($validator->forResourceKind($resourceKind)->validate([0 => ['value1'], 1 => ['value2']]));
     }
 
     public function testUsesCorrectRule() {
@@ -58,7 +60,7 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
         $metadata = Metadata::create('books', MetadataControl::TEXTAREA(), '', [], [], [], ['testConstraint' => 'testArgument']);
         $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
         $validator = new MetadataValuesSatisfyConstraintsRule($constraintManager);
-        $validator->forResourceKind($resourceKind)->validate([0 => 1]);
+        $validator->forResourceKind($resourceKind)->validate([0 => [1]]);
     }
 
     private function createSingleMetadataResourceKindMock($metadata): \PHPUnit_Framework_MockObject_MockObject {

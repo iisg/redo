@@ -17,9 +17,9 @@ class ValidationController extends ApiController {
      * @Method("POST")
      * @Security("has_role('ROLE_OPERATOR')")
      */
-    public function regexMatchAll(Request $request) {
+    public function regexMatch(Request $request) {
         $query = MatchAgainstRegexQuery::fromArray($request->request->all());
-        $result = $this->handleCommand($query);
-        return new Response('', $result ? Response::HTTP_NO_CONTENT : Response::HTTP_BAD_REQUEST);
+        $this->handleCommand($query);
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

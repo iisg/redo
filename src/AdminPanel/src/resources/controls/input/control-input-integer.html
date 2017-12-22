@@ -1,11 +1,11 @@
 <template>
     <require from="./only-valid-numbers"></require>
-    <require from="common/value-converters/integer"></require>
+    <require from="common/value-converters/integer-value-converter"></require>
 
     <input placeholder.one-time="metadata.placeholder[currentLanguageCode] || ''"
         type="number"
         class="form-control"
         only-valid-numbers
-        value.bind="valueWrapper.value | integer"
+        value.bind="valueWrapper.value | integer & validate:validationController:validationRules"
         disabled.bind="disabled">
 </template>

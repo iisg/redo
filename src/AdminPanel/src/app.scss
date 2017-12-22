@@ -224,6 +224,11 @@ ux-dialog-overlay {
   }
 }
 
+// temporary fix for material design until it is removed
+.help-block {
+  position: static !important;
+}
+
 // max-height animation, idea based on: http://stackoverflow.com/a/8331169/878514
 @mixin anim-height-inout($max-height) {
   @include keyframes(heightIn#{$max-height}) {

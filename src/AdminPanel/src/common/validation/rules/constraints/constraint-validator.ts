@@ -1,4 +1,5 @@
 import * as changeCase from "change-case";
+import {FluentRuleCustomizer} from "aurelia-validation";
 
 export abstract class ConstraintValidator {
   validatedConstraintName(): string {
@@ -7,18 +8,22 @@ export abstract class ConstraintValidator {
     return camelCase.replace(/ConstraintValidator$/, '');
   }
 
-  abstract validate(values: any[], config): boolean|Promise<boolean>;
+  public addRule(rules: FluentRuleCustomizer<any, any>, config): FluentRuleCustomizer<any, any> {
+    return rules.satisfies(value => this.validate(value, config), this.getRuleConfig()).withMessage(this.getErrorMessage(config));
+  }
+
+  abstract getErrorMessage(config): string;
+
+  getRuleConfig(): any {
+    return {};
+  }
+
+  abstract validate(value, config): boolean | Promise<boolean>;
 }
 
-export abstract class BackendConstraintValidator extends ConstraintValidator {
-  abstract get endpointName(): string;
+export abstract class SingleValueConstraintValidator extends ConstraintValidator {
+}
 
-  /**
-   * If this method returns a boolean value, backend query will be skipped and the returned value will be considered the validation result.
-   * Returning undefined means that validation result can't be determined in frontend and backend query is necessary.
-   * Overload this method to avoid unnecessary backend requests in cases when validation result can be determined in frontend.
-   */
-  validateOnFrontend(content: Object): boolean|undefined {
-    return undefined;
-  }
+export abstract class MetadataArrayConstraintValidator extends ConstraintValidator {
+  abstract validate(values: any[], config): boolean | Promise<boolean>;
 }

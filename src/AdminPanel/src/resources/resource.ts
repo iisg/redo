@@ -1,10 +1,9 @@
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
-import {ValidationRules} from "aurelia-validation";
 import {TransitionBlockReason, WorkflowPlace, WorkflowTransition} from "workflows/workflow";
 import {Entity} from "common/entity/entity";
-import {MetadataConstraintsSatisfiedValidationRule} from "common/validation/rules/metadata-constraints-satisfied";
 import {copy, map, mappedWith} from "common/dto/decorators";
 import {ResourceKindIdMapper, ResourceMapper} from "./resource-mapping";
+import {ValidationRules} from "aurelia-validation";
 
 @mappedWith(ResourceMapper)
 export class Resource extends Entity {
@@ -36,8 +35,6 @@ export function registerResourceValidationRules() {
     .ensure('contents').displayName('Contents')
       .satisfies(contents => Object.keys(contents).filter(metadataId => contents[metadataId].length > 0).length > 0)
         .withMessageKey('atLeastOneMetadataRequired')
-      .satisfiesRule(MetadataConstraintsSatisfiedValidationRule.NAME)
-        .withMessageKey('metadataConstraintsNotSatisfied')
     .on(Resource);
   // @formatter:on
   // @codingStandardsIgnoreEnd

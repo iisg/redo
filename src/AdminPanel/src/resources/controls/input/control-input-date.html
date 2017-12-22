@@ -1,6 +1,6 @@
 <template>
     <input type="date"
         class="form-control"
-        value.bind="valueWrapper.value"
+        value.bind="valueWrapper.value & validate:validationController:validationRules"
         disabled.bind="disabled">
 </template>

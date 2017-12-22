@@ -1,5 +1,5 @@
 import {Resource} from "../resource";
-import {Validator} from "aurelia-validation";
+import {ValidationController, ValidationControllerFactory, Validator} from "aurelia-validation";
 import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
@@ -9,23 +9,32 @@ import {ImportDialog} from "./xml-import/import-dialog";
 import {Modal} from "common/dialog/modal";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
-import {inArray, flatten} from "common/utils/array-utils";
-import {WorkflowTransition, RequirementState} from "../../workflows/workflow";
+import {flatten, inArray} from "common/utils/array-utils";
+import {RequirementState, WorkflowTransition} from "../../workflows/workflow";
 import {Router} from "aurelia-router";
 import {numberKeysByValue} from "../../common/utils/object-utils";
+import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 
 @autoinject
 export class ResourceForm {
   @bindable resourceClass: string;
   @bindable parent: Resource;
   @bindable edit: Resource;
-  @bindable submit: (value: {savedResource: Resource, transitionId: string}) => Promise<any>;
+  @bindable submit: (value: { savedResource: Resource, transitionId: string }) => Promise<any>;
   resource: Resource = new Resource();
   submitting: boolean = false;
-  errorToDisplay: string;
+  hasValidationError: boolean = false;
   transition: WorkflowTransition;
 
-  constructor(private validator: Validator, private entitySerializer: EntitySerializer, private modal: Modal, private router: Router) {
+  private validationController: ValidationController;
+
+  constructor(private validator: Validator,
+              private entitySerializer: EntitySerializer,
+              private modal: Modal,
+              private router: Router,
+              validationControllerFactory: ValidationControllerFactory) {
+    this.validationController = validationControllerFactory.createForCurrentScope();
+    this.validationController.addRenderer(new BootstrapValidationRenderer());
   }
 
   attached() {
@@ -113,14 +122,13 @@ export class ResourceForm {
 
   private validateAndSubmit(transitionId?: string) {
     this.submitting = true;
-    this.errorToDisplay = undefined;
-    this.validator.validateObject(this.resource).then(results => {
-      const errors = results.filter(result => !result.valid);
-      if (errors.length == 0) {
+    this.hasValidationError = false;
+    this.validationController.validate().then(result => {
+      if (result.valid) {
         return this.submit({savedResource: this.resource, transitionId: transitionId})
           .then(() => this.editing || (this.resource = new Resource));
       } else {
-        this.errorToDisplay = errors[0].message;
+        this.hasValidationError = true;
       }
     }).finally(() => this.submitting = false);
   }

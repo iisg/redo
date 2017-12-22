@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\Validation\MetadataConstraints;
 
 use Repeka\Application\Service\PhpRegexNormalizer;
+use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Validation\MetadataConstraints\RegexConstraint;
 
 class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
@@ -23,28 +24,35 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($this->constraint->isConfigValid('ok'));
     }
 
-    public function testValidatesUsualValues() {
-        $this->assertTrue($this->constraint->isValueValid('^a', ['aXb']));
-        $this->assertTrue($this->constraint->isValueValid('b$', ['aXb']));
-        $this->assertTrue($this->constraint->isValueValid('', ['whatever']));
-        $this->assertTrue($this->constraint->isValueValid('', ['']));
-        $this->assertTrue($this->constraint->isValueValid('', ['', 'test']));
-        $this->assertTrue($this->constraint->isValueValid('^$', ['']));
-        $this->assertTrue($this->constraint->isValueValid('^abc$', ['abc']));
-        $this->assertTrue($this->constraint->isValueValid('^abc$', ['abc', 'abc']));
-        $this->assertTrue($this->constraint->isValueValid('^a.*z$', ['az', 'aXz', 'a.....z']));
-        $this->assertTrue($this->constraint->isValueValid('d.f', ['abcdefgh']));
+    /**
+     * @dataProvider regexTestCases
+     */
+    public function testValidates($regex, $value, $shouldBeValid) {
+        if (!$shouldBeValid) {
+            $this->expectException(InvalidCommandException::class);
+        }
+        $this->constraint->validateSingle($regex, $value);
     }
 
-    public function testValidatesWithRegexesThatNeedEscaping() {
-        $this->assertTrue($this->constraint->isValueValid('a\\/b', ['a\\/b']));
-        $this->assertFalse($this->constraint->isValueValid('a\\/b', ['a\\\\/b']));
-        $this->assertFalse($this->constraint->isValueValid('a\\/b', ['a\\//b']));
+    public function regexTestCases() {
+        return [
+            ['^a', 'aXb', true],
+            ['b$', 'aXb', true],
+            ['', 'whatever', true],
+            ['', '', true],
+            ['^$', '', true],
+            ['^abc$', 'abc', true],
+            ['d.f', 'abcdefgh', true],
+            ['b$', 'aXB', false],
+            ['^abc$', 'xabcx', false],
+            ['a\\/b', 'a\\/b', true],
+            ['a\\/b', 'a\\\\/b', false],
+            ['a\\/b', 'a\\//b', false],
+        ];
     }
 
-    public function testRejectsUsualValues() {
-        $this->assertFalse($this->constraint->isValueValid('b$', ['aXB']));
-        $this->assertFalse($this->constraint->isValueValid('^abc$', ['xabcx']));
-        $this->assertFalse($this->constraint->isValueValid('^abc$', ['abc', 'xabcx']));
+    public function testFailsIfOneValueInArrayIsIncorrect() {
+        $this->expectException(InvalidCommandException::class);
+        $this->constraint->validateAll('^a', ['abc', 'bcd']);
     }
 }
