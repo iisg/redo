@@ -15,7 +15,8 @@ export abstract class ApiRepository<T> {
     if (!response.content || !response.content.map) {
       throw new Error(`Response from ${response.requestMessage.url} should be an array`);
     }
-    return Promise.all(response.content.map(item => this.toEntity(item)));
+    const dtoItems: any[] = response.content;
+    return Promise.all(dtoItems.map(item => this.toEntity(item)));
   }
 
   public get(id: number | string, suppressError: boolean = false): Promise<T> {

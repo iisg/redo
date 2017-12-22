@@ -80,10 +80,14 @@ export class TypeRegistry {
 
   getEntityByType(type: string): any {
     const factory = this.factories[type];
-    if (factory === undefined) {
-      throw new Error(`No factory registered for type '${type}'`);
+    if (factory !== undefined) {
+      return factory();
+    } else if (this.extractArrayItemType(type)) {
+      return [];
+    } else if (this.extractMapValueType(type)) {
+      return {};
     }
-    return factory();
+    throw new Error(`No factory registered for type '${type}'`);
   }
 
   getFactoryByType(type: string): FactoryFunction<any> {
@@ -94,6 +98,7 @@ export class TypeRegistry {
       return () => [];
     } else if (this.extractMapValueType(type)) {
       return () => {
+        return {};
       };
     }
     return undefined;

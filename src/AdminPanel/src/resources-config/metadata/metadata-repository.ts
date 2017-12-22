@@ -25,7 +25,7 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
 
   public getByParent(parent: Metadata): Promise<Metadata[]> {
     return this.httpClient.get(this.oneEntityEndpoint(parent.id) + '/metadata')
-      .then(response => Promise.all(response.content.map(item => this.toEntity(item))));
+      .then(response => this.responseToEntities(response));
   }
 
   public saveChild(parentId: number, newChildMetadata: Metadata, baseId?: number) {

@@ -1,4 +1,5 @@
 import {RouteConfig} from "aurelia-router";
+import * as $ from "jquery";
 
 interface Arrayable<T> {
   toArray(): T[];

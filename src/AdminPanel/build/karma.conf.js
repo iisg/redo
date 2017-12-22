@@ -11,7 +11,13 @@ module.exports = function (config) {
           "src/*": "src/*",
           "typescript": "node_modules/typescript/lib/typescript.js",
           "systemjs": "node_modules/systemjs/dist/system.js",
-          'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.js'
+          "system-polyfills": 'node_modules/systemjs/dist/system-polyfills.js'
+        },
+        meta: {
+          "typescript": {
+            format: 'global',
+            exports: 'ts',
+          }
         },
         packages: {
           '/base/src': {
@@ -50,12 +56,16 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_WARN,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     browserNoActivityTimeout: 15000,
     customLaunchers: {
       chrome_no_sandbox: {
-        base: 'Chrome',
+        base: 'ChromeHeadless',
         flags: ['--no-sandbox']
+      },
+      chrome_devtools: {  // may not work properly on Chrome older than v63 because DevTools will disconnect external debugger
+        base: 'Chrome',
+        flags: ['--auto-open-devtools-for-tabs']
       }
     },
     singleRun: false

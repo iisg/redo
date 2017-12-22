@@ -10,6 +10,12 @@ interface BindableConfig {
 }
 
 class BindableArgument implements BindableConfig {
+  name?: string;
+  attribute?: string;
+  changeHandler?: string;
+  defaultBindingMode?: bindingMode;
+  defaultValue?: any;
+
   constructor(config: BindableConfig) {
     $.extend(this, config);
   }
