@@ -111,8 +111,6 @@ class NavGroup implements NavItem {
   updateActive(currentInstruciton: NavigationInstruction): void {
     this.items.forEach(link => link.updateActive(currentInstruciton));
     this.active = this.items.filter(link => link.active).length > 0;
-    if (this.active) {
-      this.expanded = true;
-    }
+    this.expanded = this.active;
   }
 }
