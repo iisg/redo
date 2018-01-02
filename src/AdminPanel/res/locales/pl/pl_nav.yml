@@ -1,17 +1,17 @@
 # sidebar
-"Tasks": "Zadania"
-"Metadata Kinds": "Rodzaje metadanych"
-"Resource Kinds": "Rodzaje zasobów"
-"Workflows": "Procesy"
-"Languages": "Języki"
-"Roles": "Role"
-"About": "O systemie"
+Tasks: Zadania
+Metadata Kinds: Rodzaje metadanych
+Resource Kinds: Rodzaje zasobów
+Workflows: Procesy
+Languages: Języki
+Roles: Role
+About: O systemie
 
 # navbar menu
-"My Account": "Moje konto"
-"Dashboard": "Tablica"
-"Front Page": "Strona główna"
-"Log Out": "Wyloguj"
+My Account: Moje konto
+Dashboard: Tablica
+Front Page: Strona główna
+Log Out: Wyloguj
 
 # navbar title
-"Resources": "Zasoby"
+Resources: Zasoby

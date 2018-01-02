@@ -1,6 +1,6 @@
 meta:
-  translatedName: "English"
-  flag: "GB"
+  translatedName: English
+  flag: GB
 bool:
-  true: "Yes"
-  false: "No"
+  true: Yes
+  false: No

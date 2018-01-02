@@ -1,10 +1,10 @@
 meta:
-  translatedName: "русский",
-  flag: "RU"
-"Name": "имя",
-"Label": "дисплей Имя",
-"Control": "свет",
-"Description": "описание",
-"Hint": "подсказка",
-"Save": "экономить",
-"Add new metadata kind": "Добавить новый вид метаданных"
+  translatedName: русский,
+  flag: RU
+Name: имя,
+Label: дисплей Имя,
+Control: свет,
+Description: описание,
+Hint: подсказка,
+Save: экономить,
+Add new metadata kind: Добавить новый вид метаданных

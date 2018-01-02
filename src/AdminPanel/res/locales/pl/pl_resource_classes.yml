@@ -1,9 +1,9 @@
 books:
-  label: "Książki"
-  settings: "Ustawienia książek"
+  label: Książki
+  settings: Ustawienia książek
 dictionaries:
-  label: "Słowniki"
-  settings: "Ustawienia słowników"
+  label: Słowniki
+  settings: Ustawienia słowników
 users:
-  label: "Użytkownicy"
-  settings: "Ustawienia użytkowników"
+  label: Użytkownicy
+  settings: Ustawienia użytkowników
