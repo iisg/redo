@@ -1,29 +1,29 @@
-generic: "Server error occurred. Try again."
-uploadLimitExceeded: "Uploaded file is too large, limit is {{limit}}"
-uploadFailed: "File upload failed, try again later"
-noSuchResourceFile: "File {{filename}} doesn't exist in resource {{resourceId}}"
-cannotApplyTransition: "Transition '{{transitionId}}' can't be applied in workflow {{workflowId}}"
-noSuchTransition: "Transition '{{transitionId}}' doesn't exist in workflow {{workflowId}}"
+generic: Server error occurred. Try again.
+uploadLimitExceeded: Uploaded file is too large, limit is {{limit}}
+uploadFailed: File upload failed, try again later
+noSuchResourceFile: File {{filename}} doesn't exist in resource {{resourceId}}
+cannotApplyTransition: Transition '{{transitionId}}' can't be applied in workflow {{workflowId}}
+noSuchTransition: Transition '{{transitionId}}' doesn't exist in workflow {{workflowId}}
 resourceCannotEnterPlace: "Resource #{{resourceId}} can't be in this state"
 entityNotFound: "{{entityName, capitalized}} {{query}} not found"
-invalidCommand: "Data sent to server are invalid"
+invalidCommand: Data sent to server are invalid
 metadataAlreadyPresent: "Metadata #{{metadataId}} is already present in resource kind #{{resourceKind}}"
-invalidTopKeys: "Configuration file is invalid"
+invalidTopKeys: Configuration file is invalid
 missingTransforms: "Some transforms are used but not defined in config file: {{names}}"
 missingSubfields: "Some subfields are used by mapping '{{mapping}}' but missing in imported data: {{names}}"
 invalidSubfieldName: "Invalid subfield name in mapping '{{mappingKey}}': {{subfield}}"
 invalidTransformName: "Invalid transform name in mapping '{{mappingKey}}': {{transform}}"
 unclosedStringLiteral: "Unclosed quote in mapping '{{mappingKey}}': {{literal}}"
-invalidMapping: "Mapping '{{key}}' has invalid definition"
+invalidMapping: Mapping '{{key}}' has invalid definition
 invalidSelector: "Mapping '{{mappingKey}}' has invalid selector: {{selector}}"
 invalidTransform: "Invalid transform definition '{{name}}' with parameters: {{params}}"
-incorrectResourceDisplayStrategy: Incorrect resource display strategy. Error: {{error}}
+incorrectResourceDisplayStrategy: "Incorrect resource display strategy. Error: {{error}}"
 violationFields:
-  metadata: "Metadata kind"
-  resource: "Resource"
-  resourceKind: "Resource kind"
-  resourceWorkflow: "Workflow"
-  newConstraints: "Constraints"
-  metadataList: "Metadata list"
-  userRole: "User role"
+  metadata: Metadata kind
+  resource: Resource
+  resourceKind: Resource kind
+  resourceWorkflow: Workflow
+  newConstraints: Constraints
+  metadataList: Metadata list
+  userRole: User role
   displayStrategies: Resource presentation strategy

@@ -1,37 +1,37 @@
-generic: "Wystąpił błąd serwera. Spróbuj ponownie."
-uploadLimitExceeded: "Przesłany plik jest zbyt duży, limit wynosi {{limit}}"
-uploadFailed: "Przesyłanie pliku nie powiodło się, spróbuj ponownie później"
-noSuchResourceFile: "Plik {{filename}} nie istnieje w zasobie {{resourceId}}"
-cannotApplyTransition: "Przejście '{{transitionId}}' nie może zostać wykonane w procesie {{workflowId}}"
-noSuchTransition: "Przejście '{{transitionId}}' nie istnieje w procesie {{workflowId}}"
+generic: Wystąpił błąd serwera. Spróbuj ponownie.
+uploadLimitExceeded: Przesłany plik jest zbyt duży, limit wynosi {{limit}}
+uploadFailed: Przesyłanie pliku nie powiodło się, spróbuj ponownie później
+noSuchResourceFile: Plik {{filename}} nie istnieje w zasobie {{resourceId}}
+cannotApplyTransition: Przejście '{{transitionId}}' nie może zostać wykonane w procesie {{workflowId}}
+noSuchTransition: Przejście '{{transitionId}}' nie istnieje w procesie {{workflowId}}
 resourceCannotEnterPlace: "Zasób #{{resourceId}} nie może znajdować się w tym stanie"
-entityNotFound: "Nie znaleziono {{entityName}} {{query}}"
-invalidCommand: "Dane przesłane do serwera są nieprawidłowe"
+entityNotFound: Nie znaleziono {{entityName}} {{query}}
+invalidCommand: Dane przesłane do serwera są nieprawidłowe
 metadataAlreadyPresent: "Metadana #{{metadataId}} jest już obecna w rodzaju zasobu #{{resourceKind}}"
-invalidTopKeys: "Plik konfiguracyjny jest nieprawidłowy"
+invalidTopKeys: Plik konfiguracyjny jest nieprawidłowy
 missingTransforms: "Transformacje są używane, ale nie zdefiniowane w pliku konfiguracyjnym: {{names}}"
 missingSubfields: "Podpola są używane w mapowaniu '{{mapping}}', ale nie ma ich w zaimportowanych danych: {{names}}"
 invalidSubfieldName: "Nieprawidłowa nazwa podpola w mapowaniu '{{mappingKey}}': {{subfield}}"
 invalidTransformName: "Nieprawidłowa nazwa transformacji w mapowaniu '{{mappingKey}}': {{transform}}"
 unclosedStringLiteral: "Niedomknięty nawias w mapowaniu '{{mappingKey}}': {{literal}}"
-invalidMapping: "Mapowanie '{{key}}' ma niepoprawną definicję"
+invalidMapping: Mapowanie '{{key}}' ma niepoprawną definicję
 invalidSelector: "Mapowanie '{{mappingKey}}' ma nieprawidłowy selektor: {{selector}}"
 invalidTransform: "Nieprawidłowa definicja transformacji '{{name}}' z parametrami: {{params}}"
-incorrectResourceDisplayStrategy: Niepoprawna strategia prezentacji zasobu. Błąd zwrócony przez kompilator szablonów: {{error}}
+incorrectResourceDisplayStrategy: "Niepoprawna strategia prezentacji zasobu. Błąd zwrócony przez kompilator szablonów: {{error}}"
 violationFields:
-  metadata: "Rodzaj metadanej"
-  name: "Nazwa"
-  resource: "Zasób"
-  resourceKind: "Rodzaj zasobu"
-  resourceWorkflow: "Proces"
-  newConstraints: "Ograniczenia"
-  metadataList: "Lista metadanych"
-  userRole: "Rola użytkownika"
+  metadata: Rodzaj metadanej
+  name: Nazwa
+  resource: Zasób
+  resourceKind: Rodzaj zasobu
+  resourceWorkflow: Proces
+  newConstraints: Ograniczenia
+  metadataList: Lista metadanych
+  userRole: Rola użytkownika
   displayStrategies: Strategia prezentacji zasobu
-"user role is in use": "Rola jest w użyciu."
-"resource has children": "zasób ma podzasoby."
-"resources of this kind exist": "istnieją zasoby tego rodzaju."
-"workflow is assigned to one of resource kinds": "proces jest przypisany do jednego z rodzajów zasobów"
-"metadata kind is used in some resource kinds": "rodzaj metadanej jest używany przez niektóre rodzaje zasobów"
-"metadata kind has submetadata kinds": "rodzaj metadanej ma podmetadane"
-"relationship must be constrained to users because metadata determines assignee": "relacja musi być ograniczona do użytkowników, bo metadana określa osobę odpowiedzialną"
+user role is in use: Rola jest w użyciu.
+resource has children: zasób ma podzasoby.
+resources of this kind exist: istnieją zasoby tego rodzaju.
+workflow is assigned to one of resource kinds: proces jest przypisany do jednego z rodzajów zasobów
+metadata kind is used in some resource kinds: rodzaj metadanej jest używany przez niektóre rodzaje zasobów
+metadata kind has submetadata kinds: rodzaj metadanej ma podmetadane
+relationship must be constrained to users because metadata determines assignee: relacja musi być ograniczona do użytkowników, bo metadana określa osobę odpowiedzialną
