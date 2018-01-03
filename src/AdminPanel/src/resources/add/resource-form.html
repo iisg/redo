@@ -17,7 +17,7 @@
                     all-metadata-list.bind="resource.kind.metadataList"
                     required-metadata-ids.bind="resource.kind ? requiredMetadataIds : []"></required-metadata-list>
             </div>
-            <div class="col-md-4">
+            <div class="${editing && !transition ? 'col-md-8' : 'col-md-4'}">
                 <div class="pull-right button-parent"
                     if.bind="resource.kind !== undefined">
                     <button class="btn btn-fab btn-raised"
