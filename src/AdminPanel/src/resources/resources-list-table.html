@@ -29,7 +29,7 @@
             <tr repeat.for="resource of resources"
                 hover-aware.one-time="resource"
                 class="au-animate fade-inup-outdown"
-                go-to-link-on-row-click>
+                go-to-link-on-row-click=".btn-details">
                 <td>${resource.id & oneTime}</td>
                 <td>
                     ${resource.kind.label | inCurrentLanguage}
@@ -47,7 +47,7 @@
                 <td>
                     <span class="pull-right text-nowrap">
                         <pending-throbber entity.bind="resource"></pending-throbber>
-                        <a class="btn ${resource.hovered ? 'btn-raised' : ''} btn-info btn-sm"
+                        <a class="btn ${resource.hovered ? 'btn-raised' : ''} btn-info btn-sm btn-details"
                             route-href="route: resources/details; params.bind: {id: resource.id}"
                             disabled-link.bind="resource.pendingRequest">
                             <fa name="eye fw"></fa>
