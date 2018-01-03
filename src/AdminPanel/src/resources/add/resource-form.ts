@@ -29,7 +29,7 @@ export class ResourceForm {
   }
 
   attached() {
-    if (this.edit) {
+    if (this.edit && this.edit.kind.workflow) {
       let params = this.router.currentInstruction.queryParams;
       this.transition = this.edit.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
     }
