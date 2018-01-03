@@ -6,9 +6,18 @@ import {autoinject} from "aurelia-dependency-injection";
 @autoinject
 export class ResourceDisplayStrategyEvaluator {
   private defaultTemplate: HandlebarsTemplateDelegate;
+  private handlebars: typeof Handlebars;
 
   constructor() {
-    this.defaultTemplate = Handlebars.compile('#{{id}}');
+    this.handlebars = Handlebars.create();
+    this.handlebars.registerHelper('helperMissing', this.missingVariableHelper);
+    this.defaultTemplate = this.handlebars.compile('#{{id}}');
+  }
+
+  // missing helper called when unknown variable has been used: https://stackoverflow.com/a/25631909/878514
+  private missingVariableHelper() {
+    const options = arguments[arguments.length - 1];
+    return '{{' + options.name + '}}';
   }
 
   public getDisplayValue(resource: Resource, strategyId: string): string {
@@ -20,7 +29,7 @@ export class ResourceDisplayStrategyEvaluator {
   }
 
   public compileTemplate(template: string) {
-    const compiled = Handlebars.compile(template);
+    const compiled = this.handlebars.compile(template);
     compiled({}); // detects possible template runtime errors
     return compiled;
   }
@@ -50,9 +59,3 @@ class ResourceDisplayStrategyTemplateData {
     }
   }
 }
-
-// missing helper called when unknown variable has been used: https://stackoverflow.com/a/25631909/878514
-Handlebars.registerHelper('helperMissing', function (/* [args, ] options */) {
-  const options = arguments[arguments.length - 1];
-  return '{{' + options.name + '}}';
-});

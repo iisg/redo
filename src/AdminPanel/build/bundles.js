@@ -88,6 +88,7 @@ module.exports = {
         "bootstrap-material-design/dist/css/ripples.min.css!text",
         "change-case",
         "jquery",
+        "handlebars",
         // "martingust/aurelia-repeat-strategies",  // causes "Unable to dynamically transpile ES module" error
         "oribella-aurelia-sortable",
         "sweetalert2",
