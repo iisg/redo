@@ -113,6 +113,7 @@ function copySingleRequiredFiles() {
     'var/.htaccess',
     'var/config/config_local.yml.sample',
     'var/config/docker.env.sample',
+    'var/config/user_data_mapping.json.sample',
     'var/ssl/generate-self-signed-certs.sh',
     'var/volumes/initialize-directory-structure.sh',
   ].forEach((filepath) => {

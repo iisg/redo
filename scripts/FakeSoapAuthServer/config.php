@@ -27,7 +27,7 @@ $config = [
     // Canned responses. If a key matching username is found, it will be used
     'userSpecificResponses' => [
         'halinka' => ['plainPassword' => 'h4linaRulz'],
-        'budynek' => ['password' => 'cGlvdHI='], // piotr
+        'budynek' => ['password' => 'cGlvdHI=', 'first_name' => 'Piotr'], // piotr
         'jeanzulu' => ['password' => 'Z290b3RvZ28='], // gototogo
     ],
     // Canned response used if user-specific response isn't found

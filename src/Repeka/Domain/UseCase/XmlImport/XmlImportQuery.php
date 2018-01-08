@@ -2,24 +2,24 @@
 namespace Repeka\Domain\UseCase\XmlImport;
 
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\NonValidatedCommand;
 use Repeka\Domain\Entity\ResourceKind;
 
-class XmlImportQuery extends Command {
-    /** @var string */
-    private $id;
+class XmlImportQuery extends NonValidatedCommand {
+    private $xml;
     /** @var array */
     private $config;
     /** @var ResourceKind */
     private $resourceKind;
 
-    public function __construct(string $id, array $config, ResourceKind $resourceKind) {
-        $this->id = $id;
+    public function __construct(string $xml, array $config, ResourceKind $resourceKind) {
+        $this->xml = $xml;
         $this->config = $config;
         $this->resourceKind = $resourceKind;
     }
 
-    public function getId(): string {
-        return $this->id;
+    public function getXml() {
+        return $this->xml;
     }
 
     public function getConfig(): array {

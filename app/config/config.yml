@@ -31,6 +31,8 @@ repeka:
       password: qwerty
     local_accounts_enabled: true
 
+  user_data_mapping: '%kernel.root_dir%/../var/config/user_data_mapping.json'
+
 doctrine:
   dbal:
     driver: pdo_pgsql

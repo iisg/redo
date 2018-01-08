@@ -1,8 +1,6 @@
 <?php
 namespace Repeka\Domain\XmlImport\Expression;
 
-use Assert\Assertion;
-
 class Subfield {
     /** @var string */
     private $name;
@@ -10,7 +8,6 @@ class Subfield {
     private $content;
 
     public function __construct(string $name, string $content) {
-        Assertion::regex($name, '/^[*a-z0-9]$/');
         $this->name = $name;
         $this->content = $content;
     }
@@ -23,8 +20,12 @@ class Subfield {
         return $this->content;
     }
 
-    public static function fromDOMNode(\DOMNode $subfieldNode): Subfield {
-        $name = $subfieldNode->attributes->getNamedItem('code')->textContent;
+    public static function fromDOMNode(\DOMElement $subfieldNode): Subfield {
+        if ($subfieldNode->hasAttribute('code')) {
+            $name = $subfieldNode->getAttribute('code');
+        } else {
+            $name = $subfieldNode->tagName;
+        }
         $content = $subfieldNode->textContent;
         return new Subfield($name, $content);
     }
