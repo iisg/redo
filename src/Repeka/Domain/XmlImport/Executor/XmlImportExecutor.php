@@ -7,14 +7,14 @@ use Repeka\Domain\XmlImport\Config\XmlImportConfig;
 
 class XmlImportExecutor {
     /** @var RawValueXmlImporter */
-    private $rawValueImporter;
+    private $rawValueXmlImporter;
 
-    public function __construct(RawValueXmlImporter $rawValueImporter) {
-        $this->rawValueImporter = $rawValueImporter;
+    public function __construct(RawValueXmlImporter $rawValueXmlImporter) {
+        $this->rawValueXmlImporter = $rawValueXmlImporter;
     }
 
     public function execute(string $xml, XmlImportConfig $config, ResourceKind $resourceKind): ImportResult {
-        $values = $this->rawValueImporter->import($xml, $config);
+        $values = $this->rawValueXmlImporter->import($xml, $config);
         $resultBuilder = new ImportResultBuilder($config->getInvalidMetadataKeys());
         foreach ($resourceKind->getMetadataList() as $metadata) {
             $id = $metadata->getBaseId();

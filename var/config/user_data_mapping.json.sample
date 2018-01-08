@@ -1,0 +1,54 @@
+{
+  "transforms": {
+    "plain": {
+      "regex": "[\\S\\s]",
+      "replacement": "$&"
+    }
+  },
+  "mappings": {
+    "Imię": {
+      "selector": "response",
+      "value": "'first_name'|plain"
+    },
+    "Nazwisko": {
+      "selector": "response",
+      "value": "'last_name'|plain"
+    },
+    "Email": {
+      "selector": "response",
+      "value": "'email_last_used'|plain"
+    },
+    "Miasto": {
+      "selector": "response",
+      "value": "'city'|plain"
+    },
+    "Ulica": {
+      "selector": "response",
+      "value": "'street'|plain"
+    },
+    "Pesel": {
+      "selector": "response",
+      "value": "'pesel'|plain"
+    },
+    "Kategoria": {
+      "selector": "response",
+      "value": "'categorycode'|plain"
+    },
+    "Wydział": {
+      "selector": "response",
+      "value": "'department'|plain"
+    },
+    "Identyfikator wydziału": {
+      "selector": "response",
+      "value": "'dpcode'|plain"
+    },
+    "Instytut": {
+      "selector": "response",
+      "value": "'institute_desc'|plain"
+    },
+    "Identyfikator instytutu": {
+      "selector": "response",
+      "value": "'institute'|plain"
+    }
+  }
+}

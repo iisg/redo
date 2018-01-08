@@ -19,7 +19,7 @@ class PKAuthenticationClient {
         }
     }
 
-    private function fetchUserData(string $login): array {
+    public function fetchUserData(string $login): array {
         $userId = $this->getUserId($login);
         try {
             $userData = $this->soapService->getClientDataById($userId);

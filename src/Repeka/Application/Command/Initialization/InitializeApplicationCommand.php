@@ -28,5 +28,6 @@ class InitializeApplicationCommand extends ContainerAwareCommand {
         $this->getApplication()->run(new StringInput('repeka:initialize:system-resource-kinds'), $output);
         $this->getApplication()->run(new StringInput('repeka:initialize:system-resource-kinds-metadata'), $output);
         $this->getApplication()->run(new StringInput('repeka:initialize:system-user-roles'), $output);
+        $this->getApplication()->run(new StringInput('repeka:initialize:user-metadata'), $output);
     }
 }

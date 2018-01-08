@@ -53,6 +53,7 @@ class Configuration implements ConfigurationInterface {
                         ->scalarNode('url')->end()
                     ->end()
                 ->end()
+                ->scalarNode('user_data_mapping')->end()
                 ->arrayNode('resource_classes')->prototype('scalar')->end()->end()
             ->end();
         // @formatter:on
