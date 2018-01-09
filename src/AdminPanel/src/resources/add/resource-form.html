@@ -13,7 +13,7 @@
                     places.bind="edit.kind.workflow.places"></workflow-froms-tos-display>
             </div>
             <div class="${edit ? 'col-md-4' : 'col-md-8'}">
-                <required-metadata-list if.bind="requiredMetadataIds.length > 0"
+                <required-metadata-list if.bind="requiredMetadataIds.length > 0 && resource.kind.metadataList.length > 0"
                     all-metadata-list.bind="resource.kind.metadataList"
                     required-metadata-ids.bind="resource.kind ? requiredMetadataIds : []"></required-metadata-list>
             </div>
@@ -38,7 +38,7 @@
         </div>
         <resource-form-generated resource-kind.bind="resource.kind"
             resource.bind="resource"
-            disable-parent.bind="parent !== undefined"
+            parent.bind="parent"
             resource-class.bind="resourceClass"
             required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
         <div class="has-error"

@@ -9,12 +9,13 @@ import {twoWay} from "common/components/binding-mode";
 import {diff, flatten, inArray} from "common/utils/array-utils";
 import {numberKeysByValue} from "common/utils/object-utils";
 import {RequirementState} from "workflows/workflow";
+import {computedFrom} from "aurelia-binding";
 
 @autoinject
 export class ResourceFormGenerated {
   @bindable resourceKind: ResourceKind;
   @bindable(twoWay) resource: Resource;
-  @bindable disableParent: boolean = false;
+  @bindable parent: Resource;
   @bindable resourceClass: string;
   @bindable requiredMetadataIdsForTransition: number[];
 
@@ -25,6 +26,18 @@ export class ResourceFormGenerated {
 
   constructor(i18n: I18N) {
     this.currentLanguageCode = i18n.getLocale().toUpperCase();
+  }
+
+  @computedFrom('resourceKind', 'resourceKind.metadataList')
+  get metadataList(): Metadata[] {
+    if (this.resourceKind) {
+      return this.resourceKind.metadataList.filter(v => v.baseId > 0);
+    }
+  }
+
+  @computedFrom('parent')
+  get disableParent(): boolean {
+    return this.parent !== undefined;
   }
 
   resourceKindChanged() {
@@ -50,6 +63,13 @@ export class ResourceFormGenerated {
           this.resource.contents[metadataId] = [];
         }
       }
+    }
+    this.setParent();
+  }
+
+  setParent() {
+    if (this.parent && this.resourceKind) {
+      this.resource.contents[SystemMetadata.PARENT.baseId][0] = this.parent.id;
     }
   }
 

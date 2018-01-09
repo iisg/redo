@@ -5,7 +5,7 @@
     <require from="./max-count-constraint-info"></require>
 
     <div class="form-group"
-        repeat.for="metadata of resourceKind.metadataList">
+        repeat.for="metadata of metadataList">
         <h4>
             ${metadata | metadataLabel}
             <max-count-constraint-info metadata.bind="metadata"
