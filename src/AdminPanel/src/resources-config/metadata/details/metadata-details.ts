@@ -51,7 +51,7 @@ export class MetadataDetails implements RoutableComponentActivate {
   private navigateToParentOrList() {
     const parentId: number = this.metadata.parentId;
     if (parentId == undefined) {
-      this.router.navigateToRoute('metadata/list');
+      this.router.navigateToRoute('metadata');
     } else {
       this.router.navigateToRoute('metadata/details', {id: parentId});
     }
