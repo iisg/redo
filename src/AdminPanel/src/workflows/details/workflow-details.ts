@@ -84,7 +84,7 @@ export class WorkflowDetails implements RoutableComponentActivate {
     return this.deleteEntityConfirmation.confirm('workflow', this.workflow.id)
       .then(() => this.workflow.pendingRequest = true)
       .then(() => this.workflowRepository.remove(this.workflow))
-      .then(() => this.router.navigateToRoute('workflows/list'))
+      .then(() => this.router.navigateToRoute('workflows', {resourceClass: this.workflow.resourceClass}))
       .finally(() => this.workflow.pendingRequest = false);
   }
 }
