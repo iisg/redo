@@ -1,4 +1,5 @@
-import {keysByValue, numberKeysByValue, zip, filterByValues} from "./object-utils";
+import {filterByValues, keysByValue, mapValues, numberKeysByValue, zip} from "./object-utils";
+
 describe('object-utils', () => {
   describe(keysByValue.name, () => {
     const testObject = {
@@ -88,6 +89,18 @@ describe('object-utils', () => {
         1: 1,
         'three': 3,
       });
+    });
+  });
+
+  describe(mapValues.name, () => {
+    const multiplyByTwo = (a) => a * 2;
+
+    it('maps simple object', () => {
+      expect(mapValues({a: 1, b: 2}, multiplyByTwo)).toEqual({a: 2, b: 4});
+    });
+
+    it('maps nested object', () => {
+      expect(mapValues({a: 1, b: {c: 2}}, multiplyByTwo)).toEqual({a: 2, b: {c: 4}});
     });
   });
 });

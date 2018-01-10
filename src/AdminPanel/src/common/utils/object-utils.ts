@@ -48,7 +48,11 @@ export function mapValues<T, U>(obj: AnyMap<T>, mapperFn: (value: T) => U): AnyM
   const out = {};
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      out[key] = mapperFn(obj[key]);
+      if (obj[key] instanceof Object) {
+        out[key] = mapValues(obj[key] as any as AnyMap<T>, mapperFn);
+      } else {
+        out[key] = mapperFn(obj[key]);
+      }
     }
   }
   return out;
