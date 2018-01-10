@@ -1,0 +1,48 @@
+<?php
+
+$config = [
+
+
+    // ---=== COMMON CONFIG ===---
+    // SOAP options - will be passed to SoapClient or SoapServer
+    'wsdlUrl' => NULL,//'http://soap.biblos.pk.edu.pl/soap.php?WSDL',
+    'commonOptions' => [
+        'uri' => 'test',
+    ],
+    'clientOptions' => [
+        'location' => 'http://localhost/',
+        'login' => 'budynek',
+        'password' => 'alamakota',
+        'cache_wsdl' => WSDL_CACHE_NONE,
+    ],
+
+
+    // ---=== SERVER CONFIG ===---
+    // HTTP basic auth credentials. SOAP Client must authenticate with one of these, otherwise it will be rejected.
+    'serverHttpCredentials' => [
+        'budynek' => 'alamakota',
+        'admin' => 'admin',
+        'pk' => 'qwerty',
+    ],
+    // Canned responses. If a key matching username is found, it will be used
+    'userSpecificResponses' => [
+        'halinka' => ['plainPassword' => 'h4linaRulz'],
+        'budynek' => ['password' => 'cGlvdHI='], // piotr
+        'jeanzulu' => ['password' => 'Z290b3RvZ28='], // gototogo
+    ],
+    // Canned response used if user-specific response isn't found
+    'fallbackResponse' => [],
+
+
+    // ---=== CLIENT CONFIG ===---
+    // Client will pass these to ValidLogin() method (mind special handling for 6-char logins)
+    'loginCredentials' => [
+        'login' => 'halinka',
+        'password' => 'h4linaRulz'
+    ]
+];
+
+
+$config['clientOptions'] = array_merge($config['commonOptions'] ?? [], $config['clientOptions'] ?? []);
+$config['serverOptions'] = array_merge($config['commonOptions'] ?? [], $config['serverOptions'] ?? []);
+return $config;
