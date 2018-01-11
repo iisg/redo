@@ -26,7 +26,7 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('pk_auth.wsdl', $mergedConfig['pk_auth']['wsdl']);
         $container->setParameter('pk_auth.options', $mergedConfig['pk_auth']['options']);
         $container->setParameter('pk_auth.local_accounts_enabled', $mergedConfig['pk_auth']['local_accounts_enabled']);
-        $container->setParameter('xml_import.url', $mergedConfig['xml_import']['url']);
+        $container->setParameter('xml_import.koha', $mergedConfig['xml_import']['koha']);
         $container->setParameter('user_data_mapping', $mergedConfig['user_data_mapping']);
         $container->setParameter(
             'repeka.resource_classes',

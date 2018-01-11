@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Domain\Entity;
 
+use Repeka\Domain\Constants\SystemMetadata;
+
 abstract class User implements Identifiable {
     /** @var ResourceEntity */
     protected $userData;
@@ -34,5 +36,9 @@ abstract class User implements Identifiable {
 
     public function setUserData(ResourceEntity $userData) {
         $this->userData = $userData;
+    }
+
+    public function getUsername(): string {
+        return $this->getUserData()->getContents()[SystemMetadata::USERNAME][0];
     }
 }

@@ -1,54 +1,37 @@
 {
-  "transforms": {
-    "plain": {
-      "regex": "[\\S\\s]",
-      "replacement": "$&"
-    }
-  },
   "mappings": {
     "Imię": {
-      "selector": "response",
-      "value": "'first_name'|plain"
+      "key": "first_name"
     },
     "Nazwisko": {
-      "selector": "response",
-      "value": "'last_name'|plain"
+      "key": "last_name"
     },
     "Email": {
-      "selector": "response",
-      "value": "'email_last_used'|plain"
+      "key": "email_last_used"
     },
     "Miasto": {
-      "selector": "response",
-      "value": "'city'|plain"
+      "key": "city"
     },
     "Ulica": {
-      "selector": "response",
-      "value": "'street'|plain"
+      "key": "street"
     },
     "Pesel": {
-      "selector": "response",
-      "value": "'pesel'|plain"
+      "key": "pesel"
     },
     "Kategoria": {
-      "selector": "response",
-      "value": "'categorycode'|plain"
+      "key": "categorycode"
     },
     "Wydział": {
-      "selector": "response",
-      "value": "'department'|plain"
+      "key": "department"
     },
     "Identyfikator wydziału": {
-      "selector": "response",
-      "value": "'dpcode'|plain"
+      "key": "dpcode"
     },
     "Instytut": {
-      "selector": "response",
-      "value": "'institute_desc'|plain"
+      "key": "institute_desc"
     },
     "Identyfikator instytutu": {
-      "selector": "response",
-      "value": "'institute'|plain"
+      "key": "institute"
     }
   }
 }

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+    xmlns="http://www.loc.gov/MARC21/slim">
+
+  <leader>01491cam a2200301 i 4500</leader>
+  <controlfield tag="003">KR 048</controlfield>
+  <controlfield tag="005">20171017063212.0</controlfield>
+  <controlfield tag="008">051129s1991    xxka   | |||||1|| | eng||</controlfield>
+  <datafield tag="020" ind1=" " ind2=" ">
+    <subfield code="a">185166632X</subfield>
+  </datafield>
+  <datafield tag="024" ind1="8" ind2="0">
+    <subfield code="a">7e88e74af59e8b8092baf473f02f3907</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">KR 048/StrAn</subfield>
+    <subfield code="c">KR 048/StrAn</subfield>
+    <subfield code="d">KR 048/DomAg</subfield>
+  </datafield>
+  <datafield tag="041" ind1="0" ind2=" ">
+    <subfield code="a">eng</subfield>
+  </datafield>
+  <datafield tag="044" ind1=" " ind2=" ">
+    <subfield code="a">xxk</subfield>
+    <subfield code="a">xxu</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">628.515</subfield>
+    <subfield code="j">Ochrona przed zanieczyszczeniem wód.</subfield>
+    <subfield code="9">3617</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">2422</subfield>
+    <subfield code="a">502.51</subfield>
+    <subfield code="j">Środowisko hydrosfery.</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">628.16</subfield>
+    <subfield code="j">Uzdatnianie wody: procesy, instalacje i wyposażenie. Oczyszczanie wody, filtracja.</subfield>
+    <subfield code="9">3585</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">429</subfield>
+    <subfield code="a">005.745(06)</subfield>
+    <subfield code="j">Sprawozdania z konferencji, kongresów.</subfield>
+    <subfield code="k">Materiały konferencyjne.</subfield>
+  </datafield>
+  <datafield tag="095" ind1=" " ind2=" ">
+    <subfield code="a">INTERNATIONAL CONFERENCE</subfield>
+  </datafield>
+  <datafield tag="111" ind1="2" ind2=" ">
+    <subfield code="a">International Conference "Advances in Water Treatment and Environmental Management"</subfield>
+    <subfield code="n">(1 ;</subfield>
+    <subfield code="d">1990 ;</subfield>
+    <subfield code="c">Lyon).</subfield>
+    <subfield code="0">1ce1edbba7a3937888abdb30ff80d084</subfield>
+    <subfield code="9">31012</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Advances in water treatment and environmental management :</subfield>
+    <subfield code="b">proceedings of the 1st International Conference (Lyon, France 27-29 june 1990) /</subfield>
+    <subfield code="c">eds. George Thomas, Roger King.</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">London ;</subfield>
+    <subfield code="a">New York :</subfield>
+    <subfield code="b">Elsevier Appl. Science,</subfield>
+    <subfield code="c">cop. 1991.</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">IX, [1], 269 s. :</subfield>
+    <subfield code="b">rys., wykr. ;</subfield>
+    <subfield code="c">25 cm.</subfield>
+  </datafield>
+  <datafield tag="504" ind1=" " ind2=" ">
+    <subfield code="a">Bibliogr. po rozdz.</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">King, Roger</subfield>
+    <subfield code="d">(1942- ).</subfield>
+    <subfield code="0">1716666429748c7c9d6aa37cc5b81f16</subfield>
+    <subfield code="e">Red.</subfield>
+    <subfield code="9">35884</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Thomas, George.</subfield>
+    <subfield code="0">aad8ba97278430f2fe56a8bebfba6ae3</subfield>
+    <subfield code="e">Red.</subfield>
+    <subfield code="9">72169</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">Elsevier (Amsterdam).</subfield>
+    <subfield code="4">pbl</subfield>
+    <subfield code="0">n 2012030222</subfield>
+    <subfield code="9">101835</subfield>
+  </datafield>
+  <datafield tag="920" ind1=" " ind2=" ">
+    <subfield code="a">1-85166-632-X</subfield>
+  </datafield>
+  <datafield tag="999" ind1=" " ind2=" ">
+    <subfield code="c">1178</subfield>
+    <subfield code="d">1178</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="2">udc</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">181149</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">1795</subfield>
+    <subfield code="a">BPK</subfield>
+    <subfield code="b">BPK</subfield>
+    <subfield code="c">BPK-MAG</subfield>
+    <subfield code="d">2014-08-30</subfield>
+    <subfield code="i">181149</subfield>
+    <subfield code="l">2</subfield>
+    <subfield code="m">1</subfield>
+    <subfield code="o">181149</subfield>
+    <subfield code="p">100000003274</subfield>
+    <subfield code="r">2017-10-17</subfield>
+    <subfield code="s">2017-07-17</subfield>
+    <subfield code="w">2014-08-30</subfield>
+    <subfield code="y">BK-DW</subfield>
+  </datafield>
+</record>
