@@ -7,6 +7,8 @@ services:
   _instanceof:
     Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessorStrategy:
       tags: [repeka.metadata_value_processor]
+    Repeka\Domain\MetadataImport\Transform\ImportTransform:
+      tags: [repeka.import_transform]
 
   Repeka\Application\Authentication\:
     resource: '../../Authentication'
@@ -33,8 +35,8 @@ services:
   Repeka\Application\Service\:
     resource: '../../Service'
 
-  Repeka\Application\XmlImport\:
-    resource: '../../XmlImport'
+  Repeka\Application\MetadataImport\:
+    resource: '../../MetadataImport'
 
   Repeka\Domain\UseCase\:
     public: true
@@ -48,5 +50,5 @@ services:
   Repeka\Domain\Validation\Rules\:
     resource: '../../../Domain/Validation/Rules'
 
-  Repeka\Domain\XmlImport\:
-    resource: '../../../Domain/XmlImport'
+  Repeka\Domain\MetadataImport\:
+    resource: '../../../Domain/MetadataImport'

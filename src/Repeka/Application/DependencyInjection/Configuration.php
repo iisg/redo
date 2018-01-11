@@ -50,7 +50,7 @@ class Configuration implements ConfigurationInterface {
                 ->end()
                 ->arrayNode('xml_import')
                     ->children()
-                        ->scalarNode('url')->end()
+                        ->scalarNode('koha')->end()
                     ->end()
                 ->end()
                 ->scalarNode('user_data_mapping')->end()

@@ -20,14 +20,14 @@
                     metadata-list.bind="metadataList"></fake-resource-display>
             </div>
             <div class="form-group"
-                if.bind="importResult.unfitTypeValues">
+                if.bind="importResult.unfitTypeValues.length">
                 <p>${"Ignored values unsuitable for their metadata controls:" | t}</p>
                 <fake-resource-display values.bind="importResult.unfitTypeValues"
                     metadata-list.bind="metadataList"
                     omit-missing></fake-resource-display>
             </div>
             <div class="form-group"
-                if.bind="importResult.invalidMetadataKeys">
+                if.bind="importResult.invalidMetadataKeys.length">
                 <p>${"Ignored values that have no matching metadata in this resource kind:" | t}</p>
                 <ul>
                     <li repeat.for="metadataKey of importResult.invalidMetadataKeys">${metadataKey}</li>

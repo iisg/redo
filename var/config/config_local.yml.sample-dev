@@ -9,7 +9,7 @@ repeka:
   elasticsearch:
     host: localhost
   xml_import:
-    url: 'http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode='
+    koha: 'http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode='
 m6_statsd:
   servers:
     default:

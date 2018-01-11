@@ -1,23 +1,16 @@
 <?php
 namespace Repeka\Application\Authentication\TokenAuthenticator;
 
-use Assert\Assertion;
 use Repeka\Application\Authentication\PKAuthenticationClient;
 use Repeka\Application\Authentication\PKAuthenticationException;
+use Repeka\Application\Authentication\PKUserDataUpdater;
 use Repeka\Application\Entity\UserEntity;
-use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Cqrs\CommandBus;
-use Repeka\Domain\UseCase\Resource\ResourceQuery;
-use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
-use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Domain\UseCase\User\UserCreateCommand;
-use Repeka\Domain\UseCase\XmlImport\XmlImportQuery;
-use Repeka\Domain\XmlImport\Executor\ImportResult;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -27,12 +20,13 @@ class ExternalServiceAuthenticator extends TokenAuthenticator {
     private $authenticationClient;
     /** @var CommandBus */
     private $commandBus;
-    private $mappingConfigPath;
+    /** @var PKUserDataUpdater */
+    private $userDataUpdater;
 
-    public function __construct(PKAuthenticationClient $authenticationClient, CommandBus $commandBus, string $mappingConfigPath) {
+    public function __construct(PKAuthenticationClient $authenticationClient, CommandBus $commandBus, PKUserDataUpdater $userDataUpdater) {
         $this->authenticationClient = $authenticationClient;
         $this->commandBus = $commandBus;
-        $this->mappingConfigPath = $mappingConfigPath;
+        $this->userDataUpdater = $userDataUpdater;
     }
 
     public function canAuthenticate(TokenInterface $token): bool {
@@ -59,26 +53,7 @@ class ExternalServiceAuthenticator extends TokenAuthenticator {
                 throw new CustomUserMessageAuthenticationException('Invalid username or password', [], 0, $e);
             }
         }
-        if ($this->mappingConfigPath && is_readable($this->mappingConfigPath)) {
-            $this->updateUserData($username, $user);
-        }
+        $this->userDataUpdater->updateUserData($user);
         return $this->createAuthenticatedToken($user, $providerKey);
-    }
-
-    private function updateUserData(string $username, UserEntity $user) {
-        $userData = $this->authenticationClient->fetchUserData($username);
-        $fetchedValues = $this->mapUserData($userData);
-        $acceptedValues = $fetchedValues->getAcceptedValues();
-        $userResource = $user->getUserData();
-        $this->commandBus->handle(new ResourceUpdateContentsCommand($userResource, $acceptedValues));
-    }
-
-    private function mapUserData(array $userData): ImportResult {
-        $jsonConfig = json_decode(file_get_contents($this->mappingConfigPath), true);
-        Assertion::notNull($jsonConfig, 'Invalid user data mapping in ' . $this->mappingConfigPath . ': ' . json_last_error_msg());
-        $userResourceKind = $this->commandBus->handle(new ResourceKindQuery(SystemResourceKind::USER));
-        $xmlEncoder = new XmlEncoder();
-        $xml = $xmlEncoder->encode($userData, 'xml');
-        return $this->commandBus->handle(new XmlImportQuery($xml, $jsonConfig, $userResourceKind));
     }
 }

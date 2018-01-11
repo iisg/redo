@@ -1,0 +1,9 @@
+repeka:
+  pk_auth:
+    wsdl: ~
+    options:
+      uri: pk_soap
+      location: http://localhost/
+      login: pk
+      password: qwerty
+    local_accounts_enabled: true

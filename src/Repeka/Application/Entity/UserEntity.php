@@ -34,10 +34,6 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
         return $this->id;
     }
 
-    public function getUsername(): string {
-        return $this->getUserData()->getContents()[SystemMetadata::USERNAME][0];
-    }
-
     public function setUsername(string $username): User {
         $contents = $this->getUserData()->getContents();
         $contents[SystemMetadata::USERNAME] = [$username];

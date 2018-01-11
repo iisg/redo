@@ -14,11 +14,11 @@ services:
     - '%pk_auth.options%'
   Repeka\Application\Authentication\TokenAuthenticator\LocalDatabaseAuthenticator:
     $localAccountsEnabled: '%pk_auth.local_accounts_enabled%'
-  Repeka\Application\Authentication\TokenAuthenticator\ExternalServiceAuthenticator:
+  Repeka\Application\Authentication\PKUserDataUpdater:
     $mappingConfigPath: '%user_data_mapping%'
 
-  Repeka\Application\XmlImport\ContainerAwareXmlResourceDownloader:
-    - '%xml_import.url%'
+  Repeka\Application\MetadataImport\KohaXmlResourceDownloader:
+    - '%xml_import.koha%'
 
   Repeka\Application\Command\Initialization\InitializeUserMetadataCommand:
     $mappingConfigPath: '%user_data_mapping%'
