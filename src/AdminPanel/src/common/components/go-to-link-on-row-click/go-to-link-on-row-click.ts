@@ -19,14 +19,16 @@ export class GoToLinkOnRowClickCustomAttribute {
   }
 
   private onMouseUp(event: JQueryEventObject) {
-    if (this.isLeftMouseClick(event)) {
+    if (this.isLeftMouseClick(event) && this.isClickingOnRowEnabled(event)) {
       const currentPosition = {x: event.pageX, y: event.pageY};
       const moveX = Math.abs(currentPosition.x - this.lastMouseDownPosition.x);
       const moveY = Math.abs(currentPosition.y - this.lastMouseDownPosition.y);
       if (moveX <= GoToLinkOnRowClickCustomAttribute.MAX_CLICK_MOVE && moveY <= GoToLinkOnRowClickCustomAttribute.MAX_CLICK_MOVE) {
         if (this.notAButton(event.target)) {
           const link = $(event.currentTarget).find(this.linkSelector)[0];
-          setTimeout(() => link.click());
+          if (link) {
+            setTimeout(() => link.click());
+          }
         }
       }
     }
@@ -34,6 +36,10 @@ export class GoToLinkOnRowClickCustomAttribute {
 
   private isLeftMouseClick(event: JQueryEventObject): boolean {
     return event.which == 1;
+  }
+
+  private isClickingOnRowEnabled(event: JQueryEventObject): boolean {
+    return !event.currentTarget.classList.contains('go-to-link-on-row-click-disabled');
   }
 
   private notAButton(element: Element): boolean {

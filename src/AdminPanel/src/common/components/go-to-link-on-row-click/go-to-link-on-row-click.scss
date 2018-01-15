@@ -1,6 +1,6 @@
 @import "../../styles";
 
-[go-to-link-on-row-click] {
+[go-to-link-on-row-click]:not(.go-to-link-on-row-click-disabled) {
   &, td {
     cursor: pointer;
   }

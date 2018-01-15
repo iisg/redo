@@ -43,7 +43,7 @@
                 <tr repeat.for="metadata of metadataList"
                     hover-aware.one-time="metadata"
                     oa-sortable-item="item.bind: metadata"
-                    class="${metadata.sortingClass} ${metadata.editing ? 'table-row-edit-form' : ''}"
+                    class="${metadata.sortingClass} ${metadata.editing ? 'table-row-edit-form go-to-link-on-row-click-disabled' : ''}"
                     go-to-link-on-row-click=".btn-details">
                     <td>${metadata.id}</td>
                     <td if.bind="!metadata.editing">
