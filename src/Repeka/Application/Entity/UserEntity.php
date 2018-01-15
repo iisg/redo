@@ -111,6 +111,6 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     }
 
     public function getUserRoles(): array {
-        return $this->userRoles->toArray();
+        return $this->userRoles ? $this->userRoles->toArray() : [];
     }
 }
