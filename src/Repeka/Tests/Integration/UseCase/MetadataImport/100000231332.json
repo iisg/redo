@@ -1,0 +1,48 @@
+{
+  "xmlMappings": {
+    "Tytuł": "[tag=245]>[code=a]",
+    "Opis": "[tag=245]>[code=a],[tag=245]>[code=b]",
+    "Język": "[tag=008]"
+  },
+  "mappings": {
+    "Tytuł": {
+      "key": "Tytuł",
+      "transforms": [
+        {
+          "name": "regexReplace",
+          "regex": " :$",
+          "replacement": ""
+        }
+      ]
+    },
+    "Opis": {
+      "key": "Opis",
+      "transforms": [
+        {
+          "name": "regexReplace",
+          "regex": " :$",
+          "replacement": ""
+        },
+        {
+          "name": "regexReplace",
+          "regex": " /$",
+          "replacement": ""
+        },
+        {
+          "name": "join",
+          "glue": " - "
+        }
+      ]
+    },
+    "Język": {
+      "key": "Język",
+      "transforms": [
+        {
+          "name": "substring",
+          "start": 35,
+          "length": 3
+        }
+      ]
+    }
+  }
+}

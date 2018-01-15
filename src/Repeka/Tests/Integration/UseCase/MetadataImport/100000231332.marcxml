@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+    xmlns="http://www.loc.gov/MARC21/slim">
+
+  <leader>01299cam a2200289 i 4500</leader>
+  <controlfield tag="005">20161103021800.0</controlfield>
+  <controlfield tag="008">021113s1922    un a         |000 0|pol c</controlfield>
+  <datafield tag="024" ind1="8" ind2="0">
+    <subfield code="a">104713fe738a4dffe6a47661c8400096</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">zz2002904207</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">TOR U/KMo</subfield>
+    <subfield code="c">TOR U/AKL</subfield>
+    <subfield code="d">TOR U/AP</subfield>
+    <subfield code="d">LUBL M/ASs</subfield>
+    <subfield code="d">KAT U/MK</subfield>
+    <subfield code="d">KR 048/AK</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">7.03(091)</subfield>
+    <subfield code="j">Historia sztuki w ogólności.</subfield>
+    <subfield code="9">4268</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">7.07</subfield>
+    <subfield code="j">Zawodowy stosunek do sztuki.</subfield>
+    <subfield code="9">4296</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">3-054.6</subfield>
+    <subfield code="j">Obcokrajowcy (obcy). Cudzoziemcy.</subfield>
+    <subfield code="9">110208</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">81367</subfield>
+    <subfield code="a">(438)</subfield>
+    <subfield code="j">Polska.</subfield>
+  </datafield>
+  <datafield tag="095" ind1=" " ind2=" ">
+    <subfield code="a">KIESZKOWSKI J.</subfield>
+  </datafield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Kieszkowski, Jerzy</subfield>
+    <subfield code="d">(1872-1923).</subfield>
+    <subfield code="0">n 2002037039</subfield>
+    <subfield code="9">107911</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Artyści obcy w służbie polskiej :</subfield>
+    <subfield code="b">epizody z dziejów sztuki /</subfield>
+    <subfield code="c">Jerzy Kieszkowski.</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Lwów :</subfield>
+    <subfield code="b">Wydaw. Zakładu Narodowego im. Ossolińskich,</subfield>
+    <subfield code="c">1922</subfield>
+    <subfield code="e">(Lwów :</subfield>
+    <subfield code="f">Drukarnia Zakładu Narodowego im. Ossolińskich).</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">XI, [1], 134, [1] s., [28] k. tabl. :</subfield>
+    <subfield code="b">il., fot. ;</subfield>
+    <subfield code="c">24 cm.</subfield>
+  </datafield>
+  <datafield tag="530" ind1=" " ind2=" ">
+    <subfield code="a">Dostępne także w formie elektronicznej.</subfield>
+  </datafield>
+  <datafield tag="561" ind1=" " ind2=" ">
+    <subfield code="3">III-28325</subfield>
+    <subfield code="a">1. [na okł. naklejka:] Dom Książki.</subfield>
+  </datafield>
+  <datafield tag="594" ind1=" " ind2=" ">
+    <subfield code="a">Lwowiana.</subfield>
+  </datafield>
+  <datafield tag="596" ind1=" " ind2=" ">
+    <subfield code="a">EDT_4</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">Zakład Narodowy im. Ossolińskich.</subfield>
+    <subfield code="b">Wydawnictwo.</subfield>
+    <subfield code="4">pbl</subfield>
+    <subfield code="0">n  99073547</subfield>
+    <subfield code="9">97285</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="u">http://www.sbc.org.pl/dlibra/docmetadata?id=7882&amp;from=&amp;dirids=1</subfield>
+  </datafield>
+  <datafield tag="942" ind1=" " ind2=" ">
+    <subfield code="2">udc</subfield>
+  </datafield>
+  <datafield tag="999" ind1=" " ind2=" ">
+    <subfield code="c">4962</subfield>
+    <subfield code="d">4962</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="2">udc</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">II6157</subfield>
+    <subfield code="7">1</subfield>
+    <subfield code="8">EDT-L</subfield>
+    <subfield code="9">10026</subfield>
+    <subfield code="a">BPK</subfield>
+    <subfield code="b">BPK</subfield>
+    <subfield code="c">BPK-MAG</subfield>
+    <subfield code="d">2014-08-30</subfield>
+    <subfield code="i">II-6157</subfield>
+    <subfield code="o">II-6157</subfield>
+    <subfield code="p">100000231332</subfield>
+    <subfield code="r">2014-08-30</subfield>
+    <subfield code="w">2014-08-30</subfield>
+    <subfield code="y">BK-NDW</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="2">udc</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">III28325</subfield>
+    <subfield code="7">1</subfield>
+    <subfield code="8">EDT-L</subfield>
+    <subfield code="9">10027</subfield>
+    <subfield code="a">BPK</subfield>
+    <subfield code="b">BPK</subfield>
+    <subfield code="c">BPK-MAG</subfield>
+    <subfield code="d">2014-08-30</subfield>
+    <subfield code="i">III-28325</subfield>
+    <subfield code="o">III-28325</subfield>
+    <subfield code="p">100000231402</subfield>
+    <subfield code="r">2014-08-30</subfield>
+    <subfield code="w">2014-08-30</subfield>
+    <subfield code="y">BK-NDW</subfield>
+  </datafield>
+</record>
