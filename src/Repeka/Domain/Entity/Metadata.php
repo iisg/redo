@@ -196,7 +196,7 @@ class Metadata implements Identifiable {
     ) {
         Assertion::allNotNull($newConstraints);
         if ($this->isBase()) {
-            $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
+            $this->label = array_filter($newLabel, 'trim');
             $this->placeholder = $newPlaceholder;
             $this->description = $newDescription;
             $this->constraints = $newConstraints;

@@ -8,6 +8,7 @@ use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
+use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
@@ -21,6 +22,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private $constraintArgumentsRule;
     /** @var ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule|\PHPUnit_Framework_MockObject_MockObject */
     private $rkConstraintRule;
+    /** @var  UnknownLanguageStripper */
+    private $unknownLanguageStripper;
 
     /** @var MetadataUpdateCommand */
     private $command;
@@ -46,7 +49,9 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->constraintSetRule = $this->constraintSetMatchesControlRule(true);
         $this->constraintArgumentsRule = $this->createRuleMock(ConstraintArgumentsAreValidRule::class, true);
         $this->rkConstraintRule = $this->resourceKindConstraintIsUser(true);
-        $this->command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], ['resourceKind' => [0],], false);
+        $languageRepository = $this->createLanguageRepositoryMock(['PL']);
+        $this->unknownLanguageStripper = new UnknownLanguageStripper($languageRepository);
+        $this->command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], ['resourceKind' => [0]], false);
     }
 
     public function testPasses() {
@@ -54,7 +59,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->languagesRule,
             $this->constraintSetRule,
             $this->constraintArgumentsRule,
-            $this->rkConstraintRule
+            $this->rkConstraintRule,
+            $this->unknownLanguageStripper
         );
         $validator->validate($this->command);
     }
@@ -65,7 +71,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->createRuleMock(ContainsOnlyAvailableLanguagesRule::class, false),
             $this->constraintSetRule,
             $this->constraintArgumentsRule,
-            $this->rkConstraintRule
+            $this->rkConstraintRule,
+            $this->unknownLanguageStripper
         );
         $validator->validate($this->command);
     }
@@ -76,7 +83,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->languagesRule,
             $this->constraintSetMatchesControlRule(false),
             $this->constraintArgumentsRule,
-            $this->rkConstraintRule
+            $this->rkConstraintRule,
+            $this->unknownLanguageStripper
         );
         $validator->validate($this->command);
     }
@@ -87,7 +95,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->languagesRule,
             $this->constraintSetRule,
             $this->createRuleMock(ConstraintArgumentsAreValidRule::class, false),
-            $this->rkConstraintRule
+            $this->rkConstraintRule,
+            $this->unknownLanguageStripper
         );
         $validator->validate($this->command);
     }
@@ -98,8 +107,33 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             $this->languagesRule,
             $this->constraintSetRule,
             $this->constraintArgumentsRule,
-            $this->resourceKindConstraintIsUser(false)
+            $this->resourceKindConstraintIsUser(false),
+            $this->unknownLanguageStripper
         );
         $validator->validate($this->command);
+    }
+
+    public function testStrippingUnknownLanugagesOnPrepare() {
+        $validator = new MetadataUpdateCommandValidator(
+            $this->languagesRule,
+            $this->constraintSetRule,
+            $this->constraintArgumentsRule,
+            $this->rkConstraintRule,
+            $this->unknownLanguageStripper
+        );
+        $command = new MetadataUpdateCommand(
+            1,
+            ['PL' => 'TestLabel', 'EN' => 'TestLabel'],
+            ['PL' => 'TestDescription', 'EN' => 'TestDescription'],
+            ['PL' => 'TestPlaceholder', 'EN' => 'TestPlaceholder'],
+            ['resourceKind' => [0]],
+            false
+        );
+        /** @var MetadataUpdateCommand $preparedCommand */
+        $preparedCommand = $validator->prepareCommand($command);
+        $this->assertEquals(1, $preparedCommand->getMetadataId());
+        $this->assertEquals(['PL' => 'TestLabel'], $preparedCommand->getNewLabel());
+        $this->assertEquals(['PL' => 'TestDescription'], $preparedCommand->getNewDescription());
+        $this->assertEquals(['PL' => 'TestPlaceholder'], $preparedCommand->getNewPlaceholder());
     }
 }

@@ -28,6 +28,7 @@ violationFields:
   metadataList: Lista metadanych
   userRole: Rola użytkownika
   displayStrategies: Strategia prezentacji zasobu
+  newLabel: Nowa nazwa
 user role is in use: Rola jest w użyciu.
 resource has children: zasób ma podzasoby.
 resources of this kind exist: istnieją zasoby tego rodzaju.

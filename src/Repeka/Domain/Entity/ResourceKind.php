@@ -103,7 +103,7 @@ class ResourceKind implements Identifiable {
      * @param Metadata[] $newMetadataList
      */
     public function update(array $newLabel, array $newMetadataList, array $newDisplayStrategies) {
-        $this->label = array_merge($this->label, array_filter($newLabel, 'trim'));
+        $this->label = array_filter($newLabel, 'trim');
         $this->setDisplayStrategies($newDisplayStrategies);
         /** @var Metadata[] $currentMetadata */
         $currentMetadata = [];

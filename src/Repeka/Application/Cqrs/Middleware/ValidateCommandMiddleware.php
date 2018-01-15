@@ -34,6 +34,7 @@ class ValidateCommandMiddleware implements CommandBusMiddleware {
     private function validate(Command $command) {
         /** @var CommandValidator $validator */
         $validator = $this->container->get($this->getValidatorId($command));
-        $validator->validate($command);
+        $commandToValidate = $validator->prepareCommand($command);
+        $validator->validate($commandToValidate);
     }
 }

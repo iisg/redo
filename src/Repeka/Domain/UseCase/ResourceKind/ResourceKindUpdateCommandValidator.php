@@ -6,6 +6,7 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
+use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
@@ -16,15 +17,19 @@ class ResourceKindUpdateCommandValidator extends CommandAttributesValidator {
     private $notBlankInAllLanguagesRule;
     /** @var CorrectResourceDisplayStrategySyntaxRule */
     private $correctResourceDisplayStrategySyntaxRule;
+    /** @var UnknownLanguageStripper */
+    private $unknownLanguageStripper;
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule $rkConstraintIsUserIfNecessaryRule,
-        CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategyRule
+        CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategyRule,
+        UnknownLanguageStripper $unknownLanguageStripper
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->rkConstraintIsUserIfNecessaryRule = $rkConstraintIsUserIfNecessaryRule;
         $this->correctResourceDisplayStrategySyntaxRule = $correctResourceDisplayStrategyRule;
+        $this->unknownLanguageStripper = $unknownLanguageStripper;
     }
 
     /** @inheritdoc */
@@ -41,5 +46,17 @@ class ResourceKindUpdateCommandValidator extends CommandAttributesValidator {
     public function validateMetadata(array $metadata) {
         $constraintsValidator = $this->rkConstraintIsUserIfNecessaryRule->forMetadataId($metadata['baseId']);
         return Validator::key('constraints', $constraintsValidator, false)->validate($metadata);
+    }
+
+    /**
+     * @param ResourceKindUpdateCommand $command
+     */
+    public function prepareCommand(Command $command): Command {
+        return new ResourceKindUpdateCommand(
+            $command->getResourceKindId(),
+            $this->unknownLanguageStripper->removeUnknownLanguages($command->getLabel()),
+            $command->getMetadataList(),
+            $command->getDisplayStrategies()
+        );
     }
 }

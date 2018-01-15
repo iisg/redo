@@ -3,9 +3,13 @@ namespace Repeka\Domain\Cqrs;
 
 use Repeka\Domain\Exception\InvalidCommandException;
 
-interface CommandValidator {
+abstract class CommandValidator {
+    public function prepareCommand(Command $command): Command {
+        return $command;
+    }
+
     /**
      * @throws InvalidCommandException when the command has some validation errors
      */
-    public function validate(Command $command);
+    abstract public function validate(Command $command);
 }
