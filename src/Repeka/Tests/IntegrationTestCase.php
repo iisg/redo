@@ -3,6 +3,7 @@ namespace Repeka\Tests;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
@@ -99,7 +100,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function getEntityManager() {
-        return $this->container->get('doctrine.orm.entity_manager');
+        return $this->container->get(EntityManagerInterface::class);
     }
 
     protected function loadFixture(FixtureInterface... $fixtures) {

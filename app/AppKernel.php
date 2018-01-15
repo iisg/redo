@@ -55,4 +55,11 @@ class AppKernel extends Kernel {
             $loader->load($localConfigPath);
         }
     }
+
+    protected function build(\Symfony\Component\DependencyInjection\ContainerBuilder $container) {
+        parent::build($container);
+        if ($this->getEnvironment() === 'test') {
+            $container->addCompilerPass(new Repeka\Tests\TestContainerPass(), \Symfony\Component\DependencyInjection\Compiler\PassConfig::TYPE_OPTIMIZE);
+        }
+    }
 }
