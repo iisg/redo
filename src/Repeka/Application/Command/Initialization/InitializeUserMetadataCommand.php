@@ -52,7 +52,7 @@ class InitializeUserMetadataCommand extends TransactionalCommand {
             $metadataNamesToCreate = $config->getInvalidMetadataKeys();
             if ($metadataNamesToCreate) {
                 $metadataList = array_map(function (Metadata $m) {
-                    return ['baseId' => $m->getBaseId()];
+                    return ['baseId' => $m->getBaseId(), 'shownInBrief' => $m->isShownInBrief()];
                 }, $userResourceKind->getMetadataList());
                 foreach ($metadataNamesToCreate as $metadataNameToCreate) {
                     $label = [];
@@ -79,6 +79,7 @@ class InitializeUserMetadataCommand extends TransactionalCommand {
                     $metadataList,
                     $userResourceKind->getDisplayStrategies()
                 ));
+                $output->writeln("Created user metadata based on user data mapping: " . count($metadataNamesToCreate));
             }
         }
     }
