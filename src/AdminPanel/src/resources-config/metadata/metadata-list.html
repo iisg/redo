@@ -80,7 +80,7 @@
                             <button type="button"
                                 class="btn btn-default btn-narrow ${metadata.hovered ? 'btn-raised' : ''}"
                                 click.trigger="metadata.editing = true"
-                                disabled.bind="metadata.pendingRequest">
+                                disabled.bind="metadata.pendingRequest || metadata.id < 0">
                                 <fa name="edit"></fa>
                             </button>
                             <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
