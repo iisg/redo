@@ -263,12 +263,6 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         ], false);
     }
 
-    public function testDoesNotUpdateMissingValuesInLabel() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
-        $metadata->update(['EN' => 'BB'], [], [], [], false);
-        $this->assertEquals(['PL' => 'AA', 'EN' => 'BB'], $metadata->getLabel());
-    }
-
     public function testConstraintsOverrideBase() {
         $initialValue = [100];
         $overrideValue = [101];

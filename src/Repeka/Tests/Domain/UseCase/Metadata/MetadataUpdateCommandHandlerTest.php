@@ -41,10 +41,4 @@ class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $updated = $this->handler->handle($command);
         $this->assertEquals('books', $updated->getResourceClass());
     }
-
-    public function testUpdatingWithNoValuesDoesNotCauseEntityInvalidState() {
-        $command = MetadataUpdateCommand::fromArray(1, []);
-        $updated = $this->handler->handle($command);
-        $this->assertEquals(['PL' => 'AA'], $updated->getLabel());
-    }
 }

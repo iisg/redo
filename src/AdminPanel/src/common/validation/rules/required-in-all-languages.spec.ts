@@ -8,7 +8,7 @@ describe(RequiredInAllLanguagesValidationRule.name, () => {
   let eventAggregator: EventAggregator;
 
   beforeEach((ready) => {
-    languageRepository = new LanguageRepository(undefined, eventAggregator);
+    languageRepository = new LanguageRepository(undefined, undefined, eventAggregator);
     eventAggregator = new EventAggregator();
     spyOn(languageRepository, 'getList').and.returnValue(new Promise(resolve => resolve([{code: 'PL'}, {code: 'EN'}])));
     rule = new RequiredInAllLanguagesValidationRule(languageRepository, eventAggregator);
@@ -17,6 +17,10 @@ describe(RequiredInAllLanguagesValidationRule.name, () => {
 
   it('validates value that contains both languages', () => {
     expect(rule.validationFunction()({PL: 'text', EN: 'text'})).toBeTruthy();
+  });
+
+  it("validates value that contains extra language", () => {
+    expect(rule.validationFunction()({PL: 'text', EN: 'text', RUS: 'text'})).toBeTruthy();
   });
 
   it('invalidates value that does not contain one language', () => {
@@ -37,10 +41,6 @@ describe(RequiredInAllLanguagesValidationRule.name, () => {
 
   it('validates undefined', () => {
     expect(rule.validationFunction()(undefined)).toBeTruthy();
-  });
-
-  it("invalides value that contains extra language", () => {
-    expect(rule.validationFunction()({PL: 'text', EN: 'text', RUS: 'text'})).toBeFalsy();
   });
 
   it("updates the list after the languages changed event", (done) => {

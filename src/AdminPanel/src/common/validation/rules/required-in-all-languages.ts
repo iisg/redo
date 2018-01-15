@@ -36,8 +36,7 @@ export class RequiredInAllLanguagesValidationRule implements CustomValidationRul
         }
       }
       let missingLanguages = $(this.knownLanguageCodes).not(languagesWithValue).get();
-      let extraLanguages = $(languagesWithValue).not(this.knownLanguageCodes).get();
-      return missingLanguages.length == 0 && extraLanguages.length == 0;
+      return missingLanguages.length == 0;
     };
   }
 }

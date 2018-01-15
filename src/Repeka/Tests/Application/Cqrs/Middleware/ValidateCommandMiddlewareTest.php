@@ -41,6 +41,7 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailsValidation() {
         $this->expectException('Repeka\Domain\Exception\InvalidCommandException');
+        $this->validator->expects($this->once())->method('prepareCommand')->willReturnArgument(0);
         $this->container->expects($this->once())->method('has')->willReturn(true);
         $this->container->expects($this->once())->method('get')->willReturn($this->validator);
         $this->validator->expects($this->once())->method('validate')->with($this->command)

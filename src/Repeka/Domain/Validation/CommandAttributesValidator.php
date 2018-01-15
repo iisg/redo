@@ -9,7 +9,7 @@ use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Validatable;
 
 /** @SuppressWarnings(PHPMD.NumberOfChildren) */
-abstract class CommandAttributesValidator implements CommandValidator {
+abstract class CommandAttributesValidator extends CommandValidator {
     abstract public function getValidator(Command $command): Validatable;
 
     /**

@@ -9,6 +9,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
+use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 use Repeka\Tests\Traits\StubsTrait;
 use Respect\Validation\Validator;
 
@@ -33,10 +34,12 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
             'forMetadataId'
         );
+        $languageRepository = $this->createLanguageRepositoryMock(['PL']);
         $this->validator = new ResourceKindUpdateCommandValidator(
             $notBlankInAllLanguagesRule,
             $this->rkConstraintIsUser,
-            $this->correctResourceDisplayStrategySyntaxRule
+            $this->correctResourceDisplayStrategySyntaxRule,
+            new UnknownLanguageStripper($languageRepository)
         );
     }
 
@@ -59,5 +62,13 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 'control' => 'relationship', 'constraints' => ['resourceKind' => [123]]],
         ], []);
         $this->validator->validate($command);
+    }
+
+    public function testRemovesInvalidLanguagesOnPrepare() {
+        $command = new ResourceKindUpdateCommand(1, ['PL' => 'Labelka', 'EN' => 'Labelka'], [], []);
+        /** @var ResourceKindUpdateCommand $preparedCommand */
+        $preparedCommand = $this->validator->prepareCommand($command);
+        $this->assertEquals(1, $preparedCommand->getResourceKindId());
+        $this->assertEquals(['PL' => 'Labelka'], $preparedCommand->getLabel());
     }
 }
