@@ -92,6 +92,7 @@ framework:
 parameters:
   locale: pl
   secret: some_secret
+  container.autowiring.strict_mode: true
 
 twig:
   debug: "%kernel.debug%"

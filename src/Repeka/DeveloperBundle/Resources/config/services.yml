@@ -4,5 +4,9 @@ services:
     autoconfigure: true
     public: false
 
+  Repeka\DeveloperBundle\DataFixtures\:
+    resource: '../../DataFixtures'
+    tags: [doctrine.fixture.orm]
+
   Repeka\DeveloperBundle\Command\:
     resource: '../../Command'

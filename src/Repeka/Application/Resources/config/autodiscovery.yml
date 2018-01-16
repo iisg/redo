@@ -9,6 +9,8 @@ services:
       tags: [repeka.metadata_value_processor]
     Repeka\Domain\MetadataImport\Transform\ImportTransform:
       tags: [repeka.import_transform]
+    Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint:
+      tags: [repeka.metadata_constraint]
 
   Repeka\Application\Authentication\:
     resource: '../../Authentication'
@@ -38,17 +40,11 @@ services:
   Repeka\Application\MetadataImport\:
     resource: '../../MetadataImport'
 
+  Repeka\Domain\:
+    resource: '../../../Domain'
+    exclude: '../../../Domain/Entity'
+
   Repeka\Domain\UseCase\:
     public: true
     resource: '../../../Domain/UseCase'
     exclude: '../../../Domain/UseCase/**/*{Command,Query}.php'
-
-  Repeka\Domain\Validation\MetadataConstraints\:
-    resource: '../../../Domain/Validation/MetadataConstraints'
-    tags: [repeka.metadata_constraint]
-
-  Repeka\Domain\Validation\Rules\:
-    resource: '../../../Domain/Validation/Rules'
-
-  Repeka\Domain\MetadataImport\:
-    resource: '../../../Domain/MetadataImport'

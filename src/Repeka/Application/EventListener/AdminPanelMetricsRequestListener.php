@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Application\EventListener;
 
-use M6Web\Bundle\StatsdBundle\Client\Client;
+use M6Web\Component\Statsd\Client;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class AdminPanelMetricsRequestListener {
