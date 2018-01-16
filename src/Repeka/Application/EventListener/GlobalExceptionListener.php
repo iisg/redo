@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -22,14 +22,14 @@ class GlobalExceptionListener {
 
     private $isDebug;
 
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var SessionInterface */
     private $session;
     /** @var LoggerInterface */
     private $logger;
 
-    public function __construct($isDebug, TokenStorage $tokenStorage, SessionInterface $session, LoggerInterface $logger) {
+    public function __construct($isDebug, TokenStorageInterface $tokenStorage, SessionInterface $session, LoggerInterface $logger) {
         $this->isDebug = $isDebug;
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;

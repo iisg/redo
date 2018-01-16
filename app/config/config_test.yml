@@ -15,7 +15,7 @@ framework:
 monolog:
   handlers:
     main:
-      channels: [!event, !exception_listener]
+      channels: ['!event', '!exception_listener']
       level: notice
       path: "%kernel.logs_dir%/%kernel.environment%.log"
       type: stream
@@ -38,6 +38,7 @@ services:
   test.client:
     class: Repeka\Tests\TestClient
     shared: false
+    public: true
     arguments:
       - '@kernel'
       - '%test.client.parameters%'

@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Application\Cqrs\Middleware;
 
-use M6Web\Bundle\StatsdBundle\Client\Client;
+use M6Web\Component\Statsd\Client;
 use Repeka\Domain\Cqrs\Command;
 
 class MetricsCommandBusMiddleware implements CommandBusMiddleware {
