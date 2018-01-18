@@ -61,7 +61,7 @@ export abstract class AdvancedMapper<V> extends Mapper<V> {
 
   abstract fromBackendProperty(key: string, dto: Object, entity: Object): Promise<V>;
 
-  abstract toBackendProperty(key: string, entity: V, dto: Object): void;
+  abstract toBackendProperty(key: string, entity: Object, dto: Object): void;
 
   fromBackendValue(): Promise<V> {
     throw new Error(this.ERROR_MESSAGE);

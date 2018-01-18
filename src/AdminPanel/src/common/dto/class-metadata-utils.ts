@@ -1,4 +1,4 @@
-import {metadata} from "aurelia-metadata";
+import {metadata as reflection} from "aurelia-metadata";
 import {Class, EntityClass, MapperClass} from "./contracts";
 
 const propertiesMetadata = 'dto_properties';
@@ -8,20 +8,20 @@ type DtoProperties = StringMap<HandlingInstruction<any>>;
 
 export function getDtoProperties(entityOrClass: Class<any> | Object): DtoProperties {
   const klass = toClass(entityOrClass);
-  return metadata.get(propertiesMetadata, klass as Function) as any || {};
+  return reflection.get(propertiesMetadata, klass as Function) as any || {};
 }
 
 export function addDtoProperty<T>(entityOrClass: Class<T> | T, propertyName: string, handlingInstruction: HandlingInstruction<T>): void {
   const klass = toClass(entityOrClass);
   const properties = getDtoProperties(klass);
   properties[propertyName] = handlingInstruction;
-  metadata.define(propertiesMetadata, properties, klass as Function);
+  reflection.define(propertiesMetadata, properties, klass as Function);
 }
 
 export function inferHandlingInstruction(entityOrClass: EntityClass<any> | Object, propertyName: string): string {
   const entityClass = toClass<any, EntityClass<any>>(entityOrClass);
   const entityPrototype = entityClass.prototype;
-  const inferredType: EntityClass<any> | Class<any> = metadata.getOwn('design:type', entityPrototype, propertyName) as any;
+  const inferredType: EntityClass<any> | Class<any> = reflection.getOwn('design:type', entityPrototype, propertyName) as any;
   const className = entityClass.NAME || entityClass.name;
   const userFriendlyRef = className + '.' + propertyName;
   if (inferredType === undefined) {
