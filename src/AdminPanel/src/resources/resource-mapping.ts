@@ -4,6 +4,7 @@ import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {autoinject} from "aurelia-dependency-injection";
 import {AdvancedMapper} from "common/dto/mappers";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
+import {maps} from "common/dto/decorators";
 
 export class ResourceMapper extends AutoMapper<Resource> {
   fromBackendValue(dto: any, entity: Resource): Promise<Resource> {
@@ -62,20 +63,21 @@ export class ResourceMapper extends AutoMapper<Resource> {
 }
 
 @autoinject
+@maps('ResourceKindId')
 export class ResourceKindIdMapper extends AdvancedMapper<ResourceKind> {
   constructor(private resourceKindRepository: ResourceKindRepository, private autoMapper: AutoMapper<ResourceKind>) {
     super();
   }
 
-  fromBackendProperty(key: string, dto: Object, resourceKind: Object): Promise<ResourceKind> {
+  fromBackendProperty(key: string, dto: Object, resource: Object): Promise<ResourceKind> {
     const dtoKey = key + 'Id';
     const resourceKindId = dto[dtoKey];
     return this.resourceKindRepository.get(resourceKindId);
   }
 
-  toBackendProperty(key: string, resourceKind: ResourceKind, dto: Object): void {
+  toBackendProperty(key: string, resource: Resource, dto: Object): void {
     const dtoKey = key + 'Id';
-    dto[dtoKey] = resourceKind.id;
+    dto[dtoKey] = resource.kind.id;
   }
 
   clone(resourceKind: ResourceKind): ResourceKind {

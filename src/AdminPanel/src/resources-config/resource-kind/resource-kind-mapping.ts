@@ -7,23 +7,23 @@ import {maps} from "common/dto/decorators";
 import {Metadata} from "../metadata/metadata";
 import {TypeRegistry} from "common/dto/registry";
 import {SystemMetadata} from "../metadata/system-metadata";
+import {ResourceKind} from "./resource-kind";
 
 @autoinject
-@maps('WorkflowId')  // avoid circular dependency issues
+@maps('WorkflowId')
 export class WorkflowIdMapper extends AdvancedMapper<Workflow> {
   constructor(private workflowRepository: WorkflowRepository, private autoMapper: AutoMapper<Workflow>) {
     super();
   }
 
-  fromBackendProperty(key: string, dto: Object, workflow: Object): Promise<Workflow> {
-    const dtoKey = key + 'Id';
-    const workflowId = dto[dtoKey];
+  fromBackendProperty(key: string, dto: Object, resourceKind: Object): Promise<Workflow> {
+    const workflowId = dto[key + 'Id'];
     return this.isEmpty(workflowId) ? Promise.resolve(undefined) : this.workflowRepository.get(workflowId);
   }
 
-  toBackendProperty(key: string, workflow: Workflow, dto: Object): void {
-    const dtoKey = key + 'Id';
-    dto[dtoKey] = this.isEmpty(workflow) ? undefined : workflow.id;
+  toBackendProperty(key: string, resourceKind: ResourceKind, dto: Object): void {
+    const workflow = resourceKind.workflow;
+    dto[key + 'Id'] = this.isEmpty(workflow) ? undefined : workflow.id;
   }
 
   protected clone(workflow: Workflow): Workflow {
