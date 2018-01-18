@@ -55,7 +55,7 @@ System.config({
     "martingust/aurelia-repeat-strategies": "github:martingust/aurelia-repeat-strategies@master",
     "moment": "npm:moment@2.19.1",
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.13.0",
-    "region-flags": "github:behdad/region-flags@1.0.1",
+    "region-flags": "npm:region-flags@1.1.0",
     "select2": "github:select2/select2@4.0.5",
     "sweetalert2": "npm:sweetalert2@6.11.5",
     "text": "github:systemjs/plugin-text@0.0.9",
