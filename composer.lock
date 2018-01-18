@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8c4c26ccae073ee611417e831915918",
+    "content-hash": "e3dc85540d0a717463bae5399442bfc2",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1369,16 +1369,16 @@
         },
         {
             "name": "m6web/statsd-bundle",
-            "version": "v2.15.0",
+            "version": "v2.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/M6Web/StatsdBundle.git",
-                "reference": "f5ca7cbbbffeb0524a7d286e6ffe932d58ce07a3"
+                "reference": "70bc09750d345ff024bdfea912e351c7a3b03a86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/M6Web/StatsdBundle/zipball/f5ca7cbbbffeb0524a7d286e6ffe932d58ce07a3",
-                "reference": "f5ca7cbbbffeb0524a7d286e6ffe932d58ce07a3",
+                "url": "https://api.github.com/repos/M6Web/StatsdBundle/zipball/70bc09750d345ff024bdfea912e351c7a3b03a86",
+                "reference": "70bc09750d345ff024bdfea912e351c7a3b03a86",
                 "shasum": ""
             },
             "require": {
@@ -1416,7 +1416,7 @@
                 "statsd",
                 "symfony"
             ],
-            "time": "2017-12-12T11:04:05+00:00"
+            "time": "2018-01-17T20:37:43+00:00"
         },
         {
             "name": "monolog/monolog",
