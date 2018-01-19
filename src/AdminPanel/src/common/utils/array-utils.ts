@@ -48,3 +48,11 @@ export function move<T>(array: T[], element: T, delta: number): void {
 export function diff<T>(array1: T[], array2: any[]): T[] {
   return array1.filter(item => !inArray(item, array2));
 }
+
+/**
+ * Converts array of objects to one object
+ * https://stackoverflow.com/a/45906909
+ */
+export function convertToObject<T>(array: T[]): Object {
+  return Object.assign({}, ...array);
+}

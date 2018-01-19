@@ -1,5 +1,5 @@
 import {Resource} from "../resource";
-import {ValidationController, ValidationControllerFactory, Validator} from "aurelia-validation";
+import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
@@ -9,7 +9,7 @@ import {ImportDialog} from "./xml-import/import-dialog";
 import {Modal} from "common/dialog/modal";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
-import {flatten, inArray} from "common/utils/array-utils";
+import {flatten, inArray, convertToObject} from "common/utils/array-utils";
 import {RequirementState, WorkflowTransition} from "../../workflows/workflow";
 import {Router} from "aurelia-router";
 import {numberKeysByValue} from "../../common/utils/object-utils";
@@ -28,8 +28,7 @@ export class ResourceForm {
 
   private validationController: ValidationController;
 
-  constructor(private validator: Validator,
-              private entitySerializer: EntitySerializer,
+  constructor(private entitySerializer: EntitySerializer,
               private modal: Modal,
               private router: Router,
               validationControllerFactory: ValidationControllerFactory) {
@@ -50,10 +49,25 @@ export class ResourceForm {
   }
 
   get requiredMetadataIds(): number[] {
-    if (this.edit && this.transition) {
-      return this.requiredMetadataIdsForTransition();
+    let requiredMetadataIds = [];
+    if (this.resource.kind && this.resource.kind.workflow) {
+      let restrictingMetadata;
+      if (this.edit && this.transition) {
+        const places = [];
+        this.transition.tos.forEach((value) => {
+          const places = this.resource.kind.workflow.places;
+          places.push(places.find(place => place.id === value));
+        });
+        restrictingMetadata = places.map(v => v.restrictingMetadataIds);
+        restrictingMetadata = convertToObject(restrictingMetadata);
+      } else {
+        restrictingMetadata = this.resource.kind.workflow.places[0].restrictingMetadataIds;
+      }
+      requiredMetadataIds = flatten(
+        numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED)
+      );
     }
-    return this.requiredMetadataIdsForAdding();
+    return requiredMetadataIds;
   }
 
   requiredMetadataIdsForTransition(): number[] {
@@ -61,23 +75,11 @@ export class ResourceForm {
     return reasonCollection ? reasonCollection.missingMetadataIds : [];
   }
 
-  requiredMetadataIdsForAdding(): number[] {
-    let restrictingMetadataIds = [];
-    if (this.resource.kind && this.resource.kind.workflow) {
-      const metadataListIds = this.resource.kind.metadataList.map(metadata => metadata.baseId);
-      const restrictingMetadata = this.resource.kind.workflow.places[0].restrictingMetadataIds;
-      restrictingMetadataIds = flatten(
-        numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED)
-      ).filter(v => inArray(v, metadataListIds));
-    }
-    return restrictingMetadataIds;
-  }
-
   get canApplyTransition(): boolean {
     if (this.transition) {
       const contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
-      for (const metadatId of this.requiredMetadataIdsForTransition()) {
-        let array = contents[metadatId] !== undefined ? contents[metadatId] : [];
+      for (const metadataId of this.requiredMetadataIdsForTransition()) {
+        let array = contents[metadataId] !== undefined ? contents[metadataId] : [];
         if (!array.length) {
           return false;
         }

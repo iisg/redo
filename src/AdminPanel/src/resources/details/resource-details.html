@@ -65,7 +65,8 @@
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"
             else>
-            <resource-form edit.bind="resource"
+            <resource-form resource-class.bind="resource.resourceClass"
+                edit.bind="resource"
                 submit.call="saveEditedResource(savedResource, transitionId)"></resource-form>
         </div>
     </div>
