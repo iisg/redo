@@ -13,8 +13,8 @@
                     places.bind="edit.kind.workflow.places"></workflow-froms-tos-display>
             </div>
             <div class="${edit ? 'col-md-4' : 'col-md-8'}">
-                <required-metadata-list if.bind="requiredMetadataIds.length > 0 && resource.kind.metadataList.length > 0"
-                    all-metadata-list.bind="resource.kind.metadataList"
+                <required-metadata-list if.bind="requiredMetadataIds.length > 0"
+                    resource-class.bind="resourceClass"
                     required-metadata-ids.bind="resource.kind ? requiredMetadataIds : []"></required-metadata-list>
             </div>
             <div class="${editing && !transition ? 'col-md-8' : 'col-md-4'}">
