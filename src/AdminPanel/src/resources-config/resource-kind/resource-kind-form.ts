@@ -2,7 +2,7 @@ import {ResourceKind} from "./resource-kind";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable, ComponentDetached} from "aurelia-templating";
+import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {BindingSignaler} from "aurelia-templating-resources";
@@ -10,9 +10,10 @@ import {Metadata} from "../metadata/metadata";
 import {noop, VoidFunction} from "common/utils/function-utils";
 import {move, removeValue} from "common/utils/array-utils";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {SystemMetadata} from "../metadata/system-metadata";
 
 @autoinject
-export class ResourceKindForm implements ComponentDetached {
+export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   @bindable submit: (value: { savedResourceKind: ResourceKind }) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
   @bindable resourceClass: string;
@@ -32,6 +33,12 @@ export class ResourceKindForm implements ComponentDetached {
               private entitySerializer: EntitySerializer) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
+  }
+
+  attached() {
+    if (!this.edit) {
+      this.resourceKind.metadataList.unshift(SystemMetadata.PARENT);
+    }
   }
 
   newMetadataBaseChanged() {
@@ -68,7 +75,11 @@ export class ResourceKindForm implements ComponentDetached {
 
   @computedFrom('resourceKind.metadataList', 'resourceKind.metadataList.length')
   get editableMetadataList(): Metadata[] {
-    return this.resourceKind.metadataList.filter(metadata => metadata.id > 0);
+    return this.resourceKind.metadataList.filter(metadata => metadata.baseId > 0);
+  }
+
+  get resourceChildConstraintMetadata(): Metadata {
+    return this.resourceKind.metadataList.find(metadata => metadata.baseId === SystemMetadata.PARENT.baseId);
   }
 
   editChanged() {
@@ -94,7 +105,7 @@ export class ResourceKindForm implements ComponentDetached {
     this.controller.validate().then(result => {
       if (result.valid) {
         return Promise.resolve(this.submit({savedResourceKind: this.resourceKind}))
-          .then(() => this.editing || (this.resourceKind = new ResourceKind));
+          .then(() => this.editing || (this.resourceKind = new ResourceKind()));
       }
     }).finally(() => this.submitting = false);
   }

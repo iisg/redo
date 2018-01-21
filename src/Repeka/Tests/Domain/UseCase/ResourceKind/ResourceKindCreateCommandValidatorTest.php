@@ -97,8 +97,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator->validate($command);
     }
 
-    public function testFailWithExplicitParentMetadata() {
-        $this->expectException(InvalidCommandException::class);
+    public function testPassWithExplicitParentMetadata() {
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
             [
                 'baseId' => SystemMetadata::PARENT,

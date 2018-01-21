@@ -2,11 +2,11 @@ import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {arraysEqual} from "common/utils/array-utils";
 import {twoWay, oneTime} from "common/components/binding-mode";
-import {SystemResourceKinds} from "../../../resource-kind/system-resource-kinds";
 import {Workflow} from "workflows/workflow";
-import {Metadata} from "../../metadata";
 import {WorkflowRepository} from "workflows/workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
+import {Metadata} from "resources-config/metadata/metadata";
+import {SystemResourceKinds} from "resources-config/resource-kind/system-resource-kinds";
 
 @autoinject
 export class ResourceKindConstraintEditor {

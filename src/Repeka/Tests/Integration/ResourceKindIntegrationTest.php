@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
@@ -94,6 +95,14 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'placeholder' => [],
                 'shownInBrief' => false,
                 'resourceClass' => 'books',
+            ], [
+                'baseId' => SystemMetadata::PARENT,
+                'control' => MetadataControl::RELATIONSHIP,
+                'description' => [],
+                'label' => [],
+                'placeholder' => [],
+                'shownInBrief' => false,
+                'resourceClass' => 'books',
             ]],
             'resourceClass' => 'books',
         ]);
@@ -103,7 +112,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         /** @var ResourceKind $createdResourceKind */
         $createdResourceKind = $resourceKindRepository->findOne($createdId);
         $this->assertEquals(['TEST' => 'created'], $createdResourceKind->getLabel());
-        $this->assertCount(1, $createdResourceKind->getMetadataList());
+        $this->assertCount(2, $createdResourceKind->getMetadataList());
         $createdMetadata = $createdResourceKind->getMetadataList()[0];
         $this->assertEquals($baseMetadata->getControl(), $createdMetadata->getControl());
         $this->assertEquals($baseMetadata->getId(), $createdMetadata->getBaseId());
@@ -137,6 +146,14 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'shownInBrief' => false,
                 'resourceClass' => 'books',
                 'constraints' => ['maxCount' => 0],
+            ], [
+            'baseId' => SystemMetadata::PARENT,
+                'control' => MetadataControl::RELATIONSHIP,
+                'description' => [],
+                'label' => [],
+                'placeholder' => [],
+                'shownInBrief' => false,
+                'resourceClass' => 'books',
             ]],
             'displayStrategies' => [],
         ]);

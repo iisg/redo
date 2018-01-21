@@ -37,7 +37,7 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
             ::attribute('label', $this->notBlankInAllLanguagesRule)
             ->attribute('resourceClass', $this->resourceClassExistsRule)
             ->attribute('metadataList', Validator::arrayType()->length(1)->each(
-                Validator::arrayType()->length(1)->key('baseId', Validator::intVal()->not(Validator::equals(SystemMetadata::PARENT)))
+                Validator::arrayType()->length(1)->key('baseId', Validator::intVal())
             ))
             ->attribute('displayStrategies', Validator::arrayType()->each($this->correctResourceDisplayStrategySyntaxRule));
     }

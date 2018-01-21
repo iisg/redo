@@ -14,6 +14,7 @@ import {RequirementState, WorkflowTransition} from "../../workflows/workflow";
 import {Router} from "aurelia-router";
 import {numberKeysByValue} from "../../common/utils/object-utils";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
+import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 
 @autoinject
 export class ResourceForm {
@@ -25,6 +26,7 @@ export class ResourceForm {
   submitting: boolean = false;
   hasValidationError: boolean = false;
   transition: WorkflowTransition;
+  resourceKindIdsAllowedByParent: number[] = [];
 
   private validationController: ValidationController;
 
@@ -41,6 +43,7 @@ export class ResourceForm {
       let params = this.router.currentInstruction.queryParams;
       this.transition = this.edit.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
     }
+    this.setResourceKindsAlloweByParent();
   }
 
   @computedFrom('resource.id')
@@ -86,6 +89,24 @@ export class ResourceForm {
       }
       return true;
     }
+  }
+
+  private setResourceKindsAlloweByParent() {
+    if (this.parent) {
+      let metadata = this.parent.kind.metadataList.find(v => v.baseId === SystemMetadata.PARENT.baseId);
+      let resourceKindsAllowedByParent = [];
+      resourceKindsAllowedByParent = metadata.constraints.resourceKind;
+      this.resourceKindIdsAllowedByParent = resourceKindsAllowedByParent.map(v => v.hasOwnProperty('id') ? v.id : v);
+    }
+  }
+
+  isAllowedByParentFilter() {
+    return (resourceKind: ResourceKind) => {
+      if (this.resourceKindIdsAllowedByParent.length > 0) {
+        return inArray(resourceKind.id, this.resourceKindIdsAllowedByParent);
+      }
+      return true;
+    };
   }
 
   private copyContentsAndFilterEmptyValues(contents: StringArrayMap): StringArrayMap {

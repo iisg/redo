@@ -39,11 +39,13 @@ class MetadataListMapper extends ArrayMapper<Metadata> {
   }
 
   fromBackendValue(items: any[]): Promise<Metadata[]> {
-    return super.fromBackendValue(items).then(items => [SystemMetadata.PARENT].concat(items));
+    return super.fromBackendValue(items).then(items => {
+      const parentMetadata = items.filter(v => v.baseId === SystemMetadata.PARENT.baseId);
+      return !parentMetadata.length ? [SystemMetadata.PARENT].concat(items) : items;
+    });
   }
 
   toBackendValue(items: Metadata[]): any[] {
-    items = items.filter(item => item.id >= 0);
     return super.toBackendValue(items);
   }
 }
