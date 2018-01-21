@@ -8,7 +8,8 @@
     <div if.bind="addFormOpened"
         class="well fade-inup-outdown au-animate floating-form-full-width">
         <h2>${'Add new resource kind' | t}</h2>
-        <resource-kind-form resource-class.bind="resourceClass" submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
+        <resource-kind-form resource-class.bind="resourceClass"
+            submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
     </div>
 
     <div class="row"
@@ -41,12 +42,14 @@
                     <td if.bind="!resourceKind.editing">
                         <dl class="dl-horizontal">
                             <template repeat.for="metadata of resourceKind.metadataList">
-                                <dt>${metadata.name}</dt>
-                                <dd>
-                                    <span>${metadata.label | inCurrentLanguage}</span>
-                                    <fa name="thumb-tack"
-                                        if.bind="metadata.shownInBrief"></fa>
-                                </dd>
+                                <div if.bind="metadata.baseId > 0">
+                                    <dt>${metadata.name}</dt>
+                                    <dd>
+                                        <span>${metadata.label | inCurrentLanguage}</span>
+                                        <fa name="thumb-tack"
+                                            if.bind="metadata.shownInBrief"></fa>
+                                    </dd>
+                                </div>
                             </template>
                         </dl>
                     </td>

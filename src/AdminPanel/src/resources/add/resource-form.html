@@ -1,5 +1,5 @@
 <template>
-    <require from="common/components/resource-kind-chooser/resource-kind-chooser"></require>
+    <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="./resource-form-generated"></require>
     <require from="../metadata/required-metadata-list"></require>
     <require from="workflows/details/transitions/workflow-froms-tos-display"></require>
@@ -34,6 +34,7 @@
         <div class="form-group"
             if.bind="!editing">
             <resource-kind-chooser resource-class.bind="resourceClass"
+                filter.one-time="isAllowedByParentFilter()"
                 value.bind="resource.kind & validate"></resource-kind-chooser>
         </div>
         <div class="form-group">

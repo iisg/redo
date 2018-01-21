@@ -5,6 +5,7 @@
     <require from="../metadata/metadata-form"></require>
     <require from="./move-up-down-buttons"></require>
     <require from="./display-strategies/resource-display-strategies-form"></require>
+    <require from="common/components/resource-kind/resource-kind-constraint-editor/resource-kind-constraint-editor"></require>
 
     <form submit.delegate="validateAndSubmit()">
         <div class="form-group no-margin-top">
@@ -79,6 +80,11 @@
             <label>${'Workflow' | t}</label>
             <workflow-chooser resource-class.bind="resourceClass"
                 value.bind="resourceKind.workflow"></workflow-chooser>
+        </div>
+        <div class="form-group">
+            <label>${'Available child resource kind' | t}</label>
+            <resource-kind-constraint-editor metadata.bind="resourceChildConstraintMetadata"
+                resource-class.bind="resourceClass"></resource-kind-constraint-editor>
         </div>
         <div class="form-group">
             <resource-display-strategies-form resource-kind.bind="resourceKind"></resource-display-strategies-form>
