@@ -2,6 +2,7 @@
 namespace Repeka\Application\Command\Initialization;
 
 use Repeka\Application\Command\TransactionalCommand;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Metadata;
@@ -73,6 +74,7 @@ class InitializeUserMetadataCommand extends TransactionalCommand {
                     ));
                     $metadataList[] = ['baseId' => $metadata->getId()];
                 }
+                $metadataList[] = ['baseId' => SystemMetadata::PARENT];
                 $this->commandBus->handle(new ResourceKindUpdateCommand(
                     $userResourceKind->getId(),
                     $userResourceKind->getLabel(),

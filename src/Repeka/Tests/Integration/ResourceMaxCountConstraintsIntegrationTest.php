@@ -1,8 +1,10 @@
 <?php
 namespace Repeka\Tests\Integration;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\IntegrationTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,6 +13,10 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
 
     /** @var Metadata */
     private $baseMetadata;
+    /** @var Metadata */
+    private $baseMetadata2;
+    /** @var  Metadata */
+    private $parentMetadata;
 
     private $resourceKindMax1;
     private $resourceKindMax3;
@@ -19,14 +25,20 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
+        /** @var MetadataRepository $metadataRepository */
+        $metadataRepository = $this->container->get(MetadataRepository::class);
+        $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
         $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'textarea');
+        $this->baseMetadata2 = $this->createMetadata('Base2', ['TEST' => 'Base metadata2'], [], [], 'textarea');
         $this->resourceKindMax1 = $this->getCountConstrainedResourceKind(1);
         $this->resourceKindMax3 = $this->getCountConstrainedResourceKind(3);
     }
 
     private function getCountConstrainedResourceKind(int $max): ResourceKind {
         return $this->createResourceKind(['TEST' => 'Resource kind'], [
+            $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata'], ''),
             $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata'], 'books', $max),
+            $this->resourceKindMetadata($this->baseMetadata2, ['TEST' => 'Metadata2'], 'books', $max),
         ]);
     }
 

@@ -2,6 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 
@@ -23,6 +24,7 @@ class ResourceKindsStage2Fixture extends RepekaFixture {
             $bookResourceKind->getId(),
             $bookResourceKind->getLabel(),
             [
+                ['baseId' => SystemMetadata::PARENT],
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, 1, true),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION, 1, true),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),

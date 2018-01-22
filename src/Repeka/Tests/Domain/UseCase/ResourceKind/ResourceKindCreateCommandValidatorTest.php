@@ -10,6 +10,7 @@ use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator;
+use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
@@ -43,14 +44,28 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator = new ResourceKindCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepository),
             new ResourceClassExistsRule(['books', 'dictionaries']),
-            new CorrectResourceDisplayStrategySyntaxRule($this->resourceDisplayStrategyEvaluator)
+            new CorrectResourceDisplayStrategySyntaxRule($this->resourceDisplayStrategyEvaluator),
+            new ContainsParentMetadataRule()
         );
     }
 
     public function testValidating() {
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            [
+                'baseId' => SystemMetadata::PARENT,
+                'name' => 'A',
+                'label' => [],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text'
+            ], [
+                'baseId' => 1,
+                'name' => 'B',
+                'label' => ['PL' => 'Label B'],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text'
+            ],
         ], 'books');
         $this->validator->validate($command);
     }
@@ -58,17 +73,21 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     public function testFailWhenNoLabel() {
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand([], [
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-        ], 'books');
-        $this->validator->validate($command);
-    }
-
-    public function testFailWhenNoBaseIdForOneOfTheMetadata() {
-        $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            [
+                'baseId' => SystemMetadata::PARENT,
+                'name' => 'A',
+                'label' => [],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text'
+            ], [
+                'baseId' => 1,
+                'name' => 'B',
+                'label' => ['PL' => 'Label B'],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text'
+            ],
         ], 'books');
         $this->validator->validate($command);
     }
@@ -85,6 +104,13 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     public function testPassesWhenInvalidMetadataBecauseItOnlyExtendsTheBase() {
         $this->metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysInvalid());
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
+            [
+                'baseId' => SystemMetadata::PARENT,
+                'name' => 'A', 'label' => [],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text'
+            ],
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
             ['baseId' => 1, 'name' => 'B', 'label' => [], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ], 'books');
@@ -97,10 +123,40 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator->validate($command);
     }
 
+    public function testFailWhenOnlyParentMetadata() {
+        $this->expectException(InvalidCommandException::class);
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
+            [
+                'baseId' => SystemMetadata::PARENT,
+                'name' => 'A', 'label' => ['PL' => 'Label A'],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text'
+            ],
+        ], 'books');
+        $this->validator->validate($command);
+    }
+
+    public function testFailWhenNoParentMetadata() {
+        $this->expectException(InvalidCommandException::class);
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
+            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            ['baseId' => 2, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+        ], 'books');
+        $this->validator->validate($command);
+    }
+
     public function testPassWithExplicitParentMetadata() {
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
             [
                 'baseId' => SystemMetadata::PARENT,
+                'name' => 'A',
+                'label' => ['PL' => 'Label A'],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text',
+            ], [
+                'baseId' => 2,
                 'name' => 'A',
                 'label' => ['PL' => 'Label A'],
                 'description' => [],
@@ -115,13 +171,20 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
             [
+                'baseId' => SystemMetadata::PARENT,
+                'name' => 'A',
+                'label' => ['PL' => 'Label A'],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text',
+            ], [
                 'baseId' => 1,
                 'name' => 'A',
                 'label' => ['PL' => 'Label A'],
                 'description' => [],
                 'placeholder' => [],
                 'control' => 'text',
-            ],
+            ]
         ], 'resourceClass');
         $this->validator->validate($command);
     }
@@ -134,6 +197,14 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ->with('This is the header')
             ->willThrowException(new InvalidResourceDisplayStrategyException('Syntax error'));
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
+            [
+                'baseId' => SystemMetadata::PARENT,
+                'name' => 'A',
+                'label' => [],
+                'description' => [],
+                'placeholder' => [],
+                'control' => 'text'
+            ],
             ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
         ], 'books', ['header' => 'This is the header']);
         $this->validator->validate($command);

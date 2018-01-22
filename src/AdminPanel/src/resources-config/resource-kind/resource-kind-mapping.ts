@@ -6,7 +6,6 @@ import {AutoMapper} from "common/dto/auto-mapper";
 import {maps} from "common/dto/decorators";
 import {Metadata} from "../metadata/metadata";
 import {TypeRegistry} from "common/dto/registry";
-import {SystemMetadata} from "../metadata/system-metadata";
 import {ResourceKind} from "./resource-kind";
 
 @autoinject
@@ -36,16 +35,5 @@ export class WorkflowIdMapper extends AdvancedMapper<Workflow> {
 class MetadataListMapper extends ArrayMapper<Metadata> {
   constructor(typeRegistry: TypeRegistry) {
     super(typeRegistry.getMapperByType(Metadata.NAME), typeRegistry.getFactoryByType(Metadata.NAME));
-  }
-
-  fromBackendValue(items: any[]): Promise<Metadata[]> {
-    return super.fromBackendValue(items).then(items => {
-      const parentMetadata = items.filter(v => v.baseId === SystemMetadata.PARENT.baseId);
-      return !parentMetadata.length ? [SystemMetadata.PARENT].concat(items) : items;
-    });
-  }
-
-  toBackendValue(items: Metadata[]): any[] {
-    return super.toBackendValue(items);
   }
 }

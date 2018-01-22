@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
+use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
@@ -17,15 +18,19 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
     private $resourceClassExistsRule;
     /** @var CorrectResourceDisplayStrategySyntaxRule */
     private $correctResourceDisplayStrategySyntaxRule;
+    /** @var ContainsParentMetadataRule */
+    private $containsParentMetadataRule;
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         ResourceClassExistsRule $resourceClassExistsRule,
-        CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategyRule
+        CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategyRule,
+        ContainsParentMetadataRule $containsParentMetadataRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->resourceClassExistsRule = $resourceClassExistsRule;
         $this->correctResourceDisplayStrategySyntaxRule = $correctResourceDisplayStrategyRule;
+        $this->containsParentMetadataRule = $containsParentMetadataRule;
     }
 
     /**
@@ -36,9 +41,11 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
         return Validator
             ::attribute('label', $this->notBlankInAllLanguagesRule)
             ->attribute('resourceClass', $this->resourceClassExistsRule)
-            ->attribute('metadataList', Validator::arrayType()->length(1)->each(
+            // length 2 because Parent Metadata is obligatory and one chosen by user
+            ->attribute('metadataList', Validator::arrayType()->length(2)->each(
                 Validator::arrayType()->length(1)->key('baseId', Validator::intVal())
             ))
+            ->attribute('metadataList', $this->containsParentMetadataRule)
             ->attribute('displayStrategies', Validator::arrayType()->each($this->correctResourceDisplayStrategySyntaxRule));
     }
 }
