@@ -2,6 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
 
@@ -25,6 +26,7 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Book',
             ],
             [
+                ['baseId' => SystemMetadata::PARENT],
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, 1, true),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION, 1, true),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),
@@ -49,6 +51,7 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Forbidden book',
             ],
             [
+                ['baseId' => SystemMetadata::PARENT],
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
             ],
             'books',
@@ -63,6 +66,7 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Category',
             ],
             [
+                ['baseId' => SystemMetadata::PARENT],
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME, true),
             ],
             'books',

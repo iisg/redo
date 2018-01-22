@@ -1,9 +1,11 @@
 <?php
 namespace Repeka\Tests\Integration;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -11,11 +13,15 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/resources';
 
     /** @var Metadata */
+    private $baseMetadata2;
+    /** @var Metadata */
     private $baseMetadata;
     /** @var ResourceKind */
     private $resourceKind;
     /** @var Metadata */
     private $metadata;
+    /** @var  Metadata */
+    private $parentMetadata;
     /** @var ResourceEntity */
     private $resource;
     /** @var ResourceEntity */
@@ -27,11 +33,17 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('TEST', 'te_ST', 'Test language');
+        /** @var MetadataRepository $metadataRepository */
+        $metadataRepository = $this->container->get(MetadataRepository::class);
+        $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
         $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'textarea');
+        $this->baseMetadata2 = $this->createMetadata('Base2', ['TEST' => 'Base metadata'], [], [], 'textarea');
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Resource kind'], [
+            $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata']),
             $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
+            $this->resourceKindMetadata($this->baseMetadata2, ['TEST' => 'Metadata']),
         ]);
-        $this->metadata = $this->resourceKind->getMetadataList()[0];
+        $this->metadata = $this->resourceKind->getMetadataList()[1];
         $this->metadata->updateOrdinalNumber(0);
         $this->persistAndFlush($this->metadata);
         $this->resource = $this->createResource($this->resourceKind, [
@@ -115,10 +127,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResourceKindFails() {
         $newResourceKind = $this->createResourceKind(['TEST' => 'Replacement resource kind'], [
+            $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata']),
             $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
+            $this->resourceKindMetadata($this->baseMetadata2, ['TEST' => 'Metadata']),
         ]);
         $newResourceKind->getMetadataList()[0]->updateOrdinalNumber(0);
-        $this->persistAndFlush($newResourceKind->getMetadataList()[0]);
+        $this->persistAndFlush($newResourceKind->getMetadataList()[1]);
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
             'kindId' => $newResourceKind->getId(),

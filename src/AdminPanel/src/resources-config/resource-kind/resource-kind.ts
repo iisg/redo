@@ -20,7 +20,8 @@ export class ResourceKind extends Entity {
 export function registerResourceKindValidationRules() {
   ValidationRules
     .ensure('label').displayName("Label").satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
-    .ensure('metadataList').displayName('Metadata').satisfies((metadataList: Metadata[]) => metadataList.length > 0)
+  // parent metadata with id == -1 is hidden and obligatory, it shouldn't be treated as one of metadata in list while validating
+    .ensure('metadataList').displayName('Metadata').satisfies((metadataList: Metadata[]) => metadataList.length > 1)
     .withMessageKey('mustHaveMetadata')
     .on(ResourceKind);
 }

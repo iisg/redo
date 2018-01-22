@@ -80,7 +80,12 @@ export class GlobalExceptionInterceptor implements Interceptor {
   }
 
   private sanitizeValues(params: AnyMap<any>): Object {
-    return mapValues(params, v => this.sanitizeHtml.toView(v));
+    return mapValues(params, v => {
+      if (typeof v === 'string') {
+        return this.sanitizeHtml.toView(v);
+      }
+      return v;
+    });
   }
 
   private groupViolationsByField(responseContent: ExceptionContent): StringMap<Violation[]> {

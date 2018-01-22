@@ -28,8 +28,8 @@
             </div>
             <div class="row">
                 <div class="col-xs-12 resource-kind-form-metadata-item"
-                    repeat.for="metadata of editableMetadataList & validate">
-                    <div class="well">
+                repeat.for="metadata of resourceKind.metadataList & validate">
+                    <div class="well" if.bind="metadata.baseId > 0">
                         <div class="btn-group pull-right top-right-buttons"
                             show.bind="!sortingMetadata">
                             <button class="btn btn-default btn-raised ${metadata.overwriteForm ? 'active' : ''}"
