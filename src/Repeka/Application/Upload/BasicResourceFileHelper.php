@@ -24,13 +24,22 @@ class BasicResourceFileHelper implements ResourceFileHelper {
         $contents = $resource->getContents();
         $fileMetadataIds = $this->getExistingFileMetadataIds($resource);
         foreach ($fileMetadataIds as $metadataId) {
-            $this->ensureMovingWillNotOverwriteFiles($contents[$metadataId], $resource);
+            $filePaths = array_map(function (array $metadataValue) {
+                return $metadataValue['value'];
+            }, $contents[$metadataId]);
+            $this->ensureMovingWillNotOverwriteFiles($filePaths, $resource);
         }
         $movedFilesCount = 0;
         foreach ($fileMetadataIds as $metadataId) {
-            $updatedPaths = $this->moveFilesInListToDestinationPaths($contents[$metadataId], $resource);
-            $movedFilesCount += count(array_diff($contents[$metadataId], $updatedPaths));
-            $contents[$metadataId] = $updatedPaths;
+            $filePaths = array_map(function (array $metadataValue) {
+                return $metadataValue['value'];
+            }, $contents[$metadataId]);
+            $updatedPaths = $this->moveFilesInListToDestinationPaths($filePaths, $resource);
+            $movedFilesCount += count(array_diff($filePaths, $updatedPaths));
+            // TODO submetadata values are possibly lost here
+            $contents[$metadataId] = array_map(function ($path) {
+                return ['value' => $path];
+            }, $updatedPaths);
         }
         $resource->updateContents($contents);
         return $movedFilesCount;

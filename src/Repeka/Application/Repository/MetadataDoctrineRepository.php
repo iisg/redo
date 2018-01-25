@@ -41,8 +41,8 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $result->toArray();
     }
 
-    public function findAllChildren(int $parentId): array {
-        return $this->findBy(['parentMetadata' => $parentId]);
+    public function findByParent(Metadata $parent): array {
+        return $this->findBy(['parentMetadata' => $parent]);
     }
 
     public function exists(int $id): bool {

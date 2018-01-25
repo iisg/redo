@@ -2,7 +2,6 @@
 namespace Repeka\Application\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\UserRole;
@@ -32,13 +31,6 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
 
     public function getId(): int {
         return $this->id;
-    }
-
-    public function setUsername(string $username): User {
-        $contents = $this->getUserData()->getContents();
-        $contents[SystemMetadata::USERNAME] = [$username];
-        $this->getUserData()->updateContents($contents);
-        return $this;
     }
 
     public function getSalt(): ?string {

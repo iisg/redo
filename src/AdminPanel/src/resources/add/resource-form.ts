@@ -15,6 +15,7 @@ import {Router} from "aurelia-router";
 import {numberKeysByValue} from "../../common/utils/object-utils";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
+import {MetadataValue} from "../metadata-value";
 
 @autoinject
 export class ResourceForm {
@@ -113,10 +114,10 @@ export class ResourceForm {
     };
   }
 
-  private copyContentsAndFilterEmptyValues(contents: NumberMap<any[]>): StringArrayMap {
+  private copyContentsAndFilterEmptyValues(contents: NumberMap<MetadataValue[]>): NumberMap<MetadataValue[]> {
     let copiedContents = {};
     for (let index in contents) {
-      copiedContents[index] = contents[index].filter(v => v !== undefined && v !== "");
+      copiedContents[index] = contents[index].filter(v => v !== undefined && v.value !== undefined && v.value !== "");
     }
     return copiedContents;
   }
@@ -133,7 +134,7 @@ export class ResourceForm {
 
   parentChanged(newParent: Resource) {
     if (newParent != undefined) {
-      this.resource.contents[SystemMetadata.PARENT.id] = [newParent.id];
+      this.resource.contents[SystemMetadata.PARENT.id] = [new MetadataValue(newParent.id)];
     }
   }
 
@@ -166,6 +167,7 @@ export class ResourceForm {
         metadataList: this.resource.kind.metadataList,
         importResult,
         invalidMetadataKeys: importResult.invalidMetadataKeys,
+        resourceKind: this.resource.kind,
         resourceClass: this.resourceClass,
       };
       return this.modal.open(ImportConfirmationDialog, model);

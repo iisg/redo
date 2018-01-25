@@ -2,6 +2,7 @@
 namespace Repeka\Domain\MetadataImport\Transform;
 
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Factory\ResourceContentsNormalizer;
 use Repeka\Domain\MetadataImport\Config\ImportConfig;
 use Repeka\Domain\MetadataImport\ImportResult;
 use Repeka\Domain\MetadataImport\Mapping\Mapping;
@@ -18,7 +19,9 @@ class MetadataImporterTest extends \PHPUnit_Framework_TestCase {
     public function init() {
         $transforms = $this->createMock(ImportTransformComposite::class);
         $transforms->method('apply')->willReturnArgument(1);
-        $this->importer = new MetadataImporter($transforms);
+        $normalizer = $this->createMock(ResourceContentsNormalizer::class);
+        $normalizer->method('normalize')->willReturnArgument(0);
+        $this->importer = new MetadataImporter($transforms, $normalizer);
     }
 
     private function defaultImport(array $data): ImportResult {

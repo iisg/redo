@@ -12,6 +12,7 @@ export class ResourceLevelUp {
       this.parentId = undefined;
       return;
     }
-    this.parentId = (newResource.contents[SystemMetadata.PARENT.id] || [])[0];
+    const parents = newResource.contents[SystemMetadata.PARENT.id];
+    this.parentId = parents.length ? parents[0].value : undefined;
   }
 }

@@ -6,10 +6,6 @@ use Repeka\Tests\IntegrationTestCase;
 class WorkflowIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/workflows';
 
-    public function setUp() {
-        parent::setUp();
-    }
-
     public function testFetchingWorkflows() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);

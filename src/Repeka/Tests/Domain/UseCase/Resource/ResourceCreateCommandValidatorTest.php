@@ -5,7 +5,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
+use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -25,7 +25,7 @@ class ResourceCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private function createValidator(
         bool $valueSetMatchesResourceKind,
         bool $metadataValuesSatisfyConstraints,
-        bool $resourceClassExists
+        bool $resourceContentsCurrectStructure
     ): ResourceCreateCommandValidator {
         $valueSetMatchesResourceKindRule = $this->createRuleWithFactoryMethodMock(
             ValueSetMatchesResourceKindRule::class,
@@ -37,50 +37,44 @@ class ResourceCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             'forResourceKind',
             $metadataValuesSatisfyConstraints
         );
-        $resourceClassExistsRule = $this->createRuleMock(
-            ResourceClassExistsRule::class,
-            $resourceClassExists
+        $resourceContentsCorrectStructureRule = $this->createRuleMock(
+            ResourceContentsCorrectStructureRule::class,
+            $resourceContentsCurrectStructure
         );
         return new ResourceCreateCommandValidator(
             $valueSetMatchesResourceKindRule,
             $metadataValuesSatisfyConstraintsRule,
-            $resourceClassExistsRule
+            $resourceContentsCorrectStructureRule
         );
     }
 
     public function testValid() {
         $validator = $this->createValidator(true, true, true);
-        $command = new ResourceCreateCommand($this->resourceKind, [1 => ['Some value']], $this->resourceClass);
-        $validator->validate($command);
+        $command = new ResourceCreateCommand($this->resourceKind, []);
+        $this->assertTrue($validator->isValid($command));
     }
 
     public function testInvalidForNotInitializedResourceKind() {
         $validator = $this->createValidator(true, true, true);
-        $command = new ResourceCreateCommand($this->createMock(ResourceKind::class), [1 => ['Some value']], $this->resourceClass);
-        $this->assertFalse($validator->isValid($command));
-    }
-
-    public function testInvalidWhenNoContents() {
-        $validator = $this->createValidator(true, true, true);
-        $command = new ResourceCreateCommand($this->resourceKind, [], $this->resourceClass);
+        $command = new ResourceCreateCommand($this->createMock(ResourceKind::class), [1 => ['Some value']]);
         $this->assertFalse($validator->isValid($command));
     }
 
     public function testInvalidIfContentsDoNotMatchResourceKind() {
         $validator = $this->createValidator(false, true, true);
-        $command = new ResourceCreateCommand($this->resourceKind, [1 => ['Some value']], $this->resourceClass);
+        $command = new ResourceCreateCommand($this->resourceKind, []);
         $this->assertFalse($validator->isValid($command));
     }
 
     public function testInvalidWhenConstraintsNotSatisfied() {
         $validator = $this->createValidator(true, false, true);
-        $command = new ResourceCreateCommand($this->resourceKind, [], $this->resourceClass);
+        $command = new ResourceCreateCommand($this->resourceKind, []);
         $this->assertFalse($validator->isValid($command));
     }
 
-    public function testInvalidWhenInvalidResourceClass() {
+    public function testInvalidWhenInvalidContentStructure() {
         $validator = $this->createValidator(true, true, false);
-        $command = new ResourceCreateCommand($this->resourceKind, [], 'invalidResourceClass');
+        $command = new ResourceCreateCommand($this->resourceKind, []);
         $this->assertFalse($validator->isValid($command));
     }
 }

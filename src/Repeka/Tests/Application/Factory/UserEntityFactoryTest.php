@@ -2,8 +2,9 @@
 namespace Repeka\Tests\Application\Factory;
 
 use Repeka\Application\Factory\UserEntityFactory;
+use Repeka\Domain\Cqrs\CommandBus;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceKindRepository;
-use Repeka\Domain\UseCase\Resource\ResourceCreateCommandHandler;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
 class UserEntityFactoryTest extends \PHPUnit_Framework_TestCase {
@@ -11,10 +12,12 @@ class UserEntityFactoryTest extends \PHPUnit_Framework_TestCase {
         $username = 'JohnDoe';
         $password = 'JohnDoe';
         $resourceKindRepository = $this->createMock(ResourceKindRepository::class);
-        $resourceCreateCommandHandler = $this->createMock(ResourceCreateCommandHandler::class);
+        $commandBus = $this->createMock(CommandBus::class);
+        $commandBus->method('handle')->willReturn($this->createMock(ResourceEntity::class));
         $passwordEncoder = $this->createMock(UserPasswordEncoder::class);
-        $user = (new UserEntityFactory($passwordEncoder, $resourceKindRepository, $resourceCreateCommandHandler))
-            ->createUser($username, $password);
+        $userEntityFactory = new UserEntityFactory($passwordEncoder, $resourceKindRepository);
+        $userEntityFactory->setCommandBus($commandBus);
+        $user = ($userEntityFactory)->createUser($username, $password);
         $this->assertNotNull($user);
         $this->assertEmpty($user->getUserRoles());
     }

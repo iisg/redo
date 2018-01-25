@@ -7,7 +7,6 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
-use Repeka\Domain\Exception\RelatedUserNotFoundException;
 use Repeka\Domain\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
@@ -17,9 +16,9 @@ class UserDoctrineRepository extends AbstractRepository implements UserRepositor
 
         $resultSetMapping = ResultSetMappings::user($this->getEntityManager());
         $query = $this->getEntityManager()->createNativeQuery(<<<SQL
-SELECT "user".* FROM "user"
-  INNER JOIN "resource" user_data ON "user".user_data_id = user_data.id
-  WHERE (contents->'$usernameMetadataId')::jsonb @> :username
+            SELECT "user".* FROM "user"
+              INNER JOIN "resource" user_data ON "user".user_data_id = user_data.id
+              WHERE (contents->'$usernameMetadataId'->0->'value')::jsonb @> :username
 SQL
             , $resultSetMapping);
         // the value needs to be double quoted for @> operator

@@ -22,7 +22,6 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
         return Validator
             ::attribute('transitionId', Validator::notBlank())
             ->attribute('resource', Validator::allOf(
-                Validator::instance(ResourceEntity::class),
                 Validator::callback(function (ResourceEntity $resource) {
                     return $resource->getId() > 0;
                 })->setTemplate('Resource ID must be greater than 0'),

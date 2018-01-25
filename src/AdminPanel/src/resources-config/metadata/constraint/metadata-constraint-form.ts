@@ -11,7 +11,6 @@ import {diff} from "common/utils/array-utils";
 export class MetadataConstraintForm implements ComponentAttached, ComponentDetached {
   @bindable(twoWay) metadata: Metadata;
   @bindable originalMetadata: Metadata;
-  @bindable resourceClass: string;
 
   private controlSubscription: Disposable;
 

@@ -28,11 +28,11 @@ class MetadataFactory {
     public function createWithBaseAndParent(Metadata $base, Metadata $parent, array $newChildMetadata) {
         $metadata = Metadata::createChild($base, $parent);
         $metadata->update(
-            $newChildMetadata['label'],
-            $newChildMetadata['placeholder'],
-            $newChildMetadata['description'],
-            $newChildMetadata['constraints'],
-            $newChildMetadata['shownInBrief']
+            $newChildMetadata['label'] ?? [],
+            $newChildMetadata['placeholder'] ?? [],
+            $newChildMetadata['description'] ?? [],
+            $newChildMetadata['constraints'] ?? [],
+            $newChildMetadata['shownInBrief'] ?? $base->isShownInBrief()
         );
         return $metadata;
     }

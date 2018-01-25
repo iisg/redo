@@ -1,6 +1,7 @@
 import {Resource} from "../../../resources/resource";
 import {ResourceKind} from "../resource-kind";
 import * as moment from "moment";
+import {MetadataValue} from "../../../resources/metadata-value";
 
 export class SampleResource extends Resource {
   constructor(resourceKind: ResourceKind) {
@@ -17,20 +18,20 @@ export class SampleResource extends Resource {
     }
   }
 
-  private createSampleContent(control: string): any[] {
+  private createSampleContent(control: string): MetadataValue[] {
     switch (control) {
       case 'integer':
-        return [1 + Math.floor(Math.random() * 100)];
+        return [new MetadataValue(1 + Math.floor(Math.random() * 100))];
       case 'boolean':
-        return [Math.random() > .5];
+        return [new MetadataValue(Math.random() > .5)];
       case 'date':
-        return [moment().toDate()];
+        return [new MetadataValue(moment().toDate())];
       case 'relationship':
-        return [1234];
+        return [new MetadataValue(1234)];
       case 'file':
-        return ['i6/r6/repeka.pdf'];
+        return [new MetadataValue('i6/r6/repeka.pdf')];
       default:
-        return ['XXX', 'YYY'];
+        return [new MetadataValue('XXX'), new MetadataValue('YYY')];
     }
   }
 }

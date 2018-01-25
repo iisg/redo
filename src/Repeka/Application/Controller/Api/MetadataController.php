@@ -8,7 +8,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataDeleteCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
-use Repeka\Domain\UseCase\Metadata\MetadataListByParentIdQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListByParentQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
@@ -49,11 +49,11 @@ class MetadataController extends ApiController {
     }
 
     /**
-     * @Route("/{parentId}/metadata")
+     * @Route("/{parent}/metadata")
      * @Method("GET")
      */
-    public function getAllChildrenListAction(int $parentId) {
-        $metadataChildrenList = $this->handleCommand(new MetadataListByParentIdQuery($parentId));
+    public function getAllChildrenListAction(Metadata $parent) {
+        $metadataChildrenList = $this->handleCommand(new MetadataListByParentQuery($parent));
         return $this->createJsonResponse($metadataChildrenList);
     }
 

@@ -20,10 +20,12 @@ export class ResourceLink {
   }
 
   idChanged(): void {
-    this.loading = true;
-    this.resourceRepository.get(this.id, true)
-      .then(resource => this.onResourceFetched(resource))
-      .finally(() => this.loading = false);
+    if (this.id) {
+      this.loading = true;
+      this.resourceRepository.get(this.id, true)
+        .then(resource => this.onResourceFetched(resource))
+        .finally(() => this.loading = false);
+    }
   }
 
   private onResourceFetched(resource: Resource): Promise<void>|void {

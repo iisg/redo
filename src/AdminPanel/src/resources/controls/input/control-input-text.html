@@ -2,6 +2,6 @@
     <input placeholder.one-time="metadata.placeholder[currentLanguageCode] || ''"
         type="text"
         class="form-control"
-        value.bind="valueWrapper.value & validate:validationController:validationRules"
+        value.bind="metadataValue.value & validate:validationController:validationRules"
         disabled.bind="disabled">
 </template>

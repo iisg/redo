@@ -69,6 +69,7 @@ class TransitionPossibilityChecker {
         }, $assigneeMetadataIds);
         $assigneeUserIdArrays[] = [];  // ensure it's not empty or array_merge will fail
         $assigneeUserIds = call_user_func_array('array_merge', $assigneeUserIdArrays);
+        $assigneeUserIds = array_column($assigneeUserIds, 'value');
         return $assigneeUserIds;
     }
 }

@@ -94,7 +94,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $book = $this->getPhpBookResource('books');
         $scannerMetadata = $this->getScannerBaseMetadata();
         $bookContents = $book->getContents();
-        $bookContents[$scannerMetadata->getId()] = [$user->getUserData()->getId()];
+        $bookContents[$scannerMetadata->getId()] = [['value' => $user->getUserData()->getId()]];
         $book->updateContents($bookContents);
         $this->resourceRepository->save($book);
         $this->em->flush();
@@ -107,7 +107,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
         $categoryNameMetadataId = $connection->query("SELECT id FROM metadata WHERE label->'EN' = '\"Category name\"';")->fetch()['id'];
         $ebooksCategoryId = $connection
-            ->query("SELECT id FROM resource WHERE contents->'{$categoryNameMetadataId}' = '[\"E-booki\"]'")->fetch()['id'];
+            ->query("SELECT id FROM resource WHERE contents->'{$categoryNameMetadataId}' = '[{\"value\":\"E-booki\"}]'")->fetch()['id'];
         $this->assertNotNull($ebooksCategoryId);
         return $ebooksCategoryId;
     }
@@ -138,6 +138,9 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $query = ResourceListQuery::builder()->filterByResourceClasses([$resourceClass])->build();
         foreach ($this->resourceRepository->findByQuery($query) as $resource) {
             $allValuesOfContents = call_user_func_array('array_merge', $resource->getContents());
+            $allValuesOfContents = array_map(function ($value) {
+                return $value['value'];
+            }, $allValuesOfContents);
             if (in_array('PHP - to można leczyć!', $allValuesOfContents)) {
                 return $resource;
             }

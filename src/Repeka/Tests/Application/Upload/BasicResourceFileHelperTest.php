@@ -7,10 +7,12 @@ use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Upload\ResourceFileHelper;
+use Repeka\Tests\Traits\ResourceContentsNormalizerAware;
 use Repeka\Tests\Traits\StubsTrait;
 
 class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
+    use ResourceContentsNormalizerAware;
 
     // not constants because only variables work with string interpolation
     private $uploadsRoot = '/var/uploads/whatever';
@@ -38,10 +40,10 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
             $this->createMetadataMock($fileMetadataId, 66, MetadataControl::FILE()),
             $this->createMetadataMock($otherMetadataId, 66, MetadataControl::TEXTAREA()),
         ]);
-        $contents = [
+        $contents = $this->normalizeContents([
             $fileMetadataId => ['somewhere/todo.list', 'somewhere/cuteCat.jpg'],
             $otherMetadataId => ['somewhere/cantTouchThis', 'somewhere/nanananana.batman'],
-        ];
+        ]);
         $resource = $this->createResourceMock(123, $resourceKind, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
         $this->filesystemDriver->expects($this->atLeastOnce())
@@ -53,7 +55,7 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $resource->expects($this->once())->method('updateContents')->willReturnCallback(
             function ($updatedContents) use ($contents, $fileMetadataId, $otherMetadataId) {
                 $this->assertEquals(
-                    ["$this->destinationPath/todo.list", "$this->destinationPath/cuteCat.jpg",],
+                    $this->normalizeContents([["$this->destinationPath/todo.list", "$this->destinationPath/cuteCat.jpg"]])[0],
                     $updatedContents[$fileMetadataId]
                 );
                 $this->assertEquals($contents[$otherMetadataId], $updatedContents[$otherMetadataId]);
@@ -67,9 +69,9 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $resourceKind = $this->createResourceKindMock(1, 'books', [
             $this->createMetadataMock($fileMetadataId, 66, MetadataControl::FILE()),
         ]);
-        $contents = [
+        $contents = $this->normalizeContents([
             $fileMetadataId => ["$this->destinationPath/todo.list"],
-        ];
+        ]);
         $resource = $this->createResourceMock(123, $resourceKind, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
         $this->filesystemDriver->expects($this->never())->method('move');
@@ -83,12 +85,12 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $resourceKind = $this->createResourceKindMock(1, 'books', [
             $this->createMetadataMock($fileMetadataId, 66, MetadataControl::FILE()),
         ]);
-        $contents = [
+        $contents = $this->normalizeContents([
             $fileMetadataId => [
                 'somewhere/regular.file',
                 'somewhere/file.that.already.exists',
             ],
-        ];
+        ]);
         $resource = $this->createResourceMock(123, $resourceKind, $contents);
         $this->filesystemDriver->expects($this->exactly(2))->method('exists')->willReturnCallback(function ($path) {
             return (basename($path) != 'regular.file');

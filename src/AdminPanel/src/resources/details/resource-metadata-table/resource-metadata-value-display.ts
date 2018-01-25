@@ -1,34 +1,26 @@
-import {ComponentAttached, ComponentDetached, bindable} from "aurelia-templating";
+import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "resources-config/metadata/metadata";
-import {BindingEngine} from "aurelia-binding";
 import {Resource} from "../../resource";
-import {ValueWrapper} from "common/utils/value-wrapper";
+import {MetadataValue} from "../../metadata-value";
+import {EntitySerializer} from "../../../common/dto/entity-serializer";
+import {MetadataRepository} from "../../../resources-config/metadata/metadata-repository";
 
 @autoinject
-export class ResourceMetadataValueDisplay implements ComponentAttached, ComponentDetached {
+export class ResourceMetadataValueDisplay {
   @bindable metadata: Metadata;
   @bindable resource: Resource;
-  @bindable value: any;
+  @bindable value: MetadataValue;
 
-  valueWrapper: ValueWrapper<any> = new ValueWrapper();
+  private submetadataResource: Resource;
 
-  constructor(private bindingEngine: BindingEngine) {
+  constructor(private entitySerializer: EntitySerializer, private metadataRepository: MetadataRepository) {
   }
 
-  attached(): void {
-    this.valueWrapper.onChange(this.bindingEngine, () => this.wrappedValueChanged());
-  }
-
-  detached(): void {
-    this.valueWrapper.cancelChangeSubscriptions();
-  }
-
-  valueChanged() {
-    this.valueWrapper.value = this.value;
-  }
-
-  wrappedValueChanged() {
-    this.value = this.valueWrapper.value;
+  async valueChanged() {
+    this.submetadataResource = this.entitySerializer.clone(this.resource, Resource.NAME);
+    this.submetadataResource.contents = this.value.submetadata || {};
+    this.submetadataResource.kind.metadataList = [];
+    this.submetadataResource.kind.metadataList = await this.metadataRepository.getByParent(this.metadata);
   }
 }

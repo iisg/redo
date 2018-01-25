@@ -1,7 +1,7 @@
 <template>
     <require from="common/components/file-upload/file-upload"></require>
     <require from="common/components/file-upload/upload-limit/upload-limit-info"></require>
-    <file-upload value.bind="valueWrapper.value & validate:validationController:validationRules"
+    <file-upload value.bind="metadataValue.value & validate:validationController:validationRules"
         disabled.bind="disabled"></file-upload>
     <upload-limit-info></upload-limit-info>
 </template>

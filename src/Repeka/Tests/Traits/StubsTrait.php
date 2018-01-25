@@ -11,6 +11,7 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Factory\ResourceContentsNormalizer;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraintManager;
@@ -82,6 +83,7 @@ trait StubsTrait {
         $mock = $this->createMock(ResourceEntity::class);
         $mock->method('getKind')->willReturn($resourceKind);
         $mock->method('getId')->willReturn($id);
+        $contents = (new ResourceContentsNormalizer())->normalize($contents);
         $mock->method('getContents')->willReturn($contents);
         if ($contents) {
             $mock->method('getValues')->willReturnCallback(function ($metadata) use ($contents) {

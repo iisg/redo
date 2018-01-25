@@ -22,7 +22,7 @@ class FileMetadataValueProcessorStrategy implements MetadataValueProcessorStrate
         $processedValues = [];
         foreach ($values as $value) {
             /** @var UploadedFile $file */
-            $file = $request->files->get($value);
+            $file = $request->files->get($value['value']);
             if ($file) {
                 $fileName = $file->getClientOriginalName();
                 $tempFolder = $this->pathGenerator->getTemporaryPath();

@@ -1,6 +1,6 @@
 <template>
     <require from="resources/controls/input/resource-picker/resource-picker"></require>
-    <resource-picker resource-id.bind="valueWrapper.value & validate:validationController:validationRules"
+    <resource-picker resource-id.bind="metadataValue.value & validate:validationController:validationRules"
         resource-kind-ids.bind="metadata.constraints.resourceKind"
         resource-class.bind="metadata.id == -1 ? resource.resourceClass : undefined"
         disabled.bind="disabled || metadata.constraints.resourceKind.length === 0"></resource-picker>

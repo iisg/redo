@@ -63,9 +63,7 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
      * @return int[]
      */
     private function getModifiedLockedMetadataIds(array $currentContents, array $newContents, array $lockedMetadataIds): array {
-        foreach ($newContents as &$values) {
-            $values = $this->replaceObjectsWithIds($values);
-        }
+        $this->replaceObjectsWithIds($newContents);
         $modifiedIds = [];
         foreach ($lockedMetadataIds as $id) {
             if ($currentContents[$id] != $newContents[$id]) {
@@ -75,10 +73,18 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
         return $modifiedIds;
     }
 
-    private function replaceObjectsWithIds(array $values): array {
-        return array_map(function ($item) {
-            /** @var Identifiable|mixed $item */
-            return is_object($item) ? $item->getId() : $item;
-        }, $values);
+    private function replaceObjectsWithIds(array &$contents) {
+        foreach ($contents as &$values) {
+            $values = array_map(function (array $metadataValue) {
+                /** @var Identifiable|mixed $item */
+                if (is_object($metadataValue['value'])) {
+                    $metadataValue['value'] = $metadataValue['value']->getId();
+                }
+                if (isset($metadataValue['submetadata'])) {
+                    $this->replaceObjectsWithIds($metadataValue['submetadata']);
+                }
+                return $metadataValue;
+            }, $values);
+        }
     }
 }

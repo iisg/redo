@@ -9,8 +9,6 @@ use Repeka\Tests\IntegrationTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
-    const ENDPOINT = '/api/resources';
-
     /** @var Metadata */
     private $baseMetadata;
     /** @var Metadata */
@@ -47,7 +45,7 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
 
     private function makeRequest(ResourceKind $resourceKind, array $values): Response {
         $client = self::createAdminClient();
-        $client->apiRequest('POST', ResourceIntegrationTest::ENDPOINT, [
+        $client->apiRequest('POST', '/api/resources', [
             'kindId' => $resourceKind->getId(),
             'contents' => json_encode([$this->baseMetadata->getId() => $values]),
             'resourceClass' => 'books',
