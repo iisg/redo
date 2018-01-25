@@ -7,8 +7,11 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
+use Repeka\Tests\Traits\ResourceContentsNormalizerAware;
 
 class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCase {
+    use ResourceContentsNormalizerAware;
+
     /** @var ResourceWorkflow|\PHPUnit_Framework_MockObject_MockObject */
     private $workflow;
     /** @var ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
@@ -37,26 +40,44 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
     public function testAcceptsForNoLockedMetadata() {
         $place = new ResourceWorkflowPlace([]);
         $this->workflow->expects($this->once())->method('getPlaces')->willReturn([$place, $place, $place]);
-        $this->resource->method('getContents')->willReturn([0 => ['foo'], 1 => ['bar']]);
-        $newContents = [2 => ['baz'], 3 => ['quux']];
+        $this->resource->method('getContents')->willReturn($this->normalizeContents([0 => ['foo'], 1 => ['bar']]));
+        $newContents = $this->normalizeContents([2 => ['baz'], 3 => ['quux']]);
         $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
     }
 
     public function testAcceptsUnchangedLockedMetadata() {
         $place = new ResourceWorkflowPlace([], null, [], [1]);
         $this->workflow->method('getPlaces')->willReturn([$place]);
-        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['baz']]);
         $this->resource->method('getContents')->willReturn($oldContents);
-        $newContents = [1 => ['foo', 'bar'], 2 => ['quux']];
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['quux']]);
+        $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testAcceptsUnchangedLockedMetadataAndSubmetadata() {
+        $place = new ResourceWorkflowPlace([], null, [], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place]);
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => [['value' => 'baz', 'submetadata' => [3 => 'qux']]]]);
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => [['value' => 'baz', 'submetadata' => [3 => 'qux']]]]);
         $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
     }
 
     public function testRejectsChangedLockedMetadata() {
         $place = new ResourceWorkflowPlace([], null, [], [2]);
         $this->workflow->method('getPlaces')->willReturn([$place]);
-        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['baz']]);
         $this->resource->method('getContents')->willReturn($oldContents);
-        $newContents = [1 => ['foo', 'bar'], 2 => ['quux']];
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['quux']]);
+        $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testRejectsChangedSubmetadataOfLockedMetadata() {
+        $place = new ResourceWorkflowPlace([], null, [], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place]);
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => [['value' => 'baz', 'submetadata' => [3 => 'qux']]]]);
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => [['value' => 'baz', 'submetadata' => [3 => 'wux']]]]);
         $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
     }
 
@@ -65,9 +86,9 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
         $place2 = new ResourceWorkflowPlace([], null, [], []);
         $place3 = new ResourceWorkflowPlace([], null, [], [2]);
         $this->workflow->method('getPlaces')->willReturn([$place1, $place2, $place3]);
-        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['baz']]);
         $this->resource->method('getContents')->willReturn($oldContents);
-        $newContents = [1 => ['foo', 'bar'], 2 => ['quux']];
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['quux']]);
         $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
     }
 
@@ -75,9 +96,9 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
         $this->expectExceptionMessage("Metadata 1, 2");
         $place = new ResourceWorkflowPlace([], null, [], [1, 2]);
         $this->workflow->method('getPlaces')->willReturn([$place]);
-        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['baz']]);
         $this->resource->method('getContents')->willReturn($oldContents);
-        $newContents = [1 => ['foo', 'bar', 'ni'], 2 => ['quux']];
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar', 'ni'], 2 => ['quux']]);
         $this->rule->forResource($this->resource)->assert($newContents);
     }
 
@@ -89,18 +110,52 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
         $place2 = new ResourceWorkflowPlace([], null, [], []);
         $place3 = new ResourceWorkflowPlace([], null, [], [2]);
         $this->workflow->method('getPlaces')->willReturn([$place1, $place2, $place3]);
-        $oldContents = [1 => ['foo', 'bar'], 2 => [$identifiable->getId()]];
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => [$identifiable->getId()]]);
         $this->resource->method('getContents')->willReturn($oldContents);
-        $newContents = [1 => ['foo', 'bar'], 2 => [$identifiable]];
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => [$identifiable]]);
+        $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testRejectsWhenObjectsAreNotEqualToTheirIds() {
+        /** @var Identifiable|\PHPUnit_Framework_MockObject_MockObject $identifiable */
+        $identifiable = $this->createMock(Identifiable::class);
+        $identifiable->method('getId')->willReturn(123);
+        $place1 = new ResourceWorkflowPlace([], null, [], [1]);
+        $place2 = new ResourceWorkflowPlace([], null, [], []);
+        $place3 = new ResourceWorkflowPlace([], null, [], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place1, $place2, $place3]);
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => [$identifiable->getId() + 1]]);
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => [$identifiable]]);
+        $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
+    }
+
+    public function testObjectsAreEqualToTheirIdsInSubmetadata() {
+        /** @var Identifiable|\PHPUnit_Framework_MockObject_MockObject $identifiable */
+        $identifiable = $this->createMock(Identifiable::class);
+        $identifiable->method('getId')->willReturn(123);
+        $place1 = new ResourceWorkflowPlace([], null, [], [1]);
+        $place2 = new ResourceWorkflowPlace([], null, [], []);
+        $place3 = new ResourceWorkflowPlace([], null, [], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place1, $place2, $place3]);
+        $oldContents = $this->normalizeContents([
+            1 => ['foo', 'bar'],
+            2 => [['value' => $identifiable->getId(), 'submetadata' => [3 => $identifiable->getId()]]],
+        ]);
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = $this->normalizeContents([
+            1 => ['foo', 'bar'],
+            2 => [['value' => $identifiable->getId(), 'submetadata' => [3 => $identifiable]]],
+        ]);
         $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
     }
 
     public function testConsidersAssigneeMetadataLocked() {
         $place1 = new ResourceWorkflowPlace([], null, [], [1], [2]);
         $this->workflow->method('getPlaces')->willReturn([$place1]);
-        $oldContents = [1 => ['foo', 'bar'], 2 => ['baz']];
+        $oldContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['baz']]);
         $this->resource->method('getContents')->willReturn($oldContents);
-        $newContents = [1 => ['foo', 'bar'], 2 => ['quux']];
+        $newContents = $this->normalizeContents([1 => ['foo', 'bar'], 2 => ['quux']]);
         $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
     }
 }

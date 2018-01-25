@@ -16,7 +16,8 @@
         <div class="modal-body">
             <div class="form-group">
                 <p>${"Values that are already present will be omitted." | t}</p>
-                <fake-resource-display values.bind="importResult.acceptedValues"
+                <fake-resource-display resource-kind.bind="resourceKind"
+                    values.bind="importResult.acceptedValues"
                     metadata-list.bind="metadataList"></fake-resource-display>
             </div>
             <div class="form-group"

@@ -1,0 +1,12 @@
+<template>
+    <button type="button"
+        class="btn btn-action"
+        disabled.bind="!canAddMore"
+        click.delegate="addNew()">
+        ${'Add value' | t}
+    </button>
+    <span if.bind="!canAddMore"
+        class="small">
+        ${'No more values are allowed' | t}
+    </span>
+</template>

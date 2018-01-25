@@ -1,9 +1,17 @@
 <template>
+    <require from="./resource-form-generated"></require>
+
     <div class="form-group">
         <compose view-model="../controls/control-strategy"
             view="../controls/input/control-input-${metadata.control}.html"
-            model.bind="{metadata: metadata, valueWrapper: valueWrapper, disabled: disabled, resource: resource, validationController: validationController}"></compose>
+            model.bind="{metadata: metadata, metadataValue: value, disabled: disabled, resource: resource, validationController: validationController}"></compose>
         <p class="help-block"
             if.one-time="metadata.description | inCurrentLanguage">${metadata.description | inCurrentLanguage}</p>
+    </div>
+    <div if.bind="submetadataResource.kind.metadataList.length">
+        <resource-form-generated resource-kind.bind="submetadataResource.kind"
+            resource.bind="submetadataResource"
+            validation-controller.bind="validationController"
+            resource-class.bind="submetadataResource.resourceClass"></resource-form-generated>
     </div>
 </template>

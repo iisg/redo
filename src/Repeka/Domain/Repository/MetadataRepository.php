@@ -26,11 +26,8 @@ interface MetadataRepository {
      */
     public function findTopLevelByResourceClass(string $resourceClass): array;
 
-    /**
-     * Returns all metadata that have specific parent ID.
-     * @return Metadata[]
-     */
-    public function findAllChildren(int $parentId): array;
+    /** @return Metadata[] */
+    public function findByParent(Metadata $parent): array;
 
     public function exists(int $id): bool;
 

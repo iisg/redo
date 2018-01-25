@@ -2,6 +2,7 @@ import {Resource} from "../../../resources/resource";
 import * as Handlebars from "handlebars";
 import {ResourceKind} from "../resource-kind";
 import {autoinject} from "aurelia-dependency-injection";
+import * as handlebarsHelpers from "./resource-display-strategy-handlebars-helpers";
 
 @autoinject
 export class ResourceDisplayStrategyEvaluator {
@@ -10,14 +11,10 @@ export class ResourceDisplayStrategyEvaluator {
 
   constructor() {
     this.handlebars = Handlebars.create();
-    this.handlebars.registerHelper('helperMissing', this.missingVariableHelper);
+    for (let helper in handlebarsHelpers) {
+      this.handlebars.registerHelper(helper, handlebarsHelpers[helper]);
+    }
     this.defaultTemplate = this.handlebars.compile('#{{id}}');
-  }
-
-  // missing helper called when unknown variable has been used: https://stackoverflow.com/a/25631909/878514
-  private missingVariableHelper() {
-    const options = arguments[arguments.length - 1];
-    return '{{' + options.name + '}}';
   }
 
   public getDisplayValue(resource: Resource, strategyId: string): string {
@@ -41,6 +38,7 @@ export class ResourceDisplayStrategyEvaluator {
       try {
         return this.compileTemplate(template);
       } catch (error) {
+        console.warn(error); // tslint:disable-line
         return this.defaultTemplate;
       }
     }

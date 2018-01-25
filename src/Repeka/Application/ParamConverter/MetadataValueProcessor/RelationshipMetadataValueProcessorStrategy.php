@@ -14,7 +14,10 @@ class RelationshipMetadataValueProcessorStrategy implements MetadataValueProcess
     }
 
     public function processValues(array $values, Request $request): array {
-        return array_values(array_map([$this->resourceRepository, 'findOne'], $values));
+        foreach ($values as &$value) {
+            $value['value'] = $this->resourceRepository->findOne($value['value']);
+        }
+        return $values;
     }
 
     public function getSupportedControl(): MetadataControl {

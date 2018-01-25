@@ -11,9 +11,12 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 use Repeka\Tests\Domain\Factory\SampleResourceWorkflowDriverFactory;
 use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\Traits\ResourceContentsNormalizerAware;
 
 class ResourceIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/resources';
+
+    use ResourceContentsNormalizerAware;
 
     /** @var Metadata */
     private $metadata1;
@@ -74,17 +77,20 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => ['Test value']],
+                'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
                 'resourceClass' => $this->resource->getResourceClass(),
             ], [
                 'id' => $this->parentResource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => ['Test value for parent']],
+                'contents' => [$this->metadata1->getId() => [['value' => 'Test value for parent']]],
                 'resourceClass' => $this->resource->getResourceClass(),
             ], [
                 'id' => $this->childResource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => ['Test value for child'], -1 => [$this->parentResource->getId()]],
+                'contents' => [
+                    $this->metadata1->getId() => [['value' => 'Test value for child']],
+                    SystemMetadata::PARENT => [['value' => $this->parentResource->getId()]],
+                ],
                 'resourceClass' => $this->resource->getResourceClass(),
             ],
         ], $client->getResponse()->getContent());
@@ -98,12 +104,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => ['Test value']],
+                'contents' => $this->normalizeContents([$this->metadata1->getId() => ['Test value']]),
                 'resourceClass' => $this->resource->getResourceClass(),
             ], [
                 'id' => $this->parentResource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => ['Test value for parent']],
+                'contents' => $this->normalizeContents([$this->metadata1->getId() => ['Test value for parent']]),
                 'resourceClass' => $this->resource->getResourceClass(),
             ],
         ], $client->getResponse()->getContent());
@@ -122,7 +128,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertJsonStringSimilarToArray([
             'id' => $this->resource->getId(),
             'kindId' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata1->getId() => ['Test value']],
+            'contents' => $this->normalizeContents([$this->metadata1->getId() => ['Test value']]),
             'resourceClass' => $this->resource->getResourceClass(),
         ], $client->getResponse()->getContent());
     }
@@ -140,7 +146,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $created */
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
-        $this->assertEquals([$this->metadata1->getId() => ['created']], $created->getContents());
+        $this->assertEquals($this->normalizeContents([$this->metadata1->getId() => ['created']]), $created->getContents());
     }
 
     public function testCreatingResourceWithWorkflow() {
@@ -156,7 +162,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $created */
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKindWithWorkflow->getId(), $created->getKind()->getId());
-        $this->assertEquals([$this->metadata1->getId() => ['created']], $created->getContents());
+        $this->assertEquals($this->normalizeContents([$this->metadata1->getId() => ['created']]), $created->getContents());
         $this->assertEquals(['key' => true], $created->getMarking());
     }
 
@@ -171,7 +177,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
-        $this->assertEquals([$this->metadata1->getId() => ['edited']], $edited->getContents());
+        $this->assertEquals($this->normalizeContents([$this->metadata1->getId() => ['edited']]), $edited->getContents());
     }
 
     public function testEditingResourceKindFails() {
@@ -202,7 +208,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertFalse($repository->exists($this->childResource->getId()));
     }
 
-    public function testDeletingParentResource() {
+    public function testDeletingParentResourceIsForbidden() {
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::oneEntityEndpoint($this->parentResource->getId()));
         $this->assertStatusCode(400, $client->getResponse());

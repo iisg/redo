@@ -8,12 +8,14 @@ import {autoinject} from "aurelia-dependency-injection";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 import {I18N} from "aurelia-i18n";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {ResourceKind} from "../../../resources-config/resource-kind/resource-kind";
 
 @autoinject
 export class FakeResourceDisplay {
   @bindable values: StringMap<any[]>;
   @bindable metadataList: Metadata[];
   @bindable @booleanAttribute omitMissing: boolean = false;
+  @bindable resourceKind: ResourceKind;
   @bindable resourceClass: string;
 
   resource = new Resource();
@@ -25,6 +27,10 @@ export class FakeResourceDisplay {
 
   valuesChanged(): void {
     this.resource.contents = this.values;
+  }
+
+  resourceKindChanged() {
+    this.resource.kind = this.resourceKind;
   }
 
   @computedFrom('metadataList', 'values', 'allMetadata')

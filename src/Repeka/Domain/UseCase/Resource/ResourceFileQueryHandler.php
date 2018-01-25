@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\MetadataControl;
@@ -24,7 +23,8 @@ class ResourceFileQueryHandler {
         $fileMetadata = $resource->getKind()->getMetadataByControl(MetadataControl::FILE());
         foreach ($fileMetadata as $metadata) {
             $filePaths = $resource->getValues($metadata);
-            foreach ($filePaths as $filePath) {
+            foreach ($filePaths as $metadataValue) {
+                $filePath = $metadataValue['value'];
                 if (basename($filePath) == $filename) {
                     return $this->resourceFileHelper->toAbsolutePath($filePath);
                 }

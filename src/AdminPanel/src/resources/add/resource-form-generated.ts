@@ -5,7 +5,6 @@ import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {Metadata} from "resources-config/metadata/metadata";
-import {twoWay} from "common/components/binding-mode";
 import {diff, flatten, inArray} from "common/utils/array-utils";
 import {numberKeysByValue} from "common/utils/object-utils";
 import {RequirementState} from "workflows/workflow";
@@ -14,11 +13,12 @@ import {AllMetadataValueValidator} from "common/validation/rules/all-metadata-va
 import {ValidationController} from "aurelia-validation";
 import {EntitySerializer} from "../../common/dto/entity-serializer";
 import {BindingSignaler} from "aurelia-templating-resources";
+import {MetadataValue} from "../metadata-value";
 
 @autoinject
 export class ResourceFormGenerated {
   @bindable resourceKind: ResourceKind;
-  @bindable(twoWay) resource: Resource;
+  @bindable resource: Resource;
   @bindable parent: Resource;
   @bindable resourceClass: string;
   @bindable requiredMetadataIdsForTransition: number[];
@@ -56,14 +56,14 @@ export class ResourceFormGenerated {
   }
 
   resourceKindChanged() {
-    if (!this.resource) {
+    if (!this.resource || !this.resource.contents) {
       return;
     }
-    if (!this.resourceKind) {
-      this.resource.contents = {};
-    } else {
+    if (this.resourceKind) {
       this.setResourceContents();
       this.buildMetadataValidators();
+    } else {
+      this.resource.contents = {};
     }
     this.setParent();
   }
@@ -88,7 +88,7 @@ export class ResourceFormGenerated {
   }
 
   private setResourceContents() {
-    const previousMetadata = Object.keys(this.resource.contents).map(k => k);
+    const previousMetadata = Object.keys(this.resource.contents);
     const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.id);
     const toBeRemoved = diff(previousMetadata, newMetadata);
     const toBeAdded = diff(newMetadata, previousMetadata);
@@ -108,7 +108,7 @@ export class ResourceFormGenerated {
 
   setParent() {
     if (this.parent && this.resourceKind) {
-      this.resource.contents[SystemMetadata.PARENT.id][0] = this.parent.id;
+      this.resource.contents[SystemMetadata.PARENT.id][0] = new MetadataValue(this.parent.id);
     }
   }
 

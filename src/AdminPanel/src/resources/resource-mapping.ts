@@ -31,11 +31,11 @@ export class ResourceMapper extends AutoMapper<Resource> {
     for (let metadataId in resource.contents) {
       if (resource.contents[metadataId].length > 0) {
         resourceCopy.contents[metadataId] = resource.contents[metadataId].map(item => {
-          if (!(item instanceof File)) {
-            return item;
+          if (item.value instanceof File) {
+            fileCounter++;
+            item.value = this.wrapFileWithFormData(formData, item.value, metadataId as any as number, fileCounter);
           }
-          fileCounter++;
-          return this.wrapFileWithFormData(formData, item, metadataId as any as number, fileCounter);
+          return item;
         });
       } else {
         resourceCopy.contents[metadataId] = [];

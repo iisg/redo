@@ -19,6 +19,7 @@ class ResourceKindsFixture extends RepekaFixture {
     public function load(ObjectManager $manager) {
         $workflow = $this
             ->handleCommand(new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::BOOK_WORKFLOW)->getId()));
+        $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId();
         $this->handleCommand(new ResourceKindCreateCommand(
             [
                 'PL' => 'Książka',
@@ -37,8 +38,8 @@ class ResourceKindsFixture extends RepekaFixture {
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
             ],
             [
-                'header' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() . '}}',
-                'dropdown' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() . '}} (ID: {{id}})',
+                'header' => '{{allValues m' . $titleMetadataId . '}}',
+                'dropdown' => '{{allValues m' . $titleMetadataId . '}} (ID: {{id}})',
             ],
             $workflow
         ), self::REFERENCE_RESOURCE_KIND_BOOK);
@@ -51,10 +52,11 @@ class ResourceKindsFixture extends RepekaFixture {
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
             ],
             [
-                'header' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() . '}}',
-                'dropdown' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId() . '}} (ID: {{id}})',
+                'header' => '{{allValues m' . $titleMetadataId . '}}',
+                'dropdown' => '{{allValues m' . $titleMetadataId . '}} (ID: {{id}})',
             ]
         ), self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
+        $nameId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME)->getId();
         $this->handleCommand(new ResourceKindCreateCommand(
             [
                 'PL' => 'Kategoria',
@@ -64,8 +66,8 @@ class ResourceKindsFixture extends RepekaFixture {
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME, true),
             ],
             [
-                'header' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME)->getId() . '}}',
-                'dropdown' => '{{m' . $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME)->getId() . '}} (ID: {{id}})',
+                'header' => '{{allValues m' . $nameId . '}}',
+                'dropdown' => '{{allValues m' . $nameId . '}} (ID: {{id}})',
             ]
         ), self::REFERENCE_RESOURCE_KIND_CATEGORY);
     }

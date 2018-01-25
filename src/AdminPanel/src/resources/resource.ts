@@ -4,6 +4,7 @@ import {Entity} from "common/entity/entity";
 import {copy, map, mappedWith} from "common/dto/decorators";
 import {ResourceMapper} from "./resource-mapping";
 import {ValidationRules} from "aurelia-validation";
+import {MetadataValue} from "./metadata-value";
 
 @mappedWith(ResourceMapper)
 export class Resource extends Entity {
@@ -15,7 +16,7 @@ export class Resource extends Entity {
   @map('WorkflowTransition[]') availableTransitions: WorkflowTransition[] = [];
   @map blockedTransitions: StringMap<TransitionBlockReason> = {};
   @map('{WorkflowTransition[]}') transitionAssigneeMetadata: NumberMap<WorkflowTransition[]> = {};
-  @copy contents: NumberMap<any[]> = {};
+  @copy contents: NumberMap<MetadataValue[]> = {};
   @map resourceClass: string;
 
   public canApplyTransition(transition: WorkflowTransition): boolean {

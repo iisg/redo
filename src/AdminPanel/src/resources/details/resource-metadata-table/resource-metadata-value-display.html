@@ -8,7 +8,13 @@
     <require from="../../controls/display/control-display-text.html"></require>
     <require from="../../controls/display/control-display-textarea.html"></require>
 
+    <require from="./resource-metadata-table"></require>
+
     <compose view-model="../../controls/control-strategy"
         view="../../controls/display/control-display-${metadata.control}.html"
-        model.bind="{valueWrapper: valueWrapper, resource: resource}"></compose>
+        model.bind="{metadataValue: value, resource: resource}"></compose>
+
+    <resource-metadata-table if.bind="submetadataResource.kind.metadataList.length"
+        resource.bind="submetadataResource"
+        hide-empty-metadata.one-time="true"></resource-metadata-table>
 </template>

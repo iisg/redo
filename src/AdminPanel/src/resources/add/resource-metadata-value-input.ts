@@ -1,46 +1,30 @@
-import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
+import {bindable} from "aurelia-templating";
 import {Metadata} from "resources-config/metadata/metadata";
-import {BindingEngine} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {ValueWrapper} from "common/utils/value-wrapper";
 import {booleanAttribute} from "common/components/boolean-attribute";
-import {twoWay} from "common/components/binding-mode";
-import {BindingSignaler} from "aurelia-templating-resources";
 import {Resource} from "../resource";
 import {ValidationController} from "aurelia-validation";
+import {MetadataValue} from "../metadata-value";
+import {MetadataRepository} from "../../resources-config/metadata/metadata-repository";
+import {EntitySerializer} from "../../common/dto/entity-serializer";
 
 @autoinject
-export class ResourceMetadataValueInput implements ComponentAttached, ComponentDetached {
+export class ResourceMetadataValueInput {
   @bindable metadata: Metadata;
   @bindable resource: Resource;
-  @bindable(twoWay) value: any;
+  @bindable value: MetadataValue;
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable validationController: ValidationController;
 
-  valueWrapper: ValueWrapper<any> = new ValueWrapper();
+  private submetadataResource: Resource;
 
-  constructor(private bindingEngine: BindingEngine, private bindingSignaler: BindingSignaler) {
+  constructor(private metadataRepository: MetadataRepository, private entitySerializer: EntitySerializer) {
   }
 
-  attached() {
-    this.valueWrapper.onChange(this.bindingEngine, () => this.wrappedValueChanged());
-  }
-
-  detached() {
-    this.valueWrapper.cancelChangeSubscriptions();
-  }
-
-  valueChanged() {
-    this.valueWrapper.value = this.value;
-    this.sendChangeSignal();
-  }
-
-  wrappedValueChanged() {
-    this.value = this.valueWrapper.value;
-    this.sendChangeSignal();
-  }
-
-  private sendChangeSignal(): void {
-    this.bindingSignaler.signal('metadata-values-changed');
+  async valueChanged() {
+    this.submetadataResource = this.entitySerializer.clone(this.resource, Resource.NAME);
+    this.submetadataResource.contents = this.value.submetadata;
+    this.submetadataResource.kind.metadataList = [];
+    this.submetadataResource.kind.metadataList = await this.metadataRepository.getByParent(this.metadata);
   }
 }

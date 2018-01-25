@@ -11,6 +11,7 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {WorkflowTransition} from "../../workflows/workflow";
 import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
 import {computedFrom} from "aurelia-binding";
+import {MetadataValue} from "../metadata-value";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -41,13 +42,13 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   async activate(params: any, routeConfig: RouteConfig) {
     this.resource = await this.resourceRepository.get(params.id);
-      const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
+    const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
     routeConfig.navModel.setTitle(title);
   }
 
   @computedFrom('this.resource.kind.metadataList', 'this.resource.kind.metadataList.length')
   get allowAddChildResource(): boolean {
-    const parentMetadata = this.resource.kind.metadataList.find(v => v.baseId === SystemMetadata.PARENT.baseId);
+    const parentMetadata = this.resource.kind.metadataList.find(v => v.id === SystemMetadata.PARENT.id);
     return !!parentMetadata.constraints.resourceKind.length;
   }
 
@@ -92,11 +93,11 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   private navigateToParentOrList() {
-    const parentId: number = this.resource.contents[SystemMetadata.PARENT.id][0];
-    if (parentId == undefined) {
+    const parent: MetadataValue = this.resource.contents[SystemMetadata.PARENT.id][0];
+    if (parent == undefined) {
       this.router.navigateToRoute('resources', {resourceClass: this.resource.resourceClass});
     } else {
-      this.router.navigateToRoute('resources/details', {id: parentId});
+      this.router.navigateToRoute('resources/details', {id: parent.value});
     }
   }
 }

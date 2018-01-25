@@ -15,6 +15,7 @@ class TestContainerPass implements CompilerPassInterface {
     private static $publicInTests = [
         \Doctrine\ORM\EntityManagerInterface::class,
         \Repeka\Domain\Cqrs\CommandBus::class,
+        \Repeka\Domain\Factory\ResourceContentsNormalizer::class,
         \Repeka\Domain\MetadataImport\Config\ImportConfigFactory::class,
         \Repeka\Domain\Repository\LanguageRepository::class,
         \Repeka\Domain\Repository\MetadataRepository::class,
@@ -22,6 +23,7 @@ class TestContainerPass implements CompilerPassInterface {
         \Repeka\Domain\Repository\ResourceRepository::class,
         \Repeka\Domain\Repository\ResourceWorkflowRepository::class,
         \Repeka\Domain\Repository\UserRepository::class,
+        \Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule::class,
         'sensio_framework_extra.view.guesser',
     ];
 

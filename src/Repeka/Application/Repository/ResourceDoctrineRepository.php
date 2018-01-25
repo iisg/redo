@@ -35,10 +35,10 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
 
     /** @return ResourceEntity[] */
     public function findChildren(int $parentId): array {
-        $parentMetadataId = SystemMetadata::PARENT;
         return $this->createQueryBuilder('r')
-            ->where("JSONB_CONTAINS(JSON_GET(r.contents, '$parentMetadataId'), :parentId) = TRUE")
-            ->setParameter('parentId', $parentId)
+            ->where("JSONB_CONTAINS(JSON_GET(r.contents, :parentMetadataId), :searchValue) = TRUE")
+            ->setParameter('parentMetadataId', SystemMetadata::PARENT)
+            ->setParameter('searchValue', json_encode([['value' => $parentId]]))
             ->getQuery()
             ->getResult();
     }
@@ -89,7 +89,7 @@ FROM (
        -- Each row contains a resource ID and an array of users it's assigned to
        SELECT
          resources_with_assignee_metadata_ids.*,
-         contents -> metadata_id AS assignee_ids
+         jsonb_array_elements(contents -> metadata_id) ->> 'value' AS assignee_id
        FROM (
               -- Extracts arrays of assigneeMetadataIds from places and splits them into rows.
               -- Rows are basically a cross join of resources with all assigneeMetadataIds
@@ -109,7 +109,7 @@ FROM (
                    ) AS resources_with_places
             ) AS resources_with_assignee_metadata_ids
      ) AS resources_with_assignees
-WHERE assignee_ids @> :userId :: TEXT :: JSONB
+WHERE assignee_id = :userId
 SQL
             , $resultSetMapping);
         $query->setParameter('userId', $user->getUserData()->getId());

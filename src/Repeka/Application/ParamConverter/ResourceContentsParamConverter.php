@@ -55,7 +55,7 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
         if (!$contentsFromRequest) {
             $this->handleEmptyRequestContents($request);
         }
-        foreach (json_decode($contentsFromRequest) ?? [] as $metadataId => $values) {
+        foreach (json_decode($contentsFromRequest, true) ?? [] as $metadataId => $values) {
             $baseMetadata = $this->metadataRepository->findOne($metadataId);
             $contents[$metadataId] = $this->metadataValueProcessor->process($values, $baseMetadata->getControl(), $request);
         }

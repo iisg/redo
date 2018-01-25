@@ -4,7 +4,7 @@ namespace Repeka\Domain\UseCase\Metadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
 
-class MetadataListByParentIdQueryHandler {
+class MetadataListByParentQueryHandler {
     /** @var MetadataRepository */
     private $metadataRepository;
 
@@ -13,7 +13,7 @@ class MetadataListByParentIdQueryHandler {
     }
 
     /** @return Metadata[] */
-    public function handle(MetadataListByParentIdQuery $query): array {
-        return $this->metadataRepository->findAllChildren($query->getParentId());
+    public function handle(MetadataListByParentQuery $query): array {
+        return $this->metadataRepository->findByParent($query->getParent());
     }
 }

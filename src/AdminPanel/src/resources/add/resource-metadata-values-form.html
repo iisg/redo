@@ -1,5 +1,6 @@
 <template>
     <require from="./resource-metadata-value-input"></require>
+    <require from="./new-metadata-value-button"></require>
 
     <table class="table resource-metadata-values-table"
         ref="valueTable">
@@ -25,7 +26,6 @@
                 </a>
                 <button type="button"
                     class="btn pull-right btn-danger"
-                    disabled.bind="isDeletingDisabled($index) & signal:VALUES_CHANGED_SIGNAL"
                     click.trigger="deleteIndex($index)">
                     <fa name="trash fw"></fa>
                 </button>
@@ -33,16 +33,9 @@
         </tr>
         <tr if.bind="!disabled">
             <td colspan="3">
-                <button type="button"
-                    class="btn btn-action"
-                    disabled.bind="!canAddMoreValues() & signal:VALUES_CHANGED_SIGNAL"
-                    click.delegate="addNew()">
-                    ${'Add value' | t}
-                </button>
-                <span if.bind="!canAddMoreValues() & signal:VALUES_CHANGED_SIGNAL"
-                    class="small">
-                    ${'No more values are allowed' | t}
-                </span>
+                <new-metadata-value-button metadata.bind="metadata"
+                    resource.bind="resource"
+                    add.delegate="addNew()"></new-metadata-value-button>
             </td>
         </tr>
         </tbody>

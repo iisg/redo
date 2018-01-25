@@ -53,6 +53,6 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailsIfOneValueInArrayIsIncorrect() {
         $this->expectException(InvalidCommandException::class);
-        $this->constraint->validateAll('^a', ['abc', 'bcd']);
+        $this->constraint->validateAll('^a', [['value' => 'abc'], ['value' => 'bcd']]);
     }
 }

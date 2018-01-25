@@ -7,24 +7,33 @@ use Repeka\Domain\Entity\ResourceEntity;
 
 class RelationshipPropertyConverterListener {
     public function prePersist(LifecycleEventArgs $eventArgs) {
-        $this->convertRelationshipProperties($eventArgs->getEntity());
+        $this->convertResourceContents($eventArgs->getEntity());
     }
 
     public function preUpdate(LifecycleEventArgs $eventArgs) {
-        $this->convertRelationshipProperties($eventArgs->getEntity());
+        $this->convertResourceContents($eventArgs->getEntity());
     }
 
-    private function convertRelationshipProperties($entity) {
+    private function convertResourceContents($entity) {
         if (!($entity instanceof ResourceEntity)) {
             return;
         }
         /** @var ResourceEntity $entity */
-        $contents = $entity->getContents();
+        $convertedContents = $this->convertRelationshipMetadata($entity->getContents());
+        $entity->updateContents($convertedContents);
+    }
+
+    public function convertRelationshipMetadata(array $contents): array {
         foreach ($contents as &$values) {
-            if (count($values) > 0 && $values[0] instanceof ResourceEntity) {
-                $values = EntityUtils::mapToIds($values);
+            foreach ($values as &$value) {
+                if ($value['value'] instanceof ResourceEntity) {
+                    $value['value'] = $value['value']->getId();
+                }
+                if (isset($value['submetadata'])) {
+                    $value['submetadata'] = $this->convertRelationshipMetadata($value['submetadata']);
+                }
             }
         }
-        $entity->updateContents($contents);
+        return $contents;
     }
 }

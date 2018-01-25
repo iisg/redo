@@ -6,6 +6,6 @@
         type="number"
         class="form-control"
         only-valid-numbers
-        value.bind="valueWrapper.value | integer & validate:validationController:validationRules"
+        value.bind="metadataValue.value | integer & validate:validationController:validationRules"
         disabled.bind="disabled">
 </template>

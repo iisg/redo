@@ -3,6 +3,8 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Entity\EntityUtils;
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
@@ -31,7 +33,7 @@ class MetadataFixture extends RepekaFixture {
      */
     public function load(ObjectManager $manager) {
         $addedMetadata = [];
-        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+        $addedMetadata[] = $titleMetadata = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Tytuł',
             'label' => [
                 'PL' => 'Tytuł',
@@ -101,7 +103,7 @@ class MetadataFixture extends RepekaFixture {
             'resourceClass' => 'books',
             'constraints' => $this->constraints(1),
         ]), self::REFERENCE_METADATA_NO_OF_PAGES);
-        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+        $addedMetadata[] = $languageMetadata = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Język',
             'label' => [
                 'PL' => 'Język',
@@ -172,6 +174,13 @@ class MetadataFixture extends RepekaFixture {
             'resourceClass' => 'books',
             'constraints' => $this->relationshipConstraints(1, [-1]),
         ]), self::REFERENCE_METADATA_SUPERVISOR);
+        $this->handleCommand(new MetadataChildWithBaseCreateCommand($titleMetadata, $languageMetadata, [
+            'label' => [
+                'PL' => 'Język tytułu',
+                'EN' => 'Title language',
+            ],
+            'constraints' => $this->textConstraints(1),
+        ]));
         $this->handleCommand(new MetadataUpdateOrderCommand(EntityUtils::mapToIds(
             $this->handleCommand(new MetadataListByResourceClassQuery('books'))
         ), 'books'));
