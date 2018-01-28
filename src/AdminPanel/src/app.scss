@@ -2,6 +2,7 @@
 @import "../jspm_packages/npm/compass-mixins@0.12.10/lib/animation/animate/fading";
 
 .admin-content {
+  position: relative;
   margin-left: 250px;
 }
 

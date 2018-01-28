@@ -1,0 +1,43 @@
+@import "../../../common/styles";
+
+$color: #8bc34a;
+$spinner-default-height: 18px;
+$spinner-margin-size: 5px;
+$navigation-bar-height: 52px;
+$navigation-bar-height-on-smaller-screens: 50px;
+$navigation-bar-border-with-shadow-size-on-smaller-screens: 2px;
+
+page-loading-indicator {
+    position: absolute;
+    display: block;
+    top: $navigation-bar-height;
+    width: 100%;
+    height: $spinner-margin-size + $spinner-default-height;
+    &.nprogress-custom-parent {
+        position: absolute;
+    }
+    #nprogress {
+        display: inherit;
+        .bar {
+            background: $color;
+        }
+        .spinner {
+            top: $spinner-margin-size;
+            right: $spinner-margin-size;
+            .spinner-icon {
+                border-top-color: $color;
+                border-left-color: $color;
+            }
+        }
+    }
+}
+
+@include on-sm-and-down {
+    page-loading-indicator {
+        top: $navigation-bar-height-on-smaller-screens - $navigation-bar-border-with-shadow-size-on-smaller-screens;
+    }
+}
+
+#nprogress {
+    display: none;
+}

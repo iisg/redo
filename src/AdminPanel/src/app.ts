@@ -1,4 +1,4 @@
-import {ConfiguresRouter, RouterConfiguration} from "aurelia-router";
+import {ConfiguresRouter, RouterConfiguration, Router} from "aurelia-router";
 import {ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
@@ -8,12 +8,14 @@ import {supportMiddleClickInLinks} from "./common/routes/middle-link-opener";
 
 @autoinject
 export class App implements ConfiguresRouter, ComponentAttached {
+  router: Router;
+
   constructor(private i18n: I18N,
               private element: Element,
               private routeAccessChecker: RouteAccessChecker) {
   }
 
-  configureRouter(config: RouterConfiguration) {
+  configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'RePeKa';
     config.options.pushState = true;
     config.options.root = '/admin';
@@ -23,6 +25,7 @@ export class App implements ConfiguresRouter, ComponentAttached {
     config.mapUnknownRoutes('common/error-pages/not-found');
     config.addAuthorizeStep(this.routeAccessChecker);
     supportMiddleClickInLinks(config);
+    this.router = router;
   }
 
   attached() {
