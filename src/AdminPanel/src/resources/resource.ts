@@ -28,14 +28,7 @@ export class Resource extends Entity {
 }
 
 export function registerResourceValidationRules() {
-  // @codingStandardsIgnoreStart
-  // @formatter:off because indentation makes config structure way clearer
   ValidationRules
     .ensure('kind').displayName("Resource kind").required()
-    .ensure('contents').displayName('Contents')
-      .satisfies(contents => Object.keys(contents).filter(metadataId => contents[metadataId].length > 0).length > 0)
-        .withMessageKey('atLeastOneMetadataRequired')
     .on(Resource);
-  // @formatter:on
-  // @codingStandardsIgnoreEnd
 }

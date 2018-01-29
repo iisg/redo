@@ -22,6 +22,8 @@ class ResourceCreateCommandHandler {
         $resource = new ResourceEntity($command->getKind(), $command->getContents(), $command->getResourceClass());
         if ($resource->getWorkflow()) {
             $this->ensureCanEnterTheFirstWorkflowState($resource);
+            $initialPlace = $resource->getWorkflow()->getInitialPlace();
+            $resource->getWorkflow()->setCurrentPlaces($resource, [$initialPlace->getId()]);
         }
         $resource = $this->resourceRepository->save($resource);
         Assertion::integer($resource->getId());

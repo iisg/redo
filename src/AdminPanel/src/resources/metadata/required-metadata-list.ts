@@ -1,9 +1,9 @@
 import {bindable} from "aurelia-templating";
 import {Metadata} from "../../resources-config/metadata/metadata";
 import {inArray} from "../../common/utils/array-utils";
-import {computedFrom} from "aurelia-binding";
 import {MetadataRepository} from "../../resources-config/metadata/metadata-repository";
 import {autoinject} from "aurelia-dependency-injection";
+import {computedFrom} from "aurelia-binding";
 
 @autoinject
 export class RequiredMetadataList {
@@ -23,7 +23,7 @@ export class RequiredMetadataList {
     this.allMetadataList = await this.metadataRepository.getListByClass(this.resourceClass);
   }
 
-  @computedFrom('requiredMetadataIds')
+  @computedFrom('requiredMetadataIds', 'allMetadataList')
   get requiredMetadataList(): Metadata[] {
     if (this.allMetadataList) {
       return this.allMetadataList.filter(metadata => inArray(metadata.id, this.requiredMetadataIds));

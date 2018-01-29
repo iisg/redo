@@ -1,3 +1,4 @@
+Value in this metadata is required: Wartość dla tej metadanej jest wymagana
 No more than {{maxCount}} values allowed: "Maksymlana liczba wartości: {{maxCount}}"
 "Value must fit the regular expression: {{regex}}": "Wartość musi pasować do wyrażenia regularnego: {{regex}}"
 

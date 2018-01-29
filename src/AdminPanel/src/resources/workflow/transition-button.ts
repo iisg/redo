@@ -1,11 +1,9 @@
 import {bindable} from "aurelia-templating";
 import {WorkflowTransition, WorkflowPlace} from "workflows/workflow";
-import {autoinject} from "aurelia-dependency-injection";
 import {VoidFunction} from "common/utils/function-utils";
 import {computedFrom} from "aurelia-binding";
 import {inArray} from "../../common/utils/array-utils";
 
-@autoinject
 export class TransitionButton {
   @bindable submitting: boolean;
   @bindable transition: WorkflowTransition;

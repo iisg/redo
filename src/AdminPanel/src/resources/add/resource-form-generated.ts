@@ -12,6 +12,8 @@ import {RequirementState} from "workflows/workflow";
 import {computedFrom} from "aurelia-binding";
 import {AllMetadataValueValidator} from "common/validation/rules/all-metadata-value-validator";
 import {ValidationController} from "aurelia-validation";
+import {EntitySerializer} from "../../common/dto/entity-serializer";
+import {BindingSignaler} from "aurelia-templating-resources";
 
 @autoinject
 export class ResourceFormGenerated {
@@ -27,9 +29,17 @@ export class ResourceFormGenerated {
   requiredMetadataIds: number[];
   removedValues: AnyMap<any[]> = {};
 
-  contentsValidator: any;
+  /*
+    contentsValidator is computed from resourceKind and requiredMetadataIdsForTransition - second one is bound later
+    after resourceKind is changed view binds old contentsValidator
+    @bindable solves this problem by binding current contentsValidator after computing new ones
+  */
+  @bindable contentsValidator: NumberMap<any>;
 
-  constructor(i18n: I18N, private allMetadataValidator: AllMetadataValueValidator) {
+  constructor(i18n: I18N,
+              private signaler: BindingSignaler,
+              private allMetadataValidator: AllMetadataValueValidator,
+              private entitySerializer: EntitySerializer) {
     this.currentLanguageCode = i18n.getLocale().toUpperCase();
   }
 
@@ -52,28 +62,48 @@ export class ResourceFormGenerated {
     if (!this.resourceKind) {
       this.resource.contents = {};
     } else {
-      this.contentsValidator = {};
-      for (let metadata of this.resourceKind.metadataList) {
-        this.contentsValidator[metadata.baseId] = this.allMetadataValidator.createRules(metadata).rules;
-      }
-      const previousMetadata = Object.keys(this.resource.contents).map(k => k);
-      const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.baseId);
-      const toBeRemoved = diff(previousMetadata, newMetadata);
-      const toBeAdded = diff(newMetadata, previousMetadata);
-      for (const metadataId of toBeRemoved) {
-        this.removedValues[metadataId] = this.resource.contents[metadataId];
-        delete this.resource.contents[metadataId];
-      }
-      for (const metadataId of toBeAdded) {
-        if (metadataId in this.removedValues) {
-          this.resource.contents[metadataId] = this.removedValues[metadataId];
-          delete this.removedValues[metadataId];
-        } else {
-          this.resource.contents[metadataId] = [];
-        }
-      }
+      this.setResourceContents();
+      this.buildMetadataValidators();
     }
     this.setParent();
+  }
+
+  requiredMetadataIdsForTransitionChanged() {
+    this.buildMetadataValidators();
+    this.signaler.signal('require-metadata-for-transition-changed');
+  }
+
+  private buildMetadataValidators() {
+    this.contentsValidator = {};
+    if (!this.resourceKind) {
+      return;
+    }
+    for (let metadata of this.resourceKind.metadataList) {
+      const clonedMetadata = this.entitySerializer.clone(metadata);
+      if (inArray(clonedMetadata.baseId, this.requiredMetadataIdsForTransition || [])) {
+        clonedMetadata.constraints.minCount = 1;
+      }
+      this.contentsValidator[clonedMetadata.baseId] = this.allMetadataValidator.createRules(clonedMetadata).rules;
+    }
+  }
+
+  private setResourceContents() {
+    const previousMetadata = Object.keys(this.resource.contents).map(k => k);
+    const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.baseId);
+    const toBeRemoved = diff(previousMetadata, newMetadata);
+    const toBeAdded = diff(newMetadata, previousMetadata);
+    for (const metadataId of toBeRemoved) {
+      this.removedValues[metadataId] = this.resource.contents[metadataId];
+      delete this.resource.contents[metadataId];
+    }
+    for (const metadataId of toBeAdded) {
+      if ((metadataId in this.removedValues) && this.removedValues[metadataId]) {
+        this.resource.contents[metadataId] = this.removedValues[metadataId];
+        delete this.removedValues[metadataId];
+      } else {
+        this.resource.contents[metadataId] = [];
+      }
+    }
   }
 
   setParent() {
@@ -99,7 +129,7 @@ export class ResourceFormGenerated {
   }
 
   metadataIsRequired(metadata: Metadata): boolean {
-    return inArray(metadata.baseId, this.requiredMetadataIds) || inArray(metadata.baseId, this.requiredMetadataIdsForTransition);
+    return inArray(metadata.baseId, this.requiredMetadataIdsForTransition) || inArray(metadata.baseId, this.requiredMetadataIds);
   }
 
   metadataIsLocked(metadata: Metadata): boolean {

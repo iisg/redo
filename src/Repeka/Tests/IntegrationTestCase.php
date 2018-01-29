@@ -11,6 +11,7 @@ use Repeka\Domain\Entity\Language;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
@@ -159,8 +160,14 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         );
     }
 
-    protected function createResourceKind(array $label, array $metadataList, string $resourceClass = 'books'): ResourceKind {
-        return $this->handleCommand(new ResourceKindCreateCommand($label, $metadataList, $resourceClass));
+    protected function createResourceKind(
+        array $label,
+        array $metadataList,
+        string $resourceClass = 'books',
+        array $displayStrategies = [],
+        ResourceWorkflow $workflow = null
+    ): ResourceKind {
+        return $this->handleCommand(new ResourceKindCreateCommand($label, $metadataList, $resourceClass, $displayStrategies, $workflow));
     }
 
     /** Creates arrays for use in createResourceKind()'s $metadataList */
@@ -185,8 +192,8 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         return $this->handleCommand(new ResourceCreateCommand($resourceKind, $contents, $resourceClass));
     }
 
-    protected function createWorkflow(array $name, string $resourceClass) {
-        $places = [new ResourceWorkflowPlace([])];
+    protected function createWorkflow(array $name, string $resourceClass, ResourceWorkflowPlace $initialPlace): ResourceWorkflow {
+        $places = [$initialPlace];
         return $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, [], $resourceClass, null, null));
     }
 }

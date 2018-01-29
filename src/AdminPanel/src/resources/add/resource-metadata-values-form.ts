@@ -55,7 +55,7 @@ export class ResourceMetadataValuesForm {
       return true;
     }
 
-    return this.required && this.filledValuesCount == 1 && !this.valueIsUndefined(index);
+    return this.required && this.filledValuesCount <= 1 && !this.valueIsUndefined(index);
   }
 
   canAddMoreValues(): boolean {

@@ -7,17 +7,18 @@
 
     <div>
         <div class="row">
-            <div if.bind="editing && transition"
+            <div if.bind="showRequiredMetadataAndWorkflowInfo"
                 class="col-md-4">
                 <workflow-froms-tos-display transition.bind="transition"
-                    places.bind="edit.kind.workflow.places"></workflow-froms-tos-display>
+                    places.bind="resource.kind.workflow.places"></workflow-froms-tos-display>
             </div>
-            <div class="${edit ? 'col-md-4' : 'col-md-8'}">
+            <div if.bind="showRequiredMetadataAndWorkflowInfo"
+                class="col-md-4">
                 <required-metadata-list if.bind="requiredMetadataIds.length > 0"
                     resource-class.bind="resourceClass"
                     required-metadata-ids.bind="resource.kind ? requiredMetadataIds : []"></required-metadata-list>
             </div>
-            <div class="${editing && !transition ? 'col-md-8' : 'col-md-4'}">
+            <div class="${showRequiredMetadataAndWorkflowInfo ? 'col-md-4' : 'col-md-12'}">
                 <div class="pull-right button-parent"
                     if.bind="resource.kind !== undefined">
                     <button class="btn btn-fab btn-raised"

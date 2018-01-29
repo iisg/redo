@@ -2,6 +2,7 @@ import {MetadataArrayConstraintValidator, SingleValueConstraintValidator} from "
 import {MaxCountConstraintValidator} from "./constraints/max-count-constraint-validator";
 import {RegexConstraintValidator} from "./constraints/regex-constraint-validator";
 import {autoinject, Container} from "aurelia-dependency-injection";
+import {MinCountConstraintValidator} from "./constraints/min-count-constraint-validator";
 
 @autoinject
 export class MetadataConstraintValidators {
@@ -10,6 +11,7 @@ export class MetadataConstraintValidators {
   ];
 
   private readonly metadataArrayValidatorClasses: any[] = [
+    MinCountConstraintValidator,
     MaxCountConstraintValidator,
   ];
 

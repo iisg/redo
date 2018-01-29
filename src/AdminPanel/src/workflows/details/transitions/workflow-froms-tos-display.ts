@@ -22,6 +22,9 @@ export class WorkflowFromsTosDisplay {
     if (this.transition) {
       let tos = this.transition.tos;
       return this.places.filter(place => inArray(place.id, tos));
+    } else if (this.places && this.places.length) {
+      const place = this.places[0];
+      return [place];
     } else {
       return [];
     }

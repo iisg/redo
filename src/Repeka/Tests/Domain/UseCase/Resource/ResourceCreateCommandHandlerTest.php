@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
@@ -53,8 +54,7 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testCreatingResourceWithWorkflow() {
-        $initialPlace = $this->createMock(ResourceWorkflowPlace::class);
-        $initialPlace->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(true);
+        $initialPlace = $this->createWorkflowPlaceMock('key');
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getInitialPlace')->willReturn($initialPlace);
         $resourceKind = new ResourceKind([], 'books', [], $workflow);
@@ -63,6 +63,16 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotNull($resource);
         $this->assertEquals($workflow, $resource->getWorkflow());
         $this->assertEquals('books', $resource->getResourceClass());
+    }
+
+    public function testCreatedResourceEntersTheFirstPlaceOfWorkflow() {
+        $initialPlace = $this->createWorkflowPlaceMock('key');
+        $workflow = $this->createMock(ResourceWorkflow::class);
+        $workflow->method('getInitialPlace')->willReturn($initialPlace);
+        $workflow->expects($this->once())->method('setCurrentPlaces')->with($this->isInstanceOf(ResourceEntity::class), ['key']);
+        $resourceKind = new ResourceKind([], 'books', [], $workflow);
+        $command = new ResourceCreateCommand($resourceKind, [], $this->resourceClass);
+        $this->handler->handle($command);
     }
 
     public function testMovingFiles() {
