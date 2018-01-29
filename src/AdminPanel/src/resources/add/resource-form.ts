@@ -9,7 +9,7 @@ import {ImportDialog} from "./xml-import/import-dialog";
 import {Modal} from "common/dialog/modal";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
-import {flatten, inArray, convertToObject} from "common/utils/array-utils";
+import {convertToObject, flatten, inArray} from "common/utils/array-utils";
 import {RequirementState, WorkflowTransition} from "../../workflows/workflow";
 import {Router} from "aurelia-router";
 import {numberKeysByValue} from "../../common/utils/object-utils";
@@ -51,6 +51,7 @@ export class ResourceForm {
     return !!this.resource.id;
   }
 
+  @computedFrom('resource.kind.workflow')
   get requiredMetadataIds(): number[] {
     let requiredMetadataIds = [];
     if (this.resource.kind && this.resource.kind.workflow) {
@@ -58,8 +59,8 @@ export class ResourceForm {
       if (this.edit && this.transition) {
         const places = [];
         this.transition.tos.forEach((value) => {
-          const places = this.resource.kind.workflow.places;
-          places.push(places.find(place => place.id === value));
+          const workflowPlaces = this.resource.kind.workflow.places;
+          places.push(workflowPlaces.find(place => place.id === value));
         });
         restrictingMetadata = places.map(v => v.restrictingMetadataIds);
         restrictingMetadata = convertToObject(restrictingMetadata);
@@ -79,16 +80,19 @@ export class ResourceForm {
   }
 
   get canApplyTransition(): boolean {
-    if (this.transition) {
-      const contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
-      for (const metadataId of this.requiredMetadataIdsForTransition()) {
-        let array = contents[metadataId] !== undefined ? contents[metadataId] : [];
-        if (!array.length) {
-          return false;
-        }
+    const requiredMetadataIds = this.transition ? this.requiredMetadataIdsForTransition() : this.requiredMetadataIds;
+    const contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
+    for (const metadataId of requiredMetadataIds) {
+      let array = contents[metadataId] !== undefined ? contents[metadataId] : [];
+      if (!array.length) {
+        return false;
       }
-      return true;
     }
+    return true;
+  }
+
+  get showRequiredMetadataAndWorkflowInfo(): boolean {
+    return (!!this.transition || !this.editing) && this.resource.kind && !!this.resource.kind.workflow;
   }
 
   private setResourceKindsAlloweByParent() {

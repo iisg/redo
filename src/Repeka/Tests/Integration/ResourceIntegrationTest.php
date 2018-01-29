@@ -5,8 +5,11 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Workflow\ResourceWorkflowDriver;
+use Repeka\Tests\Domain\Factory\SampleResourceWorkflowDriverFactory;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceIntegrationTest extends IntegrationTestCase {
@@ -18,6 +21,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     private $baseMetadata;
     /** @var ResourceKind */
     private $resourceKind;
+    /** @var ResourceKind */
+    private $resourceKindWithWorkflow;
     /** @var Metadata */
     private $metadata;
     /** @var  Metadata */
@@ -38,11 +43,18 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
         $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'textarea');
         $this->baseMetadata2 = $this->createMetadata('Base2', ['TEST' => 'Base metadata'], [], [], 'textarea');
+        $workflow = $this->createWorkflow(['TEST' => 'Workflow'], 'books', new ResourceWorkflowPlace(['key']));
+        $sampleResourceWorkflowDriverFactory = new SampleResourceWorkflowDriverFactory($this->createMock(ResourceWorkflowDriver::class));
+        $workflow = $sampleResourceWorkflowDriverFactory->setForWorkflow($workflow);
         $this->resourceKind = $this->createResourceKind(['TEST' => 'Resource kind'], [
             $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata']),
             $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
             $this->resourceKindMetadata($this->baseMetadata2, ['TEST' => 'Metadata']),
         ]);
+        $this->resourceKindWithWorkflow = $this->createResourceKind(['TEST' => 'Resource kind'], [
+            $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata']),
+            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
+        ], 'books', [], $workflow);
         $this->metadata = $this->resourceKind->getMetadataList()[1];
         $this->metadata->updateOrdinalNumber(0);
         $this->persistAndFlush($this->metadata);
@@ -133,6 +145,23 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
         $this->assertEquals([$this->metadata->getBaseId() => ['created']], $created->getContents());
+    }
+
+    public function testCreatingResourceWithWorkflow() {
+        $client = self::createAdminClient();
+        $client->apiRequest('POST', self::ENDPOINT, [
+            'kindId' => $this->resourceKindWithWorkflow->getId(),
+            'contents' => json_encode([$this->metadata->getBaseId() => ['created']]),
+            'resourceClass' => 'books',
+        ]);
+        $this->assertStatusCode(201, $client->getResponse());
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        $createdId = json_decode($client->getResponse()->getContent())->id;
+        /** @var ResourceEntity $created */
+        $created = $repository->findOne($createdId);
+        $this->assertEquals($this->resourceKindWithWorkflow->getId(), $created->getKind()->getId());
+        $this->assertEquals([$this->metadata->getBaseId() => ['created']], $created->getContents());
+        $this->assertEquals(['key' => true], $created->getMarking());
     }
 
     public function testEditingResource() {

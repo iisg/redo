@@ -16,6 +16,7 @@ export interface MultilingualText extends StringStringMap {
 export class MetadataConstraints {
   static NAME = 'MetadataConstraints';
 
+  minCount?: number;
   @map maxCount?: number;
   @map(ResourceKindConstraintMapper) resourceKind?: ResourceKind[] | number[] = [];
   @map regex?: string;
@@ -27,6 +28,7 @@ export class MetadataConstraints {
 
 export const metadataConstraintDefaults: MetadataConstraints = {
   resourceKind: [],
+  minCount: 0,
   maxCount: 0,
   regex: '',
 };

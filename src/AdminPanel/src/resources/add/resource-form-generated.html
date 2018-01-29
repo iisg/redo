@@ -17,7 +17,7 @@
                 </li>
             </ul>
         </div>
-        <div if.bind="metadataIsRequired(metadata)"
+        <div if.bind="metadataIsRequired(metadata) & signal:'require-metadata-for-transition-changed'"
             class="alert alert-warning">
             <fa name="info-circle"></fa>
             ${"This metadata is required in current state" | t}
@@ -27,7 +27,8 @@
             <fa name="info-circle"></fa>
             ${"Resource's state prevents modification of these values." | t}
         </div>
-        <resource-metadata-values-form metadata.bind="metadata"
+        <resource-metadata-values-form if.bind="contentsValidator[metadata.baseId]"
+            metadata.bind="metadata"
             resource.bind="resource"
             validation-controller.bind="validationController"
             disabled.bind="editingDisabledForMetadata(metadata)"
