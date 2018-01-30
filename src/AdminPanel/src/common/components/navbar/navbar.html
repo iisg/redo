@@ -4,6 +4,7 @@
     <require from="./notification-bell/notification-bell"></require>
     <require from="../sidebar/nested-navigation-menu"></require>
     <require from="./navbar-title"></require>
+    <require from="common/components/page-loading-indicator/page-loading-indicator"></require>
 
     <div class="navbar navbar-default z-depth-1">
         <div class="container-fluid"></div>
@@ -44,6 +45,6 @@
                 </li>
             </ul>
         </div>
+        <page-loading-indicator loading.bind="router.isNavigating"></page-loading-indicator>
     </div>
-
 </template>

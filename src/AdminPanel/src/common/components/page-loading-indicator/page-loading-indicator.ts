@@ -1,5 +1,5 @@
 import * as nprogress from "nprogress";
-import { noView, bindable } from "aurelia-framework";
+import {noView, bindable} from "aurelia-framework";
 
 @noView(['nprogress/nprogress.css'])
 export class PageLoadingIndicator {
