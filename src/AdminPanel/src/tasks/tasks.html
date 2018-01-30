@@ -6,7 +6,7 @@
 
     <loading-bar if.bind="tasks === undefined"></loading-bar>
 
-    <div if.bind="tasks !== undefined">
+    <div else>
         <h3>${"Your current tasks" | t}</h3>
         <div class="row">
             <resources-list-table resources.bind="tasks | currentTasks"
