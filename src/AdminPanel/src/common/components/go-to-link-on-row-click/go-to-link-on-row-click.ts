@@ -13,13 +13,13 @@ export class GoToLinkOnRowClickCustomAttribute {
   }
 
   private onMouseDown(event: JQueryEventObject) {
-    if (this.isLeftMouseClick(event)) {
+    if (this.isLeftOrMiddleMouseClick(event)) {
       this.lastMouseDownPosition = {x: event.pageX, y: event.pageY};
     }
   }
 
   private onMouseUp(event: JQueryEventObject) {
-    if (this.isLeftMouseClick(event) && this.isClickingOnRowEnabled(event)) {
+    if (this.isLeftOrMiddleMouseClick(event) && this.isClickingOnRowEnabled(event)) {
       const currentPosition = {x: event.pageX, y: event.pageY};
       const moveX = Math.abs(currentPosition.x - this.lastMouseDownPosition.x);
       const moveY = Math.abs(currentPosition.y - this.lastMouseDownPosition.y);
@@ -27,15 +27,18 @@ export class GoToLinkOnRowClickCustomAttribute {
         if (this.notAButton(event.target)) {
           const link = $(event.currentTarget).find(this.linkSelector)[0];
           if (link) {
-            setTimeout(() => link.click());
+            setTimeout(() => {
+              link.dispatchEvent(new MouseEvent("mouseup", event.originalEvent));
+              link.dispatchEvent(new MouseEvent("click", event.originalEvent));
+            });
           }
         }
       }
     }
   }
 
-  private isLeftMouseClick(event: JQueryEventObject): boolean {
-    return event.which == 1;
+  private isLeftOrMiddleMouseClick(event: JQueryEventObject): boolean {
+    return event.which == 1 || event.which == 2;
   }
 
   private isClickingOnRowEnabled(event: JQueryEventObject): boolean {
