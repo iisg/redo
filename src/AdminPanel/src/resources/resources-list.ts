@@ -2,9 +2,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {ResourceRepository} from "./resource-repository";
 import {Resource} from "./resource";
 import {bindable, ComponentAttached} from "aurelia-templating";
-import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {bindingMode, observable} from "aurelia-binding";
-import {removeValue} from "common/utils/array-utils";
 import {Metadata} from "../resources-config/metadata/metadata";
 import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
 import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
@@ -25,7 +23,6 @@ export class ResourcesList implements ComponentAttached {
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceKindRepository: ResourceKindRepository,
-              private deleteEntityConfirmation: DeleteEntityConfirmation,
               private ea: EventAggregator) {
   }
 
@@ -101,13 +98,5 @@ export class ResourcesList implements ComponentAttached {
       this.resources.push(resource);
       return resource;
     });
-  }
-
-  deleteResource(resource: Resource) {
-    this.deleteEntityConfirmation.confirm('resource', resource.id)
-      .then(() => resource.pendingRequest = true)
-      .then(() => this.resourceRepository.remove(resource))
-      .then(() => removeValue(this.resources, resource))
-      .finally(() => resource.pendingRequest = false);
   }
 }

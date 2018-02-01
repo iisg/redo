@@ -2,8 +2,6 @@ import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
-import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
-import {removeValue} from "common/utils/array-utils";
 import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
@@ -14,9 +12,7 @@ export class MetadataList implements ComponentAttached {
   addFormOpened: boolean = false;
   progressBar: boolean;
 
-  constructor(private metadataRepository: MetadataRepository,
-              private deleteEntityConfirmation: DeleteEntityConfirmation,
-              private entitySerializer: EntitySerializer) {
+  constructor(private metadataRepository: MetadataRepository, private entitySerializer: EntitySerializer) {
   }
 
   activate(params: any) {
@@ -77,14 +73,6 @@ export class MetadataList implements ComponentAttached {
     return this.metadataRepository.update(changedMetadata)
       .then(() => metadata.editing = false)
       .catch(() => this.entitySerializer.hydrateClone(originalMetadata, metadata))
-      .finally(() => metadata.pendingRequest = false);
-  }
-
-  deleteMetadata(metadata: Metadata) {
-    this.deleteEntityConfirmation.confirm('metadata', metadata.name)
-      .then(() => metadata.pendingRequest = true)
-      .then(() => this.metadataRepository.remove(metadata))
-      .then(() => removeValue(this.metadataList, metadata))
       .finally(() => metadata.pendingRequest = false);
   }
 }

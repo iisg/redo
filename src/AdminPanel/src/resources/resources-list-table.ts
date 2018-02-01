@@ -6,7 +6,6 @@ import {Metadata} from "../resources-config/metadata/metadata";
 export class ResourcesListTable {
   @bindable resources: Resource[];
   @bindable columnMetadata: Metadata[];
-  @bindable(oneTime) deleteResource: (value: {resource: Resource}) => void;
   @bindable(oneTime) extraColumnNames: string[] = [];
   @bindable(oneTime) extraColumnViews: string[] = [];
 }

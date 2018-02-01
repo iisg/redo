@@ -21,7 +21,6 @@
     <div class="row"
         show.bind="!resources || resources.length > 0">
         <resources-list-table resources.bind="resources"
-            delete-resource.call="deleteResource(resource)"
             column-metadata.bind="briefMetadata"></resources-list-table>
     </div>
 
