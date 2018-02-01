@@ -33,12 +33,10 @@ class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint 
     }
 
     public function getValidator($allowedResourceKindIds, $resource) {
-        if ($allowedResourceKindIds) {
-            $resource = $this->resourceRepository->findOne($resource->getId());
-            $valid = Validator::in($allowedResourceKindIds)->validate($resource->getKind()->getId());
-            if (!$valid) {
-                return Validator::alwaysInvalid();
-            }
+        $resource = $this->resourceRepository->findOne($resource->getId());
+        $valid = Validator::in($allowedResourceKindIds)->validate($resource->getKind()->getId());
+        if (!$valid) {
+            return Validator::alwaysInvalid();
         }
     }
 }

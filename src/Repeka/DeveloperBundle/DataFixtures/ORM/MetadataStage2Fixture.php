@@ -4,7 +4,9 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 
 /**
@@ -21,8 +23,7 @@ class MetadataStage2Fixture extends RepekaFixture {
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
-        $existingMetadata = $this->handleCommand(new MetadataListByResourceClassQuery('books'));
-        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+        $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Powiązana książka',
             'label' => [
                 'PL' => 'Powiązana książka',
@@ -37,9 +38,23 @@ class MetadataStage2Fixture extends RepekaFixture {
                 $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_BOOK)->getId(),
             ]),
         ]), self::REFERENCE_METADATA_RELATED_BOOK);
-        $allMetadata = array_merge($existingMetadata, $addedMetadata);
+        /** @var Metadata $seeAlsoMetadata */
+        $seeAlsoMetadata = $this->handleCommand(new MetadataGetQuery(
+            $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getId()
+        ));
+        $this->handleCommand(new MetadataUpdateCommand(
+            $seeAlsoMetadata->getId(),
+            $seeAlsoMetadata->getLabel(),
+            $seeAlsoMetadata->getDescription(),
+            $seeAlsoMetadata->getPlaceholder(),
+            $this->relationshipConstraints(0, [
+                $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_BOOK)->getId(),
+            ]),
+            $seeAlsoMetadata->isShownInBrief()
+        ));
+        $existingMetadata = $this->handleCommand(new MetadataListByResourceClassQuery('books'));
         $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
             return $metadata->getId();
-        }, $allMetadata), 'books'));
+        }, $existingMetadata), 'books'));
     }
 }
