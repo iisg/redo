@@ -34,7 +34,7 @@ class ResourceListQueryBuilder {
         return $this->filterByResourceClasses([$resourceClass]);
     }
 
-    public function onlyTopLevel() {
+    public function onlyTopLevel(): ResourceListQueryBuilder {
         $this->onlyTopLevel = true;
         return $this;
     }

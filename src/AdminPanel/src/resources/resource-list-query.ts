@@ -31,6 +31,11 @@ export class ResourceListQuery {
     return this;
   }
 
+  public onlyTopLevel(): ResourceListQuery {
+    this.params.topLevel = true;
+    return this;
+  }
+
   public get(): Promise<Resource[]> {
     let params = deepCopy(this.params);
     for (let param in params) {

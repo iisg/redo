@@ -73,6 +73,30 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'kindId' => $this->resourceKind->getId(),
                 'contents' => [$this->metadata->getBaseId() => ['Test value for parent']],
                 'resourceClass' => $this->resource->getResourceClass(),
+            ], [
+                'id' => $this->childResource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => [$this->metadata->getBaseId() => ['Test value for child'], -1 => [$this->parentResource->getId()]],
+                'resourceClass' => $this->resource->getResourceClass(),
+            ],
+        ], $client->getResponse()->getContent());
+    }
+
+    public function testFetchingTopLevelResources() {
+        $client = self::createAdminClient();
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => 'books', 'topLevel' => true]);
+        $this->assertStatusCode(200, $client->getResponse());
+        $this->assertJsonStringSimilarToArray([
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => [$this->metadata->getBaseId() => ['Test value']],
+                'resourceClass' => $this->resource->getResourceClass(),
+            ], [
+                'id' => $this->parentResource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => [$this->metadata->getBaseId() => ['Test value for parent']],
+                'resourceClass' => $this->resource->getResourceClass(),
             ],
         ], $client->getResponse()->getContent());
     }

@@ -32,16 +32,15 @@ class ResourcesController extends ApiController {
     public function getListAction(Request $request) {
         $resourceClasses = array_filter(explode(',', $request->query->get('resourceClasses', '')));
         $resourceKindIds = array_filter(explode(',', $request->query->get('resourceKinds', '')));
+        $topLevel = $request->query->get('topLevel', false);
         $resourceKinds = array_map(function ($resourceKindId) {
             return $this->handleCommand(new ResourceKindQuery($resourceKindId));
         }, $resourceKindIds);
-        $resources = $this->handleCommand(
-            ResourceListQuery::builder()
-                ->onlyTopLevel()
-                ->filterByResourceClasses($resourceClasses)
-                ->filterByResourceKinds($resourceKinds)
-                ->build()
-        );
+        $resourceListQueryBuilder = ResourceListQuery::builder()
+            ->filterByResourceClasses($resourceClasses)
+            ->filterByResourceKinds($resourceKinds);
+        $resourceListQuery = $topLevel ? $resourceListQueryBuilder->onlyTopLevel()->build() : $resourceListQueryBuilder->build();
+        $resources = $this->handleCommand($resourceListQuery);
         return $this->createJsonResponse($resources);
     }
 
