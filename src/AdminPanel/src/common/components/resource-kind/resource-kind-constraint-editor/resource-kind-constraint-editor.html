@@ -24,7 +24,7 @@
             </li>
         </ul>
     </div>
-    <p if.bind="metadata.constraints.resourceKind.length === 0">${'No restrictions' | t}</p>
+    <p if.bind="metadata.constraints.resourceKind.length === 0">${'No allowed resource kinds' | t}</p>
     <p if.bind="metadata.constraints.resourceKind.length > 1">${'One of:' | t}</p>
     <div class="input-group">
         <resource-kind-chooser value.bind="metadata.constraints.resourceKind"

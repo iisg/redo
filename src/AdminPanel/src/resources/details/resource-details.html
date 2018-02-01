@@ -58,9 +58,11 @@
                 </div>
             </div>
 
-            <h3>${'Child resources' | t}</h3>
-            <resources-list parent-resource.bind="resource"
-                has-resources.bind="hasChildren"></resources-list>
+            <div if.bind="allowAddChildResource">
+                <h3>${'Child resources' | t}</h3>
+                <resources-list parent-resource.bind="resource"
+                    has-resources.bind="hasChildren"></resources-list>
+            </div>
         </div>
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"

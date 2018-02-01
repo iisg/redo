@@ -48,6 +48,7 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
             return $metadata->getId();
         }, $allFiltered);
         sort($baseIds);
+        sort($filteredIds);
         $this->assertEquals($filteredIds, $baseIds);
     }
 }

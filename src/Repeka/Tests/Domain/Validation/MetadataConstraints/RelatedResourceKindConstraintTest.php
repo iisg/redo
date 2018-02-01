@@ -28,25 +28,30 @@ class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
         $this->constraint = new RelatedResourceKindConstraint($repository, $this->createMock(EntityExistsRule::class));
     }
 
-    public function testAcceptsValueAnythingWhenNoResourceKindIdsAreProvided() {
+    public function testAcceptsWhenNoResourceKindIdsAndNoValueAreProvided() {
         $this->resourceKind->expects($this->never())->method('getId');
-        $this->constraint->validateSingle([], $this->resource);
+        $this->constraint->validateAll([], []);
+    }
+
+    public function testRejectsWhenValueAndNoResourceKindIdsAreProvided() {
+        $this->expectException(InvalidCommandException::class);
+        $this->constraint->validateAll([], [$this->resource]);
     }
 
     public function testAcceptsValueWhenSoleResourceKindIdMatches() {
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->constraint->validateSingle([123], $this->resource);
+        $this->constraint->validateAll([123], [$this->resource]);
     }
 
     public function testAcceptsValueWhenAnyResourceKindIdMatches() {
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->constraint->validateSingle([100, 111, 123, 200], $this->resource);
+        $this->constraint->validateAll([100, 111, 123, 200], [$this->resource]);
     }
 
     public function testRejectsValueWhenResourceKindIdDoesNotMatch() {
         $this->expectException(InvalidCommandException::class);
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->constraint->validateSingle([100], $this->resource);
+        $this->constraint->validateAll([100], [$this->resource]);
     }
 
     public function testRejectsValueWhenResourceDoesNotExist() {
@@ -55,7 +60,7 @@ class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
         $repository->method('findOne')->willThrowException(new EntityNotFoundException('dummy', 0));
         $constraint = new RelatedResourceKindConstraint($repository, $this->createMock(EntityExistsRule::class));
         $this->resourceKind->expects($this->never())->method('getId');
-        $constraint->validateSingle([100], $this->resource);
+        $constraint->validateAll([100], [$this->resource]);
     }
 
     public function testAcceptsArgumentWhenResourceKindsExist() {

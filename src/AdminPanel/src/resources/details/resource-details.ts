@@ -10,6 +10,7 @@ import {I18N} from "aurelia-i18n";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {WorkflowTransition} from "../../workflows/workflow";
 import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
+import {computedFrom} from "aurelia-binding";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -42,6 +43,12 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.resource = await this.resourceRepository.get(params.id);
       const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
     routeConfig.navModel.setTitle(title);
+  }
+
+  @computedFrom('this.resource.kind.metadataList', 'this.resource.kind.metadataList.length')
+  get allowAddChildResource(): boolean {
+    const parentMetadata = this.resource.kind.metadataList.find(v => v.baseId === SystemMetadata.PARENT.baseId);
+    return !!parentMetadata.constraints.resourceKind.length;
   }
 
   toggleEditForm(transition?: WorkflowTransition) {

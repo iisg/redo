@@ -3,5 +3,8 @@
     <resource-picker resource-id.bind="valueWrapper.value & validate:validationController:validationRules"
         resource-kind-ids.bind="metadata.constraints.resourceKind"
         resource-class.bind="metadata.id == -1 ? resource.resourceClass : undefined"
-        disabled.bind="disabled"></resource-picker>
+        disabled.bind="disabled || metadata.constraints.resourceKind.length === 0"></resource-picker>
+    <span if.bind="metadata.constraints.resourceKind.length === 0">
+        ${'To see dropdown choose allowed resource kinds in metadata settings.' | t}
+    </span>
 </template>

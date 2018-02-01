@@ -71,7 +71,7 @@ Choose existing submetadata kind: Wybierz istniejący rodzaj podmetadanych
 Roles allowed to apply transition: Uprawnieni do wykonania przejścia
 Select file: Wybierz...
 Required resource kind: Wymagany rodzaj zasobu
-No restrictions: Bez ograniczeń
+No allowed resource kinds: Brak dozwolonych rodzajów zasobów
 One of:: Jeden spośród:
 Restore from base: Przywróć z bazowej
 Add value: Dodaj wartość
@@ -144,3 +144,4 @@ List of required metadata: Lista metadanych wymaganych do przejścia
 And move to state: i przejdź do stanu
 No more values are allowed: Wprowadzono maksymalną liczbę wartości
 Some metadata constraints have not been met. Check the form error and try again.: W formularzu pojawiły się błędy. Przejrzyj je i spróbuj ponownie.
+To see dropdown choose allowed resource kinds in metadata settings.: Aby zobaczy listę zasobów wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
