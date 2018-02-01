@@ -65,7 +65,7 @@ export class ResourcesList implements ComponentAttached {
 
   fetchResources() {
     this.progressBar = true;
-    this.resourceRepository.getListQuery().filterByResourceClasses(this.resourceClass).get().then(resources => {
+    this.resourceRepository.getListQuery().onlyTopLevel().filterByResourceClasses(this.resourceClass).get().then(resources => {
       this.progressBar = false;
       this.resources = resources;
       this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);
