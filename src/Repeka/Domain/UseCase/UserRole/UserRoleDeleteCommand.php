@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\UserRole;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Entity\UserRole;
 
-class UserRoleDeleteCommand extends Command {
+class UserRoleDeleteCommand extends AbstractCommand {
     /** @var UserRole */
     private $userRole;
 

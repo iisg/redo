@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class MetadataUpdateOrderCommand extends Command {
+class MetadataUpdateOrderCommand extends AbstractCommand {
     /** @var int[] */
     private $metadataIdsInOrder;
     /** @var string */

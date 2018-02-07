@@ -17,7 +17,9 @@ class ValidateCommandMiddleware implements CommandBusMiddleware {
         if (!($command instanceof NonValidatedCommand)) {
             $validatorId = $this->getValidatorId($command);
             if ($this->container->has($validatorId)) {
-                $this->validate($command);
+                /** @var CommandValidator $validator */
+                $validator = $this->container->get($validatorId);
+                $validator->validate($command);
             } else {
                 throw new \InvalidArgumentException("Could not find a validator for the {$command->getCommandName()}. "
                     . "Looking for the {$validatorId}. "
@@ -29,12 +31,5 @@ class ValidateCommandMiddleware implements CommandBusMiddleware {
 
     private function getValidatorId(Command $command) {
         return get_class($command) . 'Validator';
-    }
-
-    private function validate(Command $command) {
-        /** @var CommandValidator $validator */
-        $validator = $this->container->get($this->getValidatorId($command));
-        $commandToValidate = $validator->prepareCommand($command);
-        $validator->validate($commandToValidate);
     }
 }

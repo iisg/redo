@@ -1,10 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 use Repeka\Domain\Entity\ResourceEntity;
 
-class ResourceFileQuery extends NonValidatedCommand {
+class ResourceFileQuery extends AbstractCommand implements NonValidatedCommand {
     /** @var ResourceEntity */
     private $resource;
     private $filename;

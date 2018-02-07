@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class ResourceWorkflowCreateCommand extends Command {
+class ResourceWorkflowCreateCommand extends AbstractCommand {
     private $name;
     private $places;
     private $transitions;

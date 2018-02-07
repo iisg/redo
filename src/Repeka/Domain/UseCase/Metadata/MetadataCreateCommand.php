@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class MetadataCreateCommand extends Command {
+class MetadataCreateCommand extends AbstractCommand {
     private $name;
     private $label;
     private $description;

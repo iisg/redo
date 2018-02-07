@@ -1,9 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\UserRole;
 
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class UserRoleQuery extends NonValidatedCommand {
+class UserRoleQuery extends AbstractCommand implements NonValidatedCommand {
     /** @var int */
     private $id;
 

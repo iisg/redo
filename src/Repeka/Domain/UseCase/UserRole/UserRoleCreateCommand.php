@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\UserRole;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class UserRoleCreateCommand extends Command {
+class UserRoleCreateCommand extends AbstractCommand {
     protected $name;
 
     public function __construct(array $name) {

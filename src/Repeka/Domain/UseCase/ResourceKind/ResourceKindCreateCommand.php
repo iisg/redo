@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
-class ResourceKindCreateCommand extends Command {
+class ResourceKindCreateCommand extends AbstractCommand {
     private $label;
     private $metadataList;
     private $workflow;

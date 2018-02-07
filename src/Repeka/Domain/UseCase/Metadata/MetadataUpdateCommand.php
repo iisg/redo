@@ -1,9 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\AdjustableCommand;
 
-class MetadataUpdateCommand extends Command {
+class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand {
     private $metadataId;
     private $newLabel;
     private $newDescription;

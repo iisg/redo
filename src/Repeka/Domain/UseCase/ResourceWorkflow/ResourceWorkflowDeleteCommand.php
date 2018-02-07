@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
-class ResourceWorkflowDeleteCommand extends Command {
+class ResourceWorkflowDeleteCommand extends AbstractCommand {
     /** @var ResourceWorkflow */
     private $resourceWorkflow;
 

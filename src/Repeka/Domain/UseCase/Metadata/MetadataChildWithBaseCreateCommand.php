@@ -1,10 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
+use Repeka\Domain\Entity\Metadata;
 
-class MetadataChildWithBaseCreateCommand extends NonValidatedCommand {
+class MetadataChildWithBaseCreateCommand extends AbstractCommand implements NonValidatedCommand {
     /** @var Metadata */
     private $base;
     /** @var Metadata */

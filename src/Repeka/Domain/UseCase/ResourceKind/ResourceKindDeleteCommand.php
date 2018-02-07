@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Entity\ResourceKind;
 
-class ResourceKindDeleteCommand extends Command {
+class ResourceKindDeleteCommand extends AbstractCommand {
     /** @var ResourceKind */
     private $resourceKind;
 

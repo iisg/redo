@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\User;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class UserCreateCommand extends Command {
+class UserCreateCommand extends AbstractCommand {
     /** @var string */
     private $username;
     /** @var null|string */

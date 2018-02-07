@@ -1,9 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\MetadataImport;
 
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class XmlExtractQuery extends NonValidatedCommand {
+class XmlExtractQuery extends AbstractCommand implements NonValidatedCommand {
     private $xml;
     private $mappings;
 

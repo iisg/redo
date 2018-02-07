@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Entity\Metadata;
 
-class MetadataChildCreateCommand extends Command {
+class MetadataChildCreateCommand extends AbstractCommand {
     /** @var Metadata */
     private $parent;
     private $newChildMetadata;
