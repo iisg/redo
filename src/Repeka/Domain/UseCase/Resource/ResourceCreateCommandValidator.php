@@ -1,12 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
-use Psr\Container\ContainerInterface;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Validation\CommandAttributesValidator;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
+use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;

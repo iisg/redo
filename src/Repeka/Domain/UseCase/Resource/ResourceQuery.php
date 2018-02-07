@@ -1,9 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class ResourceQuery extends NonValidatedCommand {
+class ResourceQuery extends AbstractCommand implements NonValidatedCommand {
     private $id;
 
     public function __construct(int $id) {

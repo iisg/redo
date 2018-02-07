@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class ResourceKindByResourceClassListQuery extends Command {
+class ResourceKindByResourceClassListQuery extends AbstractCommand {
     private $resourceClass;
 
     public function __construct(string $resourceClass) {

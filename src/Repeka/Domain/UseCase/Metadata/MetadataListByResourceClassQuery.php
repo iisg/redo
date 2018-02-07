@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class MetadataListByResourceClassQuery extends Command {
+class MetadataListByResourceClassQuery extends AbstractCommand {
     private $resourceClass;
 
     public function __construct(string $resourceClass) {

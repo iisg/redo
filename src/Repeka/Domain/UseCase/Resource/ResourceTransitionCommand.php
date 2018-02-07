@@ -1,11 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 
-class ResourceTransitionCommand extends Command {
+class ResourceTransitionCommand extends AbstractCommand {
     /** @var ResourceEntity */
     private $resource;
     /** @var string */

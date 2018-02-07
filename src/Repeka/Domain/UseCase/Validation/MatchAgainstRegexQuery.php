@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\Validation;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class MatchAgainstRegexQuery extends Command {
+class MatchAgainstRegexQuery extends AbstractCommand {
     /** @var string */
     private $regex;
     /** @var string */

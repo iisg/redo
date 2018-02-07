@@ -1,9 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\Language;
 
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 
-class LanguageDeleteCommand extends NonValidatedCommand {
+class LanguageDeleteCommand extends AbstractCommand implements NonValidatedCommand {
     private $code;
 
     public function __construct(string $code) {

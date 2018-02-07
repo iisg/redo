@@ -3,6 +3,7 @@ namespace Repeka\Tests\Application\Cqrs\Middleware;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware;
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandValidator;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
@@ -24,7 +25,7 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->container = $this->createMock(ContainerInterface::class);
         $this->middleware = new ValidateCommandMiddleware($this->container);
-        $this->command = $this->createMock(Command::class);
+        $this->command = $this->createMock(AbstractCommand::class);
         $this->command->expects($this->any())->method('getCommandName')->willReturn('some_command');
         $this->validator = $this->createMock(CommandValidator::class);
     }
@@ -41,7 +42,6 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailsValidation() {
         $this->expectException('Repeka\Domain\Exception\InvalidCommandException');
-        $this->validator->expects($this->once())->method('prepareCommand')->willReturnArgument(0);
         $this->container->expects($this->once())->method('has')->willReturn(true);
         $this->container->expects($this->once())->method('get')->willReturn($this->validator);
         $this->validator->expects($this->once())->method('validate')->with($this->command)

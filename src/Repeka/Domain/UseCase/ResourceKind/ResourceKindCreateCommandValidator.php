@@ -1,13 +1,12 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 

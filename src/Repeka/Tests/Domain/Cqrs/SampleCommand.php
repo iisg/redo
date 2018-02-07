@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Cqrs;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class SampleCommand extends Command {
+class SampleCommand extends AbstractCommand {
 }

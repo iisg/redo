@@ -99,8 +99,7 @@ trait StubsTrait {
      * @return MetadataRepository
      */
     protected function createRepositoryStub(string $repositoryClassName, array $entityList = []): \PHPUnit_Framework_MockObject_MockObject {
-        $entityList = array_values($entityList);
-        $lookup = EntityHelper::getLookupMap($entityList);
+        $lookup = key($entityList) === 0 ? EntityHelper::getLookupMap($entityList) : $entityList;
         $idCounter = 1;
         $repository = $this->createMock($repositoryClassName);
         $repository->method('findAll')->willReturn($entityList);

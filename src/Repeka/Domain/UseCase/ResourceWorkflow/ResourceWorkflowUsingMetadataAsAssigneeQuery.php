@@ -1,10 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
+use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 use Repeka\Domain\Entity\Metadata;
 
-class ResourceWorkflowUsingMetadataAsAssigneeQuery extends NonValidatedCommand {
+class ResourceWorkflowUsingMetadataAsAssigneeQuery extends AbstractCommand implements NonValidatedCommand {
     /** @var Metadata */
     private $metadata;
 

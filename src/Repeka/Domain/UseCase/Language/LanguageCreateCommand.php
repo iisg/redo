@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\Language;
 
-use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Cqrs\AbstractCommand;
 
-class LanguageCreateCommand extends Command {
+class LanguageCreateCommand extends AbstractCommand {
     private $code;
     private $flag;
     private $name;
