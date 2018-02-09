@@ -1,11 +1,11 @@
 import {bindable} from "aurelia-templating";
 import {computedFrom, observable} from "aurelia-binding";
-import {twoWay, changeHandler} from "common/components/binding-mode";
+import {changeHandler, twoWay} from "common/components/binding-mode";
 import {generateId} from "common/utils/string-utils";
 
 export class MaxCountConstraintEditor {
   @bindable(twoWay) maxCount: number;
-  @bindable baseMaxCount: number;
+  @bindable originalMaxCount: number;
 
   private modelIsChanging: boolean = false;
   @observable(changeHandler('updateConstraint')) unlimited: boolean;
@@ -29,17 +29,17 @@ export class MaxCountConstraintEditor {
     this.modelIsChanging = false;
   }
 
-  resetToBaseValues() {
-    this.maxCount = this.baseMaxCount;
+  resetToOriginalValues() {
+    this.maxCount = this.originalMaxCount;
   }
 
-  @computedFrom('maxCount', 'baseMaxCount')
+  @computedFrom('maxCount', 'originalMaxCount')
   get wasModified(): boolean {
-    return this.maxCount != this.baseMaxCount;
+    return this.maxCount != this.originalMaxCount;
   }
 
-  @computedFrom('baseMaxCount')
-  get hasBaseConstraint(): boolean {
-    return this.baseMaxCount != undefined;
+  @computedFrom('originalMaxCount')
+  get hasOriginalConstraint(): boolean {
+    return this.originalMaxCount != undefined;
   }
 }

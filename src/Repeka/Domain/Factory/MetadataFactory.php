@@ -1,10 +1,8 @@
 <?php
 namespace Repeka\Domain\Factory;
 
-use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 
 class MetadataFactory {
@@ -37,20 +35,6 @@ class MetadataFactory {
             $newChildMetadata['shownInBrief']
         );
         return $metadata;
-    }
-
-    public function createForResourceKind(ResourceKind $resourceKind, Metadata $base, Metadata $metadata) {
-        Assertion::true($base->isBase(), "Given metadata (ID: {$base->getId()}) cannot be used as base.");
-        $constraints = $this->removeUnmodifiedConstraints($metadata->getConstraints(), $base->getConstraints());
-        return Metadata::createForResourceKind(
-            $metadata->getLabel(),
-            $resourceKind,
-            $base,
-            $metadata->getPlaceholder(),
-            $metadata->getDescription(),
-            $constraints,
-            $metadata->isShownInBrief()
-        );
     }
 
     public function removeUnmodifiedConstraints(array $constraints, array $baseConstraints): array {

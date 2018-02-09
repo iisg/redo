@@ -12,7 +12,7 @@
             <multilingual-editor label="${'Name' | t}"
                 value.bind="resourceKind.label & validate"></multilingual-editor>
         </div>
-        <div if.bind="editableMetadataList.length === 0 || base(editableMetadataList[0]) & signal:'base-metadata-fetched'"
+        <div if.bind="originalMetadataList && (editableMetadataList.length === 0 || originalMetadata(editableMetadataList[0])) & signal:'original-metadata-changed'"
             class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
             <div class="row">
                 <div class="col-xs-12">
@@ -29,7 +29,8 @@
             <div class="row">
                 <div class="col-xs-12 resource-kind-form-metadata-item"
                 repeat.for="metadata of resourceKind.metadataList & validate">
-                    <div class="well" if.bind="metadata.baseId > 0">
+                    <div class="well"
+                        if.bind="metadata.id > 0">
                         <div class="btn-group pull-right top-right-buttons"
                             show.bind="!sortingMetadata">
                             <button class="btn btn-default btn-raised ${metadata.overwriteForm ? 'active' : ''}"
@@ -50,15 +51,15 @@
                                 up.delegate="moveUp(metadata)"
                                 down.delegate="moveDown(metadata)"
                                 show.bind="sortingMetadata"></move-up-down-buttons>
-                            ${base(metadata).name}
-                            <span class="small text-muted">ID: ${base(metadata).id}</span>
+                            ${originalMetadata(metadata).name}
+                            <span class="small text-muted">ID: ${originalMetadata(metadata).id}</span>
                             <fa name="thumb-tack"
                                 class="small"
                                 if.bind="metadata.shownInBrief"></fa>
                         </h3>
                         <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
                             metadata.bind="metadata"
-                            base-metadata.bind="base(metadata)"
+                            original-metadata.bind="originalMetadata(metadata)"
                             editing.bind="editing"
                             resource-class.bind="resourceClass"></resource-kind-metadata-form>
                     </div>
@@ -71,7 +72,7 @@
             <label>${'Add metadata kind' | t}</label>
             <resource-kind-metadata-chooser
                 has-metadata-to-choose.bind="hasMetadataToChoose"
-                value.bind="newMetadataBase"
+                value.bind="metadataToAdd"
                 resource-kind.bind="resourceKind"
                 resource-class.bind="resourceClass"></resource-kind-metadata-chooser>
         </div>

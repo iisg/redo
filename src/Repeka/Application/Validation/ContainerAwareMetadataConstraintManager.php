@@ -13,7 +13,7 @@ class ContainerAwareMetadataConstraintManager implements MetadataConstraintManag
     private $applicableForControl = [];
 
     public function __construct() {
-        $supportedControls = MetadataControl::all();
+        $supportedControls = MetadataControl::toArray();
         $this->applicableForControl = $this->makeArray($supportedControls, []);
     }
 

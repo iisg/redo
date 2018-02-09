@@ -11,7 +11,7 @@ export class EntityChooser {
   @computedFrom('entities.length', 'excludeEntities.length')
   get values(): Entity[] {
     const excludedEntities = this.getExcludedEntitiesArray();
-    const blacklistedIds = excludedEntities.map(entity => entity.baseId || entity.id);
+    const blacklistedIds = excludedEntities.map(entity => entity.id);
     const result = (this.entities || []).filter(entity => blacklistedIds.indexOf(entity.id) == -1);
     this.containsItems = (result.length > 0);
     return result;
@@ -28,4 +28,4 @@ export class EntityChooser {
   }
 }
 
-type Entity = {id: number, baseId?: number};
+type Entity = { id: number };

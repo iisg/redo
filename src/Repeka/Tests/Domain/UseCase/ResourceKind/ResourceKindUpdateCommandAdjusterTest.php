@@ -1,8 +1,10 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandAdjuster;
@@ -20,10 +22,15 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         $resourceKindRespository = $this->createRepositoryStub(ResourceKindRepository::class, [
             1 => $this->createMock(ResourceKind::class),
         ]);
-        $this->adjuster = new ResourceKindUpdateCommandAdjuster(new UnknownLanguageStripper($languageRepository), $resourceKindRespository);
+        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [SystemMetadata::PARENT()->toMetadata()]);
+        $this->adjuster = new ResourceKindUpdateCommandAdjuster(
+            $metadataRepository,
+            new UnknownLanguageStripper($languageRepository),
+            $resourceKindRespository
+        );
     }
 
-    public function testRemovesInvalidLanguagesOnPrepare() {
+    public function testRemovesInvalidLanguages() {
         $resourceKind = $this->createMock(ResourceKind::class);
         $command = new ResourceKindUpdateCommand($resourceKind, ['PL' => 'Labelka', 'EN' => 'Labelka'], [], []);
         /** @var ResourceKindUpdateCommand $preparedCommand */
@@ -32,7 +39,7 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         $this->assertEquals(['PL' => 'Labelka'], $preparedCommand->getLabel());
     }
 
-    public function testFetcherResourceKindIfIdGiven() {
+    public function testFetchesResourceKindIfIdGiven() {
         $command = new ResourceKindUpdateCommand(1, [], [], []);
         /** @var ResourceKindUpdateCommand $preparedCommand */
         $preparedCommand = $this->adjuster->adjustCommand($command);

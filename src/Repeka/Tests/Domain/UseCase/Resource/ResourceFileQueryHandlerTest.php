@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Entity\ResourceEntity;
@@ -19,7 +18,6 @@ class ResourceFileQueryHandlerTest extends \PHPUnit_Framework_TestCase {
     private $resourceKind;
     /** @var \PHPUnit_Framework_MockObject_MockObject|ResourceEntity */
     private $resource;
-    private $resourceClass;
 
     protected function setUp() {
         $fileHelper = $this->createMock(ResourceFileHelper::class);
@@ -27,15 +25,14 @@ class ResourceFileQueryHandlerTest extends \PHPUnit_Framework_TestCase {
             return 'absolute/' . $path;
         });
         $this->handler = new ResourceFileQueryHandler($fileHelper);
-        $this->resourceKind = $this->createResourceKindMock([
-            $this->createMetadataMock(11, 1),
-            $this->createMetadataMock(12, 2),
-            $this->createMetadataMock(13, 3),
+        $this->resourceKind = $this->createResourceKindMock(1, 'books', [
+            $this->createMetadataMock(11),
+            $this->createMetadataMock(12),
+            $this->createMetadataMock(13),
         ]);
         $this->resourceKind->method('getMetadataByControl')
-            ->willReturn([$this->createMetadataMock(11, 1), $this->createMetadataMock(12, 2)]);
-        $this->resourceClass = 'books';
-        $this->resource = $this->createResourceMock(1, $this->resourceKind, [1 => ['relative/path/test.txt']]);
+            ->willReturn([$this->createMetadataMock(11), $this->createMetadataMock(12)]);
+        $this->resource = $this->createResourceMock(1, $this->resourceKind, [11 => ['relative/path/test.txt']]);
     }
 
     public function testGettingFile() {
@@ -50,7 +47,7 @@ class ResourceFileQueryHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingFileFromNotFileMetadata() {
         $this->expectException(NotFoundException::class);
-        $resource = new ResourceEntity($this->resourceKind, [3 => ['relative/path/test.txt']], $this->resourceClass);
+        $resource = new ResourceEntity($this->resourceKind, [13 => ['relative/path/test.txt']]);
         $this->handler->handle(new ResourceFileQuery($resource, 'test.txt'));
     }
 }

@@ -9,13 +9,13 @@ export class MetadataLabelValueConverter implements ToViewValueConverter {
   }
 
   toView(metadata: Metadata): string {
-    return (metadata.baseId < 0)
+    return (metadata.id < 0)
       ? this.getSystemMetadataLabel(metadata)
       : this.getRegularMetadataLabel(metadata);
   }
 
   private getSystemMetadataLabel(metadata: Metadata): string {
-    return this.i18n.tr(`system_metadata::${metadata.baseId || metadata.id}`);
+    return this.i18n.tr(`system_metadata::${metadata.id}`);
   }
 
   private getRegularMetadataLabel(metadata: Metadata): string {

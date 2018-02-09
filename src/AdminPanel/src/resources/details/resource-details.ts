@@ -92,7 +92,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   private navigateToParentOrList() {
-    const parentId: number = this.resource.contents[SystemMetadata.PARENT.baseId][0];
+    const parentId: number = this.resource.contents[SystemMetadata.PARENT.id][0];
     if (parentId == undefined) {
       this.router.navigateToRoute('resources', {resourceClass: this.resource.resourceClass});
     } else {

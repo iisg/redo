@@ -32,15 +32,15 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testMovingFilesToDestinationPaths() {
-        $fileBaseMetadataId = 1;
-        $otherBaseMetadataId = $fileBaseMetadataId + 1;
-        $resourceKind = $this->createResourceKindMock([
-            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
-            $this->createMetadataMock(12, $otherBaseMetadataId, MetadataControl::TEXTAREA()),
+        $fileMetadataId = 1;
+        $otherMetadataId = $fileMetadataId + 1;
+        $resourceKind = $this->createResourceKindMock(1, 'books', [
+            $this->createMetadataMock($fileMetadataId, 66, MetadataControl::FILE()),
+            $this->createMetadataMock($otherMetadataId, 66, MetadataControl::TEXTAREA()),
         ]);
         $contents = [
-            $fileBaseMetadataId => ['somewhere/todo.list', 'somewhere/cuteCat.jpg'],
-            $otherBaseMetadataId => ['somewhere/cantTouchThis', 'somewhere/nanananana.batman'],
+            $fileMetadataId => ['somewhere/todo.list', 'somewhere/cuteCat.jpg'],
+            $otherMetadataId => ['somewhere/cantTouchThis', 'somewhere/nanananana.batman'],
         ];
         $resource = $this->createResourceMock(123, $resourceKind, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
@@ -51,24 +51,24 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
             ["$this->uploadsRoot/somewhere/cuteCat.jpg", "$this->uploadsRoot/$this->destinationPath/cuteCat.jpg"]
         );
         $resource->expects($this->once())->method('updateContents')->willReturnCallback(
-            function ($updatedContents) use ($contents, $fileBaseMetadataId, $otherBaseMetadataId) {
+            function ($updatedContents) use ($contents, $fileMetadataId, $otherMetadataId) {
                 $this->assertEquals(
                     ["$this->destinationPath/todo.list", "$this->destinationPath/cuteCat.jpg",],
-                    $updatedContents[$fileBaseMetadataId]
+                    $updatedContents[$fileMetadataId]
                 );
-                $this->assertEquals($contents[$otherBaseMetadataId], $updatedContents[$otherBaseMetadataId]);
+                $this->assertEquals($contents[$otherMetadataId], $updatedContents[$otherMetadataId]);
             }
         );
         $this->helper->moveFilesToDestinationPaths($resource);
     }
 
     public function testFilesAreNotMovedWhenTheyAreInCorrectPath() {
-        $fileBaseMetadataId = 1;
-        $resourceKind = $this->createResourceKindMock([
-            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
+        $fileMetadataId = 1;
+        $resourceKind = $this->createResourceKindMock(1, 'books', [
+            $this->createMetadataMock($fileMetadataId, 66, MetadataControl::FILE()),
         ]);
         $contents = [
-            $fileBaseMetadataId => ["$this->destinationPath/todo.list"],
+            $fileMetadataId => ["$this->destinationPath/todo.list"],
         ];
         $resource = $this->createResourceMock(123, $resourceKind, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
@@ -79,12 +79,12 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
 
     public function testMovingFilesFailsIfFileAlreadyExists() {
         $this->expectException(DomainException::class);
-        $fileBaseMetadataId = 1;
-        $resourceKind = $this->createResourceKindMock([
-            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
+        $fileMetadataId = 1;
+        $resourceKind = $this->createResourceKindMock(1, 'books', [
+            $this->createMetadataMock($fileMetadataId, 66, MetadataControl::FILE()),
         ]);
         $contents = [
-            $fileBaseMetadataId => [
+            $fileMetadataId => [
                 'somewhere/regular.file',
                 'somewhere/file.that.already.exists',
             ],

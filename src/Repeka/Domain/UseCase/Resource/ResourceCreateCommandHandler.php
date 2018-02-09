@@ -19,7 +19,7 @@ class ResourceCreateCommandHandler {
     }
 
     public function handle(ResourceCreateCommand $command): ResourceEntity {
-        $resource = new ResourceEntity($command->getKind(), $command->getContents(), $command->getResourceClass());
+        $resource = new ResourceEntity($command->getKind(), $command->getContents());
         if ($resource->getWorkflow()) {
             $this->ensureCanEnterTheFirstWorkflowState($resource);
             $initialPlace = $resource->getWorkflow()->getInitialPlace();

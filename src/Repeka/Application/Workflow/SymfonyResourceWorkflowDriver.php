@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Application\Workflow;
 
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\ResourceWorkflow\CannotApplyTransitionException;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
@@ -25,9 +25,7 @@ class SymfonyResourceWorkflowDriver implements ResourceWorkflowDriver {
     private function getWorkflow(): Workflow {
         if (!$this->workflow) {
             $builder = new DefinitionBuilder();
-            $builder->addPlaces(array_map(function (ResourceWorkflowPlace $place) {
-                return $place->getId();
-            }, $this->resourceWorkflow->getPlaces()));
+            $builder->addPlaces(EntityUtils::mapToIds($this->resourceWorkflow->getPlaces()));
             $builder->addTransitions(array_map(function (ResourceWorkflowTransition $transition) {
                 return new Transition($transition->getId(), $transition->getFromIds(), $transition->getToIds());
             }, $this->resourceWorkflow->getTransitions()));

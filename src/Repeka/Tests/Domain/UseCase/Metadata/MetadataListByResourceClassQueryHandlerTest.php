@@ -20,7 +20,7 @@ class MetadataListByResourceClassQueryHandlerTest extends \PHPUnit_Framework_Tes
 
     public function testGettingTheList() {
         $metadataList = [$this->createMock(Metadata::class)];
-        $this->metadataRepository->expects($this->once())->method('findAllBaseByResourceClass')->willReturn($metadataList);
+        $this->metadataRepository->expects($this->once())->method('findTopLevelByResourceClass')->willReturn($metadataList);
         $returnedList = $this->handler->handle(new MetadataListByResourceClassQuery('books'));
         $this->assertSame($metadataList, $returnedList);
     }

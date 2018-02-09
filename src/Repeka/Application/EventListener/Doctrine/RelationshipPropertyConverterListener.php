@@ -2,6 +2,7 @@
 namespace Repeka\Application\EventListener\Doctrine;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceEntity;
 
 class RelationshipPropertyConverterListener {
@@ -21,10 +22,7 @@ class RelationshipPropertyConverterListener {
         $contents = $entity->getContents();
         foreach ($contents as &$values) {
             if (count($values) > 0 && $values[0] instanceof ResourceEntity) {
-                $values = array_map(function ($value) {
-                    /** @var ResourceEntity $value */
-                    return $value->getId();
-                }, $values);
+                $values = EntityUtils::mapToIds($values);
             }
         }
         $entity->updateContents($contents);

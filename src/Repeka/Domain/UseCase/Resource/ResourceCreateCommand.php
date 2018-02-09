@@ -9,12 +9,9 @@ class ResourceCreateCommand extends AbstractCommand {
 
     private $contents;
 
-    private $resourceClass;
-
-    public function __construct(ResourceKind $resourceKind, array $contents, string $resourceClass) {
+    public function __construct(ResourceKind $resourceKind, array $contents) {
         $this->kind = $resourceKind;
         $this->contents = $contents;
-        $this->resourceClass = $resourceClass;
     }
 
     public function getKind(): ResourceKind {
@@ -23,9 +20,5 @@ class ResourceCreateCommand extends AbstractCommand {
 
     public function getContents(): array {
         return $this->contents;
-    }
-
-    public function getResourceClass(): string {
-        return $this->resourceClass;
     }
 }

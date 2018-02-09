@@ -42,13 +42,12 @@ class MappingLoader {
         return $this->findMetadataById($key, $resourceKind) ?: $this->findMetadataByName($key, $resourceKind);
     }
 
-    private function findMetadataById(string $baseIdString, ResourceKind $resourceKind): ?Metadata {
-        if (!preg_match('/^\d+$/', $baseIdString)) {
+    private function findMetadataById(string $idString, ResourceKind $resourceKind): ?Metadata {
+        if (!preg_match('/^\d+$/', $idString)) {
             return null;
         }
-        $baseId = intval($baseIdString);
         try {
-            return $resourceKind->getMetadataById($baseId);
+            return $resourceKind->getMetadataById(intval($idString));
         } catch (\InvalidArgumentException $e) {
             return null;
         }

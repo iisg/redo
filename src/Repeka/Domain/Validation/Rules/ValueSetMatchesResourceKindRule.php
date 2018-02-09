@@ -16,7 +16,7 @@ class ValueSetMatchesResourceKindRule extends AbstractRule {
 
     private function buildContentsValidator(ResourceKind $resourceKind): Validatable {
         $metadataIdValidators = array_map(function (Metadata $metadata) {
-            return Validator::key($metadata->getBaseId(), null, false);
+            return Validator::key($metadata->getId(), null, false);
         }, $resourceKind->getMetadataList());
         return call_user_func_array([Validator::arrayType(), 'keySet'], $metadataIdValidators);
     }

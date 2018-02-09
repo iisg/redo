@@ -3,7 +3,6 @@ namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\DomainException;
@@ -23,18 +22,16 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     /** @var ResourceCreateCommandHandler */
     private $handler;
-    private $resourceClass;
 
     protected function setUp() {
         $this->resourceRepository = $this->createRepositoryStub(ResourceRepository::class);
         $this->fileHelper = $this->createMock(ResourceFileHelper::class);
         $this->handler = new ResourceCreateCommandHandler($this->resourceRepository, $this->fileHelper);
-        $this->resourceClass = 'books';
     }
 
     public function testCreatingResourceWithoutWorkflow() {
-        $resourceKind = new ResourceKind([], 'books');
-        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']], $this->resourceClass);
+        $resourceKind = $this->createResourceKindMock();
+        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']]);
         $resource = $this->handler->handle($command);
         $this->assertNotNull($resource);
         $this->assertSame($command->getKind(), $resource->getKind());
@@ -48,8 +45,8 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $initialPlace->expects($this->once())->method('resourceHasRequiredMetadata')->willReturn(false);
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getInitialPlace')->willReturn($initialPlace);
-        $resourceKind = new ResourceKind([], 'books', [], $workflow);
-        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']], $this->resourceClass);
+        $resourceKind = $this->createResourceKindMock(1, 'books', [], $workflow);
+        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']]);
         $this->handler->handle($command);
     }
 
@@ -57,8 +54,8 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $initialPlace = $this->createWorkflowPlaceMock('key');
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getInitialPlace')->willReturn($initialPlace);
-        $resourceKind = new ResourceKind([], 'books', [], $workflow);
-        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']], $this->resourceClass);
+        $resourceKind = $this->createResourceKindMock(1, 'books', [], $workflow);
+        $command = new ResourceCreateCommand($resourceKind, ['1' => ['AA']]);
         $resource = $this->handler->handle($command);
         $this->assertNotNull($resource);
         $this->assertEquals($workflow, $resource->getWorkflow());
@@ -70,18 +67,18 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getInitialPlace')->willReturn($initialPlace);
         $workflow->expects($this->once())->method('setCurrentPlaces')->with($this->isInstanceOf(ResourceEntity::class), ['key']);
-        $resourceKind = new ResourceKind([], 'books', [], $workflow);
-        $command = new ResourceCreateCommand($resourceKind, [], $this->resourceClass);
+        $resourceKind = $this->createResourceKindMock(1, 'books', [], $workflow);
+        $command = new ResourceCreateCommand($resourceKind, []);
         $this->handler->handle($command);
     }
 
     public function testMovingFiles() {
         $fileBaseMetadataId = 1;
-        $resourceKind = $this->createResourceKindMock([
+        $resourceKind = $this->createResourceKindMock(1, 'books', [
             $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
         ]);
         $contents = [$fileBaseMetadataId => []];
-        $command = new ResourceCreateCommand($resourceKind, $contents, $this->resourceClass);
+        $command = new ResourceCreateCommand($resourceKind, $contents);
         $this->fileHelper->expects($this->once())->method('moveFilesToDestinationPaths');
         $this->handler->handle($command);
     }

@@ -14,7 +14,7 @@ export class ImportConfirmationDialog implements DialogComponentActivate<ImportC
   }
 
   activate(model: ImportConfirmationDialogModel): void {
-    this.metadataList = model.metadataList.filter(metadata => metadata.baseId >= 0);
+    this.metadataList = model.metadataList.filter(metadata => metadata.id >= 0);
     this.resourceClass = model.resourceClass;
     this.importResult = model.importResult;
   }

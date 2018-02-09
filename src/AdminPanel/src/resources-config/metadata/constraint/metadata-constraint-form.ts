@@ -1,16 +1,16 @@
-import {bindable, ComponentDetached, ComponentAttached} from "aurelia-templating";
-import {Metadata, MetadataConstraints, metadataConstraintDefaults} from "../metadata";
-import {computedFrom, Disposable, BindingEngine} from "aurelia-binding";
+import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
+import {Metadata, metadataConstraintDefaults, MetadataConstraints} from "../metadata";
+import {BindingEngine, computedFrom, Disposable} from "aurelia-binding";
 import {twoWay} from "common/components/binding-mode";
 import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
-import {propertyKeys, deepCopy} from "common/utils/object-utils";
+import {deepCopy, propertyKeys} from "common/utils/object-utils";
 import {diff} from "common/utils/array-utils";
 
 @autoinject
 export class MetadataConstraintForm implements ComponentAttached, ComponentDetached {
   @bindable(twoWay) metadata: Metadata;
-  @bindable baseMetadata: Metadata;
+  @bindable originalMetadata: Metadata;
   @bindable resourceClass: string;
 
   private controlSubscription: Disposable;

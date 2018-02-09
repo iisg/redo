@@ -6,13 +6,6 @@ Repeka\Domain\Entity\ResourceKind:
     id:
       type: integer
       generator: {strategy: AUTO}
-  oneToMany:
-    metadataList:
-      orderBy: {ordinalNumber: 'ASC'}
-      targetEntity: Repeka\Domain\Entity\Metadata
-      mappedBy: resourceKind
-      orphanRemoval: true
-      cascade: ["persist", "merge", "remove"]
   manyToOne:
     workflow:
       targetEntity: Repeka\Domain\Entity\ResourceWorkflow
@@ -28,6 +21,10 @@ Repeka\Domain\Entity\ResourceKind:
       length: 64
       nullable: false
       column: resource_class
+    metadataOverrides:
+      type: json_document
+      options: {jsonb: true}
+      column: metadata_list
     displayStrategies:
       type: json_document
       options: {jsonb: true}

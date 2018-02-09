@@ -2,7 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
@@ -53,8 +53,6 @@ class MetadataStage2Fixture extends RepekaFixture {
             $seeAlsoMetadata->isShownInBrief()
         ));
         $existingMetadata = $this->handleCommand(new MetadataListByResourceClassQuery('books'));
-        $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
-            return $metadata->getId();
-        }, $existingMetadata), 'books'));
+        $this->handleCommand(new MetadataUpdateOrderCommand(EntityUtils::mapToIds($existingMetadata), 'books'));
     }
 }

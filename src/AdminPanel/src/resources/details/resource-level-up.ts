@@ -12,6 +12,6 @@ export class ResourceLevelUp {
       this.parentId = undefined;
       return;
     }
-    this.parentId = (newResource.contents[SystemMetadata.PARENT.baseId] || [])[0];
+    this.parentId = (newResource.contents[SystemMetadata.PARENT.id] || [])[0];
   }
 }

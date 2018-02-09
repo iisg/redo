@@ -7,12 +7,6 @@ Repeka\Domain\Entity\Metadata:
       type: integer
       generator: {strategy: AUTO}
   manyToOne:
-    resourceKind:
-      targetEntity: Repeka\Domain\Entity\ResourceKind
-      inversedBy: metadataList
-      joinColumn:
-        name: resource_kind_id
-        referencedColumnName: id
     baseMetadata:
       targetEntity: Repeka\Domain\Entity\Metadata
       fetch: EAGER

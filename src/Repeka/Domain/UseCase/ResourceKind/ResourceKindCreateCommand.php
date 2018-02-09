@@ -2,25 +2,19 @@
 namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\AdjustableCommand;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
-class ResourceKindCreateCommand extends AbstractCommand {
+class ResourceKindCreateCommand extends AbstractCommand implements AdjustableCommand {
     private $label;
     private $metadataList;
     private $workflow;
-    private $resourceClass;
     private $displayStrategies;
 
-    public function __construct(
-        array $label,
-        array $metadataList,
-        string $resourceClass,
-        array $displayStrategies = [],
-        ResourceWorkflow $workflow = null
-    ) {
+    public function __construct(array $label, array $metadataList, array $displayStrategies = [], ResourceWorkflow $workflow = null) {
         $this->label = $label;
         $this->metadataList = $metadataList;
-        $this->resourceClass = $resourceClass;
         $this->workflow = $workflow;
         $this->displayStrategies = $displayStrategies;
     }
@@ -29,12 +23,9 @@ class ResourceKindCreateCommand extends AbstractCommand {
         return $this->label;
     }
 
+    /** @return Metadata[] */
     public function getMetadataList(): array {
         return $this->metadataList;
-    }
-
-    public function getResourceClass(): string {
-        return $this->resourceClass;
     }
 
     public function getDisplayStrategies(): array {

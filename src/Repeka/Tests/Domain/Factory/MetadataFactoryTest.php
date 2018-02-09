@@ -3,7 +3,6 @@ namespace Repeka\Tests\Domain\Factory;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 
@@ -67,16 +66,6 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($created->getPlaceholder());
         $this->assertEmpty($created->getDescription());
         $this->assertEquals([], $created->getConstraints());
-    }
-
-    public function testCreatingForResourceKind() {
-        $metadata = $this->factory->create($this->textareaMetadataCreateCmd);
-        $base = $this->factory->create($this->textareaMetadataCreateCmd);
-        $base->update([], ['PL' => 'base'], [], [], false);
-        $resourceKind = new ResourceKind(['PL' => 'rodzaj'], 'books');
-        $created = $this->factory->createForResourceKind($resourceKind, $base, $metadata);
-        $this->assertSame($resourceKind, $created->getResourceKind());
-        $this->assertEquals('base', $created->getPlaceholder()['PL']);
     }
 
     public function testRemovingUnmodifiedConstraints() {

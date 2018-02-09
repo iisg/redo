@@ -35,11 +35,14 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
     }
 
     private function getCountConstrainedResourceKind(int $max): ResourceKind {
-        return $this->createResourceKind(['TEST' => 'Resource kind'], [
-            $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata'], ''),
-            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata'], 'books', $max),
-            $this->resourceKindMetadata($this->baseMetadata2, ['TEST' => 'Metadata2'], 'books', $max),
-        ]);
+        return $this->createResourceKind(
+            ['TEST' => 'Resource kind'],
+            [
+                $this->parentMetadata,
+                ['id' => $this->baseMetadata->getId(), 'constraints' => ['maxCount' => $max]],
+                ['id' => $this->baseMetadata2->getId(), 'constraints' => ['maxCount' => $max]],
+            ]
+        );
     }
 
     private function makeRequest(ResourceKind $resourceKind, array $values): Response {

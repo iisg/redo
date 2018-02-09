@@ -2,24 +2,22 @@
 namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Assert\InvalidArgumentException;
-use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
+use Repeka\Tests\Traits\StubsTrait;
 use Respect\Validation\Exceptions\ValidationException;
 
 class ValueSetMatchesResourceKindRuleTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     private $resourceKind;
 
     /** @var ValueSetMatchesResourceKindRule */
     private $rule;
 
     protected function setUp() {
-        $metadata1 = $this->createMock(Metadata::class);
-        $metadata2 = $this->createMock(Metadata::class);
-        $metadata1->expects($this->any())->method('getBaseId')->willReturn(1);
-        $metadata2->expects($this->any())->method('getBaseId')->willReturn(2);
-        $this->resourceKind = $this->createMock(ResourceKind::class);
-        $this->resourceKind->expects($this->any())->method('getMetadataList')->willReturn([$metadata1, $metadata2]);
+        $metadata1 = $this->createMetadataMock(1);
+        $metadata2 = $this->createMetadataMock(2);
+        $this->resourceKind = $this->createResourceKindMock(1, 'books', [$metadata1, $metadata2]);
         $this->rule = new ValueSetMatchesResourceKindRule();
     }
 

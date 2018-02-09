@@ -2,7 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
@@ -172,8 +172,8 @@ class MetadataFixture extends RepekaFixture {
             'resourceClass' => 'books',
             'constraints' => $this->relationshipConstraints(1, [-1]),
         ]), self::REFERENCE_METADATA_SUPERVISOR);
-        $this->handleCommand(new MetadataUpdateOrderCommand(array_map(function (Metadata $metadata) {
-            return $metadata->getId();
-        }, $this->handleCommand(new MetadataListByResourceClassQuery('books'))), 'books'));
+        $this->handleCommand(new MetadataUpdateOrderCommand(EntityUtils::mapToIds(
+            $this->handleCommand(new MetadataListByResourceClassQuery('books'))
+        ), 'books'));
     }
 }

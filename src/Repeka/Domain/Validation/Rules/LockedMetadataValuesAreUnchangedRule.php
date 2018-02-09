@@ -67,9 +67,9 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
             $values = $this->replaceObjectsWithIds($values);
         }
         $modifiedIds = [];
-        foreach ($lockedMetadataIds as $baseId) {
-            if ($currentContents[$baseId] != $newContents[$baseId]) {
-                $modifiedIds[] = $baseId;
+        foreach ($lockedMetadataIds as $id) {
+            if ($currentContents[$id] != $newContents[$id]) {
+                $modifiedIds[] = $id;
             }
         }
         return $modifiedIds;

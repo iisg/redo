@@ -3,19 +3,21 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Assert\Assertion;
 use Repeka\Domain\Cqrs\Command;
-use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 
-class ResourceKindUpdateCommandAdjuster implements CommandAdjuster {
-    /** @var UnknownLanguageStripper */
-    private $unknownLanguageStripper;
+class ResourceKindUpdateCommandAdjuster extends ResourceKindCreateCommandAdjuster {
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
 
-    public function __construct(UnknownLanguageStripper $unknownLanguageStripper, ResourceKindRepository $resourceKindRepository) {
-        $this->unknownLanguageStripper = $unknownLanguageStripper;
+    public function __construct(
+        MetadataRepository $metadataRepository,
+        UnknownLanguageStripper $unknownLanguageStripper,
+        ResourceKindRepository $resourceKindRepository
+    ) {
+        parent::__construct($metadataRepository, $unknownLanguageStripper);
         $this->resourceKindRepository = $resourceKindRepository;
     }
 
@@ -24,7 +26,7 @@ class ResourceKindUpdateCommandAdjuster implements CommandAdjuster {
         return new ResourceKindUpdateCommand(
             $this->findResourceKind($command->getResourceKind()),
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getLabel()),
-            $command->getMetadataList(),
+            $this->fetchMetadataIfRequired($command->getMetadataList()),
             $command->getDisplayStrategies()
         );
     }

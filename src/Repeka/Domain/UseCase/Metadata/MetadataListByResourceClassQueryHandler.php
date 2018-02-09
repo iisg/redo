@@ -14,6 +14,6 @@ class MetadataListByResourceClassQueryHandler {
     }
 
     public function handle(MetadataListByResourceClassQuery $query): array {
-        return $this->metadataRepository->findAllBaseByResourceClass($query->getResourceClass());
+        return $this->metadataRepository->findTopLevelByResourceClass($query->getResourceClass());
     }
 }

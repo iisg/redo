@@ -35,7 +35,7 @@ export class ResourceMetadataValuesForm {
   }
 
   get allValuesCount(): number {
-    return this.resource.contents[this.metadata.baseId].length;
+    return this.resource.contents[this.metadata.id].length;
   }
 
   isFilled(value: any): boolean {
@@ -43,11 +43,11 @@ export class ResourceMetadataValuesForm {
   }
 
   get filledValuesCount(): number {
-    return this.resource.contents[this.metadata.baseId].filter(this.isFilled).length;
+    return this.resource.contents[this.metadata.id].filter(this.isFilled).length;
   }
 
   private valueIsUndefined(index: number): boolean {
-    return this.resource.contents[this.metadata.baseId][index] === undefined;
+    return this.resource.contents[this.metadata.id][index] === undefined;
   }
 
   isDeletingDisabled(index: number): boolean {
@@ -65,19 +65,19 @@ export class ResourceMetadataValuesForm {
 
   private ensureResourceHasMetadataContents() {
     const contents = this.resource.contents;
-    const baseId = this.metadata.baseId;
-    if (!contents.hasOwnProperty(baseId)) {
-      contents[baseId] = [];
+    const id = this.metadata.id;
+    if (!contents.hasOwnProperty(id)) {
+      contents[id] = [];
     }
   }
 
   deleteIndex(index: number) {
-    this.resource.contents[this.metadata.baseId].splice(index, 1);
+    this.resource.contents[this.metadata.id].splice(index, 1);
     this.bindingSignaler.signal(this.VALUES_CHANGED_SIGNAL);
   }
 
   addNew() {
-    this.resource.contents[this.metadata.baseId].push(undefined);
+    this.resource.contents[this.metadata.id].push(undefined);
     this.bindingSignaler.signal(this.VALUES_CHANGED_SIGNAL);
     // queueMicroTask and queueTask fire too early and the <input> doesn't exist yet.
     // setTimeout(..., 0) fires at right time, but something steals the focus later.

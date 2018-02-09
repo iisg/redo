@@ -1,13 +1,13 @@
 <?php
 namespace Repeka\Tests\Traits;
 
-use Repeka\Application\Entity\EntityUtils;
-use Repeka\Domain\Entity\EntityHelper;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\EntityNotFoundException;
@@ -36,10 +36,11 @@ trait StubsTrait {
 
     /** @return Metadata|\PHPUnit_Framework_MockObject_MockObject */
     protected function createMetadataMock(
-        int $id,
+        int $id = 1,
         ?int $baseId = null,
         MetadataControl $control = null,
-        array $constraints = []
+        array $constraints = [],
+        string $resourceClass = 'books'
     ): Metadata {
         if ($control == null) {
             $control = MetadataControl::TEXTAREA();
@@ -50,20 +51,29 @@ trait StubsTrait {
         $metadata->method('isBase')->willReturn($baseId === null);
         $metadata->method('getControl')->willReturn($control);
         $metadata->method('getConstraints')->willReturn($constraints);
+        $metadata->method('getResourceClass')->willReturn($resourceClass);
         return $metadata;
     }
 
     /**
+     * @param int $id
+     * @param string $resourceClass
      * @param Metadata[] $metadataList
+     * @param ResourceWorkflow|null $workflow
      * @return ResourceKind|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function createResourceKindMock(array $metadataList = [], int $id = 1): ResourceKind {
+    protected function createResourceKindMock(
+        int $id = 1,
+        $resourceClass = 'books',
+        array $metadataList = [],
+        ResourceWorkflow $workflow = null
+    ): ResourceKind {
         $resourceKind = $this->createMock(ResourceKind::class);
         $resourceKind->method('getId')->willReturn($id);
+        $resourceKind->method('getResourceClass')->willReturn($resourceClass);
         $resourceKind->method('getMetadataList')->willReturn($metadataList);
-        $resourceKind->method('getBaseMetadataIds')->willReturn(array_values(array_map(function (Metadata $v) {
-            return $v->getBaseId();
-        }, $metadataList)));
+        $resourceKind->method('getWorkflow')->willReturn($workflow);
+        $resourceKind->method('getMetadataIds')->willReturn(EntityUtils::mapToIds($metadataList));
         return $resourceKind;
     }
 
@@ -76,8 +86,8 @@ trait StubsTrait {
         if ($contents) {
             $mock->method('getValues')->willReturnCallback(function ($metadata) use ($contents) {
                 /** @var Metadata $metadata */
-                if (array_key_exists($metadata->getBaseId(), $contents)) {
-                    return $contents[$metadata->getBaseId()];
+                if (array_key_exists($metadata->getId(), $contents)) {
+                    return $contents[$metadata->getId()];
                 } else {
                     return [];
                 }
@@ -99,7 +109,7 @@ trait StubsTrait {
      * @return MetadataRepository
      */
     protected function createRepositoryStub(string $repositoryClassName, array $entityList = []): \PHPUnit_Framework_MockObject_MockObject {
-        $lookup = key($entityList) === 0 ? EntityHelper::getLookupMap($entityList) : $entityList;
+        $lookup = key($entityList) === 0 ? EntityUtils::getLookupMap($entityList) : $entityList;
         $idCounter = 1;
         $repository = $this->createMock($repositoryClassName);
         $repository->method('findAll')->willReturn($entityList);

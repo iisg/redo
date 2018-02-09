@@ -2,6 +2,7 @@
 namespace Repeka\Application\Upload;
 
 use Assert\Assertion;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -42,11 +43,9 @@ class BasicResourceFileHelper implements ResourceFileHelper {
                 return $metadata->getControl() == MetadataControl::FILE();
             }
         ));
-        $fileMetadataBaseIds = array_map(function (Metadata $metadata) {
-            return $metadata->getBaseId();
-        }, $fileMetadataList);
+        $fileMetadataIds = EntityUtils::mapToIds($fileMetadataList);
         $contentsIds = array_keys($resource->getContents());
-        return array_intersect($fileMetadataBaseIds, $contentsIds);
+        return array_intersect($fileMetadataIds, $contentsIds);
     }
 
     public function getFilesThatWouldBeOverwrittenInDestinationPaths(ResourceEntity $resource): array {

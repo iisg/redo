@@ -1,7 +1,7 @@
 import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {arraysEqual} from "common/utils/array-utils";
-import {twoWay, oneTime} from "common/components/binding-mode";
+import {oneTime, twoWay} from "common/components/binding-mode";
 import {Workflow} from "workflows/workflow";
 import {WorkflowRepository} from "workflows/workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
@@ -11,7 +11,7 @@ import {SystemResourceKinds} from "resources-config/resource-kind/system-resourc
 @autoinject
 export class ResourceKindConstraintEditor {
   @bindable(twoWay) metadata: Metadata;
-  @bindable(oneTime) idsFromBaseMetadata: number[];
+  @bindable(oneTime) idsFromOriginalMetadata: number[];
   @bindable(twoWay) disabled: boolean = false;
   @bindable(oneTime) resourceClass: string;
 
@@ -32,18 +32,18 @@ export class ResourceKindConstraintEditor {
       .finally(() => this.loadingWorkflows = false);
   }
 
-  resetToBaseIds() {
-    this.metadata.constraints.resourceKind = (this.idsFromBaseMetadata || []).slice();
+  resetToOriginalIds() {
+    this.metadata.constraints.resourceKind = (this.idsFromOriginalMetadata || []).slice();
   }
 
-  @computedFrom('metadata.constraints.resourceKind', 'idsFromBaseMetadata')
+  @computedFrom('metadata.constraints.resourceKind', 'idsFromOriginalMetadata')
   get wasModified(): boolean {
-    return !arraysEqual(this.metadata.constraints.resourceKind, (this.idsFromBaseMetadata || []));
+    return !arraysEqual(this.metadata.constraints.resourceKind, (this.idsFromOriginalMetadata || []));
   }
 
-  @computedFrom('idsFromBaseMetadata', 'disabled')
+  @computedFrom('idsFromOriginalMetadata', 'disabled')
   get canInherit(): boolean {
-    return !this.disabled && this.idsFromBaseMetadata != undefined;
+    return !this.disabled && this.idsFromOriginalMetadata != undefined;
   }
 
   @computedFrom('metadata.constraints.resourceKind')

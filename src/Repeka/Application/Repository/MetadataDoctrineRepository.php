@@ -32,19 +32,8 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $metadata;
     }
 
-    public function findAllBase(): array {
+    public function findTopLevelByResourceClass(string $resourceClass): array {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->isNull('baseMetadata'))
-            ->andWhere(Criteria::expr()->isNull('parentMetadata'))
-            ->andWhere(Criteria::expr()->gte('id', 0))
-            ->orderBy(['ordinalNumber' => 'ASC']);
-        $result = $this->matching($criteria);
-        return $result->toArray();
-    }
-
-    public function findAllBaseByResourceClass(string $resourceClass): array {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->isNull('baseMetadata'))
             ->andWhere(Criteria::expr()->isNull('parentMetadata'))
             ->andWhere(Criteria::expr()->eq('resourceClass', $resourceClass))
             ->orderBy(['ordinalNumber' => 'ASC']);
@@ -73,12 +62,14 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $query->getSingleScalarResult();
     }
 
-    public function countByBase(Metadata $base): int {
-        $qb = $this->createQueryBuilder('m');
-        $query = $qb->select('COUNT(m.id)')
-            ->where('m.baseMetadata = :base')
-            ->setParameter('base', $base)
-            ->getQuery();
-        return $query->getSingleScalarResult();
+    /**
+     * @param int[] $metadataIds
+     * @return Metadata[]
+     */
+    public function findByIds(array $metadataIds): array {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->in('id', $metadataIds));
+        $result = $this->matching($criteria);
+        return $result->toArray();
     }
 }

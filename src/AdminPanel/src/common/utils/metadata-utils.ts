@@ -28,5 +28,5 @@ export function getUpdatedMetadataArray(metadataList: Metadata[], metadata: Meta
 }
 
 export function getIndexOfMetadataInArray(metadataList: Metadata[], metadata: Metadata): number {
-  return metadataList.map(metadata => metadata.baseId).indexOf(metadata.baseId);
+  return metadataList.map(metadata => metadata.id).indexOf(metadata.id);
 }

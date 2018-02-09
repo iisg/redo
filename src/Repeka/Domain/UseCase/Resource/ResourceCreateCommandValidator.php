@@ -5,7 +5,6 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -15,18 +14,14 @@ class ResourceCreateCommandValidator extends CommandAttributesValidator {
     private $valueSetMatchesResourceKindRule;
     /** @var MetadataValuesSatisfyConstraintsRule */
     private $metadataValuesSatisfyConstraintsRule;
-    /** @var  ResourceClassExistsRule */
-    private $resourceClassExistsRule;
 
     /** @SuppressWarnings("PHPMD.LongVariable") */
     public function __construct(
         ValueSetMatchesResourceKindRule $valueSetMatchesResourceKindRule,
-        MetadataValuesSatisfyConstraintsRule $metadataValuesSatisfyConstraintsRule,
-        ResourceClassExistsRule $resourceClassExistsRule
+        MetadataValuesSatisfyConstraintsRule $metadataValuesSatisfyConstraintsRule
     ) {
         $this->valueSetMatchesResourceKindRule = $valueSetMatchesResourceKindRule;
         $this->metadataValuesSatisfyConstraintsRule = $metadataValuesSatisfyConstraintsRule;
-        $this->resourceClassExistsRule = $resourceClassExistsRule;
     }
 
     /** @param ResourceCreateCommand $command */
@@ -37,7 +32,6 @@ class ResourceCreateCommandValidator extends CommandAttributesValidator {
             }))
             ->attribute('contents', Validator::arrayType()->notEmpty()->each(Validator::arrayType()))
             ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getKind()))
-            ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResourceKind($command->getKind()))
-            ->attribute('resourceClass', $this->resourceClassExistsRule);
+            ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResourceKind($command->getKind()));
     }
 }

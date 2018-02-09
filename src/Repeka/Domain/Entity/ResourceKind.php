@@ -2,26 +2,36 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
-use Doctrine\Common\Collections\ArrayCollection;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Exception\MetadataAlreadyPresentException;
 
 class ResourceKind implements Identifiable {
     private $id;
     private $label;
-    /** @var ArrayCollection|Metadata[] */
     private $metadataList;
+    private $metadataOverrides;
     /** @var ResourceWorkflow */
     private $workflow;
     private $resourceClass;
     private $displayStrategies = [];
 
-    public function __construct(array $label, string $resourceClass, array $displayStrategies = [], ResourceWorkflow $workflow = null) {
+    /**
+     * @param string[] $label
+     * @param Metadata[] $metadataList
+     */
+    public function __construct(array $label, array $metadataList, array $displayStrategies = [], ResourceWorkflow $workflow = null) {
+        $this->setMetadataList($metadataList);
+        $this->detectResourceClass();
         $this->label = $label;
-        $this->metadataList = new ArrayCollection();
-        $this->resourceClass = $resourceClass;
         $this->setDisplayStrategies($displayStrategies);
         $this->workflow = $workflow;
+    }
+
+    private function detectResourceClass() {
+        $nonSystemMetadata = array_filter($this->metadataList, function (Metadata $metadata) {
+            return !!$metadata->getResourceClass();
+        });
+        Assertion::greaterOrEqualThan(count($nonSystemMetadata), 1, 'Could not detect resource class from system metadata only.');
+        $this->resourceClass = current($nonSystemMetadata)->getResourceClass();
     }
 
     public function getId() {
@@ -38,7 +48,7 @@ class ResourceKind implements Identifiable {
 
     /** @return Metadata[] */
     public function getMetadataList(): array {
-        return $this->metadataList->toArray();
+        return $this->metadataList;
     }
 
     public function getMetadataById(int $id): Metadata {
@@ -57,22 +67,6 @@ class ResourceKind implements Identifiable {
         return $this->displayStrategies;
     }
 
-    public function getMetadataByBaseId(int $baseId): Metadata {
-        if ($baseId == SystemMetadata::PARENT) {
-            return SystemMetadata::PARENT()->toMetadata();
-        }
-        foreach ($this->getMetadataList() as $metadata) {
-            if ($metadata->getBaseId() === $baseId) {
-                return $metadata;
-            }
-        }
-        throw new \InvalidArgumentException(sprintf(
-            "Metadata not found for base metadata #%d in resource kind #%d",
-            $baseId,
-            $this->getId()
-        ));
-    }
-
     public function getMetadataByName(string $name): Metadata {
         foreach ($this->getMetadataList() as $metadata) {
             if ($metadata->getName() === $name) {
@@ -89,62 +83,9 @@ class ResourceKind implements Identifiable {
         }));
     }
 
-    public function addMetadata(Metadata $metadata) {
-        Assertion::notNull($metadata->getBaseId());
-        if (in_array($metadata->getBaseId(), $this->getBaseMetadataIds())) {
-            throw new MetadataAlreadyPresentException($this, $metadata);
-        }
-        $this->metadataList[] = $metadata;
-        $this->sortMetadataByOrdinalNumber();
-    }
-
-    /**
-     * @param string[] $newLabel
-     * @param Metadata[] $newMetadataList
-     */
-    public function update(array $newLabel, array $newMetadataList, array $newDisplayStrategies) {
+    public function update(array $newLabel, array $newDisplayStrategies) {
         $this->label = array_filter($newLabel, 'trim');
         $this->setDisplayStrategies($newDisplayStrategies);
-        /** @var Metadata[] $currentMetadata */
-        $currentMetadata = [];
-        foreach ($this->metadataList as $metadata) {
-            $currentMetadata[$metadata->getBaseId()] = $metadata;
-        }
-        $currentMetadataIds = array_keys($currentMetadata);
-        $newMetadataIds = array_map(function (Metadata $metadata) {
-            return $metadata->getBaseId();
-        }, $newMetadataList);
-        foreach ($newMetadataList as $newMetadata) {
-            if (in_array($newMetadata->getBaseId(), $currentMetadataIds)) {
-                $currentMetadata[$newMetadata->getBaseId()]->update(
-                    $newMetadata->getLabel(),
-                    $newMetadata->getPlaceholder(),
-                    $newMetadata->getDescription(),
-                    $newMetadata->getConstraints(),
-                    $newMetadata->isShownInBrief()
-                );
-                $currentMetadata[$newMetadata->getBaseId()]
-                    ->updateOrdinalNumber($newMetadata->getOrdinalNumber());
-            } else {
-                $this->addMetadata($newMetadata);
-            }
-        }
-        foreach ($currentMetadataIds as $currentMetadataId) {
-            if (!in_array($currentMetadataId, $newMetadataIds)) {
-                $this->metadataList->removeElement($currentMetadata[$currentMetadataId]);
-            }
-        }
-        $this->sortMetadataByOrdinalNumber();
-    }
-
-    private function sortMetadataByOrdinalNumber() {
-        $metadataList = $this->getMetadataList();
-        usort($metadataList, [Metadata::class, 'compareOrdinalNumbers']);
-        // do not replace it with new ArrayCollection($metadataList) as it will make Doctrine think all current metadata are orphaned!
-        $this->metadataList->clear();
-        foreach ($metadataList as $metadata) {
-            $this->metadataList->add($metadata);
-        }
     }
 
     public function getWorkflow(): ?ResourceWorkflow {
@@ -152,13 +93,24 @@ class ResourceKind implements Identifiable {
     }
 
     /** @return int[] */
-    public function getBaseMetadataIds(): array {
-        return array_map(function (Metadata $metadata) {
-            return $metadata->getBaseId();
-        }, $this->getMetadataList());
+    public function getMetadataIds(): array {
+        return EntityUtils::mapToIds($this->getMetadataList());
     }
 
     private function setDisplayStrategies(array $displayStrategies) {
         $this->displayStrategies = array_filter(array_map('trim', $displayStrategies));
+    }
+
+    public function setMetadataList(array $metadataList) {
+        Assertion::greaterOrEqualThan(count($metadataList), 1, 'ResourceKind must contain at least one metadata.');
+        $this->metadataList = $metadataList;
+    }
+
+    public function getMetadataOverrides() {
+        return $this->metadataOverrides;
+    }
+
+    public function setMetadataOverrides($metadataOverrides) {
+        $this->metadataOverrides = $metadataOverrides;
     }
 }

@@ -13,7 +13,7 @@ class MetadataUpdateOrderCommandHandler {
     }
 
     public function handle(MetadataUpdateOrderCommand $command) {
-        $metadataList = $this->metadataRepository->findAllBaseByResourceClass($command->getResourceClass());
+        $metadataList = $this->metadataRepository->findTopLevelByResourceClass($command->getResourceClass());
         foreach ($metadataList as $metadata) {
             $ordinal = array_search($metadata->getId(), $command->getMetadataIdsInOrder());
             Assertion::integer($ordinal, "Could not find ordinal number for metadata #{$metadata->getId()}");

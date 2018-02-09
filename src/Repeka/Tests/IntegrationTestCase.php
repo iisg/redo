@@ -50,6 +50,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $this->application->setAutoExit(false);
         $this->application->setCatchExceptions(false);
         if (!defined('INTEGRATION_TESTS_BOOTSTRAPPED')) {
+            ini_set('memory_limit', '512M');
             define('INTEGRATION_TESTS_BOOTSTRAPPED', true);
             $this->executeCommand('doctrine:database:drop --force --if-exists');
             $this->executeCommand('doctrine:database:create');
@@ -163,33 +164,14 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     protected function createResourceKind(
         array $label,
         array $metadataList,
-        string $resourceClass = 'books',
         array $displayStrategies = [],
         ResourceWorkflow $workflow = null
     ): ResourceKind {
-        return $this->handleCommand(new ResourceKindCreateCommand($label, $metadataList, $resourceClass, $displayStrategies, $workflow));
+        return $this->handleCommand(new ResourceKindCreateCommand($label, $metadataList, $displayStrategies, $workflow));
     }
 
-    /** Creates arrays for use in createResourceKind()'s $metadataList */
-    protected function resourceKindMetadata(
-        Metadata $baseMetadata,
-        array $label,
-        string $resourceClass = 'books',
-        int $maxCount = 0
-    ): array {
-        return [
-            'baseId' => $baseMetadata->getId(),
-            'label' => $label,
-            'description' => [],
-            'placeholder' => [],
-            'shownInBrief' => false,
-            'resourceClass' => $resourceClass,
-            'constraints' => ['maxCount' => $maxCount],
-        ];
-    }
-
-    protected function createResource(ResourceKind $resourceKind, array $contents, string $resourceClass): ResourceEntity {
-        return $this->handleCommand(new ResourceCreateCommand($resourceKind, $contents, $resourceClass));
+    protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {
+        return $this->handleCommand(new ResourceCreateCommand($resourceKind, $contents));
     }
 
     protected function createWorkflow(array $name, string $resourceClass, ResourceWorkflowPlace $initialPlace): ResourceWorkflow {

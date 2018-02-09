@@ -58,7 +58,6 @@ class ResourceKindsController extends ApiController {
         $command = new ResourceKindCreateCommand(
             $data['label'] ?? [],
             $data['metadataList'] ?? [],
-            $data['resourceClass'] ?? '',
             $data['displayStrategies'] ?? [],
             isset($data['workflowId']) ? $this->resourceWorkflowRepository->findOne($data['workflowId']) : null
         );

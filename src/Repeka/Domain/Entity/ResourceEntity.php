@@ -12,10 +12,10 @@ class ResourceEntity implements Identifiable {
     private $contents;
     private $resourceClass;
 
-    public function __construct(ResourceKind $kind, array $contents, string $resourceClass) {
+    public function __construct(ResourceKind $kind, array $contents) {
         $this->kind = $kind;
         $this->contents = $contents;
-        $this->resourceClass = $resourceClass;
+        $this->resourceClass = $kind->getResourceClass();
     }
 
     public function getId(): ?int {
@@ -45,12 +45,8 @@ class ResourceEntity implements Identifiable {
     }
 
     public function getValues(Metadata $metadata): array {
-        $baseId = $metadata->isBase() ? $metadata->getId() : $metadata->getBaseId();
-        $baseIds = array_map(function (Metadata $m) {
-            return $m->getBaseId();
-        }, $this->kind->getMetadataList());
-        Assertion::inArray($baseId, $baseIds);
-        return $this->getContents()[$baseId] ?? [];
+        Assertion::inArray($metadata->getId(), $this->kind->getMetadataIds());
+        return $this->getContents()[$metadata->getId()] ?? [];
     }
 
     public function updateContents(array $contents) {

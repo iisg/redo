@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration\Repository;
 
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\IntegrationTestCase;
@@ -15,40 +16,18 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $this->loadAllFixtures();
     }
 
-    public function testFindAllBase() {
-        $allBase = $this->metadataRepository->findAllBase();
+    public function testFindAllByResourceClass() {
+        $topLevelByResourceClass = $this->metadataRepository->findTopLevelByResourceClass('books');
         $all = $this->metadataRepository->findAll();
         $allFiltered = array_values(array_filter($all, function (Metadata $metadata) {
-            return $metadata->isBase() && $metadata->isParent() && ($metadata->getId() >= 0);
+            return $metadata->isParent()
+                && ($metadata->getId() >= 0)
+                && ($metadata->getResourceClass() == 'books');
         }));
-        $baseIds = array_map(function (Metadata $metadata) {
-            return $metadata->getId();
-        }, $allBase);
-        $filteredIds = array_map(function (Metadata $metadata) {
-            return $metadata->getId();
-        }, $allFiltered);
-        sort($baseIds);
+        $allIds = EntityUtils::mapToIds($topLevelByResourceClass);
+        $filteredIds = EntityUtils::mapToIds($allFiltered);
+        sort($allIds);
         sort($filteredIds);
-        $this->assertEquals($filteredIds, $baseIds);
-    }
-
-    public function testFindAllBaseByResourceClass() {
-        $allBaseByResourceClass = $this->metadataRepository->findAllBaseByResourceClass('books');
-        $all = $this->metadataRepository->findAll();
-        $allFiltered = array_values(array_filter($all, function (Metadata $metadata) {
-            return $metadata->isBase()
-            && $metadata->isParent()
-            && ($metadata->getId() >= 0)
-            && ($metadata->getResourceClass() == 'books');
-        }));
-        $baseIds = array_map(function (Metadata $metadata) {
-            return $metadata->getId();
-        }, $allBaseByResourceClass);
-        $filteredIds = array_map(function (Metadata $metadata) {
-            return $metadata->getId();
-        }, $allFiltered);
-        sort($baseIds);
-        sort($filteredIds);
-        $this->assertEquals($filteredIds, $baseIds);
+        $this->assertEquals($filteredIds, $allIds);
     }
 }

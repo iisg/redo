@@ -2,8 +2,8 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Respect\Validation\Validatable;
@@ -37,9 +37,7 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
     private function assertHasTransition(string $transitionId) {
         return function (ResourceEntity $resource) use ($transitionId) {
             $transitions = $resource->getWorkflow()->getTransitions($resource);
-            return in_array($transitionId, array_map(function (ResourceWorkflowTransition $transition) {
-                return $transition->getId();
-            }, $transitions));
+            return in_array($transitionId, EntityUtils::mapToIds($transitions));
         };
     }
 
