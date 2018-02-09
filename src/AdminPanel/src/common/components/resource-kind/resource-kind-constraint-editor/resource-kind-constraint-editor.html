@@ -1,6 +1,6 @@
 <template>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
-    <require from="common/components/restore-from-base/restore-from-base.html"></require>
+    <require from="common/components/restore-from-original/restore-from-original.html"></require>
 
     <label>
         <throbber if.bind="loadingWorkflows"></throbber>
@@ -33,8 +33,8 @@
             if.bind="!disabled || metadata.constraints.resourceKind.length > 0"
             resource-class.bind="resourceClass"></resource-kind-chooser>
         <div class="input-group-addon">
-            <restore-from-base if.bind="canInherit && wasModified"
-                on-click.call="resetToBaseIds()"></restore-from-base>
+            <restore-from-original if.bind="canInherit && wasModified"
+                click.delegate="resetToOriginalIds()"></restore-from-original>
         </div>
     </div>
 </template>

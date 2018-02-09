@@ -20,10 +20,10 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   @bindable edit: ResourceKind;
 
   resourceKind: ResourceKind = new ResourceKind;
-  baseMetadataMap: Map<Metadata, Metadata> = new Map();
+  originalMetadataList: Metadata[];
   submitting = false;
   sortingMetadata = false;
-  @bindable newMetadataBase: Metadata; // we only need @observable but it's buggy: https://github.com/aurelia/binding/issues/594
+  @bindable metadataToAdd: Metadata; // we only need @observable but it's buggy: https://github.com/aurelia/binding/issues/594
 
   private controller: ValidationController;
 
@@ -41,19 +41,23 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
     }
   }
 
-  newMetadataBaseChanged() {
-    if (this.newMetadataBase == undefined) {
-      return;
-    }
-    const metadata = this.entitySerializer.clone(this.newMetadataBase);
-    metadata.baseId = this.newMetadataBase.id;
-    this.baseMetadataMap.set(metadata, this.newMetadataBase);
-    this.resourceKind.metadataList.push(metadata);
-    this.newMetadataBase = undefined;
+  async resourceClassChanged() {
+    this.originalMetadataList = undefined;
+    this.originalMetadataList = await this.metadataRepository.getListByClass(this.resourceClass);
   }
 
-  base(metadata: Metadata): Metadata {
-    return this.baseMetadataMap.get(metadata);
+  metadataToAddChanged() {
+    if (this.metadataToAdd == undefined) {
+      return;
+    }
+    const metadataOverrides = this.entitySerializer.clone(this.metadataToAdd);
+    metadataOverrides.clearInheritedValues(this.metadataRepository, this.metadataToAdd);
+    this.resourceKind.metadataList.push(metadataOverrides);
+    this.metadataToAdd = undefined;
+  }
+
+  originalMetadata(metadata: Metadata): Metadata {
+    return this.originalMetadataList.find(m => m.id == metadata.id);
   }
 
   removeMetadata(metadata: Metadata) {
@@ -75,11 +79,11 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
 
   @computedFrom('resourceKind.metadataList', 'resourceKind.metadataList.length')
   get editableMetadataList(): Metadata[] {
-    return this.resourceKind.metadataList.filter(metadata => metadata.baseId > 0);
+    return this.resourceKind.metadataList.filter(metadata => metadata.id > 0);
   }
 
   get resourceChildConstraintMetadata(): Metadata {
-    return this.resourceKind.metadataList.find(metadata => metadata.baseId === SystemMetadata.PARENT.baseId);
+    return this.resourceKind.metadataList.find(metadata => metadata.id === SystemMetadata.PARENT.id);
   }
 
   editChanged() {
@@ -87,10 +91,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
     if (this.edit) {
       this.resourceKind = this.entitySerializer.clone(this.edit);
       this.resourceKind.metadataList.forEach(metadata => {
-        this.metadataRepository.getBase(metadata).then(baseMetadata => {
-          this.baseMetadataMap.set(metadata, baseMetadata);
-          metadata.clearInheritedValues(this.metadataRepository).then(() => this.signaler.signal('base-metadata-fetched'));
-        });
+        metadata.clearInheritedValues(this.metadataRepository).then(() => this.signaler.signal('original-metadata-changed'));
       });
     }
   }

@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Domain\Entity;
 
-class EntityHelper {
+class EntityUtils {
     /**
      * Maps each ID to entity with such ID. All IDs must have matching entities.
      * Eg.  $ids = [2, 3];
@@ -44,15 +44,27 @@ class EntityHelper {
      * @return (int|string)[]
      */
     public static function mapToIds(array $entities) {
-        return array_map(function ($entity) {
+        return array_values(array_map(function ($entity) {
             /** @var Identifiable $entity */
             return $entity->getId();
-        }, $entities);
+        }, $entities));
     }
 
     /** Just like getByIds(), but silently ignores missing items */
     public static function filterByIds(array $ids, array $entities): array {
         $commonIds = array_intersect($ids, self::mapToIds($entities));
         return self::getByIds($commonIds, $entities);
+    }
+
+    public static function forceSetId($entity, $id) {
+        (new self())->doForceSetId($entity, $id); // just because IDE thinks $this is an error in static methods
+    }
+
+    /** @SuppressWarnings(PHPMD.UnusedPrivateMethod) */
+    private function doForceSetId($entity, $id) {
+        $idSetter = function ($id) {
+            $this->id = $id;
+        };
+        $idSetter->call($entity, $id);
     }
 }

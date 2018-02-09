@@ -21,15 +21,10 @@ interface MetadataRepository {
     public function findByName(string $name): Metadata;
 
     /**
-     * Returns all metadata that have no base (i.e. are not assigned to any resoruce kind), sorted by ordinalNumber, ascending.
+     * Returns metadata without parent by given resource class sorted by ordinalNumber, ascending.
      * @return Metadata[]
      */
-    public function findAllBase(): array;
-
-    /**
-     * Returns metadata by resource class that have no base(i.e. are not assigned to any resoruce kind), sorted by ordinalNumber, ascending.
-     * @return Metadata[] */
-    public function findAllBaseByResourceClass(string $resourceClass): array;
+    public function findTopLevelByResourceClass(string $resourceClass): array;
 
     /**
      * Returns all metadata that have specific parent ID.
@@ -43,5 +38,9 @@ interface MetadataRepository {
 
     public function countByParent(Metadata $parent): int;
 
-    public function countByBase(Metadata $base): int;
+    /**
+     * @param int[] $metadataIds
+     * @return Metadata[]
+     */
+    public function findByIds(array $metadataIds): array;
 }

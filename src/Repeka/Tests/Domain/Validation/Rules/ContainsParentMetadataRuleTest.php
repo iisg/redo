@@ -3,8 +3,11 @@ namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ContainsParentMetadataRuleTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ContainsParentMetadataRule */
     private $validator;
 
@@ -12,25 +15,18 @@ class ContainsParentMetadataRuleTest extends \PHPUnit_Framework_TestCase {
         $this->validator = new ContainsParentMetadataRule();
     }
 
-    public function testRejectsNonExistingResourceClasses() {
+    public function testRejectsArrayWithoutParentMetadata() {
         $metadataList = [
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 2, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            $this->createMetadataMock(1),
+            $this->createMetadataMock(2),
         ];
         $this->assertFalse($this->validator->validate($metadataList));
     }
 
-    public function testAcceptsExistingResourceClass() {
+    public function testAcceptsArrayWithParentMetadata() {
         $metadataList = [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => ['PL' => 'Label A'],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text'
-            ],
-            ['baseId' => 2, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
+            SystemMetadata::PARENT()->toMetadata(),
+            $this->createMetadataMock(),
         ];
         $this->assertTrue($this->validator->validate($metadataList));
     }

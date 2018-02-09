@@ -75,6 +75,12 @@ services:
       - { name: doctrine.event_listener, event: prePersist }
       - { name: doctrine.event_listener, event: preUpdate }
 
+  Repeka\Application\EventListener\Doctrine\ResourceKindMetadataListConverterListener:
+    tags:
+      - { name: doctrine.event_listener, event: prePersist }
+      - { name: doctrine.event_listener, event: preUpdate }
+      - { name: doctrine.event_listener, event: postLoad }
+
   Repeka\Application\EventListener\Doctrine\ResourceWorkflowDriverInjector:
     tags:
       - { name: doctrine.event_listener, event: postLoad }

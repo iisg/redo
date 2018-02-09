@@ -55,20 +55,18 @@ export class Metadata extends Entity {
       && arraysEqual(this.constraints.resourceKind, [SystemResourceKinds.USER_ID]);
   }
 
-  clearInheritedValues(metadataRepository: MetadataRepository, baseId?: number): Promise<Metadata> {
-    const baseMetadata: Promise<Metadata> = (baseId != undefined)
-      ? metadataRepository.get(baseId)
-      : metadataRepository.getBase(this);
-    return baseMetadata.then(base => {
-      for (let overridableField of ['label', 'placeholder', 'description']) {
-        for (let languageCode in this[overridableField]) {
-          if (this[overridableField][languageCode] == base[overridableField][languageCode]) {
-            this[overridableField][languageCode] = '';
-          }
+  async clearInheritedValues(metadataRepository: MetadataRepository, originalMetadata: Metadata = undefined): Promise<Metadata> {
+    if (!originalMetadata) {
+      originalMetadata = await metadataRepository.get(this.id);
+    }
+    for (let overridableField of ['label', 'placeholder', 'description']) {
+      for (let languageCode in this[overridableField]) {
+        if (this[overridableField][languageCode] == originalMetadata[overridableField][languageCode]) {
+          this[overridableField][languageCode] = '';
         }
       }
-      return this;
-    });
+    }
+    return this;
   }
 }
 

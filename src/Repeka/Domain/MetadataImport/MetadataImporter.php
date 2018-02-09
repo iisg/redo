@@ -28,7 +28,7 @@ class MetadataImporter {
                 $values = $this->transforms->apply($values, $transformConfig);
             }
             $metadata = $mapping->getMetadata();
-            $id = $metadata->getBaseId();
+            $id = $metadata->getId();
             switch ($metadata->getControl()->getValue()) {
                 case MetadataControl::TEXT:
                 case MetadataControl::TEXTAREA:

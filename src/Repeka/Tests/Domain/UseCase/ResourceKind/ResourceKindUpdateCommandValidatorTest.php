@@ -2,6 +2,9 @@
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Entity\EntityUtils;
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
@@ -14,6 +17,9 @@ use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDetermi
 use Repeka\Tests\Traits\StubsTrait;
 use Respect\Validation\Validator;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
@@ -23,6 +29,8 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     private $validator;
     /** @var CorrectResourceDisplayStrategySyntaxRule|\PHPUnit_Framework_MockObject_MockObject */
     private $correctResourceDisplayStrategySyntaxRule;
+    /** @var Metadata */
+    private $relationshipMetadata;
 
     protected function setUp() {
         $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
@@ -33,28 +41,30 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
             'forMetadataId'
         );
+        $this->relationshipMetadata = Metadata::create(
+            '',
+            MetadataControl::RELATIONSHIP(),
+            '',
+            [],
+            [],
+            [],
+            ['resourceKind' => [123]]
+        );
+        EntityUtils::forceSetId($this->relationshipMetadata, 2);
         $this->validator = new ResourceKindUpdateCommandValidator(
             $notBlankInAllLanguagesRule,
-            $this->rkConstraintIsUser,
             $this->correctResourceDisplayStrategySyntaxRule,
-            new ContainsParentMetadataRule()
+            new ContainsParentMetadataRule(),
+            $this->rkConstraintIsUser
         );
     }
 
     public function testValid() {
         $this->rkConstraintIsUser->expects($this->once())->method('validate')->willReturn(true);
         $command = new ResourceKindUpdateCommand($this->createMock(ResourceKind::class), ['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => [],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text',
-            ],
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [],
-                'control' => 'relationship', 'constraints' => ['resourceKind' => [123]]],
+            $this->createMetadataMock(SystemMetadata::PARENT),
+            $this->createMetadataMock(),
+            $this->relationshipMetadata,
         ], []);
         $this->validator->validate($command);
     }
@@ -63,17 +73,9 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->expectException(InvalidCommandException::class);
         $this->rkConstraintIsUser->expects($this->once())->method('validate')->willReturn(true);
         $command = new ResourceKindUpdateCommand(1, ['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => [],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text',
-            ],
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [],
-                'control' => 'relationship', 'constraints' => ['resourceKind' => [123]]],
+            $this->createMetadataMock(SystemMetadata::PARENT),
+            $this->createMetadataMock(),
+            $this->relationshipMetadata,
         ], []);
         $this->validator->validate($command);
     }
@@ -82,16 +84,9 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->expectException(InvalidCommandException::class);
         $this->rkConstraintIsUser->expects($this->once())->method('validate')->willReturn(false);
         $command = new ResourceKindUpdateCommand($this->createMock(ResourceKind::class), ['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A', 'label' => [],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text',
-            ],
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [],
-                'control' => 'relationship', 'constraints' => ['resourceKind' => [123]]],
+            $this->createMetadataMock(SystemMetadata::PARENT),
+            $this->createMetadataMock(),
+            $this->relationshipMetadata,
         ], []);
         $this->validator->validate($command);
     }
@@ -99,14 +94,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     public function testInvalidWhenOnlyParentMetadata() {
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindUpdateCommand($this->createMock(ResourceKind::class), ['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => [],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text',
-            ],
+            SystemMetadata::PARENT()->toMetadata(),
         ], []);
         $this->validator->validate($command);
     }

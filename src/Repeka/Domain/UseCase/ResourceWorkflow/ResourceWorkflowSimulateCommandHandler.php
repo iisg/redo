@@ -1,8 +1,6 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
-use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Factory\ResourceWorkflowDriverFactory;
 
@@ -18,7 +16,7 @@ class ResourceWorkflowSimulateCommandHandler {
     public function handle(ResourceWorkflowSimulateCommand $command): array {
         $simulatedWorkflow = new ResourceWorkflow([], $command->getPlaces(), $command->getTransitions(), 'books');
         $this->workflowDriverFactory->setForWorkflow($simulatedWorkflow);
-        $tempResource = new ResourceEntity(new ResourceKind([], 'books'), [], 'books');
+        $tempResource = new ResourceWorkflowSimulationResource();
         $simulatedWorkflow->setCurrentPlaces($tempResource, $command->getCurrentPlaces());
         if ($command->getTransitionId()) {
             $simulatedWorkflow->apply($tempResource, $command->getTransitionId());

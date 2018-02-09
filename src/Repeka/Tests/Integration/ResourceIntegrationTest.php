@@ -16,15 +16,13 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/resources';
 
     /** @var Metadata */
-    private $baseMetadata2;
+    private $metadata1;
     /** @var Metadata */
-    private $baseMetadata;
+    private $metadata2;
     /** @var ResourceKind */
     private $resourceKind;
     /** @var ResourceKind */
     private $resourceKindWithWorkflow;
-    /** @var Metadata */
-    private $metadata;
     /** @var  Metadata */
     private $parentMetadata;
     /** @var ResourceEntity */
@@ -41,33 +39,31 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var MetadataRepository $metadataRepository */
         $metadataRepository = $this->container->get(MetadataRepository::class);
         $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
-        $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'textarea');
-        $this->baseMetadata2 = $this->createMetadata('Base2', ['TEST' => 'Base metadata'], [], [], 'textarea');
+        $this->metadata1 = $this->createMetadata('M1', ['TEST' => 'metadata'], [], [], 'textarea');
+        $this->metadata2 = $this->createMetadata('M2', ['TEST' => 'metadata'], [], [], 'textarea');
         $workflow = $this->createWorkflow(['TEST' => 'Workflow'], 'books', new ResourceWorkflowPlace(['key']));
         $sampleResourceWorkflowDriverFactory = new SampleResourceWorkflowDriverFactory($this->createMock(ResourceWorkflowDriver::class));
         $workflow = $sampleResourceWorkflowDriverFactory->setForWorkflow($workflow);
-        $this->resourceKind = $this->createResourceKind(['TEST' => 'Resource kind'], [
-            $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata']),
-            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
-            $this->resourceKindMetadata($this->baseMetadata2, ['TEST' => 'Metadata']),
-        ]);
-        $this->resourceKindWithWorkflow = $this->createResourceKind(['TEST' => 'Resource kind'], [
-            $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata']),
-            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
-        ], 'books', [], $workflow);
-        $this->metadata = $this->resourceKind->getMetadataList()[1];
-        $this->metadata->updateOrdinalNumber(0);
-        $this->persistAndFlush($this->metadata);
+        $this->resourceKind = $this->createResourceKind(
+            ['TEST' => 'Resource kind'],
+            [$this->metadata1, $this->metadata2]
+        );
+        $this->resourceKindWithWorkflow = $this->createResourceKind(
+            ['TEST' => 'Resource kind'],
+            [$this->parentMetadata, $this->metadata1],
+            [],
+            $workflow
+        );
         $this->resource = $this->createResource($this->resourceKind, [
-            $this->baseMetadata->getId() => ['Test value'],
-        ], 'books');
+            $this->metadata1->getId() => ['Test value'],
+        ]);
         $this->parentResource = $this->createResource($this->resourceKind, [
-            $this->baseMetadata->getId() => ['Test value for parent'],
-        ], 'books');
+            $this->metadata1->getId() => ['Test value for parent'],
+        ]);
         $this->childResource = $this->createResource($this->resourceKind, [
             -1 => [$this->parentResource->getId()],
-            $this->baseMetadata->getId() => ['Test value for child'],
-        ], 'books');
+            $this->metadata1->getId() => ['Test value for child'],
+        ]);
     }
 
     public function testFetchingResources() {
@@ -78,17 +74,17 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata->getBaseId() => ['Test value']],
+                'contents' => [$this->metadata1->getId() => ['Test value']],
                 'resourceClass' => $this->resource->getResourceClass(),
             ], [
                 'id' => $this->parentResource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata->getBaseId() => ['Test value for parent']],
+                'contents' => [$this->metadata1->getId() => ['Test value for parent']],
                 'resourceClass' => $this->resource->getResourceClass(),
             ], [
                 'id' => $this->childResource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata->getBaseId() => ['Test value for child'], -1 => [$this->parentResource->getId()]],
+                'contents' => [$this->metadata1->getId() => ['Test value for child'], -1 => [$this->parentResource->getId()]],
                 'resourceClass' => $this->resource->getResourceClass(),
             ],
         ], $client->getResponse()->getContent());
@@ -102,12 +98,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata->getBaseId() => ['Test value']],
+                'contents' => [$this->metadata1->getId() => ['Test value']],
                 'resourceClass' => $this->resource->getResourceClass(),
             ], [
                 'id' => $this->parentResource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata->getBaseId() => ['Test value for parent']],
+                'contents' => [$this->metadata1->getId() => ['Test value for parent']],
                 'resourceClass' => $this->resource->getResourceClass(),
             ],
         ], $client->getResponse()->getContent());
@@ -126,7 +122,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertJsonStringSimilarToArray([
             'id' => $this->resource->getId(),
             'kindId' => $this->resourceKind->getId(),
-            'contents' => [$this->metadata->getBaseId() => ['Test value']],
+            'contents' => [$this->metadata1->getId() => ['Test value']],
             'resourceClass' => $this->resource->getResourceClass(),
         ], $client->getResponse()->getContent());
     }
@@ -135,7 +131,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [
             'kindId' => $this->resourceKind->getId(),
-            'contents' => json_encode([$this->metadata->getBaseId() => ['created']]),
+            'contents' => json_encode([$this->metadata1->getId() => ['created']]),
             'resourceClass' => 'books',
         ]);
         $this->assertStatusCode(201, $client->getResponse());
@@ -144,14 +140,14 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $created */
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
-        $this->assertEquals([$this->metadata->getBaseId() => ['created']], $created->getContents());
+        $this->assertEquals([$this->metadata1->getId() => ['created']], $created->getContents());
     }
 
     public function testCreatingResourceWithWorkflow() {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [
             'kindId' => $this->resourceKindWithWorkflow->getId(),
-            'contents' => json_encode([$this->metadata->getBaseId() => ['created']]),
+            'contents' => json_encode([$this->metadata1->getId() => ['created']]),
             'resourceClass' => 'books',
         ]);
         $this->assertStatusCode(201, $client->getResponse());
@@ -160,7 +156,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $created */
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKindWithWorkflow->getId(), $created->getKind()->getId());
-        $this->assertEquals([$this->metadata->getBaseId() => ['created']], $created->getContents());
+        $this->assertEquals([$this->metadata1->getId() => ['created']], $created->getContents());
         $this->assertEquals(['key' => true], $created->getMarking());
     }
 
@@ -169,21 +165,20 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
             'id' => $this->resource->getId(),
             'kindId' => $this->resourceKind->getId(),
-            'contents' => json_encode([$this->metadata->getBaseId() => ['edited']]),
+            'contents' => json_encode([$this->metadata1->getId() => ['edited']]),
         ]);
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
-        $this->assertEquals([$this->metadata->getBaseId() => ['edited']], $edited->getContents());
+        $this->assertEquals([$this->metadata1->getId() => ['edited']], $edited->getContents());
     }
 
     public function testEditingResourceKindFails() {
-        $newResourceKind = $this->createResourceKind(['TEST' => 'Replacement resource kind'], [
-            $this->resourceKindMetadata($this->parentMetadata, ['TEST' => 'Metadata']),
-            $this->resourceKindMetadata($this->baseMetadata, ['TEST' => 'Metadata']),
-            $this->resourceKindMetadata($this->baseMetadata2, ['TEST' => 'Metadata']),
-        ]);
+        $newResourceKind = $this->createResourceKind(
+            ['TEST' => 'Replacement resource kind'],
+            [$this->parentMetadata, $this->metadata1, $this->metadata2]
+        );
         $newResourceKind->getMetadataList()[0]->updateOrdinalNumber(0);
         $this->persistAndFlush($newResourceKind->getMetadataList()[1]);
         $client = self::createAdminClient();

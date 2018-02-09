@@ -3,8 +3,8 @@
 
     <table class="table resource-metadata-values-table"
         ref="valueTable">
-        <tbody oa-sortable="items.bind: resource.contents[metadata.baseId]; allow-drag.call: isDragHandle($event);">
-        <tr repeat.for="item of resource.contents[metadata.baseId]"
+        <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allow-drag.call: isDragHandle($event);">
+        <tr repeat.for="item of resource.contents[metadata.id]"
             oa-sortable-item="item.bind: item">
             <td class="index">
                 ${$index + 1}.
@@ -13,14 +13,14 @@
                 <resource-metadata-value-input metadata.bind="metadata"
                     resource.bind="resource"
                     validation-controller.bind="validationController"
-                    value.bind="resource.contents[metadata.baseId][$index]"
+                    value.bind="resource.contents[metadata.id][$index]"
                     disabled.bind="disabled"></resource-metadata-value-input>
             </td>
             <td class="action">
                 <a class="btn btn-default btn-narrow drag-handle vertically-sortable ${metadata.hovered ? 'btn-raised' : ''}"
                     bootstrap-tooltip.bind="'Drag to change order' | t"
                     data-placement="left"
-                    if.bind="resource.contents[metadata.baseId].length > 1">
+                    if.bind="resource.contents[metadata.id].length > 1">
                     <fa name="sort"></fa>
                 </a>
                 <button type="button"

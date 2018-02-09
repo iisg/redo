@@ -46,7 +46,7 @@ export class ResourceFormGenerated {
   @computedFrom('resourceKind', 'resourceKind.metadataList')
   get metadataList(): Metadata[] {
     if (this.resourceKind) {
-      return this.resourceKind.metadataList.filter(v => v.baseId > 0);
+      return this.resourceKind.metadataList.filter(v => v.id > 0);
     }
   }
 
@@ -80,16 +80,16 @@ export class ResourceFormGenerated {
     }
     for (let metadata of this.resourceKind.metadataList) {
       const clonedMetadata = this.entitySerializer.clone(metadata);
-      if (inArray(clonedMetadata.baseId, this.requiredMetadataIdsForTransition || [])) {
+      if (inArray(clonedMetadata.id, this.requiredMetadataIdsForTransition || [])) {
         clonedMetadata.constraints.minCount = 1;
       }
-      this.contentsValidator[clonedMetadata.baseId] = this.allMetadataValidator.createRules(clonedMetadata).rules;
+      this.contentsValidator[clonedMetadata.id] = this.allMetadataValidator.createRules(clonedMetadata).rules;
     }
   }
 
   private setResourceContents() {
     const previousMetadata = Object.keys(this.resource.contents).map(k => k);
-    const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.baseId);
+    const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.id);
     const toBeRemoved = diff(previousMetadata, newMetadata);
     const toBeAdded = diff(newMetadata, previousMetadata);
     for (const metadataId of toBeRemoved) {
@@ -108,7 +108,7 @@ export class ResourceFormGenerated {
 
   setParent() {
     if (this.parent && this.resourceKind) {
-      this.resource.contents[SystemMetadata.PARENT.baseId][0] = this.parent.id;
+      this.resource.contents[SystemMetadata.PARENT.id][0] = this.parent.id;
     }
   }
 
@@ -124,20 +124,20 @@ export class ResourceFormGenerated {
   }
 
   editingDisabledForMetadata(metadata: Metadata): boolean {
-    const isParent = metadata.baseId == SystemMetadata.PARENT.baseId;
+    const isParent = metadata.id == SystemMetadata.PARENT.id;
     return (isParent && this.disableParent) || this.metadataIsLocked(metadata);
   }
 
   metadataIsRequired(metadata: Metadata): boolean {
-    return inArray(metadata.baseId, this.requiredMetadataIdsForTransition) || inArray(metadata.baseId, this.requiredMetadataIds);
+    return inArray(metadata.id, this.requiredMetadataIdsForTransition) || inArray(metadata.id, this.requiredMetadataIds);
   }
 
   metadataIsLocked(metadata: Metadata): boolean {
-    return inArray(metadata.baseId, this.lockedMetadataIds);
+    return inArray(metadata.id, this.lockedMetadataIds);
   }
 
   metadataDeterminesAssignee(metadata: Metadata): boolean {
-    return this.resource.transitionAssigneeMetadata[metadata.baseId] !== undefined
-      && this.resource.transitionAssigneeMetadata[metadata.baseId].length > 0;
+    return this.resource.transitionAssigneeMetadata[metadata.id] !== undefined
+      && this.resource.transitionAssigneeMetadata[metadata.id].length > 0;
   }
 }

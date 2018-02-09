@@ -14,8 +14,6 @@ class MetadataListByParentIdQueryHandler {
 
     /** @return Metadata[] */
     public function handle(MetadataListByParentIdQuery $query): array {
-        return $query->getParentId()
-            ? $this->metadataRepository->findAllChildren($query->getParentId())
-            : $this->metadataRepository->findAllBase();
+        return $this->metadataRepository->findAllChildren($query->getParentId());
     }
 }

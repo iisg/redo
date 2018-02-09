@@ -1,5 +1,5 @@
 <template>
-    <require from="common/components/restore-from-base/restore-from-base.html"></require>
+    <require from="common/components/restore-from-original/restore-from-original.html"></require>
     <require from="common/value-converters/integer-value-converter"></require>
 
     <div class="input-group form-inline">
@@ -34,8 +34,8 @@
             </div>
         </div>
         <div class="input-group-addon">
-            <restore-from-base if.bind="hasBaseConstraint && wasModified"
-                on-click.call="resetToBaseValues()"></restore-from-base>
+            <restore-from-original if.bind="hasOriginalConstraint && wasModified"
+                click.delegate="resetToOriginalValues()"></restore-from-original>
         </div>
     </div>
 </template>

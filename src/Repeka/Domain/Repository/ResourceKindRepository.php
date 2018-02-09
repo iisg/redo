@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Repository;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\EntityNotFoundException;
@@ -27,4 +28,6 @@ interface ResourceKindRepository {
     public function delete(ResourceKind $resourceKind): void;
 
     public function countByResourceWorkflow(ResourceWorkflow $resourceWorkflow): int;
+
+    public function countByMetadata(Metadata $metadata): int;
 }

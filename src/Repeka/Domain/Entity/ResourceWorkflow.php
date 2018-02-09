@@ -36,7 +36,7 @@ class ResourceWorkflow implements Identifiable {
     public function getPlaces(ResourceEntity $resource = null): array {
         if ($resource) {
             $availablePlaceIds = $this->getWorkflowDriver()->getPlaces($resource);
-            return EntityHelper::filterByIds($availablePlaceIds, $this->getPlacesAsObjects());
+            return EntityUtils::filterByIds($availablePlaceIds, $this->getPlacesAsObjects());
         } else {
             return $this->getPlacesAsObjects();
         }
@@ -50,7 +50,7 @@ class ResourceWorkflow implements Identifiable {
     public function getTransitions(ResourceEntity $resource = null): array {
         if ($resource) {
             $availableTransitionIds = $this->getWorkflowDriver()->getTransitions($resource);
-            return EntityHelper::filterByIds($availableTransitionIds, $this->getTransitionsAsObjects());
+            return EntityUtils::filterByIds($availableTransitionIds, $this->getTransitionsAsObjects());
         } else {
             return $this->getTransitionsAsObjects();
         }

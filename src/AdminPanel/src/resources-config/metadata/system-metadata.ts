@@ -12,8 +12,6 @@ export class SystemMetadata {
     id: -2,
     control: 'text',
     baseId: -2,
-    constraints: {
-      count: {min: 0, max: 1}
-    },
+    constraints: new MetadataConstraints({maxCount: 1}),
   });
 }

@@ -13,7 +13,7 @@ export class SampleResource extends Resource {
 
   private createSampleContents() {
     for (let metadata of this.kind.metadataList) {
-      this.contents[metadata.baseId] = this.createSampleContent(metadata.control);
+      this.contents[metadata.id] = this.createSampleContent(metadata.control);
     }
   }
 

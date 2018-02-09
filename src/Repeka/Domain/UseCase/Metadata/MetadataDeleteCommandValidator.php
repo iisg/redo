@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\Metadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -11,9 +12,12 @@ use Respect\Validation\Validator;
 class MetadataDeleteCommandValidator extends CommandAttributesValidator {
     /** @var MetadataRepository */
     private $metadataRepository;
+    /** @var ResourceKindRepository */
+    private $resourceKindRepository;
 
-    public function __construct(MetadataRepository $metadataRepository) {
+    public function __construct(MetadataRepository $metadataRepository, ResourceKindRepository $resourceKindRepository) {
         $this->metadataRepository = $metadataRepository;
+        $this->resourceKindRepository = $resourceKindRepository;
     }
 
     public function getValidator(Command $command): Validatable {
@@ -32,6 +36,6 @@ class MetadataDeleteCommandValidator extends CommandAttributesValidator {
     }
 
     public function metadataIsNotUsedInAnyResourceKind(Metadata $metadata): bool {
-        return $this->metadataRepository->countByBase($metadata) === 0;
+        return $this->resourceKindRepository->countByMetadata($metadata) === 0;
     }
 }

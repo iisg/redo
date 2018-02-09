@@ -3,7 +3,7 @@ import {Metadata} from "../metadata";
 
 export class ConstraintStrategy {
   metadataWrapper: ValueWrapper<Metadata>;
-  baseMetadataWrapper: ValueWrapper<Metadata>;
+  originalMetadataWrapper: ValueWrapper<Metadata>;
   constraintName: string;
 
   activate(model: Object) {

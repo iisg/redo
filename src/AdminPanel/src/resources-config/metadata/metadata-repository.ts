@@ -34,7 +34,7 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
       {newChildMetadata: this.toBackend(newChildMetadata), baseId}
     ).then(response => this.toEntity(response.content));
     return baseId
-      ? newChildMetadata.clearInheritedValues(this, baseId).then(() => postChild)
+      ? newChildMetadata.clearInheritedValues(this).then(() => postChild)
       : postChild;
   }
 
@@ -55,15 +55,6 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
       constraints: updatedMetadata.constraints,
       shownInBrief: updatedMetadata.shownInBrief,
     }).then(metadata => clearCachedResponse(this.getListByClass, getCachedArgumentsHash([metadata.resourceClass])) || metadata);
-  }
-
-  public getBase(metadata: Metadata): Promise<Metadata> {
-    if (metadata.baseId < 0) {
-      return new Promise(resolve => resolve(metadata));
-    }
-    return this.getListByClass(metadata.resourceClass).then(metadataList => {
-      return metadataList.filter(base => metadata.baseId == base.id)[0];
-    });
   }
 
   public remove(metadata: Metadata): Promise<any> {

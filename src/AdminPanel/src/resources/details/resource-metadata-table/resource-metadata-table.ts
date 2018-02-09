@@ -12,7 +12,7 @@ export class ResourceMetadataTable implements ComponentAttached {
 
   metadataListChanged() {
     const emptyMetadata = this.metadataList.filter(metadata => {
-      const values = this.resource.contents[metadata.baseId];
+      const values = this.resource.contents[metadata.id];
       return values == undefined || values.length == 0;
     });
     if (emptyMetadata.length > 0 && this.hideEmptyMetadata) {

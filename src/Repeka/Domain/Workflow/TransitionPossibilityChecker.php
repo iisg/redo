@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Domain\Workflow;
 
-use Repeka\Domain\Entity\EntityHelper;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
@@ -23,7 +23,7 @@ class TransitionPossibilityChecker {
 
     private function determineMissingMetadataIds(ResourceEntity $resource, ResourceWorkflowTransition $transition): array {
         $workflow = $resource->getWorkflow();
-        $targetPlaces = EntityHelper::getByIds($transition->getToIds(), $workflow->getPlaces());
+        $targetPlaces = EntityUtils::getByIds($transition->getToIds(), $workflow->getPlaces());
         $missingMetadataIds = [];
         foreach ($targetPlaces as $targetPlace) {
             /** @var ResourceWorkflowPlace $targetPlace */
@@ -52,7 +52,7 @@ class TransitionPossibilityChecker {
      */
     public function getAssigneeMetadataIds(ResourceWorkflow $workflow, ResourceWorkflowTransition $transition): array {
         /** @var ResourceWorkflowPlace[] $transitionTos */
-        $transitionTos = EntityHelper::getByIds($transition->getToIds(), $workflow->getPlaces());
+        $transitionTos = EntityUtils::getByIds($transition->getToIds(), $workflow->getPlaces());
         $assigneeMetadataIds = [];
         foreach ($transitionTos as $place) {
             $assigneeMetadataIds = array_merge($assigneeMetadataIds, $place->restrictingMetadataIds()->assignees()->get());
@@ -63,7 +63,7 @@ class TransitionPossibilityChecker {
 
     private function extractAssigneeIds(ResourceEntity $resource, array $assigneeMetadataIds): array {
         $resourceKind = $resource->getKind();
-        $assigneeMetadataIds = array_intersect($assigneeMetadataIds, $resourceKind->getBaseMetadataIds());
+        $assigneeMetadataIds = array_intersect($assigneeMetadataIds, $resourceKind->getMetadataIds());
         $assigneeUserIdArrays = array_map(function (int $metadataId) use ($resource) {
             return $resource->getContents()[$metadataId] ?? [];
         }, $assigneeMetadataIds);

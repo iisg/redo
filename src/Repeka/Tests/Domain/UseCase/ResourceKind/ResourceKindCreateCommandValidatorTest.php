@@ -43,7 +43,6 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->resourceDisplayStrategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
         $this->validator = new ResourceKindCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepository),
-            new ResourceClassExistsRule(['books', 'dictionaries']),
             new CorrectResourceDisplayStrategySyntaxRule($this->resourceDisplayStrategyEvaluator),
             new ContainsParentMetadataRule()
         );
@@ -51,141 +50,57 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidating() {
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => [],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text'
-            ], [
-                'baseId' => 1,
-                'name' => 'B',
-                'label' => ['PL' => 'Label B'],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text'
-            ],
-        ], 'books');
+            $this->createMetadataMock(SystemMetadata::PARENT),
+            $this->createMetadataMock(),
+        ]);
         $this->validator->validate($command);
     }
 
     public function testFailWhenNoLabel() {
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand([], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => [],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text'
-            ], [
-                'baseId' => 1,
-                'name' => 'B',
-                'label' => ['PL' => 'Label B'],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text'
-            ],
-        ], 'books');
-        $this->validator->validate($command);
-    }
-
-    public function testFailWhenInvalidBaseId() {
-        $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['baseId' => 'abc', 'name' => 'A', 'label' => ['PL' => 'L'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-        ], 'books');
-        $this->validator->validate($command);
-    }
-
-    public function testPassesWhenInvalidMetadataBecauseItOnlyExtendsTheBase() {
-        $this->metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysInvalid());
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A', 'label' => [],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text'
-            ],
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => [], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-        ], 'books');
+            $this->createMetadataMock(SystemMetadata::PARENT),
+            $this->createMetadataMock(),
+        ]);
         $this->validator->validate($command);
     }
 
     public function testFailWhenNoMetadata() {
         $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [], 'books');
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], []);
         $this->validator->validate($command);
     }
 
     public function testFailWhenOnlyParentMetadata() {
         $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A', 'label' => ['PL' => 'Label A'],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text'
-            ],
-        ], 'books');
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [$this->createMetadataMock(SystemMetadata::PARENT)]);
         $this->validator->validate($command);
     }
 
     public function testFailWhenNoParentMetadata() {
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 2, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-        ], 'books');
+            $this->createMetadataMock(),
+            $this->createMetadataMock(),
+        ]);
         $this->validator->validate($command);
     }
 
-    public function testPassWithExplicitParentMetadata() {
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => ['PL' => 'Label A'],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text',
-            ], [
-                'baseId' => 2,
-                'name' => 'A',
-                'label' => ['PL' => 'Label A'],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text',
-            ],
-        ], 'books');
-        $this->validator->validate($command);
-    }
-
-    public function testFailsValidationWhenInvalidResourceClass() {
+    public function testFailWhenDifferentResourceClassesOfMetadata() {
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => ['PL' => 'Label A'],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text',
-            ], [
-                'baseId' => 1,
-                'name' => 'A',
-                'label' => ['PL' => 'Label A'],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text',
-            ]
-        ], 'resourceClass');
+            $this->createMetadataMock(SystemMetadata::PARENT),
+            $this->createMetadataMock(),
+            $this->createMetadataMock(1, 1, null, [], 'unicorns'),
+        ]);
+        $this->validator->validate($command);
+    }
+
+    public function testIgnoringSystemMetadataResourceClass() {
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
+            SystemMetadata::PARENT()->toMetadata(),
+            $this->createMetadataMock(),
+        ]);
         $this->validator->validate($command);
     }
 
@@ -197,16 +112,9 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ->with('This is the header')
             ->willThrowException(new InvalidResourceDisplayStrategyException('Syntax error'));
         $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            [
-                'baseId' => SystemMetadata::PARENT,
-                'name' => 'A',
-                'label' => [],
-                'description' => [],
-                'placeholder' => [],
-                'control' => 'text'
-            ],
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-        ], 'books', ['header' => 'This is the header']);
+            $this->createMetadataMock(SystemMetadata::PARENT),
+            $this->createMetadataMock(),
+        ], ['header' => 'This is the header']);
         $this->validator->validate($command);
     }
 }

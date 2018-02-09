@@ -16,8 +16,8 @@ export class ResourceMapper extends AutoMapper<Resource> {
       return resource;
     }
     for (const metadata of resource.kind.metadataList) {
-      if (!(metadata.baseId in resource.contents)) {
-        resource.contents[metadata.baseId] = [];
+      if (!(metadata.id in resource.contents)) {
+        resource.contents[metadata.id] = [];
       }
     }
     return resource;
@@ -35,7 +35,7 @@ export class ResourceMapper extends AutoMapper<Resource> {
             return item;
           }
           fileCounter++;
-          return this.wrapFileWithFormData(formData, item, resource.kind, metadataId, fileCounter);
+          return this.wrapFileWithFormData(formData, item, metadataId as any as number, fileCounter);
         });
       } else {
         resourceCopy.contents[metadataId] = [];
@@ -49,16 +49,10 @@ export class ResourceMapper extends AutoMapper<Resource> {
     return formData;
   }
 
-  private wrapFileWithFormData(formData: FormData, file: File, resourceKind: ResourceKind, metadataId: any, fileIndex: number): string {
-    let resourceName;
-    for (let metadata of resourceKind.metadataList) {
-      if (metadata.baseId == metadataId) {
-        resourceName = `metadata${metadata.id}_file${fileIndex}`;
-        formData.append(resourceName, file, file.name);
-        return resourceName;
-      }
-    }
-    throw new Error(`Matching base metadata ${metadataId} not found in resource kind ${resourceKind.id}`);
+  private wrapFileWithFormData(formData: FormData, file: File, metadataId: number, fileIndex: number): string {
+    const resourceName = `metadata${metadataId}_file${fileIndex}`;
+    formData.append(resourceName, file, file.name);
+    return resourceName;
   }
 }
 

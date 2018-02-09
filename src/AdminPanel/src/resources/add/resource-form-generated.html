@@ -12,7 +12,7 @@
             <fa name="user-circle"></fa>
             ${'This metadata determines who can perform these actions:' | t}
             <ul>
-                <li repeat.for="transition of resource.transitionAssigneeMetadata[metadata.baseId]">
+                <li repeat.for="transition of resource.transitionAssigneeMetadata[metadata.id]">
                     ${transition.label | inCurrentLanguage}
                 </li>
             </ul>
@@ -27,12 +27,12 @@
             <fa name="info-circle"></fa>
             ${"Resource's state prevents modification of these values." | t}
         </div>
-        <resource-metadata-values-form if.bind="contentsValidator[metadata.baseId]"
+        <resource-metadata-values-form if.bind="contentsValidator[metadata.id]"
             metadata.bind="metadata"
             resource.bind="resource"
             validation-controller.bind="validationController"
             disabled.bind="editingDisabledForMetadata(metadata)"
-            values-validation.bind="resource.contents[metadata.baseId] & validate:contentsValidator[metadata.baseId]"
+            values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id]"
             required.bind="metadataIsRequired(metadata)"></resource-metadata-values-form>
     </div>
 

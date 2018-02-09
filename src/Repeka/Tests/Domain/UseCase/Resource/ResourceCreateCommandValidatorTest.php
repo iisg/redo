@@ -4,8 +4,8 @@ namespace Repeka\Tests\Domain\UseCase\Resource;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommandValidator;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
+use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -56,7 +56,7 @@ class ResourceCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testInvalidForNotInitializedResourceKind() {
         $validator = $this->createValidator(true, true, true);
-        $command = new ResourceCreateCommand(new ResourceKind([], $this->resourceClass), [1 => ['Some value']], $this->resourceClass);
+        $command = new ResourceCreateCommand($this->createMock(ResourceKind::class), [1 => ['Some value']], $this->resourceClass);
         $this->assertFalse($validator->isValid($command));
     }
 

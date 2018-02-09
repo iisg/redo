@@ -20,10 +20,4 @@ class MetadataControl extends Enum {
     const BOOLEAN = 'boolean';
     const RELATIONSHIP = 'relationship';
     const FILE = 'file';
-
-    /** @return string[] */
-    public static function all(): array {
-        $constantsMap = (new \ReflectionClass(self::class))->getConstants();
-        return array_values($constantsMap);
-    }
 }

@@ -10,7 +10,7 @@ export class AllMetadataValueValidator {
   }
 
   public createRules(metadata: Metadata): FluentRuleCustomizer<any, any> {
-    let rules = ValidationRules.ensure(metadata.baseId + '').satisfies(v => true);
+    let rules = ValidationRules.ensure(metadata.id + '').satisfies(v => true);
     for (const constraintName in metadata.constraints) {
       if (metadata.constraints.hasOwnProperty(constraintName)) {
         const validator = this.metadataConstraintValidators.metadataArrayValidators[constraintName];

@@ -43,7 +43,7 @@ export class ResourceForm {
       let params = this.router.currentInstruction.queryParams;
       this.transition = this.edit.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
     }
-    this.setResourceKindsAlloweByParent();
+    this.setResourceKindsAllowedByParent();
   }
 
   @computedFrom('resource.id')
@@ -95,9 +95,9 @@ export class ResourceForm {
     return (!!this.transition || !this.editing) && this.resource.kind && !!this.resource.kind.workflow;
   }
 
-  private setResourceKindsAlloweByParent() {
+  private setResourceKindsAllowedByParent() {
     if (this.parent) {
-      let metadata = this.parent.kind.metadataList.find(v => v.baseId === SystemMetadata.PARENT.baseId);
+      let metadata = this.parent.kind.metadataList.find(v => v.id === SystemMetadata.PARENT.id);
       let resourceKindsAllowedByParent = [];
       resourceKindsAllowedByParent = metadata.constraints.resourceKind;
       this.resourceKindIdsAllowedByParent = resourceKindsAllowedByParent.map(v => v.hasOwnProperty('id') ? v.id : v);
@@ -113,7 +113,7 @@ export class ResourceForm {
     };
   }
 
-  private copyContentsAndFilterEmptyValues(contents: StringArrayMap): StringArrayMap {
+  private copyContentsAndFilterEmptyValues(contents: NumberMap<any[]>): StringArrayMap {
     let copiedContents = {};
     for (let index in contents) {
       copiedContents[index] = contents[index].filter(v => v !== undefined && v !== "");
@@ -133,7 +133,7 @@ export class ResourceForm {
 
   parentChanged(newParent: Resource) {
     if (newParent != undefined) {
-      this.resource.contents[SystemMetadata.PARENT.baseId] = [newParent.id];
+      this.resource.contents[SystemMetadata.PARENT.id] = [newParent.id];
     }
   }
 
@@ -173,7 +173,7 @@ export class ResourceForm {
   }
 
   importValues(valueMap: StringArrayMap): void {
-    const metadataIds = this.resource.kind.metadataList.map(metadata => metadata.baseId + '');
+    const metadataIds = this.resource.kind.metadataList.map(metadata => metadata.id + '');
     for (const metadataId in valueMap) {
       if (!inArray(metadataId + '', metadataIds)) {
         continue;

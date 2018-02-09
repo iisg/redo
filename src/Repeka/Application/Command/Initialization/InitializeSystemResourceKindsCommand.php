@@ -3,10 +3,9 @@ namespace Repeka\Application\Command\Initialization;
 
 use Repeka\Application\Command\TransactionalCommand;
 use Repeka\Application\Entity\EntityIdGeneratorHelper;
-use Repeka\Application\Entity\EntityUtils;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,23 +32,26 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
     /** @inheritdoc */
     protected function executeInTransaction(InputInterface $input, OutputInterface $output) {
         $this->idGeneratorHelper->preventGeneratingIds(ResourceKind::class);
-        foreach (SystemResourceKind::toArray() as $resourceKindName => $resourceKindId) {
-            if (!$this->resourceKindRepository->exists($resourceKindId)) {
-                $systemResourceKind = new SystemResourceKind($resourceKindId);
-                $usernameDisplayTemplate = '{{m' . SystemMetadata::USERNAME . '}}';
-                $resourceKind = new ResourceKind([], SystemResourceClass::USER, [
-                    'header' => $usernameDisplayTemplate, 'dropdown' => $usernameDisplayTemplate,
-                ]);
-                EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
-                $label = [];
-                $label['PL'] = $label['EN'] = strtolower($resourceKindName);
-                $resourceKind->update($label, $resourceKind->getMetadataList(), $resourceKind->getDisplayStrategies());
-                $this->resourceKindRepository->save($resourceKind);
-                $output->writeln("Resource $resourceKindName has been created.");
-            } else {
-                $output->writeln("Resource $resourceKindName already exists.");
-            }
-        }
+        $this->createUserResourceKind($output);
         $this->idGeneratorHelper->restoreIdGenerator(ResourceKind::class, 'resource_kind_id_seq');
+    }
+
+    private function createUserResourceKind(OutputInterface $output) {
+        if (!$this->resourceKindRepository->exists(SystemResourceKind::USER)) {
+            $systemResourceKind = new SystemResourceKind(SystemResourceKind::USER);
+            $usernameDisplayTemplate = '{{m' . SystemMetadata::USERNAME . '}}';
+            $resourceKind = new ResourceKind(
+                ['PL' => 'user', 'EN' => 'user'],
+                [SystemMetadata::USERNAME()->toMetadata()],
+                ['header' => $usernameDisplayTemplate, 'dropdown' => $usernameDisplayTemplate]
+            );
+            EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
+            $label = [];
+            $label['PL'] = $label['EN'] = 'user';
+            $this->resourceKindRepository->save($resourceKind);
+            $output->writeln("System resource kind user has been created.");
+        } else {
+            $output->writeln("System resource kind user already exists.");
+        }
     }
 }

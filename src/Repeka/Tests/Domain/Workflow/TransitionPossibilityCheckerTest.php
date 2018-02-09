@@ -70,7 +70,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             1 => [1000],
             2 => [2000, $this->executor->getId()],
         ]);
-        $this->resourceKind->method('getBaseMetadataIds')->willReturn([1, 2]);
+        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
@@ -85,7 +85,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->resource->method('getContents')->willReturn([
             1 => [1000],
         ]);
-        $this->resourceKind->method('getBaseMetadataIds')->willReturn([1, 2]);
+        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
         $this->checkWithDefaults();
     }

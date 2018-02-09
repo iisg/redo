@@ -65,7 +65,7 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
 
     private function createSingleMetadataResourceKindMock($metadata): \PHPUnit_Framework_MockObject_MockObject {
         $resourceKind = $this->createMock(ResourceKind::class);
-        $resourceKind->method('getMetadataByBaseId')->willReturn($metadata);
+        $resourceKind->method('getMetadataById')->willReturn($metadata);
         return $resourceKind;
     }
 }

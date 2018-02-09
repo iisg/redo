@@ -27,8 +27,8 @@ class MetadataValuesSatisfyConstraintsRule extends AbstractRule {
             $this->resourceKind,
             'Resource kind not set. Use forResourceKind() to create validator for specific resource kind first.'
         );
-        foreach ($input as $baseId => $metadataValues) {
-            $metadataKind = $this->resourceKind->getMetadataByBaseId($baseId);
+        foreach ($input as $id => $metadataValues) {
+            $metadataKind = $this->resourceKind->getMetadataById($id);
             foreach ($metadataKind->getConstraints() as $constraintName => $constraintArgument) {
                 $constraint = $this->metadataConstraintManager->get($constraintName);
                 $constraint->validateAll($constraintArgument, $metadataValues);

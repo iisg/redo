@@ -44,11 +44,7 @@ class ResourceWorkflowDoctrineRepository extends EntityRepository implements Res
      */
     public function findByAssigneeMetadata($metadata): array {
         Assertion::true(is_numeric($metadata) || $metadata instanceof Metadata);
-        if (is_numeric($metadata)) {
-            $baseId = $metadata;
-        } else {
-            $baseId = $metadata->isBase() ? $metadata->getId() : $metadata->getBaseId();
-        }
+        $metadataId = is_numeric($metadata) ? $metadata : $metadata->getId();
         $resultSetMapping = $this->getResultSetMapping();
         $query = $this->getEntityManager()->createNativeQuery(<<<SQL
             SELECT * FROM workflow WHERE id IN (
@@ -58,7 +54,7 @@ class ResourceWorkflowDoctrineRepository extends EntityRepository implements Res
             );
 SQL
             , $resultSetMapping);
-        $query->setParameter('metadata', $baseId);
+        $query->setParameter('metadata', $metadataId);
         return $query->getArrayResult();
     }
 

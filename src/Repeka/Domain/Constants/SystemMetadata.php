@@ -3,12 +3,13 @@ namespace Repeka\Domain\Constants;
 
 use Assert\Assertion;
 use MyCLabs\Enum\Enum;
-use Repeka\Application\Entity\EntityUtils;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 
 /**
  * @method static SystemMetadata PARENT()
+ * @method static SystemMetadata USERNAME()
  */
 class SystemMetadata extends Enum {
     const PARENT = -1;

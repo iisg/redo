@@ -38,15 +38,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             MetadataControl::TEXTAREA,
             'dictionaries'
         );
-        $this->resourceKind = $this->createResourceKind(['TEST' => 'Test'], [
-            $this->resourceKindMetadata($parentMetadata, ['TEST' => '']),
-            $this->resourceKindMetadata($baseMetadata1, ['TEST' => 'Metadata kind 1']),
-            $this->resourceKindMetadata($baseMetadata2, ['TEST' => 'Metadata kind 2']),
-        ]);
-        $this->createResourceKind(['TEST' => 'Test'], [
-            $this->resourceKindMetadata($parentMetadata, ['TEST' => 'Metadata kind dictionary'], ''),
-            $this->resourceKindMetadata($baseDictionaryMetadata, ['TEST' => 'Metadata kind dictionary'], 'dictionaries'),
-        ], 'dictionaries');
+        $this->resourceKind = $this->createResourceKind(['TEST' => 'Test'], [$parentMetadata, $baseMetadata1, $baseMetadata2]);
+        $this->createResourceKind(['TEST' => 'Test'], [$parentMetadata, $baseDictionaryMetadata]);
         $this->metadata1 = $this->resourceKind->getMetadataList()[1];
         $this->metadata2 = $this->resourceKind->getMetadataList()[2];
     }
@@ -87,30 +80,15 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingResourceKind() {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $baseMetadata = $this->createMetadata('New base', ['TEST' => 'New base metadata'], [], [], MetadataControl::TEXTAREA());
-        $em->persist($baseMetadata);
+        $metadata = $this->createMetadata('New base', ['TEST' => 'New base metadata'], [], [], MetadataControl::TEXTAREA());
+        $em->persist($metadata);
         $em->flush();
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [
             'label' => ['TEST' => 'created'],
-            'metadataList' => [[
-                'baseId' => $baseMetadata->getId(),
-                'control' => $baseMetadata->getControl()->getValue(),
-                'description' => [],
-                'label' => ['TEST' => 'created'],
-                'placeholder' => [],
-                'shownInBrief' => false,
-                'resourceClass' => 'books',
-            ], [
-                'baseId' => SystemMetadata::PARENT,
-                'control' => MetadataControl::RELATIONSHIP,
-                'description' => [],
-                'label' => [],
-                'placeholder' => [],
-                'shownInBrief' => false,
-                'resourceClass' => 'books',
-            ]],
-            'resourceClass' => 'books',
+            'metadataList' => [
+                ['id' => $metadata->getId(), 'label' => ['TEST' => 'created overridden']],
+            ],
         ]);
         $this->assertStatusCode(201, $client->getResponse());
         $resourceKindRepository = self::createClient()->getContainer()->get(ResourceKindRepository::class);
@@ -119,48 +97,22 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $createdResourceKind = $resourceKindRepository->findOne($createdId);
         $this->assertEquals(['TEST' => 'created'], $createdResourceKind->getLabel());
         $this->assertCount(2, $createdResourceKind->getMetadataList());
-        $createdMetadata = $createdResourceKind->getMetadataList()[0];
-        $this->assertEquals($baseMetadata->getControl(), $createdMetadata->getControl());
-        $this->assertEquals($baseMetadata->getId(), $createdMetadata->getBaseId());
-        $this->assertEquals($baseMetadata->getName(), $createdMetadata->getName());
-        $this->assertEquals(['TEST' => 'created'], $createdMetadata->getLabel());
+        $assignedMetadata = $createdResourceKind->getMetadataById($metadata->getId());
+        $this->assertEquals($metadata->getControl(), $assignedMetadata->getControl());
+        $this->assertEquals($metadata->getId(), $assignedMetadata->getId());
+        $this->assertEquals($metadata->getName(), $assignedMetadata->getName());
+        $this->assertEquals(['TEST' => 'created overridden'], $assignedMetadata->getLabel());
     }
 
     public function testEditingResourceKind() {
         $client = self::createAdminClient();
         $client->apiRequest('PATCH', self::oneEntityEndpoint($this->resourceKind->getId()), [
             'label' => ['TEST' => 'modified'],
-            'metadataList' => [[
-                'baseId' => $this->metadata2->getBaseId(),
-                'control' => $this->metadata2->getControl()->getValue(),
-                'description' => $this->metadata2->getDescription(),
-                'id' => $this->metadata2->getId(),
-                'label' => $this->metadata2->getLabel(),
-                'name' => $this->metadata2->getName(),
-                'placeholder' => $this->metadata2->getPlaceholder(),
-                'shownInBrief' => false,
-                'resourceClass' => 'books',
-                'constraints' => ['maxCount' => 0],
-            ], [
-                'baseId' => $this->metadata1->getBaseId(),
-                'control' => $this->metadata1->getControl()->getValue(),
-                'description' => $this->metadata1->getDescription(),
-                'id' => $this->metadata1->getId(),
-                'label' => $this->metadata1->getLabel(),
-                'name' => $this->metadata1->getName(),
-                'placeholder' => ['TEST' => 'modified'],
-                'shownInBrief' => false,
-                'resourceClass' => 'books',
-                'constraints' => ['maxCount' => 0],
-            ], [
-            'baseId' => SystemMetadata::PARENT,
-                'control' => MetadataControl::RELATIONSHIP,
-                'description' => [],
-                'label' => [],
-                'placeholder' => [],
-                'shownInBrief' => false,
-                'resourceClass' => 'books',
-            ]],
+            'metadataList' => [
+                ['id' => $this->metadata2->getId()],
+                ['id' => $this->metadata1->getId(), 'placeholder' => ['TEST' => 'modified']],
+                ['id' => SystemMetadata::PARENT],
+            ],
             'displayStrategies' => [],
         ]);
         $this->assertStatusCode(200, $client->getResponse());
@@ -171,10 +123,11 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $resourceKind = $resourceKindRepository->findOne($this->resourceKind->getId());
         /** @var Metadata $metadata1 */
         $metadata1 = $metadataRepository->findOne($this->metadata1->getId());
-        /** @var Metadata $metadata2 */
-        $metadata2 = $metadataRepository->findOne($this->metadata2->getId());
         $this->assertEquals(['TEST' => 'modified'], $resourceKind->getLabel());
-        $this->assertTrue($metadata2->getOrdinalNumber() < $metadata1->getOrdinalNumber());
+        $this->assertEquals(
+            [$this->metadata2->getId(), $this->metadata1->getId(), SystemMetadata::PARENT],
+            $resourceKind->getMetadataIds()
+        );
         $this->assertEquals(['TEST' => 'modified'], $metadata1->getPlaceholder());
     }
 
@@ -188,15 +141,15 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         /** @var MetadataRepository $metadataRepository */
         $metadataRepository = $client->getContainer()->get(MetadataRepository::class);
         $this->assertFalse($resourceKindRepository->exists($this->resourceKind->getId()));
-        $this->assertFalse($metadataRepository->exists($this->metadata1->getId()));
-        $this->assertFalse($metadataRepository->exists($this->metadata2->getId()));
+        $this->assertTrue($metadataRepository->exists($this->metadata1->getId()));
+        $this->assertTrue($metadataRepository->exists($this->metadata2->getId()));
     }
 
     public function testDeletingUsedResourceKindFails() {
         $this->handleCommand(new ResourceCreateCommand($this->resourceKind, [
-            $this->metadata1->getBaseId() => ['test1'],
-            $this->metadata2->getBaseId() => ['test2'],
-        ], 'books'));
+            $this->metadata1->getId() => ['test1'],
+            $this->metadata2->getId() => ['test2'],
+        ]));
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::oneEntityEndpoint($this->resourceKind->getId()));
         $this->assertStatusCode(400, $client->getResponse());

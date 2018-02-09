@@ -4,19 +4,19 @@ import {computedFrom} from "aurelia-binding";
 
 export class RegexConstraintEditor {
   @bindable(twoWay) regex: string;
-  @bindable baseRegex: string;
+  @bindable originalRegex: string;
 
-  resetToBaseValues() {
-    this.regex = this.baseRegex;
+  resetToOriginalValues() {
+    this.regex = this.originalRegex;
   }
 
-  @computedFrom('regex', 'baseRegex')
+  @computedFrom('regex', 'originalRegex')
   get wasModified(): boolean {
-    return this.regex != this.baseRegex;
+    return this.regex != this.originalRegex;
   }
 
-  @computedFrom('baseRegex')
+  @computedFrom('originalRegex')
   get canInherit(): boolean {
-    return this.baseRegex != undefined;
+    return this.originalRegex != undefined;
   }
 }

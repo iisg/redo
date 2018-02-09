@@ -7,11 +7,11 @@ use Repeka\Domain\Cqrs\NonValidatedCommand;
 class MetadataListByParentIdQuery extends AbstractCommand implements NonValidatedCommand {
     private $parentId;
 
-    public function __construct(int $parentId = null) {
+    public function __construct(int $parentId) {
         $this->parentId = $parentId;
     }
 
-    public function getParentId() {
+    public function getParentId(): int {
         return $this->parentId;
     }
 }

@@ -4,11 +4,6 @@ namespace Repeka\Domain\Entity;
 use Assert\Assertion;
 
 class Metadata implements Identifiable {
-    /**
-     * This array key is used to store names of constraints that were present in base metadata, but were removed in overriding metadata.
-     */
-    const REMOVED_CONSTRAINTS_KEY = '__removedConstraints';
-
     private $id;
     /** @var string */
     private $control;
@@ -18,13 +13,13 @@ class Metadata implements Identifiable {
     private $placeholder = [];
     /** @var Metadata */
     private $baseMetadata;
-    private $resourceKind;
     private $ordinalNumber;
     /** @var Metadata */
     private $parentMetadata;
     private $constraints = [];
     private $shownInBrief;
     private $resourceClass;
+    private $overrides = [];
 
     private function __construct() {
     }
@@ -54,78 +49,44 @@ class Metadata implements Identifiable {
         return $metadata;
     }
 
-    private static function createWithBase(Metadata $base): Metadata {
+    public static function createChild(Metadata $base, Metadata $parent): Metadata {
         $metadata = new self();
         $metadata->baseMetadata = $base;
         $metadata->ordinalNumber = -1;
         $metadata->resourceClass = $base->resourceClass;
-        return $metadata;
-    }
-
-    /** @SuppressWarnings(PHPMD.BooleanArgumentFlag) */
-    public static function createForResourceKind(
-        array $label,
-        ResourceKind $resourceKind,
-        Metadata $base,
-        array $placeholder = [],
-        array $description = [],
-        array $constraints = [],
-        bool $shownInBrief = null
-    ): Metadata {
-        Assertion::allNotNull($constraints);
-        $metadata = self::createWithBase($base);
-        $metadata->label = $label;
-        $metadata->resourceKind = $resourceKind;
-        $metadata->placeholder = $placeholder;
-        $metadata->description = $description;
-        $metadata->constraints = $constraints;
-        $metadata->shownInBrief = $shownInBrief;
-        return $metadata;
-    }
-
-    public static function createChild(Metadata $base, Metadata $parent): Metadata {
-        $metadata = self::createWithBase($base);
         $metadata->parentMetadata = $parent;
         return $metadata;
     }
 
-    public function getId() {
+    public function getId(): int {
         return $this->id;
     }
 
     public function getControl(): MetadataControl {
-        return $this->baseMetadata ? $this->baseMetadata->getControl() : new MetadataControl($this->control);
+        return $this->isBase() ? new MetadataControl($this->control) : $this->baseMetadata->getControl();
     }
 
     public function getName(): string {
-        return $this->baseMetadata ? $this->baseMetadata->getName() : $this->name;
+        return $this->isBase() ? $this->name : $this->baseMetadata->getName();
     }
 
     public function getLabel(): array {
-        return array_merge($this->baseMetadata ? $this->baseMetadata->getLabel() : [], array_filter($this->label, 'trim'));
+        return array_merge($this->label, array_filter($this->overrides['label'] ?? [], 'trim'));
     }
 
     public function getDescription(): array {
-        return array_merge($this->baseMetadata ? $this->baseMetadata->getDescription() : [], array_filter($this->description, 'trim'));
+        return array_merge($this->description, array_filter($this->overrides['description'] ?? [], 'trim'));
     }
 
     public function getPlaceholder(): array {
-        return array_merge($this->baseMetadata ? $this->baseMetadata->getPlaceholder() : [], array_filter($this->placeholder, 'trim'));
+        return array_merge($this->placeholder, array_filter($this->overrides['placeholder'] ?? [], 'trim'));
     }
 
-    public function getResourceKind(): ResourceKind {
-        return $this->resourceKind;
-    }
-
-    public function isBase() {
+    public function isBase(): bool {
         return !$this->baseMetadata;
     }
 
-    public function getOrdinalNumber() {
-        return $this->ordinalNumber;
-    }
-
-    public function isParent() {
+    public function isParent(): bool {
         return !$this->parentMetadata;
     }
 
@@ -138,33 +99,15 @@ class Metadata implements Identifiable {
     }
 
     public function getConstraints(): array {
-        if (!$this->baseMetadata) {
-            return $this->constraints;
-        } else {
-            $patchedConstraints = $this->baseMetadata->constraints;
-            foreach ($this->constraints as $name => $value) {
-                if ($name == self::REMOVED_CONSTRAINTS_KEY) {
-                    continue;  // key for internal use, not an override, so skip it
-                }
-                $patchedConstraints[$name] = $value;
-            }
-            foreach ($this->constraints[self::REMOVED_CONSTRAINTS_KEY] ?? [] as $removedConstraint) {
-                if (array_key_exists($removedConstraint, $patchedConstraints)) {
-                    unset($patchedConstraints[$removedConstraint]);
-                }
-            }
-            return $patchedConstraints;
-        }
+        return array_merge($this->constraints, $this->overrides['constraints'] ?? []);
     }
 
-    public function getResourceClass(): ?string {
-        return $this->baseMetadata ? $this->baseMetadata->getResourceClass() : $this->resourceClass;
+    public function getResourceClass(): string {
+        return $this->resourceClass;
     }
 
     public function isShownInBrief(): bool {
-        return ($this->isBase())
-            ? $this->shownInBrief
-            : $this->shownInBrief ?? $this->baseMetadata->isShownInBrief();
+        return is_bool($this->overrides['shownInBrief'] ?? null) ? $this->overrides['shownInBrief'] : $this->shownInBrief;
     }
 
     public function getBaseId(): ?int {
@@ -176,56 +119,46 @@ class Metadata implements Identifiable {
         $this->ordinalNumber = $newOrdinalNumber;
     }
 
-    private function removeCopiedFromBase(array $array, array $baseArray): array {
-        $filtered = $array;
-        foreach ($baseArray as $key => $baseValue) {
-            if (array_key_exists($key, $array) && $array[$key] == $baseValue) {
-                // key unchanged, it will be inherited from base metadata - don't store a copy
+    public function update(array $newLabel, array $newPlaceholder, array $newDescription, array $newConstraints, bool $shownInBrief) {
+        Assertion::allNotNull($newConstraints);
+        $this->label = array_filter($newLabel, 'trim');
+        $this->placeholder = $newPlaceholder;
+        $this->description = $newDescription;
+        $this->constraints = $newConstraints;
+        $this->shownInBrief = $shownInBrief;
+    }
+
+    public function updateOverrides(array $overrides) {
+        $this->overrides = [
+            'label' => $this->removeValuesOverridingToTheSameThing($overrides['label'] ?? [], $this->label),
+            'description' => $this->removeValuesOverridingToTheSameThing($overrides['description'] ?? [], $this->description),
+            'placeholder' => $this->removeValuesOverridingToTheSameThing($overrides['placeholder'] ?? [], $this->placeholder),
+            'constraints' => $this->removeValuesOverridingToTheSameThing($overrides['constraints'] ?? [], $this->constraints),
+            'shownInBrief' => isset($overrides['shownInBrief']) && is_bool($overrides['shownInBrief']) ? $overrides['shownInBrief'] : null,
+        ];
+    }
+
+    private function removeValuesOverridingToTheSameThing(array $overrides, array $actualValues): array {
+        $filtered = $overrides;
+        foreach ($actualValues as $key => $actualValue) {
+            if (array_key_exists($key, $overrides) && $overrides[$key] == $actualValue) {
                 unset($filtered[$key]);
             }
         }
         return $filtered;
     }
 
-    public function update(
-        array $newLabel,
-        array $newPlaceholder,
-        array $newDescription,
-        array $newConstraints,
-        bool $shownInBrief
-    ) {
-        Assertion::allNotNull($newConstraints);
-        if ($this->isBase()) {
-            $this->label = array_filter($newLabel, 'trim');
-            $this->placeholder = $newPlaceholder;
-            $this->description = $newDescription;
-            $this->constraints = $newConstraints;
-            $this->shownInBrief = $shownInBrief;
-        } else {
-            $this->label = $this->removeCopiedFromBase($newLabel, $this->baseMetadata->getLabel());
-            $this->placeholder = $this->removeCopiedFromBase($newPlaceholder, $this->baseMetadata->getPlaceholder());
-            $this->description = $this->removeCopiedFromBase($newDescription, $this->baseMetadata->getDescription());
-            $this->constraints = $this->getBaseConstraintsPatch($newConstraints, $this->baseMetadata->getConstraints());
-            $this->shownInBrief = ($shownInBrief == $this->baseMetadata->shownInBrief) ? null : $shownInBrief;
-        }
-    }
-
-    private function getBaseConstraintsPatch(array $constraints, array $baseConstraints): array {
-        $patch = [];
-        foreach ($constraints as $name => &$value) {  // mind that $value is a reference
-            $valueIsInherited = array_key_exists($name, $baseConstraints) && $baseConstraints[$name] == $value;
-            if (!$valueIsInherited) {
-                $patch[$name] = $value;
+    public function getOverrides(): array {
+        $overrides = $this->overrides;
+        if (isset($overrides['shownInBrief'])) {
+            if ($this->shownInBrief === $overrides['shownInBrief'] || !is_bool($overrides['shownInBrief'])) {
+                unset($overrides['shownInBrief']);
             }
         }
-        $removedKeys = array_diff(array_keys($baseConstraints), array_keys($constraints));
-        if (!empty($removedKeys)) {
-            $patch[self::REMOVED_CONSTRAINTS_KEY] = $removedKeys;
-        }
-        return $patch;
+        return $overrides;
     }
 
-    public static function compareOrdinalNumbers(Metadata $a, Metadata $b): int {
-        return $a->getOrdinalNumber() - $b->getOrdinalNumber();
+    public function setOverrides($overrides) {
+        $this->overrides = $overrides;
     }
 }

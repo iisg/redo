@@ -35,9 +35,6 @@ export class FakeResourceDisplay {
       result = this.metadataList;
     } else if (this.allMetadata !== undefined) {
       const extraMetadata = this.allMetadata.filter(metadata => inArray(metadata.id + '', unknownMetadataIds));
-      for (const metadata of extraMetadata) {
-        metadata.baseId = metadata.id;
-      }
       result = this.addNecessaryFakeMetadata(this.metadataList.concat(extraMetadata));
     } else {
       if (!this.pendingRequest) {
@@ -52,14 +49,14 @@ export class FakeResourceDisplay {
   }
 
   private getUnknownMetadataIds(knownMetadata: Metadata[]): string[] {
-    const knownMetadataIds = knownMetadata.map(metadata => metadata.baseId + '');
+    const knownMetadataIds = knownMetadata.map(metadata => metadata.id + '');
     return Object.keys(this.values).filter(id => !inArray(id, knownMetadataIds));
   }
 
   private createFakeMetadata(ids: string[]): Metadata[] {
     return ids.map(id => {
       const metadata = new Metadata();
-      metadata.baseId = id as any;
+      metadata.id = id as any;
       metadata.label = {dummyLanguage: this.getFakeLabel(id)};
       return metadata;
     });
@@ -78,7 +75,7 @@ export class FakeResourceDisplay {
 
   @computedFrom('fakeMetadataList')
   get filteredMetadataList(): Metadata[] {
-    return this.fakeMetadataList.filter(metadata => (metadata.baseId + '') in this.values);
+    return this.fakeMetadataList.filter(metadata => (metadata.id + '') in this.values);
   }
 
   private sanitizeControls(metadataList: Metadata[]): Metadata[] {

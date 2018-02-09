@@ -2,10 +2,8 @@
 namespace Repeka\Application\Command\Initialization;
 
 use Repeka\Application\Command\TransactionalCommand;
-use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Cqrs\CommandBus;
-use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\MetadataImport\Config\ImportConfigFactory;
@@ -52,9 +50,7 @@ class InitializeUserMetadataCommand extends TransactionalCommand {
             $config = $this->configFactory->fromFile($this->mappingConfigPath, $userResourceKind);
             $metadataNamesToCreate = $config->getInvalidMetadataKeys();
             if ($metadataNamesToCreate) {
-                $metadataList = array_map(function (Metadata $m) {
-                    return ['baseId' => $m->getBaseId(), 'shownInBrief' => $m->isShownInBrief()];
-                }, $userResourceKind->getMetadataList());
+                $metadataList = $userResourceKind->getMetadataList();
                 foreach ($metadataNamesToCreate as $metadataNameToCreate) {
                     $label = [];
                     foreach ($this->languageRepository->getAvailableLanguageCodes() as $code) {
@@ -72,11 +68,10 @@ class InitializeUserMetadataCommand extends TransactionalCommand {
                             'regex' => '',
                         ]
                     ));
-                    $metadataList[] = ['baseId' => $metadata->getId()];
+                    $metadataList[] = $metadata;
                 }
-                $metadataList[] = ['baseId' => SystemMetadata::PARENT];
                 $this->commandBus->handle(new ResourceKindUpdateCommand(
-                    $userResourceKind->getId(),
+                    $userResourceKind,
                     $userResourceKind->getLabel(),
                     $metadataList,
                     $userResourceKind->getDisplayStrategies()

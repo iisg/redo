@@ -1,10 +1,11 @@
 <?php
 namespace Repeka\Tests\Domain\Entity;
 
-use Repeka\Domain\Entity\EntityHelper;
+use Repeka\Application\Entity\UserEntity;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Identifiable;
 
-class EntityHelperTest extends \PHPUnit_Framework_TestCase {
+class EntityUtilsTest extends \PHPUnit_Framework_TestCase {
     /** @var Identifiable[] */
     private $entities;
     private $zero;
@@ -29,24 +30,24 @@ class EntityHelperTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetByIds() {
         $ids = [1, 'z', 0];
-        $result = EntityHelper::getByIds($ids, $this->entities);
+        $result = EntityUtils::getByIds($ids, $this->entities);
         $this->assertEquals([$this->one, $this->zet, $this->zero], $result);
     }
 
     public function testGetByIdsThrowsWhenMoEntityMatchesId() {
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessageRegExp("/nope/");
-        EntityHelper::getByIds(['nope'], $this->entities);
+        EntityUtils::getByIds(['nope'], $this->entities);
     }
 
     public function testGetByIdsPreservesKeys() {
         $ids = [1, 'z', 'key' => 0];
-        $result = EntityHelper::getByIds($ids, $this->entities);
+        $result = EntityUtils::getByIds($ids, $this->entities);
         $this->assertEquals([$this->one, $this->zet, 'key' => $this->zero], $result);
     }
 
     public function testGetLookupMap() {
-        $map = EntityHelper::getLookupMap($this->entities);
+        $map = EntityUtils::getLookupMap($this->entities);
         $this->assertEquals([0, 1, 'a', 2, 'z'], array_keys($map));
         $this->assertEquals($this->zero, $map[0]);
         $this->assertEquals($this->one, $map[1]);
@@ -54,25 +55,31 @@ class EntityHelperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testMapToIds() {
-        $ids = EntityHelper::mapToIds($this->entities);
+        $ids = EntityUtils::mapToIds($this->entities);
         $this->assertEquals([0, 1, 'a', 2, 'z'], $ids);
     }
 
     public function testFilterByIds() {
         $ids = [1, 'z', 0];
-        $result = EntityHelper::filterByIds($ids, $this->entities);
+        $result = EntityUtils::filterByIds($ids, $this->entities);
         $this->assertEquals([$this->one, $this->zet, $this->zero], $result);
     }
 
     public function testFilterByIdsCarriesOnWhenNoEntityMatchesId() {
         $ids = [1, 'z', 0, 'nope'];
-        $result = EntityHelper::filterByIds($ids, $this->entities);
+        $result = EntityUtils::filterByIds($ids, $this->entities);
         $this->assertEquals([$this->one, $this->zet, $this->zero], $result);
     }
 
     public function testFilterByIdsPreservesKeys() {
         $ids = ['key' => 1, 'nope'];
-        $result = EntityHelper::filterByIds($ids, $this->entities);
+        $result = EntityUtils::filterByIds($ids, $this->entities);
         $this->assertEquals(['key' => $this->one], $result);
+    }
+
+    public function testForceSetId() {
+        $sampleEntity = new UserEntity();
+        EntityUtils::forceSetId($sampleEntity, 123);
+        $this->assertEquals(123, $sampleEntity->getId());
     }
 }

@@ -2,6 +2,7 @@
 namespace Repeka\Domain\UseCase\User;
 
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\UserRole;
 use Repeka\Domain\Validation\CommandAttributesValidator;
@@ -34,11 +35,8 @@ class UserUpdateRolesCommandValidator extends CommandAttributesValidator {
             $currentSystemRoles = array_filter($command->getUser()->getUserRoles(), function (UserRole $userRole) {
                 return $userRole->isSystemRole();
             });
-            $mapToRoleId = function (UserRole $userRole) {
-                return $userRole->getId();
-            };
-            $currentSystemRoleIds = array_map($mapToRoleId, $currentSystemRoles);
-            $newRoleIds = array_map($mapToRoleId, $command->getRoles());
+            $currentSystemRoleIds = EntityUtils::mapToIds($currentSystemRoles);
+            $newRoleIds = EntityUtils::mapToIds($command->getRoles());
             return count(array_diff($currentSystemRoleIds, $newRoleIds)) === 0;
         };
     }

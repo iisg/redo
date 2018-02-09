@@ -2,39 +2,30 @@
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Factory\ResourceKindFactory;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandHandler;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceKindCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
-    /** @var ResourceKindCreateCommand */
-    private $command;
+    use StubsTrait;
+
     /** @var PHPUnit_Framework_MockObject_MockObject|ResourceKindRepository */
     private $resourceKindRespository;
     /** @var ResourceKindCreateCommandHandler */
     private $handler;
 
-    /** @var PHPUnit_Framework_MockObject_MockObject|ResourceKindFactory */
-    private $resourceKindFactory;
-
     protected function setUp() {
-        $this->command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            ['baseId' => 1, 'name' => 'A', 'label' => ['PL' => 'Label A'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-            ['baseId' => 1, 'name' => 'B', 'label' => ['PL' => 'Label B'], 'description' => [], 'placeholder' => [], 'control' => 'text'],
-        ], 'books');
         $this->resourceKindRespository = $this->createMock(ResourceKindRepository::class);
-        $this->resourceKindFactory = $this->createMock(ResourceKindFactory::class);
-        $this->handler = new ResourceKindCreateCommandHandler($this->resourceKindFactory, $this->resourceKindRespository);
+        $this->handler = new ResourceKindCreateCommandHandler($this->resourceKindRespository);
     }
 
     public function testCreatingResourceKind() {
-        $resourceKind = new ResourceKind([], 'books');
-        $this->resourceKindFactory->expects($this->once())->method('create')->willReturn($resourceKind);
+        $metadataList = [$this->createMetadataMock()];
+        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], $metadataList);
         $this->resourceKindRespository->expects($this->once())->method('save')->willReturnArgument(0);
-        $created = $this->handler->handle($this->command);
-        $this->assertSame($resourceKind, $created);
-        $this->assertSame('books', $created->getResourceClass());
+        $created = $this->handler->handle($command);
+        $this->assertEquals(['PL' => 'Labelka'], $created->getLabel());
+        $this->assertEquals($metadataList, $created->getMetadataList());
     }
 }

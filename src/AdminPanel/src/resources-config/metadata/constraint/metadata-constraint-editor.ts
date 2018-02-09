@@ -4,17 +4,17 @@ import {ValueWrapper} from "common/utils/value-wrapper";
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "../metadata";
 import * as changeCase from "change-case";
-import {twoWay, oneTime} from "common/components/binding-mode";
+import {oneTime, twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class MetadataConstraintEditor implements ComponentAttached, ComponentDetached {
   @bindable(oneTime) name: string;
   @bindable(twoWay) metadata: Metadata;
-  @bindable(oneTime) baseMetadata: Metadata;
+  @bindable(oneTime) originalMetadata: Metadata;
   @bindable(oneTime) resourceClass: string;
 
   readonly metadataWrapper: ValueWrapper<Metadata> = new ValueWrapper<Metadata>();
-  readonly baseMetadataWrapper: ValueWrapper<Metadata> = new ValueWrapper<Metadata>();
+  readonly originalMetadataWrapper: ValueWrapper<Metadata> = new ValueWrapper<Metadata>();
 
   composeModel = {};
 
@@ -23,11 +23,11 @@ export class MetadataConstraintEditor implements ComponentAttached, ComponentDet
 
   attached(): void {
     this.metadataWrapper.onChange(this.bindingEngine, () => this.wrappedValueChanged());
-    this.baseMetadataWrapper.onChange(this.bindingEngine, () => this.wrappedBaseValueChanged());
+    this.originalMetadataWrapper.onChange(this.bindingEngine, () => this.wrappedOriginalValueChanged());
 
     this.composeModel = {
       metadataWrapper: this.metadataWrapper,
-      baseMetadataWrapper: this.baseMetadataWrapper,
+      originalMetadataWrapper: this.originalMetadataWrapper,
       metadataName: this.name,
       resourceClass: this.resourceClass
     };
@@ -35,7 +35,7 @@ export class MetadataConstraintEditor implements ComponentAttached, ComponentDet
 
   detached(): void {
     this.metadataWrapper.cancelChangeSubscriptions();
-    this.baseMetadataWrapper.cancelChangeSubscriptions();
+    this.originalMetadataWrapper.cancelChangeSubscriptions();
   }
 
   metadataChanged() {
@@ -46,12 +46,12 @@ export class MetadataConstraintEditor implements ComponentAttached, ComponentDet
     this.metadata = this.metadataWrapper.value;
   }
 
-  baseMetadataChanged() {
-    this.baseMetadataWrapper.value = this.baseMetadata;
+  originalMetadataChanged() {
+    this.originalMetadataWrapper.value = this.originalMetadata;
   }
 
-  wrappedBaseValueChanged() {
-    this.baseMetadata = this.baseMetadataWrapper.value;
+  wrappedOriginalValueChanged() {
+    this.originalMetadata = this.originalMetadataWrapper.value;
   }
 
   @computedFrom('name')

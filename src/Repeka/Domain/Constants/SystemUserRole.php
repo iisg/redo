@@ -2,7 +2,7 @@
 namespace Repeka\Domain\Constants;
 
 use MyCLabs\Enum\Enum;
-use Repeka\Application\Entity\EntityUtils;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\UserRole;
 
 /**
@@ -22,7 +22,7 @@ class SystemUserRole extends Enum {
     /** @return SystemUserRole[] */
     public function getImpliedRoles(): array {
         return [
-            self::ADMIN => [self::OPERATOR()]
-        ][$this->getValue()] ?? [];
+                self::ADMIN => [self::OPERATOR()],
+            ][$this->getValue()] ?? [];
     }
 }

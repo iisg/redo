@@ -4,9 +4,9 @@ import {getMergedBriefMetadata} from "./metadata-utils";
 
 describe('metadata-utils', () => {
   describe('getMergedBriefMetadata', () => {
-    function metadataMock(baseId: number, shownInBrief: boolean): Metadata {
+    function metadataMock(id: number, shownInBrief: boolean): Metadata {
       const metadata = new Metadata();
-      metadata.baseId = baseId;
+      metadata.id = id;
       metadata.shownInBrief = shownInBrief;
       return metadata;
     }
