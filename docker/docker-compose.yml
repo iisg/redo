@@ -16,29 +16,14 @@ services:
     links:
       - repeka-elasticsearch:elasticsearch
       - repeka-postgres:postgres
-      - repeka-metrics:metrics
 
   repeka-elasticsearch:
     container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch
     image: elasticsearch:2.4.2
     command: -Des.node.name="repeka-elasticsearch"
-    volumes:
-      - ${VOLUME_ELASTICSEARCH}:/usr/share/elasticsearch/data:z
 
   repeka-postgres:
     container_name: ${COMPOSE_PROJECT_NAME}-postgres
     image: postgres:10.0
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-    volumes:
-      - ${VOLUME_POSTGRES}:/var/lib/postgresql/data:z
-
-  repeka-metrics:
-    container_name: ${COMPOSE_PROJECT_NAME}-metrics
-    build: ./repeka-metrics
-    volumes:
-      - ${VOLUME_METRICS}/data/whisper:/opt/graphite/storage/whisper:z
-      - ${VOLUME_METRICS}/data/elasticsearch:/var/lib/elasticsearch:z
-      - ${VOLUME_METRICS}/data/grafana:/opt/grafana/data:z
-      - ${VOLUME_METRICS}/log/graphite:/opt/graphite/storage/log:z
-      - ${VOLUME_METRICS}/log/elasticsearch:/var/log/elasticsearch:z

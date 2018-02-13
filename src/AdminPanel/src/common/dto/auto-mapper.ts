@@ -2,7 +2,7 @@ import {inject, Lazy} from "aurelia-dependency-injection";
 import {Mapper} from "./mappers";
 import {TypeRegistry} from "./registry";
 import {getDtoProperties} from "./class-metadata-utils";
-import {MapperClass, EntityClass} from "./contracts";
+import {EntityClass, MapperClass} from "./contracts";
 
 /**
  * Copies object using mapping instructions provided by @map and other property decorators. Non-decorated properties are omitted.
