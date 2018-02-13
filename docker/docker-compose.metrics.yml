@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  repeka:
+    links:
+      - repeka-metrics:metrics
+
+  repeka-metrics:
+    container_name: ${COMPOSE_PROJECT_NAME}-metrics
+    build: ./repeka-metrics
+    volumes:
+      - ${VOLUME_METRICS}/data/whisper:/opt/graphite/storage/whisper:z
+      - ${VOLUME_METRICS}/data/elasticsearch:/var/lib/elasticsearch:z
+      - ${VOLUME_METRICS}/data/grafana:/opt/grafana/data:z
+      - ${VOLUME_METRICS}/log/graphite:/opt/graphite/storage/log:z
+      - ${VOLUME_METRICS}/log/elasticsearch:/var/log/elasticsearch:z

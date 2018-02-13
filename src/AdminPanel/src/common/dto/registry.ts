@@ -25,7 +25,7 @@ export class TypeRegistry {
   }
 
   register<T>(type: string, mapperClass: MapperClass<T>, factory?: FactoryFunction<T>): void {
-    if (type in this.mappers) {
+    if (this.mappers[type]) {
       throw new Error(`'${type}' already has mapper registered: '${this.mappers[type].name}'`);
     }
     this.mappers[type] = mapperClass;

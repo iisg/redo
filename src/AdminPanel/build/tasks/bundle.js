@@ -3,35 +3,36 @@
 const gulp = require('gulp');
 const bundler = require('aurelia-bundler');
 const bundles = require('../bundles.js');
-const fs = require('fs');
 const path = require('path');
 const runSequence = require('run-sequence');
 
 const paths = require('../paths');
 
-const config = {
-  force: true,
-  baseURL: paths.webRoot,
-  configPath: path.join(paths.webAdminRoot, 'jspm.config.js'),
-  bundles: bundles.bundles
+const bundlingConfig = function (whatToBundle) {
+  return {
+    force: true,
+    baseURL: paths.webRoot,
+    configPath: path.join(paths.webAdminRoot, 'jspm.config.js'),
+    bundles: bundles[whatToBundle]
+  };
 };
 
-let calledBuild = false;
+gulp.task('bundle', function (cb) {
+  return runSequence('bundle-vendors', 'bundle-views', 'bundle-locales', cb);
+});
 
-// does not have build as dependency in order to allow bundling of already built sources
-gulp.task('bundle', function () {
-  try {
-    const locales = fs.readdirSync(paths.locales)
-      .filter(file => fs.lstatSync(path.join(paths.locales, file)).isDirectory());
-    //noinspection NodeModulesDependencies,ES6ModulesDependencies because JSON is a global builtin
-    fs.writeFileSync(path.join(paths.webAdminRoot, 'locales.json'), JSON.stringify(locales));
-    return bundler.bundle(config);
-  } catch (e) {
-    if (calledBuild) {
-      throw e;
-    } else {
-      calledBuild = true;
-      return runSequence('build', 'bundle');
-    }
-  }
+gulp.task('bundle-app', function () {
+  return bundler.bundle(bundlingConfig('app'));
+});
+
+gulp.task('bundle-vendors', function () {
+  return bundler.bundle(bundlingConfig('vendors'));
+});
+
+gulp.task('bundle-views', ['build-html'], function () {
+  return bundler.bundle(bundlingConfig('views'));
+});
+
+gulp.task('bundle-locales', ['build-locales'], function () {
+  return bundler.bundle(bundlingConfig('resources'));
 });

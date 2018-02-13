@@ -63,8 +63,6 @@ DirectoryIndex app.php
     RewriteRule ^admin/(dist|res)/ - [L]
     # Serve other admin requests as static content if they have a file extension
     RewriteRule ^admin/.*\.[a-z0-9\-_]{2,}$ - [L]
-    # Rewrite other admin queries to SPA
-    RewriteRule ^admin[$/] %{ENV:BASE}/admin/index.html [L]
 
     # Serve static admin libraries, never rewrite to SPA
     RewriteRule ^jspm_packages/ - [L]

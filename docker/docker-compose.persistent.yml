@@ -1,0 +1,6 @@
+version: '2'
+
+services:
+  repeka-postgres:
+    volumes:
+      - ${VOLUME_POSTGRES}:/var/lib/postgresql/data:z

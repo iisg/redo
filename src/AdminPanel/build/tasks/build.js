@@ -41,14 +41,6 @@ gulp.task('build-scripts', () => {
     .pipe(gulp.dest(paths.output));
 });
 
-gulp.task('build-index', () => {
-  return gulp.src('index.html')
-    .pipe(plumber({errorHandler: notify.onError('HTML: <%= error.message %>')}))
-    .pipe(changed(paths.output, {extension: '.html'}))
-    .pipe(htmlmin(htmlMinifierOptions))
-    .pipe(gulp.dest(paths.webAdminRoot));
-});
-
 gulp.task('build-html', () => {
   return gulp.src(paths.html)
     .pipe(plumber({errorHandler: notify.onError('HTML: <%= error.message %>')}))
@@ -96,8 +88,10 @@ gulp.task('symlink-dist', () => {
 gulp.task('build', (callback) => {
   return runSequence(
     'clean',
-    ['build-scripts', 'build-index', 'build-html', 'build-css', 'build-locales', 'symlink-jspm-packages'],
-    ['symlink-dist', 'copy-jspm-config'],
+    ['build-scripts', 'build-css', 'symlink-jspm-packages'],
+    'copy-jspm-config',
+    'symlink-dist',
+    'bundle',
     callback
   );
 });

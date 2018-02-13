@@ -1,6 +1,5 @@
 import {BootstrapValidationRenderer} from "./bootstrap-validation-renderer";
 import {RenderInstruction, ResultInstruction, ValidateResult} from "aurelia-validation";
-import "jquery";
 
 describe(BootstrapValidationRenderer.name, () => {
   let renderer: BootstrapValidationRenderer;

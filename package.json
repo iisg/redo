@@ -34,7 +34,7 @@
     "dist:admin": "cd src/AdminPanel && npm run dist -s",
     "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev --prefer-dist",
     "init": "npm run -s clean:backend && php bin/console repeka:initialize --skip-backup && php bin/console cache:warmup",
-    "install": "npm prune && node scripts/repeka.js && node scripts/version-public.js && composer-runner -- install --prefer-dist && cd src/AdminPanel && npm install",
+    "install-deps": "npm prune && node scripts/repeka.js && node scripts/version-public.js && composer-runner -- install --prefer-dist && cd src/AdminPanel && npm install && npm run install-deps",
     "lint": "rm -fr var/reports/lints/*.xml && (npm run -s lint:backend && npm run -s lint:admin)",
     "lint:admin": "cd src/AdminPanel && npm run -s lint",
     "lint:backend": "rm -fr var/reports/phpmd/*.xml && (npm run -s lint:backend:phpmd && npm run -s lint:backend:phpcs)",
@@ -50,6 +50,6 @@
     "test:backend:integration": "sh -c \"vendor/bin/phpunit -c scripts --testsuite integration --fail-on-warning\"",
     "test:backend:junit": "sh -c \"vendor/bin/phpunit -c scripts --testsuite unit --fail-on-warning --testdox --log-junit var/reports/tests/phpunit.xml --coverage-clover var/reports/coverage/phpunit.xml && vendor/bin/phpunit -c scripts --testsuite integration --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration.xml\"",
     "test:junit": "rm -f var/reports/tests/*.xml var/reports/coverage/*.xml && npm run -s test:backend:junit && cd src/AdminPanel && npm run -s test:junit",
-    "watch": "npm run -s clean && cd src/AdminPanel && npm run -s watch"
+    "watch": "cd src/AdminPanel && npm run -s watch"
   }
 }

@@ -1,24 +1,21 @@
-module.exports = {
-  "bundles": {
+const dev = process.env.REPEKA_ENV !== 'prod';
+
+const bundles = {
+  app: {
     "admin/bundles/app": {
       "includes": [
         "[**/*.js]",
-        "**/*.html!text",
         "**/*.css!text",
-      ],
-      "excludes": [
-        "[common/dto/**]",
-        "[resources-config/**]",
-        "resources-config/**/*.html!text",
-        "resources-config/**/*.css!text",
       ],
       "options": {
         "inject": true,
-        "minify": true,
+        "minify": !dev,
         "depCache": true,
-        "rev": true
+        "rev": !dev
       }
-    },
+    }
+  },
+  resources: {
     "admin/bundles/res": {
       "includes": [
         "res/**/*!text",
@@ -27,48 +24,44 @@ module.exports = {
         "inject": true,
         "minify": true,
         "depCache": true,
-        "rev": true
+        "rev": !dev
       }
     },
-    "admin/bundles/dto": {
+  },
+  views: {
+    "admin/bundles/views": {
       "includes": [
-        "[common/dto/**/*.js]",
+        "**/*.html!text",
       ],
       "options": {
         "inject": true,
-        "minify": true,
+        "minify": !dev,
         "depCache": true,
-        "rev": true
+        "rev": !dev
       }
-    },
-    "admin/bundles/resources-config": {
-      "includes": [
-        "[resources-config/**/*.js]",
-        "resources-config/**/*.html!text",
-        "resources-config/**/*.css!text"
-      ],
-      "options": {
-        "inject": true,
-        "minify": true,
-        "depCache": true,
-        "rev": true
-      }
-    },
+    }
+  },
+  vendors: {
     "admin/bundles/vendor-select2": {
       "includes": [
         "select2",
       ],
+      "excludes": [
+        "jquery"
+      ],
       "options": {
         "inject": true,
-        "minify": true,
-        "depCache": false,
-        "rev": true
+        "minify": !dev,
+        "depCache": true,
+        "rev": !dev
       }
-    }, "admin/bundles/vendor": {
+    },
+    "admin/bundles/vendor": {
       "includes": [
         "arrive",
         "aurelia-configuration",
         "aurelia-cookie",
+        "aurelia-dialog",
         "aurelia-framework",
         "aurelia-bootstrapper",
         "aurelia-http-client",
@@ -87,8 +80,11 @@ module.exports = {
         "bootstrap-material-design",
         "bootstrap-material-design/dist/css/ripples.min.css!text",
         "change-case",
-        "jquery",
         "handlebars",
+        "jquery",
+        "moment",
+        "nprogress",
+        "nprogress/nprogress.css!text",
         // "martingust/aurelia-repeat-strategies",  // causes "Unable to dynamically transpile ES module" error
         "oribella-aurelia-sortable",
         "sticky-table-headers",
@@ -98,9 +94,9 @@ module.exports = {
       ],
       "options": {
         "inject": true,
-        "minify": true,
+        "minify": !dev,
         "depCache": false,
-        "rev": true
+        "rev": !dev
       }
     },
     "admin/bundles/cytoscape": {
@@ -113,10 +109,12 @@ module.exports = {
       ],
       "options": {
         "inject": true,
-        "minify": true,
+        "minify": !dev,
         "depCache": false,
-        "rev": true
+        "rev": !dev
       }
     }
   }
 };
+
+module.exports = bundles;
