@@ -1,39 +1,31 @@
 <template class="nested-navigation-menu">
-    <ul class="nav nav-pills nav-stacked">
-
+    <ul class="nav nav-stacked">
         <li repeat.for="item of items"
-            class="${item.active ? 'current' : ''}"
+            class="navigation-menu-item ${item.active ? 'current' : ''} ${item.expanded ? 'expanded' : ''}"
             require-roles.bind="item.requiredRoles">
-
             <a if.bind="!item.items"
                 route-href="route.bind: item.routeName; params.bind: item.params"
-                class="btn btn-default btn-block">
-                <fa name.bind="item.icon"
-                    options="fw"></fa>
-                ${item.labelKey | t}
+                class="btn btn-default">
+                <fa name.bind="item.icon" options="fw"></fa><span>${item.labelKey | t}</span>
             </a>
-
             <template else>
-                <a class="btn btn-default btn-block"
+                <a class="btn btn-default"
                     click.delegate="item.toggle()">
                     <fa name="angle-right"
-                        options.bind="item.expanded ? 'fw rotate-90' : 'fw'"></fa>
-                    ${item.labelKey | t}
+                        options.bind="item.expanded ? 'fw rotate-90' : 'fw'"></fa><span>${item.labelKey | t}</span>
                 </a>
                 <ul if.bind="item.expanded"
-                    class="nav-children anim-height-inout-150 au-animate">
+                    class="navigation-menu-subitems anim-height-inout-150 au-animate">
                     <li repeat.for="child of item.items"
-                        class="${child.active ? 'current' : ''}"
+                        class="navigation-menu-item ${child.active ? 'current' : ''}"
                         require-roles.bind="item.requiredRoles">
                         <a route-href="route.bind: child.routeName; params.bind: child.params"
-                            class="btn btn-default btn-block">
-                            ${child.labelKey | t}
+                            class="btn btn-default">
+                            <fa name="circle-o" options="fw"></fa><span>${child.labelKey | t}</span>
                         </a>
                     </li>
                 </ul>
             </template>
-
         </li>
-
     </ul>
 </template>

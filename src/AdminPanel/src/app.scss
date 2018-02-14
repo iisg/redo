@@ -1,9 +1,39 @@
 @import "common/styles";
 @import "../jspm_packages/npm/compass-mixins@0.12.10/lib/animation/animate/fading";
 
+$sidebar-top-bar-z-index: 3;
+$admin-content-top-bar-z-index: 2;
+$sidebar-content-z-index: 1;
+$admin-content-container-fluid-z-index: 0;
+
+sidebar {
+  .navbar {
+    z-index: $sidebar-top-bar-z-index;
+  }
+  .with-overflow-scrollbar-on-the-left > * > * {
+    z-index: $sidebar-content-z-index;
+    position: relative;
+  }
+}
+
 .admin-content {
-  position: relative;
-  margin-left: 250px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  .navbar {
+    z-index: $admin-content-top-bar-z-index;
+    margin-bottom: 0;
+  }
+  & > .container-fluid {
+    z-index: $admin-content-container-fluid-z-index;
+    flex: 1;
+    margin-left: 0;
+    margin-right: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    overflow: auto;
+  }
 }
 
 a {
@@ -160,42 +190,24 @@ input, textarea, select {
 }
 
 .diagram-cover {
-  z-index: 999 !important; // fix UI elements like menus displaying over graphs, but not interacting with mouse
+  z-index: 999 !important; // Fix UI elements like menus displaying over graphs, but not interacting with mouse.
 }
 
 ux-dialog-overlay {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-// z-depth helpers from MaterializeCSS
-// see https://github.com/FezVrasta/bootstrap-material-design/issues/1109
+// Z-depth helpers from MaterializeCSS.
+// See: https://github.com/FezVrasta/bootstrap-material-design/issues/1109.
 
-.z-depth-0 {
-  box-shadow: none !important;
+@for $i from 0 through 5 {
+  .z-depth-#{$i} {
+    @include z-depth($i);
+  }
 }
 
-.z-depth-1 {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-}
-
-.z-depth-2 {
-  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-}
-
-.z-depth-3 {
-  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.3);
-}
-
-.z-depth-4 {
-  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
-}
-
-.z-depth-5 {
-  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
-}
-
-// animations
-// see: http://blog.aurelia.io/2015/07/17/animating-apps-with-aurelia-part-1/
+// Animations.
+// See: http://blog.aurelia.io/2015/07/17/animating-apps-with-aurelia-part-1.
 .au-stagger {
   -webkit-animation-delay: 30ms;
   animation-delay: 30ms;
