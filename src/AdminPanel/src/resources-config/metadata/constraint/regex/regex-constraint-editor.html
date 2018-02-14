@@ -5,7 +5,7 @@
         <input type="text"
             class="form-control"
             value.bind="regex">
-        <restore-from-original if.bind="canInherit && wasModified"
+        <restore-from-original if.bind="hasBase && wasModified"
             click.delegate="resetToOriginalValues()"></restore-from-original>
     </div>
 </template>

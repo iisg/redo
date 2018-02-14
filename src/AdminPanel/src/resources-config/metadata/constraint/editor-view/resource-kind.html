@@ -1,6 +1,7 @@
 <template>
-    <require from="common/components/resource-kind/resource-kind-constraint-editor/resource-kind-constraint-editor"></require>
+    <require from="../resource-kind/resource-kind-constraint-editor"></require>
 
     <resource-kind-constraint-editor metadata.bind="metadata"
-        ids-from-original-metadata.bind="originalMetadata.constraints.resourceKind"></resource-kind-constraint-editor>
+        ids-from-original-metadata.bind="originalMetadata.constraints.resourceKind"
+        has-base.bind="!!originalMetadata"></resource-kind-constraint-editor>
 </template>

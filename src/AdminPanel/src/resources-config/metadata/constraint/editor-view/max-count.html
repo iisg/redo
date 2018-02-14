@@ -2,5 +2,6 @@
     <require from="../max-count/max-count-constraint-editor"></require>
 
     <max-count-constraint-editor max-count.bind="metadata.constraints.maxCount"
-        original-max-count.bind="originalMetadata.constraints.maxCount"></max-count-constraint-editor>
+        original-max-count.bind="originalMetadata.constraints.maxCount"
+        has-base.bind="!!originalMetadata"></max-count-constraint-editor>
 </template>

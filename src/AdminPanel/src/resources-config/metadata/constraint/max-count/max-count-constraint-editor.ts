@@ -6,6 +6,7 @@ import {generateId} from "common/utils/string-utils";
 export class MaxCountConstraintEditor {
   @bindable(twoWay) maxCount: number;
   @bindable originalMaxCount: number;
+  @bindable hasBase: boolean;
 
   private modelIsChanging: boolean = false;
   @observable(changeHandler('updateConstraint')) unlimited: boolean;
@@ -20,9 +21,13 @@ export class MaxCountConstraintEditor {
     this.maxCount = this.unlimited ? 0 : this.count;
   }
 
+  attached() {
+    this.maxCountChanged();
+  }
+
   maxCountChanged(): void {
     this.modelIsChanging = true;
-    this.unlimited = this.maxCount == 0;
+    this.unlimited = !this.maxCount;
     if (!this.unlimited || this.count === undefined) {
       this.count = this.maxCount || 1;
     }
@@ -36,10 +41,5 @@ export class MaxCountConstraintEditor {
   @computedFrom('maxCount', 'originalMaxCount')
   get wasModified(): boolean {
     return this.maxCount != this.originalMaxCount;
-  }
-
-  @computedFrom('originalMaxCount')
-  get hasOriginalConstraint(): boolean {
-    return this.originalMaxCount != undefined;
   }
 }

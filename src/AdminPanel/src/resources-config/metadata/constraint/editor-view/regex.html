@@ -2,5 +2,6 @@
     <require from="../regex/regex-constraint-editor"></require>
 
     <regex-constraint-editor regex.bind="metadata.constraints.regex"
-        original-regex.bind="originalMetadata.constraints.regex"></regex-constraint-editor>
+        original-regex.bind="originalMetadata.constraints.regex"
+        has-base.bind="!!originalMetadata"></regex-constraint-editor>
 </template>
