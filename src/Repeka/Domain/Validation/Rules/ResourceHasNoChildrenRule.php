@@ -4,6 +4,8 @@ namespace Repeka\Domain\Validation\Rules;
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Respect\Validation\Rules\AbstractRule;
 
 class ResourceHasNoChildrenRule extends AbstractRule {
@@ -17,7 +19,8 @@ class ResourceHasNoChildrenRule extends AbstractRule {
     public function validate($input): bool {
         Assertion::isInstanceOf($input, ResourceEntity::class);
         /** @var ResourceEntity $input */
-        $children = $this->resourceRepository->findChildren($input->getId());
-        return empty($children);
+        $resourceChildrenQueryBuilder = ResourceListQuery::builder()->filterByParentId($input->getId())->build();
+        $pageResult = $this->resourceRepository->findByQuery($resourceChildrenQueryBuilder);
+        return empty($pageResult->getResults());
     }
 }

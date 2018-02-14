@@ -9,15 +9,29 @@ class ResourceListQuery extends AbstractCommand {
     private $resourceKinds;
     /** @var string[] */
     private $resourceClasses;
-    /**
-     * @var bool
-     */
+    /** @var int */
+    private $parentId;
+    /** @var int */
+    private $page;
+    /** @var int */
+    private $resultsPerPage;
+    /** @var bool */
     private $onlyTopLevel;
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
-    private function __construct(array $resourceClasses, array $resourceKinds, bool $onlyTopLevel) {
+    private function __construct(
+        array $resourceClasses,
+        array $resourceKinds,
+        int $parentId,
+        int $page,
+        int $resultsPerPage,
+        bool $onlyTopLevel
+    ) {
         $this->resourceKinds = $resourceKinds;
         $this->resourceClasses = $resourceClasses;
+        $this->parentId = $parentId;
+        $this->page = $page;
+        $this->resultsPerPage = $resultsPerPage;
         $this->onlyTopLevel = $onlyTopLevel;
     }
 
@@ -25,8 +39,15 @@ class ResourceListQuery extends AbstractCommand {
         return new ResourceListQueryBuilder();
     }
 
-    public static function withParams(array $resourceClasses, array $resourceKinds, bool $onlyTopLevel): ResourceListQuery {
-        return new self($resourceClasses, $resourceKinds, $onlyTopLevel);
+    public static function withParams(
+        array $resourceClasses,
+        array $resourceKinds,
+        int $parentId,
+        int $page,
+        int $resultsPerPage,
+        bool $onlyTopLevel
+    ): ResourceListQuery {
+        return new self($resourceClasses, $resourceKinds, $parentId, $page, $resultsPerPage, $onlyTopLevel);
     }
 
     /** @return string[] */
@@ -37,6 +58,22 @@ class ResourceListQuery extends AbstractCommand {
     /** @return ResourceKind[] */
     public function getResourceKinds(): array {
         return $this->resourceKinds;
+    }
+
+    public function paginate(): bool {
+        return $this->page != 0;
+    }
+
+    public function getParentId(): int {
+        return $this->parentId;
+    }
+
+    public function getPage(): int {
+        return $this->page;
+    }
+
+    public function getResultsPerPage(): int {
+        return $this->resultsPerPage;
     }
 
     public function onlyTopLevel(): bool {

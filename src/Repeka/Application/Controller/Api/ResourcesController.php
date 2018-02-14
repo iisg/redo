@@ -4,6 +4,7 @@ namespace Repeka\Application\Controller\Api;
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
@@ -32,6 +33,7 @@ class ResourcesController extends ApiController {
     public function getListAction(Request $request) {
         $resourceClasses = array_filter(explode(',', $request->query->get('resourceClasses', '')));
         $resourceKindIds = array_filter(explode(',', $request->query->get('resourceKinds', '')));
+        $parentId = $request->query->get('parentId', 0);
         $topLevel = $request->query->get('topLevel', false);
         $resourceKinds = array_map(function ($resourceKindId) {
             return $this->handleCommand(new ResourceKindQuery($resourceKindId));
@@ -39,9 +41,19 @@ class ResourcesController extends ApiController {
         $resourceListQueryBuilder = ResourceListQuery::builder()
             ->filterByResourceClasses($resourceClasses)
             ->filterByResourceKinds($resourceKinds);
+        $page = $request->query->get('page', 1);
+        if ($request->query->has('page')) {
+            $resultsPerPage = $request->query->get('resultsPerPage', 10);
+            $resourceListQueryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
+        }
+        $resourceListQueryBuilder->filterByParentId($parentId);
         $resourceListQuery = $topLevel ? $resourceListQueryBuilder->onlyTopLevel()->build() : $resourceListQueryBuilder->build();
+        /** @var PageResult $resources */
         $resources = $this->handleCommand($resourceListQuery);
-        return $this->createJsonResponse($resources);
+        $response = $this->createJsonResponse($resources->getResults());
+        $response->headers->set('pk_total', $resources->getTotalCount());
+        $response->headers->set('pk_page', $page);
+        return $response;
     }
 
     /**
@@ -50,15 +62,6 @@ class ResourcesController extends ApiController {
      */
     public function getAction(int $id) {
         $resource = $this->handleCommand(new ResourceQuery($id));
-        return $this->createJsonResponse($resource);
-    }
-
-    /**
-     * @Route("/{id}/resources")
-     * @Method("GET")
-     */
-    public function getChildrenAction(int $id) {
-        $resource = $this->handleCommand(new ResourceChildrenQuery($id));
         return $this->createJsonResponse($resource);
     }
 

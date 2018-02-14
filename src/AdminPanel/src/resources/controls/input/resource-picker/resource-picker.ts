@@ -4,6 +4,7 @@ import {observable} from "aurelia-binding";
 import {ResourceRepository} from "resources/resource-repository";
 import {Resource} from "resources/resource";
 import {twoWay} from "common/components/binding-mode";
+import {PageResult} from "../../../page-result";
 
 @autoinject
 export class ResourcePicker implements ComponentAttached {
@@ -15,7 +16,7 @@ export class ResourcePicker implements ComponentAttached {
   @observable value: Resource;
 
   initialized: boolean = false;
-  resources: Resource[];
+  resources: PageResult<Resource>;
   invalidValue: boolean = false;
 
   constructor(private resourceRepository: ResourceRepository) {
@@ -68,7 +69,8 @@ export class ResourcePicker implements ComponentAttached {
     if (this.resources == undefined) {
       return undefined;
     }
-    for (let resource of this.resources) {
+    for (let i = 0; i < this.resources.length; i++) {
+      const resource = this.resources[i];
       if (resource.id == id) {
         return resource;
       }

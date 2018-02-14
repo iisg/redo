@@ -4,6 +4,7 @@ namespace Repeka\Application\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -11,9 +12,14 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\PageResult;
+use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 
-/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ResourceDoctrineRepository extends EntityRepository implements ResourceRepository {
     public function __construct(EntityManagerInterface $em, ClassMetadata $class) {
         parent::__construct($em, $class);
@@ -33,18 +39,7 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         return $resource;
     }
 
-    /** @return ResourceEntity[] */
-    public function findChildren(int $parentId): array {
-        return $this->createQueryBuilder('r')
-            ->where("CONTAINS(JSON_GET_FIELD(r.contents, :parentMetadataId), :searchValue) = TRUE")
-            ->setParameter('parentMetadataId', SystemMetadata::PARENT)
-            ->setParameter('searchValue', json_encode([['value' => $parentId]]))
-            ->getQuery()
-            ->getResult();
-    }
-
-    /** @return ResourceEntity[] */
-    public function findByQuery(ResourceListQuery $query): array {
+    public function findByQuery(ResourceListQuery $query): PageResult {
         $qb = $this->createQueryBuilder('r')->join('r.kind', 'rk');
         if ($query->getResourceClasses()) {
             $qb->andWhere($qb->expr()->in('r.resourceClass', $query->getResourceClasses()));
@@ -53,11 +48,23 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             $qb->andWhere($qb->expr()->in('rk', ':resourceKinds'));
             $qb->setParameter('resourceKinds', $query->getResourceKinds());
         }
+        if ($query->getParentId()) {
+            $qb->where("CONTAINS(JSON_GET_FIELD(r.contents, :parentMetadataId), :searchValue) = TRUE");
+            $qb->setParameter('parentMetadataId', SystemMetadata::PARENT);
+            $qb->setParameter('searchValue', json_encode([['value' => $query->getParentId()]]));
+        }
         if ($query->onlyTopLevel()) {
             $parentMetadata = SystemMetadata::PARENT;
             $qb->andWhere("JSON_GET_FIELD(r.contents, '$parentMetadata') = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadata') = FALSE");
         }
-        return $qb->getQuery()->getResult();
+        if ($query->paginate()) {
+            $qb->orderBy('r.id', 'ASC')
+                ->setFirstResult(($query->getPage() - 1) * $query->getResultsPerPage())
+                ->setMaxResults($query->getResultsPerPage());
+        }
+        $paginator = new Paginator($qb);
+        $results = $paginator->getQuery()->getResult();
+        return new PageResult($results, $paginator->count());
     }
 
     public function exists(int $resourceId): bool {

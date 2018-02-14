@@ -19,14 +19,16 @@ class ResourceListQueryValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->validator = new ResourceListQueryValidator($this->resourceClassExistsRule);
     }
 
-    public function testPassWhenNoFilters() {
+    public function testPassWhenPaginationParamsAndNoFilters() {
         $command = ResourceListQuery::builder()->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testPassWhenResourceClassExists() {
         $this->resourceClassExistsRule->method('validate')->with('books')->willReturn(true);
-        $command = ResourceListQuery::builder()->filterByResourceClass('books')->build();
+        $command = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
@@ -36,12 +38,24 @@ class ResourceListQueryValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testValidIfFilterByResourceKind() {
-        $command = ResourceListQuery::builder()->filterByResourceKinds([$this->createMock(ResourceKind::class)])->build();
+        $command = ResourceListQuery::builder()
+            ->filterByResourceKinds([$this->createMock(ResourceKind::class)])
+            ->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testInvalidIfFilterByNotResourceKind() {
         $command = ResourceListQuery::builder()->filterByResourceKinds([$this->createMock(ResourceEntity::class)])->build();
+        $this->assertFalse($this->validator->isValid($command));
+    }
+
+    public function testPassWhenPageAndResultsPerPageArePositiveValue() {
+        $command = ResourceListQuery::builder()->setPage(1)->setResultsPerPage(5)->build();
+        $this->assertTrue($this->validator->isValid($command));
+    }
+
+    public function testInvalidIfPageIsPostiveAndResultsPerPageIsNegativeValues() {
+        $command = ResourceListQuery::builder()->setPage(-1)->setResultsPerPage(-1)->build();
         $this->assertFalse($this->validator->isValid($command));
     }
 }

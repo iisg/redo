@@ -23,6 +23,8 @@ class ResourceListQueryValidator extends CommandAttributesValidator {
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('resourceClasses', Validator::arrayType()->each($this->resourceClassExistsRule))
-            ->attribute('resourceKinds', Validator::arrayType()->each(Validator::instance(ResourceKind::class)));
+            ->attribute('resourceKinds', Validator::arrayType()->each(Validator::instance(ResourceKind::class)))
+            ->attribute('page', Validator::intVal()->min(0))
+            ->attribute('resultsPerPage', Validator::intVal()->min(1));
     }
 }

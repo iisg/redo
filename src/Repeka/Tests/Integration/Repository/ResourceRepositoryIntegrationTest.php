@@ -11,6 +11,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
+use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
@@ -37,38 +38,71 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindAllByBookResourceClass() {
         $query = ResourceListQuery::builder()->filterByResourceClass('books')->build();
-        $resources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(6, $resources);
-        foreach ($resources as $resource) {
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(6, $paginatedResources->getResults());
+        foreach ($paginatedResources->getResults() as $resource) {
             $this->assertNotEquals(SystemResourceKind::USER, $resource->getKind()->getId());
         }
     }
 
+    public function testFindAllBookResourceClassResourceIfPageAndResultsPerPageNotSet() {
+        $query = ResourceListQuery::builder()->filterByResourceClass('books')->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(6, $paginatedResources->getResults());
+    }
+
+    public function testFindFirstThreeResourcesByBookResourceClass() {
+        $query = ResourceListQuery::builder()->filterByResourceClass('books')->setPage(1)->setResultsPerPage(3)->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(3, $paginatedResources->getResults());
+        $this->assertEquals(6, $paginatedResources->getTotalCount());
+    }
+
+    public function testFindDifferResultsForDifferPages() {
+        $firstPageQuery = ResourceListQuery::builder()->filterByResourceClass('books')->setPage(1)->setResultsPerPage(3)->build();
+        $secondPageQuery = ResourceListQuery::builder()->filterByResourceClass('books')->setPage(2)->setResultsPerPage(3)->build();
+        $firstPaginatedResources = $this->resourceRepository->findByQuery($firstPageQuery);
+        $secondPaginatedResources = $this->resourceRepository->findByQuery($secondPageQuery);
+        $this->assertCount(3, $firstPaginatedResources->getResults());
+        $this->assertCount(3, $secondPaginatedResources->getResults());
+        $firstPageResourceIds = array_map(function ($resource) {
+            return $resource->getId();
+        }, $firstPaginatedResources->getResults());
+        $secondPageResourceIds = array_map(function ($resource) {
+            return $resource->getId();
+        }, $secondPaginatedResources->getResults());
+        $notInSecondPage = array_diff($firstPageResourceIds, $secondPageResourceIds);
+        $this->assertCount(3, $notInSecondPage);
+    }
+
     public function testFindAllByDictionaryResourceClass() {
-        $query = ResourceListQuery::builder()->filterByResourceClass('dictionaries')->build();
-        $resources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(4, $resources);
+        $query = ResourceListQuery::builder()->filterByResourceClass('dictionaries')->setPage(1)->setResultsPerPage(6)->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(4, $paginatedResources->getResults());
     }
 
     public function testFindAllByResourceKind() {
         $userResourceKind = $this->container->get(ResourceKindRepository::class)->findOne(SystemResourceKind::USER);
-        $query = ResourceListQuery::builder()->filterByResourceKind($userResourceKind)->build();
-        $resources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(4, $resources);
+        $query = ResourceListQuery::builder()->filterByResourceKind($userResourceKind)->setPage(1)->setResultsPerPage(6)->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(4, $paginatedResources->getResults());
     }
 
     public function testFindTopLevel() {
-        $topLevelResources = $this->resourceRepository->findByQuery(ResourceListQuery::builder()->onlyTopLevel()->build());
-        foreach ($topLevelResources as $topLevelResource) {
+        $paginatedTopLevelResources = $this->resourceRepository->findByQuery(
+            ResourceListQuery::builder()->setPage(1)->setResultsPerPage(6)->onlyTopLevel()->build()
+        );
+        foreach ($paginatedTopLevelResources->getResults() as $topLevelResource) {
             $this->assertFalse($topLevelResource->hasParent());
         }
     }
 
     public function testFindChildren() {
         $ebooksCategoryId = $this->getEbooksCategoryResourceId();
+        $query = ResourceListQuery::builder()->filterByParentId($ebooksCategoryId)->build();
         $this->assertNotNull($ebooksCategoryId);
-        $ebooksChildren = $this->resourceRepository->findChildren($ebooksCategoryId);
-        $this->assertCount(2, $ebooksChildren);
+        $pageResult = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(2, $pageResult->getResults());
     }
 
     public function testDelete() {
@@ -136,7 +170,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     /** @SuppressWarnings("PHPMD.UnusedLocalVariable") */
     private function getPhpBookResource(string $resourceClass): ResourceEntity {
         $query = ResourceListQuery::builder()->filterByResourceClasses([$resourceClass])->build();
-        foreach ($this->resourceRepository->findByQuery($query) as $resource) {
+        foreach ($this->resourceRepository->findByQuery($query)->getResults() as $resource) {
             $isPhpBook = $resource->getContents()->reduceAllValues(function ($value, $metadataId, $isPhpBook) {
                 return $isPhpBook || $value == 'PHP - to można leczyć!';
             });

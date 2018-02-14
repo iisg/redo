@@ -8,6 +8,7 @@ import {ResourceKindRepository} from "../resources-config/resource-kind/resource
 import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
 import {NavigationInstruction} from "aurelia-router";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
+import {PageResult} from "./page-result";
 
 @autoinject
 export class ResourcesList implements ComponentAttached {
@@ -15,10 +16,12 @@ export class ResourcesList implements ComponentAttached {
   @bindable({defaultBindingMode: bindingMode.twoWay}) hasResources: boolean = undefined;
 
   @bindable resourceClass: string;
+  @observable resources: PageResult<Resource>;
+  page: number = 1;
+  resultsPerPage: number = 10;
   addFormOpened: boolean;
   briefMetadata: Metadata[];
   progressBar: boolean;
-  @observable resources: Resource[];
   urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
@@ -33,7 +36,7 @@ export class ResourcesList implements ComponentAttached {
   private fetchList(resourceClass: string) {
     this.resourceClass = resourceClass;
     if (this.resources) {
-      this.resources = [];
+      this.resources = new PageResult<Resource>();
     }
     this.addFormOpened = false;
     this.briefMetadata = [];
@@ -65,20 +68,27 @@ export class ResourcesList implements ComponentAttached {
 
   fetchResources() {
     this.progressBar = true;
-    this.resourceRepository.getListQuery().onlyTopLevel().filterByResourceClasses(this.resourceClass).get().then(resources => {
-      this.progressBar = false;
-      this.resources = resources;
-      this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);
-    });
+    this.resourceRepository.getListQuery()
+      .onlyTopLevel()
+      .filterByResourceClasses(this.resourceClass)
+      .get()
+      .then(resources => {
+        this.progressBar = false;
+        this.resources = resources;
+        this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);
+      });
   }
 
   fetchResourcesByParent() {
-    this.resourceRepository.getByParent(this.parentResource).then(resources => {
-      this.resources = resources;
-      if (!this.addFormOpened) {
-        this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);
-      }
-    });
+    this.resourceRepository.getListQuery()
+      .filterByParentId(this.parentResource.id)
+      .get()
+      .then(resources => {
+        this.resources = resources;
+        if (!this.addFormOpened) {
+          this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);
+        }
+      });
   }
 
   fetchBriefMetadata() {
