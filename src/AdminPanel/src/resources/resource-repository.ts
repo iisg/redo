@@ -15,12 +15,6 @@ export class ResourceRepository extends ApiRepository<Resource> {
     return new ResourceListQuery(this.httpClient, this.endpoint, this.entitySerializer);
   }
 
-  public getByParent(parent: Resource): Promise<Resource[]> {
-    const parentId: number = (parent == undefined) ? 0 : parent.id;
-    const endpoint = this.endpoint + `/${parentId}/resources`;
-    return this.httpClient.get(endpoint).then(response => this.responseToEntities(response));
-  }
-
   update(resource: Resource): Promise<Resource> {
     return this.postOne(resource);
   }

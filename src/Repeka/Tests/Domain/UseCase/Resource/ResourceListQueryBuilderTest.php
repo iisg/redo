@@ -1,12 +1,8 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
-use PHPUnit_Framework_MockObject_MockObject;
-use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
-use Repeka\Domain\UseCase\Resource\ResourceListQueryHandler;
 
 class ResourceListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
     public function testResourceClassFilter() {
@@ -51,8 +47,34 @@ class ResourceListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([$kind1, $kind2], $query->getResourceKinds());
     }
 
+    public function testSettingParentId() {
+        $parentId = 1;
+        $query = ResourceListQuery::builder()->filterByParentId($parentId)->build();
+        $this->assertEquals($parentId, $query->getParentId());
+    }
+
+    public function testSettingPage() {
+        $page = 4;
+        $query = ResourceListQuery::builder()->setPage($page)->build();
+        $this->assertEquals($page, $query->getPage());
+    }
+
+    public function testSettingResultsPerPage() {
+        $resultsPerPage = 4;
+        $query = ResourceListQuery::builder()->setResultsPerPage($resultsPerPage)->build();
+        $this->assertEquals($resultsPerPage, $query->getResultsPerPage());
+    }
+
     public function testFilteringOnlyTopLevel() {
         $this->assertFalse(ResourceListQuery::builder()->build()->onlyTopLevel());
         $this->assertTrue(ResourceListQuery::builder()->onlyTopLevel()->build()->onlyTopLevel());
+    }
+
+    public function testPaginationReturnTrueIfPageSet() {
+        $this->assertTrue(ResourceListQuery::builder()->setPage(1)->setResultsPerPage(10)->build()->paginate());
+    }
+
+    public function testPaginationReturnFalseIfPageSet() {
+        $this->assertFalse(ResourceListQuery::builder()->build()->paginate());
     }
 }

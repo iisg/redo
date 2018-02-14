@@ -4,6 +4,7 @@ namespace Repeka\Tests\Domain\Validation\Rules;
 use Assert\AssertionFailedException;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\Validation\Rules\ResourceHasNoChildrenRule;
 
 class ResourceHasNoChildrenRuleTest extends \PHPUnit_Framework_TestCase {
@@ -20,7 +21,8 @@ class ResourceHasNoChildrenRuleTest extends \PHPUnit_Framework_TestCase {
     public function testPositive() {
         $dummy = $this->createMock(ResourceEntity::class);
         $dummy->method('getId')->willReturn(0);
-        $this->resourceRepository->expects($this->once())->method('findChildren')->willReturn([]);
+        $pageResult = new PageResult([], 1);
+        $this->resourceRepository->expects($this->once())->method('findByQuery')->willReturn($pageResult);
         $result = $this->rule->validate($dummy);
         $this->assertTrue($result);
     }
@@ -28,7 +30,8 @@ class ResourceHasNoChildrenRuleTest extends \PHPUnit_Framework_TestCase {
     public function testNegative() {
         $dummy = $this->createMock(ResourceEntity::class);
         $dummy->method('getId')->willReturn(0);
-        $this->resourceRepository->expects($this->once())->method('findChildren')->willReturn([$dummy]);
+        $pageResult = new PageResult([$dummy], 1);
+        $this->resourceRepository->expects($this->once())->method('findByQuery')->willReturn($pageResult);
         $result = $this->rule->validate($dummy);
         $this->assertFalse($result);
     }

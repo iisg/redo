@@ -6,6 +6,9 @@ use Repeka\Domain\Entity\ResourceKind;
 class ResourceListQueryBuilder {
     private $resourceKinds = [];
     private $resourceClasses = [];
+    private $parentId = 0;
+    private $page = 0;
+    private $resultsPerPage = 1;
     private $onlyTopLevel = false;
 
     /**
@@ -34,12 +37,34 @@ class ResourceListQueryBuilder {
         return $this->filterByResourceClasses([$resourceClass]);
     }
 
+    public function filterByParentId(int $parentId): ResourceListQueryBuilder {
+        $this->parentId = $parentId;
+        return $this;
+    }
+
+    public function setPage(int $page): ResourceListQueryBuilder {
+        $this->page = $page;
+        return $this;
+    }
+
+    public function setResultsPerPage(int $resultsPerPage): ResourceListQueryBuilder {
+        $this->resultsPerPage = $resultsPerPage;
+        return $this;
+    }
+
     public function onlyTopLevel(): ResourceListQueryBuilder {
         $this->onlyTopLevel = true;
         return $this;
     }
 
     public function build(): ResourceListQuery {
-        return ResourceListQuery::withParams($this->resourceClasses, $this->resourceKinds, $this->onlyTopLevel);
+        return ResourceListQuery::withParams(
+            $this->resourceClasses,
+            $this->resourceKinds,
+            $this->parentId,
+            $this->page,
+            $this->resultsPerPage,
+            $this->onlyTopLevel
+        );
     }
 }
