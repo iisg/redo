@@ -62,11 +62,7 @@ class InitializeUserMetadataCommand extends TransactionalCommand {
                         [],
                         [],
                         MetadataControl::TEXT,
-                        $userResourceKind->getResourceClass(),
-                        [
-                            'maxCount' => 0,
-                            'regex' => '',
-                        ]
+                        $userResourceKind->getResourceClass()
                     ));
                     $metadataList[] = $metadata;
                 }

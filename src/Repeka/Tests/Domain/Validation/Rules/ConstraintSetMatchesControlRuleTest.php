@@ -53,14 +53,14 @@ class ConstraintSetMatchesControlRuleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($this->rule->forMetadataId(self::METADATA_ID)->validate([]));
     }
 
-    public function testRejectsMissingConstraint() {
+    public function testAcceptsMissingConstraint() {
         $this->configureRequiredConstraints();
-        $this->assertFalse($this->rule->forControl('text')->validate(['foo' => null]));
-        $this->assertFalse($this->rule->forControl('text')->validate(['bar' => null]));
-        $this->assertFalse($this->rule->forControl('text')->validate([]));
-        $this->assertFalse($this->rule->forMetadataId(self::METADATA_ID)->validate(['foo' => null]));
-        $this->assertFalse($this->rule->forMetadataId(self::METADATA_ID)->validate(['bar' => null]));
-        $this->assertFalse($this->rule->forMetadataId(self::METADATA_ID)->validate([]));
+        $this->assertTrue($this->rule->forControl('text')->validate(['foo' => null]));
+        $this->assertTrue($this->rule->forControl('text')->validate(['bar' => null]));
+        $this->assertTrue($this->rule->forControl('text')->validate([]));
+        $this->assertTrue($this->rule->forMetadataId(self::METADATA_ID)->validate(['foo' => null]));
+        $this->assertTrue($this->rule->forMetadataId(self::METADATA_ID)->validate(['bar' => null]));
+        $this->assertTrue($this->rule->forMetadataId(self::METADATA_ID)->validate([]));
     }
 
     public function testRejectsExtraConstraints() {

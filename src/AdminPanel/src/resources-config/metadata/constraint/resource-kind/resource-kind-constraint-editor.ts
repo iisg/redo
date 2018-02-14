@@ -14,6 +14,7 @@ export class ResourceKindConstraintEditor {
   @bindable(oneTime) idsFromOriginalMetadata: number[];
   @bindable(twoWay) disabled: boolean = false;
   @bindable(oneTime) resourceClass: string;
+  @bindable hasBase: boolean;
 
   workflowsUsingMetadataAsAssignee: Workflow[] = [];
   loadingWorkflows: boolean = false;
@@ -41,9 +42,9 @@ export class ResourceKindConstraintEditor {
     return !arraysEqual(this.metadata.constraints.resourceKind, (this.idsFromOriginalMetadata || []));
   }
 
-  @computedFrom('idsFromOriginalMetadata', 'disabled')
+  @computedFrom('hasBase', 'disabled')
   get canInherit(): boolean {
-    return !this.disabled && this.idsFromOriginalMetadata != undefined;
+    return !this.disabled && this.hasBase;
   }
 
   @computedFrom('metadata.constraints.resourceKind')

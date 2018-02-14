@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="input-group-addon">
-            <restore-from-original if.bind="hasOriginalConstraint && wasModified"
+            <restore-from-original if.bind="hasBase && wasModified"
                 click.delegate="resetToOriginalValues()"></restore-from-original>
         </div>
     </div>

@@ -46,9 +46,8 @@ class ConstraintSetMatchesControlRule extends AbstractRule {
             'Control not set. Use forControl() or forMetadataId() to create validator for specific control first.'
         );
         $actualKeys = array_keys($input);
-        $requiredKeys = $this->metadataConstraintManager->getSupportedConstraintNamesForControl($this->control);
-        $missingKeys = array_diff($requiredKeys, $actualKeys);
-        $extraKeys = array_diff($actualKeys, $requiredKeys);
-        return empty($missingKeys) && empty($extraKeys);
+        $controlKeys = $this->metadataConstraintManager->getSupportedConstraintNamesForControl($this->control);
+        $extraKeys = array_diff($actualKeys, $controlKeys);
+        return empty($extraKeys);
     }
 }
