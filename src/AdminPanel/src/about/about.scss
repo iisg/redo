@@ -1,0 +1,5 @@
+@import "../common/components/repeka-logo/repeka-logo";
+
+.repeka-logo {
+    @include repeka-logo(300px);
+}

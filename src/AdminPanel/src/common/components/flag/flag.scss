@@ -3,7 +3,6 @@
 @mixin flag-icon($flag-width) {
   display: inline-block;
   width: $flag-width + 7px;
-  vertical-align: text-bottom;
   text-align: left;
   img {
     @include shadow-z-1;

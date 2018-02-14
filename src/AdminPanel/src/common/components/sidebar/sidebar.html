@@ -1,26 +1,29 @@
-<template>
+<template class.bind="collapsed ? 'collapsed' : ''">
     <require from="./nested-navigation-menu"></require>
     <require from="common/components/repeka-logo/repeka-logo.html"></require>
     <require from="common/components/version-display/version-display"></require>
 
-    <div class="navbar navbar-default bg-info z-depth-1">
+    <div class="navbar navbar-default bg-info z-depth-3">
         <div class="container-fluid"></div>
         <div class="navbar-header">
             <a class="navbar-brand"
                 href="/">
                 <div class="logo-container">
                     <repeka-logo class="admin-navbar"></repeka-logo>
-                </div>
-                RePeKa
+                </div><span>RePeKa</span><version-display></version-display>
             </a>
         </div>
     </div>
 
-    <nested-navigation-menu></nested-navigation-menu>
-
-    <div class="application-version">
-        v
-        <version-display></version-display>
+    <div class="with-overflow-scrollbar-on-the-left">
+        <nested-navigation-menu></nested-navigation-menu>
+        <ul class="nav">
+            <li class="navigation-menu-item">
+                <a click.delegate="collapsed = !collapsed"
+                    class="btn btn-default">
+                    <fa name.bind="collapsed ? 'angle-double-right' : 'angle-double-left'" options="fw"></fa><span>${collapsed ? 'expand' : 'collapse' | t}</span>
+                </a>
+            </li>
+        </ul>
     </div>
-
 </template>

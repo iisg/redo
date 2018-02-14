@@ -60,12 +60,3 @@
     }
   }
 }
-
-.repeka-logo {
-  &.admin-navbar {
-    @include repeka-logo(44px, darken(#f47920, 8%));
-  }
-  &.about {
-    @include repeka-logo(300px);
-  }
-}
