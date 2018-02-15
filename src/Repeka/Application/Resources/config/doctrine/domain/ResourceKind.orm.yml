@@ -14,18 +14,15 @@ Repeka\Domain\Entity\ResourceKind:
         referencedColumnName: id
   fields:
     label:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
     resourceClass:
       type: string
       length: 64
       nullable: false
       column: resource_class
     metadataOverrides:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
       column: metadata_list
     displayStrategies:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
       column: display_strategies

@@ -28,22 +28,20 @@ Repeka\Domain\Entity\Metadata:
       length: 255
       nullable: true
     label:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
     description:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
+      options: {default: '{}'}
     placeholder:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
+      options: {default: '{}'}
     ordinalNumber:
       type: integer
       nullable: false
       column: ordinal_number
       options: {default: 0}
     constraints:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
     shownInBrief:
       type: boolean
       column: shown_in_brief

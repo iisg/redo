@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3d7e39003bd5216667927b9cd636194",
+    "content-hash": "3841dce06c331088a5c9b4c30a65101e",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1157,73 +1157,6 @@
             "time": "2017-12-20T00:38:15+00:00"
         },
         {
-            "name": "dunglas/doctrine-json-odm",
-            "version": "v0.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dunglas/doctrine-json-odm.git",
-                "reference": "2de29f7fe6125d75a8d08ff86ec943a36f38bf40"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dunglas/doctrine-json-odm/zipball/2de29f7fe6125d75a8d08ff86ec943a36f38bf40",
-                "reference": "2de29f7fe6125d75a8d08ff86ec943a36f38bf40",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/orm": "^2.5",
-                "php": ">=5.5.9",
-                "symfony/serializer": "^2.8 || ^3.0 || ^4.0"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "^1.6",
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0",
-                "symfony/finder": "^2.8 || ^3.0 || ^4.0",
-                "symfony/framework-bundle": "^2.8 || ^3.0 || ^4.0",
-                "symfony/property-access": "^2.8 || ^3.0 || ^4.0",
-                "symfony/property-info": "^2.8 || ^3.0 || ^4.0"
-            },
-            "suggest": {
-                "symfony/property-access": "To support complex objects.",
-                "symfony/property-info": "To support complex objects.",
-                "symfony/symfony": "To use the provided bundle."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Dunglas\\DoctrineJsonOdm\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kévin Dunglas",
-                    "email": "dunglas@gmail.com",
-                    "homepage": "https://dunglas.fr"
-                }
-            ],
-            "description": "An object document mapper for Doctrine ORM using JSON types of modern RDBMS.",
-            "homepage": "https://dunglas.fr",
-            "keywords": [
-                "database",
-                "json",
-                "mysql",
-                "odm",
-                "orm",
-                "postgresql",
-                "rdbms"
-            ],
-            "time": "2017-11-19T16:41:08+00:00"
-        },
-        {
             "name": "fig/link-util",
             "version": "1.0.0",
             "source": {
@@ -1417,6 +1350,63 @@
                 "symfony"
             ],
             "time": "2018-01-17T20:37:43+00:00"
+        },
+        {
+            "name": "martin-georgiev/postgresql-for-doctrine",
+            "version": "0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/martin-georgiev/postgresql-for-doctrine.git",
+                "reference": "2b8d47b55a14198fc7f4ef103995372a922e58a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/martin-georgiev/postgresql-for-doctrine/zipball/2b8d47b55a14198fc7f4ef103995372a922e58a0",
+                "reference": "2b8d47b55a14198fc7f4ef103995372a922e58a0",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "~2.5",
+                "doctrine/orm": "~2.5",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MartinGeorgiev\\": "src/MartinGeorgiev/",
+                    "MartinGeorgiev\\Tests\\": "tests/MartinGeorgiev/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Georgiev",
+                    "email": "martin.georgiev@gmail.com"
+                }
+            ],
+            "description": "PostgreSQL enhancements for Doctrine2. Provides support for JSONB and array data types and operators and other specific functions.",
+            "keywords": [
+                "array data types",
+                "dbal",
+                "doctrine2",
+                "jsonb",
+                "martin georgiev",
+                "postgres",
+                "postgresql"
+            ],
+            "time": "2017-03-21T12:48:21+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2887,59 +2877,6 @@
                 "framework"
             ],
             "time": "2018-01-05T08:33:31+00:00"
-        },
-        {
-            "name": "syslogic/doctrine-json-functions",
-            "version": "dev-better-postgres-support",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gronostajo/DoctrineJsonFunctions.git",
-                "reference": "995844b467100f5a4fdd947d1c1a6ec455a33afa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gronostajo/DoctrineJsonFunctions/zipball/995844b467100f5a4fdd947d1c1a6ec455a33afa",
-                "reference": "995844b467100f5a4fdd947d1c1a6ec455a33afa",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "doctrine/orm": "~2.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Syslogic\\DoctrineJsonFunctions\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Doctrine Json Functions Contributors",
-                    "homepage": "https://github.com/SyslogicNL/DoctrineJsonFunctions/contributors"
-                }
-            ],
-            "description": "A set of extensions to Doctrine 2 that add support for json query functions.",
-            "keywords": [
-                "database",
-                "doctrine",
-                "dql",
-                "json",
-                "orm"
-            ],
-            "support": {
-                "source": "https://github.com/gronostajo/DoctrineJsonFunctions/tree/better-postgres-support"
-            },
-            "time": "2017-08-07T11:34:08+00:00"
         },
         {
             "name": "twig/twig",
@@ -4804,7 +4741,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "respect/validation": 20,
-        "syslogic/doctrine-json-functions": 20,
         "phpmd/phpmd": 0
     },
     "prefer-stable": false,

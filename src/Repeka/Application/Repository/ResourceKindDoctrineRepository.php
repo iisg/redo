@@ -63,7 +63,7 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
     public function countByMetadata(Metadata $metadata): int {
         $qb = $this->createQueryBuilder('rk');
         $query = $qb->select('COUNT(rk.id)')
-            ->where("JSONB_CONTAINS(rk.metadataOverrides, :searchValue) = TRUE")
+            ->where("CONTAINS(rk.metadataOverrides, :searchValue) = TRUE")
             ->setParameter('searchValue', json_encode([['id' => $metadata->getId()]]))
             ->getQuery();
         return $query->getSingleScalarResult();
