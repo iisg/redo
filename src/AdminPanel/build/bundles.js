@@ -91,6 +91,7 @@ module.exports = {
         "handlebars",
         // "martingust/aurelia-repeat-strategies",  // causes "Unable to dynamically transpile ES module" error
         "oribella-aurelia-sortable",
+        "sticky-table-headers",
         "sweetalert2",
         "sweetalert2/dist/sweetalert2.css!text",
         "text"
