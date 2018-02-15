@@ -17,7 +17,7 @@ class Metadata implements Identifiable {
     /** @var Metadata */
     private $parentMetadata;
     private $constraints = [];
-    private $shownInBrief;
+    private $shownInBrief = false;
     private $resourceClass;
     private $overrides = [];
 
@@ -56,6 +56,7 @@ class Metadata implements Identifiable {
         $metadata->resourceClass = $base->resourceClass;
         $metadata->control = $base->control;
         $metadata->parentMetadata = $parent;
+        $metadata->shownInBrief = $base->shownInBrief;
         return $metadata;
     }
 
