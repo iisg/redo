@@ -5,6 +5,10 @@ table.highlight-col-row-on-hover {
   $highlight-color: $yellow-50;
   overflow: hidden;
 
+  thead{
+    background-color: #EEE;
+  }
+
   tr:hover {
     background-color: $highlight-color;
   }

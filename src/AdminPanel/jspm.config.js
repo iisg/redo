@@ -58,6 +58,7 @@ System.config({
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.13.0",
     "region-flags": "npm:region-flags@1.1.0",
     "select2": "github:select2/select2@4.0.5",
+    "sticky-table-headers": "npm:sticky-table-headers@0.1.24",
     "sweetalert2": "npm:sweetalert2@6.11.5",
     "text": "github:systemjs/plugin-text@0.0.9",
     "github:jspm/nodelibs-assert@0.1.0": {
