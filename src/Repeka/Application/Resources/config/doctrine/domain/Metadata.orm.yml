@@ -23,7 +23,6 @@ Repeka\Domain\Entity\Metadata:
     control:
       type: string
       length: 25
-      nullable: true
     name:
       type: string
       length: 255
@@ -52,5 +51,4 @@ Repeka\Domain\Entity\Metadata:
     resourceClass:
       type: string
       length: 64
-      nullable: true    # System metadata has null
       column: resource_class

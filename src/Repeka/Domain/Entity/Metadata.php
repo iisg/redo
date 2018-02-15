@@ -54,6 +54,7 @@ class Metadata implements Identifiable {
         $metadata->baseMetadata = $base;
         $metadata->ordinalNumber = -1;
         $metadata->resourceClass = $base->resourceClass;
+        $metadata->control = $base->control;
         $metadata->parentMetadata = $parent;
         return $metadata;
     }
@@ -63,11 +64,15 @@ class Metadata implements Identifiable {
     }
 
     public function getControl(): MetadataControl {
-        return $this->isBase() ? new MetadataControl($this->control) : $this->baseMetadata->getControl();
+        return new MetadataControl($this->control);
     }
 
     public function getName(): string {
         return $this->isBase() ? $this->name : $this->baseMetadata->getName();
+    }
+
+    public function getResourceClass(): string {
+        return $this->resourceClass;
     }
 
     public function getLabel(): array {
@@ -100,10 +105,6 @@ class Metadata implements Identifiable {
 
     public function getConstraints(): array {
         return array_merge($this->constraints, $this->overrides['constraints'] ?? []);
-    }
-
-    public function getResourceClass(): string {
-        return $this->resourceClass;
     }
 
     public function isShownInBrief(): bool {
