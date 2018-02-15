@@ -8,14 +8,13 @@ Repeka\Domain\Entity\ResourceWorkflow:
       generator: {strategy: AUTO}
   fields:
     name:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
     places:
-      type: json
-      options: {default: '[]', jsonb: true}
+      type: jsonb
+      options: {default: '[]'}
     transitions:
-      type: json
-      options: {default: '[]', jsonb: true}
+      type: jsonb
+      options: {default: '[]'}
     diagram:
       type: text
       nullable: true

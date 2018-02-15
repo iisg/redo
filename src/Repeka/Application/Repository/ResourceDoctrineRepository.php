@@ -36,7 +36,7 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
     /** @return ResourceEntity[] */
     public function findChildren(int $parentId): array {
         return $this->createQueryBuilder('r')
-            ->where("JSONB_CONTAINS(JSON_GET(r.contents, :parentMetadataId), :searchValue) = TRUE")
+            ->where("CONTAINS(JSON_GET_FIELD(r.contents, :parentMetadataId), :searchValue) = TRUE")
             ->setParameter('parentMetadataId', SystemMetadata::PARENT)
             ->setParameter('searchValue', json_encode([['value' => $parentId]]))
             ->getQuery()
@@ -54,8 +54,8 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             $qb->setParameter('resourceKinds', $query->getResourceKinds());
         }
         if ($query->onlyTopLevel()) {
-            $parentMetadataId = SystemMetadata::PARENT;
-            $qb->andWhere("JSON_GET(r.contents, '$parentMetadataId') = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadataId') = FALSE");
+            $parentMetadata = SystemMetadata::PARENT;
+            $qb->andWhere("JSON_GET_FIELD(r.contents, '$parentMetadata') = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadata') = FALSE");
         }
         return $qb->getQuery()->getResult();
     }

@@ -41,6 +41,10 @@ doctrine:
     user: postgres
     password: repeka
     server_version: 10.0
+    types:
+      jsonb: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb
+    mapping_types:
+      jsonb: jsonb
   orm:
     auto_mapping: false
     mappings:

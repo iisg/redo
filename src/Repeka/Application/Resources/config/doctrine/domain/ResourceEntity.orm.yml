@@ -14,12 +14,10 @@ Repeka\Domain\Entity\ResourceEntity:
         referencedColumnName: id
   fields:
     marking:
-      type: json_document
+      type: jsonb
       nullable: true
-      options: {jsonb: true}
     contents:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb
     resourceClass:
       type: string
       length: 64

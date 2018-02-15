@@ -12,5 +12,4 @@ Repeka\Domain\Entity\UserRole:
       mappedBy: userRoles
   fields:
     name:
-      type: json_document
-      options: {jsonb: true}
+      type: jsonb

@@ -1,14 +1,11 @@
+# I have not added all of them, see the available ones here if you miss something:
+# https://github.com/martin-georgiev/postgresql-for-doctrine/tree/develop/src/MartinGeorgiev/Doctrine/ORM/Query/AST/Functions
+
 doctrine:
   orm:
     dql:
       string_functions:
-        json_get: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGet
-        json_get_text: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetText
-        json_get_path: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetPath
-        json_get_path_text: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetPathText
+        json_get_field: MartinGeorgiev\Doctrine\ORM\Query\AST\Functions\JsonGetField
       numeric_functions:
-        jsonb_exists: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbExists
-        jsonb_exists_any: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbExistsAny
-        jsonb_exists_all: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbExistsAll
-        jsonb_contains: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbContains
-        jsonb_is_contained: Syslogic\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbIsContained
+        jsonb_exists: MartinGeorgiev\Doctrine\ORM\Query\AST\Functions\JsonbExists
+        contains: MartinGeorgiev\Doctrine\ORM\Query\AST\Functions\Contains
