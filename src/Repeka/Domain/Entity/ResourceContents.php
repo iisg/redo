@@ -114,6 +114,10 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
         return new self(array_replace($this->contents, $newValues));
     }
 
+    public function isEmpty() {
+        return empty($this->contents);
+    }
+
     public static function fromArray(array $anyArray): ResourceContents {
         $normalized = array_map(function ($metadataEntry) {
             if (is_array($metadataEntry)) {
@@ -154,10 +158,12 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
         return $this->contents[$offset];
     }
 
+    /** @inheritdoc */
     public function offsetSet($offset, $value) {
         throw new \LogicException('ResourceContents are immutable.');
     }
 
+    /** @inheritdoc */
     public function offsetUnset($offset) {
         throw new \LogicException('ResourceContents are immutable.');
     }

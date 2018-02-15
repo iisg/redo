@@ -43,7 +43,10 @@ class EntityUtils {
      * @param Identifiable[] $entities
      * @return (int|string)[]
      */
-    public static function mapToIds(array $entities) {
+    public static function mapToIds($entities): array {
+        if (!is_array($entities)) {
+            $entities = iterator_to_array($entities);
+        }
         return array_values(array_map(function ($entity) {
             /** @var Identifiable $entity */
             return $entity->getId();

@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 
@@ -76,5 +77,11 @@ class ResourceListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
 
     public function testPaginationReturnFalseIfPageSet() {
         $this->assertFalse(ResourceListQuery::builder()->build()->paginate());
+    }
+
+    public function testFilteringByResourceContents() {
+        $contents = [1 => 'test'];
+        $query = ResourceListQuery::builder()->filterByContents([1 => 'test'])->build();
+        $this->assertEquals(ResourceContents::fromArray($contents), $query->getContentsFilter());
     }
 }

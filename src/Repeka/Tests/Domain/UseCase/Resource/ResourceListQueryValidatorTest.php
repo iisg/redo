@@ -6,8 +6,10 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQueryValidator;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
+use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
 
 class ResourceListQueryValidatorTest extends \PHPUnit_Framework_TestCase {
+    private $resourceContentsStructureRule;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $resourceClassExistsRule;
@@ -16,46 +18,55 @@ class ResourceListQueryValidatorTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->resourceClassExistsRule = $this->createMock(ResourceClassExistsRule::class);
-        $this->validator = new ResourceListQueryValidator($this->resourceClassExistsRule);
+        $this->resourceContentsStructureRule = $this->createMock(ResourceContentsCorrectStructureRule::class);
+        $this->validator = new ResourceListQueryValidator($this->resourceClassExistsRule, $this->resourceContentsStructureRule);
     }
 
-    public function testPassWhenPaginationParamsAndNoFilters() {
+    public function testPassWhenNoFilters() {
+        $this->resourceContentsStructureRule->method('validate')->willReturn(true);
         $command = ResourceListQuery::builder()->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testPassWhenResourceClassExists() {
         $this->resourceClassExistsRule->method('validate')->with('books')->willReturn(true);
-        $command = ResourceListQuery::builder()
-            ->filterByResourceClass('books')
-            ->build();
+        $this->resourceContentsStructureRule->method('validate')->willReturn(true);
+        $command = ResourceListQuery::builder()->filterByResourceClass('books')->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testInvalidWhenInvalidResourceClass() {
+        $this->resourceContentsStructureRule->method('validate')->willReturn(true);
         $command = ResourceListQuery::builder()->filterByResourceClass('invalidResourceClass')->build();
         $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testValidIfFilterByResourceKind() {
-        $command = ResourceListQuery::builder()
-            ->filterByResourceKinds([$this->createMock(ResourceKind::class)])
-            ->build();
+        $this->resourceContentsStructureRule->method('validate')->willReturn(true);
+        $command = ResourceListQuery::builder()->filterByResourceKinds([$this->createMock(ResourceKind::class)])->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testInvalidIfFilterByNotResourceKind() {
+        $this->resourceContentsStructureRule->method('validate')->willReturn(true);
         $command = ResourceListQuery::builder()->filterByResourceKinds([$this->createMock(ResourceEntity::class)])->build();
         $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testPassWhenPageAndResultsPerPageArePositiveValue() {
+        $this->resourceContentsStructureRule->method('validate')->willReturn(true);
         $command = ResourceListQuery::builder()->setPage(1)->setResultsPerPage(5)->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testInvalidIfPageIsPostiveAndResultsPerPageIsNegativeValues() {
+        $this->resourceContentsStructureRule->method('validate')->willReturn(true);
         $command = ResourceListQuery::builder()->setPage(-1)->setResultsPerPage(-1)->build();
+        $this->assertFalse($this->validator->isValid($command));
+    }
+
+    public function testInvalidIfWrongContents() {
+        $command = ResourceListQuery::builder()->build();
         $this->assertFalse($this->validator->isValid($command));
     }
 }
