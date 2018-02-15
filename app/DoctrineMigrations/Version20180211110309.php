@@ -14,8 +14,9 @@ class Version20180211110309 extends AbstractMigration implements ContainerAwareI
 
     public function up(Schema $schema) {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        $this->addSql('UPDATE metadata m1 SET resource_class = (SELECT resource_class FROM metadata m2 WHERE m2.id = m1.base_id) WHERE resource_class IS NULL');
+        $this->addSql('UPDATE metadata m1 SET resource_class = (SELECT resource_class FROM metadata m2 WHERE m2.id = m1.base_id) WHERE base_id IS NOT NULL');
         $this->addSql('UPDATE metadata m1 SET control = (SELECT control FROM metadata m2 WHERE m2.id = m1.base_id) WHERE control IS NULL');
+        $this->addSql('UPDATE metadata m1 SET resource_class = \'\' WHERE resource_class IS NULL');
         $this->addSql('ALTER TABLE metadata ALTER control SET NOT NULL');
         $this->addSql('ALTER TABLE metadata ALTER resource_class SET NOT NULL');
     }
