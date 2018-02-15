@@ -46,7 +46,6 @@ Repeka\Domain\Entity\Metadata:
       options: {jsonb: true}
     shownInBrief:
       type: boolean
-      nullable: true
       column: shown_in_brief
     resourceClass:
       type: string
