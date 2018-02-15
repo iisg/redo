@@ -1,8 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase;
 
-class PageResult {
-
+class PageResult implements \IteratorAggregate, \ArrayAccess, \Countable {
     /** @var array */
     private $results;
     /** @var int */
@@ -19,5 +18,31 @@ class PageResult {
 
     public function getTotalCount(): int {
         return $this->totalCount;
+    }
+
+    public function getIterator() {
+        return new \ArrayIterator($this->results);
+    }
+
+    public function offsetExists($offset) {
+        return isset($this->results[$offset]);
+    }
+
+    public function offsetGet($offset) {
+        return isset($this->results[$offset]) ? $this->results[$offset] : null;
+    }
+
+    /** @inheritdoc */
+    public function offsetSet($offset, $value) {
+        throw new \LogicException('PageResult is immutable.');
+    }
+
+    /** @inheritdoc */
+    public function offsetUnset($offset) {
+        throw new \LogicException('PageResult is immutable.');
+    }
+
+    public function count() {
+        return count($this->results);
     }
 }

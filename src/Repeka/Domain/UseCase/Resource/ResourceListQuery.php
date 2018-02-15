@@ -2,6 +2,7 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 
 class ResourceListQuery extends AbstractCommand {
@@ -11,28 +12,17 @@ class ResourceListQuery extends AbstractCommand {
     private $resourceClasses;
     /** @var int */
     private $parentId;
+    /** @var bool */
+    private $onlyTopLevel;
+    /** @var ResourceContents */
+    private $contentsFilter;
+
     /** @var int */
     private $page;
     /** @var int */
     private $resultsPerPage;
-    /** @var bool */
-    private $onlyTopLevel;
 
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
-    private function __construct(
-        array $resourceClasses,
-        array $resourceKinds,
-        int $parentId,
-        int $page,
-        int $resultsPerPage,
-        bool $onlyTopLevel
-    ) {
-        $this->resourceKinds = $resourceKinds;
-        $this->resourceClasses = $resourceClasses;
-        $this->parentId = $parentId;
-        $this->page = $page;
-        $this->resultsPerPage = $resultsPerPage;
-        $this->onlyTopLevel = $onlyTopLevel;
+    private function __construct() {
     }
 
     public static function builder(): ResourceListQueryBuilder {
@@ -43,11 +33,20 @@ class ResourceListQuery extends AbstractCommand {
         array $resourceClasses,
         array $resourceKinds,
         int $parentId,
+        ResourceContents $contentsFilter,
+        bool $onlyTopLevel,
         int $page,
-        int $resultsPerPage,
-        bool $onlyTopLevel
+        int $resultsPerPage
     ): ResourceListQuery {
-        return new self($resourceClasses, $resourceKinds, $parentId, $page, $resultsPerPage, $onlyTopLevel);
+        $query = new self();
+        $query->resourceKinds = $resourceKinds;
+        $query->resourceClasses = $resourceClasses;
+        $query->parentId = $parentId;
+        $query->page = $page;
+        $query->resultsPerPage = $resultsPerPage;
+        $query->contentsFilter = $contentsFilter;
+        $query->onlyTopLevel = $onlyTopLevel;
+        return $query;
     }
 
     /** @return string[] */
@@ -78,5 +77,9 @@ class ResourceListQuery extends AbstractCommand {
 
     public function onlyTopLevel(): bool {
         return $this->onlyTopLevel;
+    }
+
+    public function getContentsFilter(): ResourceContents {
+        return $this->contentsFilter;
     }
 }

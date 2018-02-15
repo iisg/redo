@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 
 class ResourceListQueryBuilder {
@@ -9,12 +10,10 @@ class ResourceListQueryBuilder {
     private $parentId = 0;
     private $page = 0;
     private $resultsPerPage = 1;
+    private $contents = [];
     private $onlyTopLevel = false;
 
-    /**
-     * @param ResourceKind[] $resourceKinds
-     * @return ResourceListQueryBuilder
-     */
+    /** @param ResourceKind[] $resourceKinds */
     public function filterByResourceKinds(array $resourceKinds): ResourceListQueryBuilder {
         $this->resourceKinds = array_values(array_merge($this->resourceKinds, $resourceKinds));
         return $this;
@@ -24,10 +23,6 @@ class ResourceListQueryBuilder {
         return $this->filterByResourceKinds([$resourceKind]);
     }
 
-    /**
-     * @param string $resourceClasses
-     * @return ResourceListQueryBuilder
-     */
     public function filterByResourceClasses(array $resourceClasses): ResourceListQueryBuilder {
         $this->resourceClasses = array_values(array_unique(array_merge($this->resourceClasses, $resourceClasses)));
         return $this;
@@ -52,6 +47,12 @@ class ResourceListQueryBuilder {
         return $this;
     }
 
+    /** @param ResourceContents|array $contents */
+    public function filterByContents($contents): ResourceListQueryBuilder {
+        $this->contents = $contents;
+        return $this;
+    }
+
     public function onlyTopLevel(): ResourceListQueryBuilder {
         $this->onlyTopLevel = true;
         return $this;
@@ -62,9 +63,10 @@ class ResourceListQueryBuilder {
             $this->resourceClasses,
             $this->resourceKinds,
             $this->parentId,
+            $this->contents instanceof ResourceContents ? $this->contents : ResourceContents::fromArray($this->contents),
+            $this->onlyTopLevel,
             $this->page,
-            $this->resultsPerPage,
-            $this->onlyTopLevel
+            $this->resultsPerPage
         );
     }
 }
