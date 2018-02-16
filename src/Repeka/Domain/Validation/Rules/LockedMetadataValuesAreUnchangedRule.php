@@ -3,6 +3,7 @@ namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\Identifiable;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
@@ -46,13 +47,13 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
      * @param ResourceWorkflowPlace[] $currentContents
      * @return int[]
      */
-    private function getLockedMetadataIds(array $currentContents, array $currentPlaces): array {
+    private function getLockedMetadataIds(ResourceContents $currentContents, array $currentPlaces): array {
         $lockedIds = [];
         foreach ($currentPlaces as $currentPlace) {
             $lockedIds = array_merge($lockedIds, $currentPlace->restrictingMetadataIds()->locked()->assignees()->get());
         }
         $lockedIds = array_intersect(
-            array_keys($currentContents),
+            array_keys($currentContents->toArray()),
             array_unique($lockedIds)
         );
         return $lockedIds;
@@ -62,8 +63,12 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
      * @param int[] $lockedMetadataIds
      * @return int[]
      */
-    private function getModifiedLockedMetadataIds(array $currentContents, array $newContents, array $lockedMetadataIds): array {
-        $this->replaceObjectsWithIds($newContents);
+    private function getModifiedLockedMetadataIds(
+        ResourceContents $currentContents,
+        ResourceContents $newContents,
+        array $lockedMetadataIds
+    ): array {
+        $newContents = $this->replaceObjectsWithIds($newContents);
         $modifiedIds = [];
         foreach ($lockedMetadataIds as $id) {
             if ($currentContents[$id] != $newContents[$id]) {
@@ -73,18 +78,13 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
         return $modifiedIds;
     }
 
-    private function replaceObjectsWithIds(array &$contents) {
-        foreach ($contents as &$values) {
-            $values = array_map(function (array $metadataValue) {
-                /** @var Identifiable|mixed $item */
-                if (is_object($metadataValue['value'])) {
-                    $metadataValue['value'] = $metadataValue['value']->getId();
-                }
-                if (isset($metadataValue['submetadata'])) {
-                    $this->replaceObjectsWithIds($metadataValue['submetadata']);
-                }
-                return $metadataValue;
-            }, $values);
-        }
+    private function replaceObjectsWithIds(ResourceContents $contents): ResourceContents {
+        return $contents->mapAllValues(function ($value) {
+            if ($value instanceof Identifiable) {
+                return $value->getId();
+            } else {
+                return $value;
+            }
+        });
     }
 }

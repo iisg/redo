@@ -19,8 +19,14 @@ export class ResourceMetadataValueDisplay {
 
   async valueChanged() {
     this.submetadataResource = this.entitySerializer.clone(this.resource, Resource.NAME);
-    this.submetadataResource.contents = this.value.submetadata || {};
     this.submetadataResource.kind.metadataList = [];
-    this.submetadataResource.kind.metadataList = await this.metadataRepository.getByParent(this.metadata);
+    if (this.hasSubmetadata) {
+      this.submetadataResource.contents = this.value.submetadata || {};
+      this.submetadataResource.kind.metadataList = await this.metadataRepository.getByParent(this.metadata);
+    }
+  }
+
+  private get hasSubmetadata(): boolean {
+    return this.value.submetadata && Object.keys(this.value.submetadata).length > 0;
   }
 }

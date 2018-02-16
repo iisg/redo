@@ -12,9 +12,9 @@ class ResourceEntity implements Identifiable {
     private $contents;
     private $resourceClass;
 
-    public function __construct(ResourceKind $kind, array $contents) {
+    public function __construct(ResourceKind $kind, ResourceContents $contents) {
         $this->kind = $kind;
-        $this->contents = $contents;
+        $this->updateContents($contents);
         $this->resourceClass = $kind->getResourceClass();
     }
 
@@ -34,25 +34,16 @@ class ResourceEntity implements Identifiable {
         $this->marking = $marking;
     }
 
-    public function getContents(): array {
-        return array_filter($this->contents, function ($values) {
-            return count($values) > 0;
-        });
+    public function getContents(): ResourceContents {
+        return new ResourceContents($this->contents);
     }
 
     public function hasParent(): bool {
         return isset($this->getContents()[SystemMetadata::PARENT]);
     }
 
-    public function getValues(Metadata $metadata): array {
-        Assertion::inArray($metadata->getId(), $this->kind->getMetadataIds());
-        return $this->getContents()[$metadata->getId()] ?? [];
-    }
-
-    public function updateContents(array $contents) {
-        $this->contents = array_filter($contents, function ($values) {
-            return count($values) > 0;
-        });
+    public function updateContents(ResourceContents $contents) {
+        $this->contents = $contents->filterOutEmptyMetadata()->toArray();
     }
 
     public function getResourceClass(): string {

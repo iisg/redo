@@ -2,15 +2,15 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
-use Repeka\Domain\Cqrs\AdjustableCommand;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 
-class ResourceCreateCommand extends AbstractCommand implements AdjustableCommand {
+class ResourceCreateCommand extends AbstractCommand {
     private $kind;
 
     private $contents;
 
-    public function __construct(ResourceKind $resourceKind, array $contents) {
+    public function __construct(ResourceKind $resourceKind, ResourceContents $contents) {
         $this->kind = $resourceKind;
         $this->contents = $contents;
     }
@@ -19,7 +19,7 @@ class ResourceCreateCommand extends AbstractCommand implements AdjustableCommand
         return $this->kind;
     }
 
-    public function getContents(): array {
+    public function getContents(): ResourceContents {
         return $this->contents;
     }
 }

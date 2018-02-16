@@ -2,6 +2,7 @@
 namespace Repeka\Tests\UseCase\Resource;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
@@ -30,15 +31,15 @@ class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCa
     private $handler;
 
     protected function setUp() {
-        $this->resource = $this->createMock(ResourceEntity::class);
-        $this->command = new ResourceUpdateContentsCommand($this->resource, ['1' => ['AA']]);
+        $this->resource = $this->createResourceMock(1);
+        $this->command = new ResourceUpdateContentsCommand($this->resource, ResourceContents::fromArray(['1' => ['AA']]));
         $this->resourceRepository = $this->createRepositoryStub(ResourceRepository::class);
         $this->fileHelper = $this->createMock(ResourceFileHelper::class);
         $this->handler = new ResourceUpdateContentsCommandHandler($this->resourceRepository, $this->fileHelper);
     }
 
     public function testUpdatingResource() {
-        $this->resource->expects($this->once())->method('updateContents')->with(['1' => ['AA']]);
+        $this->resource->expects($this->once())->method('updateContents')->with(ResourceContents::fromArray(['1' => ['AA']]));
         $resource = $this->handler->handle($this->command);
         $this->assertSame($this->resource, $resource);
     }
@@ -65,7 +66,7 @@ class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCa
 
     public function testMovingFiles() {
         $resource = $this->createMock(ResourceEntity::class);
-        $command = new ResourceUpdateContentsCommand($resource, []);
+        $command = new ResourceUpdateContentsCommand($resource, new ResourceContents([]));
         $this->fileHelper->expects($this->once())->method('moveFilesToDestinationPaths');
         $this->handler->handle($command);
     }

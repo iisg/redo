@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\InvalidCommandException;
@@ -60,35 +61,35 @@ class ResourceUpdateContentsCommandValidatorTest extends \PHPUnit_Framework_Test
 
     public function testValid() {
         $validator = $this->createValidator(true, true, true, true);
-        $command = new ResourceUpdateContentsCommand($this->resource, []);
+        $command = new ResourceUpdateContentsCommand($this->resource, ResourceContents::empty());
         $validator->validate($command);
     }
 
     public function testInvalidIfContentsDoNotMatchResourceKind() {
         $this->expectException(InvalidCommandException::class);
         $validator = $this->createValidator(false, true, true, true);
-        $command = new ResourceUpdateContentsCommand($this->resource, []);
+        $command = new ResourceUpdateContentsCommand($this->resource, ResourceContents::empty());
         $validator->validate($command);
     }
 
     public function testInvalidWhenConstraintsNotSatisfied() {
         $this->expectException(InvalidCommandException::class);
         $validator = $this->createValidator(true, false, true, true);
-        $command = new ResourceUpdateContentsCommand($this->resource, []);
+        $command = new ResourceUpdateContentsCommand($this->resource, ResourceContents::empty());
         $validator->validate($command);
     }
 
     public function testInvalidWhenLockedMetadataAreChanged() {
         $this->expectException(InvalidCommandException::class);
         $validator = $this->createValidator(true, true, false, true);
-        $command = new ResourceUpdateContentsCommand($this->resource, []);
+        $command = new ResourceUpdateContentsCommand($this->resource, ResourceContents::empty());
         $validator->validate($command);
     }
 
     public function testInvalidWhenInvalidContentsStructure() {
         $this->expectException(InvalidCommandException::class);
         $validator = $this->createValidator(true, true, true, false);
-        $command = new ResourceUpdateContentsCommand($this->resource, []);
+        $command = new ResourceUpdateContentsCommand($this->resource, ResourceContents::empty());
         $validator->validate($command);
     }
 }

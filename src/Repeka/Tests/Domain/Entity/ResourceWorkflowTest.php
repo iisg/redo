@@ -59,6 +59,14 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['PL' => 'Test'], $this->workflow->getPlaces()[0]->getLabel());
     }
 
+    public function testInitialPlaceIsTheFirstPlace() {
+        $place1 = new ResourceWorkflowPlace(['PL' => 'First']);
+        $place2 = new ResourceWorkflowPlace(['PL' => 'Second']);
+        $this->workflow->update([], [$place1, $place2], [], 'books');
+        $this->assertCount(2, $this->workflow->getPlaces());
+        $this->assertSame('First', $this->workflow->getInitialPlace()->getLabel()['PL']);
+    }
+
     public function testUpdatingPlacesIfAlreadyExists() {
         $this->workflow->update([], [['label' => ['EN' => 'First place']]], [], 'books');
         $this->workflow->update([], [['label' => ['EN' => 'Another place']]], [], 'books');

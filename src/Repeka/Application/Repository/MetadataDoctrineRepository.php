@@ -4,6 +4,7 @@ namespace Repeka\Application\Repository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 
@@ -71,5 +72,13 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
             ->where(Criteria::expr()->in('id', $metadataIds));
         $result = $this->matching($criteria);
         return $result->toArray();
+    }
+
+    /** @return Metadata[] */
+    public function findByControlAndResourceClass(MetadataControl $control, string $resourceClass): array {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('control', $control->getValue()))
+            ->andWhere(Criteria::expr()->eq('resourceClass', $resourceClass));
+        return $this->matching($criteria)->toArray();
     }
 }

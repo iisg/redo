@@ -2,8 +2,8 @@
 namespace Repeka\Domain\Factory;
 
 use Repeka\Application\Cqrs\CommandBusAware;
-use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceKindRepository;
@@ -19,9 +19,9 @@ abstract class UserFactory {
         $this->resourceKindRepository = $resourceKindRepository;
     }
 
-    public function createUser(string $username, ?string $plainPassword, array $userData = []): User {
+    public function createUser(string $username, ?string $plainPassword, ResourceContents $userData): User {
         $resourceKind = $this->resourceKindRepository->findOne(SystemResourceKind::USER);
-        $resourceCreateCommand = new ResourceCreateCommand($resourceKind, $userData, SystemResourceClass::USER);
+        $resourceCreateCommand = new ResourceCreateCommand($resourceKind, $userData);
         /** @var ResourceEntity $userData */
         $userData = $this->handleCommand($resourceCreateCommand);
         $user = $this->createApplicationUser($username, $plainPassword, $userData);

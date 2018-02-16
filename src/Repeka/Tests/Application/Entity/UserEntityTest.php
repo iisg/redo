@@ -3,9 +3,13 @@ namespace Repeka\Tests\Application\Entity;
 
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemUserRole;
+use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\UserRole;
+use Repeka\Tests\Traits\StubsTrait;
 
 class UserEntityTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
 
     /** @var UserEntity */
     private $user;
@@ -15,6 +19,7 @@ class UserEntityTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->user = new UserEntity();
+        $this->user->setUserData(new ResourceEntity($this->createResourceKindMock(), ResourceContents::empty()));
         $this->sampleRole = $this->createMock(UserRole::class);
         $this->sampleRole->method('getId')->willReturn(1);
     }
@@ -51,5 +56,10 @@ class UserEntityTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('ROLE_ADMIN', $this->user->getRoles());
         $this->user->updateRoles([]);
         $this->assertNotContains('ROLE_ADMIN', $this->user->getRoles());
+    }
+
+    public function testSettingUsername() {
+        $this->user->setUsername('chocapic');
+        $this->assertEquals('chocapic', $this->user->getUsername());
     }
 }

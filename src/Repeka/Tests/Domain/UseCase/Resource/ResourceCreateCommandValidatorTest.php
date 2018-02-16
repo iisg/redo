@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\Resource;
 
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommandValidator;
@@ -50,31 +51,31 @@ class ResourceCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testValid() {
         $validator = $this->createValidator(true, true, true);
-        $command = new ResourceCreateCommand($this->resourceKind, []);
+        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
         $this->assertTrue($validator->isValid($command));
     }
 
     public function testInvalidForNotInitializedResourceKind() {
         $validator = $this->createValidator(true, true, true);
-        $command = new ResourceCreateCommand($this->createMock(ResourceKind::class), [1 => ['Some value']]);
+        $command = new ResourceCreateCommand($this->createMock(ResourceKind::class), ResourceContents::fromArray([1 => ['Some value']]));
         $this->assertFalse($validator->isValid($command));
     }
 
     public function testInvalidIfContentsDoNotMatchResourceKind() {
         $validator = $this->createValidator(false, true, true);
-        $command = new ResourceCreateCommand($this->resourceKind, []);
+        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
         $this->assertFalse($validator->isValid($command));
     }
 
     public function testInvalidWhenConstraintsNotSatisfied() {
         $validator = $this->createValidator(true, false, true);
-        $command = new ResourceCreateCommand($this->resourceKind, []);
+        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
         $this->assertFalse($validator->isValid($command));
     }
 
     public function testInvalidWhenInvalidContentStructure() {
         $validator = $this->createValidator(true, true, false);
-        $command = new ResourceCreateCommand($this->resourceKind, []);
+        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
         $this->assertFalse($validator->isValid($command));
     }
 }

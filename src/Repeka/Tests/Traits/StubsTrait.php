@@ -5,13 +5,13 @@ use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\EntityNotFoundException;
-use Repeka\Domain\Factory\ResourceContentsNormalizer;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraintManager;
@@ -79,22 +79,12 @@ trait StubsTrait {
     }
 
     /** @return ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
-    protected function createResourceMock(int $id, ?ResourceKind $resourceKind = null, array $contents = []): ResourceEntity {
+    protected function createResourceMock(int $id, ?ResourceKind $resourceKind = null, $contents = []): ResourceEntity {
         $mock = $this->createMock(ResourceEntity::class);
         $mock->method('getKind')->willReturn($resourceKind);
         $mock->method('getId')->willReturn($id);
-        $contents = (new ResourceContentsNormalizer())->normalize($contents);
+        $contents = $contents instanceof ResourceContents ? $contents : ResourceContents::fromArray($contents);
         $mock->method('getContents')->willReturn($contents);
-        if ($contents) {
-            $mock->method('getValues')->willReturnCallback(function ($metadata) use ($contents) {
-                /** @var Metadata $metadata */
-                if (array_key_exists($metadata->getId(), $contents)) {
-                    return $contents[$metadata->getId()];
-                } else {
-                    return [];
-                }
-            });
-        }
         return $mock;
     }
 

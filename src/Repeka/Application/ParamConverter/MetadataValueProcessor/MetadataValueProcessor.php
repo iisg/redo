@@ -8,10 +8,10 @@ class MetadataValueProcessor {
     /** @var MetadataValueProcessorStrategy[] */
     private $strategies = [];
 
-    public function process(array $values, MetadataControl $control, Request $request): array {
+    public function process($value, MetadataControl $control, Request $request) {
         return array_key_exists($control->getValue(), $this->strategies)
-            ? $this->strategies[$control->getValue()]->processValues($values, $request)
-            : $values;
+            ? $this->strategies[$control->getValue()]->processValue($value, $request)
+            : $value;
     }
 
     public function registerStrategy(MetadataValueProcessorStrategy $strategy) {

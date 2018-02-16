@@ -5,8 +5,11 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
+use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var MetadataCreateCommand */
     private $textareaMetadataCreateCmd;
     /** @var MetadataCreateCommand */
@@ -43,8 +46,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testCreatingChildMetadataWithParent() {
-        $parent = $this->createMock(Metadata::class);
-        $parent->expects($this->atLeastOnce())->method('getId')->willReturn(1);
+        $parent = $this->createMetadataMock();
         $created = $this->factory->createWithParent($this->newChildMetadata, $parent);
         $this->assertEquals(1, $created->getParentId());
         $this->assertEquals('nazwa', $created->getName());

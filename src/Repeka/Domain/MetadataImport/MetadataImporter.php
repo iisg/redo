@@ -2,19 +2,15 @@
 namespace Repeka\Domain\MetadataImport;
 
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\Factory\ResourceContentsNormalizer;
 use Repeka\Domain\MetadataImport\Config\ImportConfig;
 use Repeka\Domain\MetadataImport\Transform\ImportTransformComposite;
 
 class MetadataImporter {
     /** @var ImportTransformComposite */
     private $transforms;
-    /** @var ResourceContentsNormalizer */
-    private $resourceContentsNormalizer;
 
-    public function __construct(ImportTransformComposite $transforms, ResourceContentsNormalizer $resourceContentsNormalizer) {
+    public function __construct(ImportTransformComposite $transforms) {
         $this->transforms = $transforms;
-        $this->resourceContentsNormalizer = $resourceContentsNormalizer;
     }
 
     public function import(array $data, ImportConfig $config): ImportResult {
@@ -48,7 +44,7 @@ class MetadataImporter {
                     $resultBuilder->addUnfitTypeValues($id, $values);
             }
         }
-        return $resultBuilder->build($this->resourceContentsNormalizer);
+        return $resultBuilder->build();
     }
 
     /**

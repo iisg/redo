@@ -4,6 +4,7 @@ namespace Repeka\Tests\Integration;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
@@ -146,10 +147,10 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     }
 
     public function testDeletingUsedResourceKindFails() {
-        $this->handleCommand(new ResourceCreateCommand($this->resourceKind, [
+        $this->handleCommand(new ResourceCreateCommand($this->resourceKind, ResourceContents::fromArray([
             $this->metadata1->getId() => ['test1'],
             $this->metadata2->getId() => ['test2'],
-        ]));
+        ])));
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::oneEntityEndpoint($this->resourceKind->getId()));
         $this->assertStatusCode(400, $client->getResponse());

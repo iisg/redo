@@ -2,12 +2,10 @@
 namespace Repeka\Application\ParamConverter;
 
 use Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor;
-use Repeka\Application\Upload\FilesystemDriver;
-use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Application\Upload\UploadSizeHelper;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\Repository\ResourceRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,26 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 class ResourceContentsParamConverter implements ParamConverterInterface {
     /** @var MetadataRepository */
     private $metadataRepository;
-    /** @var ResourceRepository */
-    private $resourceRepository;
-    /** @var ResourceFilePathGenerator */
-    private $pathGenerator;
-    /** @var FilesystemDriver */
-    private $filesystemDriver;
     /** @var MetadataValueProcessor */
     private $metadataValueProcessor;
 
-    public function __construct(
-        MetadataRepository $metadataRepository,
-        ResourceRepository $resourceRepository,
-        ResourceFilePathGenerator $pathGenerator,
-        FilesystemDriver $filesystemDriver,
-        MetadataValueProcessor $metadataValueProcessor
-    ) {
+    public function __construct(MetadataRepository $metadataRepository, MetadataValueProcessor $metadataValueProcessor) {
         $this->metadataRepository = $metadataRepository;
-        $this->resourceRepository = $resourceRepository;
-        $this->pathGenerator = $pathGenerator;
-        $this->filesystemDriver = $filesystemDriver;
         $this->metadataValueProcessor = $metadataValueProcessor;
     }
 
@@ -44,22 +27,21 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
         return true;
     }
 
-    /** @inheritdoc */
     public function supports(ParamConverter $configuration): bool {
-        return true;
+        return $configuration->getClass() == ResourceContents::class;
     }
 
-    private function getContentsFromRequest(Request $request): array {
-        $contents = [];
+    private function getContentsFromRequest(Request $request): ResourceContents {
         $contentsFromRequest = $request->get('contents');
         if (!$contentsFromRequest) {
             $this->handleEmptyRequestContents($request);
         }
-        foreach (json_decode($contentsFromRequest, true) ?? [] as $metadataId => $values) {
-            $baseMetadata = $this->metadataRepository->findOne($metadataId);
-            $contents[$metadataId] = $this->metadataValueProcessor->process($values, $baseMetadata->getControl(), $request);
-        }
-        return $contents;
+        $decodedContents = json_decode($contentsFromRequest, true);
+        $contents = ResourceContents::fromArray($decodedContents ?? []);
+        return $contents->mapAllValues(function ($value, int $metadataId) use ($request) {
+            $metadata = $this->metadataRepository->findOne($metadataId);
+            return $this->metadataValueProcessor->process($value, $metadata->getControl(), $request);
+        });
     }
 
     /**

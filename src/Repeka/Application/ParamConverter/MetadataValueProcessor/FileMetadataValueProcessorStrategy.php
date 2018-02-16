@@ -18,25 +18,21 @@ class FileMetadataValueProcessorStrategy implements MetadataValueProcessorStrate
         $this->filesystemDriver = $filesystemDriver;
     }
 
-    public function processValues(array $values, Request $request): array {
-        $processedValues = [];
-        foreach ($values as $value) {
-            /** @var UploadedFile $file */
-            $file = $request->files->get($value['value']);
-            if ($file) {
-                $fileName = $file->getClientOriginalName();
-                $tempFolder = $this->pathGenerator->getTemporaryPath();
-                if (!$this->filesystemDriver->exists($tempFolder)) {
-                    $this->filesystemDriver->mkdirRecursive($tempFolder, 0750);
-                }
-                $storedFile = $file->move($tempFolder, $fileName);
-                chmod($storedFile->getRealPath(), 0660); // make sure file isn't executable
-                $processedValues[] = $this->pathGenerator->getTemporaryFolderName() . '/' . $fileName;
-            } else {
-                $processedValues[] = $value;
+    public function processValue($fileRef, Request $request) {
+        /** @var UploadedFile $file */
+        $file = $request->files->get($fileRef);
+        if ($file) {
+            $fileName = $file->getClientOriginalName();
+            $tempFolder = $this->pathGenerator->getTemporaryPath();
+            if (!$this->filesystemDriver->exists($tempFolder)) {
+                $this->filesystemDriver->mkdirRecursive($tempFolder, 0750);
             }
+            $storedFile = $file->move($tempFolder, $fileName);
+            chmod($storedFile->getRealPath(), 0660); // make sure file isn't executable
+            return $this->pathGenerator->getTemporaryFolderName() . '/' . $fileName;
+        } else {
+            return $fileRef;
         }
-        return $processedValues;
     }
 
     public function getSupportedControl(): MetadataControl {
