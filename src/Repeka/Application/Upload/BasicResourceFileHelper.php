@@ -3,9 +3,9 @@ namespace Repeka\Application\Upload;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\EntityUtils;
-use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Upload\ResourceFileHelper;
 
 class BasicResourceFileHelper implements ResourceFileHelper {
@@ -13,98 +13,92 @@ class BasicResourceFileHelper implements ResourceFileHelper {
     private $pathGenerator;
     /** @var FilesystemDriver */
     private $filesystemDriver;
+    /** @var MetadataRepository */
+    private $metadataRepository;
 
-    public function __construct(ResourceFilePathGenerator $pathGenerator, FilesystemDriver $filesystemDriver) {
+    public function __construct(
+        ResourceFilePathGenerator $pathGenerator,
+        FilesystemDriver $filesystemDriver,
+        MetadataRepository $metadataRepository
+    ) {
         $this->pathGenerator = $pathGenerator;
         $this->filesystemDriver = $filesystemDriver;
+        $this->metadataRepository = $metadataRepository;
     }
 
     public function moveFilesToDestinationPaths(ResourceEntity $resource): int {
         Assertion::integer($resource->getId());
-        $contents = $resource->getContents();
-        $fileMetadataIds = $this->getExistingFileMetadataIds($resource);
-        foreach ($fileMetadataIds as $metadataId) {
-            $filePaths = array_map(function (array $metadataValue) {
-                return $metadataValue['value'];
-            }, $contents[$metadataId]);
-            $this->ensureMovingWillNotOverwriteFiles($filePaths, $resource);
-        }
+        $fileMetadataIds = $this->getPossibleFileMetadataIds($resource);
+        $resource->getContents()->forEachValue(function ($filePath, int $metadataId) use ($resource, $fileMetadataIds) {
+            if (in_array($metadataId, $fileMetadataIds)) {
+                $this->ensureMovingWillNotOverwriteFile($filePath, $resource);
+            }
+        });
         $movedFilesCount = 0;
-        foreach ($fileMetadataIds as $metadataId) {
-            $filePaths = array_map(function (array $metadataValue) {
-                return $metadataValue['value'];
-            }, $contents[$metadataId]);
-            $updatedPaths = $this->moveFilesInListToDestinationPaths($filePaths, $resource);
-            $movedFilesCount += count(array_diff($filePaths, $updatedPaths));
-            // TODO submetadata values are possibly lost here
-            $contents[$metadataId] = array_map(function ($path) {
-                return ['value' => $path];
-            }, $updatedPaths);
-        }
+        $contents = $resource->getContents()->mapAllValues(
+            function ($value, int $metadataId) use ($resource, $fileMetadataIds, &$movedFilesCount) {
+                if (in_array($metadataId, $fileMetadataIds)) {
+                    $path = $this->moveFileToDestinationPath($value, $resource);
+                    if ($path) {
+                        $movedFilesCount++;
+                        return $path;
+                    }
+                }
+                return $value;
+            }
+        );
         $resource->updateContents($contents);
         return $movedFilesCount;
     }
 
-    private function getExistingFileMetadataIds(ResourceEntity $resource): array {
-        $fileMetadataList = array_values(array_filter(
-            $resource->getKind()->getMetadataList(),
-            function (Metadata $metadata) {
-                return $metadata->getControl() == MetadataControl::FILE();
-            }
-        ));
-        $fileMetadataIds = EntityUtils::mapToIds($fileMetadataList);
-        $contentsIds = array_keys($resource->getContents());
-        return array_intersect($fileMetadataIds, $contentsIds);
+    public function getFilesThatWouldBeOverwrittenInDestinationPaths(ResourceEntity $resource): array {
+        $fileMetadataIds = $this->getPossibleFileMetadataIds($resource);
+        return $resource->getContents()->reduceAllValues(
+            function ($value, int $metadataId, array $existingFiles) use ($resource, $fileMetadataIds) {
+                if (in_array($metadataId, $fileMetadataIds)) {
+                    try {
+                        $this->ensureMovingWillNotOverwriteFile($value, $resource);
+                    } catch (ResourceFileExistException $e) {
+                        $existingFiles[] = $e->getConflictingPath();
+                    }
+                }
+                return $existingFiles;
+            },
+            []
+        );
     }
 
-    public function getFilesThatWouldBeOverwrittenInDestinationPaths(ResourceEntity $resource): array {
-        $contents = $resource->getContents();
-        $fileMetadataIds = $this->getExistingFileMetadataIds($resource);
-        $existingFiles = [];
-        foreach ($fileMetadataIds as $metadataId) {
-            try {
-                $this->ensureMovingWillNotOverwriteFiles($contents[$metadataId], $resource);
-            } catch (ResourceFilesExistException $e) {
-                $existingFiles = $existingFiles + $e->getExistingFiles();
-            }
-        }
-        return $existingFiles;
+    private function getPossibleFileMetadataIds(ResourceEntity $resource): array {
+        $fileMetadata = $this->metadataRepository->findByControlAndResourceClass(MetadataControl::FILE(), $resource->getResourceClass());
+        return EntityUtils::mapToIds($fileMetadata);
     }
 
     /** @param string[] $filePaths */
-    private function ensureMovingWillNotOverwriteFiles(array $filePaths, ResourceEntity $resource): void {
-        $existingFiles = [];
-        foreach ($filePaths as $path) {
-            $relativeTargetPath = $this->getRelativePath($resource, $path);
-            $absoluteTargetPath = $this->getAbsolutePath($resource, $path);
-            if ($path != $relativeTargetPath && $this->filesystemDriver->exists($absoluteTargetPath)) {
-                $existingFiles[$path] = $relativeTargetPath;
-            }
-        }
-        if (count($existingFiles) > 0) {
-            throw new ResourceFilesExistException($resource, $existingFiles);
+    private function ensureMovingWillNotOverwriteFile(string $filePath, ResourceEntity $resource): void {
+        $relativeTargetPath = $this->getRelativePath($resource, $filePath);
+        $absoluteTargetPath = $this->getAbsolutePath($resource, $filePath);
+        if ($filePath != $relativeTargetPath && $this->filesystemDriver->exists($absoluteTargetPath)) {
+            throw new ResourceFileExistException($resource, $relativeTargetPath);
         }
     }
 
     /**
-     * @param string[] $filePaths
-     * @return string[]
+     * @param string $filePath
+     * @return string relativeTargetPath of the file or false if the file has not been moved
      */
-    private function moveFilesInListToDestinationPaths(array $filePaths, ResourceEntity $resource): array {
-        $movedFilePaths = [];
-        foreach ($filePaths as $path) {
-            $relativeTargetPath = $this->getRelativePath($resource, $path);
-            if ($path != $relativeTargetPath) {
-                $absoluteTargetPath = $this->getAbsolutePath($resource, $path);
-                $absoluteTargetFolder = pathinfo($absoluteTargetPath)['dirname'];
-                if (!$this->filesystemDriver->exists($absoluteTargetFolder)) {
-                    $this->filesystemDriver->mkdirRecursive($absoluteTargetFolder, 0750);
-                }
-                $this->filesystemDriver->move($this->toAbsolutePath($path), $absoluteTargetPath);
+    private function moveFileToDestinationPath(string $filePath, ResourceEntity $resource) {
+        $relativeTargetPath = $this->getRelativePath($resource, $filePath);
+        if ($filePath != $relativeTargetPath) {
+            $absoluteTargetPath = $this->getAbsolutePath($resource, $filePath);
+            $absoluteTargetFolder = pathinfo($absoluteTargetPath)['dirname'];
+            if (!$this->filesystemDriver->exists($absoluteTargetFolder)) {
+                $this->filesystemDriver->mkdirRecursive($absoluteTargetFolder, 0750);
             }
-            $movedFilePaths[] = $relativeTargetPath;
+            $this->filesystemDriver->move($this->toAbsolutePath($filePath), $absoluteTargetPath);
+            return $relativeTargetPath;
+        } else {
+            return false;
         }
-        return $movedFilePaths;
     }
 
     public function toAbsolutePath(string $path): string {

@@ -93,8 +93,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(0, $resultsBeforeAssigning);
         $book = $this->getPhpBookResource('books');
         $scannerMetadata = $this->getScannerBaseMetadata();
-        $bookContents = $book->getContents();
-        $bookContents[$scannerMetadata->getId()] = [['value' => $user->getUserData()->getId()]];
+        $bookContents = $book->getContents()->withNewValues($scannerMetadata, $user->getUserData());
         $book->updateContents($bookContents);
         $this->resourceRepository->save($book);
         $this->em->flush();
@@ -113,7 +112,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     private function getBookResourceKind(): ResourceKind {
-        $resourceKinds = $this->handleCommand(new ResourceKindListQuery('books', false));
+        $resourceKinds = $this->handleCommand(new ResourceKindListQuery());
         foreach ($resourceKinds as $resourceKind) {
             /** @var ResourceKind $resourceKind */
             if ($resourceKind->getLabel()['EN'] == 'Book') {
@@ -134,14 +133,14 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         throw new \ErrorException("User not found");
     }
 
+    /** @SuppressWarnings("PHPMD.UnusedLocalVariable") */
     private function getPhpBookResource(string $resourceClass): ResourceEntity {
         $query = ResourceListQuery::builder()->filterByResourceClasses([$resourceClass])->build();
         foreach ($this->resourceRepository->findByQuery($query) as $resource) {
-            $allValuesOfContents = call_user_func_array('array_merge', $resource->getContents());
-            $allValuesOfContents = array_map(function ($value) {
-                return $value['value'];
-            }, $allValuesOfContents);
-            if (in_array('PHP - to można leczyć!', $allValuesOfContents)) {
+            $isPhpBook = $resource->getContents()->reduceAllValues(function ($value, $metadataId, $isPhpBook) {
+                return $isPhpBook || $value == 'PHP - to można leczyć!';
+            });
+            if ($isPhpBook) {
                 return $resource;
             }
         }

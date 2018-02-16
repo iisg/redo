@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Repository;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Exception\EntityNotFoundException;
 
 interface MetadataRepository {
@@ -40,4 +41,7 @@ interface MetadataRepository {
      * @return Metadata[]
      */
     public function findByIds(array $metadataIds): array;
+
+    /** @return Metadata[] */
+    public function findByControlAndResourceClass(MetadataControl $control, string $resourceClass): array;
 }

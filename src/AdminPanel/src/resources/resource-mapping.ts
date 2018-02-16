@@ -5,8 +5,12 @@ import {autoinject} from "aurelia-dependency-injection";
 import {AdvancedMapper} from "common/dto/mappers";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {maps} from "common/dto/decorators";
+import {MetadataValue} from "./metadata-value";
 
 export class ResourceMapper extends AutoMapper<Resource> {
+
+  static FILE_COUNTER = 0;
+
   fromBackendValue(dto: any, entity: Resource): Promise<Resource> {
     return super.fromBackendValue(dto, entity).then(resource => this.addContentsForEachMetadata(resource));
   }
@@ -25,31 +29,36 @@ export class ResourceMapper extends AutoMapper<Resource> {
 
   toBackendValue(resource: Resource): Object {
     const formData = new FormData();
-    const resourceCopy = new Resource();
-    let fileCounter = 0;
+    const contents = this.contentsToBackend(resource.contents, formData);
+    formData.append('id', resource.id + '');
+    formData.append('kindId', resource.kind.id + '');
+    formData.append('resourceClass', resource.resourceClass);
+    formData.append('contents', JSON.stringify(contents));
+    return formData;
+  }
 
-    for (let metadataId in resource.contents) {
-      if (resource.contents[metadataId].length > 0) {
-        resourceCopy.contents[metadataId] = resource.contents[metadataId].map(item => {
+  private contentsToBackend(contents: NumberMap<MetadataValue[]>, formData: FormData): NumberMap<MetadataValue[]> {
+    const updatedContents: NumberMap<MetadataValue[]> = {};
+    for (let metadataId in contents) {
+      if (contents[metadataId].length > 0) {
+        updatedContents[metadataId] = contents[metadataId].map(item => {
           if (item.value instanceof File) {
-            fileCounter++;
-            item.value = this.wrapFileWithFormData(formData, item.value, metadataId as any as number, fileCounter);
+            item.value = this.wrapFileWithFormData(formData, item.value, metadataId as any as number);
+          }
+          if (item.submetadata) {
+            item.submetadata = this.contentsToBackend(item.submetadata, formData);
           }
           return item;
         });
       } else {
-        resourceCopy.contents[metadataId] = [];
+        updatedContents[metadataId] = [];
       }
     }
-
-    formData.append('id', resource.id + '');
-    formData.append('kindId', resource.kind.id + '');
-    formData.append('resourceClass', resource.resourceClass);
-    formData.append('contents', JSON.stringify(resourceCopy.contents));
-    return formData;
+    return updatedContents;
   }
 
-  private wrapFileWithFormData(formData: FormData, file: File, metadataId: number, fileIndex: number): string {
+  private wrapFileWithFormData(formData: FormData, file: File, metadataId: number): string {
+    const fileIndex = ResourceMapper.FILE_COUNTER++;
     const resourceName = `metadata${metadataId}_file${fileIndex}`;
     formData.append(resourceName, file, file.name);
     return resourceName;

@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Domain\MetadataImport;
 
-use Repeka\Domain\Factory\ResourceContentsNormalizer;
+use Repeka\Domain\Entity\ResourceContents;
 
 class ImportResultBuilder {
     /** @var array[] */
@@ -32,11 +32,11 @@ class ImportResultBuilder {
         $this->unfitTypeValues[$metadataId] = $values;
     }
 
-    public function build(ResourceContentsNormalizer $normalizer): ImportResult {
+    public function build(): ImportResult {
         $notEmptyCallback = function (array $array) {
             return !empty($array);
         };
-        $this->acceptedValues = $normalizer->normalize(array_filter($this->acceptedValues, $notEmptyCallback));
+        $this->acceptedValues = ResourceContents::fromArray((array_filter($this->acceptedValues, $notEmptyCallback)));
         $this->unfitTypeValues = array_filter($this->unfitTypeValues, $notEmptyCallback);
         return new ImportResult($this->acceptedValues, $this->unfitTypeValues, $this->invalidMetadataKeys);
     }

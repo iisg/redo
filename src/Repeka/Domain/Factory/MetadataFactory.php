@@ -1,12 +1,14 @@
 <?php
 namespace Repeka\Domain\Factory;
 
+use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 
 class MetadataFactory {
     public function create(MetadataCreateCommand $command) {
+        Assertion::notEmpty($command->getResourceClass());
         return Metadata::create(
             $command->getResourceClass(),
             new MetadataControl($command->getControlName()),
@@ -20,6 +22,7 @@ class MetadataFactory {
     }
 
     public function createWithParent(array $newChildMetadata, Metadata $parent) {
+        $newChildMetadata['resourceClass'] = $parent->getResourceClass();
         $metadata = MetadataFactory::create(MetadataCreateCommand::fromArray($newChildMetadata));
         $metadata->setParent($parent);
         return $metadata;

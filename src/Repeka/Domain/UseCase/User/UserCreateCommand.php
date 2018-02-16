@@ -2,6 +2,7 @@
 namespace Repeka\Domain\UseCase\User;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Entity\ResourceContents;
 
 class UserCreateCommand extends AbstractCommand {
     /** @var string */
@@ -11,17 +12,17 @@ class UserCreateCommand extends AbstractCommand {
     /** @var array */
     private $userData;
 
-    public function __construct(string $username, string $plainPassword = null, array $userData = []) {
+    public function __construct(string $username, string $plainPassword = null, ResourceContents $userData = null) {
         $this->username = $username;
         $this->plainPassword = $plainPassword;
-        $this->userData = $userData;
+        $this->userData = $userData ?: ResourceContents::empty();
     }
 
     public function getUsername(): string {
         return $this->username;
     }
 
-    public function getUserData(): array {
+    public function getUserData(): ResourceContents {
         return $this->userData;
     }
 

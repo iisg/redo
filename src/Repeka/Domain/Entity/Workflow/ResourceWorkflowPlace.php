@@ -41,7 +41,7 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
 
     public function getMissingRequiredMetadataIds(ResourceEntity $resource): array {
         $requiredMetadataIds = $this->restrictingMetadataIds()->required()->assignees()->get();
-        $presentMetadataIds = array_keys($resource->getContents());
+        $presentMetadataIds = array_keys($resource->getContents()->toArray());
         $metadataIdsMissingForPlace = array_diff($requiredMetadataIds, $presentMetadataIds);
         return array_values($metadataIdsMissingForPlace);
     }

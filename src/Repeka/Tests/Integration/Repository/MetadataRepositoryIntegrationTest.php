@@ -3,6 +3,7 @@ namespace Repeka\Tests\Integration\Repository;
 
 use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -29,5 +30,10 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         sort($allIds);
         sort($filteredIds);
         $this->assertEquals($filteredIds, $allIds);
+    }
+
+    public function testFindByControlAndResourceClass() {
+        $textMetadata = $this->metadataRepository->findByControlAndResourceClass(MetadataControl::TEXT(), 'books');
+        $this->assertCount(4, $textMetadata);
     }
 }

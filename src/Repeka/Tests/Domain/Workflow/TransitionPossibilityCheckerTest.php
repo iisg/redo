@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Workflow;
 
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -66,10 +67,10 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             $this->createWorkflowPlaceMock('p1', [], [1]),
             $this->createWorkflowPlaceMock('p2', [], [2]),
         ]);
-        $this->resource->method('getContents')->willReturn([
+        $this->resource->method('getContents')->willReturn(ResourceContents::fromArray([
             1 => [1000],
             2 => [2000, ['value' => $this->executor->getId()]],
-        ]);
+        ]));
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
         $result = $this->checkWithDefaults();
@@ -82,9 +83,9 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             $this->createWorkflowPlaceMock('p1', [], [1]),
             $this->createWorkflowPlaceMock('p2', [], [2]),
         ]);
-        $this->resource->method('getContents')->willReturn([
+        $this->resource->method('getContents')->willReturn(ResourceContents::fromArray([
             1 => [1000],
-        ]);
+        ]));
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
         $this->checkWithDefaults();

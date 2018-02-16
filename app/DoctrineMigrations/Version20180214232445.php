@@ -4,7 +4,7 @@ namespace Repeka\Migrations;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Repeka\Domain\Factory\ResourceContentsNormalizer;
+use Repeka\Domain\Entity\ResourceContents;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -27,10 +27,9 @@ class Version20180214232445 extends AbstractMigration implements ContainerAwareI
 
     private function updateResourceContentsStructure(Connection $connection): void {
         $resources = $connection->fetchAll('SELECT id, contents FROM resource');
-        $contentsNormalizer = $this->container->get(ResourceContentsNormalizer::class);
         foreach ($resources as $resource) {
             $resource['contents'] = json_decode($resource['contents'], true);
-            $resource['contents'] = $contentsNormalizer->normalize($resource['contents']);
+            $resource['contents'] = ResourceContents::fromArray($resource['contents']);
             $resource['contents'] = json_encode($resource['contents']);
             $this->addSql('UPDATE resource SET contents = :contents WHERE id = :id', $resource);
         }

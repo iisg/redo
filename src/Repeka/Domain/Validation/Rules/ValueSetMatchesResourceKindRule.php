@@ -2,10 +2,11 @@
 namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
-use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Respect\Validation\Exceptions\NestedValidationException;
+use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Rules\AbstractRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -29,15 +30,22 @@ class ValueSetMatchesResourceKindRule extends AbstractRule {
 
     public function validate($input) {
         Assertion::notNull($this->contentsValidator, 'Resource kind not set');
-        return $this->contentsValidator->validate($input);
+        try {
+            $this->assert($input);
+            return true;
+        } catch (ValidationException|\InvalidArgumentException $e) {
+            return false;
+        }
     }
 
     public function assert($input) {
-        unset($input[SystemMetadata::PARENT]);
+        Assertion::notNull($this->contentsValidator, 'Resource kind not set');
+        Assertion::isInstanceOf($input, ResourceContents::class);
+        $contentsArray = $input->toArray();
         try {
-            $this->contentsValidator->assert($input);
+            $this->contentsValidator->assert($contentsArray);
         } catch (NestedValidationException $e) {
-            throw $this->reportError(array_keys($input), ['originalMessage' => $e->getFullMessage()]);
+            throw $this->reportError(array_keys($contentsArray), ['originalMessage' => $e->getFullMessage()]);
         }
     }
 }

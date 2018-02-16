@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Validation\Rules;
 
+use Repeka\Domain\Entity\ResourceContents;
 use Respect\Validation\Rules\AbstractRule;
 use Respect\Validation\Validator;
 
@@ -22,6 +23,7 @@ class ResourceContentsCorrectStructureRule extends AbstractRule {
     }
 
     public function validate($input) {
+        $input = $input instanceof ResourceContents ? $input->toArray() : $input;
         return $this->contentsValidator->validate($input)
             && !in_array(false, array_map(function (array $metadataEntry) {
                 return !in_array(false, array_map([$this, 'recursivelyCheckSubmetadataIfExist'], $metadataEntry));

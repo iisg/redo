@@ -3,6 +3,7 @@ namespace Repeka\Tests\Application\Factory;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Application\Workflow\SymfonyResourceWorkflowDriver;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -23,14 +24,14 @@ class SymfonyResourceWorkflowDriverTest extends \PHPUnit_Framework_TestCase {
         $this->resourceWorkflow->method('getPlaces')->willReturn([
             $this->placeMock('A'),
             $this->placeMock('B'),
-            $this->placeMock('C')
+            $this->placeMock('C'),
         ]);
         $this->resourceWorkflow->method('getTransitions')->willReturn([
             $this->transitionMock('AB'),
             $this->transitionMock('BC'),
             $this->transitionMock('AC'),
         ]);
-        $this->resource = new ResourceEntity($this->createMock(ResourceKind::class), [], 'books');
+        $this->resource = new ResourceEntity($this->createMock(ResourceKind::class), ResourceContents::empty());
         $this->workflowDriver = new SymfonyResourceWorkflowDriver($this->resourceWorkflow);
     }
 

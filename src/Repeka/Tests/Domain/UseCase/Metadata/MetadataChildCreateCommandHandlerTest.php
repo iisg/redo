@@ -9,8 +9,11 @@ use Repeka\Domain\Factory\MetadataFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommandHandler;
+use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataChildCreateCommandHandlerTest extends PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var Metadata */
     private $parent;
     /** @var MetadataChildCreateCommand */
@@ -33,8 +36,7 @@ class MetadataChildCreateCommandHandlerTest extends PHPUnit_Framework_TestCase {
             'shownInBrief' => false,
         ];
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
-        $this->parent = $this->createMock(Metadata::class);
-        $this->parent->expects($this->atLeastOnce())->method('getId')->willReturn(1);
+        $this->parent = $this->createMetadataMock();
         $this->metadataChildCreateCommand = new MetadataChildCreateCommand($this->parent, $this->newChildMetadata);
         $this->metadataFactory = new MetadataFactory();
         $this->handler = new MetadataChildCreateCommandHandler($this->metadataFactory, $this->metadataRepository);

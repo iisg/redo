@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\MetadataImport;
 
+use Repeka\Domain\Entity\ResourceContents;
 use Respect\Validation\Validator;
 
 class ImportResult {
@@ -12,22 +13,22 @@ class ImportResult {
     private $invalidMetadataKeys;
 
     /**
-     * @param array[] $acceptedValues with metadata base ID keys
+     * @param ResourceContents $acceptedValues with metadata base ID keys
      * @param string[][] $unfitTypeValues with metadata base ID keys
      * @param string[] $invalidMetadataKeys
      */
-    public function __construct(array $acceptedValues, array $unfitTypeValues, array $invalidMetadataKeys) {
+    public function __construct(ResourceContents $acceptedValues, array $unfitTypeValues, array $invalidMetadataKeys) {
         Validator::arrayType()->each(
             Validator::arrayType(),
             Validator::intType()  // keys are base IDs
-        )->assert($acceptedValues);
+        )->assert($acceptedValues->toArray());
         Validator::arrayType()->each(Validator::stringType())->assert($invalidMetadataKeys);
         $this->acceptedValues = $acceptedValues;
         $this->unfitTypeValues = $unfitTypeValues;
         $this->invalidMetadataKeys = $invalidMetadataKeys;
     }
 
-    public function getAcceptedValues() {
+    public function getAcceptedValues(): ResourceContents {
         return $this->acceptedValues;
     }
 

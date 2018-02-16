@@ -9,6 +9,7 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Language;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -171,7 +172,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {
-        return $this->handleCommand(new ResourceCreateCommand($resourceKind, $contents));
+        return $this->handleCommand(new ResourceCreateCommand($resourceKind, ResourceContents::fromArray($contents)));
     }
 
     protected function createWorkflow(array $name, string $resourceClass, ResourceWorkflowPlace $initialPlace): ResourceWorkflow {
