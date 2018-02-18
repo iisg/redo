@@ -1,24 +1,18 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "./metadata";
-import {cachedResponse, forOneMinute} from "common/repository/cached-response";
-import {ResourceClassApiRepository} from "common/repository/resource-class-api-repository";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {MetadataListQuery} from "./metadata-list-query";
+import {ApiRepository} from "../../common/repository/api-repository";
 
 @autoinject
-export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
+export class MetadataRepository extends ApiRepository<Metadata> {
   constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer) {
     super(httpClient, entitySerializer, Metadata, 'metadata');
   }
 
-  @cachedResponse(forOneMinute())
-  public getListByClass(resourceClass: string): Promise<Metadata[]> {
-    return super.getListByClass(resourceClass);
-  }
-
-  public getByParent(parent: Metadata): Promise<Metadata[]> {
-    return this.httpClient.get(this.oneEntityEndpoint(parent.id) + '/metadata')
-      .then(response => this.responseToEntities(response));
+  public getListQuery(): MetadataListQuery {
+    return new MetadataListQuery(this.httpClient, this.endpoint, this.entitySerializer);
   }
 
   public saveChild(parentId: number, newChildMetadata: Metadata, baseId?: number) {

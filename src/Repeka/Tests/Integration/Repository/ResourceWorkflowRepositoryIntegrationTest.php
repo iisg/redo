@@ -5,7 +5,6 @@ use Assert\Assertion;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -40,7 +39,7 @@ class ResourceWorkflowRepositoryIntegrationTest extends IntegrationTestCase {
     /** @return Metadata[] */
     private function getScannerAndSupervisorMetadata(): array {
         /** @var Metadata[] $allMetadata */
-        $allMetadata = $this->handleCommand(new MetadataListByResourceClassQuery('books'));
+        $allMetadata = $this->handleCommand(MetadataListQuery::builder()->filterByResourceClass('books')->build());
         $scanner = $supervisor = null;
         foreach ($allMetadata as $metadata) {
             if ($metadata->getName() == 'Skanista') {

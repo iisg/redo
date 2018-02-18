@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Upload\ResourceFileHelper;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 
 class BasicResourceFileHelper implements ResourceFileHelper {
     /** @var ResourceFilePathGenerator */
@@ -69,7 +70,11 @@ class BasicResourceFileHelper implements ResourceFileHelper {
     }
 
     private function getPossibleFileMetadataIds(ResourceEntity $resource): array {
-        $fileMetadata = $this->metadataRepository->findByControlAndResourceClass(MetadataControl::FILE(), $resource->getResourceClass());
+        $fileMetadataQuery = MetadataListQuery::builder()
+            ->filterByResourceClass($resource->getResourceClass())
+            ->filterByControl(MetadataControl::FILE())
+            ->build();
+        $fileMetadata = $this->metadataRepository->findByQuery($fileMetadataQuery);
         return EntityUtils::mapToIds($fileMetadata);
     }
 

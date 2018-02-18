@@ -10,6 +10,7 @@ import {PageResult} from "../../../page-result";
 export class ResourcePicker implements ComponentAttached {
   @bindable(twoWay) resourceId: number;
   @bindable resourceKindIds: number[] = [];
+  @bindable contentsFilter: NumberMap<string> = {};
   @bindable resourceClass: string;
   @bindable disabled: boolean = false;
 
@@ -29,6 +30,9 @@ export class ResourcePicker implements ComponentAttached {
     }
     if (this.resourceClass) {
       query.filterByResourceClasses(this.resourceClass);
+    }
+    if (this.contentsFilter) {
+      query.filterByContents(this.contentsFilter);
     }
     query.get().then(resources => {
       this.resources = resources;

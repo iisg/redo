@@ -146,3 +146,6 @@ And move to state: i przejdź do stanu
 No more values are allowed: Wprowadzono maksymalną liczbę wartości
 Some metadata constraints have not been met. Check the form error and try again.: W formularzu pojawiły się błędy. Przejrzyj je i spróbuj ponownie.
 To see dropdown choose allowed resource kinds in metadata settings.: Aby zobaczy listę zasobów wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
+Additional filter limits results in this dropdown: Dodatkowy filtr ogranicza zasoby wyświetlane w powyższym polu
+Filter: Filtr
+Firstly, choose allowed resource kinds.: Wybierz najpierw dozwolone rodzaje zasobów.

@@ -19,7 +19,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First'], [], [], 'textarea');
         $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second'], ['TEST' => 'Hello'], ['TEST' => 'World'], 'integer');
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'topLevel' => true]);
         $this->assertStatusCode(200, $client->getResponse());
         $responseContent = $client->getResponse()->getContent();
         $this->assertJsonStringSimilarToArray([[
@@ -51,7 +51,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingMetadataWithInvalidResourceClassFails() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'resourceClass']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['invalidResourceClass']]);
         $this->assertStatusCode(400, $client->getResponse());
     }
 
@@ -87,7 +87,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'textarea');
         $metadata2 = $this->createMetadata('Metadata2', ['TEST' => 'Second metadata'], [], [], 'integer');
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'topLevel' => true]);
         $response = json_decode($client->getResponse()->getContent());
         array_multisort($response); // make sure IDs are ordered
         $this->assertEquals($metadata1->getId(), $response[0]->id);
@@ -96,7 +96,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('PUT', self::ENDPOINT . '?resourceClass=books', [$response[0]->id, $response[1]->id]);
         $this->assertStatusCode(200, $client->getResponse());
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books']]);
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals($metadata1->getId(), $response[0]->id);
         $this->assertEquals($metadata2->getId(), $response[1]->id);

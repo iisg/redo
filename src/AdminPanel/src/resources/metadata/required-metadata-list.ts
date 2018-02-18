@@ -20,7 +20,10 @@ export class RequiredMetadataList {
   }
 
   private async fetchMetadataList() {
-    this.allMetadataList = await this.metadataRepository.getListByClass(this.resourceClass);
+    this.allMetadataList = await this.metadataRepository.getListQuery()
+      .filterByResourceClasses(this.resourceClass)
+      .onlyTopLevel()
+      .get();
   }
 
   @computedFrom('requiredMetadataIds', 'allMetadataList')

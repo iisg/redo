@@ -3,7 +3,7 @@ namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Repository\MetadataRepository;
 
-class MetadataListByResourceClassQueryHandler {
+class MetadataListQueryHandler {
     /**
      * @var MetadataRepository
      */
@@ -13,7 +13,7 @@ class MetadataListByResourceClassQueryHandler {
         $this->metadataRepository = $metadataRepository;
     }
 
-    public function handle(MetadataListByResourceClassQuery $query): array {
-        return $this->metadataRepository->findTopLevelByResourceClass($query->getResourceClass());
+    public function handle(MetadataListQuery $query): array {
+        return $this->metadataRepository->findByQuery($query);
     }
 }

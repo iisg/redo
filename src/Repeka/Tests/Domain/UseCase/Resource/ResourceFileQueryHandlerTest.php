@@ -29,7 +29,7 @@ class ResourceFileQueryHandlerTest extends \PHPUnit_Framework_TestCase {
             $fileMetadataMock,
             $this->createMetadataMock(13, 1, MetadataControl::TEXT()),
         ]);
-        $metadataRepository->method('findByControlAndResourceClass')->willReturn([$fileMetadataMock]);
+        $metadataRepository->method('findByQuery')->willReturn([$fileMetadataMock]);
         $this->handler = new ResourceFileQueryHandler($fileHelper, $metadataRepository);
         $this->resource = $this->createResourceMock(1, null, [11 => ['relative/path/test.txt']]);
     }

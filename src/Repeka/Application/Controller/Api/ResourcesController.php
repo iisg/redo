@@ -38,9 +38,11 @@ class ResourcesController extends ApiController {
         $resourceKinds = array_map(function ($resourceKindId) {
             return $this->handleCommand(new ResourceKindQuery($resourceKindId));
         }, $resourceKindIds);
+        $contentsFilter = $request->get('contentsFilter', []);
         $resourceListQueryBuilder = ResourceListQuery::builder()
             ->filterByResourceClasses($resourceClasses)
-            ->filterByResourceKinds($resourceKinds);
+            ->filterByResourceKinds($resourceKinds)
+            ->filterByContents(is_array($contentsFilter) ? $contentsFilter : []);
         $page = $request->query->get('page', 1);
         if ($request->query->has('page')) {
             $resultsPerPage = $request->query->get('resultsPerPage', 10);

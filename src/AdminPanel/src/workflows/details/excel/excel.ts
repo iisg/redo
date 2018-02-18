@@ -1,6 +1,6 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
-import {Workflow, WorkflowPlace, RestrictingMetadataIdMap} from "../../workflow";
+import {RestrictingMetadataIdMap, Workflow, WorkflowPlace} from "../../workflow";
 import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 import {autoinject} from "aurelia-dependency-injection";
@@ -23,7 +23,10 @@ export class Excel implements ComponentAttached {
 
   async attached() {
     $('.highlight-col-row-on-hover').stickyTableHeaders();
-    this.metadataList = await this.metadataRepository.getListByClass(this.resourceClass);
+    this.metadataList = await this.metadataRepository.getListQuery()
+      .filterByResourceClasses(this.resourceClass)
+      .onlyTopLevel()
+      .get();
   }
 
   @computedFrom('workflow.places')

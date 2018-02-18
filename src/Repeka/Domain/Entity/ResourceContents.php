@@ -129,7 +129,7 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
                         if (!isset($metadataValue['value'])) {
                             $metadataValue['value'] = null;
                         }
-                        return $metadataValue;
+                        return array_intersect_key($metadataValue, ['value' => '', 'submetadata' => '']);
                     } else {
                         return ['value' => $metadataValue];
                     }

@@ -6,7 +6,7 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 
 /**
@@ -30,7 +30,7 @@ trait FixtureHelpers {
 
     protected function findMetadataByName(string $name, string $resourceClass = 'books'): Metadata {
         /** @var Metadata[] $metadataList */
-        $metadataList = $this->handleCommand(new MetadataListByResourceClassQuery($resourceClass));
+        $metadataList = $this->handleCommand(MetadataListQuery::builder()->filterByResourceClass($resourceClass)->build());
         foreach ($metadataList as $metadata) {
             if ($metadata->getName() == $name) {
                 return $metadata;

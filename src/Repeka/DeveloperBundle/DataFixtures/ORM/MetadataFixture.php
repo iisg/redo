@@ -5,7 +5,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
-use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 
 /** @SuppressWarnings(PHPMD.ExcessiveMethodLength) */
@@ -213,7 +213,7 @@ class MetadataFixture extends RepekaFixture {
             'constraints' => $this->textConstraints(1, '^[a-z]{3}$'),
         ]));
         $this->handleCommand(new MetadataUpdateOrderCommand(EntityUtils::mapToIds(
-            $this->handleCommand(new MetadataListByResourceClassQuery('books'))
+            $this->handleCommand(MetadataListQuery::builder()->filterByResourceClass('books')->build())
         ), 'books'));
     }
 

@@ -3,6 +3,7 @@ import {deepCopy} from "common/utils/object-utils";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {PageResult} from "./page-result";
+import {cachedResponse, forSeconds} from "../common/repository/cached-response";
 
 export class ResourceListQuery {
   private params: any = {};
@@ -47,6 +48,11 @@ export class ResourceListQuery {
     return this;
   }
 
+  filterByContents(contentsFilter: NumberMap<string>): ResourceListQuery {
+    this.params.contentsFilter = contentsFilter;
+    return this;
+  }
+
   public onlyTopLevel(): ResourceListQuery {
     this.params.topLevel = true;
     return this;
@@ -64,6 +70,7 @@ export class ResourceListQuery {
     return this.makeRequest(params);
   }
 
+  @cachedResponse(forSeconds(30))
   private makeRequest(params): Promise<PageResult<Resource>> {
     return this.httpClient.get(this.endpoint, params)
       .then(response => {

@@ -123,6 +123,7 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
             [['a'], [[['value' => 'a']]]],
             [[2 => ['a', 'b']], [2 => [['value' => 'a'], ['value' => 'b']]]],
             [[1 => ['a']], [1 => [['value' => 'a']]]],
+            [[1 => [['value' => 'a', 'someKey' => 'b']]], [1 => [['value' => 'a']]]],
             [[1 => [['value' => 'a', 'submetadata' => [1 => 'a']]]], [1 => [['value' => 'a', 'submetadata' => [1 => [['value' => 'a']]]]]]],
             [[1 => [['submetadata' => [1 => 'a']]]], [1 => [['value' => null, 'submetadata' => [1 => [['value' => 'a']]]]]]],
         ];

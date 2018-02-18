@@ -45,7 +45,10 @@ export class FakeResourceDisplay {
     } else {
       if (!this.pendingRequest) {
         this.pendingRequest = true;
-        this.metadataRepository.getListByClass(this.resourceClass)
+        this.metadataRepository.getListQuery()
+          .filterByResourceClasses(this.resourceClass)
+          .onlyTopLevel()
+          .get()
           .then(allMetadata => this.allMetadata = allMetadata)
           .finally(() => this.pendingRequest = false);
       }

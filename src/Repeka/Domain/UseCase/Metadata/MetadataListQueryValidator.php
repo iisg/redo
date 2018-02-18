@@ -2,12 +2,13 @@
 namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
-class MetadataListByResourceClassQueryValidator extends CommandAttributesValidator {
+class MetadataListQueryValidator extends CommandAttributesValidator {
     /** @var ResourceClassExistsRule */
     private $resourceClassExistsRule;
 
@@ -16,11 +17,12 @@ class MetadataListByResourceClassQueryValidator extends CommandAttributesValidat
     }
 
     /**
-     * @param MetadataListByResourceClassQuery $command
+     * @param MetadataListQuery $command
      * @inheritdoc
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('resourceClass', $this->resourceClassExistsRule);
+            ::attribute('resourceClasses', Validator::arrayType()->each($this->resourceClassExistsRule))
+            ->attribute('controls', Validator::arrayType()->each(Validator::instance(MetadataControl::class)));
     }
 }
