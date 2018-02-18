@@ -1,0 +1,8 @@
+<template>
+    <require from="common/components/entity-chooser/entity-chooser"></require>
+
+    <entity-chooser entities.bind="metadataList"
+        value.bind="value"
+        contains-items.bind="hasMetadataToChoose"
+        exclude-entities.bind="excludedMetadata"></entity-chooser>
+</template>

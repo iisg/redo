@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class MetadataDoctrineRepository extends EntityRepository implements MetadataRepository {
@@ -31,19 +32,6 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
             throw new EntityNotFoundException($this, $name);
         }
         return $metadata;
-    }
-
-    public function findTopLevelByResourceClass(string $resourceClass): array {
-        $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->isNull('parentMetadata'))
-            ->andWhere(Criteria::expr()->eq('resourceClass', $resourceClass))
-            ->orderBy(['ordinalNumber' => 'ASC']);
-        $result = $this->matching($criteria);
-        return $result->toArray();
-    }
-
-    public function findByParent(Metadata $parent): array {
-        return $this->findBy(['parentMetadata' => $parent]);
     }
 
     public function exists(int $id): bool {
@@ -75,10 +63,24 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
     }
 
     /** @return Metadata[] */
-    public function findByControlAndResourceClass(MetadataControl $control, string $resourceClass): array {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('control', $control->getValue()))
-            ->andWhere(Criteria::expr()->eq('resourceClass', $resourceClass));
+    public function findByQuery(MetadataListQuery $query): array {
+        $criteria = Criteria::create();
+        if ($query->onlyTopLevel()) {
+            $criteria = $criteria->andWhere(Criteria::expr()->isNull('parentMetadata'));
+        }
+        if ($query->getResourceClasses()) {
+            $criteria = $criteria->andWhere(Criteria::expr()->in('resourceClass', $query->getResourceClasses()));
+        }
+        if ($query->getControls()) {
+            $controlNames = array_map(function (MetadataControl $control) {
+                return $control->getValue();
+            }, $query->getControls());
+            $criteria = $criteria->andWhere(Criteria::expr()->in('control', $controlNames));
+        }
+        if ($query->getParent()) {
+            $criteria = $criteria->andWhere(Criteria::expr()->eq('parentMetadata', $query->getParent()));
+        }
+        $criteria->orderBy(['ordinalNumber' => 'ASC']);
         return $this->matching($criteria)->toArray();
     }
 }

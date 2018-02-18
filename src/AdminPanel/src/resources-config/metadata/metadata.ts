@@ -20,6 +20,7 @@ export class MetadataConstraints {
   @map maxCount?: number;
   @map(ResourceKindConstraintMapper) resourceKind?: ResourceKind[] | number[] = [];
   @map regex?: string;
+  @map relatedResourceMetadataFilter?: NumberMap<string> = {};
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
@@ -31,6 +32,7 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   minCount: 0,
   maxCount: 0,
   regex: '',
+  relatedResourceMetadataFilter: {}
 };
 
 @mappedWith(MetadataMapper)

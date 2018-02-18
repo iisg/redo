@@ -1,0 +1,7 @@
+<template>
+    <require from="../related-resource-metadata-filter/related-resource-metadata-filter-editor"></require>
+
+    <related-resource-metadata-filter-editor metadata.bind="metadata"
+        original-filters.bind="originalMetadata.constraints.relatedResourceMetadataFilter"
+        has-base.bind="!!originalMetadata"></related-resource-metadata-filter-editor>
+</template>

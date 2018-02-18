@@ -38,7 +38,7 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
             $fileMetadataMock,
             $this->createMetadataMock(self::OTHER_METADATA_ID, 1, MetadataControl::TEXT()),
         ]);
-        $metadataRepository->method('findByControlAndResourceClass')->willReturn([$fileMetadataMock]);
+        $metadataRepository->method('findByQuery')->willReturn([$fileMetadataMock]);
         $this->helper = new BasicResourceFileHelper($this->pathGenerator, $this->filesystemDriver, $metadataRepository);
     }
 

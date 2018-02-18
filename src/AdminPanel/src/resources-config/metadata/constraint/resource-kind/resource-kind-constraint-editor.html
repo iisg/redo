@@ -30,8 +30,7 @@
         <resource-kind-chooser value.bind="metadata.constraints.resourceKind"
             multi-select="true"
             disabled.bind="dropdownDisabled"
-            if.bind="!disabled || metadata.constraints.resourceKind.length > 0"
-            resource-class.bind="resourceClass"></resource-kind-chooser>
+            if.bind="!disabled || metadata.constraints.resourceKind.length > 0"></resource-kind-chooser>
         <div class="input-group-addon">
             <restore-from-original if.bind="canInherit && wasModified"
                 click.delegate="resetToOriginalIds()"></restore-from-original>

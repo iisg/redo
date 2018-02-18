@@ -12,6 +12,7 @@ class ResourceListQueryBuilder {
     private $resultsPerPage = 1;
     private $contents = [];
     private $onlyTopLevel = false;
+    private $ids = [];
 
     /** @param ResourceKind[] $resourceKinds */
     public function filterByResourceKinds(array $resourceKinds): ResourceListQueryBuilder {
@@ -53,6 +54,11 @@ class ResourceListQueryBuilder {
         return $this;
     }
 
+    public function filterByIds(array $ids): ResourceListQueryBuilder {
+        $this->ids = $ids;
+        return $this;
+    }
+
     public function onlyTopLevel(): ResourceListQueryBuilder {
         $this->onlyTopLevel = true;
         return $this;
@@ -60,6 +66,7 @@ class ResourceListQueryBuilder {
 
     public function build(): ResourceListQuery {
         return ResourceListQuery::withParams(
+            $this->ids,
             $this->resourceClasses,
             $this->resourceKinds,
             $this->parentId,

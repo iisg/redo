@@ -44,9 +44,13 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         $queryFroms = ['resource r'];
         $queryWheres = ['1=1'];
         $queryParams = [];
+        if ($query->getIds()) {
+            $queryWheres[] = 'id IN(:ids)';
+            $queryParams['ids'] = $query->getIds();
+        }
         if ($query->getResourceClasses()) {
-            $queryWheres[] = 'resource_class IN(:resourceClass)';
-            $queryParams['resourceClass'] = $query->getResourceClasses();
+            $queryWheres[] = 'resource_class IN(:resourceClasses)';
+            $queryParams['resourceClasses'] = $query->getResourceClasses();
         }
         if ($query->getResourceKinds()) {
             $queryWheres[] = 'kind_id IN(:resourceKindIds)';

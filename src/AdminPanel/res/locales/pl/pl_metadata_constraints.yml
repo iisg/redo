@@ -6,3 +6,4 @@ labels:
   maxCount: Maksymalna liczba wartości
   regex: Wyrażenie regularne
   resourceKind: Wymagany rodzaj zasobu
+  relatedResourceMetadataFilter: Dodatkowy filtr zasobów

@@ -5,6 +5,7 @@ use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Tests\IntegrationTestCase;
 
 class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
@@ -18,7 +19,8 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindAllByResourceClass() {
-        $topLevelByResourceClass = $this->metadataRepository->findTopLevelByResourceClass('books');
+        $query = MetadataListQuery::builder()->filterByResourceClass('books')->onlyTopLevel()->build();
+        $topLevelByResourceClass = $this->metadataRepository->findByQuery($query);
         $all = $this->metadataRepository->findAll();
         $allFiltered = array_values(array_filter($all, function (Metadata $metadata) {
             return $metadata->isParent()
@@ -33,7 +35,8 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindByControlAndResourceClass() {
-        $textMetadata = $this->metadataRepository->findByControlAndResourceClass(MetadataControl::TEXT(), 'books');
+        $query = MetadataListQuery::builder()->filterByResourceClass('books')->filterByControl(MetadataControl::TEXT())->build();
+        $textMetadata = $this->metadataRepository->findByQuery($query);
         $this->assertCount(4, $textMetadata);
     }
 }

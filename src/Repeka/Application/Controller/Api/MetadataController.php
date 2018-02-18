@@ -1,15 +1,16 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
+use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataDeleteCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
-use Repeka\Domain\UseCase\Metadata\MetadataListByParentQuery;
-use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -34,8 +35,26 @@ class MetadataController extends ApiController {
      * @Method("GET")
      */
     public function getListAction(Request $request) {
-        $resourceClass = $request->query->get('resourceClass', '');
-        $metadataList = $this->handleCommand(new MetadataListByResourceClassQuery($resourceClass));
+        $queryBuilder = MetadataListQuery::builder();
+        if ($resourceClasses = $request->query->get('resourceClasses')) {
+            Assertion::isArray($resourceClasses);
+            $queryBuilder->filterByResourceClasses($resourceClasses);
+        }
+        if ($controls = $request->query->get('controls')) {
+            Assertion::isArray($controls);
+            $controls = array_map(function (string $control) {
+                return new MetadataControl($control);
+            }, $controls);
+            $queryBuilder->filterByControls($controls);
+        }
+        if ($request->query->get('topLevel')) {
+            $queryBuilder->onlyTopLevel();
+        }
+        if ($parentId = $request->query->get('parentId')) {
+            $parent = $this->handleCommand(new MetadataGetQuery($parentId));
+            $queryBuilder->filterByParent($parent);
+        }
+        $metadataList = $this->handleCommand($queryBuilder->build());
         return $this->createJsonResponse($metadataList);
     }
 
@@ -46,15 +65,6 @@ class MetadataController extends ApiController {
     public function getAction(int $id) {
         $metadata = $this->handleCommand(new MetadataGetQuery($id));
         return $this->createJsonResponse($metadata);
-    }
-
-    /**
-     * @Route("/{parent}/metadata")
-     * @Method("GET")
-     */
-    public function getAllChildrenListAction(Metadata $parent) {
-        $metadataChildrenList = $this->handleCommand(new MetadataListByParentQuery($parent));
-        return $this->createJsonResponse($metadataChildrenList);
     }
 
     /**

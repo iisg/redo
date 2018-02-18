@@ -1,12 +1,13 @@
 <template>
     <require from="./resource-form-generated"></require>
+    <require from="./metadata-value-input"></require>
 
     <div class="form-group ${metadataInitialValue.value !== value.value ? 'highlight-edited-metadata' : ''}">
-        <compose view-model="../controls/control-strategy"
-            view="../controls/input/control-input-${metadata.control}.html"
-            model.bind="{metadata: metadata, metadataValue: value, disabled: disabled, resource: resource, validationController: validationController}"></compose>
-        <p class="help-block"
-            if.one-time="metadata.description | inCurrentLanguage">${metadata.description | inCurrentLanguage}</p>
+        <metadata-value-input metadata.bind="metadata"
+            value.bind="value"
+            disabled.bind="disabled"
+            resource.bind="resource"
+            validation-controller.bind="validationController"></metadata-value-input>
     </div>
     <div if.bind="submetadataResource.kind.metadataList.length">
         <resource-form-generated resource-kind.bind="submetadataResource.kind"

@@ -1,8 +1,8 @@
 <template>
-    <require from="common/components/entity-chooser/entity-chooser"></require>
+    <require from="resources-config/metadata/metadata-chooser"></require>
 
-    <entity-chooser entities.bind="metadataList"
+    <metadata-chooser resource-class.bind="resourceKind.resourceClass"
         value.bind="value"
-        contains-items.bind="hasMetadataToChoose"
-        exclude-entities.bind="resourceKind.metadataList"></entity-chooser>
+        has-metadata-to-choose.bind="hasMetadataToChoose"
+        excluded-metadata.bind="resourceKind.metadataList"></metadata-chooser>
 </template>

@@ -2,3 +2,4 @@ labels:
   maxCount: Max value count
   regex: Regular expression
   resourceKind: Required resource kind
+  relatedResourceMetadataFilter: Additional resources filter

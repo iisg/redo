@@ -2,8 +2,8 @@
 namespace Repeka\Domain\Repository;
 
 use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 
 interface MetadataRepository {
     /**@return Metadata[] */
@@ -21,15 +21,6 @@ interface MetadataRepository {
      */
     public function findByName(string $name): Metadata;
 
-    /**
-     * Returns metadata without parent by given resource class sorted by ordinalNumber, ascending.
-     * @return Metadata[]
-     */
-    public function findTopLevelByResourceClass(string $resourceClass): array;
-
-    /** @return Metadata[] */
-    public function findByParent(Metadata $parent): array;
-
     public function exists(int $id): bool;
 
     public function delete(Metadata $metadata): void;
@@ -43,5 +34,5 @@ interface MetadataRepository {
     public function findByIds(array $metadataIds): array;
 
     /** @return Metadata[] */
-    public function findByControlAndResourceClass(MetadataControl $control, string $resourceClass): array;
+    public function findByQuery(MetadataListQuery $query): array;
 }

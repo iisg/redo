@@ -1,23 +1,12 @@
 import {Metadata} from "../metadata/metadata";
-import {ComponentAttached, bindable} from "aurelia-templating";
+import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {MetadataRepository} from "../metadata/metadata-repository";
 import {ResourceKind} from "./resource-kind";
 import {twoWay} from "common/components/binding-mode";
 
 @autoinject
-export class ResourceKindMetadataChooser implements ComponentAttached {
+export class ResourceKindMetadataChooser {
   @bindable resourceKind: ResourceKind;
   @bindable(twoWay) value: Metadata;
   @bindable(twoWay) hasMetadataToChoose: boolean;
-  @bindable resourceClass: string;
-
-  metadataList: Metadata[];
-
-  constructor(private metadataRepository: MetadataRepository) {
-  }
-
-  async attached() {
-    this.metadataList = await this.metadataRepository.getListByClass(this.resourceClass);
-  }
 }

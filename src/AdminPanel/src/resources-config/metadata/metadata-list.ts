@@ -1,11 +1,11 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable, ComponentAttached} from "aurelia-templating";
+import {bindable} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
 import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
-export class MetadataList implements ComponentAttached {
+export class MetadataList {
   metadataList: Metadata[];
   @bindable parentMetadata: Metadata;
   @bindable resourceClass: string;
@@ -23,27 +23,18 @@ export class MetadataList implements ComponentAttached {
     this.fetchMetadata();
   }
 
-  attached() {
-    if (this.parentMetadata) {
-      this.fetchMetadataByParent();
-    }
-  }
-
   parentMetadataChanged() {
-    this.fetchMetadataByParent();
+    this.fetchMetadata();
   }
 
   private async fetchMetadata() {
     this.progressBar = true;
     this.metadataList = undefined;
-    this.metadataList = await this.metadataRepository.getListByClass(this.resourceClass);
-    this.progressBar = false;
-  }
-
-  private async fetchMetadataByParent() {
-    this.progressBar = true;
-    this.metadataList = undefined;
-    this.metadataList = await this.metadataRepository.getByParent(this.parentMetadata);
+    let query = this.metadataRepository.getListQuery();
+    query = this.parentMetadata
+      ? query.filterByParent(this.parentMetadata)
+      : query.filterByResourceClasses(this.resourceClass).onlyTopLevel();
+    this.metadataList = await query.get();
     this.progressBar = false;
   }
 

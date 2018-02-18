@@ -19,7 +19,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   @bindable resourceClass: string;
   @bindable edit: ResourceKind;
 
-  resourceKind: ResourceKind = new ResourceKind;
+  resourceKind: ResourceKind = new ResourceKind();
   originalMetadataList: Metadata[];
   submitting = false;
   sortingMetadata = false;
@@ -38,22 +38,25 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   attached() {
     if (!this.edit) {
       this.resourceKind.metadataList.unshift(SystemMetadata.PARENT);
+      this.resourceKind.resourceClass = this.resourceClass;
     }
   }
 
   async resourceClassChanged() {
     this.originalMetadataList = undefined;
-    this.originalMetadataList = await this.metadataRepository.getListByClass(this.resourceClass);
+    this.originalMetadataList = await this.metadataRepository.getListQuery()
+      .filterByResourceClasses(this.resourceClass)
+      .onlyTopLevel()
+      .get();
   }
 
   metadataToAddChanged() {
-    if (this.metadataToAdd == undefined) {
-      return;
+    if (this.metadataToAdd) {
+      const metadataOverrides = this.entitySerializer.clone(this.metadataToAdd);
+      metadataOverrides.clearInheritedValues(this.metadataRepository, this.metadataToAdd);
+      this.resourceKind.metadataList.push(metadataOverrides);
+      this.metadataToAdd = undefined;
     }
-    const metadataOverrides = this.entitySerializer.clone(this.metadataToAdd);
-    metadataOverrides.clearInheritedValues(this.metadataRepository, this.metadataToAdd);
-    this.resourceKind.metadataList.push(metadataOverrides);
-    this.metadataToAdd = undefined;
   }
 
   originalMetadata(metadata: Metadata): Metadata {
@@ -87,7 +90,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   }
 
   editChanged() {
-    this.resourceKind = new ResourceKind;
+    this.resourceKind = new ResourceKind();
     if (this.edit) {
       this.resourceKind = this.entitySerializer.clone(this.edit);
       this.resourceKind.metadataList.forEach(metadata => {

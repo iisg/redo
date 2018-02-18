@@ -22,7 +22,7 @@ class MetadataUpdateOrderCommandHandlerTest extends \PHPUnit_Framework_TestCase 
 
     public function testUpdatingOrderOfOne() {
         $metadata = $this->createMock(Metadata::class);
-        $this->metadataRepository->expects($this->once())->method('findTopLevelByResourceClass')->willReturn([$metadata]);
+        $this->metadataRepository->expects($this->once())->method('findByQuery')->willReturn([$metadata]);
         $this->metadataRepository->expects($this->once())->method('save')->with($metadata)->willReturnArgument(0);
         $metadata->expects($this->once())->method('updateOrdinalNumber')->with(0);
         $metadata->expects($this->any())->method('getId')->willReturn(1);
@@ -35,7 +35,7 @@ class MetadataUpdateOrderCommandHandlerTest extends \PHPUnit_Framework_TestCase 
         $metadata3 = $this->createMock(Metadata::class);
         $this->metadataRepository
             ->expects($this->once())
-            ->method('findTopLevelByResourceClass')
+            ->method('findByQuery')
             ->willReturn([$metadata1, $metadata2, $metadata3]);
         $this->metadataRepository->expects($this->any())->method('save')->willReturnArgument(0);
         $metadata1->expects($this->any())->method('getId')->willReturn(1);
@@ -50,7 +50,7 @@ class MetadataUpdateOrderCommandHandlerTest extends \PHPUnit_Framework_TestCase 
     public function testUpdatingNonExistingMetadata() {
         $this->expectException(InvalidArgumentException::class);
         $metadata = $this->createMock(Metadata::class);
-        $this->metadataRepository->expects($this->once())->method('findTopLevelByResourceClass')->willReturn([$metadata]);
+        $this->metadataRepository->expects($this->once())->method('findByQuery')->willReturn([$metadata]);
         $metadata->expects($this->any())->method('getId')->willReturn(1);
         $this->commandHandler->handle(new MetadataUpdateOrderCommand([2], 'books'));
     }

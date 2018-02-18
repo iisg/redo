@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 
 class ResourceListQuery extends AbstractCommand {
+    private $ids;
     /** @var ResourceKind[] */
     private $resourceKinds;
     /** @var string[] */
@@ -14,9 +15,9 @@ class ResourceListQuery extends AbstractCommand {
     private $parentId;
     /** @var bool */
     private $onlyTopLevel;
+
     /** @var ResourceContents */
     private $contentsFilter;
-
     /** @var int */
     private $page;
     /** @var int */
@@ -30,6 +31,7 @@ class ResourceListQuery extends AbstractCommand {
     }
 
     public static function withParams(
+        array $ids,
         array $resourceClasses,
         array $resourceKinds,
         int $parentId,
@@ -39,6 +41,7 @@ class ResourceListQuery extends AbstractCommand {
         int $resultsPerPage
     ): ResourceListQuery {
         $query = new self();
+        $query->ids = $ids;
         $query->resourceKinds = $resourceKinds;
         $query->resourceClasses = $resourceClasses;
         $query->parentId = $parentId;
@@ -47,6 +50,11 @@ class ResourceListQuery extends AbstractCommand {
         $query->contentsFilter = $contentsFilter;
         $query->onlyTopLevel = $onlyTopLevel;
         return $query;
+    }
+
+    /** @return int[] */
+    public function getIds(): array {
+        return $this->ids;
     }
 
     /** @return string[] */
