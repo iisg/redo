@@ -87,6 +87,11 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         unset($contents[1]);
     }
 
+    public function testJsonEncode() {
+        $contents = ResourceContents::fromArray([1 => 2]);
+        $this->assertEquals('{"1":[{"value":2}]}', json_encode($contents));
+    }
+
     /** @dataProvider fromArrayExamples */
     public function testFromArray(array $input, array $expectedOutput) {
         $normalized = ResourceContents::fromArray($input)->toArray();
