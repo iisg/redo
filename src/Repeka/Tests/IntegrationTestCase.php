@@ -56,6 +56,10 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
             $this->executeCommand('doctrine:database:drop --force --if-exists');
             $this->executeCommand('doctrine:database:create');
         }
+        $this->clearDatabase();
+    }
+
+    protected function clearDatabase() {
         $this->executeCommand('doctrine:schema:drop --force');
         $this->executeCommand('doctrine:migrations:version --delete --all');
         $this->executeCommand('repeka:initialize --skip-backup');
@@ -102,7 +106,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         return self::joinUrl(static::ENDPOINT, is_object($entity) ? $entity->getId() : $entity);
     }
 
-    protected function getEntityManager() {
+    protected function getEntityManager(): EntityManagerInterface {
         return $this->container->get(EntityManagerInterface::class);
     }
 

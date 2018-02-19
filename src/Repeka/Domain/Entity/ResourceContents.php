@@ -3,7 +3,7 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 
-class ResourceContents implements \IteratorAggregate, \ArrayAccess {
+class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSerializable {
     private $contents = [];
 
     public function __construct(array $normalizedContents) {
@@ -128,5 +128,9 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess {
 
     public function offsetUnset($offset) {
         throw new \LogicException('ResourceContents are immutable.');
+    }
+
+    public function jsonSerialize() {
+        return $this->contents;
     }
 }
