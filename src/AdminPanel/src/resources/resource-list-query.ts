@@ -3,6 +3,7 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {PageResult} from "./page-result";
 import {cachedResponse, forSeconds} from "../common/repository/cached-response";
+import {ResourceMetadataSort} from "./resource-metadata-sort";
 
 export class ResourceListQuery {
   private params: any = {};
@@ -34,6 +35,11 @@ export class ResourceListQuery {
 
   public filterByParentId(parentId: number): ResourceListQuery {
     this.params.parentId = parentId;
+    return this;
+  }
+
+  public sortByMetadataIds(sortBy: ResourceMetadataSort[]): ResourceListQuery {
+    this.params.sortByIds = sortBy;
     return this;
   }
 

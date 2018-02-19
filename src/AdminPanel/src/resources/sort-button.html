@@ -1,0 +1,11 @@
+<template>
+    <icon if.bind="sortDirection === 'ASC'"
+        click.delegate="fetchSortedResources()"
+        name="up-3"></icon>
+    <icon if.bind="sortDirection === 'DESC'"
+        click.delegate="fetchSortedResources()"
+        name="down-3"></icon>
+    <icon if.bind="!sortDirection"
+        click.delegate="fetchSortedResources()"
+        name="arrows-2"></icon>
+</template>

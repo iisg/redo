@@ -6,7 +6,6 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\PageResult;
-use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
@@ -35,8 +34,13 @@ class ResourcesController extends ApiController {
     public function getListAction(Request $request) {
         $resourceClasses = $request->get('resourceClasses', []);
         $resourceKindIds = $request->get('resourceKinds', []);
+        $sortByMetadataIds = $request->query->get('sortByIds', []);
+        Assertion::isArray($sortByMetadataIds);
         Assertion::isArray($resourceClasses);
         Assertion::isArray($resourceKindIds);
+        $sortByMetadataIds = array_map(function ($sortBy) {
+            return ['metadataId' => intval($sortBy['metadataId']), 'direction' => $sortBy['direction']];
+        }, $sortByMetadataIds);
         $parentId = $request->query->get('parentId', 0);
         $topLevel = $request->query->get('topLevel', false);
         $resourceKinds = array_map(function ($resourceKindId) {
@@ -46,7 +50,8 @@ class ResourcesController extends ApiController {
         $resourceListQueryBuilder = ResourceListQuery::builder()
             ->filterByResourceClasses($resourceClasses)
             ->filterByResourceKinds($resourceKinds)
-            ->filterByContents(is_array($contentsFilter) ? $contentsFilter : []);
+            ->filterByContents(is_array($contentsFilter) ? $contentsFilter : [])
+            ->sortByMetadataIds($sortByMetadataIds);
         $page = $request->query->get('page', 1);
         if ($request->query->has('page')) {
             $resultsPerPage = $request->query->get('resultsPerPage', 10);

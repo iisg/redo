@@ -12,7 +12,7 @@ export function keysByValue<M, V>(obj: M, value: V): string[] {
 }
 
 export function numberKeysByValue<M, V>(obj: M, value: V): number[] {
-  return keysByValue(obj, value).map(key => parseInt(key, 10)).filter(val => !Number.isNaN(val));
+  return keysByValue(obj, value).map(key => parseInt(key)).filter(val => !Number.isNaN(val));
 }
 
 export function propertyKeys(obj: Object): string[] {

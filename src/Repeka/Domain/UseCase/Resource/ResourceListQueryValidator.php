@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
+use Repeka\Domain\Validation\Rules\ResourceMetadataSortCorrectStructureRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
@@ -14,13 +15,17 @@ class ResourceListQueryValidator extends CommandAttributesValidator {
     private $resourceClassExistsRule;
     /** @var ResourceContentsCorrectStructureRule */
     private $resourceContentsCorrectStructureRule;
+    /** @var ResourceMetadataSortCorrectStructureRule */
+    private $resourceMetadataSortCorrectStructureRule;
 
     public function __construct(
         ResourceClassExistsRule $resourceClassExistsRule,
-        ResourceContentsCorrectStructureRule $resourceContentsCorrectStructureRule
+        ResourceContentsCorrectStructureRule $resourceContentsCorrectStructureRule,
+        ResourceMetadataSortCorrectStructureRule $resourceMetadataSortCorrectStructureRule
     ) {
         $this->resourceClassExistsRule = $resourceClassExistsRule;
         $this->resourceContentsCorrectStructureRule = $resourceContentsCorrectStructureRule;
+        $this->resourceMetadataSortCorrectStructureRule = $resourceMetadataSortCorrectStructureRule;
     }
 
     /**
@@ -33,6 +38,7 @@ class ResourceListQueryValidator extends CommandAttributesValidator {
             ->attribute('resourceKinds', Validator::arrayType()->each(Validator::instance(ResourceKind::class)))
             ->attribute('page', Validator::intVal()->min(0))
             ->attribute('resultsPerPage', Validator::intVal()->min(1))
-            ->attribute('contentsFilter', $this->resourceContentsCorrectStructureRule);
+            ->attribute('contentsFilter', $this->resourceContentsCorrectStructureRule)
+            ->attribute('sortBy', $this->resourceMetadataSortCorrectStructureRule);
     }
 }

@@ -1,7 +1,8 @@
 <template>
-    <require from="resources/workflow/resource-place-display.html"></require>
     <require from="resources/details/resource-metadata-table/resource-metadata-values"></require>
+    <require from="resources/workflow/resource-place-display.html"></require>
     <require from="resources-config/metadata/metadata-label"></require>
+    <require from="resources/sort-button"></require>
 
     <div class="col-xs-12">
         <table class="table table-striped"
@@ -12,6 +13,8 @@
                 <th>${'Resource kind' | resourceClassTranslation:resourceClass}</th>
                 <th repeat.for="metadata of columnMetadata">
                     ${metadata | metadataLabel}
+                    <sort-button metadata.bind="metadata"
+                        sort-by.bind="sortBy"></sort-button>
                 </th>
                 <th>${'Place' | t}</th>
                 <th repeat.for="name of extraColumnNames">${name | t}</th>

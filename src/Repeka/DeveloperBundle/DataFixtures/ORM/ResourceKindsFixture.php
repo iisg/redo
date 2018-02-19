@@ -3,6 +3,7 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
 
@@ -28,6 +29,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $workflow = $this
             ->handleCommand(new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::BOOK_WORKFLOW)->getId()));
         $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId();
+        $parentMetadata = $this->handleCommand(new MetadataGetQuery(-1));
         $bookRK = $this->handleCommand(new ResourceKindCreateCommand(
             [
                 'PL' => 'Książka',
@@ -57,6 +59,7 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Forbidden book',
             ],
             [
+                $parentMetadata->withOverrides([0 => $bookRK->getId()]),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT),
             ],

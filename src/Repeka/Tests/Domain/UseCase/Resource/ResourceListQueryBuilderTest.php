@@ -84,4 +84,10 @@ class ResourceListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceListQuery::builder()->filterByContents([1 => 'test'])->build();
         $this->assertEquals(ResourceContents::fromArray($contents), $query->getContentsFilter());
     }
+
+    public function testSortByMetadataId() {
+        $sortBy = [2 => 'ASC'];
+        $query = ResourceListQuery::builder()->sortByMetadataIds($sortBy)->build();
+        $this->assertEquals($sortBy, $query->getSortByMetadataIds());
+    }
 }
