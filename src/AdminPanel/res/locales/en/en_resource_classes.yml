@@ -1,9 +1,19 @@
 books:
-  label: Books
-  settings: Books settings
+  resources: Books
+  settings: Book settings
+  resource-kinds: Book kinds
+  metadata: Metadata kinds
+  workflows: Workflows
 dictionaries:
-  label: Dictionaries
+  resources: Dictionaries
   settings: Dictionaries settings
+  resource-kinds: Dictionary kinds
+  metadata: Metadata kinds
+  workflows: Workflows
 users:
-  label: Users
+  users: Users
   settings: Users settings
+  resource-kinds: User kinds
+  metadata: Metadata kinds
+  workflows: Workflows
+  users/roles: Roles
