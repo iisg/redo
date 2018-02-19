@@ -1,9 +1,19 @@
 books:
-  label: Książki
-  settings: Ustawienia książek
+  resources: Zasoby
+  settings: Ustawienia zasobów
+  resource-kinds: Rodzaje zasobów
+  metadata: Rodzaje metadanych
+  workflows: Procesy
 dictionaries:
-  label: Słowniki
+  resources: Słowniki
   settings: Ustawienia słowników
+  resource-kinds: Rodzaje słowników
+  metadata: Rodzaje metadanych
+  workflows: Procesy
 users:
-  label: Użytkownicy
+  users: Użytkownicy
   settings: Ustawienia użytkowników
+  resource-kinds: Rodzaje użytkowników
+  metadata: Rodzaje metadanych
+  workflows: Procesy
+  users/roles: Role

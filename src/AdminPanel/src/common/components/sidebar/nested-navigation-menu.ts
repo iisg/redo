@@ -29,10 +29,10 @@ export class NestedNavigationMenu {
   private getMenuItems() {
     const classes: string[] = this.getResourceClasses();
 
-    const routeToLink: (className?: string, primary?: boolean) => (route: AbstractRoute) => NavLink =
-      (className?: string, primary?: boolean) => (route: AbstractRoute) => {
-        const labelKey = primary
-          ? `resource_classes::${className}//label`
+    const routeToLink: (className?: string, isResourceClass?: boolean) => (route: AbstractRoute) => NavLink =
+      (className?: string, isResourceClass?: boolean) => (route: AbstractRoute) => {
+        const labelKey = isResourceClass
+          ? `resource_classes::${className}//${route.name}`
           : `nav::${route.title}`;
         if (route.route.indexOf(':resourceClass') == -1) {
           className = undefined;
@@ -47,7 +47,7 @@ export class NestedNavigationMenu {
     for (const className of classes) {
       const primary: NavLink[] = this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS, className).map(routeToLink(className, true));
       const secondary = new NavGroup('resource_classes::' + className + '//settings', className,
-        this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS_SECONDARY, className).map(routeToLink(className, false))
+        this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS_SECONDARY, className).map(routeToLink(className, true))
       );
       middle = middle.concat(primary).concat(secondary);
     }
@@ -108,8 +108,8 @@ class NavGroup implements NavItem {
     this.expanded = !this.expanded;
   }
 
-  updateActive(currentInstruciton: NavigationInstruction): void {
-    this.items.forEach(link => link.updateActive(currentInstruciton));
+  updateActive(currentInstruction: NavigationInstruction): void {
+    this.items.forEach(link => link.updateActive(currentInstruction));
     this.active = this.items.filter(link => link.active).length > 0;
     this.expanded = this.active;
   }
