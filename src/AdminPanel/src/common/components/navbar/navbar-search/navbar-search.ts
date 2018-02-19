@@ -25,9 +25,10 @@ export class NavbarSearch {
   findResources(): void {
     let contentsFilter = {};
     contentsFilter[this.metadata.id] = this.metadataValue.value;
-    contentsFilter = JSON.stringify(contentsFilter);
-    const urlDetail = this.router.generate('resources', {resourceClass: this.resourceClass, contentsFilter});
-    this.router.navigate(urlDetail);
+    const queryParams = this.router.currentInstruction.queryParams;
+    queryParams['resourceClass'] = this.metadata.resourceClass;
+    queryParams['contentsFilter'] = JSON.stringify(contentsFilter);
+    this.router.navigateToRoute('resources', queryParams);
   }
 
   @computedFrom('metadata', 'metadataValue.value')

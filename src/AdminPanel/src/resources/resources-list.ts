@@ -9,7 +9,8 @@ import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
 import {NavigationInstruction} from "aurelia-router";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {PageResult} from "./page-result";
-import {ContextResourceClass} from './context/context-resource-class';
+import {ContextResourceClass} from "./context/context-resource-class";
+import {ResourceMetadataSort} from "./resource-metadata-sort";
 
 @autoinject
 export class ResourcesList implements ComponentAttached {
@@ -24,6 +25,8 @@ export class ResourcesList implements ComponentAttached {
   briefMetadata: Metadata[];
   progressBar: boolean;
   urlListener: Subscription;
+  sortBy: ResourceMetadataSort[] = [];
+  contentsFilter: NumberMap<string>;
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceKindRepository: ResourceKindRepository,
@@ -33,18 +36,23 @@ export class ResourcesList implements ComponentAttached {
 
   activate(params: any) {
     this.contextResourceClass.setCurrent(params.resourceClass);
-    let contentsFilter;
-    if (params.contentsFilter) {
+    this.contentsFilter = this.getParamsByName(params, 'contentsFilter');
+    this.sortBy = this.getParamsByName(params, 'sortBy');
+    this.fetchList(params.resourceClass);
+  }
+
+  private getParamsByName(params: any, key: string) {
+    if (params[key]) {
       try {
-        contentsFilter = JSON.parse(params.contentsFilter);
+        return JSON.parse(params[key]);
       } catch (e) {
         console.warn(e);  // tslint:disable-line
       }
     }
-    this.fetchList(params.resourceClass, contentsFilter);
+    return [];
   }
 
-  private fetchList(resourceClass: string, contentsFilter?: NumberMap<string>) {
+  private fetchList(resourceClass: string) {
     this.resourceClass = resourceClass;
     if (this.resources) {
       this.resources = new PageResult<Resource>();
@@ -52,7 +60,7 @@ export class ResourcesList implements ComponentAttached {
     this.addFormOpened = false;
     this.briefMetadata = [];
     this.fetchBriefMetadata();
-    this.fetchResources(contentsFilter);
+    this.fetchResources();
   }
 
   bind() {
@@ -73,32 +81,24 @@ export class ResourcesList implements ComponentAttached {
     if (this.parentResource) {
       this.resourceClass = this.parentResource.resourceClass;
       this.fetchBriefMetadata();
-      this.fetchResourcesByParent();
+      this.fetchResources();
     }
   }
 
-  fetchResources(contentsFilter?: NumberMap<string>) {
+  fetchResources() {
     this.progressBar = true;
     let query = this.resourceRepository.getListQuery();
-    query = contentsFilter ? query.filterByContents(contentsFilter) : query;
-    query = query.onlyTopLevel().filterByResourceClasses(this.resourceClass);
+    query = this.contentsFilter ? query.filterByContents(this.contentsFilter) : query;
+    query = this.parentResource
+      ? query.filterByParentId(this.parentResource.id)
+      : query.onlyTopLevel()
+      .filterByResourceClasses(this.resourceClass)
+      .sortByMetadataIds(this.sortBy);
     query.get()
       .then(resources => {
         this.progressBar = false;
         this.resources = resources;
-        this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined) && !contentsFilter;
-      });
-  }
-
-  fetchResourcesByParent() {
-    this.resourceRepository.getListQuery()
-      .filterByParentId(this.parentResource.id)
-      .get()
-      .then(resources => {
-        this.resources = resources;
-        if (!this.addFormOpened) {
-          this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);
-        }
+        this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter;
       });
   }
 

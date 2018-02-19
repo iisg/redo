@@ -15,9 +15,10 @@ class ResourceListQuery extends AbstractCommand {
     private $parentId;
     /** @var bool */
     private $onlyTopLevel;
-
     /** @var ResourceContents */
     private $contentsFilter;
+    /** @var array */
+    private $sortBy;
     /** @var int */
     private $page;
     /** @var int */
@@ -34,6 +35,7 @@ class ResourceListQuery extends AbstractCommand {
         array $ids,
         array $resourceClasses,
         array $resourceKinds,
+        array $sortBy,
         int $parentId,
         ResourceContents $contentsFilter,
         bool $onlyTopLevel,
@@ -44,6 +46,7 @@ class ResourceListQuery extends AbstractCommand {
         $query->ids = $ids;
         $query->resourceKinds = $resourceKinds;
         $query->resourceClasses = $resourceClasses;
+        $query->sortBy = $sortBy;
         $query->parentId = $parentId;
         $query->page = $page;
         $query->resultsPerPage = $resultsPerPage;
@@ -73,6 +76,10 @@ class ResourceListQuery extends AbstractCommand {
 
     public function getParentId(): int {
         return $this->parentId;
+    }
+
+    public function getSortByMetadataIds(): array {
+        return $this->sortBy;
     }
 
     public function getPage(): int {

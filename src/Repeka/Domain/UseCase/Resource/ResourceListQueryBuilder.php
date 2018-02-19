@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\ResourceKind;
 class ResourceListQueryBuilder {
     private $resourceKinds = [];
     private $resourceClasses = [];
+    private $sortByMetadata = [];
     private $parentId = 0;
     private $page = 0;
     private $resultsPerPage = 1;
@@ -35,6 +36,11 @@ class ResourceListQueryBuilder {
 
     public function filterByParentId(int $parentId): ResourceListQueryBuilder {
         $this->parentId = $parentId;
+        return $this;
+    }
+
+    public function sortByMetadataIds(array $sortByMetadata): ResourceListQueryBuilder {
+        $this->sortByMetadata = array_replace($this->sortByMetadata, $sortByMetadata);
         return $this;
     }
 
@@ -69,6 +75,7 @@ class ResourceListQueryBuilder {
             $this->ids,
             $this->resourceClasses,
             $this->resourceKinds,
+            $this->sortByMetadata,
             $this->parentId,
             $this->contents instanceof ResourceContents ? $this->contents : ResourceContents::fromArray($this->contents),
             $this->onlyTopLevel,

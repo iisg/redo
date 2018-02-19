@@ -170,6 +170,27 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         ], $client->getResponse()->getContent());
     }
 
+    public function testFetchingSortedResources() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'GET',
+            self::ENDPOINT,
+            [],
+            [
+                'resourceClasses' => ['books'],
+                'topLevel' => true,
+                'sortByIds' => [0 => ['metadataId' => $this->metadata1->getId(), 'direction' => 'DESC']]
+            ]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $expectedOrder = [$this->parentResource->getId(), $this->resource->getId()];
+        $fetchedResource = json_decode($client->getResponse()->getContent());
+        $actualOrder[] = $fetchedResource[0]->id;
+        $actualOrder[] = $fetchedResource[1]->id;
+        $this->assertEquals($expectedOrder, $actualOrder);
+        $this->assertEquals(2, $client->getResponse()->headers->get('pk_total'));
+    }
+
     public function testCreatingResource() {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [

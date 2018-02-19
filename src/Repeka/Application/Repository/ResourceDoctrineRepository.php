@@ -13,7 +13,6 @@ use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\PageResult;
-use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 
 /**
@@ -39,7 +38,10 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         return $resource;
     }
 
-    /** @return ResourceEntity[] */
+    /**
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @return ResourceEntity[]
+     */
     public function findByQuery(ResourceListQuery $query): PageResult {
         $queryFroms = ['resource r'];
         $queryWheres = ['1=1'];
@@ -72,6 +74,12 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             $queryWheres[] = "m$escapedMetadataId->>'value' ILIKE :$paramName";
             $queryParams[$paramName] = '%' . $value . '%';
         });
+        foreach ($query->getSortByMetadataIds() as $resourceMetadataSort) {
+            $metadataId = $resourceMetadataSort['metadataId'];
+            $direction = $resourceMetadataSort['direction'];
+            $queryOrderBy[] = "jsonb_array_elements(r.contents->'$metadataId')->>'value' $direction";
+        }
+        $queryOrderBy[] = "r.id ASC";
         $pagination = '';
         if ($query->paginate()) {
             $offset = ($query->getPage() - 1) * $query->getResultsPerPage();
@@ -81,7 +89,8 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         $resultSetMapping = ResultSetMappings::resourceEntity($em);
         $queryFroms = implode(', ', $queryFroms);
         $queryWheres = implode(' AND ', $queryWheres);
-        $querySql = "SELECT r.* FROM $queryFroms WHERE $queryWheres ORDER BY r.id ASC $pagination";
+        $queryOrderBys = implode(', ', $queryOrderBy);
+        $querySql = "SELECT r.* FROM $queryFroms WHERE $queryWheres ORDER BY $queryOrderBys $pagination";
         $dbQuery = $em->createNativeQuery($querySql, $resultSetMapping);
         $dbQuery->setParameters($queryParams);
         $pageContents = $dbQuery->getResult();
