@@ -25,6 +25,7 @@
                     <fa name="sort"></fa>
                 </a>
                 <button type="button"
+                    disabled.bind="disabled"
                     class="btn pull-right btn-danger"
                     click.trigger="deleteIndex($index)">
                     <fa name="trash fw"></fa>
