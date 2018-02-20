@@ -8,13 +8,7 @@ use Repeka\Domain\Entity\Metadata;
  * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
  */
 trait ResourceKindsFixtureTrait {
-    private function metadata(string $baseReference, ?int $maxCount = 0, bool $shownInBrief = false): Metadata {
-        /** @var Metadata $metadata */
-        $metadata = $this->getReference($baseReference);
-        $metadata->setOverrides([
-            'constraints' => ['maxCount' => $maxCount],
-            'shownInBrief' => $shownInBrief,
-        ]);
-        return $metadata;
+    private function metadata(string $baseReference): Metadata {
+        return $this->getReference($baseReference);
     }
 }

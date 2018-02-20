@@ -19,7 +19,7 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindAll() {
         $resourceKinds = $this->resourceKindRepository->findAll();
-        $this->assertCount(4, $resourceKinds);
+        $this->assertCount(6, $resourceKinds);
     }
 
     public function testCountByMetadata() {

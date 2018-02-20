@@ -3,7 +3,6 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Entity\EntityUtils;
-use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListByResourceClassQuery;
@@ -26,12 +25,23 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_CATEGORY_NAME = 'metadata-category-name';
     const REFERENCE_METADATA_ASSIGNED_SCANNER = 'metadata-assigned-scanner';
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
+    const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
+
+    const REFERENCE_METADATA_DEPARTMENTS_NAME = 'metadata-departments-name';
+    const REFERENCE_METADATA_DEPARTMENTS_ABBREV = 'metadata-departments-abbrev';
+    const REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY = 'metadata-departments-university';
+    const REFERENCE_METADATA_ISSUING_DEPARTMENT = 'metadata-issuing-department';
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
+        $this->addBooksMetadata();
+        $this->addDepartmentsMetadata();
+    }
+
+    private function addBooksMetadata(): void {
         $addedMetadata = [];
         $addedMetadata[] = $titleMetadata = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Tytuł',
@@ -174,6 +184,27 @@ class MetadataFixture extends RepekaFixture {
             'resourceClass' => 'books',
             'constraints' => $this->relationshipConstraints(1, [-1]),
         ]), self::REFERENCE_METADATA_SUPERVISOR);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Wydział wydający',
+            'label' => [
+                'PL' => 'Wydział wydający',
+                'EN' => 'Issued on',
+            ],
+            'control' => 'relationship',
+            'resourceClass' => 'books',
+        ]), self::REFERENCE_METADATA_ISSUING_DEPARTMENT);
+        $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Powiązana książka',
+            'label' => [
+                'PL' => 'Powiązana książka',
+                'EN' => 'Related book',
+            ],
+            'description' => [],
+            'placeholder' => [],
+            'control' => 'relationship',
+            'shownInBrief' => true,
+            'resourceClass' => 'books',
+        ]), self::REFERENCE_METADATA_RELATED_BOOK);
         $this->handleCommand(new MetadataChildWithBaseCreateCommand($titleMetadata, $languageMetadata, [
             'label' => [
                 'PL' => 'Język tytułu',
@@ -184,5 +215,42 @@ class MetadataFixture extends RepekaFixture {
         $this->handleCommand(new MetadataUpdateOrderCommand(EntityUtils::mapToIds(
             $this->handleCommand(new MetadataListByResourceClassQuery('books'))
         ), 'books'));
+    }
+
+    private function addDepartmentsMetadata() {
+        $metadata = [];
+        $metadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Nazwa',
+            'label' => [
+                'PL' => 'Nazwa',
+                'EN' => 'Name',
+            ],
+            'control' => 'text',
+            'shownInBrief' => false,
+            'resourceClass' => 'dictionaries',
+            'constraints' => $this->textConstraints(1),
+        ]), self::REFERENCE_METADATA_DEPARTMENTS_NAME);
+        $metadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Skrót',
+            'label' => [
+                'PL' => 'Nazwa skrótowa',
+                'EN' => 'Abbreviation',
+            ],
+            'control' => 'text',
+            'shownInBrief' => true,
+            'resourceClass' => 'dictionaries',
+            'constraints' => ['regex' => '^[A-Z]{2,6}$'],
+        ]), self::REFERENCE_METADATA_DEPARTMENTS_ABBREV);
+        $metadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
+            'name' => 'Uczelnia',
+            'label' => [
+                'PL' => 'Uczelnia',
+                'EN' => 'University',
+            ],
+            'control' => 'relationship',
+            'shownInBrief' => false,
+            'resourceClass' => 'dictionaries',
+        ]), self::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY);
+//        $this->handleCommand(new MetadataUpdateOrderCommand(EntityUtils::mapToIds($metadata), 'books'));
     }
 }

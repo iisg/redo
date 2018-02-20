@@ -12,11 +12,18 @@ class ResourceKindsFixture extends RepekaFixture {
     const REFERENCE_RESOURCE_KIND_BOOK = 'resource-kind-book';
     const REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK = 'resource-kind-forbidden-book';
     const REFERENCE_RESOURCE_KIND_CATEGORY = 'resource-kind-category';
+    const REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT = 'resource-kind-department';
+    const REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY = 'resource-kind-university';
 
     /**
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
+        $this->addBooksResourceKinds();
+        $this->addDictionariesResourceKinds();
+    }
+
+    private function addBooksResourceKinds() {
         $workflow = $this
             ->handleCommand(new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::BOOK_WORKFLOW)->getId()));
         $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId();
@@ -26,13 +33,15 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Book',
             ],
             [
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, 1, true),
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION, 1, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_HARD_COVER),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_LANGUAGE),
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO, 0),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->setOverrides([
+                    'constraints' => ['maxCount' => 0],
+                ]),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_FILE),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
@@ -49,7 +58,8 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Forbidden book',
             ],
             [
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT),
             ],
             [
                 'header' => '{{allValues m' . $titleMetadataId . '}}',
@@ -63,12 +73,43 @@ class ResourceKindsFixture extends RepekaFixture {
                 'EN' => 'Category',
             ],
             [
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME, true),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME),
             ],
             [
                 'header' => '{{allValues m' . $nameId . '}}',
                 'dropdown' => '{{allValues m' . $nameId . '}} (ID: {{id}})',
             ]
         ), self::REFERENCE_RESOURCE_KIND_CATEGORY);
+    }
+
+    private function addDictionariesResourceKinds() {
+        $nameMetadata = $this->metadata(MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME);
+        $abbrevMetadata = $this->metadata(MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV);
+        $this->handleCommand(new ResourceKindCreateCommand(
+            [
+                'PL' => 'Wydział',
+                'EN' => 'Department',
+            ],
+            [
+                $nameMetadata,
+                $abbrevMetadata,
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY),
+            ],
+            [
+                'header' => "{{allValues m{$nameMetadata->getId()}}} ({{allValues m{$abbrevMetadata->getId()}}})",
+                'dropdown' => '{{allValues m' . $abbrevMetadata->getId() . '}} (ID: {{id}})',
+            ]
+        ), self::REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT);
+        $this->handleCommand(new ResourceKindCreateCommand(
+            ['PL' => 'Uczelnia', 'EN' => 'University'],
+            [
+                $nameMetadata->setOverrides(['label' => ['PL' => 'Nazwa uczelni']]),
+                $abbrevMetadata,
+            ],
+            [
+                'header' => "{{allValues m{$nameMetadata->getId()}}} ({{allValues m{$abbrevMetadata->getId()}}})",
+                'dropdown' => '{{allValues m' . $abbrevMetadata->getId() . '}} (ID: {{id}})',
+            ]
+        ), self::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY);
     }
 }

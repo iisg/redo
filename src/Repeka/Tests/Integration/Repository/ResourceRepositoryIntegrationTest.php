@@ -32,7 +32,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindAll() {
         $resources = $this->resourceRepository->findAll();
-        $this->assertCount(10, $resources); // 1 per every user + fixtures
+        $this->assertCount(14, $resources); // 1 per every user + fixtures
     }
 
     public function testFindAllByBookResourceClass() {
@@ -47,7 +47,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     public function testFindAllByDictionaryResourceClass() {
         $query = ResourceListQuery::builder()->filterByResourceClass('dictionaries')->build();
         $resources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(0, $resources);
+        $this->assertCount(4, $resources);
     }
 
     public function testFindAllByResourceKind() {

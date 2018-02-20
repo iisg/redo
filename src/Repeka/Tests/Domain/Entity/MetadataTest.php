@@ -58,7 +58,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testUpdatingOverridesToTheSameValueClearsOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
         $metadata->updateOverrides(['label' => ['PL' => 'AA']]);
-        $this->assertEmpty($metadata->getOverrides()['label']);
+        $this->assertEmpty($metadata->getOverrides());
     }
 
     public function testSetOverridesDoesNotPerformAnyAdjustments() {
@@ -125,5 +125,13 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], ['regex' => 'abc']);
         $metadata->updateOverrides(['constraints' => ['regex' => null]]);
         $this->assertEquals(['regex' => null], $metadata->getConstraints());
+    }
+
+    public function testOverridingZeroConstraintWithNull() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], ['maxCount' => 0]);
+        $this->assertEquals(['maxCount' => 0], $metadata->getConstraints());
+        $metadata->updateOverrides(['constraints' => ['maxCount' => null]]);
+        $this->assertEmpty($metadata->getOverrides());
+        $this->assertEquals(['maxCount' => 0], $metadata->getConstraints());
     }
 }

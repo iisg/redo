@@ -131,13 +131,17 @@ class Metadata implements Identifiable {
     }
 
     public function updateOverrides(array $overrides) {
-        $this->overrides = [
+        $overrides = [
             'label' => $this->removeValuesOverridingToTheSameThing($overrides['label'] ?? [], $this->label),
             'description' => $this->removeValuesOverridingToTheSameThing($overrides['description'] ?? [], $this->description),
             'placeholder' => $this->removeValuesOverridingToTheSameThing($overrides['placeholder'] ?? [], $this->placeholder),
             'constraints' => $this->removeValuesOverridingToTheSameThing($overrides['constraints'] ?? [], $this->constraints),
             'shownInBrief' => isset($overrides['shownInBrief']) && is_bool($overrides['shownInBrief']) ? $overrides['shownInBrief'] : null,
         ];
+        $overrides = array_filter($overrides, function ($override) {
+            return !is_null($override) && !is_array($override) || !empty($override);
+        });
+        $this->overrides = $overrides;
     }
 
     private function removeValuesOverridingToTheSameThing(array $overrides, array $actualValues): array {
@@ -160,7 +164,8 @@ class Metadata implements Identifiable {
         return $overrides;
     }
 
-    public function setOverrides($overrides) {
+    public function setOverrides($overrides): Metadata {
         $this->overrides = $overrides;
+        return $this;
     }
 }

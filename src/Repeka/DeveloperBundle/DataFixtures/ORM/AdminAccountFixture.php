@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AdminAccountFixture extends RepekaFixture {
     const USERNAME = 'admin';
     const PASSWORD = 'admin';
+    const REFERENCE_USER_ADMIN = 'user-admin';
 
     /**
      * @inheritdoc
@@ -20,7 +21,7 @@ class AdminAccountFixture extends RepekaFixture {
         $container = $this->container;
         if (!$container->get(UserRepository::class)->loadUserByUsername(self::USERNAME)) {
             $userCreateCommand = new UserCreateCommand(self::USERNAME, self::PASSWORD);
-            $user = $this->handleCommand($userCreateCommand);
+            $user = $this->handleCommand($userCreateCommand, self::REFERENCE_USER_ADMIN);
             $allUserRoles = $this->handleCommand(new UserRoleListQuery());
             $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $allUserRoles, $user);
             $this->handleCommand($userUpdateRolesCommand);
