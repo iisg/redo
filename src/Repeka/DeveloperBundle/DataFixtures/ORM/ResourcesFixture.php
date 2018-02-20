@@ -12,11 +12,40 @@ use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 
 class ResourcesFixture extends RepekaFixture {
     const ORDER = ResourceKindsStage2Fixture::ORDER + UsersFixture::ORDER;
+    const REFERENCE_DEPARTMENT_IET = 'resource-department-iet';
 
     /**
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
+        $this->addDictionaries();
+        $this->addBooks($manager);
+    }
+
+    private function addDictionaries() {
+        $departmentResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT);
+        $universityResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY);
+        $agh = $this->handleCommand(new ResourceCreateCommand($universityResourceKind, $this->contents([
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Akademia Górniczo Hutnicza',
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'AGH',
+        ])));
+        $this->handleCommand(new ResourceCreateCommand($universityResourceKind, $this->contents([
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Politechnika Krakowska',
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'PK',
+        ])));
+        $this->handleCommand(new ResourceCreateCommand($departmentResourceKind, $this->contents([
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Informatyki, Elektroniki i Telekomunikacji',
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'IET',
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY => $agh,
+        ])), self::REFERENCE_DEPARTMENT_IET);
+        $this->handleCommand(new ResourceCreateCommand($departmentResourceKind, $this->contents([
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Elektroniki, Automatyki i Inżynierii Biomedycznej',
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'EAIB',
+            MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY => $agh,
+        ])));
+    }
+
+    private function addBooks(ObjectManager $manager) {
         /** @var ResourceKind $bookResourceKind */
         $bookResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_BOOK);
         /** @var ResourceKind $forbiddenBookResourceKind */
@@ -41,10 +70,11 @@ class ResourcesFixture extends RepekaFixture {
                 ['Poradnik dla cierpiących na zwyrodnienie interpretera.'],
             MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [1337],
             MetadataFixture::REFERENCE_METADATA_SEE_ALSO => [$book1],
-            MetadataStage2Fixture::REFERENCE_METADATA_RELATED_BOOK => [$book1],
+            MetadataFixture::REFERENCE_METADATA_RELATED_BOOK => [$book1],
         ])));
         $this->handleCommand(new ResourceCreateCommand($forbiddenBookResourceKind, $this->contents([
             MetadataFixture::REFERENCE_METADATA_TITLE => ['Python dla opornych'],
+            MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT => $this->getReference(self::REFERENCE_DEPARTMENT_IET),
         ])));
         /** @var ResourceEntity $ebooks */
         $ebooks = $this->handleCommand(new ResourceCreateCommand($categoryResourceKind, $this->contents([
