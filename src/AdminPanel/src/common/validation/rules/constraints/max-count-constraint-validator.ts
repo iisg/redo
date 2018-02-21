@@ -9,7 +9,7 @@ export class MaxCountConstraintValidator extends MetadataArrayConstraintValidato
   }
 
   validate(values: any[], maxCount: number): boolean {
-    return maxCount == 0 || values.length <= maxCount;
+    return !maxCount || values.length <= maxCount;
   }
 
   getErrorMessage(maxCount): string {

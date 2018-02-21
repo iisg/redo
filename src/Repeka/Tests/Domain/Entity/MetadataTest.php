@@ -38,99 +38,99 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
 
     public function testOverridingLabel() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
-        $metadata->updateOverrides(['label' => ['PL' => 'BB']]);
+        $metadata = $metadata->withOverrides(['label' => ['PL' => 'BB']]);
         $this->assertEquals(['PL' => 'BB'], $metadata->getLabel());
+    }
+
+    public function testOverridingDoesNotInfluenceOriginalInstance() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
+        $metadata->withOverrides(['label' => ['PL' => 'BB']]);
+        $this->assertEquals(['PL' => 'AA'], $metadata->getLabel());
     }
 
     public function testDoesNotOverrideWhenBlank() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
-        $metadata->updateOverrides(['label' => ['PL' => '']]);
+        $metadata = $metadata->withOverrides(['label' => ['PL' => '']]);
         $this->assertEquals(['PL' => 'AA'], $metadata->getLabel());
     }
 
     public function testChangedMetadataLabelIsLessImportantThanOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
-        $metadata->updateOverrides(['label' => ['PL' => 'BB']]);
+        $metadata = $metadata->withOverrides(['label' => ['PL' => 'BB']]);
         $metadata->update(['PL' => 'CC'], [], [], [], true);
         $this->assertEquals(['PL' => 'BB'], $metadata->getLabel());
     }
 
     public function testUpdatingOverridesToTheSameValueClearsOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
-        $metadata->updateOverrides(['label' => ['PL' => 'AA']]);
+        $metadata = $metadata->withOverrides(['label' => ['PL' => 'AA']]);
         $this->assertEmpty($metadata->getOverrides());
-    }
-
-    public function testSetOverridesDoesNotPerformAnyAdjustments() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
-        $metadata->setOverrides(['label' => ['PL' => 'AA']]);
-        $this->assertEquals(['label' => ['PL' => 'AA']], $metadata->getOverrides());
     }
 
     public function testOverridingDescription() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], ['PL' => 'DescA']);
-        $metadata->updateOverrides(['description' => ['PL' => 'DescB']]);
+        $metadata = $metadata->withOverrides(['description' => ['PL' => 'DescB']]);
         $this->assertEquals(['PL' => 'DescB'], $metadata->getDescription());
     }
 
     public function testAddingALanguageInDescriptionOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], ['PL' => 'DescA']);
-        $metadata->updateOverrides(['description' => ['EN' => 'DescB']]);
+        $metadata = $metadata->withOverrides(['description' => ['EN' => 'DescB']]);
         $this->assertEquals(['PL' => 'DescA', 'EN' => 'DescB'], $metadata->getDescription());
     }
 
     public function testReplacingALanguageInPlaceholderOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], ['PL' => 'DescA', 'EN' => 'DescB']);
-        $metadata->updateOverrides(['placeholder' => ['EN' => 'DescC']]);
+        $metadata = $metadata->withOverrides(['placeholder' => ['EN' => 'DescC']]);
         $this->assertEquals(['PL' => 'DescA', 'EN' => 'DescC'], $metadata->getPlaceholder());
     }
 
     public function testOverridingShownInBrief() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], true);
         $this->assertTrue($metadata->isShownInBrief());
-        $metadata->updateOverrides(['shownInBrief' => false]);
+        $metadata = $metadata->withOverrides(['shownInBrief' => false]);
         $this->assertFalse($metadata->isShownInBrief());
-        $metadata->updateOverrides(['shownInBrief' => true]);
+        $metadata = $metadata->withOverrides(['shownInBrief' => true]);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata->update([], [], [], [], false);
         $this->assertTrue($metadata->isShownInBrief());
-        $metadata->updateOverrides(['shownInBrief' => null]);
+        $metadata = $metadata->withOverrides(['shownInBrief' => null]);
         $this->assertFalse($metadata->isShownInBrief());
         $metadata->update([], [], [], [], true);
         $this->assertTrue($metadata->isShownInBrief());
-        $metadata->updateOverrides([]);
+        $metadata = $metadata->withOverrides([]);
         $this->assertTrue($metadata->isShownInBrief());
     }
 
     public function testOverriddenShownInBriefIsNotPresentInOverrides() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], true);
-        $metadata->updateOverrides(['shownInBrief' => true]);
+        $metadata = $metadata->withOverrides(['shownInBrief' => true]);
         $this->assertArrayNotHasKey('shownInBrief', $metadata->getOverrides());
     }
 
     public function testOverridingConstraints() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], ['regex' => 'abc']);
         $this->assertEquals(['regex' => 'abc'], $metadata->getConstraints());
-        $metadata->updateOverrides(['constraints' => ['regex' => 'cab']]);
+        $metadata = $metadata->withOverrides(['constraints' => ['regex' => 'cab']]);
         $this->assertEquals(['regex' => 'cab'], $metadata->getConstraints());
     }
 
     public function testAddingConstraintWithOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], ['regex' => 'abc']);
-        $metadata->updateOverrides(['constraints' => ['count' => 2]]);
+        $metadata = $metadata->withOverrides(['constraints' => ['count' => 2]]);
         $this->assertEquals(['regex' => 'abc', 'count' => 2], $metadata->getConstraints());
     }
 
     public function testClearingConstraintWithOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], ['regex' => 'abc']);
-        $metadata->updateOverrides(['constraints' => ['regex' => null]]);
+        $metadata = $metadata->withOverrides(['constraints' => ['regex' => null]]);
         $this->assertEquals(['regex' => null], $metadata->getConstraints());
     }
 
     public function testOverridingZeroConstraintWithNull() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], ['maxCount' => 0]);
         $this->assertEquals(['maxCount' => 0], $metadata->getConstraints());
-        $metadata->updateOverrides(['constraints' => ['maxCount' => null]]);
+        $metadata = $metadata->withOverrides(['constraints' => ['maxCount' => null]]);
         $this->assertEmpty($metadata->getOverrides());
         $this->assertEquals(['maxCount' => 0], $metadata->getConstraints());
     }

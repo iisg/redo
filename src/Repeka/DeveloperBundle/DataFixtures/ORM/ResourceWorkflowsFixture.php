@@ -5,7 +5,6 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 
 class ResourceWorkflowsFixture extends RepekaFixture {
     const ORDER = RolesFixture::ORDER + 1;
@@ -16,6 +15,7 @@ class ResourceWorkflowsFixture extends RepekaFixture {
      * @inheritdoc
      */
     public function load(ObjectManager $manager) {
+        $titleMetadataId = $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId();
         $fileMetadata = $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE);
         $fileMetadataId = $fileMetadata->getId();
         $scannerMetadata = $this->getReference(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER);
@@ -24,14 +24,14 @@ class ResourceWorkflowsFixture extends RepekaFixture {
         $supervisorMetadataId = $supervisorMetadata->getId();
         $places = json_decode(<<<JSON
 [
-  {"id": "y1oosxtgf", "label": {"PL": "Zaimportowana", "EN":"Imported"}},
+  {"id": "y1oosxtgf", "label": {"PL": "Zaimportowana", "EN":"Imported"},                      "requiredMetadataIds": [$titleMetadataId]},
   {"id": "lb1ovdqcy", "label": {"PL": "Do skanowania", "EN":"Ready to scan"},                 "requiredMetadataIds": [$scannerMetadataId, $supervisorMetadataId]},
   {"id": "qqd3yk499", "label": {"PL": "Zeskanowana", "EN":"Scanned"},                         "lockedMetadataIds": [$supervisorMetadataId], "assigneeMetadataIds": [$scannerMetadataId]},
   {"id": "9qq9ipqa3", "label": {"PL": "Wymaga ponownego skanowania", "EN":"Require rescan"},  "lockedMetadataIds": [$scannerMetadataId, $supervisorMetadataId]},
   {"id": "ss9qm7r78", "label": {"PL": "Zweryfikowana", "EN":"Verified"},                      "requiredMetadataIds": [$fileMetadataId], "lockedMetadataIds": [$scannerMetadataId, $supervisorMetadataId]},
   {"id": "jvz160sl4", "label": {"PL": "Rozpoznana", "EN":"Recognized"},                       "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId, $supervisorMetadataId]},
   {"id": "xo77kutzk", "label": {"PL": "Zaakceptowana", "EN":"Accepted"},                      "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId, $supervisorMetadataId]},
-  {"id": "j70hlpsvu", "label": {"PL": "Opublikowana", "EN":"Published"},                      "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId, $supervisorMetadataId]}
+  {"id": "j70hlpsvu", "label": {"PL": "Opublikowana", "EN":"Published"},                      "lockedMetadataIds": [$titleMetadataId, $fileMetadataId, $scannerMetadataId, $supervisorMetadataId]}
 ]
 JSON
             , true);

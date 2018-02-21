@@ -39,9 +39,7 @@ class ResourceKindsFixture extends RepekaFixture {
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_HARD_COVER),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_LANGUAGE),
-                $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->setOverrides([
-                    'constraints' => ['maxCount' => 0],
-                ]),
+                $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_FILE),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER),
                 $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
@@ -103,7 +101,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $this->handleCommand(new ResourceKindCreateCommand(
             ['PL' => 'Uczelnia', 'EN' => 'University'],
             [
-                $nameMetadata->setOverrides(['label' => ['PL' => 'Nazwa uczelni']]),
+                $nameMetadata->withOverrides(['label' => ['PL' => 'Nazwa uczelni']]),
                 $abbrevMetadata,
             ],
             [

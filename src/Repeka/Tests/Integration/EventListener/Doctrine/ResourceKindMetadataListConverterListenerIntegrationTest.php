@@ -88,4 +88,24 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
         $resourceKind = $this->handleCommand(new ResourceKindQuery($resourceKind->getId()));
         $this->assertEquals([2, SystemMetadata::PARENT, 1], $resourceKind->getMetadataIds());
     }
+
+    public function testOverridesForDifferentResourceKindsDoNotInfluenceEachOther() {
+        /** @var ResourceKind $resourceKindA */
+        $resourceKindA = $this->handleCommand(new ResourceKindCreateCommand(
+            ['PL' => 'A', 'EN' => 'A'],
+            [['id' => 2, 'label' => ['PL' => 'Label A']]]
+        ));
+        /** @var ResourceKind $resourceKindB */
+        $resourceKindB = $this->handleCommand(new ResourceKindCreateCommand(
+            ['PL' => 'B', 'EN' => 'B'],
+            [['id' => 2, 'label' => ['PL' => 'Label B']]]
+        ));
+        $this->assertEquals('Label A', $resourceKindA->getMetadataById(2)->getLabel()['PL']);
+        $this->assertEquals('Label B', $resourceKindB->getMetadataById(2)->getLabel()['PL']);
+        $this->getEntityManager()->clear();
+        $resourceKindA = $this->handleCommand(new ResourceKindQuery($resourceKindA->getId()));
+        $resourceKindB = $this->handleCommand(new ResourceKindQuery($resourceKindB->getId()));
+        $this->assertEquals('Label A', $resourceKindA->getMetadataById(2)->getLabel()['PL']);
+        $this->assertEquals('Label B', $resourceKindB->getMetadataById(2)->getLabel()['PL']);
+    }
 }

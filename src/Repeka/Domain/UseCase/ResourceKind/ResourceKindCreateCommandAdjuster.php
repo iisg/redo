@@ -43,8 +43,7 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
                 Assertion::keyExists($metadataOrOverride, 'id', 'Metadata id is requried when using override format.');
                 $id = (int)$metadataOrOverride['id'];
                 $metadata = $this->metadataRepository->findOne($id);
-                $metadata->updateOverrides($metadataOrOverride);
-                $metadataList[$id] = $metadata;
+                $metadataList[$id] = $metadata->withOverrides($metadataOrOverride);
             }
         }
         if (!isset($metadataList[SystemMetadata::PARENT])) {

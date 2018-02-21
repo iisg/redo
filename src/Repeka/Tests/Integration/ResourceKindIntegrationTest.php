@@ -119,17 +119,13 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(200, $client->getResponse());
         $client = self::createClient();
         $resourceKindRepository = $client->getContainer()->get(ResourceKindRepository::class);
-        $metadataRepository = $client->getContainer()->get(MetadataRepository::class);
         /** @var ResourceKind $resourceKind */
         $resourceKind = $resourceKindRepository->findOne($this->resourceKind->getId());
-        /** @var Metadata $metadata1 */
-        $metadata1 = $metadataRepository->findOne($this->metadata1->getId());
         $this->assertEquals(['TEST' => 'modified'], $resourceKind->getLabel());
         $this->assertEquals(
             [$this->metadata2->getId(), $this->metadata1->getId(), SystemMetadata::PARENT],
             $resourceKind->getMetadataIds()
         );
-        $this->assertEquals(['TEST' => 'modified'], $metadata1->getPlaceholder());
     }
 
     public function testDeletingResourceKind() {
