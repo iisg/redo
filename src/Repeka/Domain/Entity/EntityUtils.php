@@ -57,14 +57,18 @@ class EntityUtils {
     }
 
     public static function forceSetId($entity, $id) {
-        (new self())->doForceSetId($entity, $id); // just because IDE thinks $this is an error in static methods
+        self::forceSetField($entity, $id, 'id');
+    }
+
+    public static function forceSetField($entity, $value, string $field) {
+        (new self())->doForceSetField($entity, $value, $field); // just because IDE thinks $this is an error in static methods
     }
 
     /** @SuppressWarnings(PHPMD.UnusedPrivateMethod) */
-    private function doForceSetId($entity, $id) {
-        $idSetter = function ($id) {
-            $this->id = $id;
+    private function doForceSetField($entity, $value, string $field) {
+        $fieldSetter = function ($value, string $field) {
+            $this->{$field} = $value;
         };
-        $idSetter->call($entity, $id);
+        $fieldSetter->call($entity, $value, $field);
     }
 }

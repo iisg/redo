@@ -53,6 +53,7 @@ trait StubsTrait {
         $metadata->method('getControl')->willReturn($control);
         $metadata->method('getConstraints')->willReturn($constraints);
         $metadata->method('getResourceClass')->willReturn($resourceClass);
+        $metadata->method('withOverrides')->willReturn($metadata);
         return $metadata;
     }
 

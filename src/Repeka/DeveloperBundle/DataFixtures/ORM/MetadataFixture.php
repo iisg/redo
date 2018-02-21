@@ -210,7 +210,7 @@ class MetadataFixture extends RepekaFixture {
                 'PL' => 'Język tytułu',
                 'EN' => 'Title language',
             ],
-            'constraints' => $this->textConstraints(1),
+            'constraints' => $this->textConstraints(1, '^[a-z]{3}$'),
         ]));
         $this->handleCommand(new MetadataUpdateOrderCommand(EntityUtils::mapToIds(
             $this->handleCommand(new MetadataListByResourceClassQuery('books'))

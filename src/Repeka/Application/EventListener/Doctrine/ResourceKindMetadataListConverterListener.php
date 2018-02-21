@@ -3,6 +3,7 @@ namespace Repeka\Application\EventListener\Doctrine;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Psr\Container\ContainerInterface;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -45,8 +46,9 @@ class ResourceKindMetadataListConverterListener {
             $metadataRepository = $this->container->get(MetadataRepository::class);
             $metadataList = $metadataRepository->findByIds($metadataIds);
             foreach ($metadataList as $metadata) {
-                $metadata->setOverrides($metadataOverrides[$metadata->getId()]);
-                $metadataOverrides[$metadata->getId()] = $metadata;
+                $metadataWithOverrides = clone $metadata;
+                EntityUtils::forceSetField($metadataWithOverrides, $metadataOverrides[$metadata->getId()], 'overrides');
+                $metadataOverrides[$metadata->getId()] = $metadataWithOverrides;
             }
             $entity->setMetadataList(array_values($metadataOverrides));
         }
