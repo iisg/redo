@@ -1,6 +1,6 @@
 <template>
     <button class="btn btn-success btn-block"
-        disabled.bind="!canEditResource">
+        disabled.bind="!canApplyTransition">
         ${transition.label | inCurrentLanguage}
         <span>
             <span if.bind="transitionInactiveReasons === undefined">

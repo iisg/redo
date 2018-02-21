@@ -6,19 +6,12 @@ import {computedFrom} from "aurelia-binding";
 import {Resource} from "../../resource";
 
 @autoinject
-export class ResourceEditButton {
+export class ApplyTransitionButton {
   @bindable resource: Resource;
   @bindable transition: WorkflowTransition;
+  @bindable canApplyTransition: boolean;
 
   constructor(private i18n: I18N) {
-  }
-
-  @computedFrom('resource', 'transition')
-  get canEditResource(): boolean {
-    if (!this.resource || !this.transition) {
-      return false;
-    }
-    return this.resource.canApplyTransition(this.transition);
   }
 
   @computedFrom('resource', 'transition')
