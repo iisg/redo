@@ -55,6 +55,18 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(3, $count);
     }
 
+    public function testForEachMetadata() {
+        $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2, 'submetadata' => [4 => 5, 2 => [1, 2]]]]]);
+        $iteratedIds = [];
+        $iteratedValues = [];
+        $contents->forEachMetadata(function (array $values, int $metadataId) use (&$iteratedIds, &$iteratedValues) {
+            $iteratedIds[] = $metadataId;
+            $iteratedValues[] = $values;
+        });
+        $this->assertEquals([1, 2, 4, 2], $iteratedIds);
+        $this->assertEquals([[1], [2], [5], [1, 2]], $iteratedValues);
+    }
+
     public function testSetOneValue() {
         $contents = ResourceContents::fromArray([1 => 1]);
         $contents = $contents->withNewValues(2, 2);
