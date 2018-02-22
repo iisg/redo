@@ -69,6 +69,7 @@ const bundles = function () {
           "aurelia-animator-css",
           "aurelia-i18n",
           "aurelia-templating-binding",
+          "aurelia-plugins-tabs",
           "aurelia-polyfills",
           "aurelia-templating-resources",
           "aurelia-templating-router",
