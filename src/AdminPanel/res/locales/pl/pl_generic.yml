@@ -140,6 +140,7 @@ Ignored values that have no matching metadata in this resource kind:: Zignorowan
 File is not a valid import configuration: Plik nie jest poprawną konfiguracją importu.
 Edit resource with transition from: Edycja zasobu przy przejściu ze stanu
 To states: Do stanu
+Added resource will be in following place: Dodany zasób znajdzie się w stanie
 List of required metadata: Lista metadanych wymaganych do przejścia
 And move to state: i przejdź do stanu
 No more values are allowed: Wprowadzono maksymalną liczbę wartości
