@@ -8,7 +8,6 @@
     <require from="common/components/fab/fab-edit"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
-
     <div class="au-animate fade-inup-outup"
         if.bind="resource">
 
@@ -30,38 +29,47 @@
             ${resource | resourceDisplayStrategy:'header'}
         </h1>
 
-        <div class="au-animate anim-height-inout-300"
-            if.bind="!editing">
-            <resource-metadata-table resource.bind="resource"></resource-metadata-table>
-
-            <dl class="dl-horizontal resource-details">
-                <dt>${'Place' | t}</dt>
-                <dd>
-                    <resource-place-display resource.bind="resource"></resource-place-display>
-                </dd>
-            </dl>
-
-            <div class="row"
-                if.bind="resource.kind.workflow">
-                <div class="col-sm-4">
-                    <div class="btn-group-vertical au-animate fade-inup-outup btn-block">
-                        <apply-transition-button repeat.for="transition of resource.availableTransitions"
-                            resource.bind="resource"
-                            transition.bind="transition"
-                            can-apply-transition.bind="resource.canApplyTransition(transition)"
-                            click.trigger="toggleEditForm(transition)"></apply-transition-button>
+        <div if.bind="!editing">
+            <pending-throbber entity.bind="resource"></pending-throbber>
+            <aup-tabs tabs.bind="resourceDetailsTabs">
+                <aup-tab></aup-tab>
+            </aup-tabs>
+            <aup-tab-content if.bind="!editing">
+                <aup-tab-pane tab="childResourceTab">
+                    <div if.bind="currentTabId === 'childResourceTab'">
+                            <resources-list parent-resource.bind="resource"
+                                has-resources.bind="hasChildren"></resources-list>
                     </div>
-                </div>
-                <div class="col-sm-8">
-                    <resource-workflow resource.bind="resource"></resource-workflow>
-                </div>
-            </div>
-
-            <div if.bind="allowAddChildResource">
-                <h3>${'Child resources' | t}</h3>
-                <resources-list parent-resource.bind="resource"
-                    has-resources.bind="hasChildren"></resources-list>
-            </div>
+                </aup-tab-pane>
+                <aup-tab-pane tab="metadataTab">
+                    <div  if.bind="currentTabId === 'metadataTab'">
+                        <resource-metadata-table resource.bind="resource"></resource-metadata-table>
+                        <dl class="dl-horizontal resource-details">
+                            <dt>${'Place' | t}</dt>
+                            <dd>
+                                <resource-place-display resource.bind="resource"></resource-place-display>
+                            </dd>
+                        </dl>
+                    </div>
+                </aup-tab-pane>
+                <aup-tab-pane tab="workflowTab" >
+                    <div class="row"
+                        if.bind="currentTabId === 'workflowTab'">
+                        <div class="col-sm-4">
+                            <div class="btn-group-vertical au-animate fade-inup-outup btn-block">
+                                <apply-transition-button repeat.for="transition of resource.availableTransitions"
+                                    resource.bind="resource"
+                                    transition.bind="transition"
+                                    can-apply-transition.bind="resource.canApplyTransition(transition)"
+                                    click.trigger="toggleEditForm(transition)"></apply-transition-button>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <resource-workflow resource.bind="resource"></resource-workflow>
+                        </div>
+                    </div>
+                </aup-tab-pane>
+            </aup-tab-content>
         </div>
 
         <div class="au-animate anim-height-inout-900 well floating-form-full-width"

@@ -46,6 +46,7 @@ Server returned error 404 - Not Found: Serwer zwrócił błąd 404 - Nie Znalezi
 Server returned error 403 - Forbidden: Serwer zwrócił błąd 403 - Zabronione
 No matches found for {0}: Żaden element nie pasuje do {0}
 Resource: Zasób
+Metadata: Metadane
 User: Użytkownik
 Error {{code}}: Błąd {{code}}
 Close: Zamknij

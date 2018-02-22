@@ -38,6 +38,7 @@ export function configure(aurelia: Aurelia) {
     .plugin('aurelia-dialog', dialogConfigurator)
     .plugin("oribella-aurelia-sortable")
     .plugin('martingust/aurelia-repeat-strategies')
+    .plugin('aurelia-plugins-tabs')
     .globalResources([
       'common/authorization/require-role',
       'common/bootstrap/bootstrap-tooltip',

@@ -20,6 +20,8 @@ export class ResourceDetails implements RoutableComponentActivate {
   selectedTransition: WorkflowTransition;
   hasChildren: boolean;
   private urlListener: Subscription;
+  resourceDetailsTabs: any[] = [];
+  currentTabId: string = '';
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceDisplayStrategy: ResourceDisplayStrategyValueConverter,
@@ -34,6 +36,13 @@ export class ResourceDetails implements RoutableComponentActivate {
   bind() {
     this.urlListener = this.ea.subscribe("router:navigation:success",
       (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit');
+    this.resourceDetailsTabs.forEach(tab => {
+      this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${tab.id}`, () => {
+        this.resourceDetailsTabs.find(currentTab => currentTab.id == this.currentTabId).active = false;
+        tab.active = true;
+        this.currentTabId = tab.id;
+      });
+    });
   }
 
   unbind() {
@@ -42,8 +51,30 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   async activate(params: any, routeConfig: RouteConfig) {
     this.resource = await this.resourceRepository.get(params.id);
+    const resources = await this.resourceRepository.getListQuery()
+      .filterByParentId(this.resource.id)
+      .get();
+    this.hasChildren = resources.length > 0;
     const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
     routeConfig.navModel.setTitle(title);
+    this.activateTabs();
+  }
+
+  activateTabs() {
+    if (this.allowAddChildResource) {
+      this.resourceDetailsTabs.push({id: 'childResourceTab', label: this.i18n.tr('Child resources')});
+      if (this.hasChildren) {
+        this.currentTabId = 'childResourceTab';
+      }
+    }
+    this.resourceDetailsTabs.push({id: 'metadataTab', label: this.i18n.tr('Metadata')});
+    if (this.currentTabId === '') {
+      this.currentTabId = 'metadataTab';
+    }
+    if (this.resource.kind.workflow) {
+      this.resourceDetailsTabs.push({id: 'workflowTab', label: this.i18n.tr('Workflow')});
+    }
+    this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
   }
 
   @computedFrom('this.resource.kind.metadataList', 'this.resource.kind.metadataList.length')
