@@ -8,7 +8,7 @@
     "help": "gulp help",
     "build": "gulp build",
     "clean": "gulp clean",
-    "dist": "npm install && npm run -s install-deps && cross-env REPEKA_ENV=prod npm run -s build && cross-env REPEKA_ENV=prod gulp bundle-app",
+    "dist": "npm install && npm run -s install-deps && cross-env REPEKA_ENV=prod gulp dist",
     "install-deps": "npm prune && (typings prune && typings install && jspm clean && jspm install)",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",

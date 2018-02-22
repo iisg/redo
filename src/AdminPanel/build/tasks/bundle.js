@@ -13,7 +13,7 @@ const bundlingConfig = function (whatToBundle) {
     force: true,
     baseURL: paths.webRoot,
     configPath: path.join(paths.webAdminRoot, 'jspm.config.js'),
-    bundles: bundles[whatToBundle]
+    bundles: bundles()[whatToBundle]
   };
 };
 
@@ -35,4 +35,9 @@ gulp.task('bundle-views', ['build-html'], function () {
 
 gulp.task('bundle-locales', ['build-locales'], function () {
   return bundler.bundle(bundlingConfig('resources'));
+});
+
+gulp.task('dist', function (cb) {
+  process.env.REPEKA_ENV = 'prod';
+  return runSequence('build', 'bundle-app', cb);
 });

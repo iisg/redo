@@ -3,6 +3,7 @@ import {suppressError as suppressErrorHeader} from "common/http-client/headers";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {EntityClass} from "../dto/contracts";
 import {DeduplicatingHttpClient} from "../http-client/deduplicating-http-client";
+import {cachedResponse, untilPromiseCompleted} from "./cached-response";
 
 export abstract class ApiRepository<T> {
   constructor(protected httpClient: DeduplicatingHttpClient,
@@ -19,6 +20,7 @@ export abstract class ApiRepository<T> {
     return Promise.all(dtoItems.map(item => this.toEntity(item)));
   }
 
+  @cachedResponse(untilPromiseCompleted)
   public get(id: number | string, suppressError: boolean = false): Promise<T> {
     const request = this.httpClient.createRequest(this.oneEntityEndpoint(id)).asGet();
     if (suppressError) {

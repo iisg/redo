@@ -16,6 +16,11 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
         }));
     }
 
+    /**
+     * @param callable $mapper function(mixed $value, int $metadataId)
+     *                         that receives every single value of all metadata from the contents and returns the mapped value
+     * @return ResourceContents new instance of the contents with all values mapped by $mapper
+     */
     public function mapAllValues(callable $mapper): ResourceContents {
         return new self($this->mapAllValuesRecursive($mapper, $this->contents));
     }
@@ -32,6 +37,12 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
         return $contents;
     }
 
+    /**
+     * @param callable $function function(mixed $value, int $metadataId, mixed $accumulator)
+     *                           that receives every value of all metadata from the contents and returns the new accumulator value
+     * @param mixed $initial initial value for the accumulator
+     * @return mixed the final accumulator value
+     */
     public function reduceAllValues(callable $function, $initial = null) {
         return $this->reduceAllValuesRecursive($this->contents, $function, $initial);
     }
@@ -49,8 +60,29 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
         return $result;
     }
 
+    /**
+     * @param callable $callback function(mixed $value, int $metadataId) that receives every value of all metadata from the contents
+     */
     public function forEachValue(callable $callback) {
         $this->reduceAllValuesRecursive($this->contents, $callback, null);
+    }
+
+    /**
+     * @param callable $callback function(array $values, int $metadataId) that receives all values of all metadata from the contents
+     */
+    public function forEachMetadata(callable $callback) {
+        $this->forEachMetadataRecursive($this->contents, $callback);
+    }
+
+    private function forEachMetadataRecursive(array $contents, callable $function) {
+        foreach ($contents as $metadataId => $values) {
+            $function(array_column($values, 'value'), $metadataId);
+            foreach ($values as $value) {
+                if (isset($value['submetadata'])) {
+                    $this->forEachMetadataRecursive($value['submetadata'], $function);
+                }
+            }
+        }
     }
 
     /**

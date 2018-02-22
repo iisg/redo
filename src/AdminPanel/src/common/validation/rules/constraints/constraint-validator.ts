@@ -1,12 +1,7 @@
-import * as changeCase from "change-case";
 import {FluentRuleCustomizer} from "aurelia-validation";
 
 export abstract class ConstraintValidator {
-  validatedConstraintName(): string {
-    const className = this.constructor.name;
-    const camelCase = changeCase.camelCase(className);
-    return camelCase.replace(/ConstraintValidator$/, '');
-  }
+  abstract validatedConstraintName(): string;
 
   public addRule(rules: FluentRuleCustomizer<any, any>, config): FluentRuleCustomizer<any, any> {
     return rules.satisfies(value => this.validate(value, config), this.getRuleConfig()).withMessage(this.getErrorMessage(config));

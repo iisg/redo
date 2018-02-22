@@ -3,8 +3,8 @@ namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Validation\MetadataConstraintManager;
+use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
 use Repeka\Tests\Traits\StubsTrait;
@@ -12,60 +12,83 @@ use Repeka\Tests\Traits\StubsTrait;
 class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
+    /** @var AbstractMetadataConstraint|\PHPUnit_Framework_MockObject_MockObject */
+    private $constraint1;
+    /** @var AbstractMetadataConstraint|\PHPUnit_Framework_MockObject_MockObject */
+    private $constraint2;
+
+    /** @var Metadata */
+    private $metadataWithoutConstraints;
+    /** @var Metadata */
+    private $metadataWithConstraint1;
+    /** @var Metadata */
+    private $metadataWithBothConstraints;
+
+    /** @var MetadataValuesSatisfyConstraintsRule */
+    private $rule;
+
+    /** @before */
+    public function init() {
+        $this->constraint1 = $this->createMock(AbstractMetadataConstraint::class);
+        $this->constraint2 = $this->createMock(AbstractMetadataConstraint::class);
+        $constraintManager = $this->createMetadataConstraintManagerStub(
+            ['constraint1' => $this->constraint1, 'constraint2' => $this->constraint2]
+        );
+        $this->metadataWithoutConstraints = $this->createMetadataMock(1, null, MetadataControl::TEXT(), []);
+        $this->metadataWithConstraint1 = $this->createMetadataMock(2, null, MetadataControl::TEXT(), ['constraint1' => 'c1m2cfg']);
+        $this->metadataWithBothConstraints = $this->createMetadataMock(3, null, MetadataControl::TEXT(), [
+            'constraint1' => 'c1m3cfg', 'constraint2' => 'c2m3cfg',
+        ]);
+        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [
+            $this->metadataWithoutConstraints, $this->metadataWithConstraint1, $this->metadataWithBothConstraints,
+        ]);
+        $resourceKind = $this->createResourceKindMock(1, 'books', [$this->metadataWithConstraint1]);
+        $this->rule = (new MetadataValuesSatisfyConstraintsRule($constraintManager, $metadataRepository))->forResourceKind($resourceKind);
+    }
+
     public function testAcceptsWhenThereAreNoConstraints() {
-        $constraintlessMetadata = Metadata::create('books', MetadataControl::TEXTAREA(), '', []);
-        $resourceKind = $this->createSingleMetadataResourceKindMock($constraintlessMetadata);
-        $constraintManager = $this->createMock(MetadataConstraintManager::class);
-        $constraintManager->expects($this->never())->method('get');
-        $validator = new MetadataValuesSatisfyConstraintsRule($constraintManager);
-        $this->assertTrue($validator->forResourceKind($resourceKind)->validate([0 => 1, 1 => 'test']));
+        $this->assertTrue($this->rule->validate(ResourceContents::fromArray([$this->metadataWithoutConstraints->getId() => 1])));
     }
 
     public function testAcceptsWhenAllRulesAccept() {
-        $constraints = ['constraint1' => 'arg1', 'constraint2' => 'arg2'];
-        $metadata = Metadata::create('books', MetadataControl::TEXTAREA(), '', [], [], [], $constraints);
-        $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
-        $constraint = $this->createMock(AbstractMetadataConstraint::class);
-        $constraint->expects($this->exactly(4))->method('validateAll');
-        $constraintManager = $this->createMetadataConstraintManagerStub([
-            'constraint1' => $constraint,
-            'constraint2' => $constraint,
-        ]);
-        $validator = new MetadataValuesSatisfyConstraintsRule($constraintManager);
-        $this->assertTrue($validator->forResourceKind($resourceKind)->validate([0 => ['value1'], 1 => ['value2']]));
+        $this->constraint1->expects($this->exactly(2))->method('validateAll')
+            ->withConsecutive(['c1m2cfg', ['a', 'b']], ['c1m3cfg', ['d']]);
+        $this->constraint2->expects($this->once())->method('validateAll')->with('c2m3cfg', ['d']);
+        $this->assertTrue($this->rule->validate(ResourceContents::fromArray([
+            $this->metadataWithConstraint1->getId() => ['a', 'b'],
+            $this->metadataWithBothConstraints->getId() => 'd',
+        ])));
     }
 
     public function testRejectsWhenAnyRuleRejects() {
         $this->expectException(\InvalidArgumentException::class);
-        $constraints = ['constraint1' => 'arg1', 'constraint2' => 'arg2'];
-        $metadata = Metadata::create('books', MetadataControl::TEXTAREA(), '', [], [], [], $constraints);
-        $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
-        $constraint = $this->createMock(AbstractMetadataConstraint::class);
-        $constraint->method('validateAll');
-        $constraint->method('validateAll')->willThrowException(new \InvalidArgumentException());
-        $constraintManager = $this->createMetadataConstraintManagerStub([
-            'constraint1' => $constraint,
-            'constraint2' => $constraint,
-        ]);
-        $validator = new MetadataValuesSatisfyConstraintsRule($constraintManager);
-        $this->assertFalse($validator->forResourceKind($resourceKind)->validate([0 => ['value1'], 1 => ['value2']]));
+        $this->constraint2->method('validateAll')->willThrowException(new \InvalidArgumentException());
+        $this->rule->validate(ResourceContents::fromArray([
+            $this->metadataWithConstraint1->getId() => ['a', 'b'],
+            $this->metadataWithBothConstraints->getId() => 'd',
+        ]));
     }
 
-    public function testUsesCorrectRule() {
-        $constraint = $this->createMock(AbstractMetadataConstraint::class);
-        $constraintManager = $this->createMock(MetadataConstraintManager::class);
-        $constraintManager->expects($this->once())->method('get')
-            ->with('testConstraint')
-            ->willReturn($constraint);
-        $metadata = Metadata::create('books', MetadataControl::TEXTAREA(), '', [], [], [], ['testConstraint' => 'testArgument']);
-        $resourceKind = $this->createSingleMetadataResourceKindMock($metadata);
-        $validator = new MetadataValuesSatisfyConstraintsRule($constraintManager);
-        $validator->forResourceKind($resourceKind)->validate([0 => [1]]);
-    }
-
-    private function createSingleMetadataResourceKindMock($metadata): \PHPUnit_Framework_MockObject_MockObject {
-        $resourceKind = $this->createMock(ResourceKind::class);
-        $resourceKind->method('getMetadataById')->willReturn($metadata);
-        return $resourceKind;
+    public function testValidatesSubmetadata() {
+        $this->constraint1->expects($this->exactly(3))->method('validateAll')
+            ->withConsecutive(['c1m2cfg', ['a', 'c']], ['c1m3cfg', ['b', 'c']], ['c1m3cfg', ['e']]);
+        $this->constraint2->expects($this->exactly(2))->method('validateAll')
+            ->withConsecutive(['c2m3cfg', ['b', 'c']], ['c2m3cfg', ['e']]);
+        $this->assertTrue($this->rule->validate(ResourceContents::fromArray([
+            $this->metadataWithConstraint1->getId() => [
+                [
+                    'value' => 'a',
+                    'submetadata' => [
+                        $this->metadataWithBothConstraints->getId() => ['b', 'c'],
+                    ],
+                ],
+                [
+                    'value' => 'c',
+                    'submetadata' => [
+                        $this->metadataWithBothConstraints->getId() => 'e',
+                    ],
+                ],
+            ],
+        ])));
     }
 }

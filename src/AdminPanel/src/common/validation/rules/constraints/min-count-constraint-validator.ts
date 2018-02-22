@@ -4,6 +4,9 @@ import {I18N} from "aurelia-i18n";
 
 @autoinject
 export class MinCountConstraintValidator extends MetadataArrayConstraintValidator {
+  validatedConstraintName(): string {
+    return 'minCount';
+  }
   constructor(private i18n: I18N) {
     super();
   }
