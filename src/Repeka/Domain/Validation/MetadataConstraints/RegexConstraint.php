@@ -14,7 +14,7 @@ class RegexConstraint extends RespectValidationMetadataConstraint {
     }
 
     public function getSupportedControls(): array {
-        return [MetadataControl::TEXT];
+        return [MetadataControl::TEXT, MetadataControl::TEXTAREA];
     }
 
     /**
