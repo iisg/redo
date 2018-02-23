@@ -2,7 +2,7 @@ import {EventAggregator} from "aurelia-event-aggregator";
 import {NavigationInstruction} from "aurelia-router";
 import {inlineView} from "aurelia-templating";
 
-@inlineView('<template><span class="navbar-brand">${\'nav::\' + title | t}</span></template>')
+@inlineView('<template><span class="navbar-brand">${title | t}</span></template>')
 export class NavbarTitle {
   title: string;
 
@@ -12,6 +12,8 @@ export class NavbarTitle {
   }
 
   updateTitle(navigationInstruction: NavigationInstruction) {
-    this.title = navigationInstruction.config.title;
+    this.title = navigationInstruction.params.hasOwnProperty("resourceClass")
+      ? `resource_classes::${navigationInstruction.params.resourceClass}//${navigationInstruction.config.name}`
+      : `nav::${navigationInstruction.config.title}`;
   }
 }
