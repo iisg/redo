@@ -4,5 +4,5 @@ No more than {{maxCount}} values allowed: "Maksymlana liczba wartości: {{maxCou
 
 labels:
   maxCount: Maksymalna liczba wartości
-  regex: Wyrażenie reulgarne
+  regex: Wyrażenie regularne
   resourceKind: Wymagany rodzaj zasobu
