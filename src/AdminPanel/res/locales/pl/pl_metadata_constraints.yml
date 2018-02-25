@@ -1,9 +1,13 @@
-Value in this metadata is required: Wartość dla tej metadanej jest wymagana
-No more than {{maxCount}} values allowed: "Maksymlana liczba wartości: {{maxCount}}"
+﻿Value in this metadata is required: Wartość dla tej metadanej jest wymagana
+"No more than {{maxCount}} values allowed": "Maksymlana liczba wartości: {{maxCount}}"
 "Value must fit the regular expression: {{regex}}": "Wartość musi pasować do wyrażenia regularnego: {{regex}}"
+"Value must be between {{minMaxValue.min}} and {{minMaxValue.max}}": "Wartość musi zawierać się w zakresie od {{minMaxValue.min}} do {{minMaxValue.max}}"
+"Value must be at most {{minMaxValue.max}}": "Wartość nie może być większa niż {{minMaxValue.max}}"
+"Value must be at least {{minMaxValue.min}}": "Wartość nie może być mniejsza niż {{minMaxValue.min}}"
 
 labels:
   maxCount: Maksymalna liczba wartości
   regex: Wyrażenie regularne
   resourceKind: Wymagany rodzaj zasobu
   relatedResourceMetadataFilter: Dodatkowy filtr zasobów
+  minMaxValue: Minimalna i maksymalna wartość

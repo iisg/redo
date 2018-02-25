@@ -4,6 +4,7 @@ import {RequiredInAllLanguagesValidationRule} from "./rules/required-in-all-lang
 import {registerLanguageValidationRules} from "resources-config/language-config/language";
 import {registerResourceValidationRules} from "resources/resource";
 import {registerMetadataValidationRules} from "resources-config/metadata/metadata";
+import {registerMetadataConstraintsValidationRules} from "resources-config/metadata/metadata";
 import {registerResourceKindValidationRules} from "resources-config/resource-kind/resource-kind";
 import {registerWorkflowValidationRules} from "workflows/workflow";
 import {registerUserRoleValidationRules} from "users/roles/user-role";
@@ -22,6 +23,7 @@ export class CustomValidationRules {
     registerLanguageValidationRules,
     registerWorkflowValidationRules,
     registerUserRoleValidationRules,
+    registerMetadataConstraintsValidationRules,
   ];
 
   constructor(private container: Container) {
