@@ -6,3 +6,4 @@ RequiredInAllLanguages: ${$displayName} musi mieć wartość we wszystkich języ
 lengthUpTo10: Długość do 10 znaków.
 Workflow must consist of at least one place: Proces musi zawierać co najmniej jeden stan
 Template compilation error: Błąd kompilacji szablonu
+minMaxValueRange: Minimalna wartość musi być mniejsza lub równa maksymalnej wartości.

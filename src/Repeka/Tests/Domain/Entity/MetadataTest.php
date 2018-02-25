@@ -187,4 +187,23 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $metadata->setParent($metadata);
         $this->assertFalse($metadata->isTopLevel());
     }
+
+    public function testOverridingIntegerConstraints() {
+        $minMaxValue = ['minMaxValue' => ['min' => 1000, 'max' => 2000]];
+        $metadata = Metadata::create('books', MetadataControl::INTEGER(), 'Prop', [], [], [], $minMaxValue);
+        $this->assertEquals(['minMaxValue' => ['min' => 1000, 'max' => 2000]], $metadata->getConstraints());
+        $metadata = $metadata->withOverrides(['constraints' => ['minMaxValue' => ['max' => 3000]]]);
+        $this->assertEquals(['minMaxValue' => ['max' => 3000]], $metadata->getConstraints());
+    }
+
+    public function testAddingAndClearingIntegerConstraintWithOverride() {
+        $minMaxValue = ['minMaxValue' => ['min' => 1000, 'max' => 2000]];
+        $metadata = Metadata::create('books', MetadataControl::INTEGER(), 'Prop', [], [], [], $minMaxValue);
+        $metadata = $metadata->withOverrides(['constraints' => ['count' => 2]]);
+        $this->assertEquals(['minMaxValue' => ['min' => 1000, 'max' => 2000], 'count' => 2], $metadata->getConstraints());
+        $minMaxValue = ['minMaxValue' => ['min' => 1000, 'max' => 2000]];
+        $metadata = Metadata::create('books', MetadataControl::INTEGER(), 'Prop', [], [], [], $minMaxValue);
+        $metadata = $metadata->withOverrides(['constraints' => ['minMaxValue' => null]]);
+        $this->assertEquals(['minMaxValue' => null], $metadata->getConstraints());
+    }
 }

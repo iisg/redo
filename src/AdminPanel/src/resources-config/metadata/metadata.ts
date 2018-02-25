@@ -7,7 +7,9 @@ import {SystemResourceKinds} from "../resource-kind/system-resource-kinds";
 import {arraysEqual} from "common/utils/array-utils";
 import {computedFrom} from "aurelia-binding";
 import {automapped, map, mappedWith} from "common/dto/decorators";
+import {CopyMapper} from "common/dto/mappers";
 import {MetadataMapper, ResourceKindConstraintMapper} from "./metadata-mapping";
+import {MinMaxValue} from "./metadata-min-max-value";
 
 export interface MultilingualText extends StringStringMap {
 }
@@ -21,16 +23,26 @@ export class MetadataConstraints {
   @map(ResourceKindConstraintMapper) resourceKind?: ResourceKind[] | number[] = [];
   @map regex?: string;
   @map relatedResourceMetadataFilter?: NumberMap<string> = {};
+  @map(CopyMapper) minMaxValue?: MinMaxValue = {};
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
   }
 }
 
+export function registerMetadataConstraintsValidationRules() {
+  ValidationRules
+    .ensure('minMaxValue').satisfies(obj => obj === undefined || obj.min === undefined || obj.max === undefined
+    || Number.isInteger(obj.min) && Number.isInteger(obj.max) && obj.max >= obj.min)
+    .withMessageKey('minMaxValueRange')
+    .on(MetadataConstraints);
+}
+
 export const metadataConstraintDefaults: MetadataConstraints = {
   resourceKind: [],
   minCount: 0,
   maxCount: 0,
+  minMaxValue: {min: undefined, max: undefined},
   regex: '',
   relatedResourceMetadataFilter: {}
 };

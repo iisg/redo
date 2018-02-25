@@ -102,6 +102,9 @@ You cannot revoke system roles from yourself.: Nie możesz odebrać sobie roli s
 Resource doesn't exist: Zasób nie istnieje
 Constraints: Ograniczenia
 At most: Najwyżej
+At least: Co najmniej
+Minimum: Minimum
+Maximum: Maksimum
 Unlimited: Bez ograniczeń
 At least one required: Co najmniej jedno wymagane
 At most {{max}} values required: Wymagane najwyżej {{max}} wartości
