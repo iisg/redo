@@ -1,5 +1,23 @@
 import {VoidFunction} from "../utils/function-utils";
+import {inArray} from "../utils/array-utils";
+
 const CACHED_VALUE_KEY = '_cachedValue';
+
+class CacheRegistry {
+  private cachedMethods = [];
+
+  registerCachedMethod(method) {
+    if (!inArray(method, this.cachedMethods)) {
+      this.cachedMethods.push(method);
+    }
+  }
+
+  clearAll() {
+    this.cachedMethods.forEach(method => clearCachedResponse(method));
+  }
+}
+
+export const cachedResponseRegistry = new CacheRegistry();
 
 export function cachedResponse(expirationPolicy?: (returnValue: any, clearCallback: VoidFunction) => void) {
   return (target: any, propertyName: string, descriptor: TypedPropertyDescriptor<any>) => {
@@ -18,6 +36,7 @@ export function cachedResponse(expirationPolicy?: (returnValue: any, clearCallba
         return returnValue;
       };
       fn[CACHED_VALUE_KEY] = {};
+      cachedResponseRegistry.registerCachedMethod(fn);
       descriptor.value = fn;
       return descriptor;
     } else {
@@ -26,7 +45,11 @@ export function cachedResponse(expirationPolicy?: (returnValue: any, clearCallba
   };
 }
 
-export function forSeconds(seconds: number = 60): (returnValue: any, clearCallback: VoidFunction) => void {
+export function forOneMinute(): (returnValue: any, clearCallback: VoidFunction) => void {
+  return forSeconds(60);
+}
+
+export function forSeconds(seconds: number): (returnValue: any, clearCallback: VoidFunction) => void {
   return (_, clearCallback: VoidFunction) => setTimeout(clearCallback, seconds * 1000);
 }
 

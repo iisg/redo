@@ -1,6 +1,6 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {Metadata} from "./metadata";
-import {cachedResponse, clearCachedResponse, forSeconds, getCachedArgumentsHash} from "common/repository/cached-response";
+import {cachedResponse, forOneMinute} from "common/repository/cached-response";
 import {ResourceClassApiRepository} from "common/repository/resource-class-api-repository";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {EntitySerializer} from "common/dto/entity-serializer";
@@ -11,16 +11,9 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
     super(httpClient, entitySerializer, Metadata, 'metadata');
   }
 
-  @cachedResponse(forSeconds())
+  @cachedResponse(forOneMinute())
   public getListByClass(resourceClass: string): Promise<Metadata[]> {
     return super.getListByClass(resourceClass);
-  }
-
-  public post(metadata: Metadata): Promise<Metadata> {
-    return super.post(metadata).then(metadata => {
-      clearCachedResponse(this.getListByClass, getCachedArgumentsHash([metadata.resourceClass]));
-      return metadata;
-    });
   }
 
   public getByParent(parent: Metadata): Promise<Metadata[]> {
@@ -40,10 +33,7 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
 
   public updateOrder(metadataList: Array<Metadata>, resourceClass: string): Promise<boolean> {
     return this.httpClient.put(this.endpoint, metadataList.map(metadata => metadata.id), {resourceClass})
-      .then(response => {
-        clearCachedResponse(this.getListByClass);
-        return response.content;
-      });
+      .then(response => response.content);
   }
 
   public update(updatedMetadata: Metadata): Promise<Metadata> {
@@ -54,10 +44,6 @@ export class MetadataRepository extends ResourceClassApiRepository<Metadata> {
       placeholder: updatedMetadata.placeholder,
       constraints: updatedMetadata.constraints,
       shownInBrief: updatedMetadata.shownInBrief,
-    }).then(metadata => clearCachedResponse(this.getListByClass, getCachedArgumentsHash([metadata.resourceClass])) || metadata);
-  }
-
-  public remove(metadata: Metadata): Promise<any> {
-    return super.remove(metadata).then(() => clearCachedResponse(this.getListByClass, getCachedArgumentsHash([metadata.resourceClass])));
+    });
   }
 }

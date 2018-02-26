@@ -1,5 +1,12 @@
 import Promise from "bluebird";
-import {cachedResponse, clearCachedResponse, getCachedArgumentsHash, forSeconds, untilPromiseCompleted} from "./cached-response";
+import {
+  cachedResponse,
+  cachedResponseRegistry,
+  clearCachedResponse,
+  forSeconds,
+  getCachedArgumentsHash,
+  untilPromiseCompleted
+} from "./cached-response";
 
 describe(cachedResponse.name, () => {
   class TestClass {
@@ -50,7 +57,7 @@ describe(cachedResponse.name, () => {
   it("allows to manually clear the value", () => {
     let first = a.getNumber();
     clearCachedResponse(a.getNumber);
-    expect(a.getNumber).not.toEqual(first);
+    expect(a.getNumber()).not.toEqual(first);
   });
 
   it("allows to manually clear the value with argument", () => {
@@ -75,7 +82,9 @@ describe(cachedResponse.name, () => {
     expect(a.getNumberPromise()).toBe(first);
     first.then(() => {
       expect(a.getNumberPromise()).not.toBe(first);
-    }).then(done);
+      done();
+      return true;
+    });
   });
 
   it("clears when promise is rejected", done => {
@@ -83,7 +92,9 @@ describe(cachedResponse.name, () => {
     expect(a.getRejectedPromise()).toBe(first);
     first.catch(() => {
       expect(a.getRejectedPromise()).not.toBe(first);
-    }).then(done);
+      done();
+      return true;
+    });
   });
 
   it("clears when non-immediate promise is resolved", done => {
@@ -91,6 +102,14 @@ describe(cachedResponse.name, () => {
     expect(a.getDelayedNumberPromise()).toBe(first);
     first.then(() => {
       expect(a.getDelayedNumberPromise()).not.toBe(first);
-    }).then(done);
+      done();
+      return true;
+    });
+  });
+
+  it('clears the cached method via the cache registry', () => {
+    let first = a.getNumber();
+    cachedResponseRegistry.clearAll();
+    expect(a.getNumber()).not.toEqual(first);
   });
 });
