@@ -8,5 +8,7 @@ interface ResourceFileHelper {
     /** @throws ResourceFileExistException */
     public function moveFilesToDestinationPaths(ResourceEntity $resource): int;
 
+    public function prune(ResourceEntity $resource): void;
+
     public function toAbsolutePath(string $path): string;
 }

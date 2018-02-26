@@ -23,6 +23,7 @@ class ResourceUpdateContentsCommandHandler {
         if ($resource->getWorkflow()) {
             $this->ensureStillValidInPlace($resource);
         }
+        $this->fileHelper->prune($resource);
         $this->fileHelper->moveFilesToDestinationPaths($resource);
         return $this->resourceRepository->save($resource);
     }

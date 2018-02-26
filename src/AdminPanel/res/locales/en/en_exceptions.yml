@@ -1,4 +1,5 @@
 generic: Server error occurred. Try again.
+duplicatedFilenames: Resource contains duplicated filenames {{filenames}}
 uploadLimitExceeded: Uploaded file is too large, limit is {{limit}}
 uploadFailed: File upload failed, try again later
 noSuchResourceFile: File {{filename}} doesn't exist in resource {{resourceId}}
