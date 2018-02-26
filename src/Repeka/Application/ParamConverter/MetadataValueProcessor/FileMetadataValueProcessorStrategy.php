@@ -25,7 +25,7 @@ class FileMetadataValueProcessorStrategy implements MetadataValueProcessorStrate
             $fileName = $file->getClientOriginalName();
             $tempFolder = $this->pathGenerator->getTemporaryPath();
             if (!$this->filesystemDriver->exists($tempFolder)) {
-                $this->filesystemDriver->mkdirRecursive($tempFolder, 0750);
+                $this->filesystemDriver->mkdirRecursive($tempFolder);
             }
             $storedFile = $file->move($tempFolder, $fileName);
             chmod($storedFile->getRealPath(), 0660); // make sure file isn't executable

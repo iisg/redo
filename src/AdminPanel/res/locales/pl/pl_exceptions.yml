@@ -1,4 +1,5 @@
 generic: Wystąpił błąd serwera. Spróbuj ponownie.
+duplicatedFilenames: Niektóre pliki zasobu są zduplikowane {{filenames}}
 uploadLimitExceeded: Przesłany plik jest zbyt duży, limit wynosi {{limit}}
 uploadFailed: Przesyłanie pliku nie powiodło się, spróbuj ponownie później
 noSuchResourceFile: Plik {{filename}} nie istnieje w zasobie {{resourceId}}

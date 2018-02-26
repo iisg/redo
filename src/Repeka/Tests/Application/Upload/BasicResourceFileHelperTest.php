@@ -6,7 +6,6 @@ use Repeka\Application\Upload\FilesystemDriver;
 use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Tests\Traits\StubsTrait;
@@ -50,7 +49,7 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $resource = $this->createResourceMock(123, null, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
         $this->filesystemDriver->expects($this->atLeastOnce())
-            ->method('mkdirRecursive')->with($this->uploadsRoot . '/' . $this->destinationPath, 0750);
+            ->method('mkdirRecursive')->with($this->uploadsRoot . '/' . $this->destinationPath);
         $this->filesystemDriver->expects($this->exactly(2))->method('move')->withConsecutive(
             ["$this->uploadsRoot/somewhere/todo.list", "$this->uploadsRoot/$this->destinationPath/todo.list"],
             ["$this->uploadsRoot/somewhere/cuteCat.jpg", "$this->uploadsRoot/$this->destinationPath/cuteCat.jpg"]
@@ -67,6 +66,19 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $this->helper->moveFilesToDestinationPaths($resource);
     }
 
+    public function testClearingDeletedFiles() {
+        $this->filesystemDriver->expects($this->once())->method('listFiles')->willReturn(
+            ['a.txt', 'b.txt']
+        );
+        $contents = ResourceContents::fromArray([
+            self::FILE_METADATA_ID => ['q/w/e/r/t/y/abcxyz/a.txt'],
+        ])->toArray();
+
+        $resource = $this->createResourceMock(123, null, $contents);
+        $this->filesystemDriver->expects($this->once())->method('delete')->with('/var/uploads/whatever/q/w/e/r/t/y/abcxyz/b.txt');
+        $this->helper->prune($resource);
+    }
+
     public function testMovingFilesToDestinationPathsEvenIfFilesInSubmetadata() {
         $contents = ResourceContents::fromArray([
             self::OTHER_METADATA_ID => [['submetadata' => [self::FILE_METADATA_ID => ['somewhere/todo.list', 'somewhere/cuteCat.jpg']]]],
@@ -74,7 +86,7 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $resource = $this->createResourceMock(123, null, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
         $this->filesystemDriver->expects($this->atLeastOnce())
-            ->method('mkdirRecursive')->with($this->uploadsRoot . '/' . $this->destinationPath, 0750);
+            ->method('mkdirRecursive')->with($this->uploadsRoot . '/' . $this->destinationPath);
         $this->filesystemDriver->expects($this->exactly(2))->method('move')->withConsecutive(
             ["$this->uploadsRoot/somewhere/todo.list", "$this->uploadsRoot/$this->destinationPath/todo.list"],
             ["$this->uploadsRoot/somewhere/cuteCat.jpg", "$this->uploadsRoot/$this->destinationPath/cuteCat.jpg"]
@@ -98,22 +110,6 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
         $this->filesystemDriver->expects($this->never())->method('move');
         $this->filesystemDriver->expects($this->never())->method('exists');
-        $this->helper->moveFilesToDestinationPaths($resource);
-    }
-
-    public function testMovingFilesFailsIfFileAlreadyExists() {
-        $this->expectException(DomainException::class);
-        $contents = ResourceContents::fromArray([
-            self::FILE_METADATA_ID => [
-                'somewhere/regular.file',
-                'somewhere/file.that.already.exists',
-            ],
-        ])->toArray();
-        $resource = $this->createResourceMock(123, null, $contents);
-        $this->filesystemDriver->expects($this->exactly(2))->method('exists')->willReturnCallback(function ($path) {
-            return (basename($path) != 'regular.file');
-        });
-        $this->filesystemDriver->expects($this->never())->method('move');
         $this->helper->moveFilesToDestinationPaths($resource);
     }
 }
