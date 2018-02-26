@@ -4,6 +4,7 @@ import {MetricsSenderInterceptor} from "common/metrics/metrics-sender-intercepto
 import {GlobalExceptionInterceptor} from "common/http-client/global-exception-interceptor";
 import {CsrfHeaderInterceptor} from "common/http-client/csrf-header-interceptor";
 import {RedirectToLoginIfUnauthenticatedInterceptor} from "common/http-client/redirect-to-login-if-unauthenticated-interceptor";
+import {ClearCachedResponseInterceptor} from "../common/repository/clear-cached-response-interceptor";
 
 export function configure(aurelia: Aurelia) {
   const client: HttpClient = aurelia.container.get(HttpClient);
@@ -16,6 +17,7 @@ export function configure(aurelia: Aurelia) {
       .withInterceptor(new RedirectToLoginIfUnauthenticatedInterceptor())
       .withInterceptor(new MetricsSenderInterceptor())
       .withInterceptor(new CsrfHeaderInterceptor())
+      .withInterceptor(new ClearCachedResponseInterceptor())
       .withInterceptor(globalExceptionInterceptor);
   });
 }
