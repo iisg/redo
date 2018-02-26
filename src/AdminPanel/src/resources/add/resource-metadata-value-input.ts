@@ -15,6 +15,7 @@ export class ResourceMetadataValueInput {
   @bindable value: MetadataValue;
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable validationController: ValidationController;
+  metadataInitialValue: MetadataValue;
 
   private submetadataResource: Resource;
 
@@ -22,6 +23,7 @@ export class ResourceMetadataValueInput {
   }
 
   async valueChanged() {
+    this.metadataInitialValue = new MetadataValue(this.value.value);
     this.submetadataResource = this.entitySerializer.clone(this.resource, Resource.NAME);
     this.submetadataResource.contents = this.value.submetadata;
     this.submetadataResource.kind.metadataList = [];
