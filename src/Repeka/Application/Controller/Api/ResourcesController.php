@@ -2,6 +2,7 @@
 namespace Repeka\Application\Controller\Api;
 
 use Assert\Assertion;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\PageResult;
@@ -11,6 +12,7 @@ use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
+use Repeka\Domain\UseCase\Resource\ResourceTopLevelPathQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
@@ -65,6 +67,15 @@ class ResourcesController extends ApiController {
     public function getAction(int $id) {
         $resource = $this->handleCommand(new ResourceQuery($id));
         return $this->createJsonResponse($resource);
+    }
+
+    /**
+     * @Route("/{id}/hierarchy")
+     * @Method("GET")
+     */
+    public function getHierarchy(ResourceEntity $resource) {
+        $path = $this->handleCommand(new ResourceTopLevelPathQuery($resource, SystemMetadata::PARENT));
+        return $this->createJsonResponse($path);
     }
 
     /**

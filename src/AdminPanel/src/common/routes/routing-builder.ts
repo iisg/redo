@@ -23,9 +23,10 @@ export enum NavRole { TOP, PER_RESOURCE_CLASS, PER_RESOURCE_CLASS_SECONDARY, BOT
 
 export interface RouteSettings {
   icon: string;
-  requiredRoles?: string[];
   role: NavRole;
+  requiredRoles?: string[];
   specificForClass?: string;  // overrides other PER_RESOURCE_CLASS items, appends to PER_RESOURCE_CLASS_SECONDARY items
+  breadcrumbsProvider?: string;
 }
 
 export abstract class AbstractRoute implements RouteConfig, Arrayable<AbstractRoute> {
@@ -66,6 +67,11 @@ export class Route extends AbstractRoute {
 
   setActivationStrategy(activationStrategy: ActivationStrategy): Route {
     this.activationStrategy = activationStrategy;
+    return this;
+  }
+
+  withBreadcrumbsProvider(providerName: string): Route {
+    this.settings.breadcrumbsProvider = providerName;
     return this;
   }
 }

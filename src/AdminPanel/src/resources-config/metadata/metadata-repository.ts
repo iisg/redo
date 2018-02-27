@@ -4,6 +4,7 @@ import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-cli
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {MetadataListQuery} from "./metadata-list-query";
 import {ApiRepository} from "../../common/repository/api-repository";
+import {cachedResponse, forOneMinute} from "../../common/repository/cached-response";
 
 @autoinject
 export class MetadataRepository extends ApiRepository<Metadata> {
@@ -39,5 +40,10 @@ export class MetadataRepository extends ApiRepository<Metadata> {
       constraints: updatedMetadata.constraints,
       shownInBrief: updatedMetadata.shownInBrief,
     });
+  }
+
+  @cachedResponse(forOneMinute())
+  public getHierarchy(id: number): Promise<Metadata[]> {
+    return this.httpClient.get(this.oneEntityEndpoint(id) + '/hierarchy').then(response => this.responseToEntities(response));
   }
 }

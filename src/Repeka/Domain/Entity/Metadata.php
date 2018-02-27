@@ -92,12 +92,17 @@ class Metadata implements Identifiable {
         return !$this->baseMetadata;
     }
 
-    public function isParent(): bool {
+    public function isTopLevel(): bool {
         return !$this->parentMetadata;
     }
 
     public function getParentId() {
-        return $this->isParent() ? null : $this->parentMetadata->getId();
+        return $this->isTopLevel() ? null : $this->parentMetadata->getId();
+    }
+
+    public function getParent(): Metadata {
+        Assertion::false($this->isTopLevel());
+        return $this->parentMetadata;
     }
 
     public function setParent(Metadata $parent) {

@@ -23,7 +23,7 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $topLevelByResourceClass = $this->metadataRepository->findByQuery($query);
         $all = $this->metadataRepository->findAll();
         $allFiltered = array_values(array_filter($all, function (Metadata $metadata) {
-            return $metadata->isParent()
+            return $metadata->isTopLevel()
                 && ($metadata->getId() >= 0)
                 && ($metadata->getResourceClass() == 'books');
         }));

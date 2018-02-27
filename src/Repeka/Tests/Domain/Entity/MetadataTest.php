@@ -134,4 +134,22 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($metadata->getOverrides());
         $this->assertEquals(['maxCount' => 0], $metadata->getConstraints());
     }
+
+    public function testParentIdNullIfNoParent() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
+        $this->assertNull($metadata->getParentId());
+    }
+
+    public function testExceptionWhenGettingParentOfTopLevelMetadata() {
+        $this->expectException(InvalidArgumentException::class);
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
+        $metadata->getParent();
+    }
+
+    public function testTopLevelByParent() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
+        $this->assertTrue($metadata->isTopLevel());
+        $metadata->setParent($metadata);
+        $this->assertFalse($metadata->isTopLevel());
+    }
 }

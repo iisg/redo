@@ -1,0 +1,9 @@
+@import "../../styles";
+
+.breadcrumb {
+  @include transition(opacity .3s);
+}
+
+.alpha50 {
+  @include opacity(.5);
+}
