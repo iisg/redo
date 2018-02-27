@@ -44,3 +44,5 @@ services:
       - '%test.client.parameters%'
       - '@test.client.history'
       - '@test.client.cookiejar'
+  Repeka\Application\Authentication\PKSoapService:
+    class: Repeka\Tests\Integration\Authentication\TestPKSoapService

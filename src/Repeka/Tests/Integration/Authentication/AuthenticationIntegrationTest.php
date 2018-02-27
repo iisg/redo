@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Tests\Integration;
+namespace Repeka\Tests\Integration\Authentication;
 
 use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
@@ -25,7 +25,7 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertContains('nieudane', $client->getResponse()->getContent());
     }
 
-    private function authenticate(string $username, string $password): Client {
+    public static function authenticate(string $username, string $password): Client {
         $client = self::createClient();
         $crawler = $client->request('GET', '/login');
         $buttonCrawlerNode = $crawler->selectButton('Zaloguj');
@@ -36,7 +36,7 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         return $client;
     }
 
-    private function getAuthenticatedUser(Client $client) {
+    public static function getAuthenticatedUser(Client $client) {
         if (!$client->getContainer()->has('security.token_storage')) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
