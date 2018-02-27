@@ -11,6 +11,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataDeleteCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\UseCase\Metadata\MetadataTopLevelPathQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -65,6 +66,15 @@ class MetadataController extends ApiController {
     public function getAction(int $id) {
         $metadata = $this->handleCommand(new MetadataGetQuery($id));
         return $this->createJsonResponse($metadata);
+    }
+
+    /**
+     * @Route("/{id}/hierarchy")
+     * @Method("GET")
+     */
+    public function getHierarchy(Metadata $metadata) {
+        $path = $this->handleCommand(new MetadataTopLevelPathQuery($metadata));
+        return $this->createJsonResponse($path);
     }
 
     /**

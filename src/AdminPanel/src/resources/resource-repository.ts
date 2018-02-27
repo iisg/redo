@@ -4,6 +4,7 @@ import {ApiRepository} from "common/repository/api-repository";
 import {ResourceListQuery} from "./resource-list-query";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
+import {cachedResponse, forOneMinute} from "../common/repository/cached-response";
 
 @autoinject
 export class ResourceRepository extends ApiRepository<Resource> {
@@ -25,5 +26,10 @@ export class ResourceRepository extends ApiRepository<Resource> {
 
   private postOne(entity: Resource) {
     return this.httpClient.post(this.oneEntityEndpoint(entity), this.toBackend(entity)).then(response => this.toEntity(response.content));
+  }
+
+  @cachedResponse(forOneMinute())
+  public getHierarchy(id: number): Promise<Resource[]> {
+    return this.httpClient.get(this.oneEntityEndpoint(id) + '/hierarchy').then(response => this.responseToEntities(response));
   }
 }

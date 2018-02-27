@@ -275,6 +275,7 @@ ux-dialog-overlay {
 }
 
 @include anim-height-inout(15);
+@include anim-height-inout(36);
 @include anim-height-inout(150);
 @include anim-height-inout(600);
 @include anim-height-inout(900);

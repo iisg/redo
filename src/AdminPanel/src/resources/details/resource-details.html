@@ -4,7 +4,6 @@
     <require from="../workflow/resource-place-display.html"></require>
     <require from="./apply-transition-button/apply-transition-button"></require>
     <require from="./resource-metadata-table/resource-metadata-table"></require>
-    <require from="./resource-level-up"></require>
     <require from="../resources-list"></require>
     <require from="common/components/fab/fab-edit"></require>
 
@@ -28,7 +27,6 @@
         </div>
 
         <h1>
-            <resource-level-up resource.bind="resource"></resource-level-up>
             ${resource | resourceDisplayStrategy:'header'}
         </h1>
 
