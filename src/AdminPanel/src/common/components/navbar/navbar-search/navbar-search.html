@@ -2,7 +2,8 @@
     <require from="resources-config/metadata/metadata-chooser"></require>
     <require from="resources/add/metadata-value-input"></require>
 
-    <form if.bind="resourceClass" class="form-inline"
+    <form if.bind="resourceClass"
+        class="form-inline"
         submit.delegate="findResources()">
         <div class="form-group">
             <metadata-chooser value.bind="metadata"

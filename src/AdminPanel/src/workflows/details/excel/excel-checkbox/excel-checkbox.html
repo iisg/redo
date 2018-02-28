@@ -4,9 +4,13 @@
         click.trigger="nextState()"
         class="unstyled ${disabled ? 'disabled' : ''}"
         ref="container">
-        <icon if.bind="isOptional" name="square"></icon>
-        <icon if.bind="isRequired" name="save-3"></icon>
-        <icon if.bind="isLocked" name="save-2"></icon>
-        <icon if.bind="isAssignee" name="user-4"></icon>
+        <icon if.bind="isOptional"
+            name="square"></icon>
+        <icon if.bind="isRequired"
+            name="save-3"></icon>
+        <icon if.bind="isLocked"
+            name="save-2"></icon>
+        <icon if.bind="isAssignee"
+            name="user-4"></icon>
     </button>
 </template>

@@ -10,29 +10,35 @@ import {autoinject} from "aurelia-dependency-injection";
 export class SortButton {
   @bindable metadata: Metadata;
   @bindable(twoWay) sortBy: ResourceMetadataSort[];
+  sortDirection: SortDirection;
 
   constructor(private router: Router) {
   }
 
-  get sortDirection(): SortDirection {
-    const metadataSort = this.sortBy.find(v => v.metadataId === this.metadata.id);
-    return metadataSort ? metadataSort.direction : SortDirection.NONE;
+  sortByChanged() {
+    const metadataSort = this.metadataSort();
+    this.sortDirection = metadataSort ? metadataSort.direction : SortDirection.NONE;
   }
 
   fetchSortedResources() {
-    const direction = this.sortDirection;
-    const metadataSort = this.sortBy.find(v => v.metadataId === this.metadata.id);
-    if (!direction) {
+    const metadataSort = this.metadataSort();
+    if (!metadataSort) {
+      if (!this.sortBy) {
+        this.sortBy = [];
+      }
       this.sortBy.push(new ResourceMetadataSort(this.metadata.id, SortDirection.ASC));
-    } else if (direction === SortDirection.ASC) {
+    } else if (metadataSort.direction === SortDirection.ASC) {
       metadataSort.direction = SortDirection.DESC;
     } else {
-      const index = this.sortBy.indexOf(metadataSort);
-      this.sortBy.splice(index, 1);
+      this.sortBy.splice(this.sortBy.indexOf(metadataSort), 1);
     }
-    const queryParams = this.router.currentInstruction.queryParams;
-    queryParams['resourceClass'] = this.metadata.resourceClass;
-    queryParams['sortBy'] = JSON.stringify(this.sortBy);
-    this.router.navigateToRoute('resources', queryParams, {replace: true});
+    const currentInstruction = this.router.currentInstruction;
+    let parameters = Object.assign(currentInstruction.params, currentInstruction.queryParams);
+    parameters['sortBy'] = this.sortBy.length ? JSON.stringify(this.sortBy) : undefined;
+    this.router.navigateToRoute(currentInstruction.config.name, parameters, {replace: true});
+  }
+
+  metadataSort(): ResourceMetadataSort {
+    return this.sortBy && this.sortBy.find(resourceMetadataSort => resourceMetadataSort.metadataId === this.metadata.id);
   }
 }

@@ -1,0 +1,51 @@
+$page-number-margin-size: 3px;
+$elements-per-page-dropdown-minimum-width: 54px;
+$elements-per-page-dropdown-left-margin-size: 5px;
+
+pagination {
+    .pageNumbers {
+        display: flex;
+        .with-ellipsis {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            span {
+                cursor: default;
+            }
+        }
+        .different-direction {
+            direction: rtl;
+        }
+        .current-page-number, a {
+            margin-left: $page-number-margin-size;
+            margin-right: $page-number-margin-size;
+        }
+        .current-page-number {
+            font-weight: bold;
+        }
+        & > :first-child {
+            .current-page-number, a {
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+        }
+        & > :last-child {
+            .current-page-number, a {
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+    .label-with-dropdown {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        dropdown-select {
+            min-width: $elements-per-page-dropdown-minimum-width;
+            margin-left: $elements-per-page-dropdown-left-margin-size;
+        }
+    }
+}

@@ -1,0 +1,42 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+
+    <div if.bind="elementsPerPage && currentPageNumber"
+        class="pageNumbers">
+        <div if.bind="currentPageNumber != 1">
+            <a click.delegate="currentPageNumber = currentPageNumber - 1">&lt;</a><a click.delegate="currentPageNumber = 1">${pageIdentifier(1,
+            elementsPerPage)}</a>
+        </div>
+        <div class="with-ellipsis different-direction">
+            <a repeat.for="pageNumber of additionalPageNumbers(2, currentPageNumber - 2, maximumAdditionalPageNumbers / 2, true)"
+                click.delegate="currentPageNumber = pageNumber">${pageIdentifier(pageNumber,
+                elementsPerPage)}</a><span if.bind="currentPageNumber - 3 > maximumAdditionalPageNumbers / 2">…</span>
+        </div>
+        <a if.bind="currentPageNumber - 1 > 1"
+            click.delegate="currentPageNumber = currentPageNumber - 1">${pageIdentifier(currentPageNumber - 1, elementsPerPage)}</a>
+        <span class="current-page-number">${pageIdentifier(currentPageNumber, elementsPerPage)}</span>
+        <a if.bind="currentPageNumber + 1 < numberOfPages"
+            click.delegate="currentPageNumber = currentPageNumber + 1">${pageIdentifier(currentPageNumber + 1, elementsPerPage)}</a>
+        <div class="with-ellipsis">
+            <a repeat.for="pageNumber of additionalPageNumbers(currentPageNumber + 2, numberOfPages - 1, maximumAdditionalPageNumbers / 2)"
+                click.delegate="currentPageNumber = pageNumber">${pageIdentifier(pageNumber,
+                elementsPerPage)}</a><span if.bind="numberOfPages - currentPageNumber - 2 > maximumAdditionalPageNumbers / 2">…</span>
+        </div>
+        <div if.bind="numberOfPages && currentPageNumber < numberOfPages">
+            <a click.delegate="currentPageNumber = numberOfPages">${pageIdentifier(numberOfPages,
+                elementsPerPage)}</a><a click.delegate="currentPageNumber = currentPageNumber + 1">&gt;</a>
+        </div>
+    </div>
+
+    <div if.bind="!hideElementsPerPageDropdown && elementsPerPage"
+        class="label-with-dropdown">
+        <span>${'Results per page' | t}:</span>
+        <dropdown-select values.bind="elementsPerPageDropdownOptions"
+            value.bind="selectedElementsPerPageDropdownOption"
+            hide-search-box>
+            <template replace-part="option-template">
+                ${option}
+            </template>
+        </dropdown-select>
+    </div>
+</template>
