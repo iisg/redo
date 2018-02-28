@@ -5,20 +5,22 @@ import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {Metadata} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
 import {DeleteEntityConfirmation} from "../../../common/dialog/delete-entity-confirmation";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
   metadataChildrenList: Metadata[];
   metadata: Metadata;
   addFormOpened: boolean = false;
-  editing = false;
+  editing: boolean = false;
   urlListener: Subscription;
 
   constructor(private metadataRepository: MetadataRepository,
               private i18n: I18N,
               private router: Router,
               private ea: EventAggregator,
-              private deleteEntityConfirmation: DeleteEntityConfirmation) {
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private entitySerializer: EntitySerializer) {
   }
 
   bind() {
@@ -56,4 +58,19 @@ export class MetadataDetails implements RoutableComponentActivate {
       this.router.navigateToRoute('metadata/details', {id: parentId});
     }
   }
+
+  toggleEditForm() {
+    this.editing = !this.editing;
+  }
+
+  saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<any> {
+    const originalMetadata: Metadata = this.entitySerializer.clone(metadata);
+    this.entitySerializer.hydrateClone(changedMetadata, metadata);
+    metadata.pendingRequest = true;
+    return this.metadataRepository.update(changedMetadata)
+      .then(() => this.editing = false)
+      .catch(() => this.entitySerializer.hydrateClone(originalMetadata, metadata))
+      .finally(() => metadata.pendingRequest = false);
+  }
+
 }

@@ -2,7 +2,6 @@ import {autoinject} from "aurelia-dependency-injection";
 import {bindable} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
-import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class MetadataList {
@@ -12,7 +11,7 @@ export class MetadataList {
   addFormOpened: boolean = false;
   progressBar: boolean;
 
-  constructor(private metadataRepository: MetadataRepository, private entitySerializer: EntitySerializer) {
+  constructor(private metadataRepository: MetadataRepository) {
   }
 
   activate(params: any) {
@@ -55,15 +54,5 @@ export class MetadataList {
   metadataAdded(newMetadata: Metadata) {
     this.addFormOpened = false;
     this.metadataList.unshift(newMetadata);
-  }
-
-  saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<any> {
-    const originalMetadata: Metadata = this.entitySerializer.clone(metadata);
-    this.entitySerializer.hydrateClone(changedMetadata, metadata);
-    metadata.pendingRequest = true;
-    return this.metadataRepository.update(changedMetadata)
-      .then(() => metadata.editing = false)
-      .catch(() => this.entitySerializer.hydrateClone(originalMetadata, metadata))
-      .finally(() => metadata.pendingRequest = false);
   }
 }
