@@ -91,14 +91,12 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         $queryWheres = implode(' AND ', $queryWheres);
         $queryOrderBys = implode(', ', $queryOrderBy);
         $querySql = "SELECT r.* FROM $queryFroms WHERE $queryWheres ORDER BY $queryOrderBys $pagination";
-        $dbQuery = $em->createNativeQuery($querySql, $resultSetMapping);
-        $dbQuery->setParameters($queryParams);
+        $dbQuery = $em->createNativeQuery($querySql, $resultSetMapping)->setParameters($queryParams);
         $pageContents = $dbQuery->getResult();
         if ($pagination) {
-            $querySqlTotal = "SELECT COUNT(id) count FROM $queryFroms WHERE $queryWheres";
-            $total = $em->createNativeQuery($querySqlTotal, ResultSetMappings::scalar())
-                ->setParameters($queryParams)
-                ->getSingleScalarResult();
+            $querySqlTotal = "SELECT COUNT(id) count FROM $queryFroms WHERE $queryWheres GROUP BY id ORDER BY $queryOrderBys";
+            $total = $em->createNativeQuery($querySqlTotal, ResultSetMappings::scalar())->setParameters($queryParams);
+            $total = count($total->getScalarResult());
         } else {
             $total = count($pageContents);
         }

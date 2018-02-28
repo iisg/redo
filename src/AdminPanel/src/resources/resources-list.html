@@ -1,8 +1,14 @@
 <template>
     <require from="./add/resource-form"></require>
     <require from="common/components/fab/fab-add"></require>
+    <require from="common/components/pagination/pagination"></require>
     <require from="./resources-list-table"></require>
     <require from="./workflow/resource-place-display.html"></require>
+
+    <pagination total-number-of-elements.bind="totalNumberOfResources"
+        elements-per-page.bind="resultsPerPage"
+        current-page-number.bind="currentPageNumber"
+        hide-elements-per-page-dropdown="true"></pagination>
 
     <fab-add class="pull-right"
         opened.bind="addFormOpened"
@@ -16,7 +22,7 @@
             parent.bind="parentResource"></resource-form>
     </div>
 
-    <loading-bar if.bind="progressBar"></loading-bar>
+    <loading-bar if.bind="displayProgressBar"></loading-bar>
 
     <div class="row"
         show.bind="!resources || resources.length > 0">
@@ -27,9 +33,12 @@
     </div>
 
     <div class="alert alert-info"
-        if.bind="resources.length === 0 && !progressBar">
+        if.bind="resources.length === 0 && !displayProgressBar">
         <icon name="information"></icon>
         ${'No resources.' | resourceClassTranslation:resourceClass}
     </div>
 
+    <pagination total-number-of-elements.bind="totalNumberOfResources"
+        elements-per-page.bind="resultsPerPage"
+        current-page-number.bind="currentPageNumber"></pagination>
 </template>

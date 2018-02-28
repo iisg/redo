@@ -1,5 +1,5 @@
 {
-  "attr-name-ignore-regex": ".+\\..+",
+  "attr-name-ignore-regex": ".+\\..+|viewBox|xlink:href",
   "attr-new-line": 1,
   "attr-req-value": false,
   "class-no-dup": false,

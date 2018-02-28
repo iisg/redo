@@ -16,6 +16,8 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable @booleanAttribute multiple: boolean = false;
   @bindable @booleanAttribute allowClear: boolean = false;  // allows nothing in single-select dropdown
 
+  @bindable @booleanAttribute hideSearchBox: boolean = false;
+
   @bindable @booleanAttribute disabled: boolean = false;
 
   dropdown: Element;
@@ -51,6 +53,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
       placeholder: this.placeholder,
       allowClear: this.allowClear,
       multiple: this.multiple,
+      minimumResultsForSearch: this.hideSearchBox ? -1 : 0,
       width: '100%',
       language: {
         "noResults": () => this.i18n.tr("No results")
