@@ -8,13 +8,14 @@ var path = require('path');
 var TemplateLintConfig = require('aurelia-template-lint').Config;
 var templateLinter = require('gulp-aurelia-template-lint');
 var tslint = require('gulp-tslint');
+var htmllint = require('gulp-htmllint');
 
 var typingsLinter = require('../typings-linter');
 var paths = require('../paths');
 
 // TODO Restore lint-aurelia-templates when issue is resolved: https://github.com/MeirionHughes/aurelia-template-lint/issues/178
 // gulp.task('lint', ['lint-ts', 'lint-aurelia-templates', 'lint-typings']);
-gulp.task('lint', ['lint-ts', 'lint-typings']);
+gulp.task('lint', ['lint-ts', 'lint-typings', 'lint-html']);
 
 gulp.task('lint-ts', () => {
   return gulp.src(paths.scripts[0])
@@ -48,7 +49,7 @@ gulp.task('lint-wcag', () => {
             source: error.issue,
             severity: 'warning'
           };
-        });
+        }, file => process.cwd() + (file[0] == '/' ? '' : '/') + file);
         fs.writeFileSync(path.join(paths.lintReports, 'wcag.xml'), xml);
         throw 'There are some WCAG rules violations';
       }
@@ -56,14 +57,12 @@ gulp.task('lint-wcag', () => {
 });
 
 gulp.task('lint-aurelia-templates', () => {
-  var hasErrors = false;
   var lintErrors = {};
   var config = new TemplateLintConfig();
   config.useRuleAureliaBindingAccess = true;
   config.reflectionOpts.sourceFileGlob = paths.scripts[0];
   return gulp.src(paths.html)
     .pipe(templateLinter(config, (error, file) => {
-      hasErrors = true;
       if (!lintErrors[file]) {
         lintErrors[file] = [];
       }
@@ -87,15 +86,40 @@ gulp.task('lint-typings', (done) => {
   typingsLinter('typings.json', 'jspm.config.js', done);
 });
 
-function lintErrorsToXml(lintErrors, errorExtractor) {
-  var xml = '<?xml version="1.0" encoding="utf-8"?><checkstyle version="4.3">';
-  for (var file in lintErrors) {
-    var filepath = process.cwd() + (file[0] == '/' ? '' : '/') + file;
+gulp.task('lint-html', () => {
+  var lintErrors = {};
+  return gulp.src(paths.html)
+    .pipe(htmllint({
+      config: path.join(__dirname, '../htmllint.json')
+    }, (filepath, issues) => {
+      if (issues.length > 0) {
+        lintErrors[filepath] = issues;
+        issues.forEach((issue) => console.log(filepath + ' [' + issue.line + ',' + issue.column + ']: ' + '(' + issue.code + ') ' + issue.msg));
+      }
+    }))
+    .on('end', () => {
+      if (Object.keys(lintErrors).length > 0) {
+        var xml = lintErrorsToXml(lintErrors, (error) => {
+          error.source = 'htmllint';
+          error.severity = 'error';
+          error.message = error.msg;
+          return error;
+        });
+        fs.writeFileSync(path.join(paths.lintReports, 'htmllint.xml'), xml);
+
+        throw 'There are some htmllint errors';
+      }
+    });
+});
+
+function lintErrorsToXml(lintErrors, errorExtractor, filePathBuilder = f => f) {
+  let xml = '<?xml version="1.0" encoding="utf-8"?><checkstyle version="4.3">';
+  for (let file in lintErrors) {
+    const filepath = filePathBuilder(file);
     xml += '<file name="' + filepath + '">';
-    for (var i = 0; i < lintErrors[file].length; i++) {
-      var error = errorExtractor(lintErrors[file][i]);
-      xml += '<error line="' + (error.line || 1) + '" column="' + (error.column || 1) + '" severity="' + error.severity + '" message="' + error.message
-        + '" source="' + error.source.replace(/\./g, '/') + '"/>'
+    for (let i = 0; i < lintErrors[file].length; i++) {
+      const e = errorExtractor(lintErrors[file][i]);
+      xml += `<error line="${e.line || 1}" column="${e.column || 1}" severity="${e.severity}" message="${e.message}" source="${e.source.replace(/\./g, '/')}"/>`;
     }
     xml += '</file>';
   }

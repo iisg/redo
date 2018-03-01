@@ -1,0 +1,23 @@
+{
+  "attr-name-ignore-regex": ".+\\..+",
+  "attr-new-line": 1,
+  "attr-req-value": false,
+  "class-no-dup": false,
+  "class-style": false,
+  "id-class-style": false,
+  "img-req-alt": false,
+  "img-req-src": false,
+  "indent-style": "spaces",
+  "input-radio-req-name": false,
+  "label-req-for": false,
+  "line-end-style": false,
+  "line-no-trailing-whitespace": true,
+  "spec-char-escape": false,
+  "tag-bans": [
+    "b",
+    "style"
+  ],
+  "tag-name-lowercase": true,
+  "tag-name-match": true,
+  "tag-self-close": "never"
+}

@@ -24,7 +24,8 @@
 
         <h1>${'Metadata' | t} #${ metadata.id }</h1>
 
-        <div class="au-animate anim-height-inout-300" if.bind="!editing">
+        <div class="au-animate anim-height-inout-300"
+            if.bind="!editing">
             <div>
                 <dl class="dl-horizontal">
                     <dt>ID</dt>
@@ -52,7 +53,6 @@
             <h3>${'Submetadata kinds' | t}:</h3>
             <metadata-list parent-metadata.bind="metadata"
                 resource-class.bind="metadata.resourceClass"></metadata-list>
-
 
         </div>
 

@@ -10,7 +10,9 @@
                 href="/">
                 <div class="logo-container">
                     <repeka-logo class="admin-navbar"></repeka-logo>
-                </div><span>RePeKa</span><version-display></version-display>
+                </div>
+                <span>RePeKa</span>
+                <version-display></version-display>
             </a>
         </div>
     </div>
@@ -21,7 +23,9 @@
             <li class="navigation-menu-item">
                 <a click.delegate="collapsed = !collapsed"
                     class="btn btn-default">
-                    <fa name.bind="collapsed ? 'angle-double-right' : 'angle-double-left'" options="fw"></fa><span>${collapsed ? 'expand' : 'collapse' | t}</span>
+                    <fa name.bind="collapsed ? 'angle-double-right' : 'angle-double-left'"
+                        options="fw"></fa>
+                    <span>${collapsed ? 'expand' : 'collapse' | t}</span>
                 </a>
             </li>
         </ul>
