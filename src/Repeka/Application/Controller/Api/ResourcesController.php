@@ -33,8 +33,10 @@ class ResourcesController extends ApiController {
      * @Method("GET")
      */
     public function getListAction(Request $request) {
-        $resourceClasses = array_filter(explode(',', $request->query->get('resourceClasses', '')));
-        $resourceKindIds = array_filter(explode(',', $request->query->get('resourceKinds', '')));
+        $resourceClasses = $request->get('resourceClasses', []);
+        $resourceKindIds = $request->get('resourceKinds', []);
+        Assertion::isArray($resourceClasses);
+        Assertion::isArray($resourceKindIds);
         $parentId = $request->query->get('parentId', 0);
         $topLevel = $request->query->get('topLevel', false);
         $resourceKinds = array_map(function ($resourceKindId) {
