@@ -33,12 +33,12 @@
                         if.bind="metadata.id > 0">
                         <div class="btn-group pull-right top-right-buttons"
                             show.bind="!sortingMetadata">
-                            <button class="btn btn-default btn-raised ${metadata.overwriteForm ? 'active' : ''}"
+                            <button class="btn btn-default ${metadata.overwriteForm ? 'active' : ''}"
                                 type="button"
                                 click.delegate="metadata.overwriteForm = !metadata.overwriteForm">
                                 <fa name="edit"></fa>
                             </button>
-                            <button class="btn btn-danger btn-raised"
+                            <button class="btn btn-danger"
                                 type="button"
                                 click.delegate="removeMetadata(metadata)">
                                 <fa name="times"></fa>

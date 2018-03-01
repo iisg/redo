@@ -28,20 +28,19 @@
                 </tfoot>
                 <tbody class="au-stagger table-hover">
                 <tr class="au-animate fade-inup-outdown"
-                    hover-aware.one-time="role"
                     repeat.for="role of roles">
                     <td if.bind="!role.editing">${role.name | inCurrentLanguage}</td>
                     <td if.bind="!role.editing"
                         class="text-right">
                         <pending-throbber entity.bind="role"></pending-throbber>
                         <button type="button"
-                            class="btn btn-default ${role.hovered ? 'btn-raised' : ''}"
+                            class="btn btn-default"
                             click.trigger="role.editing = true"
                             disabled.bind="role.pendingRequest">
                             <fa name="edit"></fa>
                         </button>
                         <button type="button"
-                            class="btn btn-danger btn-narrow ${role.hovered ? 'btn-raised' : ''}"
+                            class="btn btn-danger btn-narrow"
                             click.trigger="deleteRole(role)"
                             disabled.bind="role.pendingRequest || role.id < 0">
                             <fa name="trash fw"></fa>

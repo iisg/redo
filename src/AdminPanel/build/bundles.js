@@ -77,8 +77,6 @@ const bundles = function () {
           "aurelia-logging-console",
           "aurelia-validation",
           "bootstrap",
-          "bootstrap-material-design",
-          "bootstrap-material-design/dist/css/ripples.min.css!text",
           "change-case",
           "handlebars",
           "jquery",

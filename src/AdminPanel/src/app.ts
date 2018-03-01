@@ -26,7 +26,6 @@ export class App implements ConfiguresRouter, ComponentAttached {
   }
 
   attached() {
-    $.material.init();
     this.i18n.updateTranslations(this.element);
   }
 }

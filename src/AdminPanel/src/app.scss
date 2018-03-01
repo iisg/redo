@@ -40,10 +40,6 @@ a {
   cursor: pointer;
 }
 
-.btn-fab:focus, .btn-fab:active {
-  outline: 0 !important;
-}
-
 .button-parent {
   position: relative;
   z-index: 1;
@@ -74,7 +70,7 @@ a {
 
 table {
   .table-row-edit-form {
-    background: lighten($lime-50, 3%) !important;
+    background: lightgoldenrodyellow !important;
   }
 }
 
@@ -154,27 +150,12 @@ input, textarea, select {
   z-index: 10;
 }
 
-.btn-fab .fa {
-  $size: 24px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  line-height: $size;
-  width: $size;
-  margin-left: $size / -2;
-  margin-top: $size / -2;
-}
-
-.btn-fab-mini .fa {
-  font-size: 0.65em;
-}
-
 .no-padding {
   padding: 0 !important;
 }
 
 .checkbox label, .radio label {
-  color: $grey-700;
+  color: grey;
 }
 
 .alert > .btn {
@@ -186,7 +167,7 @@ input, textarea, select {
 }
 
 .badge.badge-danger {
-  background-color: $red;
+  background-color: red;
 }
 
 .diagram-cover {

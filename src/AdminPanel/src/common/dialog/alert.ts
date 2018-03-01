@@ -49,7 +49,7 @@ export class Alert {
       options.cancelButtonClass = 'default';
     }
 
-    const commonCssClasses = 'btn btn-raised';
+    const commonCssClasses = 'btn';
     let overrides: SweetAlertOptions = {
       titleText: title,
       html: html,

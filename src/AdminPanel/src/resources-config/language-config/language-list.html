@@ -31,7 +31,6 @@
                 </tfoot>
                 <tbody class="au-stagger">
                 <tr class="au-animate fade-inup-outdown ${language.editing ? 'table-row-edit-form' : ''}"
-                    hover-aware.one-time="language"
                     repeat.for="language of languageList">
                     <td>${language.code}</td>
                     <td if.bind="!language.editing">
@@ -43,13 +42,13 @@
                         <div class="pull-right text-nowrap">
                             <pending-throbber entity.bind="language"></pending-throbber>
                             <button type="button"
-                                class="btn btn-danger pull-right ${language.hovered ? 'btn-raised' : ''}"
+                                class="btn btn-danger pull-right"
                                 click.delegate="deleteLanguage(language)"
                                 disabled.bind="language.pendingRequest">
                                 <fa name="trash"></fa>
                             </button>
                             <button type="button"
-                                class="btn btn-default pull-right ${language.hovered ? 'btn-raised' : ''}"
+                                class="btn btn-default pull-right"
                                 click.delegate="language.editing = true"
                                 disabled.bind="language.pendingRequest">
                                 <fa name="edit"></fa>

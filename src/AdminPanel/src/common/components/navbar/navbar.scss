@@ -14,14 +14,13 @@ $navigation-bar-border-with-shadow-size-on-smaller-screens: 2px;
       color: white !important;
     }
     li.current > a {
-      color: $light-green-A200 !important;
+      color: lightgreen !important;
     }
   }
   navbar-title .navbar-brand {
     font-size: 1.7em;
   }
 }
-
 
 @include on-sm-and-down {
   .navbar {
