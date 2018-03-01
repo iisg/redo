@@ -33,7 +33,6 @@
                 </tfoot>
                 <tbody class="au-stagger">
                 <tr repeat.for="resourceKind of resourceKinds"
-                    hover-aware.one-time="resourceKind"
                     class="au-animate fade-inup-outdown ${resourceKind.editing ? 'table-row-edit-form' : ''}">
                     <td>${resourceKind.id}</td>
                     <td if.bind="!resourceKind.editing">
@@ -58,19 +57,19 @@
                         <div class="pull-right text-nowrap">
                             <pending-throbber entity.bind="resourceKind"></pending-throbber>
                             <button if.one-time="resourceKind.workflow"
-                                class="btn btn-default ${resourceKind.hovered ? 'btn-raised' : ''}"
+                                class="btn btn-default"
                                 click.trigger="displayWorkflowPreview(resourceKind)"
                                 disabled.bind="resourceKind.pendingRequest">
                                 <workflow-icon></workflow-icon>
                             </button>
                             <button type="button"
-                                class="btn btn-default ${resourceKind.hovered ? 'btn-raised' : ''}"
+                                class="btn btn-default"
                                 click.trigger="resourceKind.editing = true"
                                 disabled.bind="resourceKind.pendingRequest">
                                 <fa name="edit"></fa>
                             </button>
                             <button type="button"
-                                class="btn btn-danger ${resourceKind.hovered ? 'btn-raised' : ''}"
+                                class="btn btn-danger"
                                 click.trigger="deleteResourceKind(resourceKind)"
                                 disabled.bind="resourceKind.pendingRequest || resourceKind.id < 0">
                                 <fa name="trash"></fa>

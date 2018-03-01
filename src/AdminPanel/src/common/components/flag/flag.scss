@@ -5,7 +5,6 @@
   width: $flag-width + 7px;
   text-align: left;
   img {
-    @include shadow-z-1;
     width: $flag-width;
   }
 }

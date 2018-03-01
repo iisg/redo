@@ -26,7 +26,6 @@
                 </tfoot>
                 <tbody class="au-stagger table-hover">
                 <tr class="au-animate fade-inup-outdown"
-                    hover-aware.one-time="workflow"
                     repeat.for="workflow of workflows"
                     go-to-link-on-row-click>
                     <td>${workflow.id}</td>
@@ -40,7 +39,7 @@
                             <pending-throbber entity.bind="workflow"></pending-throbber>
                             <a route-href="route: workflows/details; params.bind: {id: workflow.id}"
                                 disabled-link.bind="workflow.pendingRequest"
-                                class="btn ${workflow.hovered ? 'btn-raised' : ''} btn-info btn-sm">
+                                class="btn btn-info btn-sm">
                                 <fa name="eye fw"></fa>
                             </a>
                         </span>

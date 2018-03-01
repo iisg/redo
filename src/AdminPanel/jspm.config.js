@@ -40,7 +40,6 @@ System.config({
     "aurelia-validation": "npm:aurelia-validation@1.1.2",
     "bluebird": "npm:bluebird@3.4.1",
     "bootstrap": "github:twbs/bootstrap@3.3.7",
-    "bootstrap-material-design": "npm:bootstrap-material-design@0.5.10",
     "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.7",
     "change-case": "npm:change-case@3.0.1",
     "compass-mixins": "npm:compass-mixins@0.12.10",
@@ -65,7 +64,7 @@ System.config({
       "assert": "npm:assert@1.4.1"
     },
     "github:jspm/nodelibs-buffer@0.1.1": {
-      "buffer": "npm:buffer@5.0.8"
+      "buffer": "npm:buffer@5.1.0"
     },
     "github:jspm/nodelibs-os@0.1.0": {
       "os-browserify": "npm:os-browserify@0.1.2"
@@ -269,20 +268,8 @@ System.config({
     "npm:bluebird@3.4.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:bootstrap-material-design@0.5.10": {
-      "bootstrap": "npm:bootstrap@3.3.7",
-      "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "jquery": "npm:jquery@3.2.1",
-      "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:bootstrap@3.3.7": {
-      "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "path": "github:jspm/nodelibs-path@0.1.0",
-      "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:buffer@5.0.8": {
-      "base64-js": "npm:base64-js@1.2.1",
+    "npm:buffer@5.1.0": {
+      "base64-js": "npm:base64-js@1.2.3",
       "ieee754": "npm:ieee754@1.1.8"
     },
     "npm:camel-case@3.0.0": {

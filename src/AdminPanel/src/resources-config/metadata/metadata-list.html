@@ -41,7 +41,6 @@
                 </tfoot>
                 <tbody oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
                 <tr repeat.for="metadata of metadataList"
-                    hover-aware.one-time="metadata"
                     oa-sortable-item="item.bind: metadata"
                     class="${metadata.sortingClass}"
                     go-to-link-on-row-click=".btn-details">
@@ -69,7 +68,7 @@
                     <td class="text-right">
                         <span class="pull-right text-nowrap">
                             <pending-throbber entity.bind="metadata"></pending-throbber>
-                            <a class="btn btn-default btn-narrow drag-handle vertically-sortable ${metadata.hovered ? 'btn-raised' : ''}"
+                            <a class="btn btn-default btn-narrow drag-handle vertically-sortable"
                                 bootstrap-tooltip.bind="'Drag to change order' | t"
                                 disabled-link.bind="metadata.pendingRequest"
                                 data-placement="left"
@@ -77,7 +76,7 @@
                                 <fa name="sort"></fa>
                             </a>
                             <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
-                                class="btn ${metadata.hovered ? 'btn-raised' : ''} btn-info btn-details"
+                                class="btn btn-info btn-details"
                                 disabled-link.bind="metadata.pendingRequest">
                                 <fa name="eye fw"></fa>
                             </a>

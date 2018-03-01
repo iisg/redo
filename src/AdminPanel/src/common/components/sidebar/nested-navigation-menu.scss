@@ -7,7 +7,7 @@ $subitem-extra-left-padding-size: 7px;
   display: block;
   &.current > .btn, &:hover > .btn:link, &:hover > .btn:visited  {
     & > :not(.ripple-container) {
-      color: $blue-500;
+      color: blue;
     }
   }
   & > .btn {

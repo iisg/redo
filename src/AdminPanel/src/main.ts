@@ -1,6 +1,5 @@
 import "bootstrap";
 import "arrive";
-import "bootstrap-material-design";
 import {Aurelia, LogManager} from "aurelia-framework";
 import {ConsoleAppender} from "aurelia-logging-console";
 import {configure as configureHttpClient} from "config/http-client";
@@ -42,7 +41,6 @@ export function configure(aurelia: Aurelia) {
     .globalResources([
       'common/authorization/require-role',
       'common/bootstrap/bootstrap-tooltip',
-      'common/bootstrap/hover-aware',
       'common/components/font-awesome/fa',
       'common/components/go-to-link-on-row-click/go-to-link-on-row-click',
       'common/components/loading-bar/loading-bar.html',

@@ -4,11 +4,11 @@ excel-checkbox {
   display: inline-block;
   text-align: center;
   cursor: pointer;
-  color: $teal-500;
+  color: teal;
 
   .disabled {
     cursor: not-allowed;
-    color: $grey-700;
+    color: grey;
   }
 
   .fa-stack {
