@@ -6,13 +6,16 @@
             <a if.bind="!item.items"
                 route-href="route.bind: item.routeName; params.bind: item.params"
                 class="btn btn-default">
-                <fa name.bind="item.icon" options="fw"></fa><span>${item.labelKey | t}</span>
+                <fa name.bind="item.icon"
+                    options="fw"></fa>
+                <span>${item.labelKey | t}</span>
             </a>
             <template else>
                 <a class="btn btn-default"
                     click.delegate="item.toggle()">
                     <fa name="angle-right"
-                        options.bind="item.expanded ? 'fw rotate-90' : 'fw'"></fa><span>${item.labelKey | t}</span>
+                        options.bind="item.expanded ? 'fw rotate-90' : 'fw'"></fa>
+                    <span>${item.labelKey | t}</span>
                 </a>
                 <ul if.bind="item.expanded"
                     class="navigation-menu-subitems anim-height-inout-150 au-animate">
@@ -21,7 +24,9 @@
                         require-roles.bind="item.requiredRoles">
                         <a route-href="route.bind: child.routeName; params.bind: child.params"
                             class="btn btn-default">
-                            <fa name="circle-o" options="fw"></fa><span>${child.labelKey | t}</span>
+                            <fa name="circle-o"
+                                options="fw"></fa>
+                            <span>${child.labelKey | t}</span>
                         </a>
                     </li>
                 </ul>
