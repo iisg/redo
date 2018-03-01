@@ -30,10 +30,18 @@ export class ResourcesList implements ComponentAttached {
   }
 
   activate(params: any) {
-    this.fetchList(params.resourceClass);
+    let contentsFilter;
+    if (params.contentsFilter) {
+      try {
+        contentsFilter = JSON.parse(params.contentsFilter);
+      } catch (e) {
+        console.warn(e);  // tslint:disable-line
+      }
+    }
+    this.fetchList(params.resourceClass, contentsFilter);
   }
 
-  private fetchList(resourceClass: string) {
+  private fetchList(resourceClass: string, contentsFilter?: NumberMap<string>) {
     this.resourceClass = resourceClass;
     if (this.resources) {
       this.resources = new PageResult<Resource>();
@@ -41,7 +49,7 @@ export class ResourcesList implements ComponentAttached {
     this.addFormOpened = false;
     this.briefMetadata = [];
     this.fetchBriefMetadata();
-    this.fetchResources();
+    this.fetchResources(contentsFilter);
   }
 
   bind() {
@@ -66,16 +74,16 @@ export class ResourcesList implements ComponentAttached {
     }
   }
 
-  fetchResources() {
+  fetchResources(contentsFilter?: NumberMap<string>) {
     this.progressBar = true;
-    this.resourceRepository.getListQuery()
-      .onlyTopLevel()
-      .filterByResourceClasses(this.resourceClass)
-      .get()
+    let query = this.resourceRepository.getListQuery();
+    query = contentsFilter ? query.filterByContents(contentsFilter) : query;
+    query = query.onlyTopLevel().filterByResourceClasses(this.resourceClass);
+    query.get()
       .then(resources => {
         this.progressBar = false;
         this.resources = resources;
-        this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined);
+        this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined) && !contentsFilter;
       });
   }
 

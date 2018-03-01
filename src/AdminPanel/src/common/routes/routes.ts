@@ -4,29 +4,43 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
   new Route('', 'tasks', 'tasks/tasks').withMenuItem('Tasks', NavRole.TOP, 'check-square-o'),
 
   new RouteGroup('resources', 'resources', 'resources', 'Resources', [
-    new BaseRoute(':resourceClass', 'resources-list').withMenuItem(NavRole.PER_RESOURCE_CLASS, 'book'),
+    new BaseRoute(':resourceClass', 'resources-list')
+      .withMenuItem(NavRole.PER_RESOURCE_CLASS, 'book')
+      .withNavbarSearchProvider('resource'),
     new Route('details/:id', 'details', 'details/resource-details')
-      .setActivationStrategy('replace').withBreadcrumbsProvider('resource')
+      .setActivationStrategy('replace')
+      .withBreadcrumbsProvider('resource')
+      .withNavbarSearchProvider('resource')
   ]),
 
   new RouteGroup('metadata', 'metadata', 'resources-config/metadata', 'Metadata Kinds', [
-    new BaseRoute(':resourceClass', 'metadata-list').withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY),
-    new Route('details/:id', 'details', 'details/metadata-details').withBreadcrumbsProvider('metadata'),
+    new BaseRoute(':resourceClass', 'metadata-list')
+      .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY)
+      .withNavbarSearchProvider('metadata'),
+    new Route('details/:id', 'details', 'details/metadata-details')
+      .withBreadcrumbsProvider('metadata')
+      .withNavbarSearchProvider('metadata'),
   ]),
 
   new Route('resource-kinds/:resourceClass', 'resource-kinds', 'resources-config/resource-kind/resource-kind-list')
-    .withMenuItem('Resource Kinds', NavRole.PER_RESOURCE_CLASS_SECONDARY),
+    .withMenuItem('Resource Kinds', NavRole.PER_RESOURCE_CLASS_SECONDARY).withNavbarSearchProvider('resource-kinds'),
 
   new RouteGroup('workflows', 'workflows', 'workflows', 'Workflows', [
-    new BaseRoute(':resourceClass', 'workflow-list').withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY),
-    new Route('details/:id', 'details', 'details/workflow-details').withBreadcrumbsProvider('workflow'),
-    new Route('new/:resourceClass', 'new', 'details/workflow-new').withBreadcrumbsProvider('workflow'),
+    new BaseRoute(':resourceClass', 'workflow-list')
+      .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY)
+      .withNavbarSearchProvider('workflow'),
+    new Route('details/:id', 'details', 'details/workflow-details')
+      .withBreadcrumbsProvider('workflow')
+      .withNavbarSearchProvider('workflow'),
+    new Route('new/:resourceClass', 'new', 'details/workflow-new').withBreadcrumbsProvider('workflow').withNavbarSearchProvider('workflow'),
   ]),
 
   new RouteGroup('users', 'users', 'users', 'Users', [
-    new BaseRoute('', 'user-list').withMenuItem(NavRole.PER_RESOURCE_CLASS, 'users', 'users'),
-    new Route('roles', 'roles', 'roles/user-roles').withMenuItem('Roles', NavRole.PER_RESOURCE_CLASS_SECONDARY, undefined, 'users'),
-    new Route('details/:id', 'details', 'details/user-details').withBreadcrumbsProvider('user')
+    new BaseRoute('', 'user-list').withMenuItem(NavRole.PER_RESOURCE_CLASS, 'users', 'users').withNavbarSearchProvider('user'),
+    new Route('roles', 'roles', 'roles/user-roles')
+      .withMenuItem('Roles', NavRole.PER_RESOURCE_CLASS_SECONDARY, undefined, 'users')
+      .withNavbarSearchProvider('user'),
+    new Route('details/:id', 'details', 'details/user-details').withBreadcrumbsProvider('user').withNavbarSearchProvider('user')
   ]),
 
   new Route('languages', 'languages', 'resources-config/language-config/language-list')

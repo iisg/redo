@@ -1,5 +1,4 @@
 import {Resource} from "./resource";
-import {deepCopy} from "common/utils/object-utils";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {PageResult} from "./page-result";
@@ -59,15 +58,7 @@ export class ResourceListQuery {
   }
 
   public get(): Promise<PageResult<Resource>> {
-    const params = deepCopy(this.params);
-    for (let param in params) {
-      if (params.hasOwnProperty(param)) {
-        if (Array.isArray(params[param])) {
-          params[param] = params[param].join(',');
-        }
-      }
-    }
-    return this.makeRequest(params);
+    return this.makeRequest(this.params);
   }
 
   @cachedResponse(forSeconds(30))

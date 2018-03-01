@@ -69,7 +69,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingResources() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => 'books']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books']]);
         $this->assertStatusCode(200, $client->getResponse());
         $this->assertJsonStringSimilarToArray([
             [
@@ -97,7 +97,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingResourcesForFirstPageWithTwoByPage() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => 'books', 'page' => 1, 'resultsPerPage' => 2]);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'page' => 1, 'resultsPerPage' => 2]);
         $this->assertStatusCode(200, $client->getResponse());
         $this->assertJsonStringSimilarToArray([
             [
@@ -117,7 +117,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingTopLevelResources() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => 'books', 'topLevel' => true]);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'topLevel' => true]);
         $this->assertStatusCode(200, $client->getResponse());
         $this->assertJsonStringSimilarToArray([
             [
@@ -137,7 +137,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingResourcesFailsWhenInvalidResourceClass() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => 'resourceClass']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['resourceClass']]);
         $this->assertStatusCode(400, $client->getResponse());
     }
 

@@ -88,6 +88,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   updateSelectedItem() {  // copy value from VM to DOM
     if (this.value == undefined || this.values == undefined || this.values.length == 0) {
+      $(this.dropdown).val([] as any).trigger('change');
       return;
     }
     const needles: number[] = Array.isArray(this.value)
