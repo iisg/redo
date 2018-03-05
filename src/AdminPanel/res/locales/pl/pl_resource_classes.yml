@@ -1,19 +1,117 @@
 books:
   resources: Zasoby
+  resources/details: Zasoby
   settings: Ustawienia zasobów
   resource-kinds: Rodzaje zasobów
   metadata: Rodzaje metadanych
+  metadata/details: Rodzaje metadanych
   workflows: Procesy
+  workflows/new: Procesy
+  Metadata Kinds: Rodzaje metadanych
+  Add new resource kind: Dodaj nowy rodzaj zasobu
+  Add new metadata kind: Dodaj nowy rodzaj metadanych
+  Add new resource: Dodaj nowy zasób
+  Add metadata kind: Dodaj rodzaj metadanej
+  Resource kind: Rodzaj zasobu
+  No metadata kinds.: Brak rodzajów metadanych.
+  No resource kinds.: Brak rodzajów zasobów.
+  No resources.: Brak zasobów.
+  Workflow: Proces
+  No workflows.: Brak procesów
+  Child resources: Podzasoby
+  Resource's state prevents modification of these values.: Stan zasobu uniemożliwia modyfikację tych wartości.
+  This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
+  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
+  New workflow: Nowy proces
+  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
+  "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:"
+  Edit resource with transition from: Edycja zasobu przy przejściu ze stanu
+  Added resource will be in following place: Dodany zasób znajdzie się w stanie
+  To states: Do stanu
+  List of required metadata: Lista metadanych wymaganych do przejścia
+  display_strategies:
+    header:
+      title: Nagłówek
+      description: Wartość wyświetlana na stronie szczegółów zasobów
+    dropdown:
+      title: Wartość w liście rozwijanej
+      description: Wartość wyświetlana w liście rozwijanej przy wyborze zasobów
 dictionaries:
   resources: Słowniki
+  resources/details: Słowniki
   settings: Ustawienia słowników
   resource-kinds: Rodzaje słowników
   metadata: Rodzaje metadanych
+  metadata/details: Rodzaje metadanych
   workflows: Procesy
+  workflows/new: Procesy
+  Metadata Kinds: Rodzaje metadanych
+  Add new resource kind: Dodaj nowy rodzaj słownika
+  Add new metadata kind: Dodaj nowy rodzaj metadanych słownikowych
+  Add new resource: Dodaj nowy słownik
+  Add metadata kind: Dodaj rodzaj metadanej
+  Resource kind: Rodzaj słownika
+  No metadata kinds.: Brak rodzajów metadanych.
+  No resource kinds.: Brak rodzajów słowników.
+  No resources.: Brak słowników.
+  Workflow: Proces słownikowy
+  No workflows.: Brak procesów
+  Child resources: Podsłowniki
+  Resource's state prevents modification of these values.: Stan słownika uniemożliwia modyfikację tych wartości.
+  This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
+  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
+  New workflow: Nowy proces
+  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
+  "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:"
+  Edit resource with transition from: Edycja słownika przy przejściu ze stanu
+  Added resource will be in following place: Dodany słownik znajdzie się w stanie
+  To states: Do stanu
+  List of required metadata: Lista metadanych wymaganych do przejścia
+  display_strategies:
+    header:
+      title: Nagłówek
+      description: Wartość wyświetlana na stronie szczegółów słownikowych
+    dropdown:
+      title: Wartość w liście rozwijanej
+      description: Wartość wyświetlana w liście rozwijanej przy wyborze słownika
 users:
   users: Użytkownicy
   settings: Ustawienia użytkowników
   resource-kinds: Rodzaje użytkowników
   metadata: Rodzaje metadanych
+  metadata/details: Rodzaje metadanych
   workflows: Procesy
+  workflows/new: Procesy
+  workflows/details: Procesy
   users/roles: Role
+  Metadata Kinds: Rodzaje metadanych
+  Add new resource kind: Dodaj nowy rodzaj użytkownika
+  Add new metadata kind: Dodaj nowy rodzaj metadanych
+  Add new resource: Dodaj nowego użytkownika
+  Add metadata kind: Dodaj rodzaj metadanej
+  Resource kind: Rodzaj użytkownika
+  No metadata kinds.: Brak rodzajów metadanych.
+  No resource kinds.: Brak rodzajów użytkowników.
+  No resources.: Brak użytkowników.
+  Resource: Użytkownik
+  Workflow: Proces
+  No workflows.: Brak procesów
+  Child resources: Podużytkownicy
+  Resource's state prevents modification of these values.: Stan użytkownika uniemożliwia modyfikację tych wartości.
+  This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
+  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
+  New workflow: Nowy proces
+  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
+  "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:"
+  Edit resource with transition from: Edycja użytkownika przy przejściu ze stanu
+  Added resource will be in following place: Dodany użytkownika znajdzie się w stanie
+  To states: Do stanu
+  List of required metadata: Lista metadanych wymaganych do przejścia
+  display_strategies:
+    header:
+      title: Nagłówek
+      description: Wartość wyświetlana na stronie szczegółów użytkownika
+    dropdown:
+      title: Wartość w liście rozwijanej
+      description: Wartość wyświetlana w liście rozwijanej przy wyborze użytkownika
+users/details: Użytkownicy

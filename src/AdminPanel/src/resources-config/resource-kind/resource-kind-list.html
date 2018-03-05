@@ -3,11 +3,12 @@
     <require from="common/components/fab/fab-add"></require>
     <require from="workflows/icon/workflow-icon.html"></require>
 
+
     <fab-add class="pull-right"
         opened.bind="addFormOpened"></fab-add>
     <div if.bind="addFormOpened"
         class="well fade-inup-outdown au-animate floating-form-full-width">
-        <h2>${'Add new resource kind' | t}</h2>
+        <h2>${'Add new resource kind' | resourceClassTranslation:resourceClass}</h2>
         <resource-kind-form resource-class.bind="resourceClass"
             submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
     </div>
@@ -20,7 +21,7 @@
                 <tr>
                     <th>${'ID' | t}</th>
                     <th>${'Name' | t}</th>
-                    <th>${'Metadata Kinds' | t}</th>
+                    <th>${'Metadata Kinds' | resourceClassTranslation:resourceClass}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -95,7 +96,7 @@
     <div class="alert alert-info"
         if.bind="resourceKinds.length === 0 && !progressBar">
         <span class="fa fa-info-circle fa-fw"></span>
-        ${'No resource kinds.' | t}
+        ${'No resource kinds.' | resourceClassTranslation:resourceClass}
     </div>
 
 </template>

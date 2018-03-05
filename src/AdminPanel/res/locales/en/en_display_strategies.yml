@@ -1,6 +1,0 @@
-header:
-  title: Header
-  description: Displayed in resource details page
-dropdown:
-  title: Dropdown value
-  description: Displayed in a resource dropdown

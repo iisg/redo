@@ -4,13 +4,14 @@
     <require from="./resources-list-table"></require>
     <require from="./workflow/resource-place-display.html"></require>
 
+
     <fab-add class="pull-right"
         opened.bind="addFormOpened"
         disabled.bind="parentResource.pendingRequest"></fab-add>
 
     <div if.bind="addFormOpened"
         class="fade-inup-outdown au-animate floating-form-full-width well">
-        <h2>${'Add new resource' | t}</h2>
+        <h2>${'Add new resource' | resourceClassTranslation:resourceClass}</h2>
         <resource-form resource-class.bind="resourceClass"
             submit.call="addNewResource(savedResource)"
             parent.bind="parentResource"></resource-form>
@@ -21,13 +22,14 @@
     <div class="row"
         show.bind="!resources || resources.length > 0">
         <resources-list-table resources.bind="resources"
-            column-metadata.bind="briefMetadata"></resources-list-table>
+            column-metadata.bind="briefMetadata"
+            resource-class.bind="resourceClass"></resources-list-table>
     </div>
 
     <div class="alert alert-info"
         if.bind="resources.length === 0 && !progressBar">
         <fa name="info-circle fw"></fa>
-        ${'No resources.' | t}
+        ${'No resources.' | resourceClassTranslation:resourceClass}
     </div>
 
 </template>

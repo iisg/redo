@@ -5,6 +5,7 @@ import {inArray} from "../../../common/utils/array-utils";
 
 export class WorkflowFromsTosDisplay {
   @bindable transition: WorkflowTransition;
+  @bindable resourceClass: string;
   @bindable places: WorkflowPlace[] = [];
 
   @computedFrom('places', 'transition')
