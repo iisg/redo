@@ -1,19 +1,119 @@
 books:
   resources: Books
+  resources/details: Books
   settings: Book settings
   resource-kinds: Book kinds
   metadata: Metadata kinds
+  metadata/details: Metadata kinds
   workflows: Workflows
+  workflows/new: Workflows
+  Metadata Kinds: Metadata Kinds
+  Add new resource kind: Add new resource kind
+  Add new metadata kind: Add new metadata kind
+  Add new resource: Add new resource
+  Add metadata kind: Add metadata kind
+  Resource kind: Resource kind
+  No metadata kinds.: No metadata kinds.
+  No resource kinds.: No resource kinds.
+  No resources.: No resources.
+  Resource: Resource
+  Workflow: Workflow
+  No workflows.: No workflows.
+  Child resources: Child resources
+  Resource's state prevents modification of these values.: Resource's state prevents modification of these values.
+  This metadata is required in current state: This metadata is required in current state
+  This metadata can be used to specify assignees: This metadata can be used to specify assignees
+  New workflow: New workflow
+  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
+  "This metadata must allow only for users, because workflow uses it to determine assignees:": "This metadata must allow only for users, because workflow uses it to determine assignees:"
+  Edit resource with transition from: Edit resource with transition from
+  Added resource will be in following place: Added resource will be in following place
+  To states: Do stanu
+  List of required metadata: List of required metadata
+  display_strategies:
+    header:
+      title: Header
+      description: Displayed in resource details page
+    dropdown:
+      title: Dropdown value
+      description: Displayed in a resource dropdown
 dictionaries:
   resources: Dictionaries
+  resources/details: Dictionaries
   settings: Dictionaries settings
   resource-kinds: Dictionary kinds
   metadata: Metadata kinds
+  metadata/details: Metadata kinds
   workflows: Workflows
+  workflows/new: Workflows
+  Metadata Kinds: Metadata Kinds
+  Add new resource kind: Add new dictionary kind
+  Add new metadata kind: Add new metadata kind
+  Add new resource: Add new dictionary
+  Add metadata kind: Add metadata kind
+  Resource kind: Dictionary kind
+  No metadata kinds.: No metadata kinds.
+  No resource kinds.: No dictionary kinds.
+  No resources.: No dictionaries.
+  Resource: Dictionary
+  Workflow: Workflow
+  No workflows.: No workflows.
+  Child resources: Child dictionaries
+  Resource's state prevents modification of these values.: Dictionaries state prevents modification of these values.
+  This metadata is required in current state: This metadata is required in current state
+  This metadata can be used to specify assignees: This metadata can be used to specify assignees
+  New workflow: New workflow
+  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
+  "This metadata must allow only for users, because workflow uses it to determine assignees:": "This metadata must allow only for users, because workflow uses it to determine assignees:"
+  Edit resource with transition from: Edit dictionary with transition from
+  Added resource will be in following place: Added dictionary will be in following place
+  To states: Do stanu
+  List of required metadata: List of required metadata
+  display_strategies:
+    header:
+      title: Header
+      description: Displayed in dictionary details page
+    dropdown:
+      title: Dropdown value
+      description: Displayed in a dictionary dropdown
 users:
   users: Users
   settings: Users settings
   resource-kinds: User kinds
   metadata: Metadata kinds
+  metadata/details: Metadata kinds
   workflows: Workflows
+  workflows/new: Workflows
+  workflows/details: Workflows
   users/roles: Roles
+  Metadata Kinds: Metadata Kinds
+  Add new resource kind: Add new user kind
+  Add new metadata kind: Add new metadata kind
+  Add new resource: Add new user
+  Add metadata kind: Add metadata kind
+  Resource kind: User kind
+  No metadata kinds.: No metadata kinds.
+  No resource kinds.: No user kinds.
+  No resources.: No user.
+  Resource: User
+  Workflow: Workflow
+  No workflows.: No workflows.
+  Child resources: Child users
+  Resource's state prevents modification of these values.: User's state prevents modification of these values.
+  This metadata is required in current state: This metadata is required in current state
+  This metadata can be used to specify assignees: This metadata can be used to specify assignees
+  New workflow: New workflow
+  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
+  "This metadata must allow only for users, because workflow uses it to determine assignees:": "This metadata must allow only for users, because workflow uses it to determine assignees:"
+  Edit resource with transition from: Edit user with transition from
+  Added resource will be in following place: Added users will be in following place
+  To states: Do stanu
+  List of required metadata: List of required metadata
+  display_strategies:
+    header:
+      title: Header
+      description: Displayed in user details page
+    dropdown:
+      title: Dropdown value
+      description: Displayed in a user dropdown
+users/details: Users

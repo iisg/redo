@@ -12,6 +12,7 @@ import {WorkflowTransition} from "../../workflows/workflow";
 import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
 import {computedFrom} from "aurelia-binding";
 import {MetadataValue} from "../metadata-value";
+import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -25,6 +26,7 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceDisplayStrategy: ResourceDisplayStrategyValueConverter,
+              private resourceClassTranslation: ResourceClassTranslationValueConverter,
               private router: Router,
               private ea: EventAggregator,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
@@ -72,7 +74,10 @@ export class ResourceDetails implements RoutableComponentActivate {
       this.currentTabId = 'metadataTab';
     }
     if (this.resource.kind.workflow) {
-      this.resourceDetailsTabs.push({id: 'workflowTab', label: this.i18n.tr('Workflow')});
+      this.resourceDetailsTabs.push({
+        id: 'workflowTab',
+        label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)
+      });
     }
     this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
   }

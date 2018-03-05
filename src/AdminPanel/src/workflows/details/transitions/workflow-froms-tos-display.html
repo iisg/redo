@@ -1,7 +1,8 @@
 <template>
+
     <div if.bind="transition">
         <dt>
-            ${'Edit resource with transition from' | t}
+            ${'Edit resource with transition from' | resourceClassTranslation:resourceClass}
         </dt>
         <dl>
             <ul class="list-unstyled">
@@ -12,7 +13,7 @@
         </dl>
     </div>
     <dt>
-        ${transition ? 'To states' : 'Added resource will be in following place' | t}
+        ${transition ? 'To states' : 'Added resource will be in following place' | resourceClassTranslation:resourceClass}
     </dt>
     <dl>
         <ul class="list-unstyled">

@@ -3,12 +3,13 @@
     <require from="./details/metadata-child-add"></require>
     <require from="common/components/fab/fab-add"></require>
 
+
     <fab-add class="pull-right"
         opened.bind="addFormOpened"></fab-add>
 
     <div if.bind="addFormOpened"
         class="well fade-inout-updown au-animate floating-form-full-width">
-        <h2>${'Add new metadata kind' | t}</h2>
+        <h2>${'Add new metadata kind' | resourceClassTranslation:resourceClass}</h2>
         <metadata-form submit.call="addNewMetadata(editedMetadata)"
             if.bind="!parentMetadata"
             resource-class.bind="resourceClass"></metadata-form>
@@ -91,6 +92,6 @@
     <div class="alert alert-info"
         if.bind="metadataList.length === 0 && !progressBar">
         <fa name="info-circle"></fa>
-        ${'No metadata kinds.' | t}
+        ${'No metadata kinds.' | resourceClassTranslation:resourceClass}
     </div>
 </template>

@@ -17,24 +17,15 @@ Save: Zapisz
 Cancel: Anuluj
 Flag: Flaga
 Language: Język
+Metadata: Metadane
 Select flag: Wybierz flagę
 Code: Kod
-Metadata Kinds: Rodzaje metadanych
-Add new resource kind: Dodaj nowy rodzaj zasobu
-Add new metadata kind: Dodaj nowy rodzaj metadanych
 Add next metadata kind: Dodaj kolejny rodzaj metadanych
 Select: Wybierz
-Add new resource: Dodaj nowy zasób
-Add metadata kind: Dodaj rodzaj metadanej
-Available child resource kind: Dopuszczalne rodzaje podzasobów
-Resource kind: Rodzaj zasobu
 Change order: Zmień kolejność
 Changing order: Zmiana kolejności
 Drag to change order: Przeciągnij, by zmienić kolejność
 Roles: Role
-No metadata kinds.: Brak rodzajów metadanych.
-No resource kinds.: Brak rodzajów zasobów.
-No resources.: Brak zasobów.
 First Name: Imię
 Last Name: Nazwisko
 Details: Szczegóły
@@ -46,7 +37,6 @@ Server returned error 404 - Not Found: Serwer zwrócił błąd 404 - Nie Znalezi
 Server returned error 403 - Forbidden: Serwer zwrócił błąd 403 - Zabronione
 No matches found for {0}: Żaden element nie pasuje do {0}
 Resource: Zasób
-Metadata: Metadane
 User: Użytkownik
 Error {{code}}: Błąd {{code}}
 Close: Zamknij
@@ -62,7 +52,6 @@ Choose the next transition: Wybierz kolejne przejście
 Select any element on the diagram to edit: Zaznacz element na grafie by go edytować
 Simulation: Symulacja
 Thumbnail: Miniatura
-Workflow: Proces
 Add new submetadata kind: Dodaj nowy rodzaj podmetadanych
 Submetadata kinds: Rodzaje podmetadanych
 No submetadata kinds.: Brak rodzajów podmetadanych.
@@ -72,6 +61,7 @@ Choose existing submetadata kind: Wybierz istniejący rodzaj podmetadanych
 Roles allowed to apply transition: Uprawnieni do wykonania przejścia
 Select file: Wybierz...
 Required resource kind: Wymagany rodzaj zasobu
+Available child resource kind: Dopuszczalne rodzaje podzasobów
 No allowed resource kinds: Brak dozwolonych rodzajów zasobów
 One of:: Jeden spośród:
 Clear overridden value: Przywróć oryginalną wartość
@@ -87,16 +77,12 @@ bool:
 collapse: zwiń
 expand: rozwiń
 No results: Brak wyników
-No workflows.: Brak procesów
 Confirm deletion: Potwierdź usunięcie
 Are you sure you want to delete {{entityType}} {{caption}}?: Czy na pewno chcesz usunąć {{entity}} {{caption}}?
 Delete: Usuń
-Child resources: Podzasoby
 "Resource #{{id}} doesn't exist": "Zasób #{{id}} nie istnieje"
 Resource has children: Zasób ma podzasoby
 Delete or disown them first to delete this resource: Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób
-Resource's state prevents modification of these values.: Stan zasobu uniemożliwia modyfikację tych wartości.
-This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
 Legend: Legenda
 In this state metadata value is:: W tym stanie wartość metadanej jest:
 Optional_female: Opcjonalna
@@ -104,15 +90,11 @@ Required_female: Wymagana
 Locked_female: Zablokowana
 Specifies assignee: Określa osobę przypisaną do zadania
 only for relationships with users: tylko dla relacji z użytkownikami
-This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
-New workflow: Nowy proces
 Your current tasks: Twoje bieżące zadania
 Your other tasks: Inne twoje zadania
 No current tasks!: Brak bieżących zadań!
 No tasks.: Brak zadań.
 Possible actions: Możliwe czynności
-This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-"This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:"
 Fix: Napraw
 You cannot revoke system roles from yourself.: Nie możesz odebrać sobie roli systemowej.
 Resource doesn't exist: Zasób nie istnieje
@@ -139,15 +121,11 @@ Values that are already present will be omitted.: Wartości, które są już obe
 Ignored values unsuitable for their metadata controls:: Zignorowane wartości nieodpowiadające kontrolkom metadanych:
 Ignored values that have no matching metadata in this resource kind:: Zignorowane wartości nieposiadające odpowiadającej im metadanej w rodzaju zasobu:
 File is not a valid import configuration: Plik nie jest poprawną konfiguracją importu.
-Edit resource with transition from: Edycja zasobu przy przejściu ze stanu
 To states: Do stanu
-Added resource will be in following place: Dodany zasób znajdzie się w stanie
-List of required metadata: Lista metadanych wymaganych do przejścia
 And move to state: i przejdź do stanu
 No more values are allowed: Wprowadzono maksymalną liczbę wartości
 Some metadata constraints have not been met. Check the form error and try again.: W formularzu pojawiły się błędy. Przejrzyj je i spróbuj ponownie.
 To see dropdown choose allowed resource kinds in metadata settings.: Aby zobaczy listę zasobów wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
 Additional filter limits results in this dropdown: Dodatkowy filtr ogranicza zasoby wyświetlane w powyższym polu
 Filter: Filtr
-Metadata kind: Rodzaj metadanej
 Firstly, choose allowed resource kinds.: Wybierz najpierw dozwolone rodzaje zasobów.

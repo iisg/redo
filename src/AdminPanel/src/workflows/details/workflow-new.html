@@ -1,7 +1,8 @@
 <template>
     <require from="./workflow-edit-form"></require>
 
-    <h1>${'New workflow' | t}</h1>
+
+    <h1>${'New workflow' | resourceClassTranslation:resourceClass}</h1>
 
     <workflow-edit-form workflow.bind="workflow"
         submit.delegate="addWorkflow()"

@@ -54,6 +54,7 @@ export function configure(aurelia: Aurelia) {
       'common/components/promise-button/promise-button',
       'common/components/submit-button/submit-button.html',
       'common/http-client/invalid-command-message.html', // used in alerts by GlobalExceptionInterceptor
+      'common/value-converters/resource-class-translation-value-converter'
     ]);
 
   preloadEntityTypes();

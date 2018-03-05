@@ -2,6 +2,7 @@
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="common/components/restore-from-original/restore-from-original.html"></require>
 
+
     <label>
         <throbber if.bind="loadingWorkflows"></throbber>
     </label>
@@ -15,7 +16,7 @@
             ${"Fix" | t}
         </button>
         <fa name.bind="allowsOnlyUsers ? 'info-circle' : 'times-circle'"></fa>
-        ${'This metadata must allow only for users, because workflow uses it to determine assignees:' | t}
+        ${'This metadata must allow only for users, because workflow uses it to determine assignees:' | resourceClassTranslation:resourceClass}
         <ul>
             <li repeat.for="workflow of workflowsUsingMetadataAsAssignee">
                 <a route-href="route: workflows/details; params.bind: {id: workflow.id}">

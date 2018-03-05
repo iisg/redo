@@ -1,6 +1,0 @@
-header:
-  title: Nagłówek
-  description: Wartość wyświetlana na stronie szczegółów zasobu
-dropdown:
-  title: Wartość w liście rozwijanej
-  description: Wartość wyświetlana w liście rozwijanej przy wyborze zasobu
