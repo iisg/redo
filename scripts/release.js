@@ -124,6 +124,7 @@ function copySingleRequiredFiles() {
 function clearLocalConfigFiles() {
   del.sync([
     'release/docker/.env',
+    'release/docker/jenkins-agent',
     'release/app/config/config_dev.yml',
     'release/app/config/config_test.yml',
     'release/app/config/routing_dev.yml',
