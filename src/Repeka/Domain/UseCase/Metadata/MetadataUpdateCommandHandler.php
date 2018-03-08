@@ -21,7 +21,8 @@ class MetadataUpdateCommandHandler {
             $command->getNewPlaceholder(),
             $command->getNewDescription(),
             $command->getNewConstraints(),
-            $command->getNewShownInBrief()
+            $command->getNewShownInBrief(),
+            $command->getNewCopyToChildResource()
         );
         return $this->metadataRepository->save($metadata);
     }

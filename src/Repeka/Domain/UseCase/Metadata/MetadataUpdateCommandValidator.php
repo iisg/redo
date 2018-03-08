@@ -40,6 +40,7 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
             ->attribute('newPlaceholder', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('newDescription', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('newShownInBrief', Validator::boolType())
+            ->attribute('newCopyToChildResource', Validator::boolType())
             ->attribute('newConstraints', $this->constraintSetMatchesControlRule->forMetadataId($command->getMetadataId()))
             ->attribute('newConstraints', $this->constraintArgumentsAreValidRule)
             ->attribute('newConstraints', $this->rkConstraintIsUserIfNecessaryRule->forMetadataId($command->getMetadataId()));

@@ -46,7 +46,7 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->constraintSetRule = $this->constraintSetMatchesControlRule(true);
         $this->constraintArgumentsRule = $this->createRuleMock(ConstraintArgumentsAreValidRule::class, true);
         $this->rkConstraintRule = $this->resourceKindConstraintIsUser(true);
-        $this->command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], ['resourceKind' => [0]], false);
+        $this->command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], ['resourceKind' => [0]], false, false);
     }
 
     public function testPasses() {

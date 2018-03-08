@@ -13,6 +13,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('AA', $metadata->getLabel()['PL']);
         $this->assertEquals('books', $metadata->getResourceClass());
         $this->assertFalse($metadata->isShownInBrief());
+        $this->assertFalse($metadata->isCopiedToChildResource());
     }
 
     public function testCannotSetOrdinalNumberLessThan0() {
@@ -27,13 +28,24 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testUpdating() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA'], [], false);
-        $metadata->update(['PL' => 'AA1', 'EN' => 'BB'], ['PL' => 'BB'], ['EN' => 'BB'], ['regex' => [null]], true);
+        $metadata = Metadata::create(
+            'books',
+            MetadataControl::TEXT(),
+            'Prop',
+            ['PL' => 'AA'],
+            ['PL' => 'AA'],
+            ['PL' => 'AA'],
+            [],
+            false,
+            false
+        );
+        $metadata->update(['PL' => 'AA1', 'EN' => 'BB'], ['PL' => 'BB'], ['EN' => 'BB'], ['regex' => [null]], true, true);
         $this->assertEquals(['PL' => 'AA1', 'EN' => 'BB'], $metadata->getLabel());
         $this->assertEquals(['PL' => 'BB'], $metadata->getPlaceholder());
         $this->assertEquals(['EN' => 'BB'], $metadata->getDescription());
         $this->assertEquals(['regex' => [null]], $metadata->getConstraints());
         $this->assertTrue($metadata->isShownInBrief());
+        $this->assertTrue($metadata->isCopiedToChildResource());
     }
 
     public function testOverridingLabel() {
@@ -57,7 +69,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testChangedMetadataLabelIsLessImportantThanOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
         $metadata = $metadata->withOverrides(['label' => ['PL' => 'BB']]);
-        $metadata->update(['PL' => 'CC'], [], [], [], true);
+        $metadata->update(['PL' => 'CC'], [], [], [], true, true);
         $this->assertEquals(['PL' => 'BB'], $metadata->getLabel());
     }
 
@@ -86,26 +98,49 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testOverridingShownInBrief() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], true);
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], true, true);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides(['shownInBrief' => false]);
         $this->assertFalse($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides(['shownInBrief' => true]);
         $this->assertTrue($metadata->isShownInBrief());
-        $metadata->update([], [], [], [], false);
+        $metadata->update([], [], [], [], false, false);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides(['shownInBrief' => null]);
         $this->assertFalse($metadata->isShownInBrief());
-        $metadata->update([], [], [], [], true);
+        $metadata->update([], [], [], [], true, false);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides([]);
         $this->assertTrue($metadata->isShownInBrief());
     }
 
     public function testOverriddenShownInBriefIsNotPresentInOverrides() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], true);
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], true, true);
         $metadata = $metadata->withOverrides(['shownInBrief' => true]);
         $this->assertArrayNotHasKey('shownInBrief', $metadata->getOverrides());
+    }
+
+    public function testOverridingCopyToChildResource() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], true, true);
+        $this->assertTrue($metadata->isCopiedToChildResource());
+        $metadata = $metadata->withOverrides(['copyToChildResource' => false]);
+        $this->assertFalse($metadata->isCopiedToChildResource());
+        $metadata = $metadata->withOverrides(['copyToChildResource' => true]);
+        $this->assertTrue($metadata->isCopiedToChildResource());
+        $metadata->update([], [], [], [], false, false);
+        $this->assertTrue($metadata->isCopiedToChildResource());
+        $metadata = $metadata->withOverrides(['copyToChildResource' => null]);
+        $this->assertFalse($metadata->isCopiedToChildResource());
+        $metadata->update([], [], [], [], true, true);
+        $this->assertTrue($metadata->isCopiedToChildResource());
+        $metadata = $metadata->withOverrides([]);
+        $this->assertTrue($metadata->isCopiedToChildResource());
+    }
+
+    public function testOverriddenCopyToChildResourceIsNotPresentInOverrides() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], true, true);
+        $metadata = $metadata->withOverrides(['copyToChildResource' => true]);
+        $this->assertArrayNotHasKey('copyToChildResource', $metadata->getOverrides());
     }
 
     public function testOverridingConstraints() {

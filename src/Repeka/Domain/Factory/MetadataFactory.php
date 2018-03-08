@@ -17,7 +17,8 @@ class MetadataFactory {
             $command->getPlaceholder(),
             $command->getDescription(),
             $command->getConstraints(),
-            $command->isShownInBrief()
+            $command->isShownInBrief(),
+            $command->isCopiedToChildResource()
         );
     }
 
@@ -35,7 +36,8 @@ class MetadataFactory {
             $newChildMetadata['placeholder'] ?? [],
             $newChildMetadata['description'] ?? [],
             $newChildMetadata['constraints'] ?? [],
-            $newChildMetadata['shownInBrief'] ?? $base->isShownInBrief()
+            $newChildMetadata['shownInBrief'] ?? $base->isShownInBrief(),
+            $newChildMetadata['copyToChildResource'] ?? $base->isCopiedToChildResource()
         );
         return $metadata;
     }

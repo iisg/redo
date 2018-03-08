@@ -55,6 +55,7 @@
                             ${originalMetadata(metadata).name}
                             <span class="small text-muted">ID: ${originalMetadata(metadata).id}</span>
                             <icon if.bind="metadata.shownInBrief" name="show"></icon>
+                            <icon if.bind="metadata.copyToChildResource" name="edit"></icon>
                         </h3>
                         <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
                             metadata.bind="metadata"

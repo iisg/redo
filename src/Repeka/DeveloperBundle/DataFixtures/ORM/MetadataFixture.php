@@ -59,6 +59,7 @@ class MetadataFixture extends RepekaFixture {
             ],
             'control' => 'text',
             'shownInBrief' => true,
+            'copyToChildResource' => true,
             'resourceClass' => 'books',
             'constraints' => $this->textConstraints(1),
         ]), self::REFERENCE_METADATA_TITLE);
@@ -121,6 +122,7 @@ class MetadataFixture extends RepekaFixture {
             ],
             'control' => 'text',
             'shownInBrief' => false,
+            'copyToChildResource' => true,
             'resourceClass' => 'books',
             'constraints' => $this->textConstraints(1, '^[a-z]{3}$'),
         ]), self::REFERENCE_METADATA_LANGUAGE);

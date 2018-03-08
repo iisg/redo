@@ -50,6 +50,8 @@
                         ${metadata.name}
                         <icon name="show"
                             if.bind="metadata.shownInBrief"></icon>
+                        <icon name="edit"
+                            if.bind="metadata.copyToChildResource"></icon>
                     </td>
                     <td>
                         ${metadata.label | inCurrentLanguage}

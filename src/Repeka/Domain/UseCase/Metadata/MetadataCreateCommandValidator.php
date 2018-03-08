@@ -57,6 +57,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
                 return MetadataControl::isValid($control);
             }))
             ->attribute('shownInBrief', Validator::boolType())
+            ->attribute('copyToChildResource', Validator::boolType())
             ->attribute('resourceClass', $this->resourceClassExistsRule)
             ->attribute('constraints', $this->constraintSetMatchesControlRule->forControl($command->getControlName()))
             ->attribute('constraints', $this->constraintArgumentsAreValidRule);

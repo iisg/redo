@@ -10,9 +10,20 @@
                     checked.bind="metadata.shownInBrief">
                 ${'Show in brief' | t}
                 <icon name="show"></icon>
+                <restore-from-original if.bind="originalMetadata && originalMetadata.shownInBrief != metadata.shownInBrief"
+                    click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original>
             </label>
-            <restore-from-original if.bind="originalMetadata && originalMetadata.shownInBrief != metadata.shownInBrief"
-                click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original>
+
+            <label if.bind="metadata.control != 'file'">
+                <input type="checkbox"
+                    checked.bind="metadata.copyToChildResource">
+                ${'Copy metadata to child resource' | t}
+                <icon name="edit"></icon>
+                <restore-from-original if.bind="originalMetadata && originalMetadata.copyToChildResource != metadata.copyToChildResource"
+                    click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original>
+            </label>
+
+
         </div>
     </div>
 

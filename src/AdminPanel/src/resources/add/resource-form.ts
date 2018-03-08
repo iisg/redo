@@ -9,6 +9,7 @@ import {ImportDialog} from "./xml-import/import-dialog";
 import {Modal} from "common/dialog/modal";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
+import {deepCopy} from "common/utils/object-utils";
 import {convertToObject, flatten, inArray} from "common/utils/array-utils";
 import {RequirementState, WorkflowTransition} from "../../workflows/workflow";
 import {Router} from "aurelia-router";
@@ -99,9 +100,18 @@ export class ResourceForm {
   private setResourceKindsAllowedByParent() {
     if (this.parent) {
       let metadata = this.parent.kind.metadataList.find(v => v.id === SystemMetadata.PARENT.id);
-      let resourceKindsAllowedByParent = [];
-      resourceKindsAllowedByParent = metadata.constraints.resourceKind;
+      let resourceKindsAllowedByParent: any[] = metadata.constraints.resourceKind;
       this.resourceKindIdsAllowedByParent = resourceKindsAllowedByParent.map(v => v.hasOwnProperty('id') ? v.id : v);
+    }
+  }
+
+  copyParentResourceToChildResource() {
+    if (this.parent) {
+      this.parent.kind.metadataList.forEach(v => {
+        if (v.copyToChildResource) {
+          this.resource.contents[v.id] = deepCopy(this.parent.contents[v.id]);
+        }
+      });
     }
   }
 
@@ -135,6 +145,7 @@ export class ResourceForm {
   parentChanged(newParent: Resource) {
     if (newParent != undefined) {
       this.resource.contents[SystemMetadata.PARENT.id] = [new MetadataValue(newParent.id)];
+      this.copyParentResourceToChildResource();
     }
   }
 

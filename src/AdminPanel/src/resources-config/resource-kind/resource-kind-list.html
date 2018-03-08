@@ -47,6 +47,8 @@
                                         <span>${metadata.label | inCurrentLanguage}</span>
                                         <icon name="show"
                                             if.bind="metadata.shownInBrief"></icon>
+                                        <icon name="edit"
+                                            if.bind="metadata.copyToChildResource"></icon>
                                     </dd>
                                 </div>
                             </template>

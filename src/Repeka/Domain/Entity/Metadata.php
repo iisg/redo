@@ -18,13 +18,25 @@ class Metadata implements Identifiable {
     private $parentMetadata;
     private $constraints = [];
     private $shownInBrief = false;
+    private $copyToChildResource = false;
     private $resourceClass;
     private $overrides = [];
 
     private function __construct() {
     }
 
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @param string $resourceClass
+     * @param MetadataControl $control
+     * @param string $name
+     * @param array $label
+     * @param array $placeholder
+     * @param array $description
+     * @param array $constraints
+     * @param bool $shownInBrief
+     * @param bool $copyToChildResource
+     * @return Metadata
+     */
     public static function create(
         string $resourceClass,
         MetadataControl $control,
@@ -33,7 +45,8 @@ class Metadata implements Identifiable {
         array $placeholder = [],
         array $description = [],
         array $constraints = [],
-        bool $shownInBrief = false
+        bool $shownInBrief = false,
+        bool $copyToChildResource = false
     ): Metadata {
         Assertion::allNotNull($constraints);
         $metadata = new self();
@@ -46,6 +59,7 @@ class Metadata implements Identifiable {
         $metadata->description = $description;
         $metadata->constraints = $constraints;
         $metadata->shownInBrief = $shownInBrief;
+        $metadata->copyToChildResource = $copyToChildResource;
         return $metadata;
     }
 
@@ -57,6 +71,7 @@ class Metadata implements Identifiable {
         $metadata->control = $base->control;
         $metadata->parentMetadata = $parent;
         $metadata->shownInBrief = $base->shownInBrief;
+        $metadata->copyToChildResource = $base->copyToChildResource;
         return $metadata;
     }
 
@@ -117,6 +132,12 @@ class Metadata implements Identifiable {
         return is_bool($this->overrides['shownInBrief'] ?? null) ? $this->overrides['shownInBrief'] : $this->shownInBrief;
     }
 
+    public function isCopiedToChildResource(): bool {
+        return is_bool($this->overrides['copyToChildResource'] ?? null) ?
+            $this->overrides['copyToChildResource'] :
+            $this->copyToChildResource;
+    }
+
     public function getBaseId(): ?int {
         return $this->isBase() ? null : $this->baseMetadata->getId();
     }
@@ -126,13 +147,21 @@ class Metadata implements Identifiable {
         $this->ordinalNumber = $newOrdinalNumber;
     }
 
-    public function update(array $newLabel, array $newPlaceholder, array $newDescription, array $newConstraints, bool $shownInBrief) {
+    public function update(
+        array $newLabel,
+        array $newPlaceholder,
+        array $newDescription,
+        array $newConstraints,
+        bool $shownInBrief,
+        bool $copyToChildResource
+    ) {
         Assertion::allNotNull($newConstraints);
         $this->label = array_filter($newLabel, 'trim');
         $this->placeholder = $newPlaceholder;
         $this->description = $newDescription;
         $this->constraints = $newConstraints;
         $this->shownInBrief = $shownInBrief;
+        $this->copyToChildResource = $copyToChildResource;
     }
 
     public function withOverrides(array $overrides): Metadata {
@@ -141,7 +170,8 @@ class Metadata implements Identifiable {
             'description' => $this->removeValuesOverridingToTheSameThing($overrides['description'] ?? [], $this->description),
             'placeholder' => $this->removeValuesOverridingToTheSameThing($overrides['placeholder'] ?? [], $this->placeholder),
             'constraints' => $this->removeValuesOverridingToTheSameThing($overrides['constraints'] ?? [], $this->constraints),
-            'shownInBrief' => isset($overrides['shownInBrief']) && is_bool($overrides['shownInBrief']) ? $overrides['shownInBrief'] : null,
+            'shownInBrief' => $this->isSetOverride($overrides, 'shownInBrief'),
+            'copyToChildResource' => $this->isSetOverride($overrides, 'copyToChildResource'),
         ];
         $overrides = array_filter($overrides, function ($override) {
             return !is_null($override) && !is_array($override) || !empty($override);
@@ -149,6 +179,10 @@ class Metadata implements Identifiable {
         $metadata = clone $this;
         $metadata->overrides = $overrides;
         return $metadata;
+    }
+
+    private function isSetOverride(array $overrides, string $overrideKey): ?bool {
+        return  isset($overrides[$overrideKey]) && is_bool($overrides[$overrideKey]) ? $overrides[$overrideKey] : null;
     }
 
     private function removeValuesOverridingToTheSameThing(array $overrides, array $actualValues): array {
@@ -163,9 +197,15 @@ class Metadata implements Identifiable {
 
     public function getOverrides(): array {
         $overrides = $this->overrides;
-        if (isset($overrides['shownInBrief'])) {
-            if ($this->shownInBrief === $overrides['shownInBrief'] || !is_bool($overrides['shownInBrief'])) {
-                unset($overrides['shownInBrief']);
+        $overrides = $this->getSingleOverride($overrides, $this->shownInBrief, 'shownInBrief');
+        $overrides = $this->getSingleOverride($overrides, $this->copyToChildResource, 'copyToChildResource');
+        return $overrides;
+    }
+
+    private function getSingleOverride(array $overrides, bool $overrideValue, string $overrideKey): array {
+        if (isset($overrides[$overrideKey])) {
+            if ($overrideValue === $overrides[$overrideKey] || !is_bool($overrides[$overrideKey])) {
+                unset($overrides[$overrideKey]);
             }
         }
         return $overrides;
