@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration\Repository;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -76,6 +77,15 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
             ->build();
         $results = $this->handleCommand($query);
         $this->assertEmpty($results);
+    }
+
+    public function testFindByUsername() {
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('users')
+            ->filterByContents([SystemMetadata::USERNAME => 'admin'])
+            ->build();
+        $results = $this->handleCommand($query);
+        $this->assertCount(1, $results);
     }
 
     public function testFindByManyConditions() {

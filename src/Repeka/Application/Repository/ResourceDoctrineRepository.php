@@ -66,9 +66,10 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             $queryWheres[] = "(r.contents->'$parentMetadata' = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadata') = FALSE)";
         }
         $query->getContentsFilter()->forEachValue(function ($value, int $metadataId) use (&$queryFroms, &$queryWheres, &$queryParams) {
-            $paramName = "mFilter$metadataId";
-            $queryFroms[] = "jsonb_array_elements(r.contents->'$metadataId') m$metadataId";
-            $queryWheres[] = "m$metadataId->>'value' ILIKE :$paramName";
+            $escapedMetadataId = str_replace('-', '_', strval($metadataId)); // prevents names like m-2
+            $paramName = "mFilter$escapedMetadataId";
+            $queryFroms[] = "jsonb_array_elements(r.contents->'$metadataId') m$escapedMetadataId";
+            $queryWheres[] = "m$escapedMetadataId->>'value' ILIKE :$paramName";
             $queryParams[$paramName] = '%' . $value . '%';
         });
         $pagination = '';
