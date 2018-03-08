@@ -49,6 +49,7 @@ export class Metadata extends Entity {
   @map baseId: number;
   @map constraints: MetadataConstraints = new MetadataConstraints();
   @map shownInBrief: boolean;
+  @map copyToChildResource: boolean;
   @map resourceClass: string;
 
   @computedFrom('control', 'constraints.resourceKind')

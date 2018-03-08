@@ -31,6 +31,7 @@ class MetadataChildWithBaseCreateCommandHandlerTest extends PHPUnit_Framework_Te
             'description' => ['PL' => 'Description'],
             'constraints' => [],
             'shownInBrief' => false,
+            'copyToChildResource' => false,
         ];
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
         $this->metadataFactory = new MetadataFactory();

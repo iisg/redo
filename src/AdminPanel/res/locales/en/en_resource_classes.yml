@@ -19,7 +19,6 @@ books:
   Resource: Resource
   Workflow: Workflow
   No workflows.: No workflows.
-  Child resources: Child resources
   Resource's state prevents modification of these values.: Resource's state prevents modification of these values.
   This metadata is required in current state: This metadata is required in current state
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
@@ -58,7 +57,6 @@ dictionaries:
   Resource: Dictionary
   Workflow: Workflow
   No workflows.: No workflows.
-  Child resources: Child dictionaries
   Resource's state prevents modification of these values.: Dictionaries state prevents modification of these values.
   This metadata is required in current state: This metadata is required in current state
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
@@ -99,7 +97,6 @@ users:
   Resource: User
   Workflow: Workflow
   No workflows.: No workflows.
-  Child resources: Child users
   Resource's state prevents modification of these values.: User's state prevents modification of these values.
   This metadata is required in current state: This metadata is required in current state
   This metadata can be used to specify assignees: This metadata can be used to specify assignees

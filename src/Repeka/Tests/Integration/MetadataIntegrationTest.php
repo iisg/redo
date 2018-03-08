@@ -33,6 +33,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'parentId' => $metadata1->getParentId(),
             'constraints' => ['maxCount' => 0],
             'shownInBrief' => false,
+            'copyToChildResource' => false,
             'resourceClass' => $metadata1->getResourceClass(),
         ], [
             'id' => $metadata2->getId(),
@@ -45,6 +46,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'parentId' => $metadata2->getParentId(),
             'constraints' => ['maxCount' => 0],
             'shownInBrief' => false,
+            'copyToChildResource' => false,
             'resourceClass' => $metadata2->getResourceClass(),
         ]], $responseContent);
     }

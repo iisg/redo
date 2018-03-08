@@ -34,6 +34,7 @@ class MetadataChildCreateCommandHandlerTest extends PHPUnit_Framework_TestCase {
             'description' => [],
             'control' => 'textarea',
             'shownInBrief' => false,
+            'copyToChildResource' => false,
         ];
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
         $this->parent = $this->createMetadataMock();

@@ -11,9 +11,20 @@ class MetadataCreateCommand extends AbstractCommand {
     private $controlName;
     private $constraints;
     private $shownInBrief;
+    private $copyToChildResource;
     private $resourceClass;
 
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @param string $name
+     * @param array $label
+     * @param array $description
+     * @param array $placeholder
+     * @param string $controlName
+     * @param string $resourceClass
+     * @param array $constraints
+     * @param bool $shownInBrief
+     * @param bool $copyToChildResource
+     */
     public function __construct(
         string $name,
         array $label,
@@ -22,7 +33,8 @@ class MetadataCreateCommand extends AbstractCommand {
         string $controlName,
         string $resourceClass,
         array $constraints = [],
-        bool $shownInBrief = false
+        bool $shownInBrief = false,
+        bool $copyToChildResource = false
     ) {
         $this->name = $name;
         $this->label = $label;
@@ -31,6 +43,7 @@ class MetadataCreateCommand extends AbstractCommand {
         $this->controlName = $controlName;
         $this->constraints = $constraints;
         $this->shownInBrief = $shownInBrief;
+        $this->copyToChildResource = $copyToChildResource;
         $this->resourceClass = $resourceClass;
     }
 
@@ -62,8 +75,12 @@ class MetadataCreateCommand extends AbstractCommand {
         return $this->resourceClass;
     }
 
-    public function isShownInBrief(): ?bool {
+    public function isShownInBrief(): bool {
         return $this->shownInBrief;
+    }
+
+    public function isCopiedToChildResource(): bool {
+        return $this->copyToChildResource;
     }
 
     public static function fromArray(array $data): MetadataCreateCommand {
@@ -75,7 +92,8 @@ class MetadataCreateCommand extends AbstractCommand {
             $data['control'] ?? 'text',
             $data['resourceClass'] ?? '',
             $data['constraints'] ?? [],
-            $data['shownInBrief'] ?? false
+            $data['shownInBrief'] ?? false,
+            $data['copyToChildResource'] ?? false
         );
     }
 }

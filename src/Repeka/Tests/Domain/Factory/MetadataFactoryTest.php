@@ -31,6 +31,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
             'control' => 'textarea',
             'constraints' => [],
             'shownInBrief' => false,
+            'copyToChildResource' => false,
             'resourceClass' => 'books',
         ];
     }

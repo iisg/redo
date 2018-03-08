@@ -42,7 +42,8 @@ class MetadataStage2Fixture extends RepekaFixture {
             $metadata->getDescription(),
             $metadata->getPlaceholder(),
             $this->relationshipConstraints($maxCount, [$this->getReference($resourceKindRef)->getId()]),
-            $metadata->isShownInBrief()
+            $metadata->isShownInBrief(),
+            $metadata->isCopiedToChildResource()
         ));
     }
 }

@@ -18,7 +18,6 @@ books:
   No resources.: Brak zasobów.
   Workflow: Proces
   No workflows.: Brak procesów
-  Child resources: Podzasoby
   Resource's state prevents modification of these values.: Stan zasobu uniemożliwia modyfikację tych wartości.
   This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
@@ -56,7 +55,6 @@ dictionaries:
   No resources.: Brak słowników.
   Workflow: Proces słownikowy
   No workflows.: Brak procesów
-  Child resources: Podsłowniki
   Resource's state prevents modification of these values.: Stan słownika uniemożliwia modyfikację tych wartości.
   This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
@@ -97,7 +95,6 @@ users:
   Resource: Użytkownik
   Workflow: Proces
   No workflows.: Brak procesów
-  Child resources: Podużytkownicy
   Resource's state prevents modification of these values.: Stan użytkownika uniemożliwia modyfikację tych wartości.
   This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej

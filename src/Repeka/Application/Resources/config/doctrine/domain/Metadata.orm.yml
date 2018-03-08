@@ -45,6 +45,10 @@ Repeka\Domain\Entity\Metadata:
     shownInBrief:
       type: boolean
       column: shown_in_brief
+    copyToChildResource:
+      type: boolean
+      column: copy_to_child_resource
+      options: {default: false}
     resourceClass:
       type: string
       length: 64

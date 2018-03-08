@@ -11,6 +11,7 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
     private $newPlaceholder;
     private $newConstraints;
     private $newShownInBrief;
+    private $newCopyToChildResource;
 
     public function __construct(
         int $metadataId,
@@ -18,7 +19,8 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
         array $newDescription,
         array $newPlaceholder,
         array $newConstraints,
-        bool $newShownInBrief
+        bool $newShownInBrief,
+        bool $newCopyToChildResource
     ) {
         $this->metadataId = $metadataId;
         $this->newLabel = $newLabel;
@@ -26,6 +28,7 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
         $this->newPlaceholder = $newPlaceholder;
         $this->newConstraints = $newConstraints;
         $this->newShownInBrief = $newShownInBrief;
+        $this->newCopyToChildResource = $newCopyToChildResource;
     }
 
     public function getMetadataId(): int {
@@ -48,6 +51,10 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
         return $this->newShownInBrief;
     }
 
+    public function getNewCopyToChildResource(): bool {
+        return $this->newCopyToChildResource;
+    }
+
     public function getNewConstraints(): array {
         return $this->newConstraints;
     }
@@ -59,7 +66,8 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
             $data['description'] ?? [],
             $data['placeholder'] ?? [],
             $data['constraints'] ?? [],
-            $data['shownInBrief'] ?? false
+            $data['shownInBrief'] ?? false,
+            $data['copyToChildResource'] ?? false
         );
     }
 }

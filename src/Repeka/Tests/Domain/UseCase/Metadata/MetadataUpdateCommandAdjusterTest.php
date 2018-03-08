@@ -25,6 +25,7 @@ class MetadataUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
             ['PL' => 'TestDescription', 'EN' => 'TestDescription'],
             ['PL' => 'TestPlaceholder', 'EN' => 'TestPlaceholder'],
             ['resourceKind' => [0]],
+            false,
             false
         );
         /** @var MetadataUpdateCommand $preparedCommand */

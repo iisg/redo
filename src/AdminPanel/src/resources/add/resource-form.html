@@ -39,7 +39,8 @@
                 filter.one-time="isAllowedByParentFilter()"
                 value.bind="resource.kind & validate"></resource-kind-chooser>
         </div>
-        <div class="form-group">
+        <div class="form-group"
+            if.bind="resource.kind">
             <resource-form-generated resource-kind.bind="resource.kind"
                 resource.bind="resource"
                 validation-controller.bind="validationController"
