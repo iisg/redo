@@ -4,7 +4,6 @@
     <require from="./resources-list-table"></require>
     <require from="./workflow/resource-place-display.html"></require>
 
-
     <fab-add class="pull-right"
         opened.bind="addFormOpened"
         disabled.bind="parentResource.pendingRequest"></fab-add>
@@ -28,7 +27,7 @@
 
     <div class="alert alert-info"
         if.bind="resources.length === 0 && !progressBar">
-        <fa name="info-circle fw"></fa>
+        <icon name="information"></icon>
         ${'No resources.' | resourceClassTranslation:resourceClass}
     </div>
 

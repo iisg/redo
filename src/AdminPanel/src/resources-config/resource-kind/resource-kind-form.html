@@ -22,7 +22,7 @@
                         click.delegate="sortingMetadata = !sortingMetadata"
                         disabled.bind="submitting"
                         show.bind="editableMetadataList.length > 1">
-                        <fa name="sort-amount-asc fw"></fa>
+                        <icon name="arrows"></icon>
                         ${(sortingMetadata ? 'Changing order' : 'Change order') | t}
                     </button>
                 </div>
@@ -37,12 +37,12 @@
                             <button class="btn btn-default ${metadata.overwriteForm ? 'active' : ''}"
                                 type="button"
                                 click.delegate="metadata.overwriteForm = !metadata.overwriteForm">
-                                <fa name="edit"></fa>
+                                <icon name="edit-2"></icon>
                             </button>
                             <button class="btn btn-danger"
                                 type="button"
                                 click.delegate="removeMetadata(metadata)">
-                                <fa name="times"></fa>
+                                <icon name="remove-3"></icon>
                             </button>
                         </div>
                         <h3>
@@ -54,9 +54,7 @@
                                 show.bind="sortingMetadata"></move-up-down-buttons>
                             ${originalMetadata(metadata).name}
                             <span class="small text-muted">ID: ${originalMetadata(metadata).id}</span>
-                            <fa name="thumb-tack"
-                                class="small"
-                                if.bind="metadata.shownInBrief"></fa>
+                            <icon if.bind="metadata.shownInBrief" name="show"></icon>
                         </h3>
                         <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
                             metadata.bind="metadata"
@@ -97,7 +95,7 @@
                     click.delegate="cancel()"
                     if.bind="editing"
                     disabled.bind="submitting">
-                    <fa name="times fw"></fa>
+                    <icon name="remove-3"></icon>
                     ${'Cancel' | t}
                 </button>
                 <submit-button submitting.bind="submitting"

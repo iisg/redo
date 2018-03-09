@@ -22,13 +22,13 @@
                     bootstrap-tooltip.bind="'Drag to change order' | t"
                     data-placement="left"
                     if.bind="resource.contents[metadata.id].length > 1">
-                    <fa name="sort"></fa>
+                    <icon name="arrows-2"></icon>
                 </a>
                 <button type="button"
                     disabled.bind="disabled"
                     class="btn pull-right btn-danger"
                     click.trigger="deleteIndex($index)">
-                    <fa name="trash fw"></fa>
+                    <icon name="remove-4"></icon>
                 </button>
             </td>
         </tr>

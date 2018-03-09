@@ -1,5 +1,4 @@
 <template>
-    <require from="common/components/font-awesome/fa"></require>
     <require from="./resource-metadata-values-form"></require>
     <require from="resources-config/metadata/metadata-label"></require>
 
@@ -10,7 +9,7 @@
         <div class="clearfix"></div>
         <div if.bind="metadataDeterminesAssignee(metadata)"
             class="alert alert-info">
-            <fa name="user-circle"></fa>
+            <icon name="user-2"></icon>
             ${'This metadata determines who can perform these actions:' | resourceClassTranslation:resource.resourceClass}
             <ul>
                 <li repeat.for="transition of resource.transitionAssigneeMetadata[metadata.id]">
@@ -20,12 +19,12 @@
         </div>
         <div if.bind="metadataIsRequired(metadata) & signal:'require-metadata-for-transition-changed'"
             class="alert alert-warning">
-            <fa name="info-circle"></fa>
+            <icon name="information"></icon>
             ${"This metadata is required in current state" | resourceClassTranslation:resource.resourceClass}
         </div>
         <div if.bind="metadataIsLocked(metadata)"
             class="alert alert-info">
-            <fa name="info-circle"></fa>
+            <icon name="information"></icon>
             ${"Resource's state prevents modification of these values." | resourceClassTranslation:resource.resourceClass}
         </div>
         <resource-metadata-values-form if.bind="contentsValidator[metadata.id]"

@@ -23,8 +23,8 @@
             <li class="navigation-menu-item">
                 <a click.delegate="collapsed = !collapsed"
                     class="btn btn-default">
-                    <fa name.bind="collapsed ? 'angle-double-right' : 'angle-double-left'"
-                        options="fw"></fa>
+                    <icon name="back" rotation.bind="collapsed ? 180 : 0"
+                        options="fw"></icon>
                     <span>${collapsed ? 'expand' : 'collapse' | t}</span>
                 </a>
             </li>

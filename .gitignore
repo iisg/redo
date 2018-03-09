@@ -6,6 +6,7 @@
 /vendor/
 
 /web/*
+!/web/files/
 /bin/symfony_requirements
 
 node_modules/

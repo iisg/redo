@@ -23,10 +23,10 @@ export class ApplyTransitionButton {
     const reasons: TransitionInactiveReason[] = [];
     if (reasonCollection) {
       if (reasonCollection.userMissingRequiredRole) {
-        reasons.push({icon: 'user-circle', message: "You don't have required role"});
+        reasons.push({icon: 'user-2', message: "You don't have required role"});
       }
       if (reasonCollection.otherUserAssigned) {
-        reasons.push({icon: 'user-circle', message: "Someone else is assigned this action"});
+        reasons.push({icon: 'user-2', message: "Someone else is assigned this action"});
       }
     }
     return reasons;

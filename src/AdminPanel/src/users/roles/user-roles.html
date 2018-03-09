@@ -37,13 +37,13 @@
                             class="btn btn-default"
                             click.trigger="role.editing = true"
                             disabled.bind="role.pendingRequest">
-                            <fa name="edit"></fa>
+                            <icon name="edit-2"></icon>
                         </button>
                         <button type="button"
                             class="btn btn-danger btn-narrow"
                             click.trigger="deleteRole(role)"
                             disabled.bind="role.pendingRequest || role.id < 0">
-                            <fa name="trash fw"></fa>
+                            <icon name="remove-4"></icon>
                         </button>
                     </td>
                     <td if.bind="role.editing"

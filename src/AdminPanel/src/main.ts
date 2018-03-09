@@ -42,7 +42,7 @@ export function configure(aurelia: Aurelia) {
     .globalResources([
       'common/authorization/require-role',
       'common/bootstrap/bootstrap-tooltip',
-      'common/components/font-awesome/fa',
+      'common/components/icon/icon',
       'common/components/go-to-link-on-row-click/go-to-link-on-row-click',
       'common/components/loading-bar/loading-bar.html',
       'common/components/loading-bar/throbber.html',

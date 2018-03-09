@@ -48,17 +48,17 @@
                     <td>${metadata.id}</td>
                     <td>
                         ${metadata.name}
-                        <fa name="thumb-tack"
-                            if.bind="metadata.shownInBrief"></fa>
+                        <icon name="show"
+                            if.bind="metadata.shownInBrief"></icon>
                     </td>
                     <td>
                         ${metadata.label | inCurrentLanguage}
                     </td>
                     <td>
                         ${'controls::' + metadata.control | t}
-                        <fa name="user"
+                        <icon name="user-3"
                             if.bind="metadata.canDetermineAssignees"
-                            bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></fa>
+                            bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></icon>
                     </td>
                     <td>
                         ${metadata.placeholder | inCurrentLanguage}
@@ -74,12 +74,12 @@
                                 disabled-link.bind="metadata.pendingRequest"
                                 data-placement="left"
                                 if.bind="!parentMetadata">
-                                <fa name="sort"></fa>
+                                <icon name="arrows-2"></icon>
                             </a>
                             <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
                                 class="btn btn-info btn-details"
                                 disabled-link.bind="metadata.pendingRequest">
-                                <fa name="eye fw"></fa>
+                                <icon name="show"></icon>
                             </a>
                         </span>
                     </td>
@@ -91,7 +91,7 @@
 
     <div class="alert alert-info"
         if.bind="metadataList.length === 0 && !progressBar">
-        <fa name="info-circle"></fa>
+        <icon name="information"></icon>
         ${'No metadata kinds.' | resourceClassTranslation:resourceClass}
     </div>
 </template>

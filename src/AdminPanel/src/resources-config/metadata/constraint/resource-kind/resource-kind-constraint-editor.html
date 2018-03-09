@@ -12,10 +12,10 @@
             if.bind="!allowsOnlyUsers"
             class="btn btn-sm btn-default pull-right"
             click.delegate="setToUserOnly()">
-            <fa name="wrench"></fa>
+            <icon name="settings-3"></icon>
             ${"Fix" | t}
         </button>
-        <fa name.bind="allowsOnlyUsers ? 'info-circle' : 'times-circle'"></fa>
+        <icon name.bind="allowsOnlyUsers ? 'information' : 'remove-3'"></icon>
         ${'This metadata must allow only for users, because workflow uses it to determine assignees:' | resourceClassTranslation:resourceClass}
         <ul>
             <li repeat.for="workflow of workflowsUsingMetadataAsAssignee">

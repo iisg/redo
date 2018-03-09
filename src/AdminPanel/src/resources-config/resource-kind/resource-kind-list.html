@@ -1,7 +1,6 @@
 <template>
     <require from="./resource-kind-form"></require>
     <require from="common/components/fab/fab-add"></require>
-    <require from="workflows/icon/workflow-icon.html"></require>
 
 
     <fab-add class="pull-right"
@@ -46,8 +45,8 @@
                                     <dt>${metadata.name}</dt>
                                     <dd>
                                         <span>${metadata.label | inCurrentLanguage}</span>
-                                        <fa name="thumb-tack"
-                                            if.bind="metadata.shownInBrief"></fa>
+                                        <icon name="show"
+                                            if.bind="metadata.shownInBrief"></icon>
                                     </dd>
                                 </div>
                             </template>
@@ -61,19 +60,19 @@
                                 class="btn btn-default"
                                 click.trigger="displayWorkflowPreview(resourceKind)"
                                 disabled.bind="resourceKind.pendingRequest">
-                                <workflow-icon></workflow-icon>
+                                <icon name="workflow-2"></icon>
                             </button>
                             <button type="button"
                                 class="btn btn-default"
                                 click.trigger="resourceKind.editing = true"
                                 disabled.bind="resourceKind.pendingRequest">
-                                <fa name="edit"></fa>
+                                <icon name="edit-2"></icon>
                             </button>
                             <button type="button"
                                 class="btn btn-danger"
                                 click.trigger="deleteResourceKind(resourceKind)"
                                 disabled.bind="resourceKind.pendingRequest || resourceKind.id < 0">
-                                <fa name="trash"></fa>
+                                <icon name="remove-4"></icon>
                             </button>
                         </div>
                     </td>
@@ -95,7 +94,7 @@
 
     <div class="alert alert-info"
         if.bind="resourceKinds.length === 0 && !progressBar">
-        <span class="fa fa-info-circle fa-fw"></span>
+        <icon name="information"></icon>
         ${'No resource kinds.' | resourceClassTranslation:resourceClass}
     </div>
 

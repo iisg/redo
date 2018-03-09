@@ -49,7 +49,6 @@ System.config({
     "cytoscape-context-menus": "npm:cytoscape-context-menus@2.1.1",
     "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.15.0",
     "fetch": "github:github/fetch@1.1.1",
-    "font-awesome": "npm:font-awesome@4.7.0",
     "handlebars": "github:components/handlebars.js@4.0.11",
     "jquery": "npm:jquery@3.2.1",
     "martingust/aurelia-repeat-strategies": "github:martingust/aurelia-repeat-strategies@master",
@@ -338,9 +337,6 @@ System.config({
     },
     "npm:dot-case@2.1.1": {
       "no-case": "npm:no-case@2.3.2"
-    },
-    "npm:font-awesome@4.7.0": {
-      "css": "github:systemjs/plugin-css@0.1.36"
     },
     "npm:header-case@1.0.1": {
       "no-case": "npm:no-case@2.3.2",
