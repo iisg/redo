@@ -3,7 +3,6 @@
     <require from="resources/details/resource-metadata-table/resource-metadata-values"></require>
     <require from="resources-config/metadata/metadata-label"></require>
 
-
     <div class="col-xs-12">
         <table class="table table-striped"
             if.bind="resources.length > 0">
@@ -50,7 +49,7 @@
                         <a class="btn btn-info btn-sm btn-details"
                             route-href="route: resources/details; params.bind: {id: resource.id}"
                             disabled-link.bind="resource.pendingRequest">
-                            <fa name="eye fw"></fa>
+                            <icon name="show"></icon>
                         </a>
                     </span>
                 </td>

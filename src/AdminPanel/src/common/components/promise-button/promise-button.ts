@@ -8,10 +8,10 @@ export class PromiseButton {
   @bindable onClick: VoidFunction;
   @bindable onReset: VoidFunction;
 
-  @bindable idleIcon = 'fa-save';
-  @bindable waitingIcon = 'fa-spinner fa-spin';
-  @bindable successIcon = 'fa-check';
-  @bindable failureIcon = 'fa-times';
+  @bindable idleIcon = 'save';
+  @bindable waitingIcon = 'workflow-2';
+  @bindable successIcon = 'accept-2';
+  @bindable failureIcon = 'remove-3';
 
   @bindable waitingText;
   @bindable successText;

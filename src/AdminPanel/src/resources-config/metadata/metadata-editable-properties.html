@@ -9,7 +9,7 @@
                 <input type="checkbox"
                     checked.bind="metadata.shownInBrief">
                 ${'Show in brief' | t}
-                <fa name="thumb-tack"></fa>
+                <icon name="show"></icon>
             </label>
             <restore-from-original if.bind="originalMetadata && originalMetadata.shownInBrief != metadata.shownInBrief"
                 click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original>

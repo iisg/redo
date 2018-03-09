@@ -1,3 +1,12 @@
 a {
     cursor: pointer;
 }
+icon {
+    vertical-align: middle;
+    line-height: 1em;
+}
+icon > svg {
+    height: 1em;
+    vertical-align: text-top;
+    fill: currentColor;
+}

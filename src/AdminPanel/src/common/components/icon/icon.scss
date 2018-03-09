@@ -1,0 +1,8 @@
+icon {
+    vertical-align: middle;
+    & > svg {
+        height: 1em;
+        vertical-align: text-top;
+        fill: currentColor;
+    }
+}

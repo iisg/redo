@@ -7,8 +7,7 @@
             class="btn btn-default ${simulating ? 'active' : ''}"
             if.bind="workflow.places.length > 0"
             click.delegate="toggleSimulation()">
-            <fa name.bind="simulating ? 'fa-pause' : 'fa-play'"
-                options="fw"></fa>
+            <icon name.bind="simulating ? 'square' : 'back-3'" rotation.bind="simulating ? 0 : 180"></icon>
             ${ 'Simulation' | t }
         </button>
     </div>

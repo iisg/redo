@@ -1,28 +1,31 @@
 @import "../../styles";
 
 fab-edit > .btn {
-  @include transition(.3s ease-out);
+  position: relative;
   z-index: 10;
   top: 0;
   box-shadow: none !important;
-  .fa {
-    @include transition(.3s);
-    &.fa-times {
-      opacity: 0;
-
+  @include transition(.3s ease-out);
+  & > div {
+    position: relative;
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
+    icon {
+      @include transition(.3s);
+      position: absolute;
+      left: 0;
     }
   }
-  &.editing {
-    @include transform(rotate(360deg));
-    .fa-times {
-      opacity: 1;
-    }
-    .fa-edit {
+  &:not(.editing) > div {
+    icon[name=remove-3] {
       opacity: 0;
     }
-
-    &.shifted {
-      top: 45px;
+  }
+  &.editing > div {
+    icon[name=edit-2] {
+      @include transform(rotate(360deg));
+      opacity: 0;
     }
   }
 }

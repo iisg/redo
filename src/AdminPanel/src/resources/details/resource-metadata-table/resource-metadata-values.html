@@ -2,8 +2,8 @@
     <require from="./resource-metadata-value-display"></require>
     <require from="resources-config/metadata/metadata-label"></require>
 
-    <fa name="user"
-        if.bind="determinesAssignee"></fa>
+    <icon name="user-3"
+        if.bind="determinesAssignee"></icon>
     <ul class="list-unstyled">
         <li repeat.for="value of resource.contents[metadata.id]">
             <resource-metadata-value-display

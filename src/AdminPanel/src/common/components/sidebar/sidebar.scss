@@ -125,4 +125,13 @@ sidebar {
       }
     }
   }
+
+  icon {
+    display: flex;
+    width: $navigation-menu-item-icon-width;
+    & > svg {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 }

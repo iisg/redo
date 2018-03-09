@@ -16,9 +16,9 @@
         <tr repeat.for="metadata of metadataList">
             <th>
                 ${metadata | metadataLabel}
-                <fa name="user"
+                <icon name="user-3"
                     if.bind="metadata.canDetermineAssignees"
-                    bootstrap-tooltip.one-time="'This metadata can be used to specify assignees' | t"></fa>
+                    bootstrap-tooltip.one-time="'This metadata can be used to specify assignees' | t"></icon>
             </th>
             <td repeat.for="place of orderedPlaces"
                 class="text-center">

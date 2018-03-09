@@ -7,10 +7,10 @@ fab-add {
 fab-add > .btn {
   position: relative;
   z-index: 20;
-  .fa-plus {
+  icon > svg {
     @include transition(transform .3s ease-out);
   }
-  &.opened .fa-plus {
+  &.opened icon > svg {
     @include transform(rotate(45deg * 5));
   }
 }
