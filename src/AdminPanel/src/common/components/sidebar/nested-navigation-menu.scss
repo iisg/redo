@@ -1,42 +1,22 @@
 @import "../../styles";
 
-$navigation-menu-item-left-and-right-padding-size: 20px;
-$subitem-extra-left-padding-size: 7px;
-
 .navigation-menu-item {
   display: block;
-  &.current > .btn, &:hover > .btn:link, &:hover > .btn:visited  {
-    & > :not(.ripple-container) {
-      color: blue;
+  &:hover, &.current:not(.expanded) {
+    & > a {
+      color: white;
+      background-color: $grey;
     }
   }
-  & > .btn {
+
+  & > a {
     display: flex;
     align-items: center;
-    text-align: left;
-    font-weight: 100;
-    margin: 0;
-    padding-left: $navigation-menu-item-left-and-right-padding-size;
-    padding-right: $navigation-menu-item-left-and-right-padding-size;
-    border-radius: 0;
-    @include transition(color .3s);
-    &.btn-default:focus, &:active {
-      background: inherit;
-    }
-    & > span {
-      padding-left: $navigation-menu-item-left-and-right-padding-size;
-    }
-  }
-}
-
-.nested-navigation-menu {
-  .navigation-menu-subitems {
-    padding-left: 0;
-    .btn {
-      text-transform: none;
-      & > span {
-        padding-left: $navigation-menu-item-left-and-right-padding-size + $subitem-extra-left-padding-size;
-      }
+    color: $default-text-color;
+    outline: none;
+    @include transition(color .3s, background-color .3s);
+    &:hover, &:focus {
+      text-decoration: none;
     }
   }
 }

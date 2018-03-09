@@ -1,16 +1,15 @@
 <template>
-    <div class="au-animate anim-height-inout-36"
-        if.bind="breadcrumbs.length">
-        <ol class="breadcrumb ${ loading ? 'alpha50' : '' }">
-            <li repeat.for="breadcrumb of breadcrumbs">
-                <span if.bind="$last">
-                    <span>${ breadcrumb.label }</span>
-                </span>
-                <a route-href="route.bind: breadcrumb.route; params.bind: breadcrumb.params; replace.bind: breadcrumb.replace"
-                    else>
-                    ${ breadcrumb.label }
-                </a>
-            </li>
-        </ol>
+    <div if.bind="breadcrumbs.length"
+        class="au-animate anim-height-inout-36 ${loading ? 'semitransparent' : ''}">
+        <span repeat.for="breadcrumb of breadcrumbs">
+            <span if.bind="!$last">
+                <a route-href="route.bind: breadcrumb.route;
+                    params.bind: breadcrumb.params;
+                    replace.bind: breadcrumb.replace">${breadcrumb.label}</a>
+                &gt;
+            </span>
+            <span else
+                class="last">${breadcrumb.label}</span>
+        </span>
     </div>
 </template>

@@ -1,18 +1,26 @@
 @import "common/styles";
 @import "../jspm_packages/npm/compass-mixins@0.12.10/lib/animation/animate/fading";
 
-$sidebar-top-bar-z-index: 3;
-$admin-content-top-bar-z-index: 2;
-$sidebar-content-z-index: 1;
-$admin-content-container-fluid-z-index: 0;
+$admin-content-z-index-when-sidebar-is-collapsed: 0;
+$collapsed-sidebar-elements-z-index-on-hover: $admin-content-z-index-when-sidebar-is-collapsed + 1;
 
-sidebar {
-  .navbar {
-    z-index: $sidebar-top-bar-z-index;
-  }
-  .with-overflow-scrollbar-on-the-left > * > * {
-    z-index: $sidebar-content-z-index;
+$admin-content-left-border-width: $default-gap-size / 4;
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: $default-text-color;
+}
+
+sidebar.collapsed {
+  .with-overflow-scrollbar-on-the-left > * > * > * {
+    z-index: $admin-content-z-index-when-sidebar-is-collapsed;
     position: relative;
+    &:hover {
+      z-index: $collapsed-sidebar-elements-z-index-on-hover;
+    }
+  }
+  & + .admin-content {
+    z-index: $admin-content-z-index-when-sidebar-is-collapsed;
   }
 }
 
@@ -21,18 +29,12 @@ sidebar {
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-  .navbar {
-    z-index: $admin-content-top-bar-z-index;
-    margin-bottom: 0;
-  }
-  & > .container-fluid {
-    z-index: $admin-content-container-fluid-z-index;
+  border-left: $lightish-grey solid $admin-content-left-border-width;
+  & > router-view {
     flex: 1;
-    margin-left: 0;
-    margin-right: 0;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: $default-gap-size;
     overflow: auto;
+    background-color: white;
   }
 }
 
@@ -47,21 +49,6 @@ a {
 
 .has-error .help-block {
   display: block;
-}
-
-@include on-sm-and-down {
-  sidebar {
-    &, > ul.side-nav {
-      width: 300px !important;
-    }
-  }
-  .admin-content {
-    margin-left: 0;
-  }
-}
-
-.oa-sorting {
-  @include opacity(.5);
 }
 
 .vertically-sortable {
@@ -216,11 +203,6 @@ ux-dialog-overlay {
   &.au-leave-active {
     @include animation(fadeOutUp .3s);
   }
-}
-
-// temporary fix for material design until it is removed
-.help-block {
-  position: static !important;
 }
 
 // max-height animation, idea based on: http://stackoverflow.com/a/8331169/878514

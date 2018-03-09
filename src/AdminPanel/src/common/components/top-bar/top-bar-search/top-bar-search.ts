@@ -7,7 +7,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
 
 @autoinject
-export class NavbarSearch {
+export class TopBarSearch {
   resourceClass: string;
   metadata: Metadata;
   metadataValue: MetadataValue = new MetadataValue();

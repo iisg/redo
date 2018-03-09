@@ -9,7 +9,7 @@ import {twoWay} from "common/components/binding-mode";
 export class LanguageChooser implements ComponentAttached, ComponentDetached {
   languages: Language[];
   @bindable(twoWay)
-  language: Language;
+  currentLanguage: Language;
 
   private readonly changeSubscriber: Subscription;
 
@@ -33,6 +33,6 @@ export class LanguageChooser implements ComponentAttached, ComponentDetached {
   }
 
   setCurrentLanguage(language: Language) {
-    this.language = language;
+    this.currentLanguage = language;
   }
 }

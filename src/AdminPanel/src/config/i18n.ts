@@ -32,7 +32,7 @@ export function i18nConfiguratorFactory(aurelia: Aurelia) {
       debug: false
     }).then(() => {
       const router = aurelia.container.get(AppRouter);
-      router.transformTitle = title => i18n.tr('nav::' + title);
+      router.transformTitle = title => i18n.tr('navigation::' + title);
     });
   };
 }
@@ -46,7 +46,7 @@ export class I18nParams {
     'exceptions',
     'generic',
     'metadata_constraints',
-    'nav',
+    'navigation',
     'resource_classes',
     'roles',
     'system_metadata',

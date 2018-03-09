@@ -33,7 +33,7 @@ export class NestedNavigationMenu {
       (className?: string, isResourceClass?: boolean) => (route: AbstractRoute) => {
         const labelKey = isResourceClass
           ? `resource_classes::${className}//${route.name}`
-          : `nav::${route.title}`;
+          : `navigation::${route.title}`;
         if (route.route.indexOf(':resourceClass') == -1) {
           className = undefined;
         }

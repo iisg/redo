@@ -1,0 +1,53 @@
+<template>
+    <require from="users/current/current-user-label"></require>
+    <require from="./gui-language-switcher/gui-language-switcher"></require>
+    <require from="./top-bar-title"></require>
+    <require from="./top-bar-search/top-bar-search"></require>
+    <require from="common/components/page-loading-indicator/page-loading-indicator"></require>
+    <require from="common/components/breadcrumbs/breadcrumbs"></require>
+
+    <div class="first-row">
+        <div class="page-title">
+            <div>
+                <top-bar-title></top-bar-title>
+                <breadcrumbs></breadcrumbs>
+            </div>
+        </div>
+        <div class="options">
+            <a route-href="about">
+                <icon name="help"></icon>
+            </a>
+            <a>
+                <icon name="settings-2"></icon>
+            </a>
+            <a>
+                <icon name="chat-2"></icon>
+            </a>
+            <a route-href="tasks">
+                <icon name="mail"></icon>
+            </a>
+            <a route-href="users">
+                <icon name="user-2"></icon>
+            </a>
+            <div class="user-data">
+                <div>
+                    <span>${'navigation::ADMINISTRATOR' | t}: <current-user-label></current-user-label></span>
+                    <span>${'navigation::from computer' | t}</span>
+                </div>
+            </div>
+            <a class="logout-button"
+                href="/logout"
+                target="_top"><icon name="logout"></icon><span>${'navigation::Log Out' | t}</span></a>
+        </div>
+    </div>
+    <div class="second-row">
+        <top-bar-search></top-bar-search>
+        <div>
+            <a>
+                <icon name="print"></icon>
+            </a>
+            <gui-language-switcher></gui-language-switcher>
+        </div>
+    </div>
+    <page-loading-indicator loading.bind="router.isNavigating"></page-loading-indicator>
+</template>

@@ -15,7 +15,6 @@ $text-font-family: "Open Sans", sans-serif;
 
 a {
   cursor: pointer;
-
 }
 
 .main-container {
@@ -25,7 +24,6 @@ a {
   align-items: center;
 
   .login-container {
-
     background-color: $background-color;
     margin-right: auto;
     margin-left: auto;
@@ -51,7 +49,6 @@ a {
       .form-box {
         flex: 1;
         padding: 15px;
-
 
         .login-error-element{
           border-radius: 0;
