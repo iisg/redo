@@ -1,0 +1,13 @@
+@import "../../styles/colors";
+
+.redo-logo {
+  display: inline-block;
+  svg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: inherit;
+    fill: currentColor;
+  }
+}
+

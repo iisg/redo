@@ -1,21 +1,13 @@
 <template>
     <require from="sweetalert2/dist/sweetalert2.css"></require>
-    <require from="common/components/navbar/navbar"></require>
+    <require from="common/components/top-bar/top-bar"></require>
     <require from="common/components/sidebar/sidebar"></require>
-    <require from="common/components/breadcrumbs/breadcrumbs"></require>
     <require from="style.css"></require>
 
-    <sidebar class="z-depth-1 hidden-xs"></sidebar>
+    <sidebar class="hidden-xs"></sidebar>
 
     <div class="admin-content">
-        <navbar></navbar>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-12">
-                    <breadcrumbs></breadcrumbs>
-                    <router-view></router-view>
-                </div>
-            </div>
-        </div>
+        <top-bar></top-bar>
+        <router-view></router-view>
     </div>
 </template>

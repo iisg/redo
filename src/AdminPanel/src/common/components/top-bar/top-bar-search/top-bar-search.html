@@ -1,0 +1,18 @@
+<template>
+    <require from="resources-config/metadata/metadata-chooser"></require>
+
+    <form if.bind="resourceClass"
+        submit.delegate="findResources()">
+        <span>${'navigation::Search' | t}</span>
+        <metadata-chooser value.bind="metadata"
+            resource-class.bind="resourceClass"
+            control.one-time="['text', 'textarea']"></metadata-chooser>
+        <input type="text"
+            class="matching-select2-style"
+            value.bind="metadataValue.value">
+        <button type="submit"
+            disabled.bind="disabled">
+            <icon name="search"></icon>
+        </button>
+    </form>
+</template>

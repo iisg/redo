@@ -1,19 +1,12 @@
 @import "../../styles";
-@import "../repeka-logo/repeka-logo";
 
 $default-sidebar-width: 275px;
-$list-element-left-and-right-padding-size: 20px;
-$navigation-menu-item-icon-width: 18px;
-$collapsed-sidebar-width: 2 * $list-element-left-and-right-padding-size + $navigation-menu-item-icon-width;
+$navigation-menu-item-icon-width-and-heigth: 22px;
+$navigation-menu-item-icon-left-and-right-padding-size: 20px;
+$collapsed-sidebar-width: 2 * $navigation-menu-item-icon-left-and-right-padding-size + $navigation-menu-item-icon-width-and-heigth;
 $expected-scrollbar-width: 17px;
-$default-top-bar-height: 60px;
-$default-top-bar-top-and-bottom-padding-size: 15px;
-$logo-width-and-height: 38px;
-$logo-container-padding-size: 3px;
-$logo-container-width-and-height: 2 * $logo-container-padding-size + $logo-width-and-height;
-$title-left-margin-size: 15px;
-$application-version-number-font-size: 0.25em;
-$navigation-menu-item-background-color-on-hover-when-sidebar-is-collapsed: #EEE;
+$logo-container-top-and-bottom-padding-size: 4px;
+$navigation-menu-item-background-color-on-hover-when-sidebar-is-collapsed: white;
 $navigation-menu-item-shadow-width: 5px;
 $fold-animation-duration: 1s;
 
@@ -23,36 +16,28 @@ sidebar {
   width: $default-sidebar-width;
   transition: width $fold-animation-duration;
 
-  .navbar {
-    margin-bottom: 3px;
+  .title {
     overflow: hidden;
-    .navbar-header {
-      float: none;
-    }
-    .navbar-brand {
-      display: block;
-      width: 100%;
-      font-size: 28px;
-      white-space: nowrap;
-      .logo-container {
-        display: inline-block;
-        width: $logo-container-width-and-height;
-        height: $logo-container-width-and-height;
-        padding: $logo-container-padding-size;
-        background: white;
-        border-radius: 50%;
-        vertical-align: middle;
-        margin-top: ($default-top-bar-height - 2 * $default-top-bar-top-and-bottom-padding-size - $logo-container-width-and-height) / 2;
-        transition: transform $fold-animation-duration;
-        .repeka-logo {
-          @include repeka-logo($logo-width-and-height, darken(#f47920, 8%));
-        }
+    background-color: $light-grey;
+    border-bottom: $orange solid $default-gap-size / 4;
+    & > div {
+      display: flex;
+      width: $default-sidebar-width;
+      align-items: center;
+      redo-logo {
+        box-sizing: content-box;
+        width: $navigation-menu-item-icon-width-and-heigth;
+        padding: $logo-container-top-and-bottom-padding-size $navigation-menu-item-icon-left-and-right-padding-size;
+        color: $orange;
+        background-color: $dark-grey;
       }
       span {
-        margin-left: $title-left-margin-size;
-      }
-      version-display {
-        font-size: $application-version-number-font-size;
+        white-space: nowrap;
+        flex: 1;
+        flex-shrink: 0;
+        text-align: center;
+        color: $grey;
+        font-weight: bold;
       }
     }
   }
@@ -70,10 +55,40 @@ sidebar {
     }
     & > ul {
       margin-top: auto;
+      & > .navigation-menu-item > a:not(:hover) {
+        background-color: $dark-grey;
+        color: white;
+      }
     }
     a {
       width: $default-sidebar-width;
       white-space: normal;
+    }
+    .navigation-menu-item {
+      & > a {
+        padding-top: $default-gap-size / 2;
+        padding-bottom: $default-gap-size / 2;
+        & > icon {
+          padding-left: $navigation-menu-item-icon-left-and-right-padding-size;
+          padding-right: $navigation-menu-item-icon-left-and-right-padding-size;
+          & > svg {
+            height: $navigation-menu-item-icon-width-and-heigth;
+          }
+        }
+        & > span {
+          padding-left: $default-gap-size / 2;
+          padding-right: $default-gap-size / 2;
+        }
+      }
+    }
+    .navigation-menu-subitems {
+      .navigation-menu-item > a > span {
+        padding-left: 2 * $default-gap-size / 2;
+      }
+    }
+    ul {
+      margin-bottom: 0;
+      padding-left: 0;
     }
   }
 
@@ -116,11 +131,6 @@ sidebar {
             background-color: $navigation-menu-item-background-color-on-hover-when-sidebar-is-collapsed;
             @include z-depth(1);
           }
-          &:not(.expanded) {
-            & > a:hover {
-              background: inherit;
-            }
-          }
         }
       }
     }
@@ -128,7 +138,6 @@ sidebar {
 
   icon {
     display: flex;
-    width: $navigation-menu-item-icon-width;
     & > svg {
       margin-left: auto;
       margin-right: auto;

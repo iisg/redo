@@ -1,8 +1,7 @@
 throbber {
-    vertical-align: middle;
     svg {
-        vertical-align: text-top;
         width: 1em;
+        vertical-align: -0.125em;
         @keyframes Rotate {
             0% {
                 transform: rotate(0);

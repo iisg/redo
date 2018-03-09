@@ -1,4 +1,4 @@
-# sidebar
+# Sidebar
 Tasks: Zadania
 Metadata Kinds: Rodzaje metadanych
 Resource Kinds: Rodzaje zasobów
@@ -9,11 +9,10 @@ Roles: Role
 Audit: Audyt
 About: O systemie
 
-# navbar menu
-My Account: Moje konto
-Dashboard: Tablica
-Front Page: Strona główna
+# Top bar menu
+from computer: z komputera
 Log Out: Wyloguj
+Search: Szukaj
 
-# navbar title
+# Top bar title
 Resources: Zasoby

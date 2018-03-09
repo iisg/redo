@@ -4,18 +4,18 @@
     <button type="button"
         class="btn dropdown-toggle"
         data-toggle="dropdown">
-        <flag name.bind="language.flag"
+        <flag name.bind="currentLanguage.flag"
             size="sm"></flag>
-        ${language.code}
+        ${currentLanguage.code}
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <li repeat.for="lang of languages"
-            show.bind="lang != language">
-            <a click.delegate="setCurrentLanguage(lang)">
-                <flag name.one-time="lang.flag"
+        <li repeat.for="language of languages"
+            show.bind="language != currentLanguage">
+            <a click.delegate="setCurrentLanguage(language)">
+                <flag name.one-time="language.flag"
                     size="sm"></flag>
-                ${lang.code & oneTime}
+                ${language.code & oneTime}
             </a>
         </li>
     </ul>

@@ -1,0 +1,198 @@
+@import "../../styles";
+@import "../page-loading-indicator/page-loading-indicator";
+
+$default-padding-or-margin-of-elements: $default-gap-size / 2;
+
+$resource-class-name-font-size: 16px;
+$breadcrumbs-font-size: 11px;
+$page-title-background-color: white;
+$breadcrumbs-and-options-text-color: $grey;
+
+$options-background-color: $light-grey;
+$options-background-color-on-bover: $grey;
+$options-text-color-on-hover: white;
+$label-with-user-name-line-height: 16px;
+$label-with-user-name-font-size: 12px;
+$label-with-computer-ip-number-line-height: 15px;
+$label-with-computer-ip-number-font-size: 11px;
+
+$second-row-background-color: $blue;
+$second-row-text-color: white;
+$dropdown-menu-items-text-color: $blue;
+$dropdown-menu-items-background-color-on-hover: $blue;
+$dropdown-menu-items-text-color-on-hover: white;
+$second-row-background-color-of-active-elements-on-hover: white;
+$second-row-text-color-of-active-elements-on-hover: $blue;
+
+$maximum-window-width-when-wrap-is-required: 480px;
+
+$navigation-bar-height-on-smaller-screens: 50px;
+$navigation-bar-border-with-shadow-size-on-smaller-screens: 2px;
+
+top-bar {
+  position: relative;
+  .first-row {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    .page-title, .options {
+      display: flex;
+      flex: 1;
+      max-width: 100%;
+    }
+    .page-title {
+      align-items: center;
+      padding: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
+      background-color: $page-title-background-color;
+      & > div {
+        max-width: inherit;
+        top-bar-title {
+          font-size: $resource-class-name-font-size;
+          font-weight: bold;
+        }
+      }
+      breadcrumbs {
+        font-size: $breadcrumbs-font-size;
+        color: $breadcrumbs-and-options-text-color;
+      }
+    }
+    .options {
+      background-color: $options-background-color;
+      color: $breadcrumbs-and-options-text-color;
+      & > * {
+        display: flex;
+        align-items: center;
+        padding: $default-padding-or-margin-of-elements;
+      }
+      a {
+        color: inherit;
+        &:hover {
+          background-color: $options-background-color-on-bover;
+          color: $options-text-color-on-hover;
+        }
+      }
+      .user-data {
+        span {
+          display: block;
+          line-height: $label-with-user-name-line-height;
+          font-size: $label-with-user-name-font-size;
+          white-space: nowrap;
+          current-user-label {
+            font-weight: bold;
+          }
+          &:last-child {
+            line-height: $label-with-computer-ip-number-line-height;
+            font-size: $label-with-computer-ip-number-font-size;
+          }
+        }
+      }
+      .logout-button {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        color: inherit;
+        white-space: nowrap;
+        &, & > * {
+          padding-left: $default-padding-or-margin-of-elements / 2;
+          padding-right: $default-padding-or-margin-of-elements / 2;
+        }
+        &:hover, &:focus {
+          text-decoration: none;
+        }
+        span {
+          font-size: inherit;
+        }
+      }
+    }
+  }
+  .second-row {
+    display: flex;
+    background-color: $second-row-background-color;
+    flex-wrap: wrap;
+    & > top-bar-search {
+      form {
+        display: flex;
+        flex-wrap: wrap;
+        & > * {
+          display: flex;
+          align-items: center;
+          &:not(input) {
+            padding: $default-padding-or-margin-of-elements;
+          }
+        }
+        & > span {
+          font-size: 16px;
+        }
+        & > button {
+          cursor: pointer;
+          background: none;
+          border: none;
+        }
+        & > input {
+          height: initial;
+          margin: $default-padding-or-margin-of-elements;
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+      }
+    }
+    & > div {
+      display: flex;
+      margin-left: auto;
+      & > :not(.dropdown-menu) {
+        display: flex;
+        align-items: center;
+        padding: $default-padding-or-margin-of-elements;
+      }
+      .dropdown-menu {
+        left: initial;
+        right: 0;
+        a {
+          color: $dropdown-menu-items-text-color;
+          &:hover {
+            background-color: $dropdown-menu-items-background-color-on-hover;
+            color: $dropdown-menu-items-text-color-on-hover;
+          }
+        }
+      }
+    }
+    span, button, a {
+      color: $second-row-text-color;
+    }
+    button:hover, a:hover, a[aria-expanded="true"] {
+      background-color: $second-row-background-color-of-active-elements-on-hover;
+      color: $second-row-text-color-of-active-elements-on-hover;
+    }
+  }
+  icon {
+    & > svg {
+      display: block;
+      height: 22px;
+    }
+    &[name=user-2] > svg {
+      height: 26px;
+    }
+  }
+
+  @include on-and-down($maximum-window-width-when-wrap-is-required) {
+    .first-row {
+      .page-title {
+        flex: 0;
+      }
+      .options {
+        flex-wrap: wrap;
+      }
+    }
+  }
+}
+
+@include on-sm-and-down {
+  top-bar {
+    page-loading-indicator {
+      bottom: -$spinner-default-height - $spinner-margin-size;
+    }
+    .in + page-loading-indicator {
+      top: $navigation-bar-height-on-smaller-screens - $navigation-bar-border-with-shadow-size-on-smaller-screens;
+      bottom: unset;
+    }
+  }
+}

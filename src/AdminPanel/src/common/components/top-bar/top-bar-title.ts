@@ -3,8 +3,8 @@ import {NavigationInstruction} from "aurelia-router";
 import {inlineView} from "aurelia-templating";
 import {ResourceClassChangeEvent, ContextResourceClass} from "resources/context/context-resource-class";
 
-@inlineView('<template><span class="navbar-brand">${title | t}</span></template>')
-export class NavbarTitle {
+@inlineView('<template><span>${title | t}</span></template>')
+export class TopBarTitle {
   title: string;
   private resourceClass: string;
   private lastInstruction: NavigationInstruction;
@@ -37,7 +37,7 @@ export class NavbarTitle {
     }
     else {
       const configTitle = this.lastInstruction.config.title;
-      this.title = `nav::${configTitle}`;
+      this.title = `navigation::${configTitle}`;
     }
   }
 }

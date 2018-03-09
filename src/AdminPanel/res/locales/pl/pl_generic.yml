@@ -1,6 +1,7 @@
 meta:
   translatedName: Polski
   flag: PL
+REDO ADMINISTRATION: ADMINISTRACJA REDO
 Upload max file size: Maksymalna wielkość pliku
 Administration Panel: Panel administracyjny
 Data import: Import danych
@@ -76,8 +77,8 @@ Missing metadata: Brakująca metadana
 bool:
   true: Tak
   false: Nie
-collapse: zwiń
-expand: rozwiń
+Collapse: Zwiń
+Expand: Rozwiń
 No results: Brak wyników
 Confirm deletion: Potwierdź usunięcie
 Are you sure you want to delete {{entityType}} {{caption}}?: Czy na pewno chcesz usunąć {{entity}} {{caption}}?
