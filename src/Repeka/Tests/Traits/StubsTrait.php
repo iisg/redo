@@ -80,12 +80,13 @@ trait StubsTrait {
     }
 
     /** @return ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
-    protected function createResourceMock(int $id, ?ResourceKind $resourceKind = null, $contents = []): ResourceEntity {
+    protected function createResourceMock(int $id, ?ResourceKind $resourceKind = null, $contents = [], $marking = []): ResourceEntity {
         $mock = $this->createMock(ResourceEntity::class);
         $mock->method('getKind')->willReturn($resourceKind);
         $mock->method('getId')->willReturn($id);
         $contents = $contents instanceof ResourceContents ? $contents : ResourceContents::fromArray($contents);
         $mock->method('getContents')->willReturn($contents);
+        $mock->method('getMarking')->willReturn($marking);
         return $mock;
     }
 
@@ -198,13 +199,16 @@ trait StubsTrait {
     protected function createWorkflowPlaceMock(
         string $id = '',
         array $missingMetadataIds = [],
-        array $assigneeMetadataIds = []
+        array $assigneeMetadataIds = [],
+        array $autoAssignMetadataIds = []
     ): ResourceWorkflowPlace {
         $mock = $this->createMock(ResourceWorkflowPlace::class);
         $mock->method('getId')->willReturn($id);
         $mock->method('getMissingRequiredMetadataIds')->willReturn($missingMetadataIds);
         $mock->method('resourceHasRequiredMetadata')->willReturn(empty($missingMetadataIds));
-        $mock->method('restrictingMetadataIds')->willReturn(new FluentRestrictingMetadataSelector([], [], $assigneeMetadataIds));
+        $mock->method('restrictingMetadataIds')->willReturn(
+            new FluentRestrictingMetadataSelector([], [], $assigneeMetadataIds, $autoAssignMetadataIds)
+        );
         return $mock;
     }
 }

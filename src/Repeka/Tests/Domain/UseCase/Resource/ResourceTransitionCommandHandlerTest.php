@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandHandler;
+use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandHandler;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceTransitionCommandHandlerTest extends \PHPUnit_Framework_TestCase {
@@ -28,7 +29,8 @@ class ResourceTransitionCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->resource->method('getWorkflow')->willReturn($this->workflow);
         $resourceRepository = $this->createRepositoryStub(ResourceRepository::class);
         $this->executor = $this->createMock(User::class);
-        $this->handler = new ResourceTransitionCommandHandler($resourceRepository);
+        $resourceUpdateContentsCommandHandler = $this->createMock(ResourceUpdateContentsCommandHandler::class);
+        $this->handler = new ResourceTransitionCommandHandler($resourceRepository, $resourceUpdateContentsCommandHandler);
     }
 
     public function testTransition() {

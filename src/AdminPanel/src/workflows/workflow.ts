@@ -32,6 +32,7 @@ export enum RequirementState {
   REQUIRED,
   LOCKED,
   ASSIGNEE,
+  AUTOASSIGN,
 }
 
 @automapped

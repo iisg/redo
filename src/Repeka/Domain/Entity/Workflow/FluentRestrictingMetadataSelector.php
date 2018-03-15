@@ -8,6 +8,8 @@ class FluentRestrictingMetadataSelector {
     private $lockedIds;
     /** @var int[] */
     private $assigneeIds;
+    /** @var int[] */
+    private $autoAssignIds;
 
     /** @var string[] */
     private $selectedFields = [];
@@ -16,11 +18,13 @@ class FluentRestrictingMetadataSelector {
      * @param int[] $requiredIds
      * @param int[] $lockedIds
      * @param int[] $assigneeIds
+     * @param int[] $autoAssignIds
      */
-    public function __construct(array $requiredIds, array $lockedIds, array $assigneeIds) {
+    public function __construct(array $requiredIds, array $lockedIds, array $assigneeIds, array $autoAssignIds) {
         $this->requiredIds = $requiredIds;
         $this->lockedIds = $lockedIds;
         $this->assigneeIds = $assigneeIds;
+        $this->autoAssignIds = $autoAssignIds;
     }
 
     public function required(): self {
@@ -38,8 +42,13 @@ class FluentRestrictingMetadataSelector {
         return $this;
     }
 
+    public function autoAssign(): self {
+        $this->selectedFields = array_unique(array_merge($this->selectedFields, ['autoAssignIds']));
+        return $this;
+    }
+
     public function all(): self {
-        $this->selectedFields = ['requiredIds', 'lockedIds', 'assigneeIds'];
+        $this->selectedFields = ['requiredIds', 'lockedIds', 'assigneeIds', 'autoAssignIds'];
         return $this;
     }
 

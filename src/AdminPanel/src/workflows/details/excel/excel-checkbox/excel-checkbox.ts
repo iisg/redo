@@ -27,6 +27,7 @@ export class ExcelCheckbox {
     let next: RequirementState = successor(this.state, RequirementState);
     if (next == RequirementState.ASSIGNEE && !this.assigneeAllowed) {
       next = successor(next, RequirementState);
+      next = successor(next, RequirementState);
     }
     this.setState(next);
     this.updateInternalState();
@@ -39,7 +40,7 @@ export class ExcelCheckbox {
 
   @computedFrom('state')
   get isOptional(): boolean {
-    return !this.isRequired && !this.isLocked && !this.isAssignee;
+    return !this.isRequired && !this.isLocked && !this.isAssignee && !this.isAutoAssign;
   }
 
   @computedFrom('state')
@@ -55,5 +56,10 @@ export class ExcelCheckbox {
   @computedFrom('state')
   get isAssignee(): boolean {
     return this.states[this.model] == RequirementState.ASSIGNEE;
+  }
+
+  @computedFrom('state')
+  get isAutoAssign(): boolean {
+    return this.states[this.model] == RequirementState.AUTOASSIGN;
   }
 }
