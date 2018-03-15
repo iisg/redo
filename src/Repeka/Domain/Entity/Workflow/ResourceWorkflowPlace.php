@@ -13,6 +13,7 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
     private $requiredMetadataIds;
     private $lockedMetadataIds;
     private $assigneeMetadataIds;
+    private $autoAssignMetadataIds;
 
     public function __construct(
         array $label,
@@ -20,6 +21,7 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
         array $requiredMetadataIds = [],
         array $lockedMetadataIds = [],
         array $assigneeMetadataIds = [],
+        array $autoAssignMetadataIds = [],
         array $pluginsConfig = []
     ) {
         $this->label = $label;
@@ -27,6 +29,7 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
         $this->requiredMetadataIds = $requiredMetadataIds;
         $this->lockedMetadataIds = $lockedMetadataIds;
         $this->assigneeMetadataIds = $assigneeMetadataIds;
+        $this->autoAssignMetadataIds = $autoAssignMetadataIds;
         $this->pluginsConfig = $pluginsConfig;
     }
 
@@ -39,7 +42,12 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
     }
 
     public function restrictingMetadataIds(): FluentRestrictingMetadataSelector {
-        return new FluentRestrictingMetadataSelector($this->requiredMetadataIds, $this->lockedMetadataIds, $this->assigneeMetadataIds);
+        return new FluentRestrictingMetadataSelector(
+            $this->requiredMetadataIds,
+            $this->lockedMetadataIds,
+            $this->assigneeMetadataIds,
+            $this->autoAssignMetadataIds
+        );
     }
 
     public function getMissingRequiredMetadataIds(ResourceEntity $resource): array {
@@ -65,6 +73,7 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
             'requiredMetadataIds' => $this->requiredMetadataIds,
             'lockedMetadataIds' => $this->lockedMetadataIds,
             'assigneeMetadataIds' => $this->assigneeMetadataIds,
+            'autoAssignMetadataIds' => $this->autoAssignMetadataIds,
             'pluginsConfig' => $this->pluginsConfig,
         ];
     }
@@ -76,6 +85,7 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
             $data['requiredMetadataIds'] ?? [],
             $data['lockedMetadataIds'] ?? [],
             $data['assigneeMetadataIds'] ?? [],
+            $data['autoAssignMetadataIds'] ?? [],
             $data['pluginsConfig'] ?? []
         );
     }

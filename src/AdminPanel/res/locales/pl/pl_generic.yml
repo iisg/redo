@@ -92,6 +92,7 @@ Optional_female: Opcjonalna
 Required_female: Wymagana
 Locked_female: Zablokowana
 Specifies assignee: Określa osobę przypisaną do zadania
+Specifies auto assignee: Określa automatyczne przypisanie osoby do metadanej
 only for relationships with users: tylko dla relacji z użytkownikami
 Your current tasks: Twoje bieżące zadania
 Your other tasks: Inne twoje zadania

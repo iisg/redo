@@ -161,10 +161,12 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         array $description = [],
         array $placeholder = [],
         string $control = 'text',
-        string $resourceClass = 'books'
+        string $resourceClass = 'books',
+        array $constraints = []
     ): Metadata {
+        $constraints = array_merge(['maxCount' => 0], $constraints);
         return $this->handleCommand(
-            new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $resourceClass, ['maxCount' => 0])
+            new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $resourceClass, $constraints)
         );
     }
 
@@ -178,12 +180,12 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {
-        return $this->handleCommand(new ResourceCreateCommand($resourceKind, ResourceContents::fromArray($contents)));
+        $user = new UserEntity();
+        return $this->handleCommand(new ResourceCreateCommand($resourceKind, ResourceContents::fromArray($contents), $user));
     }
 
-    protected function createWorkflow(array $name, string $resourceClass, ResourceWorkflowPlace $initialPlace): ResourceWorkflow {
-        $places = [$initialPlace];
-        return $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, [], $resourceClass, null, null));
+    protected function createWorkflow(array $name, string $resourceClass, array $places, array $transitions): ResourceWorkflow {
+        return $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, $transitions, $resourceClass, null, null));
     }
 
     protected function simulateAuthentication(UserEntity $user) {

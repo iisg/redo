@@ -15,6 +15,9 @@ export class RestrictingMetadataMapper extends AdvancedMapper<RestrictingMetadat
     for (const assigneeId of dto.assigneeMetadataIds) {
       map[assigneeId] = RequirementState.ASSIGNEE;
     }
+    for (const assigneeId of dto.autoAssignMetadataIds) {
+      map[assigneeId] = RequirementState.AUTOASSIGN;
+    }
     return Promise.resolve(map);
   }
 
@@ -22,6 +25,7 @@ export class RestrictingMetadataMapper extends AdvancedMapper<RestrictingMetadat
     backendPlace.requiredMetadataIds = numberKeysByValue(mergedMap[key], RequirementState.REQUIRED);
     backendPlace.lockedMetadataIds = numberKeysByValue(mergedMap[key], RequirementState.LOCKED);
     backendPlace.assigneeMetadataIds = numberKeysByValue(mergedMap[key], RequirementState.ASSIGNEE);
+    backendPlace.autoAssignMetadataIds = numberKeysByValue(mergedMap[key], RequirementState.AUTOASSIGN);
   }
 
   clone(map: RestrictingMetadataIdMap): RestrictingMetadataIdMap {
@@ -35,4 +39,5 @@ interface BackendPlace {
   requiredMetadataIds: number[];
   lockedMetadataIds: number[];
   assigneeMetadataIds: number[];
+  autoAssignMetadataIds: number[];
 }

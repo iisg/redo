@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\AuditEntryRepository;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -21,6 +22,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     private $metadata1;
     /** @var Metadata */
     private $metadata2;
+    /** @var Metadata */
+    private $metadata3;
+    /** @var Metadata */
+    private $metadata4;
     /** @var ResourceKind */
     private $resourceKind;
     /** @var ResourceKind */
@@ -30,9 +35,15 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     /** @var ResourceEntity */
     private $resource;
     /** @var ResourceEntity */
+    private $resourceWithWorkflow;
+    /** @var ResourceEntity */
     private $parentResource;
     /** @var ResourceEntity */
     private $childResource;
+    /** @var  ResourceWorkflowPlace */
+    private $workflowPlace1;
+    /** @var ResourceWorkflowTransition */
+    private $transition;
 
     protected function setUp() {
         parent::setUp();
@@ -43,7 +54,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
         $this->metadata1 = $this->createMetadata('M1', ['TEST' => 'metadata'], [], [], 'textarea');
         $this->metadata2 = $this->createMetadata('M2', ['TEST' => 'metadata'], [], [], 'textarea');
-        $workflow = $this->createWorkflow(['TEST' => 'Workflow'], 'books', new ResourceWorkflowPlace(['key']));
+        $this->metadata3 = $this->createMetadata('M3', ['TEST' => 'metadata'], [], [], 'relationship', 'books', ['resourceKind' => [-1]]);
+        $this->metadata4 = $this->createMetadata('M4', ['TEST' => 'metadata'], [], [], 'relationship', 'books', ['resourceKind' => [-1]]);
+        $this->workflowPlace1 = new ResourceWorkflowPlace(['key1'], 'p1', [], [], [], [$this->metadata3->getId()]);
+        $workflowPlace2 = new ResourceWorkflowPlace(['key2'], 'p2', [], [], [], [$this->metadata4->getId()]);
+        $this->transition = new ResourceWorkflowTransition(['key3'], ['p1'], ['p2'], [-1, 1], 't1');
+        $workflow = $this->createWorkflow(['TEST' => 'Workflow'], 'books', [$this->workflowPlace1, $workflowPlace2], [$this->transition]);
         $sampleResourceWorkflowDriverFactory = new SampleResourceWorkflowDriverFactory($this->createMock(ResourceWorkflowDriver::class));
         $workflow = $sampleResourceWorkflowDriverFactory->setForWorkflow($workflow);
         $this->resourceKind = $this->createResourceKind(
@@ -52,7 +68,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         );
         $this->resourceKindWithWorkflow = $this->createResourceKind(
             ['TEST' => 'Resource kind'],
-            [$this->parentMetadata, $this->metadata1],
+            [$this->parentMetadata, $this->metadata1, $this->metadata3, $this->metadata4],
             [],
             $workflow
         );
@@ -61,6 +77,9 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         ]);
         $this->parentResource = $this->createResource($this->resourceKind, [
             $this->metadata1->getId() => ['Test value for parent'],
+        ]);
+        $this->resourceWithWorkflow = $this->createResource($this->resourceKindWithWorkflow, [
+            $this->metadata1->getId() => ['Test value'],
         ]);
         $this->childResource = $this->createResource($this->resourceKind, [
             -1 => [$this->parentResource->getId()],
@@ -91,9 +110,18 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                     SystemMetadata::PARENT => [['value' => $this->parentResource->getId()]],
                 ],
                 'resourceClass' => $this->resource->getResourceClass(),
+            ], [
+                'id' => $this->resourceWithWorkflow->getId(),
+                'kindId' => $this->resourceKindWithWorkflow->getId(),
+                'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
+                'resourceClass' => $this->resource->getResourceClass(),
+                'currentPlaces' => [$this->workflowPlace1->toArray()],
+                'availableTransitions' => [$this->transition->toArray()],
+                'blockedTransitions' => [],
+                'transitionAssigneeMetadata' => []
             ],
         ], $client->getResponse()->getContent());
-        $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
     public function testFetchingResourcesForFirstPageWithTwoByPage() {
@@ -113,7 +141,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'resourceClass' => $this->resource->getResourceClass(),
             ],
         ], $client->getResponse()->getContent());
-        $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
     public function testFetchingTopLevelResources() {
@@ -131,9 +159,18 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'kindId' => $this->resourceKind->getId(),
                 'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value for parent']])->toArray(),
                 'resourceClass' => $this->resource->getResourceClass(),
+            ], [
+                'id' => $this->resourceWithWorkflow->getId(),
+                'kindId' => $this->resourceKindWithWorkflow->getId(),
+                'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
+                'resourceClass' => $this->resource->getResourceClass(),
+                'currentPlaces' => [$this->workflowPlace1->toArray()],
+                'availableTransitions' => [$this->transition->toArray()],
+                'blockedTransitions' => [],
+                'transitionAssigneeMetadata' => []
             ],
         ], $client->getResponse()->getContent());
-        $this->assertEquals(2, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
     }
 
     public function testFetchingResourcesFailsWhenInvalidResourceClass() {
@@ -189,7 +226,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $actualOrder[] = $fetchedResource[0]->id;
         $actualOrder[] = $fetchedResource[1]->id;
         $this->assertEquals($expectedOrder, $actualOrder);
-        $this->assertEquals(2, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
     }
 
     public function testCreatingResource(): int {
@@ -230,8 +267,11 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $created */
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKindWithWorkflow->getId(), $created->getKind()->getId());
-        $this->assertEquals(ResourceContents::fromArray([$this->metadata1->getId() => ['created']]), $created->getContents());
-        $this->assertEquals(['key' => true], $created->getMarking());
+        $this->assertEquals(
+            ResourceContents::fromArray([$this->metadata1->getId() => ['created'], $this->metadata3->getId() => 1]),
+            $created->getContents()
+        );
+        $this->assertEquals(['p1' => true], $created->getMarking());
     }
 
     public function testEditingResource() {
@@ -246,6 +286,35 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
         $this->assertEquals(ResourceContents::fromArray([$this->metadata1->getId() => ['edited']]), $edited->getContents());
+    }
+
+    public function testAutoAssignMetadataWhenEditingResourceWithWorkflow() {
+        $client = self::createAdminClient();
+        $client->apiRequest('POST', self::oneEntityEndpoint($this->resourceWithWorkflow->getId()), [
+            'id' => $this->resourceWithWorkflow->getId(),
+            'kindId' => $this->resourceKindWithWorkflow->getId(),
+            'contents' => json_encode([$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1]),
+        ]);
+        $this->assertStatusCode(200, $client->getResponse());
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $edited */
+        $edited = $repository->findOne($this->resourceWithWorkflow->getId());
+        $this->assertEquals(
+            ResourceContents::fromArray([$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1]),
+            $edited->getContents()
+        );
+        $client = self::createAdminClient();
+        $client->apiRequest('PATCH', self::oneEntityEndpoint($this->resourceWithWorkflow->getId()), [
+            'transitionId' => 't1',
+        ]);
+        $this->assertStatusCode(200, $client->getResponse());
+        $edited = $repository->findOne($this->resourceWithWorkflow->getId());
+        $this->assertEquals(
+            ResourceContents::fromArray(
+                [$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1, $this->metadata4->getId() => 1]
+            ),
+            $edited->getContents()
+        );
     }
 
     public function testEditingResourceKindFails() {

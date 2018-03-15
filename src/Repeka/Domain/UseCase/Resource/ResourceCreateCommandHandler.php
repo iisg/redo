@@ -7,28 +7,38 @@ use Repeka\Domain\Exception\ResourceWorkflow\ResourceCannotEnterPlaceException;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Upload\ResourceFileHelper;
 
-class ResourceCreateCommandHandler {
+class ResourceCreateCommandHandler extends ResourceTransitionCommandHandler {
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var ResourceFileHelper */
     private $fileHelper;
 
-    public function __construct(ResourceRepository $resourceRepository, ResourceFileHelper $fileHelper) {
+    public function __construct(
+        ResourceRepository $resourceRepository,
+        ResourceFileHelper $fileHelper,
+        ResourceUpdateContentsCommandHandler $resourceUpdateContentsCommandHandler
+    ) {
+        parent::__construct($resourceRepository, $resourceUpdateContentsCommandHandler);
         $this->resourceRepository = $resourceRepository;
         $this->fileHelper = $fileHelper;
     }
 
-    public function handle(ResourceCreateCommand $command): ResourceEntity {
+    /**
+     * @param ResourceCreateCommand $command
+     * @return ResourceEntity
+     */
+    public function handle($command): ResourceEntity {
         $resource = new ResourceEntity($command->getKind(), $command->getContents());
-        if ($resource->getWorkflow()) {
+        $workflow = $resource->getWorkflow();
+        if ($workflow) {
             $this->ensureCanEnterTheFirstWorkflowState($resource);
-            $initialPlace = $resource->getWorkflow()->getInitialPlace();
-            $resource->getWorkflow()->setCurrentPlaces($resource, [$initialPlace->getId()]);
+            $initialPlace = $workflow->getInitialPlace();
+            $workflow->setCurrentPlaces($resource, [$initialPlace->getId()]);
         }
         $resource = $this->resourceRepository->save($resource);
         Assertion::integer($resource->getId());
         $this->fileHelper->moveFilesToDestinationPaths($resource);
-        return $resource;
+        return $workflow ? $this->autoAssingMetadata($resource, $command->getExecutor()) : $resource;
     }
 
     private function ensureCanEnterTheFirstWorkflowState(ResourceEntity $resource): void {

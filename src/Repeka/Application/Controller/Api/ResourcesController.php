@@ -10,6 +10,7 @@ use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\Resource\ResourceMetadataAutoAssignCommand;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTopLevelPathQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
@@ -91,7 +92,7 @@ class ResourcesController extends ApiController {
         Assertion::keyExists($data, 'kindId', 'kindId is missing');
         Assertion::numeric($data['kindId']);
         $resourceKind = $this->handleCommand(new ResourceKindQuery($data['kindId']));
-        $command = new ResourceCreateCommand($resourceKind, $resourceContents);
+        $command = new ResourceCreateCommand($resourceKind, $resourceContents, $this->getUser());
         $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource, 201);
     }

@@ -25,6 +25,7 @@ class WorkflowPlacesDefinitionIsValidRule extends AbstractRule {
                 Validator::key('requiredMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
                 Validator::key('lockedMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
                 Validator::key('assigneeMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
+                Validator::key('autoAssignMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
                 Validator::key('pluginsConfig', Validator::arrayType(), false)
             )->callback([$this, 'noCommonValuesBetweenRequirements'])
         ))->validate($input);
@@ -33,7 +34,12 @@ class WorkflowPlacesDefinitionIsValidRule extends AbstractRule {
     public function noCommonValuesBetweenRequirements($place): bool {
         $merged = ($place instanceof ResourceWorkflowPlace)
             ? array_merge($place->restrictingMetadataIds()->all()->get())
-            : array_merge($place['requiredMetadataIds'] ?? [], $place['lockedMetadataIds'] ?? [], $place['assigneeMetadataIds'] ?? []);
+            : array_merge(
+                $place['requiredMetadataIds'] ?? [],
+                $place['lockedMetadataIds'] ?? [],
+                $place['assigneeMetadataIds'] ?? [],
+                $place['autoAssignMetadataIds'] ?? []
+            );
         $allCount = count($merged);
         $uniqueCount = count(array_unique($merged));
         return $allCount == $uniqueCount;

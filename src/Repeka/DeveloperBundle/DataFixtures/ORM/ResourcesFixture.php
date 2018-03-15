@@ -52,6 +52,7 @@ class ResourcesFixture extends RepekaFixture {
         $forbiddenBookResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK);
         /** @var ResourceKind $categoryResourceKind */
         $categoryResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CATEGORY);
+        $userAdmin = $manager->getRepository(UserEntity::class)->loadUserByUsername('admin');
         /** @var UserEntity $userBudynek */
         $userBudynek = $this->getReference(UsersFixture::REFERENCE_USER_BUDYNEK);
         /** @var UserEntity $userScanner */
@@ -63,7 +64,7 @@ class ResourcesFixture extends RepekaFixture {
             MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [404],
             MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
             MetadataFixture::REFERENCE_METADATA_SUPERVISOR => [$userBudynek->getUserData()],
-        ])));
+        ]), $userAdmin));
         $this->handleCommand(new ResourceCreateCommand($bookResourceKind, $this->contents([
             MetadataFixture::REFERENCE_METADATA_TITLE => ['PHP - to można leczyć!'],
             MetadataFixture::REFERENCE_METADATA_DESCRIPTION =>
@@ -73,7 +74,7 @@ class ResourcesFixture extends RepekaFixture {
             MetadataFixture::REFERENCE_METADATA_RELATED_BOOK => [$book1],
             MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
             MetadataFixture::REFERENCE_METADATA_SUPERVISOR => [$userBudynek->getUserData()],
-        ])));
+        ]), $userAdmin));
         $this->handleCommand(new ResourceCreateCommand($forbiddenBookResourceKind, $this->contents([
             MetadataFixture::REFERENCE_METADATA_TITLE => ['Python dla opornych'],
             MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT => $this->getReference(self::REFERENCE_DEPARTMENT_IET),
@@ -85,12 +86,11 @@ class ResourcesFixture extends RepekaFixture {
         $this->handleCommand(new ResourceCreateCommand($bookResourceKind, $this->contents([
             SystemMetadata::PARENT => [$ebooks->getId()],
             MetadataFixture::REFERENCE_METADATA_TITLE => ['"Mogliśmy użyć Webpacka" i inne spóźnione mądrości'],
-        ])));
+        ]), $userAdmin));
         $this->handleCommand(new ResourceCreateCommand($bookResourceKind, $this->contents([
             SystemMetadata::PARENT => [$ebooks->getId()],
             MetadataFixture::REFERENCE_METADATA_TITLE => ['Pair programming: jak równocześnie pisać na jednej klawiaturze w dwie osoby'],
-        ])));
-        $userAdmin = $manager->getRepository(UserEntity::class)->loadUserByUsername('admin');
+        ]), $userAdmin));
         $this->handleCommand(new ResourceTransitionCommand($book1, 'e7d756ed-d6b3-4f2f-9517-679311e88b17', $userAdmin));
         $this->handleCommand(new ResourceTransitionCommand($book1, 'd3f73249-d10f-4d4b-8b63-be60b4c02081', $userScanner));
     }
