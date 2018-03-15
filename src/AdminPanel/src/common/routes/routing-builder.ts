@@ -27,7 +27,6 @@ export interface RouteSettings {
   requiredRoles?: string[];
   specificForClass?: string;  // overrides other PER_RESOURCE_CLASS items, appends to PER_RESOURCE_CLASS_SECONDARY items
   breadcrumbsProvider?: string;
-  navbarSearchProvider?: string;
 }
 
 export abstract class AbstractRoute implements RouteConfig, Arrayable<AbstractRoute> {
@@ -75,11 +74,6 @@ export class Route extends AbstractRoute {
     this.settings.breadcrumbsProvider = providerName;
     return this;
   }
-
-  withNavbarSearchProvider(providerName: string): Route {
-    this.settings.navbarSearchProvider = providerName;
-    return this;
-  }
 }
 
 /**
@@ -97,11 +91,6 @@ export class BaseRoute extends AbstractRoute {
   withMenuItem(role: NavRole, icon?: string, specificForClass?: string): BaseRoute {
     this.checkRoleClassPair(role, specificForClass);
     $.extend(this.settings, {icon, role, specificForClass});
-    return this;
-  }
-
-  withNavbarSearchProvider(providerName: string): BaseRoute {
-        this.settings.navbarSearchProvider = providerName;
     return this;
   }
 }

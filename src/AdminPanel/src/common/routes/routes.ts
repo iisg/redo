@@ -5,47 +5,40 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
 
   new RouteGroup('resources', 'resources', 'resources', 'Resources', [
     new BaseRoute(':resourceClass', 'resources-list')
-      .withMenuItem(NavRole.PER_RESOURCE_CLASS, 'book')
-      .withNavbarSearchProvider('resource'),
+      .withMenuItem(NavRole.PER_RESOURCE_CLASS, 'book'),
     new Route('details/:id', 'details', 'details/resource-details')
       .setActivationStrategy('replace')
       .withBreadcrumbsProvider('resource')
-      .withNavbarSearchProvider('resource')
   ]),
 
   new RouteGroup('metadata', 'metadata', 'resources-config/metadata', 'Metadata Kinds', [
     new BaseRoute(':resourceClass', 'metadata-list')
-      .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY, 'metadata')
-      .withNavbarSearchProvider('metadata'),
+      .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY, 'metadata'),
     new Route('details/:id', 'details', 'details/metadata-details')
       .withBreadcrumbsProvider('metadata')
-      .withNavbarSearchProvider('metadata'),
   ]),
 
   new Route('resource-kinds/:resourceClass', 'resource-kinds', 'resources-config/resource-kind/resource-kind-list')
-    .withMenuItem('Resource Kinds', NavRole.PER_RESOURCE_CLASS_SECONDARY, 'resources').withNavbarSearchProvider('resource-kinds'),
+    .withMenuItem('Resource Kinds', NavRole.PER_RESOURCE_CLASS_SECONDARY, 'resources'),
 
   new RouteGroup('workflows', 'workflows', 'workflows', 'Workflows', [
     new BaseRoute(':resourceClass', 'workflow-list')
-      .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY, 'workflow')
-      .withNavbarSearchProvider('workflow'),
+      .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY, 'workflow'),
     new Route('details/:id', 'details', 'details/workflow-details')
-      .withBreadcrumbsProvider('workflow')
-      .withNavbarSearchProvider('workflow'),
-    new Route('new/:resourceClass', 'new', 'details/workflow-new').withBreadcrumbsProvider('workflow').withNavbarSearchProvider('workflow'),
+      .withBreadcrumbsProvider('workflow'),
+    new Route('new/:resourceClass', 'new', 'details/workflow-new').withBreadcrumbsProvider('workflow')
   ]),
 
   new RouteGroup('users', 'users', 'users', 'Users', [
-    new BaseRoute('', 'user-list').withMenuItem(NavRole.PER_RESOURCE_CLASS, 'user', 'users').withNavbarSearchProvider('user'),
+    new BaseRoute('', 'user-list').withMenuItem(NavRole.PER_RESOURCE_CLASS, 'user', 'users'),
     new Route('roles', 'roles', 'roles/user-roles')
-      .withMenuItem('Roles', NavRole.PER_RESOURCE_CLASS_SECONDARY, 'roles', 'users')
-      .withNavbarSearchProvider('user'),
-    new Route('details/:id', 'details', 'details/user-details').withBreadcrumbsProvider('user').withNavbarSearchProvider('user')
+      .withMenuItem('Roles', NavRole.PER_RESOURCE_CLASS_SECONDARY, 'roles', 'users'),
+    new Route('details/:id', 'details', 'details/user-details').withBreadcrumbsProvider('user')
   ]),
 
   new Route('languages', 'languages', 'resources-config/language-config/language-list')
     .withMenuItem('Languages', NavRole.BOTTOM, 'languages'),
-  new Route('about', 'about', 'about/about') .withMenuItem('About', NavRole.BOTTOM, 'information'),
+  new Route('about', 'about', 'about/about').withMenuItem('About', NavRole.BOTTOM, 'information'),
 ]).toArray();
 
 // used in contexts where DI is available for better testability

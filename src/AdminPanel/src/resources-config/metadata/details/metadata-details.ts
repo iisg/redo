@@ -6,6 +6,7 @@ import {Metadata} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
 import {DeleteEntityConfirmation} from "../../../common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {ContextResourceClass} from 'resources/context/context-resource-class';
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
@@ -20,7 +21,8 @@ export class MetadataDetails implements RoutableComponentActivate {
               private router: Router,
               private ea: EventAggregator,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
-              private entitySerializer: EntitySerializer) {
+              private entitySerializer: EntitySerializer,
+              private contextResourceClass: ContextResourceClass) {
   }
 
   bind() {
@@ -35,6 +37,7 @@ export class MetadataDetails implements RoutableComponentActivate {
   async activate(params: any, routeConfig: RouteConfig) {
     this.metadata = await this.metadataRepository.get(params.id);
     routeConfig.navModel.setTitle(this.i18n.tr('Metadata') + ` #${this.metadata.id}`);
+    this.contextResourceClass.setCurrent(this.metadata.resourceClass);
   }
 
   childMetadataSaved(savedMetadata: Metadata) {

@@ -76,6 +76,7 @@ dictionaries:
       description: Wartość wyświetlana w liście rozwijanej przy wyborze słownika
 users:
   users: Użytkownicy
+  resources: Użytkownicy
   settings: Ustawienia użytkowników
   resource-kinds: Rodzaje użytkowników
   metadata: Rodzaje metadanych
@@ -114,4 +115,4 @@ users:
     dropdown:
       title: Wartość w liście rozwijanej
       description: Wartość wyświetlana w liście rozwijanej przy wyborze użytkownika
-users/details: Użytkownicy
+  users/details: Użytkownicy

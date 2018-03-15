@@ -13,6 +13,7 @@ import {ResourceDisplayStrategyValueConverter} from "../../resources-config/reso
 import {computedFrom} from "aurelia-binding";
 import {MetadataValue} from "../metadata-value";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
+import {ContextResourceClass} from './../context/context-resource-class';
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -32,7 +33,8 @@ export class ResourceDetails implements RoutableComponentActivate {
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private alert: Alert,
               private i18n: I18N,
-              private entitySerializer: EntitySerializer) {
+              private entitySerializer: EntitySerializer,
+              private contextResourceClass: ContextResourceClass) {
   }
 
   bind() {
@@ -53,6 +55,7 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   async activate(params: any, routeConfig: RouteConfig) {
     this.resource = await this.resourceRepository.get(params.id);
+    this.contextResourceClass.setCurrent(this.resource.resourceClass);
     const resources = await this.resourceRepository.getListQuery()
       .filterByParentId(this.resource.id)
       .get();
