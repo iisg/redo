@@ -2,6 +2,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {Workflow} from "./workflow";
 import {WorkflowRepository} from "./workflow-repository";
 import {bindable} from "aurelia-templating";
+import {ContextResourceClass} from 'resources/context/context-resource-class';
 
 @autoinject
 export class WorkflowList {
@@ -12,11 +13,13 @@ export class WorkflowList {
 
   workflows: Array<Workflow>;
 
-  constructor(private workflowRepository: WorkflowRepository) {
+  constructor(private workflowRepository: WorkflowRepository,
+              private contextResourceClass: ContextResourceClass) {
   }
 
   activate(params: any) {
     this.resourceClass = params.resourceClass;
+    this.contextResourceClass.setCurrent(this.resourceClass);
     if (this.workflows) {
       this.workflows = [];
     }

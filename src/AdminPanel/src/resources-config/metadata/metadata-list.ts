@@ -2,6 +2,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {bindable} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
+import {ContextResourceClass} from 'resources/context/context-resource-class';
 
 @autoinject
 export class MetadataList {
@@ -11,11 +12,13 @@ export class MetadataList {
   addFormOpened: boolean = false;
   progressBar: boolean;
 
-  constructor(private metadataRepository: MetadataRepository) {
+  constructor(private metadataRepository: MetadataRepository,
+              private contextResourceClass: ContextResourceClass) {
   }
 
   activate(params: any) {
     this.resourceClass = params.resourceClass;
+    this.contextResourceClass.setCurrent(this.resourceClass);
     if (this.metadataList) {
       this.metadataList = [];
     }

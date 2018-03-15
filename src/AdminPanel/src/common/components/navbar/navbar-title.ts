@@ -1,38 +1,43 @@
 import {EventAggregator} from "aurelia-event-aggregator";
 import {NavigationInstruction} from "aurelia-router";
 import {inlineView} from "aurelia-templating";
-import {ResourceClassDetailsNavbarTitleProvider} from './resourceClassDetails-navbar-title-provider';
-import {ResourceClassNavbarTitleProvider} from "./resourceClass-navbar-title-provider";
-import {DefaultNavbarTitleProvider} from "./default-navbar-title-provider";
+import {ResourceClassChangeEvent, ContextResourceClass} from "resources/context/context-resource-class";
 
 @inlineView('<template><span class="navbar-brand">${title | t}</span></template>')
 export class NavbarTitle {
   title: string;
-  private providers: Array<NavbarTitleProvider> = [];
+  private resourceClass: string;
+  private lastInstruction: NavigationInstruction;
 
-  constructor(eventAggregator: EventAggregator,
-              private resourceClassDetailsNavbarTitleProvider: ResourceClassDetailsNavbarTitleProvider,
-              private resourceClassNavbarTitleProvider: ResourceClassNavbarTitleProvider,
-              private defaultNavbarTitleProvider: DefaultNavbarTitleProvider) {
+  constructor(eventAggregator: EventAggregator) {
 
-    eventAggregator.subscribe("router:navigation:success",
-      (event: {instruction: NavigationInstruction}) => this.updateTitle(event.instruction));
-    this.providers.push(resourceClassNavbarTitleProvider);
-    this.providers.push(resourceClassDetailsNavbarTitleProvider);
-    this.providers.push(defaultNavbarTitleProvider);
+    eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
+      (event: ResourceClassChangeEvent) => this.updateResourceClass(event));
+    eventAggregator.subscribe('router:navigation:success',
+      (event: {instruction: NavigationInstruction}) => this.updateInstruction(event.instruction));
   }
 
-  async updateTitle(navigationInstruction: NavigationInstruction) {
-    for (let provider of this.providers) {
-      if (provider.supports(navigationInstruction)) {
-        this.title = await provider.getNavbarTitle(navigationInstruction);
-        break;
-      }
+  private updateResourceClass(event: ResourceClassChangeEvent): void {
+    this.resourceClass = event.newResourceClass;
+    this.updateTitle();
+  }
+
+  private updateInstruction(instruction: NavigationInstruction): void {
+    this.lastInstruction = instruction;
+    this.updateTitle();
+  }
+
+  private updateTitle(): void {
+    if (!this.lastInstruction) {
+      return;
+    }
+    const configName = this.lastInstruction.config.name;
+    if (this.resourceClass) {
+      this.title = `resource_classes::${this.resourceClass}//${configName}`;
+    }
+    else {
+      const configTitle = this.lastInstruction.config.title;
+      this.title = `nav::${configTitle}`;
     }
   }
-}
-
-export interface NavbarTitleProvider {
-  getNavbarTitle(navigationInstruction: NavigationInstruction): Promise<string>;
-  supports(navigationInstruction: NavigationInstruction): boolean;
 }

@@ -78,6 +78,7 @@ dictionaries:
       description: Displayed in a dictionary dropdown
 users:
   users: Users
+  resources: Users
   settings: Users settings
   resource-kinds: User kinds
   metadata: Metadata kinds
@@ -116,4 +117,4 @@ users:
     dropdown:
       title: Dropdown value
       description: Displayed in a user dropdown
-users/details: Users
+  users/details: Users

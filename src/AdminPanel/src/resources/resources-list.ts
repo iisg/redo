@@ -9,6 +9,7 @@ import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
 import {NavigationInstruction} from "aurelia-router";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {PageResult} from "./page-result";
+import {ContextResourceClass} from './context/context-resource-class';
 
 @autoinject
 export class ResourcesList implements ComponentAttached {
@@ -26,10 +27,12 @@ export class ResourcesList implements ComponentAttached {
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceKindRepository: ResourceKindRepository,
-              private ea: EventAggregator) {
+              private ea: EventAggregator,
+              private contextResourceClass: ContextResourceClass) {
   }
 
   activate(params: any) {
+    this.contextResourceClass.setCurrent(params.resourceClass);
     let contentsFilter;
     if (params.contentsFilter) {
       try {

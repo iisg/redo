@@ -8,6 +8,7 @@ import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {ContextResourceClass} from 'resources/context/context-resource-class';
 
 @autoinject
 export class WorkflowDetails implements RoutableComponentActivate {
@@ -27,7 +28,8 @@ export class WorkflowDetails implements RoutableComponentActivate {
               private router: Router,
               private signaler: BindingSignaler,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
-              private entitySerializer: EntitySerializer) {
+              private entitySerializer: EntitySerializer,
+              private contextResourceClass: ContextResourceClass) {
   }
 
   bind() {
@@ -50,11 +52,13 @@ export class WorkflowDetails implements RoutableComponentActivate {
 
   async activate(params: any, routeConfig: RouteConfig) {
     this.workflow = await this.workflowRepository.get(params.id);
+    this.contextResourceClass.setCurrent(this.workflow.resourceClass);
     if (this.editing) {
       this.originalWorkflow = this.entitySerializer.clone(this.workflow);
     }
     this.navModel = routeConfig.navModel;
     this.updateWindowTitle();
+
   }
 
   private updateWindowTitle() {
