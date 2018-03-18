@@ -16,7 +16,8 @@ export class RelatedResourceMetadataFilterEditor {
   filteredMetadata: Metadata;
   filterValue: MetadataValue = new MetadataValue();
 
-  resourceKindConstraintObserver: Disposable;
+  private resourceKindConstraintObserver: Disposable;
+  private filteredMetadataObserver: Disposable;
   private resourceClasses: string[];
 
   constructor(private resourceKindRepository: ResourceKindRepository,
@@ -25,10 +26,8 @@ export class RelatedResourceMetadataFilterEditor {
   }
 
   async metadataChanged() {
-    this.disposeResourceKindConstraintObserver();
-    this.resourceKindConstraintObserver = this.bindingEngine
-      .propertyObserver(this.metadata.constraints, 'resourceKind')
-      .subscribe(() => this.calculatePossibleResourceClasses());
+    this.recreateResourceKindConstraintObserver();
+    this.recreateFilteredMetadataObserver();
     const currentFilterId = Object.keys(this.metadata.constraints.relatedResourceMetadataFilter)[0];
     if (currentFilterId) {
       this.filteredMetadata = await this.metadataRepository.get(currentFilterId);
@@ -45,10 +44,31 @@ export class RelatedResourceMetadataFilterEditor {
     }
   }
 
+  private recreateResourceKindConstraintObserver() {
+    this.disposeResourceKindConstraintObserver();
+    this.resourceKindConstraintObserver = this.bindingEngine
+      .propertyObserver(this.metadata.constraints, 'resourceKind')
+      .subscribe(() => this.calculatePossibleResourceClasses());
+  }
+
   private disposeResourceKindConstraintObserver() {
     if (this.resourceKindConstraintObserver) {
       this.resourceKindConstraintObserver.dispose();
       this.resourceKindConstraintObserver = undefined;
+    }
+  }
+
+  private recreateFilteredMetadataObserver() {
+    this.disposeFilteredMetadataObserver;
+    this.filteredMetadataObserver = this.bindingEngine
+      .propertyObserver(this, 'filteredMetadata')
+      .subscribe(() => this.updateConstraint());
+  }
+
+  private disposeFilteredMetadataObserver() {
+    if (this.filteredMetadataObserver) {
+      this.filteredMetadataObserver.dispose();
+      this.filteredMetadataObserver = undefined;
     }
   }
 
