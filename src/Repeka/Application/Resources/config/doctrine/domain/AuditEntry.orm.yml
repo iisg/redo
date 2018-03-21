@@ -1,0 +1,29 @@
+Repeka\Domain\Entity\AuditEntry:
+  type: entity
+  table: audit
+  repositoryClass: Repeka\Application\Repository\AuditEntryDoctrineRepository
+  id:
+    id:
+      type: integer
+      generator: {strategy: AUTO}
+  manyToOne:
+    user:
+      targetEntity: Repeka\Application\Entity\UserEntity
+      joinColumn:
+        name: user_id
+        referencedColumnName: id
+  fields:
+    commandName:
+      type: string
+      length: 64
+    data:
+      type: jsonb
+    successful:
+      type: boolean
+    createdAt:
+      type: datetimetz_immutable
+      column: created_at
+      options: {default: CURRENT_TIMESTAMP}
+  indexes:
+    audit_entry_type_idx:
+      columns: [commandName]

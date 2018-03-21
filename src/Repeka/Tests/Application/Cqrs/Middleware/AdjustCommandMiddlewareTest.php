@@ -3,7 +3,6 @@ namespace Repeka\Tests\Application\Cqrs\Middleware;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Application\Cqrs\Middleware\AdjustCommandMiddleware;
-use Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware;
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\Command;
@@ -11,7 +10,7 @@ use Repeka\Domain\Cqrs\CommandAdjuster;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdjustCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
-    /** @var ValidateCommandMiddleware */
+    /** @var AdjustCommandMiddleware */
     private $middleware;
     /** @var Command|PHPUnit_Framework_MockObject_MockObject */
     private $adjustableCommand;

@@ -1,9 +1,7 @@
 <?php
 namespace Repeka\Application\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\EntityUtils;
@@ -20,10 +18,6 @@ use Repeka\Domain\UseCase\Resource\ResourceListQuery;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ResourceDoctrineRepository extends EntityRepository implements ResourceRepository {
-    public function __construct(EntityManagerInterface $em, ClassMetadata $class) {
-        parent::__construct($em, $class);
-    }
-
     public function save(ResourceEntity $resource): ResourceEntity {
         $this->getEntityManager()->persist($resource);
         return $resource;

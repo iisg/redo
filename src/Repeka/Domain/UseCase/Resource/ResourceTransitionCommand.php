@@ -2,10 +2,11 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\AuditedCommand;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 
-class ResourceTransitionCommand extends AbstractCommand {
+class ResourceTransitionCommand extends AbstractCommand implements AuditedCommand {
     /** @var ResourceEntity */
     private $resource;
     /** @var string */

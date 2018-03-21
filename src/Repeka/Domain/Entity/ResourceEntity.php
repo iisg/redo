@@ -62,4 +62,14 @@ class ResourceEntity implements Identifiable {
         Assertion::true($this->hasWorkflow(), 'Could not apply transition for resource without a workflow. ID: ' . $this->id);
         return $this->getWorkflow()->apply($this, $transitionId);
     }
+
+    public function getAuditData(): array {
+        return [
+            'resourceId' => $this->getId(),
+            'places' => $this->hasWorkflow() ? EntityUtils::mapToIds($this->getWorkflow()->getPlaces($this)) : [],
+            'resourceClass' => $this->getResourceClass(),
+            'resourceKindId' => $this->getKind()->getId(),
+            'contents' => $this->contents,
+        ];
+    }
 }

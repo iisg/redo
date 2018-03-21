@@ -4,6 +4,7 @@ namespace Repeka\Tests;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
@@ -24,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\DependencyInjection\ResettableContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -182,5 +184,10 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     protected function createWorkflow(array $name, string $resourceClass, ResourceWorkflowPlace $initialPlace): ResourceWorkflow {
         $places = [$initialPlace];
         return $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, [], $resourceClass, null, null));
+    }
+
+    protected function simulateAuthentication(UserEntity $user) {
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->container->get('security.token_storage')->setToken($token);
     }
 }

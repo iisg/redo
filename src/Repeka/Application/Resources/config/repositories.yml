@@ -6,6 +6,10 @@ services:
 
   Repeka\Application\Repository\ContainerAwareRepositoryProvider: ~
 
+  Repeka\Application\Repository\AuditEntryDoctrineRepository:
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: [Repeka\Domain\Entity\AuditEntry]
+
   Repeka\Application\Repository\LanguageDoctrineRepository:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Domain\Entity\Language]

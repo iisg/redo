@@ -27,6 +27,7 @@ services:
     -
       - '@Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\AdjustCommandMiddleware'
+      - '@Repeka\Application\Cqrs\Middleware\AuditCommandMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\WrapCommandWithTransactionMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware'
@@ -59,6 +60,10 @@ services:
       $namesWhitelist: '%admin_panel_metrics%'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+  Repeka\Application\EventListener\AuthenticationAuditListener:
+    tags:
+      - { event: security.interactive_login, name: kernel.event_listener }
+      - { event: security.authentication.failure, name: kernel.event_listener }
   Repeka\Application\EventListener\CsrfRequestListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 0 }

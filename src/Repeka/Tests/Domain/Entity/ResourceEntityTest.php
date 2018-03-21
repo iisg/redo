@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\Entity;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
@@ -78,5 +79,18 @@ class ResourceEntityTest extends \PHPUnit_Framework_TestCase {
         $rk = $this->createResourceKindMock(1, 'books', [$this->createMetadataMock(11, 1), $this->createMetadataMock(12, 2)]);
         $resource = new ResourceEntity($rk, ResourceContents::fromArray([11 => ['A', 'B']]));
         $this->assertEquals(['A', 'B'], $resource->getContents()->getValues(11));
+    }
+
+    public function testGettingAuditData() {
+        $resource = new ResourceEntity($this->resourceKind, ResourceContents::fromArray([1 => ['AA']]));
+        EntityUtils::forceSetId($resource, 2);
+        $auditData = $resource->getAuditData();
+        $this->assertEquals([
+            'resourceId' => 2,
+            'places' => [],
+            'resourceClass' => 'books',
+            'resourceKindId' => 1,
+            'contents' => ResourceContents::fromArray([1 => ['AA']])->toArray(),
+        ], $auditData);
     }
 }
