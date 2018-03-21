@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Repository\AuditEntryRepository;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
@@ -191,7 +192,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(2, $client->getResponse()->headers->get('pk_total'));
     }
 
-    public function testCreatingResource() {
+    public function testCreatingResource(): int {
         $client = self::createAdminClient();
         $client->apiRequest('POST', self::ENDPOINT, [
             'kindId' => $this->resourceKind->getId(),
@@ -205,6 +206,15 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
         $this->assertEquals(ResourceContents::fromArray([$this->metadata1->getId() => ['created']]), $created->getContents());
+        return $createdId;
+    }
+
+    public function testCreatingResourceSavesAuditEntry() {
+        $createdId = $this->testCreatingResource();
+        $auditEntries = $this->container->get(AuditEntryRepository::class)->findAll();
+        $latestAuditEntry = end($auditEntries);
+        $this->assertEquals('resource_create', $latestAuditEntry->getCommandName());
+        $this->assertEquals($createdId, $latestAuditEntry->getData()['resourceId']);
     }
 
     public function testCreatingResourceWithWorkflow() {

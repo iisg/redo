@@ -20,7 +20,7 @@ class WrapCommandWithTransactionMiddleware implements CommandBusMiddleware {
 
     public function handle(Command $command, callable $next) {
         /** @var EntityManager $entityManager */
-        $entityManager = $this->managerRegistry->getManager($this->managerRegistry->getDefaultManagerName());
+        $entityManager = $this->managerRegistry->getManager();
         $entityManager->getConnection()->beginTransaction();
         try {
             $result = $next($command);
@@ -30,7 +30,7 @@ class WrapCommandWithTransactionMiddleware implements CommandBusMiddleware {
         } catch (\Exception $exception) {
             $entityManager->close();
             $entityManager->getConnection()->rollBack();
-            $this->managerRegistry->resetManager($this->managerRegistry->getDefaultManagerName());
+            $this->managerRegistry->resetManager();
             throw $exception;
         }
     }

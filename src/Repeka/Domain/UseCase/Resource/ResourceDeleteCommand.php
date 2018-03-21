@@ -2,9 +2,10 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\AuditedCommand;
 use Repeka\Domain\Entity\ResourceEntity;
 
-class ResourceDeleteCommand extends AbstractCommand {
+class ResourceDeleteCommand extends AbstractCommand implements AuditedCommand {
     /** @var ResourceEntity */
     private $resource;
 

@@ -2,10 +2,11 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\AuditedCommand;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 
-class ResourceCreateCommand extends AbstractCommand {
+class ResourceCreateCommand extends AbstractCommand implements AuditedCommand {
     private $kind;
 
     private $contents;
