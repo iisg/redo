@@ -5,7 +5,6 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQueryValidator;
-use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
 use Repeka\Domain\Validation\Rules\ResourceMetadataSortCorrectStructureRule;
@@ -68,11 +67,6 @@ class ResourceListQueryValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->resourceMetadataSortCorrectStructureRule->method('validate')->willReturn(true);
         $command = ResourceListQuery::builder()->setPage(1)->setResultsPerPage(5)->build();
         $this->assertTrue($this->validator->isValid($command));
-    }
-
-    public function testInvalidIfPageIsPostiveAndResultsPerPageIsNegativeValues() {
-        $command = ResourceListQuery::builder()->setPage(-1)->setResultsPerPage(-1)->build();
-        $this->assertFalse($this->validator->isValid($command));
     }
 
     public function testInvalidIfWrongContents() {

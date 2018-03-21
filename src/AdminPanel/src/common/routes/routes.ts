@@ -38,6 +38,9 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
 
   new Route('languages', 'languages', 'resources-config/language-config/language-list')
     .withMenuItem('Languages', NavRole.BOTTOM, 'languages'),
+
+  new Route('audit', 'audit', 'audit/audit-page').withMenuItem('Audit', NavRole.BOTTOM, 'scan-2'),
+
   new Route('about', 'about', 'about/about').withMenuItem('About', NavRole.BOTTOM, 'information'),
 ]).toArray();
 

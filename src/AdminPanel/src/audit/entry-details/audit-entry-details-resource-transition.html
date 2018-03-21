@@ -1,0 +1,7 @@
+<template>
+    <require from="./audit-entry-details-resource"></require>
+    <audit-entry-details-resource entry.bind="entry"></audit-entry-details-resource>
+    <icon name="workflow-2"></icon>
+    ${ 'Transition' | t}:
+    ${ (entry.data.transitionLabel || entry.data.transitionId) | inCurrentLanguage }
+</template>

@@ -1,5 +1,6 @@
 import {deepCopy, zip} from "../utils/object-utils";
 import {FactoryFunction} from "./registry";
+import moment = require("moment");
 
 /**
  * This is a base class for all mappers. It's capable of doing three things:
@@ -86,6 +87,20 @@ export class IdentityMapper<V> extends Mapper<V> {
 
   protected clone(entity: V): V {
     return entity;
+  }
+}
+
+export class DateMapper extends Mapper<Date> {
+  fromBackendValue(dto: string): Promise<Date> {
+    return Promise.resolve(moment(dto).toDate());
+  }
+
+  toBackendValue(entityValue: Date): string {
+    return moment(entityValue).format();
+  }
+
+  protected clone(entity: Date): Date {
+    return moment(entity).toDate();
   }
 }
 

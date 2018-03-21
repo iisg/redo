@@ -6,10 +6,13 @@ class PageResult implements \IteratorAggregate, \ArrayAccess, \Countable {
     private $results;
     /** @var int */
     private $totalCount;
+    /** @var int */
+    private $pageNumber;
 
-    public function __construct(array $results = [], int $totalCount = 0) {
+    public function __construct(array $results = [], int $totalCount = 0, int $pageNumber = 1) {
         $this->results = $results;
         $this->totalCount = $totalCount;
+        $this->pageNumber = $pageNumber ?: 1;
     }
 
     public function getResults(): array {
@@ -18,6 +21,10 @@ class PageResult implements \IteratorAggregate, \ArrayAccess, \Countable {
 
     public function getTotalCount(): int {
         return $this->totalCount;
+    }
+
+    public function getPageNumber(): int {
+        return $this->pageNumber;
     }
 
     public function getIterator() {

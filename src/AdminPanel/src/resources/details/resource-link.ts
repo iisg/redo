@@ -5,6 +5,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {User} from "users/user";
 import {SystemResourceKinds} from "resources-config/resource-kind/system-resource-kinds";
 import {UserRepository} from "users/user-repository";
+import {cachedResponse, forSeconds} from "../../common/repository/cached-response";
 
 @autoinject
 export class ResourceLink {
@@ -22,13 +23,18 @@ export class ResourceLink {
   idChanged(): void {
     if (this.id) {
       this.loading = true;
-      this.resourceRepository.get(this.id, true)
+      this.fetchResource(this.id)
         .then(resource => this.onResourceFetched(resource))
         .finally(() => this.loading = false);
     }
   }
 
-  private onResourceFetched(resource: Resource): Promise<void>|void {
+  @cachedResponse(forSeconds(30))
+  private fetchResource(id: number): Promise<Resource> {
+    return this.resourceRepository.get(id, true);
+  }
+
+  private onResourceFetched(resource: Resource): Promise<void> | void {
     this.resource = resource;
     if (resource.kind.id == SystemResourceKinds.USER_ID) {
       this.isUserLink = true;

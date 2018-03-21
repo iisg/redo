@@ -133,3 +133,8 @@ Filter: Filtr
 Metadata kind: Rodzaj metadanej
 Firstly, choose allowed resource kinds.: Wybierz najpierw dozwolone rodzaje zasobów.
 Results per page: Wyników na stronie
+"Resource #{{id}} state, as of": "Stan zasobu #{{id}} na dzień"
+View past contents: Pokaż zawartoć zasobu
+Date: Data
+Operation: Operacja
+Filters: Filtry

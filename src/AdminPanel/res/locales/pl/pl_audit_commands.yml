@@ -1,0 +1,6 @@
+resource_create: "Zasób: stworzenie"
+resource_delete: "Zasób: usunięcie"
+resource_transition: "Zasób: przejście"
+resource_update_contents: "Zasób: Edycja"
+
+user_authenticate: "Użytkownik: autentykacja"

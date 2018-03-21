@@ -90,4 +90,14 @@ class ResourceListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceListQuery::builder()->sortByMetadataIds($sortBy)->build();
         $this->assertEquals($sortBy, $query->getSortByMetadataIds());
     }
+
+    public function testInvalidIfPerPageIsNegativeValues() {
+        $this->expectException(\InvalidArgumentException::class);
+        ResourceListQuery::builder()->setResultsPerPage(-1)->build();
+    }
+
+    public function testInvalidIfPageIsZero() {
+        $this->expectException(\InvalidArgumentException::class);
+        ResourceListQuery::builder()->setPage(0)->build();
+    }
 }

@@ -1,5 +1,5 @@
 import {autoinject, Container} from "aurelia-dependency-injection";
-import {ArrayMapper, CopyMapper, IdentityMapper, Mapper, TypedMapMapper} from "./mappers";
+import {ArrayMapper, CopyMapper, DateMapper, IdentityMapper, Mapper, TypedMapMapper} from "./mappers";
 import {EntityClass, MapperClass} from "./contracts";
 
 @autoinject
@@ -22,6 +22,8 @@ export class TypeRegistry {
     this.register(Object.name, CopyMapper, () => {
       return {};
     });
+    this.register(Date.name, DateMapper, undefinedFactory);
+    this.register('date', DateMapper, undefinedFactory);
   }
 
   register<T>(type: string, mapperClass: MapperClass<T>, factory?: FactoryFunction<T>): void {

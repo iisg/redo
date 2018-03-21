@@ -6,6 +6,7 @@ import "select2";
 import {booleanAttribute} from "../boolean-attribute";
 import {changeHandler, twoWay} from "../binding-mode";
 import {computedFrom} from "aurelia-binding";
+import {DOM} from "aurelia-framework";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
@@ -22,7 +23,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   dropdown: Element;
 
-  constructor(private i18n: I18N) {
+  constructor(private i18n: I18N, private element: Element) {
   }
 
   attached(): void {
@@ -87,6 +88,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     this.value = Array.isArray(selectedIndex)
       ? (selectedIndex as number[]).map(index => this.values[index])
       : this.values[selectedIndex];
+    setTimeout(() => this.element.dispatchEvent(ChangeEvent.newInstance()));
   }
 
   updateSelectedItem() {  // copy value from VM to DOM
@@ -118,5 +120,13 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @computedFrom('values')
   get isFetchingOptions() {
     return !this.values;
+  }
+}
+
+class ChangeEvent {
+  bubbles = true;
+
+  static newInstance(): Event {
+    return DOM.createCustomEvent('change', new ChangeEvent());
   }
 }

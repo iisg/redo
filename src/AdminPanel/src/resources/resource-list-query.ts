@@ -1,14 +1,12 @@
 import {Resource} from "./resource";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
-import {PageResult} from "./page-result";
-import {cachedResponse, forSeconds} from "../common/repository/cached-response";
 import {ResourceMetadataSort} from "./resource-metadata-sort";
+import {AbstractListQuery} from "./abstract-list-query";
 
-export class ResourceListQuery {
-  private params: any = {};
-
-  constructor(private httpClient: DeduplicatingHttpClient, private endpoint: string, private entitySerializer: EntitySerializer) {
+export class ResourceListQuery extends AbstractListQuery<Resource> {
+  constructor(httpClient: DeduplicatingHttpClient, endpoint: string, entitySerializer: EntitySerializer) {
+    super(httpClient, endpoint, entitySerializer, 'Resource[]');
   }
 
   public filterByResourceKindIds(resourceKindIds: number | number[]): ResourceListQuery {
@@ -43,16 +41,6 @@ export class ResourceListQuery {
     return this;
   }
 
-  public setPage(page: number): ResourceListQuery {
-    this.params.page = page;
-    return this;
-  }
-
-  public setResultsPerPage(resultsPerPage: number): ResourceListQuery {
-    this.params.resultsPerPage = resultsPerPage;
-    return this;
-  }
-
   filterByContents(contentsFilter: NumberMap<string>): ResourceListQuery {
     this.params.contentsFilter = contentsFilter;
     return this;
@@ -61,23 +49,5 @@ export class ResourceListQuery {
   public onlyTopLevel(): ResourceListQuery {
     this.params.topLevel = true;
     return this;
-  }
-
-  public get(): Promise<PageResult<Resource>> {
-    return this.makeRequest(this.params);
-  }
-
-  @cachedResponse(forSeconds(30))
-  private makeRequest(params): Promise<PageResult<Resource>> {
-    return this.httpClient.get(this.endpoint, params)
-      .then(response => {
-        const total = +response.headers.get('pk_total');
-        const page = +response.headers.get('pk_page');
-        return this.entitySerializer.deserialize<PageResult<Resource>>('Resource[]', response.content).then(resources => {
-          resources.total = total;
-          resources.page = page;
-          return resources;
-        });
-      });
   }
 }
