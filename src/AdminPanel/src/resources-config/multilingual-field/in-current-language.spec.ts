@@ -53,4 +53,9 @@ describe(InCurrentLanguageValueConverter.name, () => {
     let translated = inCurrentLanguage.toView({'PL': 'polski', 'RU': 'ruski'});
     expect(translated).toEqual('polski');
   });
+
+  it("returns string if string given", () => {
+    let translated = inCurrentLanguage.toView('ala');
+    expect(translated).toEqual('ala');
+  });
 });

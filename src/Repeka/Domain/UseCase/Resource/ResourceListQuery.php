@@ -1,11 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
-class ResourceListQuery extends AbstractCommand {
+class ResourceListQuery extends AbstractListQuery {
     private $ids;
     /** @var ResourceKind[] */
     private $resourceKinds;
@@ -19,12 +19,9 @@ class ResourceListQuery extends AbstractCommand {
     private $contentsFilter;
     /** @var array */
     private $sortBy;
-    /** @var int */
-    private $page;
-    /** @var int */
-    private $resultsPerPage;
 
-    private function __construct() {
+    protected function __construct(int $page, int $resultsPerPage) {
+        parent::__construct($page, $resultsPerPage);
     }
 
     public static function builder(): ResourceListQueryBuilder {
@@ -42,14 +39,12 @@ class ResourceListQuery extends AbstractCommand {
         int $page,
         int $resultsPerPage
     ): ResourceListQuery {
-        $query = new self();
+        $query = new self($page, $resultsPerPage);
         $query->ids = $ids;
         $query->resourceKinds = $resourceKinds;
         $query->resourceClasses = $resourceClasses;
         $query->sortBy = $sortBy;
         $query->parentId = $parentId;
-        $query->page = $page;
-        $query->resultsPerPage = $resultsPerPage;
         $query->contentsFilter = $contentsFilter;
         $query->onlyTopLevel = $onlyTopLevel;
         return $query;
@@ -70,24 +65,12 @@ class ResourceListQuery extends AbstractCommand {
         return $this->resourceKinds;
     }
 
-    public function paginate(): bool {
-        return $this->page != 0;
-    }
-
     public function getParentId(): int {
         return $this->parentId;
     }
 
     public function getSortByMetadataIds(): array {
         return $this->sortBy;
-    }
-
-    public function getPage(): int {
-        return $this->page;
-    }
-
-    public function getResultsPerPage(): int {
-        return $this->resultsPerPage;
     }
 
     public function onlyTopLevel(): bool {

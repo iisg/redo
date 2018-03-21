@@ -1,0 +1,22 @@
+<template>
+    <require from="resources/details/resource-metadata-table/resource-metadata-table"></require>
+    <require from="common/value-converters/date-value-converter"></require>
+
+    <div class="modal-content width-600">
+        <div class="modal-header">
+            <button type="button"
+                class="close"
+                click.delegate="dialogController.cancel()">
+                <span>&times;</span>
+            </button>
+            <h3 class="modal-title">
+                ${"Resource #{{id}} state, as of" | t:{id: resource.id} }
+                ${ entry.createdAt | date:'LLL' }
+            </h3>
+        </div>
+        <div class="modal-body">
+            <resource-metadata-table resource.bind="resource"></resource-metadata-table>
+        </div>
+        <div class="modal-footer"></div>
+    </div>
+</template>

@@ -3,14 +3,13 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\UseCase\Audit\AbstractListQueryBuilder;
 
-class ResourceListQueryBuilder {
+class ResourceListQueryBuilder extends AbstractListQueryBuilder {
     private $resourceKinds = [];
     private $resourceClasses = [];
     private $sortByMetadata = [];
     private $parentId = 0;
-    private $page = 0;
-    private $resultsPerPage = 1;
     private $contents = [];
     private $onlyTopLevel = false;
     private $ids = [];
@@ -41,16 +40,6 @@ class ResourceListQueryBuilder {
 
     public function sortByMetadataIds(array $sortByMetadata): ResourceListQueryBuilder {
         $this->sortByMetadata = array_replace($this->sortByMetadata, $sortByMetadata);
-        return $this;
-    }
-
-    public function setPage(int $page): ResourceListQueryBuilder {
-        $this->page = $page;
-        return $this;
-    }
-
-    public function setResultsPerPage(int $resultsPerPage): ResourceListQueryBuilder {
-        $this->resultsPerPage = $resultsPerPage;
         return $this;
     }
 

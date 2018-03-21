@@ -94,7 +94,7 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         } else {
             $total = count($pageContents);
         }
-        return new PageResult($pageContents, $total);
+        return new PageResult($pageContents, $total, $query->getPage());
     }
 
     public function exists(int $resourceId): bool {

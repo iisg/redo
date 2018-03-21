@@ -11,6 +11,9 @@ export class InCurrentLanguageValueConverter implements ToViewValueConverter {
   }
 
   toView(value: MultilingualText): string {
+    if (typeof value === 'string') {
+      return value;
+    }
     this.buildDesiredLanguagesOrder();
     if (value) {
       for (let desiredLanguage of this.desiredLanguagesOrder) {

@@ -52,8 +52,8 @@ class ResourcesController extends ApiController {
             ->filterByResourceKinds($resourceKinds)
             ->filterByContents(is_array($contentsFilter) ? $contentsFilter : [])
             ->sortByMetadataIds($sortByMetadataIds);
-        $page = $request->query->get('page', 1);
         if ($request->query->has('page')) {
+            $page = $request->query->get('page', 1);
             $resultsPerPage = $request->query->get('resultsPerPage', 10);
             $resourceListQueryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
         }
@@ -61,10 +61,7 @@ class ResourcesController extends ApiController {
         $resourceListQuery = $topLevel ? $resourceListQueryBuilder->onlyTopLevel()->build() : $resourceListQueryBuilder->build();
         /** @var PageResult $resources */
         $resources = $this->handleCommand($resourceListQuery);
-        $response = $this->createJsonResponse($resources->getResults());
-        $response->headers->set('pk_total', $resources->getTotalCount());
-        $response->headers->set('pk_page', $page);
-        return $response;
+        return $this->createPageResponse($resources);
     }
 
     /**
