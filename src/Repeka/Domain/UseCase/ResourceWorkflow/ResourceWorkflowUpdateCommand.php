@@ -2,9 +2,10 @@
 namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
-class ResourceWorkflowUpdateCommand extends AbstractCommand {
+class ResourceWorkflowUpdateCommand extends AbstractCommand implements AdjustableCommand {
     private $name;
     private $places;
     private $transitions;
