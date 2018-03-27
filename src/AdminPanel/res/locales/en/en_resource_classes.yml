@@ -1,4 +1,5 @@
 books:
+  tasks: Books
   resources: Books
   resources/details: Books
   settings: Book settings
@@ -7,12 +8,12 @@ books:
   metadata/details: Metadata kinds
   workflows: Workflows
   workflows/new: Workflows
+  workflows/details: Workflows
   Metadata Kinds: Metadata Kinds
   Add new resource kind: Add new resource kind
   Add new metadata kind: Add new metadata kind
   Add new resource: Add new resource
   Add metadata kind: Add metadata kind
-  Resource kind: Resource kind
   No metadata kinds.: No metadata kinds.
   No resource kinds.: No resource kinds.
   No resources.: No resources.
@@ -45,12 +46,12 @@ dictionaries:
   metadata/details: Metadata kinds
   workflows: Workflows
   workflows/new: Workflows
+  workflows/details: Workflows
   Metadata Kinds: Metadata Kinds
   Add new resource kind: Add new dictionary kind
   Add new metadata kind: Add new metadata kind
   Add new resource: Add new dictionary
   Add metadata kind: Add metadata kind
-  Resource kind: Dictionary kind
   No metadata kinds.: No metadata kinds.
   No resource kinds.: No dictionary kinds.
   No resources.: No dictionaries.
@@ -79,6 +80,7 @@ users:
   resources: Users
   settings: Users settings
   resource-kinds: User kinds
+  resources/details: Users
   metadata: Metadata kinds
   metadata/details: Metadata kinds
   workflows: Workflows
@@ -90,7 +92,6 @@ users:
   Add new metadata kind: Add new metadata kind
   Add new resource: Add new user
   Add metadata kind: Add metadata kind
-  Resource kind: User kind
   No metadata kinds.: No metadata kinds.
   No resource kinds.: No user kinds.
   No resources.: No user.

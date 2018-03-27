@@ -10,7 +10,7 @@
             <thead>
             <tr>
                 <th>${'ID' | t}</th>
-                <th>${'Resource kind' | resourceClassTranslation:resourceClass}</th>
+                <th>${'Resource kind' | t}</th>
                 <th repeat.for="metadata of columnMetadata">
                     ${metadata | metadataLabel}
                     <sort-button metadata.bind="metadata"
