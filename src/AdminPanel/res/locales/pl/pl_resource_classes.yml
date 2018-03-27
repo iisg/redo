@@ -7,12 +7,12 @@ books:
   metadata/details: Rodzaje metadanych
   workflows: Procesy
   workflows/new: Procesy
+  workflows/details: Procesy
   Metadata Kinds: Rodzaje metadanych
   Add new resource kind: Dodaj nowy rodzaj zasobu
   Add new metadata kind: Dodaj nowy rodzaj metadanych
   Add new resource: Dodaj nowy zasób
   Add metadata kind: Dodaj rodzaj metadanej
-  Resource kind: Rodzaj zasobu
   No metadata kinds.: Brak rodzajów metadanych.
   No resource kinds.: Brak rodzajów zasobów.
   No resources.: Brak zasobów.
@@ -44,12 +44,12 @@ dictionaries:
   metadata/details: Rodzaje metadanych
   workflows: Procesy
   workflows/new: Procesy
+  workflows/details: Procesy
   Metadata Kinds: Rodzaje metadanych
   Add new resource kind: Dodaj nowy rodzaj słownika
   Add new metadata kind: Dodaj nowy rodzaj metadanych słownikowych
   Add new resource: Dodaj nowy słownik
   Add metadata kind: Dodaj rodzaj metadanej
-  Resource kind: Rodzaj słownika
   No metadata kinds.: Brak rodzajów metadanych.
   No resource kinds.: Brak rodzajów słowników.
   No resources.: Brak słowników.
@@ -77,6 +77,7 @@ users:
   resources: Użytkownicy
   settings: Ustawienia użytkowników
   resource-kinds: Rodzaje użytkowników
+  resources/details: Użytkownicy
   metadata: Rodzaje metadanych
   metadata/details: Rodzaje metadanych
   workflows: Procesy
@@ -88,7 +89,6 @@ users:
   Add new metadata kind: Dodaj nowy rodzaj metadanych
   Add new resource: Dodaj nowego użytkownika
   Add metadata kind: Dodaj rodzaj metadanej
-  Resource kind: Rodzaj użytkownika
   No metadata kinds.: Brak rodzajów metadanych.
   No resource kinds.: Brak rodzajów użytkowników.
   No resources.: Brak użytkowników.
