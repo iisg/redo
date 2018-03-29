@@ -28,6 +28,7 @@ class ResourceListQuerySqlFactory {
         $this->filterByResourceClasses();
         $this->filterByResourceKinds();
         $this->filterByParentId();
+        $this->filterByWorkflowPlacesIds();
         $this->filterByTopLevel();
         $this->filterByContents($this->query->getContentsFilter());
         $this->addOrderBy();
@@ -81,6 +82,14 @@ class ResourceListQuerySqlFactory {
             $parentMetadata = SystemMetadata::PARENT;
             $this->wheres[] = "r.contents->'$parentMetadata' @> :parentSearchValue";
             $this->params['parentSearchValue'] = json_encode([['value' => $this->query->getParentId()]]);
+        }
+    }
+
+    private function filterByWorkflowPlacesIds(): void {
+        if ($this->query->getWorkflowPlacesIds()) {
+            $this->froms[] = 'JSONB_OBJECT_KEYS(r.marking) place';
+            $this->wheres[] = "place IN(:workflowPlacesIds)";
+            $this->params['workflowPlacesIds'] = $this->query->getWorkflowPlacesIds();
         }
     }
 

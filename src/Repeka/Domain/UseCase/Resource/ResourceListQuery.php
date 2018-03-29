@@ -5,6 +5,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
+/** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class ResourceListQuery extends AbstractListQuery {
     private $ids;
     /** @var ResourceKind[] */
@@ -19,6 +20,8 @@ class ResourceListQuery extends AbstractListQuery {
     private $contentsFilter;
     /** @var array */
     private $sortBy;
+    /** @var array */
+    private $workflowPlacesIds;
 
     protected function __construct(int $page, int $resultsPerPage) {
         parent::__construct($page, $resultsPerPage);
@@ -37,7 +40,8 @@ class ResourceListQuery extends AbstractListQuery {
         ResourceContents $contentsFilter,
         bool $onlyTopLevel,
         int $page,
-        int $resultsPerPage
+        int $resultsPerPage,
+        array $workflowPlacesIds
     ): ResourceListQuery {
         $query = new self($page, $resultsPerPage);
         $query->ids = $ids;
@@ -47,6 +51,7 @@ class ResourceListQuery extends AbstractListQuery {
         $query->parentId = $parentId;
         $query->contentsFilter = $contentsFilter;
         $query->onlyTopLevel = $onlyTopLevel;
+        $query->workflowPlacesIds = $workflowPlacesIds;
         return $query;
     }
 
@@ -67,6 +72,10 @@ class ResourceListQuery extends AbstractListQuery {
 
     public function getParentId(): int {
         return $this->parentId;
+    }
+
+    public function getWorkflowPlacesIds(): array {
+        return $this->workflowPlacesIds;
     }
 
     public function getSortByMetadataIds(): array {

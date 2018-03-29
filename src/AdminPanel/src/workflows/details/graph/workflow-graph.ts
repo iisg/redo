@@ -10,11 +10,16 @@ import {autoinject} from "aurelia-dependency-injection";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 import {deepCopy} from "common/utils/object-utils";
 import {noop, VoidFunction} from "common/utils/function-utils";
+import {ResourceRepository} from "../../../resources/resource-repository";
+import {Resource} from "../../../resources/resource";
+import {WorkflowPlaceDeletionAlert} from "./workflow-place-deletion-alert";
+import {PageResult} from "../../../resources/page-result";
 
 @autoinject
 export class WorkflowGraph {
   // mandatory for unit testing; unit tests do not see the imports above; have no idea why
   public static CYTOSCAPE_FACTORY: Cytoscape.Static;
+  isProcessingWorkflowPlaceRemoval: boolean = false;
 
   private cytoscape: Cytoscape.Instance;
 
@@ -23,7 +28,10 @@ export class WorkflowGraph {
 
   public onPlacesChangedByUser: VoidFunction = noop;
 
-  constructor(private i18n: I18N, private inCurrentLanguage: InCurrentLanguageValueConverter) {
+  constructor(private i18n: I18N,
+              private inCurrentLanguage: InCurrentLanguageValueConverter,
+              private resourceRepository: ResourceRepository,
+              private workflowPlaceDeletionAlert: WorkflowPlaceDeletionAlert) {
   }
 
   render(workflow: Workflow, container?: HTMLElement, editable: boolean = false) {
@@ -96,9 +104,22 @@ export class WorkflowGraph {
           title: this.i18n.tr('Remove'),
           selector: 'node[^initial], edge',
           onClickFunction: ({cyTarget: element}) => {
-            this.cytoscape.remove(element);
-            this.fit();
-            this.onPlacesChangedByUser();
+            this.isProcessingWorkflowPlaceRemoval = true;
+            this.getResourcesInWorkflowPlace(element).then(
+              resources => {
+                this.isProcessingWorkflowPlaceRemoval = false;
+                if (resources.total === 0) {
+                  this.cytoscape.remove(element);
+                }
+                else {
+                  const resourceCount = resources.total;
+                  this.workflowPlaceDeletionAlert
+                    .showWorkflowPlaceDeletionAlert(resourceCount, resources.slice(0, Math.min(3, resourceCount)));
+                }
+                this.fit();
+                this.onPlacesChangedByUser();
+              }
+            );
           },
         },
         {
@@ -122,6 +143,14 @@ export class WorkflowGraph {
       ]
     });
 
+  }
+
+  private async getResourcesInWorkflowPlace(element): Promise<PageResult<Resource>> {
+    let workflowPlace: WorkflowPlace = this.nodeToPlace(element);
+    return await this.resourceRepository.getListQuery()
+      .filterByWorkflowPlacesIds([workflowPlace.id])
+      .setResultsPerPage(1)
+      .get();
   }
 
   public addPlace(place: WorkflowPlace): WorkflowPlace {

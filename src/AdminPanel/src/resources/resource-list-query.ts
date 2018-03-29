@@ -36,6 +36,11 @@ export class ResourceListQuery extends AbstractListQuery<Resource> {
     return this;
   }
 
+  public filterByWorkflowPlacesIds(workflowPlacesIds: string[]): ResourceListQuery {
+    this.params.workflowPlacesIds = workflowPlacesIds;
+    return this;
+  }
+
   public sortByMetadataIds(sortBy: ResourceMetadataSort[]): ResourceListQuery {
     this.params.sortByIds = sortBy;
     return this;

@@ -5,6 +5,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Audit\AbstractListQueryBuilder;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class ResourceListQueryBuilder extends AbstractListQueryBuilder {
     private $resourceKinds = [];
     private $resourceClasses = [];
@@ -13,6 +14,7 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
     private $contents = [];
     private $onlyTopLevel = false;
     private $ids = [];
+    private $workflowPlacesIds = [];
 
     /** @param ResourceKind[] $resourceKinds */
     public function filterByResourceKinds(array $resourceKinds): ResourceListQueryBuilder {
@@ -59,6 +61,11 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
+    public function filterByWorkflowPlacesIds(array $workflowPlacesIds): ResourceListQueryBuilder {
+        $this->workflowPlacesIds = $workflowPlacesIds;
+        return $this;
+    }
+
     public function build(): ResourceListQuery {
         return ResourceListQuery::withParams(
             $this->ids,
@@ -69,7 +76,8 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
             $this->contents instanceof ResourceContents ? $this->contents : ResourceContents::fromArray($this->contents),
             $this->onlyTopLevel,
             $this->page,
-            $this->resultsPerPage
+            $this->resultsPerPage,
+            $this->workflowPlacesIds
         );
     }
 }

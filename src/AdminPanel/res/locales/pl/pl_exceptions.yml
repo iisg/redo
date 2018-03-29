@@ -30,6 +30,7 @@ violationFields:
   userRole: Rola użytkownika
   displayStrategies: Strategia prezentacji zasobu
   newLabel: Nowa nazwa
+  places: Edytowane Miejsca
 user role is in use: Rola jest w użyciu.
 resource has children: zasób ma podzasoby.
 resources of this kind exist: istnieją zasoby tego rodzaju.
@@ -37,3 +38,4 @@ workflow is assigned to one of resource kinds: proces jest przypisany do jednego
 metadata kind is used in some resource kinds: rodzaj metadanej jest używany przez niektóre rodzaje zasobów
 metadata kind has submetadata kinds: rodzaj metadanej ma podmetadane
 relationship must be constrained to users because metadata determines assignee: relacja musi być ograniczona do użytkowników, bo metadana określa osobę odpowiedzialną
+Workflow places you want to delete are occupied: Występują zasoby w miejscach które chcesz usunąć z procesu

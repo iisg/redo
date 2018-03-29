@@ -57,9 +57,41 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(6, $paginatedResources->getTotalCount());
     }
 
+    public function testFindAllByWorkflowPlacesIdsOneId() {
+        $query = ResourceListQuery::builder()->filterByWorkflowPlacesIds(['qqd3yk499'])->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertEquals(1, $paginatedResources->getTotalCount());
+    }
+
+    public function testFindByWorkflowPlaceWhenResourceHasManyWorkflowPlaces() {
+        $placeA = 'aaaaaaaaa';
+        $placeB = 'bbbbbbbbb';
+        $book = $this->getPhpBookResource();
+        $book->setMarking([$placeA => true, $placeB => 1]);
+        $this->resourceRepository->save($book);
+        $this->getEntityManager()->flush();
+        $query = ResourceListQuery::builder()->filterByWorkflowPlacesIds([$placeA])->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertEquals(1, $paginatedResources->getTotalCount());
+        $query = ResourceListQuery::builder()->filterByWorkflowPlacesIds([$placeB])->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertEquals(1, $paginatedResources->getTotalCount());
+        $query = ResourceListQuery::builder()->filterByWorkflowPlacesIds([$placeA, $placeB])->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertEquals(1, $paginatedResources->getTotalCount());
+    }
+
+    public function testFindAllByWorkflowPlacesIdsManyIds() {
+        $query = ResourceListQuery::builder()->filterByWorkflowPlacesIds(['qqd3yk499', 'y1oosxtgf'])->build();
+        $paginatedResources = $this->resourceRepository->findByQuery($query);
+        $this->assertEquals(4, $paginatedResources->getTotalCount());
+    }
+
     public function testFindDifferResultsForDifferPages() {
-        $firstPageQuery = ResourceListQuery::builder()->filterByResourceClass('books')->setPage(1)->setResultsPerPage(3)->build();
-        $secondPageQuery = ResourceListQuery::builder()->filterByResourceClass('books')->setPage(2)->setResultsPerPage(3)->build();
+        $firstPageQuery = ResourceListQuery::builder()->filterByResourceClass('books')
+            ->setPage(1)->setResultsPerPage(3)->build();
+        $secondPageQuery = ResourceListQuery::builder()->filterByResourceClass('books')
+            ->setPage(2)->setResultsPerPage(3)->build();
         $firstPaginatedResources = $this->resourceRepository->findByQuery($firstPageQuery);
         $secondPaginatedResources = $this->resourceRepository->findByQuery($secondPageQuery);
         $this->assertCount(3, $firstPaginatedResources->getResults());

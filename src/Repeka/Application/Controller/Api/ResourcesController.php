@@ -43,6 +43,8 @@ class ResourcesController extends ApiController {
             return ['metadataId' => intval($sortBy['metadataId']), 'direction' => $sortBy['direction']];
         }, $sortByMetadataIds);
         $parentId = $request->query->get('parentId', 0);
+        $workflowPlacesIds = $request->query->get('workflowPlacesIds', []);
+        Assertion::isArray($workflowPlacesIds);
         $topLevel = $request->query->get('topLevel', false);
         $resourceKinds = array_map(function ($resourceKindId) {
             return $this->handleCommand(new ResourceKindQuery($resourceKindId));
@@ -59,6 +61,7 @@ class ResourcesController extends ApiController {
             $resourceListQueryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
         }
         $resourceListQueryBuilder->filterByParentId($parentId);
+        $resourceListQueryBuilder->filterByWorkflowPlacesIds($workflowPlacesIds);
         $resourceListQuery = $topLevel ? $resourceListQueryBuilder->onlyTopLevel()->build() : $resourceListQueryBuilder->build();
         /** @var PageResult $resources */
         $resources = $this->handleCommand($resourceListQuery);
