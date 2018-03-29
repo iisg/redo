@@ -147,6 +147,10 @@ View past contents: Pokaż zawartoć zasobu
 Date: Data
 Operation: Operacja
 Filters: Filtry
+Pending resources in this state: Oczekujące zasoby w stanie
+First remove all resources from this state to delete state: Najpierw usuń wszystkie zasoby z tego stanu aby usunąć stan
+Number of Resources in this state:: Liczba zasobów w tym stanie:
+Example resources in this state:: Przykladowe zasoby w tym stanie:
 Groups: Grupy
 No groups: Brak grup
 Resource contents: Zawartość zasobu

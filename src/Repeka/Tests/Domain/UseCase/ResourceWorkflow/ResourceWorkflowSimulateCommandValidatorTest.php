@@ -5,6 +5,7 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
+use Repeka\Domain\Validation\Rules\WorkflowPlacesForDeletionAreUnoccupiedRule;
 use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -20,11 +21,13 @@ class ResourceWorkflowSimulateCommandValidatorTest extends \PHPUnit_Framework_Te
         $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
         $workflowPlacesDefinitionIsValidRule = new WorkflowPlacesDefinitionIsValidRule($entityExistsRule);
         $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
+        $workflowPlacesForDeletionAreUnoccupiedRule =  $this->createRuleMock(WorkflowPlacesForDeletionAreUnoccupiedRule::class, true);
         $this->validator = new ResourceWorkflowSimulateCommandValidator(
             $entityExistsRule,
             $notBlankInAllLanguagesRule,
             $workflowTransitionsDefinitionIsValidRule,
-            $workflowPlacesDefinitionIsValidRule
+            $workflowPlacesDefinitionIsValidRule,
+            $workflowPlacesForDeletionAreUnoccupiedRule
         );
     }
 

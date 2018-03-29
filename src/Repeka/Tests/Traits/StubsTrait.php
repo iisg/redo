@@ -14,6 +14,9 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\PageResult;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Respect\Validation\Exceptions\ValidationException;
@@ -124,6 +127,7 @@ trait StubsTrait {
         });
         return $repository;
     }
+
 
     /**
      * @param Metadata[] $metadataList

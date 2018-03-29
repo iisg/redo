@@ -17,6 +17,7 @@
     <div class="col-sm-12 hidden-xs workflow-editor">
         <div class="row">
             <div class="col-sm-9 no-padding">
+                <loading-bar if.bind="graph.isProcessingWorkflowPlaceRemoval"></loading-bar>
                 <workflow-graph-display workflow.bind="workflow"
                     editable.bind="!simulating"
                     current.bind="currentSimulationPlaces"
