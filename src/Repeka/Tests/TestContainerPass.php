@@ -27,6 +27,10 @@ class TestContainerPass implements CompilerPassInterface {
         'sensio_framework_extra.view.guesser',
     ];
 
+    public static function addPublicServices(array $services) {
+        self::$publicInTests = array_merge(self::$publicInTests, $services);
+    }
+
     public function process(ContainerBuilder $container) {
         $madePublic = [];
         foreach ($container->getDefinitions() as $id => $definition) {

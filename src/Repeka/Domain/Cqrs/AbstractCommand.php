@@ -7,18 +7,21 @@ use Assert\Assertion;
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class AbstractCommand implements Command {
-    public function getCommandName() {
-        $className = get_class($this);
-        $successful = preg_match('#\\\\([a-z]+?)(Command|Query)?$#i', $className, $matches);
+    public static function getCommandNameFromClassName($commandClass) {
+        $successful = preg_match('#\\\\([a-z]+?)(Command|Query)?$#i', $commandClass, $matches);
         Assertion::true(!!$successful);
-        return $this->toSnakeCase($matches[1]);
+        return self::toSnakeCase($matches[1]);
     }
 
     /**
      * @see http://stackoverflow.com/a/19533226/878514
      */
-    private function toSnakeCase($camelCase) {
+    private static function toSnakeCase($camelCase) {
         return strtolower(preg_replace('/(?<!^)[A-Z]+/', '_$0', $camelCase));
+    }
+
+    public function getCommandName() {
+        return self::getCommandNameFromClassName(get_class($this));
     }
 
     public function __toString() {

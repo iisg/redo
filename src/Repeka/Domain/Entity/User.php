@@ -44,7 +44,7 @@ abstract class User implements Identifiable {
 
     public function setUsername(string $username): User {
         $contents = $this->getUserData()->getContents();
-        $contents = $contents->withNewValues(SystemMetadata::USERNAME, $username);
+        $contents = $contents->withReplacedValues(SystemMetadata::USERNAME, $username);
         $this->getUserData()->updateContents($contents);
         return $this;
     }

@@ -71,6 +71,8 @@ class ResourcesFixture extends RepekaFixture {
             MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [1337],
             MetadataFixture::REFERENCE_METADATA_SEE_ALSO => [$book1],
             MetadataFixture::REFERENCE_METADATA_RELATED_BOOK => [$book1],
+            MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
+            MetadataFixture::REFERENCE_METADATA_SUPERVISOR => [$userBudynek->getUserData()],
         ])));
         $this->handleCommand(new ResourceCreateCommand($forbiddenBookResourceKind, $this->contents([
             MetadataFixture::REFERENCE_METADATA_TITLE => ['Python dla opornych'],

@@ -1,6 +1,7 @@
 <template>
     <require from="../graph/workflow-graph-display"></require>
     <require from="users/details/user-roles-chooser"></require>
+    <require from="./workflow-plugins-configuration"></require>
 
     <div class="btn-group pull-right">
         <button type="button"
@@ -43,6 +44,12 @@
                                 <label>${ 'Roles allowed to apply transition' | t }</label>
                                 <user-roles-chooser role-ids.bind="selectedElement.permittedRoleIds"
                                     change.delegate="saveSelectedElementChanges()"></user-roles-chooser>
+                            </div>
+                            <div class="form-group"
+                                else>
+                                <workflow-plugins-configuration config.bind="selectedElement.pluginsConfig"
+                                    workflow.bind="workflow"
+                                    change.delegate="saveSelectedElementChanges()"></workflow-plugins-configuration>
                             </div>
                         </form>
                     </span>

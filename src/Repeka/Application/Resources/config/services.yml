@@ -28,6 +28,7 @@ services:
       - '@Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\AdjustCommandMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\AuditCommandMiddleware'
+      - '@Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\WrapCommandWithTransactionMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware'
@@ -109,6 +110,9 @@ services:
   Repeka\Application\Validation\ContainerAwareMetadataConstraintManager: ~
   Repeka\Domain\Validation\Rules\ResourceClassExistsRule:
     $resourceClasses: '%repeka.resource_classes%'
+
+  Repeka\Application\Workflow\RepekaResourceWorkflowPlugins:
+    - !tagged repeka.workflow_plugin
 
   Monolog\Formatter\LineFormatter: [~, ~, true]
   Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener:

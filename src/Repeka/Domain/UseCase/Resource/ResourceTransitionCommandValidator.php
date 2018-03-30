@@ -41,6 +41,9 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
     }
 
     public function transitionIsPossible(ResourceTransitionCommand $command): bool {
+        if (!$command->getExecutor()) {
+            return true;
+        }
         $workflow = $command->getResource()->getWorkflow();
         $transition = $workflow->getTransition($command->getTransitionId());
         return $this->transitionPossibilityChecker

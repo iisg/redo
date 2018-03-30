@@ -7,10 +7,12 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowDeleteCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowListQuery;
+use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowPluginsQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUsingMetadataAsAssigneeQuery;
+use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/workflows")
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ResourceWorkflowsController extends ApiController {
     /**
@@ -72,8 +75,7 @@ class ResourceWorkflowsController extends ApiController {
             $data['places'] ?? [],
             $data['transitions'] ?? [],
             $data['diagram'] ?? null,
-            $data['thumbnail'] ?? null,
-            $data['resourceClass'] ?? ''
+            $data['thumbnail'] ?? null
         );
         $workflow = $this->handleCommand($command);
         return $this->createJsonResponse($workflow);
@@ -104,5 +106,15 @@ class ResourceWorkflowsController extends ApiController {
     public function deleteAction(ResourceWorkflow $workflow) {
         $this->handleCommand(new ResourceWorkflowDeleteCommand($workflow));
         return new Response('', 204);
+    }
+
+    /**
+     * @Route("/{workflow}/plugins")
+     * @Method("GET")
+     */
+    public function getWorkflowPluginsAction(ResourceWorkflow $workflow) {
+        /** @var ResourceWorkflowPlugin[] $plugins */
+        $plugins = $this->handleCommand(new ResourceWorkflowPluginsQuery($workflow));
+        return $this->createJsonResponse($plugins, 200);
     }
 }
