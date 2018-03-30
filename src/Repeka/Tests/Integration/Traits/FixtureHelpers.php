@@ -5,9 +5,11 @@ use Psr\Container\ContainerInterface;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\User\UserQuery;
 
 /**
  * @property ContainerInterface $container
@@ -26,6 +28,10 @@ trait FixtureHelpers {
             }
         }
         throw new \ErrorException("Resource not found");
+    }
+
+    private function getAdminUser(): User {
+        return $this->handleCommand(new UserQuery(1));
     }
 
     protected function findMetadataByName(string $name, string $resourceClass = 'books'): Metadata {

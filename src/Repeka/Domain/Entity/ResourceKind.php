@@ -63,6 +63,10 @@ class ResourceKind implements Identifiable {
         throw new \InvalidArgumentException(sprintf("Metadata not found for ID #%d in resource kind #%d", $id, $this->getId()));
     }
 
+    public function getMetadataByIdOrName($idOrName): Metadata {
+        return is_numeric($idOrName) ? $this->getMetadataById($idOrName) : $this->getMetadataByName($idOrName);
+    }
+
     public function hasMetadata(int $id): bool {
         return in_array($id, $this->getMetadataIds());
     }

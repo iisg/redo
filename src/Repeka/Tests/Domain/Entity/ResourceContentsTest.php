@@ -69,7 +69,25 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
 
     public function testSetOneValue() {
         $contents = ResourceContents::fromArray([1 => 1]);
-        $contents = $contents->withNewValues(2, 2);
+        $contents = $contents->withReplacedValues(2, 2);
+        $this->assertEquals(ResourceContents::fromArray([1 => 1, 2 => 2]), $contents);
+    }
+
+    public function testReplaceOneValue() {
+        $contents = ResourceContents::fromArray([1 => 1]);
+        $contents = $contents->withReplacedValues(1, 2);
+        $this->assertEquals(ResourceContents::fromArray([1 => 2]), $contents);
+    }
+
+    public function testAddOneValue() {
+        $contents = ResourceContents::fromArray([1 => 1]);
+        $contents = $contents->withMergedValues(1, 2);
+        $this->assertEquals(ResourceContents::fromArray([1 => [1, 2]]), $contents);
+    }
+
+    public function testAddOneValueIfNotExistedBefore() {
+        $contents = ResourceContents::fromArray([1 => 1]);
+        $contents = $contents->withMergedValues(2, 2);
         $this->assertEquals(ResourceContents::fromArray([1 => 1, 2 => 2]), $contents);
     }
 

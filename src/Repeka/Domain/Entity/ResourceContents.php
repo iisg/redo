@@ -108,10 +108,23 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
      * @param mixed $values
      * @return ResourceContents
      */
-    public function withNewValues($metadata, $values): ResourceContents {
+    public function withReplacedValues($metadata, $values): ResourceContents {
         $metadataId = $metadata instanceof Metadata ? $metadata->getId() : $metadata;
         $newValues = self::fromArray([$metadataId => $values])->toArray();
         return new self(array_replace($this->contents, $newValues));
+    }
+
+    /**
+     * @param int|Metadata $metadata
+     * @param mixed $values
+     * @return ResourceContents
+     */
+    public function withMergedValues($metadata, $values): ResourceContents {
+        $metadataId = $metadata instanceof Metadata ? $metadata->getId() : $metadata;
+        $newValues = self::fromArray([$metadataId => $values])->toArray();
+        $contents = $this->contents;
+        $contents[$metadataId] = array_merge($contents[$metadataId] ?? [], $newValues[$metadataId]);
+        return new self($contents);
     }
 
     public function isEmpty() {

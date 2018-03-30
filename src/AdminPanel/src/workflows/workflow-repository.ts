@@ -5,6 +5,7 @@ import {ResourceClassApiRepository} from "common/repository/resource-class-api-r
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {cachedResponse, forSeconds} from "common/repository/cached-response";
+import {WorkflowPlugin} from "./details/graph/workflow-plugin";
 
 @autoinject
 export class WorkflowRepository extends ResourceClassApiRepository<Workflow> {
@@ -13,7 +14,7 @@ export class WorkflowRepository extends ResourceClassApiRepository<Workflow> {
   }
 
   @cachedResponse(forSeconds(30))
-  public get(id: number|string, suppressError: boolean = false): Promise<Workflow> {
+  public get(id: number | string, suppressError: boolean = false): Promise<Workflow> {
     return super.get(id, suppressError);
   }
 
@@ -32,5 +33,11 @@ export class WorkflowRepository extends ResourceClassApiRepository<Workflow> {
   getByAssigneeMetadata(metadata: Metadata): Promise<Workflow[]> {
     const endpoint = `${this.endpoint}?assigneeMetadata=${metadata.id}`;
     return this.httpClient.get(endpoint).then(response => this.responseToEntities(response));
+  }
+
+  getPlugins(workflow: Workflow): Promise<WorkflowPlugin[]> {
+    return this.httpClient.get(this.oneEntityEndpoint(workflow.id) + '/plugins').then(response => {
+      return Promise.all(response.content.map(item => this.entitySerializer.deserialize(WorkflowPlugin, item)));
+    }) as any as Promise<WorkflowPlugin[]>;
   }
 }

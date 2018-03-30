@@ -14,7 +14,7 @@ class ResourceTransitionCommand extends AbstractCommand implements AuditedComman
     /** @var User */
     private $executor;
 
-    public function __construct(ResourceEntity $resource, string $transitionId, User $executor) {
+    public function __construct(ResourceEntity $resource, string $transitionId, ?User $executor = null) {
         $this->resource = $resource;
         $this->transitionId = $transitionId;
         $this->executor = $executor;
@@ -28,7 +28,7 @@ class ResourceTransitionCommand extends AbstractCommand implements AuditedComman
         return $this->transitionId;
     }
 
-    public function getExecutor(): User {
+    public function getExecutor(): ?User {
         return $this->executor;
     }
 }

@@ -1,0 +1,14 @@
+<template>
+    <require from="./workflow-plugin-configuration-option-input"></require>
+
+    <div class="form-group"
+        repeat.for="plugin of workflowPlugins">
+        <label>${ plugin.name }</label>
+        <div class="form-group"
+            repeat.for="option of plugin.configurationOptions">
+            <label>${ option.name }</label>
+            <workflow-plugin-configuration-option-input option.bind="option"
+                value.bind="config[plugin.name][option.name]"></workflow-plugin-configuration-option-input>
+        </div>
+    </div>
+</template>

@@ -127,7 +127,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(0, $resultsBeforeAssigning);
         $book = $this->getPhpBookResource();
         $scannerMetadata = $this->findMetadataByName('Skanista');
-        $bookContents = $book->getContents()->withNewValues($scannerMetadata, $user->getUserData());
+        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $user->getUserData());
         $book->updateContents($bookContents);
         $this->resourceRepository->save($book);
         $this->getEntityManager()->flush();

@@ -24,7 +24,8 @@ class WorkflowPlacesDefinitionIsValidRule extends AbstractRule {
                 Validator::key('id', Validator::stringType(), false),
                 Validator::key('requiredMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
                 Validator::key('lockedMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
-                Validator::key('assigneeMetadataIds', Validator::arrayType()->each($metadataExistsRule), false)
+                Validator::key('assigneeMetadataIds', Validator::arrayType()->each($metadataExistsRule), false),
+                Validator::key('pluginsConfig', Validator::arrayType(), false)
             )->callback([$this, 'noCommonValuesBetweenRequirements'])
         ))->validate($input);
     }

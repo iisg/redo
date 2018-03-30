@@ -9,6 +9,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 class ResourceWorkflowPlace implements Identifiable, Labeled {
     private $id;
     private $label;
+    private $pluginsConfig = [];
     private $requiredMetadataIds;
     private $lockedMetadataIds;
     private $assigneeMetadataIds;
@@ -18,13 +19,15 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
         $id = null,
         array $requiredMetadataIds = [],
         array $lockedMetadataIds = [],
-        array $assigneeMetadataIds = []
+        array $assigneeMetadataIds = [],
+        array $pluginsConfig = []
     ) {
         $this->label = $label;
         $this->id = $id ?: (new Slugify())->slugify(current($label));
         $this->requiredMetadataIds = $requiredMetadataIds;
         $this->lockedMetadataIds = $lockedMetadataIds;
         $this->assigneeMetadataIds = $assigneeMetadataIds;
+        $this->pluginsConfig = $pluginsConfig;
     }
 
     public function getId(): string {
@@ -51,13 +54,18 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
         return count($missingIds) == 0;
     }
 
+    public function getPluginConfig(string $pluginName): array {
+        return $this->pluginsConfig[$pluginName] ?? [];
+    }
+
     public function toArray(): array {
         return [
-            'id' => $this->getId(),
             'label' => $this->getLabel(),
+            'id' => $this->getId(),
             'requiredMetadataIds' => $this->requiredMetadataIds,
             'lockedMetadataIds' => $this->lockedMetadataIds,
             'assigneeMetadataIds' => $this->assigneeMetadataIds,
+            'pluginsConfig' => $this->pluginsConfig,
         ];
     }
 
@@ -67,7 +75,8 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
             $data['id'] ?? null,
             $data['requiredMetadataIds'] ?? [],
             $data['lockedMetadataIds'] ?? [],
-            $data['assigneeMetadataIds'] ?? []
+            $data['assigneeMetadataIds'] ?? [],
+            $data['pluginsConfig'] ?? []
         );
     }
 }

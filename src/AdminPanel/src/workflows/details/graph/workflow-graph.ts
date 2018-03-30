@@ -109,6 +109,7 @@ export class WorkflowGraph {
               id: generateId(''),
               label: {},
               restrictingMetadataIds: {},
+              pluginsConfig: {},
             });
             let newNode = this.$(newPlace);
             newNode.renderedPosition(position);
@@ -221,7 +222,7 @@ export class WorkflowGraph {
   }
 
   private nodeToPlace(node): WorkflowPlace {
-    return new WorkflowPlace(node.id(), node.data('label'), {});
+    return new WorkflowPlace(node.id(), node.data('label'), {}, node.data('pluginsConfig'));
   }
 
   private mergeTransitionsByLabel(transitions: WorkflowTransition[], mergeBy: 'froms' | 'tos'): WorkflowTransition[] {
@@ -264,6 +265,9 @@ export class WorkflowGraph {
     let labelToDisplay = this.inCurrentLanguage.toView(graphElement.data('label'));
     if (element['permittedRoleIds']) {
       graphElement.data('permittedRoleIds', element['permittedRoleIds']);
+    }
+    if (element['pluginsConfig']) {
+      graphElement.data('pluginsConfig', element['pluginsConfig']);
     }
     graphElement.data('labelToDisplay', labelToDisplay);
   }

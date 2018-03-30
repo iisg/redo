@@ -38,6 +38,10 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
         }
         $decodedContents = json_decode($contentsFromRequest, true);
         $contents = ResourceContents::fromArray($decodedContents ?? []);
+        return $this->processMetadataValues($contents, $request);
+    }
+
+    public function processMetadataValues(ResourceContents $contents, Request $request): ResourceContents {
         return $contents->mapAllValues(function ($value, int $metadataId) use ($request) {
             $metadata = $this->metadataRepository->findOne($metadataId);
             return $this->metadataValueProcessor->process($value, $metadata->getControl(), $request);
