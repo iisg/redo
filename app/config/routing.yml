@@ -7,5 +7,10 @@ api:
   type: annotation
   prefix: /api
 
+ocr:
+  resource: "@RepekaOcrPluginBundle/Controller"
+  type: annotation
+  prefix: /api/plugins/ocr
+
 logout:
   path: /logout
