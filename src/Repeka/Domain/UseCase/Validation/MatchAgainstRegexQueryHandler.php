@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Domain\UseCase\Validation;
 
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Validation\MetadataConstraints\RegexConstraint;
 
 class MatchAgainstRegexQueryHandler {
@@ -12,6 +14,7 @@ class MatchAgainstRegexQueryHandler {
     }
 
     public function handle(MatchAgainstRegexQuery $query) {
-        $this->regexConstraint->validateSingle($query->getRegex(), $query->getValue());
+        $dummyMetadata = Metadata::create('books', MetadataControl::TEXT(), 'dummy', []);
+        $this->regexConstraint->validateSingle($dummyMetadata, $query->getRegex(), $query->getValue());
     }
 }

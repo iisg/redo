@@ -40,7 +40,7 @@ class MetadataValuesSatisfyConstraintsRule extends AbstractRule {
                 : $this->metadataRepository->findOne($metadataId);
             foreach ($metadataKind->getConstraints() as $constraintName => $constraintArgument) {
                 $constraint = $this->metadataConstraintManager->get($constraintName);
-                $constraint->validateAll($constraintArgument, $values);
+                $constraint->validateAll($metadataKind, $constraintArgument, $values);
             }
         });
         return true;

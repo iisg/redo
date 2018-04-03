@@ -52,8 +52,11 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
 
     public function testAcceptsWhenAllRulesAccept() {
         $this->constraint1->expects($this->exactly(2))->method('validateAll')
-            ->withConsecutive(['c1m2cfg', ['a', 'b']], ['c1m3cfg', ['d']]);
-        $this->constraint2->expects($this->once())->method('validateAll')->with('c2m3cfg', ['d']);
+            ->withConsecutive(
+                [$this->metadataWithConstraint1, 'c1m2cfg', ['a', 'b']],
+                [$this->metadataWithBothConstraints, 'c1m3cfg', ['d']]
+            );
+        $this->constraint2->expects($this->once())->method('validateAll')->with($this->metadataWithBothConstraints, 'c2m3cfg', ['d']);
         $this->assertTrue($this->rule->validate(ResourceContents::fromArray([
             $this->metadataWithConstraint1->getId() => ['a', 'b'],
             $this->metadataWithBothConstraints->getId() => 'd',
@@ -71,9 +74,16 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
 
     public function testValidatesSubmetadata() {
         $this->constraint1->expects($this->exactly(3))->method('validateAll')
-            ->withConsecutive(['c1m2cfg', ['a', 'c']], ['c1m3cfg', ['b', 'c']], ['c1m3cfg', ['e']]);
+            ->withConsecutive(
+                [$this->metadataWithConstraint1, 'c1m2cfg', ['a', 'c']],
+                [$this->metadataWithBothConstraints, 'c1m3cfg', ['b', 'c']],
+                [$this->metadataWithBothConstraints, 'c1m3cfg', ['e']]
+            );
         $this->constraint2->expects($this->exactly(2))->method('validateAll')
-            ->withConsecutive(['c2m3cfg', ['b', 'c']], ['c2m3cfg', ['e']]);
+            ->withConsecutive(
+                [$this->metadataWithBothConstraints, 'c2m3cfg', ['b', 'c']],
+                [$this->metadataWithBothConstraints, 'c2m3cfg', ['e']]
+            );
         $this->assertTrue($this->rule->validate(ResourceContents::fromArray([
             $this->metadataWithConstraint1->getId() => [
                 [

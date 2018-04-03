@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Validation\MetadataConstraints;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
 
 class AbstractMetadataConstraintTest extends \PHPUnit_Framework_TestCase {
@@ -20,7 +21,7 @@ class TestDummyConstraint extends AbstractMetadataConstraint {
         throw new \RuntimeException('Unexpected method call');
     }
 
-    public function validateSingle($config, $metadataValue) {
+    public function validateSingle(Metadata $metadata, $config, $metadataValue) {
         throw new \RuntimeException('Unexpected method call');
     }
 }

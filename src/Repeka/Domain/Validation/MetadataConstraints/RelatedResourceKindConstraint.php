@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -32,11 +33,8 @@ class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint 
         )->validate($allowedResourceKindIds);
     }
 
-    public function getValidator($allowedResourceKindIds, $resource) {
+    public function validate(Metadata $metadata, $allowedResourceKindIds, $resource) {
         $resource = $this->resourceRepository->findOne($resource->getId());
-        $valid = Validator::in($allowedResourceKindIds)->validate($resource->getKind()->getId());
-        if (!$valid) {
-            return Validator::alwaysInvalid();
-        }
+        Validator::in($allowedResourceKindIds)->setName($metadata->getName())->assert($resource->getKind()->getId());
     }
 }
