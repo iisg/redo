@@ -8,8 +8,11 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Validation\MetadataConstraints\RelatedResourceKindConstraint;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
+use Repeka\Tests\Traits\StubsTrait;
 
 class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceKind|\PHPUnit_Framework_MockObject_MockObject */
     private $resourceKind;
     /** @var ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
@@ -30,28 +33,28 @@ class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
 
     public function testAcceptsWhenNoResourceKindIdsAndNoValueAreProvided() {
         $this->resourceKind->expects($this->never())->method('getId');
-        $this->constraint->validateAll([], []);
+        $this->constraint->validateAll($this->createMetadataMock(), [], []);
     }
 
     public function testRejectsWhenValueAndNoResourceKindIdsAreProvided() {
         $this->expectException(InvalidCommandException::class);
-        $this->constraint->validateAll([], [$this->resource]);
+        $this->constraint->validateAll($this->createMetadataMock(), [], [$this->resource]);
     }
 
     public function testAcceptsValueWhenSoleResourceKindIdMatches() {
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->constraint->validateAll([123], [$this->resource]);
+        $this->constraint->validateAll($this->createMetadataMock(), [123], [$this->resource]);
     }
 
     public function testAcceptsValueWhenAnyResourceKindIdMatches() {
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->constraint->validateAll([100, 111, 123, 200], [$this->resource]);
+        $this->constraint->validateAll($this->createMetadataMock(), [100, 111, 123, 200], [$this->resource]);
     }
 
     public function testRejectsValueWhenResourceKindIdDoesNotMatch() {
         $this->expectException(InvalidCommandException::class);
         $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
-        $this->constraint->validateAll([100], [$this->resource]);
+        $this->constraint->validateAll($this->createMetadataMock(), [100], [$this->resource]);
     }
 
     public function testRejectsValueWhenResourceDoesNotExist() {
@@ -60,7 +63,7 @@ class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
         $repository->method('findOne')->willThrowException(new EntityNotFoundException('dummy', 0));
         $constraint = new RelatedResourceKindConstraint($repository, $this->createMock(EntityExistsRule::class));
         $this->resourceKind->expects($this->never())->method('getId');
-        $constraint->validateAll([100], [$this->resource]);
+        $constraint->validateAll($this->createMetadataMock(), [100], [$this->resource]);
     }
 
     public function testAcceptsArgumentWhenResourceKindsExist() {

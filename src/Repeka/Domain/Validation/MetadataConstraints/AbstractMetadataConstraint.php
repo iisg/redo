@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
+use Repeka\Domain\Entity\Metadata;
 use Stringy\StaticStringy;
 
 abstract class AbstractMetadataConstraint {
@@ -21,11 +22,11 @@ abstract class AbstractMetadataConstraint {
      */
     abstract public function isConfigValid($config): bool;
 
-    public function validateAll($config, array $metadataValues) {
-        foreach ($metadataValues as $metadata) {
-            $this->validateSingle($config, $metadata);
+    public function validateAll(Metadata $metadata, $config, array $metadataValues) {
+        foreach ($metadataValues as $metadataValue) {
+            $this->validateSingle($metadata, $config, $metadataValue);
         }
     }
 
-    abstract public function validateSingle($config, $metadataValue);
+    abstract public function validateSingle(Metadata $metadata, $config, $metadataValue);
 }

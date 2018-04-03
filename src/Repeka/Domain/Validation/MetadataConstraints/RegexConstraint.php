@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Service\RegexNormalizer;
 use Respect\Validation\Validator;
@@ -31,7 +32,7 @@ class RegexConstraint extends RespectValidationMetadataConstraint {
         return @preg_match($phpRegex, null) !== false;
     }
 
-    public function getValidator($pattern, $metadataValue) {
+    public function getValidator(Metadata $metadata, $pattern, $metadataValue) {
         if ($pattern) {
             $phpRegex = $this->regexNormalizer->normalize($pattern);
             return Validator::regex($phpRegex);

@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -32,7 +33,7 @@ class RelatedResourceMetadataFilterConstraint extends RespectValidationMetadataC
             ->validate(ResourceContents::fromArray($contentsFilter)->toArray());
     }
 
-    public function getValidator($contentsFilter, $resource) {
+    public function getValidator(Metadata $metadata, $contentsFilter, $resource) {
         $query = ResourceListQuery::builder()
             ->filterByIds([$resource->getId()])
             ->filterByContents(ResourceContents::fromArray($contentsFilter))

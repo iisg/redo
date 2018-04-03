@@ -4,8 +4,11 @@ namespace Repeka\Tests\Domain\Validation\MetadataConstraints;
 use Repeka\Application\Service\PhpRegexNormalizer;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Validation\MetadataConstraints\RegexConstraint;
+use Repeka\Tests\Traits\StubsTrait;
 
 class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var RegexConstraint */
     private $constraint;
 
@@ -31,7 +34,7 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
         if (!$shouldBeValid) {
             $this->expectException(InvalidCommandException::class);
         }
-        $this->constraint->validateSingle($regex, $value);
+        $this->constraint->validateSingle($this->createMetadataMock(), $regex, $value);
     }
 
     public function regexTestCases() {
@@ -53,6 +56,6 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailsIfOneValueInArrayIsIncorrect() {
         $this->expectException(InvalidCommandException::class);
-        $this->constraint->validateAll('^a', [['value' => 'abc'], ['value' => 'bcd']]);
+        $this->constraint->validateAll($this->createMetadataMock(), '^a', [['value' => 'abc'], ['value' => 'bcd']]);
     }
 }
