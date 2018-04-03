@@ -5,26 +5,14 @@ import {twoWay} from "../binding-mode";
 export class EntityChooser {
   @bindable entities: Entity[] = [];
   @bindable(twoWay) value: Entity;
-  @bindable excludeEntities: Entity[]|AnyMap<Entity>;
   @bindable(twoWay) containsItems: boolean;
+  @bindable filter: (entity: Entity) => boolean;
 
-  @computedFrom('entities.length', 'excludeEntities.length')
+  @computedFrom('entities.length', 'filter', 'value')
   get values(): Entity[] {
-    const excludedEntities = this.getExcludedEntitiesArray();
-    const blacklistedIds = excludedEntities.map(entity => entity.id);
-    const result = (this.entities || []).filter(entity => blacklistedIds.indexOf(entity.id) == -1);
+    const result = (this.entities || []).filter(this.filter || (() => true));
     this.containsItems = (result.length > 0);
     return result;
-  }
-
-  private getExcludedEntitiesArray(): Entity[] {
-    if (this.excludeEntities == undefined) {
-      return [];
-    } else if (Array.isArray(this.excludeEntities)) {
-      return this.excludeEntities as Entity[];
-    } else { // assume object
-      return Object.keys(this.excludeEntities).map(key => this.excludeEntities[key]);  // Object.values not available in TS and browsers
-    }
   }
 }
 

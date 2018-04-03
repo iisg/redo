@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <entity-chooser value.bind="baseMetadata"
                         entities.bind="metadataList"
-                        exclude-entities.bind="parentMetadataChildren"></entity-chooser>
+                        filter.bind="notAlreadyInParent"></entity-chooser>
                 </div>
                 <div class="form-group">
                     <metadata-form if.bind="baseMetadata"

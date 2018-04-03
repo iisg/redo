@@ -12,34 +12,35 @@ export class MetadataChildAdd implements ComponentAttached {
   metadataList: Metadata[];
   parentMetadataChildren: Metadata[];
   baseMetadata: Metadata;
+  notAlreadyInParent;
 
   constructor(private metadataRepository: MetadataRepository) {
   }
 
   attached() {
-    let metadataList, parentMetadataChildren;
     Promise.all([
       this.metadataRepository.getListQuery()
         .filterByResourceClasses(this.resourceClass)
         .onlyTopLevel()
-        .get()
-        .then(metadata => metadataList = metadata),
-      this.metadataRepository.getListQuery().filterByParent(this.parentMetadata).get().then(children => parentMetadataChildren = children)
-    ]).then(() => {
-      this.parentMetadataChildren = parentMetadataChildren;
-      this.metadataList = metadataList;
+        .get(),
+      this.metadataRepository.getListQuery().filterByParent(this.parentMetadata).get()
+    ]).then(results => {
+      this.metadataList = results[0];
+      this.parentMetadataChildren = results[1];
+      this.notAlreadyInParent = (metadata: Metadata) => {
+        return this.parentMetadataChildren.map(m => m.baseId).indexOf(metadata.id) === -1;
+      };
     });
   }
 
   addChildMetadata(parentId: number, baseId: number, newChildMetadata: Metadata): Promise<Metadata> {
-    return this.metadataRepository.saveChild(parentId, newChildMetadata, baseId).then(
-      metadata => this.saved({savedMetadata: metadata})
-    );
+    return this.metadataRepository.saveChild(parentId, newChildMetadata, baseId)
+      .then(metadata => this.saved({savedMetadata: metadata}))
+      .then(() => this.baseMetadata = undefined);
   }
 
   createChildMetadata(parentId: number, newChildMetadata: Metadata): Promise<Metadata> {
-    return this.metadataRepository.saveChild(parentId, newChildMetadata).then(
-      metadata => this.saved({savedMetadata: metadata})
-    );
+    return this.metadataRepository.saveChild(parentId, newChildMetadata)
+      .then(metadata => this.saved({savedMetadata: metadata}));
   }
 }

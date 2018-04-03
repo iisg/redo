@@ -9,4 +9,16 @@ export class ResourceKindMetadataChooser {
   @bindable resourceKind: ResourceKind;
   @bindable(twoWay) value: Metadata;
   @bindable(twoWay) hasMetadataToChoose: boolean;
+
+  canBeAddedToResourceKind = (metadata: Metadata) => {
+    return this.notSystemMetadata(metadata) && this.metadataNotAlreadyInResourceKind(metadata);
+  };
+
+  notSystemMetadata(metadata: Metadata): boolean {
+    return metadata.id > 0;
+  }
+
+  metadataNotAlreadyInResourceKind(metadata: Metadata): boolean {
+    return this.resourceKind.metadataList.map(m => m.id).indexOf(metadata.id) === -1;
+  }
 }
