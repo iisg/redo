@@ -41,7 +41,6 @@ export function i18nConfiguratorFactory(aurelia: Aurelia) {
 export class I18nParams {
   readonly namespaces = [
     'controls',
-    'display_strategies',
     'entity_types',
     'exceptions',
     'generic',
