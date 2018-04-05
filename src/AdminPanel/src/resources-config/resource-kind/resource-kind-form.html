@@ -40,6 +40,7 @@
                                 <icon name="edit-2"></icon>
                             </button>
                             <button class="btn btn-danger"
+                                if.bind="canRemoveMetadata(metadata)"
                                 type="button"
                                 click.delegate="removeMetadata(metadata)">
                                 <icon name="remove-3"></icon>
