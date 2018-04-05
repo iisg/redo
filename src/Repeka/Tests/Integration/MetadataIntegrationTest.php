@@ -33,7 +33,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                     'placeholder' => [],
                     'baseId' => $metadata1->getBaseId(),
                     'parentId' => $metadata1->getParentId(),
-                    'constraints' => ['maxCount' => 0],
+                    'constraints' => [],
                     'shownInBrief' => false,
                     'copyToChildResource' => false,
                     'resourceClass' => $metadata1->getResourceClass(),
@@ -48,7 +48,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                     'placeholder' => $metadata2->getPlaceholder(),
                     'baseId' => $metadata2->getBaseId(),
                     'parentId' => $metadata2->getParentId(),
-                    'constraints' => ['maxCount' => 0],
+                    'constraints' => [],
                     'shownInBrief' => false,
                     'copyToChildResource' => false,
                     'resourceClass' => $metadata2->getResourceClass(),
@@ -76,7 +76,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'description' => ['EN' => 'test description', 'PL' => 'testowy opis'],
             'placeholder' => ['EN' => 'test placeholder', 'PL' => 'testowa podpowiedź'],
             'resourceClass' => 'books',
-            'constraints' => ['maxCount' => 0],
+            'constraints' => [],
         ];
         $client->apiRequest('POST', self::ENDPOINT, $metadataArray);
         $this->assertStatusCode(201, $client->getResponse());
@@ -155,7 +155,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                 'EN' => 'Test placeholder',
                 'PL' => 'Testowa zaślepka',
             ],
-            'constraints' => ['maxCount' => 0],
+            'constraints' => [],
         ];
         $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());
@@ -181,7 +181,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $update = [
             'name' => 'Altered',
-            'constraints' => ['maxCount' => 0],
+            'constraints' => [],
         ];
         $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());

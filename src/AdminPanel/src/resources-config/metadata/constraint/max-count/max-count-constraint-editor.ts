@@ -18,7 +18,10 @@ export class MaxCountConstraintEditor {
     if (this.modelIsChanging) {
       return;
     }
-    this.maxCount = this.unlimited ? 0 : this.count;
+    if (this.unlimited) {
+      this.count = 1;
+    }
+    this.maxCount = this.unlimited ? undefined : this.count;
   }
 
   attached() {
@@ -27,10 +30,8 @@ export class MaxCountConstraintEditor {
 
   maxCountChanged(): void {
     this.modelIsChanging = true;
-    this.unlimited = !this.maxCount;
-    if (!this.unlimited || this.count === undefined) {
-      this.count = this.maxCount || 1;
-    }
+    this.count = this.maxCount || 1;
+    this.unlimited = (this.maxCount == undefined);
     this.modelIsChanging = false;
   }
 

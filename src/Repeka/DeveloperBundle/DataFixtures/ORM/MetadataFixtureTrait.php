@@ -10,15 +10,19 @@ trait MetadataFixtureTrait {
         ];
     }
 
-    protected function textConstraints(int $maxCount, string $regex = ''): array {
-        $constraints = $this->constraints($maxCount);
+    protected function textConstraints($maxCount, string $regex = ''): array {
+        if (isset($maxCount)) {
+            $constraints = $this->constraints($maxCount);
+        }
         $constraints['regex'] = $regex;
         return $constraints;
     }
 
-    protected function relationshipConstraints(int $maxCount, array $resourceKind = []): array {
+    protected function relationshipConstraints($maxCount, array $resourceKind = []): array {
         Assertion::allInteger($resourceKind);
-        $constraints = $this->constraints($maxCount);
+        if (isset($maxCount)) {
+            $constraints = $this->constraints($maxCount);
+        }
         $constraints['resourceKind'] = $resourceKind;
         return $constraints;
     }

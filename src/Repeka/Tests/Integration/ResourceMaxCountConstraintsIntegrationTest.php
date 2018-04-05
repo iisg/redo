@@ -26,7 +26,7 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
         /** @var MetadataRepository $metadataRepository */
         $metadataRepository = $this->container->get(MetadataRepository::class);
         $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
-        $this->baseMetadata = $this->createMetadata('Base', ['TEST' => 'Base metadata'], [], [], 'textarea');
+        $this->baseMetadata = $this->createMetadata('Base1', ['TEST' => 'Base metadata'], [], [], 'textarea');
         $this->baseMetadata2 = $this->createMetadata('Base2', ['TEST' => 'Base metadata2'], [], [], 'textarea');
         $this->resourceKindMax1 = $this->getCountConstrainedResourceKind(1);
         $this->resourceKindMax3 = $this->getCountConstrainedResourceKind(3);

@@ -42,7 +42,7 @@ class MetadataStage2Fixture extends RepekaFixture {
         );
     }
 
-    private function addRelationshipResourceKindConstraint($metadataRef, $resourceKindRefs, $maxCount = 0) {
+    private function addRelationshipResourceKindConstraint($metadataRef, $resourceKindRefs, $maxCount = null) {
         if (!is_array($resourceKindRefs)) {
             $resourceKindRefs = [$resourceKindRefs];
         }
