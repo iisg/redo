@@ -1,12 +1,11 @@
 <?php
 namespace Repeka\Application\Repository;
 
-use Assert\Assertion;
 use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
@@ -36,9 +35,11 @@ SQL
     }
 
     public function findByUserData(ResourceEntity $resource): User {
-        Assertion::eq($resource->getKind()->getId(), SystemResourceKind::USER);
         /** @var User $user */
         $user = $this->findOneBy(['userData' => $resource]);
+        if (!$user) {
+            throw new EntityNotFoundException($this, "userData#{$resource->getId()}");
+        }
         return $user;
     }
 }

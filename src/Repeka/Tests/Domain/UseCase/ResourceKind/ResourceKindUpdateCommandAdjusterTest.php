@@ -8,6 +8,7 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandAdjuster;
+use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -23,9 +24,11 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
             1 => $this->createMock(ResourceKind::class),
         ]);
         $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [SystemMetadata::PARENT()->toMetadata()]);
+        $metadataConstraintManager = $this->createMock(MetadataConstraintManager::class);
         $this->adjuster = new ResourceKindUpdateCommandAdjuster(
             $metadataRepository,
             new UnknownLanguageStripper($languageRepository),
+            $metadataConstraintManager,
             $resourceKindRespository
         );
     }

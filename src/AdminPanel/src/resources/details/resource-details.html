@@ -6,6 +6,7 @@
     <require from="./resource-metadata-table/resource-metadata-table"></require>
     <require from="../resources-list"></require>
     <require from="common/components/fab/fab-edit"></require>
+    <require from="users/details/user-roles-assign"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
     <div class="au-animate fade-inup-outup"
@@ -37,14 +38,15 @@
             <aup-tab-content if.bind="!editing">
                 <aup-tab-pane tab="childResourceTab">
                     <div if.bind="currentTabId === 'childResourceTab'">
-                            <resources-list parent-resource.bind="resource"
-                                has-resources.bind="hasChildren"></resources-list>
+                        <resources-list parent-resource.bind="resource"
+                            has-resources.bind="hasChildren"></resources-list>
                     </div>
                 </aup-tab-pane>
                 <aup-tab-pane tab="metadataTab">
-                    <div  if.bind="currentTabId === 'metadataTab'">
+                    <div if.bind="currentTabId === 'metadataTab'">
                         <resource-metadata-table resource.bind="resource"></resource-metadata-table>
-                        <dl class="dl-horizontal resource-details">
+                        <dl class="dl-horizontal resource-details"
+                            if.bind="resource.kind.workflow">
                             <dt>${'Place' | t}</dt>
                             <dd>
                                 <resource-place-display resource.bind="resource"></resource-place-display>
@@ -52,7 +54,7 @@
                         </dl>
                     </div>
                 </aup-tab-pane>
-                <aup-tab-pane tab="workflowTab" >
+                <aup-tab-pane tab="workflowTab">
                     <div class="row"
                         if.bind="currentTabId === 'workflowTab'">
                         <div class="col-sm-4">
@@ -68,6 +70,10 @@
                             <resource-workflow resource.bind="resource"></resource-workflow>
                         </div>
                     </div>
+                </aup-tab-pane>
+                <aup-tab-pane tab="userRolesTab">
+                    <user-roles-assign if.bind="currentTabId === 'userRolesTab'"
+                        user-data.bind="resource"></user-roles-assign>
                 </aup-tab-pane>
             </aup-tab-content>
         </div>

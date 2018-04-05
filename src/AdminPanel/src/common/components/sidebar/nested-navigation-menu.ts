@@ -29,9 +29,9 @@ export class NestedNavigationMenu {
   private getMenuItems() {
     const classes: string[] = this.getResourceClasses();
 
-    const routeToLink: (className?: string, isResourceClass?: boolean) => (route: AbstractRoute) => NavLink =
-      (className?: string, isResourceClass?: boolean) => (route: AbstractRoute) => {
-        const labelKey = isResourceClass
+    const routeToLink: (className?: string) => (route: AbstractRoute) => NavLink =
+      (className?: string) => (route: AbstractRoute) => {
+        const labelKey = className
           ? `resource_classes::${className}//${route.name}`
           : `navigation::${route.title}`;
         if (route.route.indexOf(':resourceClass') == -1) {
@@ -45,9 +45,9 @@ export class NestedNavigationMenu {
 
     let middle: NavItem[] = [];
     for (const className of classes) {
-      const primary: NavLink[] = this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS, className).map(routeToLink(className, true));
+      const primary: NavLink[] = this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS).map(routeToLink(className));
       const secondary = new NavGroup('resource_classes::' + className + '//settings', className,
-        this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS_SECONDARY, className).map(routeToLink(className, true))
+        this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS_SECONDARY).map(routeToLink(className))
       );
       middle = middle.concat(primary).concat(secondary);
     }

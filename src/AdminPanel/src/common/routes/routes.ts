@@ -29,12 +29,7 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
     new Route('new/:resourceClass', 'new', 'details/workflow-new').withBreadcrumbsProvider('workflow')
   ]),
 
-  new RouteGroup('users', 'users', 'users', 'Users', [
-    new BaseRoute('', 'user-list').withMenuItem(NavRole.PER_RESOURCE_CLASS, 'user', 'users'),
-    new Route('roles', 'roles', 'roles/user-roles')
-      .withMenuItem('Roles', NavRole.PER_RESOURCE_CLASS_SECONDARY, 'roles', 'users'),
-    new Route('details/:id', 'details', 'details/user-details').withBreadcrumbsProvider('user')
-  ]),
+  new Route('roles', 'roles', 'users/roles/user-roles').withMenuItem('Roles', NavRole.BOTTOM, 'roles'),
 
   new Route('languages', 'languages', 'resources-config/language-config/language-list')
     .withMenuItem('Languages', NavRole.BOTTOM, 'languages'),

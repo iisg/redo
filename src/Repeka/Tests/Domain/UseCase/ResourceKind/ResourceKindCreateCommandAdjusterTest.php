@@ -10,6 +10,7 @@ use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandAdjuster;
+use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -23,14 +24,20 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         $languageRepository = $this->createLanguageRepositoryMock(['PL']);
         $realMetadata = Metadata::create('books', MetadataControl::TEXT(), 'name', ['PL' => 'A']);
         EntityUtils::forceSetId($realMetadata, 11);
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [
-            SystemMetadata::PARENT()->toMetadata(),
-            $this->createMetadataMock(55),
-            $realMetadata,
-        ]);
+        $metadataRepository = $this->createRepositoryStub(
+            MetadataRepository::class,
+            [
+                SystemMetadata::PARENT()->toMetadata(),
+                $this->createMetadataMock(55),
+                $realMetadata,
+            ]
+        );
+        $metadataConstraintManager = $this->createMock(MetadataConstraintManager::class);
+        $metadataConstraintManager->method('getSupportedConstraintNamesForControl')->willReturn(['maxCount']);
         $this->adjuster = new ResourceKindCreateCommandAdjuster(
             $metadataRepository,
-            new UnknownLanguageStripper($languageRepository)
+            new UnknownLanguageStripper($languageRepository),
+            $metadataConstraintManager
         );
     }
 
@@ -119,5 +126,26 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         $this->assertCount(2, $adjustedCommand->getMetadataList());
         $this->assertEquals(11, $adjustedCommand->getMetadataList()[0]->getId());
         $this->assertEquals('Nadpisana', $adjustedCommand->getMetadataList()[0]->getLabel()['PL']);
+    }
+
+    public function testAddingMetadataWithOverriddenConstraints() {
+        $command = new ResourceKindCreateCommand([], [['id' => 11, 'label' => ['PL' => 'Nadpisana'], 'constraints' => ['maxCount' => 1]]]);
+        $adjustedCommand = $this->adjuster->adjustCommand($command);
+        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertEquals(11, $adjustedCommand->getMetadataList()[0]->getId());
+        $this->assertEquals('Nadpisana', $adjustedCommand->getMetadataList()[0]->getLabel()['PL']);
+        $this->assertEquals(['maxCount' => 1], $adjustedCommand->getMetadataList()[0]->getConstraints());
+    }
+
+    public function testStrippingOutUnsupportedConstraints() {
+        $command = new ResourceKindCreateCommand(
+            [],
+            [['id' => 11, 'label' => ['PL' => 'Nadpisana'], 'constraints' => ['maxCount' => 1, 'unicornCount' => 43]]]
+        );
+        $adjustedCommand = $this->adjuster->adjustCommand($command);
+        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertEquals(11, $adjustedCommand->getMetadataList()[0]->getId());
+        $this->assertEquals('Nadpisana', $adjustedCommand->getMetadataList()[0]->getLabel()['PL']);
+        $this->assertEquals(['maxCount' => 1], $adjustedCommand->getMetadataList()[0]->getConstraints());
     }
 }

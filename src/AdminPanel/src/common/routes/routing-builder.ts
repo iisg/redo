@@ -25,7 +25,6 @@ export interface RouteSettings {
   icon: string;
   role: NavRole;
   requiredRoles?: string[];
-  specificForClass?: string;  // overrides other PER_RESOURCE_CLASS items, appends to PER_RESOURCE_CLASS_SECONDARY items
   breadcrumbsProvider?: string;
 }
 
@@ -58,10 +57,9 @@ export class Route extends AbstractRoute {
     this.moduleId = moduleId;
   }
 
-  withMenuItem(title: string, role: NavRole, icon?: string, specificForClass?: string): Route {
-    this.checkRoleClassPair(role, specificForClass);
+  withMenuItem(title: string, role: NavRole, icon?: string): Route {
     this.title = title;
-    $.extend(this.settings, {icon, role, specificForClass});
+    $.extend(this.settings, {icon, role});
     return this;
   }
 
@@ -88,9 +86,8 @@ export class BaseRoute extends AbstractRoute {
     this.moduleId = moduleId;
   }
 
-  withMenuItem(role: NavRole, icon?: string, specificForClass?: string): BaseRoute {
-    this.checkRoleClassPair(role, specificForClass);
-    $.extend(this.settings, {icon, role, specificForClass});
+  withMenuItem(role: NavRole, icon?: string): BaseRoute {
+    $.extend(this.settings, {icon, role});
     return this;
   }
 }

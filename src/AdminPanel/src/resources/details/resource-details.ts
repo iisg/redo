@@ -14,6 +14,8 @@ import {computedFrom} from "aurelia-binding";
 import {MetadataValue} from "../metadata-value";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
 import {ContextResourceClass} from './../context/context-resource-class';
+import {UserRoleChecker} from "../../common/authorization/user-role-checker";
+import {SystemResourceKinds} from "../../resources-config/resource-kind/system-resource-kinds";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -34,7 +36,8 @@ export class ResourceDetails implements RoutableComponentActivate {
               private alert: Alert,
               private i18n: I18N,
               private entitySerializer: EntitySerializer,
-              private contextResourceClass: ContextResourceClass) {
+              private contextResourceClass: ContextResourceClass,
+              private userRoleChecker: UserRoleChecker) {
   }
 
   bind() {
@@ -80,6 +83,12 @@ export class ResourceDetails implements RoutableComponentActivate {
       this.resourceDetailsTabs.push({
         id: 'workflowTab',
         label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)
+      });
+    }
+    if (this.resource.kind.id == SystemResourceKinds.USER_ID && this.userRoleChecker.hasAll(['ADMIN'])) {
+      this.resourceDetailsTabs.push({
+        id: 'userRolesTab',
+        label: this.i18n.tr('Roles')
       });
     }
     this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;

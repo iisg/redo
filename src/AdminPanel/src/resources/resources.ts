@@ -1,5 +1,5 @@
 import {inlineView} from "aurelia-templating";
-import {ConfiguresRouter, RouterConfiguration, Router, activationStrategy} from "aurelia-router";
+import {activationStrategy, ConfiguresRouter, Router, RouterConfiguration} from "aurelia-router";
 
 @inlineView("<template><router-view></router-view></template>")
 export class Resources implements ConfiguresRouter {
@@ -18,12 +18,7 @@ export class Resources implements ConfiguresRouter {
         name: 'resources/details',
         moduleId: './details/resource-details',
         activationStrategy: activationStrategy.replace
-      },
-      {
-        route: '/../users/:id',
-        name: 'users/details',
-        moduleId: 'users/details/user-details'
-      },
+      }
     ]);
   }
 }
