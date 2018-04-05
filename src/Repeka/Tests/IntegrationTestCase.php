@@ -164,7 +164,6 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         string $resourceClass = 'books',
         array $constraints = []
     ): Metadata {
-        $constraints = array_merge(['maxCount' => 0], $constraints);
         return $this->handleCommand(
             new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $resourceClass, $constraints)
         );

@@ -7,3 +7,4 @@ lengthUpTo10: Długość do 10 znaków.
 Workflow must consist of at least one place: Proces musi zawierać co najmniej jeden stan
 Template compilation error: Błąd kompilacji szablonu
 minMaxValueRange: Minimalna wartość musi być mniejsza lub równa maksymalnej wartości.
+minimalMaxCount: Maksymalna liczba wartości musi być przynajmniej jedna.

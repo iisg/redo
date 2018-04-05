@@ -31,13 +31,15 @@ export function registerMetadataConstraintsValidationRules() {
     .ensure('minMaxValue').satisfies(obj => obj === undefined || obj.min === undefined || obj.max === undefined
     || Number.isInteger(obj.min) && Number.isInteger(obj.max) && obj.max >= obj.min)
     .withMessageKey('minMaxValueRange')
+    .ensure('maxCount').satisfies(obj => obj === undefined || Number.isInteger(obj) && obj > 0)
+    .withMessageKey('minimalMaxCount')
     .on(MetadataConstraints);
 }
 
 export const metadataConstraintDefaults: MetadataConstraints = {
   resourceKind: [],
   minCount: 0,
-  maxCount: 0,
+  maxCount: undefined,
   minMaxValue: {min: undefined, max: undefined},
   regex: '',
   relatedResourceMetadataFilter: {}

@@ -137,7 +137,6 @@ class MetadataFixture extends RepekaFixture {
             'placeholder' => [],
             'control' => 'relationship',
             'resourceClass' => 'books',
-            'constraints' => $this->relationshipConstraints(0),
         ]), self::REFERENCE_METADATA_SEE_ALSO);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Okładka',
@@ -149,7 +148,6 @@ class MetadataFixture extends RepekaFixture {
             'placeholder' => [],
             'control' => 'file',
             'resourceClass' => 'books',
-            'constraints' => $this->constraints(0),
         ]), self::REFERENCE_METADATA_FILE);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Nazwa kategorii',

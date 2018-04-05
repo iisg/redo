@@ -19,7 +19,7 @@ class MaxCountConstraintTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($this->constraint->isConfigValid(1));
         $this->assertTrue($this->constraint->isConfigValid(3));
         $this->assertTrue($this->constraint->isConfigValid(123));
-        $this->assertTrue($this->constraint->isConfigValid(0));
+        $this->assertTrue($this->constraint->isConfigValid(null));
     }
 
     public function testRejectsInvalidConfig() {
@@ -28,6 +28,7 @@ class MaxCountConstraintTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($this->constraint->isConfigValid('1'));
         $this->assertFalse($this->constraint->isConfigValid('0'));
         $this->assertFalse($this->constraint->isConfigValid(-1));
+        $this->assertFalse($this->constraint->isConfigValid(0));
     }
 
     public function testRejectsSingleValidateCall() {
@@ -49,8 +50,8 @@ class MaxCountConstraintTest extends \PHPUnit_Framework_TestCase {
         $this->constraint->validateAll($this->createMetadataMock(), $max, array_fill(0, 6, null));
     }
 
-    public function testTreatsZeroAsInfinity() {
+    public function testTreatsNullAsInfinity() {
         $hugeArray = array_fill(0, 10000, null);
-        $this->constraint->validateAll($this->createMetadataMock(), 0, $hugeArray);
+        $this->constraint->validateAll($this->createMetadataMock(), null, $hugeArray);
     }
 }

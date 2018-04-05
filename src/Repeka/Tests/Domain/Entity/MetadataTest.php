@@ -167,12 +167,11 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['regex' => null], $metadata->getConstraints());
     }
 
-    public function testOverridingZeroConstraintWithNull() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], ['maxCount' => 0]);
-        $this->assertEquals(['maxCount' => 0], $metadata->getConstraints());
+    public function testOverridingMaxCountConstraintWithNull() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], ['maxCount' => 1]);
+        $this->assertEquals(['maxCount' => 1], $metadata->getConstraints());
         $metadata = $metadata->withOverrides(['constraints' => ['maxCount' => null]]);
-        $this->assertEmpty($metadata->getOverrides());
-        $this->assertEquals(['maxCount' => 0], $metadata->getConstraints());
+        $this->assertEquals(['maxCount' => null], $metadata->getConstraints());
     }
 
     public function testParentIdNullIfNoParent() {
