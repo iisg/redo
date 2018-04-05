@@ -11,6 +11,7 @@ import {noop, VoidFunction} from "common/utils/function-utils";
 import {move, removeValue} from "common/utils/array-utils";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {SystemMetadata} from "../metadata/system-metadata";
+import {Configure} from "aurelia-configuration";
 
 @autoinject
 export class ResourceKindForm implements ComponentAttached, ComponentDetached {
@@ -30,7 +31,8 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   constructor(validationControllerFactory: ValidationControllerFactory,
               private signaler: BindingSignaler,
               private metadataRepository: MetadataRepository,
-              private entitySerializer: EntitySerializer) {
+              private entitySerializer: EntitySerializer,
+              private config: Configure) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
@@ -112,5 +114,13 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
           .then(() => this.editing || (this.resourceKind = new ResourceKind()));
       }
     }).finally(() => this.submitting = false);
+  }
+
+  canRemoveMetadata(metadata: Metadata): boolean {
+    if (this.resourceClass == 'users') {
+      const mappedMetadataIds = this.config.get('user_mapped_metadata_ids') || [];
+      return mappedMetadataIds.indexOf(metadata.id) === -1;
+    }
+    return true;
   }
 }
