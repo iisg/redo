@@ -29,11 +29,15 @@ class ResourceKindUpdateCommandValidator extends ResourceKindCreateCommandValida
     public function getValidator(Command $command): Validatable {
         return parent::getValidator($command)
             ->attribute('resourceKind', Validator::instance(ResourceKind::class))
-            ->attribute('metadataList', Validator::each(Validator::callback([$this, 'validateMetadata'])));
+            ->attribute(
+                'metadataList',
+                Validator::each(Validator::callback([$this, 'validateMetadata']))->setTemplate('Invalid constraints')
+            );
     }
 
-    public function validateMetadata(Metadata $metadata) {
-        $constraintsValidator = $this->rkConstraintIsUserIfNecessaryRule->forMetadataId($metadata->getId());
-        return Validator::attribute('constraints', $constraintsValidator, false)->validate($metadata);
+    public function validateMetadata(Metadata $metadata): bool {
+        return Validator::allOf(
+            $this->rkConstraintIsUserIfNecessaryRule->forMetadataId($metadata->getId())
+        )->validate($metadata->getConstraints());
     }
 }

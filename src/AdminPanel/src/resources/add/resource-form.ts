@@ -28,7 +28,7 @@ export class ResourceForm {
   submitting: boolean = false;
   hasValidationError: boolean = false;
   transition: WorkflowTransition;
-  resourceKindIdsAllowedByParent: number[] = [];
+  resourceKindIdsAllowedByParent: number[];
 
   private validationController: ValidationController;
 
@@ -101,10 +101,11 @@ export class ResourceForm {
   }
 
   private setResourceKindsAllowedByParent() {
+    this.resourceKindIdsAllowedByParent = undefined;
     if (this.parent) {
       let metadata = this.parent.kind.metadataList.find(v => v.id === SystemMetadata.PARENT.id);
       let resourceKindsAllowedByParent: any[] = metadata.constraints.resourceKind;
-      this.resourceKindIdsAllowedByParent = resourceKindsAllowedByParent.map(v => v.hasOwnProperty('id') ? v.id : v);
+      this.resourceKindIdsAllowedByParent = resourceKindsAllowedByParent.map(v => v.id || v);
     }
   }
 
@@ -118,12 +119,12 @@ export class ResourceForm {
     }
   }
 
-  isAllowedByParentFilter() {
+  createResourceKindFilter() {
     return (resourceKind: ResourceKind) => {
-      if (this.resourceKindIdsAllowedByParent.length > 0) {
-        return inArray(resourceKind.id, this.resourceKindIdsAllowedByParent);
-      }
-      return true;
+      const isAllowedByParent = !Array.isArray(this.resourceKindIdsAllowedByParent)
+        || inArray(resourceKind.id, this.resourceKindIdsAllowedByParent);
+      const isNotSystemRK = resourceKind.id > 0;
+      return isAllowedByParent && isNotSystemRK;
     };
   }
 

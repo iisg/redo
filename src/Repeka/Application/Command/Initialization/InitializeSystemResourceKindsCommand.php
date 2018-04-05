@@ -2,16 +2,20 @@
 namespace Repeka\Application\Command\Initialization;
 
 use Repeka\Application\Command\TransactionalCommand;
+use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Entity\EntityIdGeneratorHelper;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InitializeSystemResourceKindsCommand extends TransactionalCommand {
+    use CommandBusAware;
+
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
     /** @var EntityIdGeneratorHelper */
@@ -40,15 +44,16 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
         if (!$this->resourceKindRepository->exists(SystemResourceKind::USER)) {
             $systemResourceKind = new SystemResourceKind(SystemResourceKind::USER);
             $usernameDisplayTemplate = '{{oneValue m' . SystemMetadata::USERNAME . '}}';
-            $resourceKind = new ResourceKind(
-                ['PL' => 'user', 'EN' => 'user'],
-                [SystemMetadata::USERNAME()->toMetadata()],
-                ['header' => $usernameDisplayTemplate, 'dropdown' => $usernameDisplayTemplate]
-            );
+            $resourceKind = new ResourceKind([], [SystemMetadata::USERNAME()->toMetadata()]);
             EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
-            $label = [];
-            $label['PL'] = $label['EN'] = 'user';
-            $this->resourceKindRepository->save($resourceKind);
+            $this->handleCommand(
+                new ResourceKindUpdateCommand(
+                    $resourceKind,
+                    ['PL' => 'user', 'EN' => 'user'],
+                    [SystemMetadata::USERNAME()->toMetadata()],
+                    ['header' => $usernameDisplayTemplate, 'dropdown' => $usernameDisplayTemplate]
+                )
+            );
             $output->writeln("System resource kind user has been created.");
         } else {
             $output->writeln("System resource kind user already exists.");

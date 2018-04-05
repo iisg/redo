@@ -14,6 +14,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class GlobalExceptionListener {
     use TargetPathTrait;
 
@@ -46,18 +49,20 @@ class GlobalExceptionListener {
 
     public function createErrorResponse(\Exception $e, Request $request) {
         if ($e instanceof AuthenticationException || $e instanceof AccessDeniedException) {
-            return $this->buildResponseForXmlHttpRequest($request);
+            return $this->createUnauthorizedResponse($request);
         } elseif ($e instanceof NotFoundHttpException) {
             return $this->createJsonResponse(404, $e->getMessage());
         } elseif ($e instanceof DomainException) {
             return $this->createDomainExceptionResponse($e);
+        } elseif ($e instanceof \InvalidArgumentException) {
+            return $this->createJsonResponse(400, $e->getMessage());
         } else {
             $message = $this->isDebug ? $e->getMessage() : 'Internal server error.';
             return $this->createJsonResponse(500, $message);
         }
     }
 
-    private function buildResponseForXmlHttpRequest(Request $request) {
+    private function createUnauthorizedResponse(Request $request) {
         if ($this->tokenStorage->getToken()->getUser() instanceof UserEntity) {
             return $this->createJsonResponse(403, 'Forbidden');
         } else {

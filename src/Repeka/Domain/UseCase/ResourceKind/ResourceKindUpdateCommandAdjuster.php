@@ -6,6 +6,7 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 
 class ResourceKindUpdateCommandAdjuster extends ResourceKindCreateCommandAdjuster {
@@ -15,9 +16,10 @@ class ResourceKindUpdateCommandAdjuster extends ResourceKindCreateCommandAdjuste
     public function __construct(
         MetadataRepository $metadataRepository,
         UnknownLanguageStripper $unknownLanguageStripper,
+        MetadataConstraintManager $metadataConstraintManager,
         ResourceKindRepository $resourceKindRepository
     ) {
-        parent::__construct($metadataRepository, $unknownLanguageStripper);
+        parent::__construct($metadataRepository, $unknownLanguageStripper, $metadataConstraintManager);
         $this->resourceKindRepository = $resourceKindRepository;
     }
 
