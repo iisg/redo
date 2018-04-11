@@ -52,10 +52,12 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
 
     public function testFindByTwoMetadata() {
         $descriptionMetadata = $this->findMetadataByName('Opis');
-        $query = ResourceListQuery::builder()->filterByContents([
-            $this->titleMetadata->getId() => 'PHP',
-            $descriptionMetadata->getId() => 'poradnik',
-        ])->build();
+        $query = ResourceListQuery::builder()->filterByContents(
+            [
+                $this->titleMetadata->getId() => 'PHP',
+                $descriptionMetadata->getId() => 'poradnik',
+            ]
+        )->build();
         $results = $this->handleCommand($query);
         $this->assertCount(1, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
@@ -81,7 +83,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
 
     public function testFindByUsername() {
         $query = ResourceListQuery::builder()
-            ->filterByResourceClass('users')
+            ->filterByResourceKind($this->getAdminUser()->getUserData()->getKind())
             ->filterByContents([SystemMetadata::USERNAME => 'admin'])
             ->build();
         $results = $this->handleCommand($query);
@@ -94,10 +96,12 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
             ->filterByResourceClass($this->phpBook->getResourceClass())
             ->filterByResourceKind($this->phpBook->getKind())
             ->onlyTopLevel()
-            ->filterByContents([
-                $this->titleMetadata->getId() => 'PHP',
-                $descriptionMetadata->getId() => 'poradnik',
-            ])->build();
+            ->filterByContents(
+                [
+                    $this->titleMetadata->getId() => 'PHP',
+                    $descriptionMetadata->getId() => 'poradnik',
+                ]
+            )->build();
         $results = $this->handleCommand($query);
         $this->assertCount(1, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));

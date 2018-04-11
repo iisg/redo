@@ -1,14 +1,13 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
-use Assert\Assert;
 use Assert\Assertion;
 use M6Web\Component\Statsd\Client;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\EventListener\CsrfRequestListener;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\UserRole;
 use Repeka\Domain\UseCase\User\UserByUserDataQuery;
+use Repeka\Domain\UseCase\User\UserGroupsQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
@@ -81,12 +80,24 @@ class UsersController extends ApiController {
         $data = $request->request->all();
         if (isset($data['roleIds'])) {
             Assertion::isArray($data['roleIds']);
-            $roles = array_map(function ($roleId) {
-                return $this->handleCommand(new UserRoleQuery($roleId));
-            }, $data['roleIds']);
+            $roles = array_map(
+                function ($roleId) {
+                    return $this->handleCommand(new UserRoleQuery($roleId));
+                },
+                $data['roleIds']
+            );
             $command = new UserUpdateRolesCommand($user, $roles, $this->getUser());
             $user = $this->handleCommand($command);
         }
         return $this->createJsonResponse($user);
+    }
+
+    /**
+     * @Route("/{user}/groups")
+     * @Method("GET")
+     */
+    public function getUserGroupsAction(UserEntity $user) {
+        $groups = $this->handleCommand(new UserGroupsQuery($user));
+        return $this->createJsonResponse($groups);
     }
 }

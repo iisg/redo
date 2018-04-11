@@ -1,13 +1,16 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
-use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataDeleteCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataDeleteCommandValidator;
+use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataDeleteCommandValidatorTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var MetadataRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $metadataRepository;
     /** @var MetadataDeleteCommandValidator */
@@ -22,14 +25,21 @@ class MetadataDeleteCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPositive() {
-        $metadata = $this->createMock(Metadata::class);
+        $metadata = $this->createMetadataMock();
         $command = new MetadataDeleteCommand($metadata);
         $this->assertTrue($this->validator->isValid($command));
     }
 
+    public function testInvalidIfSystemMetadata() {
+        $this->expectException(DomainException::class);
+        $metadata = $this->createMetadataMock(-1);
+        $command = new MetadataDeleteCommand($metadata);
+        $this->validator->validate($command);
+    }
+
     public function testInvalidIfHasChildren() {
         $this->expectExceptionMessage('metadata kind has submetadata kinds');
-        $metadata = $this->createMock(Metadata::class);
+        $metadata = $this->createMetadataMock();
         $this->metadataRepository->method('countByParent')->with($metadata)->willReturn(1);
         $command = new MetadataDeleteCommand($metadata);
         $this->validator->validate($command);
@@ -37,7 +47,7 @@ class MetadataDeleteCommandValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testInvalidIfUsedInResourceKinds() {
         $this->expectExceptionMessage('metadata kind is used in some resource kinds');
-        $metadata = $this->createMock(Metadata::class);
+        $metadata = $this->createMetadataMock();
         $this->resourceKindRepository->method('countByMetadata')->with($metadata)->willReturn(1);
         $command = new MetadataDeleteCommand($metadata);
         $this->validator->validate($command);
@@ -46,7 +56,7 @@ class MetadataDeleteCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testThrowsBothErrorsIfBothConditionsFail() {
         $this->expectExceptionMessage('metadata kind has submetadata kinds');
         $this->expectExceptionMessage('metadata kind is used in some resource kinds');
-        $metadata = $this->createMock(Metadata::class);
+        $metadata = $this->createMetadataMock();
         $this->metadataRepository->method('countByParent')->with($metadata)->willReturn(1);
         $this->resourceKindRepository->method('countByMetadata')->with($metadata)->willReturn(1);
         $command = new MetadataDeleteCommand($metadata);

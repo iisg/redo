@@ -22,33 +22,41 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'topLevel' => true]);
         $this->assertStatusCode(200, $client->getResponse());
         $responseContent = $client->getResponse()->getContent();
-        $this->assertJsonStringSimilarToArray([[
-            'id' => $metadata1->getId(),
-            'control' => $metadata1->getControl()->getValue(),
-            'name' => $metadata1->getName(),
-            'label' => $metadata1->getLabel(),
-            'description' => [],
-            'placeholder' => [],
-            'baseId' => $metadata1->getBaseId(),
-            'parentId' => $metadata1->getParentId(),
-            'constraints' => ['maxCount' => 0],
-            'shownInBrief' => false,
-            'copyToChildResource' => false,
-            'resourceClass' => $metadata1->getResourceClass(),
-        ], [
-            'id' => $metadata2->getId(),
-            'control' => $metadata2->getControl()->getValue(),
-            'name' => $metadata2->getName(),
-            'label' => $metadata2->getLabel(),
-            'description' => $metadata2->getDescription(),
-            'placeholder' => $metadata2->getPlaceholder(),
-            'baseId' => $metadata2->getBaseId(),
-            'parentId' => $metadata2->getParentId(),
-            'constraints' => ['maxCount' => 0],
-            'shownInBrief' => false,
-            'copyToChildResource' => false,
-            'resourceClass' => $metadata2->getResourceClass(),
-        ]], $responseContent);
+        $this->assertJsonStringSimilarToArray(
+            [
+                [
+                    'id' => $metadata1->getId(),
+                    'control' => $metadata1->getControl()->getValue(),
+                    'name' => $metadata1->getName(),
+                    'label' => $metadata1->getLabel(),
+                    'description' => [],
+                    'placeholder' => [],
+                    'baseId' => $metadata1->getBaseId(),
+                    'parentId' => $metadata1->getParentId(),
+                    'constraints' => ['maxCount' => 0],
+                    'shownInBrief' => false,
+                    'copyToChildResource' => false,
+                    'resourceClass' => $metadata1->getResourceClass(),
+                    'canDetermineAssignees' => false,
+                ],
+                [
+                    'id' => $metadata2->getId(),
+                    'control' => $metadata2->getControl()->getValue(),
+                    'name' => $metadata2->getName(),
+                    'label' => $metadata2->getLabel(),
+                    'description' => $metadata2->getDescription(),
+                    'placeholder' => $metadata2->getPlaceholder(),
+                    'baseId' => $metadata2->getBaseId(),
+                    'parentId' => $metadata2->getParentId(),
+                    'constraints' => ['maxCount' => 0],
+                    'shownInBrief' => false,
+                    'copyToChildResource' => false,
+                    'resourceClass' => $metadata2->getResourceClass(),
+                    'canDetermineAssignees' => false,
+                ],
+            ],
+            $responseContent
+        );
     }
 
     public function testFetchingMetadataWithInvalidResourceClassFails() {

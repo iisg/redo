@@ -37,7 +37,7 @@ class ResourceKindUpdateCommandValidator extends ResourceKindCreateCommandValida
 
     public function validateMetadata(Metadata $metadata): bool {
         return Validator::allOf(
-            $this->rkConstraintIsUserIfNecessaryRule->forMetadataId($metadata->getId())
+            $this->rkConstraintIsUserIfNecessaryRule->forMetadata($metadata)
         )->validate($metadata->getConstraints());
     }
 }

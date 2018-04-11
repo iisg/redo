@@ -3,9 +3,6 @@ import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/requ
 import {ResourceKind} from "../resource-kind/resource-kind";
 import {MetadataRepository} from "./metadata-repository";
 import {Entity} from "common/entity/entity";
-import {SystemResourceKinds} from "../resource-kind/system-resource-kinds";
-import {arraysEqual} from "common/utils/array-utils";
-import {computedFrom} from "aurelia-binding";
 import {automapped, map, mappedWith} from "common/dto/decorators";
 import {CopyMapper} from "common/dto/mappers";
 import {MetadataMapper, ResourceKindConstraintMapper} from "./metadata-mapping";
@@ -63,12 +60,7 @@ export class Metadata extends Entity {
   @map shownInBrief: boolean;
   @map copyToChildResource: boolean;
   @map resourceClass: string;
-
-  @computedFrom('control', 'constraints.resourceKind')
-  get canDetermineAssignees(): boolean {
-    return this.control == 'relationship'
-      && arraysEqual(this.constraints.resourceKind, [SystemResourceKinds.USER_ID]);
-  }
+  @map canDetermineAssignees: boolean;
 
   async clearInheritedValues(metadataRepository: MetadataRepository, originalMetadata: Metadata = undefined): Promise<Metadata> {
     if (!originalMetadata) {

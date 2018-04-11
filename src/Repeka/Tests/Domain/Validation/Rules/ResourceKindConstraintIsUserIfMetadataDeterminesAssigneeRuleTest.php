@@ -2,12 +2,17 @@
 namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Assert\AssertionFailedException;
-use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRuleTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceWorkflowRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $workflowRepository;
     /** @var ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule */
@@ -15,7 +20,11 @@ class ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRuleTest extends \
 
     protected function setUp() {
         $this->workflowRepository = $this->createMock(ResourceWorkflowRepository::class);
-        $this->rule = new ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule($this->workflowRepository);
+        $this->rule = new ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule(
+            $this->workflowRepository,
+            $this->createMock(ResourceKindRepository::class),
+            $this->createMock(MetadataRepository::class)
+        );
     }
 
     public function testFailsWithoutMetadataId() {
@@ -25,27 +34,40 @@ class ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRuleTest extends \
 
     public function testAcceptsNonRelationships() {
         $this->workflowRepository->expects($this->never())->method('findByAssigneeMetadata');
-        $result = $this->rule->forMetadataId(123);
-        $this->assertTrue($result->validate([]));
+        $rule = $this->rule->forMetadata($this->createMetadataMock(1, 1, MetadataControl::TEXT()));
+        $this->assertTrue($rule->validate([]));
     }
 
-    public function testAcceptsNonDependencies() {
-        $this->workflowRepository->expects($this->once())->method('findByAssigneeMetadata')->with(123)->willReturn([]);
-        $result = $this->rule->forMetadataId(123)->validate(['resourceKind' => [SystemResourceKind::USER + 1]]);
-        $this->assertTrue($result);
+    public function testAcceptsCannotDeterminesAssignee() {
+        $rule = $this->rule->forMetadata($this->createMetadataMock(1, 1, MetadataControl::RELATIONSHIP()));
+        $this->assertTrue($rule->validate([]));
     }
 
-    public function testAcceptsUserRelationshipDependencies() {
+    public function testAcceptsNonDependentWorkflows() {
+        $metadata = $this->createMetadataMock();
+        $metadata->method('canDetermineAssignees')->willReturn(true);
+        $this->workflowRepository->expects($this->once())->method('findByAssigneeMetadata')->with($metadata)->willReturn([]);
+        $rule = $this->rule->forMetadata($metadata);
+        $this->assertTrue($rule->validate([]));
+    }
+
+    public function testAcceptsIfStillCanDetermineAssignees() {
+        $metadata = $this->createMetadataMock();
         $dummyWorkflow = $this->createMock(ResourceWorkflow::class);
-        $this->workflowRepository->expects($this->once())->method('findByAssigneeMetadata')->with(123)->willReturn([$dummyWorkflow]);
-        $result = $this->rule->forMetadataId(123)->validate(['resourceKind' => [SystemResourceKind::USER]]);
-        $this->assertTrue($result);
+        $metadata->method('canDetermineAssignees')->willReturn(true);
+        $metadata->method('withOverrides')->with(['constraints' => ['a']])->willReturn($metadata);
+        $this->workflowRepository->expects($this->once())->method('findByAssigneeMetadata')->with($metadata)->willReturn([$dummyWorkflow]);
+        $rule = $this->rule->forMetadata($metadata);
+        $this->assertTrue($rule->validate(['a']));
     }
 
-    public function testRejectsOtherRelationshipDependencies() {
+    public function testRejectsIfNewConstraintsCannotDetermineAssignees() {
+        $metadata = $this->createMetadataMock();
         $dummyWorkflow = $this->createMock(ResourceWorkflow::class);
-        $this->workflowRepository->expects($this->once())->method('findByAssigneeMetadata')->with(123)->willReturn([$dummyWorkflow]);
-        $result = $this->rule->forMetadataId(123)->validate(['resourceKind' => [SystemResourceKind::USER + 1]]);
-        $this->assertFalse($result);
+        $metadata->method('canDetermineAssignees')->willReturnOnConsecutiveCalls(true, false);
+        $metadata->method('withOverrides')->with(['constraints' => ['a']])->willReturn($metadata);
+        $this->workflowRepository->expects($this->once())->method('findByAssigneeMetadata')->with($metadata)->willReturn([$dummyWorkflow]);
+        $rule = $this->rule->forMetadata($metadata);
+        $this->assertFalse($rule->validate(['a']));
     }
 }

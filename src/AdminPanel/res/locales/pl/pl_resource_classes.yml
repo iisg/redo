@@ -23,7 +23,6 @@ books:
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:"
   Edit resource with transition from: Edycja zasobu przy przejściu ze stanu
   Added resource will be in following place: Dodany zasób znajdzie się w stanie
   To states: Do stanu
@@ -60,7 +59,6 @@ dictionaries:
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:"
   Edit resource with transition from: Edycja słownika przy przejściu ze stanu
   Added resource will be in following place: Dodany słownik znajdzie się w stanie
   To states: Do stanu
@@ -100,7 +98,6 @@ users:
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  "This metadata must allow only for users, because workflow uses it to determine assignees:": "Ta metadana musi pozwalać wyłącznie na użytkowników, bo proces używa jej do określania osób odpowiedzialnych:"
   Edit resource with transition from: Edycja użytkownika przy przejściu ze stanu
   Added resource will be in following place: Dodany użytkownika znajdzie się w stanie
   To states: Do stanu

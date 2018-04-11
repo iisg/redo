@@ -1,0 +1,15 @@
+<template>
+    <require from="resources/details/resource-link"></require>
+
+    <ul if.bind="userGroups">
+        <li repeat.for="group of userGroups">
+            <resource-link resource.bind="group"></resource-link>
+        </li>
+    </ul>
+
+    <div class="alert alert-info"
+        if.bind="userGroups.length === 0">
+        <icon name="information"></icon>
+        ${'No groups' | t}.
+    </div>
+</template>

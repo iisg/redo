@@ -24,11 +24,16 @@ class MetadataDeleteCommandValidator extends CommandAttributesValidator {
         return Validator::attribute(
             'metadata',
             Validator::allOf(
+                Validator::callback([$this, 'nonSystemMetadata']),
                 Validator::callback([$this, 'metadataDoesNotHaveChildren'])->setTemplate('metadata kind has submetadata kinds'),
                 Validator::callback([$this, 'metadataIsNotUsedInAnyResourceKind'])
                     ->setTemplate('metadata kind is used in some resource kinds')
             )
         );
+    }
+
+    public function nonSystemMetadata(Metadata $metadata): bool {
+        return $metadata->getId() > 0;
     }
 
     public function metadataDoesNotHaveChildren(Metadata $metadata): bool {

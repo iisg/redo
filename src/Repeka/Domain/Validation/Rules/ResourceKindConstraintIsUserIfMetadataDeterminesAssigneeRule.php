@@ -2,7 +2,9 @@
 namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
-use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Respect\Validation\Rules\AbstractRule;
 
@@ -16,32 +18,46 @@ use Respect\Validation\Rules\AbstractRule;
 class ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule extends AbstractRule {
     /** @var ResourceWorkflowRepository */
     private $workflowRepository;
-    /** @var int */
-    private $metadataId;
+    /** @var Metadata */
+    private $metadata;
+    /** @var ResourceKindRepository */
+    private $resourceKindRepository;
+    /** @var MetadataRepository */
+    private $metadataRepository;
 
-    public function __construct(ResourceWorkflowRepository $workflowRepository) {
+    public function __construct(
+        ResourceWorkflowRepository $workflowRepository,
+        ResourceKindRepository $resourceKindRepository,
+        MetadataRepository $metadataRepository
+    ) {
         $this->workflowRepository = $workflowRepository;
+        $this->resourceKindRepository = $resourceKindRepository;
+        $this->metadataRepository = $metadataRepository;
     }
 
     public function forMetadataId(int $metadataId): ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule {
-        $instance = new self($this->workflowRepository);
-        $instance->metadataId = $metadataId;
+        return $this->forMetadata($this->metadataRepository->findOne($metadataId));
+    }
+
+    public function forMetadata(Metadata $metadata): ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule {
+        $instance = new self($this->workflowRepository, $this->resourceKindRepository, $this->metadataRepository);
+        $instance->metadata = $metadata;
         return $instance;
     }
 
     public function validate($metadataConstraints) {
         Assertion::notNull(
-            $this->metadataId,
-            'Metadata ID not set. Use forMetadataId() for create validator for specific metadata first.'
+            $this->metadata,
+            'Metadata not set. Use forMetadata() for create validator for specific metadata first.'
         );
-        if (!array_key_exists('resourceKind', $metadataConstraints)) {
-            return true;  // this validator is applicable only to relationships
+        if (!$this->metadata->canDetermineAssignees($this->resourceKindRepository)) {
+            return true;
         }
-        $determiningWorkflows = $this->workflowRepository->findByAssigneeMetadata($this->metadataId);
+        $determiningWorkflows = $this->workflowRepository->findByAssigneeMetadata($this->metadata);
         if (empty($determiningWorkflows)) {
             return true;
         }
-        $resourceKindConstraint = $metadataConstraints['resourceKind'];
-        return $resourceKindConstraint == [SystemResourceKind::USER];
+        return $this->metadata->withOverrides(['constraints' => $metadataConstraints])
+            ->canDetermineAssignees($this->resourceKindRepository);
     }
 }

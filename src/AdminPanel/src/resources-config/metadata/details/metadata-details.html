@@ -12,14 +12,14 @@
             <button class="btn btn-danger"
                 type="button"
                 click.trigger="deleteMetadata()"
-                if.bind="!editing"
+                if.bind="!editing && metadata.id > 0"
                 disabled.bind="metadata.pendingRequest">
                 <icon name="remove-4"></icon>
             </button>
             <fab-edit editing.bind="editing"
                 shift-down
                 click.trigger="toggleEditForm()"
-                disabled.bind="metadata.pendingRequest || metadata.id < 0"></fab-edit>
+                disabled.bind="metadata.pendingRequest"></fab-edit>
         </div>
 
         <h1>${'Metadata' | t} #${ metadata.id }</h1>

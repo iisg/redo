@@ -7,8 +7,16 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
+use Repeka\Domain\Repository\UserRepository;
 
 class TransitionPossibilityChecker {
+    /** @var UserRepository */
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
+    }
+
     public function check(
         ResourceEntity $resource,
         ResourceWorkflowTransition $transition,
@@ -43,7 +51,9 @@ class TransitionPossibilityChecker {
             return false;  // no metadata determines assignees, so everyone can perform transition
         }
         $assigneeUserIds = $this->extractAssigneeIds($resource, $assigneeMetadataIds);
-        return !in_array($executor->getUserData()->getId(), $assigneeUserIds);
+        $userGroupsIds = EntityUtils::mapToIds($this->userRepository->findUserGroups($executor));
+        $userGroupsIds[] = $executor->getUserData()->getId();
+        return count(array_intersect($assigneeUserIds, $userGroupsIds)) == 0;
     }
 
     /**
@@ -64,9 +74,12 @@ class TransitionPossibilityChecker {
     private function extractAssigneeIds(ResourceEntity $resource, array $assigneeMetadataIds): array {
         $resourceKind = $resource->getKind();
         $assigneeMetadataIds = array_intersect($assigneeMetadataIds, $resourceKind->getMetadataIds());
-        $assigneeUserIdArrays = array_map(function (int $metadataId) use ($resource) {
-            return $resource->getContents()[$metadataId] ?? [];
-        }, $assigneeMetadataIds);
+        $assigneeUserIdArrays = array_map(
+            function (int $metadataId) use ($resource) {
+                return $resource->getContents()[$metadataId] ?? [];
+            },
+            $assigneeMetadataIds
+        );
         $assigneeUserIdArrays[] = [];  // ensure it's not empty or array_merge will fail
         $assigneeUserIds = call_user_func_array('array_merge', $assigneeUserIdArrays);
         $assigneeUserIds = array_column($assigneeUserIds, 'value');

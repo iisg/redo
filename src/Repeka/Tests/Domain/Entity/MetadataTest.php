@@ -2,10 +2,15 @@
 namespace Repeka\Tests\Domain\Entity;
 
 use Assert\InvalidArgumentException;
+use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     public function testCreatingMetadata() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
         $this->assertEquals(MetadataControl::TEXT(), $metadata->getControl());
@@ -205,5 +210,26 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $metadata = Metadata::create('books', MetadataControl::INTEGER(), 'Prop', [], [], [], $minMaxValue);
         $metadata = $metadata->withOverrides(['constraints' => ['minMaxValue' => null]]);
         $this->assertEquals(['minMaxValue' => null], $metadata->getConstraints());
+    }
+
+    public function testCanDetermineAssignees() {
+        $resourceKindRepository = $this->createRepositoryStub(
+            ResourceKindRepository::class,
+            [
+                $this->createResourceKindMock(1, SystemResourceClass::USER),
+                $this->createResourceKindMock(2, SystemResourceClass::USER),
+                $this->createResourceKindMock(3),
+            ]
+        );
+        $metadata = Metadata::create('books', MetadataControl::RELATIONSHIP(), 'skaner', []);
+        $this->assertFalse($metadata->canDetermineAssignees($resourceKindRepository));
+        $metadata = $metadata->withOverrides(['constraints' => ['resourceKind' => [1]]]);
+        $this->assertTrue($metadata->canDetermineAssignees($resourceKindRepository));
+        $metadata = $metadata->withOverrides(['constraints' => ['resourceKind' => [1, 2]]]);
+        $this->assertTrue($metadata->canDetermineAssignees($resourceKindRepository));
+        $metadata = $metadata->withOverrides(['constraints' => ['resourceKind' => [1, 2, 3]]]);
+        $this->assertFalse($metadata->canDetermineAssignees($resourceKindRepository));
+        $metadata = $metadata->withOverrides(['constraints' => ['resourceKind' => [3]]]);
+        $this->assertFalse($metadata->canDetermineAssignees($resourceKindRepository));
     }
 }

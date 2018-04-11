@@ -7,6 +7,7 @@
     <require from="../resources-list"></require>
     <require from="common/components/fab/fab-edit"></require>
     <require from="users/details/user-roles-assign"></require>
+    <require from="users/details/user-groups"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
     <div class="au-animate fade-inup-outup"
@@ -70,6 +71,10 @@
                             <resource-workflow resource.bind="resource"></resource-workflow>
                         </div>
                     </div>
+                </aup-tab-pane>
+                <aup-tab-pane tab="userGroupsTab">
+                    <user-groups if.bind="currentTabId === 'userGroupsTab'"
+                        user-data.bind="resource"></user-groups>
                 </aup-tab-pane>
                 <aup-tab-pane tab="userRolesTab">
                     <user-roles-assign if.bind="currentTabId === 'userRolesTab'"

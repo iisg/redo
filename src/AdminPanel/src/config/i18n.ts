@@ -49,7 +49,6 @@ export class I18nParams {
     'navigation',
     'resource_classes',
     'roles',
-    'system_metadata',
     'validation',
   ];
 

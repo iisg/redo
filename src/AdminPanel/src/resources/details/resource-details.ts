@@ -85,11 +85,17 @@ export class ResourceDetails implements RoutableComponentActivate {
         label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)
       });
     }
-    if (this.resource.kind.id == SystemResourceKinds.USER_ID && this.userRoleChecker.hasAll(['ADMIN'])) {
+    if (this.resource.kind.id == SystemResourceKinds.USER_ID) {
       this.resourceDetailsTabs.push({
-        id: 'userRolesTab',
-        label: this.i18n.tr('Roles')
+        id: 'userGroupsTab',
+        label: this.i18n.tr('Groups')
       });
+      if (this.userRoleChecker.hasAll(['ADMIN'])) {
+        this.resourceDetailsTabs.push({
+          id: 'userRolesTab',
+          label: this.i18n.tr('Roles')
+        });
+      }
     }
     this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
   }
