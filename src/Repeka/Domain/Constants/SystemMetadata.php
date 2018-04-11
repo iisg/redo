@@ -10,10 +10,12 @@ use Repeka\Domain\Entity\MetadataControl;
 /**
  * @method static SystemMetadata PARENT()
  * @method static SystemMetadata USERNAME()
+ * @method static SystemMetadata GROUP_MEMBER()
  */
 class SystemMetadata extends Enum {
     const PARENT = -1;
     const USERNAME = -2;
+    const GROUP_MEMBER = -3;
 
     public function toMetadata() {
         $value = $this->getValue();
@@ -23,11 +25,7 @@ class SystemMetadata extends Enum {
                 '',
                 MetadataControl::RELATIONSHIP(),
                 'Parent',
-                ['EN' => 'Parent', 'PL' => 'Rodzic',],
-                [],
-                [],
-                [],
-                false
+                ['EN' => 'Parent resource', 'PL' => 'Zasób nadrzędny']
             );
         } elseif ($value == self::USERNAME) {
             $metadata = Metadata::create(
@@ -39,6 +37,16 @@ class SystemMetadata extends Enum {
                 [],
                 [],
                 true
+            );
+        } elseif ($value == self::GROUP_MEMBER) {
+            $metadata = Metadata::create(
+                SystemResourceClass::USER,
+                MetadataControl::RELATIONSHIP(),
+                'Group member',
+                ['EN' => 'Group member', 'PL' => 'Członek grupy'],
+                [],
+                [],
+                ['resourceKind' => [SystemResourceKind::USER]]
             );
         }
         /** @noinspection PhpUndefinedVariableInspection */

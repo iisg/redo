@@ -31,7 +31,7 @@
                 <div class="col-xs-12 resource-kind-form-metadata-item"
                 repeat.for="metadata of resourceKind.metadataList & validate">
                     <div class="well"
-                        if.bind="metadata.id > 0">
+                        if.bind="metadata.id != -1">
                         <div class="btn-group pull-right top-right-buttons"
                             show.bind="!sortingMetadata">
                             <button class="btn btn-default ${metadata.overwriteForm ? 'active' : ''}"

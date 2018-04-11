@@ -2,35 +2,12 @@
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="common/components/restore-from-original/restore-from-original.html"></require>
 
-
-    <label>
-        <throbber if.bind="loadingWorkflows"></throbber>
-    </label>
-    <div class="alert ${allowsOnlyUsers ? 'alert-info' : 'alert-danger'}"
-        if.bind="workflowsUsingMetadataAsAssignee.length > 0">
-        <button type="button"
-            if.bind="!allowsOnlyUsers"
-            class="btn btn-sm btn-default pull-right"
-            click.delegate="setToUserOnly()">
-            <icon name="settings-3"></icon>
-            ${"Fix" | t}
-        </button>
-        <icon name.bind="allowsOnlyUsers ? 'information' : 'remove-3'"></icon>
-        ${'This metadata must allow only for users, because workflow uses it to determine assignees:' | resourceClassTranslation:resourceClass}
-        <ul>
-            <li repeat.for="workflow of workflowsUsingMetadataAsAssignee">
-                <a route-href="route: workflows/details; params.bind: {id: workflow.id}">
-                    ${workflow.name | inCurrentLanguage}
-                </a>
-            </li>
-        </ul>
-    </div>
     <p if.bind="metadata.constraints.resourceKind.length === 0">${'No allowed resource kinds' | t}</p>
     <p if.bind="metadata.constraints.resourceKind.length > 1">${'One of:' | t}</p>
     <div class="input-group">
         <resource-kind-chooser value.bind="metadata.constraints.resourceKind"
             multi-select="true"
-            disabled.bind="dropdownDisabled"
+            disabled.bind="disabled"
             if.bind="!disabled || metadata.constraints.resourceKind.length > 0"></resource-kind-chooser>
         <div class="input-group-addon">
             <restore-from-original if.bind="canInherit && wasModified"

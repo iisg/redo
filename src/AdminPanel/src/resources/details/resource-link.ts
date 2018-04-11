@@ -7,9 +7,8 @@ import {cachedResponse, forSeconds} from "../../common/repository/cached-respons
 @autoinject
 export class ResourceLink {
   @bindable id: number;
+  @bindable resource: Resource;
 
-  routerParams = {id: undefined};
-  resource: Resource;
   loading: boolean = false;
 
   constructor(private resourceRepository: ResourceRepository) {
@@ -19,7 +18,7 @@ export class ResourceLink {
     if (this.id) {
       this.loading = true;
       this.fetchResource(this.id)
-        .then(resource => this.onResourceFetched(resource))
+        .then(resource => this.resource = resource)
         .finally(() => this.loading = false);
     }
   }
@@ -27,10 +26,5 @@ export class ResourceLink {
   @cachedResponse(forSeconds(30))
   private fetchResource(id: number): Promise<Resource> {
     return this.resourceRepository.get(id, true);
-  }
-
-  private onResourceFetched(resource: Resource): Promise<void> | void {
-    this.resource = resource;
-    this.routerParams.id = this.id;
   }
 }

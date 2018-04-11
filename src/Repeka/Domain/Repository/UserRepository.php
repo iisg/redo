@@ -13,4 +13,7 @@ interface UserRepository {
     public function findByUserData(ResourceEntity $resource): User;
 
     public function save(User $user): User;
+
+    /** @return ResourceEntity[] */
+    public function findUserGroups(User $user): array;
 }

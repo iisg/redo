@@ -25,7 +25,6 @@ books:
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
-  "This metadata must allow only for users, because workflow uses it to determine assignees:": "This metadata must allow only for users, because workflow uses it to determine assignees:"
   Edit resource with transition from: Edit resource with transition from
   Added resource will be in following place: Added resource will be in following place
   To states: Do stanu
@@ -63,7 +62,6 @@ dictionaries:
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
-  "This metadata must allow only for users, because workflow uses it to determine assignees:": "This metadata must allow only for users, because workflow uses it to determine assignees:"
   Edit resource with transition from: Edit dictionary with transition from
   Added resource will be in following place: Added dictionary will be in following place
   To states: Do stanu
@@ -103,7 +101,6 @@ users:
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
-  "This metadata must allow only for users, because workflow uses it to determine assignees:": "This metadata must allow only for users, because workflow uses it to determine assignees:"
   Edit resource with transition from: Edit user with transition from
   Added resource will be in following place: Added users will be in following place
   To states: Do stanu

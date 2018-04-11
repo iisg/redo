@@ -35,7 +35,7 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
     /** @param MetadataUpdateCommand $command */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('metadataId', Validator::intVal()->min(1))
+            ::attribute('metadataId', Validator::intVal())
             ->attribute('newLabel', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('newPlaceholder', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('newDescription', $this->containsOnlyAvailableLanguagesRule)

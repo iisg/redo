@@ -2,6 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
@@ -31,19 +32,38 @@ class MetadataStage2Fixture extends RepekaFixture {
             MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT,
             ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT
         );
+        $this->addRelationshipResourceKindConstraint(
+            MetadataFixture::REFERENCE_METADATA_SUPERVISOR,
+            [SystemResourceKind::USER, ResourceKindsFixture::REFERENCE_RESOURCE_KIND_USER_GROUP]
+        );
+        $this->addRelationshipResourceKindConstraint(
+            MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER,
+            [SystemResourceKind::USER, ResourceKindsFixture::REFERENCE_RESOURCE_KIND_USER_GROUP]
+        );
     }
 
-    private function addRelationshipResourceKindConstraint($metadataRef, $resourceKindRef, $maxCount = 0) {
+    private function addRelationshipResourceKindConstraint($metadataRef, $resourceKindRefs, $maxCount = 0) {
+        if (!is_array($resourceKindRefs)) {
+            $resourceKindRefs = [$resourceKindRefs];
+        }
+        $resourceKindIds = array_map(
+            function ($ref) {
+                return is_numeric($ref) ? $ref : $this->getReference($ref)->getId();
+            },
+            $resourceKindRefs
+        );
         /** @var Metadata $metadata */
         $metadata = $this->handleCommand(new MetadataGetQuery($this->getReference($metadataRef)->getId()));
-        $this->handleCommand(new MetadataUpdateCommand(
-            $metadata->getId(),
-            $metadata->getLabel(),
-            $metadata->getDescription(),
-            $metadata->getPlaceholder(),
-            $this->relationshipConstraints($maxCount, [$this->getReference($resourceKindRef)->getId()]),
-            $metadata->isShownInBrief(),
-            $metadata->isCopiedToChildResource()
-        ));
+        $this->handleCommand(
+            new MetadataUpdateCommand(
+                $metadata->getId(),
+                $metadata->getLabel(),
+                $metadata->getDescription(),
+                $metadata->getPlaceholder(),
+                $this->relationshipConstraints($maxCount, $resourceKindIds),
+                $metadata->isShownInBrief(),
+                $metadata->isCopiedToChildResource()
+            )
+        );
     }
 }

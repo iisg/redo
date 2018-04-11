@@ -12,6 +12,7 @@ import {move, removeValue} from "common/utils/array-utils";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {SystemMetadata} from "../metadata/system-metadata";
 import {Configure} from "aurelia-configuration";
+import {SystemResourceKinds} from "./system-resource-kinds";
 
 @autoinject
 export class ResourceKindForm implements ComponentAttached, ComponentDetached {
@@ -84,7 +85,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
 
   @computedFrom('resourceKind.metadataList', 'resourceKind.metadataList.length')
   get editableMetadataList(): Metadata[] {
-    return this.resourceKind.metadataList.filter(metadata => metadata.id > 0);
+    return this.resourceKind.metadataList.filter(metadata => metadata.id != SystemMetadata.PARENT.id);
   }
 
   get resourceChildConstraintMetadata(): Metadata {
@@ -117,9 +118,9 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   }
 
   canRemoveMetadata(metadata: Metadata): boolean {
-    if (this.resourceClass == 'users') {
+    if (this.resourceKind.id == SystemResourceKinds.USER_ID) {
       const mappedMetadataIds = this.config.get('user_mapped_metadata_ids') || [];
-      return mappedMetadataIds.indexOf(metadata.id) === -1;
+      return metadata.id != SystemMetadata.USERNAME.id && mappedMetadataIds.indexOf(metadata.id) === -1;
     }
     return true;
   }

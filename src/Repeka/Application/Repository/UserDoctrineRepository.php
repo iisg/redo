@@ -12,14 +12,16 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 class UserDoctrineRepository extends AbstractRepository implements UserRepository, UserLoaderInterface {
     public function loadUserByUsername($username) {
         $usernameMetadataId = SystemMetadata::USERNAME;
-
         $resultSetMapping = ResultSetMappings::user($this->getEntityManager());
-        $query = $this->getEntityManager()->createNativeQuery(<<<SQL
+        $query = $this->getEntityManager()->createNativeQuery(
+            <<<SQL
             SELECT "user".* FROM "user"
               INNER JOIN "resource" user_data ON "user".user_data_id = user_data.id
               WHERE (contents->'$usernameMetadataId'->0->'value')::jsonb @> :username
 SQL
-            , $resultSetMapping);
+            ,
+            $resultSetMapping
+        );
         // the value needs to be double quoted for @> operator
         // see: https://stackoverflow.com/a/38328942/878514
         $query->setParameter('username', '"' . $username . '"');
@@ -41,5 +43,19 @@ SQL
             throw new EntityNotFoundException($this, "userData#{$resource->getId()}");
         }
         return $user;
+    }
+
+    /** @return ResourceEntity[] */
+    public function findUserGroups(User $user): array {
+        $groupMetadataId = SystemMetadata::GROUP_MEMBER;
+        $query = <<<QUERY
+        SELECT * FROM (
+          SELECT resource.*, jsonb_array_elements(contents->'$groupMetadataId') users
+          FROM resource WHERE resource_class = 'users'
+        ) AS t WHERE users->>'value' = '{$user->getUserData()->getId()}';
+QUERY;
+        $resultSetMapping = ResultSetMappings::resourceEntity($this->getEntityManager());
+        $query = $this->getEntityManager()->createNativeQuery($query, $resultSetMapping);
+        return $query->getResult();
     }
 }

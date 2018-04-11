@@ -2,6 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
@@ -184,7 +185,7 @@ class MetadataFixture extends RepekaFixture {
             'placeholder' => [],
             'control' => 'relationship',
             'resourceClass' => 'books',
-            'constraints' => $this->relationshipConstraints(1, [-1]),
+            'constraints' => $this->relationshipConstraints(1, [SystemResourceKind::USER]),
         ]), self::REFERENCE_METADATA_SUPERVISOR);
         $addedMetadata[] = $this->handleCommand(MetadataCreateCommand::fromArray([
             'name' => 'Wydział wydający',

@@ -10,6 +10,7 @@
         <exclude name="StaticAccess"/>
     </rule>
     <rule ref="rulesets/codesize.xml">
+        <exclude name="TooManyMethods"/>
         <exclude name="TooManyPublicMethods"/>
     </rule>
     <rule ref="rulesets/controversial.xml"/>
@@ -26,9 +27,15 @@
         </properties>
     </rule>
 
+    <rule ref="rulesets/codesize.xml/TooManyMethods">
+        <properties>
+            <property name="ignorepattern" value="#^(set|get|test)#"/>
+        </properties>
+    </rule>
+
     <rule ref="rulesets/codesize.xml/TooManyPublicMethods">
         <properties>
-            <property name="ignorepattern" value="(^(set|get|test))"/>
+            <property name="ignorepattern" value="#^(set|get|test)#"/>
         </properties>
     </rule>
 </ruleset>

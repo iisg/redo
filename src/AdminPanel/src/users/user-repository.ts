@@ -5,10 +5,11 @@ import {Resource} from "../resources/resource";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {cachedResponse, forSeconds} from "../common/repository/cached-response";
+import {ResourceRepository} from "../resources/resource-repository";
 
 @autoinject
 export class UserRepository extends ApiRepository<User> {
-  constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer) {
+  constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer, private resourceRepository: ResourceRepository) {
     super(httpClient, entitySerializer, User, 'users');
   }
 
@@ -25,5 +26,10 @@ export class UserRepository extends ApiRepository<User> {
   getRelatedUser(resource: Resource): Promise<User> {
     const endpoint = `${this.endpoint}/byData/${resource.id}`;
     return this.httpClient.get(endpoint).then(response => this.toEntity(response.content));
+  }
+
+  getGroups(user: User): Promise<Resource[]> {
+    const endpoint = this.oneEntityEndpoint(user) + '/groups';
+    return this.httpClient.get(endpoint).then(response => this.resourceRepository.responseToEntities(response));
   }
 }

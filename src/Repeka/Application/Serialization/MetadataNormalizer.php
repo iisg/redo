@@ -2,8 +2,16 @@
 namespace Repeka\Application\Serialization;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Repository\ResourceKindRepository;
 
 class MetadataNormalizer extends AbstractNormalizer {
+    /** @var ResourceKindRepository */
+    private $resourceKindRepository;
+
+    public function __construct(ResourceKindRepository $resourceKindRepository) {
+        $this->resourceKindRepository = $resourceKindRepository;
+    }
+
     /**
      * @param $metadata Metadata
      * @inheritdoc
@@ -22,6 +30,7 @@ class MetadataNormalizer extends AbstractNormalizer {
             'shownInBrief' => $metadata->isShownInBrief(),
             'copyToChildResource' => $metadata->isCopiedToChildResource(),
             'resourceClass' => $metadata->getResourceClass(),
+            'canDetermineAssignees' => $metadata->canDetermineAssignees($this->resourceKindRepository),
         ];
     }
 

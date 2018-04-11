@@ -7,6 +7,7 @@ use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindByResourceClassListQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
@@ -19,16 +20,19 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     /** @var EntityRepository|ResourceRepository */
     private $resourceRepository;
+    /** @var UserRepository */
+    private $userRepository;
 
     public function setUp() {
         parent::setUp();
         $this->resourceRepository = $this->container->get(ResourceRepository::class);
+        $this->userRepository = $this->container->get(UserRepository::class);
         $this->loadAllFixtures();
     }
 
     public function testFindAll() {
         $resources = $this->resourceRepository->findAll();
-        $this->assertCount(14, $resources); // 1 per every user + fixtures
+        $this->assertCount(16, $resources); // resources from fixtures
     }
 
     public function testFindAllByBookResourceClass() {
@@ -60,12 +64,18 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $secondPaginatedResources = $this->resourceRepository->findByQuery($secondPageQuery);
         $this->assertCount(3, $firstPaginatedResources->getResults());
         $this->assertCount(3, $secondPaginatedResources->getResults());
-        $firstPageResourceIds = array_map(function ($resource) {
-            return $resource->getId();
-        }, $firstPaginatedResources->getResults());
-        $secondPageResourceIds = array_map(function ($resource) {
-            return $resource->getId();
-        }, $secondPaginatedResources->getResults());
+        $firstPageResourceIds = array_map(
+            function ($resource) {
+                return $resource->getId();
+            },
+            $firstPaginatedResources->getResults()
+        );
+        $secondPageResourceIds = array_map(
+            function ($resource) {
+                return $resource->getId();
+            },
+            $secondPaginatedResources->getResults()
+        );
         $notInSecondPage = array_diff($firstPageResourceIds, $secondPageResourceIds);
         $this->assertCount(3, $notInSecondPage);
     }
@@ -94,7 +104,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindByEmptyQuery() {
         $resources = $this->resourceRepository->findByQuery(ResourceListQuery::builder()->build());
-        $this->assertCount(14, $resources);
+        $this->assertCount(16, $resources);
     }
 
     public function testFindChildren() {
@@ -128,6 +138,22 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $book = $this->getPhpBookResource();
         $scannerMetadata = $this->findMetadataByName('Skanista');
         $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $user->getUserData());
+        $book->updateContents($bookContents);
+        $this->resourceRepository->save($book);
+        $this->getEntityManager()->flush();
+        $resultsAfterAssigning = $this->resourceRepository->findAssignedTo($user);
+        $this->assertCount(1, $resultsAfterAssigning);
+        $this->assertEquals($book->getId(), reset($resultsAfterAssigning)->getId());
+    }
+
+    public function testFindsResourcesAssignedToUserByItsGroup() {
+        $user = $this->getBudynekUser();
+        $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
+        $this->assertCount(0, $resultsBeforeAssigning);
+        $book = $this->getPhpBookResource();
+        $scannerMetadata = $this->findMetadataByName('Skanista');
+        $groups = $this->userRepository->findUserGroups($user);
+        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $groups[0]);
         $book->updateContents($bookContents);
         $this->resourceRepository->save($book);
         $this->getEntityManager()->flush();

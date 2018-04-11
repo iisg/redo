@@ -10,6 +10,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 
@@ -18,6 +19,14 @@ use Repeka\Domain\UseCase\Resource\ResourceListQuery;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ResourceDoctrineRepository extends EntityRepository implements ResourceRepository {
+    /** @var UserRepository */
+    private $userRepository;
+
+    /** @required */
+    public function setUserRepository(UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
+    }
+
     public function save(ResourceEntity $resource): ResourceEntity {
         $this->getEntityManager()->persist($resource);
         return $resource;
@@ -61,13 +70,15 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             $parentMetadata = SystemMetadata::PARENT;
             $queryWheres[] = "(r.contents->'$parentMetadata' = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadata') = FALSE)";
         }
-        $query->getContentsFilter()->forEachValue(function ($value, int $metadataId) use (&$queryFroms, &$queryWheres, &$queryParams) {
-            $escapedMetadataId = str_replace('-', '_', strval($metadataId)); // prevents names like m-2
-            $paramName = "mFilter$escapedMetadataId";
-            $queryFroms[] = "jsonb_array_elements(r.contents->'$metadataId') m$escapedMetadataId";
-            $queryWheres[] = "m$escapedMetadataId->>'value' ILIKE :$paramName";
-            $queryParams[$paramName] = '%' . $value . '%';
-        });
+        $query->getContentsFilter()->forEachValue(
+            function ($value, int $metadataId) use (&$queryFroms, &$queryWheres, &$queryParams) {
+                $escapedMetadataId = str_replace('-', '_', strval($metadataId)); // prevents names like m-2
+                $paramName = "mFilter$escapedMetadataId";
+                $queryFroms[] = "jsonb_array_elements(r.contents->'$metadataId') m$escapedMetadataId";
+                $queryWheres[] = "m$escapedMetadataId->>'value' ILIKE :$paramName";
+                $queryParams[$paramName] = '%' . $value . '%';
+            }
+        );
         foreach ($query->getSortByMetadataIds() as $resourceMetadataSort) {
             $metadataId = $resourceMetadataSort['metadataId'];
             $direction = $resourceMetadataSort['direction'];
@@ -117,7 +128,8 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
     public function findAssignedTo(User $user): array {
         $em = $this->getEntityManager();
         $resultSetMapping = ResultSetMappings::resourceEntity($em);
-        $query = $em->createNativeQuery(<<<SQL
+        $query = $em->createNativeQuery(
+            <<<SQL
 -- Filters rows by user data IDs (ie. ID of user's resource, not user's entity!)
 SELECT
   resources_with_assignees.*
@@ -146,10 +158,14 @@ FROM (
                    ) AS resources_with_places
             ) AS resources_with_assignee_metadata_ids
      ) AS resources_with_assignees
-WHERE assignee_id = :userId
+WHERE assignee_id IN(:userIds)
 SQL
-            , $resultSetMapping);
-        $query->setParameter('userId', $user->getUserData()->getId());
+            ,
+            $resultSetMapping
+        );
+        $groups = $this->userRepository->findUserGroups($user);
+        $groups[] = $user->getUserData();
+        $query->setParameter('userIds', EntityUtils::mapToIds($groups));
         return $query->getResult();
     }
 }

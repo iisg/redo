@@ -12,7 +12,7 @@ export abstract class ApiRepository<T> {
               protected endpoint: string) {
   }
 
-  protected responseToEntities(response: HttpResponseMessage): Promise<T[]> {
+  public responseToEntities(response: HttpResponseMessage): Promise<T[]> {
     if (!response.content || !response.content.map) {
       throw new Error(`Response from ${response.requestMessage.url} should be an array`);
     }

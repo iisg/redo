@@ -39,7 +39,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->correctResourceDisplayStrategySyntaxRule = $this->createMock(CorrectResourceDisplayStrategySyntaxRule::class);
         $this->rkConstraintIsUser = $this->createRuleWithFactoryMethodMock(
             ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
-            'forMetadataId'
+            'forMetadata'
         );
         $this->relationshipMetadata = Metadata::create(
             '',

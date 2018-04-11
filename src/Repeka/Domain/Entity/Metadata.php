@@ -2,6 +2,8 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use Repeka\Domain\Constants\SystemResourceClass;
+use Repeka\Domain\Repository\ResourceKindRepository;
 
 class Metadata implements Identifiable {
     private $id;
@@ -133,9 +135,9 @@ class Metadata implements Identifiable {
     }
 
     public function isCopiedToChildResource(): bool {
-        return is_bool($this->overrides['copyToChildResource'] ?? null) ?
-            $this->overrides['copyToChildResource'] :
-            $this->copyToChildResource;
+        return is_bool($this->overrides['copyToChildResource'] ?? null)
+            ? $this->overrides['copyToChildResource']
+            : $this->copyToChildResource;
     }
 
     public function getBaseId(): ?int {
@@ -173,16 +175,19 @@ class Metadata implements Identifiable {
             'shownInBrief' => $this->isSetOverride($overrides, 'shownInBrief'),
             'copyToChildResource' => $this->isSetOverride($overrides, 'copyToChildResource'),
         ];
-        $overrides = array_filter($overrides, function ($override) {
-            return !is_null($override) && !is_array($override) || !empty($override);
-        });
+        $overrides = array_filter(
+            $overrides,
+            function ($override) {
+                return !is_null($override) && !is_array($override) || !empty($override);
+            }
+        );
         $metadata = clone $this;
         $metadata->overrides = $overrides;
         return $metadata;
     }
 
     private function isSetOverride(array $overrides, string $overrideKey): ?bool {
-        return  isset($overrides[$overrideKey]) && is_bool($overrides[$overrideKey]) ? $overrides[$overrideKey] : null;
+        return isset($overrides[$overrideKey]) && is_bool($overrides[$overrideKey]) ? $overrides[$overrideKey] : null;
     }
 
     private function removeValuesOverridingToTheSameThing(array $overrides, array $actualValues): array {
@@ -209,5 +214,21 @@ class Metadata implements Identifiable {
             }
         }
         return $overrides;
+    }
+
+    public function canDetermineAssignees(ResourceKindRepository $resourceKindRepository): bool {
+        if ($this->control == MetadataControl::RELATIONSHIP) {
+            $allowedResourceKindIds = $this->getConstraints()['resourceKind'] ?? [];
+            if ($allowedResourceKindIds) {
+                $resourceClasses = array_map(
+                    function (int $resourceKindId) use ($resourceKindRepository) {
+                        return $resourceKindRepository->findOne($resourceKindId)->getResourceClass();
+                    },
+                    $allowedResourceKindIds
+                );
+                return array_unique($resourceClasses) == [SystemResourceClass::USER];
+            }
+        }
+        return false;
     }
 }

@@ -91,8 +91,6 @@ services:
 
   Repeka\Application\ParamConverter\ResourceContentsParamConverter:
     tags: [{ name: request.param_converter, converter: Repeka\Application\ParamConverter\ResourceContentsParamConverter }]
-  Repeka\Application\ParamConverter\AssigneeMetadataParamConverter:
-    tags: [{ name: request.param_converter, converter: Repeka\Application\ParamConverter\AssigneeMetadataParamConverter }]
   Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor:
     public: true
 

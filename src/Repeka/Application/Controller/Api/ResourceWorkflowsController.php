@@ -2,7 +2,6 @@
 namespace Repeka\Application\Controller\Api;
 
 use Assert\Assertion;
-use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowDeleteCommand;
@@ -11,10 +10,8 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowPluginsQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUsingMetadataAsAssigneeQuery;
 use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,13 +24,10 @@ class ResourceWorkflowsController extends ApiController {
     /**
      * @Route
      * @Method("GET")
-     * @ParamConverter("assigneeMetadata", converter="Repeka\Application\ParamConverter\AssigneeMetadataParamConverter")
      */
-    public function getListAction(?Metadata $assigneeMetadata, Request $request) {
+    public function getListAction(Request $request) {
         $resourceClass = $request->query->get('resourceClass', '');
-        $command = ($assigneeMetadata == null)
-            ? new ResourceWorkflowListQuery($resourceClass)
-            : new ResourceWorkflowUsingMetadataAsAssigneeQuery($assigneeMetadata);
+        $command = new ResourceWorkflowListQuery($resourceClass);
         $workflows = $this->handleCommand($command);
         return $this->createJsonResponse($workflows);
     }
