@@ -6,7 +6,8 @@
         <span>${'navigation::Search' | t}</span>
         <metadata-chooser value.bind="metadata"
             resource-class.bind="resourceClass"
-            control.one-time="['text', 'textarea']"></metadata-chooser>
+            control.one-time="['text', 'textarea']"
+            set-first-as-default></metadata-chooser>
         <input type="text"
             class="matching-select2-style"
             value.bind="metadataValue.value">

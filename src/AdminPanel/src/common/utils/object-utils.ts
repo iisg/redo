@@ -57,3 +57,15 @@ export function mapValues<T, U>(obj: AnyMap<T>, mapperFn: (value: T) => U): AnyM
   }
   return out;
 }
+
+export function safeJsonParse(value: string): any {
+  if (value) {
+    try {
+      return JSON.parse(value);
+    }
+    catch (exception) {
+      console.warn(exception); // tslint:disable-line
+    }
+  }
+  return undefined;
+}

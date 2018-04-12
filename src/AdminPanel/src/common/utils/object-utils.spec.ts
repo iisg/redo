@@ -1,4 +1,4 @@
-import {filterByValues, keysByValue, mapValues, numberKeysByValue, zip} from "./object-utils";
+import {filterByValues, keysByValue, mapValues, numberKeysByValue, zip, safeJsonParse} from "./object-utils";
 
 describe('object-utils', () => {
   describe(keysByValue.name, () => {
@@ -101,6 +101,22 @@ describe('object-utils', () => {
 
     it('maps nested object', () => {
       expect(mapValues({a: 1, b: {c: 2}}, multiplyByTwo)).toEqual({a: 2, b: {c: 4}});
+    });
+  });
+
+  describe(safeJsonParse.name, () => {
+    it('returns undefined if false value', () => {
+      expect(safeJsonParse('')).toEqual(undefined);
+    });
+
+    it('parses correct JSON', () => {
+      const json = JSON.stringify({a: 2});
+      expect(safeJsonParse(json)).toEqual({a: 2});
+    });
+
+    it('returns undefined if incorrect json', () => {
+      const json = '{a: 2';
+      expect(safeJsonParse(json)).toEqual(undefined);
     });
   });
 });

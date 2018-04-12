@@ -11,6 +11,7 @@ import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
 import {PageResult} from "./page-result";
 import {ContextResourceClass} from "./context/context-resource-class";
 import {ResourceMetadataSort} from "./resource-metadata-sort";
+import {safeJsonParse} from "../common/utils/object-utils";
 
 @autoinject
 export class ResourcesList {
@@ -76,7 +77,7 @@ export class ResourcesList {
   }
 
   private obtainContentsFilterValue(parameters: any) {
-    let contentsFilter = this.obtainValue('contentsFilter', parameters);
+    let contentsFilter = safeJsonParse(parameters['contentsFilter']);
     if (this.contentsFilter != contentsFilter) {
       this.contentsFilter = contentsFilter;
       this.updateURL();
@@ -84,24 +85,11 @@ export class ResourcesList {
   }
 
   private obtainSortByValue(parameters: any) {
-    let sortBy = this.obtainValue('sortBy', parameters);
+    let sortBy = safeJsonParse(parameters['sortBy']);
     if (this.sortBy != sortBy) {
       this.sortBy = sortBy;
       this.updateURL();
     }
-  }
-
-  private obtainValue(key: string, parameters: any): any {
-    let valueFromParameters = parameters[key];
-    if (valueFromParameters) {
-      try {
-        return JSON.parse(valueFromParameters);
-      }
-      catch (exception) {
-        console.warn(exception); // tslint:disable-line
-      }
-    }
-    return undefined;
   }
 
   bind() {

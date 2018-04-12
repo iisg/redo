@@ -3,6 +3,7 @@ import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {MetadataRepository} from "./metadata-repository";
 import {twoWay} from "common/components/binding-mode";
+import {booleanAttribute} from "../../common/components/boolean-attribute";
 
 @autoinject
 export class MetadataChooser {
@@ -11,6 +12,7 @@ export class MetadataChooser {
   @bindable resourceClass: string | string[];
   @bindable control: string | string[];
   @bindable filter: (metadata: Metadata) => boolean = () => true;
+  @bindable @booleanAttribute setFirstAsDefault;
 
   metadataList: Metadata[];
 
@@ -49,6 +51,9 @@ export class MetadataChooser {
             this.loadMetadataList();
           } else {
             this.metadataList = metadataList;
+          }
+          if (this.setFirstAsDefault) {
+            this.value = metadataList[0];
           }
         })
         .finally(() => this.loadingMetadataList = false);
