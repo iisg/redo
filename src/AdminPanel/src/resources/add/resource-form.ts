@@ -70,7 +70,10 @@ export class ResourceForm {
         restrictingMetadata = this.resource.kind.workflow.places[0].restrictingMetadataIds;
       }
       requiredMetadataIds = flatten(
-        numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED)
+        [
+          numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED),
+          numberKeysByValue(restrictingMetadata, RequirementState.ASSIGNEE)
+        ]
       );
     }
     return requiredMetadataIds;
