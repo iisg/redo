@@ -1,0 +1,8 @@
+@import "../../styles";
+
+edit-button {
+    @include default-button();
+    .toggled {
+        @include default-button-colors($orange);
+    }
+}

@@ -5,48 +5,52 @@
     <require from="./audit-command-name-chooser"></require>
     <require from="./underscores-to-hyphens"></require>
 
-    <pagination total-number-of-elements.bind="entries.total"
-        elements-per-page.bind="filters.resultsPerPage"
-        current-page-number.bind="filters.currentPageNumber"
-        hide-elements-per-page-dropdown="true"></pagination>
+    <div class="audit-page">
+        <div>
+            <span class="page-title">${'Filters' | t}</span>
+            <dl>
+                <dt>${'Operation' | t}</dt>
+                <dd>
+                    <audit-command-name-chooser command-names.bind="filters.commandNames"
+                        change.delegate="onFiltersChanged()"></audit-command-name-chooser>
+                </dd>
+            </dl>
+        </div>
 
-    <h4>${ 'Filters' | t }</h4>
-    <dl>
-        <dt>${ 'Operation' | t}</dt>
-        <dd>
-            <audit-command-name-chooser command-names.bind="filters.commandNames"
-                change.delegate="onFiltersChanged()"></audit-command-name-chooser>
-        </dd>
-    </dl>
+        <pagination total-number-of-elements.bind="entries.total"
+            elements-per-page.bind="filters.resultsPerPage"
+            current-page-number.bind="filters.currentPageNumber"
+            hide-elements-per-page-dropdown="true"></pagination>
 
-    <table class="table table-striped audit-table">
-        <thead>
-        <tr>
-            <th>${ 'Date' | t }</th>
-            <th>${ 'Operation' | t }</th>
-            <th>${ 'User' | t }</th>
-            <th>${ 'Details' | t }</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr repeat.for="entry of entries"
-            class="${entry.successful ? '' : 'failure'}">
-            <td>${ entry.createdAt | date:'LLL' }</td>
-            <td>${ 'audit_commands::' + entry.commandName | t }</td>
-            <td>
-                <resource-link if.bind="entry.user"
-                    id.bind="entry.user.userData.id"></resource-link>
-            </td>
-            <td>
-                <compose view-model="./entry-details/audit-entry-details"
-                    view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
-                    model.bind="{entry: entry}"></compose>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>${'Date' | t}</th>
+                    <th>${'Operation' | t}</th>
+                    <th>${'User' | t}</th>
+                    <th>${'Details' | t}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr repeat.for="entry of entries"
+                    class="${entry.successful ? '' : 'failure'}">
+                    <td>${entry.createdAt | date:'LLL'}</td>
+                    <td>${'audit_commands::' + entry.commandName | t}</td>
+                    <td>
+                        <resource-link if.bind="entry.user"
+                            id.bind="entry.user.userData.id"></resource-link>
+                    </td>
+                    <td>
+                        <compose view-model="./entry-details/audit-entry-details"
+                            view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
+                            model.bind="{entry: entry}"></compose>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <pagination total-number-of-elements.bind="entries.total"
-        elements-per-page.bind="filters.resultsPerPage"
-        current-page-number.bind="filters.currentPageNumber"></pagination>
+        <pagination total-number-of-elements.bind="entries.total"
+            elements-per-page.bind="filters.resultsPerPage"
+            current-page-number.bind="filters.currentPageNumber"></pagination>
+    </div>
 </template>

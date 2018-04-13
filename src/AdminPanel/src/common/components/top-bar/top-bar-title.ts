@@ -10,7 +10,6 @@ export class TopBarTitle {
   private lastInstruction: NavigationInstruction;
 
   constructor(eventAggregator: EventAggregator) {
-
     eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
       (event: ResourceClassChangeEvent) => this.updateResourceClass(event));
     eventAggregator.subscribe('router:navigation:success',

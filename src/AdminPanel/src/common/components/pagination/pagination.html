@@ -2,34 +2,53 @@
     <require from="common/components/dropdown-select/dropdown-select"></require>
 
     <div if.bind="elementsPerPage && currentPageNumber"
-        class="pageNumbers">
+        class="pagination-page-numbers">
         <div if.bind="currentPageNumber != 1">
-            <a click.delegate="currentPageNumber = currentPageNumber - 1">&lt;</a><a click.delegate="currentPageNumber = 1">${pageIdentifier(1,
-            elementsPerPage)}</a>
+            <a click.delegate="currentPageNumber = 1">${pageIdentifier(1, elementsPerPage)}</a><icon name="squares"></icon>
+        </div>
+        <div if.bind="currentPageNumber - 2 - numberOfAdditionalPageNumbersBeforeCurrentPageNumber - 1 == 1">
+            <a click.delegate="currentPageNumber = 2">${pageIdentifier(2, elementsPerPage)}</a><icon name="squares"></icon>
+        </div>
+        <div else
+            if.bind="currentPageNumber - 2 - numberOfAdditionalPageNumbersBeforeCurrentPageNumber - 1 > 1">
+            <span class="ellipsis">…</span><icon name="squares"></icon>
         </div>
         <div class="with-ellipsis different-direction">
-            <a repeat.for="pageNumber of additionalPageNumbers(2, currentPageNumber - 2, maximumAdditionalPageNumbers / 2, true)"
-                click.delegate="currentPageNumber = pageNumber">${pageIdentifier(pageNumber,
-                elementsPerPage)}</a><span if.bind="currentPageNumber - 3 > maximumAdditionalPageNumbers / 2">…</span>
+            <span repeat.for="pageNumber of additionalPageNumbersBeforeCurrentPageNumber">
+                <a click.delegate="currentPageNumber = pageNumber">${pageIdentifier(pageNumber,
+                    elementsPerPage)}</a><icon name="squares"></icon>&lrm;</span>
         </div>
-        <a if.bind="currentPageNumber - 1 > 1"
-            click.delegate="currentPageNumber = currentPageNumber - 1">${pageIdentifier(currentPageNumber - 1, elementsPerPage)}</a>
-        <span class="current-page-number">${pageIdentifier(currentPageNumber, elementsPerPage)}</span>
-        <a if.bind="currentPageNumber + 1 < numberOfPages"
-            click.delegate="currentPageNumber = currentPageNumber + 1">${pageIdentifier(currentPageNumber + 1, elementsPerPage)}</a>
+        <div if.bind="currentPageNumber > 2">
+            <a click.delegate="currentPageNumber = currentPageNumber - 1">${pageIdentifier(currentPageNumber - 1,
+                elementsPerPage)}</a><icon name="squares"></icon>
+        </div>
+        <div>
+            <span class="current-page-number">${pageIdentifier(currentPageNumber,
+                elementsPerPage)}</span><icon if.bind="currentPageNumber < numberOfPages"
+                    name="squares"></icon>
+        </div>
+        <div if.bind="currentPageNumber < numberOfPages - 1">
+            <a click.delegate="currentPageNumber = currentPageNumber + 1">${
+                pageIdentifier(currentPageNumber + 1, elementsPerPage)}</a><icon name="squares"></icon>
+        </div>
         <div class="with-ellipsis">
-            <a repeat.for="pageNumber of additionalPageNumbers(currentPageNumber + 2, numberOfPages - 1, maximumAdditionalPageNumbers / 2)"
-                click.delegate="currentPageNumber = pageNumber">${pageIdentifier(pageNumber,
-                elementsPerPage)}</a><span if.bind="numberOfPages - currentPageNumber - 2 > maximumAdditionalPageNumbers / 2">…</span>
+            <span repeat.for="pageNumber of additionalPageNumbersAfterCurrentPageNumber"><a click.delegate="currentPageNumber
+                = pageNumber">${pageIdentifier(pageNumber, elementsPerPage)}</a><icon name="squares"></icon></span>
+        </div>
+        <div if.bind="numberOfPages - numberOfAdditionalPageNumbersAfterCurrentPageNumber - 1 - currentPageNumber - 1 == 1">
+            <a click.delegate="currentPageNumber = numberOfPages - 1">${pageIdentifier(numberOfPages - 1, elementsPerPage)}</a><icon name="squares"></icon>
+        </div>
+        <div else
+            if.bind="numberOfPages - numberOfAdditionalPageNumbersAfterCurrentPageNumber - 1 - currentPageNumber - 1 > 1">
+            <span class="ellipsis">…</span><icon name="squares"></icon>
         </div>
         <div if.bind="numberOfPages && currentPageNumber < numberOfPages">
-            <a click.delegate="currentPageNumber = numberOfPages">${pageIdentifier(numberOfPages,
-                elementsPerPage)}</a><a click.delegate="currentPageNumber = currentPageNumber + 1">&gt;</a>
+            <a click.delegate="currentPageNumber = numberOfPages">${pageIdentifier(numberOfPages, elementsPerPage)}</a>
         </div>
     </div>
 
     <div if.bind="!hideElementsPerPageDropdown && elementsPerPage"
-        class="label-with-dropdown">
+        class="pagination-dropdown-with-label">
         <span>${'Results per page' | t}:</span>
         <dropdown-select values.bind="elementsPerPageDropdownOptions"
             value.bind="selectedElementsPerPageDropdownOption"

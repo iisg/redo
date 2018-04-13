@@ -31,15 +31,16 @@ $navigation-bar-border-with-shadow-size-on-smaller-screens: 2px;
 
 top-bar {
   position: relative;
+  @include transition(color .3s, background-color .3s);
   .first-row {
     display: flex;
     flex-wrap: wrap-reverse;
-    .page-title, .options {
+    .top-bar-title-with-breadcrumbs, .options {
       display: flex;
       flex: 1;
       max-width: 100%;
     }
-    .page-title {
+    .top-bar-title-with-breadcrumbs {
       align-items: center;
       padding: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
       background-color: $page-title-background-color;
@@ -65,6 +66,7 @@ top-bar {
       }
       a {
         color: inherit;
+        @include transition(color .3s, background-color .3s);
         &:hover {
           background-color: $options-background-color-on-bover;
           color: $options-text-color-on-hover;
@@ -91,6 +93,8 @@ top-bar {
         margin-left: auto;
         color: inherit;
         white-space: nowrap;
+        font-weight: bold;
+        text-transform: uppercase;
         &, & > * {
           padding-left: $default-padding-or-margin-of-elements / 2;
           padding-right: $default-padding-or-margin-of-elements / 2;
@@ -148,6 +152,7 @@ top-bar {
         right: 0;
         a {
           color: $dropdown-menu-items-text-color;
+          @include transition(color .3s, background-color .3s);
           &:hover {
             background-color: $dropdown-menu-items-background-color-on-hover;
             color: $dropdown-menu-items-text-color-on-hover;
@@ -158,24 +163,24 @@ top-bar {
     span, button, a {
       color: $second-row-text-color;
     }
+    button, a {
+      @include transition(color .3s, background-color .3s);
+    }
     button:hover, a:hover, a[aria-expanded="true"] {
       background-color: $second-row-background-color-of-active-elements-on-hover;
       color: $second-row-text-color-of-active-elements-on-hover;
     }
   }
   icon {
-    & > svg {
-      display: block;
-      height: 22px;
-    }
-    &[name=user-2] > svg {
+    height: 22px;
+    &[name=user-2] {
       height: 26px;
     }
   }
 
   @include on-and-down($maximum-window-width-when-wrap-is-required) {
     .first-row {
-      .page-title {
+      .top-bar-title-with-breadcrumbs {
         flex: 0;
       }
       .options {

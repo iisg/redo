@@ -1,44 +1,44 @@
 <template>
     <require from="./add/resource-form"></require>
-    <require from="common/components/fab/fab-add"></require>
+    <require from="common/components/buttons/add-button"></require>
     <require from="common/components/pagination/pagination"></require>
     <require from="./resources-list-table"></require>
     <require from="./workflow/resource-place-display.html"></require>
 
-    <pagination total-number-of-elements.bind="totalNumberOfResources"
-        elements-per-page.bind="resultsPerPage"
-        current-page-number.bind="currentPageNumber"
-        hide-elements-per-page-dropdown="true"></pagination>
+    <div class="resources-list ${addFormOpened ? 'add-form-opened' : ''}">
+        <pagination total-number-of-elements.bind="totalNumberOfResources"
+            elements-per-page.bind="resultsPerPage"
+            current-page-number.bind="currentPageNumber"
+            hide-elements-per-page-dropdown="true"></pagination>
+        <add-button entity-name="resource"
+            toggled.two-way="addFormOpened"
+            disabled.bind="parentResource.pendingRequest"></add-button>
 
-    <fab-add class="pull-right"
-        opened.bind="addFormOpened"
-        disabled.bind="parentResource.pendingRequest"></fab-add>
+        <div if.bind="addFormOpened"
+            class="fade-inup-outdown au-animate well">
+            <h2>${'Add new resource' | resourceClassTranslation:resourceClass}</h2>
+            <resource-form resource-class.bind="resourceClass"
+                submit.call="addNewResource(savedResource)"
+                parent.bind="parentResource"></resource-form>
+        </div>
 
-    <div if.bind="addFormOpened"
-        class="fade-inup-outdown au-animate floating-form-full-width well">
-        <h2>${'Add new resource' | resourceClassTranslation:resourceClass}</h2>
-        <resource-form resource-class.bind="resourceClass"
-            submit.call="addNewResource(savedResource)"
-            parent.bind="parentResource"></resource-form>
-    </div>
+        <loading-bar if.bind="displayProgressBar"></loading-bar>
 
-    <loading-bar if.bind="displayProgressBar"></loading-bar>
-
-    <div class="row"
-        show.bind="!resources || resources.length > 0">
-        <resources-list-table resources.bind="resources"
+        <resources-list-table show.bind="!resources || resources.length > 0"
+            resources.bind="resources"
             column-metadata.bind="briefMetadata"
             resource-class.bind="resourceClass"
             sort-by.bind="sortBy"></resources-list-table>
-    </div>
 
-    <div class="alert alert-info"
-        if.bind="resources.length === 0 && !displayProgressBar">
-        <icon name="information"></icon>
-        ${'No resources.' | resourceClassTranslation:resourceClass}
-    </div>
+        <div class="alert alert-info"
+            if.bind="resources.length === 0 && !displayProgressBar">
+            <icon name="information"></icon>
+            ${'No resources.' | resourceClassTranslation:resourceClass}
+        </div>
 
-    <pagination total-number-of-elements.bind="totalNumberOfResources"
-        elements-per-page.bind="resultsPerPage"
-        current-page-number.bind="currentPageNumber"></pagination>
+        <pagination containerless
+        total-number-of-elements.bind="totalNumberOfResources"
+            elements-per-page.bind="resultsPerPage"
+            current-page-number.bind="currentPageNumber"></pagination>
+    </div>
 </template>

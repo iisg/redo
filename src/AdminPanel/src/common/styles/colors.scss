@@ -1,11 +1,13 @@
+$default-value-to-lighten-colors-by: 20.7;
+
 $orange: #f9b000;
 $dark-grey: #4d4d4d;
 $grey: #808080;
 $lightish-grey: #b3b3b3;
 $light-grey: #e6e6e6;
 $blue: #0071bc;
-$light-blue: #29abe2;
-$red: #fa5165;
+$light-blue: lighten($blue, $default-value-to-lighten-colors-by);
+$red: #f95165;
 
 $default-background-color: white !default;
 $default-text-color: $dark-grey !default;

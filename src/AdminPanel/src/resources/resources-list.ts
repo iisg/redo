@@ -145,8 +145,8 @@ export class ResourcesList {
   }
 
   fetchBriefMetadata() {
-    this.resourceKindRepository.getListByClass(this.resourceClass).then(resourceKindList => {
-      this.briefMetadata = getMergedBriefMetadata(resourceKindList);
+    this.resourceKindRepository.getListByClass(this.resourceClass).then(resourceKinds => {
+      this.briefMetadata = getMergedBriefMetadata(resourceKinds);
     });
   }
 

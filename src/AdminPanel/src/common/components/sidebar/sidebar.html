@@ -1,4 +1,4 @@
-<template class.bind="collapsed ? 'collapsed' : ''">
+<template class="${!collapsed || 'collapsed'}">
     <require from="./nested-navigation-menu"></require>
     <require from="common/components/redo-logo/redo-logo.html"></require>
     <require from="common/components/version-display/version-display"></require>

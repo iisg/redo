@@ -1,5 +1,5 @@
 <template>
-    <ul class="list-unstyled">
+    <ul class="possible-actions">
         <li repeat.for="transition of resource.availableTransitions">
             ${transition.label | inCurrentLanguage}
         </li>

@@ -1,11 +1,14 @@
-.loading-bar {
-  display: block;
-  .progress {
-    height: 4px;
-    margin-bottom: 0;
-  }
-}
+@import "../../styles";
 
-.progress-bar-full {
-  width: 100%;
+loading-bar {
+    display: block;
+    .progress {
+      height: 4px;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    .progress-bar {
+      width: 100%;
+      background-color: $blue;
+    }
 }

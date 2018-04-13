@@ -1,7 +1,6 @@
 throbber {
-    svg {
-        width: 1em;
-        vertical-align: -0.125em;
+    & > svg {
+        stroke: currentColor;
         @keyframes Rotate {
             0% {
                 transform: rotate(0);
@@ -11,5 +10,8 @@ throbber {
             }
         }
         animation: linear Rotate 1s infinite;
+    }
+    &.icon > svg {
+        fill: none;
     }
 }

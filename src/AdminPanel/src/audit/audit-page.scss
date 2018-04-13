@@ -1,5 +1,20 @@
-.audit-table {
-  .failure td {
-    background: rgba(red, .2);
+@import "../common/styles";
+
+.audit-page {
+  & > div {
+    &, & > * {
+      padding: $default-gap-size / 4;
+    }
+    .page-title {
+      display: block;
+    }
+  }
+
+  table {
+    .failure {
+      td {
+        background-color: rgba($red, .2);
+      }
+    }
   }
 }

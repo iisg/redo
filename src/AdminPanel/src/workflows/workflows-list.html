@@ -1,0 +1,50 @@
+<template>
+    <require from="common/components/buttons/add-button"></require>
+
+    <a route-href="route: workflows/new; params.bind: {resourceClass}">
+        <add-button entity-name="workflow"></add-button>
+    </a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>${'ID' | t}</th>
+                <th>${'Name' | t}</th>
+                <th>${'Thumbnail' | t}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr if.bind="progressBar">
+                <th colspan="6">
+                    <loading-bar></loading-bar>
+                </th>
+            </tr>
+        </tfoot>
+        <tbody class="au-stagger">
+            <tr class="au-animate fade-inup-outdown"
+                repeat.for="workflow of workflows"
+                go-to-link-on-row-click>
+                <td>
+                    <a route-href="route: workflows/details; params.bind: {id: workflow.id}"
+                        disabled-link.bind="workflow.pendingRequest">${workflow.id}</a>
+                </td>
+                <td>
+                    <a route-href="route: workflows/details; params.bind: {id: workflow.id}"
+                        disabled-link.bind="workflow.pendingRequest">${workflow.name | inCurrentLanguage}</a>
+                </td>
+                <td>
+                    <img if.bind="workflow.thumbnail"
+                        src.bind="workflow.thumbnail">
+                </td>
+                <td class="with-throbber"><throbber if.bind="workflow.pendingRequest"></throbber></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-info"
+        if.bind="workflows.length === 0 && !progressBar">
+        <icon name="information"></icon>
+        ${'No workflows.' | resourceClassTranslation:resourceClass}
+    </div>
+</template>

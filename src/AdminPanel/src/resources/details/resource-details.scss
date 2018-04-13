@@ -1,12 +1,53 @@
-dl.resource-details {
-  margin-bottom: 0;
-  dd {
-    white-space: normal;
-  }
-}
+@import "../../common/styles";
 
-aup-tabs{
-  .active{
-    font-style: italic;
+.resource-details {
+  .resource-name-with-buttons-and-tabs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: $default-gap-size / 4 solid $light-blue;
+    & > :not(aup-tabs) {
+      padding: $default-gap-size / 2;
+    }
+    aup-tabs {
+      align-self: flex-end;
+      margin-left: auto;
+      padding-left: $default-gap-size / 2;
+      & > ul {
+        border: none;
+        & > li {
+          margin-bottom: 0;
+          & > a {
+            margin-right: 0;
+            padding: $default-gap-size / 8 $default-gap-size / 2;
+            border: 0;
+            border-radius: 0;
+            text-transform: uppercase;
+            color: $default-text-color;
+            @include transition(background-color .3s ease-out, color .3s ease-out);
+            &.active, &:hover {
+              background-color: $light-blue;
+              color: white;
+            }
+            &.active {
+              font-style: normal;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  dl.resource-details {
+    margin-bottom: 0;
+    dd {
+      white-space: normal;
+    }
+  }
+
+  aup-tabs{
+    .active{
+      font-style: italic;
+    }
   }
 }

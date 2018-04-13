@@ -2,7 +2,8 @@
 @import "../jspm_packages/npm/compass-mixins@0.12.10/lib/animation/animate/fading";
 
 $admin-content-z-index-when-sidebar-is-collapsed: 0;
-$collapsed-sidebar-elements-z-index-on-hover: $admin-content-z-index-when-sidebar-is-collapsed + 1;
+$floating-form-z-index: $admin-content-z-index-when-sidebar-is-collapsed + 1;
+$collapsed-sidebar-elements-z-index-on-hover: $floating-form-z-index + 1;
 
 $admin-content-left-border-width: $default-gap-size / 4;
 
@@ -31,15 +32,46 @@ sidebar.collapsed {
   overflow: hidden;
   border-left: $lightish-grey solid $admin-content-left-border-width;
   & > router-view {
+    position: relative;
     flex: 1;
-    padding: $default-gap-size;
     overflow: auto;
     background-color: white;
+    &, & > a, metadata-list {
+      & > add-button {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
   }
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 a {
   cursor: pointer;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+dl {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+
+h1, h2, h3, p {
+  margin-top: $default-gap-size / 2;
+  margin-bottom: $default-gap-size / 2;
+}
+
+label {
+  margin-bottom: $default-gap-size / 4;
 }
 
 .button-parent {
@@ -56,8 +88,65 @@ a {
 }
 
 table {
-  .table-row-edit-form {
-    background: lightgoldenrodyellow !important;
+  width: 100%;
+  thead {
+    color: white;
+    background-color: $grey;
+    th {
+        font-weight: normal;
+    }
+  }
+  tbody {
+    tr {
+      @include transition(background-color .3s);
+      &:nth-child(2n + 1) {
+          background-color: $light-grey;
+      }
+      &:not(.edit-form):hover {
+          background-color: $orange;
+      }
+      a {
+          color: $default-text-color;
+      }
+    }
+  }
+  th, td {
+    padding: $default-gap-size / 4;
+    &:first-child {
+      padding-left: $default-gap-size / 2;
+    }
+    &:last-child {
+      padding-right: $default-gap-size / 2;
+      &:empty {
+        padding: 0;
+        width: $default-gap-size / 4;
+      }
+    }
+  }
+  td.with-buttons-container {
+    padding: 0;
+    & > div {
+        display: flex;
+        justify-content: flex-end;
+        & > * {
+            margin: $default-gap-size / 4;
+            padding: 0;
+            background-color: initial;
+            color: $blue;
+            &.remove:not([disabled]) {
+                color: $red;
+            }
+            &[disabled] {
+                color: $grey;
+            }
+        }
+        & > a {
+          color: inherit;
+        }
+    }
+  }
+  td.with-throbber {
+    width: 1em;
   }
 }
 
@@ -122,19 +211,24 @@ input, textarea, select {
   }
 }
 
-.floating-form-full-width {
-  display: block;
-  position: relative;
-  margin-right: 28px;
-  top: 28px;
-  margin-bottom: 56px !important;
+.well {
+  padding: $default-gap-size / 2;
+  margin-bottom: 0;
+  &:not(.floating-form) {
+    border-radius: 0;
+  }
+  &.floating-form {
+    z-index: $floating-form-z-index;
+    position: absolute;
+    right: 0;
+    border-top-right-radius: 0;
+  }
 }
 
-.floating-form {
-  @extend .floating-form-full-width;
-  position: absolute;
-  right: 20px;
-  z-index: 10;
+.form-group {
+  margin-bottom: 0;
+  padding-top: $default-gap-size / 2;
+  padding-bottom: $default-gap-size / 2;
 }
 
 .no-padding {
