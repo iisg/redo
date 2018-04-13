@@ -4,10 +4,8 @@
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="resources/sort-button"></require>
 
-    <div class="col-xs-12">
-        <table class="table table-striped"
-            if.bind="resources.length > 0">
-            <thead>
+    <table if.bind="resources.length > 0">
+        <thead>
             <tr>
                 <th>${'ID' | t}</th>
                 <th>${'Resource kind' | t}</th>
@@ -20,25 +18,31 @@
                 <th repeat.for="name of extraColumnNames">${name | t}</th>
                 <th></th>
             </tr>
-            </thead>
-            <tfoot>
+        </thead>
+        <tfoot>
             <tr if.bind="resources === undefined">
                 <th colspan="6">
                     <loading-bar></loading-bar>
                 </th>
             </tr>
-            </tfoot>
-            <tbody class="au-stagger">
+        </tfoot>
+        <tbody class="au-stagger">
             <tr repeat.for="resource of resources"
                 class="au-animate fade-inup-outdown"
-                go-to-link-on-row-click=".btn-details">
-                <td>${resource.id & oneTime}</td>
+                go-to-link-on-row-click>
+                <td>
+                    <a route-href="route: resources/details; params.bind: {id: resource.id}"
+                        disabled-link.bind="resource.pendingRequest">${resource.id & oneTime}</a>
+                </td>
                 <td>
                     ${resource.kind.label | inCurrentLanguage}
                 </td>
                 <td repeat.for="metadata of columnMetadata">
-                    <resource-metadata-values resource.one-time="resource"
+                    <a route-href="route: resources/details; params.bind: {id: resource.id}"
+                        disabled-link.bind="resource.pendingRequest">
+                        <resource-metadata-values resource.one-time="resource"
                         metadata.one-time="metadata"></resource-metadata-values>
+                    </a>
                 </td>
                 <td>
                     <resource-place-display resource.bind="resource"></resource-place-display>
@@ -46,24 +50,14 @@
                 <td repeat.for="view of extraColumnViews">
                     <compose view.bind="view"></compose>
                 </td>
-                <td>
-                    <span class="pull-right text-nowrap">
-                        <pending-throbber entity.bind="resource"></pending-throbber>
-                        <a class="btn btn-info btn-sm btn-details"
-                            route-href="route: resources/details; params.bind: {id: resource.id}"
-                            disabled-link.bind="resource.pendingRequest">
-                            <icon name="show"></icon>
-                        </a>
-                    </span>
-                </td>
+                <td class="with-throbber"><throbber if.bind="resource.pendingRequest"></throbber></td>
             </tr>
-            </tbody>
-        </table>
+        </tbody>
+    </table>
 
-        <div show.bind="resources.length === 0">
-            <slot name="empty">
-                ${"No resources." | resourceClassTranslation:resourceClass}
-            </slot>
-        </div>
+    <div show.bind="resources.length === 0">
+        <slot name="empty">
+            ${"No resources." | resourceClassTranslation:resourceClass}
+        </slot>
     </div>
 </template>

@@ -1,6 +1,3 @@
 <template bindable="entity">
-    <span class="btn btn-default btn-invisible"
-        if.bind="entity.pendingRequest">
-        <throbber></throbber>
-    </span>
+    <throbber if.bind="entity.pendingRequest"></throbber>
 </template>

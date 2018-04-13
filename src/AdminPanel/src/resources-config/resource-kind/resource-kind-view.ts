@@ -5,7 +5,7 @@ import {inlineView} from "aurelia-templating";
 export class ResourceKindView implements ConfiguresRouter {
   configureRouter(config: RouterConfiguration, router: Router): void {
     config.map([
-      {route: '', name: 'resource-kinds/list', moduleId: './resource-kind-list'},
+      {route: '', name: 'resource-kinds/list', moduleId: './resource-kinds-list'},
       {route: '/../workflows/:id', name: 'workflows/details', moduleId: 'workflows/details/workflow-details'},
     ]);
   }

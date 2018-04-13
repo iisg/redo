@@ -1,3 +1,5 @@
+@import "../../styles";
+
 .select2-results {
   .selected-option {
     display: none;
@@ -10,17 +12,27 @@
   }
 }
 
-.select2-container .select2-selection--single {
-  min-height: 28px;
-  height: auto !important;
-}
-
-.dropdown-select-throbber {
+dropdown-select {
+  display: flex;
+  align-items: center;
+  .select2-container {
+    &.select2-container--focus {
+      .select2-selection {
+        border-color: $grey;
+      }
+    }
+    .select2-selection--single {
+      min-height: 28px;
+      height: auto;
+      .select2-selection__arrow {
+        min-height: inherit;
+      }
+    }
+  }
   throbber {
-    display: block;
-    position: absolute;
-    z-index: 50;
-    right: 20px;
-    top: 5px;
+    margin-left: $default-gap-size / 2;
+    &.icon {
+      display: inherit;
+    }
   }
 }

@@ -1,0 +1,36 @@
+@import "../common/styles";
+
+resources-list-table {
+    table {
+        width: 100%;
+        thead {
+            color: white;
+            background-color: $grey;
+            th {
+                font-weight: normal;
+            }
+        }
+        tbody {
+            tr {
+                &:nth-child(2n + 1) {
+                    background-color: $light-grey;
+                }
+                &:hover {
+                    background-color: $orange;
+                }
+                a {
+                    color: $default-text-color;
+                }
+            }
+        }
+        th, td {
+            padding: $default-gap-size / 4;
+            &:first-child {
+                padding-left: $default-gap-size / 2;
+            }
+            &:last-child {
+                padding-right: $default-gap-size / 2;
+            }
+        }
+    }
+}

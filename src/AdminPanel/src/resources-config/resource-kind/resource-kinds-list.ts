@@ -7,7 +7,7 @@ import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation
 import {ContextResourceClass} from 'resources/context/context-resource-class';
 
 @autoinject
-export class ResourceKindList {
+export class ResourceKindsList {
   addFormOpened: boolean = false;
   progressBar: boolean;
   resourceClass: string;

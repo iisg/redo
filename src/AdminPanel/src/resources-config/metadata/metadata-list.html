@@ -1,14 +1,13 @@
 <template>
     <require from="./metadata-form"></require>
     <require from="./details/metadata-child-add"></require>
-    <require from="common/components/fab/fab-add"></require>
+    <require from="common/components/buttons/add-button"></require>
 
-
-    <fab-add class="pull-right"
-        opened.bind="addFormOpened"></fab-add>
+    <add-button entity-name="metadata"
+        toggled.two-way="addFormOpened"></add-button>
 
     <div if.bind="addFormOpened"
-        class="well fade-inout-updown au-animate floating-form-full-width">
+        class="well au-animate fade-inout-updown">
         <h2>${'Add new metadata kind' | resourceClassTranslation:resourceClass}</h2>
         <metadata-form submit.call="addNewMetadata(editedMetadata)"
             if.bind="!parentMetadata"
@@ -19,77 +18,75 @@
             resource-class.bind="resourceClass"></metadata-child-add>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>${'Name' | t}</th>
-                    <th>${'Label' | t}</th>
-                    <th>${'Control' | t}</th>
-                    <th>${'Hint' | t}</th>
-                    <th>${'Description' | t}</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tfoot>
-                <tr if.bind="progressBar">
-                    <th colspan="7">
-                        <loading-bar></loading-bar>
-                    </th>
-                </tr>
-                </tfoot>
-                <tbody oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
-                <tr repeat.for="metadata of metadataList"
-                    oa-sortable-item="item.bind: metadata"
-                    class="${metadata.sortingClass}"
-                    go-to-link-on-row-click=".btn-details">
-                    <td>${metadata.id}</td>
-                    <td>
-                        ${metadata.name}
-                        <icon name="show"
-                            if.bind="metadata.shownInBrief"></icon>
-                        <icon name="edit"
-                            if.bind="metadata.copyToChildResource"></icon>
-                    </td>
-                    <td>
-                        ${metadata.label | inCurrentLanguage}
-                    </td>
-                    <td>
-                        ${'controls::' + metadata.control | t}
-                        <icon name="user-3"
-                            if.bind="metadata.canDetermineAssignees"
-                            bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></icon>
-                    </td>
-                    <td>
-                        ${metadata.placeholder | inCurrentLanguage}
-                    </td>
-                    <td>
-                        ${metadata.description | inCurrentLanguage}
-                    </td>
-                    <td class="text-right">
-                        <span class="pull-right text-nowrap">
-                            <pending-throbber entity.bind="metadata"></pending-throbber>
-                            <a class="btn btn-default btn-narrow drag-handle vertically-sortable"
-                                bootstrap-tooltip.bind="'Drag to change order' | t"
-                                disabled-link.bind="metadata.pendingRequest"
-                                data-placement="left"
-                                if.bind="!parentMetadata">
-                                <icon name="arrows-2"></icon>
-                            </a>
-                            <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
-                                class="btn btn-info btn-details"
-                                disabled-link.bind="metadata.pendingRequest">
-                                <icon name="show"></icon>
-                            </a>
-                        </span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>${'Name' | t}</th>
+                <th>${'Label' | t}</th>
+                <th>${'Control' | t}</th>
+                <th>${'Hint' | t}</th>
+                <th>${'Description' | t}</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr if.bind="progressBar">
+                <th colspan="8">
+                    <loading-bar></loading-bar>
+                </th>
+            </tr>
+        </tfoot>
+        <tbody oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
+            <tr repeat.for="metadata of metadataList"
+                oa-sortable-item="item.bind: metadata"
+                class="${metadata.sortingClass}"
+                go-to-link-on-row-click>
+                <td>
+                    <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
+                    disabled-link.bind="metadata.pendingRequest">${metadata.id}</a>
+                </td>
+                <td>
+                    <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
+                        disabled-link.bind="metadata.pendingRequest">${metadata.name}</a>
+                    <icon name="show"
+                        if.bind="metadata.shownInBrief"></icon>
+                    <icon name="edit"
+                        if.bind="metadata.copyToChildResource"></icon>
+                </td>
+                <td>
+                    <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
+                        disabled-link.bind="metadata.pendingRequest">${metadata.label | inCurrentLanguage}</a>
+                </td>
+                <td>
+                    ${'controls::' + metadata.control | t}
+                    <icon name="user-3"
+                        if.bind="metadata.canDetermineAssignees"
+                        bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></icon>
+                </td>
+                <td>
+                    ${metadata.placeholder | inCurrentLanguage}
+                </td>
+                <td>
+                    ${metadata.description | inCurrentLanguage}
+                </td>
+                <td class="with-buttons-container">
+                    <div>
+                        <a if.bind="!parentMetadata"
+                            class="drag-handle vertically-sortable"
+                            bootstrap-tooltip.bind="'Drag to change order' | t"
+                            disabled-link.bind="metadata.pendingRequest"
+                            data-placement="left">
+                            <icon name="arrows"
+                                size="1.25"></icon>
+                        </a>
+                    </div>
+                </td>
+                <td class="with-throbber"><throbber if.bind="metadata.pendingRequest"></throbber></td>
+            </tr>
+        </tbody>
+    </table>
 
     <div class="alert alert-info"
         if.bind="metadataList.length === 0 && !progressBar">

@@ -1,51 +1,44 @@
-$page-number-margin-size: 3px;
-$elements-per-page-dropdown-minimum-width: 54px;
-$elements-per-page-dropdown-left-margin-size: 5px;
+@import "../../styles";
 
-pagination {
-    .pageNumbers {
-        display: flex;
-        .with-ellipsis {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            span {
-                cursor: default;
-            }
-        }
-        .different-direction {
-            direction: rtl;
-        }
-        .current-page-number, a {
-            margin-left: $page-number-margin-size;
-            margin-right: $page-number-margin-size;
-        }
-        .current-page-number {
-            font-weight: bold;
-        }
-        & > :first-child {
-            .current-page-number, a {
-                &:first-child {
-                    margin-left: 0;
-                }
-            }
-        }
-        & > :last-child {
-            .current-page-number, a {
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
+$page-number-margin-size: $default-gap-size / 4;
+$elements-per-page-dropdown-minimum-width: 54px;
+
+.pagination-page-numbers {
+    display: flex;
+    justify-content: center;
+    white-space: nowrap;
+    flex-wrap: wrap;
+    &, a, icon, .ellipsis, .current-page-number {
+        margin-left: $page-number-margin-size;
+        margin-right: $page-number-margin-size;
+    }
+    .with-ellipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        span {
+            cursor: default;
         }
     }
-    .label-with-dropdown {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        dropdown-select {
-            min-width: $elements-per-page-dropdown-minimum-width;
-            margin-left: $elements-per-page-dropdown-left-margin-size;
-        }
+    .different-direction {
+        direction: rtl;
+    }
+    .current-page-number {
+        font-weight: bold;
+    }
+    a {
+        color: $default-text-color;
+    }
+}
+.pagination-dropdown-with-label {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    &, & > * {
+        margin-left: $page-number-margin-size;
+        margin-right: $page-number-margin-size;
+    }
+    dropdown-select {
+        min-width: $elements-per-page-dropdown-minimum-width;
     }
 }

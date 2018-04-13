@@ -1,9 +1,9 @@
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 import {Metadata} from "../../resources-config/metadata/metadata";
 
-function getMergedMetadata(resourceKindList: ResourceKind[]): Metadata[] {
+function getMergedMetadata(resourceKinds: ResourceKind[]): Metadata[] {
   let mergedMetadata = [];
-  for (const resourceKind of resourceKindList) {
+  for (const resourceKind of resourceKinds) {
     for (const metadata of resourceKind.metadataList) {
       mergedMetadata = getUpdatedMetadataArray(mergedMetadata, metadata);
     }
@@ -11,8 +11,8 @@ function getMergedMetadata(resourceKindList: ResourceKind[]): Metadata[] {
   return mergedMetadata;
 }
 
-export function getMergedBriefMetadata(resourceKindList: ResourceKind[]): Metadata[] {
-  return getMergedMetadata(resourceKindList).filter(metadata => metadata.shownInBrief);
+export function getMergedBriefMetadata(resourceKinds: ResourceKind[]): Metadata[] {
+  return getMergedMetadata(resourceKinds).filter(metadata => metadata.shownInBrief);
 }
 
 export function getUpdatedMetadataArray(metadataList: Metadata[], metadata: Metadata): Metadata[] {

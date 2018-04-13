@@ -18,11 +18,11 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
       .withBreadcrumbsProvider('metadata')
   ]),
 
-  new Route('resource-kinds/:resourceClass', 'resource-kinds', 'resources-config/resource-kind/resource-kind-list')
+  new Route('resource-kinds/:resourceClass', 'resource-kinds', 'resources-config/resource-kind/resource-kinds-list')
     .withMenuItem('Resource Kinds', NavRole.PER_RESOURCE_CLASS_SECONDARY, 'resources'),
 
   new RouteGroup('workflows', 'workflows', 'workflows', 'Workflows', [
-    new BaseRoute(':resourceClass', 'workflow-list')
+    new BaseRoute(':resourceClass', 'workflows-list')
       .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY, 'workflow'),
     new Route('details/:id', 'details', 'details/workflow-details')
       .withBreadcrumbsProvider('workflow'),
@@ -31,7 +31,7 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
 
   new Route('roles', 'roles', 'users/roles/user-roles').withMenuItem('Roles', NavRole.BOTTOM, 'roles'),
 
-  new Route('languages', 'languages', 'resources-config/language-config/language-list')
+  new Route('languages', 'languages', 'resources-config/language-config/languages-list')
     .withMenuItem('Languages', NavRole.BOTTOM, 'languages'),
 
   new Route('audit', 'audit', 'audit/audit-page').withMenuItem('Audit', NavRole.BOTTOM, 'scan-2'),

@@ -1,12 +1,39 @@
-@mixin on-and-down($size) {
-  @media only screen and (max-width: $size) {
-    @content;
+@mixin default-button-colors($background-color: $blue, $color: white) {
+  background-color: $background-color;
+  color: $color;
+  @include transition(background-color .3s);
+  &:hover:not([disabled]) {
+    background-color: lighten($background-color, $default-value-to-lighten-colors-by);
   }
 }
 
-@mixin on-sm-and-down {
-  @include on-and-down($screen-sm) {
-    @content;
+@mixin default-button($background-color: $blue, $color: white) {
+  button {
+    padding: $default-gap-size / 8 3 / 4 * $default-gap-size;
+    text-transform: uppercase;
+    font-weight: bold;
+    @include default-button-colors($background-color, $color);
+    &[disabled] {
+      background-color: $light-grey;
+    }
+    & > div {
+      position: relative;
+      display: inline-block;
+      icon {
+        opacity: 1;
+        @include transition(opacity .3s ease-out);
+        &:not(.visible) {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+        }
+      }
+    }
+    icon, span {
+      display: inline-block;
+      padding: $default-gap-size / 8;
+    }
   }
 }
 
@@ -20,4 +47,16 @@
     5: (0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3))
   ), $number);
   box-shadow: $box-shadow;
+}
+
+@mixin on-and-down($size) {
+  @media only screen and (max-width: $size) {
+    @content;
+  }
+}
+
+@mixin on-sm-and-down {
+  @include on-and-down($screen-sm) {
+    @content;
+  }
 }

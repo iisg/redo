@@ -1,26 +1,23 @@
 <template>
     <require from="./graph/workflow-graph-display"></require>
     <require from="./excel/excel"></require>
-    <require from="common/components/fab/fab-edit"></require>
+    <require from="common/components/buttons/remove-button"></require>
+    <require from="common/components/buttons/edit-button"></require>
     <require from="./workflow-edit-form"></require>
 
     <loading-bar if.bind="!workflow"></loading-bar>
 
     <div if.bind="workflow"
-        class="au-animate fade-inup-outup">
+        class="workflow-details au-animate fade-inup-outup">
 
         <div class="pull-right">
             <pending-throbber entity.bind="workflow"></pending-throbber>
-            <button class="btn btn-danger"
-                type="button"
-                click.trigger="deleteWorkflow()"
-                if.bind="!editing"
-                disabled.bind="workflow.pendingRequest">
-                <icon name="remove-4"></icon>
-            </button>
-            <fab-edit editing.bind="editing"
+            <remove-button if.bind="!editing"
                 disabled.bind="workflow.pendingRequest"
-                click.trigger="toggleEditForm()"></fab-edit>
+                on-click.call="deleteWorkflow()"></remove-button>
+            <edit-button toggled.bind="editing"
+                disabled.bind="workflow.pendingRequest"
+                on-click.call="toggleEditForm()"></edit-button>
         </div>
 
         <h1>${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</h1>

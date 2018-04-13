@@ -5,7 +5,7 @@ import {bindable} from "aurelia-templating";
 import {ContextResourceClass} from 'resources/context/context-resource-class';
 
 @autoinject
-export class WorkflowList {
+export class WorkflowsList {
   @bindable resourceClass: string;
 
   addFormOpened: boolean = false;

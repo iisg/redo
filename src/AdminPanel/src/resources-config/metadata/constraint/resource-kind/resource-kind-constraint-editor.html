@@ -9,9 +9,9 @@
             multi-select="true"
             disabled.bind="disabled"
             if.bind="!disabled || metadata.constraints.resourceKind.length > 0"></resource-kind-chooser>
-        <div class="input-group-addon">
-            <restore-from-original if.bind="canInherit && wasModified"
-                click.delegate="resetToOriginalIds()"></restore-from-original>
+        <div if.bind="canInherit && wasModified"
+            class="input-group-addon">
+            <restore-from-original click.delegate="resetToOriginalIds()"></restore-from-original>
         </div>
     </div>
 </template>

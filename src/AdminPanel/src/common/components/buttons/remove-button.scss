@@ -1,0 +1,5 @@
+@import "../../styles";
+
+remove-button {
+    @include default-button($red);
+}

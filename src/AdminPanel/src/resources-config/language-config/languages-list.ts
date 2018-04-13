@@ -6,8 +6,8 @@ import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation
 import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
-export class LanguageList implements ComponentAttached {
-  languageList: Language[];
+export class LanguagesList implements ComponentAttached {
+  languages: Language[];
   addFormOpened: boolean = false;
 
   constructor(private languageRepository: LanguageRepository,
@@ -17,14 +17,14 @@ export class LanguageList implements ComponentAttached {
 
   attached(): void {
     this.languageRepository.getList().then(languages => {
-      this.languageList = languages;
+      this.languages = languages;
     });
   }
 
   addNewLanguage(newLanguage: Language) {
     return this.languageRepository.post(newLanguage).then(language => {
       this.addFormOpened = false;
-      this.languageList.push(language);
+      this.languages.push(language);
     });
   }
 
@@ -43,7 +43,7 @@ export class LanguageList implements ComponentAttached {
       .then(() => language.pendingRequest = true)
       .then(() => this.languageRepository.remove(language))
       .then(() => this.languageRepository.getList())
-      .then(languages => this.languageList = languages)
+      .then(languages => this.languages = languages)
       .finally(() => language.pendingRequest = false);
   }
 }

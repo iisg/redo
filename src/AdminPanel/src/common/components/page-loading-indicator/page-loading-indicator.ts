@@ -6,7 +6,7 @@ export class PageLoadingIndicator {
     @bindable loading = false;
 
     attached() {
-        NProgress.configure({parent: 'page-loading-indicator'});
+        NProgress.configure({parent: 'page-loading-indicator', showSpinner: false});
     }
 
     loadingChanged(newValue: boolean) {

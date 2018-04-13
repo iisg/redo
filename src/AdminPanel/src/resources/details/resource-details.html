@@ -5,38 +5,31 @@
     <require from="./apply-transition-button/apply-transition-button"></require>
     <require from="./resource-metadata-table/resource-metadata-table"></require>
     <require from="../resources-list"></require>
-    <require from="common/components/fab/fab-edit"></require>
+    <require from="common/components/buttons/remove-button"></require>
+    <require from="common/components/buttons/edit-button"></require>
     <require from="users/details/user-roles-assign"></require>
     <require from="users/details/user-groups"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
-    <div class="au-animate fade-inup-outup"
-        if.bind="resource">
 
-        <div class="pull-right">
+    <div else
+        class="resource-details au-animate fade-inup-outup">
+
+        <div class="resource-name-with-buttons-and-tabs">
+            <span class="page-title">${resource | resourceDisplayStrategy:'header'}</span>
+            <edit-button toggled.bind="editing"
+                disabled.bind="resource.pendingRequest"
+                on-click.call="toggleEditForm()"></edit-button>
+            <remove-button if.bind="!editing"
+                disabled.bind="resource.pendingRequest"
+                on-click.call="remove()"></remove-button>
             <pending-throbber entity.bind="resource"></pending-throbber>
-            <button class="btn btn-danger"
-                click.trigger="remove()"
-                if.bind="!editing"
-                disabled.bind="resource.pendingRequest">
-                <icon name="remove-4"></icon>
-            </button>
-            <fab-edit editing.bind="editing"
-                shift-down
-                click.trigger="toggleEditForm()"
-                disabled.bind="resource.pendingRequest"></fab-edit>
+            <aup-tabs if.bind="!editing"
+                tabs.bind="resourceDetailsTabs"></aup-tabs>
         </div>
 
-        <h1>
-            ${resource | resourceDisplayStrategy:'header'}
-        </h1>
-
         <div if.bind="!editing">
-            <pending-throbber entity.bind="resource"></pending-throbber>
-            <aup-tabs tabs.bind="resourceDetailsTabs">
-                <aup-tab></aup-tab>
-            </aup-tabs>
-            <aup-tab-content if.bind="!editing">
+            <aup-tab-content>
                 <aup-tab-pane tab="childResourceTab">
                     <div if.bind="currentTabId === 'childResourceTab'">
                         <resources-list parent-resource.bind="resource"
@@ -82,9 +75,8 @@
                 </aup-tab-pane>
             </aup-tab-content>
         </div>
-
-        <div class="au-animate anim-height-inout-900 well floating-form-full-width"
-            else>
+        <div else
+            class="au-animate anim-height-inout-900 well floating-form-full-width">
             <resource-form resource-class.bind="resource.resourceClass"
                 edit.bind="resource"
                 submit.call="saveEditedResource(savedResource, transitionId)"></resource-form>

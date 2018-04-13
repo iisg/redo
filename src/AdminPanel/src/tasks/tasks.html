@@ -1,32 +1,29 @@
 <template>
     <require from="resources/resources-list-table"></require>
-    <require from="./possible-actions-column.html"></require>
+    <require from="./possible-actions.html"></require>
     <require from="./current-tasks-value-converter"></require>
     <require from="./non-current-tasks-value-converter"></require>
 
     <loading-bar if.bind="tasks === undefined"></loading-bar>
 
-    <div else>
-        <h3>${"Your current tasks" | t}</h3>
-        <div class="row">
-            <resources-list-table resources.bind="tasks | currentTasks"
-                extra-column-names.one-time="['Possible actions']"
-                extra-column-views.one-time="['tasks/possible-actions-column.html']">
-                <div slot="empty"
-                    class="alert alert-success">
-                    <icon name="accept-2"></icon>
-                    ${"No current tasks!" | t}
-                </div>
-            </resources-list-table>
-        </div>
+    <div else
+        class="tasks">
+        <span class="page-title">${"Your current tasks" | t}</span>
+        <resources-list-table resources.bind="tasks | currentTasks"
+            extra-column-names.one-time="['Possible actions']"
+            extra-column-views.one-time="['tasks/possible-actions.html']">
+            <div slot="empty"
+                class="alert alert-success">
+                <icon name="accept-2"></icon>
+                ${"No current tasks!" | t}
+            </div>
+        </resources-list-table>
 
-        <h3>${"Your other tasks" | t}</h3>
-        <div class="row">
-            <resources-list-table resources.bind="tasks | nonCurrentTasks">
-                <div slot="empty">
-                    ${"No tasks." | t}
-                </div>
-            </resources-list-table>
-        </div>
+        <span class="page-title">${"Your other tasks" | t}</span>
+        <resources-list-table resources.bind="tasks | nonCurrentTasks">
+            <div slot="empty">
+                ${"No tasks." | t}
+            </div>
+        </resources-list-table>
     </div>
 </template>

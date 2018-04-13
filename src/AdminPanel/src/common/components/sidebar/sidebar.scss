@@ -69,11 +69,9 @@ sidebar {
         padding-top: $default-gap-size / 2;
         padding-bottom: $default-gap-size / 2;
         & > icon {
+          height: $navigation-menu-item-icon-width-and-heigth;
           padding-left: $navigation-menu-item-icon-left-and-right-padding-size;
           padding-right: $navigation-menu-item-icon-left-and-right-padding-size;
-          & > svg {
-            height: $navigation-menu-item-icon-width-and-heigth;
-          }
         }
         & > span {
           padding-left: $default-gap-size / 2;
@@ -133,14 +131,6 @@ sidebar {
           }
         }
       }
-    }
-  }
-
-  icon {
-    display: flex;
-    & > svg {
-      margin-left: auto;
-      margin-right: auto;
     }
   }
 }

@@ -1,27 +1,37 @@
-icon {
-    & > svg {
-        height: 1em;
-        vertical-align: -0.125em;
-        fill: currentColor;
+icon, .icon {
+    display: inline-block;
+    height: 1em;
+    vertical-align: -0.15em;
+    &[size="0.5"] {
+        height: 0.5em;
+        vertical-align: 0.075em;
     }
-    &[size="1.25"] > svg {
+    &[size="0.75"] {
+        height: 0.75em;
+        vertical-align: -0.05em;
+    }
+    &[size="1.25"] {
         height: 1.25em;
-        vertical-align: -0.25em;
+        vertical-align: -0.3em;
     }
-    &[size="1.5"] > svg {
+    &[size="1.5"] {
         height: 1.5em;
         vertical-align: -0.4em;
     }
-    &[size="1.75"] > svg {
+    &[size="1.75"] {
         height: 1.75em;
         vertical-align: -0.5em;
     }
-    &[size="2"] > svg {
+    &[size="2"] {
         height: 2em;
         vertical-align: -0.65em;
     }
-    &[size="3"] > svg {
+    &[size="3"] {
         height: 3em;
         vertical-align: -1.15em;
+    }
+    & > svg {
+        height: inherit;
+        fill: currentColor;
     }
 }

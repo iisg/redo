@@ -1,6 +1,6 @@
 <template>
-    <require from="common/components/fab/fab-add"></require>
-    <require from="common/components/fab/fab-edit"></require>
+    <require from="common/components/buttons/remove-button"></require>
+    <require from="common/components/buttons/edit-button"></require>
     <require from="../metadata-list"></require>
     <require from="../metadata-form"></require>
 
@@ -9,17 +9,12 @@
 
         <div class="pull-right">
             <pending-throbber entity.bind="metadata"></pending-throbber>
-            <button class="btn btn-danger"
-                type="button"
-                click.trigger="deleteMetadata()"
-                if.bind="!editing && metadata.id > 0"
-                disabled.bind="metadata.pendingRequest">
-                <icon name="remove-4"></icon>
-            </button>
-            <fab-edit editing.bind="editing"
-                shift-down
-                click.trigger="toggleEditForm()"
-                disabled.bind="metadata.pendingRequest"></fab-edit>
+            <remove-button if.bind="!editing && metadata.id > 0"
+                disabled.bind="metadata.pendingRequest"
+                on-click.call="deleteMetadata()"></remove-button>
+            <edit-button toggled.bind="editing"
+                disabled.bind="metadata.pendingRequest"
+                on-click.call="toggleEditForm()"></edit-button>
         </div>
 
         <h1>${'Metadata' | t} #${ metadata.id }</h1>
@@ -50,7 +45,7 @@
                 </dl>
             </div>
 
-            <h3>${'Submetadata kinds' | t}:</h3>
+            <h3>${'Submetadata kinds' | t}</h3>
             <metadata-list parent-metadata.bind="metadata"
                 resource-class.bind="metadata.resourceClass"></metadata-list>
 
