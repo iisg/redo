@@ -1,5 +1,5 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
-import {computedFrom} from "aurelia-binding";
+import {computedFrom, observable} from "aurelia-binding";
 import {RestrictingMetadataIdMap, Workflow, WorkflowPlace} from "../../workflow";
 import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
@@ -15,14 +15,14 @@ export class Excel implements ComponentAttached {
   @bindable(twoWay) workflow: Workflow;
   @bindable @booleanAttribute editable: boolean = false;
   @bindable resourceClass: string;
-
+  @observable highlightedColumnId: number;
   metadataList: Metadata[];
 
   constructor(private metadataRepository: MetadataRepository, private workflowPlaceSorter: WorkflowPlaceSorter) {
   }
 
   async attached() {
-    $('.highlight-col-row-on-hover').stickyTableHeaders();
+    $('.with-sticky-header').stickyTableHeaders({zIndex: 1, scrollableArea: $('router-view')});
     this.metadataList = await this.metadataRepository.getListQuery()
       .filterByResourceClasses(this.resourceClass)
       .onlyTopLevel()

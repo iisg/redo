@@ -2,8 +2,9 @@
 @import "../jspm_packages/npm/compass-mixins@0.12.10/lib/animation/animate/fading";
 
 $admin-content-z-index-when-sidebar-is-collapsed: 0;
-$floating-form-z-index: $admin-content-z-index-when-sidebar-is-collapsed + 1;
-$collapsed-sidebar-elements-z-index-on-hover: $floating-form-z-index + 1;
+$floating-form-and-sticky-table-header-z-index: $admin-content-z-index-when-sidebar-is-collapsed + 1;
+$top-bar-z-index: $floating-form-and-sticky-table-header-z-index + 1;
+$collapsed-sidebar-elements-z-index-on-hover: $top-bar-z-index + 1;
 
 $admin-content-left-border-width: $default-gap-size / 4;
 
@@ -31,6 +32,9 @@ sidebar.collapsed {
   flex: 1;
   overflow: hidden;
   border-left: $lightish-grey solid $admin-content-left-border-width;
+  top-bar {
+    z-index: $top-bar-z-index;
+  }
   & > router-view {
     position: relative;
     flex: 1;
@@ -86,7 +90,7 @@ label {
 }
 
 .tooltip {
-  white-space:pre-wrap;
+  white-space: pre-wrap;
 }
 
 .button-parent {
@@ -109,20 +113,20 @@ table {
       color: white;
       background-color: $grey;
       th {
-          font-weight: normal;
+        font-weight: normal;
       }
     }
     tbody {
       tr {
         @include transition(background-color .3s);
         &:nth-child(2n + 1) {
-            background-color: $light-grey;
+          background-color: $light-grey;
         }
         &:not(.edit-form):hover {
-            background-color: $orange;
+          background-color: $orange;
         }
         a {
-            color: $default-text-color;
+          color: $default-text-color;
         }
       }
     }
@@ -142,23 +146,23 @@ table {
     td.with-buttons-container {
       padding: 0;
       & > div {
-          display: flex;
-          justify-content: flex-end;
-          & > * {
-              margin: $default-gap-size / 4;
-              padding: 0;
-              background-color: initial;
-              color: $blue;
-              &.remove:not([disabled]) {
-                  color: $red;
-              }
-              &[disabled] {
-                  color: $grey;
-              }
+        display: flex;
+        justify-content: flex-end;
+        & > * {
+          margin: $default-gap-size / 4;
+          padding: 0;
+          background-color: initial;
+          color: $blue;
+          &.remove:not([disabled]) {
+            color: $red;
           }
-          & > a {
-            color: inherit;
+          &[disabled] {
+            color: $grey;
           }
+        }
+        & > a {
+          color: inherit;
+        }
       }
     }
   }
@@ -175,7 +179,7 @@ table {
   grid-template-columns: auto 1fr;
   grid-column-gap: $default-gap-size;
   & > :nth-child(2n + 1) {
-      font-weight: bold;
+    font-weight: bold;
   }
 }
 
@@ -247,7 +251,7 @@ input, textarea, select {
     border-radius: 0;
   }
   &.floating-form {
-    z-index: $floating-form-z-index;
+    z-index: $floating-form-and-sticky-table-header-z-index;
     position: absolute;
     right: 0;
     border-top-right-radius: 0;
