@@ -1,29 +1,16 @@
 @import "../../../common/styles";
 
-// https://css-tricks.com/simple-css-row-column-highlighting/
-table.highlight-col-row-on-hover {
-  $highlight-color: $orange;
-  overflow: hidden;
-
-
-  td, th {
-    position: relative;
-    &:hover::after, &:hover::after {
-      display: block;
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: -5000px;
-      bottom: -5000px;
-      z-index: -1;
-      background-color: $highlight-color;
-    }
-  }
-}
-
 excel {
-  .legend dd {
-    line-height: 2.2;
+  table.with-sticky-header {
+    th, td {
+      text-align: center;
+      @include transition(background-color .3s);
+    }
+    .highlighted {
+      background-color: $orange;
+    }
+    .legend dd {
+      line-height: 2.2;
+    }
   }
 }

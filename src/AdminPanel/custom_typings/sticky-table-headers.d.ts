@@ -1,3 +1,3 @@
 interface JQuery {
-  stickyTableHeaders(): void;
+  stickyTableHeaders(options?: any): void;
 }

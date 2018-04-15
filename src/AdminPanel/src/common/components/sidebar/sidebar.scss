@@ -11,6 +11,7 @@ $navigation-menu-item-shadow-width: 5px;
 $fold-animation-duration: 1s;
 
 sidebar {
+  background-color: white;
   display: flex;
   flex-direction: column;
   width: $default-sidebar-width;
