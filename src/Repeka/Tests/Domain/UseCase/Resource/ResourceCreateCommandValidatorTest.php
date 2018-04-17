@@ -5,90 +5,21 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommandValidator;
-use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
-use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
-use Repeka\Domain\Validation\Rules\ResourceDoesNotContainDuplicatedFilenamesRule;
-use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Repeka\Tests\Traits\StubsTrait;
 
-/** @SuppressWarnings(PHPMD.LongVariable) */
 class ResourceCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
-    /** @var ResourceKind */
-    private $resourceKind;
-    private $resourceClass;
-
-    protected function setUp() {
-        $this->resourceKind = $this->createResourceKindMock();
-        $this->resourceClass = 'books';
-    }
-
-    private function createValidator(
-        bool $valueSetMatchesResourceKind,
-        bool $metadataValuesSatisfyConstraints,
-        bool $resourceContentsCurrectStructure,
-        bool $resourceDoesNotContainDuplicatedFilenames
-    ): ResourceCreateCommandValidator {
-        $valueSetMatchesResourceKindRule = $this->createRuleWithFactoryMethodMock(
-            ValueSetMatchesResourceKindRule::class,
-            'forResourceKind',
-            $valueSetMatchesResourceKind
-        );
-        $metadataValuesSatisfyConstraintsRule = $this->createRuleWithFactoryMethodMock(
-            MetadataValuesSatisfyConstraintsRule::class,
-            'forResourceKind',
-            $metadataValuesSatisfyConstraints
-        );
-        $resourceContentsCorrectStructureRule = $this->createRuleMock(
-            ResourceContentsCorrectStructureRule::class,
-            $resourceContentsCurrectStructure
-        );
-        $resourceDoesNotContainDuplicatedFilenamesRule = $this->createRuleMock(
-            ResourceDoesNotContainDuplicatedFilenamesRule::class,
-            $resourceDoesNotContainDuplicatedFilenames
-        );
-        return new ResourceCreateCommandValidator(
-            $valueSetMatchesResourceKindRule,
-            $metadataValuesSatisfyConstraintsRule,
-            $resourceContentsCorrectStructureRule,
-            $resourceDoesNotContainDuplicatedFilenamesRule
-        );
-    }
-
     public function testValid() {
-        $validator = $this->createValidator(true, true, true, true);
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
+        $validator = new ResourceCreateCommandValidator();
+        $resourceKind = $this->createResourceKindMock();
+        $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
         $this->assertTrue($validator->isValid($command));
     }
 
     public function testInvalidForNotInitializedResourceKind() {
-        $validator = $this->createValidator(true, true, true, true);
+        $validator = new ResourceCreateCommandValidator();
         $command = new ResourceCreateCommand($this->createMock(ResourceKind::class), ResourceContents::fromArray([1 => ['Some value']]));
-        $this->assertFalse($validator->isValid($command));
-    }
-
-    public function testInvalidIfContentsDoNotMatchResourceKind() {
-        $validator = $this->createValidator(false, true, true, true);
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
-        $this->assertFalse($validator->isValid($command));
-    }
-
-    public function testInvalidWhenConstraintsNotSatisfied() {
-        $validator = $this->createValidator(true, false, true, true);
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
-        $this->assertFalse($validator->isValid($command));
-    }
-
-    public function testInvalidWhenInvalidContentStructure() {
-        $validator = $this->createValidator(true, true, false, true);
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
-        $this->assertFalse($validator->isValid($command));
-    }
-
-    public function testInvalidWhenResourceContainsDuplicatedFilenames() {
-        $validator = $this->createValidator(true, true, true, false);
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
         $this->assertFalse($validator->isValid($command));
     }
 }

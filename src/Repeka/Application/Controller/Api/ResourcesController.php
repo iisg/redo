@@ -21,7 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @Route("/resources")
@@ -109,27 +108,16 @@ class ResourcesController extends ApiController {
     /**
      * @Route("/{resource}")
      * @Method("POST")
-     * POST instead of PUT, caused by multipart data
+     * POST instead of PUT, caused by multipart data, HTTP fills $_FILES only when using POST
      * @see http://stackoverflow.com/questions/24385301/symfony-rest-file-upload-over-put-method
      */
-    public function putAction(ResourceEntity $resource, ResourceContents $resourceContents) {
-        $command = new ResourceUpdateContentsCommand($resource, $resourceContents);
+    public function putAction(Request $request, ResourceEntity $resource, ResourceContents $resourceContents) {
+        $transitionId = $request->get('transitionId', '');
+        $command = ($transitionId === '')
+            ? new ResourceUpdateContentsCommand($resource, $resourceContents, $this->getUser())
+            : new ResourceTransitionCommand($resource, $resourceContents, $transitionId, $this->getUser());
         $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource);
-    }
-
-    /**
-     * @Route("/{resource}")
-     * @Method("PATCH")
-     */
-    public function patchAction(ResourceEntity $resource, Request $request) {
-        $data = $request->request->all();
-        if (!empty($data['transitionId'])) {
-            $command = new ResourceTransitionCommand($resource, $data['transitionId'], $this->getUser());
-            $resource = $this->handleCommand($command);
-            return $this->createJsonResponse($resource);
-        }
-        throw new BadRequestHttpException('Unsupported operation.');
     }
 
     /**
@@ -137,7 +125,7 @@ class ResourcesController extends ApiController {
      * @Method("DELETE")
      */
     public function deleteAction(ResourceEntity $resource) {
-        $this->handleCommand(new ResourceDeleteCommand($resource));
+        $this->handleCommand(new ResourceDeleteCommand($resource, $this->getUser()));
         return new Response('', 204);
     }
 

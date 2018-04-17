@@ -3,6 +3,7 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Utils\EntityUtils;
 
 // ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
@@ -70,7 +71,13 @@ class ResourceEntity implements Identifiable {
 
     public function applyTransition(string $transitionId): ResourceEntity {
         Assertion::true($this->hasWorkflow(), 'Could not apply transition for resource without a workflow. ID: ' . $this->id);
-        return $this->getWorkflow()->apply($this, $transitionId);
+        if (SystemTransition::isValid($transitionId)) {
+            $transition = new SystemTransition($transitionId);
+            $transition->apply($this);
+            return $this;
+        } else {
+            return $this->getWorkflow()->apply($this, $transitionId);
+        }
     }
 
     public function getAuditData(): array {

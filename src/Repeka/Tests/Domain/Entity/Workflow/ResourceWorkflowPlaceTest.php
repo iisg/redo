@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Entity\Workflow;
 
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -70,9 +71,9 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingMissingRequiredMetadataIds() {
         $place = ResourceWorkflowPlace::fromArray(['label' => [], 'requiredMetadataIds' => [1, 2]]);
-        $resource1 = $this->createResourceMock(1, null, []);
-        $resource2 = $this->createResourceMock(1, null, [1 => null]);
-        $this->assertEquals([1, 2], $place->getMissingRequiredMetadataIds($resource1));
-        $this->assertEquals([2], $place->getMissingRequiredMetadataIds($resource2));
+        $resourceContents = ResourceContents::empty();
+        $this->assertEquals([1, 2], $place->getMissingRequiredMetadataIds($resourceContents));
+        $resourceContents = $resourceContents->withMergedValues(1, null);
+        $this->assertEquals([2], $place->getMissingRequiredMetadataIds($resourceContents));
     }
 }

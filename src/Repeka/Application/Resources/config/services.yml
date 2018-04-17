@@ -113,3 +113,6 @@ services:
   Monolog\Formatter\LineFormatter: [~, ~, true]
   Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener:
     tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }]
+
+  Repeka\Domain\UseCase\Resource\AutoAssign\ResourceMetadataAutoAssignListener:
+    tags: [{ event: command_handled.resource_transition, name: kernel.event_listener, method: onResourceTransition }]

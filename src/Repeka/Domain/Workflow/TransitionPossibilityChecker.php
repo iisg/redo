@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Domain\Workflow;
 
+use Repeka\Domain\Constants\SystemTransition;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
@@ -19,33 +21,44 @@ class TransitionPossibilityChecker {
 
     public function check(
         ResourceEntity $resource,
+        ResourceContents $newContents,
         ResourceWorkflowTransition $transition,
         User $executor
     ): TransitionPossibilityCheckResult {
         return new TransitionPossibilityCheckResult(
-            $this->determineMissingMetadataIds($resource, $transition),
+            $this->determineMissingMetadataIds($resource, $newContents, $transition),
             $this->executorIsMissingRequiredRole($transition, $executor),
             $this->executorIsNotAssignee($resource, $transition, $executor)
         );
     }
 
-    private function determineMissingMetadataIds(ResourceEntity $resource, ResourceWorkflowTransition $transition): array {
+    private function determineMissingMetadataIds(
+        ResourceEntity $resource,
+        ResourceContents $resourceContents,
+        ResourceWorkflowTransition $transition
+    ): array {
+        if (!$resource->hasWorkflow()) {
+            return [];
+        }
         $workflow = $resource->getWorkflow();
         $targetPlaces = EntityUtils::getByIds($transition->getToIds(), $workflow->getPlaces());
         $missingMetadataIds = [];
         foreach ($targetPlaces as $targetPlace) {
             /** @var ResourceWorkflowPlace $targetPlace */
-            $metadataIdsMissingForPlace = $targetPlace->getMissingRequiredMetadataIds($resource);
+            $metadataIdsMissingForPlace = $targetPlace->getMissingRequiredMetadataIds($resourceContents);
             $missingMetadataIds = array_merge($missingMetadataIds, $metadataIdsMissingForPlace);
         }
         return array_unique($missingMetadataIds);
     }
 
     private function executorIsMissingRequiredRole(ResourceWorkflowTransition $transition, User $executor): bool {
-        return !$transition->userHasRoleRequiredToApply($executor);
+        return SystemTransition::isValid($transition->getId()) ? false : !$transition->userHasRoleRequiredToApply($executor);
     }
 
     private function executorIsNotAssignee(ResourceEntity $resource, ResourceWorkflowTransition $transition, User $executor): bool {
+        if (!$resource->hasWorkflow()) {
+            return false;
+        }
         $assigneeMetadataIds = $this->getAssigneeMetadataIds($resource->getWorkflow(), $transition);
         if (empty($assigneeMetadataIds)) {
             return false;  // no metadata determines assignees, so everyone can perform transition

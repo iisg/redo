@@ -9,7 +9,6 @@ use Repeka\Domain\Entity\User;
 
 class ResourceCreateCommand extends AbstractCommand implements AuditedCommand {
     private $kind;
-
     private $contents;
     /** @var null|User */
     private $executor;

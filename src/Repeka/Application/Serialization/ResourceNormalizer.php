@@ -62,7 +62,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
         /** @var TransitionPossibilityCheckResult */
         $failedPossibilityChecks = [];
         foreach ($resource->getWorkflow()->getTransitions($resource) as $transition) {
-            $result = $this->transitionPossibilityChecker->check($resource, $transition, $currentUser);
+            $result = $this->transitionPossibilityChecker->check($resource, $resource->getContents(), $transition, $currentUser);
             if (!$result->isTransitionPossible()) {
                 $failedPossibilityChecks[$transition->getId()] = $result;
             }

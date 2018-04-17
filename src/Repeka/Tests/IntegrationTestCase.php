@@ -110,6 +110,10 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         return self::joinUrl(static::ENDPOINT, is_object($entity) ? $entity->getId() : $entity);
     }
 
+    protected static function resourceEntityWithTransitionEndpoint(int $resourceId): string {
+        return self::joinUrl(static::ENDPOINT, $resourceId);
+    }
+
     protected function getEntityManager(): EntityManagerInterface {
         return $this->container->get(EntityManagerInterface::class);
     }
