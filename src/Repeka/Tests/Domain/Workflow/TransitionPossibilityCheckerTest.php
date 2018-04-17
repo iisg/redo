@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Workflow;
 
+use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
@@ -43,6 +44,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->resourceKind = $this->createMock(ResourceKind::class);
         $this->resource->method('getKind')->willReturn($this->resourceKind);
         $this->resource->method('getWorkflow')->willReturn($this->workflow);
+        $this->resource->method('hasWorkflow')->willReturn(true);
         $this->userRepository = $this->createMock(UserRepository::class);
         $this->checker = new TransitionPossibilityChecker($this->userRepository);
     }
@@ -53,7 +55,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
     }
 
     private function checkWithDefaults(): TransitionPossibilityCheckResult {
-        return $this->checker->check($this->resource, $this->transition, $this->executor);
+        return $this->checker->check($this->resource, ResourceContents::empty(), $this->transition, $this->executor);
     }
 
     public function testPositiveWithNoAssignees() {
@@ -75,14 +77,11 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 $this->createWorkflowPlaceMock('p2', [], [2]),
             ]
         );
-        $this->resource->method('getContents')->willReturn(
-            ResourceContents::fromArray(
-                [
-                    1 => [1000],
-                    2 => [2000, ['value' => $this->executor->getId()]],
-                ]
-            )
-        );
+        $resourceContents = ResourceContents::fromArray([
+            1 => [1000],
+            2 => [2000, ['value' => $this->executor->getId()]],
+        ]);
+        $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
         $result = $this->checkWithDefaults();
@@ -120,13 +119,10 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 $this->createWorkflowPlaceMock('p2', [], [2]),
             ]
         );
-        $this->resource->method('getContents')->willReturn(
-            ResourceContents::fromArray(
-                [
-                    1 => [1000],
-                ]
-            )
-        );
+        $resourceContents = ResourceContents::fromArray([
+            1 => [1000],
+        ]);
+        $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
         $this->checkWithDefaults();
@@ -139,12 +135,11 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 $this->createWorkflowPlaceMock('p2', [], []),  // metadata #2 doesn't determine assignees!
             ]
         );
-        $this->resource->method('getContents')->willReturn(
-            [
-                1 => [1000],
-                2 => [2000, $this->executor->getId()],
-            ]
-        );
+        $resourceContents = ResourceContents::fromArray([
+            1 => [1000],
+            2 => [2000, $this->executor->getId()],
+        ]);
+        $this->resource->method('getContents')->willReturn($resourceContents);
         $this->configureTransition(true, ['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertFalse($result->isTransitionPossible());
@@ -175,5 +170,28 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $result = $this->checkWithDefaults();
         $this->assertEquals([1, 2, 3], $result->getMissingMetadataIds());
         $this->assertFalse($result->isTransitionPossible());
+    }
+
+    public function testPositiveWhenResourceHasNoWorkflow() {
+        $resourceKind = $this->createMock(ResourceKind::class);
+        $resource = $this->createMock(ResourceEntity::class);
+        $resource->method('hasWorkflow')->willReturn(false);
+        $result = $this->checker->check(
+            $resource,
+            ResourceContents::empty(),
+            SystemTransition::UPDATE()->toTransition($resourceKind, $this->resource),
+            $this->executor
+        );
+        $this->assertTrue($result->isTransitionPossible());
+    }
+
+    public function testPositiveWhenResourceHasWorkflowAndSystemTransition() {
+        $result = $this->checker->check(
+            $this->resource,
+            ResourceContents::empty(),
+            SystemTransition::UPDATE()->toTransition($this->resourceKind, $this->resource),
+            $this->executor
+        );
+        $this->assertTrue($result->isTransitionPossible());
     }
 }

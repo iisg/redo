@@ -13,6 +13,9 @@ abstract class ResourceWorkflowPlugin {
     }
 
     public function getOption(string $name, ResourceEntity $resource): array {
+        if (!$resource->hasWorkflow()) {
+            return [];
+        }
         $places = $resource->getWorkflow()->getPlaces($resource);
         $values = [];
         foreach ($places as $place) {

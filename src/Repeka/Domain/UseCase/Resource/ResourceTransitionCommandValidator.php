@@ -1,49 +1,83 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\CommandAttributesValidator;
+use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
+use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
+use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
+use Repeka\Domain\Validation\Rules\ResourceDoesNotContainDuplicatedFilenamesRule;
+use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ResourceTransitionCommandValidator extends CommandAttributesValidator {
     /** @var TransitionPossibilityChecker */
     private $transitionPossibilityChecker;
+    /** @var ValueSetMatchesResourceKindRule */
+    private $valueSetMatchesResourceKindRule;
+    /** @var MetadataValuesSatisfyConstraintsRule */
+    private $metadataValuesSatisfyConstraintsRule;
+    /** @var ResourceContentsCorrectStructureRule */
+    private $resourceContentsCorrectStructureRule;
+    /** @var ResourceDoesNotContainDuplicatedFilenamesRule */
+    private $resourceDoesNotContainDuplicatedFilenamesRule;
+    /** @var LockedMetadataValuesAreUnchangedRule */
+    private $lockedMetadataValuesAreUnchangedRule;
 
-    public function __construct(TransitionPossibilityChecker $transitionPossibilityChecker) {
+    public function __construct(
+        TransitionPossibilityChecker $transitionPossibilityChecker,
+        ValueSetMatchesResourceKindRule $valueSetMatchesResourceKindRule,
+        MetadataValuesSatisfyConstraintsRule $metadataValuesSatisfyConstraintsRule,
+        ResourceContentsCorrectStructureRule $resourceContentsCorrectStructureRule,
+        ResourceDoesNotContainDuplicatedFilenamesRule $resourceDoesNotContainDuplicatedFilenamesRule,
+        LockedMetadataValuesAreUnchangedRule $lockedMetadataValuesAreUnchangedRule
+    ) {
         $this->transitionPossibilityChecker = $transitionPossibilityChecker;
+        $this->valueSetMatchesResourceKindRule = $valueSetMatchesResourceKindRule;
+        $this->metadataValuesSatisfyConstraintsRule = $metadataValuesSatisfyConstraintsRule;
+        $this->resourceContentsCorrectStructureRule = $resourceContentsCorrectStructureRule;
+        $this->resourceDoesNotContainDuplicatedFilenamesRule = $resourceDoesNotContainDuplicatedFilenamesRule;
+        $this->lockedMetadataValuesAreUnchangedRule = $lockedMetadataValuesAreUnchangedRule;
     }
 
     /** @param ResourceTransitionCommand $command */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('transitionId', Validator::notBlank())
+            ::attribute('transitionOrId', Validator::notBlank())
             ->attribute(
                 'resource',
                 Validator::allOf(
                     Validator::callback(
                         function (ResourceEntity $resource) {
-                            return $resource->getId() > 0;
+                            return $resource->getId() > 0 || $resource->getId() == null;
                         }
-                    )->setTemplate('Resource ID must be greater than 0'),
-                    Validator::callback(
-                        function (ResourceEntity $resource) {
-                            return $resource->hasWorkflow();
-                        }
-                    )->setTemplate('Resource must have a workflow'),
-                    Validator::callback($this->assertHasTransition($command->getTransitionId()))
+                    )->setTemplate('Resource ID must not be less than 0'),
+                    Validator::callback($this->assertHasTransition($command->getTransition()->getId()))
                         ->setTemplate('Given transitionId does not exist')
                 )
-            )->callback([$this, 'transitionIsPossible']);
+            )->callback([$this, 'transitionIsPossible'])
+            ->attribute('contents', $this->resourceContentsCorrectStructureRule)
+            ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getResource()->getKind()))
+            ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResourceKind($command->getResource()->getKind()))
+            ->attribute('contents', $this->resourceDoesNotContainDuplicatedFilenamesRule)
+            ->attribute('contents', $this->lockedMetadataValuesAreUnchangedRule->forResource($command->getResource()));
     }
 
-    private function assertHasTransition(string $transitionId) {
+    private function assertHasTransition($transitionId) {
         return function (ResourceEntity $resource) use ($transitionId) {
-            $transitions = $resource->getWorkflow()->getTransitions($resource);
-            return in_array($transitionId, EntityUtils::mapToIds($transitions));
+            if ($resource->hasWorkflow() && !SystemTransition::isValid($transitionId)) {
+                $transitions = $resource->getWorkflow()->getTransitions($resource);
+                return in_array($transitionId, EntityUtils::mapToIds($transitions));
+            }
+            return in_array($transitionId, SystemTransition::toArray());
         };
     }
 
@@ -51,10 +85,9 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
         if (!$command->getExecutor()) {
             return true;
         }
-        $workflow = $command->getResource()->getWorkflow();
-        $transition = $workflow->getTransition($command->getTransitionId());
+        $transition = $command->getTransition();
         return $this->transitionPossibilityChecker
-            ->check($command->getResource(), $transition, $command->getExecutor())
+            ->check($command->getResource(), $command->getContents(), $transition, $command->getExecutor())
             ->isTransitionPossible();
     }
 }

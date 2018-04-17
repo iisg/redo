@@ -5,14 +5,18 @@ use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AuditedCommand;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\User;
 
 class ResourceUpdateContentsCommand extends AbstractCommand implements AuditedCommand {
     private $resource;
     private $contents;
+    /** @var User */
+    private $executor;
 
-    public function __construct(ResourceEntity $resource, ResourceContents $contents) {
+    public function __construct(ResourceEntity $resource, ResourceContents $contents, ?User $executor = null) {
         $this->resource = $resource;
         $this->contents = $contents;
+        $this->executor = $executor;
     }
 
     public function getResource(): ResourceEntity {
@@ -21,5 +25,9 @@ class ResourceUpdateContentsCommand extends AbstractCommand implements AuditedCo
 
     public function getContents(): ResourceContents {
         return $this->contents;
+    }
+
+    public function getExecutor(): ?User {
+        return $this->executor;
     }
 }

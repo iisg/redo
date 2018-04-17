@@ -181,8 +181,7 @@ class ResourcesFixture extends RepekaFixture {
                 $userAdmin
             )
         );
-        $this->handleCommand(new ResourceTransitionCommand($book1, 'e7d756ed-d6b3-4f2f-9517-679311e88b17', $userAdmin));
-        $this->handleCommand(new ResourceTransitionCommand($book1, 'd3f73249-d10f-4d4b-8b63-be60b4c02081', $userScanner));
+        $this->makeTransition([$book1], [$userAdmin, $userScanner]);
     }
 
     private function contents(array $data): ResourceContents {
@@ -192,6 +191,15 @@ class ResourcesFixture extends RepekaFixture {
             $contents[$metadataId] = $values;
         }
         return ResourceContents::fromArray($contents);
+    }
+
+    private function makeTransition(array $books, array $executors) {
+        $this->handleCommand(
+            new ResourceTransitionCommand($books[0], $books[0]->getContents(), 'e7d756ed-d6b3-4f2f-9517-679311e88b17', $executors[0])
+        );
+        $this->handleCommand(
+            new ResourceTransitionCommand($books[0], $books[0]->getContents(), 'd3f73249-d10f-4d4b-8b63-be60b4c02081', $executors[1])
+        );
     }
 
     private function addUserGroups() {

@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Application\Serialization;
 
 use Repeka\Application\Serialization\ResourceNormalizer;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
@@ -29,6 +30,7 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $this->resource = $this->createMock(ResourceEntity::class);
         $this->resource->method('hasWorkflow')->willReturn(true);
         $this->resource->method('getWorkflow')->willReturn($this->workflow);
+        $this->resource->method('getContents')->willReturn(ResourceContents::empty());
         // TokenStorage
         $user = $this->createMock(User::class);
         $token = $this->createMock(TokenInterface::class);
@@ -37,9 +39,12 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $tokenStorage->method('getToken')->willReturn($token);
         // TransitionPossibilityChecker
         $this->checker = $this->createMock(TransitionPossibilityChecker::class);
-        $displayStrategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
         // test subject
-        $this->normalizer = new ResourceNormalizer($tokenStorage, $this->checker, $displayStrategyEvaluator);
+        $this->normalizer = new ResourceNormalizer(
+            $tokenStorage,
+            $this->checker,
+            $this->createMock(ResourceDisplayStrategyEvaluator::class)
+        );
         $normalizerService = $this->createMock(NormalizerInterface::class);
         $normalizerService->method('normalize')->willReturnArgument(0);
         $this->normalizer->setNormalizer($normalizerService);
@@ -55,7 +60,7 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->checker->method('check')->willReturnCallback(
-            function ($resource, ResourceWorkflowTransition $transition, $user) {
+            function ($resource, $resourceContents, ResourceWorkflowTransition $transition, $user) {
                 return ($transition->getId() == 'a')
                     ? new TransitionPossibilityCheckResult([], false, false)
                     : new TransitionPossibilityCheckResult([], false, true);

@@ -346,9 +346,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testAutoAssignMetadataWhenEditingResourceWithWorkflow() {
         $client = self::createAdminClient();
+        $endpoint = self::resourceEntityWithTransitionEndpoint($this->resourceWithWorkflow->getId());
         $client->apiRequest(
             'POST',
-            self::oneEntityEndpoint($this->resourceWithWorkflow->getId()),
+            $endpoint . '?' . http_build_query(['transitionId' => 't1']),
             [
                 'id' => $this->resourceWithWorkflow->getId(),
                 'kindId' => $this->resourceKindWithWorkflow->getId(),
@@ -358,20 +359,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
-        $edited = $repository->findOne($this->resourceWithWorkflow->getId());
-        $this->assertEquals(
-            ResourceContents::fromArray([$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1]),
-            $edited->getContents()
-        );
-        $client = self::createAdminClient();
-        $client->apiRequest(
-            'PATCH',
-            self::oneEntityEndpoint($this->resourceWithWorkflow->getId()),
-            [
-                'transitionId' => 't1',
-            ]
-        );
-        $this->assertStatusCode(200, $client->getResponse());
         $edited = $repository->findOne($this->resourceWithWorkflow->getId());
         $this->assertEquals(
             ResourceContents::fromArray(

@@ -121,19 +121,17 @@ export class ResourceDetails implements RoutableComponentActivate {
   saveEditedResource(updatedResource: Resource, transitionId: string): Promise<Resource> {
     const originalResource = this.entitySerializer.clone(this.resource);
     $.extend(this.resource, updatedResource);
-    return this.resourceRepository.update(updatedResource).then(resourceData => {
-      if (transitionId) {
-        return this.applyTransition(resourceData, transitionId);
-      }
-      return resourceData;
-    }).then(resourceData => {
+    return this.applyTransition(updatedResource, transitionId).then(resourceData => {
       this.toggleEditForm();
       return this.resource = resourceData;
     }).catch(() => $.extend(this.resource, originalResource));
   }
 
-  applyTransition(resource: Resource, transitionId: string): Promise<Resource> {
-    return this.resourceRepository.applyTransition(resource, transitionId);
+  private applyTransition(updatedResource: Resource, transitionId: string): Promise<Resource> {
+    if (transitionId) {
+      return this.resourceRepository.updateAndApplyTransition(updatedResource, transitionId);
+    }
+    return this.resourceRepository.update(updatedResource);
   }
 
   remove() {

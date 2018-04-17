@@ -35,7 +35,9 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
         $resource = $this->getPhpBookResource();
         $transitions = $resource->getWorkflow()->getTransitions($resource);
         $this->communicator->expects($this->never())->method('sendToOcr');
-        $this->handleCommand(new ResourceTransitionCommand($resource, $transitions[0]->getId(), $this->getAdminUser()));
+        $this->handleCommand(
+            new ResourceTransitionCommand($resource, $resource->getContents(), $transitions[0]->getId(), $this->getAdminUser())
+        );
     }
 
     public function testSendsToOcrIfSubscribed() {
@@ -69,6 +71,8 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
             )
         );
         $resource = $this->getPhpBookResource();
-        $this->handleCommand(new ResourceTransitionCommand($resource, $transitions[0]->getId(), $this->getAdminUser()));
+        $this->handleCommand(
+            new ResourceTransitionCommand($resource, $resource->getContents(), $transitions[0]->getId(), $this->getAdminUser())
+        );
     }
 }

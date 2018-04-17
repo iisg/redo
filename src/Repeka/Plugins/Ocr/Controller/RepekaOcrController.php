@@ -40,7 +40,7 @@ class RepekaOcrController extends ApiController {
             $possibleTransitions = $resource->getWorkflow()->getTransitions($resource);
             foreach ($possibleTransitions as $transition) {
                 if (in_array($transitionToExecute, $transition->getLabel())) {
-                    $this->handleCommand(new ResourceTransitionCommand($resource, $transition->getId()));
+                    $this->handleCommand(new ResourceTransitionCommand($resource, $resource->getContents(), $transition->getId()));
                     break;
                 }
             }
