@@ -38,23 +38,24 @@ export class ResourceMapper extends AutoMapper<Resource> {
   }
 
   private contentsToBackend(contents: NumberMap<MetadataValue[]>, formData: FormData): NumberMap<MetadataValue[]> {
-    const updatedContents: NumberMap<MetadataValue[]> = {};
-    for (let metadataId in contents) {
+    const copy: NumberMap<MetadataValue[]> = {};
+    for (const metadataId in contents) {
+      copy[metadataId] = [];
       if (contents[metadataId].length > 0) {
-        updatedContents[metadataId] = contents[metadataId].map(item => {
-          if (item.value instanceof File) {
-            item.value = this.wrapFileWithFormData(formData, item.value, metadataId as any as number);
+        for (let i in contents[metadataId]) {
+          const originalItem = contents[metadataId][i];
+          let newItem = new MetadataValue(originalItem.value);
+          if (originalItem.value instanceof File) {
+            newItem.value = this.wrapFileWithFormData(formData, originalItem.value, metadataId as any as number);
           }
-          if (item.submetadata) {
-            item.submetadata = this.contentsToBackend(item.submetadata, formData);
+          if (originalItem.submetadata) {
+            newItem.submetadata = this.contentsToBackend(originalItem.submetadata, formData);
           }
-          return item;
-        });
-      } else {
-        updatedContents[metadataId] = [];
+          copy[metadataId].push(newItem);
+        }
       }
     }
-    return updatedContents;
+    return copy;
   }
 
   private wrapFileWithFormData(formData: FormData, file: File, metadataId: number): string {
