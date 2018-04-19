@@ -2,7 +2,6 @@
 namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -10,6 +9,7 @@ use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandAdjuster;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 use Repeka\Tests\Traits\StubsTrait;

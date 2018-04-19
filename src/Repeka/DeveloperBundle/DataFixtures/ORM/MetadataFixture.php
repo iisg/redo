@@ -3,11 +3,11 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Constants\SystemResourceKind;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
+use Repeka\Domain\Utils\EntityUtils;
 
 /** @SuppressWarnings(PHPMD.ExcessiveMethodLength) */
 class MetadataFixture extends RepekaFixture {

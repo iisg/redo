@@ -3,9 +3,9 @@ namespace Repeka\Domain\Constants;
 
 use Assert\Assertion;
 use MyCLabs\Enum\Enum;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Utils\EntityUtils;
 
 /**
  * @method static SystemMetadata PARENT()

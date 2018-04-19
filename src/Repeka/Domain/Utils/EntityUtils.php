@@ -1,7 +1,9 @@
 <?php
-namespace Repeka\Domain\Entity;
+namespace Repeka\Domain\Utils;
 
-class EntityUtils {
+final class EntityUtils {
+    private function __construct() {
+    }
     /**
      * Maps each ID to entity with such ID. All IDs must have matching entities.
      * Eg.  $ids = [2, 3];

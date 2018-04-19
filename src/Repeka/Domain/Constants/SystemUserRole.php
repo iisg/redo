@@ -2,8 +2,8 @@
 namespace Repeka\Domain\Constants;
 
 use MyCLabs\Enum\Enum;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\UserRole;
+use Repeka\Domain\Utils\EntityUtils;
 
 /**
  * @method static SystemUserRole ADMIN()

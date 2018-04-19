@@ -2,12 +2,12 @@
 namespace Repeka\Application\Upload;
 
 use Assert\Assertion;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 
 class BasicResourceFileHelper implements ResourceFileHelper {
     /** @var ResourceFilePathGenerator */
