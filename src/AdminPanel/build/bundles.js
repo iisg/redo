@@ -89,7 +89,8 @@ const bundles = function () {
           "sticky-table-headers",
           "sweetalert2",
           "sweetalert2/dist/sweetalert2.css!text",
-          "text"
+          "text",
+          "yamljs"
         ],
         "options": {
           "inject": true,

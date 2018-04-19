@@ -1,6 +1,6 @@
-import {AuditEntryRepository} from "./audit-entry-repository";
+import {AuditEntryRepository} from "../audit-entry-repository";
 import {autoinject} from "aurelia-dependency-injection";
-import {twoWay} from "../common/components/binding-mode";
+import {twoWay} from "../../common/components/binding-mode";
 import {bindable} from "aurelia-templating";
 
 @autoinject

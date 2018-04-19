@@ -12,4 +12,9 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     this.params.commandNames = commandNames;
     return this;
   }
+
+  filterByResourceContents(resourceContents: NumberMap<string>) {
+    this.params.resourceContents = JSON.stringify(resourceContents);
+    return this;
+  }
 }

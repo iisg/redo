@@ -2,27 +2,23 @@
 namespace Repeka\Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Repeka\Application\Entity\ResultSetMappings;
+use Repeka\Domain\Factory\AuditEntryListQuerySqlFactory;
 use Repeka\Domain\Repository\AuditEntryRepository;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Domain\UseCase\PageResult;
 
 class AuditEntryDoctrineRepository extends EntityRepository implements AuditEntryRepository {
     public function findByQuery(AuditEntryListQuery $query): PageResult {
-        $qb = $this->createQueryBuilder('ae');
-        if ($query->getCommandNames()) {
-            $qb->where($qb->expr()->in('ae.commandName', ':commandNames'));
-            $qb->setParameter('commandNames', $query->getCommandNames());
-        }
-        if ($query->paginate()) {
-            $offset = ($query->getPage() - 1) * $query->getResultsPerPage();
-            $qb->setFirstResult($offset);
-        }
-        $qb->setMaxResults($query->getResultsPerPage());
-        $qb->orderBy('ae.createdAt', 'DESC');
-        $paginator = new Paginator($qb);
-        $results = $paginator->getQuery()->getResult();
-        return new PageResult($results, $paginator->count(), $query->getPage());
+        $queryFactory = new AuditEntryListQuerySqlFactory($query);
+        $em = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::auditEntry($em);
+        $dbQuery = $em->createNativeQuery($queryFactory->getPageQuery(), $resultSetMapping)->setParameters($queryFactory->getParams());
+        $pageContents = $dbQuery->getResult();
+        $total = $em->createNativeQuery($queryFactory->getTotalCountQuery(), ResultSetMappings::scalar())
+            ->setParameters($queryFactory->getParams());
+        $total = count($total->getScalarResult());
+        return new PageResult($pageContents, $total, $query->getPage());
     }
 
     public function getAuditedCommandNames(): array {

@@ -2,8 +2,11 @@
 namespace Repeka\Tests\Domain\Entity;
 
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
 
     public function testForeach() {
         $contents = ResourceContents::fromArray([1 => 'a', 2 => 'b']);
@@ -16,42 +19,54 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
 
     public function testMapAllValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
-        $mapped = $contents->mapAllValues(function ($value) {
-            return $value * 2;
-        });
+        $mapped = $contents->mapAllValues(
+            function ($value) {
+                return $value * 2;
+            }
+        );
         $this->assertEquals(ResourceContents::fromArray([1 => 2, 2 => 4]), $mapped);
     }
 
     public function testMapAllValuesDoesNotChangeOriginalContents() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
-        $contents->mapAllValues(function ($value) {
-            return $value * 2;
-        });
+        $contents->mapAllValues(
+            function ($value) {
+                return $value * 2;
+            }
+        );
         $this->assertEquals(ResourceContents::fromArray([1 => 1, 2 => 2]), $contents);
     }
 
     public function testReduceAllValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
-        $sum = $contents->reduceAllValues(function ($value, $metadataId, $acc) {
-            return $value + $metadataId + $acc;
-        }, 0);
+        $sum = $contents->reduceAllValues(
+            function ($value, $metadataId, $acc) {
+                return $value + $metadataId + $acc;
+            },
+            0
+        );
         $this->assertEquals(6, $sum);
     }
 
     public function testReduceAllValuesWithSubmetadata() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2, 'submetadata' => [4 => 5]]]]);
-        $sum = $contents->reduceAllValues(function ($value, $metadataId, $acc) {
-            return $value + $metadataId + $acc;
-        }, 0);
+        $sum = $contents->reduceAllValues(
+            function ($value, $metadataId, $acc) {
+                return $value + $metadataId + $acc;
+            },
+            0
+        );
         $this->assertEquals(15, $sum);
     }
 
     public function testForEachValue() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2, 'submetadata' => [4 => 5]]]]);
         $count = 0;
-        $contents->forEachValue(function () use (&$count) {
-            $count++;
-        });
+        $contents->forEachValue(
+            function () use (&$count) {
+                $count++;
+            }
+        );
         $this->assertEquals(3, $count);
     }
 
@@ -59,10 +74,12 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2, 'submetadata' => [4 => 5, 2 => [1, 2]]]]]);
         $iteratedIds = [];
         $iteratedValues = [];
-        $contents->forEachMetadata(function (array $values, int $metadataId) use (&$iteratedIds, &$iteratedValues) {
-            $iteratedIds[] = $metadataId;
-            $iteratedValues[] = $values;
-        });
+        $contents->forEachMetadata(
+            function (array $values, int $metadataId) use (&$iteratedIds, &$iteratedValues) {
+                $iteratedIds[] = $metadataId;
+                $iteratedValues[] = $values;
+            }
+        );
         $this->assertEquals([1, 2, 4, 2], $iteratedIds);
         $this->assertEquals([[1], [2], [5], [1, 2]], $iteratedValues);
     }
@@ -120,6 +137,24 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
     public function testJsonEncode() {
         $contents = ResourceContents::fromArray([1 => 2]);
         $this->assertEquals('{"1":[{"value":2}]}', json_encode($contents));
+    }
+
+    public function testWithMetadataNamesMappedToIds() {
+        $metadataRepository = $this->createMock(MetadataRepository::class);
+        $metadataRepository->method('findByName')
+            ->willReturnOnConsecutiveCalls($this->createMetadataMock(1), $this->createMetadataMock(2));
+        $contents = ResourceContents::fromArray(['Tytuł' => 'AA', 'Opis' => 'BB']);
+        $contents = $contents->withMetadataNamesMappedToIds($metadataRepository);
+        $this->assertEquals(ResourceContents::fromArray([1 => 'AA', 2 => 'BB']), $contents);
+    }
+
+    public function testWithMetadataNamesMappedToIdsForSubmetadata() {
+        $metadataRepository = $this->createMock(MetadataRepository::class);
+        $metadataRepository->method('findByName')
+            ->willReturnOnConsecutiveCalls($this->createMetadataMock(2), $this->createMetadataMock(1));
+        $contents = ResourceContents::fromArray(['Tytuł' => [['value' => 'AA', 'submetadata' => ['Opis' => 'BB']]]]);
+        $contents = $contents->withMetadataNamesMappedToIds($metadataRepository);
+        $this->assertEquals(ResourceContents::fromArray([1 => [['value' => 'AA', 'submetadata' => [2 => 'BB']]]]), $contents);
     }
 
     /** @dataProvider fromArrayExamples */

@@ -16,8 +16,9 @@ class AuditController extends ApiController {
     public function getListAction(Request $request) {
         $queryBuilder = AuditEntryListQuery::builder();
         $commandNames = $request->get('commandNames', []);
+        $contentsFilter = json_decode($request->get('resourceContents', '{}'), true);
         Assertion::isArray($commandNames);
-        $queryBuilder->filterByCommandNames($commandNames);
+        $queryBuilder->filterByCommandNames($commandNames)->filterByResourceContents(is_array($contentsFilter) ? $contentsFilter : []);
         if ($request->query->has('page')) {
             $page = $request->query->get('page', 1);
             $resultsPerPage = $request->query->get('resultsPerPage', 10);

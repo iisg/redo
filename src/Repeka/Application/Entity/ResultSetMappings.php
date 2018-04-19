@@ -4,6 +4,7 @@ namespace Repeka\Application\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Repeka\Domain\Entity\AuditEntry;
 use Repeka\Domain\Entity\ResourceEntity;
 
 class ResultSetMappings {
@@ -22,6 +23,12 @@ class ResultSetMappings {
     public static function scalar($columnName = 'count', $type = 'integer'): ResultSetMapping {
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult($columnName, $columnName, $type);
+        return $rsm;
+    }
+
+    public static function auditEntry(EntityManagerInterface $em, string $alias = 'ae') {
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata(AuditEntry::class, $alias);
         return $rsm;
     }
 }
