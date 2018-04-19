@@ -9,12 +9,17 @@ $username-input-right-margin: $icon-width;
 $logo-width: 10em;
 $login-container-max-width: 600px;
 $center-administration-label: 455px;
-
 $text-font-size: 23.8px;
 $text-font-family: "Open Sans", sans-serif;
 
 a {
   cursor: pointer;
+}
+
+icon > svg {
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
 }
 
 .main-container {
@@ -34,11 +39,9 @@ a {
       display: flex;
       flex-wrap: wrap;
       background-color: #4c4c4c;
-
       .logo-box {
         margin: auto;
         text-align: center;
-
         .logo {
           margin: auto;
           height: $logo-width;
@@ -49,24 +52,20 @@ a {
       .form-box {
         flex: 1;
         padding: 15px;
-
         .login-error-element{
           border-radius: 0;
         }
-
         .administration-label {
           color: $current-theme-color;
           font-weight: bold;
         }
-
         .input-elements {
           .username-input {
             margin-right: $username-input-right-margin;
           }
-
           .form-group {
             display: flex;
-
+            align-items: center;
             .form-control {
               margin-right: $input-margin;
               border-radius: 0;
@@ -77,19 +76,16 @@ a {
                 border-color: $current-theme-color;
               }
             }
-
             .login-box-icon {
               display: block;
               height: $icon-width;
               fill: $current-theme-color;
             }
-
             .submit-button {
               padding: 0;
               border: none;
               background: none;
               outline: none;
-
               &:hover{
                 filter: drop-shadow(0px 0px 5px $current-theme-color)
               }
@@ -112,23 +108,20 @@ a {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-evenly;
-
       .information-link-element {
         display:  inherit;
         align-items: center;
         margin-top: 15px;
         text-decoration: none;
-
         &:hover{
           filter: drop-shadow(0px 0px 5px $information-link-elements-color)
         }
-
         .information-link-icon {
+          height: $icon-width;
           display: block;
           padding-right: 15px;
           fill: $information-link-elements-color;
         }
-
         .information-link-text {
           flex: 1;
           color: $information-link-elements-color;
@@ -136,7 +129,6 @@ a {
           font-size: $text-font-size;
           vertical-align: bottom;
         }
-
       }
     }
   }
