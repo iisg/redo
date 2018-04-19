@@ -8,8 +8,9 @@ import {AuditListFilters} from "./audit-list-filters";
 @autoinject
 export class AuditPage implements RoutableComponentActivate {
   private entries: PageResult<AuditEntry>;
-
+  private displayProgressBar = false;
   private filters: AuditListFilters;
+  private error: '';
 
   constructor(private auditEntryRepository: AuditEntryRepository, private router: Router) {
   }
@@ -20,8 +21,19 @@ export class AuditPage implements RoutableComponentActivate {
     this.fetchEntries();
   }
 
-  async fetchEntries() {
-    this.entries = await this.filters.buildQuery(this.auditEntryRepository.getListQuery()).get();
+  fetchEntries() {
+    this.displayProgressBar = true;
+    this.error = '';
+    this.filters
+      .buildQuery(this.auditEntryRepository.getListQuery())
+      .suppressError()
+      .get()
+      .then(entries => this.entries = entries)
+      .catch(e => {
+        this.entries = new PageResult<AuditEntry>();
+        throw this.error = e;
+      })
+      .finally(() => this.displayProgressBar = false);
   }
 
   onFiltersChanged() {

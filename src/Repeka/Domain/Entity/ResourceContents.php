@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use Repeka\Domain\Repository\MetadataRepository;
 
 class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSerializable {
     private $contents = [];
@@ -11,9 +12,14 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
     }
 
     public function filterOutEmptyMetadata(): ResourceContents {
-        return new self(array_filter($this->contents, function ($values) {
-            return count($values) > 0;
-        }));
+        return new self(
+            array_filter(
+                $this->contents,
+                function ($values) {
+                    return count($values) > 0;
+                }
+            )
+        );
     }
 
     /**
@@ -91,12 +97,15 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
      */
     public function getValues($metadata): array {
         $desiredMetadataId = $metadata instanceof Metadata ? $metadata->getId() : $metadata;
-        return $this->reduceAllValues(function ($value, int $metadataId, array $values) use ($desiredMetadataId) {
-            if ($metadataId == $desiredMetadataId) {
-                $values[] = $value;
-            }
-            return $values;
-        }, []);
+        return $this->reduceAllValues(
+            function ($value, int $metadataId, array $values) use ($desiredMetadataId) {
+                if ($metadataId == $desiredMetadataId) {
+                    $values[] = $value;
+                }
+                return $values;
+            },
+            []
+        );
     }
 
     public function toArray(): array {
@@ -131,26 +140,59 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
         return empty($this->contents);
     }
 
-    public static function fromArray(array $anyArray): ResourceContents {
-        $normalized = array_map(function ($metadataEntry) {
-            if (is_array($metadataEntry)) {
-                return array_map(function ($metadataValue) {
-                    if (is_array($metadataValue)) {
-                        if (isset($metadataValue['submetadata'])) {
-                            $metadataValue['submetadata'] = self::fromArray($metadataValue['submetadata'])->toArray();
-                        }
-                        if (!isset($metadataValue['value'])) {
-                            $metadataValue['value'] = null;
-                        }
-                        return array_intersect_key($metadataValue, ['value' => '', 'submetadata' => '']);
-                    } else {
-                        return ['value' => $metadataValue];
-                    }
-                }, $metadataEntry);
-            } else {
-                return [['value' => $metadataEntry]];
+    public function withMetadataNamesMappedToIds(MetadataRepository $metadataRepository): ResourceContents {
+        $newContents = $this->withMetadataNamesMappedToIdsRecursive($metadataRepository, $this->contents);
+        return new self($newContents);
+    }
+
+    private function withMetadataNamesMappedToIdsRecursive(MetadataRepository $metadataRepository, array $contents): array {
+        $mappedContents = [];
+        foreach ($contents as $metadataIdOrName => &$values) {
+            foreach ($values as &$metadataValue) {
+                if (isset($metadataValue['submetadata'])) {
+                    $metadataValue['submetadata'] = $this->withMetadataNamesMappedToIdsRecursive(
+                        $metadataRepository,
+                        $metadataValue['submetadata']
+                    );
+                }
             }
-        }, $anyArray);
+            if (!is_int($metadataIdOrName)) {
+                $metadata = $metadataRepository->findByName($metadataIdOrName);
+                $mappedContents[$metadata->getId()] = $values;
+                unset($contents[$metadataIdOrName]);
+            } else {
+                $mappedContents[$metadataIdOrName] = $values;
+            }
+        }
+        return $mappedContents;
+    }
+
+    public static function fromArray(array $anyArray): ResourceContents {
+        $normalized = array_map(
+            function ($metadataEntry) {
+                if (is_array($metadataEntry)) {
+                    return array_map(
+                        function ($metadataValue) {
+                            if (is_array($metadataValue)) {
+                                if (isset($metadataValue['submetadata'])) {
+                                    $metadataValue['submetadata'] = self::fromArray($metadataValue['submetadata'])->toArray();
+                                }
+                                if (!isset($metadataValue['value'])) {
+                                    $metadataValue['value'] = null;
+                                }
+                                return array_intersect_key($metadataValue, ['value' => '', 'submetadata' => '']);
+                            } else {
+                                return ['value' => $metadataValue];
+                            }
+                        },
+                        $metadataEntry
+                    );
+                } else {
+                    return [['value' => $metadataEntry]];
+                }
+            },
+            $anyArray
+        );
         return new self($normalized);
     }
 

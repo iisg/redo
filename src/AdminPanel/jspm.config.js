@@ -60,11 +60,15 @@ System.config({
     "sticky-table-headers": "npm:sticky-table-headers@0.1.24",
     "sweetalert2": "npm:sweetalert2@6.11.5",
     "text": "github:systemjs/plugin-text@0.0.9",
+    "yamljs": "npm:yamljs@0.3.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
     },
     "github:jspm/nodelibs-buffer@0.1.1": {
       "buffer": "npm:buffer@5.1.0"
+    },
+    "github:jspm/nodelibs-events@0.1.1": {
+      "events": "npm:events@1.0.2"
     },
     "github:jspm/nodelibs-os@0.1.0": {
       "os-browserify": "npm:os-browserify@0.1.2"
@@ -97,6 +101,13 @@ System.config({
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
       "aurelia-loader": "npm:aurelia-loader@1.0.0",
       "aurelia-path": "npm:aurelia-path@1.1.1"
+    },
+    "npm:argparse@1.0.10": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "sprintf-js": "npm:sprintf-js@1.0.3",
+      "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:arrive@2.4.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -274,9 +285,13 @@ System.config({
     "npm:bluebird@3.4.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:brace-expansion@1.1.11": {
+      "balanced-match": "npm:balanced-match@1.0.0",
+      "concat-map": "npm:concat-map@0.0.1"
+    },
     "npm:buffer@5.1.0": {
-      "base64-js": "npm:base64-js@1.2.3",
-      "ieee754": "npm:ieee754@1.1.8"
+      "base64-js": "npm:base64-js@1.3.0",
+      "ieee754": "npm:ieee754@1.1.11"
     },
     "npm:camel-case@3.0.0": {
       "no-case": "npm:no-case@2.3.2",
@@ -338,12 +353,36 @@ System.config({
     "npm:dot-case@2.1.1": {
       "no-case": "npm:no-case@2.3.2"
     },
+    "npm:fs.realpath@1.0.0": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:glob@7.1.2": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "events": "github:jspm/nodelibs-events@0.1.1",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "fs.realpath": "npm:fs.realpath@1.0.0",
+      "inflight": "npm:inflight@1.0.6",
+      "inherits": "npm:inherits@2.0.1",
+      "minimatch": "npm:minimatch@3.0.4",
+      "once": "npm:once@1.4.0",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "path-is-absolute": "npm:path-is-absolute@1.0.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "util": "github:jspm/nodelibs-util@0.1.0"
+    },
     "npm:header-case@1.0.1": {
       "no-case": "npm:no-case@2.3.2",
       "upper-case": "npm:upper-case@1.1.3"
     },
     "npm:i18next@3.5.2": {
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:inflight@1.0.6": {
+      "once": "npm:once@1.4.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "wrappy": "npm:wrappy@1.0.2"
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
@@ -366,8 +405,15 @@ System.config({
     "npm:lower-case-first@1.0.2": {
       "lower-case": "npm:lower-case@1.1.4"
     },
+    "npm:minimatch@3.0.4": {
+      "brace-expansion": "npm:brace-expansion@1.1.11",
+      "path": "github:jspm/nodelibs-path@0.1.0"
+    },
     "npm:no-case@2.3.2": {
       "lower-case": "npm:lower-case@1.1.4"
+    },
+    "npm:once@1.4.0": {
+      "wrappy": "npm:wrappy@1.0.2"
     },
     "npm:oribella-aurelia-sortable@0.13.0": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
@@ -401,6 +447,9 @@ System.config({
     "npm:path-case@2.1.1": {
       "no-case": "npm:no-case@2.3.2"
     },
+    "npm:path-is-absolute@1.0.1": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:process@0.11.10": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
@@ -430,6 +479,14 @@ System.config({
     },
     "npm:vm-browserify@0.0.4": {
       "indexof": "npm:indexof@0.0.1"
+    },
+    "npm:yamljs@0.3.0": {
+      "argparse": "npm:argparse@1.0.10",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "glob": "npm:glob@7.1.2",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     }
   }
 });

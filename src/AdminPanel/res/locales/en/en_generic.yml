@@ -4,3 +4,4 @@ meta:
 bool:
   true: Yes
   false: No
+Filter_verb: Filter

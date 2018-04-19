@@ -147,3 +147,8 @@ Operation: Operacja
 Filters: Filtry
 Groups: Grupy
 No groups: Brak grup
+Resource contents: Zawartość zasobu
+Filter_verb: Filtruj
+Invalid audit filters.: Niepoprawne warunki filtrowania.
+Could not find metadata: Nie znaleziono metadanej
+No entry matches given filters.: Żaden wpis nie pasuje do zadanych kryteriów.

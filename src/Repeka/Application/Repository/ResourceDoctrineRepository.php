@@ -3,12 +3,12 @@ namespace Repeka\Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\ResultSetMappings;
-use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Factory\ResourceListQuerySqlFactory;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\PageResult;
@@ -42,69 +42,17 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
     }
 
     /**
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      * @return ResourceEntity[]
      */
     public function findByQuery(ResourceListQuery $query): PageResult {
-        $queryFroms = ['resource r'];
-        $queryWheres = ['1=1'];
-        $queryParams = [];
-        if ($query->getIds()) {
-            $queryWheres[] = 'id IN(:ids)';
-            $queryParams['ids'] = $query->getIds();
-        }
-        if ($query->getResourceClasses()) {
-            $queryWheres[] = 'resource_class IN(:resourceClasses)';
-            $queryParams['resourceClasses'] = $query->getResourceClasses();
-        }
-        if ($query->getResourceKinds()) {
-            $queryWheres[] = 'kind_id IN(:resourceKindIds)';
-            $queryParams['resourceKindIds'] = EntityUtils::mapToIds($query->getResourceKinds());
-        }
-        if ($query->getParentId()) {
-            $parentMetadata = SystemMetadata::PARENT;
-            $queryWheres[] = "r.contents->'$parentMetadata' @> :parentSearchValue";
-            $queryParams['parentSearchValue'] = json_encode([['value' => $query->getParentId()]]);
-        }
-        if ($query->onlyTopLevel()) {
-            $parentMetadata = SystemMetadata::PARENT;
-            $queryWheres[] = "(r.contents->'$parentMetadata' = '[]' OR JSONB_EXISTS(r.contents, '$parentMetadata') = FALSE)";
-        }
-        $query->getContentsFilter()->forEachValue(
-            function ($value, int $metadataId) use (&$queryFroms, &$queryWheres, &$queryParams) {
-                $escapedMetadataId = str_replace('-', '_', strval($metadataId)); // prevents names like m-2
-                $paramName = "mFilter$escapedMetadataId";
-                $queryFroms[] = "jsonb_array_elements(r.contents->'$metadataId') m$escapedMetadataId";
-                $queryWheres[] = "m$escapedMetadataId->>'value' ILIKE :$paramName";
-                $queryParams[$paramName] = '%' . $value . '%';
-            }
-        );
-        foreach ($query->getSortByMetadataIds() as $resourceMetadataSort) {
-            $metadataId = $resourceMetadataSort['metadataId'];
-            $direction = $resourceMetadataSort['direction'];
-            $queryOrderBy[] = "jsonb_array_elements(r.contents->'$metadataId')->>'value' $direction";
-        }
-        $queryOrderBy[] = "r.id ASC";
-        $pagination = '';
-        if ($query->paginate()) {
-            $offset = ($query->getPage() - 1) * $query->getResultsPerPage();
-            $pagination = "LIMIT {$query->getResultsPerPage()} OFFSET $offset";
-        }
+        $queryFactory = new ResourceListQuerySqlFactory($query);
         $em = $this->getEntityManager();
         $resultSetMapping = ResultSetMappings::resourceEntity($em);
-        $queryFroms = implode(', ', $queryFroms);
-        $queryWheres = implode(' AND ', $queryWheres);
-        $queryOrderBys = implode(', ', $queryOrderBy);
-        $querySql = "SELECT r.* FROM $queryFroms WHERE $queryWheres ORDER BY $queryOrderBys $pagination";
-        $dbQuery = $em->createNativeQuery($querySql, $resultSetMapping)->setParameters($queryParams);
+        $dbQuery = $em->createNativeQuery($queryFactory->getPageQuery(), $resultSetMapping)->setParameters($queryFactory->getParams());
         $pageContents = $dbQuery->getResult();
-        if ($pagination) {
-            $querySqlTotal = "SELECT COUNT(id) count FROM $queryFroms WHERE $queryWheres GROUP BY id ORDER BY $queryOrderBys";
-            $total = $em->createNativeQuery($querySqlTotal, ResultSetMappings::scalar())->setParameters($queryParams);
-            $total = count($total->getScalarResult());
-        } else {
-            $total = count($pageContents);
-        }
+        $total = $em->createNativeQuery($queryFactory->getTotalCountQuery(), ResultSetMappings::scalar())
+            ->setParameters($queryFactory->getParams());
+        $total = count($total->getScalarResult());
         return new PageResult($pageContents, $total, $query->getPage());
     }
 
