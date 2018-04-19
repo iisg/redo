@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Tests\Traits;
 
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
@@ -11,12 +10,14 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Respect\Validation\Exceptions\ValidationException;
@@ -130,7 +131,6 @@ trait StubsTrait {
         return $repository;
     }
 
-
     /**
      * @param Metadata[] $metadataList
      * @return MetadataRepository
@@ -206,7 +206,8 @@ trait StubsTrait {
         string $id = '',
         array $missingMetadataIds = [],
         array $assigneeMetadataIds = [],
-        array $autoAssignMetadataIds = []
+        array $autoAssignMetadataIds = [],
+        array $label = []
     ): ResourceWorkflowPlace {
         $mock = $this->createMock(ResourceWorkflowPlace::class);
         $mock->method('getId')->willReturn($id);
@@ -215,6 +216,24 @@ trait StubsTrait {
         $mock->method('restrictingMetadataIds')->willReturn(
             new FluentRestrictingMetadataSelector([], [], $assigneeMetadataIds, $autoAssignMetadataIds)
         );
+        $mock->method('getLabel')->willReturn($label);
+        return $mock;
+    }
+
+    /** @return ResourceWorkflowTransition|\PHPUnit_Framework_MockObject_MockObject */
+    protected function createWorkflowTransitionMock(
+        array $label = [],
+        array $fromIds = [],
+        array $toIds = [],
+        $id = null,
+        array $permittedRoleIds = []
+    ): ResourceWorkflowTransition {
+        $mock = $this->createMock(ResourceWorkflowTransition::class);
+        $mock->method('getId')->willReturn($id);
+        $mock->method('getLabel')->willReturn($label);
+        $mock->method('getFromIds')->willReturn($fromIds);
+        $mock->method('getToIds')->willReturn($toIds);
+        $mock->method('getPermittedRoleIds')->willReturn($permittedRoleIds);
         return $mock;
     }
 }

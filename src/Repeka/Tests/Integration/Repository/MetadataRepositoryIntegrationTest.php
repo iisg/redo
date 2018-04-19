@@ -1,11 +1,11 @@
 <?php
 namespace Repeka\Tests\Integration\Repository;
 
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\IntegrationTestCase;
 
 class MetadataRepositoryIntegrationTest extends IntegrationTestCase {

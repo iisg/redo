@@ -2,9 +2,9 @@
 namespace Repeka\Domain\Factory;
 
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceListQuerySqlFactory {
     /** @var ResourceListQuery */

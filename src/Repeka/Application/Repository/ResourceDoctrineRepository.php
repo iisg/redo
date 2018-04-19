@@ -3,7 +3,7 @@ namespace Repeka\Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\ResultSetMappings;
-use Repeka\Domain\Entity\EntityUtils;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
@@ -13,6 +13,7 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)

@@ -6,10 +6,10 @@ use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Entity\EntityIdGeneratorHelper;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
+use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

@@ -1,13 +1,13 @@
 <?php
 namespace Repeka\Domain\Workflow;
 
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\UserRepository;
+use Repeka\Domain\Utils\EntityUtils;
 
 class TransitionPossibilityChecker {
     /** @var UserRepository */

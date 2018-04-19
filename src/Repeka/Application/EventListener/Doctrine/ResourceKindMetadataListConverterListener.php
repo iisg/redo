@@ -3,9 +3,9 @@ namespace Repeka\Application\EventListener\Doctrine;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Psr\Container\ContainerInterface;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 class ResourceKindMetadataListConverterListener {

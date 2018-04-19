@@ -7,6 +7,7 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandValidato
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
+use Repeka\Domain\Validation\Rules\WorkflowTransitionNamesMatchInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -23,11 +24,14 @@ class WorkflowTransitionsDefinitionIsValidRuleTest extends \PHPUnit_Framework_Te
         $resourceClassExistsRule = $this->createRuleMock(ResourceClassExistsRule::class, true);
         $workflowPlacesDefinitionIsValidRule = new WorkflowPlacesDefinitionIsValidRule($entityExistsRule);
         $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
+        $workflowTransitionNamesMatchInAllLanguagesRule =
+            $this->createRuleWithFactoryMethodMock(WorkflowTransitionNamesMatchInAllLanguagesRule::class, "withPlaces", true);
         $this->validator = new ResourceWorkflowCreateCommandValidator(
             $notBlankInAllLanguagesRule,
             $resourceClassExistsRule,
             $workflowTransitionsDefinitionIsValidRule,
-            $workflowPlacesDefinitionIsValidRule
+            $workflowPlacesDefinitionIsValidRule,
+            $workflowTransitionNamesMatchInAllLanguagesRule
         );
     }
 

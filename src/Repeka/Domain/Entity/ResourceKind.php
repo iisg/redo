@@ -3,6 +3,7 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceKind implements Identifiable {
     private $id;

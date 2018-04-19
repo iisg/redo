@@ -1,12 +1,12 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceTransitionCommandHandler {
     /** @var ResourceRepository */

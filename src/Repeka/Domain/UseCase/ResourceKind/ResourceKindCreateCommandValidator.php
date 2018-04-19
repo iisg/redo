@@ -2,8 +2,8 @@
 namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Cqrs\Command;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;

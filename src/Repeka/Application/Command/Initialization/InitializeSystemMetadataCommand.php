@@ -4,9 +4,9 @@ namespace Repeka\Application\Command\Initialization;
 use Repeka\Application\Command\TransactionalCommand;
 use Repeka\Application\Entity\EntityIdGeneratorHelper;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

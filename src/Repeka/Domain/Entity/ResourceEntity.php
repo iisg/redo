@@ -3,6 +3,7 @@ namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Utils\EntityUtils;
 
 // ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
 class ResourceEntity implements Identifiable {

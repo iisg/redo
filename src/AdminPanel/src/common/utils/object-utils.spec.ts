@@ -1,4 +1,4 @@
-import {filterByValues, keysByValue, mapValues, numberKeysByValue, zip, safeJsonParse} from "./object-utils";
+import {filterByValues, keysByValue, mapValues, numberKeysByValue, zip, safeJsonParse, mapToArray} from "./object-utils";
 
 describe('object-utils', () => {
   describe(keysByValue.name, () => {
@@ -117,6 +117,18 @@ describe('object-utils', () => {
     it('returns undefined if incorrect json', () => {
       const json = '{a: 2';
       expect(safeJsonParse(json)).toEqual(undefined);
+    });
+  });
+
+  describe(mapToArray.name, () => {
+    const joinKeyWithValue = (key, value) => key + value;
+
+    it('maps simple object', () => {
+      expect(mapToArray({a: 'foo', b: 'bar'}, joinKeyWithValue)).toEqual(['afoo', 'bbar']);
+    });
+
+    it('maps empty object', () => {
+      expect(mapToArray({}, () => undefined)).toEqual([]);
     });
   });
 });

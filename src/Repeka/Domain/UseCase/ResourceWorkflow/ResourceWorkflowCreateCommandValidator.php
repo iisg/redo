@@ -6,6 +6,7 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
+use Repeka\Domain\Validation\Rules\WorkflowTransitionNamesMatchInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -21,18 +22,22 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
     private $workflowTransitionsDefinitionIsValidRule;
     /** @var WorkflowPlacesDefinitionIsValidRule */
     private $workflowPlacesDefinitionIsValidRule;
+    /** @var WorkflowTransitionNamesMatchInAllLanguagesRule */
+    private $workflowTransitionNamesMatchInAllLanguagesRule;
 
     /** @SuppressWarnings("PHPMD.LongVariable") */
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         ResourceClassExistsRule $resourceClassExistsRule,
         WorkflowTransitionsDefinitionIsValidRule $workflowTransitionsDefinitionIsValidRule,
-        WorkflowPlacesDefinitionIsValidRule $workflowPlacesDefinitionIsValidRule
+        WorkflowPlacesDefinitionIsValidRule $workflowPlacesDefinitionIsValidRule,
+        WorkflowTransitionNamesMatchInAllLanguagesRule $workflowTransitionNamesMatchInAllLanguagesRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->resourceClassExistsRule = $resourceClassExistsRule;
         $this->workflowTransitionsDefinitionIsValidRule = $workflowTransitionsDefinitionIsValidRule;
         $this->workflowPlacesDefinitionIsValidRule = $workflowPlacesDefinitionIsValidRule;
+        $this->workflowTransitionNamesMatchInAllLanguagesRule = $workflowTransitionNamesMatchInAllLanguagesRule;
     }
 
     /**
@@ -44,6 +49,7 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
             ::attribute('name', $this->notBlankInAllLanguagesRule)
             ->attribute('places', $this->workflowPlacesDefinitionIsValidRule)
             ->attribute('transitions', $this->workflowTransitionsDefinitionIsValidRule)
-            ->attribute('resourceClass', $this->resourceClassExistsRule);
+            ->attribute('resourceClass', $this->resourceClassExistsRule)
+            ->attribute('transitions', $this->workflowTransitionNamesMatchInAllLanguagesRule->withPlaces($command->getPlaces()));
     }
 }

@@ -2,11 +2,11 @@
 namespace Repeka\Tests\Domain\Entity;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceEntityTest extends \PHPUnit_Framework_TestCase {

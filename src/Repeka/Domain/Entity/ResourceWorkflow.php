@@ -5,6 +5,7 @@ use Assert\Assertion;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 
 class ResourceWorkflow implements Identifiable {

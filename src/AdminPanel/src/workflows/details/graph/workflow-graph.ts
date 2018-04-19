@@ -2,13 +2,14 @@ import * as cytoscape from "cytoscape";
 import * as contextMenus from "cytoscape-context-menus";
 import * as edgeHandles from "cytoscape-edgehandles";
 import * as autopanOnDrag from "cytoscape-autopan-on-drag";
+import {MultilingualText} from 'resources-config/metadata/metadata';
 import {workflowGraphDefaultStylesheet} from "./workflow-graph-stylesheet";
 import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
 import {generateId} from "common/utils/string-utils";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
-import {deepCopy} from "common/utils/object-utils";
+import {deepCopy, mapToArray, values} from "common/utils/object-utils";
 import {noop, VoidFunction} from "common/utils/function-utils";
 import {ResourceRepository} from "../../../resources/resource-repository";
 import {Resource} from "../../../resources/resource";
@@ -258,14 +259,18 @@ export class WorkflowGraph {
     const deduplicatedEdges: { [s: string]: WorkflowTransition } = {};
     const opposite = mergeBy == 'froms' ? 'tos' : 'froms';
     for (let transition of transitions) {
-      let edgeVisualId = transition[mergeBy][0] + '_' + this.inCurrentLanguage.toView(transition.label);
+      let edgeVisualId = transition[mergeBy][0] + '_' + this.getLabelId(transition.label);
       if (deduplicatedEdges[edgeVisualId]) {
         deduplicatedEdges[edgeVisualId][opposite].push(transition[opposite][0]);
       } else {
         deduplicatedEdges[edgeVisualId] = transition;
       }
     }
-    return Object.keys(deduplicatedEdges).map(key => deduplicatedEdges[key]);
+    return values(deduplicatedEdges);
+  }
+
+  private getLabelId(label: MultilingualText): string {
+    return mapToArray(label, (language, label) => language + '-' + label).join('_');
   }
 
   public getTransitions(): Array<WorkflowTransition> {

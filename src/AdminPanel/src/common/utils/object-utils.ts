@@ -69,3 +69,7 @@ export function safeJsonParse(value: string): any {
   }
   return undefined;
 }
+
+export function mapToArray<T, U>(obj: AnyMap<T>, mapper: (key: string | number, value: T) => U): U[] {
+  return Object.keys(obj).map(key => mapper(key, obj[key]));
+}

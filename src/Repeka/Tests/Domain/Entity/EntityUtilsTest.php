@@ -2,8 +2,8 @@
 namespace Repeka\Tests\Domain\Entity;
 
 use Repeka\Application\Entity\UserEntity;
-use Repeka\Domain\Entity\EntityUtils;
 use Repeka\Domain\Entity\Identifiable;
+use Repeka\Domain\Utils\EntityUtils;
 
 class EntityUtilsTest extends \PHPUnit_Framework_TestCase {
     /** @var Identifiable[] */
