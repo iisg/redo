@@ -1,6 +1,6 @@
 <template>
     <require from="resources/details/resource-link"></require>
-    <resource-link id.bind="entry.data.resourceId"></resource-link>
+    <resource-link id.bind="entry.data.resource.id"></resource-link>
     <icon name="examination-3"></icon>
     <a click.delegate="showResourceContentsDialog()">
         ${ 'View past contents' | t }

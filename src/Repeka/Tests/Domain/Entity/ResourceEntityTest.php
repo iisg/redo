@@ -85,12 +85,17 @@ class ResourceEntityTest extends \PHPUnit_Framework_TestCase {
         $resource = new ResourceEntity($this->resourceKind, ResourceContents::fromArray([1 => ['AA']]));
         EntityUtils::forceSetId($resource, 2);
         $auditData = $resource->getAuditData();
-        $this->assertEquals([
-            'resourceId' => 2,
-            'places' => [],
-            'resourceClass' => 'books',
-            'resourceKindId' => 1,
-            'contents' => ResourceContents::fromArray([1 => ['AA']])->toArray(),
-        ], $auditData);
+        $this->assertEquals(
+            [
+                'resource' => [
+                    'id' => 2,
+                    'kindId' => 1,
+                    'contents' => ResourceContents::fromArray([1 => ['AA']])->toArray(),
+                    'resourceClass' => 'books',
+                    'places' => [],
+                ],
+            ],
+            $auditData
+        );
     }
 }
