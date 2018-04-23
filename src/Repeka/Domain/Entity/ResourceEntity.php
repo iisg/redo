@@ -65,11 +65,13 @@ class ResourceEntity implements Identifiable {
 
     public function getAuditData(): array {
         return [
-            'resourceId' => $this->getId(),
-            'places' => $this->hasWorkflow() ? EntityUtils::mapToIds($this->getWorkflow()->getPlaces($this)) : [],
-            'resourceClass' => $this->getResourceClass(),
-            'resourceKindId' => $this->getKind()->getId(),
-            'contents' => $this->contents,
+            'resource' => [
+                'id' => $this->getId(),
+                'kindId' => $this->getKind()->getId(),
+                'contents' => $this->contents,
+                'resourceClass' => $this->getResourceClass(),
+                'places' => $this->hasWorkflow() ? EntityUtils::mapToIds($this->getWorkflow()->getPlaces($this)) : [],
+            ],
         ];
     }
 }

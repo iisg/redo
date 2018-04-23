@@ -13,7 +13,7 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
     private function build() {
         $this->froms[] = 'audit ae';
         $this->filterByCommandNames();
-        $this->filterByContents($this->query->getResourceContentsFilter(), "ae.data->'contents'");
+        $this->filterByContents($this->query->getResourceContentsFilter(), "ae.data->'resource'->'contents'");
         $this->orderBy[] = 'ae.created_at DESC';
         $this->paginate();
     }

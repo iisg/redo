@@ -1,7 +1,6 @@
 <template>
     <require from="resources/controls/input/autosize"></require>
 
-
     <ul class="nav nav-pills">
         <li repeat.for="strategyId of displayStrategies & oneTime"
             class.bind="currentlyEditedDisplayStrategy == strategyId ? 'active' : ''"

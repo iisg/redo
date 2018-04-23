@@ -251,7 +251,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $auditEntries = $this->container->get(AuditEntryRepository::class)->findAll();
         $latestAuditEntry = end($auditEntries);
         $this->assertEquals('resource_create', $latestAuditEntry->getCommandName());
-        $this->assertEquals($createdId, $latestAuditEntry->getData()['resourceId']);
+        $this->assertEquals($createdId, $latestAuditEntry->getData()['resource']['id']);
     }
 
     public function testCreatingResourceWithWorkflow() {

@@ -152,3 +152,5 @@ Filter_verb: Filtruj
 Invalid audit filters.: Niepoprawne warunki filtrowania.
 Could not find metadata: Nie znaleziono metadanej
 No entry matches given filters.: Żaden wpis nie pasuje do zadanych kryteriów.
+Resource display strategy: Strategia wyświetlania zasobu
+Add dynamic column: Dodaj dynamiczną kolumnę

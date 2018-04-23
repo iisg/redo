@@ -9,6 +9,7 @@ export class AuditListFilters {
   @observable currentPageNumber: number = 1;
   commandNames: string[] = [];
   resourceContents: NumberMap<string>;
+  customColumns: { displayStrategy: string }[] = [];
   onChange: VoidFunction = () => undefined;
 
   toParams(): StringMap<any> {
@@ -21,6 +22,9 @@ export class AuditListFilters {
     }
     if (this.commandNames.length) {
       params.commandNames = this.commandNames.join(',');
+    }
+    if (this.customColumns.length) {
+      params.customColumns = JSON.stringify(this.customColumns.map(col => col.displayStrategy));
     }
     if (this.resourceContents) {
       params.resourceContents = JSON.stringify(this.resourceContents);
@@ -42,6 +46,7 @@ export class AuditListFilters {
     filters.currentPageNumber = +params.page || 1;
     filters.commandNames = (params.commandNames || '').split(',').filter(commandName => !!commandName.trim());
     filters.resourceContents = safeJsonParse(params.resourceContents);
+    filters.setCustomColumns(params.customColumns);
     return filters;
   }
 
@@ -57,5 +62,25 @@ export class AuditListFilters {
 
   resultsPerPageChanged() {
     this.callOnChange();
+  }
+
+  addNewCustomColumn() {
+    this.customColumns.push({displayStrategy: ''});
+  }
+
+  removeCustomColumn(column) {
+    const columnIndex = this.customColumns.indexOf(column);
+    if (columnIndex >= 0) {
+      this.customColumns.splice(columnIndex, 1);
+    }
+  }
+
+  private setCustomColumns(serializedCustomColumns: string): void {
+    const customColumns = safeJsonParse(serializedCustomColumns);
+    if (Array.isArray(customColumns)) {
+      this.customColumns = customColumns.map(col => {
+        return {displayStrategy: col};
+      });
+    }
   }
 }

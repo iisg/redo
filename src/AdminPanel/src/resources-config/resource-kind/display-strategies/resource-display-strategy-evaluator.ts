@@ -3,6 +3,7 @@ import * as Handlebars from "handlebars";
 import {ResourceKind} from "../resource-kind";
 import {autoinject} from "aurelia-dependency-injection";
 import * as handlebarsHelpers from "./resource-display-strategy-handlebars-helpers";
+import {DISPLAY_STRATEGIES} from "./display-strategies";
 
 @autoinject
 export class ResourceDisplayStrategyEvaluator {
@@ -21,7 +22,8 @@ export class ResourceDisplayStrategyEvaluator {
     if (!resource) {
       return '';
     }
-    const template = this.compileTemplateOrDefault(resource.kind.displayStrategies[strategyId]);
+    const strategy = DISPLAY_STRATEGIES.indexOf(strategyId) >= 0 ? resource.kind.displayStrategies[strategyId] : strategyId;
+    const template = this.compileTemplateOrDefault(strategy);
     return template(new ResourceDisplayStrategyTemplateData(resource));
   }
 

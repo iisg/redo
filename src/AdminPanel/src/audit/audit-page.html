@@ -42,6 +42,17 @@
             </span>
         </div>
 
+        <div class="clearfix">
+            <div class="pull-right">
+                <button type="button"
+                    class="btn btn-default"
+                    click.trigger="filters.addNewCustomColumn()">
+                    <icon name="add-2"></icon>
+                    ${ 'Add dynamic column' | t }
+                </button>
+            </div>
+        </div>
+
         <table if.bind="entries.length > 0">
             <thead>
             <tr>
@@ -49,6 +60,20 @@
                 <th>${'Operation' | t}</th>
                 <th>${'User' | t}</th>
                 <th>${'Details' | t}</th>
+                <th repeat.for="column of filters.customColumns">
+                    <span class="input-group">
+                        <input type="text"
+                            class="form-control"
+                            placeholder.one-time="'Resource display strategy' | t"
+                            value.bind="column.displayStrategy">
+                        <span class="input-group-btn">
+                            <a click.trigger="filters.removeCustomColumn(column)"
+                                class="btn btn-default">
+                                <icon name="remove-2"></icon>
+                            </a>
+                        </span>
+                    </span>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -64,6 +89,11 @@
                     <compose view-model="./entry-details/audit-entry-details"
                         view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
                         model.bind="{entry: entry}"></compose>
+                </td>
+                <td repeat.for="column of filters.customColumns">
+                    <span if.bind="entry.data.resource">
+                        ${ entry.data.resource | resourceDisplayStrategy:column.displayStrategy }
+                    </span>
                 </td>
             </tr>
             </tbody>
