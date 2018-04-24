@@ -10,7 +10,10 @@ import {mapValues} from "../utils/object-utils";
 
 @autoinject
 export class GlobalExceptionInterceptor implements Interceptor {
-  constructor(private i18n: I18N, private container: Container, private alert: Alert, private sanitizeHtml: SanitizeHTMLValueConverter) {
+  constructor(private i18n: I18N,
+              private container: Container,
+              private alert: Alert,
+              private sanitizeHtml: SanitizeHTMLValueConverter) {
   }
 
   responseError(response: HttpResponseMessage): HttpResponseMessage {

@@ -2,10 +2,10 @@
 namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Assert\InvalidArgumentException;
-use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Validation\Rules\WorkflowTransitionNamesMatchInAllLanguagesRule;
 use Repeka\Tests\Traits\StubsTrait;
+use Respect\Validation\Exceptions\ValidationException;
 
 /** @SuppressWarnings("PHPMD.LongVariable") */
 class WorkflowTransitionNamesMatchInAllLanguagesRuleTest extends \PHPUnit_Framework_TestCase {
@@ -64,7 +64,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRuleTest extends \PHPUnit_Framew
     }
 
     public function testDifferentLabelsNotPassingValidation() {
-        $this->expectException(DomainException::class);
+        $this->expectException(ValidationException::class);
         $transitions = [
             $this->createWorkflowTransitionMock(['PL' => 'pl', 'EN' => 'different'], ['x'], ['y'], 'tranXX'),
             $this->createWorkflowTransitionMock(['PL' => 'pl', 'EN' => 'not ok'], ['z'], ['y'], 'tranYY'),
@@ -97,7 +97,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRuleTest extends \PHPUnit_Framew
     }
 
     public function testMissingLabelsInLanguageNotPassingValidation() {
-        $this->expectException(DomainException::class);
+        $this->expectException(ValidationException::class);
         $transitions = [
             $this->createWorkflowTransitionMock(['PL' => 'not empty'], ['x'], ['y'], 'tran1'),
             $this->createWorkflowTransitionMock([], ['z'], ['y'], 'tran2'),
@@ -122,7 +122,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRuleTest extends \PHPUnit_Framew
     }
 
     public function testDifferentGroupedTransitionsNotPassingValidation() {
-        $this->expectException(DomainException::class);
+        $this->expectException(ValidationException::class);
         $transitions = [
             $this->createWorkflowTransitionMock(['PL' => 'different', 'EN' => 'en'], ['x', 'y'], ['z'], 'tran1'),
             $this->createWorkflowTransitionMock(['PL' => 'not ok', 'EN' => 'en'], ['s'], ['z'], 'tran2'),
@@ -149,7 +149,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRuleTest extends \PHPUnit_Framew
     }
 
     public function testDifferentTransitionsFromNotPassingValidation() {
-        $this->expectException(DomainException::class);
+        $this->expectException(ValidationException::class);
         $transitions = [
             $this->createWorkflowTransitionMock(['PL' => 'XX', 'EN' => 'en'], ['from place'], ['y'], 'tran1'),
             $this->createWorkflowTransitionMock(['PL' => 'YY', 'EN' => 'en'], ['from place'], ['z'], 'tran2'),
@@ -158,7 +158,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRuleTest extends \PHPUnit_Framew
     }
 
     public function testDifferentTransitionsBetweenSamePlacesNotPassingValidation() {
-        $this->expectException(DomainException::class);
+        $this->expectException(ValidationException::class);
         $transitions = [
             $this->createWorkflowTransitionMock(['PL' => 'XX', 'EN' => 'en'], ['place 1'], ['place 2'], 'tran1'),
             $this->createWorkflowTransitionMock(['PL' => 'YY', 'EN' => 'en'], ['place 1'], ['place 2'], 'tran2'),
@@ -182,8 +182,8 @@ class WorkflowTransitionNamesMatchInAllLanguagesRuleTest extends \PHPUnit_Framew
         try {
             $this->rule->validate($transitions);
             $this->fail('The line above should throw an exception.');
-        } catch (DomainException $e) {
-            $params = implode($e->getParams());
+        } catch (ValidationException $e) {
+            $params = json_encode($e->getParams());
             $this->assertContains('PL', $params);
             $this->assertContains('pl', $params);
             $this->assertContains('EN', $params);

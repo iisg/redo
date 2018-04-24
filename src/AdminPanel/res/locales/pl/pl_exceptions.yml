@@ -5,8 +5,7 @@ uploadFailed: Przesyłanie pliku nie powiodło się, spróbuj ponownie później
 noSuchResourceFile: Plik {{filename}} nie istnieje w zasobie {{resourceId}}
 cannotApplyTransition: Przejście '{{transitionId}}' nie może zostać wykonane w procesie {{workflowId}}
 noSuchTransition: Przejście '{{transitionId}}' nie istnieje w procesie {{workflowId}}
-transitionLabelsToPlaceNotMatching: Przejścia {{transitionLabels}} wchodzące do stanu {{placeId}} mają taką samą nazwę w {{matchingLanguages}}, ale różną w {{differentLanguages}}
-transitionLabelsFromPlaceNotMatching: Przejścia {{transitionLabels}} wychodzące ze stanu {{placeId}} mają taką samą nazwę w {{matchingLanguages}}, ale różną w {{differentLanguages}}
+transitionLabelsNotMatching: Przejścia {{transitionLabels}} połączone ze stanem {{placeLabel}} mają taką samą nazwę w {{matchingLanguages}}, ale różną w {{differentLanguages}}
 resourceCannotEnterPlace: "Zasób #{{resourceId}} nie może znajdować się w tym stanie"
 entityNotFound: Nie znaleziono {{entityName}} {{query}}
 invalidCommand: Dane przesłane do serwera są nieprawidłowe
@@ -33,6 +32,7 @@ violationFields:
   displayStrategies: Strategia prezentacji zasobu
   newLabel: Nowa nazwa
   places: Edytowane Miejsca
+  transitions: Przejścia
 user role is in use: Rola jest w użyciu.
 resource has children: zasób ma podzasoby.
 resources of this kind exist: istnieją zasoby tego rodzaju.

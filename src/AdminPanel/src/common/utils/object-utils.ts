@@ -58,6 +58,16 @@ export function mapValues<T, U>(obj: AnyMap<T>, mapperFn: (value: T) => U): AnyM
   return out;
 }
 
+export function mapValuesShallow<T, U>(obj: AnyMap<T>, mapperFn: (value: T) => U): AnyMap<U> {
+  const out = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+        out[key] = mapperFn(obj[key]);
+    }
+  }
+  return out;
+}
+
 export function safeJsonParse(value: string): any {
   if (value) {
     try {

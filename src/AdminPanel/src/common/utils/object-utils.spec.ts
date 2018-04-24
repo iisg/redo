@@ -1,4 +1,4 @@
-import {filterByValues, keysByValue, mapValues, numberKeysByValue, zip, safeJsonParse, mapToArray} from "./object-utils";
+import {filterByValues, keysByValue, mapValues, mapValuesShallow, numberKeysByValue, zip, safeJsonParse, mapToArray} from "./object-utils";
 
 describe('object-utils', () => {
   describe(keysByValue.name, () => {
@@ -93,7 +93,7 @@ describe('object-utils', () => {
   });
 
   describe(mapValues.name, () => {
-    const multiplyByTwo = (a) => a * 2;
+    const multiplyByTwo = a => a * 2;
 
     it('maps simple object', () => {
       expect(mapValues({a: 1, b: 2}, multiplyByTwo)).toEqual({a: 2, b: 4});
@@ -101,6 +101,16 @@ describe('object-utils', () => {
 
     it('maps nested object', () => {
       expect(mapValues({a: 1, b: {c: 2}}, multiplyByTwo)).toEqual({a: 2, b: {c: 4}});
+    });
+  });
+
+  describe(mapValuesShallow.name, () => {
+    it('maps simple object', () => {
+      expect(mapValuesShallow({a: 1, 2: 3}, JSON.stringify)).toEqual({a: '1', 2: '3'});
+    });
+
+    it('does not map deep properties', () => {
+      expect(mapValuesShallow({a: 1, b: {c: 2}}, JSON.stringify)).toEqual({a: '1', b: '{"c":2}'});
     });
   });
 

@@ -5,8 +5,7 @@ uploadFailed: File upload failed, try again later
 noSuchResourceFile: File {{filename}} doesn't exist in resource {{resourceId}}
 cannotApplyTransition: Transition '{{transitionId}}' can't be applied in workflow {{workflowId}}
 noSuchTransition: Transition '{{transitionId}}' doesn't exist in workflow {{workflowId}}
-transitionLabelsToPlaceNotMatching: Transitions {{transitionLabels}} entering the place {{placeId}} have the same name in {{matchingLanguages}}, but different in {{differentLanguages}}
-transitionLabelsFromPlaceNotMatching: Transitions {{transitionLabels}} exiting the place {{placeId}} have the same name in {{matchingLanguages}}, but different in {{differentLanguages}}
+transitionLabelsNotMatching: Transitions {{transitionLabels}} connected to place {{placeLabel}} have the same name in {{matchingLanguages}}, but different in {{differentLanguages}}
 resourceCannotEnterPlace: "Resource #{{resourceId}} can't be in this state"
 entityNotFound: "{{entityName, capitalized}} {{query}} not found"
 invalidCommand: Data sent to server are invalid
@@ -32,3 +31,4 @@ violationFields:
   displayStrategies: Resource presentation strategy
   newLabel: New name
   places: Edited places
+  transitions: Transitions
