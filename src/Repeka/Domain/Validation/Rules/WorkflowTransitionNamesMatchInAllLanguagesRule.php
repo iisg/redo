@@ -52,11 +52,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRule extends AbstractRule {
         }
         $firstError = $this->findFirstNotMatchingLabels($transitions);
         if ($firstError !== null) {
-            throw new DomainException(
-                $firstError['direction'] === 'to' ? 'transitionLabelsToPlaceNotMatching' : 'transitionLabelsFromPlaceNotMatching',
-                400,
-                $this->stringifyError($firstError)
-            );
+            throw $this->reportError($transitions, $firstError);
         }
         return true;
     }
@@ -78,12 +74,11 @@ class WorkflowTransitionNamesMatchInAllLanguagesRule extends AbstractRule {
                         [$matchingLanguages, $differentLanguages] = $this->findMatchingLanguages($languages, $connectionsWithSameLabel);
                         if (count($matchingLanguages) != 0 && count($differentLanguages) != 0) {
                             return [
-                                'transitionIds' => $this->getTransitionIds($connectionsWithSameLabel),
-                                'transitionLabels' => $this->getTransitionLabels($connectionsWithSameLabel),
-                                'matchingLanguages' => $matchingLanguages,
-                                'differentLanguages' => $differentLanguages,
-                                'placeId' => $place,
-                                'direction' => $placeType,
+                                'transitionLabels' => array_values($this->getTransitionLabels($connectionsWithSameLabel)),
+                                'matchingLanguages' => array_values($matchingLanguages),
+                                'differentLanguages' => array_values($differentLanguages),
+                                'placeLabel' => $this->getPlaceLabel($place, $this->places),
+                                'direction' => $placeType
                             ];
                         }
                     }
@@ -152,47 +147,20 @@ class WorkflowTransitionNamesMatchInAllLanguagesRule extends AbstractRule {
         );
     }
 
-    private function getTransitionIds(array $connections) {
-        return array_column($connections, 'id');
-    }
-
     private function getTransitionLabels(array $connections) {
-        return array_column($connections, 'label');
-    }
-
-    // fix in REPEKA-458
-    private function stringifyError(array $error) {
-        return [
-            'transitionLabels' => $this->labelsToString($error['transitionLabels']),
-            'matchingLanguages' => implode(", ", $error['matchingLanguages']),
-            'differentLanguages' => implode(", ", $error['differentLanguages']),
-            'placeId' => $this->placeIdToLabelString($error['placeId'], $this->places),
-        ];
-    }
-
-    private function labelsToString(array $labels) {
-        return implode(', ', array_map([$this, 'labelToString'], $labels));
-    }
-
-    private function labelToString($label) {
-        return '{label: ' . $this->multilingualTextToString($label) . '}';
-    }
-
-    private function multilingualTextToString(array $multilingualText): string {
-        array_walk(
-            $multilingualText,
-            function (&$value, $language) {
-                $value = sprintf('%s: "%s"', $language, $value);
-            }
+        return array_map(
+            function ($connection) {
+                return ['label' => $connection['label']];
+            },
+            $connections
         );
-        return '{' . implode(', ', $multilingualText) . '}';
     }
 
-    private function placeIdToLabelString(string $placeId, array $places) {
+    private function getPlaceLabel(string $placeId, array $places) {
         if ($places != null) {
             foreach ($places as $place) {
                 if ($place->getId() == $placeId) {
-                    return $this->labelToString($place->getLabel());
+                    return ["label" => $place->getLabel()];
                 }
             }
         }

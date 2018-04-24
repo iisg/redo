@@ -1,10 +1,11 @@
 <template bindable="violationsByField">
+    <require from="./exception-params-value-converter"></require>
     <div repeat.for="[field, violations] of violationsByField | iterable">
         ${'exceptions::violationFields//' + field | t}:
         <ul>
             <li repeat.for="violation of violations">
                 <span t.bind="'exceptions::' + violation.message"
-                    t-params.bind="violation.params"></span>
+                    t-params.bind="violation.params | exceptionParams"></span>
             </li>
         </ul>
     </div>
