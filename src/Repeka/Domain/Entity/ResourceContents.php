@@ -12,13 +12,20 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
     }
 
     public function filterOutEmptyMetadata(): ResourceContents {
-        return new self(
-            array_filter(
-                $this->contents,
-                function ($values) {
-                    return count($values) > 0;
-                }
-            )
+        return new self($this->filterOutEmptyMetadataInContents($this->contents));
+    }
+
+    private function filterOutEmptyMetadataInContents(array $contents): array {
+        foreach ($contents as &$values) {
+            if (is_array($values)) {
+                $values = $this->filterOutEmptyMetadataInContents($values);
+            }
+        }
+        return array_filter(
+            $contents,
+            function ($values) {
+                return !is_array($values) || count($values) > 0;
+            }
         );
     }
 

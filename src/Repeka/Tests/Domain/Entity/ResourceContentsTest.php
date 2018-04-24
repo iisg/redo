@@ -17,6 +17,31 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([1 => 'a', 2 => 'b'], $valuesFromForeach);
     }
 
+    public function testFiltersOutEmptyMetadata() {
+        $contents = ResourceContents::fromArray([1 => 1, 2 => []]);
+        $filtered = $contents->filterOutEmptyMetadata();
+        $this->assertEquals(ResourceContents::fromArray([1 => 1]), $filtered);
+    }
+
+    public function testFiltersOutEmptySubmetadata() {
+        $contents = ResourceContents::fromArray([1 => [['value' => 1, 'submetadata' => [13 => 1, 14 => []]]]]);
+        $filtered = $contents->filterOutEmptyMetadata();
+        $this->assertEquals(ResourceContents::fromArray([1 => [['value' => 1, 'submetadata' => [13 => 1]]]]), $filtered);
+    }
+
+    public function testDoesNotLeaveEmptySubmetadataArray() {
+        $contents = ResourceContents::fromArray([1 => [['value' => 1, 'submetadata' => [14 => []]]]]);
+        $filtered = $contents->filterOutEmptyMetadata();
+        $this->assertEquals(ResourceContents::fromArray([1 => 1]), $filtered);
+    }
+
+    public function testDoesNotChangeOriginalContentsWhenFilteringEmptyMetadata() {
+        $contents = ResourceContents::fromArray([1 => []]);
+        $filtered = $contents->filterOutEmptyMetadata();
+        $this->assertEquals(ResourceContents::fromArray([]), $filtered);
+        $this->assertEquals(ResourceContents::fromArray([1 => []]), $contents);
+    }
+
     public function testMapAllValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
         $mapped = $contents->mapAllValues(

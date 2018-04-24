@@ -68,7 +68,7 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
         ResourceContents $newContents,
         array $lockedMetadataIds
     ): array {
-        $newContents = $this->replaceObjectsWithIds($newContents);
+        $newContents = $this->replaceObjectsWithIds($newContents)->filterOutEmptyMetadata();
         $modifiedIds = [];
         foreach ($lockedMetadataIds as $id) {
             if ($currentContents[$id] != $newContents[$id]) {

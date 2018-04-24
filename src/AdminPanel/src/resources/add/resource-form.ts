@@ -56,18 +56,17 @@ export class ResourceForm {
 
   @computedFrom('resource.kind.workflow')
   get requiredMetadataIds(): number[] {
-    let requiredMetadataIds = [];
+    let requiredMetadataIds = {};
     if (this.resource.kind && this.resource.kind.workflow) {
-      let restrictingMetadata;
+      let restrictingMetadata: NumberMap<any> = {};
       if (this.edit && this.transition) {
         const places = [];
         this.transition.tos.forEach((value) => {
           const workflowPlaces = this.resource.kind.workflow.places;
           places.push(workflowPlaces.find(place => place.id === value));
         });
-        restrictingMetadata = places.map(v => v.restrictingMetadataIds);
-        restrictingMetadata = convertToObject(restrictingMetadata);
-      } else {
+        restrictingMetadata = convertToObject(places.map(v => v.restrictingMetadataIds));
+      } else if (!this.edit) {
         restrictingMetadata = this.resource.kind.workflow.places[0].restrictingMetadataIds;
       }
       requiredMetadataIds = flatten(
@@ -77,7 +76,7 @@ export class ResourceForm {
         ]
       );
     }
-    return requiredMetadataIds;
+    return requiredMetadataIds as number[];
   }
 
   requiredMetadataIdsForTransition(): number[] {
