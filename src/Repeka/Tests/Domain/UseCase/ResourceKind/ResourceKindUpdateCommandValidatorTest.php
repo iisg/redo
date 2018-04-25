@@ -10,6 +10,7 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
+use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
@@ -36,6 +37,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
+        $childResourceKindsAreOfSameResourceClassRule = $this->createRuleMock(ChildResourceKindsAreOfSameResourceClassRule::class, true);
         $this->correctResourceDisplayStrategySyntaxRule = $this->createMock(CorrectResourceDisplayStrategySyntaxRule::class);
         $this->rkConstraintIsUser = $this->createRuleWithFactoryMethodMock(
             ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
@@ -55,7 +57,8 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             $notBlankInAllLanguagesRule,
             $this->correctResourceDisplayStrategySyntaxRule,
             new ContainsParentMetadataRule(),
-            $this->rkConstraintIsUser
+            $this->rkConstraintIsUser,
+            $childResourceKindsAreOfSameResourceClassRule
         );
     }
 

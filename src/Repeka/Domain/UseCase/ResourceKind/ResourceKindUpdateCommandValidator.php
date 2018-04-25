@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
@@ -19,9 +20,15 @@ class ResourceKindUpdateCommandValidator extends ResourceKindCreateCommandValida
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategyRule,
         ContainsParentMetadataRule $containsParentMetadataRule,
-        ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule $rkConstraintIsUserIfNecessaryRule
+        ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule $rkConstraintIsUserIfNecessaryRule,
+        ChildResourceKindsAreOfSameResourceClassRule $childResourceKindsAreOfSameResourceClassRule
     ) {
-        parent::__construct($notBlankInAllLanguagesRule, $correctResourceDisplayStrategyRule, $containsParentMetadataRule);
+        parent::__construct(
+            $notBlankInAllLanguagesRule,
+            $correctResourceDisplayStrategyRule,
+            $containsParentMetadataRule,
+            $childResourceKindsAreOfSameResourceClassRule
+        );
         $this->rkConstraintIsUserIfNecessaryRule = $rkConstraintIsUserIfNecessaryRule;
     }
 
