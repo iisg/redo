@@ -28,22 +28,22 @@ class MinMaxValueConstraintTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testRejectsMinMaxRange() {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(\DomainException::class);
         $this->constraint->validateSingle($this->createMetadataMock(), ['min'=>0, 'max'=>1000], 2000);
     }
 
     public function testRejectsOnlyMaxRange() {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(\DomainException::class);
         $this->constraint->validateSingle($this->createMetadataMock(), ['max'=>1000], 2000);
     }
 
     public function testRejectsOnlyMinRange() {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(\DomainException::class);
         $this->constraint->validateSingle($this->createMetadataMock(), ['min'=>1000], 100);
     }
 
     public function testRejectsString() {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->constraint->validateSingle($this->createMetadataMock(), ['min'=>200], 'foo');
     }
 

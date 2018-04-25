@@ -4,8 +4,7 @@ import {ResourceKind} from "../resource-kind/resource-kind";
 import {MetadataRepository} from "./metadata-repository";
 import {Entity} from "common/entity/entity";
 import {automapped, map, mappedWith} from "common/dto/decorators";
-import {CopyMapper} from "common/dto/mappers";
-import {MetadataMapper, ResourceKindConstraintMapper} from "./metadata-mapping";
+import {MetadataMapper, ResourceKindConstraintMapper, MinMaxConstraintMapper} from "./metadata-mapping";
 import {MinMaxValue} from "./metadata-min-max-value";
 
 export interface MultilingualText extends StringStringMap {
@@ -20,7 +19,7 @@ export class MetadataConstraints {
   @map(ResourceKindConstraintMapper) resourceKind?: ResourceKind[] | number[] = [];
   @map regex?: string;
   @map relatedResourceMetadataFilter?: NumberMap<string> = {};
-  @map(CopyMapper) minMaxValue?: MinMaxValue = {};
+  @map(MinMaxConstraintMapper) minMaxValue?: MinMaxValue = {};
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
