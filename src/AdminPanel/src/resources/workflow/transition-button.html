@@ -1,11 +1,16 @@
+
+
 <template>
-    <button class="btn btn-success btn-block"
+    <require from="common/components/buttons/toggle-button"></require>
+
+    <toggle-button containerless
+        primary-icon-name="forward"
+        primary-label="${!transition || transition.label | inCurrentLanguage}"
         disabled.bind="!canApplyTransition || submitting"
-        click.trigger="applyTransition()">
-        <span if.bind="transition">${transition.label | inCurrentLanguage}</span>
-        <span class="transition-to-state">${'And move to state' | t}: <span repeat.for="place of tos">
-            ${place.label | inCurrentLanguage}
-        </span>
-        </span>
-    </button>
+        on-click.call="applyTransition()">
+        <template replace-part="additional-button-content">
+            <span>${'And move to state' | t}:</span>
+            <span repeat.for="place of tos">${place.label | inCurrentLanguage}</span>
+        </template>
+    </toggle-button>
 </template>

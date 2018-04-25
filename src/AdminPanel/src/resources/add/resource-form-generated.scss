@@ -1,0 +1,56 @@
+@import "../../common/styles";
+
+$input-height: 34px;
+$icons-width: 1.5em;
+$gap-size: $default-gap-size / 2;
+
+resource-form-generated {
+    & > span, .input-container > *, .new-metadata-value-button-container, .drag-handle, .buttons {
+        display: flex;
+        min-height: $input-height;
+        align-self: baseline;
+        align-items: center;
+        margin-top: $gap-size / 2;
+        margin-bottom: $gap-size / 2;
+    }
+    & > span > icon {
+        margin-left: $gap-size / 2
+    }
+
+    resource-metadata-values-form {
+        & > table {
+            td > div {
+                display: flex;
+                metadata-value-input > compose > * {
+                    flex: 1;
+                    dropdown-select {
+                        width: 100%;
+                    }
+                }
+                & > resource-metadata-value-input {
+                    flex: 1;
+                    margin-right: $gap-size / 2;
+                    & > resource-form-generated {
+                        margin-left: $gap-size;
+                    }
+                }
+                & > a {
+                    line-height: 0;
+                    margin-left: $gap-size / 2;
+                    margin-right: $gap-size / 2;
+                    @include transition(color .3s);
+                }
+                & > div {
+                    width: calc(2 * #{$icons-width} + #{$gap-size});
+                    justify-content: space-between;
+                    margin-left: $gap-size / 2;
+                }
+            }
+
+            td > new-metadata-value-button {
+                margin-top: $gap-size / 2;
+                margin-bottom: $gap-size / 2;
+            }
+        }
+    }
+}

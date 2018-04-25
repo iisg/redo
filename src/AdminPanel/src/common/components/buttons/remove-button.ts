@@ -1,10 +1,10 @@
 import {useView, customElement} from "aurelia-templating";
-import {DefaultButton} from "./default-button";
+import {ToggleButton} from "./toggle-button";
 
-@useView('./default-button.html')
+@useView('./toggle-button.html')
 @customElement('remove-button')
-export class RemoveButton extends DefaultButton {
-    primaryIcon = 'remove-4';
+export class RemoveButton extends ToggleButton {
+    primaryIconName = 'remove-4';
     primaryLabel = 'Remove';
 
     bind() {

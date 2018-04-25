@@ -1,15 +1,7 @@
 <template bindable="resource">
-    <span if.bind="!resource.currentPlaces.length">
-        -
-    </span>
-    <span if.bind="resource.currentPlaces.length == 1">
-        ${ resource.currentPlaces[0].label | inCurrentLanguage }
-    </span>
-    <span if.bind="resource.currentPlaces.length > 1">
-        <ul>
-            <li repeat.for="place of resource.currentPlaces">
-                ${ place.label | inCurrentLanguage }
-            </li>
-        </ul>
-    </span>
+    <span if.bind="!resource.currentPlaces.length">&mdash;</span>
+    <span if.bind="resource.currentPlaces.length == 1">${resource.currentPlaces[0].label | inCurrentLanguage}</span>
+    <ul if.bind="resource.currentPlaces.length > 1">
+        <li repeat.for="place of resource.currentPlaces">${place.label | inCurrentLanguage}</li>
+    </ul>
 </template>

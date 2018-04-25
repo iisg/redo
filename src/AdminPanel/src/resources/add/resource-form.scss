@@ -1,3 +1,59 @@
-.resource-form-button {
-  display: inline-block;
+@import "../../common/styles";
+
+resource-form {
+  display: block;
+  &, & > :not(form), & > form > resource-kind-chooser, & > form > div > * {
+    padding: $default-gap-size / 2;
+  }
+
+  & > :not(form), resource-kind-chooser {
+    display: block;
+  }
+
+  & > div {
+    line-height: 0;
+    & > icon-button {
+      button {
+        display: block;
+        icon[size] {
+          height: 40px;
+        }
+      }
+    }
+  }
+
+  & > form {
+    & > div {
+      display: flex;
+      & > resource-form-generated {
+        flex: 1;
+      }
+      & > .buttons {
+        position: sticky;
+        top: $default-gap-size;
+        display: flex;
+        flex-direction: column;
+        align-self: baseline;
+        toggle-button {
+          button {
+            background-color: transparent;
+            &:hover:not([disabled]) {
+              background-color: $light-grey;
+            }
+            icon {
+              color: $red;
+            }
+            span {
+              color: $default-text-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .error-label {
+    text-align: center;
+    color: $red;
+  }
 }

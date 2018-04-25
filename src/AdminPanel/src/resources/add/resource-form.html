@@ -1,46 +1,35 @@
 <template>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
+    <require from="common/components/buttons/icon-button"></require>
+    <require from="common/components/buttons/toggle-button"></require>
     <require from="./resource-form-generated"></require>
     <require from="../metadata/required-metadata-list"></require>
     <require from="workflows/details/transitions/workflow-froms-tos-display"></require>
     <require from="../workflow/transition-button"></require>
 
-    <div>
-        <div class="row">
-            <div if.bind="showRequiredMetadataAndWorkflowInfo"
-                class="col-md-4">
-                <workflow-froms-tos-display transition.bind="transition"
-                    places.bind="resource.kind.workflow.places"
-                    resource-class.bind="resourceClass"></workflow-froms-tos-display>
-            </div>
-            <div if.bind="showRequiredMetadataAndWorkflowInfo"
-                class="col-md-4">
-                <required-metadata-list if.bind="requiredMetadataIds.length > 0"
-                    resource-class.bind="resourceClass"
-                    required-metadata-ids.bind="resource.kind ? requiredMetadataIds : []"></required-metadata-list>
-            </div>
-            <div class="${showRequiredMetadataAndWorkflowInfo ? 'col-md-4' : 'col-md-12'}">
-                <div class="pull-right button-parent"
-                    if.bind="resource.kind !== undefined">
-                    <button class="btn"
-                        type="button"
-                        click.trigger="openImportDialog()"
-                        bootstrap-tooltip.bind="'Import data from KOHA' | t">
-                        <icon name="koha"></icon>
-                    </button>
-                </div>
-            </div>
-        </div>
+    <span if.bind="!editing"
+        class="page-title">${'Add new resource' | resourceClassTranslation:resourceClass}</span>
+    <span if.bind="validationError"
+        class="error-label">${'Some metadata constraints have not been met. Check the form error and try again.' | t}</span>
+    <workflow-froms-tos-display if.bind="showRequiredMetadataAndWorkflowInfo"
+        transition.bind="transition"
+        places.bind="resource.kind.workflow.places"
+        resource-class.bind="resourceClass"></workflow-froms-tos-display>
+    <required-metadata-list if.bind="showRequiredMetadataAndWorkflowInfo && requiredMetadataIds.length > 0"
+        resource-class.bind="resourceClass"
+        required-metadata-ids.bind="resource.kind ? requiredMetadataIds : []"></required-metadata-list>
+    <div if.bind="resource.kind !== undefined">
+        <icon-button icon-name="koha"
+            tooltip-text-when-enabled="${'Import data from KOHA' | t}"
+            on-click.call="openImportDialog()">
+        </icon-button>
     </div>
     <form submit.delegate="saveResource()">
-        <div class="form-group"
-            if.bind="!editing">
-            <resource-kind-chooser resource-class.bind="resourceClass"
-                filter.one-time="createResourceKindFilter()"
-                value.bind="resource.kind & validate"></resource-kind-chooser>
-        </div>
-        <div class="form-group"
-            if.bind="resource.kind">
+        <resource-kind-chooser if.bind="!editing"
+            resource-class.bind="resourceClass"
+            filter.one-time="createResourceKindFilter()"
+            value.bind="resource.kind & validate"></resource-kind-chooser>
+        <div if.bind="resource.kind">
             <resource-form-generated resource-kind.bind="resource.kind"
                 resource.bind="resource"
                 validation-controller.bind="validationController"
@@ -48,23 +37,20 @@
                 parent.bind="parent"
                 resource-class.bind="resourceClass"
                 required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
-        </div>
-        <div class="form-group text-right">
-            <span class="text-danger"
-                if.bind="hasValidationError">
-                ${'Some metadata constraints have not been met. Check the form error and try again.' | t}
-            </span>
-            <div class="btn-group">
-                <submit-button class="resource-form-button"
-                    submitting.bind="submitting"
-                    editing.bind="editing"></submit-button>
-                <transition-button class="resource-form-button"
-                    if.bind="editing && transition"
+            <div class="buttons">
+                <transition-button if.bind="editing && transition"
                     submitting.bind="submitting"
                     can-apply-transition.bind="canApplyTransition"
                     apply-transition.call="applyTransition()"
                     transition.bind="transition"
                     places.bind="edit.kind.workflow.places"></transition-button>
+                <submit-button submitting.bind="submitting"
+                    editing.bind="editing"></submit-button>
+                <toggle-button if.bind="editing"
+                    primary-icon-name="remove-3"
+                    primary-label="Cancel"
+                    disabled.bind="resource.pendingRequest"
+                    on-click.call="cancel()"></toggle-button>
             </div>
         </div>
     </form>

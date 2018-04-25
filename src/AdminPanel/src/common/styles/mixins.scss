@@ -1,21 +1,23 @@
-@mixin default-button-colors($background-color: $blue, $color: white) {
+@mixin toggle-button-colors($background-color: $blue, $color: white) {
   background-color: $background-color;
   color: $color;
-  @include transition(background-color .3s);
+  @include transition(color .3s, background-color .3s);
   &:hover:not([disabled]) {
     background-color: lighten($background-color, $default-value-to-lighten-colors-by);
   }
+  &[disabled] {
+    color: $grey;
+    background-color: $light-grey;
+  }
 }
 
-@mixin default-button($background-color: $blue, $color: white) {
+@mixin toggle-button($background-color: $blue, $color: white) {
+  display: inline-block;
   button {
     padding: $default-gap-size / 8 3 / 4 * $default-gap-size;
     text-transform: uppercase;
     font-weight: bold;
-    @include default-button-colors($background-color, $color);
-    &[disabled] {
-      background-color: $light-grey;
-    }
+    @include toggle-button-colors($background-color, $color);
     & > div {
       position: relative;
       display: inline-block;
@@ -30,9 +32,30 @@
         }
       }
     }
-    icon, span {
+    icon, .icon, span {
       display: inline-block;
       padding: $default-gap-size / 8;
+    }
+  }
+}
+
+@mixin icon-button($color: $blue) {
+  display: inline-block;
+  line-height: 0;
+  button {
+    padding: 0;
+    background-color: initial;
+    color: $color;
+    @include transition(color .3s ease-out);
+    &:hover:not([disabled]) {
+      color: lighten($color, $default-value-to-lighten-colors-by);
+    }
+    &[disabled] {
+      pointer-events: none;
+      color: $light-grey;
+    }
+    icon {
+        display: block;
     }
   }
 }

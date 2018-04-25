@@ -1,0 +1,24 @@
+<template>
+    <button class="${!toggled || 'toggled'}"
+        type="${type}"
+        disabled.bind="disabled"
+        click.trigger="!onClick || onClick()">
+        <template if.bind="!throbberDisplayed">
+            <div if.bind="secondaryIconName">
+                <icon class="${toggled || 'visible'}"
+                    name="${primaryIconName}"
+                    size="1.25"></icon>
+                <icon class="${!toggled || 'visible'}"
+                    name="${secondaryIconName}"
+                    size="1.25"></icon>
+            </div>
+            <icon else
+                name="${primaryIconName}"
+                size="1.25"></icon>
+        </template>
+        <throbber else></throbber>
+        <span if.bind="primaryLabel">${toggled ? displayedSecondaryLabel : displayedPrimaryLabel}</span>
+        <template part="additional-button-content"
+            replaceable></template>
+    </button>
+</template>

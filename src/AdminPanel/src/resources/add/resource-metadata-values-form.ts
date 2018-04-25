@@ -46,7 +46,7 @@ export class ResourceMetadataValuesForm {
     // setTimeout(..., 0) fires at right time, but something steals the focus later.
     // setTimeout + queue[Micro]Task isn't reliable, it works for second and subsequent inputs but not first one
     setTimeout(() => {
-      $(this.valueTable).find('td.content').last().find('input, textarea').first().focus();
+      $(this.valueTable).find('td').last().find('input, textarea').first().focus();
     }, 50);
   }
 

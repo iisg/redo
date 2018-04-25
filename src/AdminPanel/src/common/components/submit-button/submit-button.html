@@ -1,9 +1,0 @@
-<template bindable="submitting,editing">
-    <throbber if.bind="submitting"></throbber>
-    <button class="btn btn-primary"
-        type="submit"
-        disabled.bind="submitting">
-        <icon name.bind="editing ? 'save-3' : 'add'"></icon>
-        ${editing ? 'Save' : 'Add' | t}
-    </button>
-</template>

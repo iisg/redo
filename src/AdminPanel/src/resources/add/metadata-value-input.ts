@@ -5,6 +5,7 @@ import {booleanAttribute} from "common/components/boolean-attribute";
 import {Resource} from "../resource";
 import {ValidationController} from "aurelia-validation";
 import {MetadataValue} from "../metadata-value";
+import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 
 @autoinject
 export class MetadataValueInput {
@@ -13,4 +14,8 @@ export class MetadataValueInput {
   @bindable value: MetadataValue;
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable validationController: ValidationController;
+  @bindable description: string;
+
+  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter) {
+  }
 }

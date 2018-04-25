@@ -1,15 +1,9 @@
-<template>
-    <button class="btn btn-success btn-block"
-        disabled.bind="!canApplyTransition">
-        ${transition.label | inCurrentLanguage}
-        <span>
-            <span if.bind="transitionInactiveReasons === undefined">
-                <throbber></throbber>
-            </span>
-            <span repeat.for="reason of transitionInactiveReasons"
-                bootstrap-tooltip.bind="reasonTooltip(reason)">
-                <icon name.bind="reason.icon"></icon>
-            </span>
-        </span>
+<template class="toggle-button">
+    <button disabled.bind="!canApplyTransition">
+        <span>${transition.label | inCurrentLanguage}</span>
+        <throbber if.bind="!transitionInactiveReasons"></throbber>
+        <icon repeat.for="reason of transitionInactiveReasons"
+            name.bind="reason.icon"
+            bootstrap-tooltip.bind="reasonTooltip(reason)"></icon>
     </button>
 </template>

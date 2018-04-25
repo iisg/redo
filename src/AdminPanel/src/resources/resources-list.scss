@@ -1,3 +1,5 @@
+@import "../common/styles";
+
 .resources-list {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -38,6 +40,7 @@
     .well {
         grid-area: "form";
         margin-right: 0;
+        padding: 0;
     }
 
     loading-bar {

@@ -1,7 +1,6 @@
 <template>
     <require from="../add/resource-form"></require>
     <require from="../workflow/resource-workflow"></require>
-    <require from="../workflow/resource-place-display.html"></require>
     <require from="./apply-transition-button/apply-transition-button"></require>
     <require from="./resource-metadata-table/resource-metadata-table"></require>
     <require from="../resources-list"></require>
@@ -14,72 +13,56 @@
 
     <div else
         class="resource-details au-animate fade-inup-outup">
-
         <div class="resource-name-with-buttons-and-tabs">
             <span class="page-title">${resource | resourceDisplayStrategy:'header'}</span>
-            <edit-button toggled.bind="editing"
-                disabled.bind="resource.pendingRequest"
-                on-click.call="toggleEditForm()"></edit-button>
             <remove-button if.bind="!editing"
                 disabled.bind="resource.pendingRequest"
                 on-click.call="remove()"></remove-button>
             <pending-throbber entity.bind="resource"></pending-throbber>
-            <aup-tabs if.bind="!editing"
-                tabs.bind="resourceDetailsTabs"></aup-tabs>
+            <aup-tabs tabs.bind="resourceDetailsTabs"></aup-tabs>
         </div>
-
-        <div if.bind="!editing">
-            <aup-tab-content>
-                <aup-tab-pane tab="childResourceTab">
-                    <div if.bind="currentTabId === 'childResourceTab'">
-                        <resources-list parent-resource.bind="resource"
-                            has-resources.bind="hasChildren"></resources-list>
-                    </div>
-                </aup-tab-pane>
-                <aup-tab-pane tab="metadataTab">
-                    <div if.bind="currentTabId === 'metadataTab'">
+        <aup-tab-content>
+            <aup-tab-pane tab="child-resource-tab">
+                <div if.bind="currentTabId === 'child-resource-tab'">
+                    <resources-list parent-resource.bind="resource"
+                        has-resources.bind="hasChildren"></resources-list>
+                </div>
+            </aup-tab-pane>
+            <aup-tab-pane tab="metadata-tab">
+                <div if.bind="currentTabId === 'metadata-tab'">
+                    <template if.bind="!editing">
                         <resource-metadata-table resource.bind="resource"></resource-metadata-table>
-                        <dl class="dl-horizontal resource-details"
-                            if.bind="resource.kind.workflow">
-                            <dt>${'Place' | t}</dt>
-                            <dd>
-                                <resource-place-display resource.bind="resource"></resource-place-display>
-                            </dd>
-                        </dl>
+                        <edit-button toggled.bind="editing"
+                            disabled.bind="resource.pendingRequest"
+                            on-click.call="toggleEditForm(false)"></edit-button>
+                    </template>
+                    <resource-form else
+                        resource-class.bind="resource.resourceClass"
+                        edit.bind="resource"
+                        submit.call="saveEditedResource(savedResource, transitionId)"
+                        cancel.call="toggleEditForm()"></resource-form>
+                </div>
+            </aup-tab-pane>
+            <aup-tab-pane tab="workflow-tab">
+                <div if.bind="currentTabId === 'workflow-tab'">
+                    <div>
+                        <apply-transition-button repeat.for="transition of resource.availableTransitions"
+                            resource.bind="resource"
+                            transition.bind="transition"
+                            can-apply-transition.bind="resource.canApplyTransition(transition)"
+                            click.trigger="toggleEditForm(true, transition)"></apply-transition-button>
                     </div>
-                </aup-tab-pane>
-                <aup-tab-pane tab="workflowTab">
-                    <div class="row"
-                        if.bind="currentTabId === 'workflowTab'">
-                        <div class="col-sm-4">
-                            <div class="btn-group-vertical au-animate fade-inup-outup btn-block">
-                                <apply-transition-button repeat.for="transition of resource.availableTransitions"
-                                    resource.bind="resource"
-                                    transition.bind="transition"
-                                    can-apply-transition.bind="resource.canApplyTransition(transition)"
-                                    click.trigger="toggleEditForm(transition)"></apply-transition-button>
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <resource-workflow resource.bind="resource"></resource-workflow>
-                        </div>
-                    </div>
-                </aup-tab-pane>
-                <aup-tab-pane tab="userGroupsTab">
-                    <user-groups if.bind="currentTabId === 'userGroupsTab'"
-                        user-data.bind="resource"></user-groups>
-                </aup-tab-pane>
-                <aup-tab-pane tab="userRolesTab">
-                    <user-roles-assign if.bind="currentTabId === 'userRolesTab'"
-                        user-data.bind="resource"></user-roles-assign>
-                </aup-tab-pane>
-            </aup-tab-content>
-        </div>
-        <div else
-            class="au-animate anim-height-inout-900 well floating-form-full-width">
-            <resource-form resource-class.bind="resource.resourceClass"
-                edit.bind="resource"
-                submit.call="saveEditedResource(savedResource, transitionId)"></resource-form>
-        </div>
+                    <resource-workflow resource.bind="resource"></resource-workflow>
+                </div>
+            </aup-tab-pane>
+            <aup-tab-pane tab="user-groups-tab">
+                <user-groups if.bind="currentTabId === 'user-groups-tab'"
+                    user-data.bind="resource"></user-groups>
+            </aup-tab-pane>
+            <aup-tab-pane tab="user-roles-tab">
+                <user-roles-assign if.bind="currentTabId === 'user-roles-tab'"
+                    user-data.bind="resource"></user-roles-assign>
+            </aup-tab-pane>
+        </aup-tab-content>
     </div>
 </template>

@@ -1,5 +1,6 @@
 <template>
     <input type="checkbox"
+        bootstrap-tooltip.bind="description"
         checked.bind="metadataValue.value & validate:validationController:validationRules"
         disabled.bind="disabled">
 </template>

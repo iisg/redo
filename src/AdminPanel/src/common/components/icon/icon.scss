@@ -1,6 +1,7 @@
 icon, .icon {
     display: inline-block;
     height: 1em;
+    line-height: 0;
     vertical-align: -0.15em;
     &[size="0.5"] {
         height: 0.5em;
@@ -12,7 +13,7 @@ icon, .icon {
     }
     &[size="1.25"] {
         height: 1.25em;
-        vertical-align: -0.3em;
+        vertical-align: -0.24em;
     }
     &[size="1.5"] {
         height: 1.5em;

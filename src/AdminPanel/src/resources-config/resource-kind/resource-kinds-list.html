@@ -5,7 +5,7 @@
     <add-button entity-name="resourceKind"
         toggled.two-way="addFormOpened"></add-button>
     <div if.bind="addFormOpened"
-        class="well fade-inup-outdown au-animate floating-form-full-width">
+        class="well fade-inup-outdown au-animate">
         <h2>${'Add new resource kind' | resourceClassTranslation:resourceClass}</h2>
         <resource-kind-form resource-class.bind="resourceClass"
             submit.call="addNewResourceKind(savedResourceKind)"></resource-kind-form>
@@ -97,5 +97,4 @@
         <icon name="information"></icon>
         ${'No resource kinds.' | resourceClassTranslation:resourceClass}
     </div>
-
 </template>

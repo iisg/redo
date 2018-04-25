@@ -1,9 +1,8 @@
 <template>
     <require from="common/components/buttons/add-button"></require>
 
-    <a route-href="route: workflows/new; params.bind: {resourceClass}">
-        <add-button entity-name="workflow"></add-button>
-    </a>
+    <add-button entity-name="workflow"
+        on-click.call="router.navigateToRoute('workflows/new', {resourceClass})"></add-button>
 
     <table>
         <thead>

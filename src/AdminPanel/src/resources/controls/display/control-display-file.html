@@ -1,8 +1,7 @@
 <template>
     <require from="common/value-converters/basename-value-converter"></require>
     <require from="./resource-file-url"></require>
+
     <a href.bind="metadataValue.value | resourceFileUrl:resource"
-        target="_top">
-        ${metadataValue.value | basename}
-    </a>
+        target="_top">${metadataValue.value | basename}</a>
 </template>
