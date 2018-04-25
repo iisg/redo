@@ -3,6 +3,7 @@ import {Workflow} from "./workflow";
 import {WorkflowRepository} from "./workflow-repository";
 import {bindable} from "aurelia-templating";
 import {ContextResourceClass} from 'resources/context/context-resource-class';
+import {Router} from "aurelia-router";
 
 @autoinject
 export class WorkflowsList {
@@ -13,8 +14,7 @@ export class WorkflowsList {
 
   workflows: Array<Workflow>;
 
-  constructor(private workflowRepository: WorkflowRepository,
-              private contextResourceClass: ContextResourceClass) {
+  constructor(public router: Router, private workflowRepository: WorkflowRepository, private contextResourceClass: ContextResourceClass) {
   }
 
   activate(params: any) {

@@ -1,7 +1,7 @@
 <template>
-    <compose view-model="../controls/control-strategy"
+    <compose class="input-container"
+        view-model="../controls/control-strategy"
         view="../controls/input/control-input-${metadata.control}.html"
-        model.bind="{metadata: metadata, metadataValue: value, disabled: disabled, resource: resource, validationController: validationController}"></compose>
-    <p class="help-block"
-        if.one-time="metadata.description | inCurrentLanguage">${metadata.description | inCurrentLanguage}</p>
+        model.bind="{metadata: metadata, metadataValue: value, disabled: disabled, resource: resource,
+            validationController: validationController, description: inCurrentLanguage.toView(metadata.description)}"></compose>
 </template>

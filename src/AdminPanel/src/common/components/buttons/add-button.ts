@@ -1,12 +1,12 @@
 import {useView, customElement} from "aurelia-templating";
-import {DefaultButton} from "./default-button";
+import {ToggleButton} from "./toggle-button";
 
-@useView('./default-button.html')
+@useView('./toggle-button.html')
 @customElement('add-button')
-export class AddButton extends DefaultButton {
-    primaryIcon = 'add-resource-3';
+export class AddButton extends ToggleButton {
+    primaryIconName = 'add-resource-3';
     primaryLabel = 'Add';
-    secondaryIcon = 'remove-3';
+    secondaryIconName = 'remove-3';
     secondaryLabel = 'Cancel';
     onClick = () => {
         this.toggled = !this.toggled;

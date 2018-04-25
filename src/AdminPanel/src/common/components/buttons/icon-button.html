@@ -1,0 +1,8 @@
+<template bootstrap-tooltip.bind="disabled ? tooltipTextWhenDisabled : tooltipTextWhenEnabled">
+    <button type="button"
+        disabled.bind="disabled"
+        click.trigger="onClick()">
+        <icon name="${iconName}"
+            size="1.5"></icon>
+    </button>
+</template>

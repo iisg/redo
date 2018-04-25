@@ -2,8 +2,8 @@
     <require from="./resource-metadata-value-display"></require>
     <require from="resources-config/metadata/metadata-label"></require>
 
-    <icon name="user-3"
-        if.bind="determinesAssignee"></icon>
+    <icon if.bind="determinesAssignee"
+        name="user-3"></icon>
     <ul class="list-unstyled">
         <li repeat.for="value of resource.contents[metadata.id]">
             <resource-metadata-value-display
@@ -12,8 +12,5 @@
                 value.bind="value"></resource-metadata-value-display>
         </li>
     </ul>
-    <span if.bind="resource.contents[metadata.id].length == 0 || resource.contents[metadata.id] == undefined"
-        class="small text-muted">
-        <em>&mdash;</em>
-    </span>
+    <span if.bind="resource.contents[metadata.id].length == 0 || resource.contents[metadata.id] == undefined">&mdash;</span>
 </template>

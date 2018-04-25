@@ -23,10 +23,11 @@ export class ResourceForm {
   @bindable resourceClass: string;
   @bindable parent: Resource;
   @bindable edit: Resource;
-  @bindable submit: (value: { savedResource: Resource, transitionId: string }) => Promise<any>;
+  @bindable submit: (value: {savedResource: Resource, transitionId: string}) => Promise<any>;
+  @bindable cancel: () => void;
   resource: Resource = new Resource();
   submitting: boolean = false;
-  hasValidationError: boolean = false;
+  validationError: boolean = false;
   transition: WorkflowTransition;
   resourceKindIdsAllowedByParent: number[];
 
@@ -165,13 +166,13 @@ export class ResourceForm {
 
   private validateAndSubmit(transitionId?: string) {
     this.submitting = true;
-    this.hasValidationError = false;
+    this.validationError = false;
     this.validationController.validate().then(result => {
       if (result.valid) {
         return this.submit({savedResource: this.resource, transitionId: transitionId})
           .then(() => this.editing || (this.resource = new Resource));
       } else {
-        this.hasValidationError = true;
+        this.validationError = true;
       }
     }).finally(() => this.submitting = false);
   }

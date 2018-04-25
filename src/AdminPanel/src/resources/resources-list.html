@@ -16,7 +16,6 @@
 
         <div if.bind="addFormOpened"
             class="fade-inup-outdown au-animate well">
-            <h2>${'Add new resource' | resourceClassTranslation:resourceClass}</h2>
             <resource-form resource-class.bind="resourceClass"
                 submit.call="addNewResource(savedResource)"
                 parent.bind="parentResource"></resource-form>

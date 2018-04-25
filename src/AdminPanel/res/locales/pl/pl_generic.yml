@@ -16,6 +16,7 @@ Hint: Podpowiedź
 Add: Dodaj
 Edit: Edytuj
 Save: Zapisz
+Apply: Zatwierdź
 Cancel: Anuluj
 Flag: Flaga
 Language: Język
@@ -70,6 +71,7 @@ No allowed resource kinds: Brak dozwolonych rodzajów zasobów
 One of:: Jeden spośród:
 Clear overridden value: Przywróć oryginalną wartość
 Add value: Dodaj wartość
+Remove value: Usuń wartość
 ID in relationships: ID dla relacji
 Show in brief: Pokazuj w streszczeniu
 Copy metadata to child resource: Kopiuj metadaną do podzasobów

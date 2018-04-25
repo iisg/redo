@@ -70,29 +70,27 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   activateTabs() {
     if (this.allowAddChildResource) {
-      this.resourceDetailsTabs.push({id: 'childResourceTab', label: this.i18n.tr('Child resources')});
+      this.resourceDetailsTabs.push({id: 'child-resource-tab', label: this.i18n.tr('Child resources')});
       if (this.hasChildren) {
-        this.currentTabId = 'childResourceTab';
+        this.currentTabId = 'child-resource-tab';
       }
     }
-    this.resourceDetailsTabs.push({id: 'metadataTab', label: this.i18n.tr('Metadata')});
+    this.resourceDetailsTabs.push({id: 'metadata-tab', label: this.i18n.tr('Metadata')});
     if (this.currentTabId === '') {
-      this.currentTabId = 'metadataTab';
+      this.currentTabId = 'metadata-tab';
     }
     if (this.resource.kind.workflow) {
-      this.resourceDetailsTabs.push({
-        id: 'workflowTab',
-        label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)
-      });
+      this.resourceDetailsTabs.push({id: 'workflow-tab',
+        label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)});
     }
     if (this.resource.kind.id == SystemResourceKinds.USER_ID) {
       this.resourceDetailsTabs.push({
-        id: 'userGroupsTab',
+        id: 'user-groups-tab',
         label: this.i18n.tr('Groups')
       });
       if (this.userRoleChecker.hasAll(['ADMIN'])) {
         this.resourceDetailsTabs.push({
-          id: 'userRolesTab',
+          id: 'user-roles-tab',
           label: this.i18n.tr('Roles')
         });
       }
@@ -106,14 +104,17 @@ export class ResourceDetails implements RoutableComponentActivate {
     return !!parentMetadata.constraints.resourceKind.length;
   }
 
-  toggleEditForm(transition?: WorkflowTransition) {
+  toggleEditForm(triggerNavigation = true, transition?: WorkflowTransition) {
     if (!transition || this.resource.canApplyTransition(transition)) {
       // link can't be generated in the view with route-href because it is impossible to set replace:true there
       // see https://github.com/aurelia/templating-router/issues/54
       this.selectedTransition = transition ? transition : new WorkflowTransition();
       this.router.navigateToRoute('resources/details',
-        {id: this.resource.id, action: this.editing ? undefined : 'edit', transitionId: this.selectedTransition.id}, {replace: true});
-
+        {id: this.resource.id, action: this.editing && !transition ? undefined : 'edit', transitionId: this.selectedTransition.id},
+        {trigger: triggerNavigation, replace: true});
+      if (!triggerNavigation) {
+        this.editing = !this.editing;
+      }
     }
   }
 

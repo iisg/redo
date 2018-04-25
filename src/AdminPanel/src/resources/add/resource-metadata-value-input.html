@@ -2,17 +2,16 @@
     <require from="./resource-form-generated"></require>
     <require from="./metadata-value-input"></require>
 
-    <div class="form-group ${metadataInitialValue.value !== value.value ? 'highlight-edited-metadata' : ''}">
+    <div class="${metadataInitialValue.value === value.value || 'highlighted'}">
         <metadata-value-input metadata.bind="metadata"
             value.bind="value"
             disabled.bind="disabled"
             resource.bind="resource"
             validation-controller.bind="validationController"></metadata-value-input>
     </div>
-    <div if.bind="submetadataResource.kind.metadataList.length">
-        <resource-form-generated resource-kind.bind="submetadataResource.kind"
-            resource.bind="submetadataResource"
-            validation-controller.bind="validationController"
-            resource-class.bind="submetadataResource.resourceClass"></resource-form-generated>
-    </div>
+    <resource-form-generated if.bind="submetadataResource.kind.metadataList.length"
+        resource-kind.bind="submetadataResource.kind"
+        resource.bind="submetadataResource"
+        validation-controller.bind="validationController"
+        resource-class.bind="submetadataResource.resourceClass"></resource-form-generated>
 </template>

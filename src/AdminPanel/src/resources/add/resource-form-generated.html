@@ -1,32 +1,25 @@
-<template>
+<template class="simple-form">
     <require from="./resource-metadata-values-form"></require>
     <require from="resources-config/metadata/metadata-label"></require>
+    <require from="./from-workflow-transitions-array-to-string"></require>
 
-
-    <div class="form-group"
-        repeat.for="metadata of metadataList">
-        <h4>${metadata | metadataLabel}</h4>
-        <div class="clearfix"></div>
-        <div if.bind="metadataDeterminesAssignee(metadata)"
-            class="alert alert-info">
-            <icon name="user-2"></icon>
-            ${'This metadata determines who can perform these actions:' | resourceClassTranslation:resource.resourceClass}
-            <ul>
-                <li repeat.for="transition of resource.transitionAssigneeMetadata[metadata.id]">
-                    ${transition.label | inCurrentLanguage}
-                </li>
-            </ul>
-        </div>
-        <div if.bind="metadataIsRequired(metadata) & signal:'require-metadata-for-transition-changed'"
-            class="alert alert-warning">
-            <icon name="information"></icon>
-            ${"This metadata is required in current state" | resourceClassTranslation:resource.resourceClass}
-        </div>
-        <div if.bind="metadataIsLocked(metadata)"
-            class="alert alert-info">
-            <icon name="information"></icon>
-            ${"Resource's state prevents modification of these values." | resourceClassTranslation:resource.resourceClass}
-        </div>
+    <template repeat.for="metadata of metadataList">
+        <span>
+            ${metadata | metadataLabel}
+            <icon if.bind="metadataDeterminesAssignee(metadata)"
+            name="user-2"
+            bootstrap-tooltip="${'This metadata determines who can perform these actions:'
+                | resourceClassTranslation:resource.resourceClass}&#10;${resource.transitionAssigneeMetadata[metadata.id]
+                    | fromWorkflowTransitionsArrayToString}"></icon>
+            <icon if.bind="metadataIsRequired(metadata) & signal:'require-metadata-for-transition-changed'"
+                name="information"
+                bootstrap-tooltip.bind="'This metadata is required in current state'
+                    | resourceClassTranslation:resource.resourceClass"></icon>
+            <icon if.bind="metadataIsLocked(metadata)"
+                name="information"
+                bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.'
+                    | resourceClassTranslation:resource.resourceClass"></icon>
+        </span>
         <resource-metadata-values-form if.bind="contentsValidator[metadata.id]"
             metadata.bind="metadata"
             resource.bind="resource"
@@ -34,6 +27,6 @@
             disabled.bind="editingDisabledForMetadata(metadata)"
             values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id]"
             required.bind="metadataIsRequired(metadata)"></resource-metadata-values-form>
-    </div>
+    </template>
 
 </template>

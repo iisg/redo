@@ -2,20 +2,12 @@
 
 // https://css-tricks.com/simple-css-row-column-highlighting/
 table.highlight-col-row-on-hover {
-  $highlight-color: yellow;
+  $highlight-color: $orange;
   overflow: hidden;
 
-  thead{
-    background-color: #EEE;
-  }
-
-  tr:hover {
-    background-color: $highlight-color;
-  }
 
   td, th {
     position: relative;
-
     &:hover::after, &:hover::after {
       display: block;
       content: '';

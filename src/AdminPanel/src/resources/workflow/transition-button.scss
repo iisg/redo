@@ -1,4 +1,18 @@
-.transition-to-state {
-  display: block;
-  font-size: x-small;
+@import "../../common/styles";
+
+transition-button {
+  @include toggle-button(transparent, $blue);
+  button {
+    text-align: left;
+    span {
+      color: $default-text-color;
+      &:not(:first-of-type) {
+        display: block;
+        font-size: 0.75em;
+      }
+    }
+  }
+  button:hover:not([disabled]) {
+    background-color: $light-grey;
+  }
 }

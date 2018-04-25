@@ -1,3 +1,12 @@
-.highlight-edited-metadata{
-  background-color: lightgreen;
+@import "../../common/styles";
+
+resource-metadata-value-input {
+  .highlighted {
+    input, textarea, .select2-selection {
+      background-color: lighten($orange, $default-value-to-lighten-colors-by);
+    }
+  }
+  textarea {
+    resize: vertical;
+  }
 }

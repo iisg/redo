@@ -52,6 +52,10 @@ sidebar.collapsed {
 
 a {
   cursor: pointer;
+  color: $blue;
+  &:focus, &:hover {
+    color: $light-blue;
+  }
 }
 
 button {
@@ -59,11 +63,18 @@ button {
   outline: none;
 }
 
+.toggle-button {
+  @include toggle-button();
+}
+
 dl {
   margin-top: 0;
   margin-bottom: 0;
 }
 
+ul {
+  margin-bottom: 0;
+}
 
 h1, h2, h3, p {
   margin-top: $default-gap-size / 2;
@@ -72,6 +83,10 @@ h1, h2, h3, p {
 
 label {
   margin-bottom: $default-gap-size / 4;
+}
+
+.tooltip {
+  white-space:pre-wrap;
 }
 
 .button-parent {
@@ -83,70 +98,84 @@ label {
   display: block;
 }
 
-.vertically-sortable {
+.drag-handle {
   cursor: n-resize;
 }
 
 table {
   width: 100%;
-  thead {
-    color: white;
-    background-color: $grey;
-    th {
-        font-weight: normal;
-    }
-  }
-  tbody {
-    tr {
-      @include transition(background-color .3s);
-      &:nth-child(2n + 1) {
-          background-color: $light-grey;
-      }
-      &:not(.edit-form):hover {
-          background-color: $orange;
-      }
-      a {
-          color: $default-text-color;
+  &:not(.transparent) {
+    thead {
+      color: white;
+      background-color: $grey;
+      th {
+          font-weight: normal;
       }
     }
-  }
-  th, td {
-    padding: $default-gap-size / 4;
-    &:first-child {
-      padding-left: $default-gap-size / 2;
-    }
-    &:last-child {
-      padding-right: $default-gap-size / 2;
-      &:empty {
-        padding: 0;
-        width: $default-gap-size / 4;
-      }
-    }
-  }
-  td.with-buttons-container {
-    padding: 0;
-    & > div {
-        display: flex;
-        justify-content: flex-end;
-        & > * {
-            margin: $default-gap-size / 4;
-            padding: 0;
-            background-color: initial;
-            color: $blue;
-            &.remove:not([disabled]) {
-                color: $red;
-            }
-            &[disabled] {
-                color: $grey;
-            }
+    tbody {
+      tr {
+        @include transition(background-color .3s);
+        &:nth-child(2n + 1) {
+            background-color: $light-grey;
         }
-        & > a {
-          color: inherit;
+        &:not(.edit-form):hover {
+            background-color: $orange;
         }
+        a {
+            color: $default-text-color;
+        }
+      }
     }
+    th, td {
+      padding: $default-gap-size / 4;
+      &:first-child {
+        padding-left: $default-gap-size / 2;
+      }
+      &:last-child {
+        padding-right: $default-gap-size / 2;
+        &:empty {
+          padding: 0;
+          width: $default-gap-size / 4;
+        }
+      }
+    }
+    td.with-buttons-container {
+      padding: 0;
+      & > div {
+          display: flex;
+          justify-content: flex-end;
+          & > * {
+              margin: $default-gap-size / 4;
+              padding: 0;
+              background-color: initial;
+              color: $blue;
+              &.remove:not([disabled]) {
+                  color: $red;
+              }
+              &[disabled] {
+                  color: $grey;
+              }
+          }
+          & > a {
+            color: inherit;
+          }
+      }
+    }
+  }
+  &.transparent {
+    background: none;
   }
   td.with-throbber {
     width: 1em;
+  }
+}
+
+.simple-form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-column-gap: $default-gap-size;
+  & > :nth-child(2n + 1) {
+      font-weight: bold;
   }
 }
 
