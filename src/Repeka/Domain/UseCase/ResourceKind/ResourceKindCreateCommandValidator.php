@@ -8,6 +8,7 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
@@ -18,15 +19,19 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
     private $correctResourceDisplayStrategySyntaxRule;
     /** @var ContainsParentMetadataRule */
     private $containsParentMetadataRule;
+    /** @var ChildResourceKindsAreOfSameResourceClassRule */
+    private $childResourceKindsAreOfSameResourceClassRule;
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategySyntaxRule,
-        ContainsParentMetadataRule $containsParentMetadataRule
+        ContainsParentMetadataRule $containsParentMetadataRule,
+        ChildResourceKindsAreOfSameResourceClassRule $childResourceKindsAreOfSameResourceClassRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->correctResourceDisplayStrategySyntaxRule = $correctResourceDisplayStrategySyntaxRule;
         $this->containsParentMetadataRule = $containsParentMetadataRule;
+        $this->childResourceKindsAreOfSameResourceClassRule = $childResourceKindsAreOfSameResourceClassRule;
     }
 
     /**
@@ -46,6 +51,7 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
                     ->callback([$this, 'noMetadataDuplicates'])
             )
             ->attribute('metadataList', $this->containsParentMetadataRule)
+            ->attribute('metadataList', $this->childResourceKindsAreOfSameResourceClassRule)
             ->attribute('displayStrategies', Validator::arrayType()->each($this->correctResourceDisplayStrategySyntaxRule));
     }
 
