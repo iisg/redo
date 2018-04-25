@@ -28,16 +28,16 @@ class MinMaxValueConstraint extends AbstractMetadataConstraint {
 
     public function validateSingle(Metadata $metadata, $config, $metadataValue) {
         if (!Validator::intType()->validate($metadataValue)) {
-            throw new \BadMethodCallException('Value must be an integer');
+            throw new \InvalidArgumentException('Value must be an integer');
         }
         if (array_key_exists('min', $config)) {
             if (isset($config['min']) & $config['min'] > $metadataValue) {
-                throw new \BadMethodCallException('Value must be higher than minimal constraint');
+                throw new \DomainException('Value must be higher than minimal constraint');
             }
         }
         if (array_key_exists('max', $config)) {
             if (isset($config['max']) & $config['max'] < $metadataValue) {
-                throw new \BadMethodCallException('Value must be less than maximal constraint');
+                throw new \DomainException('Value must be less than maximal constraint');
             }
         }
     }

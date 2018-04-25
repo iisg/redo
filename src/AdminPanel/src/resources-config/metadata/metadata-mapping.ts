@@ -3,6 +3,8 @@ import {CopyMapper} from "common/dto/mappers";
 import {ResourceKind} from "../resource-kind/resource-kind";
 import {AutoMapper} from "common/dto/auto-mapper";
 import {Metadata} from "./metadata";
+import {deepCopy} from "../../common/utils/object-utils";
+import {MinMaxValue} from "./metadata-min-max-value";
 
 export class MetadataMapper extends AutoMapper<Metadata> {
   toBackendValue(entity: Metadata): Object {
@@ -25,5 +27,15 @@ export class ResourceKindConstraintMapper extends CopyMapper<Array<ResourceKind|
 
   protected clone(items: Array<ResourceKind|number>): Array<ResourceKind|number> {
     return items.map(item => (item instanceof ResourceKind) ? this.autoMapper.nullSafeClone(item) : item);
+  }
+}
+
+@autoinject
+export class MinMaxConstraintMapper extends CopyMapper<MinMaxValue> {
+  protected clone(entity: MinMaxValue): MinMaxValue {
+    if (entity.min == undefined && entity.max == undefined) {
+      entity = new MinMaxValue();
+    }
+    return deepCopy(entity);
   }
 }
