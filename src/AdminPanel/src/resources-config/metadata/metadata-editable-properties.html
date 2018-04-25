@@ -4,26 +4,21 @@
     <require from="common/components/restore-from-original/restore-from-original.html"></require>
 
     <div class="form-group">
-        <div class="checkbox">
-            <label>
-                <input type="checkbox"
-                    checked.bind="metadata.shownInBrief">
-                ${'Show in brief' | t}
-                <icon name="show"></icon>
-                <restore-from-original if.bind="originalMetadata && originalMetadata.shownInBrief != metadata.shownInBrief"
-                    click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original>
-            </label>
-
-            <label if.bind="metadata.control != 'file'">
-                <input type="checkbox"
-                    checked.bind="metadata.copyToChildResource">
-                ${'Copy metadata to child resource' | t}
-                <icon name="edit"></icon>
-                <restore-from-original if.bind="originalMetadata && originalMetadata.copyToChildResource != metadata.copyToChildResource"
-                    click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original>
-            </label>
-
-
+        <div>
+            <input type="checkbox"
+                checked.bind="metadata.shownInBrief">
+            ${'Show in brief' | t}
+            <icon name="show"></icon>
+            <restore-from-original if.bind="originalMetadata && originalMetadata.shownInBrief != metadata.shownInBrief"
+                click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original>
+        </div>
+        <div if.bind="metadata.control != 'file'">
+            <input type="checkbox"
+                checked.bind="metadata.copyToChildResource">
+            ${'Copy metadata to child resource' | t}
+            <icon name="edit"></icon>
+            <restore-from-original if.bind="originalMetadata && originalMetadata.copyToChildResource != metadata.copyToChildResource"
+                click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original>
         </div>
     </div>
 
