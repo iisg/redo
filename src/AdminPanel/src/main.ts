@@ -52,7 +52,7 @@ export function configure(aurelia: Aurelia) {
       'resources-config/multilingual-field/in-current-language',
       'resources-config/resource-kind/display-strategies/resource-display-strategy',
       'common/components/promise-button/promise-button',
-      'common/components/buttons/submit-button.html',
+      'common/components/buttons/submit-button',
       'common/http-client/invalid-command-message.html', // used in alerts by GlobalExceptionInterceptor
       'common/value-converters/resource-class-translation-value-converter'
     ]);
