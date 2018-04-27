@@ -20,6 +20,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   @bindable cancel: VoidFunction = noop;
   @bindable resourceClass: string;
   @bindable edit: ResourceKind;
+  @bindable metadataListModified: boolean = false;
 
   resourceKind: ResourceKind = new ResourceKind();
   originalMetadataList: Metadata[];
@@ -68,6 +69,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
 
   removeMetadata(metadata: Metadata) {
     removeValue(this.resourceKind.metadataList, metadata);
+    this.metadataListModified = true;
   }
 
   moveUp(metadata: Metadata) {

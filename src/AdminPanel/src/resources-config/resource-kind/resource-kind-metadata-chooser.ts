@@ -10,6 +10,7 @@ export class ResourceKindMetadataChooser {
   @bindable resourceKind: ResourceKind;
   @bindable(twoWay) value: Metadata;
   @bindable(twoWay) hasMetadataToChoose: boolean;
+  @bindable(twoWay) shouldRefreshResults: boolean;
 
   canBeAddedToResourceKind = (metadata: Metadata) => {
     return this.notParentMetadata(metadata) && this.metadataNotAlreadyInResourceKind(metadata);
@@ -19,7 +20,7 @@ export class ResourceKindMetadataChooser {
     return metadata.id != SystemMetadata.PARENT.id;
   }
 
-  metadataNotAlreadyInResourceKind(metadata: Metadata): boolean {
+  metadataNotAlreadyInResourceKind(metadata: Metadata, metadataList = this.resourceKind.metadataList): boolean {
     return this.resourceKind.metadataList.map(m => m.id).indexOf(metadata.id) === -1;
   }
 }
