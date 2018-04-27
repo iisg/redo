@@ -3,22 +3,22 @@ import {AuditEntryListQuery} from "./audit-entry-list-query";
 import {safeJsonParse} from "../common/utils/object-utils";
 
 export class AuditListFilters {
-  private static DEFAULT_PER_PAGE: number = 10;
+  private static DEFAULT_RESULTS_PER_PAGE: number = 10;
 
   @observable resultsPerPage: number = 10;
   @observable currentPageNumber: number = 1;
   commandNames: string[] = [];
   resourceContents: NumberMap<string>;
-  customColumns: { displayStrategy: string }[] = [];
+  customColumns: {displayStrategy: string}[] = [];
   onChange: VoidFunction = () => undefined;
 
   toParams(): StringMap<any> {
     const params: StringMap<any> = {};
-    if (this.resultsPerPage != AuditListFilters.DEFAULT_PER_PAGE) {
-      params.perPage = this.resultsPerPage;
+    if (this.resultsPerPage != AuditListFilters.DEFAULT_RESULTS_PER_PAGE) {
+      params.resultsPerPage = this.resultsPerPage;
     }
     if (this.currentPageNumber != 1) {
-      params.page = this.currentPageNumber;
+      params.currentPageNumber = this.currentPageNumber;
     }
     if (this.commandNames.length) {
       params.commandNames = this.commandNames.join(',');
@@ -36,14 +36,14 @@ export class AuditListFilters {
     return query
       .filterByResourceContents(this.resourceContents)
       .filterByCommandNames(this.commandNames)
-      .setPage(this.currentPageNumber)
+      .setCurrentPageNumber(this.currentPageNumber)
       .setResultsPerPage(this.resultsPerPage);
   }
 
   static fromParams(params: StringMap<any>): AuditListFilters {
     const filters = new AuditListFilters();
-    filters.resultsPerPage = +params.perPage || AuditListFilters.DEFAULT_PER_PAGE;
-    filters.currentPageNumber = +params.page || 1;
+    filters.resultsPerPage = +params.resultsPerPage || AuditListFilters.DEFAULT_RESULTS_PER_PAGE;
+    filters.currentPageNumber = +params.currentPageNumber || 1;
     filters.commandNames = (params.commandNames || '').split(',').filter(commandName => !!commandName.trim());
     filters.resourceContents = safeJsonParse(params.resourceContents);
     filters.setCustomColumns(params.customColumns);

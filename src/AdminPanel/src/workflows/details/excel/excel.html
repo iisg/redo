@@ -5,30 +5,30 @@
 
     <table class="highlight-col-row-on-hover">
         <thead>
-        <tr>
-            <th>&nbsp;</th>
-            <th repeat.for="place of orderedPlaces">
-                ${place.label | inCurrentLanguage & signal:'workflow-places-updated'}
-            </th>
-        </tr>
+            <tr>
+                <th>&nbsp;</th>
+                <th repeat.for="place of orderedPlaces">
+                    ${place.label | inCurrentLanguage & signal:'workflow-places-updated'}
+                </th>
+            </tr>
         </thead>
         <tbody>
-        <tr repeat.for="metadata of metadataList">
-            <th>
-                ${metadata | metadataLabel}
-                <icon name="user-3"
-                    if.bind="metadata.canDetermineAssignees"
-                    bootstrap-tooltip.one-time="'This metadata can be used to specify assignees' | t"></icon>
-            </th>
-            <td repeat.for="place of orderedPlaces"
-                class="text-center">
-                <excel-checkbox model.bind="metadata.id"
-                    states.bind="place.restrictingMetadataIds"
-                    assignee-allowed.bind="metadata.canDetermineAssignees"
-                    on-change.call="checkboxChanged(metadata, place)"
-                    disabled.bind="!editable"></excel-checkbox>
-            </td>
-        </tr>
+            <tr repeat.for="metadata of metadataList">
+                <th>
+                    ${metadata | metadataLabel}
+                    <icon name="user-3"
+                        if.bind="metadata.canDetermineAssignees"
+                        bootstrap-tooltip.one-time="'This metadata can be used to specify assignees' | t"></icon>
+                </th>
+                <td repeat.for="place of orderedPlaces"
+                    class="text-center">
+                    <excel-checkbox model.bind="metadata.id"
+                        states.bind="place.restrictingMetadataIds"
+                        assignee-allowed.bind="metadata.canDetermineAssignees"
+                        on-change.call="checkboxChanged(metadata, place)"
+                        disabled.bind="!editable"></excel-checkbox>
+                </td>
+            </tr>
         </tbody>
     </table>
 

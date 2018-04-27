@@ -123,7 +123,7 @@ export class ResourcesList {
       .filterByResourceClasses(this.resourceClass);
     query = query.sortByMetadataIds(this.sortBy)
       .setResultsPerPage(this.resultsPerPage)
-      .setPage(this.currentPageNumber);
+      .setCurrentPageNumber(this.currentPageNumber);
     if (this.contentsFilter) {
       query = query.filterByContents(this.contentsFilter);
     }

@@ -15,10 +15,13 @@ export class AuditEntryDetailsResource {
   }
 
   async attached() {
-    this.resource.id = this.entry.data.resource.id;
-    this.resource.resourceClass = this.entry.data.resource.resourceClass;
-    this.resource.contents = this.entry.data.resource.contents;
-    this.resource.kind = await this.resourceKindRepository.get(this.entry.data.resource.kindId);
+    let resource = this.entry.data.resource;
+    if (resource) {
+      this.resource.id = resource.id;
+      this.resource.resourceClass = resource.resourceClass;
+      this.resource.contents = resource.contents;
+      this.resource.kind = await this.resourceKindRepository.get(resource.kindId);
+    }
   }
 
   showResourceContentsDialog() {
