@@ -1,5 +1,6 @@
 <template>
     <require from="select2/css/select2.min.css"></require>
+    <require from="resources-config/metadata/metadata-label"></require>
 
     <select ref="dropdown"
         disabled.bind="disabled || isFetchingOptions">
@@ -9,7 +10,7 @@
             model.bind="option">
             <template part="option-template"
                 replaceable>
-                ${option.name}
+                ${option | metadataLabel}
             </template>
         </option>
     </select>

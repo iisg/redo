@@ -12,7 +12,7 @@ export class MetadataChooser {
   @bindable resourceClass: string | string[];
   @bindable control: string | string[];
   @bindable filter: (metadata: Metadata) => boolean = () => true;
-  @bindable @booleanAttribute setFirstAsDefault;
+  @bindable @booleanAttribute setFirstAsDefault: boolean;
   @bindable(twoWay) shouldRefreshResults: boolean;
 
   metadataList: Metadata[];
@@ -53,7 +53,7 @@ export class MetadataChooser {
           } else {
             this.metadataList = metadataList;
           }
-          if (this.setFirstAsDefault) {
+          if (this.setFirstAsDefault && !this.value) {
             this.value = metadataList[0];
           }
         })
