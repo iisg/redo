@@ -96,9 +96,9 @@ export class ResourcesList {
     if (this.parentResource) {
       this.resourceClass = this.parentResource.resourceClass;
       this.eventAggregator.subscribeOnce("router:navigation:success",
-      (event: { instruction: NavigationInstruction }) => {
-        this.activate(event.instruction.queryParams);
-      });
+        (event: { instruction: NavigationInstruction }) => {
+          this.activate(event.instruction.queryParams);
+        });
     }
   }
 
@@ -118,15 +118,17 @@ export class ResourcesList {
     let resourceClass = this.resourceClass;
     let resultsPerPage = this.resultsPerPage;
     let query = this.resourceRepository.getListQuery();
-    query = this.parentResource ? query.filterByParentId(this.parentResource.id)
-      : query.onlyTopLevel()
-      .filterByResourceClasses(this.resourceClass);
+    if (this.parentResource) {
+      query = query.filterByParentId(this.parentResource.id);
+    } else {
+      query = this.contentsFilter
+        ? query.filterByContents(this.contentsFilter)
+        : query.onlyTopLevel();
+      query.filterByResourceClasses(this.resourceClass);
+    }
     query = query.sortByMetadataIds(this.sortBy)
       .setResultsPerPage(this.resultsPerPage)
       .setCurrentPageNumber(this.currentPageNumber);
-    if (this.contentsFilter) {
-      query = query.filterByContents(this.contentsFilter);
-    }
     query.get()
       .then(resources => {
         if (resourceClass === this.resourceClass) {
@@ -172,7 +174,8 @@ export class ResourcesList {
     if (previousValue) {
       try {
         localStorage[this.RESULTS_PER_PAGE_KEY] = newValue;
-      } catch (exception) {}
+      } catch (exception) {
+      }
       this.updateURL();
       if (this.activated) {
         this.fetchResources();
