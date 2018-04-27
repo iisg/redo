@@ -7,11 +7,13 @@ export class EntityChooser {
   @bindable(twoWay) value: Entity;
   @bindable(twoWay) containsItems: boolean;
   @bindable filter: (entity: Entity) => boolean;
+  @bindable(twoWay) shouldRefreshResults: boolean = false;
 
-  @computedFrom('entities.length', 'filter', 'value')
+  @computedFrom('shouldRefreshResults', 'entities.length', 'filter', 'value')
   get values(): Entity[] {
     const result = (this.entities || []).filter(this.filter || (() => true));
     this.containsItems = (result.length > 0);
+    this.shouldRefreshResults = false;
     return result;
   }
 }

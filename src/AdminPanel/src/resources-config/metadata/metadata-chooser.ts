@@ -13,6 +13,7 @@ export class MetadataChooser {
   @bindable control: string | string[];
   @bindable filter: (metadata: Metadata) => boolean = () => true;
   @bindable @booleanAttribute setFirstAsDefault;
+  @bindable(twoWay) shouldRefreshResults: boolean;
 
   metadataList: Metadata[];
 

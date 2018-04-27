@@ -76,7 +76,8 @@
             <resource-kind-metadata-chooser
                 has-metadata-to-choose.bind="hasMetadataToChoose"
                 value.bind="metadataToAdd"
-                resource-kind.bind="resourceKind"></resource-kind-metadata-chooser>
+                resource-kind.bind="resourceKind"
+                should-refresh-results.bind="metadataListModified"></resource-kind-metadata-chooser>
         </div>
         <div class="form-group"
             if.bind="!editing">
