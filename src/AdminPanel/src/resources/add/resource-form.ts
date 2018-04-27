@@ -56,7 +56,7 @@ export class ResourceForm {
 
   @computedFrom('resource.kind.workflow')
   get requiredMetadataIds(): number[] {
-    let requiredMetadataIds = {};
+    let requiredMetadataIds = [];
     if (this.resource.kind && this.resource.kind.workflow) {
       let restrictingMetadata: NumberMap<any> = {};
       if (this.edit && this.transition) {
@@ -76,7 +76,7 @@ export class ResourceForm {
         ]
       );
     }
-    return requiredMetadataIds as number[];
+    return requiredMetadataIds;
   }
 
   requiredMetadataIdsForTransition(): number[] {
