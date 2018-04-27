@@ -14,8 +14,8 @@ export abstract class AbstractListQuery<T> {
               private entityArrayType: string) {
   }
 
-  public setPage(page: number): this {
-    this.params.page = page;
+  public setCurrentPageNumber(currentPageNumber: number): this {
+    this.params.page = currentPageNumber;
     return this;
   }
 

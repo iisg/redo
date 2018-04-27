@@ -11,7 +11,7 @@
             <span class="page-title">${'Filters' | t}</span>
 
             <div class="form-group">
-                <label>${ 'Operation' | t}</label>
+                <label>${'Operation' | t}</label>
                 <audit-command-name-chooser command-names.bind="filters.commandNames"></audit-command-name-chooser>
             </div>
             <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
@@ -20,25 +20,17 @@
                 <button class="btn btn-primary"
                     click.delegate="onFiltersChanged()">
                     <icon name="filter-2"></icon>
-                    ${ 'Filter_verb' | t }
+                    ${'Filter_verb' | t}
                 </button>
             </div>
         </div>
 
-        <pagination total-number-of-elements.bind="entries.total"
-            elements-per-page.bind="filters.resultsPerPage"
-            current-page-number.bind="filters.currentPageNumber"
-            hide-elements-per-page-dropdown="true"
-            if.bind="entries.length"></pagination>
-
-        <loading-bar if.bind="displayProgressBar"></loading-bar>
-
-        <div class="alert alert-danger"
-            if.bind="error">
-            <strong>${ 'Invalid audit filters.' | t }</strong>
+        <div if.bind="error"
+            class="alert alert-danger">
+            <strong>${'Invalid audit filters.' | t}</strong>
             <span if.bind="error.statusCode == 404">
-                ${ 'Could not find metadata' | t }
-                ${ error.content.params.query }
+                ${'Could not find metadata' | t}
+                ${error.content.params.query}
             </span>
         </div>
 
@@ -48,66 +40,74 @@
                     class="btn btn-default"
                     click.trigger="filters.addNewCustomColumn()">
                     <icon name="add-2"></icon>
-                    ${ 'Add dynamic column' | t }
+                    ${'Add dynamic column' | t}
                 </button>
             </div>
         </div>
 
+        <pagination if.bind="entries.length"
+            total-number-of-elements.bind="entries.total"
+            elements-per-page.bind="filters.resultsPerPage"
+            current-page-number.bind="filters.currentPageNumber"
+            hide-elements-per-page-dropdown="true"></pagination>
+
+        <loading-bar if.bind="displayProgressBar"></loading-bar>
+
         <table if.bind="entries.length > 0">
             <thead>
-            <tr>
-                <th>${'Date' | t}</th>
-                <th>${'Operation' | t}</th>
-                <th>${'User' | t}</th>
-                <th>${'Details' | t}</th>
-                <th repeat.for="column of filters.customColumns">
-                    <span class="input-group">
-                        <input type="text"
-                            class="form-control"
-                            placeholder.one-time="'Resource display strategy' | t"
-                            value.bind="column.displayStrategy">
-                        <span class="input-group-btn">
-                            <a click.trigger="filters.removeCustomColumn(column)"
-                                class="btn btn-default">
-                                <icon name="remove-2"></icon>
-                            </a>
+                <tr>
+                    <th>${'Date' | t}</th>
+                    <th>${'Operation' | t}</th>
+                    <th>${'User' | t}</th>
+                    <th>${'Details' | t}</th>
+                    <th repeat.for="column of filters.customColumns">
+                        <span class="input-group">
+                            <input type="text"
+                                class="form-control"
+                                placeholder.one-time="'Resource display strategy' | t"
+                                value.bind="column.displayStrategy">
+                            <span class="input-group-btn">
+                                <a click.trigger="filters.removeCustomColumn(column)"
+                                    class="btn btn-default">
+                                    <icon name="remove-2"></icon>
+                                </a>
+                            </span>
                         </span>
-                    </span>
-                </th>
-            </tr>
+                    </th>
+                </tr>
             </thead>
             <tbody>
-            <tr repeat.for="entry of entries"
-                class="${entry.successful ? '' : 'failure'}">
-                <td>${entry.createdAt | date:'LLL'}</td>
-                <td>${'audit_commands::' + entry.commandName | t}</td>
-                <td>
-                    <resource-link if.bind="entry.user"
-                        id.bind="entry.user.userData.id"></resource-link>
-                </td>
-                <td>
-                    <compose view-model="./entry-details/audit-entry-details"
-                        view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
-                        model.bind="{entry: entry}"></compose>
-                </td>
-                <td repeat.for="column of filters.customColumns">
-                    <span if.bind="entry.data.resource">
-                        ${ entry.data.resource | resourceDisplayStrategy:column.displayStrategy }
-                    </span>
-                </td>
-            </tr>
+                <tr repeat.for="entry of entries"
+                    class="${entry.successful ? '' : 'failure'}">
+                    <td>${entry.createdAt | date:'LLL'}</td>
+                    <td>${'audit_commands::' + entry.commandName | t}</td>
+                    <td>
+                        <resource-link if.bind="entry.user"
+                            id.bind="entry.user.userData.id"></resource-link>
+                    </td>
+                    <td>
+                        <compose view-model="./entry-details/audit-entry-details"
+                            view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
+                            model.bind="{entry: entry}"></compose>
+                    </td>
+                    <td repeat.for="column of filters.customColumns">
+                        <span if.bind="entry.data.resource">
+                            ${entry.data.resource | resourceDisplayStrategy:column.displayStrategy}
+                        </span>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
-        <div class="alert alert-info"
-            if.bind="entries.length === 0 && !displayProgressBar && !error">
+        <div if.bind="entries.length === 0 && !displayProgressBar && !error"
+            class="alert alert-info">
             <icon name="information"></icon>
-            ${ 'No entry matches given filters.' | t }
+            ${'No entry matches given filters.' | t}
         </div>
 
-        <pagination total-number-of-elements.bind="entries.total"
+        <pagination if.bind="entries.length"
+            total-number-of-elements.bind="entries.total"
             elements-per-page.bind="filters.resultsPerPage"
-            current-page-number.bind="filters.currentPageNumber"
-            if.bind="entries.length"></pagination>
+            current-page-number.bind="filters.currentPageNumber"></pagination>
     </div>
 </template>

@@ -20,12 +20,10 @@ export class Pagination {
     bind() {
         this.selectedElementsPerPageDropdownOption = this.elementsPerPage;
         this.calculateNumberOfPages();
-        this.calculateMaximumAdditionalPageNumbers();
     }
 
     totalNumberOfElementsChanged() {
         this.calculateNumberOfPages();
-        this.calculateMaximumAdditionalPageNumbers();
     }
 
     elementsPerPageChanged() {
@@ -36,6 +34,7 @@ export class Pagination {
     calculateNumberOfPages() {
         this.numberOfPages = this.totalNumberOfElements != undefined && this.elementsPerPage ?
             Math.ceil(this.totalNumberOfElements / this.elementsPerPage) : 1;
+        this.calculateMaximumAdditionalPageNumbers();
     }
 
     currentPageNumberChanged() {
@@ -71,7 +70,7 @@ export class Pagination {
         return Array.from({length: length}, (x, i) => i + from);
     }
 
-    @computedFrom('currentPageNumber', 'numberOfAdditionalPageNumbersAfterCurrentPageNumber')
+    @computedFrom('currentPageNumber', 'elementsPerPage', 'numberOfAdditionalPageNumbersAfterCurrentPageNumber')
     get additionalPageNumbersBeforeCurrentPageNumber() {
         let additionalPageNumbers = this.additionalPageNumbers(2, this.currentPageNumber - 2,
             this.maximumAdditionalPageNumbers - this.numberOfAdditionalPageNumbersAfterCurrentPageNumber, true);
@@ -79,7 +78,7 @@ export class Pagination {
         return additionalPageNumbers;
     }
 
-    @computedFrom('currentPageNumber', 'numberOfAdditionalPageNumbersBeforeCurrentPageNumber')
+    @computedFrom('currentPageNumber', 'elementsPerPage', 'numberOfAdditionalPageNumbersBeforeCurrentPageNumber')
     get additionalPageNumbersAfterCurrentPageNumber() {
         let additionalPageNumbers = this.additionalPageNumbers(this.currentPageNumber + 2, this.numberOfPages - 1,
             this.maximumAdditionalPageNumbers - this.numberOfAdditionalPageNumbersBeforeCurrentPageNumber);
