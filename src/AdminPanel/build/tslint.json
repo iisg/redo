@@ -24,8 +24,7 @@
       "check-branch",
       "check-operator",
       "check-separator",
-      "check-type",
-      "check-module"
+      "check-type"
     ],
     "typedef-whitespace": [
       true,
@@ -40,8 +39,6 @@
     "no-internal-module": true,
     "no-trailing-whitespace": true,
     "no-null-keyword": true,
-    "no-unused-variable": true,
-    "no-use-before-declare": true,
     "no-debugger": true,
     "no-focused-tests": true,
     "no-console": [

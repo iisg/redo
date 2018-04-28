@@ -33,7 +33,7 @@ export class LanguageRepository extends ApiRepository<Language> {
   private dispatchChangedEvent<T>(arg: T): T {
     this.eventAggregator.publish(new LanguagesChangedEvent());
     return arg;
-  };
+  }
 
   public update(updatedLanguage: Language): Promise<Language> {
     const languageData = this.toBackend(updatedLanguage);

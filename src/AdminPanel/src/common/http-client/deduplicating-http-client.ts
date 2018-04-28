@@ -23,7 +23,7 @@ export class DeduplicatingHttpClient {
   @cachedResponse(untilPromiseCompleted)
   delete(url: string): Promise<HttpResponseMessage> {
     return this.httpClient.delete(url);
-  };
+  }
 
   @cachedResponse(untilPromiseCompleted)
   get(url: string, params?: Object): Promise<HttpResponseMessage> {

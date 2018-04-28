@@ -26,7 +26,7 @@ describe(BootstrapValidationRenderer.name, () => {
         result: TestRenderInstruction.newError(errorId),
         elements: [html.find(`${elementSelector} input`)[0]]
       };
-    };
+    }
 
     private static newError(id: number): ValidateResult {
       let error = new ValidateResult({}, {}, undefined, false, `Error ${id}`);
