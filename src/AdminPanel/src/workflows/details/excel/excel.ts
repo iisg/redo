@@ -8,7 +8,6 @@ import {WorkflowPlaceSorter} from "./workflow-place-sorter";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
 import {deepCopy} from "common/utils/object-utils";
-import "sticky-table-headers";
 
 @autoinject
 export class Excel implements ComponentAttached {
@@ -22,7 +21,6 @@ export class Excel implements ComponentAttached {
   }
 
   async attached() {
-    $('.with-sticky-header').stickyTableHeaders({zIndex: 1, scrollableArea: $('router-view')});
     this.metadataList = await this.metadataRepository.getListQuery()
       .filterByResourceClasses(this.resourceClass)
       .onlyTopLevel()

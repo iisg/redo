@@ -169,6 +169,15 @@ table {
   &.transparent {
     background: none;
   }
+  &.with-sticky-header {
+    thead {
+      th {
+        position: sticky;
+        top: 0;
+        background-color: $grey;
+      }
+    }
+  }
   td.with-throbber {
     width: 1em;
   }
