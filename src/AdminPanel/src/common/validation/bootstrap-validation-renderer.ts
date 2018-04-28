@@ -1,4 +1,4 @@
-import {ValidationRenderer, RenderInstruction, ValidateResult} from "aurelia-validation";
+import {RenderInstruction, ValidateResult, ValidationRenderer} from "aurelia-validation";
 
 /**
  * Renders form errors in bootstrap form with form-groups.
@@ -25,7 +25,7 @@ export class BootstrapValidationRenderer implements ValidationRenderer {
       return;
     }
 
-    const formGroup = $(element).closest('.form-group')[0];
+    const formGroup = this.findErrorContainer(element);
     if (!formGroup) {
       return;
     }
@@ -46,7 +46,7 @@ export class BootstrapValidationRenderer implements ValidationRenderer {
       return;
     }
 
-    const formGroup = $(element).closest('.form-group')[0];
+    const formGroup = this.findErrorContainer(element);
     if (!formGroup) {
       return;
     }
@@ -61,5 +61,9 @@ export class BootstrapValidationRenderer implements ValidationRenderer {
         formGroup.classList.remove('has-error');
       }
     }
+  }
+
+  private findErrorContainer(element: Element): Element {
+    return $(element).closest('.form-group, metadata-value-input, resource-metadata-values-form, resource-form-generated')[0];
   }
 }
