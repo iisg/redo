@@ -14,7 +14,7 @@ export class ResourceKindMetadataChooser {
 
   canBeAddedToResourceKind = (metadata: Metadata) => {
     return this.notParentMetadata(metadata) && this.metadataNotAlreadyInResourceKind(metadata);
-  };
+  }
 
   notParentMetadata(metadata: Metadata): boolean {
     return metadata.id != SystemMetadata.PARENT.id;

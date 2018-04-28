@@ -14,7 +14,7 @@ export class MultilingualEditor {
   @bindable(twoWay) value: Object = {};
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable onLoaded: VoidFunction = () => {
-  };
+  }
 
   languages: Language[];
   fieldId: string = generateId();
