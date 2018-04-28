@@ -1,13 +1,13 @@
 @import "../../../common/styles";
 
 excel {
-  table.with-sticky-header {
+  table {
     th, td {
       text-align: center;
       @include transition(background-color .3s);
-    }
-    .highlighted {
-      background-color: $orange;
+      &.highlighted {
+        background-color: $orange;
+      }
     }
     .legend dd {
       line-height: 2.2;
