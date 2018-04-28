@@ -2,7 +2,7 @@ parameters:
   secret: soo_secret
 doctrine:
   dbal:
-    password: postgres
+    password: CHANGE_ME_BEFORE_FIRST_LAUNCH
 repeka:
   pk_auth:
     wsdl: http://soap.biblos.pk.edu.pl/soap.php?WSDL
