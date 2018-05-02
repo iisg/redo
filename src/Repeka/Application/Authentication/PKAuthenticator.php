@@ -3,7 +3,6 @@ namespace Repeka\Application\Authentication;
 
 use Repeka\Application\Authentication\TokenAuthenticator\ExternalServiceAuthenticator;
 use Repeka\Application\Authentication\TokenAuthenticator\LocalDatabaseAuthenticator;
-use Repeka\Application\Authentication\TokenAuthenticator\Reauthenticator;
 use Repeka\Application\Authentication\TokenAuthenticator\TokenAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -20,11 +19,10 @@ class PKAuthenticator implements SimpleFormAuthenticatorInterface {
     private $authenticators;
 
     public function __construct(
-        Reauthenticator $reauthenticator,
         ExternalServiceAuthenticator $externalServiceAuthenticator,
         LocalDatabaseAuthenticator $localDatabaseAuthenticator
     ) {
-        $this->authenticators = [$reauthenticator, $externalServiceAuthenticator, $localDatabaseAuthenticator];
+        $this->authenticators = [$externalServiceAuthenticator, $localDatabaseAuthenticator];
     }
 
     /** @SuppressWarnings("PHPMD.UnusedFormalParameter") */
