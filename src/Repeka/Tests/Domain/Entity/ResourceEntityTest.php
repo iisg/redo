@@ -78,7 +78,7 @@ class ResourceEntityTest extends \PHPUnit_Framework_TestCase {
     public function testGettingValues() {
         $rk = $this->createResourceKindMock(1, 'books', [$this->createMetadataMock(11, 1), $this->createMetadataMock(12, 2)]);
         $resource = new ResourceEntity($rk, ResourceContents::fromArray([11 => ['A', 'B']]));
-        $this->assertEquals(['A', 'B'], $resource->getContents()->getValues(11));
+        $this->assertEquals(['A', 'B'], $resource->getValues(11));
     }
 
     public function testGettingAuditData() {

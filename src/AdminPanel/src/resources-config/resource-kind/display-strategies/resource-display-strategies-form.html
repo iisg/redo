@@ -15,6 +15,7 @@
         <textarea class="form-control"
             autosize
             value.bind="resourceKind.displayStrategies[strategyId] & validateOnChangeOrBlur"></textarea>
-        <p>${ sampleResource | resourceDisplayStrategy:strategyId }</p>
+        <!-- TODO display sample render in REPEKA-318 -->
+        <!--<p>${ sampleRender }</p>-->
     </div>
 </template>

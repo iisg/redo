@@ -43,14 +43,15 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
     private function createUserResourceKind(OutputInterface $output) {
         if (!$this->resourceKindRepository->exists(SystemResourceKind::USER)) {
             $systemResourceKind = new SystemResourceKind(SystemResourceKind::USER);
-            $usernameDisplayTemplate = '{{oneValue m' . SystemMetadata::USERNAME . '}}';
-            $resourceKind = new ResourceKind([], [SystemMetadata::USERNAME()->toMetadata()]);
+            $usernameMetadata = SystemMetadata::USERNAME()->toMetadata();
+            $usernameDisplayTemplate = '{{r|m' . $usernameMetadata->getName() . '}}';
+            $resourceKind = new ResourceKind([], [$usernameMetadata]);
             EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
             $this->handleCommand(
                 new ResourceKindUpdateCommand(
                     $resourceKind,
                     ['PL' => 'user', 'EN' => 'user'],
-                    [SystemMetadata::USERNAME()->toMetadata()],
+                    [$usernameMetadata],
                     ['header' => $usernameDisplayTemplate, 'dropdown' => $usernameDisplayTemplate]
                 )
             );

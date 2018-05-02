@@ -18,6 +18,7 @@ export class Resource extends Entity {
   @map('{WorkflowTransition[]}') transitionAssigneeMetadata: NumberMap<WorkflowTransition[]> = {};
   @copy contents: NumberMap<MetadataValue[]> = {};
   @map resourceClass: string;
+  @map displayStrategies: StringStringMap = {};
 
   public canApplyTransition(transition: WorkflowTransition): boolean {
     const blockedTransitionReason = this.blockedTransitions[transition.id];

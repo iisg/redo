@@ -16,7 +16,7 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertEquals('budynek', $user->getUsername());
         $this->assertNotContains('nieudane', $client->getResponse()->getContent());
         $nameMetadata = $this->findMetadataByName('Imię', $user->getUserData()->getResourceClass());
-        $this->assertEquals(['Piotr'], $user->getUserData()->getContents()->getValues($nameMetadata));
+        $this->assertEquals(['Piotr'], $user->getUserData()->getValues($nameMetadata));
     }
 
     public function testBudynekAuthFailure() {
@@ -32,8 +32,8 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertNotNull($user);
         $this->assertEquals('halinka', $user->getUsername());
         $nameMetadata = $this->findMetadataByName('Imię', $user->getUserData()->getResourceClass());
-        $this->assertEquals(['Halina'], $user->getUserData()->getContents()->getValues($nameMetadata));
+        $this->assertEquals(['Halina'], $user->getUserData()->getValues($nameMetadata));
         $emailMetadata = $this->findMetadataByName('Email', $user->getUserData()->getResourceClass());
-        $this->assertEquals(['halinka@repeka.pl'], $user->getUserData()->getContents()->getValues($emailMetadata));
+        $this->assertEquals(['halinka@repeka.pl'], $user->getUserData()->getValues($emailMetadata));
     }
 }

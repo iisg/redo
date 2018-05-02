@@ -26,7 +26,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
 
     public function testFixtureDataHasNotChanged() {
         $message = 'You have changed the contents of PHP Book added in fixtures. Tests in this class strongly relies on its contents.';
-        $this->assertEquals(['PHP - to można leczyć!'], $this->phpBook->getContents()->getValues($this->titleMetadata), $message);
+        $this->assertEquals(['PHP - to można leczyć!'], $this->phpBook->getValues($this->titleMetadata), $message);
     }
 
     public function testFindByFullMetadataValue() {

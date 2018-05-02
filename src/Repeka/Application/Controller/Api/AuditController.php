@@ -7,6 +7,7 @@ use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuditController extends ApiController {
     /**
@@ -25,7 +26,13 @@ class AuditController extends ApiController {
             $queryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
         }
         $entries = $this->handleCommand($queryBuilder->build());
-        return $this->createPageResponse($entries);
+        return $this->createPageResponse(
+            $entries,
+            Response::HTTP_OK,
+            [
+                'customColumns' => $request->get('customColumns', []),
+            ]
+        );
     }
 
     /**

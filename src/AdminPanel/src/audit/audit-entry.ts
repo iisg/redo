@@ -12,4 +12,5 @@ export class AuditEntry {
   @map data: StringMap<any>;
   @map('Date') createdAt: Date;
   @map(IdentityMapper) user: User;
+  @map customColumns: StringStringMap;
 }

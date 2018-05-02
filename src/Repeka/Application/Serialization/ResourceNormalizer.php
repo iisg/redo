@@ -4,6 +4,7 @@ namespace Repeka\Application\Serialization;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
+use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Repeka\Domain\Workflow\TransitionPossibilityCheckResult;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -17,10 +18,17 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
     private $tokenStorage;
     /** @var TransitionPossibilityChecker */
     private $transitionPossibilityChecker;
+    /** @var ResourceDisplayStrategyEvaluator */
+    private $displayStrategyEvaluator;
 
-    public function __construct(TokenStorageInterface $tokenStorage, TransitionPossibilityChecker $transitionPossibilityChecker) {
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        TransitionPossibilityChecker $transitionPossibilityChecker,
+        ResourceDisplayStrategyEvaluator $displayStrategyEvaluator
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->transitionPossibilityChecker = $transitionPossibilityChecker;
+        $this->displayStrategyEvaluator = $displayStrategyEvaluator;
     }
 
     /**
@@ -33,6 +41,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             'kindId' => $resource->getKind()->getId(),
             'contents' => $resource->getContents()->toArray(),
             'resourceClass' => $resource->getResourceClass(),
+            'displayStrategies' => $this->renderDisplayStrategies($resource),
         ];
         if ($resource->hasWorkflow()) {
             $workflow = $resource->getWorkflow();
@@ -83,5 +92,14 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
     /** @inheritdoc */
     public function supportsNormalization($data, $format = null) {
         return $data instanceof ResourceEntity;
+    }
+
+    private function renderDisplayStrategies(ResourceEntity $resource): array {
+        return array_map(
+            function (string $template) use ($resource) {
+                return $this->displayStrategyEvaluator->render($resource, $template);
+            },
+            $resource->getKind()->getDisplayStrategies()
+        );
     }
 }

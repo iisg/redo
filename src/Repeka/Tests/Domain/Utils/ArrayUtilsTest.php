@@ -1,11 +1,8 @@
 <?php
-namespace Repeka\Tests\Domain\Entity;
+namespace Repeka\Tests\Domain\Utils;
 
 use PHPUnit\Framework\AssertionFailedError;
-use Repeka\Application\Entity\UserEntity;
-use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Utils\ArrayUtils;
-use Repeka\Domain\Utils\EntityUtils;
 
 class ArrayUtilsTest extends \PHPUnit_Framework_TestCase {
 

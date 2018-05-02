@@ -79,7 +79,6 @@ const bundles = function () {
           "aurelia-validation",
           "bootstrap",
           "change-case",
-          "handlebars",
           "jquery",
           "moment",
           "nprogress",

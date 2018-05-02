@@ -1,16 +1,10 @@
 <?php
 namespace Repeka\Domain\Entity;
 
-use Assert\Assertion;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Utils\ImmutableIteratorAggregate;
 
-class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSerializable {
-    private $contents = [];
-
-    public function __construct(array $normalizedContents) {
-        $this->contents = $normalizedContents;
-    }
-
+class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerializable {
     public function filterOutEmptyMetadata(): ResourceContents {
         return new self($this->filterOutEmptyMetadataInContents($this->contents));
     }
@@ -205,29 +199,6 @@ class ResourceContents implements \IteratorAggregate, \ArrayAccess, \JsonSeriali
 
     public static function empty(): ResourceContents {
         return new self([]);
-    }
-
-    public function getIterator() {
-        return new \ArrayIterator($this->contents);
-    }
-
-    public function offsetExists($offset) {
-        return isset($this->contents[$offset]);
-    }
-
-    public function offsetGet($offset) {
-        Assertion::keyIsset($this->contents, $offset);
-        return $this->contents[$offset];
-    }
-
-    /** @inheritdoc */
-    public function offsetSet($offset, $value) {
-        throw new \LogicException('ResourceContents are immutable.');
-    }
-
-    /** @inheritdoc */
-    public function offsetUnset($offset) {
-        throw new \LogicException('ResourceContents are immutable.');
     }
 
     public function jsonSerialize() {

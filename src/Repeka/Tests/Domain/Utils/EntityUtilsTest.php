@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Tests\Domain\Entity;
+namespace Repeka\Tests\Domain\Utils;
 
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Entity\Identifiable;

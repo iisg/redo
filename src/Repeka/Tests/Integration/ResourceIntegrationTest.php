@@ -72,55 +72,77 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [],
             $workflow
         );
-        $this->resource = $this->createResource($this->resourceKind, [
-            $this->metadata1->getId() => ['Test value'],
-        ]);
-        $this->parentResource = $this->createResource($this->resourceKind, [
-            $this->metadata1->getId() => ['Test value for parent'],
-        ]);
-        $this->resourceWithWorkflow = $this->createResource($this->resourceKindWithWorkflow, [
-            $this->metadata1->getId() => ['Test value'],
-        ]);
-        $this->childResource = $this->createResource($this->resourceKind, [
-            -1 => [$this->parentResource->getId()],
-            $this->metadata1->getId() => ['Test value for child'],
-        ]);
+        $this->resource = $this->createResource(
+            $this->resourceKind,
+            [
+                $this->metadata1->getId() => ['Test value'],
+            ]
+        );
+        $this->parentResource = $this->createResource(
+            $this->resourceKind,
+            [
+                $this->metadata1->getId() => ['Test value for parent'],
+            ]
+        );
+        $this->resourceWithWorkflow = $this->createResource(
+            $this->resourceKindWithWorkflow,
+            [
+                $this->metadata1->getId() => ['Test value'],
+            ]
+        );
+        $this->childResource = $this->createResource(
+            $this->resourceKind,
+            [
+                -1 => [$this->parentResource->getId()],
+                $this->metadata1->getId() => ['Test value for child'],
+            ]
+        );
     }
 
     public function testFetchingResources() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books']]);
         $this->assertStatusCode(200, $client->getResponse());
-        $this->assertJsonStringSimilarToArray([
+        $this->assertJsonStringSimilarToArray(
             [
-                'id' => $this->resource->getId(),
-                'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
-                'resourceClass' => $this->resource->getResourceClass(),
-            ], [
-                'id' => $this->parentResource->getId(),
-                'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => [['value' => 'Test value for parent']]],
-                'resourceClass' => $this->resource->getResourceClass(),
-            ], [
-                'id' => $this->childResource->getId(),
-                'kindId' => $this->resourceKind->getId(),
-                'contents' => [
-                    $this->metadata1->getId() => [['value' => 'Test value for child']],
-                    SystemMetadata::PARENT => [['value' => $this->parentResource->getId()]],
+                [
+                    'id' => $this->resource->getId(),
+                    'kindId' => $this->resourceKind->getId(),
+                    'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'displayStrategies' => [],
                 ],
-                'resourceClass' => $this->resource->getResourceClass(),
-            ], [
-                'id' => $this->resourceWithWorkflow->getId(),
-                'kindId' => $this->resourceKindWithWorkflow->getId(),
-                'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
-                'resourceClass' => $this->resource->getResourceClass(),
-                'currentPlaces' => [$this->workflowPlace1->toArray()],
-                'availableTransitions' => [$this->transition->toArray()],
-                'blockedTransitions' => [],
-                'transitionAssigneeMetadata' => []
+                [
+                    'id' => $this->parentResource->getId(),
+                    'kindId' => $this->resourceKind->getId(),
+                    'contents' => [$this->metadata1->getId() => [['value' => 'Test value for parent']]],
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'displayStrategies' => [],
+                ],
+                [
+                    'id' => $this->childResource->getId(),
+                    'kindId' => $this->resourceKind->getId(),
+                    'contents' => [
+                        $this->metadata1->getId() => [['value' => 'Test value for child']],
+                        SystemMetadata::PARENT => [['value' => $this->parentResource->getId()]],
+                    ],
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'displayStrategies' => [],
+                ],
+                [
+                    'id' => $this->resourceWithWorkflow->getId(),
+                    'kindId' => $this->resourceKindWithWorkflow->getId(),
+                    'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'currentPlaces' => [$this->workflowPlace1->toArray()],
+                    'availableTransitions' => [$this->transition->toArray()],
+                    'blockedTransitions' => [],
+                    'transitionAssigneeMetadata' => [],
+                    'displayStrategies' => [],
+                ],
             ],
-        ], $client->getResponse()->getContent());
+            $client->getResponse()->getContent()
+        );
         $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
@@ -128,19 +150,25 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'page' => 1, 'resultsPerPage' => 2]);
         $this->assertStatusCode(200, $client->getResponse());
-        $this->assertJsonStringSimilarToArray([
+        $this->assertJsonStringSimilarToArray(
             [
-                'id' => $this->resource->getId(),
-                'kindId' => $this->resourceKind->getId(),
-                'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value']])->toArray(),
-                'resourceClass' => $this->resource->getResourceClass(),
-            ], [
-                'id' => $this->parentResource->getId(),
-                'kindId' => $this->resourceKind->getId(),
-                'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value for parent']])->toArray(),
-                'resourceClass' => $this->resource->getResourceClass(),
+                [
+                    'id' => $this->resource->getId(),
+                    'kindId' => $this->resourceKind->getId(),
+                    'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value']])->toArray(),
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'displayStrategies' => [],
+                ],
+                [
+                    'id' => $this->parentResource->getId(),
+                    'kindId' => $this->resourceKind->getId(),
+                    'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value for parent']])->toArray(),
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'displayStrategies' => [],
+                ],
             ],
-        ], $client->getResponse()->getContent());
+            $client->getResponse()->getContent()
+        );
         $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
@@ -148,28 +176,36 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'topLevel' => true]);
         $this->assertStatusCode(200, $client->getResponse());
-        $this->assertJsonStringSimilarToArray([
+        $this->assertJsonStringSimilarToArray(
             [
-                'id' => $this->resource->getId(),
-                'kindId' => $this->resourceKind->getId(),
-                'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value']])->toArray(),
-                'resourceClass' => $this->resource->getResourceClass(),
-            ], [
-                'id' => $this->parentResource->getId(),
-                'kindId' => $this->resourceKind->getId(),
-                'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value for parent']])->toArray(),
-                'resourceClass' => $this->resource->getResourceClass(),
-            ], [
-                'id' => $this->resourceWithWorkflow->getId(),
-                'kindId' => $this->resourceKindWithWorkflow->getId(),
-                'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
-                'resourceClass' => $this->resource->getResourceClass(),
-                'currentPlaces' => [$this->workflowPlace1->toArray()],
-                'availableTransitions' => [$this->transition->toArray()],
-                'blockedTransitions' => [],
-                'transitionAssigneeMetadata' => []
+                [
+                    'id' => $this->resource->getId(),
+                    'kindId' => $this->resourceKind->getId(),
+                    'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value']])->toArray(),
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'displayStrategies' => [],
+                ],
+                [
+                    'id' => $this->parentResource->getId(),
+                    'kindId' => $this->resourceKind->getId(),
+                    'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value for parent']])->toArray(),
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'displayStrategies' => [],
+                ],
+                [
+                    'id' => $this->resourceWithWorkflow->getId(),
+                    'kindId' => $this->resourceKindWithWorkflow->getId(),
+                    'contents' => [$this->metadata1->getId() => [['value' => 'Test value']]],
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'currentPlaces' => [$this->workflowPlace1->toArray()],
+                    'availableTransitions' => [$this->transition->toArray()],
+                    'blockedTransitions' => [],
+                    'transitionAssigneeMetadata' => [],
+                    'displayStrategies' => [],
+                ],
             ],
-        ], $client->getResponse()->getContent());
+            $client->getResponse()->getContent()
+        );
         $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
     }
 
@@ -183,29 +219,37 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::oneEntityEndpoint($this->resource->getId()));
         $this->assertStatusCode(200, $client->getResponse());
-        $this->assertJsonStringSimilarToArray([
-            'id' => $this->resource->getId(),
-            'kindId' => $this->resourceKind->getId(),
-            'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value']])->toArray(),
-            'resourceClass' => $this->resource->getResourceClass(),
-        ], $client->getResponse()->getContent());
+        $this->assertJsonStringSimilarToArray(
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value']])->toArray(),
+                'resourceClass' => $this->resource->getResourceClass(),
+                'displayStrategies' => [],
+            ],
+            $client->getResponse()->getContent()
+        );
     }
 
     public function testFetchingByParentId() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['parentId' => $this->parentResource->getId()]);
         $this->assertStatusCode(200, $client->getResponse());
-        $this->assertJsonStringSimilarToArray([
+        $this->assertJsonStringSimilarToArray(
             [
-                'id' => $this->childResource->getId(),
-                'kindId' => $this->resourceKind->getId(),
-                'contents' => [
-                    $this->metadata1->getId() => [['value' => 'Test value for child']],
-                    SystemMetadata::PARENT => [['value' => $this->parentResource->getId()]],
+                [
+                    'id' => $this->childResource->getId(),
+                    'kindId' => $this->resourceKind->getId(),
+                    'contents' => [
+                        $this->metadata1->getId() => [['value' => 'Test value for child']],
+                        SystemMetadata::PARENT => [['value' => $this->parentResource->getId()]],
+                    ],
+                    'resourceClass' => $this->resource->getResourceClass(),
+                    'displayStrategies' => [],
                 ],
-                'resourceClass' => $this->resource->getResourceClass(),
             ],
-        ], $client->getResponse()->getContent());
+            $client->getResponse()->getContent()
+        );
     }
 
     public function testFetchingSortedResources() {
@@ -217,7 +261,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'resourceClasses' => ['books'],
                 'topLevel' => true,
-                'sortByIds' => [0 => ['metadataId' => $this->metadata1->getId(), 'direction' => 'DESC']]
+                'sortByIds' => [0 => ['metadataId' => $this->metadata1->getId(), 'direction' => 'DESC']],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -231,11 +275,15 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingResource(): int {
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::ENDPOINT, [
-            'kindId' => $this->resourceKind->getId(),
-            'contents' => json_encode([$this->metadata1->getId() => ['created']]),
-            'resourceClass' => 'books',
-        ]);
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => json_encode([$this->metadata1->getId() => ['created']]),
+                'resourceClass' => 'books',
+            ]
+        );
         $this->assertStatusCode(201, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         $createdId = json_decode($client->getResponse()->getContent())->id;
@@ -256,11 +304,15 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingResourceWithWorkflow() {
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::ENDPOINT, [
-            'kindId' => $this->resourceKindWithWorkflow->getId(),
-            'contents' => json_encode([$this->metadata1->getId() => ['created']]),
-            'resourceClass' => 'books',
-        ]);
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'kindId' => $this->resourceKindWithWorkflow->getId(),
+                'contents' => json_encode([$this->metadata1->getId() => ['created']]),
+                'resourceClass' => 'books',
+            ]
+        );
         $this->assertStatusCode(201, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         $createdId = json_decode($client->getResponse()->getContent())->id;
@@ -276,11 +328,15 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResource() {
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
-            'id' => $this->resource->getId(),
-            'kindId' => $this->resourceKind->getId(),
-            'contents' => json_encode([$this->metadata1->getId() => ['edited']]),
-        ]);
+        $client->apiRequest(
+            'POST',
+            self::oneEntityEndpoint($this->resource->getId()),
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => json_encode([$this->metadata1->getId() => ['edited']]),
+            ]
+        );
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
@@ -290,11 +346,15 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testAutoAssignMetadataWhenEditingResourceWithWorkflow() {
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::oneEntityEndpoint($this->resourceWithWorkflow->getId()), [
-            'id' => $this->resourceWithWorkflow->getId(),
-            'kindId' => $this->resourceKindWithWorkflow->getId(),
-            'contents' => json_encode([$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1]),
-        ]);
+        $client->apiRequest(
+            'POST',
+            self::oneEntityEndpoint($this->resourceWithWorkflow->getId()),
+            [
+                'id' => $this->resourceWithWorkflow->getId(),
+                'kindId' => $this->resourceKindWithWorkflow->getId(),
+                'contents' => json_encode([$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1]),
+            ]
+        );
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
@@ -304,9 +364,13 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             $edited->getContents()
         );
         $client = self::createAdminClient();
-        $client->apiRequest('PATCH', self::oneEntityEndpoint($this->resourceWithWorkflow->getId()), [
-            'transitionId' => 't1',
-        ]);
+        $client->apiRequest(
+            'PATCH',
+            self::oneEntityEndpoint($this->resourceWithWorkflow->getId()),
+            [
+                'transitionId' => 't1',
+            ]
+        );
         $this->assertStatusCode(200, $client->getResponse());
         $edited = $repository->findOne($this->resourceWithWorkflow->getId());
         $this->assertEquals(
@@ -325,10 +389,14 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $newResourceKind->getMetadataList()[0]->updateOrdinalNumber(0);
         $this->persistAndFlush($newResourceKind->getMetadataList()[1]);
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::oneEntityEndpoint($this->resource->getId()), [
-            'kindId' => $newResourceKind->getId(),
-            'contents' => json_encode($this->resource->getContents()),
-        ]);
+        $client->apiRequest(
+            'POST',
+            self::oneEntityEndpoint($this->resource->getId()),
+            [
+                'kindId' => $newResourceKind->getId(),
+                'contents' => json_encode($this->resource->getContents()),
+            ]
+        );
         $this->assertStatusCode(200, $client->getResponse());
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
