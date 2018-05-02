@@ -55,47 +55,46 @@
 
         <table if.bind="entries.length > 0">
             <thead>
-                <tr>
-                    <th>${'Date' | t}</th>
-                    <th>${'Operation' | t}</th>
-                    <th>${'User' | t}</th>
-                    <th>${'Details' | t}</th>
-                    <th repeat.for="column of filters.customColumns">
-                        <span class="input-group">
-                            <input type="text"
-                                class="form-control"
-                                placeholder.one-time="'Resource display strategy' | t"
-                                value.bind="column.displayStrategy">
-                            <span class="input-group-btn">
-                                <a click.trigger="filters.removeCustomColumn(column)"
-                                    class="btn btn-default">
-                                    <icon name="remove-2"></icon>
-                                </a>
-                            </span>
+            <tr>
+                <th>${'Date' | t}</th>
+                <th>${'Operation' | t}</th>
+                <th>${'User' | t}</th>
+                <th>${'Details' | t}</th>
+                <th repeat.for="column of filters.customColumns">
+                    <span class="input-group">
+                        <input type="text"
+                            class="form-control"
+                            placeholder.one-time="'Resource display strategy' | t"
+                            value.bind="column.displayStrategy"
+                            keyup.trigger="onFiltersChanged() & debounce:600">
+                        <span class="input-group-btn">
+                            <a click.trigger="filters.removeCustomColumn(column)"
+                                class="btn btn-default">
+                                <icon name="remove-2"></icon>
+                            </a>
                         </span>
-                    </th>
-                </tr>
+                    </span>
+                </th>
+            </tr>
             </thead>
             <tbody>
-                <tr repeat.for="entry of entries"
-                    class="${entry.successful ? '' : 'failure'}">
-                    <td>${entry.createdAt | date:'LLL'}</td>
-                    <td>${'audit_commands::' + entry.commandName | t}</td>
-                    <td>
-                        <resource-link if.bind="entry.user"
-                            id.bind="entry.user.userData.id"></resource-link>
-                    </td>
-                    <td>
-                        <compose view-model="./entry-details/audit-entry-details"
-                            view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
-                            model.bind="{entry: entry}"></compose>
-                    </td>
-                    <td repeat.for="column of filters.customColumns">
-                        <span if.bind="entry.data.resource">
-                            ${entry.data.resource | resourceDisplayStrategy:column.displayStrategy}
-                        </span>
-                    </td>
-                </tr>
+            <tr repeat.for="entry of entries"
+                class="${entry.successful ? '' : 'failure'}">
+                <td>${entry.createdAt | date:'LLL'}</td>
+                <td>${'audit_commands::' + entry.commandName | t}</td>
+                <td>
+                    <resource-link if.bind="entry.user"
+                        id.bind="entry.user.userData.id"></resource-link>
+                </td>
+                <td>
+                    <compose view-model="./entry-details/audit-entry-details"
+                        view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
+                        model.bind="{entry: entry}"></compose>
+                </td>
+                <td repeat.for="column of filters.customColumns">
+                    ${entry.customColumns[column.displayStrategy] || '-'}
+                </td>
+            </tr>
             </tbody>
         </table>
 

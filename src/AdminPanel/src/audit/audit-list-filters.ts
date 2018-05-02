@@ -9,7 +9,7 @@ export class AuditListFilters {
   @observable currentPageNumber: number = 1;
   commandNames: string[] = [];
   resourceContents: NumberMap<string>;
-  customColumns: {displayStrategy: string}[] = [];
+  customColumns: { displayStrategy: string }[] = [];
   onChange: VoidFunction = () => undefined;
 
   toParams(): StringMap<any> {
@@ -36,6 +36,7 @@ export class AuditListFilters {
     return query
       .filterByResourceContents(this.resourceContents)
       .filterByCommandNames(this.commandNames)
+      .addCustomColumns(this.customColumns.map(({displayStrategy}) => displayStrategy))
       .setCurrentPageNumber(this.currentPageNumber)
       .setResultsPerPage(this.resultsPerPage);
   }

@@ -42,7 +42,7 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
         $resource = $this->getPhpBookResource();
         $transitions = $resource->getWorkflow()->getTransitions($resource);
         $titleMetadata = $this->findMetadataByName('Tytuł');
-        $titles = $resource->getContents()->getValues($titleMetadata);
+        $titles = $resource->getValues($titleMetadata);
         $this->communicator->expects($this->once())->method('sendToOcr')->with($titles);
         $workflow = $resource->getWorkflow();
         $places = array_map(function (ResourceWorkflowPlace $place) {

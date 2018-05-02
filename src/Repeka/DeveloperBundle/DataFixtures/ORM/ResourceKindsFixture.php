@@ -51,8 +51,8 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
                 ],
                 [
-                    'header' => '{{allValues m' . $titleMetadataId . '}}',
-                    'dropdown' => '{{allValues m' . $titleMetadataId . '}} (ID: {{id}})',
+                    'header' => '{{r|m' . $titleMetadataId . '}}',
+                    'dropdown' => '{{r|m' . $titleMetadataId . '}} (ID: {{r.id}})',
                 ],
                 $workflow
             ),
@@ -70,8 +70,8 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT),
                 ],
                 [
-                    'header' => '{{allValues m' . $titleMetadataId . '}}',
-                    'dropdown' => '{{allValues m' . $titleMetadataId . '}} (ID: {{id}})',
+                    'header' => '{{r|m' . $titleMetadataId . '}}',
+                    'dropdown' => '{{r|m' . $titleMetadataId . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK
@@ -94,8 +94,8 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME),
                 ],
                 [
-                    'header' => '{{allValues m' . $nameId . '}}',
-                    'dropdown' => '{{allValues m' . $nameId . '}} (ID: {{id}})',
+                    'header' => '{{r|m' . $nameId . '}}',
+                    'dropdown' => '{{r|m' . $nameId . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_CATEGORY
@@ -117,8 +117,8 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY),
                 ],
                 [
-                    'header' => "{{allValues m{$nameMetadata->getId()}}} ({{allValues m{$abbrevMetadata->getId()}}})",
-                    'dropdown' => '{{allValues m' . $abbrevMetadata->getId() . '}} (ID: {{id}})',
+                    'header' => "{{r|m{$nameMetadata->getId()}}} ({{r|m{$abbrevMetadata->getId()}}})",
+                    'dropdown' => '{{r|m' . $abbrevMetadata->getId() . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT
@@ -131,8 +131,8 @@ class ResourceKindsFixture extends RepekaFixture {
                     $abbrevMetadata,
                 ],
                 [
-                    'header' => "{{allValues m{$nameMetadata->getId()}}} ({{allValues m{$abbrevMetadata->getId()}}})",
-                    'dropdown' => '{{allValues m' . $abbrevMetadata->getId() . '}} (ID: {{id}})',
+                    'header' => "{{r|m{$nameMetadata->getId()}}} ({{r|m{$abbrevMetadata->getId()}}})",
+                    'dropdown' => '{{r|m' . $abbrevMetadata->getId() . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY
@@ -149,8 +149,8 @@ class ResourceKindsFixture extends RepekaFixture {
                     SystemMetadata::GROUP_MEMBER()->toMetadata(),
                 ],
                 [
-                    'header' => "{{allValues m{$nameMetadata->getId()}}} (ID: {{id}})",
-                    'dropdown' => '{{allValues m' . $nameMetadata->getId() . '}} (ID: {{id}})',
+                    'header' => "{{r|m{$nameMetadata->getName()}}} (ID: {{r.id}})",
+                    'dropdown' => '{{r|m' . $nameMetadata->getName() . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_USER_GROUP

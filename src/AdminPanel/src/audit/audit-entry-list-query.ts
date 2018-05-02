@@ -13,8 +13,13 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     return this;
   }
 
-  filterByResourceContents(resourceContents: NumberMap<string>) {
+  public filterByResourceContents(resourceContents: NumberMap<string>): this {
     this.params.resourceContents = JSON.stringify(resourceContents);
+    return this;
+  }
+
+  public addCustomColumns(templates: string[]): this {
+    this.params.customColumns = templates;
     return this;
   }
 }

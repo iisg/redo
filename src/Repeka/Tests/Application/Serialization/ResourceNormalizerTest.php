@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
+use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Repeka\Domain\Workflow\TransitionPossibilityCheckResult;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -36,8 +37,9 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $tokenStorage->method('getToken')->willReturn($token);
         // TransitionPossibilityChecker
         $this->checker = $this->createMock(TransitionPossibilityChecker::class);
+        $displayStrategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
         // test subject
-        $this->normalizer = new ResourceNormalizer($tokenStorage, $this->checker);
+        $this->normalizer = new ResourceNormalizer($tokenStorage, $this->checker, $displayStrategyEvaluator);
         $normalizerService = $this->createMock(NormalizerInterface::class);
         $normalizerService->method('normalize')->willReturnArgument(0);
         $this->normalizer->setNormalizer($normalizerService);

@@ -10,6 +10,9 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ */
 class ResourcesFixture extends RepekaFixture {
     const ORDER = ResourceKindsStage2Fixture::ORDER + UsersFixture::ORDER;
     const REFERENCE_DEPARTMENT_IET = 'resource-department-iet';
@@ -122,6 +125,7 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_RELATED_BOOK => [$book1],
                         MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
                         MetadataFixture::REFERENCE_METADATA_SUPERVISOR => [$userBudynek->getUserData()],
+                        MetadataFixture::REFERENCE_METADATA_HARD_COVER => [true],
                     ]
                 ),
                 $userAdmin
