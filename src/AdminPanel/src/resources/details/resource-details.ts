@@ -69,7 +69,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   activateTabs() {
-    if (this.allowAddChildResource) {
+    if (this.allowAddChildResource || this.hasChildren) {
       this.resourceDetailsTabs.push({id: 'child-resource-tab', label: this.i18n.tr('Child resources')});
       if (this.hasChildren) {
         this.currentTabId = 'child-resource-tab';

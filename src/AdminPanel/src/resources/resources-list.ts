@@ -20,6 +20,7 @@ export class ResourcesList {
   @bindable parentResource: Resource = undefined;
   @bindable({defaultBindingMode: bindingMode.twoWay}) hasResources: boolean = undefined;
   @bindable resourceClass: string;
+  @bindable disableAddResource: boolean;
   @observable resources: PageResult<Resource>;
   @observable resultsPerPage: number;
   @observable currentPageNumber: number;
