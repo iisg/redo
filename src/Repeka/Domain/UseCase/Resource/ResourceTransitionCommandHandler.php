@@ -42,7 +42,7 @@ class ResourceTransitionCommandHandler {
         $autoAssignMetadataIds = $this->getAutoAssignMetadataIds($resource);
         foreach ($autoAssignMetadataIds as $metadataId) {
             if (in_array($metadataId, $resourceMetadataIds)) {
-                if (!in_array($metadataId, $resourceContents->getValues($metadataId))) {
+                if (!in_array($executor->getId(), $resourceContents->getValues($metadataId))) {
                     $newResourceContents = $resourceContents->withMergedValues($metadataId, [$executor->getId()]);
                     $resource = $this->resourceUpdateContentsCommandHandler->handle(
                         new ResourceUpdateContentsCommand($resource, $newResourceContents)
