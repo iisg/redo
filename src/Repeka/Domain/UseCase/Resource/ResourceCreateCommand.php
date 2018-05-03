@@ -28,7 +28,7 @@ class ResourceCreateCommand extends AbstractCommand implements AuditedCommand {
         return $this->contents;
     }
 
-    public function getExecutor(): User {
+    public function getExecutor(): ?User {
         return $this->executor;
     }
 }

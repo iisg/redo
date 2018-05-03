@@ -2,7 +2,6 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -33,8 +32,8 @@ class ResourceTransitionCommandHandler {
         return $this->autoAssingMetadata($resource, $command->getExecutor());
     }
 
-    public function autoAssingMetadata(ResourceEntity $resource, User $executor): ResourceEntity {
-        if (!$resource->getKind()->getWorkflow()) {
+    public function autoAssingMetadata(ResourceEntity $resource, ?User $executor): ResourceEntity {
+        if (!$executor || !$resource->getKind()->getWorkflow()) {
             return $resource;
         }
         $resourceMetadata = $resource->getKind()->getMetadataList();
