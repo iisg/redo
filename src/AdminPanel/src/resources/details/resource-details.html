@@ -34,7 +34,8 @@
             <aup-tab-pane tab="child-resource-tab">
                 <div if.bind="currentTabId === 'child-resource-tab'">
                     <resources-list parent-resource.bind="resource"
-                        has-resources.bind="hasChildren"></resources-list>
+                        has-resources.bind="hasChildren"
+                        disable-add-resource.bind="!allowAddChildResource"></resources-list>
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="metadata-tab">

@@ -12,7 +12,7 @@
             hide-elements-per-page-dropdown="true"></pagination>
         <add-button entity-name="resource"
             toggled.two-way="addFormOpened"
-            disabled.bind="parentResource.pendingRequest"></add-button>
+            disabled.bind="parentResource.pendingRequest || disableAddResource"></add-button>
 
         <div if.bind="addFormOpened"
             class="fade-inup-outdown au-animate well">
