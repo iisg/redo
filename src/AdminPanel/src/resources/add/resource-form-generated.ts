@@ -114,9 +114,12 @@ export class ResourceFormGenerated {
 
   resourceChanged() {
     const currentPlaces = this.resource.currentPlaces || [];
+    const assigneeMetadataIds = flatten(
+      currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.ASSIGNEE))
+    );
     this.requiredMetadataIds = flatten(
       currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.REQUIRED))
-    );
+    ).concat(assigneeMetadataIds);
     this.lockedMetadataIds = flatten(
       currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.LOCKED))
     );
