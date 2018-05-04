@@ -15,10 +15,19 @@
         class="resource-details au-animate fade-inup-outup">
         <div class="resource-name-with-buttons-and-tabs">
             <span class="page-title">${resource | resourceDisplayStrategy:'header'}</span>
+            <template if.bind="currentTabId !== 'workflow-tab' && !editing">
+                <apply-transition-button repeat.for="transition of resource.availableTransitions"
+                    resource.bind="resource"
+                    transition.bind="transition"
+                    can-apply-transition.bind="resource.canApplyTransition(transition)"
+                    click.trigger="toggleEditForm(true, transition)"></apply-transition-button>
+            </template>
             <remove-button if.bind="!editing"
                 disabled.bind="resource.pendingRequest"
                 on-click.call="remove()"></remove-button>
-            <pending-throbber entity.bind="resource"></pending-throbber>
+            <div if.bind="resource.pendingRequest">
+                <throbber></throbber>
+            </div>
             <aup-tabs tabs.bind="resourceDetailsTabs"></aup-tabs>
         </div>
         <aup-tab-content>
