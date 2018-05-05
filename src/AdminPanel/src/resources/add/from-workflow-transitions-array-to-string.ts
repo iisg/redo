@@ -8,6 +8,8 @@ export class FromWorkflowTransitionsArrayToStringValueConverter implements ToVie
   }
 
   toView(workflowTransitions: WorkflowTransition[]): string {
-    return '- ' + workflowTransitions.map(workflowTransition => this.inCurrentLanguage.toView(workflowTransition.label)).join('\n-');
+    return workflowTransitions
+      ? '- ' + workflowTransitions.map(workflowTransition => this.inCurrentLanguage.toView(workflowTransition.label)).join('\n-')
+      : '';
   }
 }
