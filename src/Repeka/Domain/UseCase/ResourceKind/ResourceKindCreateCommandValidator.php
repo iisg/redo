@@ -3,6 +3,8 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
@@ -19,6 +21,8 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
     private $correctResourceDisplayStrategySyntaxRule;
     /** @var ContainsParentMetadataRule */
     private $containsParentMetadataRule;
+    /** @var MetadataUpdateCommandValidator */
+    private $metadataUpdateCommandValidator;
     /** @var ChildResourceKindsAreOfSameResourceClassRule */
     private $childResourceKindsAreOfSameResourceClassRule;
 
@@ -26,12 +30,14 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategySyntaxRule,
         ContainsParentMetadataRule $containsParentMetadataRule,
+        MetadataUpdateCommandValidator $metadataUpdateCommandValidator,
         ChildResourceKindsAreOfSameResourceClassRule $childResourceKindsAreOfSameResourceClassRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->correctResourceDisplayStrategySyntaxRule = $correctResourceDisplayStrategySyntaxRule;
         $this->containsParentMetadataRule = $containsParentMetadataRule;
         $this->childResourceKindsAreOfSameResourceClassRule = $childResourceKindsAreOfSameResourceClassRule;
+        $this->metadataUpdateCommandValidator = $metadataUpdateCommandValidator;
     }
 
     /**
@@ -47,6 +53,7 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
                 Validator::arrayType()
                     ->length(2)
                     ->each(Validator::instance(Metadata::class))
+                    ->each(Validator::callback([$this, 'overrideMetadataValidator']))
                     ->callback([$this, 'allMetadataOfTheSameResourceClass'])
                     ->callback([$this, 'noMetadataDuplicates'])
             )
@@ -69,6 +76,19 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
             )
         );
         return count(array_unique($resourceClasses)) === 1;
+    }
+
+    public function overrideMetadataValidator(Metadata $metadata): bool {
+        $metadataUpdateCommand = new MetadataUpdateCommand(
+            $metadata->getId(),
+            $metadata->getLabel(),
+            $metadata->getDescription(),
+            $metadata->getPlaceholder(),
+            $metadata->getConstraints(),
+            $metadata->isShownInBrief(),
+            $metadata->isCopiedToChildResource()
+        );
+        return $this->metadataUpdateCommandValidator->getValidator($metadataUpdateCommand)->assert($metadataUpdateCommand);
     }
 
     /**

@@ -26,21 +26,37 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     public function setUp() {
         parent::setUp();
         $this->clearDefaultLanguages();
-        $this->createLanguage('TEST', 'te_ST', 'Test language');
+        $this->createLanguage('PL', 'PL', 'polski'); //for validate parentMetadata
+        $this->createLanguage('EN', 'EN', 'angielski'); //for validate parentMetadata
         $this->metadataRepository = $this->container->get(MetadataRepository::class);
         $parentMetadata = $this->metadataRepository->findOne(SystemMetadata::PARENT);
-        $baseMetadata1 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 1'], [], [], MetadataControl::TEXTAREA());
-        $baseMetadata2 = $this->createMetadata('Metadata', ['TEST' => 'Base metadata kind 2'], [], [], MetadataControl::TEXTAREA());
+        $baseMetadata1 = $this->createMetadata(
+            'Metadata',
+            ['PL' => 'Base metadata kind 1', 'EN' => 'Base metadata kind 1'],
+            [],
+            [],
+            MetadataControl::TEXTAREA()
+        );
+        $baseMetadata2 = $this->createMetadata(
+            'Metadata',
+            ['PL' => 'Base metadata kind 2', 'EN' => 'Base metadata kind 2'],
+            [],
+            [],
+            MetadataControl::TEXTAREA()
+        );
         $baseDictionaryMetadata = $this->createMetadata(
             'Metadata',
-            ['TEST' => 'Base metadata dictionary'],
+            ['PL' => 'Base metadata dictionary', 'EN' => 'Base metadata dictionary'],
             [],
             [],
             MetadataControl::TEXTAREA,
             'dictionaries'
         );
-        $this->resourceKind = $this->createResourceKind(['TEST' => 'Test'], [$parentMetadata, $baseMetadata1, $baseMetadata2]);
-        $this->createResourceKind(['TEST' => 'Test'], [$parentMetadata, $baseDictionaryMetadata]);
+        $this->resourceKind = $this->createResourceKind(
+            ['PL' => 'Test', 'EN' => 'Test'],
+            [$parentMetadata, $baseMetadata1, $baseMetadata2]
+        );
+        $this->createResourceKind(['PL' => 'Test', 'EN' => 'Test'], [$parentMetadata, $baseDictionaryMetadata]);
         $this->metadata1 = $this->resourceKind->getMetadataList()[1];
         $this->metadata2 = $this->resourceKind->getMetadataList()[2];
     }
@@ -81,7 +97,13 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingResourceKind() {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $metadata = $this->createMetadata('New base', ['TEST' => 'New base metadata'], [], [], MetadataControl::TEXTAREA());
+        $metadata = $this->createMetadata(
+            'New base',
+            ['PL' => 'New base metadata', 'EN' => 'New base metadata'],
+            [],
+            [],
+            MetadataControl::TEXTAREA()
+        );
         $em->persist($metadata);
         $em->flush();
         $client = self::createAdminClient();
@@ -89,9 +111,9 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             'POST',
             self::ENDPOINT,
             [
-                'label' => ['TEST' => 'created'],
+                'label' => ['PL' => 'created', 'EN' => 'created'],
                 'metadataList' => [
-                    ['id' => $metadata->getId(), 'label' => ['TEST' => 'created overridden']],
+                    ['id' => $metadata->getId(), 'label' => ['PL' => 'created overridden', 'EN' => 'created overridden']],
                 ],
             ]
         );
@@ -100,13 +122,13 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $createdId = json_decode($client->getResponse()->getContent())->id;
         /** @var ResourceKind $createdResourceKind */
         $createdResourceKind = $resourceKindRepository->findOne($createdId);
-        $this->assertEquals(['TEST' => 'created'], $createdResourceKind->getLabel());
+        $this->assertEquals(['PL' => 'created', 'EN' => 'created'], $createdResourceKind->getLabel());
         $this->assertCount(2, $createdResourceKind->getMetadataList());
         $assignedMetadata = $createdResourceKind->getMetadataById($metadata->getId());
         $this->assertEquals($metadata->getControl(), $assignedMetadata->getControl());
         $this->assertEquals($metadata->getId(), $assignedMetadata->getId());
         $this->assertEquals($metadata->getName(), $assignedMetadata->getName());
-        $this->assertEquals(['TEST' => 'created overridden'], $assignedMetadata->getLabel());
+        $this->assertEquals(['PL' => 'created overridden', 'EN' => 'created overridden'], $assignedMetadata->getLabel());
     }
 
     public function testEditingResourceKind() {
@@ -115,10 +137,10 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             'PATCH',
             self::oneEntityEndpoint($this->resourceKind->getId()),
             [
-                'label' => ['TEST' => 'modified'],
+                'label' => ['PL' => 'modified', 'EN' => 'modified'],
                 'metadataList' => [
                     ['id' => $this->metadata2->getId()],
-                    ['id' => $this->metadata1->getId(), 'placeholder' => ['TEST' => 'modified']],
+                    ['id' => $this->metadata1->getId(), 'placeholder' => ['PL' => 'modified', 'EN' => 'modified']],
                     ['id' => SystemMetadata::PARENT],
                 ],
                 'displayStrategies' => [],
@@ -129,11 +151,32 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $resourceKindRepository = $client->getContainer()->get(ResourceKindRepository::class);
         /** @var ResourceKind $resourceKind */
         $resourceKind = $resourceKindRepository->findOne($this->resourceKind->getId());
-        $this->assertEquals(['TEST' => 'modified'], $resourceKind->getLabel());
+        $this->assertEquals(['PL' => 'modified', 'EN' => 'modified'], $resourceKind->getLabel());
         $this->assertEquals(
             [$this->metadata2->getId(), $this->metadata1->getId(), SystemMetadata::PARENT],
             $resourceKind->getMetadataIds()
         );
+    }
+
+    public function testEditingResourceKindMetadataConstraintsConflict() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'PATCH',
+            self::oneEntityEndpoint($this->resourceKind->getId()),
+            [
+                'label' => ['PL' => 'modified', 'EN' => 'modified'],
+                'metadataList' => [
+                    ['id' => $this->metadata2->getId()],
+                    ['id' => $this->metadata1->getId(), 'placeholder' => ['PL' => 'modified', 'DE' => 'modified'],],
+                    ['id' => SystemMetadata::PARENT],
+                ],
+                'displayStrategies' => [],
+            ]
+        );
+        $this->assertStatusCode(400, $client->getResponse());
+        $error = $client->getResponse() . $this->toString();
+        $this->assertContains("newLabel contains a language that does not exist", $error);
+        $this->assertContains("These rules must pass for \u0022metadata_update\u0022", $error);
     }
 
     public function testDeletingResourceKind() {

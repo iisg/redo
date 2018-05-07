@@ -5,10 +5,12 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Exception\InvalidResourceDisplayStrategyException;
+use Repeka\Domain\Exception\RespectValidationFailedException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
@@ -35,6 +37,8 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     private $containsResourceClass;
     /** @var PHPUnit_Framework_MockObject_MockObject|ResourceDisplayStrategyEvaluator */
     private $resourceDisplayStrategyEvaluator;
+    /** @var MetadataUpdateCommandValidator|PHPUnit_Framework_MockObject_MockObject */
+    private $metadataUpdateCommandValidator;
     /** @var PHPUnit_Framework_MockObject_MockObject|ResourceKindRepository */
     private $resourceKindRepository;
 
@@ -45,6 +49,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $this->metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->resourceDisplayStrategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
+        $this->metadataUpdateCommandValidator = $this->createMock(MetadataUpdateCommandValidator::class);
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
         $this->resourceKindRepository->method('findOne')->will(
             $this->returnValueMap(
@@ -58,11 +63,13 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             new NotBlankInAllLanguagesRule($this->languageRepository),
             new CorrectResourceDisplayStrategySyntaxRule($this->resourceDisplayStrategyEvaluator),
             new ContainsParentMetadataRule(),
+            $this->metadataUpdateCommandValidator,
             new ChildResourceKindsAreOfSameResourceClassRule($this->resourceKindRepository)
         );
     }
 
     public function testValidating() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $command = new ResourceKindCreateCommand(
             ['PL' => 'Labelka'],
             [
@@ -74,6 +81,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testFailWhenNoLabel() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand(
             [],
@@ -92,12 +100,20 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testFailWhenOnlyParentMetadata() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [$this->createMetadataMock(SystemMetadata::PARENT)]);
+        $command = new ResourceKindCreateCommand(
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(SystemMetadata::PARENT),
+            ]
+        );
         $this->validator->validate($command);
     }
 
     public function testFailWhenNoParentMetadata() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand(
             ['PL' => 'Labelka'],
@@ -110,12 +126,13 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testFailWhenDifferentResourceClassesOfMetadata() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand(
             ['PL' => 'Labelka'],
             [
                 $this->createMetadataMock(SystemMetadata::PARENT),
-                $this->createMetadataMock(),
+                $this->createMetadataMock(1),
                 $this->createMetadataMock(1, 1, null, [], 'unicorns'),
             ]
         );
@@ -123,6 +140,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testIgnoringSystemMetadataResourceClass() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $command = new ResourceKindCreateCommand(
             ['PL' => 'Labelka'],
             [
@@ -134,7 +152,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testFailsWhenInvalidDisplayStrategy() {
-        $this->expectException(InvalidCommandException::class);
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->expectExceptionMessage('incorrectResourceDisplayStrategy');
         $this->resourceDisplayStrategyEvaluator
             ->method('validateTemplate')
@@ -152,12 +170,26 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testFailsWhenChildrenHaveDifferentResourceClasses() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->expectException(InvalidCommandException::class);
         $command = new ResourceKindCreateCommand(
             ['PL' => 'Labelka'],
             [
                 $this->createMetadataMock(SystemMetadata::PARENT, null, null, ['resourceKind' => [1, 2]]),
                 $this->createMetadataMock(0, null, null, [], 'books'),
+            ]
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testFailsWhenNotOverrideMetadataValidator() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysInvalid());
+        $this->expectException(RespectValidationFailedException::class);
+        $command = new ResourceKindCreateCommand(
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(1),
             ]
         );
         $this->validator->validate($command);

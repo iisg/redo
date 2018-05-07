@@ -6,7 +6,9 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\InvalidCommandException;
+use Repeka\Domain\Exception\RespectValidationFailedException;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
 use Repeka\Domain\Utils\EntityUtils;
@@ -32,12 +34,21 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     private $correctResourceDisplayStrategySyntaxRule;
     /** @var Metadata */
     private $relationshipMetadata;
+    /** @var MetadataUpdateCommandValidator|\PHPUnit_Framework_MockObject_MockObject */
+    private $metadataUpdateCommandValidator;
+    /** @var ChildResourceKindsAreOfSameResourceClassRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $childResourceKindsAreOfSameResourceClassRule;
+    /** @var NotBlankInAllLanguagesRule|\PHPUnit_Framework_MockObject_MockObject */
+    private $notBlankInAllLanguagesRule;
 
     protected function setUp() {
         $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
-        $notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
-        $childResourceKindsAreOfSameResourceClassRule = $this->createRuleMock(ChildResourceKindsAreOfSameResourceClassRule::class, true);
+        $this->notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
+        $this->childResourceKindsAreOfSameResourceClassRule = $this->createRuleMock(
+            ChildResourceKindsAreOfSameResourceClassRule::class,
+            true
+        );
         $this->correctResourceDisplayStrategySyntaxRule = $this->createMock(CorrectResourceDisplayStrategySyntaxRule::class);
         $this->rkConstraintIsUser = $this->createRuleWithFactoryMethodMock(
             ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
@@ -53,16 +64,20 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ['resourceKind' => [123]]
         );
         EntityUtils::forceSetId($this->relationshipMetadata, 2);
+        $this->metadataUpdateCommandValidator = $this->createMock(MetadataUpdateCommandValidator::class);
+
         $this->validator = new ResourceKindUpdateCommandValidator(
-            $notBlankInAllLanguagesRule,
+            $this->notBlankInAllLanguagesRule,
             $this->correctResourceDisplayStrategySyntaxRule,
             new ContainsParentMetadataRule(),
             $this->rkConstraintIsUser,
-            $childResourceKindsAreOfSameResourceClassRule
+            $this->metadataUpdateCommandValidator,
+            $this->childResourceKindsAreOfSameResourceClassRule
         );
     }
 
     public function testValid() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->rkConstraintIsUser->method('validate')->willReturn(true);
         $command = new ResourceKindUpdateCommand(
             $this->createMock(ResourceKind::class),
@@ -80,6 +95,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     public function testInvalidIfNotResourceKindInstance() {
         $this->expectException(InvalidCommandException::class);
         $this->rkConstraintIsUser->method('validate')->willReturn(true);
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $command = new ResourceKindUpdateCommand(
             1,
             ['PL' => 'Labelka'],
@@ -96,6 +112,8 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     public function testInvalidWhenRelationshipRequirementFails() {
         $this->expectException(InvalidCommandException::class);
         $this->rkConstraintIsUser->method('validate')->willReturn(false);
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+
         $command = new ResourceKindUpdateCommand(
             $this->createMock(ResourceKind::class),
             ['PL' => 'Labelka'],
@@ -111,11 +129,29 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidWhenOnlyParentMetadata() {
         $this->expectException(InvalidCommandException::class);
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $command = new ResourceKindUpdateCommand(
             $this->createMock(ResourceKind::class),
             ['PL' => 'Labelka'],
             [
                 SystemMetadata::PARENT()->toMetadata(),
+                $this->createMetadataMock(),
+            ],
+            []
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testInvalidWhenNotOverrideMetadataValidator() {
+        $this->expectException(RespectValidationFailedException::class);
+        $this->rkConstraintIsUser->method('validate')->willReturn(true);
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysInvalid());
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
             ],
             []
         );
