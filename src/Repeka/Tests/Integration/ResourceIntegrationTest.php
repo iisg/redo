@@ -48,26 +48,48 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     protected function setUp() {
         parent::setUp();
         $this->clearDefaultLanguages();
-        $this->createLanguage('TEST', 'te_ST', 'Test language');
+        $this->createLanguage('PL', 'PL', 'polski'); //for validate parentMetadata
+        $this->createLanguage('EN', 'EN', 'angielski'); //for validate parentMetadata
         /** @var MetadataRepository $metadataRepository */
         $metadataRepository = $this->container->get(MetadataRepository::class);
         $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
-        $this->metadata1 = $this->createMetadata('M1', ['TEST' => 'metadata'], [], [], 'textarea');
-        $this->metadata2 = $this->createMetadata('M2', ['TEST' => 'metadata'], [], [], 'textarea');
-        $this->metadata3 = $this->createMetadata('M3', ['TEST' => 'metadata'], [], [], 'relationship', 'books', ['resourceKind' => [-1]]);
-        $this->metadata4 = $this->createMetadata('M4', ['TEST' => 'metadata'], [], [], 'relationship', 'books', ['resourceKind' => [-1]]);
+        $this->metadata1 = $this->createMetadata('M1', ['PL' => 'metadata', 'EN' => 'metadata'], [], [], 'textarea');
+        $this->metadata2 = $this->createMetadata('M2', ['PL' => 'metadata', 'EN' => 'metadata'], [], [], 'textarea');
+        $this->metadata3 = $this->createMetadata(
+            'M3',
+            ['PL' => 'metadata', 'EN' => 'metadata'],
+            [],
+            [],
+            'relationship',
+            'books',
+            ['resourceKind' => [-1]]
+        );
+        $this->metadata4 = $this->createMetadata(
+            'M4',
+            ['PL' => 'metadata', 'EN' => 'metadata'],
+            [],
+            [],
+            'relationship',
+            'books',
+            ['resourceKind' => [-1]]
+        );
         $this->workflowPlace1 = new ResourceWorkflowPlace(['key1'], 'p1', [], [], [], [$this->metadata3->getId()]);
         $workflowPlace2 = new ResourceWorkflowPlace(['key2'], 'p2', [], [], [], [$this->metadata4->getId()]);
         $this->transition = new ResourceWorkflowTransition(['key3'], ['p1'], ['p2'], [-1, 1], 't1');
-        $workflow = $this->createWorkflow(['TEST' => 'Workflow'], 'books', [$this->workflowPlace1, $workflowPlace2], [$this->transition]);
+        $workflow = $this->createWorkflow(
+            ['PL' => 'Workflow', 'EN' => 'Workflow'],
+            'books',
+            [$this->workflowPlace1, $workflowPlace2],
+            [$this->transition]
+        );
         $sampleResourceWorkflowDriverFactory = new SampleResourceWorkflowDriverFactory($this->createMock(ResourceWorkflowDriver::class));
         $workflow = $sampleResourceWorkflowDriverFactory->setForWorkflow($workflow);
         $this->resourceKind = $this->createResourceKind(
-            ['TEST' => 'Resource kind'],
+            ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->metadata1, $this->metadata2]
         );
         $this->resourceKindWithWorkflow = $this->createResourceKind(
-            ['TEST' => 'Resource kind'],
+            ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata3, $this->metadata4],
             [],
             $workflow
@@ -370,7 +392,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResourceKindFails() {
         $newResourceKind = $this->createResourceKind(
-            ['TEST' => 'Replacement resource kind'],
+            ['PL' => 'Replacement resource kind', 'EN' => 'Replacement resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata2]
         );
         $newResourceKind->getMetadataList()[0]->updateOrdinalNumber(0);

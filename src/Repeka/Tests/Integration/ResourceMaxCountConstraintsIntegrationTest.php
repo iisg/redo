@@ -22,19 +22,32 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
     public function setUp() {
         parent::setUp();
         $this->clearDefaultLanguages();
-        $this->createLanguage('TEST', 'te_ST', 'Test language');
+        $this->createLanguage('PL', 'PL', 'polski'); //for validate parentMetadata
+        $this->createLanguage('EN', 'EN', 'angielski'); //for validate parentMetadata
         /** @var MetadataRepository $metadataRepository */
         $metadataRepository = $this->container->get(MetadataRepository::class);
         $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
-        $this->baseMetadata = $this->createMetadata('Base1', ['TEST' => 'Base metadata'], [], [], 'textarea');
-        $this->baseMetadata2 = $this->createMetadata('Base2', ['TEST' => 'Base metadata2'], [], [], 'textarea');
+        $this->baseMetadata = $this->createMetadata(
+            'Base1',
+            ['PL' => 'Base metadata', 'EN' => 'Base metadata'],
+            [],
+            [],
+            'textarea'
+        );
+        $this->baseMetadata2 = $this->createMetadata(
+            'Base2',
+            ['PL' => 'Base metadata2', 'EN' => 'Base metadata2'],
+            [],
+            [],
+            'textarea'
+        );
         $this->resourceKindMax1 = $this->getCountConstrainedResourceKind(1);
         $this->resourceKindMax3 = $this->getCountConstrainedResourceKind(3);
     }
 
     private function getCountConstrainedResourceKind(int $max): ResourceKind {
         return $this->createResourceKind(
-            ['TEST' => 'Resource kind'],
+            ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [
                 $this->parentMetadata,
                 ['id' => $this->baseMetadata->getId(), 'constraints' => ['maxCount' => $max]],
