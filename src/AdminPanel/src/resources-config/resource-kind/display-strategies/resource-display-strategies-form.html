@@ -14,7 +14,8 @@
         <label>${ ( 'display_strategies//' + strategyId + '//description') | resourceClassTranslation:resourceKind.resourceClass}</label>
         <textarea class="form-control"
             autosize
-            value.bind="resourceKind.displayStrategies[strategyId] & validateOnChangeOrBlur"></textarea>
+            value.bind="resourceKind.displayStrategies[strategyId] & validateOnChangeOrBlur"
+            placeholder="Title: {{ r|mTitle }}, Scanner: {{ r|m('Scanner')|m(-2) }}"></textarea>
         <!-- TODO display sample render in REPEKA-318 -->
         <!--<p>${ sampleRender }</p>-->
     </div>

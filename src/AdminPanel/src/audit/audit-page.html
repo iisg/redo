@@ -64,7 +64,7 @@
                     <span class="input-group">
                         <input type="text"
                             class="form-control"
-                            placeholder.one-time="'Resource display strategy' | t"
+                            placeholder="Title: {{ r|mTitle }}, Scanner: {{ r|m('Scanner')|m(-2) }}"
                             value.bind="column.displayStrategy"
                             keyup.trigger="onFiltersChanged() & debounce:600">
                         <span class="input-group-btn">
