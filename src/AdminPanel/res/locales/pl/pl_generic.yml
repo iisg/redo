@@ -91,13 +91,13 @@ Delete: Usuń
 Resource has children: Zasób ma podzasoby
 Delete or disown them first to delete this resource: Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób
 Legend: Legenda
-In this state metadata value is:: W tym stanie wartość metadanej jest:
-Optional_female: Opcjonalna
-Required_female: Wymagana
-Locked_female: Zablokowana
-Specifies assignee: Określa osobę przypisaną do zadania
-Specifies auto assignee: Określa automatyczne przypisanie osoby do metadanej
-only for relationships with users: tylko dla relacji z użytkownikami
+In this state metadata value is:: Symbole oznaczają, że w danym stanie procesu:
+Optional_female: Metadana nie musi mieć wartości
+Required_female: Metadana musi mieć wartość
+Locked_female: Wartość metadanej nie może zostać zmieniona
+Specifies assignee: Wartość metadanej określa użytkownika przypisanego do zadania
+Specifies auto assignee: Jako wartość metadanej zostaje automatycznie ustawiony użytkownik, który umieści zasób w tym stanie 
+only for relationships with users: opcja dostępna tylko dla relacji z użytkownikami
 Your current tasks: Twoje bieżące zadania
 Your other tasks: Inne twoje zadania
 No current tasks!: Brak bieżących zadań!
