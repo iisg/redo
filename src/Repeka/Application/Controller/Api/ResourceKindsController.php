@@ -3,7 +3,6 @@ namespace Repeka\Application\Controller\Api;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindDeleteCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
@@ -18,13 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
  * @Route("/resource-kinds")
  */
 class ResourceKindsController extends ApiController {
-    /** @var ResourceWorkflowRepository */
-    private $resourceWorkflowRepository;
-
-    public function __construct(ResourceWorkflowRepository $resourceWorkflowRepository) {
-        $this->resourceWorkflowRepository = $resourceWorkflowRepository;
-    }
-
     /**
      * @Route("/{id}")
      * @Method("GET")
@@ -63,7 +55,7 @@ class ResourceKindsController extends ApiController {
             $data['label'] ?? [],
             $data['metadataList'] ?? [],
             $data['displayStrategies'] ?? [],
-            isset($data['workflowId']) ? $this->resourceWorkflowRepository->findOne($data['workflowId']) : null
+            $data['workflowId'] ?? null
         );
         $resourceKind = $this->handleCommand($command);
         return $this->createJsonResponse($resourceKind, 201);
@@ -71,14 +63,20 @@ class ResourceKindsController extends ApiController {
 
     /**
      * @Route("/{id}")
-     * @Method("PATCH")
+     * @Method("PUT")
      */
-    public function patchAction(int $id, Request $request) {
+    public function putAction(ResourceKind $resourceKind, Request $request) {
         $data = $request->request->all();
         Assertion::keyExists($data, 'label');
         Assertion::keyExists($data, 'metadataList');
         Assertion::keyExists($data, 'displayStrategies');
-        $command = new ResourceKindUpdateCommand($id, $data['label'], $data['metadataList'], $data['displayStrategies']);
+        $command = new ResourceKindUpdateCommand(
+            $resourceKind,
+            $data['label'],
+            $data['metadataList'],
+            $data['displayStrategies'],
+            $data['workflowId'] ?? null
+        );
         $resourceKind = $this->handleCommand($command);
         return $this->createJsonResponse($resourceKind);
     }

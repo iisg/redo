@@ -6,8 +6,11 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -134,7 +137,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     public function testEditingResourceKind() {
         $client = self::createAdminClient();
         $client->apiRequest(
-            'PATCH',
+            'PUT',
             self::oneEntityEndpoint($this->resourceKind->getId()),
             [
                 'label' => ['PL' => 'modified', 'EN' => 'modified'],
@@ -161,7 +164,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     public function testEditingResourceKindMetadataConstraintsConflict() {
         $client = self::createAdminClient();
         $client->apiRequest(
-            'PATCH',
+            'PUT',
             self::oneEntityEndpoint($this->resourceKind->getId()),
             [
                 'label' => ['PL' => 'modified', 'EN' => 'modified'],
@@ -177,6 +180,55 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $error = $client->getResponse() . $this->toString();
         $this->assertContains("newLabel contains a language that does not exist", $error);
         $this->assertContains("These rules must pass for \u0022metadata_update\u0022", $error);
+    }
+
+    public function testSettingWorkflowForExistingResourceKind() {
+        $workflow = $this->createWorkflow(
+            ['PL' => 'test', 'EN' => 'test'],
+            'books',
+            [
+                new ResourceWorkflowPlace([], 'A'),
+                new ResourceWorkflowPlace([], 'B'),
+            ],
+            [
+                new ResourceWorkflowTransition(['PL' => 'przejscie'], ['A'], ['B']),
+            ]
+        );
+        $resource = $this->handleCommand(
+            new ResourceCreateCommand(
+                $this->resourceKind,
+                ResourceContents::fromArray(
+                    [
+                        $this->metadata1->getId() => ['test1'],
+                        $this->metadata2->getId() => ['test2'],
+                    ]
+                )
+            )
+        );
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'PUT',
+            self::oneEntityEndpoint($this->resourceKind->getId()),
+            [
+                'label' => ['PL' => 'test', 'EN' => 'test'],
+                'metadataList' => [
+                    ['id' => $this->metadata2->getId()],
+                    ['id' => $this->metadata1->getId()],
+                    ['id' => SystemMetadata::PARENT],
+                ],
+                'displayStrategies' => [],
+                'workflowId' => $workflow->getId(),
+            ]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $client = self::createClient();
+        /** @var ResourceKindRepository $resourceKindRepository */
+        $resourceRepository = $client->getContainer()->get(ResourceRepository::class);
+        $resource = $resourceRepository->findOne($resource->getId());
+        $this->assertNotNull($resource->getWorkflow());
+        $this->assertEquals($workflow->getId(), $resource->getWorkflow()->getId());
+        $this->assertCount(1, $resource->getWorkflow()->getPlaces($resource));
+        $this->assertEquals('A', $resource->getWorkflow()->getPlaces($resource)[0]->getId());
     }
 
     public function testDeletingResourceKind() {

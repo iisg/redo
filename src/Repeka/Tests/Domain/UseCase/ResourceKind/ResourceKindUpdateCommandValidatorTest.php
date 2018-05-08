@@ -5,6 +5,7 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Exception\RespectValidationFailedException;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
@@ -65,7 +66,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         );
         EntityUtils::forceSetId($this->relationshipMetadata, 2);
         $this->metadataUpdateCommandValidator = $this->createMock(MetadataUpdateCommandValidator::class);
-
         $this->validator = new ResourceKindUpdateCommandValidator(
             $this->notBlankInAllLanguagesRule,
             $this->correctResourceDisplayStrategySyntaxRule,
@@ -92,28 +92,10 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator->validate($command);
     }
 
-    public function testInvalidIfNotResourceKindInstance() {
-        $this->expectException(InvalidCommandException::class);
-        $this->rkConstraintIsUser->method('validate')->willReturn(true);
-        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
-        $command = new ResourceKindUpdateCommand(
-            1,
-            ['PL' => 'Labelka'],
-            [
-                $this->createMetadataMock(SystemMetadata::PARENT),
-                $this->createMetadataMock(),
-                $this->relationshipMetadata,
-            ],
-            []
-        );
-        $this->validator->validate($command);
-    }
-
     public function testInvalidWhenRelationshipRequirementFails() {
         $this->expectException(InvalidCommandException::class);
         $this->rkConstraintIsUser->method('validate')->willReturn(false);
         $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
-
         $command = new ResourceKindUpdateCommand(
             $this->createMock(ResourceKind::class),
             ['PL' => 'Labelka'],
@@ -154,6 +136,59 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createMetadataMock(),
             ],
             []
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testValidIfWorkflowIsNull() {
+        $this->rkConstraintIsUser->method('validate')->willReturn(true);
+        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $this->createMockEntity(ResourceWorkflow::class, 1));
+        $command = new ResourceKindUpdateCommand(
+            $rkWithWorkflow,
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+                $this->relationshipMetadata,
+            ],
+            []
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testValidIfWorkflowTheSame() {
+        $this->rkConstraintIsUser->method('validate')->willReturn(true);
+        $workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
+        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow);
+        $command = new ResourceKindUpdateCommand(
+            $rkWithWorkflow,
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+                $this->relationshipMetadata,
+            ],
+            [],
+            $workflow
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testInvalidIfTryingToChangeWorkflow() {
+        $this->expectException(InvalidCommandException::class);
+        $this->rkConstraintIsUser->method('validate')->willReturn(true);
+        $workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
+        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow);
+        $command = new ResourceKindUpdateCommand(
+            $rkWithWorkflow,
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+                $this->relationshipMetadata,
+            ],
+            [],
+            $this->createMockEntity(ResourceWorkflow::class, 2)
         );
         $this->validator->validate($command);
     }

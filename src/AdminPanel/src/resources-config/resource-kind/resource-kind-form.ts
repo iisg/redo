@@ -26,6 +26,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   originalMetadataList: Metadata[];
   submitting = false;
   sortingMetadata = false;
+  hasWorkflowChosen = false;
   @bindable metadataToAdd: Metadata; // we only need @observable but it's buggy: https://github.com/aurelia/binding/issues/594
 
   private controller: ValidationController;
@@ -96,11 +97,13 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
 
   editChanged() {
     this.resourceKind = new ResourceKind();
+    this.hasWorkflowChosen = false;
     if (this.edit) {
       this.resourceKind = this.entitySerializer.clone(this.edit);
       this.resourceKind.metadataList.forEach(metadata => {
         metadata.clearInheritedValues(this.metadataRepository).then(() => this.signaler.signal('original-metadata-changed'));
       });
+      this.hasWorkflowChosen = !!this.resourceKind.workflow;
     }
   }
 

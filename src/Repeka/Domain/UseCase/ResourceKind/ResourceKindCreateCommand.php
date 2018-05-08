@@ -7,15 +7,15 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
 class ResourceKindCreateCommand extends AbstractCommand implements AdjustableCommand {
-    private $label;
-    private $metadataList;
-    private $workflow;
-    private $displayStrategies;
+    protected $label;
+    protected $metadataList;
+    protected $workflow;
+    protected $displayStrategies;
 
-    public function __construct(array $label, array $metadataList, array $displayStrategies = [], ResourceWorkflow $workflow = null) {
+    public function __construct(array $label, array $metadataList, array $displayStrategies = [], $workflowOrId = null) {
         $this->label = $label;
         $this->metadataList = $metadataList;
-        $this->workflow = $workflow;
+        $this->workflow = $workflowOrId;
         $this->displayStrategies = $displayStrategies;
     }
 
@@ -32,7 +32,8 @@ class ResourceKindCreateCommand extends AbstractCommand implements AdjustableCom
         return $this->displayStrategies;
     }
 
-    public function getWorkflow(): ?ResourceWorkflow {
+    /** @return ResourceWorkflow|int|null */
+    public function getWorkflow() {
         return $this->workflow;
     }
 }

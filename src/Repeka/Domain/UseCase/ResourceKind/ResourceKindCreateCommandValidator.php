@@ -88,7 +88,8 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
             $metadata->isShownInBrief(),
             $metadata->isCopiedToChildResource()
         );
-        return $this->metadataUpdateCommandValidator->getValidator($metadataUpdateCommand)->assert($metadataUpdateCommand);
+        $this->metadataUpdateCommandValidator->getValidator($metadataUpdateCommand)->assert($metadataUpdateCommand);
+        return true;
     }
 
     /**

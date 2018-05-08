@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandAdjuster;
 use Repeka\Domain\Utils\EntityUtils;
@@ -34,10 +35,17 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         );
         $metadataConstraintManager = $this->createMock(MetadataConstraintManager::class);
         $metadataConstraintManager->method('getSupportedConstraintNamesForControl')->willReturn(['maxCount']);
+        $workflowRepository = $this->createRepositoryStub(
+            ResourceWorkflowRepository::class,
+            [
+                $this->createMockEntity(ResourceWorkflow::class, 1),
+            ]
+        );
         $this->adjuster = new ResourceKindCreateCommandAdjuster(
             $metadataRepository,
             new UnknownLanguageStripper($languageRepository),
-            $metadataConstraintManager
+            $metadataConstraintManager,
+            $workflowRepository
         );
     }
 
@@ -52,6 +60,12 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         $command = new ResourceKindCreateCommand([], [], [], $workflow);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertEquals($workflow, $adjustedCommand->getWorkflow());
+    }
+
+    public function testTransformsWorkflowIdToWorkflow() {
+        $command = new ResourceKindCreateCommand([], [], [], 1);
+        $adjustedCommand = $this->adjuster->adjustCommand($command);
+        $this->assertInstanceOf(ResourceWorkflow::class, $adjustedCommand->getWorkflow());
     }
 
     public function testLeavesDisplayStrategies() {

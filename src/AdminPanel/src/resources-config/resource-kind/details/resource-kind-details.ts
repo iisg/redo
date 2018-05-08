@@ -44,9 +44,11 @@ export class ResourceKindDetails implements RoutableComponentActivate {
 
   activateTabs(activeTabId: string) {
     // remove parent metadata from metadata length
-    const metadataListLength = this.resourceKind.metadataList.length - 1;
-    this.resourceKindDetailsTabs.addTab({id: 'details', label: `${this.i18n.tr('Metadata')} (${metadataListLength})`});
-    if (this.resourceKind.workflow) {
+    if (this.resourceKindDetailsTabs.length === 0) {
+      const metadataListLength = this.resourceKind.metadataList.length - 1;
+      this.resourceKindDetailsTabs.addTab({id: 'details', label: `${this.i18n.tr('Metadata')} (${metadataListLength})`});
+    }
+    if (this.resourceKind.workflow && !this.resourceKindDetailsTabs.tabExists('workflow')) {
       this.resourceKindDetailsTabs.addTab({id: 'workflow', label: this.i18n.tr('Workflow')});
     }
     this.resourceKindDetailsTabs.setActiveTabId(activeTabId);
@@ -61,7 +63,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     } else {
       parameters['tab'] = this.resourceKindDetailsTabs.activeTabId;
     }
-    this.router.navigateToRoute('resource-kinds/details', parameters, {trigger: false, replace: true});
+    this.router.navigateToRoute('resource-kinds/details', parameters, {replace: true});
   }
 
   toggleEditForm() {
@@ -71,7 +73,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
 
   saveEditedResourceKind(resourceKind: ResourceKind, changedResourceKind: ResourceKind): Promise<any> {
     resourceKind.pendingRequest = true;
-    return this.resourceKindRepository.update(changedResourceKind)
+    return this.resourceKindRepository.put(changedResourceKind)
       .then(updated => $.extend(resourceKind, updated))
       .then(() => this.toggleEditForm())
       .finally(() => resourceKind.pendingRequest = false);

@@ -6,7 +6,9 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 
@@ -17,15 +19,19 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
     protected $unknownLanguageStripper;
     /** @var MetadataConstraintManager */
     private $metadataConstraintManager;
+    /** @var ResourceWorkflowRepository */
+    private $workflowRepository;
 
     public function __construct(
         MetadataRepository $metadataRepository,
         UnknownLanguageStripper $unknownLanguageStripper,
-        MetadataConstraintManager $metadataConstraintManager
+        MetadataConstraintManager $metadataConstraintManager,
+        ResourceWorkflowRepository $workflowRepository
     ) {
         $this->metadataRepository = $metadataRepository;
         $this->unknownLanguageStripper = $unknownLanguageStripper;
         $this->metadataConstraintManager = $metadataConstraintManager;
+        $this->workflowRepository = $workflowRepository;
     }
 
     /**
@@ -37,7 +43,7 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getLabel()),
             $this->fetchMetadataIfRequired($command->getMetadataList()),
             $command->getDisplayStrategies(),
-            $command->getWorkflow()
+            $this->findWorkflow($command->getWorkflow())
         );
     }
 
@@ -68,5 +74,12 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
         $controlKeys = array_combine($controlKeys, $controlKeys);
         $allowedConstraints = array_intersect_key($constraints, $controlKeys);
         return $allowedConstraints;
+    }
+
+    protected function findWorkflow($workflowOrId) {
+        if (!$workflowOrId || $workflowOrId instanceof ResourceWorkflow) {
+            return $workflowOrId;
+        }
+        return $this->workflowRepository->findOne($workflowOrId);
     }
 }

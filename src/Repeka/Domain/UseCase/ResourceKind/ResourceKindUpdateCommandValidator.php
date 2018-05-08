@@ -3,7 +3,6 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
@@ -35,14 +34,20 @@ class ResourceKindUpdateCommandValidator extends ResourceKindCreateCommandValida
         $this->rkConstraintIsUserIfNecessaryRule = $rkConstraintIsUserIfNecessaryRule;
     }
 
-    /** @inheritdoc */
+    /** @param ResourceKindUpdateCommand $command */
     public function getValidator(Command $command): Validatable {
-        return parent::getValidator($command)
-            ->attribute('resourceKind', Validator::instance(ResourceKind::class))
+        $validator = parent::getValidator($command)
             ->attribute(
                 'metadataList',
                 Validator::each(Validator::callback([$this, 'validateMetadata']))->setTemplate('Invalid constraints')
             );
+        if ($command->getResourceKind()->getWorkflow()) {
+            $validator = $validator->attribute(
+                'workflow',
+                Validator::oneOf(Validator::nullType(), Validator::equals($command->getResourceKind()->getWorkflow()))
+            );
+        }
+        return $validator;
     }
 
     public function validateMetadata(Metadata $metadata): bool {
