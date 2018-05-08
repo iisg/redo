@@ -3,10 +3,13 @@
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="../../workflow/resource-place-display.html"></require>
 
+    <span>${ 'Resource kind' | t}</span>
+    <span>${ resource.kind.label | inCurrentLanguage }</span>
+
     <template repeat.for="metadata of metadataList">
         <span>${metadata | metadataLabel}</span>
         <resource-metadata-values resource.one-time="resource"
-        metadata.one-time="metadata"></resource-metadata-values>
+            metadata.one-time="metadata"></resource-metadata-values>
     </template>
     <template if.bind="!hidePlaceInformation && resource.kind.workflow">
         <span>${'Place' | t}</span>

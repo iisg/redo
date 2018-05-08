@@ -31,7 +31,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 resource-kind-edit-form-metadata-item"
-                    repeat.for="metadata of resourceKind.metadataList & validate">
+                        repeat.for="metadata of resourceKind.metadataList & validate">
                         <div class="well"
                             if.bind="metadata.id != -1">
                             <div class="btn-group pull-right top-right-buttons"
@@ -82,10 +82,13 @@
                     should-refresh-results.bind="metadataListModified"></resource-kind-metadata-chooser>
             </div>
             <div class="form-group"
-                if.bind="!editing">
+                if.bind="!hasWorkflowChosen">
                 <label>${'Workflow' | resourceClassTranslation:resourceClass}</label>
                 <workflow-chooser resource-class.bind="resourceClass"
                     value.bind="resourceKind.workflow"></workflow-chooser>
+                <span class="help-block">
+                    ${'Keep in mind that you can not change the workflow for resource kind after choosing it once. Select with care.' | t}
+                </span>
             </div>
             <div class="form-group">
                 <label>${'Available child resource kind' | t}</label>

@@ -18,7 +18,11 @@
       "check-whitespace"
     ],
     "no-var-keyword": true,
-    "semicolon": true,
+    "semicolon": [
+      true,
+      "always",
+      "ignore-bound-class-methods"
+    ],
     "whitespace": [
       true,
       "check-branch",

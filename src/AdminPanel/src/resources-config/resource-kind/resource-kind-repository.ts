@@ -20,13 +20,4 @@ export class ResourceKindRepository extends ApiRepository<ResourceKind> {
   public get(id: number|string, suppressError?: boolean): Promise<ResourceKind> {
     return super.get(id, suppressError);
   }
-
-  public update(updatedResourceKind: ResourceKind): Promise<ResourceKind> {
-    let backendRepresentation = this.toBackend(updatedResourceKind);
-    return this.patch(updatedResourceKind, {
-      label: updatedResourceKind.label,
-      metadataList: backendRepresentation['metadataList'],
-      displayStrategies: backendRepresentation['displayStrategies'],
-    });
-  }
 }

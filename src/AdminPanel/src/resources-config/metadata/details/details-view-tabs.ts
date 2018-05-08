@@ -22,7 +22,7 @@ export class DetailsViewTabs extends Array<DetailsViewTab> {
       this.onTabChange();
     }));
     return this;
-  }
+  };
 
   public setDefaultTabId: (tabId: string) => this = (tabId: string) => {
     this.defaultTabId = tabId;
@@ -30,7 +30,7 @@ export class DetailsViewTabs extends Array<DetailsViewTab> {
       this.setActiveTabId(tabId);
     }
     return this;
-  }
+  };
 
   public setActiveTabId: (activeTabId: string) => this = (activeTabId: string) => {
     this.forEach(tab => tab.active = false);
@@ -44,18 +44,19 @@ export class DetailsViewTabs extends Array<DetailsViewTab> {
       this.onTabChange();
     }
     return this;
-  }
+  };
 
-  public clear = () => {
+  public clear: () => this = () => {
     this.listeners.forEach(listener => listener.dispose());
     this.listeners = [];
     this.splice(0, this.length);
     this.tabIds = [];
-  }
+    return this;
+  };
 
-  private tabExists = (tabId: string) => {
+  public tabExists = (tabId: string) => {
     return this.tabIds.indexOf(tabId) >= 0;
-  }
+  };
 }
 
 export interface DetailsViewTab {

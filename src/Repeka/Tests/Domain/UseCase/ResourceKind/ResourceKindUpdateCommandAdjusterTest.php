@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandAdjuster;
 use Repeka\Domain\Validation\MetadataConstraintManager;
@@ -32,7 +33,8 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
             $metadataRepository,
             new UnknownLanguageStripper($languageRepository),
             $metadataConstraintManager,
-            $resourceKindRespository
+            $resourceKindRespository,
+            $this->createMock(ResourceWorkflowRepository::class)
         );
     }
 

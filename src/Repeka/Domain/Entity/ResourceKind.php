@@ -109,6 +109,10 @@ class ResourceKind implements Identifiable {
         return $this->workflow;
     }
 
+    public function setWorkflow(ResourceWorkflow $workflow) {
+        $this->workflow = $workflow;
+    }
+
     /** @return int[] */
     public function getMetadataIds(): array {
         return EntityUtils::mapToIds($this->getMetadataList());
