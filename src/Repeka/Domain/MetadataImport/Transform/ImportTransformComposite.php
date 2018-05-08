@@ -7,8 +7,11 @@ class ImportTransformComposite {
     /** @var ImportTransform[] */
     private $transforms = [];
 
-    public function register(ImportTransform $transform) {
-        $this->transforms[$transform->getName()] = $transform;
+    /** @param ImportTransform[] $transforms */
+    public function __construct(iterable $transforms) {
+        foreach ($transforms as $transform) {
+            $this->transforms[$transform->getName()] = $transform;
+        }
     }
 
     public function apply(array $values, array $config): array {

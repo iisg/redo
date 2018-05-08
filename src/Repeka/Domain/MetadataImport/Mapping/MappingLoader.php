@@ -43,7 +43,7 @@ class MappingLoader {
     }
 
     private function findMetadataById(string $idString, ResourceKind $resourceKind): ?Metadata {
-        if (!preg_match('/^\d+$/', $idString)) {
+        if (!is_numeric($idString)) {
             return null;
         }
         try {

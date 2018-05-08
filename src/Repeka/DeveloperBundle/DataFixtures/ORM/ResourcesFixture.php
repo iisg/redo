@@ -14,7 +14,7 @@ use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  */
 class ResourcesFixture extends RepekaFixture {
-    const ORDER = ResourceKindsStage2Fixture::ORDER + UsersFixture::ORDER;
+    const ORDER = MetadataStage2Fixture::ORDER + UsersFixture::ORDER;
     const REFERENCE_DEPARTMENT_IET = 'resource-department-iet';
     const REFERENCE_USER_GROUP_SCANNERS = 'resource-user-group-scanners';
 
@@ -30,6 +30,7 @@ class ResourcesFixture extends RepekaFixture {
     private function addDictionaries() {
         $departmentResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT);
         $universityResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY);
+        $publishingHouseResouceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE);
         $userAdmin = $this->getReference(AdminAccountFixture::REFERENCE_USER_ADMIN);
         $agh = $this->handleCommand(
             new ResourceCreateCommand(
@@ -77,6 +78,17 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Elektroniki, Automatyki i Inżynierii Biomedycznej',
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'EAIB',
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY => $agh,
+                    ]
+                ),
+                $userAdmin
+            )
+        );
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $publishingHouseResouceKind,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Wydawnictwo Zakładu Narodowego im. Ossolińskich',
                     ]
                 ),
                 $userAdmin

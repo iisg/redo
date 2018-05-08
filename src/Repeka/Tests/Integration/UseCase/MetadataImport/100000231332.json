@@ -2,16 +2,17 @@
   "xmlMappings": {
     "Tytuł": "[tag=245]>[code=a]",
     "Opis": "[tag=245]>[code=a],[tag=245]>[code=b]",
-    "Język": "[tag=008]"
+    "Język": "[tag=008]",
+    "Zobacz też": "[tag=999]>[code=c]",
+    "Nazwa wydawnictwa": "[tag=260]>[code=b]"
   },
   "mappings": {
     "Tytuł": {
       "key": "Tytuł",
       "transforms": [
         {
-          "name": "regexReplace",
-          "regex": " :$",
-          "replacement": ""
+          "name": "trim",
+          "characters": " :"
         }
       ]
     },
@@ -19,14 +20,8 @@
       "key": "Opis",
       "transforms": [
         {
-          "name": "regexReplace",
-          "regex": " :$",
-          "replacement": ""
-        },
-        {
-          "name": "regexReplace",
-          "regex": " /$",
-          "replacement": ""
+          "name": "trim",
+          "characters": " :/"
         },
         {
           "name": "join",
@@ -41,6 +36,29 @@
           "name": "substring",
           "start": 35,
           "length": 3
+        }
+      ]
+    },
+    "Zobacz też": {
+      "key": "Zobacz też",
+      "transforms": [
+      ]
+    },
+    "Wydawnictwo": {
+      "key": "Nazwa wydawnictwa",
+      "transforms": [
+        {
+          "name": "regexReplace",
+          "regex": "Wydaw.",
+          "replacement": ""
+        },
+        {
+          "name": "trim",
+          "characters": " ,"
+        },
+        {
+          "name": "contentSearch",
+          "metadata": "Nazwa"
         }
       ]
     }

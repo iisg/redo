@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\MetadataImport;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\MetadataImport\Config\ImportConfig;
 use Repeka\Domain\MetadataImport\Transform\ImportTransformComposite;
@@ -28,23 +29,28 @@ class MetadataImporter {
                 $values = $this->transforms->apply($values, $transformConfig);
             }
             $metadata = $mapping->getMetadata();
-            $id = $metadata->getId();
-            switch ($metadata->getControl()->getValue()) {
-                case MetadataControl::TEXT:
-                case MetadataControl::TEXTAREA:
-                    $resultBuilder->addAcceptedValues($id, $values);
-                    break;
-                case MetadataControl::INTEGER:
-                    $this->addIntegerValues($resultBuilder, $id, $values);
-                    break;
-                case MetadataControl::BOOLEAN:
-                    $this->addBooleanValues($resultBuilder, $id, $values);
-                    break;
-                default:
-                    $resultBuilder->addUnfitTypeValues($id, $values);
-            }
+            $this->importMetadataValues($metadata, $resultBuilder, $values);
         }
         return $resultBuilder->build();
+    }
+
+    private function importMetadataValues(Metadata $metadata, ImportResultBuilder $resultBuilder, array $values): void {
+        $id = $metadata->getId();
+        switch ($metadata->getControl()->getValue()) {
+            case MetadataControl::TEXT:
+            case MetadataControl::TEXTAREA:
+                $resultBuilder->addAcceptedValues($id, $values);
+                break;
+            case MetadataControl::INTEGER:
+            case MetadataControl::RELATIONSHIP:
+                $this->addIntegerValues($resultBuilder, $id, $values);
+                break;
+            case MetadataControl::BOOLEAN:
+                $this->addBooleanValues($resultBuilder, $id, $values);
+                break;
+            default:
+                $resultBuilder->addUnfitTypeValues($id, $values);
+        }
     }
 
     /**

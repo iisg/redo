@@ -4,6 +4,7 @@ namespace Repeka\Domain\Validation\MetadataConstraints;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Respect\Validation\Validator;
@@ -33,8 +34,12 @@ class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint 
         )->validate($allowedResourceKindIds);
     }
 
-    public function validate(Metadata $metadata, $allowedResourceKindIds, $resource) {
-        $resource = $this->resourceRepository->findOne($resource->getId());
-        Validator::in($allowedResourceKindIds)->setName($metadata->getName())->assert($resource->getKind()->getId());
+    public function validate(Metadata $metadata, $allowedResourceKindIds, $resourceId) {
+        try {
+            $resource = $this->resourceRepository->findOne($resourceId);
+            Validator::in($allowedResourceKindIds)->setName($metadata->getName())->assert($resource->getKind()->getId());
+        } catch (EntityNotFoundException $e) {
+            // we accept relationships that are unknown; they will be possibly added or imported in the future
+        }
     }
 }

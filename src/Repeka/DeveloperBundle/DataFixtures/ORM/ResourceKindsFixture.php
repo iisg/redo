@@ -16,6 +16,7 @@ class ResourceKindsFixture extends RepekaFixture {
     const REFERENCE_RESOURCE_KIND_CATEGORY = 'resource-kind-category';
     const REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT = 'resource-kind-department';
     const REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY = 'resource-kind-university';
+    const REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE = 'resource-kind-publishing-house';
     const REFERENCE_RESOURCE_KIND_USER_GROUP = 'resource-kind-user-group';
 
     /**
@@ -46,7 +47,9 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_LANGUAGE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_RELATED_BOOK),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_FILE),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISHING_HOUSE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
                 ],
@@ -136,6 +139,19 @@ class ResourceKindsFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY
+        );
+        $this->handleCommand(
+            new ResourceKindCreateCommand(
+                ['PL' => 'Wydawnictwo', 'EN' => 'Publishing house'],
+                [
+                    $nameMetadata->withOverrides(['label' => ['PL' => 'Nazwa wydawnictwa']]),
+                ],
+                [
+                    'header' => "{{r|m{$nameMetadata->getId()}}}",
+                    'dropdown' => '{{r|m' . $nameMetadata->getId() . '}} (ID: {{r.id}})',
+                ]
+            ),
+            self::REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE
         );
     }
 

@@ -23,7 +23,7 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindAll() {
         $resourceKinds = $this->resourceKindRepository->findAll();
-        $this->assertCount(7, $resourceKinds);
+        $this->assertCount($this->resourceKindRepository->count([]), $resourceKinds);
     }
 
     public function testCountByMetadata() {
@@ -48,7 +48,7 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindByEmptyQuery() {
         $resourceKindList = $this->resourceKindRepository->findByQuery(ResourceKindListQuery::builder()->build());
-        $this->assertCount(7, $resourceKindList);
+        $this->assertCount($this->resourceKindRepository->count([]), $resourceKindList);
     }
 
     public function testFindByMetadataId() {

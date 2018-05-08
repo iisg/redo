@@ -51,4 +51,21 @@ final class ArrayUtils {
         $uniqueValues = array_unique(array_map($mapper, $values));
         return count($uniqueValues) <= 1;
     }
+
+    /**
+     * Flats any array to be one-dimensoinal.
+     * @see https://stackoverflow.com/a/1320156/878514
+     * @param array $multidimensionalArray
+     * @return array flat array
+     */
+    public static function flatten(array $multidimensionalArray): array {
+        $result = [];
+        array_walk_recursive(
+            $multidimensionalArray,
+            function ($a) use (&$result) {
+                $result[] = $a;
+            }
+        );
+        return $result;
+    }
 }

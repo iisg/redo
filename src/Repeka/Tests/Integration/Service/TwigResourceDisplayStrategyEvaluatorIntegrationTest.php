@@ -39,11 +39,16 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
 
     private function renderingExamples() {
         $tId = $this->findMetadataByName('Tytuł')->getId();
+        $phpBookId = $this->getPhpBookResource()->getId();
+        $phpMysqlBookId = $this->findResourceByContents(['Tytuł' => 'PHP i MySQL'])->getId();
         return [
-            ['', 'ID 12'], // empty text
-            ['  ', 'ID 12'], // blank text
+            ['', "ID $phpBookId"],
+            // empty text
+            ['  ', "ID $phpBookId"],
+            // blank text
             ['Hello world', 'Hello world'], // simple text
-            ['Hello {{ r.id }}', "Hello 12"], // get id
+            ['Hello {{ r.id }}', "Hello $phpBookId"],
+            // get id
             ["{{ r.values($tId) | join(', ') }}", "PHP - to można leczyć!"], // get metadata values
             ["{{ r.values($tId)|first }}", "PHP - to można leczyć!"], // get metadata value
             ["{{ r|m($tId) }}", "PHP - to można leczyć!"], // get metadata values without join
@@ -58,8 +63,10 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
             ["{{ r|m('Nadzorujący')|m('Username') }}", "budynek"], // can skip resource fetching?
             ["{{ r|m(1) }}", "Potop, Powódź", RC::fromArray([1 => ['Potop', 'Powódź']])], // can render directly from resource contents?
             ["{{ r|m(1)|m('Username') }}", "admin, budynek, tester", RC::fromArray([1 => [1, 2, 3]])], // many associations
-            ["{{ r|m('Liczba stron')|merge(r(11)|m('Liczba stron'))|sum }}", "1741"], // sum pages
-            ["{{ r|m(1)|m('Liczba stron')|sum }}", "1741", RC::fromArray([1 => [11, 12]])], // sum pages by associations
+            ["{{ r|m('Liczba stron')|merge(r($phpMysqlBookId)|m('Liczba stron'))|sum }}", "1741"],
+            // sum pages
+            ["{{ r|m(1)|m('Liczba stron')|sum }}", "1741", RC::fromArray([1 => [$phpBookId, $phpMysqlBookId]])],
+            // sum pages by associations
             ["{{ r|m$tId }}", "PHP - to można leczyć!"], // dynamic filter
             ["{% if r|m1|first %}TAK{% else %}NIE{% endif %}", "TAK", RC::fromArray([1 => true])], // bool true
             ["{% if r|m1|first %}TAK{% else %}NIE{% endif %}", "NIE", RC::fromArray([1 => false])], // bool false

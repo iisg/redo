@@ -23,7 +23,7 @@ resource-form-generated {
                 display: flex;
                 metadata-value-input > compose > * {
                     flex: 1;
-                    dropdown-select {
+                  dropdown-select, resource-picker {
                         width: 100%;
                     }
                 }

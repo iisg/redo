@@ -33,6 +33,10 @@ class MetadataStage2Fixture extends RepekaFixture {
             ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT
         );
         $this->addRelationshipResourceKindConstraint(
+            MetadataFixture::REFERENCE_METADATA_PUBLISHING_HOUSE,
+            ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE
+        );
+        $this->addRelationshipResourceKindConstraint(
             MetadataFixture::REFERENCE_METADATA_SUPERVISOR,
             [SystemResourceKind::USER, ResourceKindsFixture::REFERENCE_RESOURCE_KIND_USER_GROUP]
         );

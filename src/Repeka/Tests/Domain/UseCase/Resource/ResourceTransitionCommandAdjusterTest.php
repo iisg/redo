@@ -40,18 +40,17 @@ class ResourceTransitionCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
                 $realMetadata,
             ]
         );
-        $resourceRepository = $this->createRepositoryStub(ResourceRepository::class, [$this->resource]);
-        $this->adjuster = new ResourceTransitionCommandAdjuster($metadataRepository, $resourceRepository);
+        $this->adjuster = new ResourceTransitionCommandAdjuster($metadataRepository);
     }
 
-    public function testConvertResourceIdToResourceEntity() {
+    public function testConvertResourceToResourceId() {
         $command = new ResourceTransitionCommand(
             new ResourceEntity($this->resourceKind, ResourceContents::empty()),
-            ResourceContents::fromArray([11 => 2]),
+            ResourceContents::fromArray([11 => $this->createResourceMock(1)]),
             SystemTransition::CREATE()->toTransition($this->resourceKind)
         );
         $command = $this->adjuster->adjustCommand($command);
-        $this->assertEquals($this->resource, $command->getContents()->getValues(11)[0]);
+        $this->assertEquals(1, $command->getContents()->getValues(11)[0]);
     }
 
     public function testConvertTransitionIdToTransition() {

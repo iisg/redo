@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration\Repository;
 
 use Repeka\Domain\Repository\AuditEntryRepository;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
@@ -11,10 +12,13 @@ class AuditEntryRepositoryIntegrationTest extends IntegrationTestCase {
 
     /** @var AuditEntryRepository */
     private $auditEntryRepository;
+    /** @var ResourceRepository */
+    private $resourceRepository;
 
     public function setUp() {
         parent::setUp();
         $this->auditEntryRepository = $this->container->get(AuditEntryRepository::class);
+        $this->resourceRepository = $this->container->get(ResourceRepository::class);
         $this->loadAllFixtures();
     }
 
@@ -27,7 +31,7 @@ class AuditEntryRepositoryIntegrationTest extends IntegrationTestCase {
     public function testFindByCommandName() {
         $query = AuditEntryListQuery::builder()->filterByCommandNames(['resource_create'])->build();
         $entries = $this->auditEntryRepository->findByQuery($query);
-        $this->assertCount(16, $entries);
+        $this->assertCount($this->resourceRepository->count([]), $entries);
     }
 
     public function testPaginate() {
