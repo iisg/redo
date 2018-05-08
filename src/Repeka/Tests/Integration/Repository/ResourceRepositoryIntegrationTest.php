@@ -33,7 +33,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindAll() {
         $resources = $this->resourceRepository->findAll();
-        $this->assertCount(16, $resources); // resources from fixtures
+        $this->assertCount($this->resourceRepository->count([]), $resources);
     }
 
     public function testFindAllByBookResourceClass() {
@@ -116,7 +116,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     public function testFindAllByDictionaryResourceClass() {
         $query = ResourceListQuery::builder()->filterByResourceClass('dictionaries')->setPage(1)->setResultsPerPage(6)->build();
         $paginatedResources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(4, $paginatedResources->getResults());
+        $this->assertCount(5, $paginatedResources->getResults());
     }
 
     public function testFindAllByResourceKind() {
@@ -137,7 +137,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindByEmptyQuery() {
         $resources = $this->resourceRepository->findByQuery(ResourceListQuery::builder()->build());
-        $this->assertCount(16, $resources);
+        $this->assertCount($this->resourceRepository->count([]), $resources);
     }
 
     public function testFindChildren() {
@@ -170,7 +170,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(0, $resultsBeforeAssigning);
         $book = $this->getPhpBookResource();
         $scannerMetadata = $this->findMetadataByName('Skanista');
-        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $user->getUserData());
+        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $user->getUserData()->getId());
         $book->updateContents($bookContents);
         $this->resourceRepository->save($book);
         $this->getEntityManager()->flush();
@@ -186,7 +186,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $book = $this->getPhpBookResource();
         $scannerMetadata = $this->findMetadataByName('Skanista');
         $groups = $this->userRepository->findUserGroups($user);
-        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $groups[0]);
+        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $groups[0]->getId());
         $book->updateContents($bookContents);
         $this->resourceRepository->save($book);
         $this->getEntityManager()->flush();

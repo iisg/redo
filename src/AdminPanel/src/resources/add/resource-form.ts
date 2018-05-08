@@ -191,16 +191,16 @@ export class ResourceForm {
   }
 
   importValues(valueMap: StringArrayMap): void {
-    const metadataIds = this.resource.kind.metadataList.map(metadata => metadata.id + '');
+    const metadataIds = this.resource.kind.metadataList.map(metadata => metadata.id);
     for (const metadataId in valueMap) {
-      if (!inArray(metadataId + '', metadataIds)) {
+      if (!inArray(parseInt(metadataId), metadataIds)) {
         continue;
       }
       const importedValues = valueMap[metadataId];
-      const currentValues = this.resource.contents[metadataId];
-      for (const value of importedValues) {
-        if (!inArray(value, currentValues)) {
-          currentValues.push(value);
+      const currentValues = this.resource.contents[metadataId].map(v => v.value);
+      for (const metadataValue of importedValues) {
+        if (!inArray(metadataValue.value, currentValues)) {
+          this.resource.contents[metadataId].push(metadataValue);
         }
       }
     }

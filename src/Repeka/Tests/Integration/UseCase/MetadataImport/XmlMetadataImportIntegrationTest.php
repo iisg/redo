@@ -5,9 +5,12 @@ use Repeka\Domain\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\MetadataImport\XmlExtractQuery;
+use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
 class XmlMetadataImportIntegrationTest extends IntegrationTestCase {
+    use FixtureHelpers;
+
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
 
@@ -27,5 +30,8 @@ class XmlMetadataImportIntegrationTest extends IntegrationTestCase {
         $this->assertContains([['value' => 'Artyści obcy w służbie polskiej']], $importedValues);
         $this->assertContains([['value' => 'Artyści obcy w służbie polskiej - epizody z dziejów sztuki']], $importedValues);
         $this->assertContains([['value' => 'pol']], $importedValues);
+        $this->assertContains([['value' => 4962]], $importedValues);
+        $publishingHouse = $this->findResourceByContents(['Nazwa' => 'Narodowego']);
+        $this->assertContains([['value' => $publishingHouse->getId()]], $importedValues);
     }
 }

@@ -12,12 +12,10 @@ class ImportTransformCompositeTest extends \PHPUnit_Framework_TestCase {
         $transformB->method('getName')->willReturn('transformB');
         $transformA->method('apply')->willReturn(['transformedByA']);
         $transformB->method('apply')->willReturn(['transformedByB']);
-        $this->transformComposite = new ImportTransformComposite();
-        $this->transformComposite->register($transformA);
-        $this->transformComposite->register($transformB);
+        $this->transformComposite = new ImportTransformComposite([$transformA, $transformB]);
     }
 
-    public function testTranforming() {
+    public function testTransforming() {
         $transformed = $this->transformComposite->apply(['a'], ['name' => 'transformA']);
         $this->assertEquals(['transformedByA'], $transformed);
     }

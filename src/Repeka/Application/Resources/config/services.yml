@@ -21,6 +21,9 @@ services:
   Repeka\Application\MetadataImport\KohaXmlResourceDownloader:
     - '%xml_import.koha%'
 
+  Repeka\Domain\MetadataImport\Transform\ImportTransformComposite:
+    - !tagged repeka.import_transform
+
   Repeka\Application\Cqrs\RepekaCommandBus:
     -
       - '@Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware'
@@ -73,11 +76,6 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onException, priority: 1000 }
       - { name: monolog.logger, channel: exception_listener }
-
-  Repeka\Application\EventListener\Doctrine\RelationshipPropertyConverterListener:
-    tags:
-      - { name: doctrine.event_listener, event: prePersist }
-      - { name: doctrine.event_listener, event: preUpdate }
 
   Repeka\Application\EventListener\Doctrine\ResourceKindMetadataListConverterListener:
     tags:

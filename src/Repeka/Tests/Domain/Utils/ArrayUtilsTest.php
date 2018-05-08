@@ -86,4 +86,16 @@ class ArrayUtilsTest extends \PHPUnit_Framework_TestCase {
         $result = ArrayUtils::allEqual($values, $mapper);
         $this->assertFalse($result);
     }
+
+    public function testFlattenFlatArray() {
+        $this->assertEquals([1, 2, 3], ArrayUtils::flatten([1, 2, 3]));
+    }
+
+    public function testFlattenTwoDimensionalArray() {
+        $this->assertEquals([1, 2, 3, 4], ArrayUtils::flatten([[1], 2, [3, 4]]));
+    }
+
+    public function testFlattenCrazyArray() {
+        $this->assertEquals([1, 2, 3, 4, 5], ArrayUtils::flatten([[[[1]], 2], [3, [4, [5]]]]));
+    }
 }

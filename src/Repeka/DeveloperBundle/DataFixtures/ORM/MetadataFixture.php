@@ -27,6 +27,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_ASSIGNED_SCANNER = 'metadata-assigned-scanner';
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
     const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
+    const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
 
     const REFERENCE_METADATA_DEPARTMENTS_NAME = 'metadata-departments-name';
     const REFERENCE_METADATA_DEPARTMENTS_ABBREV = 'metadata-departments-abbrev';
@@ -253,6 +254,20 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_ISSUING_DEPARTMENT
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Wydawnictwo',
+                    'label' => [
+                        'PL' => 'Wydawnictwo',
+                        'EN' => 'Publishing house',
+                    ],
+                    'control' => 'relationship',
+                    'resourceClass' => 'books',
+                ]
+            ),
+            self::REFERENCE_METADATA_PUBLISHING_HOUSE
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(

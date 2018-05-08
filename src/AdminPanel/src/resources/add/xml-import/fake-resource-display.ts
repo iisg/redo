@@ -90,7 +90,7 @@ export class FakeResourceDisplay {
   private sanitizeControls(metadataList: Metadata[]): Metadata[] {
     metadataList = metadataList.map(metadata => this.entitySerializer.clone(metadata));
     for (const metadata of metadataList) {
-      if (!inArray(metadata.control, ['text', 'textarea'])) {
+      if (!inArray(metadata.control, ['text', 'textarea', 'relationship'])) {
         metadata.control = 'text';
       }
     }

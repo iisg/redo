@@ -8,7 +8,7 @@
         <resource-metadata-values resource.one-time="resource"
         metadata.one-time="metadata"></resource-metadata-values>
     </template>
-    <template if.bind="!hidePlaceInformation">
+    <template if.bind="!hidePlaceInformation && resource.kind.workflow">
         <span>${'Place' | t}</span>
         <resource-place-display resource.bind="resource"></resource-place-display>
     </template>

@@ -4,8 +4,10 @@ namespace Repeka\Tests\Integration\Traits;
 use Psr\Container\ContainerInterface;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
@@ -16,20 +18,14 @@ use Repeka\Domain\UseCase\User\UserQuery;
  * @method mixed handleCommand(Command $command)
  */
 trait FixtureHelpers {
-    /** @SuppressWarnings("PHPMD.UnusedLocalVariable") */
     private function getPhpBookResource(): ResourceEntity {
-        $query = ResourceListQuery::builder()->filterByResourceClasses(['books'])->build();
-        foreach ($this->getResourceRepository()->findByQuery($query) as $resource) {
-            $isPhpBook = $resource->getContents()->reduceAllValues(
-                function ($value, $metadataId, $isPhpBook) {
-                    return $isPhpBook || $value == 'PHP - to można leczyć!';
-                }
-            );
-            if ($isPhpBook) {
-                return $resource;
-            }
-        }
-        throw new \ErrorException("Resource not found");
+        return $this->findResourceByContents(['Tytuł' => 'PHP - to można leczyć!']);
+    }
+
+    private function findResourceByContents(array $contents): ResourceEntity {
+        $filters = ResourceContents::fromArray($contents)->withMetadataNamesMappedToIds($this->container->get(MetadataRepository::class));
+        $query = ResourceListQuery::builder()->filterByContents($filters)->build();
+        return $this->getResourceRepository()->findByQuery($query)[0];
     }
 
     private function getAdminUser(): User {
