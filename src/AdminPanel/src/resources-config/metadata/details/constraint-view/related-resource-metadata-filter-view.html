@@ -1,0 +1,12 @@
+<template>
+    <require from="../metadata-link/metadata-link"></require>
+
+    <dl class="dl-horizontal">
+        <template repeat.for="[id, filter] of metadata.constraints.relatedResourceMetadataFilter | iterable">
+            <dt class="metadata-link">
+                <metadata-link id.bind="id"></metadata-link>
+            </dt>
+            <dd>${filter}</dd>
+        </template>
+    </dl>
+</template>

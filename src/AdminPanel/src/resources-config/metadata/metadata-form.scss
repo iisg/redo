@@ -1,0 +1,15 @@
+@import "../../common/styles";
+
+.buttons {
+  toggle-button {
+    button {
+      background-color: transparent;
+      icon {
+        color: $red;
+      }
+      span {
+        color: $default-text-color;
+      }
+    }
+  }
+}

@@ -23,7 +23,7 @@ export class MetadataChildAdd implements ComponentAttached {
         .filterByResourceClasses(this.resourceClass)
         .onlyTopLevel()
         .get(),
-      this.metadataRepository.getListQuery().filterByParent(this.parentMetadata).get()
+      this.metadataRepository.getListQuery().filterByParentId(this.parentMetadata.id).get()
     ]).then(results => {
       this.metadataList = results[0];
       this.parentMetadataChildren = results[1];

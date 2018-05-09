@@ -1,0 +1,25 @@
+<template bindable="metadata">
+    <div>
+        <dl class="dl-horizontal">
+            <dt>ID</dt>
+            <dd>${metadata.id}</dd>
+            <dt>${'Name' | t}</dt>
+            <dd>${metadata.name}</dd>
+
+            <dt>${'Label' | t}</dt>
+            <dd>
+                ${metadata.label | inCurrentLanguage}
+            </dd>
+            <dt>${'Control' | t}</dt>
+            <dd>${'controls::' + metadata.control | t}</dd>
+            <dt>${'Hint' | t}</dt>
+            <dd>
+                ${metadata.placeholder | inCurrentLanguage}
+            </dd>
+            <dt>${'Description' | t}</dt>
+            <dd>
+                ${metadata.description | inCurrentLanguage}
+            </dd>
+        </dl>
+    </div>
+</template>

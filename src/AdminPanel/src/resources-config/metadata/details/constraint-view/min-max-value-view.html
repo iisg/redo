@@ -1,0 +1,14 @@
+<template>
+    <dl class="dl-horizontal">
+        <dt class="min-max-value-term">${'Minimum' | t}</dt>
+        <dd>
+            <span if.bind="metadata.constraints.minMaxValue.min !== undefined">${metadata.constraints.minMaxValue.min}</span>
+            <span else>-</span>
+        </dd>
+        <dt class="min-max-value-term">${'Maximum' | t}</dt>
+        <dd>
+            <span if.bind="metadata.constraints.minMaxValue.max !== undefined">${metadata.constraints.minMaxValue.max}</span>
+            <span else>-</span>
+        </dd>
+    </dl>
+</template>

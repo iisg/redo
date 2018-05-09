@@ -31,8 +31,8 @@ export class MetadataListQuery {
     return this;
   }
 
-  public filterByParent(parent: Metadata): MetadataListQuery {
-    this.params.parentId = parent.id;
+  public filterByParentId(parentId: number): MetadataListQuery {
+    this.params.parentId = parentId;
     return this;
   }
 

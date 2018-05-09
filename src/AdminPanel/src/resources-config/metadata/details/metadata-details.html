@@ -1,62 +1,60 @@
 <template>
     <require from="common/components/buttons/remove-button"></require>
     <require from="common/components/buttons/edit-button"></require>
+    <require from="./metadata-constraint"></require>
+    <require from="./metadata-details-list.html"></require>
     <require from="../metadata-list"></require>
     <require from="../metadata-form"></require>
 
-    <div class="au-animate fade-inup-outup"
-        if.bind="metadata">
+    <loading-bar if.bind="!metadata"></loading-bar>
 
-        <div class="pull-right">
-            <pending-throbber entity.bind="metadata"></pending-throbber>
-            <remove-button if.bind="!editing && metadata.id > 0"
+    <div else
+        class="metadata-details au-animate fade-inup-outup">
+
+        <div class="name-with-buttons-and-tabs">
+            <h1>${'Metadata' | t} #${ metadata.id }</h1>
+            <remove-button if.bind="!editing || metadata.id > 0"
                 disabled.bind="metadata.pendingRequest"
                 on-click.call="deleteMetadata()"></remove-button>
-            <edit-button toggled.bind="editing"
-                disabled.bind="metadata.pendingRequest"
-                on-click.call="toggleEditForm()"></edit-button>
+            <pending-throbber entity.bind="metadata"></pending-throbber>
+            <aup-tabs tabs.bind="metadataDetailsTabs"></aup-tabs>
         </div>
-
-        <h1>${'Metadata' | t} #${ metadata.id }</h1>
-
-        <div class="au-animate anim-height-inout-300"
-            if.bind="!editing">
-            <div>
-                <dl class="dl-horizontal">
-                    <dt>ID</dt>
-                    <dd>${metadata.id}</dd>
-                    <dt>${'Name' | t}</dt>
-                    <dd>${metadata.name}</dd>
-
-                    <dt>${'Label' | t}</dt>
-                    <dd>
-                        ${metadata.label | inCurrentLanguage}
-                    </dd>
-                    <dt>${'Control' | t}</dt>
-                    <dd>${'controls::' + metadata.control | t}</dd>
-                    <dt>${'Hint' | t}</dt>
-                    <dd>
-                        ${metadata.placeholder | inCurrentLanguage}
-                    </dd>
-                    <dt>${'Description' | t}</dt>
-                    <dd>
-                        ${metadata.description | inCurrentLanguage}
-                    </dd>
-                </dl>
-            </div>
-
-            <h3>${'Submetadata kinds' | t}</h3>
-            <metadata-list parent-metadata.bind="metadata"
-                resource-class.bind="metadata.resourceClass"></metadata-list>
-
-        </div>
-
-        <div class="au-animate anim-height-inout-900 well"
-            if.bind="editing">
-            <metadata-form submit.call="saveEditedMetadata(metadata, editedMetadata)"
-                template.bind="metadata"
-                edit="true"
-                resource-class.bind="resourceClass"></metadata-form>
-        </div>
+        <aup-tab-content>
+            <aup-tab-pane tab="child-metadata-tab">
+                <div if.bind="currentTabId === 'child-metadata-tab'">
+                    <metadata-list parent-metadata.bind="metadata"
+                        resource-class.bind="metadata.resourceClass"></metadata-list>
+                </div>
+            </aup-tab-pane>
+            <aup-tab-pane tab="details-tab">
+                <div if.bind="currentTabId === 'details-tab'">
+                    <template if.bind="!editing">
+                        <metadata-details-list metadata.bind="metadata"></metadata-details-list>
+                        <edit-button toggled.bind="editing"
+                            disabled.bind="metadata.pendingRequest"
+                            on-click.call="toggleEditForm()"></edit-button>
+                    </template>
+                    <metadata-form else
+                        edit.bind="true"
+                        resource-class.bind="resourceClass"
+                        template.bind="metadata"
+                        submit.call="saveEditedMetadata(metadata, editedMetadata)"
+                        cancel.call="toggleEditForm()"></metadata-form>
+                </div>
+            </aup-tab-pane>
+            <aup-tab-pane tab="constraints-tab">
+                <div if.bind="currentTabId === 'constraints-tab'">
+                    <dl class="constraints-list dl-horizontal">
+                        <template repeat.for="constraintName of constraintNames">
+                            <dt class="constraints-term-name"> ${'metadata_constraints::labels//' + constraintName | t}</dt>
+                            <dd class="constraints-name">
+                                <metadata-constraint name.bind="constraintName"
+                                    metadata.bind="metadata"></metadata-constraint>
+                            </dd>
+                        </template>
+                    </dl>
+                </div>
+            </aup-tab-pane>
+        </aup-tab-content>
     </div>
 </template>

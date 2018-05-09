@@ -1,0 +1,36 @@
+@import "../../../common/styles";
+
+.metadata-details {
+  #details-tab > div {
+    position: relative;
+    display: flex;
+    & > metadata-details-list {
+      padding: $default-gap-size;
+    }
+    & > metadata-form {
+      padding: $default-gap-size;
+    }
+    metadata-form {
+      flex: 1;
+    }
+    edit-button {
+      position: sticky;
+      top: 0;
+      align-self: baseline;
+      margin-left: auto;
+    }
+  }
+  #constraints-tab > div {
+    position: relative;
+    display: flex;
+    & > .constraints-list {
+      padding: $default-gap-size;
+      .constraints-term-name {
+        width: 250px;
+      }
+      .constraints-name {
+        margin-left: 270px;
+      }
+    }
+  }
+}

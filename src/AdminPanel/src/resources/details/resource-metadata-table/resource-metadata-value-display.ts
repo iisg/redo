@@ -22,7 +22,7 @@ export class ResourceMetadataValueDisplay {
     this.submetadataResource.kind.metadataList = [];
     if (this.hasSubmetadata) {
       this.submetadataResource.contents = this.value.submetadata || {};
-      this.submetadataResource.kind.metadataList = await this.metadataRepository.getListQuery().filterByParent(this.metadata).get();
+      this.submetadataResource.kind.metadataList = await this.metadataRepository.getListQuery().filterByParentId(this.metadata.id).get();
     }
   }
 

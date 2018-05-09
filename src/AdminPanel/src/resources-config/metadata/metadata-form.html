@@ -1,5 +1,6 @@
 <template>
     <require from="./metadata-control-select"></require>
+    <require from="common/components/buttons/toggle-button"></require>
 
     <form submit.delegate="validateAndSubmit()">
         <div class="row">
@@ -22,17 +23,14 @@
         </div>
         <compose view="./metadata-editable-properties.html"></compose>
         <div class="form-group text-right no-margin-top">
-            <div class="btn-group">
-                <button type="button"
-                    class="btn btn-warning"
-                    click.delegate="cancel()"
-                    if.bind="cancelButton"
-                    disabled.bind="submitting">
-                    <icon name="remove-3"></icon>
-                    ${'Cancel' | t}
-                </button>
+            <div class="buttons btn-group">
                 <submit-button submitting.bind="submitting"
                     editing.bind="edit"></submit-button>
+                <toggle-button if.bind="edit"
+                    primary-icon-name="remove-3"
+                    primary-label="Cancel"
+                    disabled.bind="metadata.pendingRequest"
+                    on-click.call="cancel()"></toggle-button>
             </div>
         </div>
     </form>
