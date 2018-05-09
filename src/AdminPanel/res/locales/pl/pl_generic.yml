@@ -20,8 +20,8 @@ Apply: Zatwierdź
 Cancel: Anuluj
 Flag: Flaga
 Language: Język
-Metadata: Metadane
 Workflow: Proces
+Metadata: Metadana
 Child resources: Podzasoby
 Resource kind: Rodzaj zasobu
 Select flag: Wybierz flagę
@@ -107,6 +107,8 @@ Possible actions: Możliwe czynności
 Fix: Napraw
 You cannot revoke system roles from yourself.: Nie możesz odebrać sobie roli systemowej.
 Resource doesn't exist: Zasób nie istnieje
+Resource kind doesn't exist: Rodzaj zasobu nie istnieje
+Metadata doesn't exist: Metadana nie istnieje
 Constraints: Ograniczenia
 At most: Najwyżej
 At least: Co najmniej

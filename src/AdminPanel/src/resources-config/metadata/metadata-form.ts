@@ -4,17 +4,15 @@ import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {Metadata} from "./metadata";
 import {computedFrom} from "aurelia-binding";
-import {noop, VoidFunction} from "common/utils/function-utils";
 import {changeHandler} from "common/components/binding-mode";
 import {EntitySerializer} from "common/dto/entity-serializer";
 
 @autoinject
 export class MetadataForm implements ComponentAttached {
   @bindable submit: (value: {editedMetadata: Metadata}) => Promise<any>;
-  @bindable cancel: VoidFunction = noop;
+  @bindable cancel: () => void;
   @bindable(changeHandler('resetValues')) template: Metadata;
   @bindable edit: boolean = false;
-  @bindable cancelButton: boolean = false;
   @bindable resourceClass: string;
 
   metadata: Metadata = new Metadata();

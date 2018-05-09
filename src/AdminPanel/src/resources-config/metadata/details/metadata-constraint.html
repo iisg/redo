@@ -1,0 +1,14 @@
+<template>
+    <!--
+    App may appear to work without these requires, but every now and then some
+    views may be missing. Require all constraint views here for reliability.
+    -->
+    <require from="./constraint-view/resource-kind-view.html"></require>
+    <require from="./constraint-view/max-count-view.html"></require>
+    <require from="./constraint-view/regex-view.html"></require>
+    <require from="./constraint-view/min-max-value-view.html"></require>
+    <require from="./constraint-view/related-resource-metadata-filter-view.html"></require>
+
+        <compose view="./constraint-view/${constraintViewName}-view.html"
+            model.bind="composeModel"></compose>
+</template>

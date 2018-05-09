@@ -1,0 +1,19 @@
+<template>
+    <require from="resources-config/metadata/metadata-label"></require>
+
+    <span if.bind="loading">
+        <throbber></throbber>
+        ${'Metadata' | t} #${id}&hellip;
+    </span>
+    <template if.bind="!loading && metadata != undefined">
+        <a route-href="route: metadata/details; params.bind: {id: metadata.id}; replace: true">
+            ${metadata | metadataLabel}
+        </a>
+    </template>
+    <span if.bind="!loading && metadata == undefined"
+        class="text-warning"
+        title.bind="'Metadata doesn\'t exist' | t">
+        <icon name="remove-5"></icon>
+        ${'Metadata' | t} #${id}
+    </span>
+</template>

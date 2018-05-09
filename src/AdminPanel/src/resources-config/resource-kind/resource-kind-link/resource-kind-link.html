@@ -1,0 +1,17 @@
+<template>
+    <span if.bind="loading">
+        <throbber></throbber>
+        ${'Resource kind' | t} #${id}&hellip;
+    </span>
+    <template if.bind="!loading && resourceKind != undefined">
+        <a route-href="route: resource-kinds/details; params.bind: {id: resourceKind.id}; replace: true">
+            ${resourceKind.label | inCurrentLanguage}
+        </a>
+    </template>
+    <span if.bind="!loading && resourceKind == undefined"
+        class="text-warning"
+        title.bind="'Resource kind doesn\'t exist' | t">
+        <icon name="remove-5"></icon>
+        ${'Resource kind' | t} #${id}
+    </span>
+</template>

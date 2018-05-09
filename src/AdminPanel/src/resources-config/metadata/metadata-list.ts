@@ -34,7 +34,7 @@ export class MetadataList {
     this.metadataList = undefined;
     let query = this.metadataRepository.getListQuery();
     query = this.parentMetadata
-      ? query.filterByParent(this.parentMetadata)
+      ? query.filterByParentId(this.parentMetadata.id)
       : query.filterByResourceClasses(this.resourceClass).onlyTopLevel();
     this.metadataList = await query.get();
     this.progressBar = false;

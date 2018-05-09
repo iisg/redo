@@ -1,0 +1,9 @@
+<template>
+    <require from="resources-config/resource-kind/resource-kind-link/resource-kind-link"></require>
+
+    <span if.bind="metadata.constraints.resourceKind.length"
+        repeat.for="resourceKindId of metadata.constraints.resourceKind">
+        <resource-kind-link id.bind="resourceKindId"></resource-kind-link>
+    </span>
+    <span else>-</span>
+</template>

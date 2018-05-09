@@ -80,6 +80,7 @@ export class ResourceDetails implements RoutableComponentActivate {
       this.resourceDetailsTabs.push({id: 'child-resources-tab', label: this.i18n.tr('Child resources')});
     }
     this.resourceDetailsTabs.push({id: 'metadata-tab', label: this.i18n.tr('Metadata')});
+    this.currentTabId = this.hasChildren ? 'child-resources-tab' : 'metadata-tab';
     if (this.resource.kind.workflow) {
       this.resourceDetailsTabs.push({id: 'workflow-tab',
         label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)});
