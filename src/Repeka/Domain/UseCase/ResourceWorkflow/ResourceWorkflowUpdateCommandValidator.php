@@ -3,7 +3,6 @@ namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;

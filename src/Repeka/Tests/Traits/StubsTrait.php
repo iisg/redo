@@ -14,9 +14,6 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\PageResult;
-use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
@@ -113,21 +110,25 @@ trait StubsTrait {
         $idCounter = 1;
         $repository = $this->createMock($repositoryClassName);
         $repository->method('findAll')->willReturn($entityList);
-        $repository->method('findOne')->willReturnCallback(function ($id) use ($lookup, $repositoryClassName) {
-            if (array_key_exists($id, $lookup)) {
-                return $lookup[$id];
-            } else {
-                throw new EntityNotFoundException($repositoryClassName . 'Mock', $id);
+        $repository->method('findOne')->willReturnCallback(
+            function ($id) use ($lookup, $repositoryClassName) {
+                if (array_key_exists($id, $lookup)) {
+                    return $lookup[$id];
+                } else {
+                    throw new EntityNotFoundException($repositoryClassName . 'Mock', $id);
+                }
             }
-        });
-        $repository->method('save')->willReturnCallback(function ($entity) use (&$idCounter) {
-            /** @var Identifiable $entity */
-            if ($entity->getId() === null) {
-                // Entities returned by save() method must have an ID assigned.
-                EntityUtils::forceSetId($entity, $idCounter++);
+        );
+        $repository->method('save')->willReturnCallback(
+            function ($entity) use (&$idCounter) {
+                /** @var Identifiable $entity */
+                if ($entity->getId() === null) {
+                    // Entities returned by save() method must have an ID assigned.
+                    EntityUtils::forceSetId($entity, $idCounter++);
+                }
+                return $entity;
             }
-            return $entity;
-        });
+        );
         return $repository;
     }
 
@@ -137,27 +138,31 @@ trait StubsTrait {
      */
     protected function createMetadataRepositoryStub(array $metadataList = []): \PHPUnit_Framework_MockObject_MockObject {
         $repository = $this->createRepositoryStub(MetadataRepository::class, $metadataList);
-        $repository->method('findByName')->willReturnCallback(function (string $name) use ($metadataList) {
-            foreach ($metadataList as $metadata) {
-                if ($metadata->getName() === $name) {
-                    return $metadata;
+        $repository->method('findByName')->willReturnCallback(
+            function (string $name) use ($metadataList) {
+                foreach ($metadataList as $metadata) {
+                    if ($metadata->getName() === $name) {
+                        return $metadata;
+                    }
                 }
+                throw new EntityNotFoundException('Metadata', $name);
             }
-            throw new EntityNotFoundException('Metadata', $name);
-        });
+        );
         return $repository;
     }
 
     /** @return MetadataConstraintManager */
     protected function createMetadataConstraintManagerStub(array $namesToConstraintsMap): \PHPUnit_Framework_MockObject_MockObject {
         $stub = $this->createMock(MetadataConstraintManager::class);
-        $stub->method('get')->willReturnCallback(function ($ruleName) use ($namesToConstraintsMap) {
-            if (array_key_exists($ruleName, $namesToConstraintsMap)) {
-                return $namesToConstraintsMap[$ruleName];
-            } else {
-                throw new \InvalidArgumentException("MetadataConstraintManager stub doesn't contain validator for '$ruleName'");
+        $stub->method('get')->willReturnCallback(
+            function ($ruleName) use ($namesToConstraintsMap) {
+                if (array_key_exists($ruleName, $namesToConstraintsMap)) {
+                    return $namesToConstraintsMap[$ruleName];
+                } else {
+                    throw new \InvalidArgumentException("MetadataConstraintManager stub doesn't contain validator for '$ruleName'");
+                }
             }
-        });
+        );
         return $stub;
     }
 
@@ -168,13 +173,15 @@ trait StubsTrait {
     protected function createRuleMock(string $ruleClass, bool $result, ?string $exceptionMessage = null) {
         $mock = $this->createMock($ruleClass);
         $mock->method('validate')->willReturn($result);
-        $mock->method('assert')->willReturnCallback(function () use ($result, $exceptionMessage) {
-            if ($result) {
-                return true;
-            } else {
-                throw new ValidationException($exceptionMessage);
+        $mock->method('assert')->willReturnCallback(
+            function () use ($result, $exceptionMessage) {
+                if ($result) {
+                    return true;
+                } else {
+                    throw new ValidationException($exceptionMessage);
+                }
             }
-        });
+        );
         return $mock;
     }
 

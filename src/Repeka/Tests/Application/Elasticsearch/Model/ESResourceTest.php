@@ -14,16 +14,23 @@ class ESResourceTest extends ElasticsearchTest {
 
     public function testInsertingDocument() {
         $typeMock = $this->createMock(Type::class);
-        $typeMock->expects($this->once())->method('addDocument')->with($this->callback(function ($doc) {
-            /** @var $doc Document */
-            $this->assertEquals([
-                'metadata' => [
-                    ['value' => self::METADATA1_VALUE],
-                    ['value' => self::METADATA2_VALUE],
-                ]
-            ], $doc->getData());
-            return true;
-        }));
+        $typeMock->expects($this->once())->method('addDocument')->with(
+            $this->callback(
+                function ($doc) {
+                    /** @var $doc Document */
+                    $this->assertEquals(
+                        [
+                            'metadata' => [
+                                ['value' => self::METADATA1_VALUE],
+                                ['value' => self::METADATA2_VALUE],
+                            ],
+                        ],
+                        $doc->getData()
+                    );
+                    return true;
+                }
+            )
+        );
         $this->indexMock->method('getType')->with(ResourceConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
         $res = new ESResource($this->clientMock, self::INDEX_NAME);
         /** @var IndexedMetadata|\PHPUnit_Framework_MockObject_MockObject $mockMetadata1 */

@@ -136,15 +136,19 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
         $place2 = new ResourceWorkflowPlace([], null, [], []);
         $place3 = new ResourceWorkflowPlace([], null, [], [2]);
         $this->workflow->method('getPlaces')->willReturn([$place1, $place2, $place3]);
-        $oldContents = ResourceContents::fromArray([
-            1 => ['foo', 'bar'],
-            2 => [['value' => $identifiable->getId(), 'submetadata' => [3 => $identifiable->getId()]]],
-        ]);
+        $oldContents = ResourceContents::fromArray(
+            [
+                1 => ['foo', 'bar'],
+                2 => [['value' => $identifiable->getId(), 'submetadata' => [3 => $identifiable->getId()]]],
+            ]
+        );
         $this->resource->method('getContents')->willReturn($oldContents);
-        $newContents = ResourceContents::fromArray([
-            1 => ['foo', 'bar'],
-            2 => [['value' => $identifiable->getId(), 'submetadata' => [3 => $identifiable]]],
-        ]);
+        $newContents = ResourceContents::fromArray(
+            [
+                1 => ['foo', 'bar'],
+                2 => [['value' => $identifiable->getId(), 'submetadata' => [3 => $identifiable]]],
+            ]
+        );
         $this->assertTrue($this->rule->forResource($this->resource)->validate($newContents));
     }
 

@@ -12,38 +12,52 @@ class ConstraintArgumentsAreValidRuleTest extends \PHPUnit_Framework_TestCase {
     public function testAcceptsWhenAllValidatorsAccept() {
         $constraint = $this->createMock(AbstractMetadataConstraint::class);
         $constraint->expects($this->exactly(2))->method('isConfigValid')->willReturn(true);
-        $constraintManager = $this->createMetadataConstraintManagerStub([
-            'a' => $constraint,
-            'b' => $constraint,
-        ]);
-        $this->assertTrue((new ConstraintArgumentsAreValidRule($constraintManager))->validate([
-            'a' => 1,
-            'b' => 2,
-        ]));
+        $constraintManager = $this->createMetadataConstraintManagerStub(
+            [
+                'a' => $constraint,
+                'b' => $constraint,
+            ]
+        );
+        $this->assertTrue(
+            (new ConstraintArgumentsAreValidRule($constraintManager))->validate(
+                [
+                    'a' => 1,
+                    'b' => 2,
+                ]
+            )
+        );
     }
 
     public function testRejectsWhenAnyValidatorRejects() {
         $constraint = $this->createMock(AbstractMetadataConstraint::class);
         $constraint->expects($this->exactly(2))->method('isConfigValid')->willReturn(true, false, true);
-        $constraintManager = $this->createMetadataConstraintManagerStub([
-            'a' => $constraint,
-            'b' => $constraint,
-            'c' => $constraint,
-        ]);
-        $this->assertFalse((new ConstraintArgumentsAreValidRule($constraintManager))->validate([
-            'a' => 1,
-            'b' => 2,
-            'c' => 3,
-        ]));
+        $constraintManager = $this->createMetadataConstraintManagerStub(
+            [
+                'a' => $constraint,
+                'b' => $constraint,
+                'c' => $constraint,
+            ]
+        );
+        $this->assertFalse(
+            (new ConstraintArgumentsAreValidRule($constraintManager))->validate(
+                [
+                    'a' => 1,
+                    'b' => 2,
+                    'c' => 3,
+                ]
+            )
+        );
     }
 
     public function testAcceptsWhenNothingToValidate() {
         $constraint = $this->createMock(AbstractMetadataConstraint::class);
         $constraint->expects($this->never())->method('isConfigValid')->willReturn(true);
-        $constraintManager = $this->createMetadataConstraintManagerStub([
-            'a' => $constraint,
-            'b' => $constraint,
-        ]);
+        $constraintManager = $this->createMetadataConstraintManagerStub(
+            [
+                'a' => $constraint,
+                'b' => $constraint,
+            ]
+        );
         $this->assertTrue((new ConstraintArgumentsAreValidRule($constraintManager))->validate([]));
     }
 

@@ -46,10 +46,14 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->resourceDisplayStrategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
-        $this->resourceKindRepository->method('findOne')->will($this->returnValueMap([
-            [1, $this->createResourceKindMock(1, 'books')],
-            [2, $this->createResourceKindMock(2, 'dictionaries')],
-        ]));
+        $this->resourceKindRepository->method('findOne')->will(
+            $this->returnValueMap(
+                [
+                    [1, $this->createResourceKindMock(1, 'books')],
+                    [2, $this->createResourceKindMock(2, 'dictionaries')],
+                ]
+            )
+        );
         $this->validator = new ResourceKindCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepository),
             new CorrectResourceDisplayStrategySyntaxRule($this->resourceDisplayStrategyEvaluator),
@@ -59,19 +63,25 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testValidating() {
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            $this->createMetadataMock(SystemMetadata::PARENT),
-            $this->createMetadataMock(),
-        ]);
+        $command = new ResourceKindCreateCommand(
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+            ]
+        );
         $this->validator->validate($command);
     }
 
     public function testFailWhenNoLabel() {
         $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand([], [
-            $this->createMetadataMock(SystemMetadata::PARENT),
-            $this->createMetadataMock(),
-        ]);
+        $command = new ResourceKindCreateCommand(
+            [],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+            ]
+        );
         $this->validator->validate($command);
     }
 
@@ -89,28 +99,37 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testFailWhenNoParentMetadata() {
         $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            $this->createMetadataMock(),
-            $this->createMetadataMock(),
-        ]);
+        $command = new ResourceKindCreateCommand(
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(),
+                $this->createMetadataMock(),
+            ]
+        );
         $this->validator->validate($command);
     }
 
     public function testFailWhenDifferentResourceClassesOfMetadata() {
         $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            $this->createMetadataMock(SystemMetadata::PARENT),
-            $this->createMetadataMock(),
-            $this->createMetadataMock(1, 1, null, [], 'unicorns'),
-        ]);
+        $command = new ResourceKindCreateCommand(
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+                $this->createMetadataMock(1, 1, null, [], 'unicorns'),
+            ]
+        );
         $this->validator->validate($command);
     }
 
     public function testIgnoringSystemMetadataResourceClass() {
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            SystemMetadata::PARENT()->toMetadata(),
-            $this->createMetadataMock(),
-        ]);
+        $command = new ResourceKindCreateCommand(
+            ['PL' => 'Labelka'],
+            [
+                SystemMetadata::PARENT()->toMetadata(),
+                $this->createMetadataMock(),
+            ]
+        );
         $this->validator->validate($command);
     }
 
@@ -121,19 +140,26 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ->method('validateTemplate')
             ->with('This is the header')
             ->willThrowException(new InvalidResourceDisplayStrategyException('Syntax error'));
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            $this->createMetadataMock(SystemMetadata::PARENT),
-            $this->createMetadataMock(),
-        ], ['header' => 'This is the header']);
+        $command = new ResourceKindCreateCommand(
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+            ],
+            ['header' => 'This is the header']
+        );
         $this->validator->validate($command);
     }
 
     public function testFailsWhenChildrenHaveDifferentResourceClasses() {
         $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], [
-            $this->createMetadataMock(SystemMetadata::PARENT, null, null, ['resourceKind' => [1,2]]),
-            $this->createMetadataMock(0, null, null, [], 'books'),
-        ]);
+        $command = new ResourceKindCreateCommand(
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT, null, null, ['resourceKind' => [1, 2]]),
+                $this->createMetadataMock(0, null, null, [], 'books'),
+            ]
+        );
         $this->validator->validate($command);
     }
 }

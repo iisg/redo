@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Cqrs\Middleware;
 
 use Repeka\Domain\Cqrs\Command;

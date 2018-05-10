@@ -9,9 +9,11 @@ class XmlArrayDataExtractor {
         $importedValues = [];
         foreach ($mappings as $metadataKey => $selector) {
             $importedValues[$metadataKey] = [];
-            $crawler->filter($selector)->each(function (Crawler $subtree) use (&$importedValues, $metadataKey) {
-                $importedValues[$metadataKey][] = $subtree->html();
-            });
+            $crawler->filter($selector)->each(
+                function (Crawler $subtree) use (&$importedValues, $metadataKey) {
+                    $importedValues[$metadataKey][] = $subtree->html();
+                }
+            );
         }
         return $importedValues;
     }

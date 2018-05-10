@@ -21,8 +21,11 @@ class DirectoryContentsLister {
 
     /** @return \SplFileInfo[] */
     public function listSubfoldersRecursively(string $path): array {
-        return array_filter($this->listRecursively($path), function (\SplFileInfo $fileInfo) {
-            return $fileInfo->isDir();
-        });
+        return array_filter(
+            $this->listRecursively($path),
+            function (\SplFileInfo $fileInfo) {
+                return $fileInfo->isDir();
+            }
+        );
     }
 }

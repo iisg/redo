@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Command;
 
 use Repeka\Application\Repository\Transactional;
@@ -11,9 +10,11 @@ abstract class TransactionalCommand extends Command {
     use Transactional;
 
     final protected function execute(InputInterface $input, OutputInterface $output) {
-        $this->transactional(function () use ($input, $output) {
-            return $this->executeInTransaction($input, $output);
-        });
+        $this->transactional(
+            function () use ($input, $output) {
+                return $this->executeInTransaction($input, $output);
+            }
+        );
     }
 
     abstract protected function executeInTransaction(InputInterface $input, OutputInterface $output);

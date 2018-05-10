@@ -17,9 +17,12 @@ class UserEntityNormalizer extends AbstractNormalizer implements NormalizerAware
         return [
             'id' => $user->getId(),
             'userData' => $this->normalizer->normalize($user->getUserData()),
-            'roles' => array_map(function (UserRole $role) {
-                return $this->normalizer->normalize($role);
-            }, $user->getUserRoles()),
+            'roles' => array_map(
+                function (UserRole $role) {
+                    return $this->normalizer->normalize($role);
+                },
+                $user->getUserRoles()
+            ),
         ];
     }
 

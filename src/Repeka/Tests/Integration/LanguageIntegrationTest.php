@@ -15,19 +15,26 @@ class LanguageIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('GET', self::ENDPOINT);
         $this->assertStatusCode(200, $client->getResponse());
         $responseContent = json_decode($client->getResponse()->getContent(), true);
-        $languageCodes = array_map(function ($language) {
-            return $language['code'];
-        }, $responseContent);
+        $languageCodes = array_map(
+            function ($language) {
+                return $language['code'];
+            },
+            $responseContent
+        );
         $this->assertContains($language1->getCode(), $languageCodes);
     }
 
     public function testCreatingLanguage() {
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::ENDPOINT, [
-            'code' => 'TEST',
-            'flag' => 'TE',
-            'name' => 'testing',
-        ]);
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'code' => 'TEST',
+                'flag' => 'TE',
+                'name' => 'testing',
+            ]
+        );
         $this->assertStatusCode(201, $client->getResponse());
         /** @var $languageRepository LanguageRepository */
         $languageRepository = $this->container->get(LanguageRepository::class);

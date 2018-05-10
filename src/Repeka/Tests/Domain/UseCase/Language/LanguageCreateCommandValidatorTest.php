@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\Language;
 
-use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommandValidator;
 

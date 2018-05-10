@@ -59,15 +59,21 @@ class ResourceWorkflow implements Identifiable {
 
     /** @return ResourceWorkflowTransition[] */
     private function getTransitionsAsObjects(): array {
-        return array_map(function (array $transition) {
-            return ResourceWorkflowTransition::fromArray($transition);
-        }, $this->transitions);
+        return array_map(
+            function (array $transition) {
+                return ResourceWorkflowTransition::fromArray($transition);
+            },
+            $this->transitions
+        );
     }
 
     private function getPlacesAsObjects() {
-        return array_map(function (array $place) {
-            return ResourceWorkflowPlace::fromArray($place);
-        }, $this->places);
+        return array_map(
+            function (array $place) {
+                return ResourceWorkflowPlace::fromArray($place);
+            },
+            $this->places
+        );
     }
 
     public function apply(ResourceEntity $resource, string $transition): ResourceEntity {

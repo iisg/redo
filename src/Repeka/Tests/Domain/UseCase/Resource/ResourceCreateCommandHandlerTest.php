@@ -6,7 +6,6 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -87,9 +86,13 @@ class ResourceCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testMovingFiles() {
         $fileBaseMetadataId = 1;
-        $resourceKind = $this->createResourceKindMock(1, 'books', [
-            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
-        ]);
+        $resourceKind = $this->createResourceKindMock(
+            1,
+            'books',
+            [
+                $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
+            ]
+        );
         $contents = ResourceContents::fromArray([$fileBaseMetadataId => []]);
         $command = new ResourceCreateCommand($resourceKind, $contents, $this->user);
         $this->fileHelper->expects($this->once())->method('moveFilesToDestinationPaths');

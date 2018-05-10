@@ -16,10 +16,16 @@ class InvalidCommandException extends DomainException {
         \Exception $previous = null,
         int $status = 400
     ) {
-        parent::__construct('invalidCommand', $status, [
-            'command' => $command ? $command->getCommandName() : '',
-            'violations' => $violations,
-        ], $previous, $message);
+        parent::__construct(
+            'invalidCommand',
+            $status,
+            [
+                'command' => $command ? $command->getCommandName() : '',
+                'violations' => $violations,
+            ],
+            $previous,
+            $message
+        );
         $this->command = $command;
         $this->violations = $violations;
     }

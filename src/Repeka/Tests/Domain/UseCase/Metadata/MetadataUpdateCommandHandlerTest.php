@@ -25,19 +25,25 @@ class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testUpdating() {
         $dummy = new \stdClass();
-        $command = MetadataUpdateCommand::fromArray(1, [
-            'label' => ['PL' => 'new label'],
-            'constraints' => [$dummy]
-        ]);
+        $command = MetadataUpdateCommand::fromArray(
+            1,
+            [
+                'label' => ['PL' => 'new label'],
+                'constraints' => [$dummy],
+            ]
+        );
         $updated = $this->handler->handle($command);
         $this->assertEquals(['PL' => 'new label'], $updated->getLabel());
         $this->assertEquals([$dummy], $updated->getConstraints());
     }
 
     public function testUpdatingWithChangedResourceClassDoesNotCauseChange() {
-        $command = MetadataUpdateCommand::fromArray(1, [
-            'resourceClass' => 'invalidResourceClass'
-        ]);
+        $command = MetadataUpdateCommand::fromArray(
+            1,
+            [
+                'resourceClass' => 'invalidResourceClass',
+            ]
+        );
         $updated = $this->handler->handle($command);
         $this->assertEquals('books', $updated->getResourceClass());
     }

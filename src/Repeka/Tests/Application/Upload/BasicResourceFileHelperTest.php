@@ -33,19 +33,24 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $this->pathGenerator->method('getUploadsRootPath')->willReturn($this->uploadsRoot);
         $this->filesystemDriver = $this->createMock(FilesystemDriver::class);
         $fileMetadataMock = $this->createMetadataMock(self::FILE_METADATA_ID, 1, MetadataControl::FILE());
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [
-            $fileMetadataMock,
-            $this->createMetadataMock(self::OTHER_METADATA_ID, 1, MetadataControl::TEXT()),
-        ]);
+        $metadataRepository = $this->createRepositoryStub(
+            MetadataRepository::class,
+            [
+                $fileMetadataMock,
+                $this->createMetadataMock(self::OTHER_METADATA_ID, 1, MetadataControl::TEXT()),
+            ]
+        );
         $metadataRepository->method('findByQuery')->willReturn([$fileMetadataMock]);
         $this->helper = new BasicResourceFileHelper($this->pathGenerator, $this->filesystemDriver, $metadataRepository);
     }
 
     public function testMovingFilesToDestinationPaths() {
-        $contents = ResourceContents::fromArray([
-            self::FILE_METADATA_ID => ['somewhere/todo.list', 'somewhere/cuteCat.jpg'],
-            self::OTHER_METADATA_ID => ['somewhere/cantTouchThis', 'somewhere/nanananana.batman'],
-        ])->toArray();
+        $contents = ResourceContents::fromArray(
+            [
+                self::FILE_METADATA_ID => ['somewhere/todo.list', 'somewhere/cuteCat.jpg'],
+                self::OTHER_METADATA_ID => ['somewhere/cantTouchThis', 'somewhere/nanananana.batman'],
+            ]
+        )->toArray();
         $resource = $this->createResourceMock(123, null, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
         $this->filesystemDriver->expects($this->atLeastOnce())
@@ -70,19 +75,31 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
         $this->filesystemDriver->expects($this->once())->method('listFiles')->willReturn(
             ['a.txt', 'b.txt']
         );
-        $contents = ResourceContents::fromArray([
-            self::FILE_METADATA_ID => ['q/w/e/r/t/y/abcxyz/a.txt'],
-        ])->toArray();
-
+        $contents = ResourceContents::fromArray(
+            [
+                self::FILE_METADATA_ID => ['q/w/e/r/t/y/abcxyz/a.txt'],
+            ]
+        )->toArray();
         $resource = $this->createResourceMock(123, null, $contents);
         $this->filesystemDriver->expects($this->once())->method('delete')->with('/var/uploads/whatever/q/w/e/r/t/y/abcxyz/b.txt');
         $this->helper->prune($resource);
     }
 
     public function testMovingFilesToDestinationPathsEvenIfFilesInSubmetadata() {
-        $contents = ResourceContents::fromArray([
-            self::OTHER_METADATA_ID => [['submetadata' => [self::FILE_METADATA_ID => ['somewhere/todo.list', 'somewhere/cuteCat.jpg']]]],
-        ])->toArray();
+        $contents = ResourceContents::fromArray(
+            [
+                self::OTHER_METADATA_ID => [
+                    [
+                        'submetadata' => [
+                            self::FILE_METADATA_ID => [
+                                'somewhere/todo.list',
+                                'somewhere/cuteCat.jpg',
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        )->toArray();
         $resource = $this->createResourceMock(123, null, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
         $this->filesystemDriver->expects($this->atLeastOnce())
@@ -103,9 +120,11 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testFilesAreNotMovedWhenTheyAreInCorrectPath() {
-        $contents = ResourceContents::fromArray([
-            self::FILE_METADATA_ID => ["$this->destinationPath/todo.list"],
-        ])->toArray();
+        $contents = ResourceContents::fromArray(
+            [
+                self::FILE_METADATA_ID => ["$this->destinationPath/todo.list"],
+            ]
+        )->toArray();
         $resource = $this->createResourceMock(123, null, $contents);
         $this->pathGenerator->expects($this->atLeastOnce())->method('getDestinationPath')->with($resource);
         $this->filesystemDriver->expects($this->never())->method('move');

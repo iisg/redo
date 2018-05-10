@@ -24,9 +24,12 @@ class GenerateFlagListCommand extends ContainerAwareCommand {
     }
 
     private function stripSvgExtensions(array $files): array {
-        return array_map(function ($file) {
-            return basename($file, '.svg');
-        }, $files);
+        return array_map(
+            function ($file) {
+                return basename($file, '.svg');
+            },
+            $files
+        );
     }
 
     /**

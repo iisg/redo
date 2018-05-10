@@ -18,12 +18,18 @@ class ResourceWorkflowNormalizer extends AbstractNormalizer implements Normalize
         return [
             'id' => $resourceWorkflow->getId(),
             'name' => $this->emptyArrayAsObject($resourceWorkflow->getName()),
-            'places' => array_map(function (ResourceWorkflowPlace $place) {
-                return $this->normalizer->normalize($place);
-            }, $resourceWorkflow->getPlaces()),
-            'transitions' => array_map(function (ResourceWorkflowTransition $transition) {
-                return $this->normalizer->normalize($transition);
-            }, $resourceWorkflow->getTransitions()),
+            'places' => array_map(
+                function (ResourceWorkflowPlace $place) {
+                    return $this->normalizer->normalize($place);
+                },
+                $resourceWorkflow->getPlaces()
+            ),
+            'transitions' => array_map(
+                function (ResourceWorkflowTransition $transition) {
+                    return $this->normalizer->normalize($transition);
+                },
+                $resourceWorkflow->getTransitions()
+            ),
             'diagram' => $resourceWorkflow->getDiagram(),
             'thumbnail' => $resourceWorkflow->getThumbnail(),
             'resourceClass' => $resourceWorkflow->getResourceClass(),

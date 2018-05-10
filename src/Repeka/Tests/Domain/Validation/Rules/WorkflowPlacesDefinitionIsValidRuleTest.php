@@ -48,13 +48,22 @@ class WorkflowPlacesDefinitionIsValidRuleTest extends \PHPUnit_Framework_TestCas
     }
 
     public function testValidWithPlaceAsArrayWithRequiredMetadataIds() {
-        $command = new ResourceWorkflowCreateCommand([], [[
-            'id' => 'fooId',
-            'label' => ['PL' => 'A'],
-            'requiredMetadataIds' => [1, 2, 3],
-            'lockedMetadataIds' => [4, 5],
-            'assigneeMetadataIds' => [6],
-        ]], [], 'books', null, null);
+        $command = new ResourceWorkflowCreateCommand(
+            [],
+            [
+                [
+                    'id' => 'fooId',
+                    'label' => ['PL' => 'A'],
+                    'requiredMetadataIds' => [1, 2, 3],
+                    'lockedMetadataIds' => [4, 5],
+                    'assigneeMetadataIds' => [6],
+                ],
+            ],
+            [],
+            'books',
+            null,
+            null
+        );
         $this->validator->validate($command);
     }
 
@@ -90,11 +99,20 @@ class WorkflowPlacesDefinitionIsValidRuleTest extends \PHPUnit_Framework_TestCas
     }
 
     public function testInvalidWhenLockedMetadataIdsNotAnArray() {
-        $command = new ResourceWorkflowCreateCommand([], [[
-            'id' => 'fooId',
-            'label' => ['PL' => 'A'],
-            'lockedMetadataIds' => 1,
-        ]], [], 'books', null, null);
+        $command = new ResourceWorkflowCreateCommand(
+            [],
+            [
+                [
+                    'id' => 'fooId',
+                    'label' => ['PL' => 'A'],
+                    'lockedMetadataIds' => 1,
+                ],
+            ],
+            [],
+            'books',
+            null,
+            null
+        );
         $this->assertFalse($this->validator->isValid($command));
     }
 
@@ -113,11 +131,20 @@ class WorkflowPlacesDefinitionIsValidRuleTest extends \PHPUnit_Framework_TestCas
             $workflowPlacesDefinitionIsValidRule,
             $workflowTransitionNamesMatchInAllLanguagesRule
         );
-        $command = new ResourceWorkflowCreateCommand([], [[
-            'id' => 'fooId',
-            'label' => ['PL' => 'A'],
-            'requiredMetadataIds' => [1],
-        ]], [], 'books', null, null);
+        $command = new ResourceWorkflowCreateCommand(
+            [],
+            [
+                [
+                    'id' => 'fooId',
+                    'label' => ['PL' => 'A'],
+                    'requiredMetadataIds' => [1],
+                ],
+            ],
+            [],
+            'books',
+            null,
+            null
+        );
         $this->assertFalse($validator->isValid($command));
     }
 
@@ -137,11 +164,20 @@ class WorkflowPlacesDefinitionIsValidRuleTest extends \PHPUnit_Framework_TestCas
             $workflowPlacesDefinitionIsValidRule,
             $workflowTransitionNamesMatchInAllLanguagesRule
         );
-        $command = new ResourceWorkflowCreateCommand([], [[
-            'id' => 'fooId',
-            'label' => ['PL' => 'A'],
-            'lockedMetadataIds' => [1],
-        ]], [], 'books', null, null);
+        $command = new ResourceWorkflowCreateCommand(
+            [],
+            [
+                [
+                    'id' => 'fooId',
+                    'label' => ['PL' => 'A'],
+                    'lockedMetadataIds' => [1],
+                ],
+            ],
+            [],
+            'books',
+            null,
+            null
+        );
         $this->assertFalse($validator->isValid($command));
     }
 
@@ -160,20 +196,38 @@ class WorkflowPlacesDefinitionIsValidRuleTest extends \PHPUnit_Framework_TestCas
             $workflowPlacesDefinitionIsValidRule,
             $workflowTransitionNamesMatchInAllLanguagesRule
         );
-        $command = new ResourceWorkflowCreateCommand([], [[
-            'id' => 'fooId',
-            'label' => ['PL' => 'A'],
-            'assigneeMetadataIds' => [1],
-        ]], [], 'books', null, null);
+        $command = new ResourceWorkflowCreateCommand(
+            [],
+            [
+                [
+                    'id' => 'fooId',
+                    'label' => ['PL' => 'A'],
+                    'assigneeMetadataIds' => [1],
+                ],
+            ],
+            [],
+            'books',
+            null,
+            null
+        );
         $this->assertFalse($validator->isValid($command));
     }
 
     public function testInvalidWhenRequiredMetadataIdsNotAnArray() {
-        $command = new ResourceWorkflowCreateCommand([], [[
-            'id' => 'fooId',
-            'label' => ['PL' => 'A'],
-            'requiredMetadataIds' => 1,
-        ]], [], 'books', null, null);
+        $command = new ResourceWorkflowCreateCommand(
+            [],
+            [
+                [
+                    'id' => 'fooId',
+                    'label' => ['PL' => 'A'],
+                    'requiredMetadataIds' => 1,
+                ],
+            ],
+            [],
+            'books',
+            null,
+            null
+        );
         $this->assertFalse($this->validator->isValid($command));
     }
 }

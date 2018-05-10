@@ -1,11 +1,9 @@
 <?php
-
 namespace Repeka\Application\Entity;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Id\SequenceGenerator;
-use Doctrine\ORM\Id\UuidGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**

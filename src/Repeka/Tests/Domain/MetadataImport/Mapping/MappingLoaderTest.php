@@ -18,18 +18,22 @@ class MappingLoaderTest extends \PHPUnit_Framework_TestCase {
         $metadata = $this->createMetadataMock(1);
         $metadata->method('getName')->willReturn('test');
         $this->resourceKind = $this->createMock(ResourceKind::class);
-        $this->resourceKind->method('getMetadataById')->willReturnCallback(function (string $id) use ($metadata) {
-            if ($id === '1') {
-                return $metadata;
+        $this->resourceKind->method('getMetadataById')->willReturnCallback(
+            function (string $id) use ($metadata) {
+                if ($id === '1') {
+                    return $metadata;
+                }
+                throw new \InvalidArgumentException();
             }
-            throw new \InvalidArgumentException();
-        });
-        $this->resourceKind->method('getMetadataByName')->willReturnCallback(function (string $name) use ($metadata) {
-            if ($name === 'test') {
-                return $metadata;
+        );
+        $this->resourceKind->method('getMetadataByName')->willReturnCallback(
+            function (string $name) use ($metadata) {
+                if ($name === 'test') {
+                    return $metadata;
+                }
+                throw new \InvalidArgumentException();
             }
-            throw new \InvalidArgumentException();
-        });
+        );
         $this->loader = new MappingLoader();
     }
 
@@ -63,17 +67,23 @@ class MappingLoaderTest extends \PHPUnit_Framework_TestCase {
 
     public function testRejectsWithExtraParams() {
         $this->expectException(ValidationException::class);
-        $this->loader->load([
-            'invalidMetadataName' => ['selector' => '[test3]', 'value' => 'c'],
-            'test' => ['selector' => '[test2]', 'value' => 'b', 'extra?' => 'extra!'],
-        ], $this->resourceKind);
+        $this->loader->load(
+            [
+                'invalidMetadataName' => ['selector' => '[test3]', 'value' => 'c'],
+                'test' => ['selector' => '[test2]', 'value' => 'b', 'extra?' => 'extra!'],
+            ],
+            $this->resourceKind
+        );
     }
 
     public function testRejectsWithMissingParams() {
         $this->expectException(ValidationException::class);
-        $this->loader->load([
-            'invalidMetadataName' => ['selector' => '[test3]', 'value' => 'c'],
-            'test' => ['selector' => '[test2]'],
-        ], $this->resourceKind);
+        $this->loader->load(
+            [
+                'invalidMetadataName' => ['selector' => '[test3]', 'value' => 'c'],
+                'test' => ['selector' => '[test2]'],
+            ],
+            $this->resourceKind
+        );
     }
 }

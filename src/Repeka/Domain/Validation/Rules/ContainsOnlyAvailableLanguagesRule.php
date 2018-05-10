@@ -10,9 +10,12 @@ class ContainsOnlyAvailableLanguagesRule extends AbstractRule {
     private $onlyAvailableLanguagesValidator;
 
     public function __construct(LanguageRepository $languageRepository) {
-        $languageValidators = array_map(function (string $languageCode) {
-            return Validator::key($languageCode, null, false);
-        }, $languageRepository->getAvailableLanguageCodes());
+        $languageValidators = array_map(
+            function (string $languageCode) {
+                return Validator::key($languageCode, null, false);
+            },
+            $languageRepository->getAvailableLanguageCodes()
+        );
         $this->onlyAvailableLanguagesValidator = call_user_func_array([Validator::arrayType(), 'keySet'], $languageValidators);
     }
 

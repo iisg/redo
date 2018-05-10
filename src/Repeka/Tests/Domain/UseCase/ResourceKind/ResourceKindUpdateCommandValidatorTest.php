@@ -64,41 +64,61 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValid() {
         $this->rkConstraintIsUser->method('validate')->willReturn(true);
-        $command = new ResourceKindUpdateCommand($this->createMock(ResourceKind::class), ['PL' => 'Labelka'], [
-            $this->createMetadataMock(SystemMetadata::PARENT),
-            $this->createMetadataMock(),
-            $this->relationshipMetadata,
-        ], []);
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+                $this->relationshipMetadata,
+            ],
+            []
+        );
         $this->validator->validate($command);
     }
 
     public function testInvalidIfNotResourceKindInstance() {
         $this->expectException(InvalidCommandException::class);
         $this->rkConstraintIsUser->method('validate')->willReturn(true);
-        $command = new ResourceKindUpdateCommand(1, ['PL' => 'Labelka'], [
-            $this->createMetadataMock(SystemMetadata::PARENT),
-            $this->createMetadataMock(),
-            $this->relationshipMetadata,
-        ], []);
+        $command = new ResourceKindUpdateCommand(
+            1,
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+                $this->relationshipMetadata,
+            ],
+            []
+        );
         $this->validator->validate($command);
     }
 
     public function testInvalidWhenRelationshipRequirementFails() {
         $this->expectException(InvalidCommandException::class);
         $this->rkConstraintIsUser->method('validate')->willReturn(false);
-        $command = new ResourceKindUpdateCommand($this->createMock(ResourceKind::class), ['PL' => 'Labelka'], [
-            $this->createMetadataMock(SystemMetadata::PARENT),
-            $this->createMetadataMock(),
-            $this->relationshipMetadata,
-        ], []);
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+                $this->relationshipMetadata,
+            ],
+            []
+        );
         $this->validator->validate($command);
     }
 
     public function testInvalidWhenOnlyParentMetadata() {
         $this->expectException(InvalidCommandException::class);
-        $command = new ResourceKindUpdateCommand($this->createMock(ResourceKind::class), ['PL' => 'Labelka'], [
-            SystemMetadata::PARENT()->toMetadata(),
-        ], []);
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                SystemMetadata::PARENT()->toMetadata(),
+            ],
+            []
+        );
         $this->validator->validate($command);
     }
 }

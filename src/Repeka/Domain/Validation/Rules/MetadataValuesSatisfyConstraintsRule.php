@@ -34,15 +34,17 @@ class MetadataValuesSatisfyConstraintsRule extends AbstractRule {
             'Resource kind not set. Use forResourceKind() to create validator for specific resource kind first.'
         );
         Assertion::isInstanceOf($contents, ResourceContents::class);
-        $contents->forEachMetadata(function (array $values, int $metadataId) {
-            $metadataKind = $this->resourceKind->hasMetadata($metadataId)
-                ? $this->resourceKind->getMetadataById($metadataId)
-                : $this->metadataRepository->findOne($metadataId);
-            foreach ($metadataKind->getConstraints() as $constraintName => $constraintArgument) {
-                $constraint = $this->metadataConstraintManager->get($constraintName);
-                $constraint->validateAll($metadataKind, $constraintArgument, $values);
+        $contents->forEachMetadata(
+            function (array $values, int $metadataId) {
+                $metadataKind = $this->resourceKind->hasMetadata($metadataId)
+                    ? $this->resourceKind->getMetadataById($metadataId)
+                    : $this->metadataRepository->findOne($metadataId);
+                foreach ($metadataKind->getConstraints() as $constraintName => $constraintArgument) {
+                    $constraint = $this->metadataConstraintManager->get($constraintName);
+                    $constraint->validateAll($metadataKind, $constraintArgument, $values);
+                }
             }
-        });
+        );
         return true;
     }
 }

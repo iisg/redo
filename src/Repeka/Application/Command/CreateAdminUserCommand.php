@@ -51,15 +51,17 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
 
     private function usernameQuestion(): Question {
         $question = new Question('New admin\'s username [admin]: ', 'admin');
-        $question->setValidator(function ($answer) {
-            if (!is_string($answer) || strlen($answer) < 4 || !preg_match('#^[a-z0-9-_]+$#i', $answer)) {
-                throw new \RuntimeException('Invalid username');
+        $question->setValidator(
+            function ($answer) {
+                if (!is_string($answer) || strlen($answer) < 4 || !preg_match('#^[a-z0-9-_]+$#i', $answer)) {
+                    throw new \RuntimeException('Invalid username');
+                }
+                if ($this->userRepository->loadUserByUsername($answer)) {
+                    throw new \RuntimeException("User already exists! Choose different username.");
+                }
+                return $answer;
             }
-            if ($this->userRepository->loadUserByUsername($answer)) {
-                throw new \RuntimeException("User already exists! Choose different username.");
-            }
-            return $answer;
-        });
+        );
         return $question;
     }
 
@@ -67,12 +69,14 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
         $question = new Question('Password: ');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
-        $question->setValidator(function ($answer) {
-            if (!is_string($answer) || strlen($answer) < 4) {
-                throw new \RuntimeException('Password too short.');
+        $question->setValidator(
+            function ($answer) {
+                if (!is_string($answer) || strlen($answer) < 4) {
+                    throw new \RuntimeException('Password too short.');
+                }
+                return $answer;
             }
-            return $answer;
-        });
+        );
         return $question;
     }
 

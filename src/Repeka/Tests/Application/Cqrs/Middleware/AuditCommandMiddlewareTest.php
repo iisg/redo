@@ -46,16 +46,21 @@ class AuditCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
         $this->auditor->expects($this->once())->method('beforeHandling')->with($this->auditedCommand);
         $this->auditor->expects($this->once())->method('afterHandling')
             ->with($this->auditedCommand, 'A')->willReturn(['a']);
-        $this->entityManager->expects($this->once())->method('persist')->willReturnCallback(function (AuditEntry $entry) {
-            $this->assertTrue($entry->isSuccessful());
-            $this->assertEquals(['a'], $entry->getData());
-            $this->assertEquals('some_command', $entry->getCommandName());
-        });
-        $this->middleware->handle($this->auditedCommand, function ($c) {
-            $this->assertSame($c, $this->auditedCommand);
-            $this->wasCalled = true;
-            return 'A';
-        });
+        $this->entityManager->expects($this->once())->method('persist')->willReturnCallback(
+            function (AuditEntry $entry) {
+                $this->assertTrue($entry->isSuccessful());
+                $this->assertEquals(['a'], $entry->getData());
+                $this->assertEquals('some_command', $entry->getCommandName());
+            }
+        );
+        $this->middleware->handle(
+            $this->auditedCommand,
+            function ($c) {
+                $this->assertSame($c, $this->auditedCommand);
+                $this->wasCalled = true;
+                return 'A';
+            }
+        );
         $this->assertTrue($this->wasCalled);
     }
 
@@ -65,22 +70,30 @@ class AuditCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
         $this->container->expects($this->once())->method('get')->willReturn($this->auditor);
         $this->auditor->expects($this->once())->method('beforeHandling')->with($this->auditedCommand);
         $this->auditor->expects($this->once())->method('afterError')->willReturn(['a']);
-        $this->entityManager->expects($this->once())->method('persist')->willReturnCallback(function (AuditEntry $entry) {
-            $this->assertFalse($entry->isSuccessful());
-            $this->assertEquals(['a'], $entry->getData());
-            $this->assertEquals('some_command', $entry->getCommandName());
-        });
-        $this->middleware->handle($this->auditedCommand, function ($c) {
-            $this->assertSame($c, $this->auditedCommand);
-            $this->wasCalled = true;
-            throw new DomainException("A");
-        });
+        $this->entityManager->expects($this->once())->method('persist')->willReturnCallback(
+            function (AuditEntry $entry) {
+                $this->assertFalse($entry->isSuccessful());
+                $this->assertEquals(['a'], $entry->getData());
+                $this->assertEquals('some_command', $entry->getCommandName());
+            }
+        );
+        $this->middleware->handle(
+            $this->auditedCommand,
+            function ($c) {
+                $this->assertSame($c, $this->auditedCommand);
+                $this->wasCalled = true;
+                throw new DomainException("A");
+            }
+        );
         $this->assertTrue($this->wasCalled);
     }
 
     public function testDoNotAuditNormalCommand() {
         $this->container->expects($this->never())->method('has')->willReturn(true);
-        $this->middleware->handle($this->createMock(AbstractCommand::class), function () {
-        });
+        $this->middleware->handle(
+            $this->createMock(AbstractCommand::class),
+            function () {
+            }
+        );
     }
 }

@@ -3,8 +3,8 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Utils\EntityUtils;
+use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -21,16 +21,23 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('transitionId', Validator::notBlank())
-            ->attribute('resource', Validator::allOf(
-                Validator::callback(function (ResourceEntity $resource) {
-                    return $resource->getId() > 0;
-                })->setTemplate('Resource ID must be greater than 0'),
-                Validator::callback(function (ResourceEntity $resource) {
-                    return $resource->hasWorkflow();
-                })->setTemplate('Resource must have a workflow'),
-                Validator::callback($this->assertHasTransition($command->getTransitionId()))
-                    ->setTemplate('Given transitionId does not exist')
-            ))->callback([$this, 'transitionIsPossible']);
+            ->attribute(
+                'resource',
+                Validator::allOf(
+                    Validator::callback(
+                        function (ResourceEntity $resource) {
+                            return $resource->getId() > 0;
+                        }
+                    )->setTemplate('Resource ID must be greater than 0'),
+                    Validator::callback(
+                        function (ResourceEntity $resource) {
+                            return $resource->hasWorkflow();
+                        }
+                    )->setTemplate('Resource must have a workflow'),
+                    Validator::callback($this->assertHasTransition($command->getTransitionId()))
+                        ->setTemplate('Given transitionId does not exist')
+                )
+            )->callback([$this, 'transitionIsPossible']);
     }
 
     private function assertHasTransition(string $transitionId) {

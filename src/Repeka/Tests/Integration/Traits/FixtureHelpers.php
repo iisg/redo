@@ -20,9 +20,11 @@ trait FixtureHelpers {
     private function getPhpBookResource(): ResourceEntity {
         $query = ResourceListQuery::builder()->filterByResourceClasses(['books'])->build();
         foreach ($this->getResourceRepository()->findByQuery($query) as $resource) {
-            $isPhpBook = $resource->getContents()->reduceAllValues(function ($value, $metadataId, $isPhpBook) {
-                return $isPhpBook || $value == 'PHP - to można leczyć!';
-            });
+            $isPhpBook = $resource->getContents()->reduceAllValues(
+                function ($value, $metadataId, $isPhpBook) {
+                    return $isPhpBook || $value == 'PHP - to można leczyć!';
+                }
+            );
             if ($isPhpBook) {
                 return $resource;
             }

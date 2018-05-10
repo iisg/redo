@@ -33,10 +33,13 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
     public function testPassingValidation() {
         $this->container->expects($this->once())->method('has')->willReturn(true);
         $this->container->expects($this->once())->method('get')->willReturn($this->validator);
-        $this->middleware->handle($this->command, function ($c) {
-            $this->assertSame($c, $this->command);
-            $this->wasCalled = true;
-        });
+        $this->middleware->handle(
+            $this->command,
+            function ($c) {
+                $this->assertSame($c, $this->command);
+                $this->wasCalled = true;
+            }
+        );
         $this->assertTrue($this->wasCalled);
     }
 
@@ -46,24 +49,33 @@ class ValidateCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
         $this->container->expects($this->once())->method('get')->willReturn($this->validator);
         $this->validator->expects($this->once())->method('validate')->with($this->command)
             ->willThrowException(new InvalidCommandException($this->command, [], new \Exception()));
-        $this->middleware->handle($this->command, function () {
-        });
+        $this->middleware->handle(
+            $this->command,
+            function () {
+            }
+        );
     }
 
     public function testNoValidatorForCommand() {
         $this->expectException(\InvalidArgumentException::class);
         $this->container->expects($this->once())->method('has')->willReturn(false);
         $this->container->expects($this->never())->method('get');
-        $this->middleware->handle($this->command, function () {
-        });
+        $this->middleware->handle(
+            $this->command,
+            function () {
+            }
+        );
     }
 
     public function testNoValidatorForNonValidatedCommand() {
         $command = $this->createMock(NonValidatedCommand::class);
-        $this->middleware->handle($command, function ($c) use ($command) {
-            $this->assertSame($c, $command);
-            $this->wasCalled = true;
-        });
+        $this->middleware->handle(
+            $command,
+            function ($c) use ($command) {
+                $this->assertSame($c, $command);
+                $this->wasCalled = true;
+            }
+        );
         $this->assertTrue($this->wasCalled);
     }
 }

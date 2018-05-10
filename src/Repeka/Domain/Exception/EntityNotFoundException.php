@@ -11,10 +11,13 @@ class EntityNotFoundException extends NotFoundException {
     public function __construct($entityNameOrRepository, $query) {
         $entityName = $this->getEntityName($entityNameOrRepository);
         $formattedQuery = $this->getFormattedQuery($query);
-        parent::__construct('entityNotFound', [
-            'entityName' => $entityName,
-            'query' => $formattedQuery,
-        ]);
+        parent::__construct(
+            'entityNotFound',
+            [
+                'entityName' => $entityName,
+                'query' => $formattedQuery,
+            ]
+        );
     }
 
     private function getEntityName($entityNameOrRepository): string {

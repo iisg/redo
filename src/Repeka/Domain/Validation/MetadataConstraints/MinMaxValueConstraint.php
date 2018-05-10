@@ -2,8 +2,8 @@
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
 use Repeka\Domain\Entity\Metadata;
-use Respect\Validation\Validator;
 use Repeka\Domain\Entity\MetadataControl;
+use Respect\Validation\Validator;
 
 class MinMaxValueConstraint extends AbstractMetadataConstraint {
     public function getSupportedControls(): array {

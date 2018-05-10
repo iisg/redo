@@ -4,6 +4,7 @@ namespace Repeka\Domain\Utils;
 final class EntityUtils {
     private function __construct() {
     }
+
     /**
      * Maps each ID to entity with such ID. All IDs must have matching entities.
      * Eg.  $ids = [2, 3];
@@ -15,12 +16,15 @@ final class EntityUtils {
      */
     public static function getByIds(array $ids, array $entities): array {
         $lookupMap = self::getLookupMap($entities);
-        return array_map(function ($id) use ($lookupMap) {
-            if (!array_key_exists($id, $lookupMap)) {
-                throw new \OutOfBoundsException("No entity with key $id found");
-            }
-            return $lookupMap[$id];
-        }, $ids);
+        return array_map(
+            function ($id) use ($lookupMap) {
+                if (!array_key_exists($id, $lookupMap)) {
+                    throw new \OutOfBoundsException("No entity with key $id found");
+                }
+                return $lookupMap[$id];
+            },
+            $ids
+        );
     }
 
     /**
@@ -49,10 +53,15 @@ final class EntityUtils {
         if (!is_array($entities)) {
             $entities = iterator_to_array($entities);
         }
-        return array_values(array_map(function ($entity) {
-            /** @var Identifiable $entity */
-            return $entity->getId();
-        }, $entities));
+        return array_values(
+            array_map(
+                function ($entity) {
+                    /** @var Identifiable $entity */
+                    return $entity->getId();
+                },
+                $entities
+            )
+        );
     }
 
     /** Just like getByIds(), but silently ignores missing items */

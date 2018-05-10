@@ -15,9 +15,14 @@ class UserUpdateRolesCommandValidator extends CommandAttributesValidator {
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('user', Validator::callback(function (User $u) {
-                return $u->getId() > 0;
-            }))
+            ::attribute(
+                'user',
+                Validator::callback(
+                    function (User $u) {
+                        return $u->getId() > 0;
+                    }
+                )
+            )
             ->attribute(
                 'roles',
                 Validator::arrayType()
@@ -32,9 +37,12 @@ class UserUpdateRolesCommandValidator extends CommandAttributesValidator {
             if ($command->getUser()->getId() != $command->getExecutor()->getId()) {
                 return true;
             }
-            $currentSystemRoles = array_filter($command->getUser()->getUserRoles(), function (UserRole $userRole) {
-                return $userRole->isSystemRole();
-            });
+            $currentSystemRoles = array_filter(
+                $command->getUser()->getUserRoles(),
+                function (UserRole $userRole) {
+                    return $userRole->isSystemRole();
+                }
+            );
             $currentSystemRoleIds = EntityUtils::mapToIds($currentSystemRoles);
             $newRoleIds = EntityUtils::mapToIds($command->getRoles());
             return count(array_diff($currentSystemRoleIds, $newRoleIds)) === 0;

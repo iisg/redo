@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Tests\Domain\Validation\Rules;
 
-use Assert\InvalidArgumentException;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraintManager;
@@ -20,9 +19,12 @@ class ConstraintSetMatchesControlRuleTest extends \PHPUnit_Framework_TestCase {
     private $rule;
 
     public function setUp() {
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [
-            $this->createMetadataMock(self::METADATA_ID, null, MetadataControl::TEXT()),
-        ]);
+        $metadataRepository = $this->createRepositoryStub(
+            MetadataRepository::class,
+            [
+                $this->createMetadataMock(self::METADATA_ID, null, MetadataControl::TEXT()),
+            ]
+        );
         $this->constraintManager = $this->createMock(MetadataConstraintManager::class);
         $this->rule = new ConstraintSetMatchesControlRule($metadataRepository, $this->constraintManager);
     }

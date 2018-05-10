@@ -79,12 +79,14 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
     }
 
     private function replaceObjectsWithIds(ResourceContents $contents): ResourceContents {
-        return $contents->mapAllValues(function ($value) {
-            if ($value instanceof Identifiable) {
-                return $value->getId();
-            } else {
-                return $value;
+        return $contents->mapAllValues(
+            function ($value) {
+                if ($value instanceof Identifiable) {
+                    return $value->getId();
+                } else {
+                    return $value;
+                }
             }
-        });
+        );
     }
 }

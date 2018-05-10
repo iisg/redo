@@ -21,16 +21,20 @@ class SymfonyResourceWorkflowDriverTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->resourceWorkflow = $this->createMock(ResourceWorkflow::class);
-        $this->resourceWorkflow->method('getPlaces')->willReturn([
-            $this->placeMock('A'),
-            $this->placeMock('B'),
-            $this->placeMock('C'),
-        ]);
-        $this->resourceWorkflow->method('getTransitions')->willReturn([
-            $this->transitionMock('AB'),
-            $this->transitionMock('BC'),
-            $this->transitionMock('AC'),
-        ]);
+        $this->resourceWorkflow->method('getPlaces')->willReturn(
+            [
+                $this->placeMock('A'),
+                $this->placeMock('B'),
+                $this->placeMock('C'),
+            ]
+        );
+        $this->resourceWorkflow->method('getTransitions')->willReturn(
+            [
+                $this->transitionMock('AB'),
+                $this->transitionMock('BC'),
+                $this->transitionMock('AC'),
+            ]
+        );
         $this->resource = new ResourceEntity($this->createMock(ResourceKind::class), ResourceContents::empty());
         $this->workflowDriver = new SymfonyResourceWorkflowDriver($this->resourceWorkflow);
     }

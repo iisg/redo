@@ -33,9 +33,12 @@ class ClearUploadsCommand extends Command {
         $uploadsPath = $this->resourceFilePathGenerator->getUploadsRootPath();
         /** @var \SplFileInfo[] $itemsToDelete */
         $itemsToDelete = $this->directoryContentsLister->listRecursively($uploadsPath);
-        $itemsToDelete = array_filter($itemsToDelete, function (\SplFileInfo $file) use ($output) {
-            return $file->getFilename() != '.gitignore';
-        });
+        $itemsToDelete = array_filter(
+            $itemsToDelete,
+            function (\SplFileInfo $file) use ($output) {
+                return $file->getFilename() != '.gitignore';
+            }
+        );
         foreach ($itemsToDelete as $item) {
             $itemPath = $item->getPathname();
             if ($item->isDir()) {

@@ -14,7 +14,6 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
@@ -79,10 +78,13 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected static function createAuthenticatedClient($username, $password, array $options = [], array $server = []): TestClient {
-        $mergedServer = array_merge([
-            'PHP_AUTH_USER' => $username,
-            'PHP_AUTH_PW' => $password,
-        ], $server);
+        $mergedServer = array_merge(
+            [
+                'PHP_AUTH_USER' => $username,
+                'PHP_AUTH_PW' => $password,
+            ],
+            $server
+        );
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return self::createClient($options, $mergedServer);
     }

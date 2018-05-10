@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Domain\Utils;
 
 use Countable;
@@ -34,9 +33,12 @@ final class ArrayUtils {
      * @return array
      */
     public static function removeValuesShorterThan(array $values, int $minLengthInclusive) {
-        return array_filter($values, function ($valueArray) use ($minLengthInclusive) {
-            return count($valueArray) >= $minLengthInclusive;
-        });
+        return array_filter(
+            $values,
+            function ($valueArray) use ($minLengthInclusive) {
+                return count($valueArray) >= $minLengthInclusive;
+            }
+        );
     }
 
     /**

@@ -32,14 +32,20 @@ class ResourceMetadataSortCorrectStructureRuleTest extends \PHPUnit_Framework_Te
             [[['metadataId' => 1, 'badKey' => 'ASC']], false],
             [[['metadataId' => 1, 'direction' => 'ASC']], true],
             [[['metadataId' => 1, 'direction' => 'DESC']], true],
-            [[
-                ['metadataId' => 1, 'direction' => 'DESC'],
-                ['metadataId' => 2, 'direction' => 'ASC'],
-            ], true],
-            [[
-                ['metadataId' => 1, 'direction' => 'DESC'],
-                ['metadataId' => 2, 'direction' => 'NONE'],
-            ], false],
+            [
+                [
+                    ['metadataId' => 1, 'direction' => 'DESC'],
+                    ['metadataId' => 2, 'direction' => 'ASC'],
+                ],
+                true,
+            ],
+            [
+                [
+                    ['metadataId' => 1, 'direction' => 'DESC'],
+                    ['metadataId' => 2, 'direction' => 'NONE'],
+                ],
+                false,
+            ],
         ];
     }
 }

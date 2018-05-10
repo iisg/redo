@@ -29,49 +29,61 @@ class MetadataChildCreateCommandValidatorTest extends \PHPUnit_Framework_TestCas
     }
 
     public function testPassingValidation() {
-        $command = new MetadataChildCreateCommand($this->parent, [
-            'name' => 'nazwa',
-            'label' => ['PL' => 'TestPL', 'EN' => 'testEN'],
-            'placeholder' => [],
-            'description' => [],
-            'control' => 'text'
-        ]);
+        $command = new MetadataChildCreateCommand(
+            $this->parent,
+            [
+                'name' => 'nazwa',
+                'label' => ['PL' => 'TestPL', 'EN' => 'testEN'],
+                'placeholder' => [],
+                'description' => [],
+                'control' => 'text',
+            ]
+        );
         $this->validator->validate($command);
     }
 
     public function testFailsValidationWithInvalidControl() {
         $this->expectException(InvalidCommandException::class);
-        $command = new MetadataChildCreateCommand($this->parent, [
-            'name' => 'nazwa',
-            'label' => ['PL' => 'TestPL', 'EN' => 'testEN'],
-            'placeholder' => [],
-            'description' => [],
-            'control' => 'blabla'
-        ]);
+        $command = new MetadataChildCreateCommand(
+            $this->parent,
+            [
+                'name' => 'nazwa',
+                'label' => ['PL' => 'TestPL', 'EN' => 'testEN'],
+                'placeholder' => [],
+                'description' => [],
+                'control' => 'blabla',
+            ]
+        );
         $this->validator->validate($command);
     }
 
     public function testFailsValidationWhenLabelIsMissingInSomeLanguage() {
         $this->expectException(InvalidCommandException::class);
-        $command = new MetadataChildCreateCommand($this->parent, [
-            'name' => 'nazwa',
-            'label' => ['EN' => 'Test'],
-            'placeholder' => [],
-            'description' => [],
-            'control' => 'text'
-        ]);
+        $command = new MetadataChildCreateCommand(
+            $this->parent,
+            [
+                'name' => 'nazwa',
+                'label' => ['EN' => 'Test'],
+                'placeholder' => [],
+                'description' => [],
+                'control' => 'text',
+            ]
+        );
         $this->validator->validate($command);
     }
 
     public function testFailsValidationWhenNameIsEmpty() {
         $this->expectException(InvalidCommandException::class);
-        $command = new MetadataChildCreateCommand($this->parent, [
-            'name' => '',
-            'label' => ['PL' => 'TestPL', 'EN' => 'testEN'],
-            'placeholder' => [],
-            'description' => [],
-            'control' => 'text'
-        ]);
+        $command = new MetadataChildCreateCommand(
+            $this->parent,
+            [
+                'name' => '',
+                'label' => ['PL' => 'TestPL', 'EN' => 'testEN'],
+                'placeholder' => [],
+                'description' => [],
+                'control' => 'text',
+            ]
+        );
         $this->validator->validate($command);
     }
 }

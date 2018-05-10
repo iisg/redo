@@ -1,8 +1,6 @@
 <?php
-
 namespace Repeka\Tests\Application\Elasticsearch;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Repeka\Application\Command\Initialization\InitializeSystemUserRolesCommand;
 use Repeka\Application\Entity\EntityIdGeneratorHelper;
 use Repeka\Domain\Constants\SystemUserRole;
@@ -33,15 +31,19 @@ class InitializeSystemUserRolesCommandTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAdminRoleIsCreatedByCommand() {
-        $this->userRoleRepository->expects($this->atLeastOnce())->method('exists')->willReturnCallback(function (string $id) {
-            return $id != SystemUserRole::ADMIN;
-        });
-        $this->userRoleRepository->expects($this->once())->method('save')->willReturnCallback(function (UserRole $userRole) {
-            $this->assertEquals(SystemUserRole::ADMIN, $userRole->getId());
-            $this->assertEquals(['PL' => 'Admin'], $userRole->getName());
-            $this->assertTrue($userRole->isSystemRole());
-            return $userRole;
-        });
+        $this->userRoleRepository->expects($this->atLeastOnce())->method('exists')->willReturnCallback(
+            function (string $id) {
+                return $id != SystemUserRole::ADMIN;
+            }
+        );
+        $this->userRoleRepository->expects($this->once())->method('save')->willReturnCallback(
+            function (UserRole $userRole) {
+                $this->assertEquals(SystemUserRole::ADMIN, $userRole->getId());
+                $this->assertEquals(['PL' => 'Admin'], $userRole->getName());
+                $this->assertTrue($userRole->isSystemRole());
+                return $userRole;
+            }
+        );
         $this->command->addSystemUserRoles($this->output, 'PL');
     }
 }

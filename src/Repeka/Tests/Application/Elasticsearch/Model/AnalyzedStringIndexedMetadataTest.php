@@ -34,7 +34,7 @@ class AnalyzedStringIndexedMetadataTest extends \PHPUnit_Framework_TestCase {
         $languages = [
             'a' => null,
             'b' => 'B',
-            'c' => null
+            'c' => null,
         ];
         $requiredMapping = AnalyzedStringIndexedMetadata::getRequiredMapping($languages);
         $this->assertEquals('string', $requiredMapping[ResourceConstants::languageString('a')]['type']);

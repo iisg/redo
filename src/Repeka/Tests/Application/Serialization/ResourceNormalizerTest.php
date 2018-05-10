@@ -45,18 +45,22 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $this->normalizer->setNormalizer($normalizerService);
     }
 
-    /** @SuppressWarnings("PHPMD.UnusedLocalVariable")  */
+    /** @SuppressWarnings("PHPMD.UnusedLocalVariable") */
     public function testGettingBlockedTransitions() {
-        $this->workflow->method('getTransitions')->willReturn([
-            $this->transition('a'),
-            $this->transition('b'),
-            $this->transition('c'),
-        ]);
-        $this->checker->method('check')->willReturnCallback(function ($resource, ResourceWorkflowTransition $transition, $user) {
-            return ($transition->getId() == 'a')
-                ? new TransitionPossibilityCheckResult([], false, false)
-                : new TransitionPossibilityCheckResult([], false, true);
-        });
+        $this->workflow->method('getTransitions')->willReturn(
+            [
+                $this->transition('a'),
+                $this->transition('b'),
+                $this->transition('c'),
+            ]
+        );
+        $this->checker->method('check')->willReturnCallback(
+            function ($resource, ResourceWorkflowTransition $transition, $user) {
+                return ($transition->getId() == 'a')
+                    ? new TransitionPossibilityCheckResult([], false, false)
+                    : new TransitionPossibilityCheckResult([], false, true);
+            }
+        );
         $normalized = $this->normalizer->normalize($this->resource);
         $this->assertArrayHasKey('blockedTransitions', $normalized);
         $blockedTransitions = $normalized['blockedTransitions'];

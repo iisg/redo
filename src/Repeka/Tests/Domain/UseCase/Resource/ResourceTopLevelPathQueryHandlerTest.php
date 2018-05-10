@@ -17,10 +17,13 @@ class ResourceTopLevelPathQueryHandlerTest extends \PHPUnit_Framework_TestCase {
     private $handler;
 
     protected function setUp() {
-        $this->resourceRepository = $this->createRepositoryStub(ResourceRepository::class, [
-            $this->createResourceMock(2, null, []),
-            $this->createResourceMock(3, null, [10 => 2]),
-        ]);
+        $this->resourceRepository = $this->createRepositoryStub(
+            ResourceRepository::class,
+            [
+                $this->createResourceMock(2, null, []),
+                $this->createResourceMock(3, null, [10 => 2]),
+            ]
+        );
         $this->handler = new ResourceTopLevelPathQueryHandler($this->resourceRepository);
     }
 

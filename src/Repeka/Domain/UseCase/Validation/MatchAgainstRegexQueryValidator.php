@@ -19,8 +19,13 @@ class MatchAgainstRegexQueryValidator extends CommandAttributesValidator {
      * @param MatchAgainstRegexQuery $command
      */
     public function getValidator(Command $command): Validatable {
-        return Validator::attribute('regex', Validator::callback(function ($regex) {
-            return $this->regexConstraint->isConfigValid($regex);
-        }));
+        return Validator::attribute(
+            'regex',
+            Validator::callback(
+                function ($regex) {
+                    return $this->regexConstraint->isConfigValid($regex);
+                }
+            )
+        );
     }
 }

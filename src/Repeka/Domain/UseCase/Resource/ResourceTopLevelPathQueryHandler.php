@@ -26,11 +26,13 @@ class ResourceTopLevelPathQueryHandler {
     }
 
     private function parentResourceId(ResourceContents $contents, int $parentMetadataId): ?int {
-        return $contents->reduceAllValues(function ($value, int $metadataId, $foundParentId) use ($parentMetadataId) {
-            if (!$foundParentId && $metadataId == $parentMetadataId) {
-                return $value;
+        return $contents->reduceAllValues(
+            function ($value, int $metadataId, $foundParentId) use ($parentMetadataId) {
+                if (!$foundParentId && $metadataId == $parentMetadataId) {
+                    return $value;
+                }
+                return $foundParentId;
             }
-            return $foundParentId;
-        });
+        );
     }
 }

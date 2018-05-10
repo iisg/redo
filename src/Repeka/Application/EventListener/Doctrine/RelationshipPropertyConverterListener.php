@@ -18,13 +18,15 @@ class RelationshipPropertyConverterListener {
             return;
         }
         /** @var ResourceEntity $entity */
-        $convertedContents = $entity->getContents()->mapAllValues(function ($value) {
-            if ($value instanceof ResourceEntity) {
-                return $value->getId();
-            } else {
-                return $value;
+        $convertedContents = $entity->getContents()->mapAllValues(
+            function ($value) {
+                if ($value instanceof ResourceEntity) {
+                    return $value->getId();
+                } else {
+                    return $value;
+                }
             }
-        });
+        );
         $entity->updateContents($convertedContents);
     }
 }

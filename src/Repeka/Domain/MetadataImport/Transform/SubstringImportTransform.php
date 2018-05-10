@@ -5,8 +5,11 @@ class SubstringImportTransform extends AbstractImportTransform {
     public function apply(array $values, array $config): array {
         $start = $config['start'] ?? 0;
         $length = $config['length'] ?? PHP_INT_MAX;
-        return array_map(function ($value) use ($length, $start) {
-            return mb_substr($value, $start, $length);
-        }, $values);
+        return array_map(
+            function ($value) use ($length, $start) {
+                return mb_substr($value, $start, $length);
+            },
+            $values
+        );
     }
 }

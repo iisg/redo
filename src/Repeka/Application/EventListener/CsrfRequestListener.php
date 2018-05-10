@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\EventListener;
 
 use Symfony\Component\HttpFoundation\Request;

@@ -46,14 +46,17 @@ class ResourceWorkflowDoctrineRepository extends EntityRepository implements Res
         Assertion::true(is_numeric($metadata) || $metadata instanceof Metadata);
         $metadataId = is_numeric($metadata) ? $metadata : $metadata->getId();
         $resultSetMapping = $this->getResultSetMapping();
-        $query = $this->getEntityManager()->createNativeQuery(<<<SQL
+        $query = $this->getEntityManager()->createNativeQuery(
+            <<<SQL
             SELECT * FROM workflow WHERE id IN (
               SELECT DISTINCT workflow_id
               FROM (SELECT jsonb_array_elements(places) AS place, id AS workflow_id FROM workflow) AS exploded
               WHERE place->'assigneeMetadataIds' @> :metadata::TEXT::JSONB
             );
 SQL
-            , $resultSetMapping);
+            ,
+            $resultSetMapping
+        );
         $query->setParameter('metadata', $metadataId);
         return $query->getArrayResult();
     }

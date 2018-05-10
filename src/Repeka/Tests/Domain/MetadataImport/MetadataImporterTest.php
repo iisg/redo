@@ -17,9 +17,11 @@ class MetadataImporterTest extends \PHPUnit_Framework_TestCase {
     /** @before */
     public function init() {
         $transforms = $this->createMock(ImportTransformComposite::class);
-        $transforms->method('apply')->willReturnCallback(function (array $values, array $transformConfig) {
-            return array_fill(0, count($values), $transformConfig['name']);
-        });
+        $transforms->method('apply')->willReturnCallback(
+            function (array $values, array $transformConfig) {
+                return array_fill(0, count($values), $transformConfig['name']);
+            }
+        );
         $this->importer = new MetadataImporter($transforms);
     }
 

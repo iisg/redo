@@ -34,16 +34,22 @@ class AdjustCommandMiddlewareTest extends \PHPUnit_Framework_TestCase {
         $this->container->expects($this->once())->method('get')->willReturn($this->adjuster);
         $adjustedCommand = $this->createMock(AdjustableCommand::class);
         $this->adjuster->method('adjustCommand')->willReturn($adjustedCommand);
-        $this->middleware->handle($this->adjustableCommand, function ($c) use ($adjustedCommand) {
-            $this->assertSame($c, $adjustedCommand);
-            $this->wasCalled = true;
-        });
+        $this->middleware->handle(
+            $this->adjustableCommand,
+            function ($c) use ($adjustedCommand) {
+                $this->assertSame($c, $adjustedCommand);
+                $this->wasCalled = true;
+            }
+        );
         $this->assertTrue($this->wasCalled);
     }
 
     public function testDoNotAdjustNormalCommand() {
         $this->container->expects($this->never())->method('has')->willReturn(true);
-        $this->middleware->handle($this->createMock(AbstractCommand::class), function () {
-        });
+        $this->middleware->handle(
+            $this->createMock(AbstractCommand::class),
+            function () {
+            }
+        );
     }
 }

@@ -33,11 +33,14 @@ class MetadataChildCreateCommandValidator extends CommandAttributesValidator {
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('newChildMetadata', Validator
-                ::key('label', $this->notBlankInAllLanguagesRule)
-                ->key('name', Validator::notBlank())
-                ->key('placeholder', $this->containsOnlyAvailableLanguagesRule)
-                ->key('description', $this->containsOnlyAvailableLanguagesRule)
-                ->key('control', $this->isValidControlRule));
+            ::attribute(
+                'newChildMetadata',
+                Validator
+                    ::key('label', $this->notBlankInAllLanguagesRule)
+                    ->key('name', Validator::notBlank())
+                    ->key('placeholder', $this->containsOnlyAvailableLanguagesRule)
+                    ->key('description', $this->containsOnlyAvailableLanguagesRule)
+                    ->key('control', $this->isValidControlRule)
+            );
     }
 }

@@ -42,10 +42,13 @@ class IndexedMetadataTest extends \PHPUnit_Framework_TestCase {
         $metadata = new TestIndexedMetadata($typeName, 'testValue');
         $metadata->addMetadata($child);
         $array = $metadata->toArray();
-        $this->assertEquals([
-            ResourceConstants::VALUE_TYPE => $typeName,
-            ResourceConstants::CHILDREN => [$child->toArray()]
-        ], $array);
+        $this->assertEquals(
+            [
+                ResourceConstants::VALUE_TYPE => $typeName,
+                ResourceConstants::CHILDREN => [$child->toArray()],
+            ],
+            $array
+        );
     }
 }
 

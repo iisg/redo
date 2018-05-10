@@ -22,7 +22,7 @@ class ResourceWorkflowSimulateCommandValidatorTest extends \PHPUnit_Framework_Te
         $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
         $workflowPlacesDefinitionIsValidRule = new WorkflowPlacesDefinitionIsValidRule($entityExistsRule);
         $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
-        $workflowPlacesForDeletionAreUnoccupiedRule =  $this->createRuleMock(WorkflowPlacesForDeletionAreUnoccupiedRule::class, true);
+        $workflowPlacesForDeletionAreUnoccupiedRule = $this->createRuleMock(WorkflowPlacesForDeletionAreUnoccupiedRule::class, true);
         $workflowTransitionNamesMatchInAllLanguagesRule =
             $this->createRuleWithFactoryMethodMock(WorkflowTransitionNamesMatchInAllLanguagesRule::class, "withPlaces", true);
         $this->validator = new ResourceWorkflowSimulateCommandValidator(

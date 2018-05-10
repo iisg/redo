@@ -2,9 +2,7 @@
 namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
-use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\UserRole;
-use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRoleRepository;
 use Respect\Validation\Rules\AbstractRule;
 

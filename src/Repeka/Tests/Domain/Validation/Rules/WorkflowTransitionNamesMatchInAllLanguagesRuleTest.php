@@ -30,7 +30,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRuleTest extends \PHPUnit_Framew
                 $this->createWorkflowPlaceMock('from place'),
                 $this->createWorkflowPlaceMock('place 1'),
                 $this->createWorkflowPlaceMock('place 2'),
-                $this->createWorkflowPlaceMock('labelledPlace', [], [], [], ['PL'=>'PlLabel', 'EN'=>'EnLabel'])
+                $this->createWorkflowPlaceMock('labelledPlace', [], [], [], ['PL' => 'PlLabel', 'EN' => 'EnLabel']),
             ]
         );
     }

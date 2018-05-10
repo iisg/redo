@@ -87,7 +87,8 @@ class ResourceContentsCorrectStructureRuleTest extends \PHPUnit_Framework_TestCa
                                 2 => [
                                     [
                                         'value' => 'Some value',
-                                        'submetadata' => [3 => [['value' => 'Some value']],
+                                        'submetadata' => [
+                                            3 => [['value' => 'Some value']],
                                         ],
                                     ],
                                 ],

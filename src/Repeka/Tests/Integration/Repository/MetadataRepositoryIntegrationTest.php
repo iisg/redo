@@ -22,11 +22,16 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $query = MetadataListQuery::builder()->filterByResourceClass('books')->onlyTopLevel()->build();
         $topLevelByResourceClass = $this->metadataRepository->findByQuery($query);
         $all = $this->metadataRepository->findAll();
-        $allFiltered = array_values(array_filter($all, function (Metadata $metadata) {
-            return $metadata->isTopLevel()
-                && ($metadata->getId() >= 0)
-                && ($metadata->getResourceClass() == 'books');
-        }));
+        $allFiltered = array_values(
+            array_filter(
+                $all,
+                function (Metadata $metadata) {
+                    return $metadata->isTopLevel()
+                        && ($metadata->getId() >= 0)
+                        && ($metadata->getResourceClass() == 'books');
+                }
+            )
+        );
         $allIds = EntityUtils::mapToIds($topLevelByResourceClass);
         $filteredIds = EntityUtils::mapToIds($allFiltered);
         sort($allIds);

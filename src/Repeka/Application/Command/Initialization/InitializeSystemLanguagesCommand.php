@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Command\Initialization;
 
 use Doctrine\ORM\EntityRepository;

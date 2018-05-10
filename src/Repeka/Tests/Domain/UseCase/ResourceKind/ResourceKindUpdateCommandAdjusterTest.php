@@ -20,9 +20,12 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     protected function setUp() {
         $languageRepository = $this->createLanguageRepositoryMock(['PL']);
-        $resourceKindRespository = $this->createRepositoryStub(ResourceKindRepository::class, [
-            1 => $this->createMock(ResourceKind::class),
-        ]);
+        $resourceKindRespository = $this->createRepositoryStub(
+            ResourceKindRepository::class,
+            [
+                1 => $this->createMock(ResourceKind::class),
+            ]
+        );
         $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [SystemMetadata::PARENT()->toMetadata()]);
         $metadataConstraintManager = $this->createMock(MetadataConstraintManager::class);
         $this->adjuster = new ResourceKindUpdateCommandAdjuster(

@@ -43,9 +43,12 @@ class MetadataController extends ApiController {
         }
         if ($controls = $request->query->get('controls')) {
             Assertion::isArray($controls);
-            $controls = array_map(function (string $control) {
-                return new MetadataControl($control);
-            }, $controls);
+            $controls = array_map(
+                function (string $control) {
+                    return new MetadataControl($control);
+                },
+                $controls
+            );
             $queryBuilder->filterByControls($controls);
         }
         if ($request->query->get('topLevel')) {

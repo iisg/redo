@@ -7,8 +7,10 @@ use Respect\Validation\Validator;
 
 class IsValidControlRule extends AbstractRule {
     public function validate($input) {
-        return Validator::callback(function ($value) {
-            return MetadataControl::isValid($value);
-        })->validate($input);
+        return Validator::callback(
+            function ($value) {
+                return MetadataControl::isValid($value);
+            }
+        )->validate($input);
     }
 }

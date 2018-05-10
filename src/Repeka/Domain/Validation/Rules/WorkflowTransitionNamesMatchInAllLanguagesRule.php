@@ -6,7 +6,6 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\LanguageRepository;
-use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\Utils\ArrayUtils;
 use Respect\Validation\Rules\AbstractRule;
 
@@ -100,10 +99,10 @@ class WorkflowTransitionNamesMatchInAllLanguagesRule extends AbstractRule {
             foreach ($transition->getToIds() as $to) {
                 foreach ($transition->getFromIds() as $from) {
                     $split[] = [
-                            "id" => $transition->getId(),
-                            "from" => $from,
-                            "to" => $to,
-                            "label" => $transition->getLabel(),
+                        "id" => $transition->getId(),
+                        "from" => $from,
+                        "to" => $to,
+                        "label" => $transition->getLabel(),
                     ];
                 }
             }
@@ -167,7 +166,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRule extends AbstractRule {
             'transitionLabels' => $this->labelsToString($error['transitionLabels']),
             'matchingLanguages' => implode(", ", $error['matchingLanguages']),
             'differentLanguages' => implode(", ", $error['differentLanguages']),
-            'placeId' => $this->placeIdToLabelString($error['placeId'], $this->places)
+            'placeId' => $this->placeIdToLabelString($error['placeId'], $this->places),
         ];
     }
 

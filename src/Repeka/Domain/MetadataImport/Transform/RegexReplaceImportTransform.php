@@ -17,8 +17,13 @@ class RegexReplaceImportTransform extends AbstractImportTransform {
         Assertion::notNull($regex, 'regexReplace transform require regex to be configured.');
         $regex = $this->regexNormalizer->normalize($regex);
         $replacement = $config['replacement'] ?? '';
-        return array_values(array_map(function ($value) use ($replacement, $regex) {
-            return preg_replace($regex, $replacement, $value);
-        }, $values));
+        return array_values(
+            array_map(
+                function ($value) use ($replacement, $regex) {
+                    return preg_replace($regex, $replacement, $value);
+                },
+                $values
+            )
+        );
     }
 }
