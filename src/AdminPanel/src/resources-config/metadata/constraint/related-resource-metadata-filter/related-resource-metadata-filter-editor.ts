@@ -92,7 +92,7 @@ export class RelatedResourceMetadataFilterEditor {
     for (let resourceKindOrId of this.metadata.constraints.resourceKind) {
       if (typeof resourceKindOrId == 'number') {
         promises.push(this.resourceKindRepository.get(resourceKindOrId as number).then(resourceKind => resourceKind.resourceClass));
-      } else {
+      } else if (resourceKindOrId) {
         promises.push(Promise.resolve(resourceKindOrId.resourceClass));
       }
     }

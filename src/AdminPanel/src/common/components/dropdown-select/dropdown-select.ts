@@ -15,12 +15,9 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   @bindable(changeHandler('recreateDropdown')) placeholder: string = "—";
   @bindable @booleanAttribute multiple: boolean = false;
-  @bindable @booleanAttribute allowClear: boolean = false;  // allows nothing in single-select dropdown
-
   @bindable @booleanAttribute hideSearchBox: boolean = false;
-
+  @bindable @booleanAttribute hideClearButton: boolean = false;
   @bindable @booleanAttribute disabled: boolean = false;
-
   dropdown: Element;
 
   constructor(private i18n: I18N, private element: Element) {
@@ -34,30 +31,50 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     $(this.dropdown).select2('destroy');
   }
 
-  multipleChanged() {  // @booleanAttributes enforce default handler name
+  multipleChanged() {  // @booleanAttributes enforce default handler name.
     this.recreateDropdown();
   }
 
-  allowClearChanged() {  // @booleanAttributes enforce default handler name
+  hideClearButtonChanged() {  // @booleanAttributes enforce default handler name.
     this.recreateDropdown();
   }
 
   private createDropdown() {
-    this.recreateDropdown();
-    $(this.dropdown).on('select2:select', () => this.onSelectedItem());
-    // timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049
-    $(this.dropdown).on('select2:unselect', () => setTimeout(() => this.onSelectedItem()));
+    this.recreateDropdown().on('select2:select', () => this.onSelectedItem())
+    // Timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049 .
+    .on('select2:unselect', () => setTimeout(() => this.onSelectedItem()))
+    // Prevents dropdown to appear after clearing a value: https://github.com/select2/select2/issues/3320#issuecomment-350249668 .
+    .on('select2:unselecting', (event) => {
+      let originalEvent = (event as any).params.args.originalEvent;
+      if (originalEvent) {
+          originalEvent.stopPropagation();
+      } else {
+          $(this.dropdown).one('select2:opening', (event) => event.preventDefault());
+      }
+    });
   }
 
   private recreateDropdown(): JQuery {
     const $element = $(this.dropdown).select2({
       placeholder: this.placeholder,
-      allowClear: this.allowClear,
+      allowClear: !this.hideClearButton,
       multiple: this.multiple,
       minimumResultsForSearch: this.hideSearchBox ? -1 : 0,
       width: '100%',
       language: {
         "noResults": () => this.i18n.tr("No results")
+      },
+      sorter: (data) => {
+        let results: any[];
+        if (!Array.isArray(this.value)) {
+          results = data.filter(item => item.element.model != this.value);
+        } else {
+          results = data.filter(item => !(this.value as Object[]).includes(item.element.model));
+        }
+        if (data.length && !results.length) {
+          $(this.dropdown).select2('close');
+        }
+        return results;
       },
       escapeMarkup: v => v,
       templateResult: item => this.getItemHtml(item),
@@ -80,7 +97,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     });
   }
 
-  onSelectedItem() {  // copy value from DOM to VM
+  onSelectedItem() {  // Copy value from DOM to VM.
     let selectedIndex = $(this.dropdown).val();
     if (selectedIndex == undefined && this.multiple) {
       selectedIndex = [];
@@ -91,7 +108,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     setTimeout(() => this.element.dispatchEvent(ChangeEvent.newInstance()));
   }
 
-  updateSelectedItem() {  // copy value from VM to DOM
+  updateSelectedItem() {  // Copy value from VM to DOM.
     if (this.value == undefined || this.values == undefined || this.values.length == 0) {
       $(this.dropdown).val([] as any).trigger('change');
       return;

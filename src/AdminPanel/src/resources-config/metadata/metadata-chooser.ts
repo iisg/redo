@@ -13,6 +13,7 @@ export class MetadataChooser {
   @bindable control: string | string[];
   @bindable filter: (metadata: Metadata) => boolean = () => true;
   @bindable @booleanAttribute setFirstAsDefault: boolean;
+  @bindable @booleanAttribute hideClearButton: boolean;
   @bindable(twoWay) shouldRefreshResults: boolean;
 
   metadataList: Metadata[];
@@ -53,8 +54,12 @@ export class MetadataChooser {
           } else {
             this.metadataList = metadataList;
           }
-          if (this.setFirstAsDefault && !this.value) {
-            this.value = metadataList[0];
+          if (this.setFirstAsDefault) {
+            if (this.value) {
+              this.value = metadataList.find(metadata => metadata.id == this.value.id);
+            } else {
+              this.value = metadataList[0];
+            }
           }
         })
         .finally(() => this.loadingMetadataList = false);

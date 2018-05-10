@@ -1,5 +1,8 @@
 @import "../../styles";
 
+$clear-button-font-size: 21px;
+$multiple-selection-clear-button-line-height: 22px;
+
 .select2-results {
   .selected-option {
     display: none;
@@ -21,11 +24,43 @@ dropdown-select {
         border-color: $grey;
       }
     }
+    &.select2-container--open {
+      .select2-selection--single {
+        .select2-selection__arrow {
+          b {
+            border-bottom-color: $grey;
+          }
+        }
+      }
+    }
     .select2-selection--single {
       min-height: 28px;
       height: auto;
+      .select2-selection__rendered {
+        &, .select2-selection__placeholder {
+          color: $dark-grey;
+        }
+      }
       .select2-selection__arrow {
         min-height: inherit;
+        b {
+        border-top-color: $grey;
+        }
+      }
+    }
+    .select2-selection__clear {
+      font-size: $clear-button-font-size;
+    }
+    .select2-selection--multiple {
+      .select2-selection__clear {
+        line-height: $multiple-selection-clear-button-line-height;
+      }
+    }
+    .select2-selection__clear, .select2-selection--multiple .select2-selection__choice__remove {
+      color: $grey;
+      @include transition(color .3s);
+      &:hover {
+        color: $dark-grey;
       }
     }
   }
