@@ -5,6 +5,7 @@ import {ResourceBreadcrumbsProvider} from "./resource-breadcrumbs-provider";
 import {DefaultBreadcrumbsProvider} from "./default-breadcrumbs-provider";
 import {MetadataBreadcrumbsProvider} from "./metadata-breadcrumbs-provider";
 import {WorkflowBreadcrumbsProvider} from "./workflow-breadcrumbs-provider";
+import {ResourceKindBreadcrumbsProvider} from './resource-kind-breadcrumbs-provider';
 
 @autoinject
 export class Breadcrumbs {
@@ -14,11 +15,14 @@ export class Breadcrumbs {
   private providers: StringMap<BreadcrumbsProvider> = {};
 
   constructor(eventAggregator: EventAggregator,
-              defaultBreadcrumbsProvider: DefaultBreadcrumbsProvider, resource: ResourceBreadcrumbsProvider,
-              metadata: MetadataBreadcrumbsProvider, workflow: WorkflowBreadcrumbsProvider) {
+              defaultBreadcrumbsProvider: DefaultBreadcrumbsProvider,
+              resource: ResourceBreadcrumbsProvider,
+              metadata: MetadataBreadcrumbsProvider,
+              workflow: WorkflowBreadcrumbsProvider,
+              resourceKind: ResourceKindBreadcrumbsProvider) {
     eventAggregator.subscribe("router:navigation:success",
       (event: { instruction: NavigationInstruction }) => this.updateBreadcrumbs(event.instruction));
-    this.providers = {'default': defaultBreadcrumbsProvider, resource, metadata, workflow};
+    this.providers = {'default': defaultBreadcrumbsProvider, resource, metadata, workflow, resourceKind};
   }
 
   async updateBreadcrumbs(navigationInstruction: NavigationInstruction) {

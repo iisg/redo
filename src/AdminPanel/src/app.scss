@@ -192,6 +192,23 @@ table {
   }
 }
 
+.form-with-buttons {
+  display: flex;
+  & > .form-content {
+    flex: 1;
+  }
+  & > .form-buttons {
+    position: sticky;
+    top: $default-gap-size;
+    display: flex;
+    flex-direction: column;
+    align-self: baseline;
+    & > * {
+      white-space: nowrap;
+    }
+  }
+}
+
 .no-margin-top {
   margin-top: 0 !important;
 }
@@ -349,6 +366,43 @@ ux-dialog-overlay {
   }
   &.au-leave-active {
     @include animation(fadeOutUp .3s);
+  }
+}
+
+.name-with-buttons-and-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: $default-gap-size / 4 solid $light-blue;
+  & > :not(aup-tabs) {
+    padding: $default-gap-size / 2;
+  }
+  aup-tabs {
+    align-self: flex-end;
+    margin-left: auto;
+    padding-left: $default-gap-size / 2;
+    & > ul {
+      border: none;
+      & > li {
+        margin-bottom: 0;
+        & > a {
+          margin-right: 0;
+          padding: $default-gap-size / 8 $default-gap-size / 2;
+          border: 0;
+          border-radius: 0;
+          text-transform: uppercase;
+          color: $default-text-color;
+          @include transition(background-color .3s ease-out, color .3s ease-out);
+          &.active, &:hover {
+            background-color: $light-blue;
+            color: white;
+          }
+          &.active {
+            font-style: normal;
+          }
+        }
+      }
+    }
   }
 }
 

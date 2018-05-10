@@ -24,28 +24,17 @@ resource-form {
 
   & > form {
     & > div {
-      display: flex;
-      & > resource-form-generated {
-        flex: 1;
-      }
-      & > .buttons {
-        position: sticky;
-        top: $default-gap-size;
-        display: flex;
-        flex-direction: column;
-        align-self: baseline;
-        toggle-button {
-          button {
-            background-color: transparent;
-            &:hover:not([disabled]) {
-              background-color: $light-grey;
-            }
-            icon {
-              color: $red;
-            }
-            span {
-              color: $default-text-color;
-            }
+      & > .form-buttons > toggle-button {
+        button {
+          background-color: transparent;
+          &:hover:not([disabled]) {
+            background-color: $light-grey;
+          }
+          icon {
+            color: $red;
+          }
+          span {
+            color: $default-text-color;
           }
         }
       }

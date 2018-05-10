@@ -18,8 +18,12 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
       .withBreadcrumbsProvider('metadata')
   ]),
 
-  new Route('resource-kinds/:resourceClass', 'resource-kinds', 'resources-config/resource-kind/resource-kinds-list')
-    .withMenuItem('Resource Kinds', NavRole.PER_RESOURCE_CLASS_SECONDARY, 'resources'),
+  new RouteGroup('resource-kinds', 'resource-kinds', 'resources-config/resource-kind', 'Resource Kinds', [
+    new BaseRoute(':resourceClass', 'resource-kinds-list')
+      .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY, 'resources'),
+    new Route('details/:id', 'details', 'details/resource-kind-details')
+      .withBreadcrumbsProvider('resourceKind')
+  ]),
 
   new RouteGroup('workflows', 'workflows', 'workflows', 'Workflows', [
     new BaseRoute(':resourceClass', 'workflows-list')

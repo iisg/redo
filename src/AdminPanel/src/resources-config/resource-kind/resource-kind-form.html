@@ -6,106 +6,103 @@
     <require from="./move-up-down-buttons"></require>
     <require from="./display-strategies/resource-display-strategies-form"></require>
     <require from="resources-config/metadata/constraint/resource-kind/resource-kind-constraint-editor"></require>
+    <require from="common/components/buttons/toggle-button"></require>
 
-
-    <form submit.delegate="validateAndSubmit()">
-        <div class="form-group">
-            <multilingual-editor label="${'Name' | t}"
-                value.bind="resourceKind.label & validate"></multilingual-editor>
-        </div>
-        <div if.bind="originalMetadataList && (editableMetadataList.length === 0 || originalMetadata(editableMetadataList[0])) & signal:'original-metadata-changed'"
-            class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
-            <div class="row">
-                <div class="col-xs-12">
-                    <button type="button"
-                        class="btn pull-right ${sortingMetadata ? 'btn-primary' : 'btn-default'}"
-                        click.delegate="sortingMetadata = !sortingMetadata"
-                        disabled.bind="submitting"
-                        show.bind="editableMetadataList.length > 1">
-                        <icon name="arrows"></icon>
-                        ${(sortingMetadata ? 'Changing order' : 'Change order') | t}
-                    </button>
-                </div>
+    <form submit.delegate="validateAndSubmit()"
+        class="form-with-buttons">
+        <div class="form-content">
+            <div class="form-group">
+                <multilingual-editor label="${'Name' | t}"
+                    value.bind="resourceKind.label & validate"></multilingual-editor>
             </div>
-            <div class="row">
-                <div class="col-xs-12 resource-kind-form-metadata-item"
-                repeat.for="metadata of resourceKind.metadataList & validate">
-                    <div class="well"
-                        if.bind="metadata.id != -1">
-                        <div class="btn-group pull-right top-right-buttons"
-                            show.bind="!sortingMetadata">
-                            <button class="btn btn-default ${metadata.overwriteForm ? 'active' : ''}"
-                                type="button"
-                                click.delegate="metadata.overwriteForm = !metadata.overwriteForm">
-                                <icon name="edit-2"></icon>
-                            </button>
-                            <button class="btn btn-danger"
-                                if.bind="canRemoveMetadata(metadata)"
-                                type="button"
-                                click.delegate="removeMetadata(metadata)">
-                                <icon name="remove-3"></icon>
-                            </button>
+            <div if.bind="originalMetadataList && (editableMetadataList.length === 0 || originalMetadata(editableMetadataList[0])) & signal:'original-metadata-changed'"
+                class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button type="button"
+                            class="btn pull-right ${sortingMetadata ? 'btn-primary' : 'btn-default'}"
+                            click.delegate="sortingMetadata = !sortingMetadata"
+                            disabled.bind="submitting"
+                            show.bind="editableMetadataList.length > 1">
+                            <icon name="arrows"></icon>
+                            ${(sortingMetadata ? 'Changing order' : 'Change order') | t}
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 resource-kind-edit-form-metadata-item"
+                    repeat.for="metadata of resourceKind.metadataList & validate">
+                        <div class="well"
+                            if.bind="metadata.id != -1">
+                            <div class="btn-group pull-right top-right-buttons"
+                                show.bind="!sortingMetadata">
+                                <button class="btn btn-default ${metadata.overwriteForm ? 'active' : ''}"
+                                    type="button"
+                                    click.delegate="metadata.overwriteForm = !metadata.overwriteForm">
+                                    <icon name="edit-2"></icon>
+                                </button>
+                                <button class="btn btn-danger"
+                                    if.bind="canRemoveMetadata(metadata)"
+                                    type="button"
+                                    click.delegate="removeMetadata(metadata)">
+                                    <icon name="remove-3"></icon>
+                                </button>
+                            </div>
+                            <h3>
+                                <move-up-down-buttons class="pull-right"
+                                    show-up.bind="!$first"
+                                    show-down.bind="!$last"
+                                    up.delegate="moveUp(metadata)"
+                                    down.delegate="moveDown(metadata)"
+                                    show.bind="sortingMetadata"></move-up-down-buttons>
+                                ${originalMetadata(metadata).name}
+                                <span class="small text-muted">ID: ${originalMetadata(metadata).id}</span>
+                                <icon if.bind="metadata.shownInBrief"
+                                    name="show"></icon>
+                                <icon if.bind="metadata.copyToChildResource"
+                                    name="edit"></icon>
+                            </h3>
+                            <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
+                                metadata.bind="metadata"
+                                original-metadata.bind="originalMetadata(metadata)"
+                                editing.bind="editing"
+                                resource-class.bind="resourceClass"></resource-kind-metadata-form>
                         </div>
-                        <h3>
-                            <move-up-down-buttons class="pull-right"
-                                show-up.bind="!$first"
-                                show-down.bind="!$last"
-                                up.delegate="moveUp(metadata)"
-                                down.delegate="moveDown(metadata)"
-                                show.bind="sortingMetadata"></move-up-down-buttons>
-                            ${originalMetadata(metadata).name}
-                            <span class="small text-muted">ID: ${originalMetadata(metadata).id}</span>
-                            <icon if.bind="metadata.shownInBrief"
-                                name="show"></icon>
-                            <icon if.bind="metadata.copyToChildResource"
-                                name="edit"></icon>
-                        </h3>
-                        <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
-                            metadata.bind="metadata"
-                            original-metadata.bind="originalMetadata(metadata)"
-                            editing.bind="editing"
-                            resource-class.bind="resourceClass"></resource-kind-metadata-form>
                     </div>
                 </div>
             </div>
-        </div>
-        <loading-bar else></loading-bar>
-        <div class="form-group"
-            show.bind="hasMetadataToChoose">
-            <label>${'Add metadata kind' | resourceClassTranslation:resourceClass}</label>
-            <resource-kind-metadata-chooser
-                has-metadata-to-choose.bind="hasMetadataToChoose"
-                value.bind="metadataToAdd"
-                resource-kind.bind="resourceKind"
-                should-refresh-results.bind="metadataListModified"></resource-kind-metadata-chooser>
-        </div>
-        <div class="form-group"
-            if.bind="!editing">
-            <label>${'Workflow' | resourceClassTranslation:resourceClass}</label>
-            <workflow-chooser resource-class.bind="resourceClass"
-                value.bind="resourceKind.workflow"></workflow-chooser>
-        </div>
-        <div class="form-group">
-            <label>${'Available child resource kind' | t}</label>
-            <resource-kind-constraint-editor metadata.bind="resourceChildConstraintMetadata"
-                resource-class.bind="resourceClass"></resource-kind-constraint-editor>
-        </div>
-        <div class="form-group">
-            <resource-display-strategies-form resource-kind.bind="resourceKind"></resource-display-strategies-form>
-        </div>
-        <div class="form-group text-right">
-            <div class="btn-group">
-                <button type="button"
-                    class="btn btn-warning"
-                    click.delegate="cancel()"
-                    if.bind="editing"
-                    disabled.bind="submitting">
-                    <icon name="remove-3"></icon>
-                    ${'Cancel' | t}
-                </button>
-                <submit-button submitting.bind="submitting"
-                    editing.bind="editing"></submit-button>
+            <loading-bar else></loading-bar>
+            <div class="form-group"
+                show.bind="hasMetadataToChoose">
+                <label>${'Add metadata kind' | resourceClassTranslation:resourceClass}</label>
+                <resource-kind-metadata-chooser
+                    has-metadata-to-choose.bind="hasMetadataToChoose"
+                    value.bind="metadataToAdd"
+                    resource-kind.bind="resourceKind"
+                    should-refresh-results.bind="metadataListModified"></resource-kind-metadata-chooser>
             </div>
+            <div class="form-group"
+                if.bind="!editing">
+                <label>${'Workflow' | resourceClassTranslation:resourceClass}</label>
+                <workflow-chooser resource-class.bind="resourceClass"
+                    value.bind="resourceKind.workflow"></workflow-chooser>
+            </div>
+            <div class="form-group">
+                <label>${'Available child resource kind' | t}</label>
+                <resource-kind-constraint-editor metadata.bind="resourceChildConstraintMetadata"
+                    resource-class.bind="resourceClass"></resource-kind-constraint-editor>
+            </div>
+            <div class="form-group">
+                <resource-display-strategies-form resource-kind.bind="resourceKind"></resource-display-strategies-form>
+            </div>
+        </div>
+        <div class="form-buttons">
+            <submit-button submitting.bind="submitting"
+                editing.bind="editing"></submit-button>
+            <toggle-button primary-icon-name="remove-3"
+                primary-label="Cancel"
+                disabled.bind="resourceKind.pendingRequest"
+                on-click.call="cancel()"></toggle-button>
         </div>
     </form>
 </template>
