@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Command\Elasticsearch;
 
 use Repeka\Application\Elasticsearch\ESIndexManager;

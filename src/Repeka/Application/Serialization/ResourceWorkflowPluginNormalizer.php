@@ -12,12 +12,17 @@ class ResourceWorkflowPluginNormalizer extends AbstractNormalizer {
     public function normalize($resourceWorkflowPlugin, $format = null, array $context = []) {
         return [
             'name' => $resourceWorkflowPlugin->getName(),
-            'configurationOptions' => $this->emptyArrayAsObject(array_map(function (ResourceWorkflowPluginConfigurationOption $option) {
-                return [
-                    'name' => $option->getName(),
-                    'control' => $option->getControl()->getValue(),
-                ];
-            }, $resourceWorkflowPlugin->getConfigurationOptions())),
+            'configurationOptions' => $this->emptyArrayAsObject(
+                array_map(
+                    function (ResourceWorkflowPluginConfigurationOption $option) {
+                        return [
+                            'name' => $option->getName(),
+                            'control' => $option->getControl()->getValue(),
+                        ];
+                    },
+                    $resourceWorkflowPlugin->getConfigurationOptions()
+                )
+            ),
         ];
     }
 

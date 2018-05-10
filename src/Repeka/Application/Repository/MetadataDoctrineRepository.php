@@ -72,9 +72,12 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
             $criteria = $criteria->andWhere(Criteria::expr()->in('resourceClass', $query->getResourceClasses()));
         }
         if ($query->getControls()) {
-            $controlNames = array_map(function (MetadataControl $control) {
-                return $control->getValue();
-            }, $query->getControls());
+            $controlNames = array_map(
+                function (MetadataControl $control) {
+                    return $control->getValue();
+                },
+                $query->getControls()
+            );
             $criteria = $criteria->andWhere(Criteria::expr()->in('control', $controlNames));
         }
         if ($query->getParent()) {

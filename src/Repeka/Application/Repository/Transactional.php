@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;

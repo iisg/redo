@@ -5,10 +5,10 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\CommandAttributesValidator;
+use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
 use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
-use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
@@ -60,9 +60,14 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
      * @return bool
      */
     public function allMetadataOfTheSameResourceClass(array $metadataList): bool {
-        $resourceClasses = array_filter(array_map(function (Metadata $metadata) {
-            return $metadata->getResourceClass();
-        }, $metadataList));
+        $resourceClasses = array_filter(
+            array_map(
+                function (Metadata $metadata) {
+                    return $metadata->getResourceClass();
+                },
+                $metadataList
+            )
+        );
         return count(array_unique($resourceClasses)) === 1;
     }
 

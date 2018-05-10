@@ -39,16 +39,22 @@ class ResourcesController extends ApiController {
         Assertion::isArray($sortByMetadataIds);
         Assertion::isArray($resourceClasses);
         Assertion::isArray($resourceKindIds);
-        $sortByMetadataIds = array_map(function ($sortBy) {
-            return ['metadataId' => intval($sortBy['metadataId']), 'direction' => $sortBy['direction']];
-        }, $sortByMetadataIds);
+        $sortByMetadataIds = array_map(
+            function ($sortBy) {
+                return ['metadataId' => intval($sortBy['metadataId']), 'direction' => $sortBy['direction']];
+            },
+            $sortByMetadataIds
+        );
         $parentId = $request->query->get('parentId', 0);
         $workflowPlacesIds = $request->query->get('workflowPlacesIds', []);
         Assertion::isArray($workflowPlacesIds);
         $topLevel = $request->query->get('topLevel', false);
-        $resourceKinds = array_map(function ($resourceKindId) {
-            return $this->handleCommand(new ResourceKindQuery($resourceKindId));
-        }, $resourceKindIds);
+        $resourceKinds = array_map(
+            function ($resourceKindId) {
+                return $this->handleCommand(new ResourceKindQuery($resourceKindId));
+            },
+            $resourceKindIds
+        );
         $contentsFilter = $request->get('contentsFilter', []);
         $resourceListQueryBuilder = ResourceListQuery::builder()
             ->filterByResourceClasses($resourceClasses)

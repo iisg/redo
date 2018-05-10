@@ -21,9 +21,11 @@ class AdjustCommandMiddleware implements CommandBusMiddleware {
                 $adjuster = $this->container->get($adjusterId);
                 $command = $adjuster->adjustCommand($command);
             } else {
-                throw new \InvalidArgumentException("Could not find an adjuster for the {$command->getCommandName()}. "
+                throw new \InvalidArgumentException(
+                    "Could not find an adjuster for the {$command->getCommandName()}. "
                     . "Looking for the {$adjusterId}. "
-                    . "If the command is not meant to have an adjuster, remove the AdjustableCommand interface from it.");
+                    . "If the command is not meant to have an adjuster, remove the AdjustableCommand interface from it."
+                );
             }
         }
         return $next($command);

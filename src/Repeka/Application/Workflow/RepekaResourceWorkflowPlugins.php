@@ -14,8 +14,11 @@ class RepekaResourceWorkflowPlugins implements ResourceWorkflowPlugins {
 
     /** @return ResourceWorkflowPlugin[] */
     public function getRegisteredPlugins(ResourceWorkflow $workflow): array {
-        return array_filter($this->plugins, function (ResourceWorkflowPlugin $plugin) use ($workflow) {
-            return $plugin->supports($workflow);
-        });
+        return array_filter(
+            $this->plugins,
+            function (ResourceWorkflowPlugin $plugin) use ($workflow) {
+                return $plugin->supports($workflow);
+            }
+        );
     }
 }

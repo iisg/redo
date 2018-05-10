@@ -24,10 +24,12 @@ class ESIndexManager {
         if ($this->index->exists()) {
             throw new \Exception("Index '{$this->indexName}' already exists");
         }
-        $this->index->create([
-            'number_of_shards' => $numberOfShards,
-            'number_of_replicas' => $numberOfReplicas,
-        ]);
+        $this->index->create(
+            [
+                'number_of_shards' => $numberOfShards,
+                'number_of_replicas' => $numberOfReplicas,
+            ]
+        );
         $mappingArray = $this->mappingFactory->getMappingArray();
         $type = $this->index->getType(ResourceConstants::ES_DOCUMENT_TYPE);
         (new Mapping($type, $mappingArray))->send();

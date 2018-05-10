@@ -39,9 +39,11 @@ class AuditCommandMiddleware implements CommandBusMiddleware {
                     throw $e;
                 }
             } else {
-                throw new \InvalidArgumentException("Could not find an auditor for the {$command->getCommandName()}. "
+                throw new \InvalidArgumentException(
+                    "Could not find an auditor for the {$command->getCommandName()}. "
                     . "Looking for the {$auditorId}. "
-                    . "If the command is not meant to have an auditor, remove the AuditedCommand interface from it.");
+                    . "If the command is not meant to have an auditor, remove the AuditedCommand interface from it."
+                );
             }
         } else {
             return $next($command);

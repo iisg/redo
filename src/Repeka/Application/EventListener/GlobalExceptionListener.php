@@ -72,16 +72,26 @@ class GlobalExceptionListener {
     }
 
     private function createJsonResponse(int $statusCode, string $message, array $extras = []): JsonResponse {
-        return new JsonResponse(array_merge([
-            'message' => mb_convert_encoding($message, 'UTF-8', 'UTF-8'),
-        ], $extras), $statusCode);
+        return new JsonResponse(
+            array_merge(
+                [
+                    'message' => mb_convert_encoding($message, 'UTF-8', 'UTF-8'),
+                ],
+                $extras
+            ),
+            $statusCode
+        );
     }
 
     private function createDomainExceptionResponse(DomainException $exception): JsonResponse {
-        return $this->createJsonResponse($exception->getCode(), $exception->getMessage(), [
-            'errorMessageId' => $exception->getErrorMessageId(),
-            'params' => $exception->getParams(),
-        ]);
+        return $this->createJsonResponse(
+            $exception->getCode(),
+            $exception->getMessage(),
+            [
+                'errorMessageId' => $exception->getErrorMessageId(),
+                'params' => $exception->getParams(),
+            ]
+        );
     }
 
     private function saveTargetUrlIfFromAdminPanel(Request $request) {

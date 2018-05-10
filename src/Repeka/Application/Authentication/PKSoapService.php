@@ -8,9 +8,15 @@ namespace Repeka\Application\Authentication;
  */
 class PKSoapService extends \SoapClient {
     public function __construct(?string $wsdl, array $clientOptions) {
-        parent::__construct($wsdl, array_merge($clientOptions, [
-            'trace' => true,
-            'exceptions' => true,
-        ]));
+        parent::__construct(
+            $wsdl,
+            array_merge(
+                $clientOptions,
+                [
+                    'trace' => true,
+                    'exceptions' => true,
+                ]
+            )
+        );
     }
 }

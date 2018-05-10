@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Command\Elasticsearch;
 
 use Elastica\Query\BoolQuery;
@@ -67,11 +66,13 @@ class SearchCommand extends ContainerAwareCommand {
         if ($language) {
             $metadataQuery = $metadataQuery
                 ->addMust($qb->query()->term(['metadata.' . ResourceConstants::VALUE_TYPE => 'content']))
-                ->addMust($qb->query()->nested()->setPath('metadata.metadata')->setQuery(
-                    $qb->query()->bool()
-                        ->addMust($qb->query()->term(['metadata.' . ResourceConstants::VALUE_TYPE => 'language']))
-                        ->addMust($qb->query()->term(['metadata.' . ResourceConstants::RAW_STRING => $language]))
-                ));
+                ->addMust(
+                    $qb->query()->nested()->setPath('metadata.metadata')->setQuery(
+                        $qb->query()->bool()
+                            ->addMust($qb->query()->term(['metadata.' . ResourceConstants::VALUE_TYPE => 'language']))
+                            ->addMust($qb->query()->term(['metadata.' . ResourceConstants::RAW_STRING => $language]))
+                    )
+                );
         }
         if ($title) {
             $metadataQuery = $metadataQuery
@@ -101,9 +102,11 @@ class SearchCommand extends ContainerAwareCommand {
         $fieldName = 'metadata.' . ResourceConstants::longLanguageString($language);
         return $qb->query()->bool()
             ->addMust($qb->query()->match($fieldName, $content))
-            ->addShould($qb->query()->match()
-                ->setFieldType($fieldName, 'phrase')
-                ->setField($fieldName, $content));
+            ->addShould(
+                $qb->query()->match()
+                    ->setFieldType($fieldName, 'phrase')
+                    ->setField($fieldName, $content)
+            );
     }
 
     private function printResult($result) {

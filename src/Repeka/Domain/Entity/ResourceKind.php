@@ -28,9 +28,12 @@ class ResourceKind implements Identifiable {
     }
 
     private function detectResourceClass() {
-        $nonSystemMetadata = array_filter($this->metadataList, function (Metadata $metadata) {
-            return !!$metadata->getResourceClass();
-        });
+        $nonSystemMetadata = array_filter(
+            $this->metadataList,
+            function (Metadata $metadata) {
+                return !!$metadata->getResourceClass();
+            }
+        );
         Assertion::greaterOrEqualThan(count($nonSystemMetadata), 1, 'Could not detect resource class from system metadata only.');
         $this->resourceClass = current($nonSystemMetadata)->getResourceClass();
     }
@@ -87,9 +90,14 @@ class ResourceKind implements Identifiable {
 
     /** @return Metadata[] */
     public function getMetadataByControl(MetadataControl $control): array {
-        return array_values(array_filter($this->getMetadataList(), function (Metadata $metadata) use ($control) {
-            return $control->equals($metadata->getControl());
-        }));
+        return array_values(
+            array_filter(
+                $this->getMetadataList(),
+                function (Metadata $metadata) use ($control) {
+                    return $control->equals($metadata->getControl());
+                }
+            )
+        );
     }
 
     public function update(array $newLabel, array $newDisplayStrategies) {

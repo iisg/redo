@@ -66,11 +66,13 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     }
 
     public function serialize() {
-        return serialize([
-            $this->id,
-            $this->password,
-            $this->roles,
-        ]);
+        return serialize(
+            [
+                $this->id,
+                $this->password,
+                $this->roles,
+            ]
+        );
     }
 
     public function unserialize($serialized) {

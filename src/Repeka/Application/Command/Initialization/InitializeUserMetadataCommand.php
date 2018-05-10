@@ -48,22 +48,26 @@ class InitializeUserMetadataCommand extends TransactionalCommand {
                     foreach ($this->languageRepository->getAvailableLanguageCodes() as $code) {
                         $label[$code] = $metadataNameToCreate;
                     }
-                    $metadata = $this->handleCommand(new MetadataCreateCommand(
-                        $metadataNameToCreate,
-                        $label,
-                        [],
-                        [],
-                        MetadataControl::TEXT,
-                        $userResourceKind->getResourceClass()
-                    ));
+                    $metadata = $this->handleCommand(
+                        new MetadataCreateCommand(
+                            $metadataNameToCreate,
+                            $label,
+                            [],
+                            [],
+                            MetadataControl::TEXT,
+                            $userResourceKind->getResourceClass()
+                        )
+                    );
                     $metadataList[] = $metadata;
                 }
-                $this->handleCommand(new ResourceKindUpdateCommand(
-                    $userResourceKind,
-                    $userResourceKind->getLabel(),
-                    $metadataList,
-                    $userResourceKind->getDisplayStrategies()
-                ));
+                $this->handleCommand(
+                    new ResourceKindUpdateCommand(
+                        $userResourceKind,
+                        $userResourceKind->getLabel(),
+                        $metadataList,
+                        $userResourceKind->getDisplayStrategies()
+                    )
+                );
                 $output->writeln("Created user metadata based on user data mapping: " . count($metadataNamesToCreate));
             }
         }

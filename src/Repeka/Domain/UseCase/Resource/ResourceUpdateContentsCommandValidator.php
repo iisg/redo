@@ -44,9 +44,14 @@ class ResourceUpdateContentsCommandValidator extends CommandAttributesValidator 
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('resource', Validator::instance(ResourceEntity::class)->callback(function (ResourceEntity $r) {
-                return $r->getId() > 0;
-            }))
+            ::attribute(
+                'resource',
+                Validator::instance(ResourceEntity::class)->callback(
+                    function (ResourceEntity $r) {
+                        return $r->getId() > 0;
+                    }
+                )
+            )
             ->attribute('contents', $this->resourceContentsCorrectStructureRule)
             ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getResource()->getKind()))
             ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResourceKind($command->getResource()->getKind()))

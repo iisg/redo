@@ -26,10 +26,15 @@ class MarcImportTest extends \PHPUnit_Framework_TestCase {
 
     public function testImportDescription() {
         $result = $this->importer->import(['Opis' => '[tag="245"]>[code="a"],[tag="245"]>[code="b"]'], self::$xmlString);
-        $this->assertEquals(['Opis' => [
-            'Advances in water treatment and environmental management :',
-            'proceedings of the 1st International Conference (Lyon, France 27-29 june 1990) /',
-        ]], $result);
+        $this->assertEquals(
+            [
+                'Opis' => [
+                    'Advances in water treatment and environmental management :',
+                    'proceedings of the 1st International Conference (Lyon, France 27-29 june 1990) /',
+                ],
+            ],
+            $result
+        );
     }
 
     public function testImportLangauge() {
@@ -38,15 +43,21 @@ class MarcImportTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testImportMultipleMetadataAtOnce() {
-        $result = $this->importer->import([
-            'Rok wydania' => '[tag="111"]>[code="d"]',
-            'Data pojawienia się pomysłu o napisaniu tej książki' => '[tag="700"]>[code="d"]',
-            'Jeszcze jakaś inna wartość' => '[tag="700"]>[code="9"]',
-        ], self::$xmlString);
-        $this->assertEquals([
-            'Rok wydania' => ['1990 ;'],
-            'Data pojawienia się pomysłu o napisaniu tej książki' => ['(1942- ).'],
-            'Jeszcze jakaś inna wartość' => ['35884', '72169'],
-        ], $result);
+        $result = $this->importer->import(
+            [
+                'Rok wydania' => '[tag="111"]>[code="d"]',
+                'Data pojawienia się pomysłu o napisaniu tej książki' => '[tag="700"]>[code="d"]',
+                'Jeszcze jakaś inna wartość' => '[tag="700"]>[code="9"]',
+            ],
+            self::$xmlString
+        );
+        $this->assertEquals(
+            [
+                'Rok wydania' => ['1990 ;'],
+                'Data pojawienia się pomysłu o napisaniu tej książki' => ['(1942- ).'],
+                'Jeszcze jakaś inna wartość' => ['35884', '72169'],
+            ],
+            $result
+        );
     }
 }

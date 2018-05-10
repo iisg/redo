@@ -11,14 +11,20 @@ class ResourceTransitionCommandAuditor extends AbstractCommandAuditor {
      * @return array
      */
     public function beforeHandling(Command $command): ?array {
-        $entryData = array_merge($command->getResource()->getAuditData(), [
-            'transitionId' => $command->getTransitionId(),
-        ]);
+        $entryData = array_merge(
+            $command->getResource()->getAuditData(),
+            [
+                'transitionId' => $command->getTransitionId(),
+            ]
+        );
         try {
             $transition = $command->getResource()->getWorkflow()->getTransition($command->getTransitionId());
-            $entryData = array_merge($entryData, [
-                'transitionLabel' => $transition->getLabel(),
-            ]);
+            $entryData = array_merge(
+                $entryData,
+                [
+                    'transitionLabel' => $transition->getLabel(),
+                ]
+            );
         } catch (NoSuchTransitionException $e) {
         }
         return $entryData;

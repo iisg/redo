@@ -3,20 +3,10 @@ namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
-use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\PageResult;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandValidator;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommandValidator;
-use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
-use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
-use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesForDeletionAreUnoccupiedRule;
-use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Repeka\Tests\Traits\StubsTrait;
-use Symfony\Component\Workflow\Workflow;
 
 /** @SuppressWarnings("PHPMD.LongVariable") */
 class WorkflowPlacesForDeletionAreUnoccupiedTest extends \PHPUnit_Framework_TestCase {
@@ -47,28 +37,27 @@ class WorkflowPlacesForDeletionAreUnoccupiedTest extends \PHPUnit_Framework_Test
         $this->placeA = $this->createWorkflowPlaceMock($this->idA);
         $this->placeB = $this->createWorkflowPlaceMock($this->idB);
         $this->placeAAsArray = [
-                "requiredMetadataIds" => [],
-                "pluginsConfig" => [],
-                "assigneeMetadataIds" => [],
-                "lockedMetadataIds" => [],
-                "label" => [
-                    "EN" => "Imported",
-                    "PL" => "Zaimportowana",
-                ],
-                'id' => $this->idA,
-            ];
-
+            "requiredMetadataIds" => [],
+            "pluginsConfig" => [],
+            "assigneeMetadataIds" => [],
+            "lockedMetadataIds" => [],
+            "label" => [
+                "EN" => "Imported",
+                "PL" => "Zaimportowana",
+            ],
+            'id' => $this->idA,
+        ];
         $this->placeBAsArray = [
-                "requiredMetadataIds" => [],
-                "pluginsConfig" => [],
-                "assigneeMetadataIds" => [],
-                "lockedMetadataIds" => [],
-                "label" => [
-                    "EN" => "Imported",
-                    "PL" => "Zaimportowana",
-                ],
-                'id' => $this->idB,
-            ];
+            "requiredMetadataIds" => [],
+            "pluginsConfig" => [],
+            "assigneeMetadataIds" => [],
+            "lockedMetadataIds" => [],
+            "label" => [
+                "EN" => "Imported",
+                "PL" => "Zaimportowana",
+            ],
+            'id' => $this->idB,
+        ];
         $this->workflow = $this->createMock(ResourceWorkflow::class, 1);
         $this->workflow->method('getPlaces')->willReturn([$this->placeA, $this->placeB]);
         $this->resource = $this->createResourceMock('1', null, [], [$this->idB => true]);

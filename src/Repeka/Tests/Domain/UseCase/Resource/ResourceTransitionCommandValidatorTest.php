@@ -43,10 +43,12 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValid() {
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
         $this->resource->expects($this->once())->method('hasWorkflow')->willReturn(true);
-        $this->workflow->method('getPlaces')->willReturn([
-            $this->createWorkflowPlaceMock('p1', [1]),
-            $this->createWorkflowPlaceMock('p2', []),
-        ]);
+        $this->workflow->method('getPlaces')->willReturn(
+            [
+                $this->createWorkflowPlaceMock('p1', [1]),
+                $this->createWorkflowPlaceMock('p2', []),
+            ]
+        );
         $this->configureTransition('t1', true, ['p2']);
         $command = new ResourceTransitionCommand($this->resource, 't1', $this->createMock(User::class));
         $this->validator->validate($command);

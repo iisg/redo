@@ -26,9 +26,14 @@ class SymfonyResourceWorkflowDriver implements ResourceWorkflowDriver {
         if (!$this->workflow) {
             $builder = new DefinitionBuilder();
             $builder->addPlaces(EntityUtils::mapToIds($this->resourceWorkflow->getPlaces()));
-            $builder->addTransitions(array_map(function (ResourceWorkflowTransition $transition) {
-                return new Transition($transition->getId(), $transition->getFromIds(), $transition->getToIds());
-            }, $this->resourceWorkflow->getTransitions()));
+            $builder->addTransitions(
+                array_map(
+                    function (ResourceWorkflowTransition $transition) {
+                        return new Transition($transition->getId(), $transition->getFromIds(), $transition->getToIds());
+                    },
+                    $this->resourceWorkflow->getTransitions()
+                )
+            );
             $definition = $builder->build();
             $this->workflow = new Workflow($definition);
         }
@@ -42,9 +47,12 @@ class SymfonyResourceWorkflowDriver implements ResourceWorkflowDriver {
 
     /** @return string[] */
     public function getTransitions(ResourceEntity $resource): array {
-        return array_map(function (Transition $transition) {
-            return $transition->getName();
-        }, $this->getWorkflow()->getEnabledTransitions($resource));
+        return array_map(
+            function (Transition $transition) {
+                return $transition->getName();
+            },
+            $this->getWorkflow()->getEnabledTransitions($resource)
+        );
     }
 
     public function apply(ResourceEntity $resource, string $transitionId): ResourceEntity {

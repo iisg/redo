@@ -17,9 +17,12 @@ class ResourceKindNormalizer extends AbstractNormalizer implements NormalizerAwa
         return [
             'id' => $resourceKind->getId(),
             'label' => $this->emptyArrayAsObject($resourceKind->getLabel()),
-            'metadataList' => array_map(function (Metadata $metadata) use ($format, $context) {
-                return $this->normalizer->normalize($metadata, $format, $context);
-            }, $resourceKind->getMetadataList()),
+            'metadataList' => array_map(
+                function (Metadata $metadata) use ($format, $context) {
+                    return $this->normalizer->normalize($metadata, $format, $context);
+                },
+                $resourceKind->getMetadataList()
+            ),
             'workflowId' => $resourceKind->getWorkflow() ? $resourceKind->getWorkflow()->getId() : null,
             'resourceClass' => $resourceKind->getResourceClass(),
             'displayStrategies' => $this->emptyArrayAsObject($resourceKind->getDisplayStrategies()),

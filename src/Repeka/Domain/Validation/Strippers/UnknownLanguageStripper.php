@@ -12,8 +12,12 @@ class UnknownLanguageStripper {
     }
 
     public function removeUnknownLanguages(array $content): array {
-        return array_filter($content, function ($key) {
-            return in_array($key, $this->availableLanguages);
-        }, ARRAY_FILTER_USE_KEY);
+        return array_filter(
+            $content,
+            function ($key) {
+                return in_array($key, $this->availableLanguages);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
     }
 }

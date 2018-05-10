@@ -11,10 +11,12 @@ class ESIndexManagerTest extends ElasticsearchTest {
         $numberOfReplicas = 1;
         $typeMock = $this->createMock(Type::class);
         $this->indexMock->expects($this->atLeastOnce())->method('exists')->willReturn(false);
-        $this->indexMock->expects($this->once())->method('create')->with([
-            'number_of_shards' => $numberOfShards,
-            'number_of_replicas' => $numberOfReplicas
-        ]);
+        $this->indexMock->expects($this->once())->method('create')->with(
+            [
+                'number_of_shards' => $numberOfShards,
+                'number_of_replicas' => $numberOfReplicas,
+            ]
+        );
         $this->indexMock->expects($this->once())->method('getType')->with(ResourceConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
         (new ESIndexManager($this->clientMock, $this->mappingFactoryMock, self::INDEX_NAME))->create($numberOfShards, $numberOfReplicas);
     }

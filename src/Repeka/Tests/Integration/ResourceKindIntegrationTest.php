@@ -85,12 +85,16 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $em->persist($metadata);
         $em->flush();
         $client = self::createAdminClient();
-        $client->apiRequest('POST', self::ENDPOINT, [
-            'label' => ['TEST' => 'created'],
-            'metadataList' => [
-                ['id' => $metadata->getId(), 'label' => ['TEST' => 'created overridden']],
-            ],
-        ]);
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'label' => ['TEST' => 'created'],
+                'metadataList' => [
+                    ['id' => $metadata->getId(), 'label' => ['TEST' => 'created overridden']],
+                ],
+            ]
+        );
         $this->assertStatusCode(201, $client->getResponse());
         $resourceKindRepository = self::createClient()->getContainer()->get(ResourceKindRepository::class);
         $createdId = json_decode($client->getResponse()->getContent())->id;
@@ -107,15 +111,19 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResourceKind() {
         $client = self::createAdminClient();
-        $client->apiRequest('PATCH', self::oneEntityEndpoint($this->resourceKind->getId()), [
-            'label' => ['TEST' => 'modified'],
-            'metadataList' => [
-                ['id' => $this->metadata2->getId()],
-                ['id' => $this->metadata1->getId(), 'placeholder' => ['TEST' => 'modified']],
-                ['id' => SystemMetadata::PARENT],
-            ],
-            'displayStrategies' => [],
-        ]);
+        $client->apiRequest(
+            'PATCH',
+            self::oneEntityEndpoint($this->resourceKind->getId()),
+            [
+                'label' => ['TEST' => 'modified'],
+                'metadataList' => [
+                    ['id' => $this->metadata2->getId()],
+                    ['id' => $this->metadata1->getId(), 'placeholder' => ['TEST' => 'modified']],
+                    ['id' => SystemMetadata::PARENT],
+                ],
+                'displayStrategies' => [],
+            ]
+        );
         $this->assertStatusCode(200, $client->getResponse());
         $client = self::createClient();
         $resourceKindRepository = $client->getContainer()->get(ResourceKindRepository::class);
@@ -143,10 +151,17 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     }
 
     public function testDeletingUsedResourceKindFails() {
-        $this->handleCommand(new ResourceCreateCommand($this->resourceKind, ResourceContents::fromArray([
-            $this->metadata1->getId() => ['test1'],
-            $this->metadata2->getId() => ['test2'],
-        ])));
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $this->resourceKind,
+                ResourceContents::fromArray(
+                    [
+                        $this->metadata1->getId() => ['test1'],
+                        $this->metadata2->getId() => ['test2'],
+                    ]
+                )
+            )
+        );
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::oneEntityEndpoint($this->resourceKind->getId()));
         $this->assertStatusCode(400, $client->getResponse());

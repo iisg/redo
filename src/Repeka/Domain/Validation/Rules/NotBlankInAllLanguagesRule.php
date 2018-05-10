@@ -12,9 +12,12 @@ class NotBlankInAllLanguagesRule extends AbstractRule {
 
     public function __construct(LanguageRepository $languageRepository) {
         $availableLanguages = $languageRepository->getAvailableLanguageCodes();
-        $this->requiredLanguagesChecks = array_map(function ($code) {
-            return Validator::key($code, Validator::notBlank());
-        }, $availableLanguages);
+        $this->requiredLanguagesChecks = array_map(
+            function ($code) {
+                return Validator::key($code, Validator::notBlank());
+            },
+            $availableLanguages
+        );
         $this->requiredLanguagesCount = count($availableLanguages);
     }
 

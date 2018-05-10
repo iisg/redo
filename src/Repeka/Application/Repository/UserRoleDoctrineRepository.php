@@ -29,8 +29,11 @@ class UserRoleDoctrineRepository extends AbstractRepository implements UserRoleR
 
     /** @return UserRole[] */
     public function findSystemRoles(): array {
-        return array_filter($this->findAll(), function (UserRole $role) {
-            return $role->isSystemRole();
-        });
+        return array_filter(
+            $this->findAll(),
+            function (UserRole $role) {
+                return $role->isSystemRole();
+            }
+        );
     }
 }

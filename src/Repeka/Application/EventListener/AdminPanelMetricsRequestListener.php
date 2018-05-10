@@ -19,18 +19,21 @@ class AdminPanelMetricsRequestListener {
     }
 
     private function initializeNamesWhitelist($namesWhitelist) {
-        $this->namesWhiteList = array_map(function ($whitelistedName) {
-            if (substr($whitelistedName, -1) == '*') {
-                $baseName = substr($whitelistedName, 0, -1);
-                return function ($nameToCheck) use ($baseName) {
-                    return strpos($nameToCheck, $baseName) === 0;
-                };
-            } else {
-                return function ($nameToCheck) use ($whitelistedName) {
-                    return $nameToCheck === $whitelistedName;
-                };
-            }
-        }, $namesWhitelist);
+        $this->namesWhiteList = array_map(
+            function ($whitelistedName) {
+                if (substr($whitelistedName, -1) == '*') {
+                    $baseName = substr($whitelistedName, 0, -1);
+                    return function ($nameToCheck) use ($baseName) {
+                        return strpos($nameToCheck, $baseName) === 0;
+                    };
+                } else {
+                    return function ($nameToCheck) use ($whitelistedName) {
+                        return $nameToCheck === $whitelistedName;
+                    };
+                }
+            },
+            $namesWhitelist
+        );
     }
 
     public function onKernelRequest(GetResponseEvent $event) {

@@ -42,10 +42,12 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
     }
 
     public function processMetadataValues(ResourceContents $contents, Request $request): ResourceContents {
-        return $contents->mapAllValues(function ($value, int $metadataId) use ($request) {
-            $metadata = $this->metadataRepository->findOne($metadataId);
-            return $this->metadataValueProcessor->process($value, $metadata->getControl(), $request);
-        });
+        return $contents->mapAllValues(
+            function ($value, int $metadataId) use ($request) {
+                $metadata = $this->metadataRepository->findOne($metadataId);
+                return $this->metadataValueProcessor->process($value, $metadata->getControl(), $request);
+            }
+        );
     }
 
     /**

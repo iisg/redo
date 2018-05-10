@@ -24,9 +24,14 @@ class UserUpdateRolesCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->userRepository = $this->createMock(UserRepository::class);
         $this->userRoleRepository = $this->createMock(UserRoleRepository::class);
         $this->userRoleRepository->expects($this->any())->method('findSystemRoles')
-            ->willReturn(array_map(function (SystemUserRole $role) {
-                return $role->toUserRole();
-            }, SystemUserRole::values()));
+            ->willReturn(
+                array_map(
+                    function (SystemUserRole $role) {
+                        return $role->toUserRole();
+                    },
+                    SystemUserRole::values()
+                )
+            );
         $this->userRepository->expects($this->once())->method('save')->willReturnArgument(0);
         $this->handler = new UserUpdateRolesCommandHandler($this->userRepository, $this->userRoleRepository);
         $this->user = $this->createMock(User::class);

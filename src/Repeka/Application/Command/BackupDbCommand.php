@@ -32,15 +32,17 @@ class BackupDbCommand extends ContainerAwareCommand {
     private function backupPostgresDatabase(Connection $connection, InputInterface $input, OutputInterface $output) {
         $backupName = 'repeka-before-' . $this->getContainer()->getParameter('application_version') . '-' . date('YmdHis') . '.sql.gz';
         $backupPath = self::BACKUP_DIR . '/' . $backupName;
-        $process = new Process(sprintf(
-            'pg_dump --username="%s" --host="%s" %s | gzip > "%s"',
-            $connection->getUsername(),
-            $connection->getHost(),
-            $connection->getDatabase(),
-            $backupPath
-        ), null, [
-            'PGPASSWORD' => $connection->getPassword(),
-        ]);
+        $process = new Process(
+            sprintf(
+                'pg_dump --username="%s" --host="%s" %s | gzip > "%s"',
+                $connection->getUsername(),
+                $connection->getHost(),
+                $connection->getDatabase(),
+                $backupPath
+            ),
+            null,
+            ['PGPASSWORD' => $connection->getPassword()]
+        );
         $process->run();
         $errorOutput = trim($process->getErrorOutput());
         if ($process->isSuccessful() && !$errorOutput) {

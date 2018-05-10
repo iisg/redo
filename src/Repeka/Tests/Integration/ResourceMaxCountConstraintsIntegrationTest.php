@@ -45,11 +45,15 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
 
     private function makeRequest(ResourceKind $resourceKind, array $values): Response {
         $client = self::createAdminClient();
-        $client->apiRequest('POST', '/api/resources', [
-            'kindId' => $resourceKind->getId(),
-            'contents' => json_encode([$this->baseMetadata->getId() => $values]),
-            'resourceClass' => 'books',
-        ]);
+        $client->apiRequest(
+            'POST',
+            '/api/resources',
+            [
+                'kindId' => $resourceKind->getId(),
+                'contents' => json_encode([$this->baseMetadata->getId() => $values]),
+                'resourceClass' => 'books',
+            ]
+        );
         return $client->getResponse();
     }
 

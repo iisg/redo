@@ -34,10 +34,12 @@ class EntityExistsRuleTest extends \PHPUnit_Framework_TestCase {
     public function testQueriesCorrectId() {
         $testId = 1234;
         $repository = $this->createMock(DummyRepository::class);
-        $repository->expects($this->once())->method('findOne')->willReturnCallback(function ($id) use ($testId) {
-            $this->assertEquals($testId, $id);
-            return new \stdClass();
-        });
+        $repository->expects($this->once())->method('findOne')->willReturnCallback(
+            function ($id) use ($testId) {
+                $this->assertEquals($testId, $id);
+                return new \stdClass();
+            }
+        );
         $repositoryProvider = $this->createRepositoryProviderMock($repository);
         $validator = (new EntityExistsRule($repositoryProvider))->forEntityType('dummy');
         $this->assertTrue($validator->validate($testId));

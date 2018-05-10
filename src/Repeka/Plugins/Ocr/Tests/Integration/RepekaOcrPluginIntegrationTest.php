@@ -45,19 +45,29 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
         $titles = $resource->getValues($titleMetadata);
         $this->communicator->expects($this->once())->method('sendToOcr')->with($titles);
         $workflow = $resource->getWorkflow();
-        $places = array_map(function (ResourceWorkflowPlace $place) {
-            return ResourceWorkflowPlace::fromArray(array_merge($place->toArray(), [
-              'pluginsConfig' => ['repekaOcr' => ['metadataToOcr' => 'Tytuł']]
-            ]));
-        }, $workflow->getPlaces());
-        $this->handleCommand(new ResourceWorkflowUpdateCommand(
-            $workflow,
-            $workflow->getName(),
-            $places,
-            $workflow->getTransitions(),
-            $workflow->getDiagram(),
-            $workflow->getThumbnail()
-        ));
+        $places = array_map(
+            function (ResourceWorkflowPlace $place) {
+                return ResourceWorkflowPlace::fromArray(
+                    array_merge(
+                        $place->toArray(),
+                        [
+                            'pluginsConfig' => ['repekaOcr' => ['metadataToOcr' => 'Tytuł']],
+                        ]
+                    )
+                );
+            },
+            $workflow->getPlaces()
+        );
+        $this->handleCommand(
+            new ResourceWorkflowUpdateCommand(
+                $workflow,
+                $workflow->getName(),
+                $places,
+                $workflow->getTransitions(),
+                $workflow->getDiagram(),
+                $workflow->getThumbnail()
+            )
+        );
         $resource = $this->getPhpBookResource();
         $this->handleCommand(new ResourceTransitionCommand($resource, $transitions[0]->getId(), $this->getAdminUser()));
     }

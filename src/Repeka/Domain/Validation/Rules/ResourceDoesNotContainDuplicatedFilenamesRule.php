@@ -41,9 +41,13 @@ class ResourceDoesNotContainDuplicatedFilenamesRule extends AbstractRule {
         $unique = array_unique($resourceFilenames);
         if (count($unique) != count($resourceFilenames)) {
             $duplicatedFilenames = array_unique(array_diff_assoc($resourceFilenames, $unique));
-            throw new DomainException('duplicatedFilenames', 400, [
-                'filenames' => implode(", ", $duplicatedFilenames),
-            ]);
+            throw new DomainException(
+                'duplicatedFilenames',
+                400,
+                [
+                    'filenames' => implode(", ", $duplicatedFilenames),
+                ]
+            );
         }
     }
 

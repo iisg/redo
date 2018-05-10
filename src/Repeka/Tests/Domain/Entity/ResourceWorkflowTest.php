@@ -44,10 +44,15 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testUpdatingPlacesFromArray() {
-        $this->workflow->update([], [
-            ['label' => ['EN' => 'First place']],
-            ['label' => ['EN' => 'Second place']],
-        ], [], 'books');
+        $this->workflow->update(
+            [],
+            [
+                ['label' => ['EN' => 'First place']],
+                ['label' => ['EN' => 'Second place']],
+            ],
+            [],
+            'books'
+        );
         $this->assertCount(2, $this->workflow->getPlaces());
         $this->assertEquals(['EN' => 'First place'], $this->workflow->getPlaces()[0]->getLabel());
         $this->assertEquals(['EN' => 'Second place'], $this->workflow->getPlaces()[1]->getLabel());
@@ -75,10 +80,15 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testUpdatingTransitionsFromArray() {
-        $this->workflow->update([], [], [
-            ['label' => ['EN' => 'First transition'], 'froms' => ['A'], 'tos' => ['B']],
-            ['label' => ['EN' => 'Second transition'], 'froms' => ['B'], 'tos' => ['C']],
-        ], 'books');
+        $this->workflow->update(
+            [],
+            [],
+            [
+                ['label' => ['EN' => 'First transition'], 'froms' => ['A'], 'tos' => ['B']],
+                ['label' => ['EN' => 'Second transition'], 'froms' => ['B'], 'tos' => ['C']],
+            ],
+            'books'
+        );
         $this->assertCount(2, $this->workflow->getTransitions());
         $this->assertEquals(['EN' => 'First transition'], $this->workflow->getTransitions()[0]->getLabel());
         $this->assertEquals(['A'], $this->workflow->getTransitions()[0]->getFromIds());
@@ -113,11 +123,16 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingTransitionsForResource() {
-        $this->workflow->update([], [], [
-            new ResourceWorkflowTransition([], [], [], [], 'onetransition'),
-            new ResourceWorkflowTransition([], [], [], [], 'twotransition'),
-            new ResourceWorkflowTransition([], [], [], [], 'anothertransition'),
-        ], 'books');
+        $this->workflow->update(
+            [],
+            [],
+            [
+                new ResourceWorkflowTransition([], [], [], [], 'onetransition'),
+                new ResourceWorkflowTransition([], [], [], [], 'twotransition'),
+                new ResourceWorkflowTransition([], [], [], [], 'anothertransition'),
+            ],
+            'books'
+        );
         $this->workflow->setWorkflowDriver($this->workflowDriver);
         $this->workflowDriver->expects($this->once())->method('getTransitions')->with($this->resource)
             ->willReturn(['onetransition', 'anothertransition']);
@@ -128,11 +143,16 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingPlacesForResource() {
-        $this->workflow->update([], [
-            new ResourceWorkflowPlace([], 'first'),
-            new ResourceWorkflowPlace([], 'second'),
-            new ResourceWorkflowPlace([], 'third'),
-        ], [], 'books');
+        $this->workflow->update(
+            [],
+            [
+                new ResourceWorkflowPlace([], 'first'),
+                new ResourceWorkflowPlace([], 'second'),
+                new ResourceWorkflowPlace([], 'third'),
+            ],
+            [],
+            'books'
+        );
         $this->workflow->setWorkflowDriver($this->workflowDriver);
         $this->workflowDriver->expects($this->once())->method('getPlaces')->with($this->resource)
             ->willReturn(['first', 'third']);
@@ -143,10 +163,15 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingTransitionById() {
-        $this->workflow->update([], [], [
-            new ResourceWorkflowTransition([], [], [], ['A'], 'first'),
-            new ResourceWorkflowTransition([], [], [], ['B'], 'second'),
-        ], 'books');
+        $this->workflow->update(
+            [],
+            [],
+            [
+                new ResourceWorkflowTransition([], [], [], ['A'], 'first'),
+                new ResourceWorkflowTransition([], [], [], ['B'], 'second'),
+            ],
+            'books'
+        );
         $transition = $this->workflow->getTransition('first');
         $this->assertNotNull($transition);
         $this->assertEquals('first', $transition->getId());

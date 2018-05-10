@@ -22,13 +22,17 @@ class ResourceWorkflowIntegrationTest extends IntegrationTestCase {
     public function testRenamingWorkflow() {
         $client = self::createAdminClient();
         $newName = ['TEST' => 'New test name'];
-        $client->apiRequest('PUT', $this->oneEntityEndpoint($this->workflow), [
-            'name' => $newName,
-            'places' => [
-                ['id' => "abc", 'label' => ['TEST' => 'place']],
-            ],
-            'resourceClass' => 'books',
-        ]);
+        $client->apiRequest(
+            'PUT',
+            $this->oneEntityEndpoint($this->workflow),
+            [
+                'name' => $newName,
+                'places' => [
+                    ['id' => "abc", 'label' => ['TEST' => 'place']],
+                ],
+                'resourceClass' => 'books',
+            ]
+        );
         $this->assertStatusCode(200, $client->getResponse());
         /** @var ResourceWorkflowRepository $repository */
         $repository = self::createClient()->getContainer()->get(ResourceWorkflowRepository::class);

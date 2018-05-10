@@ -21,9 +21,11 @@ class ValidateCommandMiddleware implements CommandBusMiddleware {
                 $validator = $this->container->get($validatorId);
                 $validator->validate($command);
             } else {
-                throw new \InvalidArgumentException("Could not find a validator for the {$command->getCommandName()}. "
+                throw new \InvalidArgumentException(
+                    "Could not find a validator for the {$command->getCommandName()}. "
                     . "Looking for the {$validatorId}. "
-                    . "If the command is not meant to have a validator, it must extend the NonValidatedCommand class.");
+                    . "If the command is not meant to have a validator, it must extend the NonValidatedCommand class."
+                );
             }
         }
         return $next($command);

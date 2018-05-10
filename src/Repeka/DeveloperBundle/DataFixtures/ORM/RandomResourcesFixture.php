@@ -45,15 +45,32 @@ class RandomResourcesFixture extends RepekaFixture {
         $possibleUsers = [[], $userAdmin->getUserData(), $userBudynek->getUserData()];
         for ($i = 0; $i < self::RANDOM_BOOKS_COUNT; $i++) {
             /** @var ResourceEntity $book */
-            $book = $this->handleCommand(new ResourceCreateCommand($bookResourceKind, $this->contents([
-                MetadataFixture::REFERENCE_METADATA_TITLE => $faker->catchPhrase,
-                MetadataFixture::REFERENCE_METADATA_DESCRIPTION => $faker->realText(),
-                MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => $faker->numberBetween(10, 1000),
-                MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => $faker->randomElement($possibleUsers),
-                MetadataFixture::REFERENCE_METADATA_SUPERVISOR => $faker->randomElement($possibleUsers),
-            ])));
-            $place = $faker->randomElement(['y1oosxtgf', 'lb1ovdqcy', 'qqd3yk499', '9qq9ipqa3', 'ss9qm7r78', 'jvz160sl4', 'xo77kutzk',
-                'j70hlpsvu']);
+            $book = $this->handleCommand(
+                new ResourceCreateCommand(
+                    $bookResourceKind,
+                    $this->contents(
+                        [
+                            MetadataFixture::REFERENCE_METADATA_TITLE => $faker->catchPhrase,
+                            MetadataFixture::REFERENCE_METADATA_DESCRIPTION => $faker->realText(),
+                            MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => $faker->numberBetween(10, 1000),
+                            MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => $faker->randomElement($possibleUsers),
+                            MetadataFixture::REFERENCE_METADATA_SUPERVISOR => $faker->randomElement($possibleUsers),
+                        ]
+                    )
+                )
+            );
+            $place = $faker->randomElement(
+                [
+                    'y1oosxtgf',
+                    'lb1ovdqcy',
+                    'qqd3yk499',
+                    '9qq9ipqa3',
+                    'ss9qm7r78',
+                    'jvz160sl4',
+                    'xo77kutzk',
+                    'j70hlpsvu',
+                ]
+            );
             $book->setMarking([$place => true]);
             $manager->getRepository(ResourceEntity::class)->save($book);
         }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Repeka\Application\Elasticsearch\Mapping;
 
 use Repeka\Domain\Repository\LanguageRepository;

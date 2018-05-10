@@ -17,8 +17,8 @@ class TransitionPossibilityCheckResult {
 
     public function isTransitionPossible() {
         return empty($this->missingMetadataIds)
-        && !$this->userMissingRequiredRole
-        && !$this->otherUserAssigned;
+            && !$this->userMissingRequiredRole
+            && !$this->otherUserAssigned;
     }
 
     /** @return int[] */

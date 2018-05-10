@@ -8,20 +8,24 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
     public function testFromArray() {
-        $place = ResourceWorkflowPlace::fromArray([
-            'id' => 'B',
-            'label' => ['PL' => 'AA'],
-            'requiredMetadataIds' => [1, 2, 3],
-        ]);
+        $place = ResourceWorkflowPlace::fromArray(
+            [
+                'id' => 'B',
+                'label' => ['PL' => 'AA'],
+                'requiredMetadataIds' => [1, 2, 3],
+            ]
+        );
         $this->assertEquals('B', $place->getId());
         $this->assertEquals(['PL' => 'AA'], $place->getLabel());
         $this->assertEquals([1, 2, 3], $place->restrictingMetadataIds()->all()->get());
     }
 
     public function testFromArrayWithMinimalFields() {
-        $place = ResourceWorkflowPlace::fromArray([
-            'label' => ['PL' => 'AA'],
-        ]);
+        $place = ResourceWorkflowPlace::fromArray(
+            [
+                'label' => ['PL' => 'AA'],
+            ]
+        );
         $this->assertEquals(['PL' => 'AA'], $place->getLabel());
         $this->assertEquals([], $place->restrictingMetadataIds()->all()->get());
     }

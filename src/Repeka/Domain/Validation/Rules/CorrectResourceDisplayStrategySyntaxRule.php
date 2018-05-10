@@ -28,9 +28,12 @@ class CorrectResourceDisplayStrategySyntaxRule extends AbstractRule {
             $this->compiler->validateTemplate($input);
             return true;
         } catch (InvalidResourceDisplayStrategyException $e) {
-            throw $this->reportError($input, [
-                'error' => $e->getMessage(),
-            ]);
+            throw $this->reportError(
+                $input,
+                [
+                    'error' => $e->getMessage(),
+                ]
+            );
         }
     }
 }

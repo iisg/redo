@@ -32,17 +32,22 @@ class ResourceFileQueryHandler {
             ->build();
         $fileMetadata = $this->metadataRepository->findByQuery($fileMetadataQuery);
         $fileMetadataIds = EntityUtils::mapToIds($fileMetadata);
-        $path = $resource->getContents()->reduceAllValues(function ($value, int $metadataId, $path) use ($filename, $fileMetadataIds) {
-            if (!$path && in_array($metadataId, $fileMetadataIds) && basename($value) == $filename) {
-                return $value;
+        $path = $resource->getContents()->reduceAllValues(
+            function ($value, int $metadataId, $path) use ($filename, $fileMetadataIds) {
+                if (!$path && in_array($metadataId, $fileMetadataIds) && basename($value) == $filename) {
+                    return $value;
+                }
+                return $path;
             }
-            return $path;
-        });
+        );
         if (!$path) {
-            throw new NotFoundException('noSuchResourceFile', [
-                'resourceId' => $resource->getId(),
-                'filename' => $filename,
-            ]);
+            throw new NotFoundException(
+                'noSuchResourceFile',
+                [
+                    'resourceId' => $resource->getId(),
+                    'filename' => $filename,
+                ]
+            );
         }
         return $this->resourceFileHelper->toAbsolutePath($path);
     }

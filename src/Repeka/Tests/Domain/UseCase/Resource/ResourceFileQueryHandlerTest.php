@@ -21,14 +21,19 @@ class ResourceFileQueryHandlerTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $fileHelper = $this->createMock(ResourceFileHelper::class);
-        $fileHelper->method('toAbsolutePath')->willReturnCallback(function (string $path) {
-            return 'absolute/' . $path;
-        });
+        $fileHelper->method('toAbsolutePath')->willReturnCallback(
+            function (string $path) {
+                return 'absolute/' . $path;
+            }
+        );
         $fileMetadataMock = $this->createMetadataMock(11, 1, MetadataControl::FILE());
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [
-            $fileMetadataMock,
-            $this->createMetadataMock(13, 1, MetadataControl::TEXT()),
-        ]);
+        $metadataRepository = $this->createRepositoryStub(
+            MetadataRepository::class,
+            [
+                $fileMetadataMock,
+                $this->createMetadataMock(13, 1, MetadataControl::TEXT()),
+            ]
+        );
         $metadataRepository->method('findByQuery')->willReturn([$fileMetadataMock]);
         $this->handler = new ResourceFileQueryHandler($fileHelper, $metadataRepository);
         $this->resource = $this->createResourceMock(1, null, [11 => ['relative/path/test.txt']]);

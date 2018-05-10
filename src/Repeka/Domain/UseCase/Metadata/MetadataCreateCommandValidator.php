@@ -53,9 +53,14 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('name', Validator::notBlank())
             ->attribute('placeholder', $this->containsOnlyAvailableLanguagesRule)
             ->attribute('description', $this->containsOnlyAvailableLanguagesRule)
-            ->attribute('controlName', Validator::callback(function ($control) {
-                return MetadataControl::isValid($control);
-            }))
+            ->attribute(
+                'controlName',
+                Validator::callback(
+                    function ($control) {
+                        return MetadataControl::isValid($control);
+                    }
+                )
+            )
             ->attribute('shownInBrief', Validator::boolType())
             ->attribute('copyToChildResource', Validator::boolType())
             ->attribute('resourceClass', $this->resourceClassExistsRule)

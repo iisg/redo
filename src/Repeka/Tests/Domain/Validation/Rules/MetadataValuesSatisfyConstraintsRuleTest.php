@@ -36,12 +36,23 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
         );
         $this->metadataWithoutConstraints = $this->createMetadataMock(1, null, MetadataControl::TEXT(), []);
         $this->metadataWithConstraint1 = $this->createMetadataMock(2, null, MetadataControl::TEXT(), ['constraint1' => 'c1m2cfg']);
-        $this->metadataWithBothConstraints = $this->createMetadataMock(3, null, MetadataControl::TEXT(), [
-            'constraint1' => 'c1m3cfg', 'constraint2' => 'c2m3cfg',
-        ]);
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [
-            $this->metadataWithoutConstraints, $this->metadataWithConstraint1, $this->metadataWithBothConstraints,
-        ]);
+        $this->metadataWithBothConstraints = $this->createMetadataMock(
+            3,
+            null,
+            MetadataControl::TEXT(),
+            [
+                'constraint1' => 'c1m3cfg',
+                'constraint2' => 'c2m3cfg',
+            ]
+        );
+        $metadataRepository = $this->createRepositoryStub(
+            MetadataRepository::class,
+            [
+                $this->metadataWithoutConstraints,
+                $this->metadataWithConstraint1,
+                $this->metadataWithBothConstraints,
+            ]
+        );
         $resourceKind = $this->createResourceKindMock(1, 'books', [$this->metadataWithConstraint1]);
         $this->rule = (new MetadataValuesSatisfyConstraintsRule($constraintManager, $metadataRepository))->forResourceKind($resourceKind);
     }
@@ -57,19 +68,29 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
                 [$this->metadataWithBothConstraints, 'c1m3cfg', ['d']]
             );
         $this->constraint2->expects($this->once())->method('validateAll')->with($this->metadataWithBothConstraints, 'c2m3cfg', ['d']);
-        $this->assertTrue($this->rule->validate(ResourceContents::fromArray([
-            $this->metadataWithConstraint1->getId() => ['a', 'b'],
-            $this->metadataWithBothConstraints->getId() => 'd',
-        ])));
+        $this->assertTrue(
+            $this->rule->validate(
+                ResourceContents::fromArray(
+                    [
+                        $this->metadataWithConstraint1->getId() => ['a', 'b'],
+                        $this->metadataWithBothConstraints->getId() => 'd',
+                    ]
+                )
+            )
+        );
     }
 
     public function testRejectsWhenAnyRuleRejects() {
         $this->expectException(\InvalidArgumentException::class);
         $this->constraint2->method('validateAll')->willThrowException(new \InvalidArgumentException());
-        $this->rule->validate(ResourceContents::fromArray([
-            $this->metadataWithConstraint1->getId() => ['a', 'b'],
-            $this->metadataWithBothConstraints->getId() => 'd',
-        ]));
+        $this->rule->validate(
+            ResourceContents::fromArray(
+                [
+                    $this->metadataWithConstraint1->getId() => ['a', 'b'],
+                    $this->metadataWithBothConstraints->getId() => 'd',
+                ]
+            )
+        );
     }
 
     public function testValidatesSubmetadata() {
@@ -84,21 +105,27 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
                 [$this->metadataWithBothConstraints, 'c2m3cfg', ['b', 'c']],
                 [$this->metadataWithBothConstraints, 'c2m3cfg', ['e']]
             );
-        $this->assertTrue($this->rule->validate(ResourceContents::fromArray([
-            $this->metadataWithConstraint1->getId() => [
-                [
-                    'value' => 'a',
-                    'submetadata' => [
-                        $this->metadataWithBothConstraints->getId() => ['b', 'c'],
-                    ],
-                ],
-                [
-                    'value' => 'c',
-                    'submetadata' => [
-                        $this->metadataWithBothConstraints->getId() => 'e',
-                    ],
-                ],
-            ],
-        ])));
+        $this->assertTrue(
+            $this->rule->validate(
+                ResourceContents::fromArray(
+                    [
+                        $this->metadataWithConstraint1->getId() => [
+                            [
+                                'value' => 'a',
+                                'submetadata' => [
+                                    $this->metadataWithBothConstraints->getId() => ['b', 'c'],
+                                ],
+                            ],
+                            [
+                                'value' => 'c',
+                                'submetadata' => [
+                                    $this->metadataWithBothConstraints->getId() => 'e',
+                                ],
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
     }
 }

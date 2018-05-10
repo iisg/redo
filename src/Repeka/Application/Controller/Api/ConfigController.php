@@ -42,20 +42,26 @@ class ConfigController extends ApiController {
         $parameters = array_map([$this, 'getParameter'], self::PUBLIC_PARAMETERS);
         $uploadSizeHelper = new UploadSizeHelper();
         if ($this->userDataMapping->mappingExists()) {
-            $userMappedMetadataIds = array_map(function (Mapping $mapping) {
-                return $mapping->getMetadata()->getId();
-            }, $this->userDataMapping->getImportConfig()->getMappings());
+            $userMappedMetadataIds = array_map(
+                function (Mapping $mapping) {
+                    return $mapping->getMetadata()->getId();
+                },
+                $this->userDataMapping->getImportConfig()->getMappings()
+            );
         }
-        $response = array_merge($parameters, [
-            'control_constraints' => $this->metadataConstraintManager->getRequiredConstraintNamesMap(),
-            'supported_controls' => array_values(MetadataControl::toArray()),
-            'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
-            'user_mapped_metadata_ids' => $userMappedMetadataIds ?? [],
-            'max_upload_size' => [
-                'file' => $uploadSizeHelper->getMaxUploadSizePerFile(),
-                'total' => $uploadSizeHelper->getMaxUploadSize(),
-            ],
-        ]);
+        $response = array_merge(
+            $parameters,
+            [
+                'control_constraints' => $this->metadataConstraintManager->getRequiredConstraintNamesMap(),
+                'supported_controls' => array_values(MetadataControl::toArray()),
+                'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
+                'user_mapped_metadata_ids' => $userMappedMetadataIds ?? [],
+                'max_upload_size' => [
+                    'file' => $uploadSizeHelper->getMaxUploadSizePerFile(),
+                    'total' => $uploadSizeHelper->getMaxUploadSize(),
+                ],
+            ]
+        );
         return $this->createJsonResponse($response);
     }
 }
