@@ -1,12 +1,14 @@
 import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {twoWay} from "../binding-mode";
+import {booleanAttribute} from "common/components/boolean-attribute";
 
 export class EntityChooser {
   @bindable entities: Entity[] = [];
   @bindable(twoWay) value: Entity;
   @bindable(twoWay) containsItems: boolean;
   @bindable filter: (entity: Entity) => boolean;
+  @bindable @booleanAttribute hideClearButton: boolean;
   @bindable(twoWay) shouldRefreshResults: boolean = false;
 
   @computedFrom('shouldRefreshResults', 'entities.length', 'filter', 'value')

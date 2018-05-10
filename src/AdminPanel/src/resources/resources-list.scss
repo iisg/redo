@@ -7,6 +7,7 @@
                          "form                                  form                                 "
                          "loading-bar                           loading-bar                          "
                          "resources-list-table                  resources-list-table                 "
+                         "alert                                 alert                                "
                          "bottom-pagination-page-numbers        blank-space                          "
                          "bottom-pagination-dropdown-with-label bottom-pagination-dropdown-with-label";
 
@@ -16,6 +17,7 @@
                              "top-pagination                        top-pagination                       "
                              "loading-bar                           loading-bar                          "
                              "resources-list-table                  resources-list-table                 "
+                             "alert                                 alert                                "
                              "bottom-pagination-page-numbers        bottom-pagination-page-numbers       "
                              "bottom-pagination-dropdown-with-label bottom-pagination-dropdown-with-label";
     }
@@ -49,5 +51,9 @@
 
     resources-list-table {
         grid-area: "resources-list-table";
+    }
+
+    .alert {
+        grid-area: "alert";
     }
 }

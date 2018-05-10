@@ -2,8 +2,7 @@
     <require from="common/components/dropdown-select/dropdown-select"></require>
 
     <dropdown-select values.bind="workflows"
-        value.bind="value"
-        allow-clear>
+        value.bind="value">
         <template replace-part="option-template">
             <span class="selected-option">
                 ${option.name | inCurrentLanguage}

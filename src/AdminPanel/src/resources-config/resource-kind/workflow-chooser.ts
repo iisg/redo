@@ -6,8 +6,7 @@ import {twoWay} from "common/components/binding-mode";
 
 @autoinject
 export class WorkflowChooser implements ComponentAttached {
-  @bindable(twoWay)
-  value: Workflow;
+  @bindable(twoWay) value: Workflow;
   @bindable resourceClass: string;
 
   workflows: Workflow[];

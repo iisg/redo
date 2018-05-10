@@ -281,6 +281,17 @@ input, textarea, select {
   color: grey;
 }
 
+.alert {
+  margin-bottom: 0;
+  padding: $default-gap-size;
+  border: none;
+  border-radius: 0;
+  &.alert-info {
+    background-color: $light-blue;
+    color: white;
+  }
+}
+
 .alert > .btn {
   margin-top: -8px;
 

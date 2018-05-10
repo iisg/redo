@@ -3,30 +3,29 @@
     <require from="resources-config/metadata/metadata-chooser"></require>
     <require from="resources/add/metadata-value-input"></require>
 
-    <table class="table"
-        if.bind="resourceClasses.length > 0">
+    <table if.bind="resourceClasses.length">
         <thead>
-        <tr>
-            <th>${ 'Metadata kind' | t }</th>
-            <th>${ 'Filter' | t }</th>
-        </tr>
+            <tr>
+                <th>${'Metadata kind' | t}</th>
+                <th>${'Filter' | t}</th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>
-                <metadata-chooser value.bind="filteredMetadata"
-                    resource-class.bind="resourceClasses"
-                    control.one-time="['text', 'textarea']"></metadata-chooser>
-            </td>
-            <td>
-                <metadata-value-input if.bind="filteredMetadata"
-                    metadata.bind="filteredMetadata"
-                    value.bind="filterValue"></metadata-value-input>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <metadata-chooser value.bind="filteredMetadata"
+                        resource-class.bind="resourceClasses"
+                        control.one-time="['text', 'textarea']"></metadata-chooser>
+                </td>
+                <td>
+                    <metadata-value-input if.bind="filteredMetadata"
+                        metadata.bind="filteredMetadata"
+                        value.bind="filterValue"></metadata-value-input>
+                </td>
+            </tr>
         </tbody>
     </table>
-    <div else>${ 'Firstly, choose allowed resource kinds.' | t }</div>
+    <div else>${'Firstly, choose allowed resource kinds.' | t}</div>
 
     <restore-from-original if.bind="hasBase && wasModified"
         click.delegate="resetToOriginalValues()"></restore-from-original>
