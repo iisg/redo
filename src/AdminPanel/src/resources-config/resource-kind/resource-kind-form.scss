@@ -1,10 +1,32 @@
 @import "../../common/styles";
 
-.resource-kind-form-metadata-item {
-  .top-right-buttons {
-    margin-top: 0;
-  }
-  h3 {
-    margin: 5px 0;
+resource-kind-form {
+  display: block;
+  &, & > :not(form), & > form > div {
+    padding: $default-gap-size / 2;
+    .resource-kind-form-metadata-item {
+      .top-right-buttons {
+        margin-top: 0;
+      }
+      h3 {
+        margin: 5px 0;
+      }
+    }
+    .form-buttons {
+      > toggle-button {
+        button {
+          background-color: transparent;
+          &:hover:not([disabled]) {
+            background-color: $light-grey;
+          }
+          icon {
+            color: $red;
+          }
+          span {
+            color: $default-text-color;
+          }
+        }
+      }
+    }
   }
 }

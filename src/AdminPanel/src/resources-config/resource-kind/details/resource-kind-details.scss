@@ -1,0 +1,10 @@
+@import "../../../common/styles";
+
+.resource-kind-details {
+  #metadata-tab > div .resource-kind-metadata-table {
+    padding: $default-gap-size / 2;
+  }
+  #workflow-tab > div {
+    padding: $default-gap-size / 2;
+  }
+}
