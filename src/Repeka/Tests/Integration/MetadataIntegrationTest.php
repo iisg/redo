@@ -4,9 +4,11 @@ namespace Repeka\Tests\Integration;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
 class MetadataIntegrationTest extends IntegrationTestCase {
+    use FixtureHelpers;
     const ENDPOINT = '/api/metadata';
 
     public function setUp() {
@@ -215,5 +217,15 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
+    }
+
+    public function testDeletingMetadataThatIsInUse() {
+        $client = self::createAdminClient();
+        $this->createLanguage('EN', 'EN', 'Test English');
+        $this->createLanguage('PL', 'PL', 'Test Polish');
+        $metadata = $this->createMetadata('test', ['PL' => 'test', 'EN' => 'test placeholder']);
+        $this->createResourceKind(['PL' => 'testRK', 'EN' => 'testRK'], [$metadata]);
+        $client->apiRequest('DELETE', self::ENDPOINT . '/' . $metadata->getId());
+        $this->assertStatusCode(400, $client->getResponse());
     }
 }

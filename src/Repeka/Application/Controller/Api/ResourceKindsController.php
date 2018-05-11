@@ -4,7 +4,6 @@ namespace Repeka\Application\Controller\Api;
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
-use Repeka\Domain\UseCase\ResourceKind\ResourceKindByResourceClassListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindDeleteCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
@@ -40,12 +39,17 @@ class ResourceKindsController extends ApiController {
      * @Method("GET")
      */
     public function getListAction(Request $request) {
-        $resourceClass = $request->query->get('resourceClass', '');
-        if (empty($resourceClass)) {
-            $resourceKindList = $this->handleCommand(new ResourceKindListQuery());
-        } else {
-            $resourceKindList = $this->handleCommand(new ResourceKindByResourceClassListQuery($resourceClass));
-        }
+        $resourceClasses = $request->query->get('resourceClasses', []);
+        $ids = $request->query->get('ids', []);
+        $metadataId = $request->query->get('metadataId', 0);
+        Assertion::isArray($resourceClasses);
+        Assertion::isArray($ids);
+        $resourceKindListQueryBuilder = ResourceKindListQuery::builder()
+            ->filterByResourceClasses($resourceClasses)
+            ->filterByMetadataId($metadataId)
+            ->filterByIds($ids);
+        $resourceKindListQuery = $resourceKindListQueryBuilder->build();
+        $resourceKindList = $this->handleCommand($resourceKindListQuery);
         return $this->createJsonResponse($resourceKindList);
     }
 

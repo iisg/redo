@@ -5,6 +5,7 @@
     <require from="./metadata-details-list.html"></require>
     <require from="../metadata-list"></require>
     <require from="../metadata-form"></require>
+    <require from="../../resource-kind/resource-kinds-list"></require>
 
     <loading-bar if.bind="!metadata"></loading-bar>
 
@@ -53,6 +54,14 @@
                             </dd>
                         </template>
                     </dl>
+                </div>
+            </aup-tab-pane>
+            <aup-tab-pane tab="resource-kinds-tab">
+                <div if.bind="currentTabId === 'resource-kinds-tab'">
+                    <div class="resource-kinds">
+                        <resource-kinds-list resource-kinds.bind="resourceKindList"
+                            hide-add-button></resource-kinds-list>
+                    </div>
                 </div>
             </aup-tab-pane>
         </aup-tab-content>

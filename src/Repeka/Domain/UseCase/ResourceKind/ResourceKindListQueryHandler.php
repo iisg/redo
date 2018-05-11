@@ -12,11 +12,8 @@ class ResourceKindListQueryHandler {
         $this->resourceKindRepository = $resourceKindRepository;
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     * @return ResourceKind[]
-     */
-    public function handle(): array {
-        return $this->resourceKindRepository->findAll();
+    /** @return ResourceKind[] */
+    public function handle(ResourceKindListQuery $query): array {
+        return $this->resourceKindRepository->findByQuery($query);
     }
 }

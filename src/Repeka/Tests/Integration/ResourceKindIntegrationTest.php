@@ -80,7 +80,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingResourceKindsWithResourceClass() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'books']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books']]);
         $this->assertStatusCode(200, $client->getResponse());
         $responseContent = json_decode($client->getResponse()->getContent());
         $this->assertCount(1, $responseContent);
@@ -220,7 +220,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingResourceKindsFailsWhenInvalidResourceClass() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'resourceClass']);
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['resourceClass']]);
         $this->assertStatusCode(400, $client->getResponse());
     }
 }

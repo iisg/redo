@@ -7,7 +7,7 @@ use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
-class ResourceKindByResourceClassListQueryValidator extends CommandAttributesValidator {
+class ResourceKindListQueryValidator extends CommandAttributesValidator {
 
     /** @var ResourceClassExistsRule */
     private $resourceClassExistsRule;
@@ -22,7 +22,8 @@ class ResourceKindByResourceClassListQueryValidator extends CommandAttributesVal
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('resourceClass', $this->resourceClassExistsRule)
-            ->setName('Resource class is not defined');
+            ::attribute('resourceClasses', Validator::arrayType()->each($this->resourceClassExistsRule))
+            ->attribute('ids', Validator::arrayType())
+            ->attribute('metadataId', Validator::intVal());
     }
 }
