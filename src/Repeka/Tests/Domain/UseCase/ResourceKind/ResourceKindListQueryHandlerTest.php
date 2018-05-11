@@ -23,8 +23,8 @@ class ResourceKindListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingTheList() {
         $resourceKindList = [$this->createMock(ResourceKind::class)];
-        $this->resourceKindRepository->expects($this->once())->method('findAll')->willReturn($resourceKindList);
-        $returnedList = $this->handler->handle(new ResourceKindListQuery());
+        $this->resourceKindRepository->expects($this->once())->method('findByQuery')->willReturn($resourceKindList);
+        $returnedList = $this->handler->handle(ResourceKindListQuery::builder()->build());
         $this->assertSame($resourceKindList, $returnedList);
     }
 }

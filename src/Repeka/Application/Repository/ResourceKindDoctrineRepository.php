@@ -3,11 +3,14 @@ namespace Repeka\Application\Repository;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Factory\ResourceKindListQuerySqlFactory;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 
 class ResourceKindDoctrineRepository extends EntityRepository implements ResourceKindRepository {
     public function save(ResourceKind $resourceKind): ResourceKind {
@@ -22,14 +25,6 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
     public function findAllSystemResourceKinds(): array {
         $criteria = Criteria::create()
             ->orWhere(Criteria::expr()->lt('id', 0));
-        $result = $this->matching($criteria);
-        return $result->toArray();
-    }
-
-    /** @return ResourceKind[] */
-    public function findAllByResourceClass(string $resourceClass): array {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('resourceClass', $resourceClass));
         $result = $this->matching($criteria);
         return $result->toArray();
     }
@@ -67,5 +62,14 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
             ->setParameter('searchValue', json_encode([['id' => $metadata->getId()]]))
             ->getQuery();
         return $query->getSingleScalarResult();
+    }
+
+    /** @return ResourceKind[] */
+    public function findByQuery(ResourceKindListQuery $query): array {
+        $queryFactory = new ResourceKindListQuerySqlFactory($query);
+        $em = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::resourceKind($em);
+        $dbQuery = $em->createNativeQuery($queryFactory->getQuery(), $resultSetMapping)->setParameters($queryFactory->getParams());
+        return $dbQuery->getResult();
     }
 }

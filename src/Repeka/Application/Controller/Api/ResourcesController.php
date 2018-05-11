@@ -35,38 +35,38 @@ class ResourcesController extends ApiController {
         $resourceClasses = $request->get('resourceClasses', []);
         $resourceKindIds = $request->get('resourceKinds', []);
         $sortByMetadataIds = $request->query->get('sortByIds', []);
-        Assertion::isArray($sortByMetadataIds);
+        $workflowPlacesIds = $request->query->get('workflowPlacesIds', []);
+        $contentsFilter = $request->get('contentsFilter', []);
+        $parentId = $request->query->get('parentId', 0);
+        $topLevel = $request->query->get('topLevel', false);
         Assertion::isArray($resourceClasses);
         Assertion::isArray($resourceKindIds);
+        Assertion::isArray($sortByMetadataIds);
+        Assertion::isArray($workflowPlacesIds);
         $sortByMetadataIds = array_map(
             function ($sortBy) {
                 return ['metadataId' => intval($sortBy['metadataId']), 'direction' => $sortBy['direction']];
             },
             $sortByMetadataIds
         );
-        $parentId = $request->query->get('parentId', 0);
-        $workflowPlacesIds = $request->query->get('workflowPlacesIds', []);
-        Assertion::isArray($workflowPlacesIds);
-        $topLevel = $request->query->get('topLevel', false);
         $resourceKinds = array_map(
             function ($resourceKindId) {
                 return $this->handleCommand(new ResourceKindQuery($resourceKindId));
             },
             $resourceKindIds
         );
-        $contentsFilter = $request->get('contentsFilter', []);
         $resourceListQueryBuilder = ResourceListQuery::builder()
             ->filterByResourceClasses($resourceClasses)
             ->filterByResourceKinds($resourceKinds)
             ->filterByContents(is_array($contentsFilter) ? $contentsFilter : [])
-            ->sortByMetadataIds($sortByMetadataIds);
+            ->sortByMetadataIds($sortByMetadataIds)
+            ->filterByParentId($parentId)
+            ->filterByWorkflowPlacesIds($workflowPlacesIds);
         if ($request->query->has('page')) {
             $page = $request->query->get('page', 1);
             $resultsPerPage = $request->query->get('resultsPerPage', 10);
             $resourceListQueryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
         }
-        $resourceListQueryBuilder->filterByParentId($parentId);
-        $resourceListQueryBuilder->filterByWorkflowPlacesIds($workflowPlacesIds);
         $resourceListQuery = $topLevel ? $resourceListQueryBuilder->onlyTopLevel()->build() : $resourceListQueryBuilder->build();
         /** @var PageResult $resources */
         $resources = $this->handleCommand($resourceListQuery);

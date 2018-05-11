@@ -18,10 +18,11 @@ export class ResourceKindChooser implements ComponentAttached {
   }
 
   attached() {
-    const promise = this.resourceClass
-      ? this.resourceKindRepository.getListByClass(this.resourceClass)
-      : this.resourceKindRepository.getList();
-    promise.then(resourceKinds => {
+    const query = this.resourceKindRepository.getListQuery();
+    if (this.resourceClass) {
+      query.filterByResourceClasses(this.resourceClass);
+    }
+    query.get().then(resourceKinds => {
       this.resourceKinds = resourceKinds.filter(this.filter);
     });
   }

@@ -10,6 +10,7 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindByResourceClassListQuery;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
@@ -204,7 +205,8 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     private function getBookResourceKind(): ResourceKind {
-        $resourceKinds = $this->handleCommand(new ResourceKindByResourceClassListQuery('books'));
+        $resourceKindListQuery = ResourceKindListQuery::builder()->filterByResourceClass('books')->build();
+        $resourceKinds = $this->handleCommand($resourceKindListQuery);
         foreach ($resourceKinds as $resourceKind) {
             /** @var ResourceKind $resourceKind */
             if ($resourceKind->getLabel()['EN'] == 'Book') {

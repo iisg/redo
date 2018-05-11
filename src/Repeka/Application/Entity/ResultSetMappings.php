@@ -6,11 +6,18 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Repeka\Domain\Entity\AuditEntry;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 
 class ResultSetMappings {
     public static function resourceEntity(EntityManagerInterface $em, string $alias = 'w'): ResultSetMapping {
         $rsm = new ResultSetMappingBuilder($em);
         $rsm->addRootEntityFromClassMetadata(ResourceEntity::class, $alias);
+        return $rsm;
+    }
+
+    public static function resourceKind(EntityManagerInterface $em, string $alias = 'rk'): ResultSetMapping {
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata(ResourceKind::class, $alias);
         return $rsm;
     }
 

@@ -9,6 +9,8 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {ContextResourceClass} from "resources/context/context-resource-class";
 import {computedFrom} from "aurelia-binding";
 import {Configure} from "aurelia-configuration";
+import {ResourceKindRepository} from "../../resource-kind/resource-kind-repository";
+import {ResourceKind} from "../../resource-kind/resource-kind";
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
@@ -20,8 +22,10 @@ export class MetadataDetails implements RoutableComponentActivate {
   currentTabId: string = '';
   numOfChildren: number;
   private listeners: Subscription[] = [];
+  resourceKindList: ResourceKind[];
 
   constructor(private metadataRepository: MetadataRepository,
+              private resourceKindRepository: ResourceKindRepository,
               private i18n: I18N,
               private router: Router,
               private ea: EventAggregator,
@@ -55,6 +59,7 @@ export class MetadataDetails implements RoutableComponentActivate {
     const metadata = await this.metadataRepository.getListQuery()
       .filterByParentId(this.metadata.id)
       .get();
+    this.resourceKindList = await this.resourceKindRepository.getListQuery().filterByMetadataId(this.metadata.id).get();
     this.numOfChildren = metadata.length;
     this.currentTabId = params.currentTabId;
     this.activateTabs();
@@ -68,6 +73,10 @@ export class MetadataDetails implements RoutableComponentActivate {
     this.metadataDetailsTabs.push({id: 'details-tab', label: this.i18n.tr('Details')});
     this.metadataDetailsTabs.push({id: 'constraints-tab', label: this.i18n.tr('Constraints')});
     this.currentTabId = this.currentTabId ? this.currentTabId : 'details-tab';
+    this.metadataDetailsTabs.push({
+      id: 'resource-kinds-tab',
+      label: `${this.i18n.tr('resource_classes::' + this.metadata.resourceClass + '//resource-kinds')} (${this.resourceKindList.length})`
+    });
     this.metadataDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
   }
 
