@@ -2,18 +2,24 @@
     <require from="resources/details/resource-metadata-table/resource-metadata-values"></require>
     <require from="resources/workflow/resource-place-display.html"></require>
     <require from="resources-config/metadata/metadata-label"></require>
-    <require from="resources/sort-button"></require>
+    <require from="./sort-button/sort-button"></require>
+    <require from="./resource-list-metadata-filter/resource-list-metadata-filter"></require>
 
-    <table if.bind="resources.length">
+    <table>
         <thead>
         <tr>
             <th>${'ID' | t}</th>
             <th>${'Resource kind' | t}</th>
-            <th repeat.for="metadata of columnMetadata">
+            <th repeat.for="metadata of columnMetadata"
+                class="show-filter">
                 ${metadata | metadataLabel}
                 <sort-button if.bind="sortable"
                     metadata.bind="metadata"
                     sort-by.bind="sortBy"></sort-button>
+                <resource-list-metadata-filter if.bind="isFilterableMetadata(metadata)"
+                    class.bind="contentsFilter[metadata.id] ? 'filter-column filter-display' : 'filter-column'"
+                    metadata.bind="metadata"
+                    contents-filter.bind="contentsFilter"></resource-list-metadata-filter>
             </th>
             <th>${'Place' | t}</th>
             <th repeat.for="name of extraColumnNames">${name | t}</th>
@@ -57,10 +63,4 @@
         </tr>
         </tbody>
     </table>
-
-    <div show.bind="resources.length === 0">
-        <slot name="empty">
-            ${"No resources." | resourceClassTranslation:resourceClass}
-        </slot>
-    </div>
 </template>

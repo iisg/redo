@@ -1,9 +1,9 @@
 <template>
-    <require from="./add/resource-form"></require>
     <require from="common/components/buttons/add-button"></require>
     <require from="common/components/pagination/pagination"></require>
     <require from="./resources-list-table"></require>
-    <require from="./workflow/resource-place-display.html"></require>
+    <require from="../add/resource-form"></require>
+    <require from="../workflow/resource-place-display.html"></require>
 
     <div class="resources-list ${addFormOpened ? 'add-form-opened' : ''}">
         <pagination total-number-of-elements.bind="totalNumberOfResources"
@@ -24,11 +24,11 @@
 
         <loading-bar if.bind="displayProgressBar"></loading-bar>
 
-        <resources-list-table show.bind="!resources || resources.length > 0"
-            resources.bind="resources"
+        <resources-list-table resources.bind="resources"
             column-metadata.bind="briefMetadata"
             resource-class.bind="resourceClass"
-            sort-by.bind="sortBy"></resources-list-table>
+            sort-by.bind="sortBy"
+            contents-filter.bind="contentsFilter"></resources-list-table>
 
         <div class="alert alert-info"
             if.bind="resources.length === 0 && !displayProgressBar">
@@ -37,7 +37,7 @@
         </div>
 
         <pagination containerless
-        total-number-of-elements.bind="totalNumberOfResources"
+            total-number-of-elements.bind="totalNumberOfResources"
             elements-per-page.bind="resultsPerPage"
             current-page-number.bind="currentPageNumber"></pagination>
     </div>

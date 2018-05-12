@@ -1,0 +1,22 @@
+<template>
+    <div class="filter-container">
+        <label for.bind="metadata.name">
+            <icon name="filter"
+                class="filter-icon"></icon>
+        </label>
+        <input type="checkbox"
+            id.bind="metadata.name"
+            checked.bind="isFilterUsed">
+        <form submit.delegate="fetchFilteredResources()"
+            if.bind="isFilterUsed">
+            <input type="text"
+                class="filter-input "
+                blur.trigger="fetchFilteredResources()"
+                focus="true"
+                value.bind="metadataValue.value">
+            <button type="submit">
+                <icon name="search"></icon>
+            </button>
+        </form>
+    </div>
+</template>

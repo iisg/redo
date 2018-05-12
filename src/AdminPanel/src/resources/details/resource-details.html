@@ -3,7 +3,7 @@
     <require from="../workflow/resource-workflow"></require>
     <require from="./apply-transition-button/apply-transition-button"></require>
     <require from="./resource-metadata-table/resource-metadata-table"></require>
-    <require from="../resources-list"></require>
+    <require from="../list/resources-list"></require>
     <require from="common/components/buttons/remove-button"></require>
     <require from="common/components/buttons/edit-button"></require>
     <require from="users/details/users-in-group"></require>
@@ -31,7 +31,7 @@
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="children">
-                <resources-list if.bind="allowAddChildResource || numberOfChildren"
+                <resources-list if.bind="allowAddChildResource || numberOfChildren || isFiltering"
                     parent-resource.bind="resource"
                     has-resources.bind="numberOfChildren"
                     results-per-page.from-view="resultsPerPage"

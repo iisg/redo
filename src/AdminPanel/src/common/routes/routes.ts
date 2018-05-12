@@ -4,7 +4,7 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
   new Route('', 'tasks', 'tasks/tasks').withMenuItem('Tasks', NavRole.TOP, 'tasks'),
 
   new RouteGroup('resources', 'resources', 'resources', 'Resources', [
-    new BaseRoute(':resourceClass', 'resources-list')
+    new BaseRoute(':resourceClass', 'list/resources-list')
       .withMenuItem(NavRole.PER_RESOURCE_CLASS, 'book'),
     new Route('details/:id', 'details', 'details/resource-details')
       .setActivationStrategy('replace')
