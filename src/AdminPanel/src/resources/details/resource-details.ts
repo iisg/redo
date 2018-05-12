@@ -25,6 +25,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   currentPageNumber: number;
   resourceDetailsTabs: DetailsViewTabs;
   numberOfChildren: number;
+  isFiltering: boolean;
   private urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
@@ -51,12 +52,13 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   async activate(parameters: any, routeConfiguration: RouteConfig) {
+    this.isFiltering = parameters.hasOwnProperty('contentsFilter');
     this.resource = await this.resourceRepository.get(parameters.id);
     this.contextResourceClass.setCurrent(this.resource.resourceClass);
     const resources = await this.resourceRepository.getListQuery()
       .filterByParentId(this.resource.id)
       .get();
-    this.numberOfChildren = resources.length;
+    this.numberOfChildren = resources.total;
     const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
     routeConfiguration.navModel.setTitle(title);
     this.activateTabs(parameters.tab);

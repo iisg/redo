@@ -4,15 +4,15 @@ import {EventAggregator} from "aurelia-event-aggregator";
 import {parseQueryString} from "aurelia-path";
 import {NavigationInstruction, Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
-import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
-import {safeJsonParse} from "../common/utils/object-utils";
-import {Metadata} from "../resources-config/metadata/metadata";
-import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
-import {ContextResourceClass} from "./context/context-resource-class";
-import {PageResult} from "./page-result";
-import {Resource} from "./resource";
-import {ResourceMetadataSort} from "./resource-metadata-sort";
-import {ResourceRepository} from "./resource-repository";
+import {ResourceRepository} from "../resource-repository";
+import {Resource} from "../resource";
+import {Metadata} from "../../resources-config/metadata/metadata";
+import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
+import {getMergedBriefMetadata} from "../../common/utils/metadata-utils";
+import {PageResult} from "../page-result";
+import {ContextResourceClass} from "../context/context-resource-class";
+import {ResourceMetadataSort} from "../resource-metadata-sort";
+import {safeJsonParse} from "../../common/utils/object-utils";
 
 @autoinject
 export class ResourcesList {
@@ -116,10 +116,11 @@ export class ResourcesList {
     if (this.parentResource) {
       query = query.filterByParentId(this.parentResource.id);
     } else {
-      query = this.contentsFilter
-        ? query.filterByContents(this.contentsFilter)
-        : query.onlyTopLevel();
-      query.filterByResourceClasses(this.resourceClass);
+      query = query.onlyTopLevel()
+        .filterByResourceClasses(this.resourceClass);
+    }
+    if (this.contentsFilter) {
+      query.filterByContents(this.contentsFilter);
     }
     query = query.sortByMetadataIds(this.sortBy)
       .setResultsPerPage(this.resultsPerPage)

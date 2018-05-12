@@ -11,7 +11,7 @@ export class Resources implements ConfiguresRouter {
       {
         route: '',
         name: 'resources/list',
-        moduleId: './resources-list'
+        moduleId: './list/resources-list'
       },
       {
         route: '/:id',

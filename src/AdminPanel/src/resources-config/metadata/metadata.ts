@@ -45,6 +45,8 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   relatedResourceMetadataFilter: {}
 };
 
+export const filterableControls = ['text', 'textarea', 'integer', 'relationship'];
+
 @mappedWith(MetadataMapper)
 export class Metadata extends Entity {
   static NAME = 'Metadata';

@@ -12,11 +12,11 @@ export class WorkflowPluginConfigurationOptionInput {
 
   private metadataValue: MetadataValue = new MetadataValue();
 
-  constructor(private be: BindingEngine) {
+  constructor(private bindingEngine: BindingEngine) {
   }
 
   attached() {
-    this.metadataValue.onChange(this.be, () => this.onValueChange());
+    this.metadataValue.onChange(this.bindingEngine, () => this.onValueChange());
   }
 
   detached() {

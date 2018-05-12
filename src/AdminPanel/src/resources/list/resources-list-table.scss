@@ -1,4 +1,4 @@
-@import "../common/styles";
+@import "../../common/styles";
 
 resources-list-table {
     table {
@@ -6,6 +6,9 @@ resources-list-table {
         thead {
             color: white;
             background-color: $grey;
+            tr {
+                height: 40px;
+            }
             th {
                 font-weight: normal;
             }
@@ -32,5 +35,13 @@ resources-list-table {
                 padding-right: $default-gap-size / 2;
             }
         }
+    }
+
+    .filter-column {
+        display: none;
+    }
+
+  sort-button, .show-filter .filter-column, .filter-display {
+        display: inline;
     }
 }

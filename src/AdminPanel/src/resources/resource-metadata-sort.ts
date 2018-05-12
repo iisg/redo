@@ -1,4 +1,4 @@
-import {SortDirection} from "./resources-list-table";
+import {SortDirection} from "./list/resources-list-table";
 
 export class ResourceMetadataSort {
   readonly metadataId: number;

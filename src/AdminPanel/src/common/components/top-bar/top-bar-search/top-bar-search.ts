@@ -2,7 +2,7 @@ import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {Router} from "aurelia-router";
-import {Metadata} from "../../../../resources-config/metadata/metadata";
+import {Metadata, filterableControls} from "../../../../resources-config/metadata/metadata";
 import {MetadataRepository} from "../../../../resources-config/metadata/metadata-repository";
 import {MetadataValue} from "../../../../resources/metadata-value";
 import {propertyKeys, safeJsonParse} from "../../../utils/object-utils";
@@ -14,6 +14,7 @@ export class TopBarSearch {
   metadata: Metadata;
   metadataValue: MetadataValue = new MetadataValue();
   private searchData: StringMap<SearchData> = {};
+  controls = filterableControls;
 
   constructor(eventAggregator: EventAggregator, private router: Router, private metadataRepository: MetadataRepository) {
     eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
