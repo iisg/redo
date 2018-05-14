@@ -23,6 +23,9 @@ export class ResourceMetadataValueInput {
   }
 
   async valueChanged() {
+    if (!this.value.submetadata) {
+      this.value.submetadata = {};
+    }
     this.metadataInitialValue = new MetadataValue(this.value.value);
     this.submetadataResource = this.entitySerializer.clone(this.resource, Resource.NAME);
     this.submetadataResource.contents = this.value.submetadata;
