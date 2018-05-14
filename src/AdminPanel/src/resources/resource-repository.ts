@@ -16,21 +16,12 @@ export class ResourceRepository extends ApiRepository<Resource> {
     return new ResourceListQuery(this.httpClient, this.endpoint, this.entitySerializer);
   }
 
-  update(resource: Resource, transitionId: string): Promise<Resource> {
-    return this.postOne(resource, transitionId);
+  update(resource: Resource): Promise<Resource> {
+    return this.updateAndApplyTransition(resource, '');
   }
 
   updateAndApplyTransition(resource: Resource, transitionId: string): Promise<Resource> {
-    const endpoint = this.oneEntityEndpoint(resource) + `/${transitionId}`;
-    return this.httpClient.post(endpoint, this.toBackend(resource)).then(response => this.toEntity(response.content));
-  }
-
-  private postOne(resource: Resource, transitionId: string) {
-    this.httpClient.createRequest(this.oneEntityEndpoint(resource))
-      .asPost()
-      .withParams({transitionId})
-      .withContent(resource)
-      .send()
+    return this.httpClient.post(this.oneEntityEndpoint(resource) + `?transitionId=${transitionId}`, this.toBackend(resource))
       .then(response => this.toEntity(response.content));
   }
 
