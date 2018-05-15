@@ -44,18 +44,4 @@ SQL
         }
         return $user;
     }
-
-    /** @return ResourceEntity[] */
-    public function findUserGroups(User $user): array {
-        $groupMetadataId = SystemMetadata::GROUP_MEMBER;
-        $query = <<<QUERY
-        SELECT * FROM (
-          SELECT resource.*, jsonb_array_elements(contents->'$groupMetadataId') users
-          FROM resource WHERE resource_class = 'users'
-        ) AS t WHERE users->>'value' = '{$user->getUserData()->getId()}';
-QUERY;
-        $resultSetMapping = ResultSetMappings::resourceEntity($this->getEntityManager());
-        $query = $this->getEntityManager()->createNativeQuery($query, $resultSetMapping);
-        return $query->getResult();
-    }
 }

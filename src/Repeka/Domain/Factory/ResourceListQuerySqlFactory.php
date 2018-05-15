@@ -106,8 +106,13 @@ class ResourceListQuerySqlFactory {
                 $escapedMetadataId = str_replace('-', '_', strval($metadataId)); // prevents names like m-2
                 $paramName = "mFilter$escapedMetadataId";
                 $this->froms[] = "jsonb_array_elements($contentsPath->'$metadataId') m$escapedMetadataId";
-                $this->wheres[] = "m$escapedMetadataId->>'value' ILIKE :$paramName";
-                $this->params[$paramName] = '%' . $value . '%';
+                if (is_int($value)) {
+                    $this->wheres[] = "m$escapedMetadataId->>'value' = :$paramName";
+                    $this->params[$paramName] = $value;
+                } else {
+                    $this->wheres[] = "m$escapedMetadataId->>'value' ILIKE :$paramName";
+                    $this->params[$paramName] = '%' . $value . '%';
+                }
             }
         );
     }

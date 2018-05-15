@@ -5,24 +5,25 @@
 
     <table if.bind="resourceClasses.length">
         <thead>
-            <tr>
-                <th>${'Metadata kind' | t}</th>
-                <th>${'Filter' | t}</th>
-            </tr>
+        <tr>
+            <th>${'Metadata kind' | t}</th>
+            <th>${'Filter' | t}</th>
+        </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <metadata-chooser value.bind="filteredMetadata"
-                        resource-class.bind="resourceClasses"
-                        control.one-time="['text', 'textarea']"></metadata-chooser>
-                </td>
-                <td>
-                    <metadata-value-input if.bind="filteredMetadata"
-                        metadata.bind="filteredMetadata"
-                        value.bind="filterValue"></metadata-value-input>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                <metadata-chooser value.bind="filteredMetadata"
+                    resource-class.bind="resourceClasses"
+                    control.one-time="['text', 'textarea', 'relationship', 'integer']"></metadata-chooser>
+            </td>
+            <td>
+                <input type="text"
+                    class="form-control"
+                    if.bind="filteredMetadata"
+                    value.bind="filterValue.value">
+            </td>
+        </tr>
         </tbody>
     </table>
     <div else>${'Firstly, choose allowed resource kinds.' | t}</div>

@@ -106,7 +106,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 ]
             )
         );
-        $this->userRepository->method('findUserGroups')->with($this->executor)->willReturn([$this->createResourceMock(1000)]);
+        $this->executor->method('getUserGroupsIds')->willReturn([1000]);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
         $result = $this->checkWithDefaults();

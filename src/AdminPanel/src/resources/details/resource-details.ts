@@ -10,7 +10,6 @@ import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {UserRoleChecker} from "../../common/authorization/user-role-checker";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
 import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
-import {SystemResourceKinds} from "../../resources-config/resource-kind/system-resource-kinds";
 import {WorkflowTransition} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
@@ -73,20 +72,27 @@ export class ResourceDetails implements RoutableComponentActivate {
       .addTab({id: 'details', label: this.i18n.tr('Metadata')})
       .setDefaultTabId(this.numberOfChildren ? 'children' : 'details');
     if (this.resource.kind.workflow) {
-      this.resourceDetailsTabs.addTab({
-        id: 'workflow',
-        label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)
-      });
-    }
-    if (this.resource.kind.id == SystemResourceKinds.USER_ID) {
-      this.resourceDetailsTabs.addTab({
-        id: 'user-groups',
-        label: this.i18n.tr('Groups')
-      });
-      if (this.userRoleChecker.hasAll(['ADMIN'])) {
+      if (this.resource.kind.workflow) {
         this.resourceDetailsTabs.addTab({
-          id: 'user-roles',
-          label: this.i18n.tr('Roles')
+          id: 'workflow',
+          label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)
+        });
+      }
+    }
+    if (this.resource.resourceClass == 'users') {
+      const isUserResourceKind = this.resource.kind.metadataList.filter(m => m.id == SystemMetadata.GROUP_MEMBER.id).length > 0;
+      if (isUserResourceKind) {
+        if (this.userRoleChecker.hasAll(['ADMIN'])) {
+          this.resourceDetailsTabs.addTab({
+            id: 'user-roles',
+            label: this.i18n.tr('Roles')
+          });
+        }
+      }
+      else {
+        this.resourceDetailsTabs.addTab({
+          id: 'users-in-group',
+          label: this.i18n.tr('Users')
         });
       }
     }

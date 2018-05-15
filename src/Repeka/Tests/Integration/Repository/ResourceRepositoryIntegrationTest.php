@@ -3,6 +3,7 @@ namespace Repeka\Tests\Integration\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\UserEntity;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
@@ -185,14 +186,21 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(0, $resultsBeforeAssigning);
         $book = $this->getPhpBookResource();
         $scannerMetadata = $this->findMetadataByName('Skanista');
-        $groups = $this->userRepository->findUserGroups($user);
-        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $groups[0]->getId());
+        $groupsIds = $user->getUserGroupsIds();
+        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $groupsIds[0]);
         $book->updateContents($bookContents);
         $this->resourceRepository->save($book);
         $this->getEntityManager()->flush();
         $resultsAfterAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(1, $resultsAfterAssigning);
         $this->assertEquals($book->getId(), reset($resultsAfterAssigning)->getId());
+    }
+
+    public function testFindUsersInGroup() {
+        $skanisci = $this->findResourceByContents([SystemMetadata::USERNAME => 'Skaniści']);
+        $users = $this->resourceRepository->findUsersInGroup($skanisci);
+        $this->assertCount(3, $users);
+        $this->assertContains($this->getAdminUser()->getUserData(), $users);
     }
 
     private function getEbooksCategoryResourceId(): int {

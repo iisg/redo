@@ -3,6 +3,8 @@ namespace Repeka\Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\ResultSetMappings;
+use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
@@ -12,7 +14,6 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
-use Repeka\Domain\Utils\EntityUtils;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -111,9 +112,17 @@ SQL
             ,
             $resultSetMapping
         );
-        $groups = $this->userRepository->findUserGroups($user);
-        $groups[] = $user->getUserData();
-        $query->setParameter('userIds', EntityUtils::mapToIds($groups));
+        $groupsIds = $user->getUserGroupsIds();
+        $groupsIds[] = $user->getUserData()->getId();
+        $query->setParameter('userIds', $groupsIds);
         return $query->getResult();
+    }
+
+    /** @return ResourceEntity[] */
+    public function findUsersInGroup(ResourceEntity $userGroup): array {
+        $query = ResourceListQuery::builder()->filterByContents(
+            ResourceContents::fromArray([SystemMetadata::GROUP_MEMBER => $userGroup->getId()])
+        )->build();
+        return $this->findByQuery($query)->getResults();
     }
 }

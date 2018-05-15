@@ -43,10 +43,7 @@ class SystemMetadata extends Enum {
                 SystemResourceClass::USER,
                 MetadataControl::RELATIONSHIP(),
                 'Group member',
-                ['EN' => 'Group member', 'PL' => 'Członek grupy'],
-                [],
-                [],
-                ['resourceKind' => [SystemResourceKind::USER]]
+                ['EN' => 'Group member', 'PL' => 'Członek grupy']
             );
         }
         /** @noinspection PhpUndefinedVariableInspection */
