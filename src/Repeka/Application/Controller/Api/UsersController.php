@@ -7,7 +7,6 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\EventListener\CsrfRequestListener;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\User\UserByUserDataQuery;
-use Repeka\Domain\UseCase\User\UserGroupsQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
@@ -90,14 +89,5 @@ class UsersController extends ApiController {
             $user = $this->handleCommand($command);
         }
         return $this->createJsonResponse($user);
-    }
-
-    /**
-     * @Route("/{user}/groups")
-     * @Method("GET")
-     */
-    public function getUserGroupsAction(UserEntity $user) {
-        $groups = $this->handleCommand(new UserGroupsQuery($user));
-        return $this->createJsonResponse($groups);
     }
 }

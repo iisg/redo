@@ -7,7 +7,7 @@
     <require from="common/components/buttons/remove-button"></require>
     <require from="common/components/buttons/edit-button"></require>
     <require from="users/details/user-roles-assign"></require>
-    <require from="users/details/user-groups"></require>
+    <require from="users/details/users-in-group"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
 
@@ -67,9 +67,9 @@
                     <resource-workflow resource.bind="resource"></resource-workflow>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="user-groups">
-                <user-groups if.bind="resourceDetailsTabs.activeTabId === 'user-groups'"
-                    user-data.bind="resource"></user-groups>
+            <aup-tab-pane tab="users-in-group">
+                <users-in-group if.bind="resourceDetailsTabs.activeTabId === 'users-in-group'"
+                    user-group.bind="resource"></users-in-group>
             </aup-tab-pane>
             <aup-tab-pane tab="user-roles">
                 <user-roles-assign if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"

@@ -63,14 +63,12 @@ class TransitionPossibilityChecker {
         }
         $assigneeMetadataIds = $this->getAssigneeMetadataIds($resource->getWorkflow(), $transition);
         $assigneeMetadataIds = array_intersect($assigneeMetadataIds, $resource->getKind()->getMetadataIds());
-
         if (empty($assigneeMetadataIds)) {
             return false;  // no metadata determines assignees, so everyone can perform transition
         }
         $assigneeUserIds = $this->extractAssigneeIds($resource, $assigneeMetadataIds);
-        $executorUserIds = EntityUtils::mapToIds($this->userRepository->findUserGroups($executor));
+        $executorUserIds = $executor->getUserGroupsIds();
         $executorUserIds[] = $executor->getUserData()->getId();
-
         return count(array_intersect($assigneeUserIds, $executorUserIds)) == 0;
     }
 

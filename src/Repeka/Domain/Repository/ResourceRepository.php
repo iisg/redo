@@ -5,7 +5,6 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\UseCase\PageResult;
-use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 
 interface ResourceRepository {
@@ -26,4 +25,7 @@ interface ResourceRepository {
     public function findAssignedTo(User $user): array;
 
     public function findByQuery(ResourceListQuery $query): PageResult;
+
+    /** @return ResourceEntity[] */
+    public function findUsersInGroup(ResourceEntity $userGroup): array;
 }

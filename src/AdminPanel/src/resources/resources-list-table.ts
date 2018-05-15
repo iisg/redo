@@ -13,6 +13,7 @@ export class ResourcesListTable {
   @bindable(oneTime) extraColumnNames: string[] = [];
   @bindable(oneTime) extraColumnViews: string[] = [];
   @bindable(twoWay) sortBy: ResourceMetadataSort[];
+  @bindable sortable: boolean = true;
 }
 
 export enum SortDirection {

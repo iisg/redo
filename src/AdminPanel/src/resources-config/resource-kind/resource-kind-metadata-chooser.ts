@@ -3,7 +3,6 @@ import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
 import {twoWay} from "common/components/binding-mode";
-import {SystemMetadata} from "../metadata/system-metadata";
 
 @autoinject
 export class ResourceKindMetadataChooser {
@@ -13,11 +12,11 @@ export class ResourceKindMetadataChooser {
   @bindable(twoWay) shouldRefreshResults: boolean;
 
   canBeAddedToResourceKind = (metadata: Metadata) => {
-    return this.notParentMetadata(metadata) && this.metadataNotAlreadyInResourceKind(metadata);
+    return this.notSystemMetadata(metadata) && this.metadataNotAlreadyInResourceKind(metadata);
   }
 
-  notParentMetadata(metadata: Metadata): boolean {
-    return metadata.id != SystemMetadata.PARENT.id;
+  notSystemMetadata(metadata: Metadata): boolean {
+    return metadata.id > 0;
   }
 
   metadataNotAlreadyInResourceKind(metadata: Metadata, metadataList = this.resourceKind.metadataList): boolean {

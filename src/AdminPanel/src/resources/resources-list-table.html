@@ -6,52 +6,55 @@
 
     <table if.bind="resources.length">
         <thead>
-            <tr>
-                <th>${'ID' | t}</th>
-                <th>${'Resource kind' | t}</th>
-                <th repeat.for="metadata of columnMetadata">
-                    ${metadata | metadataLabel}
-                    <sort-button metadata.bind="metadata"
-                        sort-by.bind="sortBy"></sort-button>
-                </th>
-                <th>${'Place' | t}</th>
-                <th repeat.for="name of extraColumnNames">${name | t}</th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>${'ID' | t}</th>
+            <th>${'Resource kind' | t}</th>
+            <th repeat.for="metadata of columnMetadata">
+                ${metadata | metadataLabel}
+                <sort-button if.bind="sortable"
+                    metadata.bind="metadata"
+                    sort-by.bind="sortBy"></sort-button>
+            </th>
+            <th>${'Place' | t}</th>
+            <th repeat.for="name of extraColumnNames">${name | t}</th>
+            <th></th>
+        </tr>
         </thead>
         <tfoot>
-            <tr if.bind="resources === undefined">
-                <th colspan="6">
-                    <loading-bar></loading-bar>
-                </th>
-            </tr>
+        <tr if.bind="resources === undefined">
+            <th colspan="6">
+                <loading-bar></loading-bar>
+            </th>
+        </tr>
         </tfoot>
         <tbody class="au-stagger">
-            <tr repeat.for="resource of resources"
-                class="au-animate fade-inup-outdown"
-                go-to-link-on-row-click>
-                <td>
-                    <a route-href="route: resources/details; params.bind: {id: resource.id}"
-                        disabled-link.bind="resource.pendingRequest">${resource.id & oneTime}</a>
-                </td>
-                <td>
-                    ${resource.kind.label | inCurrentLanguage}
-                </td>
-                <td repeat.for="metadata of columnMetadata">
-                    <a route-href="route: resources/details; params.bind: {id: resource.id}"
-                        disabled-link.bind="resource.pendingRequest">
-                        <resource-metadata-values resource.one-time="resource"
-                            metadata.one-time="metadata"></resource-metadata-values>
-                    </a>
-                </td>
-                <td>
-                    <resource-place-display resource.bind="resource"></resource-place-display>
-                </td>
-                <td repeat.for="view of extraColumnViews">
-                    <compose view.bind="view"></compose>
-                </td>
-                <td class="with-throbber"><throbber if.bind="resource.pendingRequest"></throbber></td>
-            </tr>
+        <tr repeat.for="resource of resources"
+            class="au-animate fade-inup-outdown"
+            go-to-link-on-row-click>
+            <td>
+                <a route-href="route: resources/details; params.bind: {id: resource.id}"
+                    disabled-link.bind="resource.pendingRequest">${resource.id & oneTime}</a>
+            </td>
+            <td>
+                ${resource.kind.label | inCurrentLanguage}
+            </td>
+            <td repeat.for="metadata of columnMetadata">
+                <a route-href="route: resources/details; params.bind: {id: resource.id}"
+                    disabled-link.bind="resource.pendingRequest">
+                    <resource-metadata-values resource.one-time="resource"
+                        metadata.one-time="metadata"></resource-metadata-values>
+                </a>
+            </td>
+            <td>
+                <resource-place-display resource.bind="resource"></resource-place-display>
+            </td>
+            <td repeat.for="view of extraColumnViews">
+                <compose view.bind="view"></compose>
+            </td>
+            <td class="with-throbber">
+                <throbber if.bind="resource.pendingRequest"></throbber>
+            </td>
+        </tr>
         </tbody>
     </table>
 

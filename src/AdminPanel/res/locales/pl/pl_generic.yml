@@ -155,8 +155,8 @@ Pending resources in this state: Oczekujące zasoby w stanie
 First remove all resources from this state to delete state: Najpierw usuń wszystkie zasoby z tego stanu aby usunąć stan
 Number of Resources in this state:: Liczba zasobów w tym stanie:
 Example resources in this state:: Przykladowe zasoby w tym stanie:
-Groups: Grupy
-No groups: Brak grup
+Users: Użytkownicy
+No users: Brak użytkowników
 Resource contents: Zawartość zasobu
 Filter_verb: Filtruj
 Invalid audit filters.: Niepoprawne warunki filtrowania.

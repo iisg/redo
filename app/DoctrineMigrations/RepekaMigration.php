@@ -22,4 +22,8 @@ abstract class RepekaMigration extends AbstractMigration implements ContainerAwa
     public function down(Schema $schema) {
         $this->abortIf(true, 'There is no way back.');
     }
+
+    protected function fetchAll(string $sqlQuery): array {
+        return $this->container->get('doctrine.orm.entity_manager')->getConnection()->fetchAll($sqlQuery);
+    }
 }

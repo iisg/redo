@@ -162,7 +162,6 @@ class ResourceKindsFixture extends RepekaFixture {
                 ['PL' => 'Grupa użytkowników', 'EN' => 'User group'],
                 [
                     $nameMetadata,
-                    SystemMetadata::GROUP_MEMBER()->toMetadata(),
                 ],
                 [
                     'header' => "{{r|m{$nameMetadata->getName()}}} (ID: {{r.id}})",

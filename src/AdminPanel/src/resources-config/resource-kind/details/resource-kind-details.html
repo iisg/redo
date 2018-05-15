@@ -24,7 +24,7 @@
                     <template if.bind="!editing">
                         <dl class="dl-horizontal resource-kind-metadata-table">
                             <template repeat.for="metadata of resourceKind.metadataList">
-                                <div if.bind="metadata.id > 0">
+                                <div if.bind="metadata.id != -1">
                                     <dt>${metadata.name}</dt>
                                     <dd>
                                         <span>${metadata.label | inCurrentLanguage}</span>

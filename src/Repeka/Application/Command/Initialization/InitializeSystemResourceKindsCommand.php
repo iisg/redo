@@ -44,6 +44,7 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
         if (!$this->resourceKindRepository->exists(SystemResourceKind::USER)) {
             $systemResourceKind = new SystemResourceKind(SystemResourceKind::USER);
             $usernameMetadata = SystemMetadata::USERNAME()->toMetadata();
+            $groupMemberMetadata = SystemMetadata::GROUP_MEMBER()->toMetadata();
             $usernameDisplayTemplate = '{{r|m' . $usernameMetadata->getName() . '}}';
             $resourceKind = new ResourceKind([], [$usernameMetadata]);
             EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
@@ -51,7 +52,7 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
                 new ResourceKindUpdateCommand(
                     $resourceKind,
                     ['PL' => 'user', 'EN' => 'user'],
-                    [$usernameMetadata],
+                    [$usernameMetadata, $groupMemberMetadata],
                     ['header' => $usernameDisplayTemplate, 'dropdown' => $usernameDisplayTemplate]
                 )
             );

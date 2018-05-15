@@ -2,6 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
@@ -44,6 +45,10 @@ class MetadataStage2Fixture extends RepekaFixture {
             MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER,
             [SystemResourceKind::USER, ResourceKindsFixture::REFERENCE_RESOURCE_KIND_USER_GROUP]
         );
+        $this->addRelationshipResourceKindConstraint(
+            SystemMetadata::GROUP_MEMBER,
+            [ResourceKindsFixture::REFERENCE_RESOURCE_KIND_USER_GROUP]
+        );
     }
 
     private function addRelationshipResourceKindConstraint($metadataRef, $resourceKindRefs, $maxCount = null) {
@@ -57,7 +62,9 @@ class MetadataStage2Fixture extends RepekaFixture {
             $resourceKindRefs
         );
         /** @var Metadata $metadata */
-        $metadata = $this->handleCommand(new MetadataGetQuery($this->getReference($metadataRef)->getId()));
+        $metadata = $this->handleCommand(
+            new MetadataGetQuery(is_int($metadataRef) ? $metadataRef : $this->getReference($metadataRef)->getId())
+        );
         $this->handleCommand(
             new MetadataUpdateCommand(
                 $metadata->getId(),

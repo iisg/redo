@@ -90,6 +90,22 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $this->assertCount(1, $results);
     }
 
+    public function testFindByNumber() {
+        $query = ResourceListQuery::builder()
+            ->filterByContents([$this->findMetadataByName('Liczba stron')->getId() => 404])
+            ->build();
+        $results = $this->handleCommand($query);
+        $this->assertCount(1, $results);
+    }
+
+    public function testFindByNumberDoesNotAcceptNumberSubstring() {
+        $query = ResourceListQuery::builder()
+            ->filterByContents([$this->findMetadataByName('Liczba stron')->getId() => 40])
+            ->build();
+        $results = $this->handleCommand($query);
+        $this->assertEmpty($results);
+    }
+
     public function testFindByManyConditions() {
         $descriptionMetadata = $this->findMetadataByName('Opis');
         $query = ResourceListQuery::builder()

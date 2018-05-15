@@ -42,6 +42,10 @@ abstract class User implements Identifiable {
         return $this->getUserData()->getValues(SystemMetadata::USERNAME)[0];
     }
 
+    public function getUserGroupsIds(): array {
+        return $this->getUserData()->getValues(SystemMetadata::GROUP_MEMBER);
+    }
+
     public function setUsername(string $username): User {
         $contents = $this->getUserData()->getContents();
         $contents = $contents->withReplacedValues(SystemMetadata::USERNAME, $username);

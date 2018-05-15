@@ -125,7 +125,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   canRemoveMetadata(metadata: Metadata): boolean {
     if (this.resourceKind.id == SystemResourceKinds.USER_ID) {
       const mappedMetadataIds = this.config.get('user_mapped_metadata_ids') || [];
-      return metadata.id != SystemMetadata.USERNAME.id && mappedMetadataIds.indexOf(metadata.id) === -1;
+      return metadata.id > 0 && mappedMetadataIds.indexOf(metadata.id) === -1;
     }
     return true;
   }

@@ -9,6 +9,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
+use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -16,6 +17,7 @@ use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 class ResourcesFixture extends RepekaFixture {
     const ORDER = MetadataStage2Fixture::ORDER + UsersFixture::ORDER;
     const REFERENCE_DEPARTMENT_IET = 'resource-department-iet';
+    const REFERENCE_USER_GROUP_ADMINS = 'resource-user-group-admins';
     const REFERENCE_USER_GROUP_SCANNERS = 'resource-user-group-scanners';
 
     /**
@@ -23,6 +25,7 @@ class ResourcesFixture extends RepekaFixture {
      */
     public function load(ObjectManager $manager) {
         $this->addUserGroups();
+        $this->assignUsersToGroups();
         $this->addDictionaries();
         $this->addBooks();
     }
@@ -223,10 +226,10 @@ class ResourcesFixture extends RepekaFixture {
                 $this->contents(
                     [
                         SystemMetadata::USERNAME => ['Administratorzy'],
-                        SystemMetadata::GROUP_MEMBER => [$this->getReference(AdminAccountFixture::REFERENCE_USER_ADMIN)->getUserData()],
                     ]
                 )
-            )
+            ),
+            self::REFERENCE_USER_GROUP_ADMINS
         );
         $this->handleCommand(
             new ResourceCreateCommand(
@@ -234,15 +237,44 @@ class ResourcesFixture extends RepekaFixture {
                 $this->contents(
                     [
                         SystemMetadata::USERNAME => ['Skaniści'],
-                        SystemMetadata::GROUP_MEMBER => [
-                            $this->getReference(AdminAccountFixture::REFERENCE_USER_ADMIN)->getUserData(),
-                            $this->getReference(UsersFixture::REFERENCE_USER_BUDYNEK)->getUserData(),
-                            $this->getReference(UsersFixture::REFERENCE_USER_SCANNER)->getUserData(),
-                        ],
                     ]
                 )
             ),
             self::REFERENCE_USER_GROUP_SCANNERS
+        );
+    }
+
+    private function assignUsersToGroups() {
+        /** @var ResourceEntity $admin */
+        $admin = $this->getReference(AdminAccountFixture::REFERENCE_USER_ADMIN)->getUserData();
+        $this->handleCommand(
+            new ResourceUpdateContentsCommand(
+                $admin,
+                $admin->getContents()->withReplacedValues(
+                    SystemMetadata::GROUP_MEMBER,
+                    [$this->getReference(self::REFERENCE_USER_GROUP_ADMINS), $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)]
+                )
+            )
+        );
+        $budynek = $this->getReference(UsersFixture::REFERENCE_USER_BUDYNEK)->getUserData();
+        $this->handleCommand(
+            new ResourceUpdateContentsCommand(
+                $budynek,
+                $budynek->getContents()->withReplacedValues(
+                    SystemMetadata::GROUP_MEMBER,
+                    [$this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)]
+                )
+            )
+        );
+        $scanner = $this->getReference(UsersFixture::REFERENCE_USER_SCANNER)->getUserData();
+        $this->handleCommand(
+            new ResourceUpdateContentsCommand(
+                $scanner,
+                $scanner->getContents()->withReplacedValues(
+                    SystemMetadata::GROUP_MEMBER,
+                    [$this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)]
+                )
+            )
         );
     }
 }
