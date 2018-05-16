@@ -9,6 +9,11 @@ export class MetadataListQuery {
   constructor(private httpClient: DeduplicatingHttpClient, private endpoint: string, private entitySerializer: EntitySerializer) {
   }
 
+  public filterByIds(ids: any[]): MetadataListQuery {
+    this.params.ids = ids;
+    return this;
+  }
+
   public filterByResourceClasses(resourceClasses: string | string[]): MetadataListQuery {
     if (!Array.isArray(resourceClasses)) {
       resourceClasses = [resourceClasses as string];
