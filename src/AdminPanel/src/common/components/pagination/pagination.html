@@ -52,7 +52,8 @@
         <span>${'Results per page' | t}:</span>
         <dropdown-select values.bind="elementsPerPageDropdownOptions"
             value.bind="selectedElementsPerPageDropdownOption"
-            hide-search-box>
+            hide-search-box
+            hide-clear-button>
             <template replace-part="option-template">
                 ${option}
             </template>

@@ -57,7 +57,8 @@ export class ResourcesList {
     }
     else {
       try {
-        this.resultsPerPage = localStorage[this.RESULTS_PER_PAGE_KEY] ? parseInt(localStorage[this.RESULTS_PER_PAGE_KEY]) : 10;
+        const resultsPerPageValueFromLocalStorage = localStorage[this.RESULTS_PER_PAGE_KEY];
+        this.resultsPerPage = resultsPerPageValueFromLocalStorage > 0 ? parseInt(resultsPerPageValueFromLocalStorage) : 10;
       }
       catch (exception) {
         this.resultsPerPage = 10;
