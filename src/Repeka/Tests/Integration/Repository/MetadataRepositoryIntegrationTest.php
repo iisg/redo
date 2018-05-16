@@ -6,9 +6,11 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\Utils\EntityUtils;
+use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
 class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
+    use FixtureHelpers;
     /** @var MetadataRepository */
     private $metadataRepository;
 
@@ -27,8 +29,8 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
                 $all,
                 function (Metadata $metadata) {
                     return $metadata->isTopLevel()
-                        && ($metadata->getId() >= 0)
-                        && ($metadata->getResourceClass() == 'books');
+                    && ($metadata->getId() >= 0)
+                    && ($metadata->getResourceClass() == 'books');
                 }
             )
         );
@@ -43,5 +45,13 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $query = MetadataListQuery::builder()->filterByResourceClass('books')->filterByControl(MetadataControl::TEXT())->build();
         $textMetadata = $this->metadataRepository->findByQuery($query);
         $this->assertCount(4, $textMetadata);
+    }
+
+    public function testFindByIds() {
+        $metadata1 = $this->findMetadataByName('Opis');
+        $metadata2 = $this->findMetadataByName('Tytuł');
+        $query = MetadataListQuery::builder()->filterByIds([$metadata1->getId(), $metadata2->getId()])->build();
+        $metadata = $this->metadataRepository->findByQuery($query);
+        $this->assertCount(2, $metadata);
     }
 }

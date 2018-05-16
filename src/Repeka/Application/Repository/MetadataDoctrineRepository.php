@@ -83,6 +83,9 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         if ($query->getParent()) {
             $criteria = $criteria->andWhere(Criteria::expr()->eq('parentMetadata', $query->getParent()));
         }
+        if ($query->getIds()) {
+            $criteria = $criteria->andWhere(Criteria::expr()->in('id', $query->getIds()));
+        }
         $criteria->orderBy(['ordinalNumber' => 'ASC']);
         return $this->matching($criteria)->toArray();
     }

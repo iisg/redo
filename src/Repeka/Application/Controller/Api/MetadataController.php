@@ -58,6 +58,9 @@ class MetadataController extends ApiController {
             $parent = $this->handleCommand(new MetadataGetQuery($parentId));
             $queryBuilder->filterByParent($parent);
         }
+        if ($ids = $request->query->get('ids')) {
+            $queryBuilder->filterByIds($ids);
+        }
         $metadataList = $this->handleCommand($queryBuilder->build());
         return $this->createJsonResponse($metadataList);
     }

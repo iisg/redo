@@ -6,11 +6,17 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 
 class MetadataListQueryBuilder {
+    private $ids = [];
     /** @var ?Metadata */
     private $parent;
     private $resourceClasses;
     private $onlyTopLevel = false;
     private $controls;
+
+    public function filterByIds(array $ids): MetadataListQueryBuilder {
+        $this->ids = $ids;
+        return $this;
+    }
 
     public function filterByParent(Metadata $parent): MetadataListQueryBuilder {
         Assertion::false($this->onlyTopLevel, 'Cannot set parent for onlyTopLevel query.');
@@ -45,6 +51,6 @@ class MetadataListQueryBuilder {
     }
 
     public function build(): MetadataListQuery {
-        return MetadataListQuery::withParams($this->resourceClasses, $this->parent, $this->controls, $this->onlyTopLevel);
+        return MetadataListQuery::withParams($this->ids, $this->resourceClasses, $this->parent, $this->controls, $this->onlyTopLevel);
     }
 }
