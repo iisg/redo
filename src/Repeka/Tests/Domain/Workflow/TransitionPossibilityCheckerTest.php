@@ -77,10 +77,12 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 $this->createWorkflowPlaceMock('p2', [], [2]),
             ]
         );
-        $resourceContents = ResourceContents::fromArray([
-            1 => [1000],
-            2 => [2000, ['value' => $this->executor->getId()]],
-        ]);
+        $resourceContents = ResourceContents::fromArray(
+            [
+                1 => [1000],
+                2 => [2000, ['value' => $this->executor->getId()]],
+            ]
+        );
         $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
@@ -119,9 +121,11 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 $this->createWorkflowPlaceMock('p2', [], [2]),
             ]
         );
-        $resourceContents = ResourceContents::fromArray([
-            1 => [1000],
-        ]);
+        $resourceContents = ResourceContents::fromArray(
+            [
+                1 => [1000],
+            ]
+        );
         $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
         $this->configureTransition(true, ['p1', 'p2']);
@@ -132,18 +136,41 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->workflow->method('getPlaces')->willReturn(
             [
                 $this->createWorkflowPlaceMock('p1', [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], []),  // metadata #2 doesn't determine assignees!
+                $this->createWorkflowPlaceMock('p2', [], [3]),
             ]
         );
-        $resourceContents = ResourceContents::fromArray([
-            1 => [1000],
-            2 => [2000, $this->executor->getId()],
-        ]);
+        $resourceContents = ResourceContents::fromArray(
+            [
+                1 => [1000],
+                2 => [2000, $this->executor->getId()],
+            ]
+        );
         $this->resource->method('getContents')->willReturn($resourceContents);
+        $this->resourceKind->method('getMetadataIds')->willReturn([3]);
         $this->configureTransition(true, ['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertFalse($result->isTransitionPossible());
         $this->assertTrue($result->isOtherUserAssigned());
+    }
+
+    public function testPositiveWhenAssigneeMetadataNotInResourceKind() {
+        $this->workflow->method('getPlaces')->willReturn(
+            [
+                $this->createWorkflowPlaceMock('p1', [], [1]),
+                $this->createWorkflowPlaceMock('p2', [], [35656]), // resource kind does not have metadata 35656 (arbitrary id)
+            ]
+        );
+        $resourceContents = ResourceContents::fromArray(
+            [
+                1 => [1000],
+                2 => [2000, $this->executor->getId()],
+            ]
+        );
+        $this->resource->method('getContents')->willReturn($resourceContents);
+        $this->configureTransition(true, ['p1', 'p2']);
+        $result = $this->checkWithDefaults();
+        $this->assertTrue($result->isTransitionPossible());
+        $this->assertFalse($result->isOtherUserAssigned());
     }
 
     public function testNegativeWhenExecutorIsMissingRole() {
@@ -166,9 +193,24 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 $this->createWorkflowPlaceMock('p2', [2, 3]),
             ]
         );
+        $this->resourceKind->method('getMetadataIds')->willReturn([2, 3]);
         $this->configureTransition(true, ['p1', 'p2']);
         $result = $this->checkWithDefaults();
-        $this->assertEquals([1, 2, 3], $result->getMissingMetadataIds());
+        $this->assertEquals([2, 3], $result->getMissingMetadataIds());
+        $this->assertFalse($result->isTransitionPossible());
+    }
+
+    public function testDoesntReturnMissingMetadataIdsNotInResourceKind() {
+        $this->workflow->method('getPlaces')->willReturn(
+            [
+                $this->createWorkflowPlaceMock('p1', [1]),
+                $this->createWorkflowPlaceMock('p2', [2, 3, 3784, 348753]),
+            ]
+        );
+        $this->resourceKind->method('getMetadataIds')->willReturn([2, 3]);
+        $this->configureTransition(true, ['p1', 'p2']);
+        $result = $this->checkWithDefaults();
+        $this->assertEquals([2, 3], $result->getMissingMetadataIds());
         $this->assertFalse($result->isTransitionPossible());
     }
 
