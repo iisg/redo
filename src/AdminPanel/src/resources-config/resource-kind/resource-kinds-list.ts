@@ -11,7 +11,7 @@ export class ResourceKindsList {
   @bindable @booleanAttribute hideAddButton: boolean = false;
   addFormOpened: boolean = false;
   progressBar: boolean;
-  resourceClass: string;
+  @bindable resourceClass: string;
 
   constructor(private resourceKindRepository: ResourceKindRepository,
               private contextResourceClass: ContextResourceClass) {
