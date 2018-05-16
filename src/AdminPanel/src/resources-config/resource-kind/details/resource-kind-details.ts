@@ -45,7 +45,12 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   }
 
   activateTabs() {
-    this.resourceKindDetailsTabs.push({id: 'metadata-tab', label: this.i18n.tr('Metadata')});
+    // remove parent metadata from metadata length
+    const metadataListLength = this.resourceKind.metadataList.length - 1;
+    this.resourceKindDetailsTabs.push({
+      id: 'metadata-tab',
+      label: `${this.i18n.tr('Metadata list')} (${metadataListLength})`
+    });
     if (this.resourceKind.workflow) {
       this.resourceKindDetailsTabs.push({id: 'workflow-tab', label: this.i18n.tr('Workflow')});
     }

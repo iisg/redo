@@ -27,6 +27,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   currentPageNumber: number;
   resourceDetailsTabs = [];
   currentTabId = '';
+  numberOfChildren: number;
   private listeners: Subscription[] = [];
 
   constructor(private resourceRepository: ResourceRepository,
@@ -65,7 +66,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     const resources = await this.resourceRepository.getListQuery()
       .filterByParentId(this.resource.id)
       .get();
-    this.hasChildren = resources.length > 0;
+    this.numberOfChildren = resources.length;
     const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
     routeConfiguration.navModel.setTitle(title);
     this.currentTabId = parameters.currentTabId;
@@ -76,11 +77,11 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   activateTabs() {
-    if (this.allowAddChildResource || this.hasChildren) {
-      this.resourceDetailsTabs.push({id: 'child-resources-tab', label: this.i18n.tr('Child resources')});
+    if (this.allowAddChildResource || this.numberOfChildren) {
+      this.resourceDetailsTabs.push({id: 'child-resources-tab', label: `${this.i18n.tr('Child resources')} (${this.numberOfChildren})`});
     }
-    this.resourceDetailsTabs.push({id: 'metadata-tab', label: this.i18n.tr('Metadata')});
-    this.currentTabId = this.hasChildren ? 'child-resources-tab' : 'metadata-tab';
+    this.resourceDetailsTabs.push({id: 'metadata-tab', label: this.i18n.tr('Metadata list')});
+    this.currentTabId = this.numberOfChildren ? 'child-resources-tab' : 'metadata-tab';
     if (this.resource.kind.workflow) {
       this.resourceDetailsTabs.push({id: 'workflow-tab',
         label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)});
@@ -145,7 +146,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   remove() {
-    if (this.hasChildren) {
+    if (this.numberOfChildren) {
       const title = this.i18n.tr('Resource has children');
       const text = this.i18n.tr('Delete or disown them first to delete this resource');
       this.alert.show({type: 'warning'}, title, text);

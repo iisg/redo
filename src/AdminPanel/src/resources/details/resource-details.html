@@ -32,9 +32,9 @@
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="child-resources-tab">
-                <div if.bind="allowAddChildResource || hasChildren">
+                <div if.bind="allowAddChildResource || numberOfChildren">
                     <resources-list parent-resource.bind="resource"
-                        has-resources.bind="hasChildren"
+                        has-resources.bind="numberOfChildren"
                         results-per-page.from-view="resultsPerPage"
                         current-page-number.from-view="currentPageNumber"
                         disable-add-resource.bind="!allowAddChildResource"></resources-list>

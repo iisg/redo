@@ -60,6 +60,7 @@
                 <div if.bind="currentTabId === 'resource-kinds-tab'">
                     <div class="resource-kinds">
                         <resource-kinds-list resource-kinds.bind="resourceKindList"
+                            resource-class.bind="metadata.resourceClass"
                             hide-add-button></resource-kinds-list>
                     </div>
                 </div>
