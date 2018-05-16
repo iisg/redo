@@ -54,29 +54,29 @@ export class ResourceForm {
     return !!this.resource.id;
   }
 
-  @computedFrom('resource.kind.workflow')
+  @computedFrom('resource.kind')
   get requiredMetadataIds(): number[] {
-    let requiredMetadataIds = [];
-    if (this.resource.kind && this.resource.kind.workflow) {
-      let restrictingMetadata: NumberMap<any> = {};
-      if (this.edit && this.transition) {
-        const places = [];
-        this.transition.tos.forEach((value) => {
-          const workflowPlaces = this.resource.kind.workflow.places;
-          places.push(workflowPlaces.find(place => place.id === value));
-        });
-        restrictingMetadata = convertToObject(places.map(v => v.restrictingMetadataIds));
-      } else if (!this.edit) {
-        restrictingMetadata = this.resource.kind.workflow.places[0].restrictingMetadataIds;
-      }
-      requiredMetadataIds = flatten(
-        [
-          numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED),
-          numberKeysByValue(restrictingMetadata, RequirementState.ASSIGNEE)
-        ]
-      );
+    if (!this.resource.kind || !this.resource.kind.workflow) {
+      return [];
     }
-    return requiredMetadataIds;
+    let restrictingMetadata: NumberMap<any> = {};
+    if (this.edit && this.transition) {
+      const places = [];
+      this.transition.tos.forEach(toId => {
+        const workflowPlaces = this.resource.kind.workflow.places;
+        places.push(workflowPlaces.find(place => place.id === toId));
+      });
+      restrictingMetadata = convertToObject(places.map(v => v.restrictingMetadataIds));
+    } else if (!this.edit) {
+      restrictingMetadata = this.resource.kind.workflow.places[0].restrictingMetadataIds;
+    }
+    const resourceKindMedatadaIds = this.resource.kind.metadataList.map(metadata => metadata.id);
+    return flatten(
+      [
+        numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED),
+        numberKeysByValue(restrictingMetadata, RequirementState.ASSIGNEE)
+      ]
+    ).filter(metadataId => resourceKindMedatadaIds.includes(metadataId));
   }
 
   requiredMetadataIdsForTransition(): number[] {

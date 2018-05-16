@@ -48,7 +48,9 @@ class TransitionPossibilityChecker {
             $metadataIdsMissingForPlace = $targetPlace->getMissingRequiredMetadataIds($resourceContents);
             $missingMetadataIds = array_merge($missingMetadataIds, $metadataIdsMissingForPlace);
         }
-        return array_unique($missingMetadataIds);
+        $resourceKindMetadataIds = $resource->getKind()->getMetadataIds();
+        $missingMetadataIds = array_intersect($missingMetadataIds, $resourceKindMetadataIds);
+        return array_values(array_unique($missingMetadataIds));
     }
 
     private function executorIsMissingRequiredRole(ResourceWorkflowTransition $transition, User $executor): bool {
@@ -60,13 +62,16 @@ class TransitionPossibilityChecker {
             return false;
         }
         $assigneeMetadataIds = $this->getAssigneeMetadataIds($resource->getWorkflow(), $transition);
+        $assigneeMetadataIds = array_intersect($assigneeMetadataIds, $resource->getKind()->getMetadataIds());
+
         if (empty($assigneeMetadataIds)) {
             return false;  // no metadata determines assignees, so everyone can perform transition
         }
         $assigneeUserIds = $this->extractAssigneeIds($resource, $assigneeMetadataIds);
-        $userGroupsIds = EntityUtils::mapToIds($this->userRepository->findUserGroups($executor));
-        $userGroupsIds[] = $executor->getUserData()->getId();
-        return count(array_intersect($assigneeUserIds, $userGroupsIds)) == 0;
+        $executorUserIds = EntityUtils::mapToIds($this->userRepository->findUserGroups($executor));
+        $executorUserIds[] = $executor->getUserData()->getId();
+
+        return count(array_intersect($assigneeUserIds, $executorUserIds)) == 0;
     }
 
     /**
@@ -85,8 +90,8 @@ class TransitionPossibilityChecker {
     }
 
     private function extractAssigneeIds(ResourceEntity $resource, array $assigneeMetadataIds): array {
-        $resourceKind = $resource->getKind();
-        $assigneeMetadataIds = array_intersect($assigneeMetadataIds, $resourceKind->getMetadataIds());
+        $resourceKindMetadataIds = $resource->getKind()->getMetadataIds();
+        $assigneeMetadataIds = array_values(array_intersect($assigneeMetadataIds, $resourceKindMetadataIds));
         $assigneeUserIdArrays = array_map(
             function (int $metadataId) use ($resource) {
                 return $resource->getContents()[$metadataId] ?? [];
