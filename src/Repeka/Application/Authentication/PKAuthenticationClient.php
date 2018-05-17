@@ -9,7 +9,8 @@ class PKAuthenticationClient {
     }
 
     public function authenticate(string $login, string $password): bool {
-        $userData = $this->fetchUserData($login);
+        $onlyNumbersLogin = preg_replace('#[^\d]#', '', $login);
+        $userData = $this->fetchUserData($onlyNumbersLogin);
         if (array_key_exists('plainPassword', $userData)) {
             return $this->validatePlainTextPassword($password, $userData['plainPassword']);
         } elseif (array_key_exists('password', $userData)) {
@@ -35,8 +36,6 @@ class PKAuthenticationClient {
     private function getUserId($login): string {
         if (strlen($login) < 6) {
             throw new \InvalidArgumentException('Login too short');
-        } elseif (strlen($login) == 6) {
-            return "B/$login";
         } else {
             return $login;
         }

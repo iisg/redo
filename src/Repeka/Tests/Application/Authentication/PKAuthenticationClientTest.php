@@ -9,7 +9,7 @@ class PKAuthenticationClientTest extends \PHPUnit_Framework_TestCase {
         $soapService = $this->createSoapServiceMock();
         $soapService->expects($this->once())->method('getClientDataById')->willReturn(['plainPassword' => '']);
         $authClient = new PKAuthenticationClient($soapService);
-        $authClient->authenticate('whatever', 'whatever');
+        $authClient->authenticate('123456', 'whatever');
     }
 
     public function testRejectsTooShortLogins() {
@@ -18,21 +18,21 @@ class PKAuthenticationClientTest extends \PHPUnit_Framework_TestCase {
         $soapService = $this->createSoapServiceMock();
         $soapService->expects($this->never())->method('getClientDataById');
         $authClient = new PKAuthenticationClient($soapService);
-        $authClient->authenticate('short', 'whatever');
+        $authClient->authenticate('1234', 'whatever');
     }
 
-    public function testManglesSixCharacterLogins() {
+    public function testCutNotNumbersLogins() {
         $soapService = $this->createSoapServiceMock();
-        $soapService->method('getClientDataById')->with('B/123456')->willReturn(['plainPassword' => '']);
+        $soapService->method('getClientDataById')->with('123456')->willReturn(['plainPassword' => '']);
         $authClient = new PKAuthenticationClient($soapService);
-        $authClient->authenticate('123456', 'whatever');
+        $authClient->authenticate('b/123456', 'whatever');
     }
 
     public function testPassesLongerLoginsUnmodified() {
         $soapService = $this->createSoapServiceMock();
-        $soapService->method('getClientDataById')->with('administrator')->willReturn(['plainPassword' => '']);
+        $soapService->method('getClientDataById')->with('123456789')->willReturn(['plainPassword' => '']);
         $authClient = new PKAuthenticationClient($soapService);
-        $authClient->authenticate('administrator', 'whatever');
+        $authClient->authenticate('123456789', 'whatever');
     }
 
     public function testAuthenticatesWithMatchingPlainPassword() {
@@ -40,7 +40,7 @@ class PKAuthenticationClientTest extends \PHPUnit_Framework_TestCase {
         $soapService->method('getClientDataById')->willReturn(['plainPassword' => 'p4ssw0rd']);
         $soapService->expects($this->never())->method('isValidPassword');
         $authClient = new PKAuthenticationClient($soapService);
-        $result = $authClient->authenticate('whatever', 'p4ssw0rd');
+        $result = $authClient->authenticate('123456', 'p4ssw0rd');
         $this->assertTrue($result);
     }
 
@@ -48,7 +48,7 @@ class PKAuthenticationClientTest extends \PHPUnit_Framework_TestCase {
         $soapService = $this->createSoapServiceMock();
         $soapService->method('getClientDataById')->willReturn(['plainPassword' => 'p4ssw0rd']);
         $authClient = new PKAuthenticationClient($soapService);
-        $result = $authClient->authenticate('whatever', 'BADp4ssw0rd');
+        $result = $authClient->authenticate('123456', 'BADp4ssw0rd');
         $this->assertFalse($result);
     }
 
@@ -57,7 +57,7 @@ class PKAuthenticationClientTest extends \PHPUnit_Framework_TestCase {
         $soapService->method('getClientDataById')->willReturn(['password' => '!qwerty!']);
         $soapService->expects($this->once())->method('isValidPassword')->with('p4ssw0rd', '!qwerty!')->willReturn(true);
         $authClient = new PKAuthenticationClient($soapService);
-        $result = $authClient->authenticate('whatever', 'p4ssw0rd');
+        $result = $authClient->authenticate('123456', 'p4ssw0rd');
         $this->assertTrue($result);
     }
 
@@ -66,7 +66,7 @@ class PKAuthenticationClientTest extends \PHPUnit_Framework_TestCase {
         $soapService->method('getClientDataById')->willReturn(['password' => '!qwerty!']);
         $soapService->method('isValidPassword')->willReturn(false);
         $authClient = new PKAuthenticationClient($soapService);
-        $result = $authClient->authenticate('whatever', 'p4ssw0rd');
+        $result = $authClient->authenticate('123456', 'p4ssw0rd');
         $this->assertFalse($result);
     }
 
