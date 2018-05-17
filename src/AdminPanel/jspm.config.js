@@ -29,6 +29,7 @@ System.config({
     "aurelia-logging-console": "npm:aurelia-logging-console@1.0.0",
     "aurelia-metadata": "npm:aurelia-metadata@1.0.3",
     "aurelia-pal-browser": "npm:aurelia-pal-browser@1.7.0",
+    "aurelia-path": "npm:aurelia-path@1.1.1",
     "aurelia-plugins-tabs": "npm:aurelia-plugins-tabs@2.5.2",
     "aurelia-polyfills": "npm:aurelia-polyfills@1.2.2",
     "aurelia-router": "npm:aurelia-router@1.4.0",

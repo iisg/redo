@@ -1,7 +1,7 @@
 <template>
     <require from="resources/controls/input/autosize"></require>
 
-    <div class="form-group ${yamlValid || 'has-error'}">
+    <div class="form-group ${yamlValid ? '' : 'has-error'}">
         <label>${ 'Resource contents' | t}</label>
         <textarea value.bind="yamlValue"
             class="form-control"

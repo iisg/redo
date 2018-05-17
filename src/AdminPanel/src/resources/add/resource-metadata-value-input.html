@@ -2,7 +2,7 @@
     <require from="./resource-form-generated"></require>
     <require from="./metadata-value-input"></require>
 
-    <div class="${metadataInitialValue.value === value.value || 'highlighted'}">
+    <div class="${metadataInitialValue.value !== value.value ? 'highlighted' : ''}">
         <metadata-value-input metadata.bind="metadata"
             value.bind="value"
             disabled.bind="disabled"
