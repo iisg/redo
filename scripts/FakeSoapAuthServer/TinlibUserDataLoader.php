@@ -16,11 +16,7 @@ abstract class TinlibUserDataLoader
 
         if (strlen($userLogin) < 6)
             return false;
-
-        if (strlen($userLogin) == 6)
-            $userId = "B/" . $userLogin;
-        else
-            $userId = $userLogin;
+        $userId = $userLogin;
 
         try {
             $url = CONFIG['wsdlUrl'];
