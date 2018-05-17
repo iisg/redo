@@ -4,7 +4,7 @@
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="resources/sort-button"></require>
 
-    <table if.bind="resources.length > 0">
+    <table if.bind="resources.length">
         <thead>
             <tr>
                 <th>${'ID' | t}</th>
@@ -55,7 +55,7 @@
         </tbody>
     </table>
 
-    <div show.bind="resources.length === 0">
+    <div if.bind="resources.length === 0">
         <slot name="empty">
             ${"No resources." | resourceClassTranslation:resourceClass}
         </slot>

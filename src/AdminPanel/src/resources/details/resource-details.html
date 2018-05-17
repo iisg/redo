@@ -31,10 +31,12 @@
             <aup-tabs tabs.bind="resourceDetailsTabs"></aup-tabs>
         </div>
         <aup-tab-content>
-            <aup-tab-pane tab="child-resource-tab">
-                <div if.bind="currentTabId === 'child-resource-tab'">
+            <aup-tab-pane tab="child-resources-tab">
+                <div if.bind="allowAddChildResource || hasChildren">
                     <resources-list parent-resource.bind="resource"
                         has-resources.bind="hasChildren"
+                        results-per-page.from-view="resultsPerPage"
+                        current-page-number.from-view="currentPageNumber"
                         disable-add-resource.bind="!allowAddChildResource"></resources-list>
                 </div>
             </aup-tab-pane>

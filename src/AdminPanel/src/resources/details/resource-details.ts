@@ -1,31 +1,33 @@
-import {NavigationInstruction, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
-import {Resource} from "../resource";
-import {ResourceRepository} from "../resource-repository";
+import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
-import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
-import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
+import {NavigationInstruction, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
+import {Alert} from "common/dialog/alert";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
-import {WorkflowTransition} from "../../workflows/workflow";
-import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
-import {computedFrom} from "aurelia-binding";
-import {MetadataValue} from "../metadata-value";
-import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
-import {ContextResourceClass} from './../context/context-resource-class';
+import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {UserRoleChecker} from "../../common/authorization/user-role-checker";
+import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
+import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
 import {SystemResourceKinds} from "../../resources-config/resource-kind/system-resource-kinds";
+import {WorkflowTransition} from "../../workflows/workflow";
+import {MetadataValue} from "../metadata-value";
+import {Resource} from "../resource";
+import {ResourceRepository} from "../resource-repository";
+import {ContextResourceClass} from './../context/context-resource-class';
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
-  editing: boolean = false;
+  editing = false;
   selectedTransition: WorkflowTransition;
   hasChildren: boolean;
-  private urlListener: Subscription;
-  resourceDetailsTabs: any[] = [];
-  currentTabId: string = '';
+  resultsPerPage: number;
+  currentPageNumber: number;
+  resourceDetailsTabs = [];
+  currentTabId = '';
+  private listeners: Subscription[] = [];
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceDisplayStrategy: ResourceDisplayStrategyValueConverter,
@@ -41,44 +43,43 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   bind() {
-    this.urlListener = this.ea.subscribe("router:navigation:success",
-      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit');
+    this.listeners.push(this.ea.subscribe("router:navigation:success",
+      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit'));
     this.resourceDetailsTabs.forEach(tab => {
-      this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${tab.id}`, () => {
+      this.listeners.push(this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${tab.id}`, () => {
         this.resourceDetailsTabs.find(currentTab => currentTab.id == this.currentTabId).active = false;
-        tab.active = true;
         this.currentTabId = tab.id;
-      });
+        tab.active = true;
+        this.updateURL();
+      }));
     });
   }
 
   unbind() {
-    this.urlListener.dispose();
+    this.listeners.forEach(listener => listener.dispose());
   }
 
-  async activate(params: any, routeConfig: RouteConfig) {
-    this.resource = await this.resourceRepository.get(params.id);
+  async activate(parameters: any, routeConfiguration: RouteConfig) {
+    this.resource = await this.resourceRepository.get(parameters.id);
     this.contextResourceClass.setCurrent(this.resource.resourceClass);
     const resources = await this.resourceRepository.getListQuery()
       .filterByParentId(this.resource.id)
       .get();
     this.hasChildren = resources.length > 0;
     const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
-    routeConfig.navModel.setTitle(title);
+    routeConfiguration.navModel.setTitle(title);
+    this.currentTabId = parameters.currentTabId;
     this.activateTabs();
+    if (this.currentTabId != parameters.currentTabId) {
+      this.updateURL();
+    }
   }
 
   activateTabs() {
     if (this.allowAddChildResource || this.hasChildren) {
-      this.resourceDetailsTabs.push({id: 'child-resource-tab', label: this.i18n.tr('Child resources')});
-      if (this.hasChildren) {
-        this.currentTabId = 'child-resource-tab';
-      }
+      this.resourceDetailsTabs.push({id: 'child-resources-tab', label: this.i18n.tr('Child resources')});
     }
     this.resourceDetailsTabs.push({id: 'metadata-tab', label: this.i18n.tr('Metadata')});
-    if (this.currentTabId === '') {
-      this.currentTabId = 'metadata-tab';
-    }
     if (this.resource.kind.workflow) {
       this.resourceDetailsTabs.push({id: 'workflow-tab',
         label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)});
@@ -95,7 +96,17 @@ export class ResourceDetails implements RoutableComponentActivate {
         });
       }
     }
-    this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
+    const foundTab = this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId);
+    if (foundTab) {
+      foundTab.active = true;
+    } else {
+      if (!this.editing && this.hasChildren) {
+        this.currentTabId = 'child-resources-tab';
+      } else {
+        this.currentTabId = 'metadata-tab';
+      }
+      this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
+    }
   }
 
   @computedFrom('this.resource.kind.metadataList', 'this.resource.kind.metadataList.length')
@@ -109,9 +120,7 @@ export class ResourceDetails implements RoutableComponentActivate {
       // link can't be generated in the view with route-href because it is impossible to set replace:true there
       // see https://github.com/aurelia/templating-router/issues/54
       this.selectedTransition = transition ? transition : new WorkflowTransition();
-      this.router.navigateToRoute('resources/details',
-        {id: this.resource.id, action: this.editing && !transition ? undefined : 'edit', transitionId: this.selectedTransition.id},
-        {trigger: triggerNavigation, replace: true});
+      this.updateURL(!this.editing || !!transition, triggerNavigation);
       if (!triggerNavigation) {
         this.editing = !this.editing;
       }
@@ -146,6 +155,23 @@ export class ResourceDetails implements RoutableComponentActivate {
         .then(() => this.navigateToParentOrList())
         .finally(() => this.resource.pendingRequest = false);
     }
+  }
+
+  private updateURL(editAction = this.editing, triggerNavigation = false) {
+    const parameters = {};
+    if (this.currentTabId == 'child-resources-tab') {
+      parameters['resourcesPerPage'] = this.resultsPerPage;
+      parameters['currentPageNumber'] = this.currentPageNumber;
+    }
+    parameters['id'] = this.resource.id;
+    if (editAction) {
+      parameters['action'] = 'edit';
+    }
+    if (this.selectedTransition) {
+      parameters['transitionId'] = this.selectedTransition.id;
+    }
+    parameters['currentTabId'] = this.currentTabId;
+    this.router.navigateToRoute('resources/details', parameters, {trigger: triggerNavigation, replace: true});
   }
 
   private navigateToParentOrList() {

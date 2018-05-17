@@ -9,7 +9,7 @@
             <tr>
                 <th>&nbsp;</th>
                 <th repeat.for="place of orderedPlaces"
-                    class="${highlightedColumnId != place.id || 'highlighted'}"
+                    class="${highlightedColumnId == place.id ? 'highlighted' : ''}"
                     mouseover.delegate="highlightedColumnId = place.id">
                     ${place.label | inCurrentLanguage & signal:'workflow-places-updated'}
                 </th>
@@ -17,7 +17,7 @@
         </thead>
         <tbody>
             <tr repeat.for="metadata of metadataList">
-                <th class="${highlightedRowId != metadata.id || 'highlighted'}"
+                <th class="${highlightedRowId == metadata.id ? 'highlighted' : ''}"
                     mouseover.delegate="highlightedColumnId = undefined">
                     ${metadata | metadataLabel}
                     <icon name="user-3"
@@ -26,7 +26,7 @@
                 </th>
                 <td repeat.for="place of orderedPlaces"
                     mouseover.delegate="highlightedColumnId = place.id"
-                    class="${highlightedColumnId != place.id || 'highlighted'}">
+                    class="${highlightedColumnId == place.id ? 'highlighted' : ''}">
                     <excel-checkbox model.bind="metadata.id"
                         states.bind="place.restrictingMetadataIds"
                         assignee-allowed.bind="metadata.canDetermineAssignees"

@@ -1,17 +1,18 @@
 import {bindingMode, observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {Router, NavigationInstruction} from "aurelia-router";
+import {parseQueryString} from "aurelia-path";
+import {NavigationInstruction, Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
-import {ResourceRepository} from "./resource-repository";
-import {Resource} from "./resource";
+import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
+import {safeJsonParse} from "../common/utils/object-utils";
 import {Metadata} from "../resources-config/metadata/metadata";
 import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
-import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
-import {PageResult} from "./page-result";
 import {ContextResourceClass} from "./context/context-resource-class";
+import {PageResult} from "./page-result";
+import {Resource} from "./resource";
 import {ResourceMetadataSort} from "./resource-metadata-sort";
-import {safeJsonParse} from "../common/utils/object-utils";
+import {ResourceRepository} from "./resource-repository";
 
 @autoinject
 export class ResourcesList {
@@ -21,9 +22,9 @@ export class ResourcesList {
   @bindable({defaultBindingMode: bindingMode.twoWay}) hasResources: boolean = undefined;
   @bindable resourceClass: string;
   @bindable disableAddResource: boolean;
+  @bindable resultsPerPage: number;
+  @bindable currentPageNumber: number;
   @observable resources: PageResult<Resource>;
-  @observable resultsPerPage: number;
-  @observable currentPageNumber: number;
   contentsFilter: NumberMap<string>;
   sortBy: ResourceMetadataSort[];
   totalNumberOfResources: number;
@@ -31,6 +32,8 @@ export class ResourcesList {
   briefMetadata: Metadata[];
   displayProgressBar: boolean;
   activated: boolean;
+  private resultsPerPageValueChangedOnActivate: boolean;
+  private currentPageNumberChangedOnActivate: boolean;
 
   constructor(private contextResourceClass: ContextResourceClass,
               private resourceRepository: ResourceRepository,
@@ -40,58 +43,48 @@ export class ResourcesList {
   }
 
   activate(parameters: any) {
-    this.activated = false;
     this.prepareBeforeFetchingResources(parameters.resourceClass || this.parentResource.resourceClass);
     this.contextResourceClass.setCurrent(this.resourceClass);
-    this.obtainResultsPerPageValue(parameters);
-    this.obtainCurrentPageNumber(parameters);
-    this.obtainContentsFilterValue(parameters);
-    this.obtainSortByValue(parameters);
+    const resultsPerPageChanged = this.obtainResultsPerPageValue(parameters);
+    this.resultsPerPageValueChangedOnActivate = this.activated && resultsPerPageChanged;
+    const currentPageNumberChanged = this.obtainCurrentPageNumber(parameters);
+    this.currentPageNumberChangedOnActivate = this.activated && currentPageNumberChanged;
+    this.contentsFilter = safeJsonParse(parameters['contentsFilter']);
+    this.sortBy = safeJsonParse(parameters['sortBy']);
+    this.updateURL(true);
     this.fetchResources();
     this.activated = true;
   }
 
-  private obtainResultsPerPageValue(parameters: any) {
+  private obtainResultsPerPageValue(parameters: any): boolean {
+    let resultsPerPage: number;
     if (parameters.resourcesPerPage > 0) {
-      this.resultsPerPage = parseInt(parameters.resourcesPerPage);
+      resultsPerPage = parseInt(parameters.resourcesPerPage);
     }
     else {
       try {
         const resultsPerPageValueFromLocalStorage = localStorage[this.RESULTS_PER_PAGE_KEY];
-        this.resultsPerPage = resultsPerPageValueFromLocalStorage > 0 ? parseInt(resultsPerPageValueFromLocalStorage) : 10;
+        resultsPerPage = resultsPerPageValueFromLocalStorage > 0 ? parseInt(resultsPerPageValueFromLocalStorage) : 10;
       }
       catch (exception) {
-        this.resultsPerPage = 10;
+        resultsPerPage = 10;
       }
     }
+    const resultsPerPageChanged = this.resultsPerPage != resultsPerPage;
+    this.resultsPerPage = resultsPerPage;
+    return resultsPerPageChanged;
   }
 
-  private obtainCurrentPageNumber(parameters: any) {
+  private obtainCurrentPageNumber(parameters: any): boolean {
+    let currentPageNumber: number;
     if (parameters.currentPageNumber > 0) {
-      this.currentPageNumber = parseInt(parameters.currentPageNumber);
+      currentPageNumber = parseInt(parameters.currentPageNumber);
+    } else {
+      currentPageNumber = 1;
     }
-    else if (this.currentPageNumber == 1) {
-      this.updateURL();
-    }
-    else {
-      this.currentPageNumber = 1;
-    }
-  }
-
-  private obtainContentsFilterValue(parameters: any) {
-    let contentsFilter = safeJsonParse(parameters['contentsFilter']);
-    if (this.contentsFilter != contentsFilter) {
-      this.contentsFilter = contentsFilter;
-      this.updateURL();
-    }
-  }
-
-  private obtainSortByValue(parameters: any) {
-    let sortBy = safeJsonParse(parameters['sortBy']);
-    if (this.sortBy != sortBy) {
-      this.sortBy = sortBy;
-      this.updateURL();
-    }
+    const currentPageNumberChanged = this.currentPageNumber != currentPageNumber;
+    this.currentPageNumber = currentPageNumber;
+    return currentPageNumberChanged;
   }
 
   bind() {
@@ -131,21 +124,20 @@ export class ResourcesList {
     query = query.sortByMetadataIds(this.sortBy)
       .setResultsPerPage(this.resultsPerPage)
       .setCurrentPageNumber(this.currentPageNumber);
-    query.get()
-      .then(resources => {
-        if (resourceClass === this.resourceClass) {
-          this.totalNumberOfResources = resources.total;
-          if (resources.page === this.currentPageNumber && resultsPerPage === this.resultsPerPage) {
-            if (!resources.length && resources.page !== 1) {
-              this.currentPageNumber = 1;
-            } else {
-              this.displayProgressBar = false;
-              this.resources = resources;
-              this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter;
-            }
+    query.get().then(resources => {
+      if (resourceClass === this.resourceClass) {
+        this.totalNumberOfResources = resources.total;
+        if (resources.page === this.currentPageNumber && resultsPerPage === this.resultsPerPage) {
+          if (!resources.length && resources.page !== 1) {
+            this.currentPageNumber = 1;
+          } else {
+            this.displayProgressBar = false;
+            this.resources = resources;
+            this.addFormOpened = (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter;
           }
         }
-      });
+      }
+    });
   }
 
   fetchBriefMetadata() {
@@ -173,28 +165,33 @@ export class ResourcesList {
   }
 
   resultsPerPageChanged(newValue: number, previousValue: number) {
-    if (previousValue) {
+    if (!this.resultsPerPageValueChangedOnActivate && previousValue) {
       try {
         localStorage[this.RESULTS_PER_PAGE_KEY] = newValue;
       } catch (exception) {
       }
-      this.updateURL();
-      if (this.activated) {
+      if (this.activated && this.currentPageNumber == 1) {
+        this.updateURL();
         this.fetchResources();
       }
     }
+    this.resultsPerPageValueChangedOnActivate = false;
   }
 
-  currentPageNumberChanged() {
-    this.updateURL(!this.activated);
-    if (this.activated) {
+  currentPageNumberChanged(newValue: number, previousValue: number) {
+    if (!this.currentPageNumberChangedOnActivate && previousValue) {
+      this.updateURL();
       this.fetchResources();
     }
+    this.currentPageNumberChangedOnActivate = false;
   }
 
-  updateURL(replaceEntryInBrowserHistory = true) {
+  updateURL(replaceEntryInBrowserHistory?: boolean) {
     let route: string;
-    let parameters = {};
+    const href = window.location.href;
+    const currentParameters = parseQueryString(href.slice(href.indexOf('?')));
+    const parameters = {};
+    parameters['currentTabId'] = currentParameters['currentTabId'];
     if (this.parentResource) {
       route = 'resources/details';
       parameters['id'] = this.parentResource.id;
@@ -204,8 +201,10 @@ export class ResourcesList {
     }
     parameters['contentsFilter'] = JSON.stringify(this.contentsFilter);
     parameters['sortBy'] = JSON.stringify(this.sortBy);
-    parameters['resourcesPerPage'] = this.resultsPerPage;
-    parameters['currentPageNumber'] = this.currentPageNumber;
+    if (!currentParameters['currentTabId'] || currentParameters['currentTabId'] == 'child-resources-tab') {
+      parameters['resourcesPerPage'] = this.resultsPerPage;
+      parameters['currentPageNumber'] = this.currentPageNumber;
+    }
     this.router.navigateToRoute(route, parameters, {trigger: false, replace: replaceEntryInBrowserHistory});
   }
 }
