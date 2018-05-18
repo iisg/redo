@@ -166,11 +166,13 @@ export class ResourceDetails implements RoutableComponentActivate {
     parameters['id'] = this.resource.id;
     if (editAction) {
       parameters['action'] = 'edit';
+      parameters['currentTabId'] = 'metadata-tab';
+    } else {
+      parameters['currentTabId'] = this.currentTabId;
     }
     if (this.selectedTransition) {
       parameters['transitionId'] = this.selectedTransition.id;
     }
-    parameters['currentTabId'] = this.currentTabId;
     this.router.navigateToRoute('resources/details', parameters, {trigger: triggerNavigation, replace: true});
   }
 
