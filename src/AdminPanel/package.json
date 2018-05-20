@@ -9,11 +9,13 @@
     "build": "gulp build",
     "clean": "gulp clean",
     "dist": "npm install && npm run -s install-deps && cross-env REPEKA_ENV=prod gulp dist",
+    "e2e": "protractor ./tests/e2e/protractor.config.js",
     "install-deps": "npm prune && (typings prune && typings install && jspm clean && jspm install)",
     "lint": "gulp lint",
     "test": "karma start build/karma.conf.js --singleRun",
     "test:junit": "npm test -- --reporters mocha,junit --browsers chrome_no_sandbox",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "webdriver-update": "webdriver-manager update"
   },
   "devDependencies": {
     "access-sniff": "^2.4.7",
@@ -46,6 +48,7 @@
     "karma-junit-reporter": "^1.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-systemjs": "^0.16.0",
+    "protractor": "^5.3.2",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.2.2",
     "symlink-or-copy": "^1.1.8",
