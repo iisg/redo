@@ -4,6 +4,7 @@
   "type": "project",
   "autoload": {
     "psr-4": {
+      "Repeka\\Migrations\\": "app/DoctrineMigrations",
       "Repeka\\": "src/Repeka"
     },
     "classmap": [

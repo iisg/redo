@@ -1,34 +1,20 @@
 <?php declare(strict_types=1);
 namespace Repeka\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-
 /**
  * Replace PL transition labels to all other languages.
  * Add languages to label if not set.
  */
-class Version20180422131227 extends AbstractMigration implements ContainerAwareInterface {
-    use ContainerAwareTrait;
+class Version20180422131227 extends RepekaMigration {
     private $replacingLanguageCode = 'PL';
 
-    public function up(Schema $schema) {
-        $this->abortIf(
-            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
-            'Migration can only be executed safely on \'postgresql\'.'
-        );
+    public function migrate() {
         $languages = $this->getLanguages();
         $workflows = $this->getWorkflows();
         foreach ($workflows as $workflow) {
             $workflow->replaceLabels($this->replacingLanguageCode, $languages);
             $this->queueWorkflowUpdate($workflow);
         }
-    }
-
-    public function down(Schema $schema) {
-        $this->abortIf(true, 'There is no way back.');
     }
 
     /** @return Version20180422131227WorkflowEntity[] */
