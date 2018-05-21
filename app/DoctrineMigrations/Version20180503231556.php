@@ -1,22 +1,11 @@
 <?php declare(strict_types=1);
 namespace Repeka\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-
 /**
  * Migrate resource display strategies to Twig.
  */
-class Version20180503231556 extends AbstractMigration implements ContainerAwareInterface {
-    use ContainerAwareTrait;
-
-    public function up(Schema $schema) {
-        $this->abortIf(
-            $this->connection->getDatabasePlatform()->getName() !== 'postgresql',
-            'Migration can only be executed safely on \'postgresql\'.'
-        );
+class Version20180503231556 extends RepekaMigration {
+    public function migrate() {
         $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
         $resourceKinds = $connection->fetchAll('SELECT id, display_strategies FROM resource_kind');
         foreach ($resourceKinds as $resourceKind) {
@@ -33,9 +22,5 @@ class Version20180503231556 extends AbstractMigration implements ContainerAwareI
             $resourceKind['display_strategies'] = json_encode($resourceKind['display_strategies']);
             $this->addSql('UPDATE resource_kind SET display_strategies = :display_strategies WHERE id = :id', $resourceKind);
         }
-    }
-
-    public function down(Schema $schema) {
-
     }
 }
