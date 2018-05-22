@@ -55,7 +55,7 @@
         </tbody>
     </table>
 
-    <div if.bind="resources.length === 0">
+    <div show.bind="resources.length === 0">
         <slot name="empty">
             ${"No resources." | resourceClassTranslation:resourceClass}
         </slot>
