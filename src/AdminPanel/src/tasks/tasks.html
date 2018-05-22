@@ -21,7 +21,9 @@
 
         <span class="page-title">${"Your other tasks" | t}</span>
         <resources-list-table resources.bind="tasks | nonCurrentTasks">
-            <div slot="empty">
+            <div slot="empty"
+                class="alert alert-success">
+                <icon name="accept-2"></icon>
                 ${"No tasks." | t}
             </div>
         </resources-list-table>
