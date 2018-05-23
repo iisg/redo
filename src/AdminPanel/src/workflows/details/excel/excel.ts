@@ -16,6 +16,7 @@ export class Excel implements ComponentAttached {
   @bindable resourceClass: string;
   @observable highlightedColumnId: number;
   metadataList: Metadata[];
+  autoChangeRowToTheEnd: boolean = true;
 
   constructor(private metadataRepository: MetadataRepository, private workflowPlaceSorter: WorkflowPlaceSorter) {
   }
@@ -34,12 +35,14 @@ export class Excel implements ComponentAttached {
 
   checkboxChanged(metadata: Metadata, changedPlace: WorkflowPlace): void {
     const newState = changedPlace.restrictingMetadataIds[metadata.id];
-    const changedPlaceIndex = this.orderedPlaces.indexOf(changedPlace);
-    const placesToUpdate = this.orderedPlaces.slice(changedPlaceIndex + 1);
-    for (const place of placesToUpdate) {
-      const map: RestrictingMetadataIdMap = deepCopy(place.restrictingMetadataIds);
-      map[metadata.id] = newState;
-      place.restrictingMetadataIds = map;
+    if (this.autoChangeRowToTheEnd) {
+      const changedPlaceIndex = this.orderedPlaces.indexOf(changedPlace);
+      const placesToUpdate = this.orderedPlaces.slice(changedPlaceIndex + 1);
+      for (const place of placesToUpdate) {
+        const map: RestrictingMetadataIdMap = deepCopy(place.restrictingMetadataIds);
+        map[metadata.id] = newState;
+        place.restrictingMetadataIds = map;
+      }
     }
   }
 }

@@ -43,6 +43,7 @@ export class WorkflowGraph {
       },
       style: workflowGraphDefaultStylesheet,
       maxZoom: 4,
+      minZoom: .2,
       autoungrabify: !editable,
       autounselectify: !editable,
     });
