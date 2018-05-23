@@ -22,7 +22,7 @@
                     can-apply-transition.bind="resource.canApplyTransition(transition)"
                     click.trigger="toggleEditForm(true, transition)"></apply-transition-button>
             </template>
-            <remove-button if.bind="!editing"
+            <remove-button if.bind="!!doNotShowWeWaitForSuperuser"
                 disabled.bind="resource.pendingRequest"
                 on-click.call="remove()"></remove-button>
             <div if.bind="resource.pendingRequest">
