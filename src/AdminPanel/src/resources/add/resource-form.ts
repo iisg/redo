@@ -137,6 +137,7 @@ export class ResourceForm {
   }
 
   resourceClassChanged() {
+    this.resource = new Resource();
     this.resource.resourceClass = this.resourceClass;
   }
 
