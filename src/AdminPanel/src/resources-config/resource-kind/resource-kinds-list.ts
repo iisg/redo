@@ -1,8 +1,7 @@
 import {ResourceKindRepository} from "./resource-kind-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
-import {InCurrentLanguageValueConverter} from "../multilingual-field/in-current-language";
-import {ContextResourceClass} from 'resources/context/context-resource-class';
+import {ContextResourceClass} from "resources/context/context-resource-class";
 
 @autoinject
 export class ResourceKindsList {

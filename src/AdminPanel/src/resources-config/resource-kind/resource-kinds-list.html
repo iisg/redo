@@ -18,6 +18,7 @@
             <tr>
                 <th>${'ID' | t}</th>
                 <th>${'Name' | t}</th>
+                <th>${'Workflow' | t}</th>
             </tr>
         </thead>
         <tfoot>
@@ -42,6 +43,9 @@
                         disabled-link.bind="resourceKind.pendingRequest">
                         ${resourceKind.label | inCurrentLanguage}
                     </a>
+                </td>
+                <td>
+                    ${resourceKind.workflow ? resourceKind.workflow.name : '-' | inCurrentLanguage}
                 </td>
             </tr>
         </tbody>
