@@ -68,7 +68,10 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
             ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getResource()->getKind()))
             ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResourceKind($command->getResource()->getKind()))
             ->attribute('contents', $this->resourceDoesNotContainDuplicatedFilenamesRule)
-            ->attribute('contents', $this->lockedMetadataValuesAreUnchangedRule->forResource($command->getResource()));
+            ->attribute(
+                'contents',
+                $this->lockedMetadataValuesAreUnchangedRule->forResourceAndTransition($command->getResource(), $command->getTransition())
+            );
     }
 
     private function assertHasTransition($transitionId) {
@@ -86,8 +89,9 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
             return true;
         }
         $transition = $command->getTransition();
-        return $this->transitionPossibilityChecker
+        $this->transitionPossibilityChecker
             ->check($command->getResource(), $command->getContents(), $transition, $command->getExecutor())
-            ->isTransitionPossible();
+            ->assertTransitionIsPossible();
+        return true;
     }
 }

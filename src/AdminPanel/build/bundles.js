@@ -80,6 +80,7 @@ const bundles = function () {
           "bootstrap",
           "change-case",
           "jquery",
+          "lodash",
           "moment",
           "nprogress",
           "nprogress/nprogress.css!text",

@@ -21,7 +21,7 @@ books:
   Workflow: Workflow
   No workflows.: No workflows.
   Resource's state prevents modification of these values.: Resource's state prevents modification of these values.
-  This metadata is required in current state: This metadata is required in current state
+  Metadata value required: Metadata value required
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
@@ -58,7 +58,7 @@ dictionaries:
   Workflow: Workflow
   No workflows.: No workflows.
   Resource's state prevents modification of these values.: Dictionaries state prevents modification of these values.
-  This metadata is required in current state: This metadata is required in current state
+  Metadata value required: Metadata value required
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
@@ -97,7 +97,7 @@ users:
   Workflow: Workflow
   No workflows.: No workflows.
   Resource's state prevents modification of these values.: User's state prevents modification of these values.
-  This metadata is required in current state: This metadata is required in current state
+  Metadata value required: Metadata value required
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:

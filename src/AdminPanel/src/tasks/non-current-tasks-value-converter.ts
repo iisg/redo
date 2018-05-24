@@ -1,7 +1,10 @@
 import {Resource} from "../resources/resource";
+import {CurrentTasksValueConverter} from "./current-tasks-value-converter";
+import {valueConverter} from "aurelia-binding";
 
-export class NonCurrentTasksValueConverter implements ToViewValueConverter {
+@valueConverter('nonCurrentTasks')
+export class NonCurrentTasksValueConverter extends CurrentTasksValueConverter {
   toView(tasks: Resource[]): any {
-    return tasks.filter(resource => Object.keys(resource.transitionAssigneeMetadata).length == 0);
+    return tasks.filter(t => !this.isMyCurrentTask(t));
   }
 }

@@ -9,8 +9,6 @@
 
     <span if.bind="!editing"
         class="page-title">${'Add new resource' | resourceClassTranslation:resourceClass}</span>
-    <span if.bind="validationError"
-        class="error-label">${'Some metadata constraints have not been met. Check the form error and try again.' | t}</span>
     <workflow-froms-tos-display if.bind="showRequiredMetadataAndWorkflowInfo"
         transition.bind="transition"
         places.bind="resource.kind.workflow.places"
@@ -24,6 +22,8 @@
             on-click.call="openImportDialog()">
         </icon-button>
     </div>
+    <span if.bind="validationError"
+        class="error-label">${'Some metadata constraints have not been met. Check the form error and try again.' | t}</span>
     <form submit.delegate="saveResource()">
         <resource-kind-chooser if.bind="!editing"
             resource-class.bind="resourceClass"
@@ -38,20 +38,22 @@
                 contents-validation.bind="resource.contents & validate"
                 parent.bind="parent"
                 resource-class.bind="resourceClass"
+                target-places.bind="targetPlaces"
                 required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
             <div class="form-buttons">
                 <transition-button if.bind="editing && transition"
                     submitting.bind="submitting"
-                    can-apply-transition.bind="canApplyTransition"
                     apply-transition.call="applyTransition()"
                     transition.bind="transition"
                     places.bind="edit.kind.workflow.places"></transition-button>
-                <submit-button submitting.bind="submitting"
-                    editing.bind="editing"></submit-button>
+                <submit-button if.bind="!transition"
+                    submitting.bind="submitting"
+                    editing.bind="editing"
+                    secondary-label="Save"></submit-button>
                 <toggle-button if.bind="editing"
                     primary-icon-name="remove-3"
                     primary-label="Cancel"
-                    disabled.bind="resource.pendingRequest"
+                    disabled.bind="submitting || resource.pendingRequest"
                     on-click.call="cancel()"></toggle-button>
             </div>
         </div>

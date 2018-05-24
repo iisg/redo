@@ -51,6 +51,7 @@ System.config({
     "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.15.0",
     "fetch": "github:github/fetch@1.1.1",
     "jquery": "npm:jquery@3.2.1",
+    "lodash": "npm:lodash@4.17.10",
     "martingust/aurelia-repeat-strategies": "github:martingust/aurelia-repeat-strategies@master",
     "moment": "npm:moment@2.19.1",
     "nprogress": "github:rstacruz/nprogress@0.2.0",

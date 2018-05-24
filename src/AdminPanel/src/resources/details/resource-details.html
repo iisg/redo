@@ -15,12 +15,11 @@
         class="resource-details au-animate fade-inup-outup">
         <div class="name-with-buttons-and-tabs">
             <span class="page-title">${resource | resourceDisplayStrategy:'header'}</span>
-            <template if.bind="resourceDetailsTabs.activeTabId !== 'workflow' && !editing">
+            <template if.bind="!isFormOpened">
                 <apply-transition-button repeat.for="transition of resource.availableTransitions"
                     resource.bind="resource"
                     transition.bind="transition"
-                    can-apply-transition.bind="resource.canApplyTransition(transition)"
-                    click.trigger="toggleEditForm(true, transition)"></apply-transition-button>
+                    click.trigger="showTransitionForm(transition)"></apply-transition-button>
             </template>
             <remove-button hidden.bind="!doNotShowWeWaitForSuperuser"
                 disabled.bind="resource.pendingRequest"
@@ -42,28 +41,21 @@
             </aup-tab-pane>
             <aup-tab-pane tab="details">
                 <div if.bind="resourceDetailsTabs.activeTabId === 'details'">
-                    <template if.bind="!editing">
+                    <template if.bind="!isFormOpened">
                         <resource-metadata-table resource.bind="resource"></resource-metadata-table>
-                        <edit-button toggled.bind="editing"
+                        <edit-button toggled.bind="isFormOpened"
                             disabled.bind="resource.pendingRequest"
-                            on-click.call="toggleEditForm(false)"></edit-button>
+                            on-click.call="showEditForm()"></edit-button>
                     </template>
                     <resource-form else
                         resource-class.bind="resource.resourceClass"
                         edit.bind="resource"
                         submit.call="saveEditedResource(savedResource, transitionId)"
-                        cancel.call="toggleEditForm()"></resource-form>
+                        cancel.call="hideForm()"></resource-form>
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="workflow">
                 <div if.bind="resourceDetailsTabs.activeTabId === 'workflow'">
-                    <div>
-                        <apply-transition-button repeat.for="transition of resource.availableTransitions"
-                            resource.bind="resource"
-                            transition.bind="transition"
-                            can-apply-transition.bind="resource.canApplyTransition(transition)"
-                            click.trigger="toggleEditForm(true, transition)"></apply-transition-button>
-                    </div>
                     <resource-workflow resource.bind="resource"></resource-workflow>
                 </div>
             </aup-tab-pane>

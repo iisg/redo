@@ -9,9 +9,13 @@ import {Resource} from "../../resource";
 export class ApplyTransitionButton {
   @bindable resource: Resource;
   @bindable transition: WorkflowTransition;
-  @bindable canApplyTransition: boolean;
 
   constructor(private i18n: I18N) {
+  }
+
+  @computedFrom("resource", "transition")
+  get canApplyTransition(): boolean {
+    return this.resource.canApplyTransition(this.transition);
   }
 
   @computedFrom('resource', 'transition')

@@ -20,7 +20,7 @@ import {DetailsViewTabs} from "../../resources-config/metadata/details/details-v
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
-  editing = false;
+  isFormOpened = false;
   selectedTransition: WorkflowTransition;
   resultsPerPage: number;
   currentPageNumber: number;
@@ -44,7 +44,7 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   bind() {
     this.urlListener = this.ea.subscribe("router:navigation:success",
-      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit');
+      (event: { instruction: NavigationInstruction }) => this.isFormOpened = event.instruction.queryParams.action == 'edit');
   }
 
   unbind() {
@@ -105,23 +105,29 @@ export class ResourceDetails implements RoutableComponentActivate {
     return !!parentMetadata.constraints.resourceKind.length;
   }
 
-  toggleEditForm(triggerNavigation = true, transition?: WorkflowTransition) {
-    if (!transition || this.resource.canApplyTransition(transition)) {
-      // link can't be generated in the view with route-href because it is impossible to set replace:true there
-      // see https://github.com/aurelia/templating-router/issues/54
-      this.selectedTransition = transition ? transition : new WorkflowTransition();
-      this.updateUrl(!this.editing || !!transition, triggerNavigation);
-      if (!triggerNavigation) {
-        this.editing = !this.editing;
-      }
-    }
+  showTransitionForm(transition: WorkflowTransition) {
+    this.selectedTransition = transition;
+    this.updateUrl({editAction: true, triggerNavigation: true});
+    // form is opened after navigation
+  }
+
+  showEditForm() {
+    this.selectedTransition = undefined;
+    this.updateUrl({editAction: true, triggerNavigation: false});
+    this.isFormOpened = true;
+  }
+
+  hideForm() {
+    this.selectedTransition = undefined;
+    this.updateUrl({editAction: false, triggerNavigation: true});
+    // form is closed after navigation
   }
 
   saveEditedResource(updatedResource: Resource, transitionId: string): Promise<Resource> {
     const originalResource = this.entitySerializer.clone(this.resource);
     $.extend(this.resource, updatedResource);
     return this.applyTransition(updatedResource, transitionId).then(resourceData => {
-      this.toggleEditForm();
+      this.hideForm();
       return this.resource = resourceData;
     }).catch(() => $.extend(this.resource, originalResource));
   }
@@ -147,14 +153,14 @@ export class ResourceDetails implements RoutableComponentActivate {
     }
   }
 
-  private updateUrl(editAction = this.editing, triggerNavigation = false) {
+  private updateUrl(args: {editAction, triggerNavigation} = {editAction: this.isFormOpened, triggerNavigation: false}) {
     const parameters = {};
     if (this.resourceDetailsTabs.activeTabId == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
       parameters['currentPageNumber'] = this.currentPageNumber;
     }
     parameters['id'] = this.resource.id;
-    if (editAction) {
+    if (args.editAction) {
       parameters['action'] = 'edit';
       parameters['tab'] = 'details';
     } else {
@@ -163,7 +169,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     if (this.selectedTransition) {
       parameters['transitionId'] = this.selectedTransition.id;
     }
-    this.router.navigateToRoute('resources/details', parameters, {trigger: triggerNavigation, replace: true});
+    this.router.navigateToRoute('resources/details', parameters, {trigger: args.triggerNavigation, replace: true});
   }
 
   private navigateToParentOrList() {
