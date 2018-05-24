@@ -26,9 +26,7 @@
                         class="buttons">
                         <icon-button icon-name="remove-2"
                             on-click.call="deleteIndex($index)"
-                            disabled.bind="required && $first && $last"
-                            tooltip-text-when-enabled="${'Remove value' | t}"
-                            tooltip-text-when-disabled="${'This metadata is required in current state' | resourceClassTranslation:resource.resourceClass}"></icon-button>
+                            tooltip-text-when-enabled.one-time="'Remove value' | t"></icon-button>
                         <new-metadata-value-button if.bind="$first"
                             metadata.bind="metadata"
                             resource.bind="resource"

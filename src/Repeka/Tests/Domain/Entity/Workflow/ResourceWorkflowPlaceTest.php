@@ -76,4 +76,10 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
         $resourceContents = $resourceContents->withMergedValues(1, null);
         $this->assertEquals([2], $place->getMissingRequiredMetadataIds($resourceContents));
     }
+
+    public function testGettingMissingRequiredMetadataIdsWhenValueIsDefinedButEmpty() {
+        $place = ResourceWorkflowPlace::fromArray(['label' => [], 'requiredMetadataIds' => [1, 2]]);
+        $resourceContents = ResourceContents::fromArray([1 => []]);
+        $this->assertEquals([1, 2], $place->getMissingRequiredMetadataIds($resourceContents));
+    }
 }

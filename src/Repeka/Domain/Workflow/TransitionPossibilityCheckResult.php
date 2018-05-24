@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Domain\Workflow;
 
+use Respect\Validation\Validator;
+
 class TransitionPossibilityCheckResult {
     /** @var int[] */
     private $missingMetadataIds;
@@ -32,5 +34,18 @@ class TransitionPossibilityCheckResult {
 
     public function isOtherUserAssigned(): bool {
         return $this->otherUserAssigned;
+    }
+
+    public function assertTransitionIsPossible() {
+        if (!$this->isTransitionPossible()) {
+            Validator
+                ::attribute(
+                    'missingMetadataIds',
+                    Validator::not(Validator::notEmpty()->setTemplate('Some of required metadata values does not have their values'))
+                )
+                ->attribute('userMissingRequiredRole', Validator::falseVal()->setTemplate('Executor does not have required role'))
+                ->attribute('otherUserAssigned', Validator::falseVal()->setTemplate('Other user is assigned to this transition'))
+                ->assert($this);
+        }
     }
 }

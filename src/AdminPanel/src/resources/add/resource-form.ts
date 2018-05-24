@@ -1,4 +1,3 @@
-import {Resource} from "../resource";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
@@ -17,13 +16,14 @@ import {numberKeysByValue} from "../../common/utils/object-utils";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 import {MetadataValue} from "../metadata-value";
+import {Resource} from "../resource";
 
 @autoinject
 export class ResourceForm {
   @bindable resourceClass: string;
   @bindable parent: Resource;
   @bindable edit: Resource;
-  @bindable submit: (value: {savedResource: Resource, transitionId: string}) => Promise<any>;
+  @bindable submit: (value: { savedResource: Resource, transitionId: string }) => Promise<any>;
   @bindable cancel: () => void;
   resource: Resource = new Resource();
   submitting: boolean = false;
@@ -49,27 +49,31 @@ export class ResourceForm {
     this.setResourceKindsAllowedByParent();
   }
 
+  @computedFrom('transition', 'resource.kind.workflow', 'resource.currentPlaces')
+  get targetPlaces() {
+    if (!this.resource.kind || !this.resource.kind.workflow) {
+      return [];
+    }
+    if (!this.edit) {
+      return [this.resource.kind.workflow.places[0]];
+    }
+    if (this.transition) {
+      return this.transition.tos.map((value) => {
+        const workflowPlaces = this.resource.kind.workflow.places;
+        return workflowPlaces.find(place => place.id === value);
+      });
+    }
+    return this.resource.currentPlaces;
+  }
+
   @computedFrom('resource.id')
   get editing(): boolean {
     return !!this.resource.id;
   }
 
-  @computedFrom('resource.kind')
+  @computedFrom('resource.kind', 'targetPlaces')
   get requiredMetadataIds(): number[] {
-    if (!this.resource.kind || !this.resource.kind.workflow) {
-      return [];
-    }
-    let restrictingMetadata: NumberMap<any> = {};
-    if (this.edit && this.transition) {
-      const places = [];
-      this.transition.tos.forEach(toId => {
-        const workflowPlaces = this.resource.kind.workflow.places;
-        places.push(workflowPlaces.find(place => place.id === toId));
-      });
-      restrictingMetadata = convertToObject(places.map(v => v.restrictingMetadataIds));
-    } else if (!this.edit) {
-      restrictingMetadata = this.resource.kind.workflow.places[0].restrictingMetadataIds;
-    }
+    const restrictingMetadata: NumberMap<any> = convertToObject(this.targetPlaces.map(v => v.restrictingMetadataIds));
     const resourceKindMedatadaIds = this.resource.kind.metadataList.map(metadata => metadata.id);
     return flatten(
       [
@@ -82,18 +86,6 @@ export class ResourceForm {
   requiredMetadataIdsForTransition(): number[] {
     const reasonCollection = this.resource.blockedTransitions[this.transition.id];
     return reasonCollection ? reasonCollection.missingMetadataIds : [];
-  }
-
-  get canApplyTransition(): boolean {
-    const requiredMetadataIds = this.transition ? this.requiredMetadataIdsForTransition() : this.requiredMetadataIds;
-    const contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
-    for (const metadataId of requiredMetadataIds) {
-      let array = contents[metadataId] !== undefined ? contents[metadataId] : [];
-      if (!array.length) {
-        return false;
-      }
-    }
-    return true;
   }
 
   get showRequiredMetadataAndWorkflowInfo(): boolean {

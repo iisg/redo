@@ -20,7 +20,7 @@ books:
   Workflow: Proces
   No workflows.: Brak procesów
   Resource's state prevents modification of these values.: Stan zasobu uniemożliwia modyfikację tych wartości.
-  This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
+  Metadata value required: Wartość metadanej jest wymagana
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
@@ -57,7 +57,7 @@ dictionaries:
   Workflow: Proces słownikowy
   No workflows.: Brak procesów
   Resource's state prevents modification of these values.: Stan słownika uniemożliwia modyfikację tych wartości.
-  This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
+  Metadata value required: Wartość metadanej jest wymagana
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
@@ -97,7 +97,7 @@ users:
   Workflow: Proces
   No workflows.: Brak procesów
   Resource's state prevents modification of these values.: Stan użytkownika uniemożliwia modyfikację tych wartości.
-  This metadata is required in current state: Ta metadana jest wymagana w bieżącym stanie
+  Metadata value required: Wartość metadanej jest wymagana
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:

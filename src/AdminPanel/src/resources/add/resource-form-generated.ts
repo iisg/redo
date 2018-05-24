@@ -14,6 +14,8 @@ import {ValidationController} from "aurelia-validation";
 import {EntitySerializer} from "../../common/dto/entity-serializer";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {MetadataValue} from "../metadata-value";
+import {WorkflowPlace} from './../../workflows/workflow';
+import {debounce} from "lodash";
 
 @autoinject
 export class ResourceFormGenerated {
@@ -23,6 +25,7 @@ export class ResourceFormGenerated {
   @bindable resourceClass: string;
   @bindable requiredMetadataIdsForTransition: number[];
   @bindable validationController: ValidationController;
+  @bindable targetPlaces: WorkflowPlace[];
 
   currentLanguageCode: string;
   lockedMetadataIds: number[];
@@ -70,10 +73,9 @@ export class ResourceFormGenerated {
 
   requiredMetadataIdsForTransitionChanged() {
     this.buildMetadataValidators();
-    this.signaler.signal('require-metadata-for-transition-changed');
   }
 
-  private buildMetadataValidators() {
+  private buildMetadataValidators = debounce(() => {
     this.contentsValidator = {};
     if (!this.resourceKind) {
       return;
@@ -85,7 +87,8 @@ export class ResourceFormGenerated {
       }
       this.contentsValidator[clonedMetadata.id] = this.allMetadataValidator.createRules(clonedMetadata).rules;
     }
-  }
+    this.signaler.signal('metadata-validators-changed');
+  }, 500);
 
   private setResourceContents() {
     const previousMetadata = Object.keys(this.resource.contents);
@@ -112,20 +115,25 @@ export class ResourceFormGenerated {
     }
   }
 
+  targetPlacesChanged() {
+    if (this.targetPlaces) {
+      const assigneeMetadataIds = flatten(
+        this.targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.ASSIGNEE))
+      );
+      const autoAssignMetadataIds = flatten(
+        this.targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.AUTOASSIGN))
+      );
+      this.requiredMetadataIds = flatten(
+        this.targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.REQUIRED))
+      ).concat(assigneeMetadataIds);
+      this.lockedMetadataIds = flatten(
+        this.targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.LOCKED))
+      ).concat(assigneeMetadataIds).concat(autoAssignMetadataIds);
+    }
+    this.resourceKindChanged();
+  }
+
   resourceChanged() {
-    const currentPlaces = this.resource.currentPlaces || [];
-    const assigneeMetadataIds = flatten(
-      currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.ASSIGNEE))
-    );
-    const autoAssignMetadataIds = flatten(
-      currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.AUTOASSIGN))
-    );
-    this.requiredMetadataIds = flatten(
-      currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.REQUIRED))
-    ).concat(assigneeMetadataIds);
-    this.lockedMetadataIds = flatten(
-      currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.LOCKED))
-    ).concat(assigneeMetadataIds).concat(autoAssignMetadataIds);
     this.resourceKindChanged();
   }
 

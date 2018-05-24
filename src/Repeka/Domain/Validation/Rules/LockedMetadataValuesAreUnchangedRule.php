@@ -7,15 +7,20 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
+use Repeka\Domain\Utils\EntityUtils;
 use Respect\Validation\Rules\AbstractRule;
 
 class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
     /** @var ResourceEntity */
     private $resource;
+    /** @var ResourceWorkflowTransition */
+    private $transition;
 
-    public function forResource(ResourceEntity $resource): LockedMetadataValuesAreUnchangedRule {
+    public function forResourceAndTransition(ResourceEntity $resource, ResourceWorkflowTransition $transition = null): self {
         $instance = new self();
         $instance->resource = $resource;
+        $instance->transition = $transition;
         return $instance;
     }
 
@@ -29,10 +34,15 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
         if ($workflow === null) {
             return true;
         }
-        /** @var ResourceWorkflowPlace[] $currentPlaces */
-        $currentPlaces = $workflow->getPlaces($this->resource);
+        Assertion::notNull(
+            $this->transition,
+            'Transition not set. Use forTransition() to create validator for specific transition first.'
+        );
+        $toIds = $this->transition->getToIds();
+        /** @var ResourceWorkflowPlace[] $nextPlaces */
+        $nextPlaces = EntityUtils::getByIds($toIds, $workflow->getPlaces());
         $currentContents = $this->resource->getContents();
-        $lockedMetadataIds = $this->getLockedMetadataIds($currentContents, $currentPlaces);
+        $lockedMetadataIds = $this->getLockedMetadataIds($currentContents, $nextPlaces);
         $modifiedLockedMetadataIds = $this->getModifiedLockedMetadataIds($currentContents, $newContents, $lockedMetadataIds);
         if (count($modifiedLockedMetadataIds) > 0) {
             sort($modifiedLockedMetadataIds);
@@ -44,14 +54,13 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
     }
 
     /**
-     * @param ResourceWorkflowPlace[] $currentContents
-     * @param ResourceWorkflowPlace[] $currentPlaces
+     * @param ResourceWorkflowPlace[] $targetPlaces
      * @return int[]
      */
-    private function getLockedMetadataIds(ResourceContents $currentContents, array $currentPlaces): array {
+    private function getLockedMetadataIds(ResourceContents $currentContents, array $targetPlaces): array {
         $lockedIds = [];
-        foreach ($currentPlaces as $currentPlace) {
-            $lockedIds = array_merge($lockedIds, $currentPlace->restrictingMetadataIds()->locked()->assignees()->autoAssign()->get());
+        foreach ($targetPlaces as $targetPlace) {
+            $lockedIds = array_merge($lockedIds, $targetPlace->restrictingMetadataIds()->locked()->assignees()->autoAssign()->get());
         }
         $lockedIds = array_intersect(
             array_keys($currentContents->toArray()),
