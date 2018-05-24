@@ -5,6 +5,7 @@ import {RoutableComponentActivate, RouteConfig, Router, NavigationInstruction} f
 import {autoinject} from "aurelia-dependency-injection";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {I18N} from "aurelia-i18n";
+import {ContextResourceClass} from 'resources/context/context-resource-class';
 
 @autoinject
 export class ResourceKindDetails implements RoutableComponentActivate {
@@ -20,7 +21,8 @@ export class ResourceKindDetails implements RoutableComponentActivate {
               private router: Router,
               private ea: EventAggregator,
               private i18n: I18N,
-              private deleteEntityConfirmation: DeleteEntityConfirmation) {
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private contextResourceClass: ContextResourceClass) {
   }
 
   bind() {
@@ -39,6 +41,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   async activate(params: any, routeConfig: RouteConfig) {
     this.resourceKind = await this.resourceKindRepository.get(params.id);
     this.activateTabs();
+    this.contextResourceClass.setCurrent(this.resourceKind.resourceClass);
   }
 
   activateTabs() {

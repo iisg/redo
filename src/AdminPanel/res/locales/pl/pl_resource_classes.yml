@@ -3,6 +3,7 @@ books:
   resources/details: Zasoby
   settings: Ustawienia zasobów
   resource-kinds: Rodzaje zasobów
+  resource-kinds/details: Rodzaje zasobów
   metadata: Rodzaje metadanych
   metadata/details: Rodzaje metadanych
   workflows: Procesy
@@ -39,6 +40,7 @@ dictionaries:
   resources/details: Słowniki
   settings: Ustawienia słowników
   resource-kinds: Rodzaje słowników
+  resource-kinds/details: Rodzaje słowników
   metadata: Rodzaje metadanych
   metadata/details: Rodzaje metadanych
   workflows: Procesy
@@ -75,6 +77,7 @@ users:
   resources: Użytkownicy
   settings: Ustawienia użytkowników
   resource-kinds: Rodzaje użytkowników
+  resource-kinds/details: Rodzaje użytkowników
   resources/details: Użytkownicy
   metadata: Rodzaje metadanych
   metadata/details: Rodzaje metadanych

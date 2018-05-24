@@ -5,17 +5,25 @@ import {RouteFilter} from "../../routes/route-filter";
 import {AbstractRoute, NavRole} from "../../routes/routing-builder";
 import {Configure} from "aurelia-configuration";
 import {values} from "../../utils/object-utils";
+import {ContextResourceClass, ResourceClassChangeEvent} from "../../../resources/context/context-resource-class";
 
 @autoinject
 export class NestedNavigationMenu {
   items: NavItem[];
+  private currentClass: string;
 
   constructor(private eventAggregator: EventAggregator,
               private router: Router,
               private routeFilter: RouteFilter,
               private config: Configure) {
+    eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
+      (event: ResourceClassChangeEvent) => this.updateResourceClass(event));
     eventAggregator.subscribe("router:navigation:complete", () => this.updateActiveItems());
     this.getMenuItems();
+  }
+
+  private updateResourceClass(event: ResourceClassChangeEvent): void {
+    this.currentClass = event.newResourceClass;
   }
 
   private updateActiveItems() {
@@ -23,7 +31,7 @@ export class NestedNavigationMenu {
     if (!currentInstruction) {
       return;
     }
-    this.items.forEach(item => item.updateActive(currentInstruction));
+    this.items.forEach(item => item.updateActive(currentInstruction, this.currentClass));
   }
 
   private getMenuItems() {
@@ -51,7 +59,6 @@ export class NestedNavigationMenu {
       );
       middle = middle.concat(primary).concat(secondary);
     }
-
     this.items = [].concat(top).concat(middle).concat(bottom);
   }
 
@@ -66,7 +73,7 @@ interface NavItem {
   className?: string;
   active: boolean;
 
-  updateActive(currentInstruction: NavigationInstruction): void;
+  updateActive(currentInstruction: NavigationInstruction, currentClass: string): void;
 }
 
 class NavLink implements NavItem {
@@ -81,7 +88,18 @@ class NavLink implements NavItem {
     this.params = {resourceClass: className};
   }
 
-  updateActive(currentInstruction: NavigationInstruction): void {
+  updateActive(currentInstruction: NavigationInstruction, currentClass: string): void {
+    const linkConfig = currentInstruction.config.name.match('^[^\\/]+');
+    const resourceClass = currentInstruction.params.resourceClass;
+    const currentLink = `${this.routeName}/${this.className}`;
+    let parentLink = `${linkConfig}/${resourceClass}`;
+    if (currentClass) {
+      parentLink = `${linkConfig}/${currentClass}`;
+    }
+    if (currentLink == parentLink) {
+      this.active = true;
+      return;
+    }
     if (this.routeName != currentInstruction.config.name) {
       this.active = false;
       return;
@@ -108,8 +126,8 @@ class NavGroup implements NavItem {
     this.expanded = !this.expanded;
   }
 
-  updateActive(currentInstruction: NavigationInstruction): void {
-    this.items.forEach(link => link.updateActive(currentInstruction));
+  updateActive(currentInstruction: NavigationInstruction, linkClass: string): void {
+    this.items.forEach(link => link.updateActive(currentInstruction, linkClass));
     this.active = this.items.filter(link => link.active).length > 0;
     this.expanded = this.active;
   }
