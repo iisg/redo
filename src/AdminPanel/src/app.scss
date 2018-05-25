@@ -110,13 +110,16 @@ table {
   width: 100%;
   &:not(.transparent) {
     thead {
-      color: white;
-      background-color: $grey;
       th {
+        position: sticky;
+        top: 0;
         font-weight: normal;
+        background-color: $grey;
+        color: white;
       }
     }
     tbody {
+      vertical-align: top;
       tr {
         @include transition(background-color .3s);
         &:nth-child(2n + 1) {
@@ -168,15 +171,6 @@ table {
   }
   &.transparent {
     background: none;
-  }
-  &.with-sticky-header {
-    thead {
-      th {
-        position: sticky;
-        top: 0;
-        background-color: $grey;
-      }
-    }
   }
   td.with-throbber {
     width: 1em;
