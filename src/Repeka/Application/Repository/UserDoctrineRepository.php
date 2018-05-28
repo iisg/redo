@@ -17,7 +17,7 @@ class UserDoctrineRepository extends AbstractRepository implements UserRepositor
             <<<SQL
             SELECT "user".* FROM "user"
               INNER JOIN "resource" user_data ON "user".user_data_id = user_data.id
-              WHERE (contents->'$usernameMetadataId'->0->'value')::jsonb @> :username
+              WHERE (contents->'$usernameMetadataId'->0->'value')::jsonb @> LOWER(:username)::JSONB
 SQL
             ,
             $resultSetMapping

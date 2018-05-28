@@ -19,6 +19,15 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertNotContains('nieudane', $client->getResponse()->getContent());
     }
 
+    public function testAuthSuccessWithUppercaseUsername() {
+        $client = $this->authenticate(strtoupper(AdminAccountFixture::USERNAME), AdminAccountFixture::PASSWORD);
+        /** @var UserEntity $user */
+        $user = $this->getAuthenticatedUser($client);
+        $this->assertNotNull($user);
+        $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());
+        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+    }
+
     public function testAuditAuthSuccess() {
         $this->testAuthSuccess();
         /** @var AuditEntryRepository $auditRepository */
