@@ -17,7 +17,9 @@ class DispatchCommandEventsMiddleware implements CommandBusMiddleware {
     }
 
     public function handle(Command $command, callable $next) {
-        $this->dispatch(new BeforeCommandHandlingEvent($command));
+        $beforeCommandHandlingEvent = new BeforeCommandHandlingEvent($command);
+        $this->dispatch($beforeCommandHandlingEvent);
+        $command = $beforeCommandHandlingEvent->getCommand();
         try {
             $result = $next($command);
             $this->dispatch(new CommandHandledEvent($command, $result));

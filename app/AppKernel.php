@@ -19,6 +19,7 @@ class AppKernel extends Kernel {
             new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
             new Repeka\Application\RepekaBundle(),
             new Repeka\Plugins\Ocr\RepekaOcrPluginBundle(),
+            new Repeka\Plugins\MetadataValueSetter\RepekaMetadataValueSetterPluginBundle(),
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
