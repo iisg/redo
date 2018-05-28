@@ -9,7 +9,7 @@ class AuthenticateCommandIntegrationTest extends IntegrationTestCase {
         $credentials = implode(' ', [AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD]);
         $output = $this->executeCommand('repeka:authenticate ' . $credentials);
         $this->assertContains('Credentials valid', $output);
-        $this->assertContains('(1)', $output);
+        $this->assertContains(strval(AdminAccountFixture::ADMIN_USER_ID), $output);
     }
 
     public function testAuthFailure() {

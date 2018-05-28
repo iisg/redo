@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration\Traits;
 
 use Psr\Container\ContainerInterface;
+use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
@@ -29,7 +30,7 @@ trait FixtureHelpers {
     }
 
     private function getAdminUser(): User {
-        return $this->handleCommand(new UserQuery(1));
+        return $this->handleCommand(new UserQuery(AdminAccountFixture::ADMIN_USER_ID));
     }
 
     protected function findMetadataByName(string $name, string $resourceClass = 'books'): Metadata {
