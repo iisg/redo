@@ -41,3 +41,4 @@ metadata kind is used in some resource kinds: rodzaj metadanej jest używany prz
 metadata kind has submetadata kinds: rodzaj metadanej ma podmetadane
 relationship must be constrained to users because metadata determines assignee: relacja musi być ograniczona do użytkowników, bo metadana określa osobę odpowiedzialną
 Workflow places you want to delete are occupied: Występują zasoby w miejscach które chcesz usunąć z procesu
+First place cannot contain assignee metadata: W pierwszym stanie nie można wymagać przypisania osoby

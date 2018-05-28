@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandValidator;
+use Repeka\Domain\Validation\Rules\NoAssigneeMetadataInFirstPlaceRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
@@ -25,12 +26,14 @@ class ResourceWorkflowCreateCommandValidatorTest extends \PHPUnit_Framework_Test
         $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
         $workflowTransitionNamesMatchInAllLanguagesRule =
             $this->createRuleWithFactoryMethodMock(WorkflowTransitionNamesMatchInAllLanguagesRule::class, "withPlaces", true);
+        $noAssigneeMetadataInFirstPlaceRule = $this->createRuleMock(NoAssigneeMetadataInFirstPlaceRule::class, true);
         $this->validator = new ResourceWorkflowCreateCommandValidator(
             $notBlankInAllLanguagesRule,
             $resourceClassExistsRule,
             $workflowTransitionsDefinitionIsValidRule,
             $workflowPlacesDefinitionIsValidRule,
-            $workflowTransitionNamesMatchInAllLanguagesRule
+            $workflowTransitionNamesMatchInAllLanguagesRule,
+            $noAssigneeMetadataInFirstPlaceRule
         );
     }
 
@@ -47,12 +50,14 @@ class ResourceWorkflowCreateCommandValidatorTest extends \PHPUnit_Framework_Test
         $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
         $workflowTransitionNamesMatchInAllLanguagesRule =
             $this->createRuleWithFactoryMethodMock(WorkflowTransitionNamesMatchInAllLanguagesRule::class, "withPlaces", true);
+        $noAssigneeMetadataInFirstPlaceRule = $this->createRuleMock(NoAssigneeMetadataInFirstPlaceRule::class, true);
         $validator = new ResourceWorkflowCreateCommandValidator(
             $notBlankInAllLanguagesRule,
             $resourceClassExistsRule,
             $workflowTransitionsDefinitionIsValidRule,
             $workflowPlacesDefinitionIsValidRule,
-            $workflowTransitionNamesMatchInAllLanguagesRule
+            $workflowTransitionNamesMatchInAllLanguagesRule,
+            $noAssigneeMetadataInFirstPlaceRule
         );
         $command = new ResourceWorkflowCreateCommand([], [], [], 'books', null, null);
         $this->assertFalse($validator->isValid($command));
@@ -66,14 +71,38 @@ class ResourceWorkflowCreateCommandValidatorTest extends \PHPUnit_Framework_Test
         $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
         $workflowTransitionNamesMatchInAllLanguagesRule =
             $this->createRuleWithFactoryMethodMock(WorkflowTransitionNamesMatchInAllLanguagesRule::class, "withPlaces", false);
+        $noAssigneeMetadataInFirstPlaceRule = $this->createRuleMock(NoAssigneeMetadataInFirstPlaceRule::class, true);
         $validator = new ResourceWorkflowCreateCommandValidator(
             $notBlankInAllLanguagesRule,
             $resourceClassExistsRule,
             $workflowTransitionsDefinitionIsValidRule,
             $workflowPlacesDefinitionIsValidRule,
-            $workflowTransitionNamesMatchInAllLanguagesRule
+            $workflowTransitionNamesMatchInAllLanguagesRule,
+            $noAssigneeMetadataInFirstPlaceRule
         );
         $command = new ResourceWorkflowCreateCommand([], [], [], 'books', null, null);
+        $this->assertFalse($validator->isValid($command));
+    }
+
+    public function testInvalidWhenAssigneeMetadataIsSet() {
+        $place = $this->createWorkflowPlaceMock(1, [], [2]);
+        $entityExistsMock = $this->createEntityExistsMock(true);
+        $notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
+        $resourceClassExistsRule = $this->createRuleMock(ResourceClassExistsRule::class, true);
+        $workflowPlacesDefinitionIsValidRule = new WorkflowPlacesDefinitionIsValidRule($entityExistsMock);
+        $workflowTransitionsDefinitionIsValidRule = $this->createRuleMock(WorkflowTransitionsDefinitionIsValidRule::class, true);
+        $workflowTransitionNamesMatchInAllLanguagesRule =
+            $this->createRuleWithFactoryMethodMock(WorkflowTransitionNamesMatchInAllLanguagesRule::class, "withPlaces", false);
+        $noAssigneeMetadataInFirstPlaceRule = $this->createRuleMock(NoAssigneeMetadataInFirstPlaceRule::class, false);
+        $validator = new ResourceWorkflowCreateCommandValidator(
+            $notBlankInAllLanguagesRule,
+            $resourceClassExistsRule,
+            $workflowTransitionsDefinitionIsValidRule,
+            $workflowPlacesDefinitionIsValidRule,
+            $workflowTransitionNamesMatchInAllLanguagesRule,
+            $noAssigneeMetadataInFirstPlaceRule
+        );
+        $command = new ResourceWorkflowCreateCommand([], [$place], [], 'books', null, null);
         $this->assertFalse($validator->isValid($command));
     }
 }
