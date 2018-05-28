@@ -3,6 +3,7 @@ namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
+use Repeka\Domain\Validation\Rules\NoAssigneeMetadataInFirstPlaceRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
@@ -24,6 +25,8 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
     private $workflowPlacesDefinitionIsValidRule;
     /** @var WorkflowTransitionNamesMatchInAllLanguagesRule */
     private $workflowTransitionNamesMatchInAllLanguagesRule;
+    /** @var NoAssigneeMetadataInFirstPlaceRule */
+    private $noAssigneeMetadataInFirstPlaceRule;
 
     /** @SuppressWarnings("PHPMD.LongVariable") */
     public function __construct(
@@ -31,13 +34,15 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
         ResourceClassExistsRule $resourceClassExistsRule,
         WorkflowTransitionsDefinitionIsValidRule $workflowTransitionsDefinitionIsValidRule,
         WorkflowPlacesDefinitionIsValidRule $workflowPlacesDefinitionIsValidRule,
-        WorkflowTransitionNamesMatchInAllLanguagesRule $workflowTransitionNamesMatchInAllLanguagesRule
+        WorkflowTransitionNamesMatchInAllLanguagesRule $workflowTransitionNamesMatchInAllLanguagesRule,
+        NoAssigneeMetadataInFirstPlaceRule $noAssigneeMetadataInFirstPlaceRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->resourceClassExistsRule = $resourceClassExistsRule;
         $this->workflowTransitionsDefinitionIsValidRule = $workflowTransitionsDefinitionIsValidRule;
         $this->workflowPlacesDefinitionIsValidRule = $workflowPlacesDefinitionIsValidRule;
         $this->workflowTransitionNamesMatchInAllLanguagesRule = $workflowTransitionNamesMatchInAllLanguagesRule;
+        $this->noAssigneeMetadataInFirstPlaceRule = $noAssigneeMetadataInFirstPlaceRule;
     }
 
     /**
@@ -48,6 +53,7 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
         return Validator
             ::attribute('name', $this->notBlankInAllLanguagesRule)
             ->attribute('places', $this->workflowPlacesDefinitionIsValidRule)
+            ->attribute('places', $this->noAssigneeMetadataInFirstPlaceRule)
             ->attribute('transitions', $this->workflowTransitionsDefinitionIsValidRule)
             ->attribute('resourceClass', $this->resourceClassExistsRule)
             ->attribute('transitions', $this->workflowTransitionNamesMatchInAllLanguagesRule->withPlaces($command->getPlaces()));

@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration;
 
+use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
@@ -13,9 +14,11 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 use Repeka\Tests\Domain\Factory\SampleResourceWorkflowDriverFactory;
+use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceIntegrationTest extends IntegrationTestCase {
+    use FixtureHelpers;
     const ENDPOINT = '/api/resources';
 
     /** @var Metadata */

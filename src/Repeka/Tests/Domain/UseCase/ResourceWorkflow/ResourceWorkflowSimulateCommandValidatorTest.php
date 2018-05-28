@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommandValidator;
+use Repeka\Domain\Validation\Rules\NoAssigneeMetadataInFirstPlaceRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesForDeletionAreUnoccupiedRule;
@@ -25,13 +26,15 @@ class ResourceWorkflowSimulateCommandValidatorTest extends \PHPUnit_Framework_Te
         $workflowPlacesForDeletionAreUnoccupiedRule = $this->createRuleMock(WorkflowPlacesForDeletionAreUnoccupiedRule::class, true);
         $workflowTransitionNamesMatchInAllLanguagesRule =
             $this->createRuleWithFactoryMethodMock(WorkflowTransitionNamesMatchInAllLanguagesRule::class, "withPlaces", true);
+        $noAssigneeMetadataInFirstPlaceRule = $this->createRuleMock(NoAssigneeMetadataInFirstPlaceRule::class, true);
         $this->validator = new ResourceWorkflowSimulateCommandValidator(
             $entityExistsRule,
             $notBlankInAllLanguagesRule,
             $workflowTransitionsDefinitionIsValidRule,
             $workflowPlacesDefinitionIsValidRule,
             $workflowPlacesForDeletionAreUnoccupiedRule,
-            $workflowTransitionNamesMatchInAllLanguagesRule
+            $workflowTransitionNamesMatchInAllLanguagesRule,
+            $noAssigneeMetadataInFirstPlaceRule
         );
     }
 
