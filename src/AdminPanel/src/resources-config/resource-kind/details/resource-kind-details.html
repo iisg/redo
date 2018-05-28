@@ -12,8 +12,8 @@
             <span class="page-title">
                 ${ resourceKind.label | inCurrentLanguage }
             </span>
-            <remove-button if.bind="!editing"
-                disabled.bind="resource.pendingRequest"
+            <remove-button if.bind="!editing && resourceKind.id > 0"
+                disabled.bind="resourceKind.pendingRequest"
                 on-click.call="deleteResourceKind()"></remove-button>
             <pending-throbber entity.bind="resourceKind"></pending-throbber>
             <aup-tabs tabs.bind="resourceKindDetailsTabs"></aup-tabs>
