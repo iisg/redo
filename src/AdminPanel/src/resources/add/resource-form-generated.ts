@@ -117,12 +117,15 @@ export class ResourceFormGenerated {
     const assigneeMetadataIds = flatten(
       currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.ASSIGNEE))
     );
+    const autoAssignMetadataIds = flatten(
+      currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.AUTOASSIGN))
+    );
     this.requiredMetadataIds = flatten(
       currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.REQUIRED))
     ).concat(assigneeMetadataIds);
     this.lockedMetadataIds = flatten(
       currentPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.LOCKED))
-    );
+    ).concat(assigneeMetadataIds).concat(autoAssignMetadataIds);
     this.resourceKindChanged();
   }
 
