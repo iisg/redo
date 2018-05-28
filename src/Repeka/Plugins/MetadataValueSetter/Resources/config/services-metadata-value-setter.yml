@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Repeka\Plugins\MetadataValueSetter\EventListener\MetadataValueSetterOnResourceTransitionListener:
+    tags:
+      - { event: command_before.resource_transition, name: kernel.event_listener, method: onResourceTransition }
+
+  Repeka\Plugins\MetadataValueSetter\Model\:
+    resource: '../../Model'

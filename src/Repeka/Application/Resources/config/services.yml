@@ -29,8 +29,8 @@ services:
       - '@Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\AdjustCommandMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\AuditCommandMiddleware'
-      - '@Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware'
+      - '@Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\WrapCommandWithTransactionMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware'
 

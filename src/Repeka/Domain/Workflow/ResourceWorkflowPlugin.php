@@ -17,6 +17,10 @@ abstract class ResourceWorkflowPlugin {
             return [];
         }
         $places = $resource->getWorkflow()->getPlaces($resource);
+        return $this->getOptionFromPlaces($name, $places);
+    }
+
+    public function getOptionFromPlaces(string $name, array $places): array {
         $values = [];
         foreach ($places as $place) {
             $values[$place->getId()] = $place->getPluginConfig($this->getName())[$name] ?? null;

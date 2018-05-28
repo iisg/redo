@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 abstract class CqrsCommandEvent extends Event {
     /** @var Command */
-    private $command;
+    protected $command;
 
     public function __construct(Command $command) {
         $this->command = $command;
