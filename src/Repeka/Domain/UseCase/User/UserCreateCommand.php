@@ -2,9 +2,10 @@
 namespace Repeka\Domain\UseCase\User;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Entity\ResourceContents;
 
-class UserCreateCommand extends AbstractCommand {
+class UserCreateCommand extends AbstractCommand implements AdjustableCommand {
     /** @var string */
     private $username;
     /** @var null|string */
