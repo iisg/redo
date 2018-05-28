@@ -102,9 +102,15 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     if (selectedIndex == undefined && this.multiple) {
       selectedIndex = [];
     }
-    this.value = Array.isArray(selectedIndex)
-      ? (selectedIndex as number[]).map(index => this.values[index])
-      : this.values[selectedIndex];
+    if (Array.isArray(selectedIndex)) {
+      if (selectedIndex.length == 1 && selectedIndex[0] === '') {
+        this.value = [];
+      } else {
+        this.value = (selectedIndex as number[]).map(index => this.values[index]);
+      }
+    } else {
+      this.value = this.values[selectedIndex];
+    }
     setTimeout(() => this.element.dispatchEvent(ChangeEvent.newInstance()));
   }
 
