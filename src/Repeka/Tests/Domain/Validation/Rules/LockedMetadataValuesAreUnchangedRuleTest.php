@@ -160,4 +160,13 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
         $newContents = ResourceContents::fromArray([1 => ['foo', 'bar'], 2 => ['quux']]);
         $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
     }
+
+    public function testConsidersAutoAssignMetadataLocked() {
+        $place1 = new ResourceWorkflowPlace([], null, [], [1], [], [2]);
+        $this->workflow->method('getPlaces')->willReturn([$place1]);
+        $oldContents = ResourceContents::fromArray([1 => ['foo', 'bar'], 2 => ['baz']]);
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = ResourceContents::fromArray([1 => ['foo', 'bar'], 2 => ['quux']]);
+        $this->assertFalse($this->rule->forResource($this->resource)->validate($newContents));
+    }
 }
