@@ -24,10 +24,10 @@ class ResourceMetadataAutoAssignListener {
         $command = $event->getCommand();
         $resource = $command->getResource();
         $executor = $command->getExecutor();
-        $this->autoAssingMetadata($resource, $executor);
+        $this->autoAssignMetadata($resource, $executor);
     }
 
-    private function autoAssingMetadata(ResourceEntity $resource, ?User $executor = null): ResourceEntity {
+    private function autoAssignMetadata(ResourceEntity $resource, ?User $executor = null): ResourceEntity {
         if (!$resource->getKind()->getWorkflow() || !$executor) {
             return $resource;
         }
@@ -37,8 +37,9 @@ class ResourceMetadataAutoAssignListener {
         $autoAssignMetadataIds = $this->getAutoAssignMetadataIds($resource);
         foreach ($autoAssignMetadataIds as $metadataId) {
             if (in_array($metadataId, $resourceMetadataIds)) {
-                if (!in_array($executor->getId(), $resourceContents->getValues($metadataId))) {
-                    $newResourceContents = $resourceContents->withMergedValues($metadataId, [$executor->getId()]);
+                $executorResourceId = $executor->getUserData()->getId();
+                if (!in_array($executorResourceId, $resourceContents->getValues($metadataId))) {
+                    $newResourceContents = $resourceContents->withMergedValues($metadataId, [$executorResourceId]);
                     $resource = $this->commandBus->handle(
                         new ResourceUpdateContentsCommand($resource, $newResourceContents, $executor)
                     );
