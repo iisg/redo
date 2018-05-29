@@ -1,5 +1,7 @@
 @import "../common/styles";
 
+$minimum-width-of-input-field-for-dynamic-column: 75px;
+
 .audit-page {
   & > div {
     &, & > * {
@@ -11,10 +13,25 @@
   }
 
   table {
-    .failure {
-      td {
-        background-color: rgba($red, .2);
+    .input-with-remove-button {
+      display: flex;
+      input {
+        min-width: $minimum-width-of-input-field-for-dynamic-column;
+        margin-right: $default-gap-size / 8;
       }
+      remove-button {
+        margin-left: $default-gap-size / 8;
+        button {
+          height: 100%;
+          padding-left: $default-gap-size / 2;
+          padding-right: $default-gap-size / 2;
+        }
+      }
+    }
+  }
+  .failure {
+    td {
+      background-color: rgba($red, .2);
     }
   }
 }

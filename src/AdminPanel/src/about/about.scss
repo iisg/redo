@@ -1,5 +1,12 @@
+@import "../common/styles";
+
 .about-the-application {
+    padding: $default-gap-size;
+    text-align: center;
     redo-logo {
         height: 200px;
+    }
+    version-display {
+        display: inline-block;
     }
 }

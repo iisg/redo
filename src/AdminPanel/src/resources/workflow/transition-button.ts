@@ -1,14 +1,14 @@
-import {bindable} from "aurelia-templating";
-import {WorkflowPlace, WorkflowTransition} from "workflows/workflow";
-import {VoidFunction} from "common/utils/function-utils";
 import {computedFrom} from "aurelia-binding";
+import {bindable} from "aurelia-templating";
+import {VoidFunction} from "common/utils/function-utils";
+import {WorkflowPlace, WorkflowTransition} from "workflows/workflow";
 import {inArray} from "../../common/utils/array-utils";
 
 export class TransitionButton {
-  @bindable submitting: boolean;
   @bindable transition: WorkflowTransition;
   @bindable places: WorkflowPlace[] = [];
   @bindable applyTransition: VoidFunction;
+  @bindable submitting: boolean;
 
   @computedFrom('transition', 'places')
   get tos(): WorkflowPlace[] {

@@ -4,8 +4,8 @@
     <toggle-button containerless
         primary-icon-name="forward"
         primary-label="${!transition || transition.label | inCurrentLanguage}"
-        disabled.bind="submitting"
         throbber-displayed.bind="submitting"
+        disabled.bind="submitting"
         on-click.call="applyTransition()">
         <template replace-part="additional-button-content">
             <span>${'And move to state' | t}:</span>

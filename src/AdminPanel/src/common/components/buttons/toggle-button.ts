@@ -1,7 +1,6 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable} from "aurelia-templating";
-import {booleanAttribute} from "../boolean-attribute";
 import {I18N} from "aurelia-i18n";
+import {bindable} from "aurelia-templating";
 
 @autoinject
 export class ToggleButton {
@@ -11,10 +10,11 @@ export class ToggleButton {
     @bindable secondaryIconName: string;
     @bindable secondaryLabel: string;
     @bindable entityName: string;
+    @bindable showTooltipsInsteadOfLabels: boolean;
+    @bindable toggled: boolean;
+    @bindable throbberDisplayed: boolean;
+    @bindable disabled: boolean;
     @bindable onClick: () => void;
-    @bindable @booleanAttribute toggled: boolean;
-    @bindable @booleanAttribute throbberDisplayed: boolean;
-    @bindable @booleanAttribute disabled: boolean;
     displayedPrimaryLabel: string;
     displayedSecondaryLabel: string;
 

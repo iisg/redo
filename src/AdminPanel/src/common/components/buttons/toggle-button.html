@@ -2,7 +2,8 @@
     <button class="${toggled ? 'toggled' : ''}"
         type="${type}"
         disabled.bind="disabled"
-        click.trigger="!onClick || onClick()">
+        click.trigger="!onClick || onClick()"
+        bootstrap-tooltip.bind="showTooltipsInsteadOfLabels ? toggled ? displayedSecondaryLabel : displayedPrimaryLabel : ''">
         <template if.bind="!throbberDisplayed">
             <div if.bind="secondaryIconName">
                 <icon class="${toggled ? '' : 'visible'}"
@@ -17,7 +18,7 @@
                 size="1.25"></icon>
         </template>
         <throbber else></throbber>
-        <span if.bind="primaryLabel">${toggled ? displayedSecondaryLabel : displayedPrimaryLabel}</span>
+        <span if.bind="primaryLabel && !showTooltipsInsteadOfLabels">${toggled ? displayedSecondaryLabel : displayedPrimaryLabel}</span>
         <template part="additional-button-content"
             replaceable></template>
     </button>

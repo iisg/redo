@@ -1,11 +1,11 @@
-import {DOM} from "aurelia-framework";
 import {autoinject} from "aurelia-dependency-injection";
+import {DOM} from "aurelia-framework";
 import {bindable} from "aurelia-templating";
 
 @autoinject
-export class MoveUpDownButtons {
-  @bindable showUp: boolean = true;
-  @bindable showDown: boolean = true;
+export class MoveUpOrDownButtons {
+  @bindable showUpButton: boolean = true;
+  @bindable showDownButton: boolean = true;
 
   constructor(private element: Element) {
   }

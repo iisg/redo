@@ -1,7 +1,6 @@
 <template>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="common/components/buttons/icon-button"></require>
-    <require from="common/components/buttons/toggle-button"></require>
     <require from="./resource-form-generated"></require>
     <require from="../metadata/required-metadata-list"></require>
     <require from="workflows/details/transitions/workflow-froms-tos-display"></require>
@@ -42,19 +41,17 @@
                 required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
             <div class="form-buttons">
                 <transition-button if.bind="editing && transition"
-                    submitting.bind="submitting"
-                    apply-transition.call="applyTransition()"
                     transition.bind="transition"
-                    places.bind="edit.kind.workflow.places"></transition-button>
-                <submit-button if.bind="!transition"
+                    places.bind="edit.kind.workflow.places"
                     submitting.bind="submitting"
+                    apply-transition.call="applyTransition()"></transition-button>
+                <submit-button if.bind="!transition"
+                    secondary-label="Save"
                     editing.bind="editing"
-                    secondary-label="Save"></submit-button>
-                <toggle-button if.bind="editing"
-                    primary-icon-name="remove-3"
-                    primary-label="Cancel"
-                    disabled.bind="submitting || resource.pendingRequest"
-                    on-click.call="cancel()"></toggle-button>
+                    submitting.bind="submitting"></submit-button>
+                <cancel-button if.bind="editing"
+                    disabled.bind="resource.pendingRequest || submitting"
+                    on-click.call="cancel()"></cancel-button>
             </div>
         </div>
     </form>

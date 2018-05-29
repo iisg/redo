@@ -1,5 +1,5 @@
 ﻿Value in this metadata is required: Wartość dla tej metadanej jest wymagana
-"No more than {{maxCount}} values allowed": "Maksymlana liczba wartości: {{maxCount}}"
+"No more than {{maxCount}} values allowed": "Maksymalna liczba wartości: {{maxCount}}"
 "Value must fit the regular expression: {{regex}}": "Wartość musi pasować do wyrażenia regularnego: {{regex}}"
 "Value must be between {{minMaxValue.min}} and {{minMaxValue.max}}": "Wartość musi zawierać się w zakresie od {{minMaxValue.min}} do {{minMaxValue.max}}"
 "Value must be at most {{minMaxValue.max}}": "Wartość nie może być większa niż {{minMaxValue.max}}"

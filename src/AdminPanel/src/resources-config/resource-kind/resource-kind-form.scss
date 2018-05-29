@@ -1,32 +1,41 @@
 @import "../../common/styles";
 
 resource-kind-form {
-  display: block;
-  &, & > :not(form), & > form > div {
-    padding: $default-gap-size / 2;
-    .resource-kind-form-metadata-item {
-      .top-right-buttons {
-        margin-top: 0;
-      }
-      h3 {
-        margin: 5px 0;
-      }
+  width: 100%;
+  .resource-kind-edit-form-metadata-item {
+    padding: $default-gap-size / 4;
+    & > div > :not(move-up-or-down-buttons):not(.buttons), & > resource-kind-metadata-form {
+      margin: $default-gap-size / 4;
     }
-    .form-buttons {
-      > toggle-button {
-        button {
-          background-color: transparent;
-          &:hover:not([disabled]) {
-            background-color: $light-grey;
-          }
-          icon {
-            color: $red;
-          }
-          span {
-            color: $default-text-color;
-          }
+    & > div {
+      display: flex;
+      align-items: center;
+      .title {
+        font-size: $subtitle-font-size;
+      }
+      .metadata-name {
+        font-weight: bold;
+      }
+      .metadata-id {
+        color: $lightish-grey;
+      }
+      move-up-or-down-buttons, .buttons {
+        display: flex;
+        margin-left: auto;
+        padding: $default-gap-size / 8;
+        & > * {
+          margin: $default-gap-size / 8;
         }
       }
+    }
+    & > resource-kind-metadata-form {
+      display: block;
+      padding: $default-gap-size /4;
+    }
+    h3 {
+      display: inline-block;
+      margin-top: 0;
+      margin-bottom: 0;
     }
   }
 }

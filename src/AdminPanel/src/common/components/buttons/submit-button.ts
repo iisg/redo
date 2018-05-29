@@ -1,15 +1,14 @@
-import {bindable, customElement, useView} from "aurelia-templating";
-import {booleanAttribute} from "../boolean-attribute";
-import {ToggleButton} from "./toggle-button";
-import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
+import {I18N} from "aurelia-i18n";
+import {bindable, customElement, useView} from "aurelia-templating";
+import {ToggleButton} from "./toggle-button";
 
 @useView('./toggle-button.html')
 @customElement('submit-button')
 @autoinject
 export class SubmitButton extends ToggleButton {
-  @bindable @booleanAttribute editing: boolean;
-  @bindable @booleanAttribute submitting: boolean;
+  @bindable editing: boolean;
+  @bindable submitting: boolean;
 
   constructor(i18n: I18N) {
     super(i18n);

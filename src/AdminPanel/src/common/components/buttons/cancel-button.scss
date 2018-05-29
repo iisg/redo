@@ -1,0 +1,5 @@
+@import "../../styles";
+
+cancel-button {
+    @include toggle-button($red);
+}

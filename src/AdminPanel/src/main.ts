@@ -1,26 +1,26 @@
-import "bootstrap";
 import "arrive";
+import {Configure} from "aurelia-configuration";
 import {Aurelia, LogManager} from "aurelia-framework";
 import {ConsoleAppender} from "aurelia-logging-console";
-import {configure as configureHttpClient} from "config/http-client";
+import "bootstrap";
 import {MetricsCollector} from "common/metrics/metrics-collector";
 import {MetricsEventListener} from "common/metrics/metrics-event-listener";
 import {CustomValidationRules} from "common/validation/custom-validation-rules";
 import {installValidationMessageLocalization} from "common/validation/validation-message-localization";
-import {CurrentUserFetcher} from "users/current/current-user-fetcher";
+import {configure as configureHttpClient} from "config/http-client";
 import {i18nConfiguratorFactory} from "config/i18n";
+import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {GuiLanguage} from "./common/i18n/gui-language";
-import {Configure} from "aurelia-configuration";
+import {dialogConfigurator} from "./config/dialog";
 import {Language} from "./resources-config/language-config/language";
 import {Metadata} from "./resources-config/metadata/metadata";
 import {ResourceKind} from "./resources-config/resource-kind/resource-kind";
-import {Resource} from "./resources/resource";
-import {User} from "./users/user";
-import {UserRole} from "./users/roles/user-role";
-import {Workflow} from "./workflows/workflow";
 import {WorkflowIdMapper} from "./resources-config/resource-kind/resource-kind-mapping";
-import {dialogConfigurator} from "./config/dialog";
+import {Resource} from "./resources/resource";
 import {ResourceMapper} from "./resources/resource-mapping";
+import {UserRole} from "./users/roles/user-role";
+import {User} from "./users/user";
+import {Workflow} from "./workflows/workflow";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -53,6 +53,7 @@ export function configure(aurelia: Aurelia) {
       'resources-config/resource-kind/display-strategies/resource-display-strategy',
       'common/components/promise-button/promise-button',
       'common/components/buttons/submit-button',
+      'common/components/buttons/cancel-button',
       'common/http-client/invalid-command-message.html', // used in alerts by GlobalExceptionInterceptor
       'resources/details/resource-link',
       'common/value-converters/resource-class-translation-value-converter'
