@@ -2,7 +2,7 @@
 
 resource-form {
   display: block;
-  &, & > :not(form), & > form > resource-kind-chooser, & > form > div > * {
+  &, & > :not(form), & > form > resource-kind-chooser {
     padding: $default-gap-size / 2;
   }
 
@@ -17,25 +17,6 @@ resource-form {
         display: block;
         icon[size] {
           height: 40px;
-        }
-      }
-    }
-  }
-
-  & > form {
-    & > div {
-      & > .form-buttons > toggle-button {
-        button {
-          background-color: transparent;
-          &:hover:not([disabled]) {
-            background-color: $light-grey;
-          }
-          icon {
-            color: $red;
-          }
-          span {
-            color: $default-text-color;
-          }
         }
       }
     }

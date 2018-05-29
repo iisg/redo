@@ -3,10 +3,12 @@
     <require from="./workflow-chooser"></require>
     <require from="./resource-kind-metadata-form"></require>
     <require from="../metadata/metadata-form"></require>
-    <require from="./move-up-down-buttons"></require>
+    <require from="./move-up-or-down-buttons"></require>
+    <require from="common/components/buttons/toggle-button"></require>
+    <require from="common/components/buttons/edit-button"></require>
+    <require from="common/components/buttons/remove-button"></require>
     <require from="./display-strategies/resource-display-strategies-form"></require>
     <require from="resources-config/metadata/constraint/resource-kind/resource-kind-constraint-editor"></require>
-    <require from="common/components/buttons/toggle-button"></require>
 
     <form submit.delegate="validateAndSubmit()"
         class="form-with-buttons">
@@ -19,55 +21,49 @@
                 class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
                 <div class="row">
                     <div class="col-xs-12">
-                        <button type="button"
-                            class="btn pull-right ${sortingMetadata ? 'btn-primary' : 'btn-default'}"
-                            click.delegate="sortingMetadata = !sortingMetadata"
+                        <toggle-button if.bind="editableMetadataList.length > 1"
+                            class="pull-right"
+                            primary-icon-name="arrows"
+                            primary-label="Change order"
+                            secondary-icon-name="arrows"
+                            secondary-label="Changing order"
+                            toggled.bind="sortingMetadata"
                             disabled.bind="submitting"
-                            show.bind="editableMetadataList.length > 1">
-                            <icon name="arrows"></icon>
-                            ${(sortingMetadata ? 'Changing order' : 'Change order') | t}
-                        </button>
+                            on-click.call="sortingMetadata = !sortingMetadata"></toggle-button>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 resource-kind-edit-form-metadata-item"
-                        repeat.for="metadata of resourceKind.metadataList & validate">
-                        <div class="well"
-                            if.bind="metadata.id != -1">
-                            <div class="btn-group pull-right top-right-buttons"
-                                show.bind="!sortingMetadata">
-                                <button class="btn btn-default ${metadata.overwriteForm ? 'active' : ''}"
-                                    type="button"
-                                    click.delegate="metadata.overwriteForm = !metadata.overwriteForm">
-                                    <icon name="edit-2"></icon>
-                                </button>
-                                <button class="btn btn-danger"
-                                    if.bind="canRemoveMetadata(metadata)"
-                                    type="button"
-                                    click.delegate="removeMetadata(metadata)">
-                                    <icon name="remove-3"></icon>
-                                </button>
+                <div>
+                    <div repeat.for="metadata of editableMetadataList & validate"
+                    class="resource-kind-edit-form-metadata-item well">
+                        <div>
+                            <span class="metadata-name ${metadata.overwriteForm ? 'title' : ''}">${originalMetadata(metadata).name}</span>
+                            <span class="metadata-id ${metadata.overwriteForm ? 'title' : ''}">ID: ${originalMetadata(metadata).id}</span>
+                            <icon if.bind="metadata.shownInBrief"
+                                name="show"></icon>
+                            <icon if.bind="metadata.copyToChildResource"
+                                name="edit"></icon>
+                            <move-up-or-down-buttons if.bind="sortingMetadata"
+                                show-up-button.bind="!$first"
+                                show-down-button.bind="!$last"
+                                up.delegate="moveUp(metadata)"
+                                down.delegate="moveDown(metadata)"></move-up-or-down-buttons>
+                            <div else
+                                class="buttons">
+                                <edit-button class="${metadata.overwriteForm ? 'active' : ''}"
+                                    secondary-label="Close"
+                                    toggled.bind="metadata.overwriteForm"
+                                    on-click.call="metadata.overwriteForm = !metadata.overwriteForm"
+                                    show-tooltips-instead-of-labels.bind="true"></edit-button>
+                                <remove-button if.bind="canRemoveMetadata(metadata)"
+                                    on-click.call="removeMetadata(metadata)"
+                                    show-tooltips-instead-of-labels="true"></remove-button>
                             </div>
-                            <h3>
-                                <move-up-down-buttons class="pull-right"
-                                    show-up.bind="!$first"
-                                    show-down.bind="!$last"
-                                    up.delegate="moveUp(metadata)"
-                                    down.delegate="moveDown(metadata)"
-                                    show.bind="sortingMetadata"></move-up-down-buttons>
-                                ${originalMetadata(metadata).name}
-                                <span class="small text-muted">ID: ${originalMetadata(metadata).id}</span>
-                                <icon if.bind="metadata.shownInBrief"
-                                    name="show"></icon>
-                                <icon if.bind="metadata.copyToChildResource"
-                                    name="edit"></icon>
-                            </h3>
-                            <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
-                                metadata.bind="metadata"
-                                original-metadata.bind="originalMetadata(metadata)"
-                                editing.bind="editing"
-                                resource-class.bind="resourceClass"></resource-kind-metadata-form>
                         </div>
+                        <resource-kind-metadata-form show.bind="!sortingMetadata && metadata.overwriteForm"
+                            metadata.bind="metadata"
+                            original-metadata.bind="originalMetadata(metadata)"
+                            editing.bind="editing"
+                            resource-class.bind="resourceClass"></resource-kind-metadata-form>
                     </div>
                 </div>
             </div>
@@ -100,12 +96,10 @@
             </div>
         </div>
         <div class="form-buttons">
-            <submit-button submitting.bind="submitting"
-                editing.bind="editing"></submit-button>
-            <toggle-button primary-icon-name="remove-3"
-                primary-label="Cancel"
-                disabled.bind="resourceKind.pendingRequest"
-                on-click.call="cancel()"></toggle-button>
+            <submit-button editing.bind="editing"
+                submitting.bind="submitting"></submit-button>
+            <cancel-button disabled.bind="resourceKind.pendingRequest || submitting"
+                on-click.call="cancel()"></cancel-button>
         </div>
     </form>
 </template>

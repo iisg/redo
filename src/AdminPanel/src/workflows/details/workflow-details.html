@@ -5,34 +5,29 @@
     <require from="common/components/buttons/edit-button"></require>
     <require from="./workflow-edit-form"></require>
 
-    <loading-bar if.bind="!workflow"></loading-bar>
-
     <div if.bind="workflow"
         class="workflow-details au-animate fade-inup-outup">
-
         <div class="pull-right">
             <pending-throbber entity.bind="workflow"></pending-throbber>
             <remove-button if.bind="!editing"
                 disabled.bind="workflow.pendingRequest"
                 on-click.call="deleteWorkflow()"></remove-button>
-            <edit-button toggled.bind="editing"
+            <edit-button if.bind="!editing"
                 disabled.bind="workflow.pendingRequest"
                 on-click.call="toggleEditForm()"></edit-button>
         </div>
-
         <h1>${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</h1>
-
-        <div if.bind="editing">
-            <workflow-edit-form workflow.bind="workflow"
-                submit.delegate="update()"
-                resource-class.bind="workflow.resourceClass"></workflow-edit-form>
-        </div>
-
-        <div else>
+        <workflow-edit-form if.bind="editing"
+            workflow.bind="workflow"
+            submit.delegate="update()"
+            resource-class.bind="workflow.resourceClass"
+            on-cancel.call="toggleEditForm()"
+            editing></workflow-edit-form>
+        <template else>
             <workflow-graph-display workflow.bind="workflow"></workflow-graph-display>
             <excel workflow.bind="workflow"
                 resource-class.bind="workflow.resourceClass"></excel>
-        </div>
-
+        </template>
     </div>
+    <loading-bar else></loading-bar>
 </template>

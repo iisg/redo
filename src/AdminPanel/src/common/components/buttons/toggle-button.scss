@@ -1,5 +1,5 @@
 @import "../../styles";
 
-toggle-button {
+toggle-button, add-button, edit-button, submit-button, .toggle-button {
     @include toggle-button();
 }

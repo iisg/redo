@@ -3,7 +3,7 @@
 
 $default-padding-or-margin-of-elements: $default-gap-size / 2;
 
-$resource-class-name-font-size: 16px;
+$resource-class-name-font-size: $subtitle-font-size;
 $breadcrumbs-font-size: 11px;
 $page-title-background-color: white;
 $breadcrumbs-and-options-text-color: $grey;
@@ -124,7 +124,7 @@ top-bar {
           }
         }
         & > span {
-          font-size: 16px;
+          font-size: $subtitle-font-size;
         }
         & > button {
           cursor: pointer;

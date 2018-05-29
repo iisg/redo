@@ -24,16 +24,11 @@
         </div>
         <div class="form-group text-right">
             <div class="btn-group text-nowrap">
-                <button type="button"
-                    class="btn btn-warning"
-                    click.delegate="cancel()"
-                    if.bind="editing"
-                    disabled.bind="submitting">
-                    <icon name="remove-3"></icon>
-                    ${'Cancel' | t}
-                </button>
-                <submit-button submitting.bind="submitting"
-                    editing.bind="editing"></submit-button>
+                <cancel-button if.bind="editing"
+                    disabled.bind="submitting"
+                    on-click.call="cancel()"></cancel-button>
+                <submit-button editing.bind="editing"
+                    submitting.bind="submitting"></submit-button>
             </div>
         </div>
     </form>

@@ -1,21 +1,28 @@
-import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
-import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
-import {bindable} from "aurelia-templating";
-import {Workflow} from "../workflow";
 import {autoinject} from "aurelia-dependency-injection";
 import {DOM} from "aurelia-framework";
-import {WorkflowGraphEditorReady} from "./graph/workflow-graph-events";
+import {Router} from "aurelia-router";
+import {bindable} from "aurelia-templating";
+import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
+import {booleanAttribute} from "common/components/boolean-attribute";
+import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
+import {Workflow} from "../workflow";
 import {WorkflowGraphEditor} from "./graph/workflow-graph-editor";
+import {WorkflowGraphEditorReady} from "./graph/workflow-graph-events";
 import {WorkflowGraphManager} from "./graph/workflow-graph-manager";
 
 @autoinject
 export class WorkflowEditForm {
   @bindable workflow: Workflow = new Workflow;
   @bindable resourceClass: string;
+  @bindable onCancel = () => {
+    this.router.navigateToRoute('workflows', {resourceClass: this.resourceClass});
+  };
+  @bindable @booleanAttribute editing: boolean;
   private controller: ValidationController;
   private editor: WorkflowGraphEditor;
 
   constructor(validationControllerFactory: ValidationControllerFactory,
+              private router: Router,
               private element: Element,
               private graphManager: WorkflowGraphManager) {
     this.controller = validationControllerFactory.createForCurrentScope();
