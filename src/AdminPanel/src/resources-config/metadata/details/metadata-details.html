@@ -13,7 +13,7 @@
         class="metadata-details au-animate fade-inup-outup">
 
         <div class="name-with-buttons-and-tabs">
-            <h1>${'Metadata' | t} #${ metadata.id }</h1>
+            <h1>${'Metadata_single' | t} #${ metadata.id }</h1>
             <remove-button if.bind="!editing || metadata.id > 0"
                 disabled.bind="metadata.pendingRequest"
                 on-click.call="deleteMetadata()"></remove-button>
@@ -21,14 +21,14 @@
             <aup-tabs tabs.bind="metadataDetailsTabs"></aup-tabs>
         </div>
         <aup-tab-content>
-            <aup-tab-pane tab="child-metadata-tab">
-                <div if.bind="currentTabId === 'child-metadata-tab'">
+            <aup-tab-pane tab="child-metadata">
+                <div if.bind="metadataDetailsTabs.activeTabId === 'child-metadata'">
                     <metadata-list parent-metadata.bind="metadata"
                         resource-class.bind="metadata.resourceClass"></metadata-list>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="details-tab">
-                <div if.bind="currentTabId === 'details-tab'">
+            <aup-tab-pane tab="details">
+                <div if.bind="metadataDetailsTabs.activeTabId === 'details'">
                     <template if.bind="!editing">
                         <metadata-details-list metadata.bind="metadata"></metadata-details-list>
                         <edit-button toggled.bind="editing"
@@ -43,8 +43,8 @@
                         cancel.call="toggleEditForm()"></metadata-form>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="constraints-tab">
-                <div if.bind="currentTabId === 'constraints-tab'">
+            <aup-tab-pane tab="constraints">
+                <div if.bind="metadataDetailsTabs.activeTabId === 'constraints'">
                     <dl class="constraints-list dl-horizontal">
                         <template repeat.for="constraintName of constraintNames">
                             <dt class="constraints-term-name"> ${'metadata_constraints::labels//' + constraintName | t}</dt>
@@ -56,13 +56,11 @@
                     </dl>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="resource-kinds-tab">
-                <div if.bind="currentTabId === 'resource-kinds-tab'">
-                    <div class="resource-kinds">
-                        <resource-kinds-list resource-kinds.bind="resourceKindList"
-                            resource-class.bind="metadata.resourceClass"
-                            hide-add-button></resource-kinds-list>
-                    </div>
+            <aup-tab-pane tab="resource-kinds">
+                <div if.bind="metadataDetailsTabs.activeTabId === 'resource-kinds'">
+                    <resource-kinds-list resource-kinds.bind="resourceKindList"
+                        resource-class.bind="metadata.resourceClass"
+                        hide-add-button></resource-kinds-list>
                 </div>
             </aup-tab-pane>
         </aup-tab-content>

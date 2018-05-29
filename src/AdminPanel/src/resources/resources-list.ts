@@ -191,7 +191,7 @@ export class ResourcesList {
     const href = window.location.href;
     const currentParameters = parseQueryString(href.slice(href.indexOf('?')));
     const parameters = {};
-    parameters['currentTabId'] = currentParameters['currentTabId'];
+    parameters['tab'] = currentParameters['tab'];
     if (this.parentResource) {
       route = 'resources/details';
       parameters['id'] = this.parentResource.id;
@@ -201,7 +201,7 @@ export class ResourcesList {
     }
     parameters['contentsFilter'] = JSON.stringify(this.contentsFilter);
     parameters['sortBy'] = JSON.stringify(this.sortBy);
-    if (!currentParameters['currentTabId'] || currentParameters['currentTabId'] == 'child-resources-tab') {
+    if (!currentParameters['tab'] || currentParameters['tab'] == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
       parameters['currentPageNumber'] = this.currentPageNumber;
     }

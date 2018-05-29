@@ -19,14 +19,9 @@
             <aup-tabs tabs.bind="resourceKindDetailsTabs"></aup-tabs>
         </div>
         <aup-tab-content>
-            <aup-tab-pane tab="metadata-tab">
-                <div if.bind="currentTabId === 'metadata-tab'">
-                    <div if.bind="!editing">
-                        <div class="pull-right">
-                            <edit-button toggled.bind="editing"
-                                disabled.bind="resourceKind.pendingRequest"
-                                on-click.call="toggleEditForm(false)"></edit-button>
-                        </div>
+            <aup-tab-pane tab="details">
+                <div if.bind="resourceKindDetailsTabs.activeTabId === 'details'">
+                    <template if.bind="!editing">
                         <dl class="dl-horizontal resource-kind-metadata-table">
                             <template repeat.for="metadata of resourceKind.metadataList">
                                 <div if.bind="metadata.id > 0">
@@ -41,7 +36,10 @@
                                 </div>
                             </template>
                         </dl>
-                    </div>
+                        <edit-button toggled.bind="editing"
+                            disabled.bind="resourceKind.pendingRequest"
+                            on-click.call="toggleEditForm(false)"></edit-button>
+                    </template>
                     <resource-kind-form else
                         resource-class.bind="resourceKind.resourceClass"
                         edit.bind="resourceKind"
@@ -49,8 +47,8 @@
                         cancel.call="toggleEditForm(false)"></resource-kind-form>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="workflow-tab">
-                <div if.bind="currentTabId === 'workflow-tab'">
+            <aup-tab-pane tab="workflow">
+                <div if.bind="resourceKindDetailsTabs.activeTabId === 'workflow'">
                     <workflow-graph-display workflow.bind="resourceKind.workflow"></workflow-graph-display>
                 </div>
             </aup-tab-pane>

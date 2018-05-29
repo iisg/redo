@@ -16,19 +16,18 @@ import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ContextResourceClass} from './../context/context-resource-class';
+import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
   editing = false;
   selectedTransition: WorkflowTransition;
-  hasChildren: boolean;
   resultsPerPage: number;
   currentPageNumber: number;
-  resourceDetailsTabs = [];
-  currentTabId = '';
+  resourceDetailsTabs: DetailsViewTabs;
   numberOfChildren: number;
-  private listeners: Subscription[] = [];
+  private urlListener: Subscription;
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceDisplayStrategy: ResourceDisplayStrategyValueConverter,
@@ -41,23 +40,17 @@ export class ResourceDetails implements RoutableComponentActivate {
               private entitySerializer: EntitySerializer,
               private contextResourceClass: ContextResourceClass,
               private userRoleChecker: UserRoleChecker) {
+    this.resourceDetailsTabs = new DetailsViewTabs(this.ea, () => this.updateUrl());
   }
 
   bind() {
-    this.listeners.push(this.ea.subscribe("router:navigation:success",
-      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit'));
-    this.resourceDetailsTabs.forEach(tab => {
-      this.listeners.push(this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${tab.id}`, () => {
-        this.resourceDetailsTabs.find(currentTab => currentTab.id == this.currentTabId).active = false;
-        this.currentTabId = tab.id;
-        tab.active = true;
-        this.updateURL();
-      }));
-    });
+    this.urlListener = this.ea.subscribe("router:navigation:success",
+      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit');
   }
 
   unbind() {
-    this.listeners.forEach(listener => listener.dispose());
+    this.urlListener.dispose();
+    this.resourceDetailsTabs.clear();
   }
 
   async activate(parameters: any, routeConfiguration: RouteConfig) {
@@ -69,46 +62,35 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.numberOfChildren = resources.length;
     const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
     routeConfiguration.navModel.setTitle(title);
-    this.currentTabId = parameters.currentTabId;
-    this.activateTabs();
-    if (this.currentTabId != parameters.currentTabId) {
-      this.updateURL();
-    }
+    this.activateTabs(parameters.tab);
   }
 
-  activateTabs() {
+  activateTabs(activeTabId) {
     if (this.allowAddChildResource || this.numberOfChildren) {
-      this.resourceDetailsTabs.push({id: 'child-resources-tab', label: `${this.i18n.tr('Child resources')} (${this.numberOfChildren})`});
+      this.resourceDetailsTabs.addTab({id: 'children', label: `${this.i18n.tr('Child resources')} (${this.numberOfChildren})`});
     }
-    this.resourceDetailsTabs.push({id: 'metadata-tab', label: this.i18n.tr('Metadata list')});
-    this.currentTabId = this.numberOfChildren ? 'child-resources-tab' : 'metadata-tab';
+    this.resourceDetailsTabs
+      .addTab({id: 'details', label: this.i18n.tr('Metadata')})
+      .setDefaultTabId(this.numberOfChildren ? 'children' : 'details');
     if (this.resource.kind.workflow) {
-      this.resourceDetailsTabs.push({id: 'workflow-tab',
-        label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)});
+      this.resourceDetailsTabs.addTab({
+        id: 'workflow',
+        label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)
+      });
     }
     if (this.resource.kind.id == SystemResourceKinds.USER_ID) {
-      this.resourceDetailsTabs.push({
-        id: 'user-groups-tab',
+      this.resourceDetailsTabs.addTab({
+        id: 'user-groups',
         label: this.i18n.tr('Groups')
       });
       if (this.userRoleChecker.hasAll(['ADMIN'])) {
-        this.resourceDetailsTabs.push({
-          id: 'user-roles-tab',
+        this.resourceDetailsTabs.addTab({
+          id: 'user-roles',
           label: this.i18n.tr('Roles')
         });
       }
     }
-    const foundTab = this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId);
-    if (foundTab) {
-      foundTab.active = true;
-    } else {
-      if (!this.editing && this.hasChildren) {
-        this.currentTabId = 'child-resources-tab';
-      } else {
-        this.currentTabId = 'metadata-tab';
-      }
-      this.resourceDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
-    }
+    this.resourceDetailsTabs.setActiveTabId(activeTabId);
   }
 
   @computedFrom('this.resource.kind.metadataList', 'this.resource.kind.metadataList.length')
@@ -122,7 +104,7 @@ export class ResourceDetails implements RoutableComponentActivate {
       // link can't be generated in the view with route-href because it is impossible to set replace:true there
       // see https://github.com/aurelia/templating-router/issues/54
       this.selectedTransition = transition ? transition : new WorkflowTransition();
-      this.updateURL(!this.editing || !!transition, triggerNavigation);
+      this.updateUrl(!this.editing || !!transition, triggerNavigation);
       if (!triggerNavigation) {
         this.editing = !this.editing;
       }
@@ -159,18 +141,18 @@ export class ResourceDetails implements RoutableComponentActivate {
     }
   }
 
-  private updateURL(editAction = this.editing, triggerNavigation = false) {
+  private updateUrl(editAction = this.editing, triggerNavigation = false) {
     const parameters = {};
-    if (this.currentTabId == 'child-resources-tab') {
+    if (this.resourceDetailsTabs.activeTabId == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
       parameters['currentPageNumber'] = this.currentPageNumber;
     }
     parameters['id'] = this.resource.id;
     if (editAction) {
       parameters['action'] = 'edit';
-      parameters['currentTabId'] = 'metadata-tab';
+      parameters['tab'] = 'details';
     } else {
-      parameters['currentTabId'] = this.currentTabId;
+      parameters['tab'] = this.resourceDetailsTabs.activeTabId;
     }
     if (this.selectedTransition) {
       parameters['transitionId'] = this.selectedTransition.id;

@@ -15,7 +15,7 @@
         class="resource-details au-animate fade-inup-outup">
         <div class="name-with-buttons-and-tabs">
             <span class="page-title">${resource | resourceDisplayStrategy:'header'}</span>
-            <template if.bind="currentTabId !== 'workflow-tab' && !editing">
+            <template if.bind="resourceDetailsTabs.activeTabId !== 'workflow' && !editing">
                 <apply-transition-button repeat.for="transition of resource.availableTransitions"
                     resource.bind="resource"
                     transition.bind="transition"
@@ -31,7 +31,7 @@
             <aup-tabs tabs.bind="resourceDetailsTabs"></aup-tabs>
         </div>
         <aup-tab-content>
-            <aup-tab-pane tab="child-resources-tab">
+            <aup-tab-pane tab="children">
                 <div if.bind="allowAddChildResource || numberOfChildren">
                     <resources-list parent-resource.bind="resource"
                         has-resources.bind="numberOfChildren"
@@ -40,8 +40,8 @@
                         disable-add-resource.bind="!allowAddChildResource"></resources-list>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="metadata-tab">
-                <div if.bind="currentTabId === 'metadata-tab'">
+            <aup-tab-pane tab="details">
+                <div if.bind="resourceDetailsTabs.activeTabId === 'details'">
                     <template if.bind="!editing">
                         <resource-metadata-table resource.bind="resource"></resource-metadata-table>
                         <edit-button toggled.bind="editing"
@@ -55,8 +55,8 @@
                         cancel.call="toggleEditForm()"></resource-form>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="workflow-tab">
-                <div if.bind="currentTabId === 'workflow-tab'">
+            <aup-tab-pane tab="workflow">
+                <div if.bind="resourceDetailsTabs.activeTabId === 'workflow'">
                     <div>
                         <apply-transition-button repeat.for="transition of resource.availableTransitions"
                             resource.bind="resource"
@@ -67,12 +67,12 @@
                     <resource-workflow resource.bind="resource"></resource-workflow>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="user-groups-tab">
-                <user-groups if.bind="currentTabId === 'user-groups-tab'"
+            <aup-tab-pane tab="user-groups">
+                <user-groups if.bind="resourceDetailsTabs.activeTabId === 'user-groups'"
                     user-data.bind="resource"></user-groups>
             </aup-tab-pane>
-            <aup-tab-pane tab="user-roles-tab">
-                <user-roles-assign if.bind="currentTabId === 'user-roles-tab'"
+            <aup-tab-pane tab="user-roles">
+                <user-roles-assign if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"
                     user-data.bind="resource"></user-roles-assign>
             </aup-tab-pane>
         </aup-tab-content>
