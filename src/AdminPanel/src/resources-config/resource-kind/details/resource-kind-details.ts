@@ -22,7 +22,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
               private i18n: I18N,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private contextResourceClass: ContextResourceClass) {
-    this.resourceKindDetailsTabs = new DetailsViewTabs(this.ea);
+    this.resourceKindDetailsTabs = new DetailsViewTabs(this.ea, () => this.updateUrl());
   }
 
   bind() {
@@ -38,34 +38,42 @@ export class ResourceKindDetails implements RoutableComponentActivate {
 
   async activate(params: any, routeConfig: RouteConfig) {
     this.resourceKind = await this.resourceKindRepository.get(params.id);
-    this.activateTabs();
+    this.activateTabs(params.tab);
     this.contextResourceClass.setCurrent(this.resourceKind.resourceClass);
   }
 
-  activateTabs() {
+  activateTabs(activeTabId: string) {
     // remove parent metadata from metadata length
     const metadataListLength = this.resourceKind.metadataList.length - 1;
     this.resourceKindDetailsTabs.addTab({id: 'details', label: `${this.i18n.tr('Metadata')} (${metadataListLength})`});
     if (this.resourceKind.workflow) {
       this.resourceKindDetailsTabs.addTab({id: 'workflow', label: this.i18n.tr('Workflow')});
     }
+    this.resourceKindDetailsTabs.setActiveTabId(activeTabId);
   }
 
-  toggleEditForm(triggerNavigation = true) {
-    // link can't be generated in the view with route-href because it is impossible to set replace:true there
-    // see https://github.com/aurelia/templating-router/issues/54
-    this.router.navigateToRoute('resource-kinds/details',
-      {id: this.resourceKind.id, action: this.editing ? undefined : 'edit'},
-      {trigger: triggerNavigation, replace: true});
-    if (!triggerNavigation) {
-      this.editing = !this.editing;
+  private updateUrl() {
+    const parameters = {};
+    parameters['id'] = this.resourceKind.id;
+    if (this.editing) {
+      parameters['action'] = 'edit';
+      parameters['tab'] = 'details';
+    } else {
+      parameters['tab'] = this.resourceKindDetailsTabs.activeTabId;
     }
+    this.router.navigateToRoute('resource-kinds/details', parameters, {trigger: false, replace: true});
+  }
+
+  toggleEditForm() {
+    this.editing = !this.editing;
+    this.updateUrl();
   }
 
   saveEditedResourceKind(resourceKind: ResourceKind, changedResourceKind: ResourceKind): Promise<any> {
     resourceKind.pendingRequest = true;
     return this.resourceKindRepository.update(changedResourceKind)
       .then(updated => $.extend(resourceKind, updated))
+      .then(() => this.toggleEditForm())
       .finally(() => resourceKind.pendingRequest = false);
   }
 
