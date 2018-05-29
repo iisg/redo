@@ -11,6 +11,7 @@ import {computedFrom} from "aurelia-binding";
 import {Configure} from "aurelia-configuration";
 import {ResourceKindRepository} from "../../resource-kind/resource-kind-repository";
 import {ResourceKind} from "../../resource-kind/resource-kind";
+import {DetailsViewTabs} from "./details-view-tabs";
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
@@ -18,10 +19,9 @@ export class MetadataDetails implements RoutableComponentActivate {
   metadata: Metadata;
   addFormOpened: boolean = false;
   editing: boolean = false;
-  metadataDetailsTabs = [];
-  currentTabId: string = '';
+  metadataDetailsTabs: DetailsViewTabs;
   numOfChildren: number;
-  private listeners: Subscription[] = [];
+  private urlListener: Subscription;
   resourceKindList: ResourceKind[];
 
   constructor(private metadataRepository: MetadataRepository,
@@ -33,23 +33,17 @@ export class MetadataDetails implements RoutableComponentActivate {
               private entitySerializer: EntitySerializer,
               private contextResourceClass: ContextResourceClass,
               private config: Configure) {
+    this.metadataDetailsTabs = new DetailsViewTabs(this.ea, () => this.updateUrl());
   }
 
   bind() {
-    this.listeners.push(this.ea.subscribe("router:navigation:success",
-      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit'));
-    this.metadataDetailsTabs.forEach(tab => {
-      this.listeners.push(this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${tab.id}`, () => {
-        this.metadataDetailsTabs.find(currentTab => currentTab.id == this.currentTabId).active = false;
-        tab.active = true;
-        this.currentTabId = tab.id;
-        this.updateUrl();
-      }));
-    });
+    this.urlListener = this.ea.subscribe("router:navigation:success",
+      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit');
   }
 
   unbind() {
-    this.listeners.forEach(listener => listener.dispose());
+    this.urlListener.dispose();
+    this.metadataDetailsTabs.clear();
   }
 
   async activate(params: any, routeConfig: RouteConfig) {
@@ -61,23 +55,19 @@ export class MetadataDetails implements RoutableComponentActivate {
       .get();
     this.resourceKindList = await this.resourceKindRepository.getListQuery().filterByMetadataId(this.metadata.id).get();
     this.numOfChildren = metadata.length;
-    this.currentTabId = params.currentTabId;
-    this.activateTabs();
-    if (this.currentTabId != params.currentTabId) {
-      this.updateUrl();
-    }
+    this.buildTabs(params.tab);
   }
 
-  activateTabs() {
-    this.metadataDetailsTabs.push({id: 'child-metadata-tab', label: `${this.i18n.tr('Submetadata kinds')} (${this.numOfChildren})`});
-    this.metadataDetailsTabs.push({id: 'details-tab', label: this.i18n.tr('Details')});
-    this.metadataDetailsTabs.push({id: 'constraints-tab', label: this.i18n.tr('Constraints')});
-    this.currentTabId = this.currentTabId ? this.currentTabId : 'details-tab';
-    this.metadataDetailsTabs.push({
-      id: 'resource-kinds-tab',
-      label: `${this.i18n.tr('resource_classes::' + this.metadata.resourceClass + '//resource-kinds')} (${this.resourceKindList.length})`
-    });
-    this.metadataDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
+  private buildTabs(activeTabId: string) {
+    this.metadataDetailsTabs
+      .addTab({id: 'details', label: this.i18n.tr('Details')})
+      .addTab({id: 'child-metadata', label: `${this.i18n.tr('Submetadata kinds')} (${this.numOfChildren})`})
+      .addTab({id: 'constraints', label: this.i18n.tr('Constraints')})
+      .addTab({
+        id: 'resource-kinds',
+        label: `${this.i18n.tr('resource_classes::' + this.metadata.resourceClass + '//resource-kinds')} (${this.resourceKindList.length})`
+      })
+      .setActiveTabId(activeTabId);
   }
 
   @computedFrom('metadata.constraints', 'metadata.control')
@@ -108,18 +98,18 @@ export class MetadataDetails implements RoutableComponentActivate {
   }
 
   toggleEditForm() {
-    this.updateUrl(!this.editing);
     this.editing = !this.editing;
+    this.updateUrl();
   }
 
-  private updateUrl(editAction = this.editing) {
+  private updateUrl() {
     const parameters = {};
     parameters['id'] = this.metadata.id;
-    if (editAction) {
+    if (this.editing) {
       parameters['action'] = 'edit';
-      parameters['currentTabId'] = 'details-tab';
+      parameters['tab'] = 'details';
     } else {
-      parameters['currentTabId'] = this.currentTabId;
+      parameters['tab'] = this.metadataDetailsTabs.activeTabId;
     }
     this.router.navigateToRoute('metadata/details', parameters, {trigger: false, replace: true});
   }

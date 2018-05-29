@@ -1,19 +1,18 @@
-import {Subscription, EventAggregator} from 'aurelia-event-aggregator';
+import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
 import {ResourceKindRepository} from 'resources-config/resource-kind/resource-kind-repository';
 import {ResourceKind} from 'resources-config/resource-kind/resource-kind';
-import {RoutableComponentActivate, RouteConfig, Router, NavigationInstruction} from "aurelia-router";
+import {NavigationInstruction, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
 import {autoinject} from "aurelia-dependency-injection";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {I18N} from "aurelia-i18n";
 import {ContextResourceClass} from 'resources/context/context-resource-class';
+import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
 
 @autoinject
 export class ResourceKindDetails implements RoutableComponentActivate {
-
   resourceKind: ResourceKind;
   editing: boolean = false;
-  resourceKindDetailsTabs: any[] = [];
-  currentTabId: string = '';
+  resourceKindDetailsTabs: DetailsViewTabs;
 
   private urlListener: Subscription;
 
@@ -23,19 +22,18 @@ export class ResourceKindDetails implements RoutableComponentActivate {
               private i18n: I18N,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private contextResourceClass: ContextResourceClass) {
+    this.resourceKindDetailsTabs = new DetailsViewTabs(this.ea);
   }
 
   bind() {
-    this.urlListener = this.ea.subscribe("router:navigation:success", (event: {instruction: NavigationInstruction}) => {
+    this.urlListener = this.ea.subscribe("router:navigation:success", (event: { instruction: NavigationInstruction }) => {
       this.editing = (event.instruction.queryParams.action == 'edit');
     });
-    this.resourceKindDetailsTabs.forEach(tab => {
-      this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${tab.id}`, () => {
-        this.resourceKindDetailsTabs.find(currentTab => currentTab.id == this.currentTabId).active = false;
-        tab.active = true;
-        this.currentTabId = tab.id;
-      });
-    });
+  }
+
+  unbind() {
+    this.resourceKindDetailsTabs.clear();
+    this.urlListener.dispose();
   }
 
   async activate(params: any, routeConfig: RouteConfig) {
@@ -47,15 +45,10 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   activateTabs() {
     // remove parent metadata from metadata length
     const metadataListLength = this.resourceKind.metadataList.length - 1;
-    this.resourceKindDetailsTabs.push({
-      id: 'metadata-tab',
-      label: `${this.i18n.tr('Metadata list')} (${metadataListLength})`
-    });
+    this.resourceKindDetailsTabs.addTab({id: 'details', label: `${this.i18n.tr('Metadata')} (${metadataListLength})`});
     if (this.resourceKind.workflow) {
-      this.resourceKindDetailsTabs.push({id: 'workflow-tab', label: this.i18n.tr('Workflow')});
+      this.resourceKindDetailsTabs.addTab({id: 'workflow', label: this.i18n.tr('Workflow')});
     }
-    this.currentTabId = 'metadata-tab';
-    this.resourceKindDetailsTabs.find(tab => tab.id == this.currentTabId).active = true;
   }
 
   toggleEditForm(triggerNavigation = true) {

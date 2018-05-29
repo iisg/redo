@@ -1,33 +1,17 @@
 @import "../../common/styles";
 
 .resource-details {
-  #metadata-tab > div {
-    position: relative;
-    display: flex;
-    & > resource-metadata-table {
-      padding: $default-gap-size;
-    }
-    resource-form {
-      flex: 1;
-    }
-    edit-button {
-      position: sticky;
-      top: 0;
-      align-self: baseline;
-      margin-left: auto;
-    }
+  resource-metadata-table {
+    padding: $default-gap-size;
   }
-
-  #workflow-tab > div {
-    padding: $default-gap-size / 2;
-    display: flex;
-    & > div {
-      padding: $default-gap-size / 4;
-      apply-transition-button {
-        margin: $default-gap-size / 4;
-        &, button {
-          width: 100%;
-        }
+  resource-form, resources-list {
+    flex: 1;
+  }
+  .tab-pane {
+    apply-transition-button {
+      margin: $default-gap-size / 4;
+      &, button {
+        width: 100%;
       }
     }
     resource-workflow {
@@ -36,3 +20,4 @@
     }
   }
 }
+
