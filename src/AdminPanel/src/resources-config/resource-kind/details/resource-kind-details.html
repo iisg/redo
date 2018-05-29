@@ -43,8 +43,8 @@
                     <resource-kind-form else
                         resource-class.bind="resourceKind.resourceClass"
                         edit.bind="resourceKind"
-                        submit.call="saveEditedResourceKind(resourceKind, savedResourceKind) && toggleEditForm(false)"
-                        cancel.call="toggleEditForm(false)"></resource-kind-form>
+                        submit.call="saveEditedResourceKind(resourceKind, savedResourceKind)"
+                        cancel.call="toggleEditForm()"></resource-kind-form>
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="workflow">
