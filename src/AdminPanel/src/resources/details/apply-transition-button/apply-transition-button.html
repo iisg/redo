@@ -1,5 +1,6 @@
 <template class="toggle-button">
-    <button disabled.bind="!canApplyTransition">
+    <button disabled.bind="!canApplyTransition"
+        click.trigger="onClick()">
         <span if.bind="transition.label | inCurrentLanguage">${transition.label | inCurrentLanguage}</span>
         <throbber if.bind="!transitionInactiveReasons"></throbber>
         <icon repeat.for="reason of transitionInactiveReasons"
