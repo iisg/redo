@@ -110,10 +110,6 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         return self::joinUrl(static::ENDPOINT, is_object($entity) ? $entity->getId() : $entity);
     }
 
-    protected static function resourceEntityWithTransitionEndpoint(int $resourceId): string {
-        return self::joinUrl(static::ENDPOINT, $resourceId);
-    }
-
     protected function getEntityManager(): EntityManagerInterface {
         return $this->container->get(EntityManagerInterface::class);
     }
@@ -185,8 +181,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {
-        $user = new UserEntity();
-        return $this->handleCommand(new ResourceCreateCommand($resourceKind, ResourceContents::fromArray($contents), $user));
+        return $this->handleCommand(new ResourceCreateCommand($resourceKind, ResourceContents::fromArray($contents)));
     }
 
     protected function createWorkflow(array $name, string $resourceClass, array $places, array $transitions): ResourceWorkflow {

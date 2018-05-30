@@ -76,11 +76,14 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
 
     private function assertHasTransition($transitionId) {
         return function (ResourceEntity $resource) use ($transitionId) {
-            if ($resource->hasWorkflow() && !SystemTransition::isValid($transitionId)) {
+            if (SystemTransition::isValid($transitionId)) {
+                return true;
+            } elseif ($resource->hasWorkflow()) {
                 $transitions = $resource->getWorkflow()->getTransitions($resource);
                 return in_array($transitionId, EntityUtils::mapToIds($transitions));
+            } else {
+                return false;
             }
-            return in_array($transitionId, SystemTransition::toArray());
         };
     }
 
