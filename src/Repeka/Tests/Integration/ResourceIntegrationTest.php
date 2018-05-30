@@ -282,7 +282,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testAutoAssignMetadataWhenEditingResourceWithWorkflow() {
         $client = self::createAdminClient();
-        $endpoint = self::resourceEntityWithTransitionEndpoint($this->resourceWithWorkflow->getId());
+        $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
         $client->apiRequest(
             'POST',
             $endpoint . '?' . http_build_query(['transitionId' => 't1']),
