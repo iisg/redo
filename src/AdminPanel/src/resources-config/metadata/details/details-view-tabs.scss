@@ -1,6 +1,6 @@
 aup-tab-content > .tab-content > .active > div {
   display: flex;
-  & > edit-button {
+  & > edit-button, & > apply-transition-button {
     position: sticky;
     top: 0;
     align-self: baseline;

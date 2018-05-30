@@ -100,22 +100,21 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.resourceDetailsTabs.setActiveTabId(activeTabId);
   }
 
-  @computedFrom('this.resource.kind.metadataList', 'this.resource.kind.metadataList.length')
+  @computedFrom('resource.kind.metadataList', 'resource.kind.metadataList.length')
   get allowAddChildResource(): boolean {
     const parentMetadata = this.resource.kind.metadataList.find(v => v.id === SystemMetadata.PARENT.id);
     return !!parentMetadata.constraints.resourceKind.length;
+  }
+
+  @computedFrom("resource")
+  get updateTransition(): WorkflowTransition {
+    return this.resource.availableTransitions.filter(t => t.id == 'update')[0];
   }
 
   showTransitionForm(transition: WorkflowTransition) {
     this.selectedTransition = transition;
     this.updateUrl({editAction: true, triggerNavigation: true});
     // form is opened after navigation
-  }
-
-  showEditForm() {
-    this.selectedTransition = undefined;
-    this.updateUrl({editAction: true, triggerNavigation: false});
-    this.isFormOpened = true;
   }
 
   hideForm() {
