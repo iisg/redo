@@ -25,21 +25,22 @@ class MetadataValueSetterOnResourceTransitionListener {
         /** @var ResourceTransitionCommand $command */
         $command = $event->getCommand();
         $resource = $command->getResource();
-        $newResourceContents = $resource->getContents();
+        $newResourceContents = $command->getContents();
         $workflow = $resource->getWorkflow();
         if ($workflow) {
-            $places = $command->getTransition()->getToIds();
-            $allPlaces = $workflow->getPlaces();
-            $interestingPlaces = EntityUtils::filterByIds($places, $allPlaces);
+            $targetPlaces = EntityUtils::filterByIds($command->getTransition()->getToIds(), $workflow->getPlaces());
             $content = $resource->getContents();
-            $metadataNames = array_filter($this->configuration->getOptionFromPlaces('metadataName', $interestingPlaces));
-            $metadataValues = array_filter($this->configuration->getOptionFromPlaces('metadataValue', $interestingPlaces));
+            $metadataNames = array_filter($this->configuration->getOptionFromPlaces('metadataName', $targetPlaces));
+            $metadataValues = array_filter($this->configuration->getOptionFromPlaces('metadataValue', $targetPlaces));
             if ($metadataNames && $metadataValues) {
                 foreach ($metadataNames as $key => $value) {
-                    $metadata = $resource->getKind()->getMetadataByIdOrName($value);
-                    $value = $this->strategyEvaluator->render($resource, $metadataValues[$key]);
-                    if (!in_array($value, $newResourceContents->getValues($metadata))) {
-                        $newResourceContents = $content->withMergedValues($metadata, $value);
+                    try {
+                        $metadata = $resource->getKind()->getMetadataByIdOrName($value);
+                        $value = $this->strategyEvaluator->render($resource, $metadataValues[$key]);
+                        if (!in_array($value, $newResourceContents->getValues($metadata))) {
+                            $newResourceContents = $content->withMergedValues($metadata, $value);
+                        }
+                    } catch (\InvalidArgumentException $e) {
                     }
                 }
                 $event->replaceCommand(
