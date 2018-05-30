@@ -19,7 +19,7 @@
                 <apply-transition-button repeat.for="transition of resource.availableTransitions"
                     resource.bind="resource"
                     transition.bind="transition"
-                    click.trigger="showTransitionForm(transition)"></apply-transition-button>
+                    on-click.call="showTransitionForm(transition)"></apply-transition-button>
             </template>
             <remove-button hidden.bind="!doNotShowWeWaitForSuperuser"
                 disabled.bind="resource.pendingRequest"

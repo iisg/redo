@@ -9,6 +9,7 @@ import {Resource} from "../../resource";
 export class ApplyTransitionButton {
   @bindable resource: Resource;
   @bindable transition: WorkflowTransition;
+  @bindable onClick = () => undefined;
 
   constructor(private i18n: I18N) {
   }
