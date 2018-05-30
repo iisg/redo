@@ -1,7 +1,9 @@
 <template>
+    <require from="resources/details/apply-transition-button/transition-label"></require>
     <ul class="possible-actions">
-        <li repeat.for="transition of resource.availableTransitions">
-            ${transition.label | inCurrentLanguage}
+        <li repeat.for="transition of resource.availableTransitions"
+            if.bind="transition.id != 'update'">
+            ${transition | transitionLabel}
         </li>
     </ul>
 </template>

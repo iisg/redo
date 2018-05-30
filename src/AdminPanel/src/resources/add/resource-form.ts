@@ -161,7 +161,7 @@ export class ResourceForm {
     this.validationError = false;
     this.validationController.validate().then(result => {
       if (result.valid) {
-        return this.submit({savedResource: this.resource, transitionId: transitionId})
+        return this.submit({savedResource: this.resource, transitionId})
           .then(() => this.editing || (this.resource = new Resource));
       } else {
         this.validationError = true;

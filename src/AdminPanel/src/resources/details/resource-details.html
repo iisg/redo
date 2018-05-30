@@ -17,6 +17,7 @@
             <span class="page-title">${resource | resourceDisplayStrategy:'header'}</span>
             <template if.bind="!isFormOpened">
                 <apply-transition-button repeat.for="transition of resource.availableTransitions"
+                    if.one-time="transition.id !== 'update'"
                     resource.bind="resource"
                     transition.bind="transition"
                     on-click.call="showTransitionForm(transition)"></apply-transition-button>
@@ -42,9 +43,10 @@
                 <div if.bind="resourceDetailsTabs.activeTabId === 'details'">
                     <template if.bind="!isFormOpened">
                         <resource-metadata-table resource.bind="resource"></resource-metadata-table>
-                        <edit-button toggled.bind="isFormOpened"
-                            disabled.bind="resource.pendingRequest"
-                            on-click.call="showEditForm()"></edit-button>
+                        <apply-transition-button
+                            resource.bind="resource"
+                            transition.bind="updateTransition"
+                            on-click.call="showTransitionForm(updateTransition)"></apply-transition-button>
                     </template>
                     <resource-form else
                         resource-class.bind="resource.resourceClass"

@@ -85,11 +85,16 @@ trait StubsTrait {
     /** @return ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
     protected function createResourceMock(int $id, ?ResourceKind $resourceKind = null, $contents = [], $marking = []): ResourceEntity {
         $mock = $this->createMock(ResourceEntity::class);
+        if (!$resourceKind) {
+            $resourceKind = $this->createResourceKindMock();
+        }
         $mock->method('getKind')->willReturn($resourceKind);
         $mock->method('getId')->willReturn($id);
         $contents = $contents instanceof ResourceContents ? $contents : ResourceContents::fromArray($contents);
         $mock->method('getContents')->willReturn($contents);
         $mock->method('getMarking')->willReturn($marking);
+        $mock->method('hasWorkflow')->willReturn($resourceKind && $resourceKind->getWorkflow());
+        $mock->method('getWorkflow')->willReturn($resourceKind ? $resourceKind->getWorkflow() : null);
         return $mock;
     }
 

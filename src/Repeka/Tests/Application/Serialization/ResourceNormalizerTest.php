@@ -2,19 +2,22 @@
 namespace Repeka\Tests\Application\Serialization;
 
 use Repeka\Application\Serialization\ResourceNormalizer;
-use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Repeka\Domain\Workflow\TransitionPossibilityCheckResult;
+use Repeka\Tests\Traits\StubsTrait;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceWorkflow|\PHPUnit_Framework_MockObject_MockObject */
     private $workflow;
     /** @var ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
@@ -27,10 +30,7 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->workflow = $this->createMock(ResourceWorkflow::class);
-        $this->resource = $this->createMock(ResourceEntity::class);
-        $this->resource->method('hasWorkflow')->willReturn(true);
-        $this->resource->method('getWorkflow')->willReturn($this->workflow);
-        $this->resource->method('getContents')->willReturn(ResourceContents::empty());
+        $this->resource = $this->createResourceMock(1, $this->createResourceKindMock(1, 'books', [], $this->workflow));
         // TokenStorage
         $user = $this->createMock(User::class);
         $token = $this->createMock(TokenInterface::class);
@@ -69,9 +69,29 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $normalized = $this->normalizer->normalize($this->resource);
         $this->assertArrayHasKey('blockedTransitions', $normalized);
         $blockedTransitions = $normalized['blockedTransitions'];
-        $this->assertCount(2, $blockedTransitions);
+        $this->assertCount(3, $blockedTransitions);
         $this->assertArrayHasKey('b', $blockedTransitions);
         $this->assertArrayHasKey('c', $blockedTransitions);
+        $this->assertArrayHasKey('update', $blockedTransitions);
+    }
+
+    public function testGettingAvailableTransitions() {
+        $this->workflow->method('getTransitions')->willReturn([$this->transition('a')]);
+        $this->checker->method('check')->willReturn(new TransitionPossibilityCheckResult([], false, false));
+        $normalized = $this->normalizer->normalize($this->resource);
+        $this->assertArrayHasKey('availableTransitions', $normalized);
+        $availableTransitions = $normalized['availableTransitions'];
+        $this->assertCount(2, $availableTransitions);
+        $this->assertEquals(['a', 'update'], EntityUtils::mapToIds($availableTransitions));
+    }
+
+    public function testGettingAvailableTransitionsForResourceWithoutWorkflow() {
+        $resource = $this->createResourceMock(1);
+        $normalized = $this->normalizer->normalize($resource);
+        $this->assertArrayHasKey('availableTransitions', $normalized);
+        $availableTransitions = $normalized['availableTransitions'];
+        $this->assertCount(1, $availableTransitions);
+        $this->assertEquals(['update'], EntityUtils::mapToIds($availableTransitions));
     }
 
     private function transition(string $id): ResourceWorkflowTransition {

@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Serialization;
 
+use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
@@ -43,17 +44,19 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             'resourceClass' => $resource->getResourceClass(),
             'displayStrategies' => $this->renderDisplayStrategies($resource),
         ];
+        $availableTransitions = [SystemTransition::UPDATE()->toTransition($resource->getKind(), $resource)];
+        $normalizerFunc = [$this->normalizer, 'normalize'];
         if ($resource->hasWorkflow()) {
             $workflow = $resource->getWorkflow();
-            $normalizerFunc = [$this->normalizer, 'normalize'];
             $normalized['currentPlaces'] = array_map($normalizerFunc, $workflow->getPlaces($resource));
-            $normalized['availableTransitions'] = array_map($normalizerFunc, $workflow->getTransitions($resource));
             $normalized['blockedTransitions'] = array_map(
                 $normalizerFunc,
                 $this->getBlockedTransitions($resource, $this->tokenStorage->getToken()->getUser())
             );
             $normalized['transitionAssigneeMetadata'] = $this->getTransitionAssigneeMetadata($workflow, $resource);
+            $availableTransitions = array_merge($workflow->getTransitions($resource), $availableTransitions);
         }
+        $normalized['availableTransitions'] = array_map($normalizerFunc, $availableTransitions);
         return $normalized;
     }
 
@@ -61,7 +64,9 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
     private function getBlockedTransitions(ResourceEntity $resource, User $currentUser): array {
         /** @var TransitionPossibilityCheckResult */
         $failedPossibilityChecks = [];
-        foreach ($resource->getWorkflow()->getTransitions($resource) as $transition) {
+        $transitionsToCheck = $resource->getWorkflow()->getTransitions($resource);
+        $transitionsToCheck[] = SystemTransition::UPDATE()->toTransition($resource->getKind(), $resource);
+        foreach ($transitionsToCheck as $transition) {
             $result = $this->transitionPossibilityChecker->check($resource, $resource->getContents(), $transition, $currentUser);
             if (!$result->isTransitionPossible()) {
                 $failedPossibilityChecks[$transition->getId()] = $result;
