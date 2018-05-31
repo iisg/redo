@@ -60,6 +60,7 @@ export class MetadataDetails implements RoutableComponentActivate {
 
   private buildTabs(activeTabId: string) {
     this.metadataDetailsTabs
+      .clear()
       .addTab({id: 'details', label: this.i18n.tr('Details')})
       .addTab({id: 'child-metadata', label: `${this.i18n.tr('Submetadata kinds')} (${this.numOfChildren})`})
       .addTab({id: 'constraints', label: this.i18n.tr('Constraints')})
