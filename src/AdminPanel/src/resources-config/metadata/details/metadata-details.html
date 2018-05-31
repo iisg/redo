@@ -18,7 +18,7 @@
                 disabled.bind="metadata.pendingRequest"
                 on-click.call="deleteMetadata()"></remove-button>
             <pending-throbber entity.bind="metadata"></pending-throbber>
-            <aup-tabs tabs.bind="metadataDetailsTabs"></aup-tabs>
+            <aup-tabs tabs.bind="metadataDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="child-metadata">

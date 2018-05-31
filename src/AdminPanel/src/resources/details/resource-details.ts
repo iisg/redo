@@ -65,6 +65,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   activateTabs(activeTabId) {
+    this.resourceDetailsTabs.clear();
     if (this.allowAddChildResource || this.numberOfChildren) {
       this.resourceDetailsTabs.addTab({id: 'children', label: `${this.i18n.tr('Child resources')} (${this.numberOfChildren})`});
     }
@@ -153,7 +154,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     }
   }
 
-  private updateUrl(args: {editAction, triggerNavigation} = {editAction: this.isFormOpened, triggerNavigation: false}) {
+  private updateUrl(args: { editAction, triggerNavigation } = {editAction: this.isFormOpened, triggerNavigation: false}) {
     const parameters = {};
     if (this.resourceDetailsTabs.activeTabId == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;

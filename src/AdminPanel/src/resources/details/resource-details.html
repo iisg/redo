@@ -27,7 +27,7 @@
             <div if.bind="resource.pendingRequest">
                 <throbber></throbber>
             </div>
-            <aup-tabs tabs.bind="resourceDetailsTabs"></aup-tabs>
+            <aup-tabs tabs.bind="resourceDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="children">
@@ -65,6 +65,7 @@
             </aup-tab-pane>
             <aup-tab-pane tab="user-roles">
                 <user-roles-assign if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"
+                    class="simple-form"
                     user-data.bind="resource"></user-roles-assign>
             </aup-tab-pane>
         </aup-tab-content>

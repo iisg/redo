@@ -1,19 +1,19 @@
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 
-export class DetailsViewTabs extends Array<DetailsViewTab> {
+export class DetailsViewTabs {
   private defaultTabId: string;
   private tabIds: string[] = [];
   private listeners: Subscription[] = [];
 
+  public tabs: DetailsViewTab[] = [];
   public activeTabId: string;
 
   public constructor(private ea: EventAggregator, private onTabChange: () => void = () => undefined) {
-    super();
   }
 
   public addTab: (tab: DetailsViewTab) => this = (tab: DetailsViewTab) => {
     this.tabIds.push(tab.id);
-    this.push(tab);
+    this.tabs.push(tab);
     if (!this.defaultTabId) {
       this.setDefaultTabId(tab.id);
     }
@@ -33,12 +33,12 @@ export class DetailsViewTabs extends Array<DetailsViewTab> {
   };
 
   public setActiveTabId: (activeTabId: string) => this = (activeTabId: string) => {
-    this.forEach(tab => tab.active = false);
+    this.tabs.forEach(tab => tab.active = false);
     const requestedTabId = activeTabId;
     if (!this.tabExists(activeTabId)) {
       activeTabId = this.defaultTabId;
     }
-    this.find(tab => tab.id == activeTabId).active = true;
+    this.tabs.find(tab => tab.id == activeTabId).active = true;
     this.activeTabId = activeTabId;
     if (requestedTabId && requestedTabId != activeTabId) {
       this.onTabChange();
@@ -49,7 +49,7 @@ export class DetailsViewTabs extends Array<DetailsViewTab> {
   public clear: () => this = () => {
     this.listeners.forEach(listener => listener.dispose());
     this.listeners = [];
-    this.splice(0, this.length);
+    this.tabs = [];
     this.tabIds = [];
     return this;
   };

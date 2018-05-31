@@ -16,7 +16,7 @@
                 disabled.bind="resourceKind.pendingRequest"
                 on-click.call="deleteResourceKind()"></remove-button>
             <pending-throbber entity.bind="resourceKind"></pending-throbber>
-            <aup-tabs tabs.bind="resourceKindDetailsTabs"></aup-tabs>
+            <aup-tabs tabs.bind="resourceKindDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="details">
