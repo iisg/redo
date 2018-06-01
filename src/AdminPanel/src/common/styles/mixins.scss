@@ -11,9 +11,10 @@
   }
 }
 
-@mixin toggle-button($background-color: $blue, $color: white) {
+@mixin toggle-button($background-color: $blue, $color: white, $minimum-height: 28px) {
   display: inline-block;
   button {
+    min-height: $minimum-height;
     padding: $default-gap-size / 8 3 / 4 * $default-gap-size;
     text-transform: uppercase;
     font-weight: bold;

@@ -1,7 +1,6 @@
 @import "../../styles";
 
 $page-number-margin-size: $default-gap-size / 4;
-$elements-per-page-dropdown-minimum-width: 54px;
 
 .pagination-page-numbers {
     display: flex;
@@ -37,8 +36,5 @@ $elements-per-page-dropdown-minimum-width: 54px;
     &, & > * {
         margin-left: $page-number-margin-size;
         margin-right: $page-number-margin-size;
-    }
-    dropdown-select {
-        min-width: $elements-per-page-dropdown-minimum-width;
     }
 }

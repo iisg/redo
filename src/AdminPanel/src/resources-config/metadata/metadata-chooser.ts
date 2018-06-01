@@ -1,39 +1,39 @@
-import {Metadata} from "./metadata";
-import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {MetadataRepository} from "./metadata-repository";
-import {twoWay} from "common/components/binding-mode";
+import {I18N} from "aurelia-i18n";
+import {bindable, customElement} from "aurelia-templating";
+import {EntityChooser} from "common/components/entity-chooser/entity-chooser";
 import {booleanAttribute} from "../../common/components/boolean-attribute";
+import {Metadata} from "./metadata";
+import {MetadataRepository} from "./metadata-repository";
 
+@customElement('metadata-chooser')
 @autoinject
-export class MetadataChooser {
-  @bindable(twoWay) value: Metadata;
-  @bindable(twoWay) hasMetadataToChoose: boolean;
+export class MetadataChooser extends EntityChooser {
   @bindable resourceClass: string | string[];
   @bindable control: string | string[];
-  @bindable filter: (metadata: Metadata) => boolean = () => true;
   @bindable @booleanAttribute setFirstAsDefault: boolean;
-  @bindable @booleanAttribute hideClearButton: boolean;
-  @bindable(twoWay) shouldRefreshResults: boolean;
-
-  metadataList: Metadata[];
-
   private loadingMetadataList = false;
   private reloadMetadataList = false;
 
-  constructor(private metadataRepository: MetadataRepository) {
+  constructor(private metadataRepository: MetadataRepository, i18n: I18N, element: Element) {
+    super(i18n, element);
   }
 
   attached() {
+    super.attached();
     this.loadMetadataList();
   }
 
   resourceClassChanged() {
-    this.loadMetadataList();
+    if (this.entities) {
+      this.loadMetadataList();
+    }
   }
 
   controlChanged() {
-    this.loadMetadataList();
+    if (this.entities) {
+      this.loadMetadataList();
+    }
   }
 
   private loadMetadataList() {
@@ -52,17 +52,21 @@ export class MetadataChooser {
             this.reloadMetadataList = false;
             this.loadMetadataList();
           } else {
-            this.metadataList = metadataList;
-          }
-          if (this.setFirstAsDefault) {
-            if (this.value) {
-              this.value = metadataList.find(metadata => metadata.id == this.value.id);
-            } else {
-              this.value = metadataList[0];
+            this.entities = metadataList;
+            if (this.setFirstAsDefault) {
+              if (this.value) {
+                this.value = metadataList.find(metadata => metadata.id == (this.value as Metadata).id);
+              } else {
+                this.value = metadataList[0];
+              }
             }
           }
         })
         .finally(() => this.loadingMetadataList = false);
     }
+  }
+
+  get isFetchingOptions() {
+    return this.loadingMetadataList;
   }
 }

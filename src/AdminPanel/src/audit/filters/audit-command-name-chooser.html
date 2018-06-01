@@ -3,7 +3,7 @@
 
     <dropdown-select values.bind="availableCommandNames"
         value.bind="commandNames"
-        multiple.one-time="true">
+        multiple>
         <template replace-part="option-template">
             ${ 'audit_commands::' + option | t }
         </template>

@@ -28,6 +28,7 @@ class BindableArgument implements BindableConfig {
 }
 
 export const oneTime: BindableArgument = new BindableArgument({defaultBindingMode: bindingMode.oneTime});
+export const fromView: BindableArgument = new BindableArgument({defaultBindingMode: bindingMode.fromView});
 export const twoWay: BindableArgument = new BindableArgument({defaultBindingMode: bindingMode.twoWay});
 
 export function changeHandler(methodName: string): BindableArgument {

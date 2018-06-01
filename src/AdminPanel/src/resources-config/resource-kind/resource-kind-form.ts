@@ -1,17 +1,17 @@
-import {ResourceKind} from "./resource-kind";
-import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
-import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
+import {computedFrom} from "aurelia-binding";
+import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
-import {computedFrom} from "aurelia-binding";
-import {MetadataRepository} from "../metadata/metadata-repository";
 import {BindingSignaler} from "aurelia-templating-resources";
-import {Metadata} from "../metadata/metadata";
-import {noop, VoidFunction} from "common/utils/function-utils";
-import {move, removeValue} from "common/utils/array-utils";
+import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {move, removeValue} from "common/utils/array-utils";
+import {noop, VoidFunction} from "common/utils/function-utils";
+import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
+import {Metadata} from "../metadata/metadata";
+import {MetadataRepository} from "../metadata/metadata-repository";
 import {SystemMetadata} from "../metadata/system-metadata";
-import {Configure} from "aurelia-configuration";
+import {ResourceKind} from "./resource-kind";
 import {SystemResourceKinds} from "./system-resource-kinds";
 
 @autoinject
@@ -20,7 +20,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
   @bindable cancel: VoidFunction = noop;
   @bindable resourceClass: string;
   @bindable edit: ResourceKind;
-  @bindable metadataListModified: boolean = false;
+  updateResourceKindMetadataChooserValues: () => void;
 
   resourceKind: ResourceKind = new ResourceKind();
   originalMetadataList: Metadata[];
@@ -70,7 +70,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
 
   removeMetadata(metadata: Metadata) {
     removeValue(this.resourceKind.metadataList, metadata);
-    this.metadataListModified = true;
+    this.updateResourceKindMetadataChooserValues();
   }
 
   moveUp(metadata: Metadata) {

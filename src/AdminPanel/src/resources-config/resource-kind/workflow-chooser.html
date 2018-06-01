@@ -4,14 +4,10 @@
     <dropdown-select values.bind="workflows"
         value.bind="value">
         <template replace-part="option-template">
-            <span class="selected-option">
-                ${option.name | inCurrentLanguage}
-            </span>
-            <span class="dropdown-option">
-                <h4>${option.name | inCurrentLanguage}</h4>
-                <img if.bind="option.thumbnail"
-                    src.bind="option.thumbnail">
-            </span>
+            <span>${option.name | inCurrentLanguage}</span>
+            <img if.bind="option.thumbnail"
+                class="workflow-chooser-dropdown-option-thumbnail"
+                src.bind="option.thumbnail">
         </template>
     </dropdown-select>
 </template>

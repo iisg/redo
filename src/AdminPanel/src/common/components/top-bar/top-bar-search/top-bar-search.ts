@@ -1,20 +1,19 @@
-import {ContextResourceClass, ResourceClassChangeEvent} from "./../../../../resources/context/context-resource-class";
-import {Router} from "aurelia-router";
-import {EventAggregator} from "aurelia-event-aggregator";
-import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
+import {autoinject} from "aurelia-dependency-injection";
+import {EventAggregator} from "aurelia-event-aggregator";
+import {Router} from "aurelia-router";
 import {Metadata} from "../../../../resources-config/metadata/metadata";
-import {MetadataValue} from "../../../../resources/metadata-value";
 import {MetadataRepository} from "../../../../resources-config/metadata/metadata-repository";
+import {MetadataValue} from "../../../../resources/metadata-value";
 import {propertyKeys, safeJsonParse} from "../../../utils/object-utils";
+import {ContextResourceClass, ResourceClassChangeEvent} from "./../../../../resources/context/context-resource-class";
 
 @autoinject
 export class TopBarSearch {
-  private searchData: StringMap<SearchData> = {};
   resourceClass: string;
   metadata: Metadata;
-
   metadataValue: MetadataValue = new MetadataValue();
+  private searchData: StringMap<SearchData> = {};
 
   constructor(eventAggregator: EventAggregator, private router: Router, private metadataRepository: MetadataRepository) {
     eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,

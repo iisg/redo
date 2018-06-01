@@ -1,4 +1,4 @@
-import {observable, computedFrom} from "aurelia-binding";
+import {computedFrom, observable} from "aurelia-binding";
 import {bindable} from "aurelia-templating";
 import {twoWay} from "common/components/binding-mode";
 import {booleanAttribute} from "common/components/boolean-attribute";

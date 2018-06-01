@@ -184,7 +184,6 @@ table {
 
 .form-with-buttons {
   display: flex;
-  padding: $default-gap-size / 2;
   & > .form-content {
     flex: 1;
     padding: $default-gap-size / 2;

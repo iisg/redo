@@ -68,14 +68,13 @@
                 </div>
             </div>
             <loading-bar else></loading-bar>
-            <div class="form-group"
-                show.bind="hasMetadataToChoose">
+            <div class="form-group">
                 <label>${'Add metadata kind' | resourceClassTranslation:resourceClass}</label>
                 <resource-kind-metadata-chooser
-                    has-metadata-to-choose.bind="hasMetadataToChoose"
                     value.bind="metadataToAdd"
                     resource-kind.bind="resourceKind"
-                    should-refresh-results.bind="metadataListModified"></resource-kind-metadata-chooser>
+                    resource-class.bind="resourceClass"
+                    update-values.bind="updateResourceKindMetadataChooserValues"></resource-kind-metadata-chooser>
             </div>
             <div class="form-group"
                 if.bind="!hasWorkflowChosen">

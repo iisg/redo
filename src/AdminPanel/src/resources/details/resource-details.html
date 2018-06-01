@@ -31,13 +31,12 @@
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="children">
-                <div if.bind="allowAddChildResource || numberOfChildren">
-                    <resources-list parent-resource.bind="resource"
-                        has-resources.bind="numberOfChildren"
-                        results-per-page.from-view="resultsPerPage"
-                        current-page-number.from-view="currentPageNumber"
-                        disable-add-resource.bind="!allowAddChildResource"></resources-list>
-                </div>
+                <resources-list if.bind="allowAddChildResource || numberOfChildren"
+                    parent-resource.bind="resource"
+                    has-resources.bind="numberOfChildren"
+                    results-per-page.from-view="resultsPerPage"
+                    current-page-number.from-view="currentPageNumber"
+                    disable-add-resource.bind="!allowAddChildResource"></resources-list>
             </aup-tab-pane>
             <aup-tab-pane tab="details">
                 <div if.bind="resourceDetailsTabs.activeTabId === 'details'">
@@ -55,9 +54,8 @@
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="workflow">
-                <div if.bind="resourceDetailsTabs.activeTabId === 'workflow'">
-                    <resource-workflow resource.bind="resource"></resource-workflow>
-                </div>
+                <resource-workflow if.bind="resourceDetailsTabs.activeTabId === 'workflow'"
+                    resource.bind="resource"></resource-workflow>
             </aup-tab-pane>
             <aup-tab-pane tab="users-in-group">
                 <users-in-group if.bind="resourceDetailsTabs.activeTabId === 'users-in-group'"

@@ -7,7 +7,7 @@ $minimum-width-of-input-field-for-dynamic-column: 75px;
     &, & > * {
       padding: $default-gap-size / 4;
     }
-    .page-title {
+    .page-title, resource-contents-yaml-filter {
       display: block;
     }
   }

@@ -1,46 +1,60 @@
-import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
+import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
+import {DOM} from "aurelia-framework";
 import {I18N} from "aurelia-i18n";
+import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import * as $ from "jquery";
 import "select2";
-import {booleanAttribute} from "../boolean-attribute";
 import {changeHandler, twoWay} from "../binding-mode";
-import {computedFrom} from "aurelia-binding";
-import {DOM} from "aurelia-framework";
+import {booleanAttribute} from "../boolean-attribute";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
-  @bindable(twoWay) value: Object | Object[];
   @bindable values: Object[];
-
-  @bindable(changeHandler('recreateDropdown')) placeholder: string = "—";
-  @bindable @booleanAttribute multiple: boolean = false;
-  @bindable @booleanAttribute hideSearchBox: boolean = false;
-  @bindable @booleanAttribute hideClearButton: boolean = false;
-  @bindable @booleanAttribute disabled: boolean = false;
+  @bindable(twoWay) value: Object | Object[];
+  @bindable(changeHandler('setupDropdownAgain')) placeholder = "—";
+  @bindable @booleanAttribute multiple: boolean;
+  @bindable @booleanAttribute hideSearchBox: boolean;
+  @bindable @booleanAttribute hideClearButton: boolean;
+  @bindable @booleanAttribute useComputedWidth: boolean;
+  @bindable @booleanAttribute disabled: boolean;
   dropdown: Element;
 
   constructor(private i18n: I18N, private element: Element) {
   }
 
-  attached(): void {
-    this.createDropdown();
+  attached() {
+    this.setupDropdown();
   }
 
-  detached(): void {
+  detached() {
     $(this.dropdown).select2('destroy');
   }
 
+  valuesChanged() {
+    this.setupDropdownAgain();
+  }
+
+  valueChanged() {
+    setTimeout(() => this.updateSelectedItem());
+  }
+
   multipleChanged() {  // @booleanAttributes enforce default handler name.
-    this.recreateDropdown();
+    this.setupDropdownAgain();
   }
 
   hideClearButtonChanged() {  // @booleanAttributes enforce default handler name.
-    this.recreateDropdown();
+    this.setupDropdownAgain();
   }
 
-  private createDropdown() {
-    this.recreateDropdown().on('select2:select', () => this.onSelectedItem())
+  private setupDropdownAgain() {
+    if (this.dropdown) {
+      setTimeout(() => this.setupDropdown());
+    }
+  }
+
+  private setupDropdown() {
+    this.createDropdown().on('select2:select', () => this.onSelectedItem())
     // Timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049 .
     .on('select2:unselect', () => setTimeout(() => this.onSelectedItem()))
     // Prevents dropdown to appear after clearing a value: https://github.com/select2/select2/issues/3320#issuecomment-350249668 .
@@ -54,22 +68,33 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     });
   }
 
-  private recreateDropdown(): JQuery {
+  private createDropdown(): JQuery {
     const $element = $(this.dropdown).select2({
       placeholder: this.placeholder,
-      allowClear: !this.hideClearButton,
       multiple: this.multiple,
       minimumResultsForSearch: this.hideSearchBox ? -1 : 0,
-      width: '100%',
+      allowClear: !this.hideClearButton,
+      width: this.useComputedWidth ? undefined : '100%',
       language: {
         "noResults": () => this.i18n.tr("No results")
       },
       sorter: (data) => {
+        if (this.value == undefined) {
+          return data;
+        }
+        const valueIsAnArray = Array.isArray(this.value);
+        if (valueIsAnArray && !(this.value as Object[]).length) {
+          return data;
+        }
         let results: any[];
-        if (!Array.isArray(this.value)) {
-          results = data.filter(item => item.element.model != this.value);
+        if (valueIsAnArray) {
+          if (typeof(this.value[0]) == 'number' && data.length && data[0].element.model.hasOwnProperty('id')) {
+            results = data.filter(item => !(this.value as Object[]).includes(item.element.model.id));
+          } else {
+            results = data.filter(item => !(this.value as Object[]).includes(item.element.model));
+          }
         } else {
-          results = data.filter(item => !(this.value as Object[]).includes(item.element.model));
+          results = data.filter(item => item.element.model != this.value);
         }
         if (data.length && !results.length) {
           $(this.dropdown).select2('close');
@@ -80,21 +105,12 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
       templateResult: item => this.getItemHtml(item),
       templateSelection: item => this.getItemHtml(item)
     });
+    if (this.useComputedWidth && !this.multiple) {
+      const container = $element.siblings('.select2-container');
+      container.css({'min-width': (parseInt(container.css('width')) + 6) + 'px', 'width': ''});
+    }
     this.updateSelectedItem();
     return $element;
-  }
-
-  valuesChanged() {
-    setTimeout(() => {
-      this.createDropdown();
-    });
-    this.valueChanged();
-  }
-
-  valueChanged() {
-    setTimeout(() => {
-      this.updateSelectedItem();
-    });
   }
 
   onSelectedItem() {  // Copy value from DOM to VM.
