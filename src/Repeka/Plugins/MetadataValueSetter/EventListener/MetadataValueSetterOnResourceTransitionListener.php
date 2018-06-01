@@ -29,7 +29,6 @@ class MetadataValueSetterOnResourceTransitionListener {
         $workflow = $resource->getWorkflow();
         if ($workflow) {
             $targetPlaces = EntityUtils::filterByIds($command->getTransition()->getToIds(), $workflow->getPlaces());
-            $content = $resource->getContents();
             $metadataNames = array_filter($this->configuration->getOptionFromPlaces('metadataName', $targetPlaces));
             $metadataValues = array_filter($this->configuration->getOptionFromPlaces('metadataValue', $targetPlaces));
             if ($metadataNames && $metadataValues) {
@@ -38,7 +37,7 @@ class MetadataValueSetterOnResourceTransitionListener {
                         $metadata = $resource->getKind()->getMetadataByIdOrName($value);
                         $value = $this->strategyEvaluator->render($resource, $metadataValues[$key]);
                         if (!in_array($value, $newResourceContents->getValues($metadata))) {
-                            $newResourceContents = $content->withMergedValues($metadata, $value);
+                            $newResourceContents = $newResourceContents->withMergedValues($metadata, $value);
                         }
                     } catch (\InvalidArgumentException $e) {
                     }
