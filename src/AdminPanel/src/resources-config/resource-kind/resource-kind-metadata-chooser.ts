@@ -1,17 +1,15 @@
-import {Metadata} from "../metadata/metadata";
-import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
+import {bindable, customElement} from "aurelia-templating";
+import {MetadataChooser} from "resources-config/metadata/metadata-chooser";
+import {Metadata} from "../metadata/metadata";
 import {ResourceKind} from "./resource-kind";
-import {twoWay} from "common/components/binding-mode";
 
+@customElement('resource-kind-metadata-chooser')
 @autoinject
-export class ResourceKindMetadataChooser {
+export class ResourceKindMetadataChooser extends MetadataChooser {
   @bindable resourceKind: ResourceKind;
-  @bindable(twoWay) value: Metadata;
-  @bindable(twoWay) hasMetadataToChoose: boolean;
-  @bindable(twoWay) shouldRefreshResults: boolean;
 
-  canBeAddedToResourceKind = (metadata: Metadata) => {
+  filter = (metadata: Metadata) => {
     return this.notSystemMetadata(metadata) && this.metadataNotAlreadyInResourceKind(metadata);
   }
 

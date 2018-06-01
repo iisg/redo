@@ -22,10 +22,9 @@
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="child-metadata">
-                <div if.bind="metadataDetailsTabs.activeTabId === 'child-metadata'">
-                    <metadata-list parent-metadata.bind="metadata"
-                        resource-class.bind="metadata.resourceClass"></metadata-list>
-                </div>
+                <metadata-list if.bind="metadataDetailsTabs.activeTabId === 'child-metadata'"
+                    parent-metadata.bind="metadata"
+                    resource-class.bind="metadata.resourceClass"></metadata-list>
             </aup-tab-pane>
             <aup-tab-pane tab="details">
                 <div if.bind="metadataDetailsTabs.activeTabId === 'details'">
@@ -44,24 +43,22 @@
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="constraints">
-                <div if.bind="metadataDetailsTabs.activeTabId === 'constraints'">
-                    <dl class="constraints-list dl-horizontal">
-                        <template repeat.for="constraintName of constraintNames">
-                            <dt class="constraints-term-name"> ${'metadata_constraints::labels//' + constraintName | t}</dt>
-                            <dd class="constraints-name">
-                                <metadata-constraint name.bind="constraintName"
-                                    metadata.bind="metadata"></metadata-constraint>
-                            </dd>
-                        </template>
-                    </dl>
-                </div>
+                <dl if.bind="metadataDetailsTabs.activeTabId === 'constraints'"
+                    class="constraints-list dl-horizontal">
+                    <template repeat.for="constraintName of constraintNames">
+                        <dt class="constraints-term-name"> ${'metadata_constraints::labels//' + constraintName | t}</dt>
+                        <dd class="constraints-name">
+                            <metadata-constraint name.bind="constraintName"
+                                metadata.bind="metadata"></metadata-constraint>
+                        </dd>
+                    </template>
+                </dl>
             </aup-tab-pane>
             <aup-tab-pane tab="resource-kinds">
-                <div if.bind="metadataDetailsTabs.activeTabId === 'resource-kinds'">
-                    <resource-kinds-list resource-kinds.bind="resourceKindList"
-                        resource-class.bind="metadata.resourceClass"
-                        hide-add-button></resource-kinds-list>
-                </div>
+                <resource-kinds-list if.bind="metadataDetailsTabs.activeTabId === 'resource-kinds'"
+                    resource-kinds.bind="resourceKindList"
+                    resource-class.bind="metadata.resourceClass"
+                    hide-add-button></resource-kinds-list>
             </aup-tab-pane>
         </aup-tab-content>
     </div>

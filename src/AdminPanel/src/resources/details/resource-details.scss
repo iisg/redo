@@ -7,17 +7,9 @@
   resource-form, resources-list {
     flex: 1;
   }
-  .tab-pane {
-    apply-transition-button {
-      margin: $default-gap-size / 4;
-      &, button {
-        width: 100%;
-      }
-    }
-    resource-workflow {
-      flex: 1;
-      margin: $default-gap-size / 2;
-    }
+  #workflow {
+    display: block;
+    padding: $default-gap-size;
   }
 }
 

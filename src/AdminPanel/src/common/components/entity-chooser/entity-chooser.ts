@@ -1,22 +1,28 @@
-import {bindable} from "aurelia-templating";
-import {computedFrom} from "aurelia-binding";
-import {twoWay} from "../binding-mode";
-import {booleanAttribute} from "common/components/boolean-attribute";
+import {autoinject} from "aurelia-framework";
+import {bindable, customElement, useView} from "aurelia-templating";
+import {DropdownSelect} from "common/components/dropdown-select/dropdown-select";
+import {fromView} from "../binding-mode";
 
-export class EntityChooser {
-  @bindable entities: Entity[] = [];
-  @bindable(twoWay) value: Entity;
-  @bindable(twoWay) containsItems: boolean;
-  @bindable filter: (entity: Entity) => boolean;
-  @bindable @booleanAttribute hideClearButton: boolean;
-  @bindable(twoWay) shouldRefreshResults: boolean = false;
+@useView('common/components/dropdown-select/dropdown-select.html')
+@customElement('entity-chooser')
+@autoinject
+export class EntityChooser extends DropdownSelect {
+  @bindable({changeHandler: 'updateValues'}) entities: Entity[];
+  @bindable({changeHandler: 'updateValues'}) filter: (entity: Entity) => boolean;
+  @bindable(fromView) updateValues = () => {
+    if (this.entities && this.filter) {
+      this.values = this.entities.filter(this.filter);
+    } else {
+      this.values = this.entities;
+    }
+  }
 
-  @computedFrom('shouldRefreshResults', 'entities.length', 'filter', 'value')
-  get values(): Entity[] {
-    const result = (this.entities || []).filter(this.filter || (() => true));
-    this.containsItems = (result.length > 0);
-    this.shouldRefreshResults = false;
-    return result;
+  valueChanged() {
+    if (this.filter) {
+      this.updateValues();
+    } else {
+      super.valueChanged();
+    }
   }
 }
 

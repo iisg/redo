@@ -1,16 +1,14 @@
+@import "../../common/styles";
+
 workflow-chooser {
-  .dropdown-toggle {
-    img, .only-in-dropdown {
+  .select2-selection {
+    img {
       display: none;
     }
   }
-  .dropdown-menu {
-    .active a {
-      background: inherit;
-      color: inherit;
-    }
-    .only-when-chosen {
-      display: none;
-    }
-  }
+}
+
+.workflow-chooser-dropdown-option-thumbnail {
+  display: block;
+  margin-top: $default-gap-size / 2;
 }

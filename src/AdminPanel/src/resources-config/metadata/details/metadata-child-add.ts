@@ -1,18 +1,17 @@
+import {autoinject} from "aurelia-dependency-injection";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {Metadata} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
-import {bindable, ComponentAttached} from "aurelia-templating";
-import {autoinject} from "aurelia-dependency-injection";
 
 @autoinject
 export class MetadataChildAdd implements ComponentAttached {
   @bindable saved: (value: { savedMetadata: Metadata }) => any;
   @bindable parentMetadata: Metadata;
   @bindable resourceClass: string;
-
   metadataList: Metadata[];
   parentMetadataChildren: Metadata[];
   baseMetadata: Metadata;
-  notAlreadyInParent;
+  notSelected: (metadata: Metadata) => boolean;
 
   constructor(private metadataRepository: MetadataRepository) {
   }
@@ -27,7 +26,7 @@ export class MetadataChildAdd implements ComponentAttached {
     ]).then(results => {
       this.metadataList = results[0];
       this.parentMetadataChildren = results[1];
-      this.notAlreadyInParent = (metadata: Metadata) => {
+      this.notSelected = (metadata: Metadata) => {
         return this.parentMetadataChildren.map(m => m.baseId).indexOf(metadata.id) === -1;
       };
     });

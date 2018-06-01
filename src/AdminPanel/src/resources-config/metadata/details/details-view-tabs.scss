@@ -1,12 +1,9 @@
-.tab-content {
-  .tab-pane > div {
-    position: relative;
-    display: flex;
-    edit-button {
-      position: sticky;
-      top: 0;
-      align-self: baseline;
-      margin-left: auto;
-    }
+aup-tab-content > .tab-content > .active > div {
+  display: flex;
+  & > edit-button {
+    position: sticky;
+    top: 0;
+    align-self: baseline;
+    margin-left: auto;
   }
 }

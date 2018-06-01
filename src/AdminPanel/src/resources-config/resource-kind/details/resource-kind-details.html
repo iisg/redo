@@ -48,9 +48,8 @@
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="workflow">
-                <div if.bind="resourceKindDetailsTabs.activeTabId === 'workflow'">
-                    <workflow-graph-display workflow.bind="resourceKind.workflow"></workflow-graph-display>
-                </div>
+                <workflow-graph-display if.bind="resourceKindDetailsTabs.activeTabId === 'workflow'"
+                    workflow.bind="resourceKind.workflow"></workflow-graph-display>
             </aup-tab-pane>
         </aup-tab-content>
     </div>

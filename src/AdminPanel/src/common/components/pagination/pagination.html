@@ -53,7 +53,8 @@
         <dropdown-select values.bind="elementsPerPageDropdownOptions"
             value.bind="selectedElementsPerPageDropdownOption"
             hide-search-box
-            hide-clear-button>
+            hide-clear-button
+            use-computed-width>
             <template replace-part="option-template">
                 ${option}
             </template>
