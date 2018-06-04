@@ -28,8 +28,11 @@ class OcrOnResourceTransitionListener {
         $metadataToOcr = array_filter($this->configuration->getOption('metadataToOcr', $resource));
         if ($metadataToOcr) {
             foreach ($metadataToOcr as $metadataId) {
-                $values = $resource->getValues($resource->getKind()->getMetadataByIdOrName($metadataId));
-                $this->communicator->sendToOcr($values);
+                try {
+                    $values = $resource->getValues($resource->getKind()->getMetadataByIdOrName($metadataId));
+                    $this->communicator->sendToOcr($values);
+                } catch (\InvalidArgumentException $e) {
+                }
             }
         }
     }
