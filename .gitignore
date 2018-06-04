@@ -17,6 +17,7 @@ npm-debug.log.*
 
 /*.zip
 /*.tar.gz
+/*.sql
 release/
 *.bak
 .env
