@@ -5,12 +5,16 @@ use Assert\AssertionFailedException;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
+use Repeka\Tests\Traits\StubsTrait;
 
 class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var ResourceWorkflow|\PHPUnit_Framework_MockObject_MockObject */
     private $workflow;
     /** @var ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
@@ -21,6 +25,9 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
     protected function setUp() {
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->resource = $this->createMock(ResourceEntity::class);
+        $resourceKind = $this->createMock(ResourceKind::class);
+        $resourceKind->method('getMetadataIds')->willReturn([0, 1, 2, 3, 4]);
+        $this->resource->method('getKind')->willReturn($resourceKind);
         $this->resource->method('getWorkflow')->willReturn($this->workflow);
         $this->rule = new LockedMetadataValuesAreUnchangedRule();
     }
@@ -52,6 +59,36 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
         $oldContents = ResourceContents::fromArray([1 => ['foo', 'bar'], 2 => ['baz']]);
         $this->resource->method('getContents')->willReturn($oldContents);
         $newContents = ResourceContents::fromArray([1 => ['foo', 'bar'], 2 => ['quux']]);
+        $this->assertTrue($this->rule->forResourceAndTransition($this->resource, $transition)->validate($newContents));
+    }
+
+    public function testAcceptsNoValuesForLockedMetadata() {
+        $place = new ResourceWorkflowPlace([], 'place', [], [1]);
+        $transition = new ResourceWorkflowTransition([], ['place'], ['place']);
+        $this->workflow->method('getPlaces')->willReturn([$place]);
+        $oldContents = ResourceContents::fromArray([]);
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = ResourceContents::fromArray([]);
+        $this->assertTrue($this->rule->forResourceAndTransition($this->resource, $transition)->validate($newContents));
+    }
+
+    public function testRejectsWhenNewValueForLockedMetadata() {
+        $place = new ResourceWorkflowPlace([], 'place', [], [1]);
+        $transition = new ResourceWorkflowTransition([], ['place'], ['place']);
+        $this->workflow->method('getPlaces')->willReturn([$place]);
+        $oldContents = ResourceContents::fromArray([]);
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = ResourceContents::fromArray([1 => 'a']);
+        $this->assertFalse($this->rule->forResourceAndTransition($this->resource, $transition)->validate($newContents));
+    }
+
+    public function testAcceptsChangedLockedMetadataNotInResourceKind() {
+        $place = new ResourceWorkflowPlace([], 'place', [], [111]);
+        $transition = new ResourceWorkflowTransition([], ['place'], ['place']);
+        $this->workflow->method('getPlaces')->willReturn([$place]);
+        $oldContents = ResourceContents::fromArray([111 => ['foo', 'bar']]);
+        $this->resource->method('getContents')->willReturn($oldContents);
+        $newContents = ResourceContents::fromArray([111 => []]);
         $this->assertTrue($this->rule->forResourceAndTransition($this->resource, $transition)->validate($newContents));
     }
 

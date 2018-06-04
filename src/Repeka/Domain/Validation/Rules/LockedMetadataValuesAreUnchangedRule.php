@@ -5,6 +5,7 @@ use Assert\Assertion;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
@@ -42,7 +43,7 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
         /** @var ResourceWorkflowPlace[] $nextPlaces */
         $nextPlaces = EntityUtils::getByIds($toIds, $workflow->getPlaces());
         $currentContents = $this->resource->getContents();
-        $lockedMetadataIds = $this->getLockedMetadataIds($currentContents, $nextPlaces);
+        $lockedMetadataIds = $this->getLockedMetadataIds($this->resource->getKind(), $nextPlaces);
         $modifiedLockedMetadataIds = $this->getModifiedLockedMetadataIds($currentContents, $newContents, $lockedMetadataIds);
         if (count($modifiedLockedMetadataIds) > 0) {
             sort($modifiedLockedMetadataIds);
@@ -57,13 +58,13 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
      * @param ResourceWorkflowPlace[] $targetPlaces
      * @return int[]
      */
-    private function getLockedMetadataIds(ResourceContents $currentContents, array $targetPlaces): array {
+    private function getLockedMetadataIds(ResourceKind $resourceKind, array $targetPlaces): array {
         $lockedIds = [];
         foreach ($targetPlaces as $targetPlace) {
             $lockedIds = array_merge($lockedIds, $targetPlace->restrictingMetadataIds()->locked()->assignees()->autoAssign()->get());
         }
         $lockedIds = array_intersect(
-            array_keys($currentContents->toArray()),
+            $resourceKind->getMetadataIds(),
             array_unique($lockedIds)
         );
         return $lockedIds;
@@ -81,7 +82,9 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
         $newContents = $this->replaceObjectsWithIds($newContents)->filterOutEmptyMetadata();
         $modifiedIds = [];
         foreach ($lockedMetadataIds as $id) {
-            if ($currentContents[$id] != $newContents[$id]) {
+            $currentValue = $currentContents[$id] ?? null;
+            $newValue = $newContents[$id] ?? null;
+            if ($currentValue != $newValue) {
                 $modifiedIds[] = $id;
             }
         }
