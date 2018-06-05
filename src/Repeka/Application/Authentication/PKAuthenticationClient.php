@@ -8,9 +8,8 @@ class PKAuthenticationClient {
         $this->soapService = $soapService;
     }
 
-    public function authenticate(string $login, string $password): bool {
-        $onlyNumbersLogin = preg_replace('#[^\d]#', '', $login);
-        $userData = $this->fetchUserData($onlyNumbersLogin);
+    public function authenticate(string $username, string $password): bool {
+        $userData = $this->fetchUserData($username);
         if (array_key_exists('plainPassword', $userData)) {
             return $this->validatePlainTextPassword($password, $userData['plainPassword']);
         } elseif (array_key_exists('password', $userData)) {
