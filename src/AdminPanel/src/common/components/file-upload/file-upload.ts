@@ -3,10 +3,12 @@ import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
 import {booleanAttribute} from "../boolean-attribute";
 import {twoWay} from "../binding-mode";
+import {Resource} from "../../../resources/resource";
 
 @autoinject
 export class FileUpload implements ComponentAttached {
-  @bindable(twoWay) value: File|string;
+  @bindable(twoWay) value: File | string;
+  @bindable resource: Resource;
   @bindable @booleanAttribute disabled: boolean = false;
 
   files: Array<File>;
@@ -27,12 +29,18 @@ export class FileUpload implements ComponentAttached {
   }
 
   @computedFrom('value')
-  get isImage() {
+  get isFile() {
     if (!this.value) {
       return false;
     }
     const file = this.value as File; // it may not be a File, need to test it!
-    return file.type && file.type.split('/')[0] == 'image';
+    return file.type;
+  }
+
+  @computedFrom('value')
+  get isImage() {
+    const fileType = this.isFile;
+    return fileType && fileType.split('/')[0] == 'image';
   }
 
   @computedFrom('value')
