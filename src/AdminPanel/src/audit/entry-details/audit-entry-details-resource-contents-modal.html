@@ -15,8 +15,11 @@
             </h3>
         </div>
         <div class="modal-body">
-            <resource-metadata-table resource.bind="resource"
-                hide-place-information></resource-metadata-table>
+            <resource-metadata-table if.bind="resource"
+                resource.bind="resource"
+                hide-place-information
+                show-resource-kind></resource-metadata-table>
+            <throbber else></throbber>
         </div>
         <div class="modal-footer"></div>
     </div>
