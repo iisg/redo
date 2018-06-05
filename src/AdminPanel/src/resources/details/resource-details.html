@@ -42,7 +42,8 @@
             <aup-tab-pane tab="details">
                 <div if.bind="resourceDetailsTabs.activeTabId === 'details'">
                     <template if.bind="!isFormOpened">
-                        <resource-metadata-table resource.bind="resource"></resource-metadata-table>
+                        <resource-metadata-table resource.bind="resource"
+                            show-resource-kind></resource-metadata-table>
                         <apply-transition-button
                             resource.bind="resource"
                             transition.bind="updateTransition"

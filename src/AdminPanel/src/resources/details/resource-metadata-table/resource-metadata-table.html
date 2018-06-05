@@ -3,8 +3,13 @@
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="../../workflow/resource-place-display.html"></require>
 
-    <span>${ 'Resource kind' | t}</span>
-    <span>${ resource.kind.label | inCurrentLanguage }</span>
+    <template if.one-time="showResourceKind">
+        <span>${ 'Resource kind' | t}</span>
+        <a route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id}">
+            <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
+            <span else>#${ resource.kind.id }</span>
+        </a>
+    </template>
 
     <template repeat.for="metadata of metadataList">
         <span>${metadata | metadataLabel}</span>
