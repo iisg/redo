@@ -30,5 +30,6 @@ abstract class DatabaseMigrationTestCase extends IntegrationTestCase {
 
     protected function migrate(string $toVersion = '') {
         $this->executeCommand(trim('doctrine:migrations:migrate ' . $toVersion));
+        $this->container->get('doctrine')->resetManager();
     }
 }

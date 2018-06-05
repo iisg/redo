@@ -11,6 +11,7 @@ Repeka\Domain\Entity\AuditEntry:
       targetEntity: Repeka\Application\Entity\UserEntity
       joinColumn:
         name: user_id
+        onDelete: SET NULL
         referencedColumnName: id
   fields:
     commandName:

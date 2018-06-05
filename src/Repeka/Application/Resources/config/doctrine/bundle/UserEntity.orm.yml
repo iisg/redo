@@ -16,12 +16,14 @@ Repeka\Application\Entity\UserEntity:
         joinColumns:
           user_id:
             referencedColumnName: id
+            onDelete: CASCADE
         inverseJoinColumns:
           role_id:
             referencedColumnName: id
   oneToOne:
     userData:
       targetEntity: Repeka\Domain\Entity\ResourceEntity
+      orphanRemoval: true
       joinColumn:
         nullable: false
         name: user_data_id
