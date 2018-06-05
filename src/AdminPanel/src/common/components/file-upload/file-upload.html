@@ -1,22 +1,35 @@
 <template>
     <require from="./filesize-value-converter"></require>
     <require from="./blob-to-url"></require>
+    <require from="./upload-limit/upload-limit-info"></require>
+    <require from="common/value-converters/basename-value-converter"></require>
+    <require from="resources/controls/display/resource-file-url"></require>
 
-    <input type="text"
-        readonly
-        class="form-control"
-        placeholder="${ 'Select file' | t }"
-        ref="fileNameInput">
-    <input type="file"
-        name="usersFile"
-        files.bind="files"
-        disabled.bind="disabled"
-        change.delegate="fileSelected(files)">
-
-    <div class="files-list"
-        if.bind="value">
-        ${value.size | filesize:2}
-        <img if.bind="isImage"
-            src.bind="value | blobToUrl">
+    <div if.bind="!value">
+        <input type="text"
+            readonly
+            class="form-control"
+            placeholder="${ 'Select file' | t }"
+            ref="fileNameInput">
+        <input type="file"
+            name="usersFile"
+            files.bind="files"
+            disabled.bind="disabled"
+            change.delegate="fileSelected(files)">
+        <upload-limit-info></upload-limit-info>
+    </div>
+    <div else>
+        <div if.bind="isFile">
+            <span>${displayName}</span>
+            <div class="files-list"
+                if.bind="isImage">
+                <img src.bind="value | blobToUrl">
+            </div>
+            <span>${value.size | filesize:2}</span>
+        </div>
+        <a if.bind="!isFile && resource"
+            href.bind="value | resourceFileUrl:resource"
+            target="_blank">${displayName | basename}</a>
+        <span if.bind="!isFile && !resource">${value | basename}</span>
     </div>
 </template>
