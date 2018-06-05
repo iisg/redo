@@ -14,18 +14,9 @@ class TestPKSoapService extends PKSoapService {
             'street' => 'Taśmowa',
             'institute_desc' => 'Inżynierii Biomedycznej',
         ],
-        '1234567' => [
-            'plainPassword' => 'h4linaRulz',
-            'first_name' => 'Halina',
-            'last_name' => 'Zięba',
-            'email_last_used' => 'halinka@repeka.pl',
-            'city' => 'Paczków',
-            'street' => 'Taśmowa',
-            'institute_desc' => 'Inżynierii Biomedycznej',
-        ],
         'budynek' => ['password' => 'cGlvdHI=', 'first_name' => 'Piotr'], // piotr
-        '123456' => ['password' => 'cGlvdHI=', 'first_name' => 'Piotr'], // piotr
         'jeanzulu' => ['password' => 'Z290b3RvZ28='], // gototogo
+        'b/012345' => ['plainPassword' => 'admin'],
     ];
 
     public function __construct() {

@@ -7,6 +7,7 @@ use Repeka\Application\Authentication\PKUserDataUpdater;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\UseCase\User\UserCreateCommand;
+use Repeka\Domain\UseCase\User\UserCreateCommandAdjuster;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -31,7 +32,7 @@ class ExternalServiceAuthenticator extends TokenAuthenticator {
 
     public function canAuthenticate(TokenInterface $token): bool {
         try {
-            return $this->authenticationClient->authenticate($token->getUsername(), $token->getCredentials());
+            return $this->authenticationClient->authenticate(self::normalizeUsername($token->getUsername()), $token->getCredentials());
         } catch (PKAuthenticationException $e) {
             // external service's fault - throw it, we want to have it in logs
             throw $e;
@@ -42,7 +43,7 @@ class ExternalServiceAuthenticator extends TokenAuthenticator {
     }
 
     public function authenticate(TokenInterface $token, UserProviderInterface $userProvider, $providerKey): TokenInterface {
-        $username = $token->getUsername();
+        $username = self::normalizeUsername($token->getUsername());
         try {
             /** @var $user UserEntity */
             $user = $userProvider->loadUserByUsername($username);
@@ -55,5 +56,17 @@ class ExternalServiceAuthenticator extends TokenAuthenticator {
         }
         $this->userDataUpdater->updateUserData($user);
         return $this->createAuthenticatedToken($user, $providerKey);
+    }
+
+    /**
+     * Add b/ prefix to all only-numeric usernames to support PK SOAP service authentication without inputting it.
+     * Make the username lowercase.
+     */
+    public static function normalizeUsername(string $username) {
+        $normalizedUsername = UserCreateCommandAdjuster::normalizeUsername($username);
+        if (is_numeric($normalizedUsername)) {
+            $normalizedUsername = 'b/' . $normalizedUsername;
+        }
+        return $normalizedUsername;
     }
 }

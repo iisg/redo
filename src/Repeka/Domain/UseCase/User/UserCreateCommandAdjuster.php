@@ -8,9 +8,14 @@ class UserCreateCommandAdjuster implements CommandAdjuster {
     /** @param UserCreateCommand $command */
     public function adjustCommand(Command $command): Command {
         return new UserCreateCommand(
-            strtolower($command->getUsername()),
+            $this->normalizeUsername($command->getUsername()),
             $command->getPlainPassword(),
             $command->getUserData()
         );
+    }
+
+    public static function normalizeUsername(string $username) {
+        $username = preg_replace('#[^a-z0-9_\./-]#i', '', $username);
+        return strtolower($username);
     }
 }

@@ -12,4 +12,20 @@ class UserCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
         $preparedCommand = $adjuster->adjustCommand($command);
         $this->assertEquals("admin123", $preparedCommand->getUsername());
     }
+
+    public function testRemovingInvalidCharactersLower() {
+        $adjuster = new UserCreateCommandAdjuster();
+        $command = new UserCreateCommand("AD'mIN\"12**3");
+        /** @var UserCreateCommand $preparedCommand */
+        $preparedCommand = $adjuster->adjustCommand($command);
+        $this->assertEquals("admin123", $preparedCommand->getUsername());
+    }
+
+    public function testAcceptsPkWeirdUsernames() {
+        $adjuster = new UserCreateCommandAdjuster();
+        $command = new UserCreateCommand("b/123");
+        /** @var UserCreateCommand $preparedCommand */
+        $preparedCommand = $adjuster->adjustCommand($command);
+        $this->assertEquals("b/123", $preparedCommand->getUsername());
+    }
 }

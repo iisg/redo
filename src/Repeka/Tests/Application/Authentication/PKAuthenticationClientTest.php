@@ -21,13 +21,6 @@ class PKAuthenticationClientTest extends \PHPUnit_Framework_TestCase {
         $authClient->authenticate('1234', 'whatever');
     }
 
-    public function testCutNotNumbersLogins() {
-        $soapService = $this->createSoapServiceMock();
-        $soapService->method('getClientDataById')->with('123456')->willReturn(['plainPassword' => '']);
-        $authClient = new PKAuthenticationClient($soapService);
-        $authClient->authenticate('b/123456', 'whatever');
-    }
-
     public function testPassesLongerLoginsUnmodified() {
         $soapService = $this->createSoapServiceMock();
         $soapService->method('getClientDataById')->with('123456789')->willReturn(['plainPassword' => '']);
