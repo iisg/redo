@@ -20,7 +20,7 @@ class DeduplicatingUsersMigrationTest extends DatabaseMigrationTestCase {
     /** @before */
     public function prepare() {
         $this->loadDumpV7();
-        foreach (['Admin', '123', 'b/123', 'B/123'] as $duplicatedUsername) {
+        foreach (['Admin', '123456', 'b/123456', 'B/123456', 'b/0987654321', '0987654321'] as $duplicatedUsername) {
             $randomUsername = UserCreateCommandAdjuster::normalizeUsername(Factory::create()->userName);
             $this->executeCommand("repeka:create-admin-user $randomUsername pass");
             $testAdmin = $this->findResourceByContents([SystemMetadata::USERNAME => $randomUsername]);
@@ -38,12 +38,18 @@ class DeduplicatingUsersMigrationTest extends DatabaseMigrationTestCase {
     }
 
     public function testPkAccountsAreDeduplicated() {
-        $query = ResourceListQuery::builder()->filterByContents([SystemMetadata::USERNAME => '123'])->build();
+        $query = ResourceListQuery::builder()->filterByContents([SystemMetadata::USERNAME => '123456'])->build();
         $users = $this->getResourceRepository()->findByQuery($query);
         $this->assertCount(1, $users);
         $user = $users[0];
-        $this->assertEquals($this->testAdmins['123']->getId(), $user->getId());
+        $this->assertEquals($this->testAdmins['123456']->getId(), $user->getId());
         $user = $this->getEntityManager()->find(ResourceEntity::class, $user->getId());
-        $this->assertEquals(['b/123'], $user->getValues(SystemMetadata::USERNAME));
+        $this->assertEquals(['b/123456'], $user->getValues(SystemMetadata::USERNAME));
+    }
+
+    public function testPkAccountsWithLength10AreUntouched() {
+        $query = ResourceListQuery::builder()->filterByContents([SystemMetadata::USERNAME => '0987654321'])->build();
+        $users = $this->getResourceRepository()->findByQuery($query);
+        $this->assertCount(2, $users);
     }
 }

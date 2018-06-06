@@ -8,29 +8,29 @@ use Repeka\Tests\IntegrationTestCase;
 class PKAuthenticationIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
-    public function testBudynekAuthSuccess() {
-        $client = AuthenticationIntegrationTest::authenticate('budynek', 'piotr');
+    public function testAuthSuccessWithHashedPassword() {
+        $client = AuthenticationIntegrationTest::authenticate('b/123456', 'piotr');
         /** @var UserEntity $user */
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
-        $this->assertEquals('budynek', $user->getUsername());
+        $this->assertEquals('b/123456', $user->getUsername());
         $this->assertNotContains('nieudane', $client->getResponse()->getContent());
         $nameMetadata = $this->findMetadataByName('Imię', $user->getUserData()->getResourceClass());
         $this->assertEquals(['Piotr'], $user->getUserData()->getValues($nameMetadata));
     }
 
-    public function testBudynekAuthFailure() {
-        $client = AuthenticationIntegrationTest::authenticate('budynek', 'piotrek');
+    public function testUnsupportedUsernameAuthFailure() {
+        $client = AuthenticationIntegrationTest::authenticate('a/123456', 'piotr');
         $this->assertContains('nieudane', $client->getResponse()->getContent());
         $this->assertNull(AuthenticationIntegrationTest::getAuthenticatedUser($client));
     }
 
-    public function testHalinkaAuthSuccess() {
-        $client = AuthenticationIntegrationTest::authenticate('halinka', 'h4linaRulz');
+    public function testAuthSuccessWithPlainPassword() {
+        $client = AuthenticationIntegrationTest::authenticate('b/012345', 'h4linaRulz');
         /** @var UserEntity $user */
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
-        $this->assertEquals('halinka', $user->getUsername());
+        $this->assertEquals('b/012345', $user->getUsername());
         $nameMetadata = $this->findMetadataByName('Imię', $user->getUserData()->getResourceClass());
         $this->assertEquals(['Halina'], $user->getUserData()->getValues($nameMetadata));
         $emailMetadata = $this->findMetadataByName('Email', $user->getUserData()->getResourceClass());
@@ -38,7 +38,7 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
     }
 
     public function testAuthSuccessWithUpperBPrefix() {
-        $client = AuthenticationIntegrationTest::authenticate('B/012345', 'admin');
+        $client = AuthenticationIntegrationTest::authenticate('B/012345', 'h4linaRulz');
         /** @var UserEntity $user */
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
@@ -46,8 +46,8 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertNotContains('nieudane', $client->getResponse()->getContent());
     }
 
-    public function testAuthSuccessWithLowerBPrefix() {
-        $client = AuthenticationIntegrationTest::authenticate('b/012345', 'admin');
+    public function testAuthSuccessWithoutBPrefixAndLength6() {
+        $client = AuthenticationIntegrationTest::authenticate('012345', 'h4linaRulz');
         /** @var UserEntity $user */
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
@@ -55,12 +55,21 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertNotContains('nieudane', $client->getResponse()->getContent());
     }
 
-    public function testAuthSuccessWithoutBPrefix() {
-        $client = AuthenticationIntegrationTest::authenticate('012345', 'admin');
+    public function testAuthSuccessWithUpperSPrefix() {
+        $client = AuthenticationIntegrationTest::authenticate('S/123456', 'pass');
         /** @var UserEntity $user */
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
-        $this->assertEquals('b/012345', $user->getUsername());
+        $this->assertEquals('s/123456', $user->getUsername());
+        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+    }
+
+    public function testAuthSuccessFor10DigitsUsername() {
+        $client = AuthenticationIntegrationTest::authenticate('1234567890', 'pass');
+        /** @var UserEntity $user */
+        $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
+        $this->assertNotNull($user);
+        $this->assertEquals('1234567890', $user->getUsername());
         $this->assertNotContains('nieudane', $client->getResponse()->getContent());
     }
 }
