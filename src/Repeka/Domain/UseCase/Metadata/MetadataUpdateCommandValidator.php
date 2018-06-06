@@ -5,14 +5,11 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
-use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class MetadataUpdateCommandValidator extends CommandAttributesValidator {
-    /** @var ContainsOnlyAvailableLanguagesRule */
-    private $containsOnlyAvailableLanguagesRule;
     /** @var ConstraintSetMatchesControlRule */
     private $constraintSetMatchesControlRule;
     /** @var ConstraintArgumentsAreValidRule */
@@ -21,12 +18,10 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
     private $rkConstraintIsUserIfNecessaryRule;
 
     public function __construct(
-        ContainsOnlyAvailableLanguagesRule $containsOnlyAvailableLanguagesRule,
         ConstraintSetMatchesControlRule $constraintSetMatchesControlRule,
         ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
         ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule $rkConstraintIsUserIfNecessaryRule
     ) {
-        $this->containsOnlyAvailableLanguagesRule = $containsOnlyAvailableLanguagesRule;
         $this->constraintSetMatchesControlRule = $constraintSetMatchesControlRule;
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
         $this->rkConstraintIsUserIfNecessaryRule = $rkConstraintIsUserIfNecessaryRule;
@@ -36,9 +31,9 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('metadataId', Validator::intVal())
-            ->attribute('newLabel', $this->containsOnlyAvailableLanguagesRule)
-            ->attribute('newPlaceholder', $this->containsOnlyAvailableLanguagesRule)
-            ->attribute('newDescription', $this->containsOnlyAvailableLanguagesRule)
+            ->attribute('newLabel', Validator::arrayType())
+            ->attribute('newPlaceholder', Validator::arrayType())
+            ->attribute('newDescription', Validator::arrayType())
             ->attribute('newShownInBrief', Validator::boolType())
             ->attribute('newCopyToChildResource', Validator::boolType())
             ->attribute('newConstraints', $this->constraintSetMatchesControlRule->forMetadataId($command->getMetadataId()))

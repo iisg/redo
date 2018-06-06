@@ -6,15 +6,12 @@ use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
-use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
-    /** @var ContainsOnlyAvailableLanguagesRule|\PHPUnit_Framework_MockObject_MockObject */
-    private $languagesRule;
     /** @var ConstraintSetMatchesControlRule|\PHPUnit_Framework_MockObject_MockObject */
     private $constraintSetRule;
     /** @var ConstraintArgumentsAreValidRule|\PHPUnit_Framework_MockObject_MockObject */
@@ -42,7 +39,6 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     }
 
     protected function setUp() {
-        $this->languagesRule = $this->createRuleMock(ContainsOnlyAvailableLanguagesRule::class, true);
         $this->constraintSetRule = $this->constraintSetMatchesControlRule(true);
         $this->constraintArgumentsRule = $this->createRuleMock(ConstraintArgumentsAreValidRule::class, true);
         $this->rkConstraintRule = $this->resourceKindConstraintIsUser(true);
@@ -51,18 +47,6 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testPasses() {
         $validator = new MetadataUpdateCommandValidator(
-            $this->languagesRule,
-            $this->constraintSetRule,
-            $this->constraintArgumentsRule,
-            $this->rkConstraintRule
-        );
-        $validator->validate($this->command);
-    }
-
-    public function testFailsWithInvalidLanguages() {
-        $this->expectException(InvalidCommandException::class);
-        $validator = new MetadataUpdateCommandValidator(
-            $this->createRuleMock(ContainsOnlyAvailableLanguagesRule::class, false),
             $this->constraintSetRule,
             $this->constraintArgumentsRule,
             $this->rkConstraintRule
@@ -73,7 +57,6 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testFailsWithInvalidConstraintSet() {
         $this->expectException(InvalidCommandException::class);
         $validator = new MetadataUpdateCommandValidator(
-            $this->languagesRule,
             $this->constraintSetMatchesControlRule(false),
             $this->constraintArgumentsRule,
             $this->rkConstraintRule
@@ -84,7 +67,6 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testFailsWithInvalidConstraintArguments() {
         $this->expectException(InvalidCommandException::class);
         $validator = new MetadataUpdateCommandValidator(
-            $this->languagesRule,
             $this->constraintSetRule,
             $this->createRuleMock(ConstraintArgumentsAreValidRule::class, false),
             $this->rkConstraintRule
@@ -95,7 +77,6 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testFailsWithInvalidResourceKindConstraint() {
         $this->expectException(InvalidCommandException::class);
         $validator = new MetadataUpdateCommandValidator(
-            $this->languagesRule,
             $this->constraintSetRule,
             $this->constraintArgumentsRule,
             $this->resourceKindConstraintIsUser(false)

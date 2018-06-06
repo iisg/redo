@@ -48,6 +48,7 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
     }
 
     protected function fetchMetadataIfRequired($metadataOrOverrideList): array {
+        /** @var Metadata[] $metadataList */
         $metadataList = [];
         foreach ($metadataOrOverrideList as $metadataOrOverride) {
             if ($metadataOrOverride instanceof Metadata) {
@@ -59,6 +60,13 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
                 $metadata = $this->metadataRepository->findOne($id);
                 if (isset($metadataOrOverride['constraints'])) {
                     $metadataOrOverride['constraints'] = $this->clearUnsupportedConstraints($metadata, $metadataOrOverride['constraints']);
+                }
+                foreach (['label', 'placeholder', 'description'] as $multilingualAttribute) {
+                    if (isset($metadataOrOverride[$multilingualAttribute])) {
+                        $metadataOrOverride[$multilingualAttribute] = $this->unknownLanguageStripper->removeUnknownLanguages(
+                            $metadataOrOverride[$multilingualAttribute]
+                        );
+                    }
                 }
                 $metadataList[$id] = $metadata->withOverrides($metadataOrOverride);
             }

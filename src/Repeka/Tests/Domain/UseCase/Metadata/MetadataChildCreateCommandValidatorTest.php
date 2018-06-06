@@ -5,7 +5,6 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommandValidator;
-use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Tests\Traits\StubsTrait;
@@ -23,7 +22,6 @@ class MetadataChildCreateCommandValidatorTest extends \PHPUnit_Framework_TestCas
         $languageRepositoryStub = $this->createLanguageRepositoryMock(['PL', 'EN']);
         $this->validator = new MetadataChildCreateCommandValidator(
             new NotBlankInAllLanguagesRule($languageRepositoryStub),
-            new ContainsOnlyAvailableLanguagesRule($languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea'])
         );
     }

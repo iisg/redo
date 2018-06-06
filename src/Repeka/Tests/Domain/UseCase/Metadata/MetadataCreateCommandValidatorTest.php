@@ -7,7 +7,6 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
-use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
@@ -33,7 +32,6 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->containsResourceClass = $this->createMock(ResourceClassExistsRule::class);
         $this->validator = new MetadataCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
-            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea']),
             $this->createMock(ConstraintSetMatchesControlRule::class),
             $this->constraintArgumentsAreValid,
@@ -85,7 +83,6 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->constraintArgumentsAreValid->method('assert')->willThrowException(new ValidationException());
         $validator = new MetadataCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
-            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea']),
             $this->createMock(ConstraintSetMatchesControlRule::class),
             $this->constraintArgumentsAreValid,
@@ -100,7 +97,6 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->constraintArgumentsAreValid->method('validate')->willReturn(true);
         $validator = new MetadataCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
-            new ContainsOnlyAvailableLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea', 'relationship']),
             $this->createMock(ConstraintSetMatchesControlRule::class),
             $this->constraintArgumentsAreValid,

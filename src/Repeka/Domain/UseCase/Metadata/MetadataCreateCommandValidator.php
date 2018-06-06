@@ -6,7 +6,6 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
-use Repeka\Domain\Validation\Rules\ContainsOnlyAvailableLanguagesRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
@@ -16,8 +15,6 @@ use Respect\Validation\Validator;
 class MetadataCreateCommandValidator extends CommandAttributesValidator {
     /** @var NotBlankInAllLanguagesRule */
     private $notBlankInAllLanguagesRule;
-    /** @var ContainsOnlyAvailableLanguagesRule */
-    private $containsOnlyAvailableLanguagesRule;
     /** @var IsValidControlRule */
     private $isValidControlRule;
     /** @var ConstraintSetMatchesControlRule */
@@ -29,14 +26,12 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
-        ContainsOnlyAvailableLanguagesRule $containsOnlyAvailableLanguagesRule,
         IsValidControlRule $isValidControlRule,
         ConstraintSetMatchesControlRule $constraintSetMatchesControlRule,
         ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
         ResourceClassExistsRule $resourceClassExistsRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
-        $this->containsOnlyAvailableLanguagesRule = $containsOnlyAvailableLanguagesRule;
         $this->isValidControlRule = $isValidControlRule;
         $this->constraintSetMatchesControlRule = $constraintSetMatchesControlRule;
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
@@ -51,8 +46,6 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
         return Validator
             ::attribute('label', $this->notBlankInAllLanguagesRule)
             ->attribute('name', Validator::notBlank())
-            ->attribute('placeholder', $this->containsOnlyAvailableLanguagesRule)
-            ->attribute('description', $this->containsOnlyAvailableLanguagesRule)
             ->attribute(
                 'controlName',
                 Validator::callback(
