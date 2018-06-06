@@ -64,7 +64,7 @@ class ExternalServiceAuthenticator extends TokenAuthenticator {
      */
     public static function normalizeUsername(string $username) {
         $normalizedUsername = UserCreateCommandAdjuster::normalizeUsername($username);
-        if (is_numeric($normalizedUsername)) {
+        if (is_numeric($normalizedUsername) && strlen($normalizedUsername) == 6) {
             $normalizedUsername = 'b/' . $normalizedUsername;
         }
         return $normalizedUsername;

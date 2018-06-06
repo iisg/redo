@@ -9,6 +9,9 @@ class PKAuthenticationClient {
     }
 
     public function authenticate(string $username, string $password): bool {
+        if (!$this->isUsernameSupported($username)) {
+            return false;
+        }
         $userData = $this->fetchUserData($username);
         if (array_key_exists('plainPassword', $userData)) {
             return $this->validatePlainTextPassword($password, $userData['plainPassword']);
@@ -19,10 +22,13 @@ class PKAuthenticationClient {
         }
     }
 
-    public function fetchUserData(string $login): array {
-        $userId = $this->getUserId($login);
+    private function isUsernameSupported($username): bool {
+        return boolval(preg_match('#^([bs]/\d{6}|\d{10})$#i', $username));
+    }
+
+    public function fetchUserData(string $username): array {
         try {
-            $userData = $this->soapService->getClientDataById($userId);
+            $userData = $this->soapService->getClientDataById($username);
         } catch (\SoapFault $e) {
             throw new \Exception('Fetching user data failed', 0, $e);
         }
@@ -30,14 +36,6 @@ class PKAuthenticationClient {
             throw new PKAuthenticationException('Remote service responded with invalid data', $userData);
         }
         return $userData;
-    }
-
-    private function getUserId($login): string {
-        if (strlen($login) < 6) {
-            throw new \InvalidArgumentException('Login too short');
-        } else {
-            return $login;
-        }
     }
 
     private function validatePlainTextPassword(string $clientPassword, string $storedPassword): bool {

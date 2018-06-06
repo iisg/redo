@@ -5,7 +5,7 @@ use Repeka\Application\Authentication\PKSoapService;
 
 class TestPKSoapService extends PKSoapService {
     private const TEST_USERS = [
-        'halinka' => [
+        'b/012345' => [
             'plainPassword' => 'h4linaRulz',
             'first_name' => 'Halina',
             'last_name' => 'Zięba',
@@ -14,9 +14,9 @@ class TestPKSoapService extends PKSoapService {
             'street' => 'Taśmowa',
             'institute_desc' => 'Inżynierii Biomedycznej',
         ],
-        'budynek' => ['password' => 'cGlvdHI=', 'first_name' => 'Piotr'], // piotr
-        'jeanzulu' => ['password' => 'Z290b3RvZ28='], // gototogo
-        'b/012345' => ['plainPassword' => 'admin'],
+        'b/123456' => ['password' => 'cGlvdHI=', 'first_name' => 'Piotr'], // piotr
+        's/123456' => ['plainPassword' => 'pass'],
+        '1234567890' => ['plainPassword' => 'pass'],
     ];
 
     public function __construct() {
