@@ -161,7 +161,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         );
     }
 
-    public function testEditingResourceKindMetadataConstraintsConflict() {
+    public function testEditingResourceKindMetadataClearsUnknownLanguages() {
         $client = self::createAdminClient();
         $client->apiRequest(
             'PUT',
@@ -176,10 +176,10 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 'displayStrategies' => [],
             ]
         );
-        $this->assertStatusCode(400, $client->getResponse());
-        $error = $client->getResponse() . $this->toString();
-        $this->assertContains("newLabel contains a language that does not exist", $error);
-        $this->assertContains("These rules must pass for \u0022metadata_update\u0022", $error);
+        $this->assertStatusCode(200, $client->getResponse());
+        $updatedRk = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayNotHasKey('DE', $updatedRk['metadataList'][1]['placeholder']);
+        $this->assertEquals('modified', $updatedRk['metadataList'][1]['placeholder']['PL']);
     }
 
     public function testSettingWorkflowForExistingResourceKind() {

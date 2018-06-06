@@ -2,8 +2,9 @@
 namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\AdjustableCommand;
 
-class MetadataCreateCommand extends AbstractCommand {
+class MetadataCreateCommand extends AbstractCommand implements AdjustableCommand {
     private $name;
     private $label;
     private $description;
