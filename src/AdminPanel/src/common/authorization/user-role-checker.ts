@@ -7,7 +7,7 @@ export class UserRoleChecker {
   private currentUserRoles: Array<string>;
 
   constructor(currentUser: User) {
-    this.currentUserRoles = currentUser.roles.map(role => role.systemRoleIdentifier);
+    this.currentUserRoles = currentUser.roles;
   }
 
   public hasAll(desiredRoles: Array<string>): boolean {

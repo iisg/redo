@@ -20,6 +20,5 @@ class UserEntityFactoryTest extends \PHPUnit_Framework_TestCase {
         $userEntityFactory->setCommandBus($commandBus);
         $user = ($userEntityFactory)->createUser($username, $password, ResourceContents::empty());
         $this->assertNotNull($user);
-        $this->assertEmpty($user->getUserRoles());
     }
 }

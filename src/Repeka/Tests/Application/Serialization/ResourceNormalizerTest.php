@@ -62,8 +62,8 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $this->checker->method('check')->willReturnCallback(
             function ($resource, $resourceContents, ResourceWorkflowTransition $transition, $user) {
                 return ($transition->getId() == 'a')
-                    ? new TransitionPossibilityCheckResult([], false, false)
-                    : new TransitionPossibilityCheckResult([], false, true);
+                    ? new TransitionPossibilityCheckResult([], false)
+                    : new TransitionPossibilityCheckResult([], true);
             }
         );
         $normalized = $this->normalizer->normalize($this->resource);

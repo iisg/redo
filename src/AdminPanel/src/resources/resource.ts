@@ -22,10 +22,7 @@ export class Resource extends Entity {
 
   public canApplyTransition(transition: WorkflowTransition): boolean {
     const blockedTransitionReason = this.blockedTransitions[transition.id];
-    if (blockedTransitionReason) {
-      return !(blockedTransitionReason.userMissingRequiredRole || blockedTransitionReason.otherUserAssigned);
-    }
-    return true;
+    return !blockedTransitionReason || !blockedTransitionReason.otherUserAssigned;
   }
 }
 

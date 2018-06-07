@@ -10,6 +10,9 @@ abstract class DatabaseMigrationTestCase extends IntegrationTestCase {
     protected function clearDatabase() {
         $this->executeCommand('doctrine:schema:drop --force');
         $this->getEntityManager()->getConnection()->exec('DROP TABLE IF EXISTS public.migration_versions');
+        $this->getEntityManager()->getConnection()->exec('DROP SEQUENCE IF EXISTS role_id_seq CASCADE');
+        $this->getEntityManager()->getConnection()->exec('DROP TABLE IF EXISTS user_role');
+        $this->getEntityManager()->getConnection()->exec('DROP TABLE IF EXISTS role');
     }
 
     private function loadDump(string $name) {

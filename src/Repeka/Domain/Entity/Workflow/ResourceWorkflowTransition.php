@@ -4,7 +4,6 @@ namespace Repeka\Domain\Entity\Workflow;
 use Cocur\Slugify\Slugify;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Labeled;
-use Repeka\Domain\Entity\User;
 
 class ResourceWorkflowTransition implements Identifiable, Labeled {
     private $id;
@@ -41,15 +40,6 @@ class ResourceWorkflowTransition implements Identifiable, Labeled {
 
     public function getPermittedRoleIds(): array {
         return $this->permittedRoleIds;
-    }
-
-    public function userHasRoleRequiredToApply(User $user): bool {
-        foreach ($this->getPermittedRoleIds() as $permittedRoleId) {
-            if ($user->hasRole($permittedRoleId)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public function toArray(): array {

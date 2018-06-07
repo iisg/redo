@@ -18,7 +18,6 @@ import {ResourceKind} from "./resources-config/resource-kind/resource-kind";
 import {WorkflowIdMapper} from "./resources-config/resource-kind/resource-kind-mapping";
 import {Resource} from "./resources/resource";
 import {ResourceMapper} from "./resources/resource-mapping";
-import {UserRole} from "./users/roles/user-role";
 import {User} from "./users/user";
 import {Workflow} from "./workflows/workflow";
 
@@ -83,5 +82,5 @@ function onAureliaStarted(aurelia: Aurelia): Promise<void> {
 
 function preloadEntityTypes() {
   // This function does nothing, but its presence and dependence on these classes ensures that their decorators are evaluated.
-  return [User, UserRole, Language, Metadata, ResourceKind, ResourceMapper, Resource, Workflow, WorkflowIdMapper] && undefined;
+  return [User, Language, Metadata, ResourceKind, ResourceMapper, Resource, Workflow, WorkflowIdMapper] && undefined;
 }

@@ -27,9 +27,6 @@ export class ApplyTransitionButton {
     const reasonCollection = this.resource.blockedTransitions[this.transition.id];
     const reasons: TransitionInactiveReason[] = [];
     if (reasonCollection) {
-      if (reasonCollection.userMissingRequiredRole) {
-        reasons.push({icon: 'user-2', message: "You don't have required role"});
-      }
       if (reasonCollection.otherUserAssigned) {
         reasons.push({icon: 'user-2', message: "Someone else is assigned this action"});
       }

@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\User\UserCreateCommand;
 use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
-use Repeka\Domain\UseCase\UserRole\UserRoleListQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminAccountFixture extends RepekaFixture {
@@ -33,9 +32,6 @@ class AdminAccountFixture extends RepekaFixture {
                 ->executeQuery('ALTER SEQUENCE user_id_seq RESTART WITH ' . self::ADMIN_USER_ID);
             $userCreateCommand = new UserCreateCommand(self::USERNAME, self::PASSWORD);
             $admin = $this->handleCommand($userCreateCommand);
-            $allUserRoles = $this->handleCommand(new UserRoleListQuery());
-            $userUpdateRolesCommand = new UserUpdateRolesCommand($admin, $allUserRoles, $admin);
-            $this->handleCommand($userUpdateRolesCommand);
         }
         $this->addReference(self::REFERENCE_USER_ADMIN, $admin);
     }

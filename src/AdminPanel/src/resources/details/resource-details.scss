@@ -1,7 +1,7 @@
 @import "../../common/styles";
 
 .resource-details {
-  resource-metadata-table, user-roles-assign {
+  resource-metadata-table {
     padding: $default-gap-size;
   }
   resource-form, resources-list {

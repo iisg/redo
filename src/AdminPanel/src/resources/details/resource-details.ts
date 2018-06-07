@@ -7,7 +7,6 @@ import {Alert} from "common/dialog/alert";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {UserRoleChecker} from "../../common/authorization/user-role-checker";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
 import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
 import {WorkflowTransition} from "../../workflows/workflow";
@@ -37,8 +36,7 @@ export class ResourceDetails implements RoutableComponentActivate {
               private alert: Alert,
               private i18n: I18N,
               private entitySerializer: EntitySerializer,
-              private contextResourceClass: ContextResourceClass,
-              private userRoleChecker: UserRoleChecker) {
+              private contextResourceClass: ContextResourceClass) {
     this.resourceDetailsTabs = new DetailsViewTabs(this.ea, () => this.updateUrl());
   }
 
@@ -81,16 +79,8 @@ export class ResourceDetails implements RoutableComponentActivate {
       }
     }
     if (this.resource.resourceClass == 'users') {
-      const isUserResourceKind = this.resource.kind.metadataList.filter(m => m.id == SystemMetadata.GROUP_MEMBER.id).length > 0;
-      if (isUserResourceKind) {
-        if (this.userRoleChecker.hasAll(['ADMIN'])) {
-          this.resourceDetailsTabs.addTab({
-            id: 'user-roles',
-            label: this.i18n.tr('Roles')
-          });
-        }
-      }
-      else {
+      const isGroupResourceKind = !!this.resource.kind.metadataList.filter(m => m.id == SystemMetadata.GROUP_MEMBER.id).length;
+      if (isGroupResourceKind) {
         this.resourceDetailsTabs.addTab({
           id: 'users-in-group',
           label: this.i18n.tr('Users')

@@ -1,10 +1,7 @@
 <?php
 namespace Repeka\Application\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\Entity\User;
-use Repeka\Domain\Entity\UserRole;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,18 +12,8 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
 
     private $isActive;
 
-    /** Precalculated user roles (strings) for Symfony security purposes. */
-    private $roles;
-
-    /**
-     * ManyToMany with custom UserRoles.
-     * @var ArrayCollection|UserRole[]
-     */
-    private $userRoles;
-
     public function __construct() {
         $this->isActive = true;
-        $this->userRoles = new ArrayCollection();
     }
 
     public function getId(): int {
@@ -51,15 +38,8 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
     }
 
     public function getRoles(): array {
-        if (!$this->roles) {
-            $this->roles = ['ROLE_USER'];
-            foreach (SystemUserRole::values() as $systemRole) {
-                if ($this->hasRole($systemRole->toUserRole())) {
-                    $this->roles[] = 'ROLE_' . $systemRole->getKey();
-                }
-            }
-        }
-        return $this->roles;
+        // TODO gain them based on the rules defined in REPEKA-503
+        return ['ROLE_USER', 'ROLE_OPERATOR', 'ROLE_ADMIN'];
     }
 
     public function eraseCredentials() {
@@ -70,7 +50,6 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
             [
                 $this->id,
                 $this->password,
-                $this->roles,
             ]
         );
     }
@@ -79,7 +58,6 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
         list (
             $this->id,
             $this->password,
-            $this->roles,
             ) = unserialize($serialized);
     }
 
@@ -88,18 +66,5 @@ class UserEntity extends User implements UserInterface, EquatableInterface, \Ser
             return $this->getId() == $otherUser->getId();
         }
         return false;
-    }
-
-    /** @param UserRole[] $roles */
-    public function updateRoles(array $roles): void {
-        $this->userRoles->clear();
-        foreach ($roles as $role) {
-            $this->userRoles->add($role);
-        }
-        $this->roles = null;
-    }
-
-    public function getUserRoles(): array {
-        return $this->userRoles ? $this->userRoles->toArray() : [];
     }
 }

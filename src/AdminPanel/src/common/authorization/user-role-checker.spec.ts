@@ -1,5 +1,4 @@
 import {User} from "users/user";
-import {UserRole} from "users/roles/user-role";
 import {UserRoleChecker} from "./user-role-checker";
 
 describe(UserRoleChecker.name, () => {
@@ -8,10 +7,7 @@ describe(UserRoleChecker.name, () => {
 
   beforeEach(() => {
     currentUser = new User();
-    currentUser.roles = [
-      $.extend(new UserRole(), {id: 'A', systemRoleName: 'B'}),
-      $.extend(new UserRole(), {id: 'C'}),
-    ];
+    currentUser.roles = ['A', 'B', 'C'];
     checker = new UserRoleChecker(currentUser);
   });
 

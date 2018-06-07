@@ -1,6 +1,5 @@
 <template>
     <require from="../graph/workflow-graph-display"></require>
-    <require from="users/details/user-roles-chooser"></require>
     <require from="./workflow-plugins-configuration"></require>
 
     <div class="btn-group pull-right">
@@ -41,13 +40,7 @@
                                     change.delegate="signalWorkflowPlacesUpdated()"></multilingual-editor>
                             </div>
                             <div class="form-group"
-                                if.bind="selectedElement.froms">
-                                <label>${ 'Roles allowed to apply transition' | t }</label>
-                                <user-roles-chooser role-ids.bind="selectedElement.permittedRoleIds"
-                                    change.delegate="saveSelectedElementChanges()"></user-roles-chooser>
-                            </div>
-                            <div class="form-group"
-                                else>
+                                if.bind="!selectedElement.froms">
                                 <workflow-plugins-configuration config.bind="selectedElement.pluginsConfig"
                                     workflow.bind="workflow"
                                     change.delegate="saveSelectedElementChanges()"></workflow-plugins-configuration>

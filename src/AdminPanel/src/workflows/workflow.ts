@@ -61,7 +61,6 @@ export class Workflow extends Entity {
 
 export interface TransitionBlockReason {
   missingMetadataIds: number[];
-  userMissingRequiredRole: boolean;
   otherUserAssigned: boolean;
 }
 
