@@ -8,6 +8,7 @@ use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
 use Repeka\Domain\Validation\Rules\WorkflowTransitionNamesMatchInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\WorkflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -25,6 +26,8 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
     private $workflowPlacesDefinitionIsValidRule;
     /** @var WorkflowTransitionNamesMatchInAllLanguagesRule */
     private $workflowTransitionNamesMatchInAllLanguagesRule;
+    /** @var WorkflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule */
+    private $workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule;
     /** @var NoAssigneeMetadataInFirstPlaceRule */
     private $noAssigneeMetadataInFirstPlaceRule;
 
@@ -35,7 +38,8 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
         WorkflowTransitionsDefinitionIsValidRule $workflowTransitionsDefinitionIsValidRule,
         WorkflowPlacesDefinitionIsValidRule $workflowPlacesDefinitionIsValidRule,
         WorkflowTransitionNamesMatchInAllLanguagesRule $workflowTransitionNamesMatchInAllLanguagesRule,
-        NoAssigneeMetadataInFirstPlaceRule $noAssigneeMetadataInFirstPlaceRule
+        NoAssigneeMetadataInFirstPlaceRule $noAssigneeMetadataInFirstPlaceRule,
+        WorkflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule $workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->resourceClassExistsRule = $resourceClassExistsRule;
@@ -43,6 +47,7 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
         $this->workflowPlacesDefinitionIsValidRule = $workflowPlacesDefinitionIsValidRule;
         $this->workflowTransitionNamesMatchInAllLanguagesRule = $workflowTransitionNamesMatchInAllLanguagesRule;
         $this->noAssigneeMetadataInFirstPlaceRule = $noAssigneeMetadataInFirstPlaceRule;
+        $this->workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule = $workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule;
     }
 
     /**
@@ -56,6 +61,10 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
             ->attribute('places', $this->noAssigneeMetadataInFirstPlaceRule)
             ->attribute('transitions', $this->workflowTransitionsDefinitionIsValidRule)
             ->attribute('resourceClass', $this->resourceClassExistsRule)
-            ->attribute('transitions', $this->workflowTransitionNamesMatchInAllLanguagesRule->withPlaces($command->getPlaces()));
+            ->attribute('transitions', $this->workflowTransitionNamesMatchInAllLanguagesRule->withPlaces($command->getPlaces()))
+            ->attribute(
+                'transitions',
+                $this->workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule->withPlaces($command->getPlaces())
+            );
     }
 }
