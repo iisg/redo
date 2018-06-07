@@ -37,18 +37,18 @@ class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAcceptsValueWhenSoleResourceKindIdMatches() {
-        $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
+        $this->resourceKind->method('getId')->willReturn(123);
         $this->constraint->validateAll($this->createMetadataMock(), [123], [1]);
     }
 
     public function testAcceptsValueWhenAnyResourceKindIdMatches() {
-        $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
+        $this->resourceKind->method('getId')->willReturn(123);
         $this->constraint->validateAll($this->createMetadataMock(), [100, 111, 123, 200], [1]);
     }
 
     public function testRejectsValueWhenResourceKindIdDoesNotMatch() {
         $this->expectException(InvalidCommandException::class);
-        $this->resourceKind->expects($this->once())->method('getId')->willReturn(123);
+        $this->resourceKind->method('getId')->willReturn(123);
         $this->constraint->validateAll($this->createMetadataMock(), [100], [1]);
     }
 

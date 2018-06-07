@@ -34,8 +34,4 @@ services:
    factory: ["@doctrine.orm.entity_manager", getRepository]
    arguments: [Repeka\Application\Entity\UserEntity]
 
-  Repeka\Application\Repository\UserRoleDoctrineRepository:
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Domain\Entity\UserRole]
-
   Repeka\Application\Repository\NativeAssignmentFinder: ~

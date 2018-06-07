@@ -3,17 +3,14 @@
 namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Repeka\Domain\Constants\SystemUserRole;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 
 class ResourceWorkflowsFixture extends RepekaFixture {
-    const ORDER = RolesFixture::ORDER + 1;
+    const ORDER = 1;
 
     const BOOK_WORKFLOW = 'bookWorkflow';
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function load(ObjectManager $manager) {
         $titleMetadataId = $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getId();
         $fileMetadata = $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE);
@@ -57,29 +54,9 @@ JSON
     }
 
     private function getTransitions() {
-        $transitions = json_decode(
+        return json_decode(
             '[{"id":"e7d756ed-d6b3-4f2f-9517-679311e88b17","label":{"PL":"Do\u0142\u0105cz metryczk\u0119","EN":"Attach metrics"},"froms":["y1oosxtgf"],"tos":["lb1ovdqcy"]},{"id":"d3f73249-d10f-4d4b-8b63-be60b4c02081","label":{"PL":"Skanuj","EN":"Scan"},"froms":["lb1ovdqcy"],"tos":["qqd3yk499"]},{"id":"b2725b84-c470-40f7-b7b5-3850e0f2754c","label":{"PL":"Odrzu\u0107","EN":"Reject"},"froms":["qqd3yk499"],"tos":["9qq9ipqa3"]},{"id":"9faac2d6-3a58-4ead-9aa2-9181c778a2e7","label":{"PL":"Skanuj ponownie","EN":"Rescan"},"froms":["9qq9ipqa3"],"tos":["qqd3yk499"]},{"id":"1b59e8f1-26e9-4018-a6cf-a39ef8e8521b","label":{"PL":"Zweryfikuj","EN":"Verify"},"froms":["qqd3yk499"],"tos":["ss9qm7r78"]},{"id":"4d96170b-f486-443d-ad0c-7e882487f5e1","label":{"PL":"Rozpoznaj","EN":"Recognize"},"froms":["ss9qm7r78"],"tos":["jvz160sl4"]},{"id":"e603b0a3-d04f-495c-8caa-a67e604e3c87","label":{"PL":"Zaakceptuj","EN":"Accept"},"froms":["jvz160sl4"],"tos":["xo77kutzk"]},{"id":"ce30b481-8dde-40e4-ab7c-0bc90e918431","label":{"PL":"Opublikuj","EN":"Publish"},"froms":["xo77kutzk"],"tos":["j70hlpsvu"]},{"id":"83c98637-6173-40b2-8840-cc2ae914bcc4","label":{"PL":"Zdejmij","EN":"Unpublish"},"froms":["j70hlpsvu"],"tos":["xo77kutzk"]}]',
             true
         );
-        $additionalPermittedRoles = [
-            'Attach metrics' => [$this->getReference(RolesFixture::ROLE_LIBRARIAN)->getId()],
-            'Scan' => [$this->getReference(RolesFixture::ROLE_SCANNER)->getId()],
-            'Reject' => [$this->getReference(RolesFixture::ROLE_ACCEPTOR)->getId()],
-            'Rescan' => [$this->getReference(RolesFixture::ROLE_SCANNER)->getId()],
-            'Verify' => [
-                $this->getReference(RolesFixture::ROLE_ACCEPTOR)->getId(),
-                $this->getReference(RolesFixture::ROLE_TESTER)->getId(),
-            ],
-            'Recognize' => [$this->getReference(RolesFixture::ROLE_OCR)->getId()],
-            'Accept' => [$this->getReference(RolesFixture::ROLE_ACCEPTOR)->getId()],
-            'Publish' => [$this->getReference(RolesFixture::ROLE_PUBLISHER)->getId()],
-            'Unpublish' => [$this->getReference(RolesFixture::ROLE_PUBLISHER)->getId()],
-        ];
-        foreach ($transitions as &$transition) {
-            $permittedRoles = $additionalPermittedRoles[$transition['label']['EN']] ?? [];
-            $permittedRoles[] = SystemUserRole::ADMIN;
-            $transition['permittedRoleIds'] = $permittedRoles;
-        }
-        return $transitions;
     }
 }

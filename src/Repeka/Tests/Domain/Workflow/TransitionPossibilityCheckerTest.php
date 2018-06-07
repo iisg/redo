@@ -49,8 +49,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->checker = new TransitionPossibilityChecker($this->userRepository);
     }
 
-    private function configureTransition(bool $userHasRole, array $tos = []): void {
-        $this->transition->method('userHasRoleRequiredToApply')->willReturn($userHasRole);
+    private function configureTransition(array $tos = []): void {
         $this->transition->method('getToIds')->willReturn($tos);
     }
 
@@ -65,7 +64,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 $this->createWorkflowPlaceMock('p2'),
             ]
         );
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
     }
@@ -85,7 +84,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         );
         $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
         $this->assertFalse($result->isOtherUserAssigned());
@@ -108,7 +107,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         );
         $this->executor->method('getUserGroupsIds')->willReturn([1000]);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
         $this->assertFalse($result->isOtherUserAssigned());
@@ -124,7 +123,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $resourceContents = ResourceContents::fromArray([1 => [1000]]);
         $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $this->checkWithDefaults();
     }
 
@@ -143,7 +142,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         );
         $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([3]);
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertFalse($result->isTransitionPossible());
         $this->assertTrue($result->isOtherUserAssigned());
@@ -163,23 +162,10 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
         $this->assertFalse($result->isOtherUserAssigned());
-    }
-
-    public function testNegativeWhenExecutorIsMissingRole() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1'),
-                $this->createWorkflowPlaceMock('p2'),
-            ]
-        );
-        $this->configureTransition(false, ['p1', 'p2']);
-        $result = $this->checkWithDefaults();
-        $this->assertFalse($result->isTransitionPossible());
-        $this->assertTrue($result->isUserMissingRequiredRole());
     }
 
     public function testReturnsMissingMetadataIds() {
@@ -190,7 +176,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->resourceKind->method('getMetadataIds')->willReturn([2, 3]);
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertEquals([2, 3], $result->getMissingMetadataIds());
         $this->assertFalse($result->isTransitionPossible());
@@ -204,7 +190,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->resourceKind->method('getMetadataIds')->willReturn([2, 3]);
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertEquals([2, 3], $result->getMissingMetadataIds());
         $this->assertFalse($result->isTransitionPossible());
@@ -218,7 +204,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->resourceKind->method('getMetadataIds')->willReturn([2, 3]);
-        $this->configureTransition(true, ['p1', 'p2']);
+        $this->configureTransition(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertEmpty($result->getMissingMetadataIds());
         $this->assertTrue($result->isTransitionPossible());

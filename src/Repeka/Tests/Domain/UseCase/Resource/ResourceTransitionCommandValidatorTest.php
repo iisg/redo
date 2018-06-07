@@ -100,7 +100,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createWorkflowPlaceMock('p2', []),
             ]
         );
-        $transition = $this->configureTransition('t1', true, ['p2']);
+        $transition = $this->configureTransition('t1', ['p2']);
         $command = new ResourceTransitionCommand(
             $this->resource,
             ResourceContents::empty(),
@@ -146,7 +146,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $transitionPossibilityChecker = $this->createMock(TransitionPossibilityChecker::class);
         $transitionPossibilityChecker->method('check')->willReturn(new TransitionPossibilityCheckResult([], true, true));
         $validator = $this->createValidator(true, true, true, true, true, $transitionPossibilityChecker);
-        $transition = $this->configureTransition('t1', false);
+        $transition = $this->configureTransition('t1');
         $command = new ResourceTransitionCommand(
             $this->resource,
             ResourceContents::empty(),
@@ -156,10 +156,9 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->validate($command);
     }
 
-    private function configureTransition(string $id, bool $userHasRole, array $tos = []): ResourceWorkflowTransition {
+    private function configureTransition(string $id, array $tos = []): ResourceWorkflowTransition {
         $transition = $this->createMock(ResourceWorkflowTransition::class);
         $transition->method('getId')->willReturn($id);
-        $transition->method('userHasRoleRequiredToApply')->willReturn($userHasRole);
         $transition->method('getToIds')->willReturn($tos);
         $this->workflow->method('getTransitions')->willReturn([$transition]);
         $this->workflow->method('getTransition')->willReturn($transition);

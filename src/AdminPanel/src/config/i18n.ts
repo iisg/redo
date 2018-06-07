@@ -48,7 +48,6 @@ export class I18nParams {
     'metadata_constraints',
     'navigation',
     'resource_classes',
-    'roles',
     'validation',
   ];
 

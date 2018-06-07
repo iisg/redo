@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
-use Assert\Assertion;
 use M6Web\Component\Statsd\Client;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\EventListener\CsrfRequestListener;
@@ -9,12 +8,8 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\User\UserByUserDataQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
-use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
-use Repeka\Domain\UseCase\UserRole\UserRoleQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/users")
@@ -68,26 +63,5 @@ class UsersController extends ApiController {
     public function getUserByDataAction(ResourceEntity $resource) {
         $relatedUser = $this->handleCommand(new UserByUserDataQuery($resource));
         return $this->createJsonResponse($relatedUser);
-    }
-
-    /**
-     * @Route("/{user}")
-     * @Method("PATCH")
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function updateUserAction(UserEntity $user, Request $request) {
-        $data = $request->request->all();
-        if (isset($data['roleIds'])) {
-            Assertion::isArray($data['roleIds']);
-            $roles = array_map(
-                function ($roleId) {
-                    return $this->handleCommand(new UserRoleQuery($roleId));
-                },
-                $data['roleIds']
-            );
-            $command = new UserUpdateRolesCommand($user, $roles, $this->getUser());
-            $user = $this->handleCommand($command);
-        }
-        return $this->createJsonResponse($user);
     }
 }

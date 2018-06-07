@@ -3,7 +3,6 @@ namespace Repeka\Application\Command;
 
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Repository\UserRepository;
-use Repeka\Domain\Repository\UserRoleRepository;
 use Repeka\Domain\UseCase\User\UserCreateCommand;
 use Repeka\Domain\UseCase\User\UserUpdateRolesCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -15,15 +14,12 @@ use Symfony\Component\Console\Question\Question;
 class CreateAdminUserCommand extends ContainerAwareCommand {
     /** @var UserRepository */
     private $userRepository;
-    /** @var UserRoleRepository */
-    private $userRoleRepository;
     /** @var CommandBus */
     private $commandBus;
 
-    public function __construct(UserRepository $userRepository, UserRoleRepository $userRoleRepository, CommandBus $commandBus) {
+    public function __construct(UserRepository $userRepository, CommandBus $commandBus) {
         parent::__construct();
         $this->userRepository = $userRepository;
-        $this->userRoleRepository = $userRoleRepository;
         $this->commandBus = $commandBus;
     }
 
@@ -82,8 +78,6 @@ class CreateAdminUserCommand extends ContainerAwareCommand {
 
     private function saveNewAdminAccount(string $username, string $plainPassword) {
         $userCreateCommand = new UserCreateCommand($username, $plainPassword);
-        $user = $this->commandBus->handle($userCreateCommand);
-        $userUpdateRolesCommand = new UserUpdateRolesCommand($user, $this->userRoleRepository->findAll(), $user);
-        $this->commandBus->handle($userUpdateRolesCommand);
+        $this->commandBus->handle($userCreateCommand);
     }
 }

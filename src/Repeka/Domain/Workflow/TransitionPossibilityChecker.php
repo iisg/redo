@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Domain\Workflow;
 
-use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -27,7 +26,6 @@ class TransitionPossibilityChecker {
     ): TransitionPossibilityCheckResult {
         return new TransitionPossibilityCheckResult(
             $this->determineMissingMetadataIds($resource, $newContents, $transition),
-            $this->executorIsMissingRequiredRole($transition, $executor),
             $this->executorIsNotAssignee($resource, $transition, $executor)
         );
     }
@@ -51,10 +49,6 @@ class TransitionPossibilityChecker {
         $resourceKindMetadataIds = $resource->getKind()->getMetadataIds();
         $missingMetadataIds = array_intersect($missingMetadataIds, $resourceKindMetadataIds);
         return array_values(array_unique($missingMetadataIds));
-    }
-
-    private function executorIsMissingRequiredRole(ResourceWorkflowTransition $transition, User $executor): bool {
-        return SystemTransition::isValid($transition->getId()) ? false : !$transition->userHasRoleRequiredToApply($executor);
     }
 
     private function executorIsNotAssignee(ResourceEntity $resource, ResourceWorkflowTransition $transition, User $executor): bool {

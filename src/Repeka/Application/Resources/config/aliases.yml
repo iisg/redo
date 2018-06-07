@@ -11,7 +11,6 @@ services:
   Repeka\Domain\Repository\ResourceKindDoctrineRepository: '@Repeka\Application\Repository\ResourceKindDoctrineRepository'
   Repeka\Domain\Repository\ResourceWorkflowRepository: '@Repeka\Application\Repository\ResourceWorkflowDoctrineRepository'
   Repeka\Domain\Repository\UserRepository: '@Repeka\Application\Repository\UserDoctrineRepository'
-  Repeka\Domain\Repository\UserRoleRepository: '@Repeka\Application\Repository\UserRoleDoctrineRepository'
   Repeka\Domain\Service\RegexNormalizer: '@Repeka\Application\Service\PhpRegexNormalizer'
   Repeka\Domain\Service\ResourceDisplayStrategyEvaluator: '@Repeka\Application\Service\DisplayStrategies\TwigResourceDisplayStrategyEvaluator'
   Repeka\Domain\Upload\ResourceFileHelper: '@Repeka\Application\Upload\BasicResourceFileHelper'

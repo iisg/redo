@@ -3,7 +3,6 @@ namespace Repeka\Tests\Integration\ResourceWorkflow;
 
 use Repeka\DeveloperBundle\DataFixtures\ORM\MetadataFixture;
 use Repeka\DeveloperBundle\DataFixtures\ORM\ResourceWorkflowsFixture;
-use Repeka\DeveloperBundle\DataFixtures\ORM\RolesFixture;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
@@ -18,7 +17,7 @@ class ResourceWorkflowDriverInjectorIntegrationTest extends IntegrationTestCase 
 
     public function setUp() {
         parent::setUp();
-        self::loadFixture(new RolesFixture(), new MetadataFixture(), new ResourceWorkflowsFixture());
+        self::loadFixture(new MetadataFixture(), new ResourceWorkflowsFixture());
         $this->workflow = $this->container->get(ResourceWorkflowRepository::class)->findAll()[0];
         $this->resourceClass = 'books';
     }

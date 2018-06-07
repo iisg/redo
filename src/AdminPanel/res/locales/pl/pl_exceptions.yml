@@ -33,7 +33,6 @@ violationFields:
   newLabel: Nowa nazwa
   places: Edytowane Miejsca
   transitions: Przejścia
-user role is in use: Rola jest w użyciu.
 resource has children: zasób ma podzasoby.
 resources of this kind exist: istnieją zasoby tego rodzaju.
 workflow is assigned to one of resource kinds: proces jest przypisany do jednego z rodzajów zasobów

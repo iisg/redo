@@ -33,8 +33,6 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
     new Route('new/:resourceClass', 'new', 'details/workflow-new').withBreadcrumbsProvider('workflow')
   ]),
 
-  new Route('roles', 'roles', 'users/roles/user-roles').withMenuItem('Roles', NavRole.BOTTOM, 'roles'),
-
   new Route('languages', 'languages', 'resources-config/language-config/languages-list')
     .withMenuItem('Languages', NavRole.BOTTOM, 'languages'),
 

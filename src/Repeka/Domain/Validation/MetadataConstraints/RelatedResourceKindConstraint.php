@@ -37,7 +37,10 @@ class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint 
     public function validate(Metadata $metadata, $allowedResourceKindIds, $resourceId) {
         try {
             $resource = $this->resourceRepository->findOne($resourceId);
-            Validator::in($allowedResourceKindIds)->setName($metadata->getName())->assert($resource->getKind()->getId());
+            Validator::in($allowedResourceKindIds)
+                ->setName($metadata->getName())
+                ->setTemplate("Resource kind #{$resource->getKind()->getId()} is not allowed for this relationship.")
+                ->assert($resource->getKind()->getId());
         } catch (EntityNotFoundException $e) {
             // we accept relationships that are unknown; they will be possibly added or imported in the future
         }
