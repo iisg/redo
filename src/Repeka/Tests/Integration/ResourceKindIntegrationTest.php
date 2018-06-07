@@ -187,11 +187,11 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             ['PL' => 'test', 'EN' => 'test'],
             'books',
             [
-                new ResourceWorkflowPlace([], 'A'),
-                new ResourceWorkflowPlace([], 'B'),
+                new ResourceWorkflowPlace(['PL' => 'A', 'EN' => 'A'], 'A'),
+                new ResourceWorkflowPlace(['PL' => 'B', 'EN' => 'B'], 'B'),
             ],
             [
-                new ResourceWorkflowTransition(['PL' => 'przejscie'], ['A'], ['B']),
+                new ResourceWorkflowTransition(['PL' => 'przejscie', 'EN'=>'transition'], ['A'], ['B']),
             ]
         );
         $resource = $this->handleCommand(

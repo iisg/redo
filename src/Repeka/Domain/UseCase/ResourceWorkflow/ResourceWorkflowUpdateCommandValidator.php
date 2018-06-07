@@ -10,6 +10,7 @@ use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesDefinitionIsValidRule;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesForDeletionAreUnoccupiedRule;
 use Repeka\Domain\Validation\Rules\WorkflowTransitionNamesMatchInAllLanguagesRule;
+use Repeka\Domain\Validation\Rules\WorkflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\WorkflowTransitionsDefinitionIsValidRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -28,6 +29,8 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
     protected $workflowPlacesForDeletionAreUnoccupied;
     /** @var WorkflowTransitionNamesMatchInAllLanguagesRule */
     private $workflowTransitionNamesMatchInAllLanguagesRule;
+    /** @var WorkflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule */
+    private $workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule;
     /** @var NoAssigneeMetadataInFirstPlaceRule */
     private $noAssigneeMetadataInFirstPlaceRule;
 
@@ -38,7 +41,8 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
         WorkflowPlacesDefinitionIsValidRule $workflowPlacesDefinitionIsValidRule,
         WorkflowPlacesForDeletionAreUnoccupiedRule $workflowPlacesForDeletionAreUnoccupied,
         WorkflowTransitionNamesMatchInAllLanguagesRule $workflowTransitionNamesMatchInAllLanguagesRule,
-        NoAssigneeMetadataInFirstPlaceRule $noAssigneeMetadataInFirstPlaceRule
+        NoAssigneeMetadataInFirstPlaceRule $noAssigneeMetadataInFirstPlaceRule,
+        WorkflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule $workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule
     ) {
         $this->entityExistsRule = $entityExistsRule;
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
@@ -47,6 +51,7 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
         $this->workflowPlacesForDeletionAreUnoccupied = $workflowPlacesForDeletionAreUnoccupied;
         $this->workflowTransitionNamesMatchInAllLanguagesRule = $workflowTransitionNamesMatchInAllLanguagesRule;
         $this->noAssigneeMetadataInFirstPlaceRule = $noAssigneeMetadataInFirstPlaceRule;
+        $this->workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule = $workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule;
     }
 
     /** @inheritdoc */
@@ -67,6 +72,10 @@ class ResourceWorkflowUpdateCommandValidator extends CommandAttributesValidator 
                 ->attribute('places', $this->workflowPlacesForDeletionAreUnoccupied->forWorkflow($command->getWorkflow()))
                 ->attribute('transitions', $this->workflowTransitionsDefinitionIsValidRule)
                 ->attribute('transitions', $this->workflowTransitionNamesMatchInAllLanguagesRule->withPlaces($command->getPlaces()))
+                ->attribute(
+                    'transitions',
+                    $this->workflowTransitionsAndPlacesNamesSpecifiedInAllLanguagesRule->withPlaces($command->getPlaces())
+                )
         );
     }
 }
