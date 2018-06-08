@@ -35,7 +35,7 @@ class MetadataValueSetterOnResourceTransitionListener {
                 foreach ($metadataNames as $key => $value) {
                     try {
                         $metadata = $resource->getKind()->getMetadataByIdOrName($value);
-                        $value = $this->strategyEvaluator->render($resource, $metadataValues[$key]);
+                        $value = $this->strategyEvaluator->render($newResourceContents, $metadataValues[$key]);
                         if (!in_array($value, $newResourceContents->getValues($metadata))) {
                             $newResourceContents = $newResourceContents->withMergedValues($metadata, $value);
                         }

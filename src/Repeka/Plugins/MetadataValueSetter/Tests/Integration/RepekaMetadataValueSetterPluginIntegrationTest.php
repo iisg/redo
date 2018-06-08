@@ -7,18 +7,12 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Plugins\MetadataValueSetter\EventListener\MetadataValueSetterOnResourceTransitionListener;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
-use Repeka\Tests\TestContainerPass;
 
 class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     /** @var MetadataValueSetterOnResourceTransitionListener */
     private $listener;
-
-    public function prepareIntegrationTest() {
-        TestContainerPass::addPublicServices([MetadataValueSetterOnResourceTransitionListener::class]);
-        parent::prepareIntegrationTest();
-    }
 
     /** @before */
     public function init() {

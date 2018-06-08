@@ -8,7 +8,6 @@ use Repeka\Plugins\Ocr\EventListener\OcrOnResourceTransitionListener;
 use Repeka\Plugins\Ocr\Model\OcrCommunicator;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
-use Repeka\Tests\TestContainerPass;
 
 class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
@@ -17,11 +16,6 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
     private $listener;
     /** @var OcrCommunicator|\PHPUnit_Framework_MockObject_MockObject */
     private $communicator;
-
-    public function prepareIntegrationTest() {
-        TestContainerPass::addPublicServices([OcrOnResourceTransitionListener::class]);
-        parent::prepareIntegrationTest();
-    }
 
     /** @before */
     public function init() {

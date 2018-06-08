@@ -23,9 +23,12 @@
         <testsuite name="unit">
             <directory>../src/Repeka/Tests</directory>
             <exclude>../src/Repeka/Tests/Integration</exclude>
+            <directory>../src/Repeka/Plugins/*/Tests</directory>
+            <exclude>../src/Repeka/Plugins/*/Tests/Integration</exclude>
         </testsuite>
         <testsuite name="integration">
             <directory>../src/Repeka/Tests/Integration</directory>
+            <directory>../src/Repeka/Plugins/*/Tests/Integration</directory>
         </testsuite>
     </testsuites>
 
