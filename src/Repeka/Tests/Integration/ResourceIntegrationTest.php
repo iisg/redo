@@ -218,7 +218,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
-        $expectedOrder = [$this->parentResource->getId(), $this->resourceWithWorkflow->getId()];
+        $expectedOrder = [$this->parentResource->getId(), $this->resource->getId()];
         $actualOrder = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
         $this->assertEquals($expectedOrder, $actualOrder);
         $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));

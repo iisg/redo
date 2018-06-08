@@ -20,9 +20,7 @@ export class SortButton {
   fetchSortedResources() {
     const columnSort = this.columnSort();
     if (!columnSort) {
-      if (!this.sortBy) {
-        this.sortBy = [];
-      }
+      this.sortBy = [];
       this.sortBy.push(new ResourceSort(this.columnId, SortDirection.ASC));
     } else if (columnSort.direction === SortDirection.ASC) {
       columnSort.direction = SortDirection.DESC;
@@ -30,7 +28,7 @@ export class SortButton {
       if (columnSort.columnId === 'id') {
         columnSort.direction = SortDirection.ASC;
       } else {
-        this.sortBy.splice(this.sortBy.indexOf(columnSort), 1);
+        this.sortBy = [];
       }
     }
     const currentInstruction = this.router.currentInstruction;

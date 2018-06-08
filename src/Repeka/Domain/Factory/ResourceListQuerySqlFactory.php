@@ -119,22 +119,20 @@ class ResourceListQuerySqlFactory {
 
     private function addOrderBy(): void {
         $sortByIds = $this->query->getSortBy();
-        $sortById = $sortByKindId = null;
         foreach ($sortByIds as $columnSort) {
             $sortId = $columnSort['columnId'];
             $direction = $columnSort['direction'];
             if ($sortId == 'id') {
-                $sortById = "r.id " . $direction;
+                $this->orderBy[] = "r.id " . $direction;
             } elseif ($sortId == 'kindId') {
-                $sortByKindId = "r.kind_id " . $direction;
+                $this->orderBy[] = "r.kind_id " . $direction;
             } else {
                 $this->orderBy[] = "jsonb_array_elements(r.contents->'$sortId')->>'value' $direction";
             }
         }
-        if ($sortByKindId) {
-            $this->orderBy[] = $sortByKindId;
+        if (empty($this->orderBy)) {
+            $this->orderBy[] = "r.id DESC";
         }
-        $this->orderBy[] = $sortById ? $sortById : "r.id DESC";
     }
 
     protected function paginate(): void {

@@ -19,6 +19,7 @@ export class ResourceListMetadataFilter {
   }
 
   attached() {
+    this.ensureContentsFilterExists();
     this.metadataValue.onChange(this.bindingEngine, () => this.onValueChange());
     this.updateIsFilterUsed();
   }
@@ -31,10 +32,14 @@ export class ResourceListMetadataFilter {
     this.metadataValue.value = this.contentsFilter ? this.contentsFilter[this.metadata.id] : '';
   }
 
-  private onValueChange() {
+  private ensureContentsFilterExists() {
     if (!this.contentsFilter) {
       this.contentsFilter = {};
     }
+  }
+
+  private onValueChange() {
+    this.ensureContentsFilterExists();
     this.contentsFilter[this.metadata.id] = this.metadataValue.value;
   }
 
