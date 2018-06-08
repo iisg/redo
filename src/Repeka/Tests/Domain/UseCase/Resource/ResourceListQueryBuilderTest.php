@@ -87,8 +87,8 @@ class ResourceListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
 
     public function testSortByMetadataId() {
         $sortBy = [2 => 'ASC'];
-        $query = ResourceListQuery::builder()->sortByMetadataIds($sortBy)->build();
-        $this->assertEquals($sortBy, $query->getSortByMetadataIds());
+        $query = ResourceListQuery::builder()->sortBy($sortBy)->build();
+        $this->assertEquals($sortBy, $query->getSortBy());
     }
 
     public function testInvalidIfPerPageIsNegativeValues() {

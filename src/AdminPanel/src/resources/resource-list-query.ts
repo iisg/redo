@@ -1,7 +1,7 @@
 import {Resource} from "./resource";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
-import {ResourceMetadataSort} from "./resource-metadata-sort";
+import {ResourceSort} from "./resource-sort";
 import {AbstractListQuery} from "./abstract-list-query";
 
 export class ResourceListQuery extends AbstractListQuery<Resource> {
@@ -41,7 +41,7 @@ export class ResourceListQuery extends AbstractListQuery<Resource> {
     return this;
   }
 
-  public sortByMetadataIds(sortBy: ResourceMetadataSort[]): ResourceListQuery {
+  public sortByMetadataIds(sortBy: ResourceSort[]): ResourceListQuery {
     this.params.sortByIds = sortBy;
     return this;
   }

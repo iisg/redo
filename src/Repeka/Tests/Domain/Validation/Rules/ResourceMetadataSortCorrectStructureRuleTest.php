@@ -25,27 +25,30 @@ class ResourceMetadataSortCorrectStructureRuleTest extends \PHPUnit_Framework_Te
             [[], true],
             [['ala' => 'kot'], false],
             [['2' => 'kot'], false],
-            [[['metadataId' => 1]], false],
-            [[['metadataId' => 1, 'direction' => 'NONE']], false],
-            [[['metadataId' => 'a', 'direction' => 'ASC']], false],
+            [[['columnId' => 1]], false],
+            [[['columnId' => 1, 'direction' => 'NONE']], false],
+            [[['columnId' => 'a', 'direction' => 'ASC']], false],
             [[['badKey' => 1, 'direction' => 'ASC']], false],
-            [[['metadataId' => 1, 'badKey' => 'ASC']], false],
-            [[['metadataId' => 1, 'direction' => 'ASC']], true],
-            [[['metadataId' => 1, 'direction' => 'DESC']], true],
+            [[['columnId' => 1, 'badKey' => 'ASC']], false],
+            [[['columnId' => 1, 'direction' => 'ASC']], true],
+            [[['columnId' => 1, 'direction' => 'DESC']], true],
             [
                 [
-                    ['metadataId' => 1, 'direction' => 'DESC'],
-                    ['metadataId' => 2, 'direction' => 'ASC'],
+                    ['columnId' => 1, 'direction' => 'DESC'],
+                    ['columnId' => 2, 'direction' => 'ASC'],
                 ],
                 true,
             ],
             [
                 [
-                    ['metadataId' => 1, 'direction' => 'DESC'],
-                    ['metadataId' => 2, 'direction' => 'NONE'],
+                    ['columnId' => 1, 'direction' => 'DESC'],
+                    ['columnId' => 2, 'direction' => 'NONE'],
                 ],
                 false,
             ],
+            [[['columnId' => 'id', 'direction' => 'ASC']], true],
+            [[['columnId' => 'kindId', 'direction' => 'ASC']], true],
+            [[['columnId' => 'a', 'direction' => 'ASC']], false],
         ];
     }
 }

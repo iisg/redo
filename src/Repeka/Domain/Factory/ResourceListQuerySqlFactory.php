@@ -118,12 +118,23 @@ class ResourceListQuerySqlFactory {
     }
 
     private function addOrderBy(): void {
-        foreach ($this->query->getSortByMetadataIds() as $resourceMetadataSort) {
-            $metadataId = $resourceMetadataSort['metadataId'];
-            $direction = $resourceMetadataSort['direction'];
-            $this->orderBy[] = "jsonb_array_elements(r.contents->'$metadataId')->>'value' $direction";
+        $sortByIds = $this->query->getSortBy();
+        $sortById = $sortByKindId = null;
+        foreach ($sortByIds as $columnSort) {
+            $sortId = $columnSort['columnId'];
+            $direction = $columnSort['direction'];
+            if ($sortId == 'id') {
+                $sortById = "r.id " . $direction;
+            } elseif ($sortId == 'kindId') {
+                $sortByKindId = "r.kind_id " . $direction;
+            } else {
+                $this->orderBy[] = "jsonb_array_elements(r.contents->'$sortId')->>'value' $direction";
+            }
         }
-        $this->orderBy[] = "r.id ASC";
+        if ($sortByKindId) {
+            $this->orderBy[] = $sortByKindId;
+        }
+        $this->orderBy[] = $sortById ? $sortById : "r.id DESC";
     }
 
     protected function paginate(): void {

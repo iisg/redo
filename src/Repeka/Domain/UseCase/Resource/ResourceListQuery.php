@@ -9,7 +9,7 @@ use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 /** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
     private $ids;
-    /** @var ResourceKind[] */
+    /** @var ResourceKind[] | int[] */
     private $resourceKinds;
     /** @var string[] */
     private $resourceClasses;
@@ -79,7 +79,7 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
         return $this->workflowPlacesIds;
     }
 
-    public function getSortByMetadataIds(): array {
+    public function getSortBy(): array {
         return $this->sortBy;
     }
 

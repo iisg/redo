@@ -4,15 +4,15 @@ import {EventAggregator} from "aurelia-event-aggregator";
 import {parseQueryString} from "aurelia-path";
 import {NavigationInstruction, Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
-import {ResourceRepository} from "../resource-repository";
 import {Resource} from "../resource";
-import {Metadata} from "../../resources-config/metadata/metadata";
-import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
-import {getMergedBriefMetadata} from "../../common/utils/metadata-utils";
 import {PageResult} from "../page-result";
+import {ResourceSort, SortDirection} from "../resource-sort";
+import {Metadata} from "../../resources-config/metadata/metadata";
 import {ContextResourceClass} from "../context/context-resource-class";
-import {ResourceMetadataSort} from "../resource-metadata-sort";
+import {ResourceRepository} from "../resource-repository";
+import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
 import {safeJsonParse} from "../../common/utils/object-utils";
+import {getMergedBriefMetadata} from "../../common/utils/metadata-utils";
 
 @autoinject
 export class ResourcesList {
@@ -26,7 +26,7 @@ export class ResourcesList {
   @bindable currentPageNumber: number;
   @observable resources: PageResult<Resource>;
   contentsFilter: NumberMap<string>;
-  sortBy: ResourceMetadataSort[];
+  sortBy: ResourceSort[];
   totalNumberOfResources: number;
   addFormOpened: boolean;
   briefMetadata: Metadata[];
@@ -54,6 +54,7 @@ export class ResourcesList {
     this.updateURL(true);
     this.fetchResources();
     this.activated = true;
+    this.sortBy = this.sortBy ? this.sortBy : [new ResourceSort('id', SortDirection.DESC)];
   }
 
   private obtainResultsPerPageValue(parameters: any): boolean {
