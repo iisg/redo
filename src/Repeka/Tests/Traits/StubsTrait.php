@@ -79,6 +79,16 @@ trait StubsTrait {
         $resourceKind->method('getMetadataList')->willReturn($metadataList);
         $resourceKind->method('getWorkflow')->willReturn($workflow);
         $resourceKind->method('getMetadataIds')->willReturn(EntityUtils::mapToIds($metadataList));
+        $resourceKind->method('getMetadataByIdOrName')->willReturnCallback(
+            function ($id) use ($metadataList) {
+                foreach ($metadataList as $metadata) {
+                    if ($metadata->getId() == $id) {
+                        return $metadata;
+                    }
+                }
+                throw new \InvalidArgumentException();
+            }
+        );
         return $resourceKind;
     }
 
