@@ -51,10 +51,10 @@ export class ResourcesList {
     this.currentPageNumberChangedOnActivate = this.activated && currentPageNumberChanged;
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']);
     this.sortBy = safeJsonParse(parameters['sortBy']);
+    this.sortBy = this.sortBy ? this.sortBy : [new ResourceSort('id', SortDirection.DESC)];
     this.updateURL(true);
     this.fetchResources();
     this.activated = true;
-    this.sortBy = this.sortBy ? this.sortBy : [new ResourceSort('id', SortDirection.DESC)];
   }
 
   private obtainResultsPerPageValue(parameters: any): boolean {
