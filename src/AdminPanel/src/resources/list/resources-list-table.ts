@@ -16,6 +16,7 @@ export class ResourcesListTable {
   @bindable(twoWay) contentsFilter: NumberMap<string>;
   @bindable sortBy: ResourceSort[];
   @bindable sortable: boolean = true;
+  @bindable filterable: boolean = true;
 
   isFilterableMetadata(metadata: Metadata) {
     return inArray(metadata.control, filterableControls);

@@ -58,7 +58,7 @@ trait StubsTrait {
         $metadata->method('getResourceClass')->willReturn($resourceClass);
         $metadata->method('withOverrides')->willReturn($metadata);
         $metadata->method('getOverrides')->willReturn($overrides);
-        $metadata->method('getName')->willReturn($name);
+        $metadata->method('getName')->willReturn($name ?: 'metadata' . $id);
         return $metadata;
     }
 
@@ -101,6 +101,7 @@ trait StubsTrait {
             $resourceKind = $this->createResourceKindMock();
         }
         $mock->method('getKind')->willReturn($resourceKind);
+        $mock->method('getResourceClass')->willReturn($resourceKind->getResourceClass());
         $mock->method('getId')->willReturn($id);
         $contents = $contents instanceof ResourceContents ? $contents : ResourceContents::fromArray($contents);
         $mock->method('getContents')->willReturn($contents);
@@ -237,8 +238,10 @@ trait StubsTrait {
         $mock->method('getId')->willReturn($id);
         $mock->method('getMissingRequiredMetadataIds')->willReturn($missingMetadataIds);
         $mock->method('resourceHasRequiredMetadata')->willReturn(empty($missingMetadataIds));
-        $mock->method('restrictingMetadataIds')->willReturn(
-            new FluentRestrictingMetadataSelector([], [], $assigneeMetadataIds, $autoAssignMetadataIds)
+        $mock->method('restrictingMetadataIds')->willReturnCallback(
+            function () use ($autoAssignMetadataIds, $assigneeMetadataIds) {
+                return new FluentRestrictingMetadataSelector([], [], $assigneeMetadataIds, $autoAssignMetadataIds);
+            }
         );
         $mock->method('getLabel')->willReturn($label);
         return $mock;

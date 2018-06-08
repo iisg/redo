@@ -9,6 +9,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -26,10 +27,17 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->resource = $this->createMock(ResourceEntity::class);
         $resourceKind = $this->createMock(ResourceKind::class);
-        $resourceKind->method('getMetadataIds')->willReturn([0, 1, 2, 3, 4]);
+        $resourceKind->method('getMetadataIds')->willReturn([0, 1, 2, 3]);
         $this->resource->method('getKind')->willReturn($resourceKind);
         $this->resource->method('getWorkflow')->willReturn($this->workflow);
-        $this->rule = new LockedMetadataValuesAreUnchangedRule();
+        $metadataRepository = $this->createMock(MetadataRepository::class);
+        $metadataRepository->method('findByQuery')->willReturn(
+            [
+                $this->createMetadataMock(1),
+                $this->createMetadataMock(2),
+            ]
+        );
+        $this->rule = new LockedMetadataValuesAreUnchangedRule($metadataRepository);
     }
 
     public function testFailsWithoutResource() {
@@ -147,7 +155,7 @@ class LockedMetadataValuesAreUnchangedRuleTest extends \PHPUnit_Framework_TestCa
     }
 
     public function testRejectsWithNiceErrorMessage() {
-        $this->expectExceptionMessage("Metadata 1, 2");
+        $this->expectExceptionMessage('metadata1, metadata2');
         $place = new ResourceWorkflowPlace([], 'place', [], [1, 2]);
         $transition = new ResourceWorkflowTransition([], ['place'], ['place']);
         $this->workflow->method('getPlaces')->willReturn([$place]);

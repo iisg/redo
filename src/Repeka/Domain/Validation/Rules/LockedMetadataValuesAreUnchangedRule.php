@@ -3,12 +3,15 @@ namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\Identifiable;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
+use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Respect\Validation\Rules\AbstractRule;
 
@@ -17,9 +20,15 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
     private $resource;
     /** @var ResourceWorkflowTransition */
     private $transition;
+    /** @var MetadataRepository */
+    private $metadataRepository;
+
+    public function __construct(MetadataRepository $metadataRepository) {
+        $this->metadataRepository = $metadataRepository;
+    }
 
     public function forResourceAndTransition(ResourceEntity $resource, ResourceWorkflowTransition $transition = null): self {
-        $instance = new self();
+        $instance = new self($this->metadataRepository);
         $instance->resource = $resource;
         $instance->transition = $transition;
         return $instance;
@@ -47,7 +56,15 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
         $modifiedLockedMetadataIds = $this->getModifiedLockedMetadataIds($currentContents, $newContents, $lockedMetadataIds);
         if (count($modifiedLockedMetadataIds) > 0) {
             sort($modifiedLockedMetadataIds);
-            $nameForErrorMessage = implode(', ', $modifiedLockedMetadataIds);
+            $query = MetadataListQuery::builder()->filterByIds($modifiedLockedMetadataIds)->build();
+            $modifiedLockedMetadata = $this->metadataRepository->findByQuery($query);
+            $modifiedLockedMetadataNames = array_map(
+                function (Metadata $metadata) {
+                    return $metadata->getName();
+                },
+                $modifiedLockedMetadata
+            );
+            $nameForErrorMessage = implode(', ', $modifiedLockedMetadataNames);
             $this->setName("Metadata $nameForErrorMessage");
             return false;
         }

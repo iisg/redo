@@ -25,6 +25,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_FILE = 'metadata-file';
     const REFERENCE_METADATA_CATEGORY_NAME = 'metadata-category-name';
     const REFERENCE_METADATA_ASSIGNED_SCANNER = 'metadata-assigned-scanner';
+    const REFERENCE_METADATA_REAL_SCANNER = 'metadata-real-scanner';
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
     const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
@@ -223,6 +224,23 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_ASSIGNED_SCANNER
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Zeskanowane przez',
+                    'label' => [
+                        'PL' => 'Zeskanowane przez',
+                        'EN' => 'Scanned by',
+                    ],
+                    'description' => [],
+                    'placeholder' => [],
+                    'control' => 'relationship',
+                    'resourceClass' => 'books',
+                    'constraints' => $this->relationshipConstraints(1, [-1]),
+                ]
+            ),
+            self::REFERENCE_METADATA_REAL_SCANNER
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(

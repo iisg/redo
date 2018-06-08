@@ -26,7 +26,7 @@
                 <sort-button if.bind="sortable"
                     column-id.bind="metadata.id"
                     sort-by.bind="sortBy"></sort-button>
-                <resource-list-metadata-filter if.bind="isFilterableMetadata(metadata)"
+                <resource-list-metadata-filter if.bind="isFilterableMetadata(metadata) && filterable"
                     class.bind="contentsFilter[metadata.id] ? 'filter-column filter-display' : 'filter-column'"
                     metadata.bind="metadata"
                     contents-filter.bind="contentsFilter"></resource-list-metadata-filter>
