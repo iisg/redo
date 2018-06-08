@@ -26,7 +26,7 @@ class TransitionPossibilityChecker {
     ): TransitionPossibilityCheckResult {
         return new TransitionPossibilityCheckResult(
             $this->determineMissingMetadataIds($resource, $newContents, $transition),
-            !$this->executorIsAssignee($resource, $transition, $executor)
+            $this->isTransitionGuardedByAssignees($resource, $transition) && !$this->executorIsAssignee($resource, $transition, $executor)
         );
     }
 
@@ -51,22 +51,26 @@ class TransitionPossibilityChecker {
         return array_values(array_unique($missingMetadataIds));
     }
 
-    private function executorIsAssignee(ResourceEntity $resource, ResourceWorkflowTransition $transition, User $executor): bool {
-        if (!$resource->hasWorkflow()) {
-            return true;
+    public function isTransitionGuardedByAssignees(ResourceEntity $resource, ResourceWorkflowTransition $transition) {
+        if ($resource->hasWorkflow()) {
+            $assigneeMetadataIds = $this->getAssigneeMetadataIds($resource->getWorkflow(), $transition);
+            $autoAssignMetadataIds = $this->getAutoAssignMetadataIds($resource->getWorkflow(), $transition);
+            $assigneeMetadataIds = array_intersect($assigneeMetadataIds, $resource->getKind()->getMetadataIds());
+            $autoAssignMetadataIds = array_intersect($autoAssignMetadataIds, $resource->getKind()->getMetadataIds());
+            return $assigneeMetadataIds || $autoAssignMetadataIds;
         }
+        return false;
+    }
+
+    public function executorIsAssignee(ResourceEntity $resource, ResourceWorkflowTransition $transition, User $executor): bool {
         $assigneeMetadataIds = $this->getAssigneeMetadataIds($resource->getWorkflow(), $transition);
         $autoAssignMetadataIds = $this->getAutoAssignMetadataIds($resource->getWorkflow(), $transition);
         $assigneeMetadataIds = array_intersect($assigneeMetadataIds, $resource->getKind()->getMetadataIds());
         $autoAssignMetadataIds = array_intersect($autoAssignMetadataIds, $resource->getKind()->getMetadataIds());
-        if (empty($assigneeMetadataIds) && empty($autoAssignMetadataIds)) {
-            return true;  // no metadata determines assignees, so everyone can perform transition
-        }
         $assigneeUserIds = $this->extractAssigneeIds($resource, $assigneeMetadataIds);
         $autoAssignUserIds = $this->extractAssigneeIds($resource, $autoAssignMetadataIds);
         $executorUserIds = $executor->getUserGroupsIds();
         $executorUserIds[] = $executor->getUserData()->getId();
-
         $executorIsAssignee = count(array_intersect($assigneeUserIds, $executorUserIds)) != 0;
         $executorIsAutoAssigned = count(array_intersect($autoAssignUserIds, $executorUserIds)) != 0;
         $noAssigneeMetadata = empty($assigneeMetadataIds);
@@ -86,7 +90,6 @@ class TransitionPossibilityChecker {
         foreach ($transitionTos as $place) {
             $assigneeMetadataIds = array_merge($assigneeMetadataIds, $place->restrictingMetadataIds()->assignees()->get());
         }
-
         $assigneeMetadataIds = array_unique($assigneeMetadataIds);
         return $assigneeMetadataIds;
     }

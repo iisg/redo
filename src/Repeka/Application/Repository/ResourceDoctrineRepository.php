@@ -80,20 +80,21 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         $query = $em->createNativeQuery(
             <<<SQL
 -- Filters rows by user data IDs (ie. ID of user's resource, not user's entity!)
-SELECT
+SELECT DISTINCT ON (id)
   resources_with_assignees.*
 FROM (
        -- Picks only metadata_id from resource_contents object
        -- Each row contains a resource ID and an array of users it's assigned to
        SELECT
          resources_with_assignee_metadata_ids.*,
-         jsonb_array_elements(contents -> metadata_id) ->> 'value' AS assignee_id
+         jsonb_array_elements(contents -> metadata_id) ->> 'value' AS assignee_id,
+         jsonb_array_elements(contents -> auto_metadata_id) ->> 'value' AS auto_assign_id
        FROM (
-              -- Extracts arrays of assigneeMetadataIds from places and splits them into rows.
-              -- Rows are basically a cross join of resources with all assigneeMetadataIds
-              SELECT
+              SELECT a.*, jsonb_array_elements(place -> 'autoAssignMetadataIds') ->> 0 AS auto_metadata_id FROM (
+				  SELECT
                 -- ->> 0 turns JSONB string to text without "quotation marks"
                 jsonb_array_elements(place -> 'assigneeMetadataIds') ->> 0 AS metadata_id,
+                
                 resources_with_places.*
               FROM (
                      -- Left-joins each place in each workflow with resources using these workflows
@@ -105,9 +106,9 @@ FROM (
                        LEFT JOIN resource_kind ON workflow.id = resource_kind.workflow_id
                        LEFT JOIN resource ON resource_kind.id = resource.kind_id
                    ) AS resources_with_places
-            ) AS resources_with_assignee_metadata_ids
+            ) AS a ) AS resources_with_assignee_metadata_ids
      ) AS resources_with_assignees
-WHERE assignee_id IN(:userIds)
+WHERE assignee_id IN(:userIds) OR auto_assign_id IN(:userIds)
 SQL
             ,
             $resultSetMapping

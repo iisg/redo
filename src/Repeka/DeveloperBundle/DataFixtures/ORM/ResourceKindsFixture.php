@@ -52,6 +52,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISHING_HOUSE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_REAL_SCANNER),
                 ],
                 [
                     'header' => '{{r|m' . $titleMetadataId . '}}',

@@ -5,7 +5,7 @@ import {containerless} from "aurelia-templating";
 @autoinject
 @containerless
 export class NotificationBell {
-  numberOfCurrentTasks: number;
+  numberOfCurrentTasks: number = 0;
 
   constructor(private taskFinder: TaskFinder) {
     this.fetchTasks();
@@ -13,8 +13,10 @@ export class NotificationBell {
   }
 
   fetchTasks() {
-    this.taskFinder.getList().then(tasks => {
-      this.numberOfCurrentTasks = tasks.filter(resource => Object.keys(resource.transitionAssigneeMetadata).length > 0).length;
+    this.taskFinder.getList().then(tasksCollection => {
+      for (let tasks of tasksCollection) {
+        this.numberOfCurrentTasks += tasks.myTasks.filter(resource => !!Object.keys(resource.transitionAssigneeMetadata).length).length;
+      }
     });
   }
 }

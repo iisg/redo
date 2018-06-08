@@ -7,6 +7,7 @@ import {maps} from "common/dto/decorators";
 import {Metadata} from "../metadata/metadata";
 import {TypeRegistry} from "common/dto/registry";
 import {ResourceKind} from "./resource-kind";
+import {Resource} from "../../resources/resource";
 
 @autoinject
 @maps('WorkflowId')
@@ -35,5 +36,13 @@ export class WorkflowIdMapper extends AdvancedMapper<Workflow> {
 class MetadataListMapper extends ArrayMapper<Metadata> {
   constructor(typeRegistry: TypeRegistry) {
     super(typeRegistry.getMapperByType(Metadata.NAME), typeRegistry.getFactoryByType(Metadata.NAME));
+  }
+}
+
+@autoinject
+@maps('Resource[]')
+export class ResourceMapper extends ArrayMapper<Resource> {
+  constructor(typeRegistry: TypeRegistry) {
+    super(typeRegistry.getMapperByType(Resource.NAME), typeRegistry.getFactoryByType(Resource.NAME));
   }
 }

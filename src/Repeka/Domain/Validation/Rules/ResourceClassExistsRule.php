@@ -5,7 +5,7 @@ use Respect\Validation\Rules\AbstractRule;
 use Respect\Validation\Validator;
 
 class ResourceClassExistsRule extends AbstractRule {
-    /** @var array */
+    /** @var string[] */
     private $resourceClasses;
 
     public function __construct(array $resourceClasses) {
