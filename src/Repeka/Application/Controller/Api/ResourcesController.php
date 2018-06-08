@@ -10,7 +10,6 @@ use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
-use Repeka\Domain\UseCase\Resource\ResourceMetadataAutoAssignCommand;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTopLevelPathQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
@@ -34,32 +33,20 @@ class ResourcesController extends ApiController {
     public function getListAction(Request $request) {
         $resourceClasses = $request->get('resourceClasses', []);
         $resourceKindIds = $request->get('resourceKinds', []);
-        $sortByMetadataIds = $request->query->get('sortByIds', []);
+        $sortByIds = $request->query->get('sortByIds', []);
         $workflowPlacesIds = $request->query->get('workflowPlacesIds', []);
         $contentsFilter = $request->get('contentsFilter', []);
         $parentId = $request->query->get('parentId', 0);
         $topLevel = $request->query->get('topLevel', false);
         Assertion::isArray($resourceClasses);
         Assertion::isArray($resourceKindIds);
-        Assertion::isArray($sortByMetadataIds);
+        Assertion::isArray($sortByIds);
         Assertion::isArray($workflowPlacesIds);
-        $sortByMetadataIds = array_map(
-            function ($sortBy) {
-                return ['metadataId' => intval($sortBy['metadataId']), 'direction' => $sortBy['direction']];
-            },
-            $sortByMetadataIds
-        );
-        $resourceKinds = array_map(
-            function ($resourceKindId) {
-                return $this->handleCommand(new ResourceKindQuery($resourceKindId));
-            },
-            $resourceKindIds
-        );
         $resourceListQueryBuilder = ResourceListQuery::builder()
             ->filterByResourceClasses($resourceClasses)
-            ->filterByResourceKinds($resourceKinds)
+            ->filterByResourceKinds($resourceKindIds)
             ->filterByContents(is_array($contentsFilter) ? $contentsFilter : [])
-            ->sortByMetadataIds($sortByMetadataIds)
+            ->sortBy($sortByIds)
             ->filterByParentId($parentId)
             ->filterByWorkflowPlacesIds($workflowPlacesIds);
         if ($request->query->has('page')) {

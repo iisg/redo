@@ -77,12 +77,12 @@ class ResourceListQueryValidatorTest extends \PHPUnit_Framework_TestCase {
     public function testPassWhenSortByCorrectStructure() {
         $this->resourceContentsStructureRule->method('validate')->willReturn(true);
         $this->resourceMetadataSortCorrectStructureRule->method('validate')->willReturn(true);
-        $command = ResourceListQuery::builder()->sortByMetadataIds([['metadataId' => 1, 'direction' => 'ASC']])->build();
+        $command = ResourceListQuery::builder()->sortBy([['metadataId' => 1, 'direction' => 'ASC']])->build();
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testInvalidWhenSortByInvalidStructure() {
-        $command = ResourceListQuery::builder()->sortByMetadataIds([['badKey' => 'badKey']])->build();
+        $command = ResourceListQuery::builder()->sortBy([['badKey' => 'badKey']])->build();
         $this->assertFalse($this->validator->isValid($command));
     }
 }

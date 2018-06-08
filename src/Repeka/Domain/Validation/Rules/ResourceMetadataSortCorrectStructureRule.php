@@ -10,7 +10,7 @@ class ResourceMetadataSortCorrectStructureRule extends AbstractRule {
         return Validator
             ::arrayType()->each(
                 Validator::keySet(
-                    Validator::key('metadataId', Validator::intType()),
+                    Validator::key('columnId', Validator::callback([$this, 'isCorrectSortIdKey'])),
                     Validator::key(
                         'direction',
                         Validator::in(['ASC', 'DESC'])
@@ -18,5 +18,9 @@ class ResourceMetadataSortCorrectStructureRule extends AbstractRule {
                     )
                 )
             )->validate($input);
+    }
+
+    public function isCorrectSortIdKey(string $sortId): bool {
+        return is_numeric($sortId) || in_array($sortId, ['id', 'kindId']);
     }
 }

@@ -9,14 +9,14 @@ use Repeka\Domain\UseCase\Audit\AbstractListQueryBuilder;
 class ResourceListQueryBuilder extends AbstractListQueryBuilder {
     private $resourceKinds = [];
     private $resourceClasses = [];
-    private $sortByMetadata = [];
+    private $sortBy = [];
     private $parentId = 0;
     private $contents = [];
     private $onlyTopLevel = false;
     private $ids = [];
     private $workflowPlacesIds = [];
 
-    /** @param ResourceKind[] $resourceKinds */
+    /** @param ResourceKind[] | int[] $resourceKinds */
     public function filterByResourceKinds(array $resourceKinds): ResourceListQueryBuilder {
         $this->resourceKinds = array_values(array_merge($this->resourceKinds, $resourceKinds));
         return $this;
@@ -40,8 +40,8 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
-    public function sortByMetadataIds(array $sortByMetadata): ResourceListQueryBuilder {
-        $this->sortByMetadata = array_replace($this->sortByMetadata, $sortByMetadata);
+    public function sortBy(array $sortBy): ResourceListQueryBuilder {
+        $this->sortBy = array_replace($this->sortBy, $sortBy);
         return $this;
     }
 
@@ -71,7 +71,7 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
             $this->ids,
             $this->resourceClasses,
             $this->resourceKinds,
-            $this->sortByMetadata,
+            $this->sortBy,
             $this->parentId,
             $this->contents instanceof ResourceContents ? $this->contents : ResourceContents::fromArray($this->contents),
             $this->onlyTopLevel,

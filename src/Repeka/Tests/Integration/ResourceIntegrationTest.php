@@ -133,6 +133,21 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
         $this->assertEquals(
+            [$this->childResource->getId(), $this->resourceWithWorkflow->getId(), $this->parentResource->getId(), $this->resource->getId()],
+            $fetchedIds
+        );
+        $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
+    }
+
+    public function testFetchingResourcesOrderByIdAsc() {
+        $client = self::createAdminClient();
+        $client->apiRequest('GET', self::ENDPOINT, [], [
+            'resourceClasses' => ['books'],
+            'sortByIds' => [['columnId' => 'id', 'direction' => 'ASC']],
+        ]);
+        $this->assertStatusCode(200, $client->getResponse());
+        $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
+        $this->assertEquals(
             [$this->resource->getId(), $this->parentResource->getId(), $this->resourceWithWorkflow->getId(), $this->childResource->getId()],
             $fetchedIds
         );
@@ -144,7 +159,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'page' => 1, 'resultsPerPage' => 2]);
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
-        $this->assertEquals([$this->resource->getId(), $this->parentResource->getId()], $fetchedIds);
+        $this->assertEquals([$this->childResource->getId(), $this->resourceWithWorkflow->getId()], $fetchedIds);
         $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
@@ -153,7 +168,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'topLevel' => true]);
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
-        $this->assertEquals([$this->resource->getId(), $this->parentResource->getId(), $this->resourceWithWorkflow->getId()], $fetchedIds);
+        $this->assertEquals([$this->resourceWithWorkflow->getId(), $this->parentResource->getId(), $this->resource->getId()], $fetchedIds);
         $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
     }
 
@@ -199,11 +214,11 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'resultsPerPage' => 2,
                 'resourceClasses' => ['books'],
                 'topLevel' => true,
-                'sortByIds' => [0 => ['metadataId' => $this->metadata1->getId(), 'direction' => 'DESC']],
+                'sortByIds' => [0 => ['columnId' => $this->metadata1->getId(), 'direction' => 'DESC']],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
-        $expectedOrder = [$this->parentResource->getId(), $this->resource->getId()];
+        $expectedOrder = [$this->parentResource->getId(), $this->resourceWithWorkflow->getId()];
         $actualOrder = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
         $this->assertEquals($expectedOrder, $actualOrder);
         $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
