@@ -4,6 +4,7 @@ import {MomentLocaleLoader} from "./moment-locale-loader";
 import {AureliaCookie} from "aurelia-cookie";
 import {I18N} from "aurelia-i18n";
 import * as moment from "moment";
+import "moment/locale/pl";
 
 @autoinject
 export class GuiLanguage {
@@ -33,7 +34,7 @@ export class GuiLanguage {
     this.setCookie(language);
     this.i18n.setLocale(language);
     this.momentLocaleLoader.load(language).then(() => {
-      moment.updateLocale(language, {});
+      moment.locale(language);
     });
   }
 

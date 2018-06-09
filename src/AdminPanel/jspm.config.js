@@ -53,7 +53,7 @@ System.config({
     "jquery": "npm:jquery@3.2.1",
     "lodash": "npm:lodash@4.17.10",
     "martingust/aurelia-repeat-strategies": "github:martingust/aurelia-repeat-strategies@master",
-    "moment": "npm:moment@2.19.1",
+    "moment": "npm:moment@2.22.2",
     "nprogress": "github:rstacruz/nprogress@0.2.0",
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.13.0",
     "region-flags": "npm:region-flags@1.1.0",

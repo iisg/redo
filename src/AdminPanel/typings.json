@@ -29,7 +29,7 @@
     "aurelia-testing": "github:aurelia/testing#1.0.0-beta.3.0.1",
     "aurelia-validation": "github:aurelia/validation#1.1.2",
     "bluebird": "registry:npm/bluebird#3.5.0+20170314181206",
-    "moment": "github:moment/moment/moment.d.ts#2.19.1"
+    "moment": "github:moment/moment/moment.d.ts#2.22.2"
   },
   "globalDevDependencies": {
     "jasmine": "registry:dt/jasmine#2.5.0+20161119044246"
