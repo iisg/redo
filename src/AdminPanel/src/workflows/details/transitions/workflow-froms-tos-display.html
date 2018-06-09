@@ -1,25 +1,50 @@
 <template>
-
-    <div if.bind="transition">
-        <dt>
-            ${'Edit resource with transition from' | resourceClassTranslation:resourceClass}
-        </dt>
-        <dl>
-            <ul class="list-unstyled">
-                <li repeat.for="place of froms">
-                    ${place.label | inCurrentLanguage}
-                </li>
-            </ul>
-        </dl>
-    </div>
-    <dt>
-        ${transition ? 'To states' : 'Added resource will be in following place' | resourceClassTranslation:resourceClass}
-    </dt>
-    <dl>
-        <ul class="list-unstyled">
-            <li repeat.for="place of tos">
+    <div if.bind="transition"
+        class="transition-display">
+        <div>
+            <span class="description-label">
+                ${'Current places'| t}
+            </span>
+            <span repeat.for="place of froms">
                 ${place.label | inCurrentLanguage}
-            </li>
-        </ul>
-    </dl>
+            </span>
+        </div>
+        <div>
+            <svg viewBox="0 0 144 18">
+                <defs>
+                    <marker id="arrowhead"
+                        markerWidth="9"
+                        markerHeight="6"
+                        refX="1"
+                        refY="3">
+                        <path d="M0,0 L0,6 L9,3 z">
+                    </marker>
+                </defs>
+                <line x1="0"
+                    y1="9"
+                    x2="120"
+                    y2="9"
+                    stroke-width="3"
+                    marker-end="url(#arrowhead)">
+            </svg>
+            <span>${transition.label | inCurrentLanguage}</span>
+        </div>
+        <div>
+            <span class="description-label">
+                ${'Target places'| t}
+            </span>
+            <span repeat.for="place of tos">
+                ${place.label | inCurrentLanguage}
+            </span>
+        </div>
+    </div>
+    <div else>
+        <span class="description-label">
+            ${transition ? 'To states' : 'Added resource will be in following place' | resourceClassTranslation:resourceClass}
+        </span>
+        <span repeat.for="place of tos"
+            class="tos-label">
+            ${place.label | inCurrentLanguage}
+        </span>
+    </div>
 </template>

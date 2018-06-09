@@ -1,0 +1,48 @@
+@import "../../../common/styles";
+
+$arrow-image-height: 18px;
+$maximum-transition-display-width: 800px;
+
+workflow-froms-tos-display {
+  & > :not(.transition-display), & > .transition-display > div {
+    padding: $default-gap-size / 2;
+  }
+
+  .transition-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: $maximum-transition-display-width;
+    & > div {
+      flex: 1;
+      text-align: center;
+      & > * {
+        display: block;
+      }
+      svg {
+        height: $arrow-image-height;
+        margin-left: auto;
+        margin-right: auto;
+        marker {
+          fill: currentColor;
+        }
+        line {
+          stroke: currentColor;
+        }
+      }
+      svg + span {
+        font-size: $subtitle-font-size;
+        font-weight: bold;
+      }
+    }
+  }
+  .description-label {
+    font-weight: bold;
+  }
+
+  .tos-label{
+    display: block;
+  }
+}
