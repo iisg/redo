@@ -2,19 +2,18 @@
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="common/components/buttons/icon-button"></require>
     <require from="./resource-form-generated"></require>
-    <require from="../metadata/required-metadata-list"></require>
     <require from="workflows/details/transitions/workflow-froms-tos-display"></require>
     <require from="../workflow/transition-button"></require>
 
+    <span if.bind="transition"
+        class="page-title">
+        ${'Edit resource before transition' | resourceClassTranslation:resourceClass}</span>
     <span if.bind="!editing"
         class="page-title">${'Add new resource' | resourceClassTranslation:resourceClass}</span>
     <workflow-froms-tos-display if.bind="showRequiredMetadataAndWorkflowInfo"
         transition.bind="transition"
         places.bind="resource.kind.workflow.places"
         resource-class.bind="resourceClass"></workflow-froms-tos-display>
-    <required-metadata-list if.bind="showRequiredMetadataAndWorkflowInfo && requiredMetadataIds.length > 0"
-        resource-class.bind="resourceClass"
-        required-metadata-ids.bind="resource.kind ? requiredMetadataIds : []"></required-metadata-list>
     <div if.bind="resource.kind !== undefined">
         <icon-button icon-name="koha"
             tooltip-text-when-enabled="${'Import data from KOHA' | t}"

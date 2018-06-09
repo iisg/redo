@@ -25,10 +25,9 @@ books:
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
-  Edit resource with transition from: Edit resource with transition from
+  Edit resource before transition: Edit resource before transition
   Added resource will be in following place: Added resource will be in following place
   To states: Do stanu
-  List of required metadata: List of required metadata
   display_strategies:
     header:
       title: Header
@@ -62,10 +61,9 @@ dictionaries:
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
-  Edit resource with transition from: Edit dictionary with transition from
+  Edit resource before transition: Edit dictionary before transition
   Added resource will be in following place: Added dictionary will be in following place
   To states: Do stanu
-  List of required metadata: List of required metadata
   display_strategies:
     header:
       title: Header
@@ -101,10 +99,9 @@ users:
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
-  Edit resource with transition from: Edit user with transition from
+  Edit resource before transition: Edit user before transition
   Added resource will be in following place: Added users will be in following place
   To states: Do stanu
-  List of required metadata: List of required metadata
   display_strategies:
     header:
       title: Header

@@ -24,10 +24,9 @@ books:
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  Edit resource with transition from: Edycja zasobu przy przejściu ze stanu
+  Edit resource before transition: Edycja zasobu przed przejściem
   Added resource will be in following place: Dodany zasób znajdzie się w stanie
   To states: Do stanu
-  List of required metadata: Lista metadanych wymaganych do przejścia
   display_strategies:
     header:
       title: Nagłówek
@@ -61,7 +60,7 @@ dictionaries:
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  Edit resource with transition from: Edycja słownika przy przejściu ze stanu
+  Edit resource before transition: Edycja słownika przed przejściem
   Added resource will be in following place: Dodany słownik znajdzie się w stanie
   To states: Do stanu
   List of required metadata: Lista metadanych wymaganych do przejścia
@@ -101,10 +100,9 @@ users:
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  Edit resource with transition from: Edycja użytkownika przy przejściu ze stanu
+  Edit resource before transition: Edycja użytkownika przed przejściem
   Added resource will be in following place: Dodany użytkownika znajdzie się w stanie
   To states: Do stanu
-  List of required metadata: Lista metadanych wymaganych do przejścia
   display_strategies:
     header:
       title: Nagłówek

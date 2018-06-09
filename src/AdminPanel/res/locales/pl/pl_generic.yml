@@ -166,3 +166,5 @@ Resource display strategy: Strategia wyświetlania zasobu
 Add dynamic column: Dodaj dynamiczną kolumnę
 Automatically set the same value for the states on the right: Ustawiaj tą samą wartość dla stanów na prawo od zaznaczenia
 Keep in mind that you can not change the workflow for resource kind after choosing it once. Select with care.: Raz wybrany proces dla rodzaju zasobu nie może być już później zmieniony. Upewnij się, że wybrany proces jest odpowiedni.
+Current places: Obecne stany
+Target places: Stany docelowe

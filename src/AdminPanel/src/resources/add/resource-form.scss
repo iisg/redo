@@ -2,7 +2,7 @@
 
 resource-form {
   display: block;
-  &, & > :not(form), & > form > resource-kind-chooser {
+  &, & > :not(form):not(workflow-froms-tos-display), & > form > resource-kind-chooser {
     padding: $default-gap-size / 2;
   }
 
