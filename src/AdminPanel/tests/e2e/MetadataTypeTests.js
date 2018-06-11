@@ -140,21 +140,25 @@ describe('Metadata Type Tests', function() {
 		waitForElement(element(by.className('dl-horizontal')));
 		var parametersList = element(by.className('dl-horizontal'));
 		expect(parametersList.getText()).toContain('Edycja_Nazwy');
+		
+		var languageMenu = element(by.className('au-target flag-icon-xs'));
+		languageMenu.click();
+		var polishOption = element(by.linkText('Polski'));
+		polishOption.click();
   });
 
   it('Delete metadata type', function() {
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newMetadataTypeRowLink.click();
-		
-		waitForElement(element(by.buttonText('Remove')));
-		var deleteButton = element(by.buttonText('Remove'));
+		waitForElement(element(by.buttonText('Usuń')));
+		var deleteButton = element(by.buttonText('Usuń'));
 		deleteButton.click();
-		
+
 		var confirmButton = element.all(by.className('swal2-confirm btn btn-danger'));
 		confirmButton.click();
-		
-		waitForElement(element(by.buttonText('Add metadata')));
+
+		waitForElement(element(by.buttonText('Dodaj rodzaj metadanej')));
 		expect(element(by.linkText('Nazwa_Testowanie_Automatyczne')).isPresent()).toBe(false);
   });
 });
