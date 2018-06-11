@@ -5,26 +5,39 @@ import {autoinject} from "aurelia-dependency-injection";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {ValidationController} from "aurelia-validation";
 import {MetadataValue} from "../metadata-value";
+import {changeHandler} from "../../common/components/binding-mode";
 
 @autoinject
 export class ResourceMetadataValuesForm {
-  @bindable metadata: Metadata;
-  @bindable resource: Resource;
+  @bindable(changeHandler('resourceDataChanged')) metadata: Metadata;
+  @bindable(changeHandler('resourceDataChanged')) resource: Resource;
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable @booleanAttribute required: boolean = false;
   @bindable validationController: ValidationController;
 
   valueTable: Element;
 
-  metadataChanged() {
-    if (this.resource != undefined) {
+  resourceDataChanged() {
+    if (this.resource && this.metadata) {
       this.ensureResourceHasMetadataContents();
     }
   }
 
-  resourceChanged() {
-    if (this.metadata != undefined) {
+  requiredChanged() {
+    if (this.resource && this.metadata) {
       this.ensureResourceHasMetadataContents();
+      const length = this.resource.contents[this.metadata.id].length;
+      if (this.required) {
+        if (!length) {
+          this.addNew();
+        }
+      } else {
+        this.resource.contents[this.metadata.id].forEach((metadataValue, index) => {
+          if ((Array.isArray(metadataValue.value) && metadataValue.value.length === 0) || !metadataValue.value) {
+            this.deleteIndex(index, 1);
+          }
+        });
+      }
     }
   }
 
@@ -36,8 +49,8 @@ export class ResourceMetadataValuesForm {
     }
   }
 
-  deleteIndex(index: number) {
-    this.resource.contents[this.metadata.id].splice(index, 1);
+  deleteIndex(index: number, offset: number = 1) {
+    this.resource.contents[this.metadata.id].splice(index, offset);
   }
 
   addNew() {

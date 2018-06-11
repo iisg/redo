@@ -14,7 +14,7 @@ import {ValidationController} from "aurelia-validation";
 import {EntitySerializer} from "../../common/dto/entity-serializer";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {MetadataValue} from "../metadata-value";
-import {WorkflowPlace} from './../../workflows/workflow';
+import {WorkflowPlace} from "./../../workflows/workflow";
 import {debounce} from "lodash";
 
 @autoinject
@@ -33,10 +33,10 @@ export class ResourceFormGenerated {
   removedValues: AnyMap<any[]> = {};
 
   /*
-    contentsValidator is computed from resourceKind and requiredMetadataIdsForTransition - second one is bound later
-    after resourceKind is changed view binds old contentsValidator
-    @bindable solves this problem by binding current contentsValidator after computing new ones
-  */
+   contentsValidator is computed from resourceKind and requiredMetadataIdsForTransition - second one is bound later
+   after resourceKind is changed view binds old contentsValidator
+   @bindable solves this problem by binding current contentsValidator after computing new ones
+   */
   @bindable contentsValidator: NumberMap<any>;
 
   constructor(i18n: I18N,
