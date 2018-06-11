@@ -17,7 +17,7 @@ export class AuditPage implements RoutableComponentActivate {
 
   activate(params: any) {
     this.filters = AuditListFilters.fromParams(params);
-    this.filters.onChange = () => this.onFiltersChanged();
+    this.filters.onChange = () => this.onAnyChange();
     this.fetchEntries();
   }
 
@@ -37,6 +37,11 @@ export class AuditPage implements RoutableComponentActivate {
   }
 
   onFiltersChanged() {
+    this.filters.currentPageNumber = 1;
+    this.onAnyChange();
+  }
+
+  onAnyChange() {
     this.router.navigateToRoute('audit', this.filters.toParams(), {replace: true});
   }
 }
