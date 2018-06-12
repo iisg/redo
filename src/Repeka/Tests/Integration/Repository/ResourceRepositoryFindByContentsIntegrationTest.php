@@ -31,21 +31,21 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
 
     public function testFindByFullMetadataValue() {
         $query = ResourceListQuery::builder()->filterByContents([$this->titleMetadata->getId() => 'PHP - to można leczyć!'])->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(1, $results);
         $this->assertEquals($this->phpBook->getId(), $results[0]->getId());
     }
 
     public function testFindBySubstring() {
         $query = ResourceListQuery::builder()->filterByContents([$this->titleMetadata->getId() => 'PHP'])->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(2, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }
 
     public function testCaseInsensitive() {
         $query = ResourceListQuery::builder()->filterByContents([$this->titleMetadata->getId() => 'php'])->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(2, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }
@@ -58,7 +58,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
                 $descriptionMetadata->getId() => 'poradnik',
             ]
         )->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(1, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }
@@ -68,7 +68,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
             ->filterByResourceClass($this->phpBook->getResourceClass())
             ->filterByContents([$this->titleMetadata->getId() => 'PHP'])
             ->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(2, $results);
     }
 
@@ -77,7 +77,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
             ->filterByResourceClass('users')
             ->filterByContents([$this->titleMetadata->getId() => 'PHP'])
             ->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertEmpty($results);
     }
 
@@ -86,7 +86,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
             ->filterByResourceKind($this->getAdminUser()->getUserData()->getKind())
             ->filterByContents([SystemMetadata::USERNAME => 'admin'])
             ->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(1, $results);
     }
 
@@ -94,7 +94,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $query = ResourceListQuery::builder()
             ->filterByContents([$this->findMetadataByName('Liczba stron')->getId() => 404])
             ->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(1, $results);
     }
 
@@ -102,7 +102,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $query = ResourceListQuery::builder()
             ->filterByContents([$this->findMetadataByName('Liczba stron')->getId() => 40])
             ->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertEmpty($results);
     }
 
@@ -118,14 +118,14 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
                     $descriptionMetadata->getId() => 'poradnik',
                 ]
             )->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(1, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }
 
     public function testFindByMetadataName() {
         $query = ResourceListQuery::builder()->filterByContents(['Tytuł' => 'PHP'])->build();
-        $results = $this->handleCommand($query);
+        $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(2, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }

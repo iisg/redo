@@ -20,16 +20,18 @@ class DeduplicatingUsersMigrationTest extends DatabaseMigrationTestCase {
     /** @before */
     public function prepare() {
         $this->loadDumpV7();
+        // added when introduced user roles; allows to create user with a command without messing up with custom SQLs that worked back then
+        $this->getEntityManager()->getConnection()->exec('ALTER TABLE "user" ADD roles jsonb DEFAULT \'[]\' NOT NULL');
         foreach (['Admin', '123456', 'b/123456', 'B/123456', 'b/0987654321', '0987654321'] as $duplicatedUsername) {
             $randomUsername = UserCreateCommandAdjuster::normalizeUsername(Factory::create()->userName);
-            $this->executeCommand("repeka:create-admin-user $randomUsername pass");
+            $this->executeCommand("repeka:create-user $randomUsername pass");
             $testAdmin = $this->findResourceByContents([SystemMetadata::USERNAME => $randomUsername]);
             $testAdmin->updateContents($testAdmin->getContents()->withReplacedValues(SystemMetadata::USERNAME, $duplicatedUsername));
             $this->getEntityManager()->persist($testAdmin);
             $this->testAdmins[$duplicatedUsername] = $testAdmin;
         }
         $this->getEntityManager()->flush();
-        $this->migrate();
+        $this->migrate('20180528200826');
     }
 
     public function testUppercaseAdminIsDeleted() {

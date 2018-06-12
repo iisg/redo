@@ -112,7 +112,7 @@ class ResourcesController extends ApiController {
      * @Method("DELETE")
      */
     public function deleteAction(ResourceEntity $resource) {
-        $this->handleCommand(new ResourceDeleteCommand($resource, $this->getUser()));
+        $this->handleCommand(new ResourceDeleteCommand($resource));
         return new Response('', 204);
     }
 

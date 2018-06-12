@@ -6,6 +6,7 @@ use Repeka\Domain\UseCase\Audit\AuditedCommandNamesQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,6 +14,7 @@ class AuditController extends ApiController {
     /**
      * @Route("/audit")
      * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function getListAction(Request $request) {
         $queryBuilder = AuditEntryListQuery::builder();
@@ -38,6 +40,7 @@ class AuditController extends ApiController {
     /**
      * @Route("/audit-commands")
      * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function getAuditCommandsAction() {
         $commandNames = $this->handleCommand(new AuditedCommandNamesQuery());

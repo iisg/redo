@@ -1,19 +1,21 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AuditedCommand;
+use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 
-class ResourceUpdateContentsCommand extends AbstractCommand implements AuditedCommand {
+class ResourceUpdateContentsCommand extends ResourceClassAwareCommand implements AuditedCommand {
+    use RequireOperatorRole;
+
     private $resource;
     private $contents;
-    /** @var User */
-    private $executor;
 
     public function __construct(ResourceEntity $resource, ResourceContents $contents, ?User $executor = null) {
+        parent::__construct($resource);
         $this->resource = $resource;
         $this->contents = $contents;
         $this->executor = $executor;
@@ -25,9 +27,5 @@ class ResourceUpdateContentsCommand extends AbstractCommand implements AuditedCo
 
     public function getContents(): ResourceContents {
         return $this->contents;
-    }
-
-    public function getExecutor(): ?User {
-        return $this->executor;
     }
 }

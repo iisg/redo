@@ -30,4 +30,4 @@ security:
         path: /
 
   access_control:
-    - { path: ^/api, roles: ROLE_OPERATOR }
+    - { path: ^/api, roles: ROLE_OPERATOR_SOME_CLASS }

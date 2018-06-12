@@ -4,6 +4,7 @@ namespace Repeka\Application\Authentication\TokenAuthenticator;
 use Repeka\Application\Authentication\PKAuthenticationClient;
 use Repeka\Application\Authentication\PKAuthenticationException;
 use Repeka\Application\Authentication\PKUserDataUpdater;
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\UseCase\User\UserCreateCommand;
@@ -42,20 +43,24 @@ class ExternalServiceAuthenticator extends TokenAuthenticator {
         }
     }
 
-    public function authenticate(TokenInterface $token, UserProviderInterface $userProvider, $providerKey): TokenInterface {
+    public function authenticate(TokenInterface $token, UserProviderInterface $userProvider): string {
         $username = self::normalizeUsername($token->getUsername());
         try {
             /** @var $user UserEntity */
             $user = $userProvider->loadUserByUsername($username);
         } catch (UsernameNotFoundException $e) {
             try {
-                $user = $this->commandBus->handle(new UserCreateCommand($username));
+                $user = FirewallMiddleware::bypass(
+                    function () use ($username) {
+                        return $this->commandBus->handle(new UserCreateCommand($username));
+                    }
+                );
             } catch (\Exception $e) {
                 throw new CustomUserMessageAuthenticationException('Invalid username or password', [], 0, $e);
             }
         }
         $this->userDataUpdater->updateUserData($user);
-        return $this->createAuthenticatedToken($user, $providerKey);
+        return $username;
     }
 
     /**

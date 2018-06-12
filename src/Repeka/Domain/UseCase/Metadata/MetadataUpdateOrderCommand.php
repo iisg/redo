@@ -1,24 +1,18 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 
-class MetadataUpdateOrderCommand extends AbstractCommand {
+class MetadataUpdateOrderCommand extends ResourceClassAwareCommand {
     /** @var int[] */
     private $metadataIdsInOrder;
-    /** @var string */
-    private $resourceClass;
 
     public function __construct(array $metadataIdsInOrder, string $resourceClass) {
+        parent::__construct($resourceClass);
         $this->metadataIdsInOrder = $metadataIdsInOrder;
-        $this->resourceClass = $resourceClass;
     }
 
     public function getMetadataIdsInOrder(): array {
         return $this->metadataIdsInOrder;
-    }
-
-    public function getResourceClass() {
-        return $this->resourceClass;
     }
 }

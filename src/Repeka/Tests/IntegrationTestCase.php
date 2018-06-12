@@ -5,7 +5,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Repeka\Application\Entity\UserEntity;
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
@@ -15,6 +15,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Entity\User;
 use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
@@ -140,9 +141,13 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $em->flush();
     }
 
-    protected function handleCommand(Command $command) {
-        $commandBus = $this->container->get(CommandBus::class);
-        return $commandBus->handle($command);
+    protected function handleCommandBypassingFirewall(Command $command) {
+        return FirewallMiddleware::bypass(
+            function () use ($command) {
+                $commandBus = $this->container->get(CommandBus::class);
+                return $commandBus->handle($command);
+            }
+        );
     }
 
     protected function clearDefaultLanguages() {
@@ -154,7 +159,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function createLanguage(string $code, string $flag, string $name): Language {
-        $result = $this->handleCommand(new LanguageCreateCommand($code, $flag, $name));
+        $result = $this->handleCommandBypassingFirewall(new LanguageCreateCommand($code, $flag, $name));
         $this->container->reset();
         return $result;
     }
@@ -168,7 +173,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         string $resourceClass = 'books',
         array $constraints = []
     ): Metadata {
-        return $this->handleCommand(
+        return $this->handleCommandBypassingFirewall(
             new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $resourceClass, $constraints)
         );
     }
@@ -179,18 +184,20 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         array $displayStrategies = [],
         ResourceWorkflow $workflow = null
     ): ResourceKind {
-        return $this->handleCommand(new ResourceKindCreateCommand($label, $metadataList, $displayStrategies, $workflow));
+        return $this->handleCommandBypassingFirewall(new ResourceKindCreateCommand($label, $metadataList, $displayStrategies, $workflow));
     }
 
     protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {
-        return $this->handleCommand(new ResourceCreateCommand($resourceKind, ResourceContents::fromArray($contents)));
+        return $this->handleCommandBypassingFirewall(new ResourceCreateCommand($resourceKind, ResourceContents::fromArray($contents)));
     }
 
     protected function createWorkflow(array $name, string $resourceClass, array $places, array $transitions): ResourceWorkflow {
-        return $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, $transitions, $resourceClass, null, null));
+        return $this->handleCommandBypassingFirewall(
+            new ResourceWorkflowCreateCommand($name, $places, $transitions, $resourceClass, null, null)
+        );
     }
 
-    protected function simulateAuthentication(UserEntity $user) {
+    protected function simulateAuthentication(User $user) {
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->container->get('security.token_storage')->setToken($token);
     }

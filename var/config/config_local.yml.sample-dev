@@ -6,6 +6,22 @@ doctrine:
     user: postgres
     password: postgres
 repeka:
+  resource_classes:
+    - name: books
+      admins:
+        - Username: admin
+      operators:
+        - Username: budynek
+        - Username: tester
+        - Username: skaner
+    - name: dictionaries
+      admins:
+        - Username: admin
+    - name: users
+      admins:
+        - Imię: Józef
+      operators:
+        - Username: admin
   elasticsearch:
     host: localhost
   xml_import:

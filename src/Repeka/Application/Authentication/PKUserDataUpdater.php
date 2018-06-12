@@ -2,6 +2,7 @@
 namespace Repeka\Application\Authentication;
 
 use Repeka\Application\Cqrs\CommandBusAware;
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\User;
@@ -23,6 +24,12 @@ class PKUserDataUpdater {
 
     public function updateUserData(User $user) {
         if ($this->userDataMapping->mappingExists()) {
+            FirewallMiddleware::bypass($this->updateUserDataBasedOnMapping($user));
+        }
+    }
+
+    public function updateUserDataBasedOnMapping(User $user) {
+        return function () use ($user) {
             $userData = $this->authenticationClient->fetchUserData($user->getUsername());
             $importConfig = $this->userDataMapping->getImportConfig();
             $newContents = $this->handleCommand(new MetadataImportQuery($userData, $importConfig))->getAcceptedValues()->toArray();
@@ -32,6 +39,6 @@ class PKUserDataUpdater {
             $currentContents = $user->getUserData()->getContents()->toArray();
             $updatedContents = ResourceContents::fromArray(array_replace($currentContents, $newContents));
             $this->handleCommand(new ResourceUpdateContentsCommand($user->getUserData(), $updatedContents));
-        }
+        };
     }
 }

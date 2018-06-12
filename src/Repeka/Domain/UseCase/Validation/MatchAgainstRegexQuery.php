@@ -2,8 +2,11 @@
 namespace Repeka\Domain\UseCase\Validation;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\RequireOperatorRole;
 
 class MatchAgainstRegexQuery extends AbstractCommand {
+    use RequireOperatorRole;
+
     /** @var string */
     private $regex;
     /** @var string */

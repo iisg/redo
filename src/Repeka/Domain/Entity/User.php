@@ -7,6 +7,8 @@ abstract class User implements Identifiable {
     /** @var ResourceEntity */
     protected $userData;
 
+    protected $roles = [];
+
     public function getUserData(): ResourceEntity {
         return $this->userData;
     }
@@ -28,5 +30,13 @@ abstract class User implements Identifiable {
         $contents = $contents->withReplacedValues(SystemMetadata::USERNAME, $username);
         $this->getUserData()->updateContents($contents);
         return $this;
+    }
+
+    public function getRoles(): array {
+        return $this->roles ?? [];
+    }
+
+    public function updateRoles(array $roles): void {
+        $this->roles = array_values($roles);
     }
 }

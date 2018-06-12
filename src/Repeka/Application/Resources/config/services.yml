@@ -29,6 +29,7 @@ services:
       - '@Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\AdjustCommandMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\AuditCommandMiddleware'
+      - '@Repeka\Application\Cqrs\Middleware\FirewallMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\WrapCommandWithTransactionMiddleware'
@@ -112,5 +113,13 @@ services:
   Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener:
     tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }]
 
-  Repeka\Domain\UseCase\Resource\AutoAssign\ResourceMetadataAutoAssignListener:
+  Repeka\Domain\EventListener\ResourceMetadataAutoAssignListener:
     tags: [{ event: command_before.resource_transition, name: kernel.event_listener, method: onResourceTransition }]
+
+  Repeka\Domain\EventListener\UpdateUserRolesAfterEditListener:
+    tags: [{ event: command_handled.resource_transition, name: kernel.event_listener, method: onResourceTransition }]
+
+  Repeka\Domain\UseCase\User\UserGrantRolesCommandHandler:
+    public: true
+    arguments:
+      $resourceClassesConfig: '%repeka.resource_classes_config%'

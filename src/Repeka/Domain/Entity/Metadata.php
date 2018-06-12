@@ -7,7 +7,7 @@ use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Repository\ResourceKindRepository;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
-class Metadata implements Identifiable {
+class Metadata implements Identifiable, HasResourceClass {
     private $id;
     /** @var string */
     private $control;

@@ -23,10 +23,11 @@ class LocalDatabaseAuthenticator extends TokenAuthenticator {
         return $this->localAccountsEnabled;
     }
 
-    public function authenticate(TokenInterface $token, UserProviderInterface $userProvider, $providerKey): TokenInterface {
+    public function authenticate(TokenInterface $token, UserProviderInterface $userProvider): string {
         $currentUserEntity = $this->getUserOrThrow($token->getUsername(), $userProvider);
         if ($this->checkPasswordLocally($currentUserEntity, $token->getCredentials())) {
-            return $this->authenticateExistingUser($token->getUsername(), $token->getCredentials(), $userProvider, $providerKey);
+            $this->authenticateExistingUser($token->getUsername(), $token->getCredentials(), $userProvider);
+            return $token->getUsername();
         } else {
             throw new CustomUserMessageAuthenticationException('Invalid username or password');
         }
@@ -44,20 +45,13 @@ class LocalDatabaseAuthenticator extends TokenAuthenticator {
         return $this->passwordEncoder->isPasswordValid($user, $password);
     }
 
-    private function authenticateExistingUser(
-        string $username,
-        string $password,
-        UserProviderInterface $userProvider,
-        $providerKey
-    ): TokenInterface {
+    private function authenticateExistingUser(string $username, string $password, UserProviderInterface $userProvider): void {
         try {
             $user = $userProvider->loadUserByUsername($username);
         } catch (UsernameNotFoundException $e) {
             throw new CustomUserMessageAuthenticationException('Invalid username', [], 0, $e);
         }
-        if ($this->passwordEncoder->isPasswordValid($user, $password)) {
-            return $this->createAuthenticatedToken($user, $providerKey);
-        } else {
+        if (!$this->passwordEncoder->isPasswordValid($user, $password)) {
             throw new CustomUserMessageAuthenticationException('Invalid username or password');
         }
     }

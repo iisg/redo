@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AdjustableCommand;
+use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 
-class MetadataCreateCommand extends AbstractCommand implements AdjustableCommand {
+class MetadataCreateCommand extends ResourceClassAwareCommand implements AdjustableCommand {
     private $name;
     private $label;
     private $description;
@@ -13,7 +13,6 @@ class MetadataCreateCommand extends AbstractCommand implements AdjustableCommand
     private $constraints;
     private $shownInBrief;
     private $copyToChildResource;
-    private $resourceClass;
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      * @param string $name
@@ -37,6 +36,7 @@ class MetadataCreateCommand extends AbstractCommand implements AdjustableCommand
         bool $shownInBrief = false,
         bool $copyToChildResource = false
     ) {
+        parent::__construct($resourceClass);
         $this->name = $name;
         $this->label = $label;
         $this->description = $description;
@@ -45,7 +45,6 @@ class MetadataCreateCommand extends AbstractCommand implements AdjustableCommand
         $this->constraints = $constraints;
         $this->shownInBrief = $shownInBrief;
         $this->copyToChildResource = $copyToChildResource;
-        $this->resourceClass = $resourceClass;
     }
 
     public function getName(): string {
@@ -70,10 +69,6 @@ class MetadataCreateCommand extends AbstractCommand implements AdjustableCommand
 
     public function getConstraints(): array {
         return $this->constraints;
-    }
-
-    public function getResourceClass(): string {
-        return $this->resourceClass;
     }
 
     public function isShownInBrief(): bool {

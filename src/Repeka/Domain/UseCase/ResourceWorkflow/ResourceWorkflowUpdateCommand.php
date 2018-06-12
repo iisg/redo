@@ -1,11 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AdjustableCommand;
+use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\ResourceWorkflow;
 
-class ResourceWorkflowUpdateCommand extends AbstractCommand implements AdjustableCommand {
+class ResourceWorkflowUpdateCommand extends ResourceClassAwareCommand implements AdjustableCommand {
     private $name;
     private $places;
     private $transitions;
@@ -22,6 +22,7 @@ class ResourceWorkflowUpdateCommand extends AbstractCommand implements Adjustabl
         $diagram,
         $thumbnail
     ) {
+        parent::__construct($workflow);
         $this->workflow = $workflow;
         $this->name = $name;
         $this->places = $places;

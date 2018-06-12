@@ -27,7 +27,7 @@ class LanguagesController extends ApiController {
     /**
      * @Route
      * @Method("POST")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function postAction(Request $request) {
         $command = LanguageCreateCommand::fromArray($request->request->all());
@@ -38,7 +38,7 @@ class LanguagesController extends ApiController {
     /**
      * @Route("/{code}")
      * @Method("PATCH")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function patchAction(string $code, Request $request) {
         $command = LanguageUpdateCommand::fromArray($code, $request->request->all());
@@ -49,7 +49,7 @@ class LanguagesController extends ApiController {
     /**
      * @Route("/{code}")
      * @Method("DELETE")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function deleteAction(string $code) {
         $command = new LanguageDeleteCommand($code);

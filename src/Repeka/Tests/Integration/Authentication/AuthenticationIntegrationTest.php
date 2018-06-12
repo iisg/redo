@@ -3,20 +3,23 @@ namespace Repeka\Tests\Integration\Authentication;
 
 use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
+use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Repository\AuditEntryRepository;
+use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
 class AuthenticationIntegrationTest extends IntegrationTestCase {
-    const LOGIN_PATH = '/login';
+    use FixtureHelpers;
 
     public function testAuthSuccess() {
         $client = $this->authenticate(AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD);
         /** @var UserEntity $user */
+        $content = $client->getResponse()->getContent();
+        $this->assertNotContains('nieudane', $content);
         $user = $this->getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());
-        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
     }
 
     public function testAuthSuccessWithUppercaseUsername() {
@@ -37,6 +40,17 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(AdminAccountFixture::USERNAME, $entry->getUser()->getUsername());
         $this->assertEquals('user_authenticate', $entry->getCommandName());
         $this->assertTrue($entry->isSuccessful());
+    }
+
+    public function testUpdateRolesOnAuthSuccess() {
+        $admin = $this->getAdminUser();
+        $admin->updateRoles([]);
+        $this->getEntityManager()->persist($admin);
+        $this->getEntityManager()->flush();
+        $this->testAuthSuccess();
+        $admin = $this->getAdminUser();
+        $this->assertGreaterThan(2, count($admin->getRoles()));
+        $this->assertContains(SystemRole::ADMIN()->roleName(), $admin->getRoles());
     }
 
     public function testAuthFailure() {
@@ -65,7 +79,11 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $form = $buttonCrawlerNode->form();
         $data = ['_username' => $username, '_password' => $password];
         $client->submit($form, $data);
-        $client->followRedirect();
+        if ($client->getResponse()->isRedirect()) {
+            $client->followRedirect();
+        } else {
+            throw new \RuntimeException($client->getResponse()->getContent());
+        }
         return $client;
     }
 

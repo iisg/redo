@@ -26,7 +26,7 @@ class ResourceDeleteCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testDeleting() {
         $resource = $this->createMock(ResourceEntity::class);
-        $command = new ResourceDeleteCommand($resource, $this->user);
+        $command = new ResourceDeleteCommand($resource);
         $this->resourceRepository->expects($this->once())->method('delete')->with($resource);
         $this->handler->handle($command);
     }

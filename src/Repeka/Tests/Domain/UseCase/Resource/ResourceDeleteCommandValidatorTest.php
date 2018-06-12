@@ -23,13 +23,13 @@ class ResourceDeleteCommandValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testPositive() {
         $this->resourceHasNoChildrenRule->expects($this->once())->method('validate')->willReturn(true);
-        $command = new ResourceDeleteCommand($this->createMock(ResourceEntity::class), $this->user);
+        $command = new ResourceDeleteCommand($this->createMock(ResourceEntity::class));
         $this->assertTrue($this->validator->isValid($command));
     }
 
     public function testNegative() {
         $this->resourceHasNoChildrenRule->expects($this->once())->method('validate')->willReturn(false);
-        $command = new ResourceDeleteCommand($this->createMock(ResourceEntity::class), $this->user);
+        $command = new ResourceDeleteCommand($this->createMock(ResourceEntity::class));
         $this->assertFalse($this->validator->isValid($command));
     }
 }

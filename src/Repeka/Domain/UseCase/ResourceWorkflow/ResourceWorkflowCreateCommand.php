@@ -1,17 +1,17 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
+use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 
-class ResourceWorkflowCreateCommand extends AbstractCommand {
+class ResourceWorkflowCreateCommand extends ResourceClassAwareCommand {
     private $name;
     private $places;
     private $transitions;
     private $diagram;
     private $thumbnail;
-    private $resourceClass;
 
     public function __construct(array $name, array $places, array $transitions, string $resourceClass, $diagram, $thumbnail) {
+        parent::__construct($resourceClass);
         $this->name = $name;
         $this->places = $places;
         $this->transitions = $transitions;
@@ -38,9 +38,5 @@ class ResourceWorkflowCreateCommand extends AbstractCommand {
 
     public function getThumbnail() {
         return $this->thumbnail;
-    }
-
-    public function getResourceClass(): string {
-        return $this->resourceClass;
     }
 }

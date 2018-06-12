@@ -5,7 +5,7 @@ use Assert\Assertion;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Utils\EntityUtils;
 
-class ResourceKind implements Identifiable {
+class ResourceKind implements Identifiable, HasResourceClass {
     private $id;
     private $label;
     private $metadataList;

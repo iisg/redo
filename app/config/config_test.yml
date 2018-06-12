@@ -20,6 +20,20 @@ monolog:
       path: "%kernel.logs_dir%/%kernel.environment%.log"
       type: stream
 
+repeka:
+  resource_classes:
+    - name: books
+      admins:
+        - Username: admin
+      operators:
+        - Username: budynek
+    - name: dictionaries
+      admins:
+        - Username: admin
+    - name: users
+      admins:
+        - Username: admin
+
 web_profiler:
   intercept_redirects: false
   toolbar: false

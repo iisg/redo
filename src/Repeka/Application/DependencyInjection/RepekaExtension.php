@@ -28,10 +28,7 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('pk_auth.local_accounts_enabled', $mergedConfig['pk_auth']['local_accounts_enabled']);
         $container->setParameter('xml_import.koha', $mergedConfig['xml_import']['koha']);
         $container->setParameter('user_data_mapping', $mergedConfig['user_data_mapping']);
-        $container->setParameter(
-            'repeka.resource_classes',
-            array_merge($mergedConfig['resource_classes'], SystemResourceClass::toArray())
-        );
+        $this->retrieveResourceClassesParameters($mergedConfig, $container);
     }
 
     private function loadYmlConfigFile(string $name, ContainerBuilder $container) {
@@ -42,5 +39,26 @@ class RepekaExtension extends ConfigurableExtension {
     private function getConfigPath() {
         $reflection = new ReflectionClass($this);
         return dirname($reflection->getFileName());
+    }
+
+    private function retrieveResourceClassesParameters(array $mergedConfig, ContainerBuilder $container): void {
+        $resourceClasses = $mergedConfig['resource_classes'];
+        $resourceClassesNames = array_column($mergedConfig['resource_classes'], 'name');
+        foreach (SystemResourceClass::toArray() as $systemResourceClassName) {
+            if (!in_array($systemResourceClassName, $resourceClassesNames)) {
+                $resourceClasses[] = [
+                    'name' => $systemResourceClassName,
+                    'admins' => [],
+                    'operators' => [],
+                ];
+            }
+        }
+        $resourceClassesConfig = [];
+        foreach ($resourceClasses as $resourceClassConfig) {
+            $resourceClassesConfig[$resourceClassConfig['name']] = array_merge(['admins' => [], 'operators' => []], $resourceClassConfig);
+        }
+        $resourceClassesNames = array_column($resourceClasses, 'name');
+        $container->setParameter('repeka.resource_classes', $resourceClassesNames);
+        $container->setParameter('repeka.resource_classes_config', $resourceClassesConfig);
     }
 }

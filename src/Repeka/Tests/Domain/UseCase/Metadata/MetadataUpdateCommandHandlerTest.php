@@ -19,14 +19,13 @@ class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->metadataRepository = $this->createMock(MetadataRepository::class);
         $this->handler = new MetadataUpdateCommandHandler($this->metadataRepository);
         $this->metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA'], ['PL' => 'AA'], ['PL' => 'AA']);
-        $this->metadataRepository->expects($this->atLeastOnce())->method('findOne')->willReturn($this->metadata);
         $this->metadataRepository->expects($this->atLeastOnce())->method('save')->with($this->metadata)->willReturnArgument(0);
     }
 
     public function testUpdating() {
         $dummy = new \stdClass();
         $command = MetadataUpdateCommand::fromArray(
-            1,
+            $this->metadata,
             [
                 'label' => ['PL' => 'new label'],
                 'constraints' => [$dummy],
@@ -39,7 +38,7 @@ class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testUpdatingWithChangedResourceClassDoesNotCauseChange() {
         $command = MetadataUpdateCommand::fromArray(
-            1,
+            $this->metadata,
             [
                 'resourceClass' => 'invalidResourceClass',
             ]

@@ -15,7 +15,7 @@ class MetadataUpdateCommandHandler {
     }
 
     public function handle(MetadataUpdateCommand $command): Metadata {
-        $metadata = $this->metadataRepository->findOne($command->getMetadataId());
+        $metadata = $command->getMetadata();
         $metadata->update(
             $command->getNewLabel(),
             $command->getNewPlaceholder(),

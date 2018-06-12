@@ -16,7 +16,7 @@ use Repeka\Domain\UseCase\User\UserQuery;
 
 /**
  * @property ContainerInterface $container
- * @method mixed handleCommand(Command $command)
+ * @method mixed handleCommandBypassingFirewall(Command $command)
  */
 trait FixtureHelpers {
     private function getPhpBookResource(): ResourceEntity {
@@ -30,7 +30,7 @@ trait FixtureHelpers {
     }
 
     private function getAdminUser(): User {
-        return $this->handleCommand(new UserQuery(AdminAccountFixture::ADMIN_USER_ID));
+        return $this->handleCommandBypassingFirewall(new UserQuery(AdminAccountFixture::ADMIN_USER_ID));
     }
 
     protected function findMetadataByName(string $name, string $resourceClass = 'books'): Metadata {

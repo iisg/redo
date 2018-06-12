@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\Metadata;
 
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandAdjuster;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
@@ -18,9 +20,9 @@ class MetadataUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testStrippingUnknownLanguagesOnPrepare() {
-        $adjuster = new MetadataUpdateCommandAdjuster($this->unknownLanguageStripper);
+        $adjuster = new MetadataUpdateCommandAdjuster($this->unknownLanguageStripper, $this->createMock(MetadataRepository::class));
         $command = new MetadataUpdateCommand(
-            1,
+            $this->createMock(Metadata::class),
             ['PL' => 'TestLabel', 'EN' => 'TestLabel'],
             ['PL' => 'TestDescription', 'EN' => 'TestDescription'],
             ['PL' => 'TestPlaceholder', 'EN' => 'TestPlaceholder'],
@@ -30,7 +32,6 @@ class MetadataUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
         );
         /** @var MetadataUpdateCommand $preparedCommand */
         $preparedCommand = $adjuster->adjustCommand($command);
-        $this->assertEquals(1, $preparedCommand->getMetadataId());
         $this->assertEquals(['PL' => 'TestLabel'], $preparedCommand->getNewLabel());
         $this->assertEquals(['PL' => 'TestDescription'], $preparedCommand->getNewDescription());
         $this->assertEquals(['PL' => 'TestPlaceholder'], $preparedCommand->getNewPlaceholder());
