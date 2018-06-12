@@ -15,6 +15,6 @@ class WorkflowIntegrationTest extends IntegrationTestCase {
     public function testFetchingWorkflowsFailsWhenInvalidResourceClass() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClass' => 'resourceClass']);
-        $this->assertStatusCode(400, $client->getResponse());
+        $this->assertStatusCode('4XX', $client->getResponse());
     }
 }

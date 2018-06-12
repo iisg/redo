@@ -43,7 +43,7 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
             },
             $workflow->getPlaces()
         );
-        $this->handleCommand(
+        $this->handleCommandBypassingFirewall(
             new ResourceWorkflowUpdateCommand(
                 $workflow,
                 $workflow->getName(),
@@ -53,7 +53,7 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
                 $workflow->getThumbnail()
             )
         );
-        $this->handleCommand(
+        $this->handleCommandBypassingFirewall(
             new ResourceTransitionCommand($resource, $resource->getContents(), $transitions[0]->getId(), $this->getAdminUser())
         );
         $resource = $this->getPhpBookResource();
@@ -84,7 +84,7 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
             },
             $workflow->getPlaces()
         );
-        $this->handleCommand(
+        $this->handleCommandBypassingFirewall(
             new ResourceWorkflowUpdateCommand(
                 $workflow,
                 $workflow->getName(),
@@ -94,7 +94,7 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
                 $workflow->getThumbnail()
             )
         );
-        $this->handleCommand(
+        $this->handleCommandBypassingFirewall(
             new ResourceTransitionCommand($resource, $resource->getContents(), $transitions[0]->getId(), $this->getAdminUser())
         );
         $resource = $this->getPhpBookResource();

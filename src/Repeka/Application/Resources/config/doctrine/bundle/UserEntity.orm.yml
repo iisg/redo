@@ -23,3 +23,6 @@ Repeka\Application\Entity\UserEntity:
     isActive:
       type: boolean
       column: is_active
+    roles:
+      type: jsonb
+      options: {default: '[]'}

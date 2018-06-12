@@ -14,7 +14,7 @@ trait CurrentUserAware {
     }
 
     /** @return UserEntity|null */
-    protected function getCurrentUser() {
+    public function getCurrentUser() {
         if (null === $token = $this->tokenStorage->getToken()) {
             return null;
         }

@@ -43,7 +43,8 @@ trait StubsTrait {
         MetadataControl $control = null,
         array $constraints = [],
         string $resourceClass = 'books',
-        array $overrides = []
+        array $overrides = [],
+        string $name = ''
     ): Metadata {
         if ($control == null) {
             $control = MetadataControl::TEXTAREA();
@@ -57,6 +58,7 @@ trait StubsTrait {
         $metadata->method('getResourceClass')->willReturn($resourceClass);
         $metadata->method('withOverrides')->willReturn($metadata);
         $metadata->method('getOverrides')->willReturn($overrides);
+        $metadata->method('getName')->willReturn($name);
         return $metadata;
     }
 

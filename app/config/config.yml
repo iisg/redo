@@ -7,9 +7,7 @@ imports:
 repeka:
   default_ui_language: pl
 
-  resource_classes:
-    - books
-    - dictionaries
+  resource_classes: []
 
   metadata_nesting_depth: 3
   elasticsearch:

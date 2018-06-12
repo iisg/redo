@@ -1,11 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
+use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\Metadata;
 
-class MetadataChildWithBaseCreateCommand extends AbstractCommand implements NonValidatedCommand {
+class MetadataChildWithBaseCreateCommand extends ResourceClassAwareCommand implements NonValidatedCommand {
     /** @var Metadata */
     private $base;
     /** @var Metadata */
@@ -13,6 +13,7 @@ class MetadataChildWithBaseCreateCommand extends AbstractCommand implements NonV
     private $newChildMetadata;
 
     public function __construct(Metadata $parent, Metadata $base, array $newChildMetadata) {
+        parent::__construct($parent);
         $this->base = $base;
         $this->parent = $parent;
         $this->newChildMetadata = $newChildMetadata;

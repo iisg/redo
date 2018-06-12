@@ -25,7 +25,7 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private function constraintSetMatchesControlRule(bool $result): ConstraintSetMatchesControlRule {
         /** @var ConstraintSetMatchesControlRule|\PHPUnit_Framework_MockObject_MockObject $rule */
         $rule = $this->createRuleMock(ConstraintSetMatchesControlRule::class, $result);
-        $rule->method('forMetadataId')->willReturnSelf();
+        $rule->method('forMetadata')->willReturnSelf();
         $rule->method('forControl')->willReturnSelf();
         return $rule;
     }
@@ -33,7 +33,7 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private function resourceKindConstraintIsUser(bool $result): ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule {
         return $this->createRuleWithFactoryMethodMock(
             ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
-            'forMetadataId',
+            'forMetadata',
             $result
         );
     }
@@ -42,7 +42,15 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->constraintSetRule = $this->constraintSetMatchesControlRule(true);
         $this->constraintArgumentsRule = $this->createRuleMock(ConstraintArgumentsAreValidRule::class, true);
         $this->rkConstraintRule = $this->resourceKindConstraintIsUser(true);
-        $this->command = new MetadataUpdateCommand(1, ['PL' => 'Test'], [], [], ['resourceKind' => [0]], false, false);
+        $this->command = new MetadataUpdateCommand(
+            $this->createMetadataMock(),
+            ['PL' => 'Test'],
+            [],
+            [],
+            ['resourceKind' => [0]],
+            false,
+            false
+        );
     }
 
     public function testPasses() {

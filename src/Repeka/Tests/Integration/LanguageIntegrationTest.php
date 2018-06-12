@@ -46,7 +46,7 @@ class LanguageIntegrationTest extends IntegrationTestCase {
 
     public function testDeletingLanguage() {
         /** @var Language $language */
-        $language = $this->handleCommand(new LanguageCreateCommand('TEST', 'TE', 'Test'));
+        $language = $this->handleCommandBypassingFirewall(new LanguageCreateCommand('TEST', 'TE', 'Test'));
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::ENDPOINT . '/' . $language->getCode());
         $this->assertStatusCode(204, $client->getResponse());

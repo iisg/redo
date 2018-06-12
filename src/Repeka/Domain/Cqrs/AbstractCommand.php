@@ -2,11 +2,16 @@
 namespace Repeka\Domain\Cqrs;
 
 use Assert\Assertion;
+use Repeka\Domain\Constants\SystemRole;
+use Repeka\Domain\Entity\User;
 
 /**
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class AbstractCommand implements Command {
+    /** @var User|null */
+    protected $executor;
+
     public static function getCommandNameFromClassName($commandClass) {
         $successful = preg_match('#\\\\([a-z]+?)(Command|Query)?$#i', $commandClass, $matches);
         Assertion::true(!!$successful);
@@ -26,5 +31,13 @@ abstract class AbstractCommand implements Command {
 
     public function __toString() {
         return $this->getCommandName();
+    }
+
+    public function getExecutor(): ?User {
+        return $this->executor;
+    }
+
+    public function getRequiredRole(): ?SystemRole {
+        return SystemRole::ADMIN();
     }
 }

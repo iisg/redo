@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Command\Initialization;
 
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
@@ -23,9 +24,14 @@ class InitializeApplicationCommand extends ContainerAwareCommand {
             $this->getApplication()->run(new StringInput('db:backup'), $output);
         }
         $this->getApplication()->run(new StringInput('doctrine:migrations:migrate --no-interaction --allow-no-migration'), $output);
-        $this->getApplication()->run(new StringInput('repeka:initialize:system-languages'), $output);
-        $this->getApplication()->run(new StringInput('repeka:initialize:system-metadata'), $output);
-        $this->getApplication()->run(new StringInput('repeka:initialize:system-resource-kinds'), $output);
-        $this->getApplication()->run(new StringInput('repeka:initialize:user-metadata'), $output);
+        FirewallMiddleware::bypass(
+            function () use ($output) {
+                $this->getApplication()->run(new StringInput('repeka:initialize:system-languages'), $output);
+                $this->getApplication()->run(new StringInput('repeka:initialize:system-metadata'), $output);
+                $this->getApplication()->run(new StringInput('repeka:initialize:system-resource-kinds'), $output);
+                $this->getApplication()->run(new StringInput('repeka:initialize:user-metadata'), $output);
+                $this->getApplication()->run(new StringInput('repeka:grant-user-roles'), $output);
+            }
+        );
     }
 }

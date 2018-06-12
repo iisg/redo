@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\Resource\AutoAssign;
+namespace Repeka\Domain\EventListener;
 
 use Repeka\Application\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Cqrs\CommandBus;

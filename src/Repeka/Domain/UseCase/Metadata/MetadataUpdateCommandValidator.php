@@ -30,14 +30,13 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
     /** @param MetadataUpdateCommand $command */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('metadataId', Validator::intVal())
-            ->attribute('newLabel', Validator::arrayType())
+            ::attribute('newLabel', Validator::arrayType())
             ->attribute('newPlaceholder', Validator::arrayType())
             ->attribute('newDescription', Validator::arrayType())
             ->attribute('newShownInBrief', Validator::boolType())
             ->attribute('newCopyToChildResource', Validator::boolType())
-            ->attribute('newConstraints', $this->constraintSetMatchesControlRule->forMetadataId($command->getMetadataId()))
+            ->attribute('newConstraints', $this->constraintSetMatchesControlRule->forMetadata($command->getMetadata()))
             ->attribute('newConstraints', $this->constraintArgumentsAreValidRule)
-            ->attribute('newConstraints', $this->rkConstraintIsUserIfNecessaryRule->forMetadataId($command->getMetadataId()));
+            ->attribute('newConstraints', $this->rkConstraintIsUserIfNecessaryRule->forMetadata($command->getMetadata()));
     }
 }

@@ -1,11 +1,12 @@
 <?php
 namespace Repeka\Domain\UseCase\Metadata;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AdjustableCommand;
+use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
+use Repeka\Domain\Entity\Metadata;
 
-class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand {
-    private $metadataId;
+class MetadataUpdateCommand extends ResourceClassAwareCommand implements AdjustableCommand {
+    private $metadata;
     private $newLabel;
     private $newDescription;
     private $newPlaceholder;
@@ -14,7 +15,7 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
     private $newCopyToChildResource;
 
     public function __construct(
-        int $metadataId,
+        $metadataOrId,
         array $newLabel,
         array $newDescription,
         array $newPlaceholder,
@@ -22,7 +23,8 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
         bool $newShownInBrief,
         bool $newCopyToChildResource
     ) {
-        $this->metadataId = $metadataId;
+        parent::__construct($metadataOrId);
+        $this->metadata = $metadataOrId;
         $this->newLabel = $newLabel;
         $this->newDescription = $newDescription;
         $this->newPlaceholder = $newPlaceholder;
@@ -31,8 +33,9 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
         $this->newCopyToChildResource = $newCopyToChildResource;
     }
 
-    public function getMetadataId(): int {
-        return $this->metadataId;
+    /** @return Metadata */
+    public function getMetadata() {
+        return $this->metadata;
     }
 
     public function getNewLabel(): array {
@@ -59,9 +62,9 @@ class MetadataUpdateCommand extends AbstractCommand implements AdjustableCommand
         return $this->newConstraints;
     }
 
-    public static function fromArray(int $metadataId, array $data): MetadataUpdateCommand {
+    public static function fromArray($metadataOrId, array $data): MetadataUpdateCommand {
         return new MetadataUpdateCommand(
-            $metadataId,
+            $metadataOrId,
             $data['label'] ?? [],
             $data['description'] ?? [],
             $data['placeholder'] ?? [],

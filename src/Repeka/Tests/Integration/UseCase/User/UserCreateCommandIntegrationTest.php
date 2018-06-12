@@ -9,7 +9,7 @@ class UserCreateCommandIntegrationTest extends IntegrationTestCase {
     public function testCreatingUser() {
         $command = new UserCreateCommand('budynek', 'piotr');
         /** @var User $user */
-        $user = $this->handleCommand($command);
+        $user = $this->handleCommandBypassingFirewall($command);
         $this->assertNotNull($user->getId());
         $this->assertEquals('budynek', $user->getUsername());
     }
@@ -17,7 +17,7 @@ class UserCreateCommandIntegrationTest extends IntegrationTestCase {
     public function testCreatingUserWithoutPassword() {
         $command = new UserCreateCommand('budynek');
         /** @var User $user */
-        $user = $this->handleCommand($command);
+        $user = $this->handleCommandBypassingFirewall($command);
         $this->assertNotNull($user->getId());
         $this->assertEquals('budynek', $user->getUsername());
     }

@@ -28,7 +28,7 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testCountByMetadata() {
-        $metadata = $this->handleCommand(new MetadataGetQuery(2));
+        $metadata = $this->handleCommandBypassingFirewall(new MetadataGetQuery(2));
         $resourceKindsCount = $this->resourceKindRepository->countByMetadata($metadata);
         $this->assertEquals(1, $resourceKindsCount);
     }

@@ -80,7 +80,7 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
 
     public function overrideMetadataValidator(Metadata $metadata): bool {
         $metadataUpdateCommand = new MetadataUpdateCommand(
-            $metadata->getId(),
+            $metadata,
             $metadata->getLabel(),
             $metadata->getDescription(),
             $metadata->getPlaceholder(),

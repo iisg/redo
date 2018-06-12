@@ -23,7 +23,7 @@ class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
             $this->workflow->getPlaces(),
             $this->workflow->getTransitions()
         );
-        $result = $this->handleCommand($command);
+        $result = $this->handleCommandBypassingFirewall($command);
         $this->assertCount(1, $result['places']);
         $this->assertEquals('Imported', $result['places'][0]->getLabel()['EN']);
         $this->assertCount(1, $result['transitions']);
@@ -36,7 +36,7 @@ class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
             $this->workflow->getTransitions(),
             [$this->workflow->getPlaces()[1]->getId()]
         );
-        $result = $this->handleCommand($command);
+        $result = $this->handleCommandBypassingFirewall($command);
         $this->assertCount(1, $result['places']);
         $this->assertEquals('Ready to scan', $result['places'][0]->getLabel()['EN']);
         $this->assertCount(1, $result['transitions']);
@@ -50,7 +50,7 @@ class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
             [$this->workflow->getPlaces()[1]->getId()],
             $this->workflow->getTransitions()[1]->getId()
         );
-        $result = $this->handleCommand($command);
+        $result = $this->handleCommandBypassingFirewall($command);
         $this->assertCount(1, $result['places']);
         $this->assertEquals('Scanned', $result['places'][0]->getLabel()['EN']);
         $this->assertCount(2, $result['transitions']);
@@ -66,6 +66,6 @@ class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
             [$this->workflow->getPlaces()[1]->getId()],
             $this->workflow->getTransitions()[0]->getId()
         );
-        $this->handleCommand($command);
+        $this->handleCommandBypassingFirewall($command);
     }
 }

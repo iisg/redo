@@ -194,7 +194,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 new ResourceWorkflowTransition(['PL' => 'przejscie', 'EN'=>'transition'], ['A'], ['B']),
             ]
         );
-        $resource = $this->handleCommand(
+        $resource = $this->handleCommandBypassingFirewall(
             new ResourceCreateCommand(
                 $this->resourceKind,
                 ResourceContents::fromArray(
@@ -246,7 +246,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     }
 
     public function testDeletingUsedResourceKindFails() {
-        $this->handleCommand(
+        $this->handleCommandBypassingFirewall(
             new ResourceCreateCommand(
                 $this->resourceKind,
                 ResourceContents::fromArray(

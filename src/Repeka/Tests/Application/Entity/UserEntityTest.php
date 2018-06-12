@@ -21,6 +21,11 @@ class UserEntityTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('ROLE_USER', $this->user->getRoles());
     }
 
+    public function testAddsRolePrefixToSomeClassRoles() {
+        $this->user->updateRoles(['ADMIN_SOME_CLASS']);
+        $this->assertContains('ROLE_ADMIN_SOME_CLASS', $this->user->getRoles());
+    }
+
     public function testSettingUsername() {
         $this->user->setUsername('chocapic');
         $this->assertEquals('chocapic', $this->user->getUsername());

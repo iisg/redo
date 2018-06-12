@@ -54,7 +54,11 @@ class Configuration implements ConfigurationInterface {
                     ->end()
                 ->end()
                 ->scalarNode('user_data_mapping')->end()
-                ->arrayNode('resource_classes')->prototype('scalar')->end()->end()
+                ->arrayNode('resource_classes')->requiresAtLeastOneElement()->arrayPrototype()->children()
+                    ->scalarNode('name')->isRequired()->end()
+                    ->variableNode('admins')->validate()->castToArray()->end()->end()
+                    ->variableNode('operators')->validate()->castToArray()->end()->end()
+                ->end()->end()->end()
             ->end();
         // @formatter:on
         // @codingStandardsIgnoreEnd

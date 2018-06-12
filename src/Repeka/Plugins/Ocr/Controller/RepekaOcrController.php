@@ -2,7 +2,9 @@
 namespace Repeka\Plugins\Ocr\Controller;
 
 use Repeka\Application\Controller\Api\ApiController;
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\ParamConverter\ResourceContentsParamConverter;
+use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
@@ -34,17 +36,27 @@ class RepekaOcrController extends ApiController {
             $content = $content->withMergedValues($metadata, 'OCRed!');
         }
         $content = $this->contentsParamConverter->processMetadataValues($content, $request);
-        $this->handleCommand(new ResourceUpdateContentsCommand($resource, $content));
+        $this->handleCommandBypassingFirewall(new ResourceUpdateContentsCommand($resource, $content));
         $transitionToExecute = current(array_filter($this->configuration->getOption('transitionAfterOcr', $resource)));
         if ($transitionToExecute) {
             $possibleTransitions = $resource->getWorkflow()->getTransitions($resource);
             foreach ($possibleTransitions as $transition) {
                 if (in_array($transitionToExecute, $transition->getLabel())) {
-                    $this->handleCommand(new ResourceTransitionCommand($resource, $resource->getContents(), $transition->getId()));
+                    $this->handleCommandBypassingFirewall(
+                        new ResourceTransitionCommand($resource, $resource->getContents(), $transition->getId())
+                    );
                     break;
                 }
             }
         }
         return $this->createJsonResponse(['success' => true]);
+    }
+
+    private function handleCommandBypassingFirewall(Command $command) {
+        return FirewallMiddleware::bypass(
+            function () use ($command) {
+                return $this->handleCommand($command);
+            }
+        );
     }
 }

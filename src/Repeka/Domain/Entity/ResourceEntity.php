@@ -7,7 +7,7 @@ use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Utils\EntityUtils;
 
 // ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
-class ResourceEntity implements Identifiable {
+class ResourceEntity implements Identifiable, HasResourceClass {
     private $id;
     private $kind;
     private $marking;

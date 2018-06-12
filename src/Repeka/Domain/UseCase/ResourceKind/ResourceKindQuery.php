@@ -3,8 +3,11 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
+use Repeka\Domain\Cqrs\RequireOperatorRole;
 
 class ResourceKindQuery extends AbstractCommand implements NonValidatedCommand {
+    use RequireOperatorRole;
+
     /** @var int */
     private $id;
 

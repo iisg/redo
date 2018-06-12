@@ -8,7 +8,7 @@ use Repeka\Domain\Exception\ResourceWorkflow\NoSuchTransitionException;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 
-class ResourceWorkflow implements Identifiable {
+class ResourceWorkflow implements Identifiable, HasResourceClass {
     private $id;
     private $name;
     private $places = [];

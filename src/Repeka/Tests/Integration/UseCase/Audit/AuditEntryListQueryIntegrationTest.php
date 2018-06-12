@@ -16,13 +16,13 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
     public function testFilterByMetadataIds() {
         $titleMetadata = $this->findMetadataByName('Tytuł');
         $query = AuditEntryListQuery::builder()->filterByResourceContents([$titleMetadata->getId() => 'PHP'])->build();
-        $entries = $this->handleCommand($query);
+        $entries = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(4, $entries);
     }
 
     public function testFilterByMetadataNames() {
         $query = AuditEntryListQuery::builder()->filterByResourceContents(['Tytuł' => 'PHP'])->build();
-        $entries = $this->handleCommand($query);
+        $entries = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(4, $entries);
     }
 }

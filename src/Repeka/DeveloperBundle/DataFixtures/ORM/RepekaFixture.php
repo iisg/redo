@@ -3,6 +3,7 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -15,11 +16,15 @@ abstract class RepekaFixture extends AbstractFixture implements OrderedFixtureIn
     protected $container;
 
     protected function handleCommand(Command $command, string $registerResultAs = '') {
-        $result = $this->container->get(CommandBus::class)->handle($command);
-        if ($registerResultAs) {
-            $this->addReference($registerResultAs, $result);
-        }
-        return $result;
+        return FirewallMiddleware::bypass(
+            function () use ($registerResultAs, $command) {
+                $result = $this->container->get(CommandBus::class)->handle($command);
+                if ($registerResultAs) {
+                    $this->addReference($registerResultAs, $result);
+                }
+                return $result;
+            }
+        );
     }
 
     public function setContainer(ContainerInterface $container = null) {

@@ -214,7 +214,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     private function getBookResourceKind(): ResourceKind {
         $resourceKindListQuery = ResourceKindListQuery::builder()->filterByResourceClass('books')->build();
-        $resourceKinds = $this->handleCommand($resourceKindListQuery);
+        $resourceKinds = $this->handleCommandBypassingFirewall($resourceKindListQuery);
         foreach ($resourceKinds as $resourceKind) {
             /** @var ResourceKind $resourceKind */
             if ($resourceKind->getLabel()['EN'] == 'Book') {
@@ -226,7 +226,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     private function getBudynekUser(): UserEntity {
         /** @var UserEntity[] $users */
-        $users = $this->handleCommand(new UserListQuery());
+        $users = $this->handleCommandBypassingFirewall(new UserListQuery());
         foreach ($users as $user) {
             if ($user->getUsername() == 'budynek') {
                 return $user;

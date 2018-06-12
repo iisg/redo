@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\User;
 
+use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AuditedCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
@@ -27,5 +28,9 @@ class UserAuthenticateCommand extends AbstractCommand implements NonValidatedCom
 
     public function isSuccessful() {
         return $this->successful;
+    }
+
+    public function getRequiredRole(): ?SystemRole {
+        return null;
     }
 }

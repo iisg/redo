@@ -4,6 +4,16 @@ doctrine:
   dbal:
     password: CHANGE_ME_BEFORE_FIRST_LAUNCH
 repeka:
+  resource_classes:
+    - name: books
+      admins:
+        - Username: admin
+    - name: dictionaries
+      admins:
+        - Username: admin
+    - name: users
+      admins:
+        - Username: admin
   pk_auth:
     wsdl: http://soap.biblos.pk.edu.pl/soap.php?WSDL
     options:

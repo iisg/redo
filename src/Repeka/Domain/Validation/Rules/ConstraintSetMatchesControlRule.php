@@ -2,21 +2,18 @@
 namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Respect\Validation\Rules\AbstractRule;
 
 class ConstraintSetMatchesControlRule extends AbstractRule {
-    /** @var MetadataRepository */
-    private $metadataRepository;
     /** @var MetadataConstraintManager */
     private $metadataConstraintManager;
 
     private $control;
 
-    public function __construct(MetadataRepository $metadataRepository, MetadataConstraintManager $metadataConstraintManager) {
-        $this->metadataRepository = $metadataRepository;
+    public function __construct(MetadataConstraintManager $metadataConstraintManager) {
         $this->metadataConstraintManager = $metadataConstraintManager;
     }
 
@@ -30,14 +27,13 @@ class ConstraintSetMatchesControlRule extends AbstractRule {
         if (!($control instanceof MetadataControl)) {
             throw new \InvalidArgumentException('Argument must be a valid control name or a control instance');
         }
-        $instance = new self($this->metadataRepository, $this->metadataConstraintManager);
+        $instance = new self($this->metadataConstraintManager);
         $instance->control = $control;
         return $instance;
     }
 
-    public function forMetadataId(int $metadataId): ConstraintSetMatchesControlRule {
-        $control = $this->metadataRepository->findOne($metadataId)->getControl();
-        return $this->forControl($control);
+    public function forMetadata(Metadata $metadata): ConstraintSetMatchesControlRule {
+        return $this->forControl($metadata->getControl());
     }
 
     public function validate($input) {

@@ -29,7 +29,7 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
         $resource = $this->getPhpBookResource();
         $transitions = $resource->getWorkflow()->getTransitions($resource);
         $this->communicator->expects($this->never())->method('sendToOcr');
-        $this->handleCommand(
+        $this->handleCommandBypassingFirewall(
             new ResourceTransitionCommand($resource, $resource->getContents(), $transitions[0]->getId(), $this->getAdminUser())
         );
     }
@@ -54,7 +54,7 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
             },
             $workflow->getPlaces()
         );
-        $this->handleCommand(
+        $this->handleCommandBypassingFirewall(
             new ResourceWorkflowUpdateCommand(
                 $workflow,
                 $workflow->getName(),
@@ -65,7 +65,7 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
             )
         );
         $resource = $this->getPhpBookResource();
-        $this->handleCommand(
+        $this->handleCommandBypassingFirewall(
             new ResourceTransitionCommand($resource, $resource->getContents(), $transitions[0]->getId(), $this->getAdminUser())
         );
     }

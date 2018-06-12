@@ -50,6 +50,6 @@ class InvertingUserGroupMemberMigrationsTest extends DatabaseMigrationTestCase {
     }
 
     private function getAdminUser(): User {
-        return $this->handleCommand(new UserQuery(1));
+        return $this->handleCommandBypassingFirewall(new UserQuery(1));
     }
 }
