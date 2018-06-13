@@ -1,6 +1,6 @@
 <template>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
-    <require from="common/components/buttons/icon-button"></require>
+    <require from="common/components/buttons/toggle-button"></require>
     <require from="./resource-form-generated"></require>
     <require from="workflows/details/transitions/workflow-froms-tos-display"></require>
     <require from="../workflow/transition-button"></require>
@@ -10,32 +10,37 @@
         ${'Edit resource before transition' | resourceClassTranslation:resourceClass}</span>
     <span if.bind="!editing"
         class="page-title">${'Add new resource' | resourceClassTranslation:resourceClass}</span>
+    <div if.bind="!editing"
+        class="resource-kind-chooser-with-cancel-button">
+        <resource-kind-chooser
+            resource-class.bind="resourceClass"
+            filter.one-time="createResourceKindFilter()"
+            value.bind="resource.kind & validate"></resource-kind-chooser>
+        <cancel-button if.bind="!resource.kind"
+            class="orange"
+            primary-label="Close"
+            on-click.call="cancel()"></cancel-button>
+    </div>
     <workflow-froms-tos-display if.bind="showRequiredMetadataAndWorkflowInfo"
         transition.bind="transition"
         places.bind="resource.kind.workflow.places"
         resource-class.bind="resourceClass"></workflow-froms-tos-display>
-    <div if.bind="resource.kind !== undefined">
-        <icon-button icon-name="koha"
-            tooltip-text-when-enabled="${'Import data from KOHA' | t}"
-            on-click.call="openImportDialog()">
-        </icon-button>
-    </div>
-    <span if.bind="validationError"
-        class="error-label">${'Some metadata constraints have not been met. Check the form error and try again.' | t}</span>
-    <form submit.delegate="saveResource()">
-        <resource-kind-chooser if.bind="!editing"
-            resource-class.bind="resourceClass"
-            filter.one-time="createResourceKindFilter()"
-            value.bind="resource.kind & validate"></resource-kind-chooser>
-        <div if.bind="resource.kind"
-            class="form-with-buttons">
+
+    <template if.bind="resource.kind">
+        <toggle-button primary-icon-name="koha"
+            primary-label="Import data from KOHA"
+            on-click.call="openImportDialog()"></toggle-button>
+        <span if.bind="validationError"
+            class="error-label">${'Some metadata constraints have not been met. Fix the form errors and try again.' | t}</span>
+        <form class="form-with-buttons"
+            submit.delegate="saveResource()">
             <resource-form-generated class="form-content"
                 resource-kind.bind="resource.kind"
                 resource.bind="resource"
-                validation-controller.bind="validationController"
-                contents-validation.bind="resource.contents & validate"
                 parent.bind="parent"
                 resource-class.bind="resourceClass"
+                validation-controller.bind="validationController"
+                contents-validation.bind="resource.contents & validate"
                 target-places.bind="targetPlaces"
                 required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
             <div class="form-buttons">
@@ -48,10 +53,11 @@
                     secondary-label="Save"
                     editing.bind="editing"
                     submitting.bind="submitting"></submit-button>
-                <cancel-button if.bind="editing"
+                <cancel-button class.bind="editing ? '' : 'orange'"
+                    primary-label="Close"
                     disabled.bind="resource.pendingRequest || submitting"
                     on-click.call="cancel()"></cancel-button>
             </div>
-        </div>
-    </form>
+        </form>
+    </template>
 </template>

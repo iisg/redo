@@ -1,13 +1,12 @@
 @import "../../common/styles";
 
 resource-form {
-  display: block;
-  &, & > :not(form):not(workflow-froms-tos-display), & > form > resource-kind-chooser {
-    padding: $default-gap-size / 2;
+  &, & > span {
+    display: block;
   }
 
-  & > :not(form), resource-kind-chooser {
-    display: block;
+  &, & > span, & > toggle-button, & > .resource-kind-chooser-with-cancel-button > * {
+    padding: $default-gap-size / 2;
   }
 
   & > div {
@@ -22,7 +21,16 @@ resource-form {
     }
   }
 
+  .resource-kind-chooser-with-cancel-button {
+    display: flex;
+    align-items: center;
+    resource-kind-chooser {
+      flex: 1;
+    }
+  }
+
   .error-label {
+    display: block;
     text-align: center;
     color: $red;
   }

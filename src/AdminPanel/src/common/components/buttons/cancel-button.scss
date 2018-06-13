@@ -2,4 +2,7 @@
 
 cancel-button {
     @include toggle-button($red);
+    &.orange {
+        @include toggle-button($orange);
+    }
 }
