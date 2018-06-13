@@ -1,22 +1,22 @@
-import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
-import {bindable} from "aurelia-templating";
-import {autoinject} from "aurelia-dependency-injection";
 import {computedFrom} from "aurelia-binding";
-import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {EntitySerializer} from "common/dto/entity-serializer";
-import {ImportDialog} from "./xml-import/import-dialog";
-import {Modal} from "common/dialog/modal";
-import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
-import {ImportResult} from "./xml-import/xml-import-client";
-import {deepCopy} from "common/utils/object-utils";
-import {convertToObject, flatten, inArray} from "common/utils/array-utils";
-import {RequirementState, WorkflowTransition} from "../../workflows/workflow";
+import {autoinject} from "aurelia-dependency-injection";
 import {Router} from "aurelia-router";
+import {bindable} from "aurelia-templating";
+import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
+import {Modal} from "common/dialog/modal";
+import {EntitySerializer} from "common/dto/entity-serializer";
+import {convertToObject, flatten, inArray} from "common/utils/array-utils";
+import {deepCopy} from "common/utils/object-utils";
+import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {numberKeysByValue} from "../../common/utils/object-utils";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
+import {RequirementState, WorkflowTransition} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
+import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
+import {ImportDialog} from "./xml-import/import-dialog";
+import {ImportResult} from "./xml-import/xml-import-client";
 
 @autoinject
 export class ResourceForm {
@@ -73,14 +73,16 @@ export class ResourceForm {
 
   @computedFrom('resource.kind', 'targetPlaces')
   get requiredMetadataIds(): number[] {
-    const restrictingMetadata: NumberMap<any> = convertToObject(this.targetPlaces.map(v => v.restrictingMetadataIds));
-    const resourceKindMedatadaIds = this.resource.kind.metadataList.map(metadata => metadata.id);
-    return flatten(
-      [
-        numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED),
-        numberKeysByValue(restrictingMetadata, RequirementState.ASSIGNEE)
-      ]
-    ).filter(metadataId => resourceKindMedatadaIds.includes(metadataId));
+    if (this.resource.kind) {
+      const restrictingMetadata: NumberMap<any> = convertToObject(this.targetPlaces.map(v => v.restrictingMetadataIds));
+      const resourceKindMedatadaIds = this.resource.kind.metadataList.map(metadata => metadata.id);
+      return flatten(
+        [
+          numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED),
+          numberKeysByValue(restrictingMetadata, RequirementState.ASSIGNEE)
+        ]
+      ).filter(metadataId => resourceKindMedatadaIds.includes(metadataId));
+    }
   }
 
   requiredMetadataIdsForTransition(): number[] {
