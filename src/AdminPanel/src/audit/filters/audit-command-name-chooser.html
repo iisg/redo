@@ -1,11 +1,12 @@
 <template>
     <require from="common/components/dropdown-select/dropdown-select"></require>
 
-    <dropdown-select values.bind="availableCommandNames"
+    <dropdown-select containerless
+        values.bind="availableCommandNames"
         value.bind="commandNames"
         multiple>
         <template replace-part="option-template">
-            ${ 'audit_commands::' + option | t }
+            ${'audit_commands::' + option | t}
         </template>
     </dropdown-select>
 </template>

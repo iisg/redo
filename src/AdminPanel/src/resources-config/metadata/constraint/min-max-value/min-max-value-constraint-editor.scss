@@ -1,0 +1,10 @@
+@import "../../../../common/styles";
+
+min-max-value-constraint-editor {
+    & > * {
+        @include form-element();
+    }
+    input[type=number] {
+        margin-left: $default-gap-size / 2;
+    }
+}

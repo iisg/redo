@@ -2,6 +2,7 @@
     <require from="./resource-metadata-values-form"></require>
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="./from-workflow-transitions-array-to-string"></require>
+    <require from="common/components/required-field-indicator/required-field-indicator"></require>
 
     <template repeat.for="metadata of metadataList">
         <span>
@@ -13,9 +14,8 @@
                     bootstrap-tooltip="${'This metadata determines who can perform these actions:'
                                         | resourceClassTranslation:resource.resourceClass}&#10;${resource.transitionAssigneeMetadata[metadata.id]
                                         | fromWorkflowTransitionsArrayToString}"></icon>
-                <span if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
-                    class="required-metadata-indicator"
-                    bootstrap-tooltip.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass">*</span>
+                <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
+                    translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
                 <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
                     name="save-2"
                     bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>

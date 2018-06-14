@@ -8,6 +8,9 @@ $collapsed-sidebar-elements-z-index-on-hover: $top-bar-z-index + 1;
 
 $admin-content-left-border-width: $default-gap-size / 4;
 
+$simple-form-text-input-box-minimum-width: 100px;
+$simple-form-number-input-box-minimum-width: 75px;
+
 body {
   font-family: 'Open Sans', sans-serif;
   color: $default-text-color;
@@ -98,6 +101,11 @@ label {
   display: block;
 }
 
+.help-block {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .drag-handle {
   cursor: n-resize;
 }
@@ -177,8 +185,32 @@ table {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-column-gap: $default-gap-size;
-  & > :nth-child(2n + 1) {
+  grid-row-gap: $default-gap-size / 2;
+  & > span:not(.value):not(.validation-message) {
     font-weight: bold;
+    & > icon {
+        margin-left: $default-gap-size / 4;
+    }
+  }
+  & > .full-width, & > .section-title, & > .validation-message {
+    grid-column: 1/3;
+  }
+  & > .section-title {
+    font-size: $subtitle-font-size;
+  }
+  input[type=text], dropdown-select, metadata-chooser {
+    min-width: $simple-form-text-input-box-minimum-width;
+  }
+  input[type=number] {
+    min-width: $simple-form-number-input-box-minimum-width;
+    &:not(:first-child) {
+      flex: 1;
+      margin-left: $default-gap-size / 2;
+    }
+  }
+  input[type=radio] {
+    position: relative;
+    top: 1px;
   }
 }
 
@@ -205,6 +237,10 @@ table {
       text-align: left;
     }
   }
+}
+
+.validation-message {
+  color: $red;
 }
 
 .no-margin-top {
@@ -256,6 +292,10 @@ input, textarea, select {
   &[disabled] {
     color: #999;
   }
+}
+
+input[type=checkbox], input[type=radio] {
+  margin-top: 0;
 }
 
 textarea {

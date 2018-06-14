@@ -1,7 +1,8 @@
 <template>
     <require from="common/components/dropdown-select/dropdown-select"></require>
 
-    <dropdown-select values.bind="resourceKinds"
+    <dropdown-select containerless
+        values.bind="resourceKinds"
         value.bind="value"
         multiple.bind="multiSelect"
         disabled.bind="disabled">

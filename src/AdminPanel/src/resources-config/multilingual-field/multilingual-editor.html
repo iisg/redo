@@ -1,23 +1,21 @@
 <template>
     <require from="common/components/flag/flag"></require>
+    <require from="common/components/required-field-indicator/required-field-indicator"></require>
 
-    <label>${label}</label>
-    <div class="row">
-        <div repeat.for="language of languages"
-            class="${columnClass}">
-            <div class="form-group">
-                <label class="control-label"
-                    for.one-time="fieldId">
-                    <flag name.one-time="language.flag"></flag>
-                    ${language.code}
-                </label>
-                <input type="text"
-                    class="form-control"
-                    id.one-time="fieldId"
-                    placeholder.bind="placeholder[language.code] || ''"
-                    disabled.bind="disabled"
-                    value.bind="value[language.code]">
-            </div>
-        </div>
+    <span>${label}<required-field-indicator if.bind="required"></required-field-indicator></span>
+    <div class="simple-form">
+        <template repeat.for="language of languages">
+            <span class="control-label"
+                for.one-time="fieldId">
+                <flag name.one-time="language.flag"></flag>
+                ${language.code}
+            </span>
+            <input type="text"
+                class="form-control"
+                id.one-time="fieldId"
+                placeholder.bind="placeholder[language.code] || ''"
+                disabled.bind="disabled"
+                value.bind="value[language.code]">
+        </template>
     </div>
 </template>

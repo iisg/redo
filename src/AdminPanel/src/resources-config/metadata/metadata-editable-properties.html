@@ -1,44 +1,38 @@
-<template>
+<template class="simple-form">
     <require from="./constraint/resource-kind/resource-kind-constraint-editor"></require>
     <require from="./constraint/metadata-constraint-form"></require>
-    <require from="common/components/restore-from-original/restore-from-original.html"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
 
-    <div class="form-group">
+    <span>${'Show in brief' | t}<icon name="show"></icon></span>
+    <div>
+        <input type="checkbox"
+            checked.bind="metadata.shownInBrief">
+        <restore-from-original-button if.bind="originalMetadata && originalMetadata.shownInBrief != metadata.shownInBrief"
+            click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original-button>
+    </div>
+    <template if.bind="metadata.control != 'file'">
+        <span>${'Copy metadata to child resource' | t}<icon name="edit"></icon></span>
         <div>
             <input type="checkbox"
-                checked.bind="metadata.shownInBrief">
-            ${'Show in brief' | t}
-            <icon name="show"></icon>
-            <restore-from-original if.bind="originalMetadata && originalMetadata.shownInBrief != metadata.shownInBrief"
-                click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original>
+            checked.bind="metadata.copyToChildResource">
+            <restore-from-original-button if.bind="originalMetadata && originalMetadata.copyToChildResource != metadata.copyToChildResource"
+            click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original-button>
         </div>
-        <div if.bind="metadata.control != 'file'">
-            <input type="checkbox"
-                checked.bind="metadata.copyToChildResource">
-            ${'Copy metadata to child resource' | t}
-            <icon name="edit"></icon>
-            <restore-from-original if.bind="originalMetadata && originalMetadata.copyToChildResource != metadata.copyToChildResource"
-                click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original>
-        </div>
-    </div>
-
-    <div class="form-group ${editing ? 'no-margin-top' : ''}">
-        <multilingual-editor label="${'Label' | t}"
-            placeholder.bind="originalMetadata.label"
-            value.bind="metadata.label & validate"></multilingual-editor>
-    </div>
-    <div class="form-group">
-        <multilingual-editor label="${'Hint' | t}"
-            placeholder.bind="originalMetadata.placeholder"
-            value.bind="metadata.placeholder & validate"></multilingual-editor>
-    </div>
-    <div class="form-group">
-        <multilingual-editor label="${'Description' | t}"
-            placeholder.bind="originalMetadata.description"
-            value.bind="metadata.description & validate"></multilingual-editor>
-    </div>
-
-    <metadata-constraint-form metadata.bind="metadata"
+    </template>
+    <multilingual-editor containerless
+        label="${'Label' | t}"
+        placeholder.bind="originalMetadata.label"
+        value.bind="metadata.label & validate"
+        required></multilingual-editor>
+    <multilingual-editor containerless
+        label="${'Hint' | t}"
+        placeholder.bind="originalMetadata.placeholder"
+        value.bind="metadata.placeholder & validate"></multilingual-editor>
+    <multilingual-editor containerless
+        label="${'Description' | t}"
+        placeholder.bind="originalMetadata.description"
+        value.bind="metadata.description & validate"></multilingual-editor>
+    <metadata-constraint-form containerless
+        metadata.bind="metadata"
         original-metadata.bind="originalMetadata"></metadata-constraint-form>
-
 </template>

@@ -1,12 +1,13 @@
 <template>
     <require from="./metadata-constraint-editor"></require>
 
-    <h4>${'Constraints' | t}</h4>
-    <div repeat.for="constraintName of constraintNames"
-        class="form-group">
-        <label>${'metadata_constraints::labels//' + constraintName | t}</label>
+    <span class="section-title">${'Constraints' | t}</span>
+    <template repeat.for="constraintName of constraintNames">
+        <span>${'metadata_constraints::labels//' + constraintName | t}<icon name="information"
+            if.bind="constraintName == 'resourceKind' && metadata.constraints.resourceKind.length > 1"
+            bootstrap-tooltip="${'One of the selected' | t}"></icon></span>
         <metadata-constraint-editor name.bind="constraintName"
             metadata.bind="metadata"
             original-metadata.bind="originalMetadata"></metadata-constraint-editor>
-    </div>
+    </template>
 </template>

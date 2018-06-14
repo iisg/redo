@@ -1,3 +1,7 @@
-resource-kind-constraint-editor > .input-group {
-  width: 100%;
+@import "../../../../common/styles";
+
+resource-kind-constraint-editor {
+  restore-from-original-button {
+    margin-top: $default-gap-size / 2;
+  }
 }

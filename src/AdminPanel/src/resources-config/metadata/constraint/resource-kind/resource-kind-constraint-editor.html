@@ -1,18 +1,12 @@
 <template>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
-    <require from="common/components/restore-from-original/restore-from-original.html"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
 
-    <p if.bind="metadata.constraints.resourceKind.length === 0">${'No allowed resource kinds' | t}</p>
-    <p if.bind="metadata.constraints.resourceKind.length > 1">${'One of:' | t}</p>
-    <div class="input-group">
-        <resource-kind-chooser value.bind="metadata.constraints.resourceKind"
-            resource-class.bind="resourceClass"
-            multi-select="true"
-            disabled.bind="disabled"
-            if.bind="!disabled || metadata.constraints.resourceKind.length > 0"></resource-kind-chooser>
-        <div if.bind="canInherit && wasModified"
-            class="input-group-addon">
-            <restore-from-original click.delegate="resetToOriginalIds()"></restore-from-original>
-        </div>
-    </div>
+    <resource-kind-chooser if.bind="!disabled || metadata.constraints.resourceKind.length"
+        value.bind="metadata.constraints.resourceKind"
+        multi-select="true"
+        resource-class.bind="resourceClass"
+        disabled.bind="disabled"></resource-kind-chooser>
+    <restore-from-original-button if.bind="canInherit && wasModified"
+        on-click.call="resetToOriginalIds()"></restore-from-original-button>
 </template>

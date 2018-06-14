@@ -1,11 +1,11 @@
-import {CustomValidationRule} from "../custom-validation-rules";
 import {autoinject} from "aurelia-dependency-injection";
-import {LanguageRepository, LanguagesChangedEvent} from "resources-config/language-config/language-repository";
 import {EventAggregator} from "aurelia-event-aggregator";
+import {LanguageRepository, LanguagesChangedEvent} from "resources-config/language-config/language-repository";
+import {CustomValidationRule} from "../custom-validation-rules";
 
 @autoinject
 export class RequiredInAllLanguagesValidationRule implements CustomValidationRule {
-  static readonly NAME: string = 'RequiredInAllLanguages';
+  static readonly NAME: string = 'requiredInAllLanguages';
 
   private knownLanguageCodes;
 

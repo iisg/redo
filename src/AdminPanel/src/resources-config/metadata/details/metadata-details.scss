@@ -1,8 +1,11 @@
 @import "../../../common/styles";
 
 .metadata-details {
-  metadata-form, metadata-details-list {
+  metadata-details-list {
     padding: $default-gap-size;
+  }
+  metadata-form {
+    padding: $default-gap-size / 2;
   }
   metadata-list, metadata-form, resource-kinds-list {
     flex: 1;

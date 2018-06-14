@@ -2,8 +2,6 @@ import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {bindable, customElement} from "aurelia-templating";
 import {EntityChooser} from "common/components/entity-chooser/entity-chooser";
-import {booleanAttribute} from "../../common/components/boolean-attribute";
-import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
 
 @customElement('metadata-chooser')
@@ -11,7 +9,6 @@ import {MetadataRepository} from "./metadata-repository";
 export class MetadataChooser extends EntityChooser {
   @bindable resourceClass: string | string[];
   @bindable control: string | string[];
-  @bindable @booleanAttribute setFirstAsDefault: boolean;
   private loadingMetadataList = false;
   private reloadMetadataList = false;
 
@@ -53,13 +50,6 @@ export class MetadataChooser extends EntityChooser {
             this.loadMetadataList();
           } else {
             this.entities = metadataList;
-            if (this.setFirstAsDefault) {
-              if (this.value) {
-                this.value = metadataList.find(metadata => metadata.id == (this.value as Metadata).id);
-              } else {
-                this.value = metadataList[0];
-              }
-            }
           }
         })
         .finally(() => this.loadingMetadataList = false);

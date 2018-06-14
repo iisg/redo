@@ -1,11 +1,12 @@
+import {computedFrom} from "aurelia-binding";
+import {Configure} from "aurelia-configuration";
+import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
-import {autoinject} from "aurelia-dependency-injection";
-import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
-import {Metadata} from "./metadata";
-import {computedFrom} from "aurelia-binding";
 import {changeHandler} from "common/components/binding-mode";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
+import {Metadata} from "./metadata";
 
 @autoinject
 export class MetadataForm implements ComponentAttached {
@@ -14,15 +15,18 @@ export class MetadataForm implements ComponentAttached {
   @bindable(changeHandler('resetValues')) template: Metadata;
   @bindable edit: boolean = false;
   @bindable resourceClass: string;
-
+  controls: string[];
   metadata: Metadata = new Metadata();
   submitting: boolean = false;
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory, private entitySerializer: EntitySerializer) {
+  constructor(validationControllerFactory: ValidationControllerFactory,
+    configuration: Configure,
+    private entitySerializer: EntitySerializer) {
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
+    this.controls = configuration.get('supported_controls');
   }
 
   @computedFrom('metadata.id')

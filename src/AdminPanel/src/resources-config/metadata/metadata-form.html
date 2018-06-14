@@ -1,34 +1,38 @@
 <template>
     <require from="./metadata-control-select"></require>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="common/components/required-field-indicator/required-field-indicator"></require>
 
-    <form submit.delegate="validateAndSubmit()">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group ${fromTemplate ? 'no-margin-top' : ''}">
-                    <label for="metadataName">${'Name' | t}</label>
-                    <input type="text"
-                        disabled.bind="fromTemplate"
-                        value.bind="metadata.name & validate"
-                        class="form-control"
-                        id="metadataName">
-                </div>
+    <form class="form-with-buttons"
+        submit.delegate="validateAndSubmit()">
+        <div class="form-content simple-form">
+            <span>${'Name' | t}<required-field-indicator></required-field-indicator></span>
+            <div class="validation-message-container">
+                <input type="text"
+                    disabled.bind="fromTemplate"
+                    value.bind="metadata.name & validate"
+                    class="form-control">
             </div>
-            <div class="col-sm-4 col-sm-offset-2">
-                <div class="form-group ${fromTemplate ? 'no-margin-top' : ''}">
-                    <metadata-control-select value.bind="metadata.control & validate"
-                        disabled.bind="fromTemplate"></metadata-control-select>
-                </div>
+            <span>${'Control' | t}</span>
+            <div class="validation-message-container">
+                <dropdown-select
+                    values.bind="controls"
+                    value.bind="metadata.control & validate"
+                    disabled.bind="fromTemplate"
+                    hide-clear-button>
+                    <template replace-part="option-template">
+                        ${'controls::' + option | t}
+                    </template>
+                </dropdown-select>
             </div>
+            <compose containerless
+                view="./metadata-editable-properties.html"></compose>
         </div>
-        <compose view="./metadata-editable-properties.html"></compose>
-        <div class="form-group text-right no-margin-top">
-            <div class="buttons btn-group">
-                <cancel-button if.bind="edit"
-                    disabled.bind="metadata.pendingRequest || submitting"
-                    on-click.call="cancel()"></cancel-button>
-                <submit-button editing.bind="edit"
-                    submitting.bind="submitting"></submit-button>
-            </div>
+        <div class="form-buttons">
+            <submit-button editing.bind="edit"
+                submitting.bind="submitting"></submit-button>
+            <cancel-button disabled.bind="metadata.pendingRequest || submitting"
+                on-click.call="cancel()"></cancel-button>
         </div>
     </form>
 </template>
