@@ -69,8 +69,7 @@ Roles allowed to apply transition: Uprawnieni do wykonania przejścia
 Select file: Wybierz...
 Required resource kind: Wymagany rodzaj zasobu
 Available child resource kind: Dopuszczalne rodzaje podzasobów
-No allowed resource kinds: Brak dozwolonych rodzajów zasobów
-One of:: Jeden spośród:
+One of the selected: Jeden spośród wybranych
 Clear overridden value: Przywróć oryginalną wartość
 Add value: Dodaj wartość
 Remove value: Usuń wartość
@@ -98,7 +97,7 @@ Optional_female: Metadana nie musi mieć wartości
 Required_female: Metadana musi mieć wartość
 Locked_female: Wartość metadanej nie może zostać zmieniona
 Specifies assignee: Wartość metadanej określa użytkownika przypisanego do zadania
-Specifies auto assignee: Jako wartość metadanej zostaje automatycznie ustawiony użytkownik, który umieści zasób w tym stanie 
+Specifies auto assignee: Jako wartość metadanej zostaje automatycznie ustawiony użytkownik, który umieści zasób w tym stanie
 only for relationships with users: opcja dostępna tylko dla relacji z użytkownikami
 Your current tasks: Twoje bieżące zadania
 Your other tasks: Inne twoje zadania
@@ -116,6 +115,7 @@ At least: Co najmniej
 Minimum: Minimum
 Maximum: Maksimum
 Unlimited: Bez ograniczeń
+Value is required: Wartość jest wymagana
 At least one required: Co najmniej jedno wymagane
 At most {{max}} values required: Wymagane najwyżej {{max}} wartości
 No value count constraints: Brak ograniczeń ilości wartości
@@ -144,7 +144,7 @@ To see dropdown choose allowed resource kinds in metadata settings.: Aby zobaczy
 Additional filter limits results in this dropdown: Dodatkowy filtr ogranicza zasoby wyświetlane w powyższym polu
 Filter: Filtr
 Metadata kind: Rodzaj metadanej
-Firstly, choose allowed resource kinds.: Wybierz najpierw dozwolone rodzaje zasobów.
+Firstly, specify required resource kind.: Najpierw określ wymagany rodzaj zasobu.
 Results per page: Wyników na stronie
 "Resource #{{id}} state, as of": "Stan zasobu #{{id}} na dzień"
 View past contents: Pokaż zawartoć zasobu

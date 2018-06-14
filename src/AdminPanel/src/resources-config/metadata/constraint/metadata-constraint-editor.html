@@ -8,6 +8,7 @@
     <require from="./editor-view/regex.html"></require>
     <require from="./editor-view/min-max-value.html"></require>
 
-    <compose view="./editor-view/${editorViewName}.html"
+    <compose containerless
+        view="./editor-view/${editorViewName}.html"
         model.bind="composeModel"></compose>
 </template>

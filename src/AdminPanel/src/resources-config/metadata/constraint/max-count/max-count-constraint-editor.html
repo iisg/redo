@@ -1,39 +1,23 @@
-<template>
-    <require from="common/components/restore-from-original/restore-from-original.html"></require>
+<template class="simple-form">
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
     <require from="common/value-converters/integer-value-converter"></require>
 
-    <div class="input-group form-inline">
-        <div class="form-group">
-            <div class="radio">
-                <label>
-                    <input type="radio"
-                        name.bind="radioName"
-                        model.bind="true"
-                        checked.bind="unlimited">
-                    ${"Unlimited" | t}
-                </label>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="radio">
-                <label>
-                    <input type="radio"
-                        name.bind="radioName"
-                        model.bind="false"
-                        checked.bind="unlimited">
-                    ${"At most" | t}
-                </label>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="spinner">
-                <input type="number"
-                    class="form-control"
-                    value.bind="count | integer"
-                    disabled.bind="unlimited">
-            </div>
-        </div>
-        <restore-from-original if.bind="hasBase && wasModified"
-            click.delegate="resetToOriginalValues()"></restore-from-original>
+    <input type="radio"
+        name.bind="radioName"
+        model.bind="true"
+        checked.bind="unlimited">
+    <span class="value">${"Unlimited" | t}</span>
+    <input type="radio"
+        name.bind="radioName"
+        model.bind="false"
+        checked.bind="unlimited">
+    <div>
+        <span>${"At most" | t}</span><input class="form-control"
+            type="number"
+            value.bind="count | integer"
+            disabled.bind="unlimited">
     </div>
+    <restore-from-original-button if.bind="hasBase && wasModified"
+        class="full-width"
+        on-click.call="resetToOriginalValues()"></restore-from-original-button>
 </template>

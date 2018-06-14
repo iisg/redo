@@ -1,33 +1,28 @@
-<template>
-    <require from="common/components/restore-from-original/restore-from-original.html"></require>
+<template class="simple-form">
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
     <require from="common/value-converters/integer-value-converter"></require>
 
-    <div class="form-inline input-group">
-        <div class="input-group">
-            <span class="input-group-addon">${"Minimum" | t}</span>
-            <span class="input-group-addon">
-                <input type="checkbox"
-                    name.bind="checkMin"
-                    checked.bind="checkmin">
-            </span>
-            <input type="number"
-                class="form-control"
-                value.bind="valuemin | integer"
-                disabled.bind="!checkmin">
-        </div>
-        <div class="input-group">
-            <span class="input-group-addon">${"Maximum" | t}</span>
-            <span class="input-group-addon">
-                <input type="checkbox"
-                    name.bind="checkMax"
-                    checked.bind="checkmax">
-            </span>
-            <input type="number"
-                class="form-control"
-                value.bind="valuemax | integer"
-                disabled.bind="!checkmax">
-        </div>
-            <restore-from-original if.bind="hasBase && wasModified"
-                click.delegate="resetToOriginalValues()"></restore-from-original>
+    <span>${"Minimum" | t}</span>
+    <div>
+        <input type="checkbox"
+            name.bind="checkMin"
+            checked.bind="checkmin">
+        <input type="number"
+            class="form-control"
+            value.bind="valuemin | integer"
+            disabled.bind="!checkmin">
     </div>
+    <span>${"Maximum" | t}</span>
+    <div>
+        <input type="checkbox"
+            name.bind="checkMax"
+            checked.bind="checkmax">
+        <input type="number"
+            class="form-control"
+            value.bind="valuemax | integer"
+            disabled.bind="!checkmax">
+    </div>
+    <restore-from-original-button if.bind="hasBase && wasModified"
+        class="full-width"
+        on-click.call="resetToOriginalValues()"></restore-from-original-button>
 </template>

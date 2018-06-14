@@ -61,6 +61,14 @@
   }
 }
 
+@mixin form-element($input-height: 34px) {
+  display: flex;
+  min-height: $input-height;
+  align-self: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 @mixin z-depth($number) {
   $box-shadow: map-get((
     0: none,

@@ -1,33 +1,24 @@
-<template>
-    <require from="common/components/restore-from-original/restore-from-original.html"></require>
+<template class="simple-form">
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
     <require from="resources-config/metadata/metadata-chooser"></require>
     <require from="resources/add/metadata-value-input"></require>
 
-    <table if.bind="resourceClasses.length">
-        <thead>
-        <tr>
-            <th>${'Metadata kind' | t}</th>
-            <th>${'Filter' | t}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                <metadata-chooser value.bind="filteredMetadata"
-                    resource-class.bind="resourceClasses"
-                    control.one-time="['text', 'textarea', 'relationship', 'integer']"></metadata-chooser>
-            </td>
-            <td>
-                <input type="text"
-                    class="form-control"
-                    if.bind="filteredMetadata"
-                    value.bind="filterValue.value">
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div else>${'Firstly, choose allowed resource kinds.' | t}</div>
+    <template if.bind="resourceClasses.length">
+        <span>${'Metadata kind' | t}</span>
+        <metadata-chooser value.bind="filteredMetadata"
+            resource-class.bind="resourceClasses"
+            control.one-time="['text', 'textarea', 'relationship', 'integer']"></metadata-chooser>
+        <template if.bind="filteredMetadata">
+            <span>${'Filter' | t}</span>
+            <input type="text"
+                class="form-control"
+                value.bind="filterValue.value">
+        </template>
+    </template>
+    <span else
+        class="full-width value">${'Firstly, specify required resource kind.' | t}</span>
 
-    <restore-from-original if.bind="hasBase && wasModified"
-        click.delegate="resetToOriginalValues()"></restore-from-original>
+    <restore-from-original-button if.bind="hasBase && wasModified"
+        class="full-width"
+        on-click.call="resetToOriginalValues()"></restore-from-original-button>
 </template>

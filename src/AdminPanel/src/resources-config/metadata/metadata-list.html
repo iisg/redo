@@ -3,18 +3,21 @@
     <require from="./details/metadata-child-add"></require>
     <require from="common/components/buttons/add-button"></require>
 
-    <add-button entity-name="metadata"
+    <add-button if.bind="!addFormOpened"
+        entity-name="metadata"
         toggled.two-way="addFormOpened"></add-button>
 
     <div if.bind="addFormOpened"
         class="well au-animate fade-inout-updown">
-        <h2>${'Add new metadata kind' | resourceClassTranslation:resourceClass}</h2>
-        <metadata-form submit.call="addNewMetadata(editedMetadata)"
-            if.bind="!parentMetadata"
+        <span class="page-title">${'Add new metadata kind' | resourceClassTranslation:resourceClass}</span>
+        <metadata-form if.bind="!parentMetadata"
+            submit.call="addNewMetadata(editedMetadata)"
+            cancel.call="addFormOpened = false"
             resource-class.bind="resourceClass"></metadata-form>
-        <metadata-child-add if.bind="parentMetadata"
+        <metadata-child-add else
             parent-metadata.bind="parentMetadata"
             saved.call="metadataAdded(savedMetadata)"
+            cancel.call="addFormOpened = false"
             resource-class.bind="resourceClass"></metadata-child-add>
     </div>
 

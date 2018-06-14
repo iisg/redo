@@ -2,7 +2,7 @@ required: To pole jest wymagane.
 isLanguageCode: Tylko wielkie litery i myślnik (-), musi zaczynać i kończyć się literą.
 mustHaveMetadata: Rodzaj zasobu musi posiadać rodzaj metadanych.
 metadataConstraintsNotSatisfied: Ograniczenia metadanych nie są spełnione.
-RequiredInAllLanguages: ${$displayName} musi mieć wartość we wszystkich językach.
+requiredInAllLanguages: ${$displayName} musi mieć wartość we wszystkich językach.
 lengthUpTo10: Długość do 10 znaków.
 Workflow must consist of at least one place: Proces musi zawierać co najmniej jeden stan
 Template compilation error: Błąd kompilacji szablonu

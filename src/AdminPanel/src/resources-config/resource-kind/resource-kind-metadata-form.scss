@@ -1,0 +1,7 @@
+@import "../../common/styles";
+
+resource-kind-metadata-form {
+    & > :not(.simple-form):not(metadata-constraint-editor), .simple-form > *, resource-kind-constraint-editor > * {
+        @include form-element();
+    }
+}

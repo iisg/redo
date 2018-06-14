@@ -25,20 +25,20 @@ export class BootstrapValidationRenderer implements ValidationRenderer {
       return;
     }
 
-    const formGroup = this.findErrorContainer(element);
-    if (!formGroup) {
+    const validationMessageContainer = this.findValidationMessageContainer(element);
+    if (!validationMessageContainer) {
       return;
     }
 
-    // add the has-error class to the enclosing form-group div
-    formGroup.classList.add('has-error');
+    // Adds the 'has-error' class to the validation message container.
+    validationMessageContainer.classList.add('has-error');
 
-    // add help-block
+    // Adds validation message.
     const message = document.createElement('span');
     message.className = 'help-block validation-message';
     message.textContent = result.message;
     message.id = `validation-message-${result.id}`;
-    formGroup.appendChild(message);
+    validationMessageContainer.appendChild(message);
   }
 
   private remove(element: Element, result: ValidateResult) {
@@ -46,24 +46,26 @@ export class BootstrapValidationRenderer implements ValidationRenderer {
       return;
     }
 
-    const formGroup = this.findErrorContainer(element);
-    if (!formGroup) {
+    const validationMessageContainer = this.findValidationMessageContainer(element);
+    if (!validationMessageContainer) {
       return;
     }
 
-    // remove help-block
-    const message = formGroup.querySelector(`#validation-message-${result.id}`);
+    // Removes validation message.
+    const message = validationMessageContainer.querySelector(`#validation-message-${result.id}`);
     if (message) {
-      formGroup.removeChild(message);
+      validationMessageContainer.removeChild(message);
 
-      // remove the has-error class from the enclosing form-group div
-      if (formGroup.querySelectorAll('.help-block.validation-message').length === 0) {
-        formGroup.classList.remove('has-error');
+      // Removes the 'has-error' class from the validation message container.
+      if (validationMessageContainer.querySelectorAll('.help-block.validation-message').length === 0) {
+        validationMessageContainer.classList.remove('has-error');
       }
     }
   }
 
-  private findErrorContainer(element: Element): Element {
-    return $(element).closest('.form-group, metadata-value-input, resource-metadata-values-form, resource-form-generated')[0];
+  private findValidationMessageContainer(element: Element): Element {
+    return $(element).closest('.validation-message-container, .form-group, \
+      metadata-value-input, resource-metadata-values-form, resource-form-generated')[0]
+      || $(element).prev()[0];
   }
 }

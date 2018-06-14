@@ -13,6 +13,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable values: Object[];
   @bindable(twoWay) value: Object | Object[];
   @bindable(changeHandler('setupDropdownAgain')) placeholder = "—";
+  @bindable @booleanAttribute setFirstAsDefault: boolean;
   @bindable @booleanAttribute multiple: boolean;
   @bindable @booleanAttribute hideSearchBox: boolean;
   @bindable @booleanAttribute hideClearButton: boolean;
@@ -33,6 +34,13 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   valuesChanged() {
     this.setupDropdownAgain();
+    if (!this.multiple && this.setFirstAsDefault) {
+      if (this.value) {
+        this.value = this.values.find(value => value == this.value);
+      } else {
+        this.value = this.values[0];
+      }
+    }
   }
 
   valueChanged() {

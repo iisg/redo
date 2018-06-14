@@ -1,15 +1,19 @@
 @import "../../common/styles";
 
-.buttons {
-  toggle-button {
-    button {
-      background-color: transparent;
-      icon {
-        color: $red;
-      }
-      span {
-        color: $default-text-color;
-      }
+metadata-form {
+    & > form > .simple-form {
+        dropdown-select {
+            width: 100%;
+        }
     }
-  }
+
+    .simple-form {
+        & > :not(.simple-form):not(metadata-constraint-editor), resource-kind-constraint-editor > * {
+            @include form-element();
+        }
+        flag > span {
+            display: flex;
+            align-items: center;
+        }
+    }
 }

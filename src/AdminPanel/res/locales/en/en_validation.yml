@@ -3,6 +3,6 @@ isLanguageCode: Only uppercase letters and dash (-), must start and end with a l
 mustHaveMetadata: Resource kind must have at least one metadata kind.
 metadataConstraintsNotSatisfied: Metadata constraints aren't satisfied.
 lengthUpTo10: Length up to 10 characters.
-RequiredInAllLanguages: ${$displayName} must have a value in all languages.
+requiredInAllLanguages: ${$displayName} must have a value in all languages.
 minMaxValueRange: Minimal value must be less or equal to maximum value.
 minimalMaxCount: Max value count must be at least one.

@@ -13,7 +13,7 @@
         class="metadata-details au-animate fade-inup-outup">
 
         <div class="name-with-buttons-and-tabs">
-            <h1>${'Metadata_single' | t} #${ metadata.id }</h1>
+            <span class="page-title">${'Metadata_single' | t} #${metadata.id}</span>
             <remove-button if.bind="!editing && metadata.id > 0"
                 disabled.bind="metadata.pendingRequest"
                 on-click.call="deleteMetadata()"></remove-button>

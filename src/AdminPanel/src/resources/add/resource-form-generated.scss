@@ -1,18 +1,22 @@
 @import "../../common/styles";
 
-$input-height: 34px;
 $icons-width: 1.5em;
 $gap-size: $default-gap-size / 2;
 
 resource-form-generated {
+  padding-top: $default-gap-size / 4;
+  padding-bottom: $default-gap-size / 4;
+
+  &.simple-form, .simple-form {
+    grid-row-gap: 0;
+  }
+
   & > span, .input-container > *, .new-metadata-value-button-container, .drag-handle, .buttons {
-    display: flex;
-    min-height: $input-height;
-    align-self: baseline;
-    align-items: center;
+    @include form-element();
     margin-top: $gap-size / 2;
     margin-bottom: $gap-size / 2;
   }
+
   .metadata-constraints-icons > * {
     margin-left: $gap-size / 2
   }
@@ -54,10 +58,4 @@ resource-form-generated {
     }
   }
 
-}
-
-.required-metadata-indicator {
-  color: $brand-danger;
-  display: inline-block;
-  cursor: default;
 }

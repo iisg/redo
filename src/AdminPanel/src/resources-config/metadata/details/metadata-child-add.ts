@@ -5,9 +5,10 @@ import {MetadataRepository} from "../metadata-repository";
 
 @autoinject
 export class MetadataChildAdd implements ComponentAttached {
-  @bindable saved: (value: { savedMetadata: Metadata }) => any;
   @bindable parentMetadata: Metadata;
   @bindable resourceClass: string;
+  @bindable saved: (value: { savedMetadata: Metadata }) => any;
+  @bindable cancel: () => void;
   metadataList: Metadata[];
   parentMetadataChildren: Metadata[];
   baseMetadata: Metadata;
