@@ -4,6 +4,7 @@ namespace Repeka\Tests;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
@@ -19,6 +20,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
+use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
@@ -191,5 +193,17 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     protected function simulateAuthentication(UserEntity $user) {
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->container->get('security.token_storage')->setToken($token);
+    }
+
+    /**
+     * Clears the cache of the EntityManager so it sees changes introduced by native SQL queries.
+     * @param EntityRepository[] ...$repositoriesToReset
+     */
+    protected function resetEntityManager(...$repositoriesToReset) {
+        $this->getEntityManager()->flush();
+        $this->container->get('doctrine')->resetManager();
+        foreach ($repositoriesToReset as $repository) {
+            EntityUtils::forceSetField($repository, $this->getEntityManager(), '_em');
+        }
     }
 }

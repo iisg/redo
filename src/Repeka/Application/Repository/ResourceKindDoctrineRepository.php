@@ -1,8 +1,10 @@
 <?php
 namespace Repeka\Application\Repository;
 
+use Assert\Assertion;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
@@ -71,5 +73,51 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
         $resultSetMapping = ResultSetMappings::resourceKind($em);
         $dbQuery = $em->createNativeQuery($queryFactory->getQuery(), $resultSetMapping)->setParameters($queryFactory->getParams());
         return $dbQuery->getResult();
+    }
+
+    public function removeEveryResourceKindsUsageInOtherResourceKinds(ResourceKind $resourceKind): void {
+        $resourceKindId = $resourceKind->getId();
+        $rsm = new ResultSetMapping();
+        $query = $this->getEntityManager()->createNativeQuery(
+            <<<SQL
+        UPDATE resource_kind rk
+        SET metadata_list =
+        (
+          SELECT to_jsonb(array_agg(metadata))
+          FROM (
+                 SELECT CASE WHEN (metadata #> '{constraints, resourceKind}') @> :resourceKindId = TRUE
+                     THEN
+                       jsonb_set(metadata,
+                           '{constraints, resourceKind}',
+                           (SELECT to_jsonb(array_remove(array_agg(resourceKindId), :resourceKindId) :: INT [])
+                            FROM (
+                                  SELECT jsonb_array_elements_text(metadata #> '{constraints, resourceKind}') AS resourceKindId
+                                  FROM (
+                                         SELECT jsonb_array_elements(metadata_list) AS editedMetadata
+                                         FROM resource_kind
+                                         WHERE id = rk.id) AS jsonMetadata
+                                  WHERE editedMetadata = metadata) AS resourcekindIds
+                           ),
+                           FALSE
+                       )
+                       ELSE metadata
+                       END AS metadata
+                 FROM (
+                        SELECT jsonb_array_elements(metadata_list) AS metadata
+                        FROM resource_kind
+                        WHERE id = rk.id
+                 ) AS metadatas
+          ) AS fixedMetadatas
+        )
+        WHERE :resourceKindId IN (
+          SELECT jsonb_array_elements((jsonb_array_elements(metadata_list)) #> '{constraints, resourceKind}')
+          FROM resource_kind
+          WHERE rk.id = id);
+SQL
+            ,
+            $rsm
+        );
+        $query->setParameter('resourceKindId', $resourceKindId);
+        $query->execute();
     }
 }
