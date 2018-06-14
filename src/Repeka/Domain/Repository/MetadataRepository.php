@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Repository;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 
@@ -35,4 +36,6 @@ interface MetadataRepository {
 
     /** @return Metadata[] */
     public function findByQuery(MetadataListQuery $query): array;
+
+    public function removeResourceKindFromMetadataConstraints(ResourceKind $resourceKind): void;
 }

@@ -32,4 +32,6 @@ interface ResourceKindRepository {
 
     /** @return ResourceKind[] */
     public function findByQuery(ResourceKindListQuery $query): array ;
+
+    public function removeEveryResourceKindsUsageInOtherResourceKinds(ResourceKind $resourceKind): void;
 }

@@ -358,6 +358,5 @@ class MetadataFixture extends RepekaFixture {
             ),
             self::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY
         );
-//        $this->handleCommand(new MetadataUpdateOrderCommand(EntityUtils::mapToIds($metadata), 'books'));
     }
 }

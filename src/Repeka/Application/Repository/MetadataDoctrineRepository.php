@@ -1,10 +1,13 @@
 <?php
 namespace Repeka\Application\Repository;
 
+use Assert\Assertion;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
@@ -88,5 +91,31 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         }
         $criteria->orderBy(['ordinalNumber' => 'ASC']);
         return $this->matching($criteria)->toArray();
+    }
+
+    public function removeResourceKindFromMetadataConstraints(ResourceKind $resourceKind): void {
+        $resourceKindId = $resourceKind->getId();
+        $rsm = new ResultSetMapping();
+        $query = $this->getEntityManager()->createNativeQuery(
+            <<<SQL
+           UPDATE metadata editedMetadata
+           SET constraints = jsonb_set(constraints,
+                                       '{resourceKind}',
+                        (SELECT to_jsonb(array_remove(array_agg(resourceKind), :resourceKindId)::int[])
+                         FROM (
+                          SELECT resourceKind
+                          FROM (
+                                 SELECT jsonb_array_elements_text(constraints -> 'resourceKind') AS resourceKind
+                                 FROM metadata
+                                 WHERE id = editedMetadata.id) AS resourceKinds
+                        ) AS resourceKindIds)::jsonb
+                        )
+           WHERE :resourceKindId in (select jsonb_array_elements(constraints -> 'resourceKind') from metadata where editedMetadata.id = id)
+SQL
+            ,
+            $rsm
+        );
+        $query->setParameter('resourceKindId', $resourceKindId);
+        $query->execute();
     }
 }

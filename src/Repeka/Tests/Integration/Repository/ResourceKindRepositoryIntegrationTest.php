@@ -4,6 +4,7 @@ namespace Repeka\Tests\Integration\Repository;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
@@ -56,5 +57,26 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
         $resourceKindListQuery = ResourceKindListQuery::builder()->filterByMetadataId($metadata->getId())->build();
         $resourceKindList = $this->resourceKindRepository->findByQuery($resourceKindListQuery);
         $this->assertCount(1, $resourceKindList);
+    }
+
+    public function testRemoveEveryResourceKindsUsageInOtherResourceKinds() {
+        $id = 2;
+        $searchedResourceKindId = 3;
+        $resourceKindForRemoval = $this->createMock(ResourceKind::class);
+        $resourceKindForRemoval->method('getId')->willReturn($id);
+        $resourceKind = $this->resourceKindRepository->findOne($searchedResourceKindId);
+        foreach ($resourceKind->getMetadataList() as $metadata) {
+            if ($metadata->getId() == SystemMetadata::PARENT) {
+                $this->assertContains($id, $metadata->getConstraints()['resourceKind']);
+            }
+        }
+        $this->resourceKindRepository->removeEveryResourceKindsUsageInOtherResourceKinds($resourceKindForRemoval);
+        $this->resetEntityManager($this->resourceKindRepository);
+        $afterRemovalResourceKind = $this->resourceKindRepository->findOne($searchedResourceKindId);
+        foreach ($afterRemovalResourceKind->getMetadataList() as $metadata) {
+            if ($metadata->getId() == SystemMetadata::PARENT) {
+                $this->assertNotContains($id, $metadata->getConstraints()['resourceKind']);
+            }
+        }
     }
 }
