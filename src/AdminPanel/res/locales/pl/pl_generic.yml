@@ -170,3 +170,6 @@ Current places: Obecne stany
 Target places: Stany docelowe
 Filter metadata kinds by selecting the resource kinds: Pokaż tylko rodzaje metadanych, które należą do wybranych rodzajów zasobów
 Save the workflow in order to configure workflow plugins.: Zapisz proces, by móc edytować konfigurację pluginów
+Operator of the resource classes: Operator klas zasobów
+Administrator of the resource classes: Administrator klas zasobów
+No roles.: Brak ról.

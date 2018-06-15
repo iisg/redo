@@ -21,6 +21,7 @@ invalidSelector: "Mapping '{{mappingKey}}' has invalid selector: {{selector}}"
 invalidTransform: "Invalid transform definition '{{name}}' with parameters: {{params}}"
 incorrectResourceDisplayStrategy: "Incorrect resource display strategy. Error: {{error}}"
 metadataNameIsNotUnique: Metada kind with that name already exists
+insufficientPermissions: You do not have permissions required to perform this action
 violationFields:
   metadata: Metadata kind
   resource: Resource

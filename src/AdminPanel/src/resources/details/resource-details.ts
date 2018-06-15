@@ -15,6 +15,7 @@ import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ContextResourceClass} from './../context/context-resource-class';
 import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
+import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -37,7 +38,8 @@ export class ResourceDetails implements RoutableComponentActivate {
               private alert: Alert,
               private i18n: I18N,
               private entitySerializer: EntitySerializer,
-              private contextResourceClass: ContextResourceClass) {
+              private contextResourceClass: ContextResourceClass,
+              private hasRole: HasRoleValueConverter) {
     this.resourceDetailsTabs = new DetailsViewTabs(this.ea, () => this.updateUrl());
   }
 
@@ -81,8 +83,16 @@ export class ResourceDetails implements RoutableComponentActivate {
       }
     }
     if (this.resource.resourceClass == 'users') {
-      const isGroupResourceKind = !!this.resource.kind.metadataList.filter(m => m.id == SystemMetadata.GROUP_MEMBER.id).length;
-      if (isGroupResourceKind) {
+      const isUserResourceKind = this.resource.kind.metadataList.filter(m => m.id == SystemMetadata.GROUP_MEMBER.id).length > 0;
+      if (isUserResourceKind) {
+        if (this.hasRole.toView('ADMIN', 'users')) {
+          this.resourceDetailsTabs.addTab({
+            id: 'user-roles',
+            label: this.i18n.tr('Roles')
+          });
+        }
+      }
+      else {
         this.resourceDetailsTabs.addTab({
           id: 'users-in-group',
           label: this.i18n.tr('Users')

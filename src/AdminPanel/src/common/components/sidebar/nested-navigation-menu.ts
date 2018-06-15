@@ -35,7 +35,7 @@ export class NestedNavigationMenu {
   }
 
   private getMenuItems() {
-    const classes: string[] = this.getResourceClasses();
+    const resourceClasses: string[] = this.getResourceClasses();
 
     const routeToLink: (className?: string) => (route: AbstractRoute) => NavLink =
       (className?: string) => (route: AbstractRoute) => {
@@ -45,17 +45,17 @@ export class NestedNavigationMenu {
         if (route.route.indexOf(':resourceClass') == -1) {
           className = undefined;
         }
-        return new NavLink(route.name, labelKey, route.settings.icon, className, route.settings.requiredRoles);
+        return new NavLink(route.name, labelKey, route.settings.icon, className, route.settings.requiredRole);
       };
 
     const top: NavLink[] = this.routeFilter.getRoutes(NavRole.TOP).map(routeToLink());
     const bottom: NavLink[] = this.routeFilter.getRoutes(NavRole.BOTTOM).map(routeToLink());
 
     let middle: NavItem[] = [];
-    for (const className of classes) {
-      const primary: NavLink[] = this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS).map(routeToLink(className));
-      const secondary = new NavGroup('resource_classes::' + className + '//settings', className,
-        this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS_SECONDARY).map(routeToLink(className))
+    for (const resourceClass of resourceClasses) {
+      const primary: NavLink[] = this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS).map(routeToLink(resourceClass));
+      const secondary = new NavGroup('resource_classes::' + resourceClass + '//settings', resourceClass,
+        this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS_SECONDARY).map(routeToLink(resourceClass))
       );
       middle = middle.concat(primary).concat(secondary);
     }
@@ -77,21 +77,21 @@ interface NavItem {
 }
 
 class NavLink implements NavItem {
-  params: {resourceClass: string};
+  params: { resourceClass: string };
   active: boolean = false;
 
   constructor(public routeName: string,
               public labelKey: string,
               public icon: string,
-              public className?: string,
-              public requiredRoles: string[] = []) {
-    this.params = {resourceClass: className};
+              public resourceClass?: string,
+              public requiredRole?: string) {
+    this.params = {resourceClass};
   }
 
   updateActive(currentInstruction: NavigationInstruction, currentClass: string): void {
     const linkConfig = currentInstruction.config.name.match('^[^\\/]+');
     const resourceClass = currentInstruction.params.resourceClass;
-    const currentLink = `${this.routeName}/${this.className}`;
+    const currentLink = `${this.routeName}/${this.resourceClass}`;
     let parentLink = `${linkConfig}/${resourceClass}`;
     if (currentClass) {
       parentLink = `${linkConfig}/${currentClass}`;
@@ -118,8 +118,12 @@ class NavLink implements NavItem {
 class NavGroup implements NavItem {
   expanded: boolean = false;
   active: boolean = false;
+  requiredRole: string;
+  resourceClass: string;
 
   constructor(public labelKey: string, public className: string, public items: NavLink[]) {
+    this.requiredRole = items[0].requiredRole;
+    this.resourceClass = items[0].resourceClass;
   }
 
   toggle(): void {

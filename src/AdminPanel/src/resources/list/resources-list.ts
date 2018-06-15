@@ -1,4 +1,4 @@
-import {bindingMode, observable} from "aurelia-binding";
+import {bindingMode, computedFrom, observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {parseQueryString} from "aurelia-path";
@@ -13,6 +13,7 @@ import {ResourceRepository} from "../resource-repository";
 import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
 import {safeJsonParse} from "../../common/utils/object-utils";
 import {getMergedBriefMetadata} from "../../common/utils/metadata-utils";
+import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 
 @autoinject
 export class ResourcesList {
@@ -39,7 +40,8 @@ export class ResourcesList {
               private resourceRepository: ResourceRepository,
               private resourceKindRepository: ResourceKindRepository,
               private eventAggregator: EventAggregator,
-              private router: Router) {
+              private router: Router,
+              private hasRole: HasRoleValueConverter) {
   }
 
   activate(parameters: any) {
@@ -210,5 +212,12 @@ export class ResourcesList {
       parameters['currentPageNumber'] = this.currentPageNumber;
     }
     this.router.navigateToRoute(route, parameters, {trigger: false, replace: replaceEntryInBrowserHistory});
+  }
+
+  @computedFrom("disableAddResource", "parentResource", "parentResource.pendingRequest")
+  get addingResourcesDisabled(): boolean {
+    return this.disableAddResource
+      || (this.parentResource && this.parentResource.pendingRequest)
+      || (!this.parentResource && !this.hasRole.toView('ADMIN', this.resourceClass));
   }
 }

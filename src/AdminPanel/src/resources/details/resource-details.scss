@@ -7,7 +7,7 @@
   resource-form, resources-list {
     flex: 1;
   }
-  #workflow {
+  resource-workflow, user-roles {
     display: block;
     padding: $default-gap-size;
   }

@@ -7,6 +7,7 @@
     <require from="common/components/buttons/remove-button"></require>
     <require from="common/components/buttons/edit-button"></require>
     <require from="users/details/users-in-group"></require>
+    <require from="users/details/user-roles"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
 
@@ -21,7 +22,7 @@
                     transition.bind="transition"
                     on-click.call="showTransitionForm(transition)"></apply-transition-button>
             </template>
-            <remove-button hidden.bind="!doNotShowWeWaitForSuperuser"
+            <remove-button if.one-time="'ADMIN' | hasRole:resource.resourceClass"
                 disabled.bind="resource.pendingRequest"
                 on-click.call="remove()"></remove-button>
             <div if.bind="resource.pendingRequest">
@@ -63,6 +64,10 @@
             <aup-tab-pane tab="users-in-group">
                 <users-in-group if.bind="resourceDetailsTabs.activeTabId === 'users-in-group'"
                     user-group.bind="resource"></users-in-group>
+            </aup-tab-pane>
+            <aup-tab-pane tab="user-roles">
+                <user-roles if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"
+                    user-data.bind="resource"></user-roles>
             </aup-tab-pane>
         </aup-tab-content>
     </div>

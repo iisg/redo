@@ -6,7 +6,7 @@ interface Arrayable<T> {
 }
 
 export class RoutingBuilder implements Arrayable<AbstractRoute> {
-  protected routes: AbstractRoute[];
+  public readonly routes: AbstractRoute[];
 
   constructor(routes: Arrayable<AbstractRoute>[]) {
     this.routes = [].concat.apply([], routes.map(r => r.toArray()));
@@ -24,7 +24,7 @@ export enum NavRole { TOP, PER_RESOURCE_CLASS, PER_RESOURCE_CLASS_SECONDARY, BOT
 export interface RouteSettings {
   icon: string;
   role: NavRole;
-  requiredRoles?: string[];
+  requiredRole?: string;
   breadcrumbsProvider?: string;
 }
 
@@ -36,12 +36,9 @@ export abstract class AbstractRoute implements RouteConfig, Arrayable<AbstractRo
   settings: RouteSettings = {icon: undefined, role: undefined};
   activationStrategy: ActivationStrategy = 'invoke-lifecycle';
 
-  protected checkRoleClassPair(role: NavRole, resourceClassName: string): void {
-    const perClassRole: boolean = (role == NavRole.PER_RESOURCE_CLASS) || (role == NavRole.PER_RESOURCE_CLASS_SECONDARY);
-    if (!perClassRole && resourceClassName !== undefined) {
-      throw new Error("Class name is not allowed for roles other than PER_RESOURCE_CLASS and PER_RESOURCE_CLASS_SECONDARY."
-        + "Check route definitions.");
-    }
+  requireRole(role: string): this {
+    this.settings.requiredRole = role;
+    return this;
   }
 
   toArray(): AbstractRoute[] {

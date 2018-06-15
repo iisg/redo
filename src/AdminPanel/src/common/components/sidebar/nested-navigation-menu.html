@@ -1,8 +1,8 @@
 <template class="nested-navigation-menu">
     <ul>
-        <li repeat.for="item of items"
-            class="navigation-menu-item ${item.active ? 'current' : ''} ${item.expanded ? 'expanded' : ''}"
-            require-roles.bind="item.requiredRoles">
+        <li class="navigation-menu-item ${item.active ? 'current' : ''} ${item.expanded ? 'expanded' : ''}"
+            repeat.for="item of items"
+            if.one-time="item.requiredRole | hasRole:item.resourceClass">
             <a if.bind="!item.items"
                 route-href="route.bind: item.routeName; params.bind: item.params">
                 <icon name.bind="item.icon"></icon>
@@ -17,7 +17,7 @@
                     class="navigation-menu-subitems anim-height-inout-150 au-animate">
                     <li repeat.for="child of item.items"
                         class="navigation-menu-item ${child.active ? 'current' : ''}"
-                        require-roles.bind="item.requiredRoles">
+                        if.one-time="child.requiredRole | hasRole:child.resourceClass">
                         <a route-href="route.bind: child.routeName; params.bind: child.params">
                             <icon name.bind="child.icon"></icon>
                             <span>${child.labelKey | t}</span>

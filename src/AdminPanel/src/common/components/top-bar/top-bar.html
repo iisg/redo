@@ -31,13 +31,22 @@
             </a>
             <div class="user-data">
                 <div>
-                    <span>${'navigation::ADMINISTRATOR' | t}: <current-user-label></current-user-label></span>
+                    <span if.bind="'ADMIN' | hasRole">
+                        ${'navigation::ADMINISTRATOR' | t}:
+                        <current-user-label></current-user-label>
+                    </span>
+                    <span else>
+                        ${'navigation::OPERATOR' | t}:
+                        <current-user-label></current-user-label>
+                    </span>
                     <span>${'navigation::from computer' | t}</span>
                 </div>
             </div>
             <a class="logout-button"
                 href="/logout"
-                target="_top"><icon name="logout"></icon><span>${'navigation::Log Out' | t}</span></a>
+                target="_top">
+                <icon name="logout"></icon>
+                <span>${'navigation::Log Out' | t}</span></a>
         </div>
     </div>
     <div class="second-row">

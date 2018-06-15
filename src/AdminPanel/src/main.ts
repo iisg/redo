@@ -39,7 +39,7 @@ export function configure(aurelia: Aurelia) {
     .plugin('martingust/aurelia-repeat-strategies')
     .plugin('aurelia-plugins-tabs')
     .globalResources([
-      'common/authorization/require-role',
+      'common/authorization/has-role-value-converter',
       'common/bootstrap/bootstrap-tooltip',
       'common/components/icon/icon',
       'common/components/go-to-link-on-row-click/go-to-link-on-row-click',
