@@ -13,7 +13,7 @@
         <add-button if.bind="!addFormOpened"
             entity-name="resource"
             toggled.two-way="addFormOpened"
-            disabled.bind="parentResource.pendingRequest || disableAddResource"></add-button>
+            disabled.bind="addingResourcesDisabled"></add-button>
         <div else
             class="fade-inup-outdown au-animate well">
             <resource-form resource-class.bind="resourceClass"

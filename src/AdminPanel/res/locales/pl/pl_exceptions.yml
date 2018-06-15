@@ -21,6 +21,7 @@ invalidSelector: "Mapowanie '{{mappingKey}}' ma nieprawidłowy selektor: {{selec
 invalidTransform: "Nieprawidłowa definicja transformacji '{{name}}' z parametrami: {{params}}"
 incorrectResourceDisplayStrategy: "Niepoprawna strategia prezentacji zasobu. Błąd zwrócony przez kompilator szablonów: {{error}}"
 metadataNameIsNotUnique: Rodzaj metadanej o podanej nazwie już istnieje
+insufficientPermissions: Nie posiadasz wymaganych uprawnień by wykonać tę operację
 violationFields:
   metadata: Rodzaj metadanej
   name: Nazwa
