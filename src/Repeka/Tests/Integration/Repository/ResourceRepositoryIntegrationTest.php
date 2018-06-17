@@ -165,7 +165,6 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindsResourcesAssignedToUserByAssigneeMetadata() {
-        $this->markTestSkipped();
         $user = $this->getBudynekUser();
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(0, $resultsBeforeAssigning);
@@ -181,6 +180,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindsResourcesAssignedToUserByAutoAssignMetadata() {
+        $this->markTestSkipped('REPEKA-572');
         $user = $this->getBudynekUser();
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(0, $resultsBeforeAssigning);
@@ -196,7 +196,6 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindsResourcesAssignedToUserByItsGroupIdInAssigneeMetadata() {
-        $this->markTestSkipped();
         $user = $this->getBudynekUser();
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(0, $resultsBeforeAssigning);

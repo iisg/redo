@@ -7,4 +7,5 @@ export class TasksCollection {
 
   @map resourceClass: string;
   @map('Resource[]') myTasks: Resource[] = [];
+  @map('Resource[]') possibleTasks: Resource[] = [];
 }

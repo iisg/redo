@@ -8,7 +8,7 @@ describe('workflow-place-sorter', () => {
     });
     const transitionObjects: WorkflowTransition[] = Object.keys(transitions).map(from => {
       const tos = transitions[from];
-      return {id: `_${from}_`, label: {}, froms: [from], tos, permittedRoleIds: []};
+      return {id: `_${from}_`, label: {}, froms: [from], tos};
     });
     const id: number = Math.floor(Math.random() * 10000);
     return $.extend(new Workflow(), { id, name: {}, enabled: true, places: placeObjects, transitions: transitionObjects});

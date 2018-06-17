@@ -43,7 +43,6 @@ export class WorkflowTransition {
   @map label: MultilingualText;
   @map('string[]') froms: string[];
   @map('string[]') tos: string[];
-  @map('string[]') permittedRoleIds: string[];
 }
 
 @automapped

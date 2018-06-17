@@ -61,7 +61,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
     }
 
     /** @return TransitionPossibilityCheckResult[] */
-    private function getBlockedTransitions(ResourceEntity $resource, User $currentUser): array {
+    public function getBlockedTransitions(ResourceEntity $resource, User $currentUser): array {
         /** @var TransitionPossibilityCheckResult */
         $failedPossibilityChecks = [];
         $transitionsToCheck = $resource->getWorkflow()->getTransitions($resource);

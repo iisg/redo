@@ -77,7 +77,7 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingAvailableTransitions() {
         $this->workflow->method('getTransitions')->willReturn([$this->transition('a')]);
-        $this->checker->method('check')->willReturn(new TransitionPossibilityCheckResult([], false, false));
+        $this->checker->method('check')->willReturn(new TransitionPossibilityCheckResult([], false));
         $normalized = $this->normalizer->normalize($this->resource);
         $this->assertArrayHasKey('availableTransitions', $normalized);
         $availableTransitions = $normalized['availableTransitions'];
@@ -95,6 +95,6 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
     }
 
     private function transition(string $id): ResourceWorkflowTransition {
-        return new ResourceWorkflowTransition([], [], [], [], $id);
+        return new ResourceWorkflowTransition([], [], [], $id);
     }
 }

@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Tests\Domain\Workflow;
 
-use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
@@ -9,6 +8,7 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\UserRepository;
+use Repeka\Domain\Workflow\TransitionAssigneeChecker;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Repeka\Domain\Workflow\TransitionPossibilityCheckResult;
 use Repeka\Tests\Traits\StubsTrait;
@@ -31,6 +31,8 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
     private $checker;
     /** @var UserRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $userRepository;
+    /** @var TransitionAssigneeChecker|\PHPUnit_Framework_MockObject_MockObject */
+    private $transitionAssigneeChecker;
 
     protected function setUp() {
         $this->executor = $this->createMock(User::class);
@@ -46,7 +48,8 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->resource->method('getWorkflow')->willReturn($this->workflow);
         $this->resource->method('hasWorkflow')->willReturn(true);
         $this->userRepository = $this->createMock(UserRepository::class);
-        $this->checker = new TransitionPossibilityChecker($this->userRepository);
+        $this->transitionAssigneeChecker = $this->createMock(TransitionAssigneeChecker::class);
+        $this->checker = new TransitionPossibilityChecker($this->transitionAssigneeChecker);
     }
 
     private function setTransitionTos(array $tos = []): void {
@@ -57,118 +60,19 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         return $this->checker->check($this->resource, ResourceContents::empty(), $this->transition, $this->executor);
     }
 
-    public function testPositiveWithNoAssignees() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1'),
-                $this->createWorkflowPlaceMock('p2'),
-            ]
-        );
-        $this->setTransitionTos(['p1', 'p2']);
+    public function testPositiveWhenAssigneeCheckerAllows() {
+        $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
     }
 
-    public function testPositiveWithAssignees() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], [2]),
-            ]
-        );
-        $resourceContents = ResourceContents::fromArray(
-            [
-                1 => [1000],
-                2 => [2000, ['value' => $this->executor->getId()]],
-            ]
-        );
-        $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->setTransitionTos(['p1', 'p2']);
-        $result = $this->checkWithDefaults();
-        $this->assertTrue($result->isTransitionPossible());
-        $this->assertFalse($result->isOtherUserAssigned());
-    }
-
-    public function testPositiveWithUserGroupAssignee() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], [2]),
-            ]
-        );
-        $this->resource->method('getContents')->willReturn(
-            ResourceContents::fromArray(
-                [
-                    1 => [1000],
-                    2 => [2000],
-                ]
-            )
-        );
-        $this->executor->method('getUserGroupsIds')->willReturn([1000]);
-        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->setTransitionTos(['p1', 'p2']);
-        $result = $this->checkWithDefaults();
-        $this->assertTrue($result->isTransitionPossible());
-        $this->assertFalse($result->isOtherUserAssigned());
-    }
-
-    public function testToleratesMissingAssigneeMetadata() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], [2]),
-            ]
-        );
-        $resourceContents = ResourceContents::fromArray([1 => [1000]]);
-        $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->setTransitionTos(['p1', 'p2']);
-        $this->checkWithDefaults();
-    }
-
-    public function testNegativeWhenNotAssignee() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], [3]),
-            ]
-        );
-        $resourceContents = ResourceContents::fromArray(
-            [
-                1 => [1000],
-                2 => [2000, $this->executor->getId()],
-            ]
-        );
-        $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->resourceKind->method('getMetadataIds')->willReturn([3]);
-        $this->setTransitionTos(['p1', 'p2']);
+    public function testNegativeWhenAssigneeCheckerDisallows() {
         $result = $this->checkWithDefaults();
         $this->assertFalse($result->isTransitionPossible());
-        $this->assertTrue($result->isOtherUserAssigned());
-    }
-
-    public function testPositiveWhenAssigneeMetadataNotInResourceKind() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], [35656]), // resource kind does not have metadata 35656 (arbitrary id)
-            ]
-        );
-        $resourceContents = ResourceContents::fromArray(
-            [
-                1 => [1000],
-                2 => [2000, $this->executor->getId()],
-            ]
-        );
-        $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->setTransitionTos(['p1', 'p2']);
-        $result = $this->checkWithDefaults();
-        $this->assertTrue($result->isTransitionPossible());
-        $this->assertFalse($result->isOtherUserAssigned());
     }
 
     public function testReturnsMissingMetadataIds() {
+        $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
         $this->workflow->method('getPlaces')->willReturn(
             [
                 $this->createWorkflowPlaceMock('p1', [1]),
@@ -183,6 +87,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testDoesNotReturnMissingMetadataIdsNotInResourceKind() {
+        $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
         $this->workflow->method('getPlaces')->willReturn(
             [
                 $this->createWorkflowPlaceMock('p1', [1]),
@@ -197,6 +102,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPositiveIfAllRequiredMetadataAreMissingInResourceKind() {
+        $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
         $this->workflow->method('getPlaces')->willReturn(
             [
                 $this->createWorkflowPlaceMock('p1', [1]),
@@ -207,110 +113,6 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertEmpty($result->getMissingMetadataIds());
-        $this->assertTrue($result->isTransitionPossible());
-    }
-
-    public function testPositiveWhenResourceHasNoWorkflow() {
-        $resourceKind = $this->createMock(ResourceKind::class);
-        $resource = $this->createMock(ResourceEntity::class);
-        $resource->method('hasWorkflow')->willReturn(false);
-        $result = $this->checker->check(
-            $resource,
-            ResourceContents::empty(),
-            SystemTransition::UPDATE()->toTransition($resourceKind, $this->resource),
-            $this->executor
-        );
-        $this->assertTrue($result->isTransitionPossible());
-    }
-
-    public function testPositiveWhenResourceHasWorkflowAndSystemTransition() {
-        $result = $this->checker->check(
-            $this->resource,
-            ResourceContents::empty(),
-            SystemTransition::UPDATE()->toTransition($this->resourceKind, $this->resource),
-            $this->executor
-        );
-        $this->assertTrue($result->isTransitionPossible());
-    }
-
-    public function testPositiveWhenNextPlaceHasAutoAssign() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], [], [2]),
-            ]
-        );
-        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->setTransitionTos(['p1']);
-        $result = $this->checkWithDefaults();
-        $this->assertTrue($result->isTransitionPossible());
-    }
-
-    public function testNegativeWhenOtherUserIsAlreadyPresentInAutoAssigned() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], [], [2]),
-            ]
-        );
-        $resourceContents = ResourceContents::fromArray([1 => [10], 2 => [20]]);
-        $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->setTransitionTos(['p1', 'p2']);
-        $result = $this->checkWithDefaults();
-        $this->assertFalse($result->isTransitionPossible());
-        $this->assertTrue($result->isOtherUserAssigned());
-    }
-
-    public function testPositiveWhenAlreadyAutoAssigned() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [], [1]),
-                $this->createWorkflowPlaceMock('p2', [], [], [2]),
-            ]
-        );
-        $resourceContents = ResourceContents::fromArray(
-            [
-                1 => [10, $this->executor->getId()],
-                2 => [20],
-            ]
-        );
-        $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->setTransitionTos(['p1', 'p2']);
-        $result = $this->checkWithDefaults();
-        $this->assertTrue($result->isTransitionPossible());
-    }
-
-    public function testPositiveWhenNotAssigneeButAutoAssigned() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [1], [2]),
-                $this->createWorkflowPlaceMock('p2', [], [3], [2]),
-            ]
-        );
-        $resourceContents = ResourceContents::fromArray(
-            [
-                1 => [1000],
-                2 => [2000, $this->executor->getId()],
-            ]
-        );
-        $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2, 3]);
-        $this->setTransitionTos(['p1', 'p2']);
-        $result = $this->checkWithDefaults();
-        $this->assertTrue($result->isTransitionPossible());
-    }
-
-    public function testPositiveWhenAutoAssignInFirstPlace() {
-        $this->workflow->method('getPlaces')->willReturn(
-            [
-                $this->createWorkflowPlaceMock('p1', [], [], [1]),
-            ]
-        );
-        $this->resourceKind->method('getMetadataIds')->willReturn([1]);
-        $this->transition = SystemTransition::CREATE()->toTransition($this->resourceKind);
-        $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
     }
 }

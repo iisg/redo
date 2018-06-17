@@ -10,14 +10,12 @@ class ResourceWorkflowTransition implements Identifiable, Labeled {
     private $label;
     private $fromIds;
     private $toIds;
-    private $permittedRoleIds;
 
-    public function __construct(array $label, array $fromIds, array $toIds, array $permittedRoleIds = [], $id = null) {
+    public function __construct(array $label, array $fromIds, array $toIds, $id = null) {
         $this->label = $label;
         $this->id = $id ?: (new Slugify())->slugify(current($label));
         $this->fromIds = $fromIds;
         $this->toIds = $toIds;
-        $this->permittedRoleIds = $permittedRoleIds;
     }
 
     public function getId(): string {
@@ -38,17 +36,12 @@ class ResourceWorkflowTransition implements Identifiable, Labeled {
         return $this->toIds;
     }
 
-    public function getPermittedRoleIds(): array {
-        return $this->permittedRoleIds;
-    }
-
     public function toArray(): array {
         return [
             'id' => $this->getId(),
             'label' => $this->getLabel(),
             'froms' => $this->getFromIds(),
             'tos' => $this->getToIds(),
-            'permittedRoleIds' => $this->getPermittedRoleIds(),
         ];
     }
 
@@ -57,7 +50,6 @@ class ResourceWorkflowTransition implements Identifiable, Labeled {
             $data['label'] ?? [],
             $data['froms'] ?? [],
             $data['tos'] ?? [],
-            $data['permittedRoleIds'] ?? [],
             $data['id'] ?? null
         );
     }

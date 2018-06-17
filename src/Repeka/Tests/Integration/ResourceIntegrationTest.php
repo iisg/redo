@@ -81,7 +81,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         );
         $this->workflowPlace1 = new ResourceWorkflowPlace(['PL' => 'key1', 'EN' => 'key1'], 'p1', [], [], [], [$this->metadata3->getId()]);
         $workflowPlace2 = new ResourceWorkflowPlace(['PL' => 'key2', 'EN' => 'key2'], 'p2', [], [], [], [$this->metadata4->getId()]);
-        $this->transition = new ResourceWorkflowTransition(['PL' => 'key3', 'EN' => 'key3'], ['p1'], ['p2'], [-1, 1], 't1');
+        $this->transition = new ResourceWorkflowTransition(['PL' => 'key3', 'EN' => 'key3'], ['p1'], ['p2'], 't1');
         $workflow = $this->createWorkflow(
             ['PL' => 'Workflow', 'EN' => 'Workflow'],
             'books',

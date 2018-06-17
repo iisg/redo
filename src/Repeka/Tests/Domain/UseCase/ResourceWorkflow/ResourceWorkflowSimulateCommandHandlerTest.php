@@ -24,7 +24,7 @@ class ResourceWorkflowSimulateCommandHandlerTest extends \PHPUnit_Framework_Test
     public function testHandlingSimpleWorkflow() {
         $command = new ResourceWorkflowSimulateCommand(
             [['id' => 'place', 'label' => []]],
-            [new ResourceWorkflowTransition([], [], [], [], 'transition')]
+            [new ResourceWorkflowTransition([], [], [], 'transition')]
         );
         $this->workflowDriver->expects($this->never())->method('apply');
         $this->workflowDriver->expects($this->once())->method('setCurrentPlaces')->with($this->isInstanceOf(ResourceEntity::class), []);
