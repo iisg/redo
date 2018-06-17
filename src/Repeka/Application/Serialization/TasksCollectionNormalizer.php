@@ -22,6 +22,12 @@ class TasksCollectionNormalizer extends AbstractNormalizer implements Normalizer
                 },
                 $tasksCollection->getMyTasks()
             ),
+            'possibleTasks' => array_map(
+                function (ResourceEntity $resource) use ($format, $context) {
+                    return $this->normalizer->normalize($resource, $format, $context);
+                },
+                $tasksCollection->getPossibleTasks()
+            ),
         ];
     }
 

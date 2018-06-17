@@ -52,7 +52,7 @@ class WorkflowTransitionsDefinitionIsValidRuleTest extends \PHPUnit_Framework_Te
         $command = new ResourceWorkflowCreateCommand(
             [],
             [['label' => []]],
-            [['label' => [], 'froms' => [], 'tos' => [], 'permittedRoleIds' => ['AAA']]],
+            [['label' => [], 'froms' => [], 'tos' => []]],
             'books',
             null,
             null
@@ -64,7 +64,7 @@ class WorkflowTransitionsDefinitionIsValidRuleTest extends \PHPUnit_Framework_Te
         $command = new ResourceWorkflowCreateCommand(
             [],
             [['label' => []]],
-            [['label' => [], 'froms' => [], 'tos' => [], 'permittedRoleIds' => []]],
+            [['label' => [], 'froms' => [], 'tos' => []]],
             'books',
             null,
             null

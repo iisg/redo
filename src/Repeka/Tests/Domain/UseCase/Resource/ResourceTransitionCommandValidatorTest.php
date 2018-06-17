@@ -129,7 +129,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->resource->method('getId')->willReturn(1);
         $this->resource->method('hasWorkflow')->willReturn(true);
         $this->workflow->expects($this->once())->method('getTransitions')
-            ->willReturn([new ResourceWorkflowTransition([], [], [], [], 't1')]);
+            ->willReturn([new ResourceWorkflowTransition([], [], [], 't1')]);
         $transition = $this->createWorkflowTransitionMock([], [], [], 't2');
         $command = new ResourceTransitionCommand(
             $this->resource,
@@ -144,7 +144,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->expectException(InvalidCommandException::class);
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
         $transitionPossibilityChecker = $this->createMock(TransitionPossibilityChecker::class);
-        $transitionPossibilityChecker->method('check')->willReturn(new TransitionPossibilityCheckResult([], true, true));
+        $transitionPossibilityChecker->method('check')->willReturn(new TransitionPossibilityCheckResult([], true));
         $validator = $this->createValidator(true, true, true, true, true, $transitionPossibilityChecker);
         $transition = $this->configureTransition('t1');
         $command = new ResourceTransitionCommand(
@@ -209,7 +209,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->isValid($command));
     }
 
-    public function testInvalidWhenLockedMetadataValuesAreChangeds() {
+    public function testInvalidWhenLockedMetadataValuesAreChanged() {
         $validator = $this->createValidator(true, true, true, true, false);
         $command = new ResourceTransitionCommand(
             new ResourceEntity($this->resourceKind, ResourceContents::empty()),

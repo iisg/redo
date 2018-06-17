@@ -8,10 +8,13 @@ class TasksCollection {
     private $resourceClass;
     /** @var ResourceEntity[] */
     private $myTasks;
+    /** @var ResourceEntity[] */
+    private $possibleTasks;
 
-    public function __construct(string $resourceClass = '', array $resources = []) {
+    public function __construct(string $resourceClass = '', array $myTasks = [], array $possibleTasks = []) {
         $this->resourceClass = $resourceClass;
-        $this->myTasks = $resources;
+        $this->myTasks = $myTasks;
+        $this->possibleTasks = $possibleTasks;
     }
 
     public function getResourceClass(): string {
@@ -21,5 +24,10 @@ class TasksCollection {
     /** @return ResourceEntity[] */
     public function getMyTasks(): array {
         return $this->myTasks;
+    }
+
+    /** @return ResourceEntity[] */
+    public function getPossibleTasks(): array {
+        return $this->possibleTasks;
     }
 }

@@ -30,4 +30,9 @@ export class Tasks implements ComponentAttached {
   get myTasksExists(): boolean {
     return !!this.tasksCollection.filter(tasks => tasks.myTasks.length > 0).length;
   }
+
+  @computedFrom('tasksCollection', 'tasksCollection.length')
+  get possibleTasksExists(): boolean {
+    return !!this.tasksCollection.filter(tasks => tasks.possibleTasks.length > 0).length;
+  }
 }

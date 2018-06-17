@@ -127,9 +127,9 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
             [],
             [],
             [
-                new ResourceWorkflowTransition([], [], [], [], 'onetransition'),
-                new ResourceWorkflowTransition([], [], [], [], 'twotransition'),
-                new ResourceWorkflowTransition([], [], [], [], 'anothertransition'),
+                new ResourceWorkflowTransition([], [], [], 'onetransition'),
+                new ResourceWorkflowTransition([], [], [], 'twotransition'),
+                new ResourceWorkflowTransition([], [], [], 'anothertransition'),
             ],
             'books'
         );
@@ -167,8 +167,8 @@ class ResourceWorkflowTest extends \PHPUnit_Framework_TestCase {
             [],
             [],
             [
-                new ResourceWorkflowTransition([], [], [], ['A'], 'first'),
-                new ResourceWorkflowTransition([], [], [], ['B'], 'second'),
+                new ResourceWorkflowTransition([], [], [], 'first'),
+                new ResourceWorkflowTransition([], [], [], 'second'),
             ],
             'books'
         );

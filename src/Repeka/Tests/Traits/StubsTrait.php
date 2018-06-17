@@ -252,15 +252,13 @@ trait StubsTrait {
         array $label = [],
         array $fromIds = [],
         array $toIds = [],
-        $id = null,
-        array $permittedRoleIds = []
+        $id = null
     ): ResourceWorkflowTransition {
         $mock = $this->createMock(ResourceWorkflowTransition::class);
         $mock->method('getId')->willReturn($id);
         $mock->method('getLabel')->willReturn($label);
         $mock->method('getFromIds')->willReturn($fromIds);
         $mock->method('getToIds')->willReturn($toIds);
-        $mock->method('getPermittedRoleIds')->willReturn($permittedRoleIds);
         return $mock;
     }
 }
