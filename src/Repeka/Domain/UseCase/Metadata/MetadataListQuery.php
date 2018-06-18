@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\MetadataControl;
 
 class MetadataListQuery extends AbstractCommand {
     private $ids;
+    private $names;
     private $parent;
     private $resourceClasses;
     private $onlyTopLevel;
@@ -17,6 +18,7 @@ class MetadataListQuery extends AbstractCommand {
 
     public static function withParams(
         ?array $ids,
+        ?array $names,
         ?array $resourceClasses,
         ?Metadata $parent,
         ?array $controls,
@@ -24,6 +26,7 @@ class MetadataListQuery extends AbstractCommand {
     ) {
         $query = new self();
         $query->ids = $ids ?: [];
+        $query->names = $names ?: [];
         $query->resourceClasses = $resourceClasses ?: [];
         $query->parent = $parent;
         $query->controls = $controls ?: [];
@@ -38,6 +41,11 @@ class MetadataListQuery extends AbstractCommand {
     /** @return int[] */
     public function getIds(): array {
         return $this->ids;
+    }
+
+    /** @return string[] */
+    public function getNames(): array {
+        return $this->names;
     }
 
     public function getParent(): ?Metadata {

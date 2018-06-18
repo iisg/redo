@@ -29,12 +29,11 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
     }
 
     public function findByName(string $name): Metadata {
-        /** @var Metadata $metadata */
-        $metadata = $this->findOneBy(['name' => $name]);
-        if (!$metadata) {
+        $result = $this->findByQuery(MetadataListQuery::builder()->filterByNames([$name])->build());
+        if (!$result) {
             throw new EntityNotFoundException($this, $name);
         }
-        return $metadata;
+        return $result[0];
     }
 
     public function exists(int $id): bool {
@@ -88,6 +87,10 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         }
         if ($query->getIds()) {
             $criteria = $criteria->andWhere(Criteria::expr()->in('id', $query->getIds()));
+        }
+        if ($query->getNames()) {
+            $names = array_map([Metadata::class, 'normalizeMetadataName'], $query->getNames());
+            $criteria = $criteria->andWhere(Criteria::expr()->in('name', $names));
         }
         $criteria->orderBy(['ordinalNumber' => 'ASC']);
         return $this->matching($criteria)->toArray();

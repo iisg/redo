@@ -34,14 +34,8 @@ trait FixtureHelpers {
     }
 
     protected function findMetadataByName(string $name, string $resourceClass = 'books'): Metadata {
-        /** @var Metadata[] $metadataList */
-        $metadataList = $this->handleCommand(MetadataListQuery::builder()->filterByResourceClass($resourceClass)->build());
-        foreach ($metadataList as $metadata) {
-            if ($metadata->getName() == $name) {
-                return $metadata;
-            }
-        }
-        $this->fail("Metadata $name not found");
+        return $this->container->get(MetadataRepository::class)
+            ->findByQuery(MetadataListQuery::builder()->filterByResourceClass($resourceClass)->filterByName($name)->build())[0];
     }
 
     protected function getResourceRepository(): ResourceRepository {

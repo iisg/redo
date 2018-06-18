@@ -68,4 +68,12 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $afterRemovalMetadata = $this->metadataRepository->findByName($name);
         $this->assertNotContains($rkId, $afterRemovalMetadata->getConstraints()['resourceKind']);
     }
+
+    public function testFindByUntrimmedName() {
+        $this->assertEquals($this->metadataRepository->findByName('Opis'), $this->metadataRepository->findByName('Opis '));
+    }
+
+    public function testFindByNonDiacriticName() {
+        $this->assertEquals($this->metadataRepository->findByName('Tytuł'), $this->metadataRepository->findByName('tytul'));
+    }
 }

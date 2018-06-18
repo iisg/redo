@@ -80,6 +80,7 @@ class ResourceKind implements Identifiable {
     }
 
     public function getMetadataByName(string $name): Metadata {
+        $name = Metadata::normalizeMetadataName($name);
         foreach ($this->getMetadataList() as $metadata) {
             if ($metadata->getName() === $name) {
                 return $metadata;

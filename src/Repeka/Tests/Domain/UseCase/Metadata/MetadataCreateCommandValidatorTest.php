@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\LanguageRepository;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
@@ -24,18 +25,22 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private $constraintArgumentsAreValid;
     /** @var ResourceClassExistsRule|\PHPUnit_Framework_MockObject_MockObject */
     private $containsResourceClass;
+    /** @var MetadataRepository|\PHPUnit_Framework_MockObject_MockObject */
+    private $metadataRepository;
 
     protected function setUp() {
         $this->languageRepositoryStub = $this->createMock(LanguageRepository::class);
         $this->languageRepositoryStub->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
         $this->constraintArgumentsAreValid = $this->createMock(ConstraintArgumentsAreValidRule::class);
         $this->containsResourceClass = $this->createMock(ResourceClassExistsRule::class);
+        $this->metadataRepository = $this->createMock(MetadataRepository::class);
         $this->validator = new MetadataCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea']),
             $this->createMock(ConstraintSetMatchesControlRule::class),
             $this->constraintArgumentsAreValid,
-            $this->containsResourceClass
+            $this->containsResourceClass,
+            $this->metadataRepository
         );
     }
 
@@ -81,30 +86,16 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->expectException(InvalidCommandException::class);
         $this->constraintArgumentsAreValid->method('validate')->willReturn(false);
         $this->constraintArgumentsAreValid->method('assert')->willThrowException(new ValidationException());
-        $validator = new MetadataCreateCommandValidator(
-            new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
-            new IsValidControlRule(['text', 'textarea']),
-            $this->createMock(ConstraintSetMatchesControlRule::class),
-            $this->constraintArgumentsAreValid,
-            $this->containsResourceClass
-        );
         $constraints = ['resourceKind' => [1]];
         $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', $constraints);
-        $validator->validate($command);
+        $this->validator->validate($command);
     }
 
     public function testValidationSucceedsWhenReferencedResourceKindExists() {
         $this->constraintArgumentsAreValid->method('validate')->willReturn(true);
-        $validator = new MetadataCreateCommandValidator(
-            new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
-            new IsValidControlRule(['text', 'textarea', 'relationship']),
-            $this->createMock(ConstraintSetMatchesControlRule::class),
-            $this->constraintArgumentsAreValid,
-            $this->containsResourceClass
-        );
         $constraints = ['resourceKind' => [1], 'maxCount' => 0];
         $command = new MetadataCreateCommand('nazwa', ['PL' => 'Test'], [], [], 'relationship', 'books', $constraints);
-        $validator->validate($command);
+        $this->validator->validate($command);
     }
 
     public function testTellsThatLabelIsInvalid() {
@@ -114,5 +105,13 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         } catch (InvalidCommandException $e) {
             $this->assertEquals('label', $e->getViolations()[0]['field']);
         }
+    }
+
+    public function testFailsIfMetadataWithGivenNameExists() {
+        $this->expectException(InvalidCommandException::class);
+        $this->expectExceptionMessage('metadataNameIsNotUnique');
+        $this->metadataRepository->expects($this->once())->method('findByQuery')->willReturn([$this->createMetadataMock()]);
+        $command = new MetadataCreateCommand('notUniqueName', ['PL' => 'Test'], [], [], 'text', 'books');
+        $this->validator->validate($command);
     }
 }

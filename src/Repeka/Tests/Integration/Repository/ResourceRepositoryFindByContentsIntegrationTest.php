@@ -122,4 +122,11 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $this->assertCount(1, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }
+
+    public function testFindByMetadataName() {
+        $query = ResourceListQuery::builder()->filterByContents(['Tytuł' => 'PHP'])->build();
+        $results = $this->handleCommand($query);
+        $this->assertCount(2, $results);
+        $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
+    }
 }

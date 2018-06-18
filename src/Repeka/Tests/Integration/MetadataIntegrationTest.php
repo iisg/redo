@@ -87,7 +87,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
         $metadata = $metadataRepository->findOne($response->id);
         $this->assertEquals($metadataArray['control'], $metadata->getControl()->getValue());
-        $this->assertEquals($metadataArray['name'], $metadata->getName());
+        $this->assertEquals(Metadata::normalizeMetadataName($metadataArray['name']), $metadata->getName());
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
@@ -213,7 +213,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
         $metadata = $metadataRepository->findOne($response->id);
         $this->assertEquals($metadataArray['control'], $metadata->getControl());
-        $this->assertEquals($metadataArray['name'], $metadata->getName());
+        $this->assertEquals(Metadata::normalizeMetadataName($metadataArray['name']), $metadata->getName());
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
