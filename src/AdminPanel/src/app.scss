@@ -183,7 +183,7 @@ table {
 
 .simple-form {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(60%, 1fr);
   grid-column-gap: $default-gap-size;
   grid-row-gap: $default-gap-size / 2;
   & > span:not(.value):not(.validation-message) {

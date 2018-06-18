@@ -12,26 +12,27 @@
 
     <form submit.delegate="validateAndSubmit()"
         class="form-with-buttons">
-        <div class="form-content">
-            <div class="form-group">
-                <multilingual-editor label="${'Name' | t}"
-                    value.bind="resourceKind.label & validate"></multilingual-editor>
-            </div>
+        <div class="form-content simple-form">
+            <multilingual-editor containerless
+                label="${'Name' | t}"
+                value.bind="resourceKind.label & validate"></multilingual-editor>
+            <span>${'Add metadata kind' | resourceClassTranslation:resourceClass}</span>
+            <resource-kind-metadata-chooser
+                value.bind="metadataToAdd"
+                resource-kind.bind="resourceKind"
+                resource-class.bind="resourceClass"
+                update-values.bind="updateResourceKindMetadataChooserValues"></resource-kind-metadata-chooser>
             <div if.bind="originalMetadataList && (editableMetadataList.length === 0 || originalMetadata(editableMetadataList[0])) & signal:'original-metadata-changed'"
-                class="form-group no-margin-top ${sortingMetadata ? 'sorting-enabled' : ''}">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <toggle-button if.bind="editableMetadataList.length > 1"
-                            class="pull-right"
-                            primary-icon-name="arrows"
-                            primary-label="Change order"
-                            secondary-icon-name="arrows"
-                            secondary-label="Changing order"
-                            toggled.bind="sortingMetadata"
-                            disabled.bind="submitting"
-                            on-click.call="sortingMetadata = !sortingMetadata"></toggle-button>
-                    </div>
-                </div>
+                class="full-width ${sortingMetadata ? 'sorting-enabled' : ''} validation-message-container">
+                <toggle-button if.bind="editableMetadataList.length > 1"
+                    class="change-order-button"
+                    primary-icon-name="arrows"
+                    primary-label="Change order"
+                    secondary-icon-name="arrows"
+                    secondary-label="Changing order"
+                    toggled.bind="sortingMetadata"
+                    disabled.bind="submitting"
+                    on-click.call="sortingMetadata = !sortingMetadata"></toggle-button>
                 <div>
                     <div repeat.for="metadata of editableMetadataList & validate"
                     class="resource-kind-edit-form-metadata-item well">
@@ -67,32 +68,22 @@
                     </div>
                 </div>
             </div>
-            <loading-bar else></loading-bar>
-            <div class="form-group">
-                <label>${'Add metadata kind' | resourceClassTranslation:resourceClass}</label>
-                <resource-kind-metadata-chooser
-                    value.bind="metadataToAdd"
-                    resource-kind.bind="resourceKind"
-                    resource-class.bind="resourceClass"
-                    update-values.bind="updateResourceKindMetadataChooserValues"></resource-kind-metadata-chooser>
-            </div>
-            <div class="form-group"
-                if.bind="!hasWorkflowChosen">
-                <label>${'Workflow' | resourceClassTranslation:resourceClass}</label>
-                <workflow-chooser resource-class.bind="resourceClass"
-                    value.bind="resourceKind.workflow"></workflow-chooser>
-                <span class="help-block">
-                    ${'Keep in mind that you can not change the workflow for resource kind after choosing it once. Select with care.' | t}
-                </span>
-            </div>
-            <div class="form-group">
-                <label>${'Available child resource kind' | t}</label>
-                <resource-kind-constraint-editor metadata.bind="resourceChildConstraintMetadata"
-                    resource-class.bind="resourceClass"></resource-kind-constraint-editor>
-            </div>
-            <div class="form-group">
-                <resource-display-strategies-form resource-kind.bind="resourceKind"></resource-display-strategies-form>
-            </div>
+            <loading-bar else
+                class="full-width"></loading-bar>
+            <template if.bind="!hasWorkflowChosen">
+                <span>${'Workflow' | resourceClassTranslation:resourceClass}</span>
+                <div>
+                    <workflow-chooser resource-class.bind="resourceClass"
+                        value.bind="resourceKind.workflow"></workflow-chooser>
+                    <span>${'Keep in mind that you can not change the workflow for resource kind after choosing it once. Select with care.'
+                        | t}</span>
+                </div>
+            </template>
+            <span>${'Available child resource kind' | t}</span>
+            <resource-kind-constraint-editor metadata.bind="resourceChildConstraintMetadata"
+                resource-class.bind="resourceClass"></resource-kind-constraint-editor>
+            <resource-display-strategies-form containerless
+                resource-kind.bind="resourceKind"></resource-display-strategies-form>
         </div>
         <div class="form-buttons">
             <submit-button editing.bind="editing"

@@ -8,7 +8,7 @@
     <div if.bind="workflow"
         class="workflow-details au-animate fade-inup-outup">
         <div class="pull-right">
-            <pending-throbber entity.bind="workflow"></pending-throbber>
+            <throbber if.bind="workflow.pendingRequest"></throbber>
             <remove-button if.bind="!editing"
                 disabled.bind="workflow.pendingRequest"
                 on-click.call="deleteWorkflow()"></remove-button>

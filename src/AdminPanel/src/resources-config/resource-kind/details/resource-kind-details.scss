@@ -1,9 +1,8 @@
 @import "../../../common/styles";
 
 .resource-kind-details {
-  dl, #workflow {
+  .simple-form, #workflow {
     padding: $default-gap-size;
-    flex: 1;
   }
   resource-kind-form {
     padding: $default-gap-size / 2;

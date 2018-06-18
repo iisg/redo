@@ -15,27 +15,27 @@
             <remove-button if.bind="!editing && resourceKind.id > 0"
                 disabled.bind="resourceKind.pendingRequest"
                 on-click.call="deleteResourceKind()"></remove-button>
-            <pending-throbber entity.bind="resourceKind"></pending-throbber>
+            <throbber if.bind="resourceKind.pendingRequest"></throbber>
             <aup-tabs tabs.bind="resourceKindDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="details">
                 <div if.bind="resourceKindDetailsTabs.activeTabId === 'details'">
                     <template if.bind="!editing">
-                        <dl class="dl-horizontal resource-kind-metadata-table">
+                        <div class="simple-form">
                             <template repeat.for="metadata of resourceKind.metadataList">
-                                <div if.bind="metadata.id != -1">
-                                    <dt>${metadata.name}</dt>
-                                    <dd>
+                                <template if.bind="metadata.id != -1">
+                                    <span>${metadata.name}</span>
+                                    <div>
                                         <span>${metadata.label | inCurrentLanguage}</span>
                                         <icon name="show"
                                             if.bind="metadata.shownInBrief"></icon>
                                         <icon name="edit"
                                             if.bind="metadata.copyToChildResource"></icon>
-                                    </dd>
-                                </div>
+                                    </div>
+                                </template>
                             </template>
-                        </dl>
+                        </div>
                         <edit-button toggled.bind="editing"
                             disabled.bind="resourceKind.pendingRequest"
                             on-click.call="toggleEditForm(false)"></edit-button>

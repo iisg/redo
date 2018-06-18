@@ -1,22 +1,16 @@
 <template>
     <require from="resources/controls/input/autosize"></require>
 
-    <ul class="nav nav-pills">
-        <li repeat.for="strategyId of displayStrategies & oneTime"
-            class.bind="currentlyEditedDisplayStrategy == strategyId ? 'active' : ''"
-            click.delegate="currentlyEditedDisplayStrategy = strategyId">
-            <a>${ ('display_strategies//' + strategyId + '//title') | resourceClassTranslation:resourceKind.resourceClass}</a>
-        </li>
-    </ul>
-    <div class="form-group"
-        repeat.for="strategyId of displayStrategies & oneTime"
-        show.bind="strategyId == currentlyEditedDisplayStrategy">
-        <label>${ ( 'display_strategies//' + strategyId + '//description') | resourceClassTranslation:resourceKind.resourceClass}</label>
-        <textarea class="form-control"
-            autosize
-            value.bind="resourceKind.displayStrategies[strategyId] & validateOnChangeOrBlur"
-            placeholder="Title: {{ r|mTitle }}, Scanner: {{ r|m('Scanner')|m(-2) }}"></textarea>
-        <!-- TODO display sample render in REPEKA-318 -->
-        <!--<p>${ sampleRender }</p>-->
-    </div>
+    <template repeat.for="strategyId of displayStrategies & oneTime"
+        class.bind="currentlyEditedDisplayStrategy == strategyId ? 'active' : ''"
+        click.delegate="currentlyEditedDisplayStrategy = strategyId">
+        <span class="section-title">${('display_strategies//' + strategyId + '//title') | resourceClassTranslation:resourceKind.resourceClass}</span>
+        <span>${( 'display_strategies//' + strategyId + '//description') | resourceClassTranslation:resourceKind.resourceClass}</span>
+        <div class="validation-message-container">
+            <textarea class="form-control"
+                autosize
+                value.bind="resourceKind.displayStrategies[strategyId] & validateOnChangeOrBlur"
+                placeholder="Title: {{ r|mTitle }}, Scanner: {{ r|m('Scanner')|m(-2) }}"></textarea>
+        </div>
+    </template>
 </template>
