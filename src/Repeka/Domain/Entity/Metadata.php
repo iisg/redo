@@ -2,9 +2,11 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use Cocur\Slugify\Slugify;
 use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Repository\ResourceKindRepository;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class Metadata implements Identifiable {
     private $id;
     /** @var string */
@@ -54,7 +56,7 @@ class Metadata implements Identifiable {
         $metadata = new self();
         $metadata->resourceClass = $resourceClass;
         $metadata->control = $control->getValue();  // $control must be a string internally because it's so when read from DB
-        $metadata->name = $name;
+        $metadata->name = self::normalizeMetadataName($name);
         $metadata->label = $label;
         $metadata->ordinalNumber = -1;
         $metadata->placeholder = $placeholder;
@@ -230,5 +232,9 @@ class Metadata implements Identifiable {
             }
         }
         return false;
+    }
+
+    public static function normalizeMetadataName(string $name): string {
+        return (new Slugify(['separator' => '_']))->slugify($name);
     }
 }

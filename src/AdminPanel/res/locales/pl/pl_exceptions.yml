@@ -20,6 +20,7 @@ invalidMapping: Mapowanie '{{key}}' ma niepoprawną definicję
 invalidSelector: "Mapowanie '{{mappingKey}}' ma nieprawidłowy selektor: {{selector}}"
 invalidTransform: "Nieprawidłowa definicja transformacji '{{name}}' z parametrami: {{params}}"
 incorrectResourceDisplayStrategy: "Niepoprawna strategia prezentacji zasobu. Błąd zwrócony przez kompilator szablonów: {{error}}"
+metadataNameIsNotUnique: Rodzaj metadanej o podanej nazwie już istnieje
 violationFields:
   metadata: Rodzaj metadanej
   name: Nazwa

@@ -3,6 +3,7 @@ namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
@@ -23,19 +24,23 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
     private $constraintArgumentsAreValidRule;
     /** @var  ResourceClassExistsRule */
     private $resourceClassExistsRule;
+    /** @var MetadataRepository */
+    private $metadataRepository;
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         IsValidControlRule $isValidControlRule,
         ConstraintSetMatchesControlRule $constraintSetMatchesControlRule,
         ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
-        ResourceClassExistsRule $resourceClassExistsRule
+        ResourceClassExistsRule $resourceClassExistsRule,
+        MetadataRepository $metadataRepository
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
         $this->isValidControlRule = $isValidControlRule;
         $this->constraintSetMatchesControlRule = $constraintSetMatchesControlRule;
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
         $this->resourceClassExistsRule = $resourceClassExistsRule;
+        $this->metadataRepository = $metadataRepository;
     }
 
     /**
@@ -45,7 +50,12 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('label', $this->notBlankInAllLanguagesRule)
-            ->attribute('name', Validator::notBlank())
+            ->attribute(
+                'name',
+                Validator::notBlank()
+                    ->callback($this->metadataNameIsUniqueInResourceClass($command))
+                    ->setTemplate('metadataNameIsNotUnique')
+            )
             ->attribute(
                 'controlName',
                 Validator::callback(
@@ -59,5 +69,13 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('resourceClass', $this->resourceClassExistsRule)
             ->attribute('constraints', $this->constraintSetMatchesControlRule->forControl($command->getControlName()))
             ->attribute('constraints', $this->constraintArgumentsAreValidRule);
+    }
+
+    public function metadataNameIsUniqueInResourceClass(MetadataCreateCommand $command) {
+        return function (string $name) use ($command) {
+            $query = MetadataListQuery::builder()->filterByResourceClass($command->getResourceClass())->filterByName($name)->build();
+            $result = $this->metadataRepository->findByQuery($query);
+            return count($result) === 0;
+        };
     }
 }

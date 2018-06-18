@@ -14,7 +14,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testCreatingMetadata() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
         $this->assertEquals(MetadataControl::TEXT(), $metadata->getControl());
-        $this->assertEquals('Prop', $metadata->getName());
+        $this->assertEquals('prop', $metadata->getName());
         $this->assertEquals('AA', $metadata->getLabel()['PL']);
         $this->assertEquals('books', $metadata->getResourceClass());
         $this->assertFalse($metadata->isShownInBrief());
@@ -30,6 +30,11 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testSettingOrdinalNumberTo0() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
         $metadata->updateOrdinalNumber(0);
+    }
+
+    public function testTrimsTheName() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'prop  ', ['PL' => 'AA']);
+        $this->assertEquals('prop', $metadata->getName());
     }
 
     public function testUpdating() {
@@ -230,5 +235,16 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($metadata->canDetermineAssignees($resourceKindRepository));
         $metadata = $metadata->withOverrides(['constraints' => ['resourceKind' => [3]]]);
         $this->assertFalse($metadata->canDetermineAssignees($resourceKindRepository));
+    }
+
+    public function testNormalizingName() {
+        $this->assertEquals('opis', Metadata::normalizeMetadataName('opis'));
+        $this->assertEquals('opis', Metadata::normalizeMetadataName('   opis '));
+        $this->assertEquals('opis', Metadata::normalizeMetadataName('Opis'));
+        $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis szerszy'));
+        $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis-szerszy'));
+        $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis.szerszy'));
+        $this->assertEquals('opis_dluzszy', Metadata::normalizeMetadataName('opis Dłuższy'));
+        $this->assertEquals('zolw_pchle_2_popchnal_3', Metadata::normalizeMetadataName('ŻÓŁW PChłę 2%& * popchnął%3'));
     }
 }

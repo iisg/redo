@@ -1,14 +1,15 @@
 <?php
 namespace Repeka\Tests\Integration\Repository;
 
-use Assert\Assertion;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceWorkflowRepositoryIntegrationTest extends IntegrationTestCase {
+    use FixtureHelpers;
+
     /** @var EntityRepository|ResourceWorkflowRepository */
     private $workflowRepository;
 
@@ -38,17 +39,6 @@ class ResourceWorkflowRepositoryIntegrationTest extends IntegrationTestCase {
 
     /** @return Metadata[] */
     private function getScannerAndSupervisorMetadata(): array {
-        /** @var Metadata[] $allMetadata */
-        $allMetadata = $this->handleCommand(MetadataListQuery::builder()->filterByResourceClass('books')->build());
-        $scanner = $supervisor = null;
-        foreach ($allMetadata as $metadata) {
-            if ($metadata->getName() == 'Skanista') {
-                $scanner = $metadata;
-            } elseif ($metadata->getName() == 'Nadzorujący') {
-                $supervisor = $metadata;
-            }
-        }
-        Assertion::allNotNull([$scanner, $supervisor]);
-        return [$scanner, $supervisor];
+        return [$this->findMetadataByName('Skanista'), $this->findMetadataByName('Nadzorujący')];
     }
 }

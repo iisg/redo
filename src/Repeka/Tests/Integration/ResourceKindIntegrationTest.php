@@ -34,21 +34,21 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->metadataRepository = $this->container->get(MetadataRepository::class);
         $parentMetadata = $this->metadataRepository->findOne(SystemMetadata::PARENT);
         $baseMetadata1 = $this->createMetadata(
-            'Metadata',
+            'Metadata 1',
             ['PL' => 'Base metadata kind 1', 'EN' => 'Base metadata kind 1'],
             [],
             [],
             MetadataControl::TEXTAREA()
         );
         $baseMetadata2 = $this->createMetadata(
-            'Metadata',
+            'Metadata 2',
             ['PL' => 'Base metadata kind 2', 'EN' => 'Base metadata kind 2'],
             [],
             [],
             MetadataControl::TEXTAREA()
         );
         $baseDictionaryMetadata = $this->createMetadata(
-            'Metadata',
+            'Metadata 3',
             ['PL' => 'Base metadata dictionary', 'EN' => 'Base metadata dictionary'],
             [],
             [],

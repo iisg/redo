@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\MetadataControl;
 
 class MetadataListQueryBuilder {
     private $ids = [];
+    private $names = [];
     /** @var ?Metadata */
     private $parent;
     private $resourceClasses;
@@ -15,6 +16,15 @@ class MetadataListQueryBuilder {
 
     public function filterByIds(array $ids): MetadataListQueryBuilder {
         $this->ids = $ids;
+        return $this;
+    }
+
+    public function filterByName(string $name): MetadataListQueryBuilder {
+        return $this->filterByNames([$name]);
+    }
+
+    public function filterByNames(array $names): MetadataListQueryBuilder {
+        $this->names = $names;
         return $this;
     }
 
@@ -51,6 +61,13 @@ class MetadataListQueryBuilder {
     }
 
     public function build(): MetadataListQuery {
-        return MetadataListQuery::withParams($this->ids, $this->resourceClasses, $this->parent, $this->controls, $this->onlyTopLevel);
+        return MetadataListQuery::withParams(
+            $this->ids,
+            $this->names,
+            $this->resourceClasses,
+            $this->parent,
+            $this->controls,
+            $this->onlyTopLevel
+        );
     }
 }

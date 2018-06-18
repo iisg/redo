@@ -3,6 +3,7 @@ namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 
 class MetadataCreateCommandAdjuster implements CommandAdjuster {
@@ -16,7 +17,7 @@ class MetadataCreateCommandAdjuster implements CommandAdjuster {
     /** @param MetadataCreateCommand $command */
     public function adjustCommand(Command $command): Command {
         return new MetadataCreateCommand(
-            $command->getName(),
+            Metadata::normalizeMetadataName($command->getName()),
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getLabel()),
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getDescription()),
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getPlaceholder()),
