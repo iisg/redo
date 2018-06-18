@@ -7,7 +7,7 @@
         toggled.two-way="addFormOpened"></add-button>
     <div if.bind="addFormOpened"
         class="well fade-inup-outdown au-animate">
-        <h2>${'Add new resource kind' | resourceClassTranslation:resourceClass}</h2>
+        <span class="page-title">${'Add new resource kind' | resourceClassTranslation:resourceClass}</span>
         <resource-kind-form resource-class.bind="resourceClass"
             submit.call="addNewResourceKind(savedResourceKind)"
             cancel.call="toggleEditForm()"></resource-kind-form>

@@ -17,7 +17,7 @@
             <remove-button if.bind="!editing && metadata.id > 0"
                 disabled.bind="metadata.pendingRequest"
                 on-click.call="deleteMetadata()"></remove-button>
-            <pending-throbber entity.bind="metadata"></pending-throbber>
+            <throbber if.bind="metadata.pendingRequest"></throbber>
             <aup-tabs tabs.bind="metadataDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
