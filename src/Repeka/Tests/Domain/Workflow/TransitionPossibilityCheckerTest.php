@@ -49,7 +49,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->checker = new TransitionPossibilityChecker($this->userRepository);
     }
 
-    private function configureTransition(array $tos = []): void {
+    private function setTransitionTos(array $tos = []): void {
         $this->transition->method('getToIds')->willReturn($tos);
     }
 
@@ -64,7 +64,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
                 $this->createWorkflowPlaceMock('p2'),
             ]
         );
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
     }
@@ -84,7 +84,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         );
         $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
         $this->assertFalse($result->isOtherUserAssigned());
@@ -107,7 +107,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         );
         $this->executor->method('getUserGroupsIds')->willReturn([1000]);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
         $this->assertFalse($result->isOtherUserAssigned());
@@ -123,7 +123,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         $resourceContents = ResourceContents::fromArray([1 => [1000]]);
         $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $this->checkWithDefaults();
     }
 
@@ -142,7 +142,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
         );
         $this->resource->method('getContents')->willReturn($resourceContents);
         $this->resourceKind->method('getMetadataIds')->willReturn([3]);
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertFalse($result->isTransitionPossible());
         $this->assertTrue($result->isOtherUserAssigned());
@@ -162,7 +162,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->resource->method('getContents')->willReturn($resourceContents);
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
         $this->assertFalse($result->isOtherUserAssigned());
@@ -176,7 +176,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->resourceKind->method('getMetadataIds')->willReturn([2, 3]);
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertEquals([2, 3], $result->getMissingMetadataIds());
         $this->assertFalse($result->isTransitionPossible());
@@ -190,7 +190,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->resourceKind->method('getMetadataIds')->willReturn([2, 3]);
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertEquals([2, 3], $result->getMissingMetadataIds());
         $this->assertFalse($result->isTransitionPossible());
@@ -204,7 +204,7 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $this->resourceKind->method('getMetadataIds')->willReturn([2, 3]);
-        $this->configureTransition(['p1', 'p2']);
+        $this->setTransitionTos(['p1', 'p2']);
         $result = $this->checkWithDefaults();
         $this->assertEmpty($result->getMissingMetadataIds());
         $this->assertTrue($result->isTransitionPossible());
@@ -230,6 +230,87 @@ class TransitionPossibilityCheckerTest extends \PHPUnit_Framework_TestCase {
             SystemTransition::UPDATE()->toTransition($this->resourceKind, $this->resource),
             $this->executor
         );
+        $this->assertTrue($result->isTransitionPossible());
+    }
+
+    public function testPositiveWhenNextPlaceHasAutoAssign() {
+        $this->workflow->method('getPlaces')->willReturn(
+            [
+                $this->createWorkflowPlaceMock('p1', [], [], [1]),
+                $this->createWorkflowPlaceMock('p2', [], [], [2]),
+            ]
+        );
+        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
+        $this->setTransitionTos(['p1']);
+        $result = $this->checkWithDefaults();
+        $this->assertTrue($result->isTransitionPossible());
+    }
+
+    public function testNegativeWhenOtherUserIsAlreadyPresentInAutoAssigned() {
+        $this->workflow->method('getPlaces')->willReturn(
+            [
+                $this->createWorkflowPlaceMock('p1', [], [], [1]),
+                $this->createWorkflowPlaceMock('p2', [], [], [2]),
+            ]
+        );
+        $resourceContents = ResourceContents::fromArray([1 => [10], 2 => [20]]);
+        $this->resource->method('getContents')->willReturn($resourceContents);
+        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
+        $this->setTransitionTos(['p1', 'p2']);
+        $result = $this->checkWithDefaults();
+        $this->assertFalse($result->isTransitionPossible());
+        $this->assertTrue($result->isOtherUserAssigned());
+    }
+
+    public function testPositiveWhenAlreadyAutoAssigned() {
+        $this->workflow->method('getPlaces')->willReturn(
+            [
+                $this->createWorkflowPlaceMock('p1', [], [], [1]),
+                $this->createWorkflowPlaceMock('p2', [], [], [2]),
+            ]
+        );
+        $resourceContents = ResourceContents::fromArray(
+            [
+                1 => [10, $this->executor->getId()],
+                2 => [20],
+            ]
+        );
+        $this->resource->method('getContents')->willReturn($resourceContents);
+        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2]);
+        $this->setTransitionTos(['p1', 'p2']);
+        $result = $this->checkWithDefaults();
+        $this->assertTrue($result->isTransitionPossible());
+    }
+
+    public function testPositiveWhenNotAssigneeButAutoAssigned() {
+        $this->workflow->method('getPlaces')->willReturn(
+            [
+                $this->createWorkflowPlaceMock('p1', [], [1], [2]),
+                $this->createWorkflowPlaceMock('p2', [], [3], [2]),
+            ]
+        );
+        $resourceContents = ResourceContents::fromArray(
+            [
+                1 => [1000],
+                2 => [2000, $this->executor->getId()],
+            ]
+        );
+        $this->resource->method('getContents')->willReturn($resourceContents);
+        $this->resourceKind->method('getMetadataIds')->willReturn([1, 2, 3]);
+        $this->setTransitionTos(['p1', 'p2']);
+        $result = $this->checkWithDefaults();
+        $this->assertTrue($result->isTransitionPossible());
+    }
+
+    public function testPositiveWhenAutoAssignInFirstPlace() {
+        $this->workflow->method('getPlaces')->willReturn(
+            [
+                $this->createWorkflowPlaceMock('p1', [], [], [1]),
+            ]
+        );
+        $this->resourceKind->method('getMetadataIds')->willReturn([1]);
+        $this->transition = SystemTransition::CREATE()->toTransition($this->resourceKind);
+        $result = $this->checkWithDefaults();
         $this->assertTrue($result->isTransitionPossible());
     }
 }

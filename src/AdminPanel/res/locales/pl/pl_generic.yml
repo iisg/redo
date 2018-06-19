@@ -97,7 +97,7 @@ Optional_female: Metadana nie musi mieć wartości
 Required_female: Metadana musi mieć wartość
 Locked_female: Wartość metadanej nie może zostać zmieniona
 Specifies assignee: Wartość metadanej określa użytkownika przypisanego do zadania
-Specifies auto assignee: Jako wartość metadanej zostaje automatycznie ustawiony użytkownik, który umieści zasób w tym stanie
+Specifies auto assignee: Wartość metadanej określa użytkownika przypisanego do zadania. Jeżeli nie jest ustawiona, automatycznie zostanie ustawiony użytkownik, który umieści zasób w tym stanie
 only for relationships with users: opcja dostępna tylko dla relacji z użytkownikami
 Your current tasks: Twoje bieżące zadania
 Your other tasks: Inne twoje zadania
