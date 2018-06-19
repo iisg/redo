@@ -168,3 +168,5 @@ Automatically set the same value for the states on the right: Ustawiaj tą samą
 Keep in mind that you can not change the workflow for resource kind after choosing it once. Select with care.: Raz wybrany proces dla rodzaju zasobu nie może być już później zmieniony. Upewnij się, że wybrany proces jest odpowiedni.
 Current places: Obecne stany
 Target places: Stany docelowe
+Filter metadata kinds by selecting the resource kinds: Pokaż tylko rodzaje metadanych, które należą do wybranych rodzajów zasobów
+Save the workflow in order to configure workflow plugins.: Zapisz proces, by móc edytować konfigurację pluginów

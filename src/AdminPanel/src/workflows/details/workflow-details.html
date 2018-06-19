@@ -20,13 +20,11 @@
         <workflow-edit-form if.bind="editing"
             workflow.bind="workflow"
             submit.delegate="update()"
-            resource-class.bind="workflow.resourceClass"
             on-cancel.call="toggleEditForm()"
             editing></workflow-edit-form>
         <template else>
             <workflow-graph-display workflow.bind="workflow"></workflow-graph-display>
-            <excel workflow.bind="workflow"
-                resource-class.bind="workflow.resourceClass"></excel>
+            <excel workflow.bind="workflow"></excel>
         </template>
     </div>
     <loading-bar else></loading-bar>

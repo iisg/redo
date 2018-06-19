@@ -2,12 +2,24 @@
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="./excel-checkbox/excel-checkbox"></require>
     <require from="./excel-legend.html"></require>
+    <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
 
-    <label hidden.bind="!editable">
-        <input type="checkbox"
-            checked.bind="autoChangeRowToTheEnd">
-        ${ 'Automatically set the same value for the states on the right' | t }
-    </label>
+    <div class="col-xs-12">
+        <div class="form-group"
+            if.bind="editable">
+            <label>
+                <input type="checkbox"
+                    checked.bind="autoChangeRowToTheEnd">
+                ${ 'Automatically set the same value for the states on the right' | t }
+            </label>
+        </div>
+        <div class="form-group">
+            <label>${ 'Filter metadata kinds by selecting the resource kinds' | t }</label>
+            <resource-kind-chooser resource-class.one-time="workflow.resourceClass"
+                value.bind="filterByResourceKinds"
+                multi-select="true"></resource-kind-chooser>
+        </div>
+    </div>
 
     <table mouseleave.trigger="highlightedColumnId = undefined">
         <thead>
@@ -20,8 +32,9 @@
             </th>
         </tr>
         </thead>
-        <tbody>
-        <tr repeat.for="metadata of metadataList">
+        <tbody class="au-stagger">
+        <tr repeat.for="metadata of filteredMetadata"
+            class="au-animate fade-inup-outdown">
             <th class="${highlightedRowId == metadata.id ? 'highlighted' : ''}"
                 mouseover.delegate="highlightedColumnId = undefined">
                 ${metadata | metadataLabel}
