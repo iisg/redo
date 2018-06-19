@@ -3,10 +3,26 @@
     line-height: 28px;
     border: 1px solid #aaa;
     border-radius: 4px;
+    width: 100%;
 }
 
 top-bar-search {
-    form > input, .select2-container .select2-selection--single {
-        width: 200px;
+    width: calc(100% - 120px);
+    min-width: 234px;
+  .chooser-select2-style {
+    flex: 1;
+    min-width: 200px;
+    max-width: 45%;
+  }
+  .div-select2-style {
+    flex: 1;
+    min-width: 234px;
+    max-width: 55%;
+    background: none;
+    & > button {
+      cursor: pointer;
+      background: none;
+      border: none;
     }
+  }
 }
