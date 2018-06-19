@@ -43,7 +43,9 @@
                                 if.bind="!selectedElement.froms">
                                 <workflow-plugins-configuration config.bind="selectedElement.pluginsConfig"
                                     workflow.bind="workflow"
+                                    if.bind="workflow.id"
                                     change.delegate="saveSelectedElementChanges()"></workflow-plugins-configuration>
+                                <em else>${ 'Save the workflow in order to configure workflow plugins.' | t }</em>
                             </div>
                         </form>
                     </span>

@@ -17,8 +17,7 @@
         <div class="form-group">
             <excel show.bind="workflow.places.length > 0"
                 workflow.bind="workflow"
-                editable.bind="!workflow.pendingRequest"
-                resource-class.bind="resourceClass"></excel>
+                editable.bind="!workflow.pendingRequest"></excel>
             <input type="hidden"
                 model.bind="workflow.places & validate">
         </div>

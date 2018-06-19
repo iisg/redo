@@ -8,22 +8,25 @@ import {WorkflowPlaceSorter} from "./workflow-place-sorter";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
 import {deepCopy} from "common/utils/object-utils";
+import {ResourceKind} from "../../../resources-config/resource-kind/resource-kind";
+import {flatten} from "lodash";
+import {inArray} from "../../../common/utils/array-utils";
 
 @autoinject
 export class Excel implements ComponentAttached {
   @bindable(twoWay) workflow: Workflow;
   @bindable @booleanAttribute editable: boolean = false;
-  @bindable resourceClass: string;
   @observable highlightedColumnId: number;
   metadataList: Metadata[];
   autoChangeRowToTheEnd: boolean = true;
+  filterByResourceKinds: ResourceKind[] = [];
 
   constructor(private metadataRepository: MetadataRepository, private workflowPlaceSorter: WorkflowPlaceSorter) {
   }
 
   async attached() {
     this.metadataList = await this.metadataRepository.getListQuery()
-      .filterByResourceClasses(this.resourceClass)
+      .filterByResourceClasses(this.workflow.resourceClass)
       .onlyTopLevel()
       .get();
   }
@@ -31,6 +34,16 @@ export class Excel implements ComponentAttached {
   @computedFrom('workflow.places')
   get orderedPlaces(): WorkflowPlace[] {
     return this.workflowPlaceSorter.getOrderedPlaces(this.workflow);
+  }
+
+  @computedFrom('metadataList', 'filterByResourceKinds', 'filterByResourceKinds.length')
+  get filteredMetadata(): Metadata[] {
+    if (this.filterByResourceKinds && this.filterByResourceKinds.length) {
+      const metadataIds = flatten(this.filterByResourceKinds.map(rk => rk.metadataList)).map(m => m.id);
+      return this.metadataList.filter(metadata => inArray(metadata.id, metadataIds));
+    } else {
+      return this.metadataList;
+    }
   }
 
   checkboxChanged(metadata: Metadata, changedPlace: WorkflowPlace): void {
