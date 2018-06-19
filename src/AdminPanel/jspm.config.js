@@ -52,7 +52,6 @@ System.config({
     "fetch": "github:github/fetch@1.1.1",
     "jquery": "npm:jquery@3.2.1",
     "lodash": "npm:lodash@4.17.10",
-    "martingust/aurelia-repeat-strategies": "github:martingust/aurelia-repeat-strategies@master",
     "moment": "npm:moment@2.22.2",
     "nprogress": "github:rstacruz/nprogress@0.2.0",
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.13.0",
@@ -84,9 +83,6 @@ System.config({
     },
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
-    },
-    "github:martingust/aurelia-repeat-strategies@master": {
-      "aurelia-templating-resources": "npm:aurelia-templating-resources@1.5.4"
     },
     "github:rstacruz/nprogress@0.2.0": {
       "css": "github:systemjs/plugin-css@0.1.36"
