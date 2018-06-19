@@ -84,6 +84,8 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
         $metadataTransitionMap = [];
         foreach ($workflow->getTransitions($resource) as $transition) {
             $assigneeMetadataIds = $this->transitionPossibilityChecker->getAssigneeMetadataIds($workflow, $transition);
+            $assigneeMetadataIds =
+                array_merge($assigneeMetadataIds, $this->transitionPossibilityChecker->getAutoAssignMetadataIds($workflow, $transition));
             foreach ($assigneeMetadataIds as $metadataId) {
                 if (!array_key_exists($metadataId, $metadataTransitionMap)) {
                     $metadataTransitionMap[$metadataId] = [];
