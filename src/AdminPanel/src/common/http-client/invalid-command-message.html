@@ -1,9 +1,11 @@
 <template bindable="violationsByField">
     <require from="./exception-params-value-converter"></require>
-    <div repeat.for="[field, violations] of violationsByField | iterable">
-        ${'exceptions::violationFields//' + field | t}:
+    <require from="common/value-converters/object-to-array-value-converter"></require>
+
+    <div repeat.for="entry of violationsByField | objectToArray">
+        ${'exceptions::violationFields//' + entry.key | t}:
         <ul>
-            <li repeat.for="violation of violations">
+            <li repeat.for="violation of entry.value">
                 <span t.bind="'exceptions::' + violation.message"
                     t-params.bind="violation.params | exceptionParams"></span>
             </li>

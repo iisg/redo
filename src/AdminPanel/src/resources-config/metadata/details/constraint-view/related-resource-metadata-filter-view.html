@@ -1,12 +1,17 @@
 <template>
     <require from="../metadata-link/metadata-link"></require>
+    <require from="common/value-converters/object-to-array-value-converter"></require>
 
-    <dl class="dl-horizontal">
-        <template repeat.for="[id, filter] of metadata.constraints.relatedResourceMetadataFilter | iterable">
+    <dl class="dl-horizontal"
+        ref="filtersList"
+        filters.bind="metadata.constraints.relatedResourceMetadataFilter | objectToArray"
+        show.bind="filtersList.filters.length">
+        <template repeat.for="entry of filtersList.filters">
             <dt class="metadata-link">
-                <metadata-link id.bind="id"></metadata-link>
+                <metadata-link id.bind="entry.key"></metadata-link>
             </dt>
-            <dd>${filter}</dd>
+            <dd>${entry.value}</dd>
         </template>
     </dl>
+    <span show.bind="!filtersList.filters.length">-</span>
 </template>

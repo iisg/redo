@@ -84,7 +84,6 @@ const bundles = function () {
           "moment",
           "nprogress",
           "nprogress/nprogress.css!text",
-          // "martingust/aurelia-repeat-strategies",  // causes "Unable to dynamically transpile ES module" error
           "oribella-aurelia-sortable",
           "sweetalert2",
           "sweetalert2/dist/sweetalert2.css!text",
