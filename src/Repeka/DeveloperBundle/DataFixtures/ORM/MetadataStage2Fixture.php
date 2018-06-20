@@ -25,6 +25,10 @@ class MetadataStage2Fixture extends RepekaFixture {
             ResourceKindsFixture::REFERENCE_RESOURCE_KIND_BOOK
         );
         $this->addRelationshipResourceKindConstraint(
+            MetadataFixture::REFERENCE_METADATA_RELATED_BOOK,
+            ResourceKindsFixture::REFERENCE_RESOURCE_KIND_BOOK
+        );
+        $this->addRelationshipResourceKindConstraint(
             MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY,
             ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY,
             1
