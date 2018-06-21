@@ -1,17 +1,23 @@
+import {computedFrom} from "aurelia-binding";
+import {autoinject} from "aurelia-dependency-injection";
+import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
 import {WorkflowTransition} from "workflows/workflow";
-import {I18N} from "aurelia-i18n";
-import {autoinject} from "aurelia-dependency-injection";
-import {computedFrom} from "aurelia-binding";
 import {Resource} from "../../resource";
 
 @autoinject
 export class ApplyTransitionButton {
   @bindable resource: Resource;
   @bindable transition: WorkflowTransition;
-  @bindable onClick = () => undefined;
+  @bindable iconName: string;
 
   constructor(private i18n: I18N) {
+  }
+
+  stopIfDisabled(event: Event) {
+    if (!this.canApplyTransition) {
+      event.stopPropagation();
+    }
   }
 
   @computedFrom("resource", "transition")

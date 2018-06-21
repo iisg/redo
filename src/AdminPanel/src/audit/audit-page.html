@@ -3,7 +3,7 @@
     <require from="common/value-converters/date-value-converter"></require>
     <require from="common/components/pagination/pagination"></require>
     <require from="common/components/buttons/toggle-button"></require>
-    <require from="common/components/buttons/remove-button"></require>
+    <require from="common/components/buttons/remove-button.html"></require>
     <require from="./filters/audit-command-name-chooser"></require>
     <require from="./filters/resource-contents-yaml-filter"></require>
     <require from="./underscores-to-hyphens"></require>
@@ -21,7 +21,7 @@
             <div class="form-group">
                 <toggle-button primary-icon-name="filter-2"
                     primary-label="Filter_verb"
-                    on-click.call="onFiltersChanged()"></toggle-button>
+                    click.delegate="onFiltersChanged()"></toggle-button>
             </div>
         </div>
 
@@ -38,7 +38,7 @@
             <div class="pull-right">
                 <toggle-button primary-icon-name="add-2"
                     primary-label="Add dynamic column"
-                    on-click.call="filters.addNewCustomColumn()"></toggle-button>
+                    click.delegate="filters.addNewCustomColumn()"></toggle-button>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
                             value.bind="column.displayStrategy"
                             placeholder="Title: {{ r|mTitle }}, Scanner: {{ r|m('Scanner')|m(-2) }}"
                             keyup.trigger="onFiltersChanged() & debounce:600">
-                        <remove-button on-click.call="filters.removeCustomColumn(column)"
+                        <remove-button click.delegate="filters.removeCustomColumn(column)"
                             show-tooltips-instead-of-labels="true"></remove-button>
                     </div>
                 </th>

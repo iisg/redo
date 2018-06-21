@@ -1,25 +1,24 @@
-<template>
+<template click.trigger="stopIfDisabled($event)">
     <button class="${toggled ? 'toggled' : ''}"
-        type="${type}"
+        type="button"
         disabled.bind="disabled"
-        click.trigger="!onClick || onClick()"
-        bootstrap-tooltip.bind="showTooltipsInsteadOfLabels ? toggled ? displayedSecondaryLabel : displayedPrimaryLabel : ''">
-        <template if.bind="!throbberDisplayed">
-            <div if.bind="secondaryIconName">
-                <icon class="${toggled ? '' : 'visible'}"
-                    name="${primaryIconName}"
-                    size="1.25"></icon>
-                <icon class="${toggled ? 'visible' : ''}"
-                    name="${secondaryIconName}"
-                    size="1.25"></icon>
-            </div>
-            <icon else
+        bootstrap-tooltip.bind="(showTooltipsInsteadOfLabels ? toggled ? secondaryLabel : primaryLabel : '') | t">
+        <div if.bind="secondaryIconName">
+            <icon class="${toggled ? '' : 'visible'}"
                 name="${primaryIconName}"
                 size="1.25"></icon>
-        </template>
-        <throbber else></throbber>
-        <span if.bind="primaryLabel && !showTooltipsInsteadOfLabels">${toggled ? displayedSecondaryLabel : displayedPrimaryLabel}</span>
-        <template replaceable
-            part="additional-button-content"></template>
+            <icon class="${toggled ? 'visible' : ''}"
+                name="${secondaryIconName}"
+                size="1.25"></icon>
+        </div>
+        <icon else
+            name="${primaryIconName}"
+            size="1.25"></icon>
+        <span if.bind="primaryLabel && !showTooltipsInsteadOfLabels">
+            ${(toggled ? secondaryLabel : primaryLabel) | t}
+            <span if.bind="!toggled && entityName">
+                ${'entity_types::' + entityName | t:{context: 'accusative'} }
+            </span>
+        </span>
     </button>
 </template>

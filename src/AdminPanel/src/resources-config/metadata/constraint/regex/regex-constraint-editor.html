@@ -1,9 +1,9 @@
 <template>
-    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
 
     <input class="form-control"
         type="text"
         value.bind="regex">
     <restore-from-original-button if.bind="hasBase && wasModified"
-        on-click.call="resetToOriginalValues()"></restore-from-original-button>
+        click.delegate="resetToOriginalValues()"></restore-from-original-button>
 </template>

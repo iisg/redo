@@ -2,6 +2,8 @@
     <require from="./metadata-control-select"></require>
     <require from="common/components/dropdown-select/dropdown-select"></require>
     <require from="common/components/required-field-indicator/required-field-indicator"></require>
+    <require from="common/components/buttons/cancel-button.html"></require>
+    <require from="common/components/buttons/submit-button.html"></require>
 
     <form class="form-with-buttons"
         submit.delegate="validateAndSubmit()">
@@ -32,7 +34,7 @@
             <submit-button editing.bind="edit"
                 submitting.bind="submitting"></submit-button>
             <cancel-button disabled.bind="metadata.pendingRequest || submitting"
-                on-click.call="cancel()"></cancel-button>
+                click.delegate="cancel()"></cancel-button>
         </div>
     </form>
 </template>

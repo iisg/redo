@@ -1,6 +1,6 @@
 <template>
-    <require from="common/components/buttons/remove-button"></require>
-    <require from="common/components/buttons/edit-button"></require>
+    <require from="common/components/buttons/remove-button.html"></require>
+    <require from="common/components/buttons/edit-button.html"></require>
     <require from="../resource-kind-form"></require>
     <require from="../../../workflows/details/graph/workflow-graph-display"></require>
 
@@ -13,7 +13,7 @@
             <throbber if.bind="resourceKind.pendingRequest"></throbber>
             <remove-button if.bind="!editing && resourceKind.id > 0"
                 disabled.bind="resourceKind.pendingRequest"
-                on-click.call="deleteResourceKind()"></remove-button>
+                click.delegate="deleteResourceKind()"></remove-button>
             <aup-tabs tabs.bind="resourceKindDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
@@ -24,8 +24,10 @@
                             <template repeat.for="metadata of resourceKind.metadataList">
                                 <template if.bind="metadata.id != -1">
                                     <span>${metadata.name}</span>
-                                    <span class="value">${metadata.label | inCurrentLanguage}<icon if.bind="metadata.shownInBrief"
-                                            name="show"></icon><icon if.bind="metadata.copyToChildResource"
+                                    <span class="value">${metadata.label | inCurrentLanguage}
+                                        <icon if.bind="metadata.shownInBrief"
+                                            name="show"></icon>
+                                        <icon if.bind="metadata.copyToChildResource"
                                             name="edit"></icon>
                                     </span>
                                 </template>
@@ -33,7 +35,7 @@
                         </div>
                         <edit-button toggled.bind="editing"
                             disabled.bind="resourceKind.pendingRequest"
-                            on-click.call="toggleEditForm(false)"></edit-button>
+                            click.delegate="toggleEditForm(false)"></edit-button>
                     </template>
                     <resource-kind-form else
                         resource-class.bind="resourceKind.resourceClass"

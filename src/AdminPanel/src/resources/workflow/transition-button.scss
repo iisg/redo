@@ -1,15 +1,12 @@
 @import "../../common/styles";
 
 transition-button {
-  @include toggle-button();
   button {
     text-align: left;
-    span {
-      &:not(:first-of-type) {
-        display: block;
-        font-size: 0.75em;
-        white-space: normal;
-      }
+    span.additional-information {
+      display: block;
+      font-size: 0.75em;
+      white-space: normal;
     }
   }
 }

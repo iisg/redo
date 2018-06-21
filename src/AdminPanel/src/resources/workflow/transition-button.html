@@ -1,15 +1,12 @@
 <template>
-    <require from="common/components/buttons/toggle-button"></require>
+    <require from="common/components/buttons/submit-button.html"></require>
 
-    <toggle-button containerless
-        primary-icon-name="forward"
-        primary-label="${!transition || transition.label | inCurrentLanguage}"
-        throbber-displayed.bind="submitting"
-        disabled.bind="submitting"
-        on-click.call="applyTransition()">
-        <template replace-part="additional-button-content">
-            <span>${'And move to state' | t}:</span>
-            <span repeat.for="place of tos">${place.label | inCurrentLanguage}</span>
-        </template>
-    </toggle-button>
+    <submit-button
+        icon-name="forward"
+        submitting.bind="submitting">
+        ${!transition || transition.label | inCurrentLanguage}
+        <span class="additional-information">${'And move to state' | t}:</span>
+        <span class="additional-information"
+            repeat.for="place of tos">${place.label | inCurrentLanguage}</span>
+    </submit-button>
 </template>

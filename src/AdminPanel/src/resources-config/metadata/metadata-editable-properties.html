@@ -1,10 +1,13 @@
 <template class="simple-form">
     <require from="./constraint/resource-kind/resource-kind-constraint-editor"></require>
     <require from="./constraint/metadata-constraint-form"></require>
-    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
 
     <div class="key">
-        <span>${'Show in brief' | t}<icon name="show"></icon></span>
+        <span>
+            ${'Show in brief' | t}
+            <icon name="show"></icon>
+        </span>
     </div>
     <div>
         <input type="checkbox"
@@ -14,16 +17,21 @@
     </div>
     <template if.bind="metadata.control != 'file'">
         <div class="key">
-            <span>${'Copy metadata to child resource' | t}<icon name="edit"></icon></span>
+            <span>
+                ${'Copy metadata to child resource' | t}
+                <icon name="edit"></icon>
+            </span>
         </div>
         <div>
             <input type="checkbox"
-            checked.bind="metadata.copyToChildResource">
+                checked.bind="metadata.copyToChildResource">
             <restore-from-original-button if.bind="originalMetadata && originalMetadata.copyToChildResource != metadata.copyToChildResource"
-            click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original-button>
+                click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original-button>
         </div>
     </template>
-    <span>${'Label' | t}<required-field-indicator if.bind="required"></required-field-indicator></span>
+    <span>${'Label' | t}
+        <required-field-indicator if.bind="required"></required-field-indicator>
+    </span>
     <multilingual-editor class="validation-message-container"
         value.bind="metadata.label & validate"
         placeholder.bind="originalMetadata.label"></multilingual-editor>

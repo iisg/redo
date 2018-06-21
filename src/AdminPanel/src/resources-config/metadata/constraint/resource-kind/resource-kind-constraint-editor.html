@@ -1,6 +1,6 @@
 <template>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
-    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
 
     <resource-kind-chooser if.bind="!disabled || metadata.constraints.resourceKind.length"
         value.bind="metadata.constraints.resourceKind"
@@ -8,5 +8,5 @@
         resource-class.bind="resourceClass"
         disabled.bind="disabled"></resource-kind-chooser>
     <restore-from-original-button if.bind="canInherit && wasModified"
-        on-click.call="resetToOriginalIds()"></restore-from-original-button>
+        click.delegate="resetToOriginalIds()"></restore-from-original-button>
 </template>

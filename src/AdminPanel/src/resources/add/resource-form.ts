@@ -148,17 +148,8 @@ export class ResourceForm {
     }
   }
 
-  applyTransition() {
-    if (this.transition) {
-      this.validateAndSubmit(this.transition.id);
-    }
-  }
-
-  saveResource() {
-    this.validateAndSubmit();
-  }
-
-  private validateAndSubmit(transitionId?: string) {
+  validateAndSubmit() {
+    const transitionId = this.transition && this.transition.id;
     this.submitting = true;
     this.validationError = false;
     this.validationController.validate().then(result => {

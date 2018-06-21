@@ -7,8 +7,7 @@ import {Router} from "aurelia-router";
 export class WorkflowNew {
   workflow: Workflow = new Workflow();
 
-  constructor(private workflowRepository: WorkflowRepository,
-              private router: Router) {
+  constructor(private workflowRepository: WorkflowRepository, private router: Router) {
   }
 
   activate(params: any) {

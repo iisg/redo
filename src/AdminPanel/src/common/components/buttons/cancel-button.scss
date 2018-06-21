@@ -1,8 +1,10 @@
 @import "../../styles";
 
 cancel-button {
+  toggle-button {
     @include toggle-button($red);
-    &.orange {
-        @include toggle-button($orange);
-    }
+  }
+  &.orange {
+    @include toggle-button($orange);
+  }
 }

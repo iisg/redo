@@ -3,8 +3,8 @@
 
     <toggle-button if.bind="showUpButton"
         primary-icon-name="up-3"
-        on-click.call="dispatchUp()"></toggle-button>
+        click.delegate="dispatchUp()"></toggle-button>
     <toggle-button if.bind="showDownButton"
         primary-icon-name="down-3"
-        on-click.call="dispatchDown()"></toggle-button>
+        click.delegate="dispatchDown()"></toggle-button>
 </template>
