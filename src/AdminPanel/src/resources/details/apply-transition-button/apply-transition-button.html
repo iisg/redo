@@ -1,9 +1,12 @@
-<template class="toggle-button">
+<template class="toggle-button"
+    click.trigger="stopIfDisabled($event)">
     <require from="./transition-label"></require>
 
-    <button disabled.bind="!canApplyTransition"
-        click.trigger="onClick()">
-        <span>${ transition | transitionLabel }</span>
+    <button disabled.bind="!canApplyTransition">
+        <icon if.bind="iconName"
+            name="${iconName}"
+            size="1.25"></icon>
+        <span>${transition | transitionLabel}</span>
         <throbber if.bind="!transitionInactiveReasons"></throbber>
         <icon repeat.for="reason of transitionInactiveReasons"
             name.bind="reason.icon"

@@ -1,5 +1,5 @@
 <template class="simple-form">
-    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
     <require from="resources-config/metadata/metadata-chooser"></require>
     <require from="resources/add/metadata-value-input"></require>
 
@@ -20,5 +20,5 @@
 
     <restore-from-original-button if.bind="hasBase && wasModified"
         class="full-width"
-        on-click.call="resetToOriginalValues()"></restore-from-original-button>
+        click.delegate="resetToOriginalValues()"></restore-from-original-button>
 </template>

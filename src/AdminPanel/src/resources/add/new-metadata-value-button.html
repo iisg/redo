@@ -1,0 +1,8 @@
+<template>
+    <require from="common/components/buttons/icon-button"></require>
+
+    <icon-button icon-name="add-2"
+        tooltip-text-when-enabled.one-time="'Add value' | t"
+        tooltip-text-when-disabled.one-time="'No more values are allowed' | t"
+        disabled.bind="!canAddMore"></icon-button>
+</template>

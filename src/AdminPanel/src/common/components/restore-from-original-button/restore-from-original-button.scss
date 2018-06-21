@@ -1,5 +1,5 @@
 @import "../../styles";
 
 restore-from-original-button {
-    @include toggle-button($orange);
+  @include toggle-button($orange);
 }

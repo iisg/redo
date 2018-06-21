@@ -1,0 +1,11 @@
+<template bindable="submitting, disabled, editing, iconName"
+    class="toggle-button">
+    <button type="submit"
+        disabled.bind="disabled || submitting">
+        <icon if.bind="!submitting"
+            name.bind="iconName || (editing ? 'accept-2' : 'add')"
+            size="1.25"></icon>
+        <throbber else></throbber>
+        <slot>${(editing ? 'Apply' : 'Add') | t}</slot>
+    </button>
+</template>

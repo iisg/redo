@@ -1,8 +1,8 @@
 <template>
-    <require from="common/components/buttons/add-button"></require>
+    <require from="common/components/buttons/add-button.html"></require>
 
     <add-button entity-name="workflow"
-        on-click.call="router.navigateToRoute('workflows/new', {resourceClass})"></add-button>
+        click.delegate="router.navigateToRoute('workflows/new', {resourceClass})"></add-button>
 
     <table>
         <thead>

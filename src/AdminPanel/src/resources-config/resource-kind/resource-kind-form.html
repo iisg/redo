@@ -5,10 +5,12 @@
     <require from="../metadata/metadata-form"></require>
     <require from="./move-up-or-down-buttons"></require>
     <require from="common/components/buttons/toggle-button"></require>
-    <require from="common/components/buttons/edit-button"></require>
-    <require from="common/components/buttons/remove-button"></require>
+    <require from="common/components/buttons/edit-button.html"></require>
+    <require from="common/components/buttons/remove-button.html"></require>
     <require from="./display-strategies/resource-display-strategies-form"></require>
     <require from="resources-config/metadata/constraint/resource-kind/resource-kind-constraint-editor"></require>
+    <require from="common/components/buttons/cancel-button.html"></require>
+    <require from="common/components/buttons/submit-button.html"></require>
 
     <form submit.delegate="validateAndSubmit()"
         class="form-with-buttons">
@@ -31,10 +33,10 @@
                     secondary-label="Changing order"
                     toggled.bind="sortingMetadata"
                     disabled.bind="submitting"
-                    on-click.call="sortingMetadata = !sortingMetadata"></toggle-button>
+                    click.delegate="sortingMetadata = !sortingMetadata"></toggle-button>
                 <div>
                     <div repeat.for="metadata of editableMetadataList & validate"
-                    class="resource-kind-edit-form-metadata-item well">
+                        class="resource-kind-edit-form-metadata-item well">
                         <div>
                             <span class="metadata-name ${metadata.overwriteForm ? 'title' : ''}">${originalMetadata(metadata).name}</span>
                             <span class="metadata-id ${metadata.overwriteForm ? 'title' : ''}">ID: ${originalMetadata(metadata).id}</span>
@@ -52,10 +54,10 @@
                                 <edit-button class="${metadata.overwriteForm ? 'active' : ''}"
                                     secondary-label="Close"
                                     toggled.bind="metadata.overwriteForm"
-                                    on-click.call="metadata.overwriteForm = !metadata.overwriteForm"
-                                    show-tooltips-instead-of-labels.bind="true"></edit-button>
+                                    click.delegate="metadata.overwriteForm = !metadata.overwriteForm"
+                                    show-tooltips-instead-of-labels="true"></edit-button>
                                 <remove-button if.bind="canRemoveMetadata(metadata)"
-                                    on-click.call="removeMetadata(metadata)"
+                                    click.delegate="removeMetadata(metadata)"
                                     show-tooltips-instead-of-labels="true"></remove-button>
                             </div>
                         </div>
@@ -89,7 +91,7 @@
                 submitting.bind="submitting"></submit-button>
             <cancel-button class="${!editing ? 'orange' : ''}"
                 disabled.bind="resourceKind.pendingRequest || submitting"
-                on-click.call="cancel()"></cancel-button>
+                click.delegate="cancel()"></cancel-button>
         </div>
     </form>
 </template>

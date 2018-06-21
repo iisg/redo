@@ -4,8 +4,8 @@
     <require from="./apply-transition-button/apply-transition-button"></require>
     <require from="./resource-metadata-table/resource-metadata-table"></require>
     <require from="../list/resources-list"></require>
-    <require from="common/components/buttons/remove-button"></require>
-    <require from="common/components/buttons/edit-button"></require>
+    <require from="common/components/buttons/remove-button.html"></require>
+    <require from="common/components/buttons/edit-button.html"></require>
     <require from="users/details/users-in-group"></require>
     <require from="users/details/user-roles"></require>
 
@@ -22,11 +22,11 @@
                         if.one-time="transition.id !== 'update'"
                         resource.bind="resource"
                         transition.bind="transition"
-                        on-click.call="showTransitionForm(transition)"></apply-transition-button>
+                        click.delegate="showTransitionForm(transition)"></apply-transition-button>
                 </template>
                 <remove-button if.one-time="'ADMIN' | hasRole:resource.resourceClass"
                     disabled.bind="resource.pendingRequest"
-                    on-click.call="remove()"></remove-button>
+                    click.delegate="remove()"></remove-button>
             </div>
             <aup-tabs tabs.bind="resourceDetailsTabs.tabs"></aup-tabs>
         </div>
@@ -45,10 +45,10 @@
                         <resource-metadata-table resource.bind="resource"
                             show-resource-kind></resource-metadata-table>
                         <apply-transition-button
-                            primary-icon-name="edit-2"
+                            icon-name="edit-2"
                             resource.bind="resource"
                             transition.bind="updateTransition"
-                            on-click.call="showTransitionForm(updateTransition)"></apply-transition-button>
+                            click.delegate="showTransitionForm(updateTransition)"></apply-transition-button>
                     </template>
                     <resource-form else
                         resource-class.bind="resource.resourceClass"

@@ -4,6 +4,8 @@
     <require from="./resource-form-generated"></require>
     <require from="workflows/details/transitions/workflow-froms-tos-display"></require>
     <require from="../workflow/transition-button"></require>
+    <require from="common/components/buttons/cancel-button.html"></require>
+    <require from="common/components/buttons/submit-button.html"></require>
 
     <span if.bind="transition"
         class="page-title">
@@ -19,7 +21,7 @@
         <cancel-button if.bind="!resource.kind"
             class="orange"
             primary-label="Close"
-            on-click.call="cancel()"></cancel-button>
+            click.delegate="cancel()"></cancel-button>
     </div>
     <workflow-froms-tos-display if.bind="showRequiredMetadataAndWorkflowInfo"
         transition.bind="transition"
@@ -29,11 +31,11 @@
     <template if.bind="resource.kind">
         <toggle-button primary-icon-name="koha"
             primary-label="Import data from KOHA"
-            on-click.call="openImportDialog()"></toggle-button>
+            click.delegate="openImportDialog()"></toggle-button>
         <span if.bind="validationError"
             class="error-label">${'Some metadata constraints have not been met. Fix the form errors and try again.' | t}</span>
         <form class="form-with-buttons"
-            submit.delegate="saveResource()">
+            submit.delegate="validateAndSubmit()">
             <resource-form-generated class="form-content"
                 resource-kind.bind="resource.kind"
                 resource.bind="resource"
@@ -47,16 +49,16 @@
                 <transition-button if.bind="editing && transition"
                     transition.bind="transition"
                     places.bind="edit.kind.workflow.places"
-                    submitting.bind="submitting"
-                    apply-transition.call="applyTransition()"></transition-button>
+                    submitting.bind="submitting"></transition-button>
                 <submit-button if.bind="!transition"
-                    secondary-label="Save"
                     editing.bind="editing"
-                    submitting.bind="submitting"></submit-button>
+                    submitting.bind="submitting">
+                    ${(editing ? 'Save' : 'Add') | t}
+                </submit-button>
                 <cancel-button class.bind="editing ? '' : 'orange'"
                     primary-label="Close"
                     disabled.bind="resource.pendingRequest || submitting"
-                    on-click.call="cancel()"></cancel-button>
+                    click.delegate="cancel()"></cancel-button>
             </div>
         </form>
     </template>

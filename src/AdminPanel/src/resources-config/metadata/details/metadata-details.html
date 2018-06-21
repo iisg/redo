@@ -1,6 +1,6 @@
 <template>
-    <require from="common/components/buttons/remove-button"></require>
-    <require from="common/components/buttons/edit-button"></require>
+    <require from="common/components/buttons/remove-button.html"></require>
+    <require from="common/components/buttons/edit-button.html"></require>
     <require from="./metadata-constraint"></require>
     <require from="./metadata-details-list.html"></require>
     <require from="../metadata-list"></require>
@@ -17,7 +17,7 @@
             <throbber if.bind="metadata.pendingRequest"></throbber>
             <remove-button if.bind="!editing && metadata.id > 0"
                 disabled.bind="metadata.pendingRequest"
-                on-click.call="deleteMetadata()"></remove-button>
+                click.delegate="deleteMetadata()"></remove-button>
             <aup-tabs tabs.bind="metadataDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
@@ -32,7 +32,7 @@
                         <metadata-details-list metadata.bind="metadata"></metadata-details-list>
                         <edit-button toggled.bind="editing"
                             disabled.bind="metadata.pendingRequest"
-                            on-click.call="toggleEditForm()"></edit-button>
+                            click.delegate="toggleEditForm()"></edit-button>
                     </template>
                     <metadata-form else
                         edit.bind="true"

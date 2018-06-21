@@ -1,5 +1,7 @@
 <template>
     <require from="./flags-select"></require>
+    <require from="common/components/buttons/cancel-button.html"></require>
+    <require from="common/components/buttons/submit-button.html"></require>
 
     <form submit.delegate="validateAndSubmit()">
         <div class="form-group label-floating"
@@ -26,7 +28,7 @@
             <div class="btn-group text-nowrap">
                 <cancel-button if.bind="editing"
                     disabled.bind="submitting"
-                    on-click.call="cancel()"></cancel-button>
+                    click.delegate="cancel()"></cancel-button>
                 <submit-button editing.bind="editing"
                     submitting.bind="submitting"></submit-button>
             </div>

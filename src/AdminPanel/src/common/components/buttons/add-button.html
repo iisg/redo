@@ -1,0 +1,9 @@
+<template bindable="toggled, entityName">
+    <require from="./toggle-button"></require>
+    <toggle-button primary-icon-name="add-resource-3"
+        primary-label="Add"
+        secondary-icon-name="remove-3"
+        secondary-label="Cancel"
+        entity-name.bind="entityName"
+        click.delegate="toggled = !toggled"></toggle-button>
+</template>
