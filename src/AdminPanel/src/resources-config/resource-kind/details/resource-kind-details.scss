@@ -1,7 +1,7 @@
 @import "../../../common/styles";
 
 .resource-kind-details {
-  .simple-form, #workflow {
+  #workflow {
     padding: $default-gap-size;
   }
   resource-kind-form {

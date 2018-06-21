@@ -1,22 +1,13 @@
 @import "../../../common/styles";
 
 .metadata-details {
-  metadata-details-list {
+  metadata-details-list, #constraints > div {
     padding: $default-gap-size;
   }
   metadata-form {
     padding: $default-gap-size / 2;
   }
-  metadata-list, metadata-form, resource-kinds-list {
+  metadata-list, metadata-details-list, metadata-form, resource-kinds-list {
     flex: 1;
-  }
-  .constraints-list {
-    padding: $default-gap-size;
-    .constraints-term-name {
-      width: 250px;
-    }
-    .constraints-name {
-      margin-left: 270px;
-    }
   }
 }

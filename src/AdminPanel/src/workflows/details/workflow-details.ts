@@ -1,14 +1,14 @@
-import {Workflow} from "../workflow";
-import {WorkflowRepository} from "../workflow-repository";
 import {autoinject} from "aurelia-dependency-injection";
-import {NavigationInstruction, NavModel, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
-import {I18N} from "aurelia-i18n";
-import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
+import {I18N} from "aurelia-i18n";
+import {NavigationInstruction, NavModel, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 import {ContextResourceClass} from 'resources/context/context-resource-class';
+import {Workflow} from "../workflow";
+import {WorkflowRepository} from "../workflow-repository";
 
 @autoinject
 export class WorkflowDetails implements RoutableComponentActivate {
@@ -35,10 +35,10 @@ export class WorkflowDetails implements RoutableComponentActivate {
   bind() {
     this.urlListener = this.ea.subscribe("router:navigation:success", (event: {instruction: NavigationInstruction}) => {
       this.editing = (event.instruction.queryParams.action == 'edit');
-      if (this.workflow != undefined) {
+      if (this.workflow) {
         if (this.editing) {  // read-only -> editing
           this.originalWorkflow = this.entitySerializer.clone(this.workflow);
-        } else if (this.originalWorkflow != undefined) {  // editing -> read-only or loading
+        } else if (this.originalWorkflow) {  // editing -> read-only or loading
           this.entitySerializer.hydrateClone(this.originalWorkflow, this.workflow);
           this.updateWindowTitle();
         }
@@ -53,9 +53,6 @@ export class WorkflowDetails implements RoutableComponentActivate {
   async activate(params: any, routeConfig: RouteConfig) {
     this.workflow = await this.workflowRepository.get(params.id);
     this.contextResourceClass.setCurrent(this.workflow.resourceClass);
-    if (this.editing) {
-      this.originalWorkflow = this.entitySerializer.clone(this.workflow);
-    }
     this.navModel = routeConfig.navModel;
     this.updateWindowTitle();
 
@@ -76,8 +73,7 @@ export class WorkflowDetails implements RoutableComponentActivate {
     return this.workflowRepository
       .update(this.workflow)
       .then(() => {
-        this.originalWorkflow = this.entitySerializer.clone(this.workflow);
-        this.originalWorkflow.pendingRequest = false;
+        this.originalWorkflow = undefined;
         this.toggleEditForm();
         this.signaler.signal(this.UPDATE_SIGNAL);
       })

@@ -9,13 +9,11 @@
     <div else
         class="resource-kind-details">
         <div class="name-with-buttons-and-tabs">
-            <span class="page-title">
-                ${ resourceKind.label | inCurrentLanguage }
-            </span>
+            <span class="page-title">${resourceKind.label | inCurrentLanguage}</span>
+            <throbber if.bind="resourceKind.pendingRequest"></throbber>
             <remove-button if.bind="!editing && resourceKind.id > 0"
                 disabled.bind="resourceKind.pendingRequest"
                 on-click.call="deleteResourceKind()"></remove-button>
-            <throbber if.bind="resourceKind.pendingRequest"></throbber>
             <aup-tabs tabs.bind="resourceKindDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
@@ -26,13 +24,10 @@
                             <template repeat.for="metadata of resourceKind.metadataList">
                                 <template if.bind="metadata.id != -1">
                                     <span>${metadata.name}</span>
-                                    <div>
-                                        <span>${metadata.label | inCurrentLanguage}</span>
-                                        <icon name="show"
-                                            if.bind="metadata.shownInBrief"></icon>
-                                        <icon name="edit"
-                                            if.bind="metadata.copyToChildResource"></icon>
-                                    </div>
+                                    <span class="value">${metadata.label | inCurrentLanguage}<icon if.bind="metadata.shownInBrief"
+                                            name="show"></icon><icon if.bind="metadata.copyToChildResource"
+                                            name="edit"></icon>
+                                    </span>
                                 </template>
                             </template>
                         </div>

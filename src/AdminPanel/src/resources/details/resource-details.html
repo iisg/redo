@@ -15,18 +15,18 @@
         class="resource-details au-animate fade-inup-outup">
         <div class="name-with-buttons-and-tabs">
             <span class="page-title">${resource | resourceDisplayStrategy:'header'}</span>
-            <template if.bind="!isFormOpened">
-                <apply-transition-button repeat.for="transition of resource.availableTransitions"
-                    if.one-time="transition.id !== 'update'"
-                    resource.bind="resource"
-                    transition.bind="transition"
-                    on-click.call="showTransitionForm(transition)"></apply-transition-button>
-            </template>
-            <remove-button if.one-time="'ADMIN' | hasRole:resource.resourceClass"
-                disabled.bind="resource.pendingRequest"
-                on-click.call="remove()"></remove-button>
-            <div if.bind="resource.pendingRequest">
-                <throbber></throbber>
+            <throbber if.bind="resource.pendingRequest"></throbber>
+            <div class="buttons">
+                <template if.bind="!isFormOpened">
+                    <apply-transition-button repeat.for="transition of resource.availableTransitions"
+                        if.one-time="transition.id !== 'update'"
+                        resource.bind="resource"
+                        transition.bind="transition"
+                        on-click.call="showTransitionForm(transition)"></apply-transition-button>
+                </template>
+                <remove-button if.one-time="'ADMIN' | hasRole:resource.resourceClass"
+                    disabled.bind="resource.pendingRequest"
+                    on-click.call="remove()"></remove-button>
             </div>
             <aup-tabs tabs.bind="resourceDetailsTabs.tabs"></aup-tabs>
         </div>

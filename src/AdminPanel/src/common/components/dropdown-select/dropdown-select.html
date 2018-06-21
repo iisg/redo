@@ -8,8 +8,8 @@
         <option repeat.for="option of values"
             value.bind="$index"
             model.bind="option">
-            <template part="option-template"
-                replaceable>
+            <template replaceable
+                part="option-template">
                 ${option | metadataLabel}
             </template>
         </option>

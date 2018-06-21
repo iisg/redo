@@ -186,10 +186,12 @@ table {
   grid-template-columns: auto minmax(60%, 1fr);
   grid-column-gap: $default-gap-size;
   grid-row-gap: $default-gap-size / 2;
-  & > span:not(.value):not(.validation-message) {
+  & > span:not(.value):not(.validation-message), & > .key {
     font-weight: bold;
-    & > icon {
-        margin-left: $default-gap-size / 4;
+  }
+  & > span, & > .key {
+    icon {
+      margin-left: $default-gap-size / 4;
     }
   }
   & > .full-width, & > .section-title, & > .validation-message {
@@ -411,42 +413,66 @@ ux-dialog-overlay {
   }
 }
 
-.name-with-buttons-and-tabs {
+.metadata-details, .resource-kind-details, .resource-details, .workflow-details, workflow-edit-form > form {
+  height: 100%;
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  border-bottom: $default-gap-size / 4 solid $light-blue;
-  & > :not(aup-tabs) {
-    padding: $default-gap-size / 2;
-  }
-  aup-tabs {
-    align-self: flex-end;
-    margin-left: auto;
-    padding-left: $default-gap-size / 2;
-    & > ul {
-      border: none;
-      & > li {
-        margin-bottom: 0;
-        & > a {
-          margin-right: 0;
-          padding: $default-gap-size / 8 $default-gap-size / 2;
-          border: 0;
-          border-radius: 0;
-          text-transform: uppercase;
-          color: $default-text-color;
-          @include transition(background-color .3s ease-out, color .3s ease-out);
-          &.active, &:hover {
-            background-color: $light-blue;
-            color: white;
-          }
-          &.active {
-            font-style: normal;
+  flex-direction: column;
+
+  .name-with-buttons-and-tabs {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: $default-gap-size / 4;
+    padding-bottom: $default-gap-size / 4;
+    border-bottom: $default-gap-size / 4 solid $light-blue;
+    & > :not(.buttons):not(aup-tabs) {
+      margin: $default-gap-size / 4 $default-gap-size / 2;
+    }
+    & > .buttons {
+      display: flex;
+      padding-left: $default-gap-size / 4;
+      padding-right: $default-gap-size / 4;
+      & > * {
+        margin: $default-gap-size / 4;
+      }
+    }
+    aup-tabs {
+      align-self: flex-end;
+      margin-top: $default-gap-size / 4;
+      margin-bottom: - $default-gap-size / 4;
+      margin-left: auto;
+      padding-left: $default-gap-size / 2;
+      & > ul {
+        border: none;
+        & > li {
+          margin-bottom: 0;
+          & > a {
+            margin-right: 0;
+            padding: $default-gap-size / 8 $default-gap-size / 2;
+            border: 0;
+            border-radius: 0;
+            text-transform: uppercase;
+            color: $default-text-color;
+            @include transition(background-color .3s ease-out, color .3s ease-out);
+            &.active, &:hover {
+              background-color: $light-blue;
+              color: white;
+            }
+            &.active {
+              font-style: normal;
+            }
           }
         }
       }
     }
   }
+
+  aup-tab-content, .content {
+    overflow: auto;
+  }
 }
+
 
 // max-height animation, idea based on: http://stackoverflow.com/a/8331169/878514
 @mixin anim-height-inout($max-height) {

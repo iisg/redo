@@ -19,7 +19,7 @@
         </template>
         <throbber else></throbber>
         <span if.bind="primaryLabel && !showTooltipsInsteadOfLabels">${toggled ? displayedSecondaryLabel : displayedPrimaryLabel}</span>
-        <template part="additional-button-content"
-            replaceable></template>
+        <template replaceable
+            part="additional-button-content"></template>
     </button>
 </template>

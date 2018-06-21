@@ -33,8 +33,8 @@
                         </h3>
                         <form submit.delegate="saveSelectedElementChanges()">
                             <div class="form-group">
-                                <multilingual-editor label="${'Label' | t}"
-                                    class="vertical"
+                                <span>${'Label' | t}</span>
+                                <multilingual-editor class="vertical"
                                     keyup.delegate="saveSelectedElementChanges()"
                                     value.bind="selectedElement.label"
                                     change.delegate="signalWorkflowPlacesUpdated()"></multilingual-editor>

@@ -13,9 +13,8 @@
     <form submit.delegate="validateAndSubmit()"
         class="form-with-buttons">
         <div class="form-content simple-form">
-            <multilingual-editor containerless
-                label="${'Name' | t}"
-                value.bind="resourceKind.label & validate"></multilingual-editor>
+            <span>${'Name' | t}</span>
+            <multilingual-editor value.bind="resourceKind.label & validate"></multilingual-editor>
             <span>${'Add metadata kind' | resourceClassTranslation:resourceClass}</span>
             <resource-kind-metadata-chooser
                 value.bind="metadataToAdd"
@@ -88,7 +87,8 @@
         <div class="form-buttons">
             <submit-button editing.bind="editing"
                 submitting.bind="submitting"></submit-button>
-            <cancel-button disabled.bind="resourceKind.pendingRequest || submitting"
+            <cancel-button class="${!editing ? 'orange' : ''}"
+                disabled.bind="resourceKind.pendingRequest || submitting"
                 on-click.call="cancel()"></cancel-button>
         </div>
     </form>

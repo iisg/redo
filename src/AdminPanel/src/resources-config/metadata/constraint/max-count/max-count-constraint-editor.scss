@@ -1,6 +1,6 @@
 @import "../../../../common/styles";
 
-min-max-value-constraint-editor {
+max-count-constraint-editor {
     & > * {
         @include form-element();
     }
