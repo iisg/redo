@@ -7,25 +7,19 @@
 
     <div if.bind="workflow"
         class="workflow-details au-animate fade-inup-outup">
-        <div class="pull-right">
-            <throbber if.bind="workflow.pendingRequest"></throbber>
-            <remove-button if.bind="!editing"
-                disabled.bind="workflow.pendingRequest"
-                on-click.call="deleteWorkflow()"></remove-button>
-            <edit-button if.bind="!editing"
-                disabled.bind="workflow.pendingRequest"
-                on-click.call="toggleEditForm()"></edit-button>
-        </div>
-        <h1>${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</h1>
-        <workflow-edit-form if.bind="editing"
+        <workflow-edit-form
             workflow.bind="workflow"
             submit.delegate="update()"
             on-cancel.call="toggleEditForm()"
-            editing></workflow-edit-form>
-        <template else>
-            <workflow-graph-display workflow.bind="workflow"></workflow-graph-display>
-            <excel workflow.bind="workflow"></excel>
-        </template>
+            viewing.bind="!editing"
+            editing>
+            <template replace-part="buttons-when-viewing">
+                <edit-button on-click.call="toggleEditForm()"
+                    disabled.bind="workflow.pendingRequest"></edit-button>
+                <remove-button on-click.call="deleteWorkflow()"
+                    disabled.bind="workflow.pendingRequest"></remove-button>
+            </template>
+        </workflow-edit-form>
     </div>
     <loading-bar else></loading-bar>
 </template>

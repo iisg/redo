@@ -1,32 +1,50 @@
 <template>
+    <require from="./graph/workflow-graph-display"></require>
     <require from="./graph/workflow-graph-editor"></require>
     <require from="./excel/excel"></require>
 
     <form submit.delegate="onSubmit($event)">
-        <div class="form-group">
-            <multilingual-editor value.bind="workflow.name & validate"
-                disabled.bind="workflow.pendingRequest"
-                on-loaded.call="updateGraphPosition()"></multilingual-editor>
+        <div class="name-with-buttons-and-tabs">
+            <span if.bind="viewing || editing"
+                class="page-title">${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</span>
+            <span else
+                class="page-title">${'New workflow' | resourceClassTranslation:workflow.resourceClass}</span>
+            <throbber if.bind="workflow.pendingRequest"></throbber>
+            <div class="buttons">
+                <template if.bind="viewing"
+                    replaceable
+                    part="buttons-when-viewing"></template>
+                <template else>
+                    <submit-button editing.bind="editing"
+                        submitting.bind="workflow.pendingRequest"></submit-button>
+                    <cancel-button disabled.bind="workflow.pendingRequest"
+                        on-click.call="onCancel()"></cancel-button>
+                </template>
+            </div>
         </div>
-
-        <div class="form-group clearfix">
-            <workflow-graph-editor workflow.bind="workflow"
-                workflow-graph-editor-ready.delegate="onEditorReady($event)"></workflow-graph-editor>
-        </div>
-
-        <div class="form-group">
-            <excel show.bind="workflow.places.length > 0"
-                workflow.bind="workflow"
-                editable.bind="!workflow.pendingRequest"></excel>
-            <input type="hidden"
-                model.bind="workflow.places & validate">
-        </div>
-
-        <div class="pull-right">
-            <cancel-button disabled.bind="workflow.pendingRequest"
-                on-click.call="onCancel()"></cancel-button>
-            <submit-button editing.bind="editing"
-                submitting.bind="workflow.pendingRequest"></submit-button>
+        <div class="content">
+            <template if.bind="viewing">
+                <workflow-graph-display workflow.bind="workflow"></workflow-graph-display>
+                <excel workflow.bind="workflow"></excel>
+            </template>
+            <template else>
+                <div class="form-group">
+                    <multilingual-editor value.bind="workflow.name & validate"
+                        disabled.bind="workflow.pendingRequest"
+                        on-loaded.call="updateGraphPosition()"></multilingual-editor>
+                </div>
+                <div class="form-group clearfix">
+                    <workflow-graph-editor workflow.bind="workflow"
+                        workflow-graph-editor-ready.delegate="onEditorReady($event)"></workflow-graph-editor>
+                </div>
+                <div class="form-group">
+                    <excel show.bind="workflow.places.length > 0"
+                        workflow.bind="workflow"
+                        editable.bind="!workflow.pendingRequest"></excel>
+                    <input type="hidden"
+                        model.bind="workflow.places & validate">
+                </div>
+            </template>
         </div>
     </form>
 </template>

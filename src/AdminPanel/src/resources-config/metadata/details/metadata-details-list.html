@@ -1,25 +1,15 @@
-<template bindable="metadata">
-    <div>
-        <dl class="dl-horizontal">
-            <dt>ID</dt>
-            <dd>${metadata.id}</dd>
-            <dt>${'Name' | t}</dt>
-            <dd>${metadata.name}</dd>
-
-            <dt>${'Label' | t}</dt>
-            <dd>
-                ${metadata.label | inCurrentLanguage}
-            </dd>
-            <dt>${'Control' | t}</dt>
-            <dd>${'controls::' + metadata.control | t}</dd>
-            <dt>${'Hint' | t}</dt>
-            <dd>
-                ${metadata.placeholder | inCurrentLanguage}
-            </dd>
-            <dt>${'Description' | t}</dt>
-            <dd>
-                ${metadata.description | inCurrentLanguage}
-            </dd>
-        </dl>
-    </div>
+<template bindable="metadata"
+    class="simple-form">
+    <span>ID</span>
+    <span class="value">${metadata.id}</span>
+    <span>${'Name' | t}</span>
+    <span class="value">${metadata.name}</span>
+    <span>${'Label' | t}</span>
+    <span class="value">${metadata.label | inCurrentLanguage}</span>
+    <span>${'Control' | t}</span>
+    <span class="value">${'controls::' + metadata.control | t}</span>
+    <span>${'Hint' | t}</span>
+    <span class="value">${metadata.placeholder | inCurrentLanguage}</span>
+    <span>${'Description' | t}</span>
+    <span class="value">${metadata.description | inCurrentLanguage}</span>
 </template>

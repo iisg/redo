@@ -1,9 +1,11 @@
-aup-tab-content > .tab-content > .active > div {
-  display: flex;
-  & > edit-button, & > apply-transition-button {
-    position: sticky;
-    top: 0;
-    align-self: baseline;
-    margin-left: auto;
+@import "../../../common/styles";
+
+aup-tab-content {
+  #details.active > div {
+    display: flex;
+    & > :first-child {
+      flex: 1;
+      padding: $default-gap-size;
+    }
   }
 }

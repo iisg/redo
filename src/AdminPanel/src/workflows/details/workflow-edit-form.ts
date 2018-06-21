@@ -13,6 +13,7 @@ import {WorkflowGraphManager} from "./graph/workflow-graph-manager";
 @autoinject
 export class WorkflowEditForm {
   @bindable workflow: Workflow = new Workflow;
+  @bindable viewing: boolean;
   @bindable onCancel = () => {
     this.router.navigateToRoute('workflows', {resourceClass: this.workflow.resourceClass});
   };

@@ -3,7 +3,9 @@
     <require from="./constraint/metadata-constraint-form"></require>
     <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
 
-    <span>${'Show in brief' | t}<icon name="show"></icon></span>
+    <div class="key">
+        <span>${'Show in brief' | t}<icon name="show"></icon></span>
+    </div>
     <div>
         <input type="checkbox"
             checked.bind="metadata.shownInBrief">
@@ -11,7 +13,9 @@
             click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original-button>
     </div>
     <template if.bind="metadata.control != 'file'">
-        <span>${'Copy metadata to child resource' | t}<icon name="edit"></icon></span>
+        <div class="key">
+            <span>${'Copy metadata to child resource' | t}<icon name="edit"></icon></span>
+        </div>
         <div>
             <input type="checkbox"
             checked.bind="metadata.copyToChildResource">
@@ -19,19 +23,16 @@
             click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original-button>
         </div>
     </template>
-    <multilingual-editor containerless
-        label="${'Label' | t}"
-        placeholder.bind="originalMetadata.label"
+    <span>${'Label' | t}<required-field-indicator if.bind="required"></required-field-indicator></span>
+    <multilingual-editor class="validation-message-container"
         value.bind="metadata.label & validate"
-        required></multilingual-editor>
-    <multilingual-editor containerless
-        label="${'Hint' | t}"
-        placeholder.bind="originalMetadata.placeholder"
-        value.bind="metadata.placeholder & validate"></multilingual-editor>
-    <multilingual-editor containerless
-        label="${'Description' | t}"
-        placeholder.bind="originalMetadata.description"
-        value.bind="metadata.description & validate"></multilingual-editor>
+        placeholder.bind="originalMetadata.label"></multilingual-editor>
+    <span>${'Hint' | t}</span>
+    <multilingual-editor value.bind="metadata.placeholder & validate"
+        placeholder.bind="originalMetadata.placeholder"></multilingual-editor>
+    <span>${'Description' | t}</span>
+    <multilingual-editor value.bind="metadata.description & validate"
+        placeholder.bind="originalMetadata.description"></multilingual-editor>
     <metadata-constraint-form containerless
         metadata.bind="metadata"
         original-metadata.bind="originalMetadata"></metadata-constraint-form>

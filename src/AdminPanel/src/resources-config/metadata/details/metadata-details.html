@@ -14,10 +14,10 @@
 
         <div class="name-with-buttons-and-tabs">
             <span class="page-title">${'Metadata_single' | t} #${metadata.id}</span>
+            <throbber if.bind="metadata.pendingRequest"></throbber>
             <remove-button if.bind="!editing && metadata.id > 0"
                 disabled.bind="metadata.pendingRequest"
                 on-click.call="deleteMetadata()"></remove-button>
-            <throbber if.bind="metadata.pendingRequest"></throbber>
             <aup-tabs tabs.bind="metadataDetailsTabs.tabs"></aup-tabs>
         </div>
         <aup-tab-content>
@@ -43,16 +43,14 @@
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="constraints">
-                <dl if.bind="metadataDetailsTabs.activeTabId === 'constraints'"
-                    class="constraints-list dl-horizontal">
+                <div if.bind="metadataDetailsTabs.activeTabId === 'constraints'"
+                    class="simple-form">
                     <template repeat.for="constraintName of constraintNames">
-                        <dt class="constraints-term-name"> ${'metadata_constraints::labels//' + constraintName | t}</dt>
-                        <dd class="constraints-name">
-                            <metadata-constraint name.bind="constraintName"
-                                metadata.bind="metadata"></metadata-constraint>
-                        </dd>
+                        <span>${'metadata_constraints::labels//' + constraintName | t}</span>
+                        <metadata-constraint name.bind="constraintName"
+                            metadata.bind="metadata"></metadata-constraint>
                     </template>
-                </dl>
+                </div>
             </aup-tab-pane>
             <aup-tab-pane tab="resource-kinds">
                 <resource-kinds-list if.bind="metadataDetailsTabs.activeTabId === 'resource-kinds'"

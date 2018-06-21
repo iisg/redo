@@ -5,15 +5,8 @@ metadata-form {
         dropdown-select {
             width: 100%;
         }
-    }
-
-    .simple-form {
         & > :not(.simple-form):not(metadata-constraint-editor), resource-kind-constraint-editor > * {
             @include form-element();
-        }
-        flag > span {
-            display: flex;
-            align-items: center;
         }
     }
 }
