@@ -24,9 +24,11 @@
                         transition.bind="transition"
                         click.delegate="showTransitionForm(transition)"></apply-transition-button>
                 </template>
-                <remove-button if.one-time="'ADMIN' | hasRole:resource.resourceClass"
-                    disabled.bind="resource.pendingRequest"
-                    click.delegate="remove()"></remove-button>
+                <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
+                    <remove-button if.one-time="resource.kind.id > 0"
+                        disabled.bind="resource.pendingRequest"
+                        click.delegate="remove()"></remove-button>
+                </template>
             </div>
             <aup-tabs tabs.bind="resourceDetailsTabs.tabs"></aup-tabs>
         </div>

@@ -3,12 +3,14 @@
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="../../workflow/resource-place-display.html"></require>
 
-    <template if.one-time="showResourceKind && 'ADMIN' | hasRole:resource.resourceClass">
-        <span>${ 'Resource kind' | t}</span>
-        <a route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id}">
-            <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
-            <span else>#${ resource.kind.id }</span>
-        </a>
+    <template if.one-time="showResourceKind">
+        <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
+            <span>${ 'Resource kind' | t}</span>
+            <a route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id}">
+                <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
+                <span else>#${ resource.kind.id }</span>
+            </a>
+        </template>
     </template>
 
     <template repeat.for="metadata of metadataList">
