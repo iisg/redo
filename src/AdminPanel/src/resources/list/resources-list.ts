@@ -156,17 +156,10 @@ export class ResourcesList {
     this.hasResources = newResources.length > 0;
   }
 
-  addNewResource(resource: Resource): Promise<Resource> {
+  addNewResource(resource: Resource): Promise<any> {
     resource.resourceClass = this.resourceClass;
     return this.resourceRepository.post(resource).then(resource => {
-      this.addFormOpened = false;
-      let lastPageNumber = Math.ceil((this.totalNumberOfResources + 1) / this.resultsPerPage);
-      if (this.currentPageNumber == lastPageNumber) {
-        this.resources.push(resource);
-      } else {
-        this.currentPageNumber = lastPageNumber;
-      }
-      return resource;
+      this.router.navigateToRoute('resources/details', {id: resource.id});
     });
   }
 
