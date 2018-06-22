@@ -16,7 +16,7 @@
                         value.bind="resource.contents[metadata.id][$index]"
                         disabled.bind="disabled"></resource-metadata-value-input>
                     <a if.bind="resource.contents[metadata.id].length > 1"
-                        class="drag-handle"
+                        class="drag-handle hidden"
                         bootstrap-tooltip.bind="'Drag to change order' | t"
                         data-placement="left">
                         <icon name="arrows-2"
