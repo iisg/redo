@@ -9,18 +9,21 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
-import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
 import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
-import {WorkflowTransition} from "../../workflows/workflow";
+import {WorkflowTransition, WorkflowPlace} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
-import {ContextResourceClass} from './../context/context-resource-class';
+import {ContextResourceClass} from "./../context/context-resource-class";
+import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
+import {values} from "lodash";
+import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
   isFormOpened = false;
+  isFormOpenedForGod: boolean;
   selectedTransition: WorkflowTransition;
   resultsPerPage: number;
   currentPageNumber: number;
@@ -45,7 +48,12 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   bind() {
     this.urlListener = this.ea.subscribe("router:navigation:success",
-      (event: { instruction: NavigationInstruction }) => this.isFormOpened = event.instruction.queryParams.action == 'edit');
+      (event: { instruction: NavigationInstruction }) => {
+        this.isFormOpened = event.instruction.queryParams.action == 'edit';
+        this.isFormOpenedForGod = !!event.instruction.queryParams['god']
+          && this.hasRole.toView('ADMIN', this.resource.resourceClass);
+      }
+    );
   }
 
   unbind() {
@@ -106,28 +114,41 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   showTransitionForm(transition: WorkflowTransition) {
     this.selectedTransition = transition;
-    this.updateUrl({editAction: true, triggerNavigation: true});
+    this.updateUrl({editAction: true, skipValidation: false, triggerNavigation: true});
     // form is opened after navigation
+  }
+
+  showGodForm() {
+    this.updateUrl({editAction: true, skipValidation: true, triggerNavigation: true});
   }
 
   hideForm() {
     this.selectedTransition = undefined;
-    this.updateUrl({editAction: false, triggerNavigation: true});
+    this.updateUrl({editAction: false, skipValidation: false, triggerNavigation: true});
     // form is closed after navigation
   }
 
-  saveEditedResource(updatedResource: Resource, transitionId: string): Promise<Resource> {
+  saveEditedResource(updatedResource: Resource,
+                     transitionId: string,
+                     newResourceKind: ResourceKind = undefined,
+                     places: WorkflowPlace[] = []): Promise<Resource> {
     const originalResource = this.entitySerializer.clone(this.resource);
     $.extend(this.resource, updatedResource);
-    return this.applyTransition(updatedResource, transitionId).then(resourceData => {
+    return this.applyTransition(updatedResource, transitionId, newResourceKind, places).then(resourceData => {
       this.hideForm();
       return this.resource = resourceData;
     }).catch(() => $.extend(this.resource, originalResource));
   }
 
-  private applyTransition(updatedResource: Resource, transitionId: string): Promise<Resource> {
+  private applyTransition(updatedResource: Resource,
+                          transitionId: string,
+                          newResourceKind: ResourceKind,
+                          places: WorkflowPlace[]): Promise<Resource> {
     if (transitionId) {
       return this.resourceRepository.updateAndApplyTransition(updatedResource, transitionId);
+    } else if (this.isFormOpenedForGod) {
+      const placesIds = places.map(place => place.id);
+      return this.resourceRepository.updateResourceWithNoValidation(updatedResource, newResourceKind.id, placesIds);
     }
     return this.resourceRepository.update(updatedResource);
   }
@@ -146,7 +167,11 @@ export class ResourceDetails implements RoutableComponentActivate {
     }
   }
 
-  private updateUrl(args: { editAction, triggerNavigation } = {editAction: this.isFormOpened, triggerNavigation: false}) {
+  private updateUrl(args: { editAction, skipValidation, triggerNavigation } = {
+    editAction: this.isFormOpened,
+    skipValidation: this.isFormOpenedForGod,
+    triggerNavigation: false
+  }) {
     const parameters = {};
     if (this.resourceDetailsTabs.activeTabId == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
@@ -156,6 +181,9 @@ export class ResourceDetails implements RoutableComponentActivate {
     if (args.editAction) {
       parameters['action'] = 'edit';
       parameters['tab'] = 'details';
+      if (args.skipValidation) {
+        parameters['god'] = true;
+      }
     } else {
       parameters['tab'] = this.resourceDetailsTabs.activeTabId;
     }

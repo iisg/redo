@@ -22,10 +22,10 @@ export class ResourceFormGenerated {
   @bindable resourceKind: ResourceKind;
   @bindable resource: Resource;
   @bindable parent: Resource;
-  @bindable resourceClass: string;
   @bindable requiredMetadataIdsForTransition: number[];
   @bindable validationController: ValidationController;
   @bindable targetPlaces: WorkflowPlace[];
+  @bindable skipValidation: boolean = false;
 
   currentLanguageCode: string;
   lockedMetadataIds: number[];
@@ -49,7 +49,9 @@ export class ResourceFormGenerated {
   @computedFrom('resourceKind', 'resourceKind.metadataList')
   get metadataList(): Metadata[] {
     if (this.resourceKind) {
-      return this.resourceKind.metadataList.filter(v => v.id != SystemMetadata.PARENT.id);
+      return this.skipValidation
+        ? this.resourceKind.metadataList
+        : this.resourceKind.metadataList.filter(v => v.id != SystemMetadata.PARENT.id);
     }
   }
 
@@ -143,11 +145,13 @@ export class ResourceFormGenerated {
   }
 
   metadataIsRequired(metadata: Metadata): boolean {
-    return inArray(metadata.id, this.requiredMetadataIdsForTransition) || inArray(metadata.id, this.requiredMetadataIds);
+    return !this.skipValidation
+      && inArray(metadata.id, this.requiredMetadataIdsForTransition)
+      || inArray(metadata.id, this.requiredMetadataIds);
   }
 
   metadataIsLocked(metadata: Metadata): boolean {
-    return inArray(metadata.id, this.lockedMetadataIds);
+    return !this.skipValidation && inArray(metadata.id, this.lockedMetadataIds);
   }
 
   metadataDeterminesAssignee(metadata: Metadata): boolean {

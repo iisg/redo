@@ -11,24 +11,32 @@ import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {numberKeysByValue} from "../../common/utils/object-utils";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
-import {RequirementState, WorkflowTransition} from "../../workflows/workflow";
+import {RequirementState, WorkflowTransition, WorkflowPlace} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportDialog} from "./xml-import/import-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
+import {values} from "lodash";
 
 @autoinject
 export class ResourceForm {
   @bindable resourceClass: string;
   @bindable parent: Resource;
   @bindable edit: Resource;
-  @bindable submit: (value: { savedResource: Resource, transitionId: string }) => Promise<any>;
+  @bindable skipValidation: boolean;
+  @bindable submit: (value: {
+    savedResource: Resource,
+    transitionId: string,
+    newResourceKind?: ResourceKind,
+    places?: WorkflowPlace[]
+  }) => Promise<any>;
   @bindable cancel: () => void;
   resource: Resource = new Resource();
   submitting: boolean = false;
   validationError: boolean = false;
   transition: WorkflowTransition;
+  places: WorkflowPlace[] = [];
   resourceKindIdsAllowedByParent: number[];
 
   private validationController: ValidationController;
@@ -44,6 +52,7 @@ export class ResourceForm {
   attached() {
     if (this.edit && this.edit.kind.workflow) {
       let params = this.router.currentInstruction.queryParams;
+      this.places = this.edit.currentPlaces;
       this.transition = this.edit.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
     }
     this.setResourceKindsAllowedByParent();
@@ -73,7 +82,7 @@ export class ResourceForm {
 
   @computedFrom('resource.kind', 'targetPlaces')
   get requiredMetadataIds(): number[] {
-    if (this.resource.kind) {
+    if (this.resource.kind && !this.skipValidation) {
       const restrictingMetadata: NumberMap<any> = convertToObject(this.targetPlaces.map(v => v.restrictingMetadataIds));
       const resourceKindMedatadaIds = this.resource.kind.metadataList.map(metadata => metadata.id);
       return flatten(
@@ -81,17 +90,13 @@ export class ResourceForm {
           numberKeysByValue(restrictingMetadata, RequirementState.REQUIRED),
           numberKeysByValue(restrictingMetadata, RequirementState.ASSIGNEE)
         ]
-      ).filter(metadataId => resourceKindMedatadaIds.includes(metadataId));
+      ).filter(metadataId => inArray(metadataId, resourceKindMedatadaIds));
     }
-  }
-
-  requiredMetadataIdsForTransition(): number[] {
-    const reasonCollection = this.resource.blockedTransitions[this.transition.id];
-    return reasonCollection ? reasonCollection.missingMetadataIds : [];
+    return [];
   }
 
   get showRequiredMetadataAndWorkflowInfo(): boolean {
-    return (!!this.transition || !this.editing) && this.resource.kind && !!this.resource.kind.workflow;
+    return (!!this.transition || !this.editing) && this.resource.kind && !!this.resource.kind.workflow && !this.skipValidation;
   }
 
   private setResourceKindsAllowedByParent() {
@@ -152,14 +157,20 @@ export class ResourceForm {
     const transitionId = this.transition && this.transition.id;
     this.submitting = true;
     this.validationError = false;
-    this.validationController.validate().then(result => {
-      if (result.valid) {
-        return this.submit({savedResource: this.resource, transitionId})
-          .then(() => this.editing || (this.resource = new Resource));
-      } else {
-        this.validationError = true;
-      }
-    }).finally(() => this.submitting = false);
+    if (this.skipValidation) {
+      this.resource.contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
+      return this.submit({savedResource: this.resource, transitionId, newResourceKind: this.resource.kind, places: this.places})
+        .then(() => this.editing || (this.resource = new Resource)).finally(() => this.submitting = false);
+    } else {
+      this.validationController.validate().then(result => {
+        if (result.valid) {
+          return this.submit({savedResource: this.resource, transitionId})
+            .then(() => this.editing || (this.resource = new Resource));
+        } else {
+          this.validationError = true;
+        }
+      }).finally(() => this.submitting = false);
+    }
   }
 
   openImportDialog() {

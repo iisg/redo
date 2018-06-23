@@ -5,7 +5,7 @@ resource-form {
     display: block;
   }
 
-  &, & > span, & > toggle-button, & > .resource-kind-chooser-with-cancel-button > * {
+  &, & > span, & > toggle-button, & > .resource-kind-chooser-with-cancel-button > *, & > .workflow-place-chooser-container {
     padding: $default-gap-size / 2;
   }
 
@@ -18,6 +18,17 @@ resource-form {
           height: 40px;
         }
       }
+    }
+  }
+
+  .workflow-place-chooser-container {
+    line-height: inherit;
+    p {
+      margin-top: 0;
+      font-weight: bold;
+    }
+    workflow-place-chooser {
+      flex: 1;
     }
   }
 

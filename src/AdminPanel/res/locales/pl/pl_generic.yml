@@ -51,6 +51,7 @@ Error {{code}}: Błąd {{code}}
 Close: Zamknij
 Show Profiler: Pokaż Profiler
 Remove: Usuń
+Manage: Zarządzaj
 Mark as initial: Oznacz jako początkowy
 New place: Nowy stan
 No transitions from current place.: Brak wyjść z obecnego stanu.
@@ -177,3 +178,4 @@ Administrator of the resource classes: Administrator klas zasobów
 No roles.: Brak ról.
 Add tool: Dodaj mechanizm
 Additional actions when entering this state: Dodatkowe akcje przy wejściu do stanu
+Places in workflow: Stany w procesie

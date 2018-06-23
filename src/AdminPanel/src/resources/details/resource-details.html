@@ -6,6 +6,7 @@
     <require from="../list/resources-list"></require>
     <require from="common/components/buttons/remove-button.html"></require>
     <require from="common/components/buttons/edit-button.html"></require>
+    <require from="common/components/buttons/manage-button.html"></require>
     <require from="users/details/users-in-group"></require>
     <require from="users/details/user-roles"></require>
 
@@ -28,6 +29,13 @@
                     <remove-button if.one-time="resource.kind.id > 0"
                         disabled.bind="resource.pendingRequest"
                         click.delegate="remove()"></remove-button>
+                </template>
+                <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
+                    <manage-button if.bind="!isFormOpenedForGod"
+                        disabled.bind="resource.pendingRequest"
+                        class="orange"
+                        primary-label="Manage"
+                        click.delegate="showGodForm()"></manage-button>
                 </template>
             </div>
             <aup-tabs tabs.bind="resourceDetailsTabs.tabs"></aup-tabs>
@@ -55,7 +63,8 @@
                     <resource-form else
                         resource-class.bind="resource.resourceClass"
                         edit.bind="resource"
-                        submit.call="saveEditedResource(savedResource, transitionId)"
+                        skip-validation.bind="isFormOpenedForGod"
+                        submit.call="saveEditedResource(savedResource, transitionId, newResourceKind, places)"
                         cancel.call="hideForm()"></resource-form>
                 </div>
             </aup-tab-pane>

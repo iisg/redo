@@ -64,8 +64,8 @@ export class ResourcesList {
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']);
     this.sortBy = safeJsonParse(parameters['sortBy']);
     this.sortBy = this.sortBy ? this.sortBy : [new ResourceSort('id', SortDirection.DESC)];
-    this.updateURL(true);
     this.fetchResources();
+    this.updateURL(true);
     this.activated = true;
   }
 

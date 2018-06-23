@@ -15,6 +15,7 @@ use Repeka\Domain\UseCase\Resource\ResourceTopLevelPathQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
+use Repeka\Domain\UseCase\ResourceManagement\ResourceGodUpdateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -99,11 +100,24 @@ class ResourcesController extends ApiController {
      * @see http://stackoverflow.com/questions/24385301/symfony-rest-file-upload-over-put-method
      */
     public function putAction(Request $request, ResourceEntity $resource, ResourceContents $resourceContents) {
-        $transitionId = $request->get('transitionId', '');
-        $command = ($transitionId === '')
-            ? new ResourceUpdateContentsCommand($resource, $resourceContents, $this->getUser())
-            : new ResourceTransitionCommand($resource, $resourceContents, $transitionId, $this->getUser());
-        $resource = $this->handleCommand($command);
+        $godEdit = $request->headers->get('god-edit');
+        if ($godEdit) {
+            $kindId = $request->get('newKindId');
+            $placesIds = $request->get('placesIds', []);
+            $command = ResourceGodUpdateCommand::builder()
+                ->setResource($resource)
+                ->setNewContents($resourceContents)
+                ->changeResourceKind($kindId)
+                ->changePlaces($placesIds)
+                ->build();
+            $resource = $this->handleCommand($command);
+        } else {
+            $transitionId = $request->get('transitionId', '');
+            $command = ($transitionId === '')
+                ? new ResourceUpdateContentsCommand($resource, $resourceContents, $this->getUser())
+                : new ResourceTransitionCommand($resource, $resourceContents, $transitionId, $this->getUser());
+            $resource = $this->handleCommand($command);
+        }
         return $this->createJsonResponse($resource);
     }
 
