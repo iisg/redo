@@ -1,11 +1,11 @@
-import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
-import {ResourceKindRepository} from 'resources-config/resource-kind/resource-kind-repository';
-import {ResourceKind} from 'resources-config/resource-kind/resource-kind';
+import {EventAggregator, Subscription} from "aurelia-event-aggregator";
+import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {NavigationInstruction, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
 import {autoinject} from "aurelia-dependency-injection";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {I18N} from "aurelia-i18n";
-import {ContextResourceClass} from 'resources/context/context-resource-class';
+import {ContextResourceClass} from "resources/context/context-resource-class";
 import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
 
 @autoinject

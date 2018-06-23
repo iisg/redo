@@ -26,6 +26,17 @@ export class ResourceRepository extends ApiRepository<Resource> {
       .then(response => this.toEntity(response.content));
   }
 
+  updateResourceWithNoValidation(resource: Resource, newKindId: number, placesIds: string[]): Promise<Resource> {
+    const params = {newKindId, placesIds};
+    return this.httpClient.createRequest(this.oneEntityEndpoint(resource))
+      .asPost()
+      .withHeader("GOD-EDIT", "true")
+      .withContent(this.toBackend(resource))
+      .withParams(params)
+      .send()
+      .then(response => this.toEntity(response.content));
+  }
+
   @cachedResponse(forOneMinute())
   public getHierarchy(id: number): Promise<Resource[]> {
     const request = this.httpClient.createRequest(this.oneEntityEndpoint(id) + '/hierarchy').asGet();

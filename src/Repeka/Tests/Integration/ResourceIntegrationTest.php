@@ -48,6 +48,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     private $childResource;
     /** @var  ResourceWorkflowPlace */
     private $workflowPlace1;
+    /** @var  ResourceWorkflowPlace */
+    private $workflowPlace2;
     /** @var ResourceWorkflowTransition */
     private $transition;
 
@@ -80,12 +82,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             ['resourceKind' => [-1]]
         );
         $this->workflowPlace1 = new ResourceWorkflowPlace(['PL' => 'key1', 'EN' => 'key1'], 'p1', [], [], [], [$this->metadata3->getId()]);
-        $workflowPlace2 = new ResourceWorkflowPlace(['PL' => 'key2', 'EN' => 'key2'], 'p2', [], [], [], [$this->metadata4->getId()]);
+        $this->workflowPlace2 = new ResourceWorkflowPlace(['PL' => 'key2', 'EN' => 'key2'], 'p2', [], [], [], [$this->metadata4->getId()]);
         $this->transition = new ResourceWorkflowTransition(['PL' => 'key3', 'EN' => 'key3'], ['p1'], ['p2'], 't1');
         $workflow = $this->createWorkflow(
             ['PL' => 'Workflow', 'EN' => 'Workflow'],
             'books',
-            [$this->workflowPlace1, $workflowPlace2],
+            [$this->workflowPlace1, $this->workflowPlace2],
             [$this->transition]
         );
         $sampleResourceWorkflowDriverFactory = new SampleResourceWorkflowDriverFactory($this->createMock(ResourceWorkflowDriver::class));
@@ -358,5 +360,111 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceRepository $repository */
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         $this->assertTrue($repository->exists($this->parentResource->getId()));
+    }
+
+    public function testChangingResourceKindAsAdmin() {
+        $client = $this->createAdminClient();
+        $endpoint = self::oneEntityEndpoint($this->resource);
+        $client->apiRequest(
+            'POST',
+            $endpoint . '?' . http_build_query(['newKindId' => $this->resourceKindWithWorkflow->getId()]),
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => json_encode($this->resource->getContents()),
+            ],
+            [],
+            [],
+            ['HTTP_GOD-EDIT' => true]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $edited */
+        $edited = $repository->findOne($this->resource->getId());
+        $this->assertEquals($this->resourceKindWithWorkflow->getId(), $edited->getKind()->getId());
+    }
+
+    public function testChangingParentResource() {
+        $client = $this->createAdminClient();
+        $endpoint = self::oneEntityEndpoint($this->childResource);
+        $client->apiRequest(
+            'POST',
+            $endpoint,
+            [
+                'id' => $this->childResource->getId(),
+                'newKindId' => $this->resourceKind->getId(),
+                'contents' => json_encode(
+                    [
+                        -1 => [$this->resource->getId()],
+                        $this->metadata1->getId() => ['Test value for child'],
+                    ]
+                ),
+            ],
+            [],
+            [],
+            ['HTTP_GOD-EDIT' => true]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $edited */
+        $edited = $repository->findOne($this->childResource->getId());
+        $this->assertEquals([$this->resource->getId()], $edited->getContents()->getValues(-1));
+    }
+
+    public function testChangingPlaces() {
+        $client = $this->createAdminClient();
+        $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
+        $client->apiRequest(
+            'POST',
+            $endpoint . '?' . http_build_query(['placesIds' => [$this->workflowPlace2->getId()]]),
+            [
+                'id' => $this->resourceWithWorkflow->getId(),
+                'kindId' => $this->resourceWithWorkflow->getId(),
+                'contents' => json_encode($this->resourceWithWorkflow->getContents()),
+            ],
+            [],
+            [],
+            ['HTTP_GOD-EDIT' => true]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $edited */
+        $edited = $repository->findOne($this->resourceWithWorkflow->getId());
+        $this->assertEquals([$this->workflowPlace2->getId() => 1], $edited->getMarking());
+    }
+
+    public function testEditPassWhenLackOfAdminRoles() {
+        $this->executeCommand('repeka:create-user tester tester');
+        $client = $this->createAuthenticatedClient('tester', 'tester');
+        $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
+        $client->apiRequest(
+            'POST',
+            $endpoint,
+            [
+                'id' => $this->resourceWithWorkflow->getId(),
+                'kindId' => $this->resourceWithWorkflow->getId(),
+                'contents' => json_encode($this->resourceWithWorkflow->getContents()),
+            ]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+    }
+
+    public function testGodEditFailsWhenLackOfAdminRoles() {
+        $this->executeCommand('repeka:create-user tester tester');
+        $client = $this->createAuthenticatedClient('tester', 'tester');
+        $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
+        $client->apiRequest(
+            'POST',
+            $endpoint . '?' . http_build_query(['placesIds' => [$this->workflowPlace2->getId()]]),
+            [
+                'id' => $this->resourceWithWorkflow->getId(),
+                'kindId' => $this->resourceWithWorkflow->getId(),
+                'contents' => json_encode($this->resourceWithWorkflow->getContents()),
+            ],
+            [],
+            [],
+            ['HTTP_GOD-EDIT' => true]
+        );
+        $this->assertStatusCode(403, $client->getResponse());
     }
 }

@@ -83,9 +83,11 @@ class ResourceTransitionCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testMovingFilesWhenCreatingResource() {
         $fileBaseMetadataId = 1;
-        $resourceKind = $this->createResourceKindMock(1, 'books', [
-            $this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),
-        ]);
+        $resourceKind = $this->createResourceKindMock(
+            1,
+            'books',
+            [$this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),]
+        );
         $contents = ResourceContents::fromArray([$fileBaseMetadataId => []]);
         $resource = new ResourceEntity($resourceKind, ResourceContents::empty());
         $command = new ResourceTransitionCommand(

@@ -6,7 +6,7 @@ import {BindingSignaler} from "aurelia-templating-resources";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
-import {ContextResourceClass} from 'resources/context/context-resource-class';
+import {ContextResourceClass} from "resources/context/context-resource-class";
 import {Workflow} from "../workflow";
 import {WorkflowRepository} from "../workflow-repository";
 
@@ -65,7 +65,10 @@ export class WorkflowDetails implements RoutableComponentActivate {
   toggleEditForm() {
     // link can't be generated in the view with route-href because it is impossible to set replace:true there
     // see https://github.com/aurelia/templating-router/issues/54
-    this.router.navigateToRoute('workflows/details', {id: this.workflow.id, action: this.editing ? undefined : 'edit'}, {replace: true});
+    this.router.navigateToRoute(
+      'workflows/details',
+      {id: this.workflow.id, action: this.editing ? undefined : 'edit'}, {replace: true}
+    );
   }
 
   update(): Promise<any> {

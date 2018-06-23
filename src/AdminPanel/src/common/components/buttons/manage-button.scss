@@ -1,0 +1,7 @@
+@import "../../styles";
+
+manage-button {
+  &.orange {
+    @include toggle-button($orange);
+  }
+}

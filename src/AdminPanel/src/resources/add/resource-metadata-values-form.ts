@@ -13,6 +13,7 @@ export class ResourceMetadataValuesForm {
   @bindable(changeHandler('resourceDataChanged')) resource: Resource;
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable @booleanAttribute required: boolean = false;
+  @bindable skipValidation: boolean = false;
   @bindable validationController: ValidationController;
 
   valueTable: Element;

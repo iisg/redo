@@ -1,0 +1,12 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+
+    <dropdown-select containerless
+        values.bind="workflowPlaces"
+        value.bind="value"
+        multiple>
+        <template replace-part="option-template">
+            ${option.label | inCurrentLanguage}
+        </template>
+    </dropdown-select>
+</template>

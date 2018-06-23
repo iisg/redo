@@ -27,7 +27,8 @@
             validation-controller.bind="validationController"
             disabled.bind="editingDisabledForMetadata(metadata) & signal:'metadata-validators-changed'"
             values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id] & signal:'metadata-validators-changed'"
-            required.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"></resource-metadata-values-form>
+            required.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
+            skip-validation.bind="skipValidation"></resource-metadata-values-form>
     </template>
 
 </template>

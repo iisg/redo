@@ -1,5 +1,6 @@
 <template>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
+    <require from="common\components\workflow\workflow-place-chooser\workflow-place-chooser"></require>
     <require from="common/components/buttons/toggle-button"></require>
     <require from="./resource-form-generated"></require>
     <require from="workflows/details/transitions/workflow-froms-tos-display"></require>
@@ -12,7 +13,7 @@
         ${'Edit resource before transition' | resourceClassTranslation:resourceClass}</span>
     <span if.bind="!editing"
         class="page-title">${'Add new resource' | resourceClassTranslation:resourceClass}</span>
-    <div if.bind="!editing"
+    <div if.bind="!editing || skipValidation"
         class="resource-kind-chooser-with-cancel-button">
         <resource-kind-chooser
             resource-class.bind="resourceClass"
@@ -22,6 +23,12 @@
             class="orange"
             primary-label="Close"
             click.delegate="cancel()"></cancel-button>
+    </div>
+    <div if.bind="skipValidation && resource.kind.workflow"
+        class="workflow-place-chooser-container">
+        <p>${'Places in workflow' | t}:</p>
+        <workflow-place-chooser workflow-places.bind="resource.kind.workflow.places"
+            value.bind="places"></workflow-place-chooser>
     </div>
     <workflow-froms-tos-display if.bind="showRequiredMetadataAndWorkflowInfo"
         transition.bind="transition"
@@ -40,7 +47,7 @@
                 resource-kind.bind="resource.kind"
                 resource.bind="resource"
                 parent.bind="parent"
-                resource-class.bind="resourceClass"
+                skip-validation.bind="skipValidation"
                 validation-controller.bind="validationController"
                 contents-validation.bind="resource.contents & validate"
                 target-places.bind="targetPlaces"
