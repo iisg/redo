@@ -7,6 +7,7 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @SuppressWarnings("PHPMD.UnusedLocalVariable")
@@ -16,9 +17,12 @@ class FirewallMiddlewareTest extends \PHPUnit_Framework_TestCase {
     private $middleware;
 
     private $noopCallback;
+    /** @var ContainerInterface|\PHPUnit_Framework_MockObject_MockObject */
+    private $container;
 
     protected function setUp() {
-        $this->middleware = new FirewallMiddleware();
+        $this->container = $this->createMock(ContainerInterface::class);
+        $this->middleware = new FirewallMiddleware($this->container);
         $this->noopCallback = function () {
         };
     }

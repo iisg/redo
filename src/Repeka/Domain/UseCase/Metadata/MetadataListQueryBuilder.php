@@ -5,7 +5,9 @@ use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class MetadataListQueryBuilder {
+    private $systemMetadataIds = [];
     private $ids = [];
     private $names = [];
     /** @var ?Metadata */
@@ -13,6 +15,11 @@ class MetadataListQueryBuilder {
     private $resourceClasses;
     private $onlyTopLevel = false;
     private $controls;
+
+    public function addSystemMetadataIds(array $systemMetadataIds): MetadataListQueryBuilder {
+        $this->systemMetadataIds = $systemMetadataIds;
+        return $this;
+    }
 
     public function filterByIds(array $ids): MetadataListQueryBuilder {
         $this->ids = $ids;
@@ -67,7 +74,8 @@ class MetadataListQueryBuilder {
             $this->resourceClasses,
             $this->parent,
             $this->controls,
-            $this->onlyTopLevel
+            $this->onlyTopLevel,
+            $this->systemMetadataIds
         );
     }
 }

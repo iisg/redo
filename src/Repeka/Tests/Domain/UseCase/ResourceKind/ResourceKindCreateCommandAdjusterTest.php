@@ -29,6 +29,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
             MetadataRepository::class,
             [
                 SystemMetadata::PARENT()->toMetadata(),
+                SystemMetadata::REPRODUCTOR()->toMetadata(),
                 $this->createMetadataMock(55),
                 $realMetadata,
             ]
@@ -94,38 +95,47 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         $metadata = $this->createMetadataMock();
         $command = new ResourceKindCreateCommand([], [$metadata, $metadata, $metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
-        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertCount(3, $adjustedCommand->getMetadataList());
     }
 
     public function testAddingParentMetadataIfMissing() {
         $metadata = $this->createMetadataMock();
         $command = new ResourceKindCreateCommand([], [$metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
-        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertCount(3, $adjustedCommand->getMetadataList());
         $ids = EntityUtils::mapToIds($adjustedCommand->getMetadataList());
         $this->assertContains(SystemMetadata::PARENT, $ids);
+    }
+
+    public function testAddingReproductorMetadataIfMissing() {
+        $metadata = $this->createMetadataMock();
+        $command = new ResourceKindCreateCommand([], [$metadata]);
+        $adjustedCommand = $this->adjuster->adjustCommand($command);
+        $this->assertCount(3, $adjustedCommand->getMetadataList());
+        $ids = EntityUtils::mapToIds($adjustedCommand->getMetadataList());
+        $this->assertContains(SystemMetadata::REPRODUCTOR, $ids);
     }
 
     public function testNotAddingParentMetadataIfExplicitlyAdded() {
         $metadata = $this->createMetadataMock();
         $command = new ResourceKindCreateCommand([], [SystemMetadata::PARENT()->toMetadata(), $metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
-        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertCount(3, $adjustedCommand->getMetadataList());
         $ids = EntityUtils::mapToIds($adjustedCommand->getMetadataList());
-        $this->assertEquals([SystemMetadata::PARENT, 1], $ids);
+        $this->assertEquals([SystemMetadata::PARENT, 1, SystemMetadata::REPRODUCTOR], $ids);
     }
 
     public function testAddingMetadataFromArray() {
         $command = new ResourceKindCreateCommand([], [['id' => 55]]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
-        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertCount(3, $adjustedCommand->getMetadataList());
         $this->assertEquals(55, $adjustedCommand->getMetadataList()[0]->getId());
     }
 
     public function testMixingRealAndArrayMetadata() {
         $command = new ResourceKindCreateCommand([], [['id' => 55], $this->createMetadataMock()]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
-        $this->assertCount(3, $adjustedCommand->getMetadataList());
+        $this->assertCount(4, $adjustedCommand->getMetadataList());
     }
 
     public function test404IfNonExistingMetadata() {
@@ -137,7 +147,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
     public function testAddingMetadataWithOverrides() {
         $command = new ResourceKindCreateCommand([], [['id' => 11, 'label' => ['PL' => 'Nadpisana']]]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
-        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertCount(3, $adjustedCommand->getMetadataList());
         $this->assertEquals(11, $adjustedCommand->getMetadataList()[0]->getId());
         $this->assertEquals('Nadpisana', $adjustedCommand->getMetadataList()[0]->getLabel()['PL']);
     }
@@ -145,7 +155,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
     public function testAddingMetadataWithOverriddenConstraints() {
         $command = new ResourceKindCreateCommand([], [['id' => 11, 'label' => ['PL' => 'Nadpisana'], 'constraints' => ['maxCount' => 1]]]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
-        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertCount(3, $adjustedCommand->getMetadataList());
         $this->assertEquals(11, $adjustedCommand->getMetadataList()[0]->getId());
         $this->assertEquals('Nadpisana', $adjustedCommand->getMetadataList()[0]->getLabel()['PL']);
         $this->assertEquals(['maxCount' => 1], $adjustedCommand->getMetadataList()[0]->getConstraints());
@@ -157,7 +167,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
             [['id' => 11, 'label' => ['PL' => 'Nadpisana'], 'constraints' => ['maxCount' => 1, 'unicornCount' => 43]]]
         );
         $adjustedCommand = $this->adjuster->adjustCommand($command);
-        $this->assertCount(2, $adjustedCommand->getMetadataList());
+        $this->assertCount(3, $adjustedCommand->getMetadataList());
         $this->assertEquals(11, $adjustedCommand->getMetadataList()[0]->getId());
         $this->assertEquals('Nadpisana', $adjustedCommand->getMetadataList()[0]->getLabel()['PL']);
         $this->assertEquals(['maxCount' => 1], $adjustedCommand->getMetadataList()[0]->getConstraints());

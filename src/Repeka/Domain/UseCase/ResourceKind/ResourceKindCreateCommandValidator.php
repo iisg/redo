@@ -47,11 +47,11 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('label', $this->notBlankInAllLanguagesRule)
-            // length 2 because Parent Metadata is obligatory and one chosen by user
+            // length 3 because Parent and Reproductor Metadata are obligatory and one chosen by user
             ->attribute(
                 'metadataList',
                 Validator::arrayType()
-                    ->length(2)
+                    ->length(3)
                     ->each(Validator::instance(Metadata::class))
                     ->each(Validator::callback([$this, 'overrideMetadataValidator']))
                     ->callback([$this, 'allMetadataOfTheSameResourceClass'])

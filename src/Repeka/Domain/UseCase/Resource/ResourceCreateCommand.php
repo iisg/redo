@@ -4,12 +4,13 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Cqrs\AuditedCommand;
+use Repeka\Domain\Cqrs\FirewalledCommand;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 
-class ResourceCreateCommand extends ResourceClassAwareCommand implements AuditedCommand {
+class ResourceCreateCommand extends ResourceClassAwareCommand implements AuditedCommand, FirewalledCommand {
     private $kind;
     private $contents;
 
@@ -28,7 +29,11 @@ class ResourceCreateCommand extends ResourceClassAwareCommand implements Audited
         return $this->contents;
     }
 
+    public function isTopLevel(): bool {
+        return empty($this->contents->getValues(SystemMetadata::PARENT));
+    }
+
     public function getRequiredRole(): ?SystemRole {
-        return $this->contents->getValues(SystemMetadata::PARENT) ? SystemRole::OPERATOR() : parent::getRequiredRole();
+        return $this->isTopLevel() ? SystemRole::ADMIN() : SystemRole::OPERATOR();
     }
 }

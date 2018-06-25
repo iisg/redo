@@ -58,6 +58,8 @@ class ResourceKind implements Identifiable, HasResourceClass {
     public function getMetadataById(int $id): Metadata {
         if ($id == SystemMetadata::PARENT) {
             return SystemMetadata::PARENT()->toMetadata();
+        } elseif ($id == SystemMetadata::REPRODUCTOR) {
+            return SystemMetadata::REPRODUCTOR()->toMetadata();
         }
         foreach ($this->getMetadataList() as $metadata) {
             if ($metadata->getId() === $id) {

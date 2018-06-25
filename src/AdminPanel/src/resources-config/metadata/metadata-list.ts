@@ -4,6 +4,7 @@ import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
 import {Router} from "aurelia-router";
 import {ContextResourceClass} from "../../resources/context/context-resource-class";
+import {SystemMetadata} from "./system-metadata";
 
 @autoinject
 export class MetadataList {
@@ -36,6 +37,7 @@ export class MetadataList {
     query = this.parentMetadata
       ? query.filterByParentId(this.parentMetadata.id)
       : query.filterByResourceClasses(this.resourceClass).onlyTopLevel();
+    query = query.addSystemMetadataIds(SystemMetadata.REPRODUCTOR.id);
     this.metadataList = await query.get();
     this.progressBar = false;
   }

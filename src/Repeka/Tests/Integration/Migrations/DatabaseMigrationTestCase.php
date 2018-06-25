@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration\Migrations;
 
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\IntegrationTestCase;
 
 abstract class DatabaseMigrationTestCase extends IntegrationTestCase {
@@ -41,6 +42,9 @@ abstract class DatabaseMigrationTestCase extends IntegrationTestCase {
 
     protected function migrate(string $toVersion = '') {
         $this->executeCommand(trim('doctrine:migrations:migrate ' . $toVersion));
-        $this->resetEntityManager();
+        $this->resetEntityManager(MetadataRepository::class);
+        if (!$toVersion) {
+            $this->executeCommand('repeka:initialize --skip-backup --skip-migrations');
+        }
     }
 }
