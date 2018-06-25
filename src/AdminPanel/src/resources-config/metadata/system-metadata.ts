@@ -21,4 +21,10 @@ export class SystemMetadata {
     baseId: -3,
     constraints: new MetadataConstraints({resourceKind: [SystemResourceKinds.USER_ID]}),
   });
+  static readonly REPRODUCTOR: Metadata = $.extend(new Metadata(), {
+    id: -4,
+    control: 'relationship',
+    baseId: -4,
+    constraints: new MetadataConstraints({maxCount: 1}),
+  });
 }

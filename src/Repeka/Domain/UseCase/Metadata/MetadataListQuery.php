@@ -9,6 +9,7 @@ use Repeka\Domain\Entity\MetadataControl;
 class MetadataListQuery extends AbstractCommand {
     use RequireOperatorRole;
 
+    private $systemMetadataIds;
     private $ids;
     private $names;
     private $parent;
@@ -25,7 +26,8 @@ class MetadataListQuery extends AbstractCommand {
         ?array $resourceClasses,
         ?Metadata $parent,
         ?array $controls,
-        ?bool $onlyTopLevel
+        ?bool $onlyTopLevel,
+        ?array $systemMetadataIds
     ) {
         $query = new self();
         $query->ids = $ids ?: [];
@@ -34,11 +36,17 @@ class MetadataListQuery extends AbstractCommand {
         $query->parent = $parent;
         $query->controls = $controls ?: [];
         $query->onlyTopLevel = !!$onlyTopLevel;
+        $query->systemMetadataIds = $systemMetadataIds ?: [];
         return $query;
     }
 
     public static function builder(): MetadataListQueryBuilder {
         return new MetadataListQueryBuilder();
+    }
+
+    /** @return int[] */
+    public function getSystemMetadataIds(): array {
+        return $this->systemMetadataIds;
     }
 
     /** @return int[] */

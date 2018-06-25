@@ -11,11 +11,13 @@ use Repeka\Domain\Utils\EntityUtils;
  * @method static SystemMetadata PARENT()
  * @method static SystemMetadata USERNAME()
  * @method static SystemMetadata GROUP_MEMBER()
+ * @method static SystemMetadata REPRODUCTOR()
  */
 class SystemMetadata extends Enum {
     const PARENT = -1;
     const USERNAME = -2;
     const GROUP_MEMBER = -3;
+    const REPRODUCTOR = -4;
 
     public function toMetadata() {
         $value = $this->getValue();
@@ -44,6 +46,18 @@ class SystemMetadata extends Enum {
                 MetadataControl::RELATIONSHIP(),
                 'Group member',
                 ['EN' => 'Group member', 'PL' => 'Członek grupy']
+            );
+        } elseif ($value == self::REPRODUCTOR) {
+            $metadata = Metadata::create(
+                '',
+                MetadataControl::RELATIONSHIP(),
+                'Reproductor',
+                ['EN' => 'Reproductor', 'PL' => 'Reproduktor'],
+                [],
+                [],
+                [],
+                false,
+                true
             );
         }
         /** @noinspection PhpUndefinedVariableInspection */

@@ -9,6 +9,17 @@ export class MetadataListQuery {
   constructor(private httpClient: DeduplicatingHttpClient, private endpoint: string, private entitySerializer: EntitySerializer) {
   }
 
+  public addSystemMetadataIds(systemMetadataIds: number | number[]): MetadataListQuery {
+    if (!Array.isArray(systemMetadataIds)) {
+      systemMetadataIds = [systemMetadataIds as number];
+    }
+    if (!this.params.systemMetadataIds) {
+      this.params.systemMetadataIds = [];
+    }
+    (systemMetadataIds as number[]).forEach(systemMetadataId => this.params.systemMetadataIds.push(systemMetadataId));
+    return this;
+  }
+
   public filterByIds(ids: any[]): MetadataListQuery {
     this.params.ids = ids;
     return this;

@@ -14,8 +14,9 @@ import {PageResult} from "../page-result";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ResourceSort, SortDirection} from "../resource-sort";
+import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproductor";
 
-@autoinject
+@autoinject()
 export class ResourcesList {
   private readonly RESULTS_PER_PAGE_KEY = 'resourcesListElementsPerPage';
 
@@ -41,7 +42,8 @@ export class ResourcesList {
               private resourceKindRepository: ResourceKindRepository,
               private eventAggregator: EventAggregator,
               private router: Router,
-              private hasRole: HasRoleValueConverter) {
+              private hasRole: HasRoleValueConverter,
+              private isReproductor: CurrentUserIsReproductorValueConverter) {
   }
 
   bind() {
@@ -215,7 +217,7 @@ export class ResourcesList {
   @computedFrom("disableAddResource", "parentResource", "parentResource.pendingRequest")
   get addingResourcesDisabled(): boolean {
     return this.disableAddResource
-      || (this.parentResource && this.parentResource.pendingRequest)
+      || (this.parentResource && (this.parentResource.pendingRequest || !this.isReproductor.toView(this.parentResource)))
       || (!this.parentResource && !this.hasRole.toView('ADMIN', this.resourceClass));
   }
 }

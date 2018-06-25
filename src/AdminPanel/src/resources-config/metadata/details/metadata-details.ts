@@ -60,12 +60,14 @@ export class MetadataDetails implements RoutableComponentActivate {
       .clear()
       .addTab('details', this.i18n.tr('Details'))
       .addTab('child-metadata', () => `${this.i18n.tr('Submetadata kinds')} (${this.numOfChildren})`)
-      .addTab('constraints', this.i18n.tr('Constraints'))
-      .addTab(
+      .addTab('constraints', this.i18n.tr('Constraints'));
+    if (this.metadata.resourceClass) {
+      this.metadataDetailsTabs.addTab(
         'resource-kinds',
         () => `${this.i18n.tr('resource_classes::' + this.metadata.resourceClass + '//resource-kinds')} (${this.resourceKindList.length})`
-      )
-      .setActiveTabId(activeTabId);
+      );
+    }
+    this.metadataDetailsTabs.setActiveTabId(activeTabId);
   }
 
   @computedFrom('metadata.constraints', 'metadata.control')

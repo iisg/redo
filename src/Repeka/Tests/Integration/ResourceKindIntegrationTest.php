@@ -73,12 +73,12 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $responseItem = $responseContent[1];
         $this->assertEquals($this->resourceKind->getId(), $responseItem->id);
         $this->assertEquals($this->resourceKind->getLabel(), self::objectToArray($responseItem->label));
-        $this->assertCount(3, $responseItem->metadataList);
+        $this->assertCount(4, $responseItem->metadataList);
         $sortedMetadata = ($responseItem->metadataList[0]->id == $this->metadata1->getId())
             ? $responseItem->metadataList
             : array_reverse($responseItem->metadataList);
-        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[1]->id);
-        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[0]->id);
+        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[2]->id);
+        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[1]->id);
     }
 
     public function testFetchingResourceKindsWithResourceClass() {
@@ -90,12 +90,12 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $responseItem = $responseContent[0];
         $this->assertEquals($this->resourceKind->getId(), $responseItem->id);
         $this->assertEquals($this->resourceKind->getLabel(), self::objectToArray($responseItem->label));
-        $this->assertCount(3, $responseItem->metadataList);
+        $this->assertCount(4, $responseItem->metadataList);
         $sortedMetadata = ($responseItem->metadataList[0]->id == $this->metadata1->getId())
             ? $responseItem->metadataList
             : array_reverse($responseItem->metadataList);
-        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[1]->id);
-        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[0]->id);
+        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[2]->id);
+        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[1]->id);
     }
 
     public function testCreatingResourceKind() {
@@ -126,7 +126,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         /** @var ResourceKind $createdResourceKind */
         $createdResourceKind = $resourceKindRepository->findOne($createdId);
         $this->assertEquals(['PL' => 'created', 'EN' => 'created'], $createdResourceKind->getLabel());
-        $this->assertCount(2, $createdResourceKind->getMetadataList());
+        $this->assertCount(3, $createdResourceKind->getMetadataList());
         $assignedMetadata = $createdResourceKind->getMetadataById($metadata->getId());
         $this->assertEquals($metadata->getControl(), $assignedMetadata->getControl());
         $this->assertEquals($metadata->getId(), $assignedMetadata->getId());
@@ -156,7 +156,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $resourceKind = $resourceKindRepository->findOne($this->resourceKind->getId());
         $this->assertEquals(['PL' => 'modified', 'EN' => 'modified'], $resourceKind->getLabel());
         $this->assertEquals(
-            [$this->metadata2->getId(), $this->metadata1->getId(), SystemMetadata::PARENT],
+            [$this->metadata2->getId(), $this->metadata1->getId(), SystemMetadata::PARENT, SystemMetadata::REPRODUCTOR],
             $resourceKind->getMetadataIds()
         );
     }

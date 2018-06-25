@@ -94,7 +94,9 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
 
   @computedFrom('resourceKind.metadataList', 'resourceKind.metadataList.length')
   get editableMetadataList(): Metadata[] {
-    return this.resourceKind.metadataList.filter(metadata => metadata.id != SystemMetadata.PARENT.id);
+    return this.resourceKind.metadataList
+      .filter(metadata => metadata.id != SystemMetadata.PARENT.id)
+      .filter(metadata => metadata.id != SystemMetadata.REPRODUCTOR.id);
   }
 
   get resourceChildConstraintMetadata(): Metadata {

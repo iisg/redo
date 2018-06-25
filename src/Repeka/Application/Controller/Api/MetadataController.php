@@ -61,6 +61,9 @@ class MetadataController extends ApiController {
         if ($ids = $request->query->get('ids')) {
             $queryBuilder->filterByIds($ids);
         }
+        if ($systemMetadataIds = $request->query->get('systemMetadataIds')) {
+            $queryBuilder->addSystemMetadataIds($systemMetadataIds);
+        }
         $metadataList = $this->handleCommand($queryBuilder->build());
         return $this->createJsonResponse($metadataList);
     }

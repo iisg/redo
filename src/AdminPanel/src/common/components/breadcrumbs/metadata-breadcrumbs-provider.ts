@@ -4,10 +4,13 @@ import {BreadcrumbItem, BreadcrumbsProvider} from "./breadcrumbs";
 import {I18N} from "aurelia-i18n";
 import {MetadataRepository} from "../../../resources-config/metadata/metadata-repository";
 import {Metadata} from "../../../resources-config/metadata/metadata";
+import {ResourceClassTranslationValueConverter} from "../../value-converters/resource-class-translation-value-converter";
 
 @autoinject
 export class MetadataBreadcrumbsProvider implements BreadcrumbsProvider {
-  constructor(private metadataRepository: MetadataRepository, private i18n: I18N) {
+  constructor(private metadataRepository: MetadataRepository,
+              private i18n: I18N,
+              private resourceClassTranslationValueConverter: ResourceClassTranslationValueConverter) {
   }
 
   async getBreadcrumbs(navigationInstruction: NavigationInstruction): Promise<BreadcrumbItem[]> {
@@ -18,7 +21,7 @@ export class MetadataBreadcrumbsProvider implements BreadcrumbsProvider {
       breadcrumbs.unshift(this.metadataBreadcrumb(parent));
     }
     breadcrumbs.unshift({
-      label: this.i18n.tr(`resource_classes::${metadata.resourceClass}//metadata`),
+      label: this.resourceClassTranslationValueConverter.toView('metadata', metadata.resourceClass),
       route: 'metadata',
       params: {resourceClass: metadata.resourceClass}
     });

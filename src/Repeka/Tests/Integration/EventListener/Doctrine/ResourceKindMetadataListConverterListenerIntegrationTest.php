@@ -29,12 +29,12 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
                 [$this->handleCommandBypassingFirewall(new MetadataGetQuery(2))]
             )
         );
-        $this->assertCount(2, $resourceKind->getMetadataList());
+        $this->assertCount(3, $resourceKind->getMetadataList());
         $this->assertInstanceOf(Metadata::class, $resourceKind->getMetadataList()[0]);
         $this->assertEquals(2, $resourceKind->getMetadataList()[0]->getId());
         $this->getEntityManager()->clear();
         $resourceKind = $this->handleCommandBypassingFirewall(new ResourceKindQuery($resourceKind->getId()));
-        $this->assertCount(2, $resourceKind->getMetadataList());
+        $this->assertCount(3, $resourceKind->getMetadataList());
         $this->assertInstanceOf(Metadata::class, $resourceKind->getMetadataList()[0]);
     }
 
@@ -46,13 +46,13 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
                 [['id' => 2, 'label' => ['PL' => 'Nowa labelka w rodzaju']]]
             )
         );
-        $this->assertCount(2, $resourceKind->getMetadataList());
+        $this->assertCount(3, $resourceKind->getMetadataList());
         $this->assertInstanceOf(Metadata::class, $resourceKind->getMetadataList()[0]);
         $this->assertEquals(2, $resourceKind->getMetadataList()[0]->getId());
         $this->assertEquals('Nowa labelka w rodzaju', $resourceKind->getMetadataById(2)->getLabel()['PL']);
         $this->getEntityManager()->clear();
         $resourceKind = $this->handleCommandBypassingFirewall(new ResourceKindQuery($resourceKind->getId()));
-        $this->assertCount(2, $resourceKind->getMetadataList());
+        $this->assertCount(3, $resourceKind->getMetadataList());
         $overriddenMetadata = $resourceKind->getMetadataById(2);
         $this->assertInstanceOf(Metadata::class, $overriddenMetadata);
         $this->assertEquals('Nowa labelka w rodzaju', $overriddenMetadata->getLabel()['PL']);
@@ -77,13 +77,13 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
                 $resourceKind->getDisplayStrategies()
             )
         );
-        $this->assertCount(3, $resourceKind->getMetadataList());
+        $this->assertCount(4, $resourceKind->getMetadataList());
         $this->assertInstanceOf(Metadata::class, $resourceKind->getMetadataList()[0]);
         $this->assertEquals(2, $resourceKind->getMetadataList()[0]->getId());
         $this->assertEquals(1, $resourceKind->getMetadataList()[1]->getId());
         $this->getEntityManager()->clear();
         $resourceKind = $this->handleCommandBypassingFirewall(new ResourceKindQuery($resourceKind->getId()));
-        $this->assertCount(3, $resourceKind->getMetadataList());
+        $this->assertCount(4, $resourceKind->getMetadataList());
         $this->assertInstanceOf(Metadata::class, $resourceKind->getMetadataList()[0]);
     }
 
@@ -95,11 +95,11 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
                 [['id' => 2], ['id' => SystemMetadata::PARENT], ['id' => 1]]
             )
         );
-        $this->assertCount(3, $resourceKind->getMetadataList());
-        $this->assertEquals([2, SystemMetadata::PARENT, 1], $resourceKind->getMetadataIds());
+        $this->assertCount(4, $resourceKind->getMetadataList());
+        $this->assertEquals([2, SystemMetadata::PARENT, 1, SystemMetadata::REPRODUCTOR], $resourceKind->getMetadataIds());
         $this->getEntityManager()->clear();
         $resourceKind = $this->handleCommandBypassingFirewall(new ResourceKindQuery($resourceKind->getId()));
-        $this->assertEquals([2, SystemMetadata::PARENT, 1], $resourceKind->getMetadataIds());
+        $this->assertEquals([2, SystemMetadata::PARENT, 1, SystemMetadata::REPRODUCTOR], $resourceKind->getMetadataIds());
     }
 
     public function testOverridesForDifferentResourceKindsDoNotInfluenceEachOther() {

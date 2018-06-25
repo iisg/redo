@@ -74,6 +74,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ['PL' => 'Labelka'],
             [
                 $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(SystemMetadata::REPRODUCTOR),
                 $this->createMetadataMock(),
             ]
         );
@@ -145,6 +146,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ['PL' => 'Labelka'],
             [
                 SystemMetadata::PARENT()->toMetadata(),
+                SystemMetadata::REPRODUCTOR()->toMetadata(),
                 $this->createMetadataMock(),
             ]
         );

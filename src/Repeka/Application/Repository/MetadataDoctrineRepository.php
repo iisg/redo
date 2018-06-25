@@ -97,6 +97,9 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         if ($query->getIds()) {
             $criteria = $criteria->andWhere(Criteria::expr()->in('id', $query->getIds()));
         }
+        if ($query->getSystemMetadataIds()) {
+            $criteria = $criteria->orWhere(Criteria::expr()->in('id', $query->getSystemMetadataIds()));
+        }
         if ($query->getNames()) {
             $names = array_map([Metadata::class, 'normalizeMetadataName'], $query->getNames());
             $criteria = $criteria->andWhere(Criteria::expr()->in('name', $names));

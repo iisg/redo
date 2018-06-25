@@ -30,10 +30,8 @@ class TransitionAssigneeChecker {
         $autoAssignMetadataIds = array_intersect($autoAssignMetadataIds, $resource->getKind()->getMetadataIds());
         $assigneeUserIds = $this->extractAssigneeIds($resource, $assigneeMetadataIds);
         $autoAssignUserIds = $this->extractAssigneeIds($resource, $autoAssignMetadataIds);
-        $executorUserIds = $executor->getUserGroupsIds();
-        $executorUserIds[] = $executor->getUserData()->getId();
-        $executorIsAssignee = count(array_intersect($assigneeUserIds, $executorUserIds)) != 0;
-        $executorIsAutoAssigned = count(array_intersect($autoAssignUserIds, $executorUserIds)) != 0;
+        $executorIsAssignee = $executor->belongsToAnyOfGivenUserGroupsIds($assigneeUserIds);
+        $executorIsAutoAssigned = $executor->belongsToAnyOfGivenUserGroupsIds($autoAssignUserIds);
         $noAssigneeMetadata = empty($assigneeMetadataIds);
         $noOneIsAutoAssigned = empty($autoAssignUserIds);
         $executorCanBeAutoAssigned = $noAssigneeMetadata && $noOneIsAutoAssigned;

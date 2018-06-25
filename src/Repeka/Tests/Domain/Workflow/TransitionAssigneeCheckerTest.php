@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Workflow;
 
+use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
@@ -22,8 +23,8 @@ class TransitionAssigneeCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->checker = new TransitionAssigneeChecker();
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->transition = $this->createWorkflowTransitionMock([], [], ['p']);
-        $this->executor = $this->createMockEntity(User::class, 1);
-        $this->executor->method('getUserData')->willReturn($this->createResourceMock(88));
+        $this->executor = new UserEntity();
+        $this->executor->setUserData($this->createResourceMock(88));
     }
 
     public function testGetAssigneeMetadataIds() {

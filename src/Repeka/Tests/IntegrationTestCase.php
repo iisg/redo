@@ -204,12 +204,15 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
 
     /**
      * Clears the cache of the EntityManager so it sees changes introduced by native SQL queries.
-     * @param EntityRepository[] ...$repositoriesToReset
+     * @param EntityRepository[]|string[] ...$repositoriesToReset
      */
     protected function resetEntityManager(...$repositoriesToReset) {
         $this->getEntityManager()->flush();
         $this->container->get('doctrine')->resetManager();
         foreach ($repositoriesToReset as $repository) {
+            if (is_string($repository)) {
+                $repository = $this->container->get($repository);
+            }
             EntityUtils::forceSetField($repository, $this->getEntityManager(), '_em');
         }
     }

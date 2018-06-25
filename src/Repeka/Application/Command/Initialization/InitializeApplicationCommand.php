@@ -12,7 +12,8 @@ class InitializeApplicationCommand extends ContainerAwareCommand {
         $this
             ->setName('repeka:initialize')
             ->setDescription('Initializes data in database required for the app to work properly.')
-            ->addOption('skip-backup');
+            ->addOption('skip-backup')
+            ->addOption('skip-migrations');
     }
 
     /** @inheritdoc */
@@ -23,7 +24,9 @@ class InitializeApplicationCommand extends ContainerAwareCommand {
         if (!$input->getOption('skip-backup')) {
             $this->getApplication()->run(new StringInput('db:backup'), $output);
         }
-        $this->getApplication()->run(new StringInput('doctrine:migrations:migrate --no-interaction --allow-no-migration'), $output);
+        if (!$input->getOption('skip-migrations')) {
+            $this->getApplication()->run(new StringInput('doctrine:migrations:migrate --no-interaction --allow-no-migration'), $output);
+        }
         FirewallMiddleware::bypass(
             function () use ($output) {
                 $this->getApplication()->run(new StringInput('repeka:initialize:system-languages'), $output);

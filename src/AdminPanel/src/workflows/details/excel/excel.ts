@@ -12,6 +12,7 @@ import {ResourceKind} from "../../../resources-config/resource-kind/resource-kin
 import {debounce, flatten} from "lodash";
 import {inArray} from "../../../common/utils/array-utils";
 import {ChangeEvent} from "../../../common/change-event";
+import {SystemMetadata} from "../../../resources-config/metadata/system-metadata";
 
 @autoinject
 export class Excel implements ComponentAttached {
@@ -28,6 +29,7 @@ export class Excel implements ComponentAttached {
   async attached() {
     this.metadataList = await this.metadataRepository.getListQuery()
       .filterByResourceClasses(this.workflow.resourceClass)
+      .addSystemMetadataIds(SystemMetadata.REPRODUCTOR.id)
       .onlyTopLevel()
       .get();
   }

@@ -8,6 +8,7 @@ use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
@@ -79,16 +80,45 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
         $this->handleCommandWithUserRoles($command, [SystemRole::OPERATOR()->roleName('books')]);
     }
 
-    public function testAllowedResourceCreationWhenOperatorAndParentGiven() {
+    public function testCannotAddSubresourceIfNoReproductorsSet() {
+        $this->expectException(InsufficientPrivilegesException::class);
+        $this->addSubBookToCategory();
+    }
+
+    public function testCanAddSubresourceIfReproductor() {
+        $category = $this->findResourceByContents([$this->findMetadataByName('nazwa_kategorii')->getId() => 'E-booki']);
+        $category->updateContents(
+            $category->getContents()->withReplacedValues(SystemMetadata::REPRODUCTOR, $this->getAdminUser()->getUserData()->getId())
+        );
+        $this->getEntityManager()->persist($category);
+        $this->resetEntityManager(ResourceRepository::class);
+        $resource = $this->addSubBookToCategory();
+        $this->assertNotNull($resource);
+        $this->assertTrue($resource->hasParent());
+        $this->assertEquals([$category->getId()], $resource->getValues(SystemMetadata::PARENT));
+    }
+
+    public function testCannotAddSubresourceIfSomeoneElseIsReproductor() {
+        $this->expectException(InsufficientPrivilegesException::class);
+        $category = $this->findResourceByContents([$this->findMetadataByName('nazwa_kategorii')->getId() => 'E-booki']);
+        $category->updateContents($category->getContents()->withReplacedValues(SystemMetadata::REPRODUCTOR, 666));
+        $this->getEntityManager()->persist($category);
+        $this->resetEntityManager(ResourceRepository::class);
+        $this->addSubBookToCategory();
+    }
+
+    private function addSubBookToCategory() {
+        $category = $this->findResourceByContents([$this->findMetadataByName('nazwa_kategorii')->getId() => 'E-booki']);
         $command = new ResourceCreateCommand(
-            $this->resourceKind,
+            $this->getPhpBookResource()->getKind(),
             ResourceContents::fromArray(
                 [
-                    SystemMetadata::PARENT => $this->getPhpBookResource()->getId(),
+                    $this->findMetadataByName('Tytuł')->getId() => 'Test',
+                    SystemMetadata::PARENT => $category->getId(),
                 ]
             )
         );
-        $this->handleCommandWithUserRoles($command, [SystemRole::OPERATOR()->roleName('books')]);
+        return $this->handleCommandWithUserRoles($command, [SystemRole::OPERATOR()->roleName('books')]);
     }
 
     private function handleCommandWithUserRoles(Command $command, array $roles) {
