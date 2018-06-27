@@ -1,7 +1,7 @@
 exports.config = {
   framework: 'jasmine',
   // seleniumAddress: 'http://localhost:4444/wd/hub',
-  specs: ['LoginTests.js', 'MetadataTypeTests.js', 'ResourceTypeTests.js'],
+  specs: ['LoginTests.js', 'MetadataTypeTests.js', 'ResourceTypeTests.js', 'ResourceTests.js'],
   getPageTimeout: 120000,
   allScriptsTimeout: 120000,
   multiCapabilities: [
