@@ -66,7 +66,9 @@ class ValueSetMatchesResourceKindRuleTest extends \PHPUnit_Framework_TestCase {
         try {
             $this->rule->forResourceKind($this->resourceKind)->assert(ResourceContents::fromArray([666 => '']));
         } catch (ValidationException $e) {
-            $this->assertContains('666', $e->getMessage());
+            $this->assertContains('666', $e->getName());
+            $this->assertContains('1', $e->getParam("originalMessage"));
+            $this->assertContains('2', $e->getParam("originalMessage"));
         }
     }
 
