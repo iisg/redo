@@ -5,6 +5,8 @@ use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -23,12 +25,15 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     private $resourceRepository;
     /** @var UserRepository */
     private $userRepository;
+    /** @var Metadata */
+    private $titleMetadata;
 
     public function setUp() {
         parent::setUp();
         $this->resourceRepository = $this->container->get(ResourceRepository::class);
         $this->userRepository = $this->container->get(UserRepository::class);
         $this->loadAllFixtures();
+        $this->titleMetadata = $this->findMetadataByName('Tytuł');
     }
 
     public function testFindAll() {
@@ -111,6 +116,44 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         );
         $notInSecondPage = array_diff($firstPageResourceIds, $secondPageResourceIds);
         $this->assertCount(3, $notInSecondPage);
+    }
+
+    public function testSortingIncludesResourcesWithoutMetadata() {
+        $titleMetadataId = $this->titleMetadata->getId();
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->sortBy([['columnId' => $titleMetadataId, 'direction' => 'ASC']])
+            ->build();
+        $resources = $this->resourceRepository->findByQuery($query);
+        $this->assertCount(6, $resources->getResults());
+    }
+
+    public function testSortingAscendingPutsResourcesWithoutMetadataAtEnd() {
+        $titleMetadataId = $this->titleMetadata->getId();
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->sortBy([['columnId' => $titleMetadataId, 'direction' => 'ASC']])
+            ->build();
+        /** @var ResourceEntity[] $resources */
+        $resources = $this->resourceRepository->findByQuery($query)->getResults();
+        $lastWithMetadata = $resources[4];
+        $firstWithoutMetadata = $resources[5];
+        $this->assertArrayHasKey($titleMetadataId, $lastWithMetadata->getContents());
+        $this->assertArrayNotHasKey($titleMetadataId, $firstWithoutMetadata->getContents());
+    }
+
+    public function testSortingDescendingPutsResourcesWithoutMetadataAtBeginning() {
+        $titleMetadataId = $this->titleMetadata->getId();
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->sortBy([['columnId' => $titleMetadataId, 'direction' => 'DESC']])
+            ->build();
+        /** @var ResourceEntity[] $resources */
+        $resources = $this->resourceRepository->findByQuery($query)->getResults();
+        $lastWithoutMetadata = $resources[0];
+        $firstWithMetadata = $resources[1];
+        $this->assertArrayNotHasKey($titleMetadataId, $lastWithoutMetadata->getContents());
+        $this->assertArrayHasKey($titleMetadataId, $firstWithMetadata->getContents());
     }
 
     public function testFindAllByDictionaryResourceClass() {
