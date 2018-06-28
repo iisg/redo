@@ -40,7 +40,8 @@ class ResourceListQuerySqlFactory {
     }
 
     public function getPageQuery(): string {
-        return $this->getSelectQuery($this->alias . '.*') . sprintf('ORDER BY %s %s', implode(', ', $this->orderBy), $this->limit);
+        return $this->getSelectQuery($this->alias . '.*')
+            . sprintf('ORDER BY %s %s', implode(', ', $this->orderBy), $this->limit);
     }
 
     public function getTotalCountQuery(): string {
@@ -127,7 +128,7 @@ class ResourceListQuerySqlFactory {
             } elseif ($sortId == 'kindId') {
                 $this->orderBy[] = "r.kind_id " . $direction;
             } else {
-                $this->orderBy[] = "jsonb_array_elements(r.contents->'$sortId')->>'value' $direction";
+                $this->orderBy[] = "jsonb_array_elements(COALESCE((r.contents->'$sortId'), '[{}]'::jsonb))->>'value' $direction";
             }
         }
         if (empty($this->orderBy)) {
