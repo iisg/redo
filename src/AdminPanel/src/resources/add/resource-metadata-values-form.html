@@ -5,9 +5,9 @@
 
     <table class="transparent"
         ref="valueTable">
-        <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allow-drag.call: isDragHandle($event);">
+        <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allow-drag.call: isDragHandle($event); type-flag.bind: 0">
         <tr repeat.for="item of resource.contents[metadata.id]"
-            oa-sortable-item="item.bind: item">
+            oa-sortable-item="item.bind: item; type-flag.bind: 0">
             <td>
                 <div>
                     <resource-metadata-value-input metadata.bind="metadata"
@@ -15,8 +15,8 @@
                         validation-controller.bind="validationController"
                         value.bind="resource.contents[metadata.id][$index]"
                         disabled.bind="disabled"></resource-metadata-value-input>
-                    <a if.bind="resource.contents[metadata.id].length > 1"
-                        class="drag-handle hidden"
+                    <a if.bind="!disabled && resource.contents[metadata.id].length > 1"
+                        class="drag-handle"
                         bootstrap-tooltip.bind="'Drag to change order' | t"
                         data-placement="left">
                         <icon name="arrows-2"
