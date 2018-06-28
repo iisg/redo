@@ -5,22 +5,33 @@ import {BootstrapValidationRenderer} from "common/validation/bootstrap-validatio
 import {Language} from "./language";
 import {noop, VoidFunction} from "common/utils/function-utils";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
+import {ComponentAttached} from "aurelia-templating";
+import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 
 @autoinject
-export class LanguageForm {
+export class LanguageForm extends ChangeLossPreventerForm implements ComponentAttached {
   @bindable submit: (value: {savedLanguage: Language}) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
   @bindable edit: Language;
+
   editing: boolean = false;
 
-  language: Language = new Language;
+  language: Language = new Language();
   submitting: boolean = false;
 
   private controller: ValidationController;
 
-  constructor(validationControllerFactory: ValidationControllerFactory, private entitySerializer: EntitySerializer) {
+  constructor(validationControllerFactory: ValidationControllerFactory,
+              private entitySerializer: EntitySerializer,
+              private changeLossPreventer: ChangeLossPreventer) {
+    super();
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
+  }
+
+  attached(): void {
+    this.changeLossPreventer.enable(this);
   }
 
   editChanged(newValue: Language) {

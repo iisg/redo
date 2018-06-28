@@ -16,7 +16,6 @@ import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ContextResourceClass} from "./../context/context-resource-class";
 import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
-import {values} from "lodash";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 
 @autoinject

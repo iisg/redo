@@ -16,7 +16,8 @@
             disabled.bind="addingResourcesDisabled"></add-button>
         <div else
             class="fade-inup-outdown au-animate well">
-            <resource-form resource-class.bind="resourceClass"
+            <resource-form view-model.ref="resourceForm"
+                resource-class.bind="resourceClass"
                 parent.bind="parentResource"
                 submit.call="addNewResource(savedResource)"
                 cancel.call="addFormOpened = !addFormOpened"></resource-form>

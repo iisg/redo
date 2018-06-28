@@ -3,7 +3,8 @@
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
 
-    <form submit.delegate="validateAndSubmit()">
+    <form submit.delegate="validateAndSubmit()"
+        change.delegate="dirty = true">
         <div class="form-group label-floating"
             if.bind="!language['editing']">
             <label class="control-label"

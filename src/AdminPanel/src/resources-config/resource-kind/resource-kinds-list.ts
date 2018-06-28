@@ -1,7 +1,7 @@
 import {ResourceKindRepository} from "./resource-kind-repository";
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceKind} from "./resource-kind";
-import {ContextResourceClass} from 'resources/context/context-resource-class';
+import {ContextResourceClass} from "resources/context/context-resource-class";
 import {bindable} from "aurelia-templating";
 import {booleanAttribute} from "../../common/components/boolean-attribute";
 
@@ -9,12 +9,11 @@ import {booleanAttribute} from "../../common/components/boolean-attribute";
 export class ResourceKindsList {
   @bindable resourceKinds: ResourceKind[];
   @bindable @booleanAttribute hideAddButton: boolean = false;
+  @bindable resourceClass: string;
   addFormOpened: boolean = false;
   progressBar: boolean;
-  @bindable resourceClass: string;
 
-  constructor(private resourceKindRepository: ResourceKindRepository,
-              private contextResourceClass: ContextResourceClass) {
+  constructor(private resourceKindRepository: ResourceKindRepository, private contextResourceClass: ContextResourceClass) {
   }
 
   activate(params: any) {

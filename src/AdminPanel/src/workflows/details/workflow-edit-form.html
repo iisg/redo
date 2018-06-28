@@ -5,7 +5,8 @@
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
 
-    <form submit.delegate="onSubmit($event)">
+    <form submit.delegate="onSubmit($event)"
+        change.delegate="dirty = true">
         <div class="name-with-buttons-and-tabs">
             <span if.bind="viewing || editing"
                 class="page-title">${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</span>

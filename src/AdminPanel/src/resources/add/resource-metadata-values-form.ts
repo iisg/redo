@@ -6,6 +6,7 @@ import {booleanAttribute} from "common/components/boolean-attribute";
 import {ValidationController} from "aurelia-validation";
 import {MetadataValue} from "../metadata-value";
 import {changeHandler} from "../../common/components/binding-mode";
+import {ChangeEvent} from "../../common/change-event";
 
 @autoinject
 export class ResourceMetadataValuesForm {
@@ -17,6 +18,9 @@ export class ResourceMetadataValuesForm {
   @bindable validationController: ValidationController;
 
   valueTable: Element;
+
+  public constructor(private element: Element) {
+  }
 
   resourceDataChanged() {
     if (this.resource && this.metadata) {
@@ -52,10 +56,12 @@ export class ResourceMetadataValuesForm {
 
   deleteIndex(index: number, offset: number = 1) {
     this.resource.contents[this.metadata.id].splice(index, offset);
+    this.element.dispatchEvent(ChangeEvent.newInstance());
   }
 
   addNew() {
     this.resource.contents[this.metadata.id].push(new MetadataValue());
+    this.element.dispatchEvent(ChangeEvent.newInstance());
     // queueMicroTask and queueTask fire too early and the <input> doesn't exist yet.
     // setTimeout(..., 0) fires at right time, but something steals the focus later.
     // setTimeout + queue[Micro]Task isn't reliable, it works for second and subsequent inputs but not first one

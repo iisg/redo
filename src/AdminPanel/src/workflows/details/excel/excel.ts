@@ -9,8 +9,9 @@ import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
 import {deepCopy} from "common/utils/object-utils";
 import {ResourceKind} from "../../../resources-config/resource-kind/resource-kind";
-import {flatten} from "lodash";
+import {debounce, flatten} from "lodash";
 import {inArray} from "../../../common/utils/array-utils";
+import {ChangeEvent} from "../../../common/change-event";
 
 @autoinject
 export class Excel implements ComponentAttached {
@@ -21,7 +22,7 @@ export class Excel implements ComponentAttached {
   autoChangeRowToTheEnd: boolean = true;
   filterByResourceKinds: ResourceKind[] = [];
 
-  constructor(private metadataRepository: MetadataRepository, private workflowPlaceSorter: WorkflowPlaceSorter) {
+  constructor(private metadataRepository: MetadataRepository, private workflowPlaceSorter: WorkflowPlaceSorter, private element: Element) {
   }
 
   async attached() {
@@ -57,5 +58,8 @@ export class Excel implements ComponentAttached {
         place.restrictingMetadataIds = map;
       }
     }
+    this.dispatchChangedEvent(this.workflow);
   }
+
+  dispatchChangedEvent = debounce((value) => this.element.dispatchEvent(ChangeEvent.newInstance(value)), 10);
 }

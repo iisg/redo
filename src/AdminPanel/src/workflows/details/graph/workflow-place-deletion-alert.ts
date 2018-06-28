@@ -1,7 +1,6 @@
 import {Alert, AlertOptions} from "../../../common/dialog/alert";
 import {Resource} from "../../../resources/resource";
 import {I18N} from "aurelia-i18n";
-import {InCurrentLanguageValueConverter} from "../../../resources-config/multilingual-field/in-current-language";
 import {autoinject} from "aurelia-dependency-injection";
 
 @autoinject
@@ -12,9 +11,7 @@ export class WorkflowPlaceDeletionAlert {
   private amountDescriptionLabel: string = 'Number of Resources in this state:';
   private exampleDescriptionLabel: string = 'Example resources in this state:';
 
-  constructor(private i18n: I18N,
-              private inCurrentLanguage: InCurrentLanguageValueConverter,
-              private alert: Alert) {
+  constructor(private i18n: I18N, private alert: Alert) {
   }
 
   public showWorkflowPlaceDeletionAlert(numberOfResources: number, exampleResources: Resource[]) {
@@ -24,7 +21,7 @@ export class WorkflowPlaceDeletionAlert {
     const exampleLabelDescription = `<h4>${this.i18n.tr(this.exampleDescriptionLabel)}</h4>`;
 
     const resourceLinks: string = this.getResourceLinksHtml(exampleResources.length);
-    const alertOptions: AlertOptions = this.getalertOptions(exampleResources);
+    const alertOptions: AlertOptions = this.getAlertOptions(exampleResources);
 
     const message: string = this.getMessage(mainDescription, amountDescription, exampleLabelDescription, resourceLinks);
 
@@ -37,13 +34,10 @@ export class WorkflowPlaceDeletionAlert {
 
   private getAmountDescription(numberOfResources: number): string {
     return `<h4>${this.i18n.tr(this.amountDescriptionLabel)}<strong>${numberOfResources}</strong></h4>`;
-
   }
 
-  private getalertOptions(exampleResources: Resource[]): AlertOptions {
+  private getAlertOptions(exampleResources: Resource[]): AlertOptions {
     let alertOptions: AlertOptions = {type: 'warning', aurelialize: true};
-    alertOptions.type = 'warning';
-    alertOptions.aurelialize = true;
     let aureliaContent: StringMap<number> = {};
     for (let i = 0; i < exampleResources.length; i++) {
       aureliaContent['id' + i] = exampleResources[i].id;
@@ -51,7 +45,6 @@ export class WorkflowPlaceDeletionAlert {
     alertOptions.aureliaContext = aureliaContent;
 
     return alertOptions;
-
   }
 
   private getResourceLinksHtml(numberOfResources: number) {
