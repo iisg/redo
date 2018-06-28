@@ -44,6 +44,7 @@
         <form class="form-with-buttons"
             submit.delegate="validateAndSubmit()">
             <resource-form-generated class="form-content"
+                change.delegate="dirty = true"
                 resource-kind.bind="resource.kind"
                 resource.bind="resource"
                 parent.bind="parent"

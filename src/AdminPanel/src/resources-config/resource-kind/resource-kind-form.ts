@@ -13,16 +13,18 @@ import {MetadataRepository} from "../metadata/metadata-repository";
 import {SystemMetadata} from "../metadata/system-metadata";
 import {ResourceKind} from "./resource-kind";
 import {SystemResourceKinds} from "./system-resource-kinds";
+import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
+import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
 
 @autoinject
-export class ResourceKindForm implements ComponentAttached, ComponentDetached {
+export class ResourceKindForm extends ChangeLossPreventerForm implements ComponentAttached, ComponentDetached {
   @bindable submit: (value: { savedResourceKind: ResourceKind }) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
   @bindable resourceClass: string;
   @bindable edit: ResourceKind;
   updateResourceKindMetadataChooserValues: () => void;
-
   resourceKind: ResourceKind = new ResourceKind();
+
   originalMetadataList: Metadata[];
   submitting = false;
   sortingMetadata = false;
@@ -35,16 +37,19 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
               private signaler: BindingSignaler,
               private metadataRepository: MetadataRepository,
               private entitySerializer: EntitySerializer,
-              private config: Configure) {
+              private config: Configure,
+              private changeLossPreventer: ChangeLossPreventer) {
+    super();
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
   }
 
   attached() {
     if (!this.edit) {
-      this.resourceKind.metadataList.unshift(SystemMetadata.PARENT);
+      this.resourceKind.ensureHasSystemMetadata();
       this.resourceKind.resourceClass = this.resourceClass;
     }
+    this.changeLossPreventer.enable(this);
   }
 
   async resourceClassChanged() {
@@ -129,5 +134,9 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
       return metadata.id > 0 && mappedMetadataIds.indexOf(metadata.id) === -1;
     }
     return true;
+  }
+
+  cancelForm(): void {
+    this.changeLossPreventer.canLeaveView().then(() => this.cancel());
   }
 }

@@ -4,6 +4,7 @@ import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/requ
 import {Workflow} from "workflows/workflow";
 import {Entity} from "common/entity/entity";
 import {automapped, map} from "common/dto/decorators";
+import {SystemMetadata} from "../metadata/system-metadata";
 
 @automapped
 export class ResourceKind extends Entity {
@@ -15,6 +16,12 @@ export class ResourceKind extends Entity {
   @map('WorkflowId') workflow: Workflow;
   @map resourceClass: string;
   @map displayStrategies: StringStringMap = {};
+
+  public ensureHasSystemMetadata() {
+    if (this.metadataList.find(m => m.id === SystemMetadata.PARENT.id)) {
+      this.metadataList.unshift(SystemMetadata.PARENT);
+    }
+  }
 }
 
 export function registerResourceKindValidationRules() {

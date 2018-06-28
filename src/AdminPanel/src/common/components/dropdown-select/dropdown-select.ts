@@ -1,6 +1,5 @@
 import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {DOM} from "aurelia-framework";
 import {I18N} from "aurelia-i18n";
 import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import * as $ from "jquery";
@@ -8,6 +7,7 @@ import "select2";
 import {changeHandler, twoWay} from "../binding-mode";
 import {booleanAttribute} from "../boolean-attribute";
 import {debounce} from "lodash";
+import {ChangeEvent} from "../../change-event";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
@@ -174,16 +174,5 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @computedFrom('values')
   get isFetchingOptions() {
     return !this.values;
-  }
-}
-
-class ChangeEvent {
-  bubbles = true;
-
-  private constructor(public detail) {
-  }
-
-  static newInstance(value: any): Event {
-    return DOM.createCustomEvent('change', new ChangeEvent(value));
   }
 }

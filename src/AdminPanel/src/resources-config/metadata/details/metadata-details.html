@@ -35,7 +35,7 @@
                             click.delegate="toggleEditForm()"></edit-button>
                     </template>
                     <metadata-form else
-                        edit.bind="true"
+                        edit.bind="metadata"
                         resource-class.bind="resourceClass"
                         template.bind="metadata"
                         submit.call="saveEditedMetadata(metadata, editedMetadata)"

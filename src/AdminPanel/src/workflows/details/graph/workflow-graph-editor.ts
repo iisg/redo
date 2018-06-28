@@ -8,6 +8,8 @@ import {twoWay} from "common/components/binding-mode";
 import {WorkflowGraphEditorReady, WorkflowGraphReady} from "./workflow-graph-events";
 import {Disposable, BindingEngine} from "aurelia-binding";
 import {WorkflowGraphManager} from "./workflow-graph-manager";
+import {ChangeEvent} from "../../../common/change-event";
+import {debounce} from "lodash";
 
 @autoinject
 export class WorkflowGraphEditor implements ComponentUnbind {
@@ -49,7 +51,10 @@ export class WorkflowGraphEditor implements ComponentUnbind {
 
   workflowPlacesChanged(): void {
     this.graphManager.forEach(graph => graph.recalculateGraphPosition());
+    this.dispatchChangedEvent(this.workflow);
   }
+
+  dispatchChangedEvent = debounce((value) => this.element.dispatchEvent(ChangeEvent.newInstance(value)), 10);
 
   unbind(): void {
     this.disposeWorkflowPlacesSubscription();

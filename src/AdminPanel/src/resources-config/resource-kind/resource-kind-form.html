@@ -13,7 +13,8 @@
     <require from="common/components/buttons/submit-button.html"></require>
 
     <form submit.delegate="validateAndSubmit()"
-        class="form-with-buttons">
+        class="form-with-buttons"
+        change.delegate="dirty = true">
         <div class="form-content simple-form">
             <span>${'Name' | t}</span>
             <multilingual-editor value.bind="resourceKind.label & validate"></multilingual-editor>
@@ -94,7 +95,7 @@
                 submitting.bind="submitting"></submit-button>
             <cancel-button class="${!editing ? 'orange' : ''}"
                 disabled.bind="resourceKind.pendingRequest || submitting"
-                click.delegate="cancel()"></cancel-button>
+                click.delegate="cancelForm()"></cancel-button>
         </div>
     </form>
 </template>

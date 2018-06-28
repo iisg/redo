@@ -17,10 +17,11 @@ import {Resource} from "../resource";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportDialog} from "./xml-import/import-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
-import {values} from "lodash";
+import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
+import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 
 @autoinject
-export class ResourceForm {
+export class ResourceForm extends ChangeLossPreventerForm {
   @bindable resourceClass: string;
   @bindable parent: Resource;
   @bindable edit: Resource;
@@ -32,30 +33,33 @@ export class ResourceForm {
     places?: WorkflowPlace[]
   }) => Promise<any>;
   @bindable cancel: () => void;
-  resource: Resource = new Resource();
   submitting: boolean = false;
   validationError: boolean = false;
   transition: WorkflowTransition;
   places: WorkflowPlace[] = [];
   resourceKindIdsAllowedByParent: number[];
+  resource: Resource;
 
   private validationController: ValidationController;
 
   constructor(private entitySerializer: EntitySerializer,
               private modal: Modal,
               private router: Router,
+              private changeLossPreventer: ChangeLossPreventer,
               validationControllerFactory: ValidationControllerFactory) {
+    super();
     this.validationController = validationControllerFactory.createForCurrentScope();
     this.validationController.addRenderer(new BootstrapValidationRenderer());
   }
 
   attached() {
-    if (this.edit && this.edit.kind.workflow) {
+    if (this.edit && this.edit.kind && this.edit.kind.workflow) {
       let params = this.router.currentInstruction.queryParams;
       this.places = this.edit.currentPlaces;
       this.transition = this.edit.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
     }
     this.setResourceKindsAllowedByParent();
+    this.changeLossPreventer.enable(this);
   }
 
   @computedFrom('transition', 'resource.kind.workflow', 'resource.currentPlaces')

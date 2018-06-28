@@ -7,23 +7,27 @@ import {changeHandler} from "common/components/binding-mode";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {Metadata} from "./metadata";
+import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
+import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 
 @autoinject
-export class MetadataForm implements ComponentAttached {
-  @bindable submit: (value: {editedMetadata: Metadata}) => Promise<any>;
+export class MetadataForm extends ChangeLossPreventerForm implements ComponentAttached {
+  @bindable submit: (value: { editedMetadata: Metadata }) => Promise<any>;
   @bindable cancel: () => void;
   @bindable(changeHandler('resetValues')) template: Metadata;
-  @bindable edit: boolean = false;
+  @bindable edit: Metadata;
   @bindable resourceClass: string;
   controls: string[];
-  metadata: Metadata = new Metadata();
   submitting: boolean = false;
+  metadata: Metadata = new Metadata();
 
   private controller: ValidationController;
 
   constructor(validationControllerFactory: ValidationControllerFactory,
-    configuration: Configure,
-    private entitySerializer: EntitySerializer) {
+              configuration: Configure,
+              private entitySerializer: EntitySerializer,
+              private changeLossPreventer: ChangeLossPreventer) {
+    super();
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
     this.controls = configuration.get('supported_controls');
@@ -35,7 +39,12 @@ export class MetadataForm implements ComponentAttached {
   }
 
   attached(): void {
+    this.changeLossPreventer.enable(this);
     this.resetValues();
+  }
+
+  cancelForm(): void {
+    this.changeLossPreventer.canLeaveView().then(() => this.cancel());
   }
 
   private resetValues() {

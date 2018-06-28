@@ -29,7 +29,7 @@ export class MetadataConstraints {
 export function registerMetadataConstraintsValidationRules() {
   ValidationRules
     .ensure('minMaxValue').satisfies(obj => obj === undefined || obj.min === undefined || obj.max === undefined
-    || Number.isInteger(obj.min) && Number.isInteger(obj.max) && obj.max >= obj.min)
+  || Number.isInteger(obj.min) && Number.isInteger(obj.max) && obj.max >= obj.min)
     .withMessageKey('minMaxValueRange')
     .ensure('maxCount').satisfies(obj => obj === undefined || Number.isInteger(obj) && (obj > 0 || obj === -1))
     .withMessageKey('minimalMaxCount')
@@ -71,8 +71,10 @@ export class Metadata extends Entity {
     }
     for (let overridableField of ['label', 'placeholder', 'description']) {
       for (let languageCode in this[overridableField]) {
-        if (this[overridableField][languageCode] == originalMetadata[overridableField][languageCode]) {
-          this[overridableField][languageCode] = '';
+        if (this[overridableField].hasOwnProperty(languageCode)) {
+          if (this[overridableField][languageCode] == originalMetadata[overridableField][languageCode]) {
+            this[overridableField][languageCode] = '';
+          }
         }
       }
     }

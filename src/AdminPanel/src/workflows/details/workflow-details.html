@@ -7,8 +7,7 @@
 
     <div if.bind="workflow"
         class="workflow-details au-animate fade-inup-outup">
-        <workflow-edit-form
-            workflow.bind="workflow"
+        <workflow-edit-form edit.bind="workflow"
             submit.delegate="update()"
             on-cancel.call="toggleEditForm()"
             viewing.bind="!editing"

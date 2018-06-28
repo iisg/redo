@@ -6,9 +6,12 @@
     <require from="common/components/buttons/submit-button.html"></require>
 
     <form class="form-with-buttons"
-        submit.delegate="validateAndSubmit()">
+        submit.delegate="validateAndSubmit()"
+        change.delegate="dirty = true">
         <div class="form-content simple-form">
-            <span>${'Name' | t}<required-field-indicator></required-field-indicator></span>
+            <span>${'Name' | t}
+                <required-field-indicator></required-field-indicator>
+            </span>
             <div class="validation-message-container">
                 <input type="text"
                     disabled.bind="fromTemplate"
@@ -31,10 +34,10 @@
                 view="./metadata-editable-properties.html"></compose>
         </div>
         <div class="form-buttons">
-            <submit-button editing.bind="edit"
+            <submit-button editing.bind="!!edit"
                 submitting.bind="submitting"></submit-button>
             <cancel-button disabled.bind="metadata.pendingRequest || submitting"
-                click.delegate="cancel()"></cancel-button>
+                click.delegate="cancelForm()"></cancel-button>
         </div>
     </form>
 </template>

@@ -5,12 +5,13 @@ import {ComponentAttached} from "aurelia-templating";
 import {routes} from "common/routes/routes";
 import {supportMiddleClickInLinks} from "./common/routes/middle-link-opener";
 import {RouteAccessChecker} from "./common/routes/route-access-checker";
+import {ChangeLossPreventer} from "./common/change-loss-preventer/change-loss-preventer";
 
 @autoinject
 export class App implements ConfiguresRouter, ComponentAttached {
   constructor(private i18n: I18N,
               private element: Element,
-              private routeAccessChecker: RouteAccessChecker) {
+              private routeAccessChecker: RouteAccessChecker, private changeLossPreventer: ChangeLossPreventer) {
   }
 
   configureRouter(configuration: RouterConfiguration) {
@@ -22,6 +23,7 @@ export class App implements ConfiguresRouter, ComponentAttached {
     const pageNotFoundRouteConfiguration = {route: ['not-found'], name: 'not-found', moduleId: 'common/error-pages/not-found'};
     configuration.mapRoute(pageNotFoundRouteConfiguration);
     configuration.mapUnknownRoutes(pageNotFoundRouteConfiguration);
+    configuration.addAuthorizeStep(this.changeLossPreventer);
     configuration.addAuthorizeStep(this.routeAccessChecker);
     supportMiddleClickInLinks(configuration);
   }

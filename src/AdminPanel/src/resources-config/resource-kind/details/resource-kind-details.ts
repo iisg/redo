@@ -13,7 +13,6 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   resourceKind: ResourceKind;
   editing: boolean = false;
   resourceKindDetailsTabs: DetailsViewTabs;
-
   private urlListener: Subscription;
 
   constructor(private resourceKindRepository: ResourceKindRepository,

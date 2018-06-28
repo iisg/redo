@@ -2,20 +2,18 @@ import {autoinject} from "aurelia-dependency-injection";
 import {bindable} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
-import {ContextResourceClass} from 'resources/context/context-resource-class';
 import {Router} from "aurelia-router";
+import {ContextResourceClass} from "../../resources/context/context-resource-class";
 
 @autoinject
 export class MetadataList {
-  metadataList: Metadata[];
   @bindable parentMetadata: Metadata;
   @bindable resourceClass: string;
+  metadataList: Metadata[];
   addFormOpened: boolean = false;
   progressBar: boolean;
 
-  constructor(private metadataRepository: MetadataRepository,
-              private contextResourceClass: ContextResourceClass,
-              private router: Router) {
+  constructor(private metadataRepository: MetadataRepository, private contextResourceClass: ContextResourceClass, private router: Router) {
   }
 
   activate(params: any) {
