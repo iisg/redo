@@ -22,6 +22,7 @@ invalidTransform: "Nieprawidłowa definicja transformacji '{{name}}' z parametra
 incorrectResourceDisplayStrategy: "Niepoprawna strategia prezentacji zasobu. Błąd zwrócony przez kompilator szablonów: {{error}}"
 metadataNameIsNotUnique: Rodzaj metadanej o podanej nazwie już istnieje
 insufficientPermissions: Nie posiadasz wymaganych uprawnień by wykonać tę operację
+valuesDoNotMatchResourceKind: "Lista metadanych w rodzaju zasobu zmieniła się i nie zgadza się z edytowanym zasobem. Odśwież stronę i ponownie wprowadź zmiany. Szczegóły: \"{{originalMessage}}\"."
 violationFields:
   metadata: Rodzaj metadanej
   name: Nazwa
@@ -35,6 +36,7 @@ violationFields:
   newLabel: Nowa nazwa
   places: Edytowane Miejsca
   transitions: Przejścia
+  contents: Zawartość zasobu
 resource has children: zasób ma podzasoby.
 resources of this kind exist: istnieją zasoby tego rodzaju.
 workflow is assigned to one of resource kinds: proces jest przypisany do jednego z rodzajów zasobów
