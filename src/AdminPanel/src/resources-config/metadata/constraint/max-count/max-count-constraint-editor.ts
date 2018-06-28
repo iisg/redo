@@ -9,19 +9,21 @@ export class MaxCountConstraintEditor {
   @bindable hasBase: boolean;
 
   private modelIsChanging: boolean = false;
-  @observable(changeHandler('updateConstraint')) unlimited: boolean;
+  @observable(changeHandler('updateConstraint')) isUnlimited: boolean;
   @observable(changeHandler('updateConstraint')) count: number;
 
   radioName: string = generateId();
+  private readonly DISPLAYED_COUNT_IF_UNLIMITED = 1;
+  private readonly UNLIMITED_COUNT = -1;
 
   updateConstraint(): void {
     if (this.modelIsChanging) {
       return;
     }
-    if (this.unlimited) {
-      this.count = 1;
+    if (this.isUnlimited) {
+      this.count = this.DISPLAYED_COUNT_IF_UNLIMITED;
     }
-    this.maxCount = this.unlimited ? undefined : this.count;
+    this.maxCount = this.isUnlimited ? this.UNLIMITED_COUNT : this.count;
   }
 
   attached() {
@@ -30,8 +32,8 @@ export class MaxCountConstraintEditor {
 
   maxCountChanged(): void {
     this.modelIsChanging = true;
-    this.count = this.maxCount || 1;
-    this.unlimited = (this.maxCount == undefined);
+    this.count = this.maxCount !== this.UNLIMITED_COUNT ? this.maxCount : this.DISPLAYED_COUNT_IF_UNLIMITED;
+    this.isUnlimited = !this.maxCount || this.maxCount == this.UNLIMITED_COUNT;
     this.modelIsChanging = false;
   }
 

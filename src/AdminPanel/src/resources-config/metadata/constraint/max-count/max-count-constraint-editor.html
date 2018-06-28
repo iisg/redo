@@ -5,17 +5,17 @@
     <input type="radio"
         name.bind="radioName"
         model.bind="true"
-        checked.bind="unlimited">
+        checked.bind="isUnlimited">
     <span class="value">${"Unlimited" | t}</span>
     <input type="radio"
         name.bind="radioName"
         model.bind="false"
-        checked.bind="unlimited">
+        checked.bind="isUnlimited">
     <div>
         <span>${"At most" | t}</span><input class="form-control"
             type="number"
             value.bind="count | integer"
-            disabled.bind="unlimited">
+            disabled.bind="isUnlimited">
     </div>
     <restore-from-original-button if.bind="hasBase && wasModified"
         class="full-width"

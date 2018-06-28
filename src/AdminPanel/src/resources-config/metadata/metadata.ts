@@ -31,7 +31,7 @@ export function registerMetadataConstraintsValidationRules() {
     .ensure('minMaxValue').satisfies(obj => obj === undefined || obj.min === undefined || obj.max === undefined
     || Number.isInteger(obj.min) && Number.isInteger(obj.max) && obj.max >= obj.min)
     .withMessageKey('minMaxValueRange')
-    .ensure('maxCount').satisfies(obj => obj === undefined || Number.isInteger(obj) && obj > 0)
+    .ensure('maxCount').satisfies(obj => obj === undefined || Number.isInteger(obj) && (obj > 0 || obj === -1))
     .withMessageKey('minimalMaxCount')
     .on(MetadataConstraints);
 }
