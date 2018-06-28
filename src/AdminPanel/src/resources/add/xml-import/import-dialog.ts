@@ -25,8 +25,6 @@ export class ImportDialog {
   constructor(private dialogController: DialogController,
               private xmlImportClient: XmlImportClient,
               private globalExceptionInterceptor: GlobalExceptionInterceptor) {
-    dialogController.settings.lock = false;
-    dialogController.settings.keyboard = true;
     const storedJson = localStorage[this.MOST_RECENT_CONFIG_KEY];
     if (storedJson !== undefined) {
       try {
