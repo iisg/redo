@@ -13,11 +13,16 @@ class MaxCountConstraint extends AbstractMetadataConstraint {
     }
 
     public function isConfigValid($maxCount): bool {
-        return isset($maxCount) ? Validator::intType()->min(1)->validate($maxCount) : true;
+        return isset($maxCount)
+            ? Validator::oneOf(
+                Validator::intType()->min(1),
+                Validator::intType()->equals(-1)
+            )->validate($maxCount)
+            : true;
     }
 
     public function validateAll(Metadata $metadata, $maxCount, array $metadataValues) {
-        if (isset($maxCount)) {
+        if (isset($maxCount) && $maxCount !== -1) {
             try {
                 Validator::length(0, $maxCount)->setName($metadata->getName())->assert($metadataValues);
             } catch (NestedValidationException $e) {

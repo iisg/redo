@@ -9,7 +9,8 @@ export class NewMetadataValueButton {
 
   @computedFrom('metadata.constraints.maxCount', 'values.length')
   get canAddMore() {
-    return !this.metadata.constraints.maxCount || this.values.length < this.metadata.constraints.maxCount;
+    const isUnlimited: Boolean = !this.metadata.constraints.maxCount || this.metadata.constraints.maxCount === -1;
+    return isUnlimited || this.values.length < this.metadata.constraints.maxCount;
   }
 
   @computedFrom('resource.contents', 'metadata.id')

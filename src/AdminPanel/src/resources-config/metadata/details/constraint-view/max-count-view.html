@@ -1,3 +1,3 @@
 <template>
-    <span>${metadata.constraints.maxCount || '-'}</span>
+    <span>${!metadata.constraints.maxCount || metadata.constraints.maxCount === -1 ? '-' : metadata.constraints.maxCount}</span>
 </template>
