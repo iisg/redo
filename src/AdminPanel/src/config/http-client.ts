@@ -1,9 +1,10 @@
 import {Aurelia} from "aurelia-framework";
 import {HttpClient} from "aurelia-http-client";
-import {MetricsSenderInterceptor} from "common/metrics/metrics-sender-interceptor";
-import {GlobalExceptionInterceptor} from "common/http-client/global-exception-interceptor";
 import {CsrfHeaderInterceptor} from "common/http-client/csrf-header-interceptor";
+import {GlobalExceptionInterceptor} from "common/http-client/global-exception-interceptor";
+import {RedirectToErrorPageIfElementNotFoundInterceptor} from "common/http-client/redirect-to-error-page-if-element-not-found-interceptor";
 import {RedirectToLoginIfUnauthenticatedInterceptor} from "common/http-client/redirect-to-login-if-unauthenticated-interceptor";
+import {MetricsSenderInterceptor} from "common/metrics/metrics-sender-interceptor";
 import {ClearCachedResponseInterceptor} from "../common/repository/clear-cached-response-interceptor";
 
 export function configure(aurelia: Aurelia) {
@@ -15,6 +16,7 @@ export function configure(aurelia: Aurelia) {
       .withHeader('Accept', 'application/json')
       .withHeader('X-Requested-With', 'XMLHttpRequest')
       .withInterceptor(new RedirectToLoginIfUnauthenticatedInterceptor())
+      .withInterceptor(new RedirectToErrorPageIfElementNotFoundInterceptor())
       .withInterceptor(new MetricsSenderInterceptor())
       .withInterceptor(new CsrfHeaderInterceptor())
       .withInterceptor(new ClearCachedResponseInterceptor())

@@ -64,8 +64,8 @@ class ResourcesController extends ApiController {
      * @Route("/{id}")
      * @Method("GET")
      */
-    public function getAction(int $id) {
-        $resource = $this->handleCommand(new ResourceQuery($id));
+    public function getAction(string $id) {
+        $resource = $this->handleCommand(new ResourceQuery(intval($id)));
         return $this->createJsonResponse($resource);
     }
 

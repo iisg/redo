@@ -1,12 +1,12 @@
-import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {autoinject, Container} from "aurelia-dependency-injection";
 import {HttpResponseMessage, Interceptor} from "aurelia-http-client";
 import {I18N} from "aurelia-i18n";
-import {Alert, AlertOptions} from "../dialog/alert";
-import * as headers from "./headers";
-import {inArray} from "../utils/array-utils";
 import {SanitizeHTMLValueConverter} from "aurelia-templating-resources";
+import {CurrentUserFetcher} from "users/current/current-user-fetcher";
+import {Alert, AlertOptions} from "../dialog/alert";
+import {inArray} from "../utils/array-utils";
 import {mapValues} from "../utils/object-utils";
+import * as headers from "./headers";
 
 @autoinject
 export class GlobalExceptionInterceptor implements Interceptor {
@@ -26,6 +26,7 @@ export class GlobalExceptionInterceptor implements Interceptor {
     if (!suppressError
       && response.statusCode >= 400
       && response.statusCode != 401
+      && response.statusCode != 404
       && this.userAuthenticated) {
       this.alert.showHtml(options, title, html).then(() => {
         if (isDebug) {

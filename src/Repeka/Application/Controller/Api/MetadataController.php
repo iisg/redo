@@ -69,8 +69,8 @@ class MetadataController extends ApiController {
      * @Route("/{id}")
      * @Method("GET")
      */
-    public function getAction(int $id) {
-        $metadata = $this->handleCommand(new MetadataGetQuery($id));
+    public function getAction(string $id) {
+        $metadata = $this->handleCommand(new MetadataGetQuery(intval($id)));
         return $this->createJsonResponse($metadata);
     }
 

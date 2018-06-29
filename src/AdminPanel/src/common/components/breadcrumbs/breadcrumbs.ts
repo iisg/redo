@@ -1,11 +1,11 @@
+import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {NavigationInstruction} from "aurelia-router";
-import {autoinject} from "aurelia-dependency-injection";
-import {ResourceBreadcrumbsProvider} from "./resource-breadcrumbs-provider";
 import {DefaultBreadcrumbsProvider} from "./default-breadcrumbs-provider";
 import {MetadataBreadcrumbsProvider} from "./metadata-breadcrumbs-provider";
-import {WorkflowBreadcrumbsProvider} from "./workflow-breadcrumbs-provider";
+import {ResourceBreadcrumbsProvider} from "./resource-breadcrumbs-provider";
 import {ResourceKindBreadcrumbsProvider} from './resource-kind-breadcrumbs-provider';
+import {WorkflowBreadcrumbsProvider} from "./workflow-breadcrumbs-provider";
 
 @autoinject
 export class Breadcrumbs {
@@ -27,7 +27,8 @@ export class Breadcrumbs {
 
   async updateBreadcrumbs(navigationInstruction: NavigationInstruction) {
     this.loading = true;
-    const provider = navigationInstruction.config.settings.breadcrumbsProvider || 'default';
+    const settings = navigationInstruction.config.settings;
+    const provider = settings && settings.breadcrumbsProvider || 'default';
     this.breadcrumbs = await this.providers[provider].getBreadcrumbs(navigationInstruction);
     this.loading = false;
   }

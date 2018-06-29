@@ -21,8 +21,8 @@ class ResourceKindsController extends ApiController {
      * @Route("/{id}")
      * @Method("GET")
      */
-    public function getAction(int $id) {
-        $resourceKind = $this->handleCommand(new ResourceKindQuery($id));
+    public function getAction(string $id) {
+        $resourceKind = $this->handleCommand(new ResourceKindQuery(intval($id)));
         return $this->createJsonResponse($resourceKind);
     }
 

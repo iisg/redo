@@ -7,15 +7,15 @@ import {Alert} from "common/dialog/alert";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
+import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
+import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
 import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
 import {WorkflowTransition} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ContextResourceClass} from './../context/context-resource-class';
-import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
-import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {

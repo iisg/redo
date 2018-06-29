@@ -1,0 +1,7 @@
+<template>
+    <span class="title">${title}</span>
+    <span class="subtitle">${subtitle | t}</span>
+    <span>${message | t}.</span>
+    <span>${'Please check if you have entered correct address or use the menu on the left side' | t}.</span>
+    <span if.bind="router.history.history.length > 1">${'Alternatively, go back to the' | t} <a click.delegate="router.history.navigateBack()">${'previous page' | t}</a>.</span>
+</template>
