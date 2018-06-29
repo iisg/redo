@@ -1,4 +1,4 @@
-import {metricIncrement} from "../metrics/metrics-decorators";
+import {metricIncrement} from "common/metrics/metrics-decorators";
 
 export class NotAllowed {
   @metricIncrement("error_403")

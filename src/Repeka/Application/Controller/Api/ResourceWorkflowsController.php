@@ -49,11 +49,11 @@ class ResourceWorkflowsController extends ApiController {
     }
 
     /**
-     * @Route("/{workflow}")
+     * @Route("/{id}")
      * @Method("GET")
      */
-    public function getAction(int $workflow) {
-        $workflow = $this->handleCommand(new ResourceWorkflowQuery($workflow));
+    public function getAction(string $id) {
+        $workflow = $this->handleCommand(new ResourceWorkflowQuery(intval($id)));
         return $this->createJsonResponse($workflow);
     }
 

@@ -1,10 +1,10 @@
-import {ConfiguresRouter, RouterConfiguration} from "aurelia-router";
-import {ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
-import {RouteAccessChecker} from "./common/routes/route-access-checker";
+import {ConfiguresRouter, RouterConfiguration} from "aurelia-router";
+import {ComponentAttached} from "aurelia-templating";
 import {routes} from "common/routes/routes";
 import {supportMiddleClickInLinks} from "./common/routes/middle-link-opener";
+import {RouteAccessChecker} from "./common/routes/route-access-checker";
 
 @autoinject
 export class App implements ConfiguresRouter, ComponentAttached {
@@ -13,16 +13,17 @@ export class App implements ConfiguresRouter, ComponentAttached {
               private routeAccessChecker: RouteAccessChecker) {
   }
 
-  configureRouter(config: RouterConfiguration) {
-    config.title = 'RePeKa';
-    config.options.pushState = true;
-    config.options.root = '/admin';
-    config.map(routes);
-    config.mapRoute({route: ['not-allowed'], name: 'not-allowed', moduleId: 'common/error-pages/not-allowed'});
-    config.fallbackRoute('');
-    config.mapUnknownRoutes('common/error-pages/not-found');
-    config.addAuthorizeStep(this.routeAccessChecker);
-    supportMiddleClickInLinks(config);
+  configureRouter(configuration: RouterConfiguration) {
+    configuration.title = 'RePeKa';
+    configuration.options.pushState = true;
+    configuration.options.root = '/admin';
+    configuration.map(routes);
+    configuration.mapRoute({route: ['not-allowed'], name: 'not-allowed', moduleId: 'common/error-pages/not-allowed'});
+    const pageNotFoundRouteConfiguration = {route: ['not-found'], name: 'not-found', moduleId: 'common/error-pages/not-found'};
+    configuration.mapRoute(pageNotFoundRouteConfiguration);
+    configuration.mapUnknownRoutes(pageNotFoundRouteConfiguration);
+    configuration.addAuthorizeStep(this.routeAccessChecker);
+    supportMiddleClickInLinks(configuration);
   }
 
   attached() {

@@ -1,7 +1,7 @@
 import {EventAggregator} from "aurelia-event-aggregator";
 import {NavigationInstruction} from "aurelia-router";
 import {inlineView} from "aurelia-templating";
-import {ResourceClassChangeEvent, ContextResourceClass} from "resources/context/context-resource-class";
+import {ContextResourceClass, ResourceClassChangeEvent} from "resources/context/context-resource-class";
 
 @inlineView('<template><span>${title | t}</span></template>')
 export class TopBarTitle {
@@ -33,10 +33,11 @@ export class TopBarTitle {
     const configName = this.lastInstruction.config.name;
     if (this.resourceClass) {
       this.title = `resource_classes::${this.resourceClass}//${configName}`;
-    }
-    else {
+    } else {
       const configTitle = this.lastInstruction.config.title;
-      this.title = `navigation::${configTitle}`;
+      if (configTitle) {
+        this.title = `navigation::${configTitle}`;
+      }
     }
   }
 }
