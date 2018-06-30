@@ -1,19 +1,19 @@
 import {bindingMode, computedFrom, observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {parseQueryString} from "aurelia-path";
 import {NavigationInstruction, Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
-import {Resource} from "../resource";
-import {PageResult} from "../page-result";
-import {ResourceSort, SortDirection} from "../resource-sort";
-import {Metadata} from "../../resources-config/metadata/metadata";
-import {ContextResourceClass} from "../context/context-resource-class";
-import {ResourceRepository} from "../resource-repository";
-import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
-import {safeJsonParse} from "../../common/utils/object-utils";
-import {getMergedBriefMetadata} from "../../common/utils/metadata-utils";
+import {getQueryParameters} from "common/utils/url-utils";
 import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
+import {getMergedBriefMetadata} from "../../common/utils/metadata-utils";
+import {safeJsonParse} from "../../common/utils/object-utils";
+import {Metadata} from "../../resources-config/metadata/metadata";
+import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
+import {ContextResourceClass} from "../context/context-resource-class";
+import {PageResult} from "../page-result";
+import {Resource} from "../resource";
+import {ResourceRepository} from "../resource-repository";
+import {ResourceSort, SortDirection} from "../resource-sort";
 
 @autoinject
 export class ResourcesList {
@@ -44,6 +44,16 @@ export class ResourcesList {
               private hasRole: HasRoleValueConverter) {
   }
 
+  bind() {
+    if (this.parentResource) {
+      this.resourceClass = this.parentResource.resourceClass;
+      this.eventAggregator.subscribeOnce("router:navigation:success",
+        (event: { instruction: NavigationInstruction }) => {
+          this.activate(event.instruction.queryParams);
+        });
+    }
+  }
+
   activate(parameters: any) {
     this.prepareBeforeFetchingResources(parameters.resourceClass || this.parentResource.resourceClass);
     this.contextResourceClass.setCurrent(this.resourceClass);
@@ -57,6 +67,23 @@ export class ResourcesList {
     this.updateURL(true);
     this.fetchResources();
     this.activated = true;
+  }
+
+  attached() {
+    if (!this.activated) {
+      this.activate(this.router.currentInstruction.queryParams);
+    }
+  }
+
+  private prepareBeforeFetchingResources(resourceClass: string) {
+    this.resourceClass = resourceClass;
+    this.totalNumberOfResources = undefined;
+    if (this.resources) {
+      this.resources = new PageResult<Resource>();
+    }
+    this.addFormOpened = false;
+    this.briefMetadata = [];
+    this.fetchBriefMetadata();
   }
 
   private obtainResultsPerPageValue(parameters: any): boolean {
@@ -88,27 +115,6 @@ export class ResourcesList {
     const currentPageNumberChanged = this.currentPageNumber != currentPageNumber;
     this.currentPageNumber = currentPageNumber;
     return currentPageNumberChanged;
-  }
-
-  bind() {
-    if (this.parentResource) {
-      this.resourceClass = this.parentResource.resourceClass;
-      this.eventAggregator.subscribeOnce("router:navigation:success",
-        (event: { instruction: NavigationInstruction }) => {
-          this.activate(event.instruction.queryParams);
-        });
-    }
-  }
-
-  private prepareBeforeFetchingResources(resourceClass: string) {
-    this.resourceClass = resourceClass;
-    this.totalNumberOfResources = undefined;
-    if (this.resources) {
-      this.resources = new PageResult<Resource>();
-    }
-    this.addFormOpened = false;
-    this.briefMetadata = [];
-    this.fetchBriefMetadata();
   }
 
   fetchResources() {
@@ -187,10 +193,9 @@ export class ResourcesList {
 
   updateURL(replaceEntryInBrowserHistory?: boolean) {
     let route: string;
-    const href = window.location.href;
-    const currentParameters = parseQueryString(href.slice(href.indexOf('?')));
+    const queryParameters = getQueryParameters(this.router);
     const parameters = {};
-    parameters['tab'] = currentParameters['tab'];
+    parameters['tab'] = queryParameters['tab'];
     if (this.parentResource) {
       route = 'resources/details';
       parameters['id'] = this.parentResource.id;
@@ -200,7 +205,7 @@ export class ResourcesList {
     }
     parameters['contentsFilter'] = JSON.stringify(this.contentsFilter);
     parameters['sortBy'] = JSON.stringify(this.sortBy);
-    if (!currentParameters['tab'] || currentParameters['tab'] == 'children') {
+    if (!queryParameters['tab'] || queryParameters['tab'] == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
       parameters['currentPageNumber'] = this.currentPageNumber;
     }

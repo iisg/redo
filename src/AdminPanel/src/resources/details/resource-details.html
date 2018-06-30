@@ -34,7 +34,7 @@
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="children">
-                <resources-list if.bind="allowAddChildResource || numberOfChildren || isFiltering"
+                <resources-list if.bind="resourceDetailsTabs.activeTabId === 'children' && (allowAddChildResource || numberOfChildren || isFiltering)"
                     parent-resource.bind="resource"
                     has-resources.bind="numberOfChildren"
                     results-per-page.from-view="resultsPerPage"
