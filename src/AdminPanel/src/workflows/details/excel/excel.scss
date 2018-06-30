@@ -2,11 +2,14 @@
 
 excel {
   table {
-    th, td {
-      text-align: center;
-      @include transition(background-color .3s);
-      &.highlighted {
-        background-color: $orange;
+    tr {
+      vertical-align: middle;
+      th, td {
+        text-align: center;
+        @include transition(background-color .3s);
+        &.highlighted {
+          background-color: $orange;
+        }
       }
     }
     .legend dd {

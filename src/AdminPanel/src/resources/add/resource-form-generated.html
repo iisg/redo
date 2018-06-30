@@ -17,7 +17,7 @@
                 <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
                     translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
                 <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
-                    name="save-2"
+                    name="closed-lock"
                     bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
             </span>
         </span>
