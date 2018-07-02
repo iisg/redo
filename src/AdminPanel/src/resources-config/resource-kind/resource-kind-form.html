@@ -22,7 +22,8 @@
                 value.bind="metadataToAdd"
                 resource-kind.bind="resourceKind"
                 resource-class.bind="resourceClass"
-                update-values.bind="updateResourceKindMetadataChooserValues"></resource-kind-metadata-chooser>
+                update-values.bind="updateResourceKindMetadataChooserValues"
+                metadata-list-validate.bind="resourceKind.metadataList & validate"></resource-kind-metadata-chooser>
             <div if.bind="originalMetadataList && (editableMetadataList.length === 0 || originalMetadata(editableMetadataList[0])) & signal:'original-metadata-changed'"
                 class="full-width ${sortingMetadata ? 'sorting-enabled' : ''} validation-message-container">
                 <toggle-button if.bind="editableMetadataList.length > 1"
@@ -35,7 +36,7 @@
                     disabled.bind="submitting"
                     click.delegate="sortingMetadata = !sortingMetadata"></toggle-button>
                 <div>
-                    <div repeat.for="metadata of editableMetadataList & validate"
+                    <div repeat.for="metadata of editableMetadataList"
                         class="resource-kind-edit-form-metadata-item well">
                         <div>
                             <span class="metadata-name ${metadata.overwriteForm ? 'title' : ''}">${originalMetadata(metadata).name}</span>
