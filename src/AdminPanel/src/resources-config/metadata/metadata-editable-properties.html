@@ -32,8 +32,7 @@
     <span>${'Label' | t}
         <required-field-indicator if.bind="required"></required-field-indicator>
     </span>
-    <multilingual-editor class="validation-message-container"
-        value.bind="metadata.label & validate"
+    <multilingual-editor value.bind="metadata.label & validate"
         placeholder.bind="originalMetadata.label"></multilingual-editor>
     <span>${'Hint' | t}</span>
     <multilingual-editor value.bind="metadata.placeholder & validate"

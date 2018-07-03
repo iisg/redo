@@ -200,6 +200,9 @@ table {
   & > .section-title {
     font-size: $subtitle-font-size;
   }
+  &:not(:last-child) > .validation-message {
+    margin-bottom: $default-gap-size / 2;
+  }
   input[type=text], dropdown-select, metadata-chooser {
     min-width: $simple-form-text-input-box-minimum-width;
   }

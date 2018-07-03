@@ -1,17 +1,11 @@
 @import "../../common/styles";
 
 multilingual-editor {
-  & > * {
+  & > :not(.validation-message) {
     @include form-element();
   }
   flag > span {
     display: flex;
     align-items: center;
-  }
-  &.vertical {
-    .row > div {
-      @include make-xs-column(12);
-      float: none;
-    }
   }
 }

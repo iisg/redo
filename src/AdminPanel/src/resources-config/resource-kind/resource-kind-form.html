@@ -18,12 +18,14 @@
             <span>${'Name' | t}</span>
             <multilingual-editor value.bind="resourceKind.label & validate"></multilingual-editor>
             <span>${'Add metadata kind' | resourceClassTranslation:resourceClass}</span>
-            <resource-kind-metadata-chooser
-                value.bind="metadataToAdd"
-                resource-kind.bind="resourceKind"
-                resource-class.bind="resourceClass"
-                update-values.bind="updateResourceKindMetadataChooserValues"
-                metadata-list-validate.bind="resourceKind.metadataList & validate"></resource-kind-metadata-chooser>
+            <div class="validation-message-container">
+                <resource-kind-metadata-chooser
+                    value.bind="metadataToAdd"
+                    resource-kind.bind="resourceKind"
+                    resource-class.bind="resourceClass"
+                    update-values.bind="updateResourceKindMetadataChooserValues"
+                    metadata-list-validate.bind="resourceKind.metadataList & validate"></resource-kind-metadata-chooser>
+            </div>
             <div if.bind="originalMetadataList && (editableMetadataList.length === 0 || originalMetadata(editableMetadataList[0])) & signal:'original-metadata-changed'"
                 class="full-width ${sortingMetadata ? 'sorting-enabled' : ''} validation-message-container">
                 <toggle-button if.bind="editableMetadataList.length > 1"

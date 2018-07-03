@@ -3,7 +3,7 @@
 resource-kind-form {
   width: 100%;
   & > form > .simple-form {
-    & > span, & > .simple-form > *, & > resource-kind-metadata-chooser, & > resource-kind-constraint-editor > * {
+    & > span, resource-kind-metadata-chooser, resource-kind-constraint-editor > * {
       @include form-element();
     }
 
