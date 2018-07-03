@@ -57,10 +57,8 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     parameters['id'] = this.resourceKind.id;
     if (this.editing) {
       parameters['action'] = 'edit';
-      parameters['tab'] = 'details';
-    } else {
-      parameters['tab'] = this.resourceKindDetailsTabs.activeTabId;
     }
+    parameters['tab'] = this.resourceKindDetailsTabs.activeTabId;
     this.router.navigateToRoute('resource-kinds/details', parameters, {replace: true});
   }
 
