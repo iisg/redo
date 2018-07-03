@@ -82,7 +82,7 @@
       "aurelia-metadata": "npm:aurelia-metadata@^1.0.3",
       "aurelia-pal-browser": "npm:aurelia-pal-browser@^1.7.0",
       "aurelia-path": "npm:aurelia-path@^1.1.1",
-      "aurelia-plugins-tabs": "npm:aurelia-plugins-tabs@^2.5.2",
+      "aurelia-plugins-tabs": "npm:aurelia-plugins-tabs@^2.6.2",
       "aurelia-polyfills": "npm:aurelia-polyfills@^1.2.2",
       "aurelia-router": "npm:aurelia-router@^1.4.0",
       "aurelia-task-queue": "npm:aurelia-task-queue@1.2.1",
