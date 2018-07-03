@@ -69,34 +69,25 @@ export class ResourceDetails implements RoutableComponentActivate {
   activateTabs(activeTabId) {
     this.resourceDetailsTabs.clear();
     if (this.allowAddChildResource || this.numberOfChildren) {
-      this.resourceDetailsTabs.addTab({id: 'children', label: `${this.i18n.tr('Child resources')} (${this.numberOfChildren})`});
+      this.resourceDetailsTabs.addTab('children', () => `${this.i18n.tr('Child resources')} (${this.numberOfChildren})`);
     }
     this.resourceDetailsTabs
-      .addTab({id: 'details', label: this.i18n.tr('Metadata')})
+      .addTab('details', this.i18n.tr('Metadata'))
       .setDefaultTabId(this.numberOfChildren ? 'children' : 'details');
     if (this.resource.kind.workflow) {
       if (this.resource.kind.workflow) {
-        this.resourceDetailsTabs.addTab({
-          id: 'workflow',
-          label: this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass)
-        });
+        this.resourceDetailsTabs.addTab('workflow', this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass));
       }
     }
     if (this.resource.resourceClass == 'users') {
       const isUserResourceKind = this.resource.kind.metadataList.filter(m => m.id == SystemMetadata.GROUP_MEMBER.id).length > 0;
       if (isUserResourceKind) {
         if (this.hasRole.toView('ADMIN', 'users')) {
-          this.resourceDetailsTabs.addTab({
-            id: 'user-roles',
-            label: this.i18n.tr('Roles')
-          });
+          this.resourceDetailsTabs.addTab('user-roles', this.i18n.tr('Roles'));
         }
       }
       else {
-        this.resourceDetailsTabs.addTab({
-          id: 'users-in-group',
-          label: this.i18n.tr('Users')
-        });
+        this.resourceDetailsTabs.addTab('users-in-group', this.i18n.tr('Users'));
       }
     }
     this.resourceDetailsTabs.setActiveTabId(activeTabId);
