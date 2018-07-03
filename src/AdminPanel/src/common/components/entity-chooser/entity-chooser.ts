@@ -7,7 +7,7 @@ import {fromView} from "../binding-mode";
 @customElement('entity-chooser')
 @autoinject
 export class EntityChooser extends DropdownSelect {
-  @bindable({changeHandler: 'updateValues'}) entities: Entity[];
+  @bindable entities: Entity[];
   @bindable({changeHandler: 'updateValues'}) filter: (entity: Entity) => boolean;
   @bindable(fromView) updateValues = () => {
     if (this.entities && this.filter) {
@@ -16,12 +16,33 @@ export class EntityChooser extends DropdownSelect {
       this.values = this.entities;
     }
   }
+  private valueUpdated: boolean;
+
+  entitiesChanged() {
+    this.selectEquivalentEntity();
+    this.updateValues();
+    if (this.valueUpdated && !this.filter) {
+      super.valueChanged();
+    }
+  }
 
   valueChanged() {
-    if (this.filter) {
-      this.updateValues();
+    if (!this.valueUpdated) {
+      this.selectEquivalentEntity();
+      if (this.filter) {
+        this.updateValues();
+      } else {
+        super.valueChanged();
+      }
     } else {
-      super.valueChanged();
+      this.valueUpdated = false;
+    }
+  }
+
+  private selectEquivalentEntity() {
+    if (this.entities && this.value) {
+      this.valueUpdated = true;
+      this.value = this.entities.find(entity => entity.id == (this.value as Entity).id);
     }
   }
 }

@@ -1,14 +1,6 @@
-.matching-select2-style {
-    padding: 0 8px;
-    line-height: 28px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    width: 100%;
-}
-
 top-bar-search {
-    width: calc(100% - 120px);
-    min-width: 234px;
+  width: calc(100% - 120px);
+  min-width: 234px;
   .chooser-select2-style {
     flex: 1;
     min-width: 200px;
@@ -19,7 +11,14 @@ top-bar-search {
     min-width: 234px;
     max-width: 55%;
     background: none;
-    & > button {
+    .input-box-matching-select2-style {
+      padding: 0 8px;
+      line-height: 28px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      width: 100%;
+    }
+    button {
       cursor: pointer;
       background: none;
       border: none;

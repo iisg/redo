@@ -2,7 +2,7 @@ import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {Router} from "aurelia-router";
-import {Metadata, filterableControls} from "../../../../resources-config/metadata/metadata";
+import {filterableControls, Metadata} from "../../../../resources-config/metadata/metadata";
 import {MetadataRepository} from "../../../../resources-config/metadata/metadata-repository";
 import {MetadataValue} from "../../../../resources/metadata-value";
 import {propertyKeys, safeJsonParse} from "../../../utils/object-utils";
@@ -24,18 +24,18 @@ export class TopBarSearch {
   attached() {
     const queryParams = this.router.currentInstruction.queryParams;
     const contentsFilter = safeJsonParse(queryParams['contentsFilter']);
-    if (contentsFilter) {
-      this.fetchMetadata(contentsFilter);
-    }
+    this.fetchMetadata(contentsFilter);
   }
 
   private fetchMetadata(contentsFilter: any) {
-    const id = propertyKeys(contentsFilter)[0];
-    this.metadataRepository.get(id).then(metadata => {
-      this.metadata = metadata;
-      this.metadataValue = new MetadataValue(contentsFilter[id]);
-      this.setValueByResourceClass(this.resourceClass, this.metadata, this.metadataValue);
-    });
+    const id = contentsFilter && propertyKeys(contentsFilter)[0];
+    if (id) {
+      this.metadataRepository.get(id).then(metadata => {
+        this.metadata = metadata;
+        this.metadataValue = new MetadataValue(contentsFilter[id]);
+        this.setValueByResourceClass(this.resourceClass, this.metadata, this.metadataValue);
+      });
+    }
   }
 
   private updateSearchData(event: ResourceClassChangeEvent): void {

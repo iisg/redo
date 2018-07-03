@@ -92,11 +92,6 @@ label {
   white-space: pre-wrap;
 }
 
-.button-parent {
-  position: relative;
-  z-index: 1;
-}
-
 .has-error .help-block {
   display: block;
 }
@@ -248,34 +243,8 @@ table {
   color: $red;
 }
 
-.no-margin-top {
-  margin-top: 0 !important;
-}
-
 body > tr[oa-sortable-item] {
   display: none;
-}
-
-.btn-bottom-right {
-  position: absolute;
-  right: 25px;
-  bottom: 25px;
-  z-index: 10;
-}
-
-.btn-narrow {
-  padding: 8px 10px;
-  &.btn-sm {
-    padding: 5px 7px;
-  }
-  &.btn-xs {
-    padding: 4px 5px;
-  }
-}
-
-.btn-invisible {
-  cursor: default;
-  background-color: transparent !important;
 }
 
 button.unstyled {
@@ -283,19 +252,9 @@ button.unstyled {
   border: none;
 }
 
-.btn-narrow {
-  padding: 8px 10px;
-  &.btn-sm {
-    padding: 5px 7px;
-  }
-  &.btn-xs {
-    padding: 4px 5px;
-  }
-}
-
 input, textarea, select {
   &[disabled] {
-    color: #999;
+    color: $lightish-grey;
   }
 }
 
@@ -307,14 +266,8 @@ textarea {
   resize: vertical;
 }
 
-.togglebutton label {
-  color: #333;
-}
-
-.bootstrap-select {
-  &.disabled > button {
-    color: #999 !important;
-  }
+.form-control:not([type=date]) {
+  height: initial;
 }
 
 .well {
@@ -341,10 +294,6 @@ textarea {
   padding: 0 !important;
 }
 
-.checkbox label, .radio label {
-  color: grey;
-}
-
 .alert {
   margin-bottom: 0;
   padding: $default-gap-size;
@@ -356,17 +305,6 @@ textarea {
   }
 }
 
-.alert > .btn {
-  margin-top: -8px;
-
-  &.btn-sm {
-    margin-top: -4px;
-  }
-}
-
-.badge.badge-danger {
-  background-color: red;
-}
 
 .diagram-cover {
   z-index: 999 !important; // Fix UI elements like menus displaying over graphs, but not interacting with mouse.
