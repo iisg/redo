@@ -15,9 +15,7 @@ import {DetailsViewTabs} from "./details-view-tabs";
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
-  metadataChildrenList: Metadata[];
   metadata: Metadata;
-  addFormOpened: boolean = false;
   editing: boolean = false;
   metadataDetailsTabs: DetailsViewTabs;
   numOfChildren: number;
@@ -50,35 +48,29 @@ export class MetadataDetails implements RoutableComponentActivate {
     this.metadata = await this.metadataRepository.get(params.id);
     routeConfig.navModel.setTitle(this.i18n.tr('Metadata') + ` #${this.metadata.id}`);
     this.contextResourceClass.setCurrent(this.metadata.resourceClass);
-    const metadata = await this.metadataRepository.getListQuery()
+    this.numOfChildren = (await this.metadataRepository.getListQuery()
       .filterByParentId(this.metadata.id)
-      .get();
+      .get()).length;
     this.resourceKindList = await this.resourceKindRepository.getListQuery().filterByMetadataId(this.metadata.id).get();
-    this.numOfChildren = metadata.length;
     this.buildTabs(params.tab);
   }
 
   private buildTabs(activeTabId: string) {
     this.metadataDetailsTabs
       .clear()
-      .addTab({id: 'details', label: this.i18n.tr('Details')})
-      .addTab({id: 'child-metadata', label: `${this.i18n.tr('Submetadata kinds')} (${this.numOfChildren})`})
-      .addTab({id: 'constraints', label: this.i18n.tr('Constraints')})
-      .addTab({
-        id: 'resource-kinds',
-        label: `${this.i18n.tr('resource_classes::' + this.metadata.resourceClass + '//resource-kinds')} (${this.resourceKindList.length})`
-      })
+      .addTab('details', this.i18n.tr('Details'))
+      .addTab('child-metadata', () => `${this.i18n.tr('Submetadata kinds')} (${this.numOfChildren})`)
+      .addTab('constraints', this.i18n.tr('Constraints'))
+      .addTab(
+        'resource-kinds',
+        () => `${this.i18n.tr('resource_classes::' + this.metadata.resourceClass + '//resource-kinds')} (${this.resourceKindList.length})`
+      )
       .setActiveTabId(activeTabId);
   }
 
   @computedFrom('metadata.constraints', 'metadata.control')
   get constraintNames(): string[] {
     return this.config.get('control_constraints')[this.metadata.control];
-  }
-
-  childMetadataSaved(savedMetadata: Metadata) {
-    this.metadataChildrenList.unshift(savedMetadata);
-    this.addFormOpened = false;
   }
 
   deleteMetadata(): Promise<any> {

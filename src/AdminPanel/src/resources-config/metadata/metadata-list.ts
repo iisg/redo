@@ -3,6 +3,7 @@ import {bindable} from "aurelia-templating";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
 import {ContextResourceClass} from 'resources/context/context-resource-class';
+import {Router} from "aurelia-router";
 
 @autoinject
 export class MetadataList {
@@ -13,7 +14,8 @@ export class MetadataList {
   progressBar: boolean;
 
   constructor(private metadataRepository: MetadataRepository,
-              private contextResourceClass: ContextResourceClass) {
+              private contextResourceClass: ContextResourceClass,
+              private router: Router) {
   }
 
   activate(params: any) {
@@ -56,6 +58,6 @@ export class MetadataList {
 
   metadataAdded(newMetadata: Metadata) {
     this.addFormOpened = false;
-    this.metadataList.unshift(newMetadata);
+    this.router.navigateToRoute('metadata/details', {id: newMetadata.id});
   }
 }

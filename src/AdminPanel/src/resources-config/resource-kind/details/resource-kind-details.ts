@@ -45,9 +45,9 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   activateTabs(activeTabId: string) {
     // remove parent metadata from metadata length
     const metadataListLength = this.resourceKind.metadataList.length - 1;
-    this.resourceKindDetailsTabs.clear().addTab({id: 'details', label: `${this.i18n.tr('Metadata')} (${metadataListLength})`});
+    this.resourceKindDetailsTabs.clear().addTab('details', () => `${this.i18n.tr('Metadata')} (${metadataListLength})`);
     if (this.resourceKind.workflow) {
-      this.resourceKindDetailsTabs.addTab({id: 'workflow', label: this.i18n.tr('Workflow')});
+      this.resourceKindDetailsTabs.addTab('workflow', this.i18n.tr('Workflow'));
     }
     this.resourceKindDetailsTabs.setActiveTabId(activeTabId);
   }
@@ -60,6 +60,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     }
     parameters['tab'] = this.resourceKindDetailsTabs.activeTabId;
     this.router.navigateToRoute('resource-kinds/details', parameters, {replace: true});
+    this.resourceKindDetailsTabs.updateLabels();
   }
 
   toggleEditForm() {

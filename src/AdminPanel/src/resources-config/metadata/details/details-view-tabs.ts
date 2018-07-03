@@ -11,28 +11,29 @@ export class DetailsViewTabs {
   public constructor(private ea: EventAggregator, private onTabChange: () => void = () => undefined) {
   }
 
-  public addTab: (tab: DetailsViewTab) => this = (tab: DetailsViewTab) => {
-    this.tabIds.push(tab.id);
-    this.tabs.push(tab);
+  public addTab(id: string, label: string | (() => string)): this {
+    this.tabIds.push(id);
+    const labelFactory = (typeof label === 'function' ? label : () => label) as () => string;
+    this.tabs.push({id, labelFactory, label: labelFactory(), active: false});
     if (!this.defaultTabId) {
-      this.setDefaultTabId(tab.id);
+      this.setDefaultTabId(id);
     }
-    this.listeners.push(this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${tab.id}`, () => {
-      this.setActiveTabId(tab.id);
+    this.listeners.push(this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${id}`, () => {
+      this.setActiveTabId(id);
       this.onTabChange();
     }));
     return this;
-  };
+  }
 
-  public setDefaultTabId: (tabId: string) => this = (tabId: string) => {
+  public setDefaultTabId(tabId: string): this {
     this.defaultTabId = tabId;
     if (!this.activeTabId) {
       this.setActiveTabId(tabId);
     }
     return this;
-  };
+  }
 
-  public setActiveTabId: (activeTabId: string) => this = (activeTabId: string) => {
+  public setActiveTabId(activeTabId: string): this {
     this.tabs.forEach(tab => tab.active = false);
     const requestedTabId = activeTabId;
     if (!this.tabExists(activeTabId)) {
@@ -43,24 +44,30 @@ export class DetailsViewTabs {
     if (requestedTabId && requestedTabId != activeTabId) {
       this.onTabChange();
     }
+    this.updateLabels();
     return this;
-  };
+  }
 
-  public clear: () => this = () => {
+  public clear(): this {
     this.listeners.forEach(listener => listener.dispose());
     this.listeners = [];
     this.tabs = [];
     this.tabIds = [];
     return this;
-  };
+  }
 
-  public tabExists = (tabId: string) => {
+  public tabExists(tabId: string): boolean {
     return this.tabIds.indexOf(tabId) >= 0;
-  };
+  }
+
+  public updateLabels(): void {
+    this.tabs.forEach(tab => tab.label = tab.labelFactory());
+  }
 }
 
-export interface DetailsViewTab {
+interface DetailsViewTab {
   id: string;
   label: string;
-  active?: boolean;
+  labelFactory: () => string;
+  active: boolean;
 }
