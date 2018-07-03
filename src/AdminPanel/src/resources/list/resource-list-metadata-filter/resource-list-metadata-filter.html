@@ -1,22 +1,16 @@
 <template>
-    <div class="filter-container">
-        <label for.bind="metadata.name">
-            <icon name="filter"
-                class="filter-icon"></icon>
-        </label>
-        <input type="checkbox"
-            id.bind="metadata.name"
-            checked.bind="isFilterUsed">
-        <form submit.delegate="fetchFilteredResources()"
-            if.bind="isFilterUsed">
-            <input type="text"
-                class="filter-input "
-                blur.trigger="fetchFilteredResources()"
-                focus="true"
-                value.bind="metadataValue.value">
-            <button type="submit">
-                <icon name="search"></icon>
-            </button>
-        </form>
-    </div>
+    <icon name="filter"
+        mousedown.delegate="toggleInputBoxVisibility()"></icon>
+    <form if.bind="inputBoxVisible"
+        submit.delegate="fetchFilteredResources()">
+        <input class="form-control"
+            type="text"
+            placeholder="${'Filter' | t}"
+            size.bind="inputBoxSize"
+            value.bind="metadataValue"
+            focus.bind="inputBoxFocused"
+            blur.trigger="onInputBoxBlurred()">
+        <icon name="search"
+            mousedown.delegate="fetchFilteredResources()"></icon>
+    </form>
 </template>

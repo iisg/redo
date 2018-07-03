@@ -20,14 +20,12 @@
                     column-id.bind="'kindId'"
                     sort-by.bind="sortBy"></sort-button>
             </th>
-            <th repeat.for="metadata of columnMetadata"
-                class="show-filter">
+            <th repeat.for="metadata of columnMetadata">
                 ${metadata | metadataLabel}
                 <sort-button if.bind="sortable"
                     column-id.bind="metadata.id"
                     sort-by.bind="sortBy"></sort-button>
                 <resource-list-metadata-filter if.bind="isFilterableMetadata(metadata) && filterable"
-                    class.bind="contentsFilter[metadata.id] ? 'filter-column filter-display' : 'filter-column'"
                     metadata.bind="metadata"
                     contents-filter.bind="contentsFilter"></resource-list-metadata-filter>
             </th>

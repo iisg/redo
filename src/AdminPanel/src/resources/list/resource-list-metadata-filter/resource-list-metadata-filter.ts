@@ -1,59 +1,88 @@
-import {bindable} from "aurelia-templating";
-import {Metadata} from "../../../resources-config/metadata/metadata";
-import {MetadataValue} from "../../metadata-value";
-import {BindingEngine} from "aurelia-binding";
+import {observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {Router} from "aurelia-router";
-import {twoWay} from "../../../common/components/binding-mode";
+import {bindable} from "aurelia-templating";
 import {pickBy} from "lodash";
+import {twoWay} from "../../../common/components/binding-mode";
+import {Metadata} from "../../../resources-config/metadata/metadata";
 
 @autoinject
 export class ResourceListMetadataFilter {
   @bindable metadata: Metadata;
   @bindable(twoWay) contentsFilter: NumberMap<string>;
-  isFilterUsed: boolean = false;
+  @observable metadataValue: any;
+  previousMetadataValue: any;
+  inputBoxVisible: boolean;
+  inputBoxFocused: boolean;
+  inputBoxSize = 1;
 
-  metadataValue: MetadataValue = new MetadataValue();
-
-  constructor(private bindingEngine: BindingEngine, private router: Router) {
+  constructor(private router: Router) {
   }
 
   attached() {
-    this.ensureContentsFilterExists();
-    this.metadataValue.onChange(this.bindingEngine, () => this.onValueChange());
-    this.updateIsFilterUsed();
-  }
-
-  detached() {
-    this.metadataValue.clearChangeListener();
-  }
-
-  contentsFilterChanged() {
-    this.metadataValue.value = this.contentsFilter ? this.contentsFilter[this.metadata.id] : '';
-  }
-
-  private ensureContentsFilterExists() {
     if (!this.contentsFilter) {
       this.contentsFilter = {};
+    } else {
+      this.contentsFilterChanged();
     }
   }
 
-  private onValueChange() {
-    this.ensureContentsFilterExists();
-    this.contentsFilter[this.metadata.id] = this.metadataValue.value;
+  contentsFilterChanged() {
+    this.previousMetadataValue = this.metadataValue;
+    this.metadataValue = this.contentsFilter[this.metadata.id];
+    if (this.metadataValue != this.previousMetadataValue) {
+      this.inputBoxVisible = !!this.metadataValue;
+      this.previousMetadataValue = this.metadataValue;
+    }
   }
 
-  private updateIsFilterUsed() {
-    this.isFilterUsed = !!this.metadataValue.value;
+  metadataValueChanged() {
+    this.contentsFilter[this.metadata.id] = this.metadataValue;
+    this.inputBoxSize = this.metadataValue && this.metadataValue.length || 1;
+  }
+
+  toggleInputBoxVisibility() {
+    if (this.inputBoxVisible) {
+      if (this.metadataValue) {
+        this.metadataValue = undefined;
+        this.fetchFilteredResourcesIfMetadataValueChanged();
+      }
+      this.takeFocusOutOfInputBoxAndHideIt();
+    } else {
+      this.showInputBoxAndSetFocusOnIt();
+    }
+  }
+
+  onInputBoxBlurred() {
+    if (this.inputBoxVisible && !this.metadataValue) {
+      this.takeFocusOutOfInputBoxAndHideIt();
+    }
+    this.fetchFilteredResourcesIfMetadataValueChanged();
   }
 
   fetchFilteredResources() {
-    this.updateIsFilterUsed();
-    this.contentsFilter[this.metadata.id] = this.metadataValue.value;
+    this.previousMetadataValue = this.metadataValue || undefined;
+    this.contentsFilter[this.metadata.id] = this.metadataValue;
     const currentInstruction = this.router.currentInstruction;
     let parameters = Object.assign(currentInstruction.params, currentInstruction.queryParams);
     const notEmptyFilters = pickBy(this.contentsFilter, v => v && v.trim());
     parameters['contentsFilter'] = JSON.stringify(notEmptyFilters);
     this.router.navigateToRoute(currentInstruction.config.name, parameters, {replace: true});
+  }
+
+  private fetchFilteredResourcesIfMetadataValueChanged() {
+    if ((this.metadataValue || undefined) != this.previousMetadataValue) {
+      this.fetchFilteredResources();
+    }
+  }
+
+  private showInputBoxAndSetFocusOnIt() {
+    this.inputBoxVisible = true;
+    this.inputBoxFocused = true;
+  }
+
+  private takeFocusOutOfInputBoxAndHideIt() {
+    this.inputBoxFocused = false;
+    this.inputBoxVisible = false;
   }
 }

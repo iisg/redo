@@ -1,26 +1,22 @@
+@import "../../../common/styles";
+
+$input-box-minimum-width: 100px;
+$input-box-maximum-width: 200px;
+
 resource-list-metadata-filter {
-  .filter-container {
-    display: inline;
-    .filter-icon {
-      cursor: pointer;
+  white-space: nowrap;
+  icon {
+    cursor: pointer;
+    &.orange {
+      color: $orange;
     }
-    form {
-      .filter-input {
-        padding: 0 8px;
-        line-height: 28px;
-        border: 1px solid #aaa;
-        border-radius: 4px;
-        color: black;
-      }
-      button {
-        background-color: transparent;
-      }
-    }
-    input[type=checkbox] {
-      display: none;
-    }
-    input[type=checkbox]:checked + form {
+  }
+  form {
+    display: inline-block;
+    .form-control {
       display: inline;
+      min-width: $input-box-minimum-width;
+      max-width: $input-box-maximum-width;
     }
   }
 }
