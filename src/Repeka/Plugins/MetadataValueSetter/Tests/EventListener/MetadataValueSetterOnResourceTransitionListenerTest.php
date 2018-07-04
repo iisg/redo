@@ -1,12 +1,12 @@
 <?php
 namespace Repeka\Plugins\MetadataValueSetter\Tests\EventListener;
 
-use Repeka\Application\Cqrs\Event\BeforeCommandHandlingEvent;
+use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
-use Repeka\Plugins\MetadataValueSetter\EventListener\MetadataValueSetterOnResourceTransitionListener;
+use Repeka\Plugins\MetadataValueSetter\Model\MetadataValueSetterOnResourceTransitionListener;
 use Repeka\Plugins\MetadataValueSetter\Model\RepekaMetadataValueSetterResourceWorkflowPlugin;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -68,7 +68,7 @@ class MetadataValueSetterOnResourceTransitionListenerTest extends \PHPUnit_Frame
             $this->createWorkflowTransitionMock([], [], ['a'])
         );
         $event = new BeforeCommandHandlingEvent($command);
-        $this->valueSetter->onResourceTransition($event);
+        $this->valueSetter->onBeforeCommandHandling($event);
         return $event->getCommand()->getContents();
     }
 }

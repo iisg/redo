@@ -1,11 +1,9 @@
 <?php
-namespace Repeka\Application\Cqrs\Event;
+namespace Repeka\Domain\Cqrs\Event;
 
 use Repeka\Domain\Cqrs\Command;
 
 class CommandErrorEvent extends CqrsCommandEvent {
-    const EVENT_NAME = 'command_error';
-
     /** @var \Exception */
     private $exception;
 

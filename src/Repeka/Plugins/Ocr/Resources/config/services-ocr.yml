@@ -4,10 +4,6 @@ services:
     autoconfigure: true
     public: false
 
-  Repeka\Plugins\Ocr\EventListener\OcrOnResourceTransitionListener:
-    tags:
-      - { event: command_handled.resource_transition, name: kernel.event_listener, method: onResourceTransition }
-
   Repeka\Plugins\Ocr\Controller\:
     resource: '../../Controller'
 

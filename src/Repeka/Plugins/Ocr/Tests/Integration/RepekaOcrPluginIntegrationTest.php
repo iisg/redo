@@ -4,8 +4,8 @@ namespace Repeka\Plugins\Ocr\Tests\Integration;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
-use Repeka\Plugins\Ocr\EventListener\OcrOnResourceTransitionListener;
 use Repeka\Plugins\Ocr\Model\OcrCommunicator;
+use Repeka\Plugins\Ocr\Model\OcrOnResourceTransitionListener;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 

@@ -1,19 +1,19 @@
 <?php
 namespace Repeka\Application\Cqrs\Middleware;
 
-use Repeka\Application\Cqrs\Event\BeforeCommandHandlingEvent;
-use Repeka\Application\Cqrs\Event\CommandErrorEvent;
-use Repeka\Application\Cqrs\Event\CommandHandledEvent;
-use Repeka\Application\Cqrs\Event\CqrsCommandEvent;
 use Repeka\Domain\Cqrs\Command;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
+use Repeka\Domain\Cqrs\Event\CommandErrorEvent;
+use Repeka\Domain\Cqrs\Event\CommandEventsListener;
+use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
+use Repeka\Domain\Cqrs\Event\CqrsCommandEvent;
 
 class DispatchCommandEventsMiddleware implements CommandBusMiddleware {
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
+    /** @var iterable|CommandEventsListener[] */
+    private $commandEventsListeners;
 
-    public function __construct(EventDispatcherInterface $dispatcher) {
-        $this->dispatcher = $dispatcher;
+    public function __construct(iterable $commandEventsListeners) {
+        $this->commandEventsListeners = $commandEventsListeners;
     }
 
     public function handle(Command $command, callable $next) {
@@ -31,6 +31,8 @@ class DispatchCommandEventsMiddleware implements CommandBusMiddleware {
     }
 
     private function dispatch(CqrsCommandEvent $event) {
-        $this->dispatcher->dispatch($event->getEventName(), $event);
+        foreach ($this->commandEventsListeners as $listener) {
+            $listener->handleCommandEvent($event);
+        }
     }
 }

@@ -1,13 +1,13 @@
 <?php
-namespace Repeka\Plugins\MetadataValueSetter\EventListener;
+namespace Repeka\Plugins\MetadataValueSetter\Model;
 
-use Repeka\Application\Cqrs\Event\BeforeCommandHandlingEvent;
+use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
+use Repeka\Domain\Cqrs\Event\CommandEventsListener;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\Utils\EntityUtils;
-use Repeka\Plugins\MetadataValueSetter\Model\RepekaMetadataValueSetterResourceWorkflowPlugin;
 
-class MetadataValueSetterOnResourceTransitionListener {
+class MetadataValueSetterOnResourceTransitionListener extends CommandEventsListener {
     /** @var RepekaMetadataValueSetterResourceWorkflowPlugin */
     private $configuration;
     /** @var ResourceDisplayStrategyEvaluator */
@@ -21,7 +21,7 @@ class MetadataValueSetterOnResourceTransitionListener {
         $this->strategyEvaluator = $strategyEvaluator;
     }
 
-    public function onResourceTransition(BeforeCommandHandlingEvent $event) {
+    public function onBeforeCommandHandling(BeforeCommandHandlingEvent $event): void {
         /** @var ResourceTransitionCommand $command */
         $command = $event->getCommand();
         $resource = $command->getResource();

@@ -4,7 +4,7 @@ namespace Repeka\Plugins\MetadataValueSetter\Tests\Integration;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
-use Repeka\Plugins\MetadataValueSetter\EventListener\MetadataValueSetterOnResourceTransitionListener;
+use Repeka\Plugins\MetadataValueSetter\Model\MetadataValueSetterOnResourceTransitionListener;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -61,7 +61,7 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
         $this->assertEquals($oldContent, $newContent);
     }
 
-    public function testMetdatataValueSetter() {
+    public function testMetadataValueSetter() {
         $resource = $this->getPhpBookResource();
         $transitions = $resource->getWorkflow()->getTransitions($resource);
         $workflow = $resource->getWorkflow();

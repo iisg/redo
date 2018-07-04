@@ -1,13 +1,14 @@
 <?php
 namespace Repeka\Domain\EventListener;
 
-use Repeka\Application\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Cqrs\CommandBus;
+use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
+use Repeka\Domain\Cqrs\Event\CommandEventsListener;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\Utils\EntityUtils;
 
-class ResourceMetadataAutoAssignListener {
+class ResourceMetadataAutoAssignListener extends CommandEventsListener {
 
     /** @var CommandBus */
     private $commandBus;
@@ -16,7 +17,7 @@ class ResourceMetadataAutoAssignListener {
         $this->commandBus = $commandBus;
     }
 
-    public function onResourceTransition(BeforeCommandHandlingEvent $event) {
+    public function onBeforeCommandHandling(BeforeCommandHandlingEvent $event): void {
         /** @var ResourceTransitionCommand $command */
         $command = $event->getCommand();
         $resource = $command->getResource();

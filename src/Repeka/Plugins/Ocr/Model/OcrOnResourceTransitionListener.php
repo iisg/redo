@@ -1,12 +1,11 @@
 <?php
-namespace Repeka\Plugins\Ocr\EventListener;
+namespace Repeka\Plugins\Ocr\Model;
 
-use Repeka\Application\Cqrs\Event\CommandHandledEvent;
+use Repeka\Domain\Cqrs\Event\CommandEventsListener;
+use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
-use Repeka\Plugins\Ocr\Model\OcrCommunicator;
-use Repeka\Plugins\Ocr\Model\RepekaOcrResourceWorkflowPlugin;
 
-class OcrOnResourceTransitionListener {
+class OcrOnResourceTransitionListener extends CommandEventsListener {
     /** @var OcrCommunicator */
     private $communicator;
     /** @var RepekaOcrResourceWorkflowPlugin */
@@ -21,7 +20,7 @@ class OcrOnResourceTransitionListener {
         $this->communicator = $communicator;
     }
 
-    public function onResourceTransition(CommandHandledEvent $event) {
+    public function onCommandHandled(CommandHandledEvent $event): void {
         /** @var ResourceTransitionCommand $command */
         $command = $event->getCommand();
         $resource = $command->getResource();

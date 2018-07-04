@@ -25,8 +25,8 @@ class TestContainerPass implements CompilerPassInterface {
         \Repeka\Domain\Repository\UserRepository::class,
         \Repeka\Domain\Service\ResourceDisplayStrategyEvaluator::class,
         \Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule::class,
-        \Repeka\Plugins\MetadataValueSetter\EventListener\MetadataValueSetterOnResourceTransitionListener::class,
-        \Repeka\Plugins\Ocr\EventListener\OcrOnResourceTransitionListener::class,
+        \Repeka\Plugins\MetadataValueSetter\Model\MetadataValueSetterOnResourceTransitionListener::class,
+        \Repeka\Plugins\Ocr\Model\OcrOnResourceTransitionListener::class,
         'sensio_framework_extra.view.guesser',
     ];
 
@@ -48,8 +48,8 @@ class TestContainerPass implements CompilerPassInterface {
                 $madePublic[] = $id;
             }
         }
-        Assertion::count(
-            $madePublic,
+        Assertion::greaterOrEqualThan(
+            count($madePublic),
             count(self::$publicInTests),
             function () use ($madePublic) {
                 return 'The following services were not made public although they have been requtested: '

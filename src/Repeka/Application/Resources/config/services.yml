@@ -24,6 +24,9 @@ services:
   Repeka\Domain\MetadataImport\Transform\ImportTransformComposite:
     - !tagged repeka.import_transform
 
+  Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware:
+    - !tagged repeka.command_events_listener
+
   Repeka\Application\Cqrs\RepekaCommandBus:
     -
       - '@Repeka\Application\Cqrs\Middleware\MetricsCommandBusMiddleware'
@@ -112,12 +115,6 @@ services:
   Monolog\Formatter\LineFormatter: [~, ~, true]
   Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener:
     tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }]
-
-  Repeka\Domain\EventListener\ResourceMetadataAutoAssignListener:
-    tags: [{ event: command_before.resource_transition, name: kernel.event_listener, method: onResourceTransition }]
-
-  Repeka\Domain\EventListener\UpdateUserRolesAfterEditListener:
-    tags: [{ event: command_handled.resource_transition, name: kernel.event_listener, method: onResourceTransition }]
 
   Repeka\Domain\UseCase\User\UserGrantRolesCommandHandler:
     public: true
