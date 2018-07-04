@@ -7,6 +7,7 @@ import * as $ from "jquery";
 import "select2";
 import {changeHandler, twoWay} from "../binding-mode";
 import {booleanAttribute} from "../boolean-attribute";
+import {debounce} from "lodash";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
@@ -19,6 +20,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable @booleanAttribute hideClearButton: boolean;
   @bindable @booleanAttribute useComputedWidth: boolean;
   @bindable @booleanAttribute disabled: boolean;
+  @bindable @booleanAttribute clearAfterSelect: boolean;
   dropdown: Element;
 
   constructor(private i18n: I18N, private element: Element) {
@@ -64,16 +66,16 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   private setupDropdown() {
     this.createDropdown().on('select2:select', () => this.onSelectedItem())
     // Timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049 .
-    .on('select2:unselect', () => setTimeout(() => this.onSelectedItem()))
-    // Prevents dropdown to appear after clearing a value: https://github.com/select2/select2/issues/3320#issuecomment-350249668 .
-    .on('select2:unselecting', (event) => {
-      let originalEvent = (event as any).params.args.originalEvent;
-      if (originalEvent) {
+      .on('select2:unselect', () => setTimeout(() => this.onSelectedItem()))
+      // Prevents dropdown to appear after clearing a value: https://github.com/select2/select2/issues/3320#issuecomment-350249668 .
+      .on('select2:unselecting', (event) => {
+        let originalEvent = (event as any).params.args.originalEvent;
+        if (originalEvent) {
           originalEvent.stopPropagation();
-      } else {
+        } else {
           $(this.dropdown).one('select2:opening', (event) => event.preventDefault());
-      }
-    });
+        }
+      });
   }
 
   private createDropdown(): JQuery {
@@ -135,8 +137,10 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     } else {
       this.value = this.values[selectedIndex];
     }
-    setTimeout(() => this.element.dispatchEvent(ChangeEvent.newInstance()));
+    this.dispatchChangedEvent(this.value);
   }
+
+  dispatchChangedEvent = debounce((value) => this.element.dispatchEvent(ChangeEvent.newInstance(value)), 10);
 
   updateSelectedItem() {  // Copy value from VM to DOM.
     if (this.value == undefined || this.values == undefined || this.values.length == 0) {
@@ -152,6 +156,9 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
       ? values
       : values[0];
     $(this.dropdown).val(value as any).trigger('change');
+    if (this.clearAfterSelect) {
+      this.value = undefined;
+    }
   }
 
   getIndex(value: any) {
@@ -173,7 +180,10 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 class ChangeEvent {
   bubbles = true;
 
-  static newInstance(): Event {
-    return DOM.createCustomEvent('change', new ChangeEvent());
+  private constructor(public detail) {
+  }
+
+  static newInstance(value: any): Event {
+    return DOM.createCustomEvent('change', new ChangeEvent(value));
   }
 }

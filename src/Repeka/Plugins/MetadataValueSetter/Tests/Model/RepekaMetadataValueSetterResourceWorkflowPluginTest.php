@@ -1,64 +1,67 @@
 <?php
-namespace Repeka\Plugins\MetadataValueSetter\Tests\EventListener;
+namespace Repeka\Plugins\MetadataValueSetter\Tests\Model;
 
 use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlacePluginConfiguration;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Plugins\MetadataValueSetter\Model\MetadataValueSetterOnResourceTransitionListener;
 use Repeka\Plugins\MetadataValueSetter\Model\RepekaMetadataValueSetterResourceWorkflowPlugin;
 use Repeka\Tests\Traits\StubsTrait;
 
-class MetadataValueSetterOnResourceTransitionListenerTest extends \PHPUnit_Framework_TestCase {
+class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
-    /** @var RepekaMetadataValueSetterResourceWorkflowPlugin|\PHPUnit_Framework_MockObject_MockObject */
-    private $config;
     /** @var ResourceDisplayStrategyEvaluator|\PHPUnit_Framework_MockObject_MockObject */
     private $strategyEvaluator;
-    /** @var MetadataValueSetterOnResourceTransitionListener */
+    /** @var RepekaMetadataValueSetterResourceWorkflowPlugin */
     private $valueSetter;
 
     /** @before */
     public function init() {
-        $this->config = $this->createMock(RepekaMetadataValueSetterResourceWorkflowPlugin::class);
         $this->strategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
-        $this->valueSetter = new MetadataValueSetterOnResourceTransitionListener($this->config, $this->strategyEvaluator);
+        $this->valueSetter = new RepekaMetadataValueSetterResourceWorkflowPlugin($this->strategyEvaluator);
     }
 
     public function testDoNothing() {
-        $this->assertEquals([], $this->getContentsAfterEvent([])->toArray());
+        $this->assertEquals([], $this->getContentsAfterEvent([], [])->toArray());
     }
 
     public function testDoNothingForInvalidMetadataIds() {
-        $this->config->method('getOptionFromPlaces')->willReturnOnConsecutiveCalls(['5'], ['YY']);
-        $this->assertEquals([], $this->getContentsAfterEvent([])->toArray());
+        $this->assertEquals([], $this->getContentsAfterEvent([], ['metadataName' => 5, 'metadataValue' => 'YY'])->toArray());
     }
 
     public function testInsertsValue() {
-        $this->config->method('getOptionFromPlaces')->willReturnOnConsecutiveCalls(['1'], ['YY']);
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
-        $this->assertEquals(ResourceContents::fromArray([1 => 'YY']), $this->getContentsAfterEvent([]));
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => 'YY']),
+            $this->getContentsAfterEvent([], ['metadataName' => 1, 'metadataValue' => 'YY'])
+        );
     }
 
     public function testAddsValue() {
-        $this->config->method('getOptionFromPlaces')->willReturnOnConsecutiveCalls(['1'], ['YY']);
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
-        $this->assertEquals(ResourceContents::fromArray([1 => ['XX', 'YY']]), $this->getContentsAfterEvent([1 => 'XX']));
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => ['XX', 'YY']]),
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY'])
+        );
     }
 
     public function testGeneratesValueBasedOnNewContent() {
-        $this->config->method('getOptionFromPlaces')->willReturnOnConsecutiveCalls(['1'], ['YY']);
         $this->strategyEvaluator->method('render')->willReturnCallback(
             function (ResourceContents $contents) {
                 return $contents->getValues(2)[0];
             }
         );
-        $this->assertEquals(ResourceContents::fromArray([1 => 'AA', 2 => 'AA']), $this->getContentsAfterEvent([2 => 'AA']));
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => 'AA', 2 => 'AA']),
+            $this->getContentsAfterEvent([2 => 'AA'], ['metadataName' => 1, 'metadataValue' => 'YY'])
+        );
     }
 
-    private function getContentsAfterEvent(array $contents): ResourceContents {
+    private function getContentsAfterEvent(array $contents, array $config): ResourceContents {
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getPlaces')->willReturn([$this->createWorkflowPlaceMock('a')]);
         $resourceKind = $this->createResourceKindMock(1, 'books', [$this->createMetadataMock(1)], $workflow);
@@ -68,7 +71,10 @@ class MetadataValueSetterOnResourceTransitionListenerTest extends \PHPUnit_Frame
             $this->createWorkflowTransitionMock([], [], ['a'])
         );
         $event = new BeforeCommandHandlingEvent($command);
-        $this->valueSetter->onBeforeCommandHandling($event);
+        $this->valueSetter->beforeEnterPlace(
+            $event,
+            new ResourceWorkflowPlacePluginConfiguration(['name' => 'repekaMetadataValueSetter', 'config' => $config])
+        );
         return $event->getCommand()->getContents();
     }
 }

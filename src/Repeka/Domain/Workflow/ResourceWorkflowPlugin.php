@@ -2,30 +2,33 @@
 namespace Repeka\Domain\Workflow;
 
 use Assert\Assertion;
-use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
+use Repeka\Domain\Cqrs\Event\CommandErrorEvent;
+use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
 use Repeka\Domain\Entity\ResourceWorkflow;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlacePluginConfiguration;
 
 abstract class ResourceWorkflowPlugin {
     public function getName() {
-        $successful = preg_match('#\\\\([a-z]+?)(ResourceWorkflowPlugin)?$#i', get_class($this), $matches);
+        return self::getNameFromClassName(get_class($this));
+    }
+
+    public static function getNameFromClassName(string $className) {
+        $successful = preg_match('#\\\\([a-z]+?)(ResourceWorkflowPlugin)?$#i', $className, $matches);
         Assertion::true(!!$successful);
         return lcfirst($matches[1]);
     }
 
-    public function getOption(string $name, ResourceEntity $resource): array {
-        if (!$resource->hasWorkflow()) {
-            return [];
-        }
-        $places = $resource->getWorkflow()->getPlaces($resource);
-        return $this->getOptionFromPlaces($name, $places);
+    /** @inheritdoc */
+    public function beforeEnterPlace(BeforeCommandHandlingEvent $event, ResourceWorkflowPlacePluginConfiguration $config) {
     }
 
-    public function getOptionFromPlaces(string $name, array $places): array {
-        $values = [];
-        foreach ($places as $place) {
-            $values[$place->getId()] = $place->getPluginConfig($this->getName())[$name] ?? null;
-        }
-        return $values;
+    /** @inheritdoc */
+    public function afterEnterPlace(CommandHandledEvent $event, ResourceWorkflowPlacePluginConfiguration $config) {
+    }
+
+    /** @inheritdoc */
+    public function failedEnterPlace(CommandErrorEvent $event, ResourceWorkflowPlacePluginConfiguration $config) {
     }
 
     /** @return ResourceWorkflowPluginConfigurationOption[] */

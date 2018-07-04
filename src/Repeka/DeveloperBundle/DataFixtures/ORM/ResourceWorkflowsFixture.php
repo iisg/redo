@@ -24,7 +24,7 @@ class ResourceWorkflowsFixture extends RepekaFixture {
         $places = json_decode(
             <<<JSON
 [
-  {"id": "y1oosxtgf", "label": {"PL": "Zaimportowana", "EN":"Imported"},                      "requiredMetadataIds": [$titleMetadataId], "lockedMetadataIds": [$realScannerMetadataId, $creationDateMetadataId], "pluginsConfig": {"repekaMetadataValueSetter": {"metadataName": "Data utworzenia", "metadataValue": "{{ 'now'|date('Y-m-d') }}"}}},
+  {"id": "y1oosxtgf", "label": {"PL": "Zaimportowana", "EN":"Imported"},                      "requiredMetadataIds": [$titleMetadataId], "lockedMetadataIds": [$realScannerMetadataId, $creationDateMetadataId], "pluginsConfig": [{"name": "repekaMetadataValueSetter", "config": {"metadataName": "Data utworzenia", "metadataValue": "{{ 'now'|date('Y-m-d') }}"}}]},
   {"id": "lb1ovdqcy", "label": {"PL": "Do skanowania", "EN":"Ready to scan"},                 "requiredMetadataIds": [$scannerMetadataId, $supervisorMetadataId], "lockedMetadataIds": [$realScannerMetadataId, $creationDateMetadataId]},
   {"id": "qqd3yk499", "label": {"PL": "Zeskanowana", "EN":"Scanned"},                         "lockedMetadataIds": [$supervisorMetadataId, $creationDateMetadataId], "assigneeMetadataIds": [$scannerMetadataId], "autoAssignMetadataIds": [$realScannerMetadataId]},
   {"id": "9qq9ipqa3", "label": {"PL": "Wymaga ponownego skanowania", "EN":"Require rescan"},  "lockedMetadataIds": [$scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId, $creationDateMetadataId]},

@@ -63,8 +63,14 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
         return count($missingIds) == 0;
     }
 
-    public function getPluginConfig(string $pluginName): array {
-        return $this->pluginsConfig[$pluginName] ?? [];
+    /** @return ResourceWorkflowPlacePluginConfiguration[] */
+    public function getPluginsConfig(): array {
+        return array_map(
+            function (array $pluginConfig) {
+                return new ResourceWorkflowPlacePluginConfiguration($pluginConfig);
+            },
+            $this->pluginsConfig
+        );
     }
 
     public function toArray(): array {

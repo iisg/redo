@@ -41,7 +41,7 @@
                             </div>
                             <div class="form-group"
                                 if.bind="!selectedElement.froms">
-                                <workflow-plugins-configuration config.bind="selectedElement.pluginsConfig"
+                                <workflow-plugins-configuration plugins-config.bind="selectedElement.pluginsConfig"
                                     workflow.bind="workflow"
                                     if.bind="workflow.id"
                                     change.delegate="saveSelectedElementChanges()"></workflow-plugins-configuration>

@@ -6,23 +6,22 @@ use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Plugins\Ocr\Model\OcrCommunicator;
 use Repeka\Plugins\Ocr\Model\OcrOnResourceTransitionListener;
+use Repeka\Plugins\Ocr\Model\RepekaOcrResourceWorkflowPlugin;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
 class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
-    /** @var OcrOnResourceTransitionListener */
-    private $listener;
     /** @var OcrCommunicator|\PHPUnit_Framework_MockObject_MockObject */
     private $communicator;
 
     /** @before */
     public function init() {
         $this->loadAllFixtures();
-        $this->listener = $this->container->get(OcrOnResourceTransitionListener::class);
+        $plugin = $this->container->get(RepekaOcrResourceWorkflowPlugin::class);
         $this->communicator = $this->createMock(OcrCommunicator::class);
-        $this->listener->setCommunicator($this->communicator);
+        $plugin->setCommunicator($this->communicator);
     }
 
     public function testDoesNotOcrIfNotConfiguredEvent() {
@@ -47,7 +46,9 @@ class RepekaOcrPluginIntegrationTest extends IntegrationTestCase {
                     array_merge(
                         $place->toArray(),
                         [
-                            'pluginsConfig' => ['repekaOcr' => ['metadataToOcr' => 'Tytuł']],
+                            'pluginsConfig' => [
+                                ['name' => 'repekaOcr', 'config' => ['metadataToOcr' => 'Tytuł']],
+                            ],
                         ]
                     )
                 );

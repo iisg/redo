@@ -268,4 +268,40 @@ class WorkflowPlacesDefinitionIsValidRuleTest extends \PHPUnit_Framework_TestCas
         );
         $this->assertFalse($this->validator->isValid($command));
     }
+
+    public function testInvalidWhenObsoletePluginsConfigIsGiven() {
+        $command = new ResourceWorkflowCreateCommand(
+            [],
+            [
+                [
+                    'id' => 'fooId',
+                    'label' => ['PL' => 'A'],
+                    'pluginsConfig' => ['repekaOcr' => ['metadataToOcr' => 'Tytuł']],
+                ],
+            ],
+            [],
+            'books',
+            null,
+            null
+        );
+        $this->assertFalse($this->validator->isValid($command));
+    }
+
+    public function testValidWhenNewPluginsConfigIsGiven() {
+        $command = new ResourceWorkflowCreateCommand(
+            [],
+            [
+                [
+                    'id' => 'fooId',
+                    'label' => ['PL' => 'A'],
+                    'pluginsConfig' => [['name' => 'repekaOcr', 'config' => ['metadataToOcr' => 'Tytuł']]],
+                ],
+            ],
+            [],
+            'books',
+            null,
+            null
+        );
+        $this->assertTrue($this->validator->isValid($command));
+    }
 }

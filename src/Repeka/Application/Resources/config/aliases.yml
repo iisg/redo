@@ -15,7 +15,6 @@ services:
   Repeka\Domain\Service\ResourceDisplayStrategyEvaluator: '@Repeka\Application\Service\DisplayStrategies\TwigResourceDisplayStrategyEvaluator'
   Repeka\Domain\Upload\ResourceFileHelper: '@Repeka\Application\Upload\BasicResourceFileHelper'
   Repeka\Domain\Validation\MetadataConstraintManager: '@Repeka\Application\Validation\ContainerAwareMetadataConstraintManager'
-  Repeka\Domain\Workflow\ResourceWorkflowPlugins: '@Repeka\Application\Workflow\RepekaResourceWorkflowPlugins'
 
   Doctrine\ORM\EntityManagerInterface: '@doctrine.orm.entity_manager'
   M6Web\Component\Statsd\Client: '@m6_statsd'
