@@ -1,14 +1,10 @@
 <?php
 namespace Repeka\Tests\Application\Cqrs\Middleware;
 
-use Repeka\Application\Cqrs\Event\BeforeCommandHandlingEvent;
-use Repeka\Application\Cqrs\Event\CommandErrorEvent;
-use Repeka\Application\Cqrs\Event\CommandHandledEvent;
-use Repeka\Application\Cqrs\Event\CqrsCommandEvent;
 use Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware;
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @SuppressWarnings("PHPMD.UnusedLocalVariable")
@@ -16,64 +12,64 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class DispatchCommandEventsMiddlewareTest extends \PHPUnit_Framework_TestCase {
     /** @var DispatchCommandEventsMiddleware */
     private $middleware;
-    /** @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject */
-    private $dispatcher;
+    /** @var SampleCommandEventsListener */
+    private $listener;
 
     protected function setUp() {
-        $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->middleware = new DispatchCommandEventsMiddleware($this->dispatcher);
+        $this->listener = new SampleCommandEventsListener();
+        $this->middleware = new DispatchCommandEventsMiddleware([$this->listener]);
     }
 
     public function testDispatchingSuccess() {
-        $this->dispatcher->method('dispatch')->withConsecutive(
-            ['command_before.resource', $this->isInstanceOf(BeforeCommandHandlingEvent::class)],
-            ['command_handled.resource', $this->isInstanceOf(CommandHandledEvent::class)]
-        );
         $this->middleware->handle(
             new ResourceQuery(1),
             function () {
             }
         );
+        $this->assertCount(1, $this->listener->before);
+        $this->assertCount(1, $this->listener->handled);
+        $this->assertCount(0, $this->listener->error);
+    }
+
+    public function testNotHandlingUnsubscribedEvent() {
+        $this->middleware->handle(
+            new MetadataGetQuery(1),
+            function () {
+            }
+        );
+        $this->assertEmpty($this->listener->before);
+        $this->assertEmpty($this->listener->handled);
+        $this->assertEmpty($this->listener->error);
     }
 
     public function testDispatchingError() {
-        $this->expectException(\RuntimeException::class);
-        $this->dispatcher->method('dispatch')->withConsecutive(
-            ['command_before.resource', $this->isInstanceOf(BeforeCommandHandlingEvent::class)],
-            ['command_error.resource', $this->isInstanceOf(CommandErrorEvent::class)]
-        );
-        $this->middleware->handle(
-            new ResourceQuery(1),
-            function () {
-                throw new \RuntimeException();
-            }
-        );
+        try {
+            $this->middleware->handle(
+                new ResourceQuery(1),
+                function () {
+                    throw new \RuntimeException();
+                }
+            );
+            $this->fail('Exception expected.');
+        } catch (\RuntimeException $exception) {
+            $this->assertCount(1, $this->listener->before);
+            $this->assertCount(0, $this->listener->handled);
+            $this->assertCount(1, $this->listener->error);
+        }
     }
 
     public function testPassingReturnValue() {
-        $this->dispatcher->method('dispatch')->willReturnCallback(
-            function (string $name, CqrsCommandEvent $event) {
-                if ($event instanceof CommandHandledEvent) {
-                    $this->assertEquals(2, $event->getResult());
-                }
-            }
-        );
         $this->middleware->handle(
             new ResourceQuery(1),
             function () {
                 return 2;
             }
         );
+        $this->assertEquals(2, $this->listener->handled[0]->getResult());
     }
 
     public function testReplacingCommand() {
-        $this->dispatcher->method('dispatch')->willReturnCallback(
-            function (string $name, CqrsCommandEvent $event) {
-                if ($event instanceof BeforeCommandHandlingEvent) {
-                    $event->replaceCommand(new ResourceQuery(2));
-                }
-            }
-        );
+        $this->listener->commandToReplace = new ResourceQuery(2);
         $this->middleware->handle(
             new ResourceQuery(1),
             function (Command $command) {
