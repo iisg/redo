@@ -14,6 +14,6 @@ class ResourceWorkflowPluginsQueryHandler {
 
     /** @return ResourceWorkflowPlugin[] */
     public function handle(ResourceWorkflowPluginsQuery $query): array {
-        return $this->resourceWorkflowPlugins->getRegisteredPlugins($query->getWorkflow());
+        return array_values($this->resourceWorkflowPlugins->getRegisteredPlugins($query->getWorkflow()));
     }
 }

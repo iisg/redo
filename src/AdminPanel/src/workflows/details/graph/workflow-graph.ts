@@ -132,7 +132,7 @@ export class WorkflowGraph {
               id: generateId(''),
               label: {},
               restrictingMetadataIds: {},
-              pluginsConfig: {},
+              pluginsConfig: [],
             });
             let newNode = this.$(newPlace);
             newNode.renderedPosition(position);

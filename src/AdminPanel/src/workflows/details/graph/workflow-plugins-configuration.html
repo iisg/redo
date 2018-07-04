@@ -1,14 +1,36 @@
 <template>
     <require from="./workflow-plugin-configuration-option-input"></require>
+    <require from="common/value-converters/object-to-array-value-converter"></require>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="common/components/buttons/remove-button.html"></require>
 
-    <div class="form-group"
-        repeat.for="plugin of workflowPlugins">
-        <label>${ plugin.name }</label>
-        <div class="form-group"
-            repeat.for="option of plugin.configurationOptions">
-            <label>${ option.name }</label>
-            <workflow-plugin-configuration-option-input option.bind="option"
-                value.bind="config[plugin.name][option.name]"></workflow-plugin-configuration-option-input>
+    <h4>${'Additional actions when entering this state' | t}</h4>
+
+    <div class="form-group">
+        <label>${'Add tool' | t}</label>
+        <dropdown-select
+            values.bind="availableWorkflowPlugins | objectToArray"
+            change.trigger="newPluginRequested($event)"
+            clear-after-select>
+            <template replace-part="option-template">
+                ${ option.value.name }
+            </template>
+        </dropdown-select>
+    </div>
+
+    <div class="list-group">
+        <div class="list-group-item"
+            repeat.for="config of pluginsConfig">
+            <label>${ config.name }</label>
+            <remove-button click.delegate="removePluginConfig(config)"
+                class="pull-right"
+                show-tooltips-instead-of-labels="true"></remove-button>
+            <div class="form-group"
+                repeat.for="option of availableWorkflowPlugins[config.name].configurationOptions">
+                <label>${ option.name }</label>
+                <workflow-plugin-configuration-option-input option.bind="option"
+                    value.bind="config.config[option.name]"></workflow-plugin-configuration-option-input>
+            </div>
         </div>
     </div>
 </template>

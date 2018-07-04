@@ -109,7 +109,7 @@ services:
   Repeka\Domain\Validation\Rules\ResourceClassExistsRule:
     $resourceClasses: '%repeka.resource_classes%'
 
-  Repeka\Application\Workflow\RepekaResourceWorkflowPlugins:
+  Repeka\Domain\Workflow\ResourceWorkflowPlugins:
     - !tagged repeka.workflow_plugin
 
   Monolog\Formatter\LineFormatter: [~, ~, true]

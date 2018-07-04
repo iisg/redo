@@ -12,17 +12,25 @@ export class WorkflowPlace {
   @map id: string;
   @map label: MultilingualText;
   @map(RestrictingMetadataMapper) restrictingMetadataIds: RestrictingMetadataIdMap;
-  @map pluginsConfig: StringMap<any> = {};
+  @map('WorkflowPlacePluginConfiguration[]') pluginsConfig: WorkflowPlacePluginConfiguration[] = [];
 
   constructor(id?: string,
               label?: MultilingualText,
               restrictingMetadataIds?: RestrictingMetadataIdMap,
-              pluginsConfig: StringMap<any> = {}) {
+              pluginsConfig: WorkflowPlacePluginConfiguration[] = []) {
     this.id = id;
     this.label = label;
     this.restrictingMetadataIds = restrictingMetadataIds;
     this.pluginsConfig = pluginsConfig;
   }
+}
+
+@automapped
+export class WorkflowPlacePluginConfiguration {
+  static NAME = 'WorkflowPlacePluginConfiguration';
+
+  @map name: string;
+  @map config: StringMap<any> = {};
 }
 
 export type RestrictingMetadataIdMap = NumberMap<RequirementState>;
