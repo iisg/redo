@@ -13,7 +13,7 @@
             change.trigger="newPluginRequested($event)"
             clear-after-select>
             <template replace-part="option-template">
-                ${ option.value.name }
+                ${'plugins::' + option.value.name + '//label' | t & oneTime}
             </template>
         </dropdown-select>
     </div>
@@ -21,15 +21,17 @@
     <div class="list-group">
         <div class="list-group-item"
             repeat.for="config of pluginsConfig">
-            <label>${ config.name }</label>
+            <label>${'plugins::' + config.name + '//label' | t & oneTime}</label>
             <remove-button click.delegate="removePluginConfig(config)"
                 class="pull-right"
                 show-tooltips-instead-of-labels="true"></remove-button>
             <div class="form-group"
                 repeat.for="option of availableWorkflowPlugins[config.name].configurationOptions">
-                <label>${ option.name }</label>
+                <label>${'plugins::' + config.name + '//options//' + option.name + '//label' | t & oneTime}</label>
                 <workflow-plugin-configuration-option-input option.bind="option"
-                    value.bind="config.config[option.name]"></workflow-plugin-configuration-option-input>
+                    value.bind="config.config[option.name]"
+                    description.one-time="'plugins::' + config.name + '//options//' + option.name + '//placeholder' | t"></workflow-plugin-configuration-option-input>
+                <span class="help-block">${'plugins::' + config.name + '//options//' + option.name + '//description' | t & oneTime}</span>
             </div>
         </div>
     </div>

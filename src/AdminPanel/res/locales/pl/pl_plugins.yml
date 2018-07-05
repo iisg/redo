@@ -1,0 +1,26 @@
+repekaOcr:
+  label: Prześlij medatane do serwera OCR
+  options:
+    metadataToOcr:
+      label: Źródłowy rodzaj metadanej
+      description: Wartość tej metadanej w zasobie zostanie wysłana do serwera OCR
+      placeholder: Nazwa lub id
+    metadataForResult:
+      label: Docelowy rodzaj metadanej
+      description: Rodzaj metadanej zasobu, w której zostanie zapisany rezultat OCR
+      placeholder: Nazwa lub id
+    transitionAfterOcr:
+      label: Przejście po OCR
+      description: Jeśli po odebraniu rezultatu zasób ma zostać przeniesiony do następnego stanu, podaj nazwę odpowiedniego przejścia wychodzącego ze stanu obecnego
+      placeholder: Nazwa przejścia w dowolnym języku
+repekaMetadataValueSetter:
+  label: Wygeneruj wartość metadanej
+  options:
+    metadataName:
+      label: Rodzja metadanej
+      placeholder: Nazwa lub id
+      description: ~
+    metadataValue:
+      label: Wartość
+      placeholder: "{{\"now\"|date(\"Y-m-d\")}}"
+      description: Możesz podać wartość lub użyć strategii wyświetlania zasobu
