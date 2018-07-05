@@ -5,20 +5,18 @@
         submit.delegate="findResources()">
         <span>${'navigation::Search' | t}</span>
         <metadata-chooser
-            class="chooser-select2-style"
             value.bind="metadata"
             resource-class.bind="resourceClass"
             control.one-time="controls"
             set-first-as-default
+            use-computed-width
             hide-clear-button></metadata-chooser>
-        <div class="div-select2-style">
-            <input type="text"
-                class="input-box-matching-select2-style"
-                value.bind="metadataValue.value">
-            <button type="submit"
-                disabled.bind="disabled">
-                <icon name="search"></icon>
-            </button>
-        </div>
+        <input type="text"
+            class="input-box-matching-select2-style"
+            value.bind="metadataValue.value">
+        <button type="submit"
+            disabled.bind="disabled">
+            <icon name="search"></icon>
+        </button>
     </form>
 </template>

@@ -1,27 +1,17 @@
+$input-box-width: 200px;
+$metadata-chooser-maximum-width: 60%;
+
 top-bar-search {
-  width: calc(100% - 120px);
-  min-width: 234px;
-  .chooser-select2-style {
-    flex: 1;
-    min-width: 200px;
-    max-width: 45%;
+  max-width: 100%;
+  metadata-chooser {
+    min-width: $input-box-width;
+    max-width: $metadata-chooser-maximum-width;
   }
-  .div-select2-style {
-    flex: 1;
-    min-width: 234px;
-    max-width: 55%;
-    background: none;
-    .input-box-matching-select2-style {
-      padding: 0 8px;
-      line-height: 28px;
-      border: 1px solid #aaa;
-      border-radius: 4px;
-      width: 100%;
-    }
-    button {
-      cursor: pointer;
-      background: none;
-      border: none;
-    }
+  .input-box-matching-select2-style {
+    padding: 0 8px;
+    line-height: 28px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    width: $input-box-width;
   }
 }
