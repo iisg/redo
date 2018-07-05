@@ -115,7 +115,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     });
     if (this.useComputedWidth && !this.multiple) {
       const container = $element.siblings('.select2-container');
-      container.css({'min-width': (parseInt(container.css('width')) + 6) + 'px', 'width': ''});
+      container.css({'width': (parseInt(container.css('width')) + 6) + 'px'});
     }
     this.updateSelectedItem();
     return $element;
