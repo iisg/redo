@@ -9,6 +9,7 @@ import {twoWay} from "../../../common/components/binding-mode";
 export class WorkflowPluginConfigurationOptionInput {
   @bindable option: WorkflowPluginConfigurationOption;
   @bindable(twoWay) value;
+  @bindable description: string;
 
   private metadataValue: MetadataValue = new MetadataValue();
 

@@ -1,0 +1,26 @@
+repekaOcr:
+  label: Send metadata to OCR
+  options:
+    metadataToOcr:
+      label: Source metadata kind
+      description: Value of this metadata will be sent to the OCR server
+      placeholder: Name or id
+    metadataForResult:
+      label: Target metadata kind
+      description: Metadata kind to store the OCR result in
+      placeholder: Name or id
+    transitionAfterOcr:
+      label: Transition after OCR
+      description: If you want the resource to be moved after OCR, enter the name of the transition that should be applied
+      placeholder: The name of the transition
+repekaMetadataValueSetter:
+  label: Generate metadata value
+  options:
+    metadataName:
+      label: Metadata kind
+      placeholder: Name or id
+      description: ~
+    metadataValue:
+      label: Value
+      placeholder: "{{\"now\"|date(\"Y-m-d\")}}"
+      description: Value or resource display strategy

@@ -1,6 +1,6 @@
 <template>
     <input type="text"
-        placeholder.one-time="metadata.placeholder[currentLanguageCode] || description"
+        placeholder.one-time="metadata.placeholder[currentLanguageCode] || description || ''"
         bootstrap-tooltip.bind="description"
         class="form-control"
         value.bind="metadataValue.value & validate:validationController:validationRules"
