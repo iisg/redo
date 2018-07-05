@@ -20,17 +20,18 @@ class ResourceWorkflowsFixture extends RepekaFixture {
         $scannerMetadataId = $scannerMetadata->getId();
         $supervisorMetadata = $this->getReference(MetadataFixture::REFERENCE_METADATA_SUPERVISOR);
         $supervisorMetadataId = $supervisorMetadata->getId();
+        $creationDateMetadataId = $this->getReference(MetadataFixture::REFERENCE_METADATA_CREATION_DATE)->getId();
         $places = json_decode(
             <<<JSON
 [
-  {"id": "y1oosxtgf", "label": {"PL": "Zaimportowana", "EN":"Imported"},                      "requiredMetadataIds": [$titleMetadataId], "lockedMetadataIds": [$realScannerMetadataId]},
-  {"id": "lb1ovdqcy", "label": {"PL": "Do skanowania", "EN":"Ready to scan"},                 "requiredMetadataIds": [$scannerMetadataId, $supervisorMetadataId], "lockedMetadataIds": [$realScannerMetadataId]},
-  {"id": "qqd3yk499", "label": {"PL": "Zeskanowana", "EN":"Scanned"},                         "lockedMetadataIds": [$supervisorMetadataId], "assigneeMetadataIds": [$scannerMetadataId], "autoAssignMetadataIds": [$realScannerMetadataId]},
-  {"id": "9qq9ipqa3", "label": {"PL": "Wymaga ponownego skanowania", "EN":"Require rescan"},  "lockedMetadataIds": [$scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId]},
-  {"id": "ss9qm7r78", "label": {"PL": "Zweryfikowana", "EN":"Verified"},                      "requiredMetadataIds": [$fileMetadataId], "lockedMetadataIds": [$scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId]},
-  {"id": "jvz160sl4", "label": {"PL": "Rozpoznana", "EN":"Recognized"},                       "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId]},
-  {"id": "xo77kutzk", "label": {"PL": "Zaakceptowana", "EN":"Accepted"},                      "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId]},
-  {"id": "j70hlpsvu", "label": {"PL": "Opublikowana", "EN":"Published"},                      "lockedMetadataIds": [$titleMetadataId, $fileMetadataId, $scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId]}
+  {"id": "y1oosxtgf", "label": {"PL": "Zaimportowana", "EN":"Imported"},                      "requiredMetadataIds": [$titleMetadataId], "lockedMetadataIds": [$realScannerMetadataId, $creationDateMetadataId], "pluginsConfig": {"repekaMetadataValueSetter": {"metadataName": "Data utworzenia", "metadataValue": "{{ 'now'|date('Y-m-d') }}"}}},
+  {"id": "lb1ovdqcy", "label": {"PL": "Do skanowania", "EN":"Ready to scan"},                 "requiredMetadataIds": [$scannerMetadataId, $supervisorMetadataId], "lockedMetadataIds": [$realScannerMetadataId, $creationDateMetadataId]},
+  {"id": "qqd3yk499", "label": {"PL": "Zeskanowana", "EN":"Scanned"},                         "lockedMetadataIds": [$supervisorMetadataId, $creationDateMetadataId], "assigneeMetadataIds": [$scannerMetadataId], "autoAssignMetadataIds": [$realScannerMetadataId]},
+  {"id": "9qq9ipqa3", "label": {"PL": "Wymaga ponownego skanowania", "EN":"Require rescan"},  "lockedMetadataIds": [$scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId, $creationDateMetadataId]},
+  {"id": "ss9qm7r78", "label": {"PL": "Zweryfikowana", "EN":"Verified"},                      "requiredMetadataIds": [$fileMetadataId], "lockedMetadataIds": [$scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId, $creationDateMetadataId]},
+  {"id": "jvz160sl4", "label": {"PL": "Rozpoznana", "EN":"Recognized"},                       "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId, $creationDateMetadataId]},
+  {"id": "xo77kutzk", "label": {"PL": "Zaakceptowana", "EN":"Accepted"},                      "lockedMetadataIds": [$fileMetadataId, $scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId, $creationDateMetadataId]},
+  {"id": "j70hlpsvu", "label": {"PL": "Opublikowana", "EN":"Published"},                      "lockedMetadataIds": [$titleMetadataId, $fileMetadataId, $scannerMetadataId, $supervisorMetadataId, $realScannerMetadataId, $creationDateMetadataId]}
 ]
 JSON
             ,

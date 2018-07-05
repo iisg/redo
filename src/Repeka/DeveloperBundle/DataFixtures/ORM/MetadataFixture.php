@@ -18,6 +18,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_TITLE = 'metadata-title';
     const REFERENCE_METADATA_DESCRIPTION = 'metadata-description';
     const REFERENCE_METADATA_PUBLISH_DATE = 'metadata-publish-date';
+    const REFERENCE_METADATA_CREATION_DATE = 'metadata-creation-date';
     const REFERENCE_METADATA_HARD_COVER = 'metadata-hard-cover';
     const REFERENCE_METADATA_NO_OF_PAGES = 'metadata-no-of-pages';
     const REFERENCE_METADATA_LANGUAGE = 'metadata-language';
@@ -107,6 +108,23 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_PUBLISH_DATE
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Data utworzenia',
+                    'label' => [
+                        'PL' => 'Data utworzenia',
+                        'EN' => 'Creation date',
+                    ],
+                    'description' => [],
+                    'placeholder' => [],
+                    'control' => 'date',
+                    'resourceClass' => 'books',
+                    'constraints' => $this->constraints(1),
+                ]
+            ),
+            self::REFERENCE_METADATA_CREATION_DATE
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(

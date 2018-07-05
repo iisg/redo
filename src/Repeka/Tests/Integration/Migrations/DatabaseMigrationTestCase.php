@@ -35,6 +35,10 @@ abstract class DatabaseMigrationTestCase extends IntegrationTestCase {
         $this->loadDump('0.8.0');
     }
 
+    protected function loadDumpV9() {
+        $this->loadDump('0.9.0');
+    }
+
     protected function migrate(string $toVersion = '') {
         $this->executeCommand(trim('doctrine:migrations:migrate ' . $toVersion));
         $this->resetEntityManager();
