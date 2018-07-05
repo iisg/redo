@@ -43,6 +43,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CREATION_DATE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_HARD_COVER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_LANGUAGE),
