@@ -72,7 +72,7 @@ export class Pagination {
 
     @computedFrom('currentPageNumber', 'elementsPerPage', 'numberOfAdditionalPageNumbersAfterCurrentPageNumber')
     get additionalPageNumbersBeforeCurrentPageNumber() {
-        let additionalPageNumbers = this.additionalPageNumbers(2, this.currentPageNumber - 2,
+        const additionalPageNumbers = this.additionalPageNumbers(2, this.currentPageNumber - 2,
             this.maximumAdditionalPageNumbers - this.numberOfAdditionalPageNumbersAfterCurrentPageNumber, true);
         this.numberOfAdditionalPageNumbersBeforeCurrentPageNumber = additionalPageNumbers.length;
         return additionalPageNumbers;
@@ -80,15 +80,22 @@ export class Pagination {
 
     @computedFrom('currentPageNumber', 'elementsPerPage', 'numberOfAdditionalPageNumbersBeforeCurrentPageNumber')
     get additionalPageNumbersAfterCurrentPageNumber() {
-        let additionalPageNumbers = this.additionalPageNumbers(this.currentPageNumber + 2, this.numberOfPages - 1,
+        const additionalPageNumbers = this.additionalPageNumbers(this.currentPageNumber + 2, this.numberOfPages - 1,
             this.maximumAdditionalPageNumbers - this.numberOfAdditionalPageNumbersBeforeCurrentPageNumber);
         this.numberOfAdditionalPageNumbersAfterCurrentPageNumber = additionalPageNumbers.length;
         return additionalPageNumbers;
     }
 
     pageIdentifier(pageNumber: number, elementsPerPage: number) {
-        let numberOfTheLastElementOnThePage = pageNumber * elementsPerPage;
-        let numberOfTheFirstElementOnThePage = numberOfTheLastElementOnThePage - elementsPerPage + 1;
+        let numberOfTheLastElementOnThePage;
+        let numberOfTheFirstElementOnThePage;
+        if (this.totalNumberOfElements && pageNumber === this.numberOfPages) {
+            numberOfTheLastElementOnThePage = this.totalNumberOfElements;
+            numberOfTheFirstElementOnThePage = (pageNumber - 1) * elementsPerPage + 1;
+        } else {
+            numberOfTheLastElementOnThePage = pageNumber * elementsPerPage;
+            numberOfTheFirstElementOnThePage = numberOfTheLastElementOnThePage - elementsPerPage + 1;
+        }
         return numberOfTheFirstElementOnThePage + '\u200E…' + numberOfTheLastElementOnThePage;
     }
 }
