@@ -61,6 +61,7 @@ export class ResourceKindForm implements ComponentAttached, ComponentDetached {
       metadataOverrides.clearInheritedValues(this.metadataRepository, this.metadataToAdd);
       this.resourceKind.metadataList.push(metadataOverrides);
       this.metadataToAdd = undefined;
+      this.updateResourceKindMetadataChooserValues();
     }
   }
 
