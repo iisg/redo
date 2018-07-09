@@ -53,6 +53,15 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $query->getSingleScalarResult();
     }
 
+    public function countByBase(Metadata $base): int {
+        $qb = $this->createQueryBuilder('m');
+        $query = $qb->select('COUNT(m.id)')
+            ->where('m.baseMetadata = :base')
+            ->setParameter('base', $base)
+            ->getQuery();
+        return $query->getSingleScalarResult();
+    }
+
     /**
      * @param int[] $metadataIds
      * @return Metadata[]

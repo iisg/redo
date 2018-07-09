@@ -26,6 +26,8 @@ class MetadataDeleteCommandValidator extends CommandAttributesValidator {
             Validator::allOf(
                 Validator::callback([$this, 'nonSystemMetadata']),
                 Validator::callback([$this, 'metadataDoesNotHaveChildren'])->setTemplate('metadata kind has submetadata kinds'),
+                Validator::callback([$this, 'metadataIsNotBaseToAnyOther'])
+                    ->setTemplate('Metadata kind is used as a base to another metadata kind'),
                 Validator::callback([$this, 'metadataIsNotUsedInAnyResourceKind'])
                     ->setTemplate('metadata kind is used in some resource kinds')
             )
@@ -38,6 +40,10 @@ class MetadataDeleteCommandValidator extends CommandAttributesValidator {
 
     public function metadataDoesNotHaveChildren(Metadata $metadata): bool {
         return $this->metadataRepository->countByParent($metadata) === 0;
+    }
+
+    public function metadataIsNotBaseToAnyOther(Metadata $metadata): bool {
+        return $this->metadataRepository->countByBase($metadata) === 0;
     }
 
     public function metadataIsNotUsedInAnyResourceKind(Metadata $metadata): bool {

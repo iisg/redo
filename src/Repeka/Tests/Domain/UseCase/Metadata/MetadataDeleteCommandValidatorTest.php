@@ -45,6 +45,14 @@ class MetadataDeleteCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->validator->validate($command);
     }
 
+    public function testInvalidIfIsBase() {
+        $this->expectExceptionMessage('Metadata kind is used as a base to another metadata kind');
+        $metadata = $this->createMetadataMock();
+        $this->metadataRepository->method('countByBase')->with($metadata)->willReturn(1);
+        $command = new MetadataDeleteCommand($metadata);
+        $this->validator->validate($command);
+    }
+
     public function testInvalidIfUsedInResourceKinds() {
         $this->expectExceptionMessage('metadata kind is used in some resource kinds');
         $metadata = $this->createMetadataMock();

@@ -28,6 +28,8 @@ interface MetadataRepository {
 
     public function countByParent(Metadata $parent): int;
 
+    public function countByBase(Metadata $base): int;
+
     /**
      * @param int[] $metadataIds
      * @return Metadata[]

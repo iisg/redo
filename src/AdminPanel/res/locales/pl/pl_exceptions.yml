@@ -42,6 +42,7 @@ resources of this kind exist: istnieją zasoby tego rodzaju.
 workflow is assigned to one of resource kinds: proces jest przypisany do jednego z rodzajów zasobów
 metadata kind is used in some resource kinds: rodzaj metadanej jest używany przez niektóre rodzaje zasobów
 metadata kind has submetadata kinds: rodzaj metadanej ma podmetadane
+Metadata kind is used as a base to another metadata kind: Rodzaj metadanej jest używany jako bazowy dla innego rodzaju podmetadanej
 relationship must be constrained to users because metadata determines assignee: relacja musi być ograniczona do użytkowników, bo metadana określa osobę odpowiedzialną
 Workflow places you want to delete are occupied: Występują zasoby w miejscach które chcesz usunąć z procesu
 First place cannot contain assignee metadata: W pierwszym stanie nie można wymagać przypisania osoby
