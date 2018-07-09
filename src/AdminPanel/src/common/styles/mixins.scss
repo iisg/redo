@@ -48,7 +48,7 @@
     background-color: initial;
     color: $color;
     @include transition(color .3s ease-out);
-    &:hover:not([disabled]) {
+    &:hover:not([disabled]), &:focus {
       color: lighten($color, $default-value-to-lighten-colors-by);
     }
     &[disabled] {

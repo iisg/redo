@@ -6,6 +6,7 @@ export class IconButton {
   @bindable tooltipTextWhenEnabled: string;
   @bindable tooltipTextWhenDisabled: string;
   @bindable @booleanAttribute disabled: boolean;
+  @bindable tabIndex: number;
 
   stopIfDisabled(event: Event) {
     if (this.disabled) {
