@@ -24,19 +24,25 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
         $newResourceContents = $command->getContents();
         $metadataName = $config->getConfigValue('metadataName');
         $metadataValue = $config->getConfigValue('metadataValue');
-        if ($metadataName && $metadataValue) {
-            try {
-                $metadata = $resource->getKind()->getMetadataByIdOrName($metadataName);
-                $value = $this->strategyEvaluator->render($newResourceContents, $metadataValue);
-                if (!in_array($value, $newResourceContents->getValues($metadata))) {
-                    $newResourceContents = $newResourceContents->withMergedValues($metadata, $value);
-                }
-            } catch (\InvalidArgumentException $e) {
-            }
-            $event->replaceCommand(
-                new ResourceTransitionCommand($resource, $newResourceContents, $command->getTransition(), $command->getExecutor())
-            );
+        $setOnlyWhenEmpty = $config->getConfigValue('setOnlyWhenEmpty');
+        if (!$metadataName || !$metadataValue) {
+            return;
         }
+        try {
+            $metadata = $resource->getKind()->getMetadataByIdOrName($metadataName);
+            $value = $this->strategyEvaluator->render($newResourceContents, $metadataValue);
+
+            $sameValueExists = in_array($value, $newResourceContents->getValues($metadata));
+            $anyValueExists = !empty($newResourceContents->getValues($metadata));
+            $blockSettingNonEmpty = $setOnlyWhenEmpty && $anyValueExists;
+            if (!$sameValueExists && !$blockSettingNonEmpty) {
+                $newResourceContents = $newResourceContents->withMergedValues($metadata, $value);
+            }
+        } catch (\InvalidArgumentException $e) {
+        }
+        $event->replaceCommand(
+            new ResourceTransitionCommand($resource, $newResourceContents, $command->getTransition(), $command->getExecutor())
+        );
     }
 
     /** @return ResourceWorkflowPluginConfigurationOption[] */
@@ -44,6 +50,7 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
         return [
             new ResourceWorkflowPluginConfigurationOption('metadataName', MetadataControl::TEXT()),
             new ResourceWorkflowPluginConfigurationOption('metadataValue', MetadataControl::TEXT()),
+            new ResourceWorkflowPluginConfigurationOption('setOnlyWhenEmpty', MetadataControl::BOOLEAN()),
         ];
     }
 }

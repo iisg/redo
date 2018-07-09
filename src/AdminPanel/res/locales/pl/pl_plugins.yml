@@ -17,10 +17,14 @@ repekaMetadataValueSetter:
   label: Wygeneruj wartość metadanej
   options:
     metadataName:
-      label: Rodzja metadanej
+      label: Rodzaj metadanej
       placeholder: Nazwa lub id
       description: ~
     metadataValue:
       label: Wartość
       placeholder: "{{\"now\"|date(\"Y-m-d\")}}"
       description: Możesz podać wartość lub użyć strategii wyświetlania zasobu
+    setOnlyWhenEmpty:
+      label: Tylko jeśli metadana nie ma wartości
+      placeholder: ~
+      description: Niezależnie od wybranej opcji, jeżeli wygenerowana wartość metadanej już istnieje w zasobie, to nie zostanie dodana ponownie

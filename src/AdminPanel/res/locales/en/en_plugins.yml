@@ -24,3 +24,7 @@ repekaMetadataValueSetter:
       label: Value
       placeholder: "{{\"now\"|date(\"Y-m-d\")}}"
       description: Value or resource display strategy
+    setOnlyWhenEmpty:
+      label: Only if metadata does not have any value
+      placeholder: ~
+      description: Regardless of this option, if generated metadata value already exists in resource, it will not be added again

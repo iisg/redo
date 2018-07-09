@@ -25,19 +25,25 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         $this->valueSetter = new RepekaMetadataValueSetterResourceWorkflowPlugin($this->strategyEvaluator);
     }
 
-    public function testDoNothing() {
+    public function testDoesNothingIfNoConfig() {
         $this->assertEquals([], $this->getContentsAfterEvent([], [])->toArray());
     }
 
-    public function testDoNothingForInvalidMetadataIds() {
-        $this->assertEquals([], $this->getContentsAfterEvent([], ['metadataName' => 5, 'metadataValue' => 'YY'])->toArray());
+    public function testDoesNothingForInvalidMetadataIds() {
+        $this->assertEquals(
+            [],
+            $this->getContentsAfterEvent(
+                [],
+                ['metadataName' => 5, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false]
+            )->toArray()
+        );
     }
 
     public function testInsertsValue() {
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
         $this->assertEquals(
             ResourceContents::fromArray([1 => 'YY']),
-            $this->getContentsAfterEvent([], ['metadataName' => 1, 'metadataValue' => 'YY'])
+            $this->getContentsAfterEvent([], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false])
         );
     }
 
@@ -45,7 +51,31 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
         $this->assertEquals(
             ResourceContents::fromArray([1 => ['XX', 'YY']]),
-            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY'])
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false])
+        );
+    }
+
+    public function testDoesNothingWhenNotEmptyAndConfigSet() {
+        $this->strategyEvaluator->method('render')->willReturnArgument(1);
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => ['XX']]),
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => true])
+        );
+    }
+
+    public function testInsertsValueWhenEmptyAndConfigSet() {
+        $this->strategyEvaluator->method('render')->willReturnArgument(1);
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => ['XX']]),
+            $this->getContentsAfterEvent([], ['metadataName' => 1, 'metadataValue' => 'XX', 'setOnlyWhenEmpty' => true])
+        );
+    }
+
+    public function testDoNothingWhenDuplicatedValue() {
+        $this->strategyEvaluator->method('render')->willReturnArgument(1);
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => ['XX']]),
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'XX', 'setOnlyWhenEmpty' => false])
         );
     }
 
@@ -57,7 +87,15 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         );
         $this->assertEquals(
             ResourceContents::fromArray([1 => 'AA', 2 => 'AA']),
-            $this->getContentsAfterEvent([2 => 'AA'], ['metadataName' => 1, 'metadataValue' => 'YY'])
+            $this->getContentsAfterEvent([2 => 'AA'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false])
+        );
+    }
+
+    public function testOptionFalseSameAsNotDefined() {
+        $this->strategyEvaluator->method('render')->willReturnArgument(1);
+        $this->assertEquals(
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false]),
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY',])
         );
     }
 
