@@ -49,9 +49,9 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $factory = new ResourceListQuerySqlFactory($query);
         $this->assertContains('mFilter1', $factory->getPageQuery());
         $this->assertContains("r.contents->'1'", $factory->getPageQuery());
-        $this->assertContains("LIKE", $factory->getPageQuery());
+        $this->assertContains("~*", $factory->getPageQuery());
         $this->assertArrayHasKey('mFilter1', $factory->getParams());
-        $this->assertEquals('%PHP%', $factory->getParams()['mFilter1']);
+        $this->assertEquals('PHP', $factory->getParams()['mFilter1']);
     }
 
     public function testFilterByNumber() {

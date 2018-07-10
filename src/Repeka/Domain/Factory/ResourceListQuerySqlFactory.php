@@ -111,8 +111,8 @@ class ResourceListQuerySqlFactory {
                     $this->wheres[] = "m$escapedMetadataId->>'value' = :$paramName";
                     $this->params[$paramName] = $value;
                 } else {
-                    $this->wheres[] = "m$escapedMetadataId->>'value' ILIKE :$paramName";
-                    $this->params[$paramName] = '%' . $value . '%';
+                    $this->wheres[] = "m$escapedMetadataId->>'value' ~* :$paramName";
+                    $this->params[$paramName] = $value;
                 }
             }
         );

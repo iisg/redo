@@ -50,6 +50,33 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }
 
+    public function testAnchorStart() {
+        $query = ResourceListQuery::builder()->filterByContents([$this->titleMetadata->getId() => '^PHP'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(2, $results);
+        $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
+    }
+
+    public function testAnchorEnd() {
+        $query = ResourceListQuery::builder()->filterByContents([$this->titleMetadata->getId() => 'leczyć!$'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(1, $results);
+        $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
+    }
+
+    public function testDoesNotFindSubstringWithBothAnchors() {
+        $query = ResourceListQuery::builder()->filterByContents([$this->titleMetadata->getId() => '^PHP$'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertEmpty($results);
+    }
+
+    public function testWildcard() {
+        $query = ResourceListQuery::builder()->filterByContents([$this->titleMetadata->getId() => 'P.*leczy.!'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(1, $results);
+        $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
+    }
+
     public function testFindByTwoMetadata() {
         $descriptionMetadata = $this->findMetadataByName('Opis');
         $query = ResourceListQuery::builder()->filterByContents(
