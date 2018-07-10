@@ -1,0 +1,18 @@
+{
+  "mappings": {
+    "nazwa": {
+      "key": "1/VALUE_TEXT",
+      "transforms": [
+        {
+          "name": "trim"
+        }
+      ]
+    },
+    "iso_code": {
+      "key": "ISO_VALUE"
+    },
+    "old_id": {
+      "key": "ID"
+    }
+  }
+}

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <resource ID="76968" MODIFICATION_COUNTER="11" REMOVED="0" KIND_ID="15" VISIBLE="1" STATUS="verified" USER_ID="8"
+              CREATED="2018-01-29 07:52:55" MODIFIED="2018-02-05 13:05:20" VISIBILITY_CHANGED="2018-01-30 17:23:48" DISPLAY_COUNTER="4"
+              ORDERING="0" VERIFIED="2018-01-30 17:23:39" VERIFIED_BY_USER_ID="46" USER_ID_LAST_MODIFIED="8">
+        <metadata ID="2345576" MODIFICATION_COUNTER="11" REMOVED="0" RESOURCE_ID="76968" TERM_ID="1"
+                  VALUE_TEXT="Rozwój zużycia typu scuffing w ruchu oscylacyjnym" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="5"
+                  RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345582" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="14"
+                  VALUE_TEXT="Scuffing tendencies under the oscillatory motion" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="6"
+                  RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345577" MODIFICATION_COUNTER="11" REMOVED="0" RESOURCE_ID="76968" TERM_ID="2" VALUE_TEXT="Kaczor, Grzegorz"
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="3" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345583" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="111"
+                  VALUE_TEXT="dr hab. inż. Stanisław Guzowski, prof. PK" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="3"
+                  RELATED_RESOURCE_ID="" VALUE_NUMBER="">
+            <userMetadataRelation ID="88740" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" METADATA_ID="2345583" USER_ID="3304"
+                                  RELATION_TYPE="RPK-supervisor" RELATION_FEATURES=""/>
+        </metadata>
+        <metadata ID="2345584" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="190" VALUE_TEXT="dr inż. Grzegorz Zając"
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="3" RELATED_RESOURCE_ID="" VALUE_NUMBER="">
+            <userMetadataRelation ID="88741" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" METADATA_ID="2345584" USER_ID="396"
+                                  RELATION_TYPE="BPP-phd-co-supervisor" RELATION_FEATURES=""/>
+        </metadata>
+        <metadata ID="2345578" MODIFICATION_COUNTER="11" REMOVED="0" RESOURCE_ID="76968" TERM_ID="3" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="2018-01-01" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345585" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="52" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="2018-01-24" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345586" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="23"
+                  VALUE_TEXT="Zasadniczym celem dysertacji było wyznaczenie wpływu wybranych czynników eksploatacyjnych na proces zużycia scuffing w ruchu oscylacyjnym z uwzględnieniem różnych stanów struktury geometrycznej powierzchni metalowych. Zakres pracy obejmował realizację części doświadczalnej i analitycznej. W ramach części doświadczalnej wykonano badania tribotogiczne z wykorzystaniem tribotestera T-05 typu rolka-klocek, dokonano obserwacji makroskopowej i mikroskopowej zużytych powierzchni oraz zidentyfikowano ślady zużycia adhezyjnego i ściernego na powierzchniach badanych elementów, świadczących o wystąpieniu zużycia scuffing. Zakres części analitycznej obejmował wyznaczenie wybranych charakterystyk tribologicznych, wyznaczenie wpływu wybranych czynników na zużycie scuffing opisanie rozwoju zużycia w przyjętym modelu badań. W pracy zamieszczono obrazy struktury geometrycznej powierzchni elementów pary ciernej przed i po badaniach zużyciowych, a także fotografie makroskopowe dla wybranych elementów po zrealizowaniu założonego planu badawczego. Do opracowania planu badań zastosowano narzędzia teorii eksperymentu obejmujące metodę Taguchi i metodę analizy wariancji (ANOVA). W pracy wykazano, że procesem inicjującym zużycie scuffing oraz że zmiana wartości badanych czynników ma większy wpływ na zużycie objętościowe elementów pary ciernej niż rodzaj struktury geometrycznej ich powierzchni."
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="5" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345587" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="23"
+                  VALUE_TEXT="The main objective of the dissertation was to determine the impact of selected •'factors on the process of scuffing under the oscillatory motion taking into account the different surface textures of the specimen. The scope of the dissertation included the experimental and analytica! parts. The experimental tests were conducted with the use of T-05 block-on- ring tribotester. The macroscoping and microscoping observation of the worn surfaces revealed the traces of adhesive and abrasive wear, which prove the scuffing occurrence. The scope of the analytical part included the determination of the influence of the selected factors on the scuffing wear, describing the wear mechanism in the given, experimental model. The work contains the images of the worn surfaces as well as the macroscoping photographs for the selected specimens after the end of the tests. To develop the research plan, both the Taguchi and ANOVA methods were applied. The results of the dissertation showed that the process of adhesion initiates the scuffing wear. What is morę, changing the values of the selected factors has the greater impact on the volume wear of the tribological pairs than the type of the surface texture."
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="6" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345588" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="19" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1398" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345589" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="19" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1386" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345579" MODIFICATION_COUNTER="11" REMOVED="0" RESOURCE_ID="76968" TERM_ID="17" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1575" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345590" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="18" VALUE_TEXT="[s.n.]" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="3" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345597" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="9"
+                  VALUE_TEXT="KaczorGrzegorz_RozwojZuzycia.pdf" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID=""
+                  VALUE_NUMBER=""/>
+        <metadata ID="2345591" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="8" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345580" MODIFICATION_COUNTER="11" REMOVED="0" RESOURCE_ID="76968" TERM_ID="31" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1567" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345581" MODIFICATION_COUNTER="11" REMOVED="0" RESOURCE_ID="76968" TERM_ID="30" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1640" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345592" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="30" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1642" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345593" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="7" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="5" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2353310" MODIFICATION_COUNTER="2" REMOVED="0" RESOURCE_ID="76968" TERM_ID="38"
+                  VALUE_TEXT=" &amp;rarr; http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-detail.pl?biblionumber=134024" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="3" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2347871" MODIFICATION_COUNTER="3" REMOVED="0" RESOURCE_ID="76968" TERM_ID="51" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="77034" VALUE_NUMBER=""/>
+        <metadata ID="2345595" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="20"
+                  VALUE_TEXT="scuffing, zużycie ścierne, adhezja" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="5" RELATED_RESOURCE_ID=""
+                  VALUE_NUMBER=""/>
+        <metadata ID="2345596" MODIFICATION_COUNTER="10" REMOVED="0" RESOURCE_ID="76968" TERM_ID="20"
+                  VALUE_TEXT="scuffing, abrasive wear, adhesive wear" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="6"
+                  RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345571" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76968" TERM_ID="4" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="4051" VALUE_NUMBER=""/>
+        <metadata ID="2345572" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76968" TERM_ID="6" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="4051" VALUE_NUMBER=""/>
+        <metadata ID="2345573" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76968" TERM_ID="6" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="4062" VALUE_NUMBER=""/>
+        <metadata ID="2345574" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76968" TERM_ID="6" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="11" VALUE_NUMBER=""/>
+        <metadata ID="2345575" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76968" TERM_ID="6" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="6021" VALUE_NUMBER=""/>
+    </resource>
+    <resource ID="76805" MODIFICATION_COUNTER="19" REMOVED="0" KIND_ID="15" VISIBLE="1" STATUS="verified" USER_ID="3805"
+              CREATED="2018-01-19 23:30:26" MODIFIED="2018-02-19 08:25:05" VISIBILITY_CHANGED="2018-01-30 17:20:47" DISPLAY_COUNTER="7"
+              ORDERING="0" VERIFIED="2018-01-30 17:20:31" VERIFIED_BY_USER_ID="46" USER_ID_LAST_MODIFIED="8">
+        <metadata ID="2339266" MODIFICATION_COUNTER="19" REMOVED="0" RESOURCE_ID="76805" TERM_ID="1"
+                  VALUE_TEXT="Miasta w dolnym biegu Wisłoki w województwie sandomierskim o średniowiecznym pochodzeniu do połowy XVII wieku"
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="5" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345662" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="14"
+                  VALUE_TEXT="Towns in the Wisłoka lower reaches originating on the Middle Ages up to the second half of 17&lt;sup&gt;th&lt;/sup&gt; century in Sandomierz Voivodeship"
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="6" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2339267" MODIFICATION_COUNTER="19" REMOVED="0" RESOURCE_ID="76805" TERM_ID="2" VALUE_TEXT="Malczewska, Joanna"
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="3" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345663" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="111"
+                  VALUE_TEXT="dr hab. inż. arch. Dominika Kuśnierz-Krupa, prof. PK" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="3"
+                  RELATED_RESOURCE_ID="" VALUE_NUMBER="">
+            <userMetadataRelation ID="88744" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" METADATA_ID="2345663" USER_ID="270"
+                                  RELATION_TYPE="RPK-supervisor" RELATION_FEATURES=""/>
+        </metadata>
+        <metadata ID="2339268" MODIFICATION_COUNTER="19" REMOVED="0" RESOURCE_ID="76805" TERM_ID="3" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="2017-01-01" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345664" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="52" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="2018-02-05" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345665" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="23"
+                  VALUE_TEXT="Niniejsza publikacja podejmuje problematykę związaną z miastami położonymi w Dolnym Biegu Wisłoki - Mielcem, Rzochowem i Przecławiem w okresie od średniowiecza do połowy XVII w., omawia m. in ich lokacje i plany urbanistyczne. Materiałem wyjściowym zostały tutaj mapy i plany katastralne, pochodzące z wieków późniejszych. Materiał ten uzupełniła wizja i analiza terenowa. Na początku dysertacji omówiono kształtowanie się sieci miejskiej na Śląsku, w Małopolsce, w województwie Sandomierskim i jego sąsiedztwie w średniowieczu. Omówiono też wpływ sytuacji geopolitycznej na lokacje i rozwój miast oraz sieci drożnej która miała ogromny wpływ na rozwój miast, a także zwrócono uwagę na wzorce, na których lokowano miasta we wskazanym okresie. Przecław, Rzochów i Mielec powstały w obrębie wcześniej uformowanych kluczy dóbr i rozwijały się jako lokalne ośrodki handlu, rzemiosła i usług, a ich mieszkańcy zajmowali się równolegle w dużym zakresie rolnictwem. W czasie ich kształtowania się szlak handlowy prowadzący z Węgier i Krakowa, przez Pilzno do Sandomierza stał się drugorzędnym szlakiem handlowym, ponieważ szlak z Krakowa przez Pilzno, Ropczyce, Rzeszów i Przemyśl do Lwowa przejął prawie w całości wymianę handlową najpierw z Polską i Śląskiem, a następnie między Europą Zachodnią, a Rusią. Wspomniany fakt sprawił, że miasta te nigdy nie stały się dużymi ośrodkami handlowymi i bardziej znaczącymi w tej części kraju. W pracy opisano dokładną analizę części składowych planów urbanistycznych omawianych miast, jak: rynki, place, działki siedliskowe, bloki zabudowy, ulice i obwody policyjno- obronne. Kolejnym ważnym elementem dysertacji jest omówienie zagospodarowania miast i strefy podmiejskiej, gdzie skupiono się m.in. na zabudowie mieszczańskiej, ratuszach, kościołach, zamkach i urządzeniach gospodarczych. Dotychczasowa wiedza o rozwoju urbanistycznym Mielca była omawiana marginalnie, przy opracowywaniu monografii miasta. Wiedza o Rzochowie i Przecławiu także była niewielka, a przeprowadzone analizy pozwoliły na dokonanie ustaleń, które uporządkowały informacje na temat tych ośrodków. W wyniku przeprowadzonych badań i analiz zwrócono także uwagę na potrzebę opracowania wytycznych do ochrony krajobrazu kulturowego i rewitalizacji przestrzeni cennych kulturowo. "
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="5" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345666" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="23"
+                  VALUE_TEXT="This publication addresses issues related to towns located in the lower course of the River Wisłoka, i.e. Mielec, Rzochow and Przecław, in the period from the Middle Ages to the mid-17th century. Among other things, it discusses their locations and urban development plans. The source materials were maps and cadastral plans originating from later centuries. These materials were complemented by field visits and analyses. At the beginning, the dissertation discusses the urban network in the regions of Silesia and Lesser Poland (Małopolska) as well as in the Sandomierskie Province and its neighbourhood in the Middle Ages. The impact of the geopolitical situation on the location and development of towns and on the road network, which greatly influenced the development of towns, has been discussed, too; attention has also been drawn to the patterns according to which towns were located in the period concerned. Przecław, Rzochów and Mielec were established within previously formed clusters of estates and developed as local centres of trade, crafts and services while their inhabitants were to a large extent concurrently engaged in agriculture. During the time of their formation the trade route leading from Hungary and Krakow through Pilzno to Sandomierz became a secondary trade route because the route from Krakow through Pilzno, Ropczyce, Rzeszów and Przemyśl to Lviv took over nearly the entire trade exchange, first with Poland and Silesia, and then between West Europe and Russia. This fact caused that these town never became large and more significant trade centres in this part of the country. The study contains a thorough analysis of the constituent parts of the urban development plans of the towns concerned, such as market places, squares, building plots, building blocks, streets as well as police and defence districts. Another important element of the dissertation is the discussion of the development of the towns and the suburban zones, with focus inter alia on the bourgeois building development, town halls, churches, castles and commercial facilities. So far, the knowledge of the urban development of Mielec has only been marginally discussed, as part of the preparation of the town monograph. The knowledge on Rzochow and Przeclaw was also limited, and the analyses conducted allowed for making some findings that put information on these towns in order. As a result of the research and analyses carried out also attention was drawn to the need for drawing up guidelines for protection of the cultural landscape and revitalisation of culturally precious spaces."
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="6" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345667" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="19" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1179" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2339269" MODIFICATION_COUNTER="19" REMOVED="0" RESOURCE_ID="76805" TERM_ID="17" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1572" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345668" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="18" VALUE_TEXT="[s.n.]" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="3" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2361459" MODIFICATION_COUNTER="6" REMOVED="0" RESOURCE_ID="76805" TERM_ID="9"
+                  VALUE_TEXT="MalczewskaJ_MiastaDolnym.pdf" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID=""
+                  VALUE_NUMBER=""/>
+        <metadata ID="2361460" MODIFICATION_COUNTER="6" REMOVED="0" RESOURCE_ID="76805" TERM_ID="9" VALUE_TEXT="__MalczewskaJ_MiastaDolnym"
+                  VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345669" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="8" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2361458" MODIFICATION_COUNTER="7" REMOVED="0" RESOURCE_ID="76805" TERM_ID="8" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="2" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2339270" MODIFICATION_COUNTER="19" REMOVED="0" RESOURCE_ID="76805" TERM_ID="31" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1567" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2339271" MODIFICATION_COUNTER="19" REMOVED="0" RESOURCE_ID="76805" TERM_ID="30" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="1579" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345671" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="7" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="5" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2369370" MODIFICATION_COUNTER="2" REMOVED="0" RESOURCE_ID="76805" TERM_ID="38"
+                  VALUE_TEXT=" &amp;rarr; http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-detail.pl?biblionumber=134290" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="3" RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345673" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="20"
+                  VALUE_TEXT="miasta, lokacja, rynek, układ przestrzenny" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="5"
+                  RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2345674" MODIFICATION_COUNTER="18" REMOVED="0" RESOURCE_ID="76805" TERM_ID="20"
+                  VALUE_TEXT="towns, location, market, urban development plans" VALUE_TEXT_STEM="" VALUE_DATE="" INDEX_ITEM_ID="6"
+                  RELATED_RESOURCE_ID="" VALUE_NUMBER=""/>
+        <metadata ID="2339261" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76805" TERM_ID="4" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="13" VALUE_NUMBER=""/>
+        <metadata ID="2339262" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76805" TERM_ID="6" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="13" VALUE_NUMBER=""/>
+        <metadata ID="2339263" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76805" TERM_ID="6" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="4062" VALUE_NUMBER=""/>
+        <metadata ID="2339264" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76805" TERM_ID="6" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="11" VALUE_NUMBER=""/>
+        <metadata ID="2339265" MODIFICATION_COUNTER="0" REMOVED="0" RESOURCE_ID="76805" TERM_ID="6" VALUE_TEXT="" VALUE_TEXT_STEM=""
+                  VALUE_DATE="" INDEX_ITEM_ID="" RELATED_RESOURCE_ID="6021" VALUE_NUMBER=""/>
+    </resource>
+</resources>

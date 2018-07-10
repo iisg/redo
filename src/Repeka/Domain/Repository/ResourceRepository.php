@@ -24,6 +24,7 @@ interface ResourceRepository {
     /** @return ResourceEntity[] */
     public function findAssignedTo(User $user): array;
 
+    /** @return PageResult|ResourceEntity[] */
     public function findByQuery(ResourceListQuery $query): PageResult;
 
     /** @return ResourceEntity[] */
