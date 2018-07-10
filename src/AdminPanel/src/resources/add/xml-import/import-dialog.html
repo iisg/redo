@@ -19,6 +19,8 @@
                     <input type="file"
                         id="importConfigFile"
                         files.bind="configFile | singleFileList"
+                        focus.bind="importFileIsFocused"
+                        keydown.trigger="handleEscPressed($event)"
                         accept="application/json">
                     <input type="text"
                         class="form-control"

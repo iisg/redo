@@ -18,6 +18,7 @@ export class ImportDialog {
   configFileError: boolean = false;
   notFoundError: boolean = false;
   serverError: string;
+  importFileIsFocused: boolean = false;
 
   private readonly MOST_RECENT_CONFIG_KEY = 'mostRecentXmlImportConfig';
 
@@ -25,6 +26,7 @@ export class ImportDialog {
               private xmlImportClient: XmlImportClient,
               private globalExceptionInterceptor: GlobalExceptionInterceptor) {
     dialogController.settings.lock = false;
+    dialogController.settings.keyboard = true;
     const storedJson = localStorage[this.MOST_RECENT_CONFIG_KEY];
     if (storedJson !== undefined) {
       try {
@@ -43,6 +45,17 @@ export class ImportDialog {
 
   activate(model: ImportDialogModel): void {
     this.resourceKind = model.resourceKind;
+  }
+
+  handleEscPressed(event) {
+    if (event.keyCode == 27) {
+      this.importFileIsFocused = false;
+    }
+    return true;
+  }
+
+  canDeactivate() {
+    return !this.importFileIsFocused;
   }
 
   configFileChanged(): void {
