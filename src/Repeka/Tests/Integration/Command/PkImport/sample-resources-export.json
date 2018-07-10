@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "Tytuł": {
+      "key": "1/VALUE_TEXT",
+      "transforms": []
+    },
+    "Zobacz też": {
+      "key": "51/RELATED_RESOURCE_ID"
+    },
+    "Old ID": {
+      "key": "ID"
+    }
+  }
+}
