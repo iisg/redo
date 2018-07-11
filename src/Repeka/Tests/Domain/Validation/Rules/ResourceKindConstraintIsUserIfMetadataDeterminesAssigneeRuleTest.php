@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
+use Repeka\Domain\Validation\Exceptions\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRuleException;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -62,12 +63,13 @@ class ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRuleTest extends \
     }
 
     public function testRejectsIfNewConstraintsCannotDetermineAssignees() {
+        $this->expectException(ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRuleException::class);
         $metadata = $this->createMetadataMock();
         $dummyWorkflow = $this->createMock(ResourceWorkflow::class);
         $metadata->method('canDetermineAssignees')->willReturnOnConsecutiveCalls(true, false);
         $metadata->method('withOverrides')->with(['constraints' => ['a']])->willReturn($metadata);
         $this->workflowRepository->expects($this->once())->method('findByAssigneeMetadata')->with($metadata)->willReturn([$dummyWorkflow]);
         $rule = $this->rule->forMetadata($metadata);
-        $this->assertFalse($rule->validate(['a']));
+        $rule->validate(['a']);
     }
 }

@@ -23,6 +23,7 @@ incorrectResourceDisplayStrategy: "Niepoprawna strategia prezentacji zasobu. Bł
 metadataNameIsNotUnique: Rodzaj metadanej o podanej nazwie już istnieje
 insufficientPermissions: Nie posiadasz wymaganych uprawnień by wykonać tę operację
 valuesDoNotMatchResourceKind: "Lista metadanych w rodzaju zasobu zmieniła się i nie zgadza się z edytowanym zasobem. Odśwież stronę i ponownie wprowadź zmiany. Szczegóły: \"{{originalMessage}}\"."
+metadataConstrainedToUsers: relacja '{{name}}' musi być ograniczona do użytkowników, bo metadana określa osobę odpowiedzialną
 violationFields:
   metadata: Rodzaj metadanej
   name: Nazwa
@@ -43,7 +44,6 @@ workflow is assigned to one of resource kinds: proces jest przypisany do jednego
 metadata kind is used in some resource kinds: rodzaj metadanej jest używany przez niektóre rodzaje zasobów
 metadata kind has submetadata kinds: rodzaj metadanej ma podmetadane
 Metadata kind is used as a base to another metadata kind: Rodzaj metadanej jest używany jako bazowy dla innego rodzaju podmetadanej
-relationship must be constrained to users because metadata determines assignee: relacja musi być ograniczona do użytkowników, bo metadana określa osobę odpowiedzialną
 Workflow places you want to delete are occupied: Występują zasoby w miejscach które chcesz usunąć z procesu
 First place cannot contain assignee metadata: W pierwszym stanie nie można wymagać przypisania osoby
 Places or Transitions exist without a name specified in every language: Istnieją stany albo przejścia bez nazwy określonej w każdym języku

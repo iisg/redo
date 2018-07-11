@@ -132,6 +132,10 @@ class Metadata implements Identifiable, HasResourceClass {
         return array_merge($this->constraints, $this->overrides['constraints'] ?? []);
     }
 
+    public function getBaseConstraints(): array {
+        return $this->constraints;
+    }
+
     public function isShownInBrief(): bool {
         return is_bool($this->overrides['shownInBrief'] ?? null) ? $this->overrides['shownInBrief'] : $this->shownInBrief;
     }
@@ -218,9 +222,12 @@ class Metadata implements Identifiable, HasResourceClass {
         return $overrides;
     }
 
-    public function canDetermineAssignees(ResourceKindRepository $resourceKindRepository): bool {
+    /** @SuppressWarnings(PHPMD.BooleanArgumentFlag) */
+    public function canDetermineAssignees(ResourceKindRepository $resourceKindRepository, bool $baseMetadataConstraints = false): bool {
         if ($this->control == MetadataControl::RELATIONSHIP) {
-            $allowedResourceKindIds = $this->getConstraints()['resourceKind'] ?? [];
+            $allowedResourceKindIds = $baseMetadataConstraints
+                ? ($this->getBaseConstraints()['resourceKind'] ?? [])
+                : ($this->getConstraints()['resourceKind'] ?? []);
             if ($allowedResourceKindIds) {
                 $resourceClasses = array_map(
                     function (int $resourceKindId) use ($resourceKindRepository) {

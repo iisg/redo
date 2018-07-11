@@ -51,7 +51,7 @@ class ResourceWorkflowDoctrineRepository extends EntityRepository implements Res
             SELECT * FROM workflow WHERE id IN (
               SELECT DISTINCT workflow_id
               FROM (SELECT jsonb_array_elements(places) AS place, id AS workflow_id FROM workflow) AS exploded
-              WHERE place->'assigneeMetadataIds' @> :metadata::TEXT::JSONB
+              WHERE place->'assigneeMetadataIds' @> :metadata::TEXT::JSONB OR place->'autoAssignMetadataIds' @> :metadata::TEXT::JSONB
             );
 SQL
             ,
