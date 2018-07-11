@@ -27,8 +27,6 @@ use Respect\Validation\Validator;
 class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
-    /** @var ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule|\PHPUnit_Framework_MockObject_MockObject */
-    private $rkConstraintIsUser;
     /** @var ResourceKindUpdateCommandValidator */
     private $validator;
     /** @var CorrectResourceDisplayStrategySyntaxRule|\PHPUnit_Framework_MockObject_MockObject */
@@ -51,10 +49,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             true
         );
         $this->correctResourceDisplayStrategySyntaxRule = $this->createMock(CorrectResourceDisplayStrategySyntaxRule::class);
-        $this->rkConstraintIsUser = $this->createRuleWithFactoryMethodMock(
-            ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule::class,
-            'forMetadata'
-        );
         $this->relationshipMetadata = Metadata::create(
             '',
             MetadataControl::RELATIONSHIP(),
@@ -70,31 +64,12 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             $this->notBlankInAllLanguagesRule,
             $this->correctResourceDisplayStrategySyntaxRule,
             new ContainsParentMetadataRule(),
-            $this->rkConstraintIsUser,
             $this->metadataUpdateCommandValidator,
             $this->childResourceKindsAreOfSameResourceClassRule
         );
     }
 
     public function testValid() {
-        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
-        $this->rkConstraintIsUser->method('validate')->willReturn(true);
-        $command = new ResourceKindUpdateCommand(
-            $this->createMock(ResourceKind::class),
-            ['PL' => 'Labelka'],
-            [
-                $this->createMetadataMock(SystemMetadata::PARENT),
-                $this->createMetadataMock(),
-                $this->relationshipMetadata,
-            ],
-            []
-        );
-        $this->validator->validate($command);
-    }
-
-    public function testInvalidWhenRelationshipRequirementFails() {
-        $this->expectException(InvalidCommandException::class);
-        $this->rkConstraintIsUser->method('validate')->willReturn(false);
         $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $command = new ResourceKindUpdateCommand(
             $this->createMock(ResourceKind::class),
@@ -115,10 +90,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $command = new ResourceKindUpdateCommand(
             $this->createMock(ResourceKind::class),
             ['PL' => 'Labelka'],
-            [
-                SystemMetadata::PARENT()->toMetadata(),
-                $this->createMetadataMock(),
-            ],
+            [SystemMetadata::PARENT()->toMetadata()],
             []
         );
         $this->validator->validate($command);
@@ -126,7 +98,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidWhenNotOverrideMetadataValidator() {
         $this->expectException(RespectValidationFailedException::class);
-        $this->rkConstraintIsUser->method('validate')->willReturn(true);
         $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysInvalid());
         $command = new ResourceKindUpdateCommand(
             $this->createMock(ResourceKind::class),
@@ -141,7 +112,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testValidIfWorkflowIsNull() {
-        $this->rkConstraintIsUser->method('validate')->willReturn(true);
         $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $this->createMockEntity(ResourceWorkflow::class, 1));
         $command = new ResourceKindUpdateCommand(
             $rkWithWorkflow,
@@ -157,7 +127,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testValidIfWorkflowTheSame() {
-        $this->rkConstraintIsUser->method('validate')->willReturn(true);
         $workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
         $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow);
         $command = new ResourceKindUpdateCommand(
@@ -176,7 +145,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidIfTryingToChangeWorkflow() {
         $this->expectException(InvalidCommandException::class);
-        $this->rkConstraintIsUser->method('validate')->willReturn(true);
         $workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
         $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow);
         $command = new ResourceKindUpdateCommand(

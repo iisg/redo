@@ -50,14 +50,19 @@ class ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule extends Abstr
             $this->metadata,
             'Metadata not set. Use forMetadata() for create validator for specific metadata first.'
         );
-        if (!$this->metadata->canDetermineAssignees($this->resourceKindRepository)) {
+        if (!$this->metadata->canDetermineAssignees($this->resourceKindRepository, true)) {
             return true;
         }
         $determiningWorkflows = $this->workflowRepository->findByAssigneeMetadata($this->metadata);
         if (empty($determiningWorkflows)) {
             return true;
         }
-        return $this->metadata->withOverrides(['constraints' => $metadataConstraints])
+        $isAssigneeMetadata = $this->metadata->withOverrides(['constraints' => $metadataConstraints])
             ->canDetermineAssignees($this->resourceKindRepository);
+        if ($isAssigneeMetadata) {
+            return true;
+        } else {
+            throw $this->reportError($this->metadata, ['name' => $this->metadata->getName()]);
+        }
     }
 }
