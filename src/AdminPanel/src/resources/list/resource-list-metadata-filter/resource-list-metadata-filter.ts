@@ -29,7 +29,7 @@ export class ResourceListMetadataFilter {
 
   contentsFilterChanged() {
     this.previousMetadataValue = this.metadataValue;
-    this.metadataValue = this.contentsFilter[this.metadata.id];
+    this.metadataValue = this.contentsFilter ? this.contentsFilter[this.metadata.id] : undefined;
     if (this.metadataValue != this.previousMetadataValue) {
       this.inputBoxVisible = !!this.metadataValue;
       this.previousMetadataValue = this.metadataValue;
