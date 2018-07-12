@@ -63,6 +63,13 @@ class TransitionAssigneeCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([42], $userIds);
     }
 
+    public function testGetUserIdsAssignedToTransitionIgnoresDuplicatedIds() {
+        $this->workflow->method('getPlaces')->willReturn([$this->createWorkflowPlaceMock('p', [], [1, 2])]);
+        $resource = $this->createResourceMockWithContents([1 => 42, 2 => 42]);
+        $userIds = $this->checker->getUserIdsAssignedToTransition($resource, $this->transition);
+        $this->assertEquals([42], $userIds);
+    }
+
     public function testGetUserIdsAssignedToTransitionReturnsAlsoAutoAssigned() {
         $this->workflow->method('getPlaces')->willReturn([$this->createWorkflowPlaceMock('p', [], [1], [2])]);
         $resource = $this->createResourceMockWithContents([1 => 42, 2 => 48]);

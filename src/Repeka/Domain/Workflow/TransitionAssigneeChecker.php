@@ -48,7 +48,7 @@ class TransitionAssigneeChecker {
             $autoAssignMetadataIds = array_intersect($autoAssignMetadataIds, $resource->getKind()->getMetadataIds());
             $assigneeUserIds = $this->extractAssigneeIds($resource, $assigneeMetadataIds);
             $autoAssignUserIds = $this->extractAssigneeIds($resource, $autoAssignMetadataIds);
-            return array_merge($assigneeUserIds, $autoAssignUserIds);
+            return array_values(array_unique(array_merge($assigneeUserIds, $autoAssignUserIds)));
         }
         return [];
     }
