@@ -19,7 +19,7 @@
   "scripts": {
     "help": "node scripts/help.js",
     "check": "npm run -s lint && npm run -s test",
-    "build": "cd src/AdminPanel && npm run -s build",
+    "build": "cd src/AdminPanel && npm run -s build && cd ../src/Frontend && npm run -s build",
     "clean": "npm run -s clean:backend && npm run -s clean:admin",
     "clean:admin": "cd src/AdminPanel && npm run -s clean",
     "clean:backend": "npm run -s clean:backend:cache",
@@ -30,17 +30,19 @@
     "db:fixture": "npm run -s clean:backend:cache && php bin/console doctrine:database:drop -e dev --force --if-exists && sleep 2 && php bin/console repeka:initialize --skip-backup && php bin/console doctrine:fixtures:load -e dev -n --append",
     "db:migrate": "npm run -s clean:backend && npm run -s db:create && php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration",
     "db:diff": "php bin/console doctrine:migrations:diff",
-    "dist": "node scripts/repeka.js && node scripts/version-public.js && node scripts/assert-prod.js && (npm run dist:backend && npm run dist:admin) && php bin/console repeka:statsd:deploy",
+    "dist": "node scripts/repeka.js && node scripts/assert-prod.js && (npm run dist:backend && npm run dist:admin && npm run dist:frontend) && php bin/console repeka:statsd:deploy",
     "dist:admin": "cd src/AdminPanel && npm run dist -s",
     "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev --prefer-dist",
+    "dist:frontend": "cd src/Frontend && npm run build -s",
     "init": "npm run -s clean:backend && php bin/console repeka:initialize --skip-backup && php bin/console cache:warmup",
-    "install-deps": "npm prune && node scripts/repeka.js && node scripts/version-public.js && composer-runner -- install --prefer-dist && cd src/AdminPanel && npm install && npm run install-deps",
-    "lint": "rm -fr var/reports/lints/*.xml && (npm run -s lint:backend && npm run -s lint:admin)",
+    "install-deps": "npm prune && node scripts/repeka.js && composer-runner -- install --prefer-dist && cd src/AdminPanel && npm install && npm run install-deps && cd ../Frontend && npm install",
+    "lint": "rm -fr var/reports/lints/*.xml && (npm run -s lint:backend && npm run -s lint:admin && npm run -s lint:frontend)",
     "lint:admin": "cd src/AdminPanel && npm run -s lint",
     "lint:backend": "rm -fr var/reports/phpmd/*.xml && (npm run -s lint:backend:phpmd && npm run -s lint:backend:phpcs)",
     "lint:backend:phpcbf": "sh -c \"vendor/bin/phpcbf src/Repeka --standard=scripts/phpcs-rules.xml\" || true",
     "lint:backend:phpcs": "sh -c \"vendor/bin/phpcs src/Repeka --standard=scripts/phpcs-rules.xml --report=checkstyle --report-file=var/reports/lints/phpcs.xml\"",
     "lint:backend:phpmd": "sh -c \"vendor/bin/phpmd src/Repeka xml scripts/phpmd-rules.xml --reportfile var/reports/phpmd/phpmd.xml\"",
+    "lint:frontend": "cd src/Frontend && npm run -s lint",
     "publish": "curl -v --user repeka:AizoJoonoh5oidoo --upload-file ./repeka-0.8.6.tar.gz https://repo.fslab.agh.edu.pl/repository/repeka/",
     "release": "cross-env REPEKA_ENV=prod npm run -s dist && node scripts/release.js",
     "test": "npm run -s test:backend && npm run -s test:admin",
@@ -50,6 +52,7 @@
     "test:backend:integration": "sh -c \"vendor/bin/phpunit -c scripts --testsuite integration --fail-on-warning\"",
     "test:backend:junit": "sh -c \"vendor/bin/phpunit -c scripts --testsuite unit --fail-on-warning --testdox --log-junit var/reports/tests/phpunit.xml --coverage-clover var/reports/coverage/phpunit.xml && vendor/bin/phpunit -c scripts --testsuite integration --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration.xml\"",
     "test:junit": "rm -f var/reports/tests/*.xml var/reports/coverage/*.xml && npm run -s test:backend:junit && cd src/AdminPanel && npm run -s test:junit",
-    "watch": "cd src/AdminPanel && npm run -s watch"
+    "watch": "cd src/AdminPanel && npm run -s watch",
+    "watch:frontend": "cd src/Frontend && npm run -s dev"
   }
 }

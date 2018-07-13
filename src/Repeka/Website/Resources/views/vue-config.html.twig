@@ -1,0 +1,15 @@
+<script>
+  window.FRONTEND_CONFIG = {
+    locale: '{{ app.request.locale }}',
+    baseUrl: '{{ path('home')[:-1] }}',
+    serverTime: '{{ "now"|date("Y-m-d\\TH:i:sP") }}',
+    renderStart: new Date()
+      {% if app.user %}
+    ,
+    user: {
+      id: {{ app.user.id }},
+      username: '{{ app.user.username }}'
+    }
+      {% endif %}
+  };
+</script>

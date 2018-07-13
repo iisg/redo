@@ -14,14 +14,14 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals('b/123456', $user->getUsername());
-        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+        $this->assertContains('Wyloguj', $client->getResponse()->getContent());
         $nameMetadata = $this->findMetadataByName('Imię', $user->getUserData()->getResourceClass());
         $this->assertEquals(['Piotr'], $user->getUserData()->getValues($nameMetadata));
     }
 
     public function testUnsupportedUsernameAuthFailure() {
         $client = AuthenticationIntegrationTest::authenticate('a/123456', 'piotr');
-        $this->assertContains('nieudane', $client->getResponse()->getContent());
+        $this->assertContains('error="true"', $client->getResponse()->getContent());
         $this->assertNull(AuthenticationIntegrationTest::getAuthenticatedUser($client));
     }
 
@@ -43,7 +43,7 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals('b/012345', $user->getUsername());
-        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+        $this->assertContains('Wyloguj', $client->getResponse()->getContent());
     }
 
     public function testAuthSuccessWithoutBPrefixAndLength6() {
@@ -52,7 +52,7 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals('b/012345', $user->getUsername());
-        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+        $this->assertContains('Wyloguj', $client->getResponse()->getContent());
     }
 
     public function testAuthSuccessWithUpperSPrefix() {
@@ -61,7 +61,7 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals('s/123456', $user->getUsername());
-        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+        $this->assertContains('Wyloguj', $client->getResponse()->getContent());
     }
 
     public function testAuthSuccessFor10DigitsUsername() {
@@ -70,6 +70,6 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals('1234567890', $user->getUsername());
-        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+        $this->assertContains('Wyloguj', $client->getResponse()->getContent());
     }
 }

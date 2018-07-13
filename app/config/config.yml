@@ -65,7 +65,10 @@ doctrine_migrations:
   namespace: Repeka\Migrations
 
 framework:
-  assets: ~
+  assets:
+    packages:
+      webpack:
+        version_strategy: Repeka\Website\Twig\WebpackAssetVersionStrategy
   csrf_protection: ~
   default_locale: "%locale%"
   form:
@@ -95,9 +98,8 @@ parameters:
   locale: pl
   secret: some_secret
   container.autowiring.strict_mode: true
+  use_webpack_dev_server: false
 
 twig:
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
-  globals:
-    application_version: "%application_version%"

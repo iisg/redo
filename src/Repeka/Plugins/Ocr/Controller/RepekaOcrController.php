@@ -2,7 +2,7 @@
 namespace Repeka\Plugins\Ocr\Controller;
 
 use Assert\Assertion;
-use Repeka\Application\Controller\Api\ApiController;
+use Repeka\Application\Controller\ApiController;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\ParamConverter\ResourceContentsParamConverter;
 use Repeka\Domain\Cqrs\Command;

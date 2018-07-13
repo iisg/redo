@@ -49,7 +49,7 @@ gulp.task('build-html', () => {
     .pipe(gulp.dest(paths.output));
 });
 
-gulp.task('build-css', ['build-css-frontend'], () => {
+gulp.task('build-css', () => {
   return gulp.src(paths.scss)
     .pipe(plumber({errorHandler: notify.onError('SCSS: <%= error.message %>')}))
     .pipe(sourcemaps.init())
@@ -58,15 +58,6 @@ gulp.task('build-css', ['build-css-frontend'], () => {
     .pipe(minifyCSS())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(paths.output));
-});
-
-gulp.task('build-css-frontend', () => {
-  return gulp.src("../Repeka/Application/Resources/views/Site/*.scss")
-    .pipe(plumber({errorHandler: notify.onError('SCSS: <%= error.message %>')}))
-    .pipe(sass())
-    .pipe(concat('style.css'))
-    .pipe(minifyCSS())
-    .pipe(gulp.dest(paths.webRoot));
 });
 
 gulp.task('build-locales', () => {
