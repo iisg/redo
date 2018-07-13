@@ -1,9 +1,9 @@
 site:
-  resource: "@RepekaBundle/Controller/Site"
+  resource: "@RepekaWebsiteBundle/Controller"
   type: annotation
 
 api:
-  resource: "@RepekaBundle/Controller/Api"
+  resource: "@RepekaBundle/Controller"
   type: annotation
   prefix: /api
 

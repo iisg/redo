@@ -30,7 +30,7 @@ class BackupDbCommand extends ContainerAwareCommand {
     }
 
     private function backupPostgresDatabase(Connection $connection, InputInterface $input, OutputInterface $output) {
-        $backupName = 'repeka-before-' . $this->getContainer()->getParameter('application_version') . '-' . date('YmdHis') . '.sql.gz';
+        $backupName = 'repeka-before-' . $this->getContainer()->getParameter('repeka.version') . '-' . date('YmdHis') . '.sql.gz';
         $backupPath = self::BACKUP_DIR . '/' . $backupName;
         $process = new Process(
             sprintf(

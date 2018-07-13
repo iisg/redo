@@ -26,6 +26,9 @@ monolog:
       type: rotating_file
       formatter: Monolog\Formatter\LineFormatter
 
+parameters:
+  use_webpack_dev_server: true
+
 web_profiler:
   intercept_redirects: false
   toolbar: true

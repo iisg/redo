@@ -16,6 +16,7 @@ class Configuration implements ConfigurationInterface {
         $rootNode
             ->children()
                 ->scalarNode('default_ui_language')->defaultValue('en')->end()
+                ->scalarNode('version')->defaultValue('X.X.X')->end()
                 ->arrayNode('static_permissions')->prototype('scalar')->end()->end()
                 ->integerNode('metadata_nesting_depth')->min(1)->end()
                 ->arrayNode('elasticsearch')
@@ -59,6 +60,7 @@ class Configuration implements ConfigurationInterface {
                     ->variableNode('admins')->validate()->castToArray()->end()->end()
                     ->variableNode('operators')->validate()->castToArray()->end()->end()
                 ->end()->end()->end()
+                ->arrayNode('webpack_hashes')->normalizeKeys(false)->defaultValue([])->useAttributeAsKey('name')->prototype('scalar')->end()->end()
             ->end();
         // @formatter:on
         // @codingStandardsIgnoreEnd

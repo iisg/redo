@@ -28,6 +28,8 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('pk_auth.local_accounts_enabled', $mergedConfig['pk_auth']['local_accounts_enabled']);
         $container->setParameter('xml_import.koha', $mergedConfig['xml_import']['koha']);
         $container->setParameter('user_data_mapping', $mergedConfig['user_data_mapping']);
+        $container->setParameter('repeka.version', $mergedConfig['version']);
+        $container->setParameter('repeka.webpack_hashes', $mergedConfig['webpack_hashes']);
         $this->retrieveResourceClassesParameters($mergedConfig, $container);
     }
 

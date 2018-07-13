@@ -1,0 +1,11 @@
+a {
+  cursor: pointer;
+}
+
+icon, .icon {
+  > svg {
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+  }
+}
