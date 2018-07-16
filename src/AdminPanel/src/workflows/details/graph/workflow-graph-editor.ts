@@ -6,7 +6,7 @@ import {WorkflowGraph} from "./workflow-graph";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {twoWay} from "common/components/binding-mode";
 import {WorkflowGraphEditorReady, WorkflowGraphReady} from "./workflow-graph-events";
-import {Disposable, BindingEngine} from "aurelia-binding";
+import {BindingEngine, Disposable} from "aurelia-binding";
 import {WorkflowGraphManager} from "./workflow-graph-manager";
 import {ChangeEvent} from "../../../common/change-event";
 import {debounce} from "lodash";
@@ -15,7 +15,7 @@ import {debounce} from "lodash";
 export class WorkflowGraphEditor implements ComponentUnbind {
   @bindable(twoWay) workflow: Workflow;
 
-  selectedElement: WorkflowPlace|WorkflowTransition;
+  selectedElement: WorkflowPlace | WorkflowTransition;
   simulating = false;
   availableTransitions: Array<string> = [];
   graph: WorkflowGraph;
@@ -81,8 +81,10 @@ export class WorkflowGraphEditor implements ComponentUnbind {
     this.copyPlaceRequirementArrays(this.workflow.places, workflow.places);
     this.workflow.places = workflow.places;
     this.workflow.transitions = workflow.transitions;
-    this.workflow.diagram = workflow.diagram;
-    this.workflow.thumbnail = workflow.thumbnail;
+    if (withLayout) {
+      this.workflow.diagram = workflow.diagram;
+      this.workflow.thumbnail = workflow.thumbnail;
+    }
   }
 
   private updateWorkflowPlacesBasedOnGraph() {

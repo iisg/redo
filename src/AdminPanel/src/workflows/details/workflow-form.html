@@ -5,9 +5,9 @@
     <require from="./excel/excel-legend.html"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
+    <require from="common/components/buttons/make-copy-button.html"></require>
 
-    <form submit.delegate="onSubmit($event)"
-        change.delegate="dirty = true">
+    <form change.delegate="dirty = true">
         <div class="name-with-buttons-and-tabs">
             <span if.bind="viewing || editing"
                 class="page-title">${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</span>
@@ -20,7 +20,9 @@
                     part="buttons-when-viewing"></template>
                 <template else>
                     <submit-button editing.bind="editing"
-                        submitting.bind="workflow.pendingRequest"></submit-button>
+                        click.delegate="onSubmit()"></submit-button>
+                    <make-copy-button if.bind="editing"
+                        click.delegate="addWorkflow()"></make-copy-button>
                     <cancel-button disabled.bind="workflow.pendingRequest"
                         click.delegate="onCancel()"></cancel-button>
                 </template>
