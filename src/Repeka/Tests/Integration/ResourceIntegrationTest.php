@@ -143,10 +143,15 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testFetchingResourcesOrderByIdAsc() {
         $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], [
-            'resourceClasses' => ['books'],
-            'sortByIds' => [['columnId' => 'id', 'direction' => 'ASC']],
-        ]);
+        $client->apiRequest(
+            'GET',
+            self::ENDPOINT,
+            [],
+            [
+                'resourceClasses' => ['books'],
+                'sortByIds' => [['columnId' => 'id', 'direction' => 'ASC']],
+            ]
+        );
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
         $this->assertEquals(

@@ -50,7 +50,11 @@ class ResourceEntity implements Identifiable, HasResourceClass {
     }
 
     public function hasParent(): bool {
-        return isset($this->getContents()[SystemMetadata::PARENT]);
+        return !empty($this->getValues(SystemMetadata::PARENT));
+    }
+
+    public function getParentId(): int {
+        return current($this->getValues(SystemMetadata::PARENT));
     }
 
     public function updateContents(ResourceContents $contents) {
