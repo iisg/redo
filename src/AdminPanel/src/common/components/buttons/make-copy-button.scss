@@ -1,0 +1,5 @@
+@import "../../styles";
+
+make-copy-button toggle-button {
+  @include toggle-button($blue);
+}

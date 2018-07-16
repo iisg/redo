@@ -25,8 +25,11 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
 
   new RouteGroup('workflows', 'workflows', 'workflows', 'Workflows', [
     new BaseRoute(':resourceClass', 'workflows-list').withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY, 'workflow').requireRole('ADMIN'),
-    new Route('details/:id', 'details', 'details/workflow-details').withBreadcrumbsProvider('workflow').requireRole('ADMIN'),
-    new Route('new/:resourceClass', 'new', 'details/workflow-new').withBreadcrumbsProvider('workflow').requireRole('ADMIN')
+    new Route('details/:id', 'details', 'details/workflow-details')
+      .withBreadcrumbsProvider('workflow')
+      .requireRole('ADMIN')
+      .setActivationStrategy('replace'),
+    new Route('new/:resourceClass', 'new', 'details/workflow-form').withBreadcrumbsProvider('workflow').requireRole('ADMIN')
   ]),
 
   new Route('languages', 'languages', 'resources-config/language-config/languages-list')

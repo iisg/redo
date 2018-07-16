@@ -3,11 +3,12 @@
     <require from="./excel/excel"></require>
     <require from="common/components/buttons/remove-button.html"></require>
     <require from="common/components/buttons/edit-button.html"></require>
-    <require from="./workflow-edit-form"></require>
+    <require from="./workflow-form"></require>
 
     <div if.bind="workflow"
         class="workflow-details au-animate fade-inup-outup">
-        <workflow-edit-form workflow.bind="workflow"
+        <workflow-form
+            workflow.bind="workflow"
             submit.delegate="update()"
             on-cancel.call="toggleEditForm()"
             viewing.bind="!editing"
@@ -18,7 +19,7 @@
                 <remove-button click.delegate="deleteWorkflow()"
                     disabled.bind="workflow.pendingRequest"></remove-button>
             </template>
-        </workflow-edit-form>
+        </workflow-form>
     </div>
     <loading-bar else></loading-bar>
 </template>
