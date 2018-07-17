@@ -156,4 +156,39 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $this->assertCount(2, $results);
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }
+
+    public function testFindByAlternatives() {
+        $descriptionMetadata = $this->findMetadataByName('Opis');
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->filterByContents([$this->titleMetadata->getId() => 'PHP'])
+            ->filterByContents([$descriptionMetadata->getId() => 'poradnik'])
+            ->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(2, $results);
+        $this->assertContains($this->getPhpBookResource()->getId(), EntityUtils::mapToIds($results));
+    }
+
+    public function testFindByAlternativesUsingSameMetadata() {
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->filterByContents([$this->titleMetadata->getId() => 'PHP'])
+            ->filterByContents([$this->titleMetadata->getId() => 'MySQL'])
+            ->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(2, $results);
+        $this->assertContains($this->getPhpBookResource()->getId(), EntityUtils::mapToIds($results));
+    }
+
+    public function testConditionsFromOneAlternativeDoNotApplyToAnother() {
+        $descriptionMetadata = $this->findMetadataByName('Opis');
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->filterByContents([$this->titleMetadata->getId() => 'PHP', $descriptionMetadata->getId() => 'poradnik'])
+            ->filterByContents([$this->titleMetadata->getId() => 'MySQL'])
+            ->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(2, $results);
+        $this->assertContains($this->getPhpBookResource()->getId(), EntityUtils::mapToIds($results));
+    }
 }

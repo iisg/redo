@@ -1,8 +1,11 @@
 <template>
     <require from="resources/details/resource-link"></require>
-    <resource-link id.bind="entry.data.resource.id"></resource-link>
-    <icon name="examination-3"></icon>
-    <a click.delegate="showResourceContentsDialog()">
-        ${ 'View past contents' | t }
-    </a>
+    <require from="./audit-entry-details-resource-show-contents"></require>
+    <resource-link id.bind="entry.data.after.resource.id || entry.data.before.resource.id"></resource-link>
+    <audit-entry-details-resource-show-contents if.bind="entry.data.before"
+        entry.bind="entry"
+        data-key="before"></audit-entry-details-resource-show-contents>
+    <audit-entry-details-resource-show-contents if.bind="entry.data.after"
+        entry.bind="entry"
+        data-key="after"></audit-entry-details-resource-show-contents>
 </template>

@@ -1,0 +1,7 @@
+<template>
+    <a if.bind="resource"
+        click.delegate="showResourceContentsDialog()">
+        <icon name="examination-3"></icon>
+        ${ 'View contents ' + dataKey + ' operation' | t }
+    </a>
+</template>
