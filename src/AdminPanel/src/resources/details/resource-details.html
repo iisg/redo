@@ -9,6 +9,7 @@
     <require from="common/components/buttons/manage-button.html"></require>
     <require from="users/details/users-in-group"></require>
     <require from="users/details/user-roles"></require>
+    <require from="../../audit/audit-page"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
 
@@ -71,6 +72,11 @@
             <aup-tab-pane tab="workflow">
                 <resource-workflow if.bind="resourceDetailsTabs.activeTabId === 'workflow'"
                     resource.bind="resource"></resource-workflow>
+            </aup-tab-pane>
+            <aup-tab-pane tab="audit">
+                <audit-page if.bind="resourceDetailsTabs.activeTabId === 'audit'"
+                    resource-id.bind="resource.id"
+                    filters.from-view="filters"></audit-page>
             </aup-tab-pane>
             <aup-tab-pane tab="users-in-group">
                 <users-in-group if.bind="resourceDetailsTabs.activeTabId === 'users-in-group'"

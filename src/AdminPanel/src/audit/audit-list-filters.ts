@@ -10,6 +10,7 @@ export class AuditListFilters {
   commandNames: string[] = [];
   resourceContents: NumberMap<string>;
   customColumns: { displayStrategy: string }[] = [];
+  resourceId: number;
   onChange: VoidFunction = () => undefined;
 
   toParams(): StringMap<any> {
@@ -29,10 +30,17 @@ export class AuditListFilters {
     if (this.resourceContents) {
       params.resourceContents = JSON.stringify(this.resourceContents);
     }
+    if (this.resourceId) {
+      params.id = this.resourceId;
+      params.tab = 'audit';
+    }
     return params;
   }
 
   buildQuery(query: AuditEntryListQuery): AuditEntryListQuery {
+    if (this.resourceId) {
+      query = query.filterByResourceId(this.resourceId);
+    }
     return query
       .filterByResourceContents(this.resourceContents)
       .filterByCommandNames(this.commandNames)
@@ -48,6 +56,7 @@ export class AuditListFilters {
     filters.commandNames = (params.commandNames || '').split(',').filter(commandName => !!commandName.trim());
     filters.resourceContents = safeJsonParse(params.resourceContents);
     filters.setCustomColumns(params.customColumns);
+    filters.resourceId = +params.id;
     return filters;
   }
 

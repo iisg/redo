@@ -17,6 +17,7 @@ import {ResourceRepository} from "../resource-repository";
 import {ContextResourceClass} from "./../context/context-resource-class";
 import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
+import {AuditListFilters} from "../../audit/audit-list-filters";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -24,12 +25,15 @@ export class ResourceDetails implements RoutableComponentActivate {
   isFormOpened = false;
   isFormOpenedForGod: boolean;
   selectedTransition: WorkflowTransition;
-  resultsPerPage: number;
-  currentPageNumber: number;
   resourceDetailsTabs: DetailsViewTabs;
   numberOfChildren: number;
   isFiltering: boolean;
   private urlListener: Subscription;
+
+  resultsPerPage: number;
+  currentPageNumber: number;
+
+  filters: AuditListFilters;
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceDisplayStrategy: ResourceDisplayStrategyValueConverter,
@@ -96,6 +100,9 @@ export class ResourceDetails implements RoutableComponentActivate {
       else {
         this.resourceDetailsTabs.addTab('users-in-group', this.i18n.tr('Users'));
       }
+    }
+    if (this.hasRole.toView('ADMIN', this.resource.resourceClass)) {
+      this.resourceDetailsTabs.addTab('audit', this.i18n.tr('Audit'));
     }
     this.resourceDetailsTabs.setActiveTabId(activeTabId);
   }
@@ -171,7 +178,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     skipValidation: this.isFormOpenedForGod,
     triggerNavigation: false
   }) {
-    const parameters = {};
+    let parameters = {};
     if (this.resourceDetailsTabs.activeTabId == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
       parameters['currentPageNumber'] = this.currentPageNumber;
@@ -188,6 +195,9 @@ export class ResourceDetails implements RoutableComponentActivate {
     }
     if (this.selectedTransition) {
       parameters['transitionId'] = this.selectedTransition.id;
+    }
+    if (this.resourceDetailsTabs.activeTabId == 'audit' && this.filters) {
+      parameters = this.filters.toParams();
     }
     this.router.navigateToRoute('resources/details', parameters, {trigger: args.triggerNavigation, replace: true});
   }

@@ -11,7 +11,7 @@ class AuditedCommandNamesQueryHandler {
         $this->auditEntryRepository = $auditEntryRepository;
     }
 
-    public function handle(): array {
-        return $this->auditEntryRepository->getAuditedCommandNames();
+    public function handle(AuditedCommandNamesQuery $auditedCommandNamesQuery): array {
+        return $this->auditEntryRepository->getAuditedCommandNames($auditedCommandNamesQuery);
     }
 }

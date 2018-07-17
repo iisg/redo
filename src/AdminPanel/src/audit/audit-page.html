@@ -14,7 +14,8 @@
 
             <div class="form-group">
                 <label>${'Operation' | t}</label>
-                <audit-command-name-chooser command-names.bind="filters.commandNames"></audit-command-name-chooser>
+                <audit-command-name-chooser command-names.bind="filters.commandNames"
+                    resource-id.bind="resourceId"></audit-command-name-chooser>
             </div>
             <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
 

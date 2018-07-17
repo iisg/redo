@@ -20,8 +20,13 @@ class AuditController extends ApiController {
         $queryBuilder = AuditEntryListQuery::builder();
         $commandNames = $request->get('commandNames', []);
         $contentsFilter = json_decode($request->get('resourceContents', '{}'), true);
+        if ($request->query->has('resourceId')) {
+            $resourceId = intval($request->query->get('resourceId', 0));
+            $queryBuilder = $queryBuilder->filterByResourceId($resourceId);
+        }
         Assertion::isArray($commandNames);
-        $queryBuilder->filterByCommandNames($commandNames)->filterByResourceContents(is_array($contentsFilter) ? $contentsFilter : []);
+        $queryBuilder->filterByCommandNames($commandNames)
+            ->filterByResourceContents(is_array($contentsFilter) ? $contentsFilter : []);
         if ($request->query->has('page')) {
             $page = $request->query->get('page', 1);
             $resultsPerPage = $request->query->get('resultsPerPage', 10);
@@ -42,8 +47,9 @@ class AuditController extends ApiController {
      * @Method("GET")
      * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
-    public function getAuditCommandsAction() {
-        $commandNames = $this->handleCommand(new AuditedCommandNamesQuery());
+    public function getAuditCommandsAction(Request $request) {
+        $onlyResource = $request->query->get('onlyResource', false);
+        $commandNames = $this->handleCommand(new AuditedCommandNamesQuery($onlyResource));
         return $this->createJsonResponse($commandNames);
     }
 }

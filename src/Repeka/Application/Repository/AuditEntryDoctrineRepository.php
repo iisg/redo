@@ -5,6 +5,7 @@ use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Factory\AuditEntryListQuerySqlFactory;
 use Repeka\Domain\Repository\AuditEntryRepository;
+use Repeka\Domain\UseCase\Audit\AuditedCommandNamesQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Domain\UseCase\PageResult;
 
@@ -21,12 +22,15 @@ class AuditEntryDoctrineRepository extends EntityRepository implements AuditEntr
         return new PageResult($pageContents, $total, $query->getPage());
     }
 
-    public function getAuditedCommandNames(): array {
-        $query = $this->createQueryBuilder('a')
+    public function getAuditedCommandNames(AuditedCommandNamesQuery $query): array {
+        $dbQuery = $this->createQueryBuilder('a')
             ->select('a.commandName')
-            ->distinct()
-            ->getQuery();
-        $commandNames = $query->getArrayResult();
+            ->distinct();
+        if ($query->getOnlyResource()) {
+            $dbQuery = $dbQuery->where("a.commandName LIKE 'resource_%'");
+        }
+        $dbQuery = $dbQuery->getQuery();
+        $commandNames = $dbQuery->getArrayResult();
         return array_column($commandNames, 'commandName');
     }
 }

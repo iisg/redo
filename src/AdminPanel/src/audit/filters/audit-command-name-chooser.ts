@@ -8,11 +8,16 @@ export class AuditCommandNameChooser {
   private availableCommandNames: string[];
 
   @bindable(twoWay) commandNames;
+  @bindable resourceId: number;
 
   constructor(private auditEntryRepository: AuditEntryRepository) {
   }
 
   async attached() {
-    this.availableCommandNames = await this.auditEntryRepository.getCommandNames();
+    let params: StringMap<any> = {};
+    if (this.resourceId) {
+      params.onlyResource = true;
+    }
+    this.availableCommandNames = await this.auditEntryRepository.getCommandNames(params);
   }
 }
