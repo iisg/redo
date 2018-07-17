@@ -9,6 +9,7 @@ Import data from Excel: Importuj dane z Excela
 Import data from KOHA: Importuj dane z KOHA
 Name: Nazwa
 Label: Nazwa wyświetlana
+Audit: Audyt
 Child resources: Podzasoby
 Control: Kontrolka
 Description: Opis

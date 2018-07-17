@@ -10,4 +10,11 @@ class AuditEntryListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
             ->build();
         $this->assertEquals(['a', 'b'], $query->getCommandNames());
     }
+
+    public function testResourceIdFilter() {
+        $query = AuditEntryListQuery::builder()
+            ->filterByResourceId(1)
+            ->build();
+        $this->assertEquals(1, $query->getResourceId());
+    }
 }

@@ -3,6 +3,7 @@ namespace Repeka\Tests\Integration\Repository;
 
 use Repeka\Domain\Repository\AuditEntryRepository;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\Audit\AuditedCommandNamesQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
@@ -22,9 +23,16 @@ class AuditEntryRepositoryIntegrationTest extends IntegrationTestCase {
         $this->loadAllFixtures();
     }
 
-    public function testGetAuditedCommandNames() {
-        $commandNames = $this->auditEntryRepository->getAuditedCommandNames();
+    public function testGetAllAuditedCommandNames() {
+        $commandNames = $this->auditEntryRepository->getAuditedCommandNames(new AuditedCommandNamesQuery(false));
         $this->assertTrue(count($commandNames) < 10);
+        $this->assertContains('resource_create', $commandNames);
+    }
+
+    public function testGetResourceAuditedCommandNames() {
+        $commandNames = $this->auditEntryRepository->getAuditedCommandNames(new AuditedCommandNamesQuery(true));
+        $this->assertTrue(count($commandNames) < 10);
+        $this->assertNotContains('user_authenticate', $commandNames);
         $this->assertContains('resource_create', $commandNames);
     }
 
@@ -46,5 +54,12 @@ class AuditEntryRepositoryIntegrationTest extends IntegrationTestCase {
         $query = AuditEntryListQuery::builder()->filterByResourceContents([$titleMetadata->getId() => 'PHP'])->build();
         $entries = $this->auditEntryRepository->findByQuery($query);
         $this->assertCount(4, $entries);
+    }
+
+    public function testFindByResourceId() {
+        $resourceId = 12;
+        $query = AuditEntryListQuery::builder()->filterByResourceId($resourceId)->build();
+        $entries = $this->auditEntryRepository->findByQuery($query);
+        $this->assertCount(3, $entries);
     }
 }

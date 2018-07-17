@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\ResourceContents;
 class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
     private $commandNames = [];
     private $resourceContents = [];
+    private $resourceId = 0;
 
     public function build(): AuditEntryListQuery {
         return new AuditEntryListQuery(
@@ -14,7 +15,8 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
                 ? $this->resourceContents
                 : ResourceContents::fromArray($this->resourceContents),
             $this->page,
-            $this->resultsPerPage
+            $this->resultsPerPage,
+            $this->resourceId
         );
     }
 
@@ -26,6 +28,11 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
     /** @param ResourceContents|array $resourceContents */
     public function filterByResourceContents($resourceContents): self {
         $this->resourceContents = $resourceContents;
+        return $this;
+    }
+
+    public function filterByResourceId(int $resourceId): self {
+        $this->resourceId = $resourceId;
         return $this;
     }
 }

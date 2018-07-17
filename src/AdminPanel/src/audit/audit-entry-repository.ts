@@ -15,7 +15,7 @@ export class AuditEntryRepository extends ApiRepository<AuditEntry> {
     return new AuditEntryListQuery(this.httpClient, this.endpoint, this.entitySerializer);
   }
 
-  public getCommandNames(): Promise<string[]> {
-    return this.httpClient.get('audit-commands').then(response => response.content);
+  public getCommandNames(params): Promise<string[]> {
+    return this.httpClient.get('audit-commands', params).then(response => response.content);
   }
 }
