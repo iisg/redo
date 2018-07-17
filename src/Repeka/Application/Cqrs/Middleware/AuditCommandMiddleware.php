@@ -32,10 +32,12 @@ class AuditCommandMiddleware implements CommandBusMiddleware {
                 $beforeEntry = $auditor->beforeHandling($command);
                 try {
                     $result = $next($command);
-                    $this->auditSuccess($command, $beforeEntry, $auditor->afterHandling($command, $result));
+                    $afterEntry = $auditor->afterHandling($command, $result, $beforeEntry);
+                    $this->auditSuccess($command, $beforeEntry, $afterEntry, $auditor->doSaveBeforeHandlingResult());
                     return $result;
                 } catch (\Exception $e) {
-                    $this->auditFailure($command, $beforeEntry, $auditor->afterError($command, $e));
+                    $errorEntry = $auditor->afterError($command, $e, $beforeEntry);
+                    $this->auditFailure($command, $beforeEntry, $errorEntry, $auditor->doSaveBeforeHandlingResult());
                     throw $e;
                 }
             } else {
@@ -54,12 +56,12 @@ class AuditCommandMiddleware implements CommandBusMiddleware {
         return get_class($command) . 'Auditor';
     }
 
-    private function auditSuccess(Command $command, ?array $beforeEntry, ?array $afterEntry) {
-        $this->saveAuditEntries($command, $beforeEntry, $afterEntry, true);
+    private function auditSuccess(Command $command, ?array $beforeEntry, ?array $afterEntry, bool $saveBeforeEntry) {
+        $this->saveAuditEntries($command, $saveBeforeEntry ? $beforeEntry : null, $afterEntry, true);
     }
 
-    private function auditFailure(Command $command, ?array $beforeEntry, ?array $afterEntry) {
-        $this->saveAuditEntries($command, $beforeEntry, $afterEntry, false);
+    private function auditFailure(Command $command, ?array $beforeEntry, ?array $afterEntry, bool $saveBeforeEntry) {
+        $this->saveAuditEntries($command, $saveBeforeEntry ? $beforeEntry : null, $afterEntry, false);
     }
 
     private function saveAuditEntries(Command $command, ?array $beforeEntry, ?array $afterEntry, bool $successful) {

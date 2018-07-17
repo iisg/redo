@@ -47,20 +47,46 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testFilterByContents() {
         $query = ResourceListQuery::builder()->filterByContents([1 => 'PHP'])->build();
         $factory = new ResourceListQuerySqlFactory($query);
-        $this->assertContains('mFilter1', $factory->getPageQuery());
+        $this->assertContains('mFilter0', $factory->getPageQuery());
         $this->assertContains("r.contents->'1'", $factory->getPageQuery());
         $this->assertContains("~*", $factory->getPageQuery());
-        $this->assertArrayHasKey('mFilter1', $factory->getParams());
-        $this->assertEquals('PHP', $factory->getParams()['mFilter1']);
+        $this->assertArrayHasKey('mFilter0', $factory->getParams());
+        $this->assertEquals('PHP', $factory->getParams()['mFilter0']);
     }
 
     public function testFilterByNumber() {
         $query = ResourceListQuery::builder()->filterByContents([1 => 40])->build();
         $factory = new ResourceListQuerySqlFactory($query);
-        $this->assertContains('mFilter1', $factory->getPageQuery());
+        $this->assertContains('mFilter0', $factory->getPageQuery());
         $this->assertContains("r.contents->'1'", $factory->getPageQuery());
-        $this->assertNotContains("LIKE", $factory->getPageQuery());
+        $this->assertNotContains("~*", $factory->getPageQuery());
+        $this->assertArrayHasKey('mFilter0', $factory->getParams());
+        $this->assertEquals(40, $factory->getParams()['mFilter0']);
+    }
+
+    public function testFilterByAlternativeContents() {
+        $query = ResourceListQuery::builder()
+            ->filterByContents([5 => 'PHP'])
+            ->filterByContents([6 => 'alternative'])
+            ->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertContains('m0', $factory->getPageQuery());
+        $this->assertContains('m0', $factory->getPageQuery());
+        $this->assertContains('mFilter0', $factory->getPageQuery());
+        $this->assertContains('mFilter1', $factory->getPageQuery());
+        $this->assertArrayHasKey('mFilter0', $factory->getParams());
         $this->assertArrayHasKey('mFilter1', $factory->getParams());
-        $this->assertEquals(40, $factory->getParams()['mFilter1']);
+        $this->assertEquals('PHP', $factory->getParams()['mFilter0']);
+        $this->assertEquals('alternative', $factory->getParams()['mFilter1']);
+        $this->assertContains("r.contents->'5'", $factory->getPageQuery());
+        $this->assertContains("r.contents->'6'", $factory->getPageQuery());
+        $this->assertContains(' OR ', $factory->getPageQuery());
+    }
+
+    public function testFilterByNoContentsHasNoAlternatives() {
+        $query = ResourceListQuery::builder()
+            ->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertNotContains(' OR ', $factory->getPageQuery());
     }
 }

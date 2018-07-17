@@ -11,7 +11,7 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
     private $resourceClasses = [];
     private $sortBy = [];
     private $parentId = 0;
-    private $contents = [];
+    private $contentAlternatives = [];
     private $onlyTopLevel = false;
     private $ids = [];
     private $workflowPlacesIds = [];
@@ -45,9 +45,12 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
-    /** @param ResourceContents|array $contents */
+    /**
+     * Each call to filterByContents adds an alternative to query.
+     * @param ResourceContents|array $contents
+     */
     public function filterByContents($contents): ResourceListQueryBuilder {
-        $this->contents = $contents;
+        $this->contentAlternatives[] = $contents instanceof ResourceContents ? $contents : ResourceContents::fromArray($contents);
         return $this;
     }
 
@@ -73,7 +76,7 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
             $this->resourceKinds,
             $this->sortBy,
             $this->parentId,
-            $this->contents instanceof ResourceContents ? $this->contents : ResourceContents::fromArray($this->contents),
+            $this->contentAlternatives,
             $this->onlyTopLevel,
             $this->page,
             $this->resultsPerPage,

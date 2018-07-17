@@ -105,9 +105,9 @@ class UserGrantRolesCommandHandlerTest extends \PHPUnit_Framework_TestCase {
     private function pretendToFindFor(array $matchingFilters): callable {
         return function (ResourceListQuery $query) use ($matchingFilters) {
             $this->assertEquals([44], $query->getIds());
-            $contentsFilter = $query->getContentsFilter();
+            $contentsFilters = $query->getContentsFilters();
             foreach ($matchingFilters as $matchingFilter) {
-                if (ResourceContents::fromArray($matchingFilter) == $contentsFilter) {
+                if (ResourceContents::fromArray($matchingFilter) == $contentsFilters[0]) {
                     return new PageResult([$this->user]);
                 }
             }

@@ -3,6 +3,7 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
@@ -30,7 +31,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
             $this->convertResourceKindIdsToResourceKinds($query->getResourceKinds()),
             $this->convertSortByMetadataColumnsToIntegers($query->getSortBy()),
             $query->getParentId(),
-            $query->getContentsFilter()->withMetadataNamesMappedToIds($this->metadataRepository),
+            $this->mapMetadataIdsToNamesInContentFilter($query->getContentsFilters()),
             $query->onlyTopLevel(),
             $query->getPage(),
             $query->getResultsPerPage(),
@@ -51,13 +52,21 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
     }
 
     private function convertSortByMetadataColumnsToIntegers(array $sortByIds): array {
-        $sortArray = array_map(
+        return array_map(
             function ($sortBy) {
                 $sortId = is_numeric($sortBy['columnId']) ? intval($sortBy['columnId']) : $sortBy['columnId'];
                 return ['columnId' => $sortId, 'direction' => $sortBy['direction']];
             },
             $sortByIds
         );
-        return $sortArray;
+    }
+
+    private function mapMetadataIdsToNamesInContentFilter(array $contentsFilters) {
+        return array_map(
+            function (ResourceContents $contentsFilter) {
+                return $contentsFilter->withMetadataNamesMappedToIds($this->metadataRepository);
+            },
+            $contentsFilters
+        );
     }
 }

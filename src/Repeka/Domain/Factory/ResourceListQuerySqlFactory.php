@@ -12,6 +12,7 @@ class ResourceListQuerySqlFactory {
 
     protected $froms = [];
     protected $wheres = ['1=1'];
+    protected $whereAlternatives = [];
     protected $params = [];
     protected $orderBy = [];
     protected $limit = '';
@@ -23,14 +24,16 @@ class ResourceListQuerySqlFactory {
     }
 
     private function build() {
-        $this->froms[] = 'resource r';
+        $this->froms['r'] = 'resource r';
         $this->filterByIds();
         $this->filterByResourceClasses();
         $this->filterByResourceKinds();
         $this->filterByParentId();
         $this->filterByWorkflowPlacesIds();
         $this->filterByTopLevel();
-        $this->filterByContents($this->query->getContentsFilter());
+        foreach ($this->query->getContentsFilters() as $filter) {
+            $this->filterByContents($filter);
+        }
         $this->addOrderBy();
         $this->paginate();
     }
@@ -48,12 +51,23 @@ class ResourceListQuerySqlFactory {
         return $this->getSelectQuery('COUNT(id)') . 'GROUP BY id';
     }
 
+    /**
+     * WHERE clause in the database query has a form of:
+     * WHERE     $this->wheres[0]
+     *       AND ...
+     *       AND $this->wheres[end]
+     *       AND ($this->whereAlternatives[0] OR ... OR $this->whereAlternatives[end]).
+     */
     private function getSelectQuery(string $what) {
+        $wheres = $this->wheres;
+        if (!empty($this->whereAlternatives)) {
+            $wheres[] = '(' . implode(' OR ', $this->whereAlternatives) . ')';
+        }
         return sprintf(
             'SELECT %s FROM %s WHERE %s ',
             $what,
             implode(', ', $this->froms),
-            implode(' AND ', $this->wheres)
+            implode(' AND ', $wheres)
         );
     }
 
@@ -88,7 +102,7 @@ class ResourceListQuerySqlFactory {
 
     private function filterByWorkflowPlacesIds(): void {
         if ($this->query->getWorkflowPlacesIds()) {
-            $this->froms[] = 'JSONB_OBJECT_KEYS(r.marking) place';
+            $this->froms['place'] = 'JSONB_OBJECT_KEYS(r.marking) place';
             $this->wheres[] = "place IN(:workflowPlacesIds)";
             $this->params['workflowPlacesIds'] = $this->query->getWorkflowPlacesIds();
         }
@@ -101,21 +115,30 @@ class ResourceListQuerySqlFactory {
         }
     }
 
+    /**
+     * Each call to filterByContents adds an alternative to search query.
+     */
     protected function filterByContents(ResourceContents $resourceContents, $contentsPath = 'r.contents'): void {
+        $nextFilterId = $this->getUnusedParamId();
+        $contentWhere = [];
         $resourceContents->forEachValue(
-            function ($value, int $metadataId) use ($contentsPath) {
-                $escapedMetadataId = str_replace('-', '_', strval($metadataId)); // prevents names like m-2
-                $paramName = "mFilter$escapedMetadataId";
-                $this->froms[] = "jsonb_array_elements($contentsPath->'$metadataId') m$escapedMetadataId";
+            function ($value, int $metadataId) use ($contentsPath, &$contentWhere, &$nextFilterId, &$metadataInFrom) {
+                $this->froms["m$nextFilterId"] = $this->jsonbArrayElements("$contentsPath->'$metadataId'") . " m$nextFilterId";
+                $paramName = "mFilter$nextFilterId";
                 if (is_int($value)) {
-                    $this->wheres[] = "m$escapedMetadataId->>'value' = :$paramName";
+                    $contentWhere[] = "m$nextFilterId->>'value' = :$paramName";
                     $this->params[$paramName] = $value;
                 } else {
-                    $this->wheres[] = "m$escapedMetadataId->>'value' ~* :$paramName";
+                    $contentWhere[] = "m$nextFilterId->>'value' ~* :$paramName";
                     $this->params[$paramName] = $value;
                 }
+                $nextFilterId++;
             }
         );
+        $alternative = implode(' AND ', $contentWhere);
+        if (!empty($alternative)) {
+            $this->whereAlternatives[] = $alternative;
+        }
     }
 
     private function addOrderBy(): void {
@@ -128,7 +151,7 @@ class ResourceListQuerySqlFactory {
             } elseif ($sortId == 'kindId') {
                 $this->orderBy[] = "r.kind_id " . $direction;
             } else {
-                $this->orderBy[] = "jsonb_array_elements(COALESCE((r.contents->'$sortId'), '[{}]'::jsonb))->>'value' $direction";
+                $this->orderBy[] = $this->jsonbArrayElements("(r.contents->'$sortId')") . "->>'value' $direction";
             }
         }
         if (empty($this->orderBy)) {
@@ -141,5 +164,13 @@ class ResourceListQuerySqlFactory {
             $offset = ($this->query->getPage() - 1) * $this->query->getResultsPerPage();
             $this->limit = "LIMIT {$this->query->getResultsPerPage()} OFFSET $offset";
         }
+    }
+
+    protected function getUnusedParamId(): int {
+        return count($this->params);
+    }
+
+    private function jsonbArrayElements($arg) {
+        return "jsonb_array_elements(COALESCE($arg, '[{}]'))";
     }
 }

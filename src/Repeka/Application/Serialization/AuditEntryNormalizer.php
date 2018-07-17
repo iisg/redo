@@ -43,15 +43,16 @@ class AuditEntryNormalizer extends AbstractNormalizer implements NormalizerAware
 
     private function evaluateCustomColumns(AuditEntry $entry, array $customColumns) {
         $data = $entry->getData();
-        if (isset($data['resource'])) {
-            $evaluated = [];
-            $contents = ResourceContents::fromArray($data['resource']['contents']);
-            foreach ($customColumns as $displayStrategy) {
-                $evaluated[$displayStrategy] = $this->displayStrategyEvaluator->render($contents, $displayStrategy);
+        foreach (['before', 'after'] as $dataField) {
+            if (isset($data[$dataField]) && isset($data[$dataField]['resource'])) {
+                $evaluated = [];
+                $contents = ResourceContents::fromArray($data[$dataField]['resource']['contents']);
+                foreach ($customColumns as $displayStrategy) {
+                    $evaluated[$displayStrategy] = $this->displayStrategyEvaluator->render($contents, $displayStrategy);
+                }
+                return $evaluated;
             }
-            return $evaluated;
-        } else {
-            return [];
         }
+        return [];
     }
 }

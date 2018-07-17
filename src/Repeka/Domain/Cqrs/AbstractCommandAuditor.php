@@ -6,11 +6,15 @@ abstract class AbstractCommandAuditor implements CommandAuditor {
         return null;
     }
 
-    public function afterHandling(Command $command, $result): ?array {
+    public function afterHandling(Command $command, $result, ?array $beforeHandlingResult): ?array {
         return null;
     }
 
-    public function afterError(Command $command, \Exception $exception): ?array {
+    public function afterError(Command $command, \Exception $exception, ?array $beforeHandlingResult): ?array {
         return null;
+    }
+
+    public function doSaveBeforeHandlingResult(): bool {
+        return true;
     }
 }

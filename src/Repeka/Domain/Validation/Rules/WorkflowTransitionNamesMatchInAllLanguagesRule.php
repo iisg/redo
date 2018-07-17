@@ -38,7 +38,7 @@ class WorkflowTransitionNamesMatchInAllLanguagesRule extends AbstractRule {
 
     /**
      * @param ResourceWorkflowTransition[]|array[] $transitions
-     * @return boolean
+     * @return bool
      */
     public function validate($transitions) {
         Assertion::isArray($this->places, 'You need to instantiate validator instance with withPlaces() method to use it');
