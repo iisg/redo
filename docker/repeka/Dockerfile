@@ -31,7 +31,7 @@ RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - 
   && apt-get clean
 
 # @exclude
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
   && apt-get install -y --no-install-recommends nodejs \
   && apt-get autoremove \
   && rm -r /var/lib/apt/lists/* \

@@ -22,5 +22,4 @@ release/
 *.bak
 .env
 
-package-lock.json
 composer.phar

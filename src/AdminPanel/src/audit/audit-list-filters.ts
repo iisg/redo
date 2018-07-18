@@ -16,23 +16,23 @@ export class AuditListFilters {
   toParams(): StringMap<any> {
     const params: StringMap<any> = {};
     if (this.resultsPerPage != AuditListFilters.DEFAULT_RESULTS_PER_PAGE) {
-      params.resultsPerPage = this.resultsPerPage;
+      params['resultsPerPage'] = this.resultsPerPage;
     }
     if (this.currentPageNumber != 1) {
-      params.currentPageNumber = this.currentPageNumber;
+      params['currentPageNumber'] = this.currentPageNumber;
     }
     if (this.commandNames.length) {
-      params.commandNames = this.commandNames.join(',');
+      params['commandNames'] = this.commandNames.join(',');
     }
     if (this.customColumns.length) {
-      params.customColumns = JSON.stringify(this.customColumns.map(col => col.displayStrategy));
+      params['customColumns'] = JSON.stringify(this.customColumns.map(col => col.displayStrategy));
     }
     if (this.resourceContents) {
-      params.resourceContents = JSON.stringify(this.resourceContents);
+      params['resourceContents'] = JSON.stringify(this.resourceContents);
     }
     if (this.resourceId) {
-      params.id = this.resourceId;
-      params.tab = 'audit';
+      params['id'] = this.resourceId;
+      params['tab'] = 'audit';
     }
     return params;
   }
@@ -51,12 +51,12 @@ export class AuditListFilters {
 
   static fromParams(params: StringMap<any>): AuditListFilters {
     const filters = new AuditListFilters();
-    filters.resultsPerPage = +params.resultsPerPage || AuditListFilters.DEFAULT_RESULTS_PER_PAGE;
-    filters.currentPageNumber = +params.currentPageNumber || 1;
-    filters.commandNames = (params.commandNames || '').split(',').filter(commandName => !!commandName.trim());
-    filters.resourceContents = safeJsonParse(params.resourceContents);
-    filters.setCustomColumns(params.customColumns);
-    filters.resourceId = +params.id;
+    filters.resultsPerPage = +params['resultsPerPage'] || AuditListFilters.DEFAULT_RESULTS_PER_PAGE;
+    filters.currentPageNumber = +params['currentPageNumber'] || 1;
+    filters.commandNames = (params['commandNames'] || '').split(',').filter(commandName => !!commandName.trim());
+    filters.resourceContents = safeJsonParse(params['resourceContents']);
+    filters.setCustomColumns(params['customColumns']);
+    filters.resourceId = +params['id'];
     return filters;
   }
 
