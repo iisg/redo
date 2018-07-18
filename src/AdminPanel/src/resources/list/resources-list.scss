@@ -23,37 +23,37 @@
     }
 
     & > .pagination-page-numbers {
-        grid-area: "bottom-pagination-page-numbers";
+        grid-area: bottom-pagination-page-numbers;
     }
 
     & > .pagination-dropdown-with-label {
-        grid-area: "bottom-pagination-dropdown-with-label";
+        grid-area: bottom-pagination-dropdown-with-label;
     }
 
     pagination {
-        grid-area: "top-pagination";
+        grid-area: top-pagination;
         align-self: center;
     }
 
     add-button {
-        grid-area: "add-button";
+        grid-area: add-button;
     }
 
     .well {
-        grid-area: "form";
+        grid-area: form;
         margin-right: 0;
         padding: 0;
     }
 
     loading-bar {
-        grid-area: "loading-bar";
+        grid-area: loading-bar;
     }
 
     resources-list-table {
-        grid-area: "resources-list-table";
+        grid-area: resources-list-table;
     }
 
     .alert {
-        grid-area: "alert";
+        grid-area: alert;
     }
 }
