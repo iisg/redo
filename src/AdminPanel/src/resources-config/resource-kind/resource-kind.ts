@@ -18,7 +18,7 @@ export class ResourceKind extends Entity {
   @map displayStrategies: StringStringMap = {};
 
   public ensureHasSystemMetadata() {
-    if (this.metadataList.find(m => m.id === SystemMetadata.PARENT.id)) {
+    if (!this.metadataList.find(m => m.id === SystemMetadata.PARENT.id)) {
       this.metadataList.unshift(SystemMetadata.PARENT);
     }
   }
