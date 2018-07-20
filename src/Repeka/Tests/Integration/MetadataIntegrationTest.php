@@ -255,4 +255,31 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('DELETE', self::ENDPOINT . '/' . $metadata->getId());
         $this->assertStatusCode(400, $client->getResponse());
     }
+
+    public function testCreatingDisplayStrategyMetadata() {
+        $this->createLanguage('TEST', 'TE', 'Test language');
+        $client = self::createAdminClient();
+        $metadataArray = [
+            'control' => MetadataControl::DISPLAY_STRATEGY,
+            'name' => 'Test metadata',
+            'label' => ['TEST' => 'User-friendly label'],
+            'description' => ['TEST' => 'test description'],
+            'placeholder' => ['TEST' => 'test placeholder'],
+            'resourceClass' => 'books',
+            'constraints' => ['displayStrategy' => 'Unicorn {{r | mTitle }}'],
+        ];
+        $client->apiRequest('POST', self::ENDPOINT, $metadataArray);
+        $this->assertStatusCode(201, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        /** @var $metadataRepository MetadataRepository */
+        $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
+        $metadata = $metadataRepository->findOne($response->id);
+        $this->assertEquals($metadataArray['control'], $metadata->getControl()->getValue());
+        $this->assertEquals(Metadata::normalizeMetadataName($metadataArray['name']), $metadata->getName());
+        $this->assertEquals($metadataArray['label'], $metadata->getLabel());
+        $this->assertEquals($metadataArray['description'], $metadata->getDescription());
+        $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
+        $this->assertEquals($metadataArray['resourceClass'], $metadata->getResourceClass());
+        $this->assertEquals($metadataArray['constraints'], $metadata->getConstraints());
+    }
 }

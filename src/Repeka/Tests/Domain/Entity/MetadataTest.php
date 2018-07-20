@@ -114,11 +114,11 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides(['shownInBrief' => true]);
         $this->assertTrue($metadata->isShownInBrief());
-        $metadata->update([], [], [], [], false, false);
+        $metadata->update([], [], [], [], false, false, null);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides(['shownInBrief' => null]);
         $this->assertFalse($metadata->isShownInBrief());
-        $metadata->update([], [], [], [], true, false);
+        $metadata->update([], [], [], [], true, false, null);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides([]);
         $this->assertTrue($metadata->isShownInBrief());
@@ -137,11 +137,11 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($metadata->isCopiedToChildResource());
         $metadata = $metadata->withOverrides(['copyToChildResource' => true]);
         $this->assertTrue($metadata->isCopiedToChildResource());
-        $metadata->update([], [], [], [], false, false);
+        $metadata->update([], [], [], [], false, false, null);
         $this->assertTrue($metadata->isCopiedToChildResource());
         $metadata = $metadata->withOverrides(['copyToChildResource' => null]);
         $this->assertFalse($metadata->isCopiedToChildResource());
-        $metadata->update([], [], [], [], true, true);
+        $metadata->update([], [], [], [], true, true, null);
         $this->assertTrue($metadata->isCopiedToChildResource());
         $metadata = $metadata->withOverrides([]);
         $this->assertTrue($metadata->isCopiedToChildResource());

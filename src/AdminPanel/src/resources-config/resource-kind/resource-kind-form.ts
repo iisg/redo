@@ -57,6 +57,7 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
     this.originalMetadataList = await this.metadataRepository.getListQuery()
       .filterByResourceClasses(this.resourceClass)
       .onlyTopLevel()
+      .addSystemMetadataIds(SystemMetadata.RESOURCE_LABEL.id)
       .get();
   }
 
@@ -136,7 +137,7 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
       const mappedMetadataIds = this.config.get('user_mapped_metadata_ids') || [];
       return metadata.id > 0 && mappedMetadataIds.indexOf(metadata.id) === -1;
     }
-    return true;
+    return metadata.id != SystemMetadata.RESOURCE_LABEL.id;
   }
 
   cancelForm(): void {

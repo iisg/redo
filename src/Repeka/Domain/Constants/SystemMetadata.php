@@ -12,12 +12,14 @@ use Repeka\Domain\Utils\EntityUtils;
  * @method static SystemMetadata USERNAME()
  * @method static SystemMetadata GROUP_MEMBER()
  * @method static SystemMetadata REPRODUCTOR()
+ * @method static SystemMetadata RESOURCE_LABEL()
  */
 class SystemMetadata extends Enum {
     const PARENT = -1;
     const USERNAME = -2;
     const GROUP_MEMBER = -3;
     const REPRODUCTOR = -4;
+    const RESOURCE_LABEL = -5;
 
     public function toMetadata() {
         $value = $this->getValue();
@@ -57,6 +59,17 @@ class SystemMetadata extends Enum {
                 [],
                 [],
                 false,
+                true
+            );
+        } elseif ($value == self::RESOURCE_LABEL) {
+            $metadata = Metadata::create(
+                '',
+                MetadataControl::DISPLAY_STRATEGY(),
+                'label',
+                ['EN' => 'Label', 'PL' => 'Etykieta'],
+                [],
+                [],
+                ['displayStrategy' => '#{{ r.id }}'],
                 true
             );
         }

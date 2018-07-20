@@ -47,9 +47,9 @@ export function configure(aurelia: Aurelia) {
       'common/components/disabled-link/disabled-link',
       'resources-config/multilingual-field/multilingual-editor',
       'resources-config/multilingual-field/in-current-language',
-      'resources-config/resource-kind/display-strategies/resource-display-strategy',
       'common/http-client/invalid-command-message.html', // used in alerts by GlobalExceptionInterceptor
       'resources/details/resource-link',
+      'resources/details/resource-label-value-converter',
       'common/value-converters/resource-class-translation-value-converter'
     ]);
 

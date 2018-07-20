@@ -11,3 +11,4 @@ labels:
   resourceKind: Wymagany rodzaj zasobu
   relatedResourceMetadataFilter: Dodatkowy filtr zasobów
   minMaxValue: Minimalna i maksymalna wartość
+  displayStrategy: Szablon

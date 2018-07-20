@@ -49,9 +49,10 @@ export class ResourceFormGenerated {
   @computedFrom('resourceKind', 'resourceKind.metadataList')
   get metadataList(): Metadata[] {
     if (this.resourceKind) {
-      return this.skipValidation
+      const metadataList = this.skipValidation
         ? this.resourceKind.metadataList
         : this.resourceKind.metadataList.filter(v => v.id != SystemMetadata.PARENT.id);
+      return metadataList.filter(m => m.control != 'display-strategy');
     }
   }
 

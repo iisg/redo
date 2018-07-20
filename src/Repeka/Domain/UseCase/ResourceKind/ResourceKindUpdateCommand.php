@@ -6,8 +6,8 @@ use Repeka\Domain\Entity\ResourceKind;
 class ResourceKindUpdateCommand extends ResourceKindCreateCommand {
     private $resourceKind;
 
-    public function __construct($resourceKindOrId, array $label, array $metadataList, array $displayStrategies, $workflowOrId = null) {
-        parent::__construct($label, $metadataList, $displayStrategies, $workflowOrId);
+    public function __construct($resourceKindOrId, array $label, array $metadataList, $workflowOrId = null) {
+        parent::__construct($label, $metadataList, $workflowOrId);
         $this->resourceKind = $resourceKindOrId;
     }
 

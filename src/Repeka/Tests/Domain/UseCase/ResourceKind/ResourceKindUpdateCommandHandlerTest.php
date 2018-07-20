@@ -26,7 +26,7 @@ class ResourceKindUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $rk = $this->createMock(ResourceKind::class);
         $metadataList = [$this->createMetadataMock()];
         $rk->expects($this->once())->method('setMetadataList')->with($metadataList);
-        $command = new ResourceKindUpdateCommand($rk, [], $metadataList, []);
+        $command = new ResourceKindUpdateCommand($rk, [], $metadataList);
         $this->resourceKindRepository->expects($this->once())->method('save')->with($rk)->willReturnArgument(0);
         $updated = $this->handler->handle($command);
         $this->assertEquals($rk, $updated);

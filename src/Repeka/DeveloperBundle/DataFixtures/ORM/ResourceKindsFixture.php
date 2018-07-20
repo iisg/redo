@@ -3,6 +3,7 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
@@ -40,6 +41,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     'EN' => 'Book',
                 ],
                 [
+                    $this->resourceLabelMetadata('{{r|m' . $titleMetadataId . '}}'),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),
@@ -55,10 +57,6 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_REAL_SCANNER),
                 ],
-                [
-                    'header' => '{{r|m' . $titleMetadataId . '}}',
-                    'dropdown' => '{{r|m' . $titleMetadataId . '}} (ID: {{r.id}})',
-                ],
                 $workflow
             ),
             self::REFERENCE_RESOURCE_KIND_BOOK
@@ -70,13 +68,10 @@ class ResourceKindsFixture extends RepekaFixture {
                     'EN' => 'Forbidden book',
                 ],
                 [
+                    $this->resourceLabelMetadata('{{r|m' . $titleMetadataId . '}}'),
                     $parentMetadata->withOverrides([0 => $bookRK->getId()]),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT),
-                ],
-                [
-                    'header' => '{{r|m' . $titleMetadataId . '}}',
-                    'dropdown' => '{{r|m' . $titleMetadataId . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK
@@ -89,6 +84,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     'EN' => 'Category',
                 ],
                 [
+                    $this->resourceLabelMetadata('{{r|m' . $nameId . '}}'),
                     SystemMetadata::PARENT()->toMetadata()->withOverrides(
                         [
                             'constraints' => [
@@ -97,10 +93,6 @@ class ResourceKindsFixture extends RepekaFixture {
                         ]
                     ),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME),
-                ],
-                [
-                    'header' => '{{r|m' . $nameId . '}}',
-                    'dropdown' => '{{r|m' . $nameId . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_CATEGORY
@@ -117,13 +109,10 @@ class ResourceKindsFixture extends RepekaFixture {
                     'EN' => 'Department',
                 ],
                 [
+                    $this->resourceLabelMetadata("{{r|m{$nameMetadata->getId()}}} ({{r|m{$abbrevMetadata->getId()}}})"),
                     $nameMetadata,
                     $abbrevMetadata,
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY),
-                ],
-                [
-                    'header' => "{{r|m{$nameMetadata->getId()}}} ({{r|m{$abbrevMetadata->getId()}}})",
-                    'dropdown' => '{{r|m' . $abbrevMetadata->getId() . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT
@@ -132,12 +121,9 @@ class ResourceKindsFixture extends RepekaFixture {
             new ResourceKindCreateCommand(
                 ['PL' => 'Uczelnia', 'EN' => 'University'],
                 [
+                    $this->resourceLabelMetadata("{{r|m{$nameMetadata->getId()}}} ({{r|m{$abbrevMetadata->getId()}}})"),
                     $nameMetadata->withOverrides(['label' => ['PL' => 'Nazwa uczelni']]),
                     $abbrevMetadata,
-                ],
-                [
-                    'header' => "{{r|m{$nameMetadata->getId()}}} ({{r|m{$abbrevMetadata->getId()}}})",
-                    'dropdown' => '{{r|m' . $abbrevMetadata->getId() . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY
@@ -146,11 +132,8 @@ class ResourceKindsFixture extends RepekaFixture {
             new ResourceKindCreateCommand(
                 ['PL' => 'Wydawnictwo', 'EN' => 'Publishing house'],
                 [
+                    $this->resourceLabelMetadata("{{r|m{$nameMetadata->getId()}}}"),
                     $nameMetadata->withOverrides(['label' => ['PL' => 'Nazwa wydawnictwa']]),
-                ],
-                [
-                    'header' => "{{r|m{$nameMetadata->getId()}}}",
-                    'dropdown' => '{{r|m' . $nameMetadata->getId() . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE
@@ -163,14 +146,15 @@ class ResourceKindsFixture extends RepekaFixture {
             new ResourceKindCreateCommand(
                 ['PL' => 'Grupa użytkowników', 'EN' => 'User group'],
                 [
+                    $this->resourceLabelMetadata("{{r|m{$nameMetadata->getName()}}} (ID: {{r.id}})"),
                     $nameMetadata,
-                ],
-                [
-                    'header' => "{{r|m{$nameMetadata->getName()}}} (ID: {{r.id}})",
-                    'dropdown' => '{{r|m' . $nameMetadata->getName() . '}} (ID: {{r.id}})',
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_USER_GROUP
         );
+    }
+
+    private function resourceLabelMetadata(string $displayStrategy): Metadata {
+        return SystemMetadata::RESOURCE_LABEL()->toMetadata()->withOverrides(['constraints' => ['displayStrategy' => $displayStrategy]]);
     }
 }

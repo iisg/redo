@@ -64,8 +64,7 @@ class InitializeUserMetadataCommand extends TransactionalCommand {
                     new ResourceKindUpdateCommand(
                         $userResourceKind,
                         $userResourceKind->getLabel(),
-                        $metadataList,
-                        $userResourceKind->getDisplayStrategies()
+                        $metadataList
                     )
                 );
                 $output->writeln("Created user metadata based on user data mapping: " . count($metadataNamesToCreate));

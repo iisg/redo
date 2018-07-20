@@ -31,7 +31,8 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
             MetadataRepository::class,
             [
                 SystemMetadata::PARENT()->toMetadata(),
-                SystemMetadata::REPRODUCTOR()->toMetadata()
+                SystemMetadata::REPRODUCTOR()->toMetadata(),
+                SystemMetadata::RESOURCE_LABEL()->toMetadata(),
             ]
         );
         $metadataConstraintManager = $this->createMock(MetadataConstraintManager::class);

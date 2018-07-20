@@ -19,7 +19,6 @@ unclosedStringLiteral: "Unclosed quote in mapping '{{mappingKey}}': {{literal}}"
 invalidMapping: Mapping '{{key}}' has invalid definition
 invalidSelector: "Mapping '{{mappingKey}}' has invalid selector: {{selector}}"
 invalidTransform: "Invalid transform definition '{{name}}' with parameters: {{params}}"
-incorrectResourceDisplayStrategy: "Incorrect resource display strategy. Error: {{error}}"
 metadataNameIsNotUnique: Metada kind with that name already exists
 insufficientPermissions: You do not have permissions required to perform this action
 valuesDoNotMatchResourceKind: "Metadata list has been changed in resource kind and edited resource does not match. Refresh page and apply changes again. Details: \"{{originalMessage}}\"."

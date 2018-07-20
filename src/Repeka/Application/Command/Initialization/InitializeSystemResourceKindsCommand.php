@@ -45,15 +45,16 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
             $systemResourceKind = new SystemResourceKind(SystemResourceKind::USER);
             $usernameMetadata = SystemMetadata::USERNAME()->toMetadata();
             $groupMemberMetadata = SystemMetadata::GROUP_MEMBER()->toMetadata();
-            $usernameDisplayTemplate = '{{r|m' . $usernameMetadata->getName() . '}}';
+            $resourceLabelMetadata = SystemMetadata::RESOURCE_LABEL()->toMetadata()->withOverrides(
+                ['constraints' => ['displayStrategy' => '{{r|m' . $usernameMetadata->getName() . '}}']]
+            );
             $resourceKind = new ResourceKind([], [$usernameMetadata]);
             EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());
             $this->handleCommand(
                 new ResourceKindUpdateCommand(
                     $resourceKind,
                     ['PL' => 'user', 'EN' => 'user'],
-                    [$usernameMetadata, $groupMemberMetadata],
-                    ['header' => $usernameDisplayTemplate, 'dropdown' => $usernameDisplayTemplate]
+                    [$usernameMetadata, $groupMemberMetadata, $resourceLabelMetadata]
                 )
             );
             $output->writeln("System resource kind user has been created.");

@@ -11,14 +11,12 @@ class ResourceKindCreateCommand extends ResourceClassAwareCommand implements Adj
     protected $label;
     protected $metadataList;
     protected $workflow;
-    protected $displayStrategies;
 
-    public function __construct(array $label, array $metadataList, array $displayStrategies = [], $workflowOrId = null) {
+    public function __construct(array $label, array $metadataList, $workflowOrId = null) {
         parent::__construct($this->detectResourceClass($metadataList));
         $this->label = $label;
         $this->metadataList = $metadataList;
         $this->workflow = $workflowOrId;
-        $this->displayStrategies = $displayStrategies;
     }
 
     public function getLabel(): array {
@@ -28,10 +26,6 @@ class ResourceKindCreateCommand extends ResourceClassAwareCommand implements Adj
     /** @return Metadata[] */
     public function getMetadataList(): array {
         return $this->metadataList;
-    }
-
-    public function getDisplayStrategies(): array {
-        return $this->displayStrategies;
     }
 
     /** @return ResourceWorkflow|int|null */

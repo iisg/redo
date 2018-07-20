@@ -13,6 +13,7 @@ class MigratingDisplayStrategiesToTwigMigrationsTest extends DatabaseMigrationTe
     }
 
     public function testBookKind() {
+        $this->markTestSkipped('Test is no longer valid as resource kind\'s display strategies have been moved to dynamic metadata.');
         $book = $this->getPhpBookResource();
         $displayStrategies = $book->getKind()->getDisplayStrategies();
         $this->assertEquals('{{r|m(1)}}', $displayStrategies['header']);

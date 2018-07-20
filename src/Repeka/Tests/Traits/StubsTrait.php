@@ -91,6 +91,18 @@ trait StubsTrait {
                 throw new \InvalidArgumentException();
             }
         );
+        $resourceKind->method('getMetadataByControl')->willReturnCallback(
+            function (MetadataControl $control) use ($metadataList) {
+                return array_values(
+                    array_filter(
+                        $metadataList,
+                        function (Metadata $metadata) use ($control) {
+                            return $control->equals($metadata->getControl());
+                        }
+                    )
+                );
+            }
+        );
         return $resourceKind;
     }
 
@@ -109,14 +121,6 @@ trait StubsTrait {
         $mock->method('hasWorkflow')->willReturn($resourceKind && $resourceKind->getWorkflow());
         $mock->method('getWorkflow')->willReturn($resourceKind ? $resourceKind->getWorkflow() : null);
         return $mock;
-    }
-
-    protected function createEntityLookupMap(array $entityList): array {
-        $result = [];
-        foreach ($entityList as $metadata) {
-            $result[$metadata->getId()] = $metadata;
-        }
-        return $result;
     }
 
     /**

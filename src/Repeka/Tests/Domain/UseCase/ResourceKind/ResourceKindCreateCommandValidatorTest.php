@@ -4,11 +4,9 @@ namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 use PHPUnit_Framework_MockObject_MockObject;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Exception\InvalidCommandException;
-use Repeka\Domain\Exception\InvalidResourceDisplayStrategyException;
 use Repeka\Domain\Exception\RespectValidationFailedException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
-use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
@@ -35,8 +33,6 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     private $validator;
     /** @var ResourceClassExistsRule|\PHPUnit_Framework_MockObject_MockObject */
     private $containsResourceClass;
-    /** @var PHPUnit_Framework_MockObject_MockObject|ResourceDisplayStrategyEvaluator */
-    private $resourceDisplayStrategyEvaluator;
     /** @var MetadataUpdateCommandValidator|PHPUnit_Framework_MockObject_MockObject */
     private $metadataUpdateCommandValidator;
     /** @var PHPUnit_Framework_MockObject_MockObject|ResourceKindRepository */
@@ -48,7 +44,6 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->containsResourceClass = $this->createMock(ResourceClassExistsRule::class);
         $this->metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $this->metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
-        $this->resourceDisplayStrategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
         $this->metadataUpdateCommandValidator = $this->createMock(MetadataUpdateCommandValidator::class);
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
         $this->resourceKindRepository->method('findOne')->will(
@@ -61,7 +56,6 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         );
         $this->validator = new ResourceKindCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepository),
-            new CorrectResourceDisplayStrategySyntaxRule($this->resourceDisplayStrategyEvaluator),
             new ContainsParentMetadataRule(),
             $this->metadataUpdateCommandValidator,
             new ChildResourceKindsAreOfSameResourceClassRule($this->resourceKindRepository)
@@ -75,6 +69,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             [
                 $this->createMetadataMock(SystemMetadata::PARENT),
                 $this->createMetadataMock(SystemMetadata::REPRODUCTOR),
+                $this->createMetadataMock(SystemMetadata::RESOURCE_LABEL),
                 $this->createMetadataMock(),
             ]
         );
@@ -149,24 +144,6 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 SystemMetadata::REPRODUCTOR()->toMetadata(),
                 $this->createMetadataMock(),
             ]
-        );
-        $this->validator->validate($command);
-    }
-
-    public function testFailsWhenInvalidDisplayStrategy() {
-        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
-        $this->expectExceptionMessage('incorrectResourceDisplayStrategy');
-        $this->resourceDisplayStrategyEvaluator
-            ->method('validateTemplate')
-            ->with('This is the header')
-            ->willThrowException(new InvalidResourceDisplayStrategyException('Syntax error'));
-        $command = new ResourceKindCreateCommand(
-            ['PL' => 'Labelka'],
-            [
-                $this->createMetadataMock(SystemMetadata::PARENT),
-                $this->createMetadataMock(),
-            ],
-            ['header' => 'This is the header']
         );
         $this->validator->validate($command);
     }

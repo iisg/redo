@@ -29,7 +29,8 @@
                 click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original-button>
         </div>
     </template>
-    <span>${'Label' | t}
+    <span>
+        ${'Label' | t}
         <required-field-indicator if.bind="required"></required-field-indicator>
     </span>
     <multilingual-editor value.bind="metadata.label & validate"

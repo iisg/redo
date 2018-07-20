@@ -11,6 +11,7 @@ use MyCLabs\Enum\Enum;
  * @method static MetadataControl BOOLEAN()
  * @method static MetadataControl RELATIONSHIP()
  * @method static MetadataControl FILE()
+ * @method static MetadataControl DISPLAY_STRATEGY()
  */
 class MetadataControl extends Enum {
     const TEXT = 'text';
@@ -20,4 +21,5 @@ class MetadataControl extends Enum {
     const BOOLEAN = 'boolean';
     const RELATIONSHIP = 'relationship';
     const FILE = 'file';
+    const DISPLAY_STRATEGY = 'display-strategy';
 }

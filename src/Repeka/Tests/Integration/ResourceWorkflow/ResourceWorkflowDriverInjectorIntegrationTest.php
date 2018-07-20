@@ -30,7 +30,7 @@ class ResourceWorkflowDriverInjectorIntegrationTest extends IntegrationTestCase 
 
     public function testTheDriverIsInjectedForWorkflowThatBelongsToResourceKind() {
         $resourceKind = $this->handleCommandBypassingFirewall(
-            new ResourceKindCreateCommand(['PL' => 'a', 'EN' => 'a'], [['id' => 1]], [], $this->workflow)
+            new ResourceKindCreateCommand(['PL' => 'a', 'EN' => 'a'], [['id' => 1]], $this->workflow)
         );
         $resourceKind = $this->container->get(ResourceKindRepository::class)->findOne($resourceKind->getId());
         $places = $resourceKind->getWorkflow()->getPlaces(new ResourceWorkflowSimulationResource());

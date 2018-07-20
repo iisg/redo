@@ -64,7 +64,6 @@ class TaskIntegrationTest extends IntegrationTestCase {
         $this->resourceKind = $this->createResourceKind(
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata2],
-            [],
             $workflow
         );
         $this->resource = $this->createResource(

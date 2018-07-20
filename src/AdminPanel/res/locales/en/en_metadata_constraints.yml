@@ -4,4 +4,4 @@ labels:
   resourceKind: Required resource kind
   relatedResourceMetadataFilter: Additional resources filter
   minMaxValue: Minimal and maximal value
-
+  displayStrategy: Template

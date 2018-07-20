@@ -27,13 +27,6 @@ books:
   Edit resource before transition: Edycja zasobu przed przejściem
   Added resource will be in following place: Dodany zasób znajdzie się w stanie
   To states: Do stanu
-  display_strategies:
-    header:
-      title: Nagłówek
-      description: Wartość wyświetlana na stronie szczegółów zasobów
-    dropdown:
-      title: Wartość w liście rozwijanej
-      description: Wartość wyświetlana w liście rozwijanej przy wyborze zasobów
 dictionaries:
   resources: Słowniki
   resources/details: Słowniki
@@ -64,13 +57,6 @@ dictionaries:
   Added resource will be in following place: Dodany słownik znajdzie się w stanie
   To states: Do stanu
   List of required metadata: Lista metadanych wymaganych do przejścia
-  display_strategies:
-    header:
-      title: Nagłówek
-      description: Wartość wyświetlana na stronie szczegółów słownikowych
-    dropdown:
-      title: Wartość w liście rozwijanej
-      description: Wartość wyświetlana w liście rozwijanej przy wyborze słownika
 users:
   users: Użytkownicy
   resources: Użytkownicy
@@ -103,11 +89,4 @@ users:
   Edit resource before transition: Edycja użytkownika przed przejściem
   Added resource will be in following place: Dodany użytkownika znajdzie się w stanie
   To states: Do stanu
-  display_strategies:
-    header:
-      title: Nagłówek
-      description: Wartość wyświetlana na stronie szczegółów użytkownika
-    dropdown:
-      title: Wartość w liście rozwijanej
-      description: Wartość wyświetlana w liście rozwijanej przy wyborze użytkownika
   users/details: Użytkownicy

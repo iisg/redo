@@ -16,17 +16,6 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('2', $resourceKind->getLabel()['PL']);
     }
 
-    public function testUpdatesDisplayStrategies() {
-        $resourceKind = new ResourceKind(['PL' => '1'], [$this->createMetadataMock(1)]);
-        $resourceKind->update(['PL' => '2'], ['header' => 'AA']);
-        $this->assertEquals(['header' => 'AA'], $resourceKind->getDisplayStrategies());
-    }
-
-    public function testDoesNotSaveEmptyDisplayStrategies() {
-        $resourceKind = new ResourceKind(['PL' => '1'], [$this->createMetadataMock(1)], ['header' => '']);
-        $this->assertEmpty($resourceKind->getDisplayStrategies());
-    }
-
     public function testRemovingObsoleteMetadataWithUpdate() {
         $metadata1 = $this->createMetadataMock(1);
         $metadata2 = $this->createMetadataMock(2);
@@ -59,13 +48,8 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
 
     public function testSettingWorkflow() {
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $resourceKind = new ResourceKind([], [$this->createMetadataMock(1)], [], $workflow);
+        $resourceKind = new ResourceKind([], [$this->createMetadataMock(1)], $workflow);
         $this->assertEquals($workflow, $resourceKind->getWorkflow());
-    }
-
-    public function testSettingDisplayStrategies() {
-        $resourceKind = new ResourceKind([], [$this->createMetadataMock(1)], ['header' => 'AA']);
-        $this->assertEquals(['header' => 'AA'], $resourceKind->getDisplayStrategies());
     }
 
     public function testWorkflowIsOptional() {

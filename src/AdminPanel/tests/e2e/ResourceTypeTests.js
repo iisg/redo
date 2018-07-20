@@ -26,7 +26,7 @@ describe('Resource Type Tests', function() {
 		addButton.click();
 
 		var errorMessage = element(by.className('help-block validation-message'));
-		expect(errorMessage.getText()).toContain('Rodzaj zasobu musi posiadać rodzaj metadanych.');
+		expect(errorMessage.getText()).toContain('Dodaj rodzaj metadanej.');
   });
 
   it('Try to add without Polish name', function() {
@@ -176,7 +176,7 @@ describe('Resource Type Tests', function() {
 		confirmButton.click();
 
 		var errorMessage = element(by.className('help-block validation-message'));
-		expect(errorMessage.getText()).toContain('Rodzaj zasobu musi posiadać rodzaj metadanych.');
+		expect(errorMessage.getText()).toContain('Dodaj rodzaj metadanej.');
   });
 
   it('Edit by adding metadata', function() {

@@ -12,17 +12,15 @@ class ResourceKind implements Identifiable, HasResourceClass {
     /** @var ResourceWorkflow */
     private $workflow;
     private $resourceClass;
-    private $displayStrategies = [];
 
     /**
      * @param string[] $label
      * @param Metadata[] $metadataList
      */
-    public function __construct(array $label, array $metadataList, array $displayStrategies = [], ResourceWorkflow $workflow = null) {
+    public function __construct(array $label, array $metadataList, ResourceWorkflow $workflow = null) {
         $this->setMetadataList($metadataList);
         $this->detectResourceClass();
         $this->label = $label;
-        $this->setDisplayStrategies($displayStrategies);
         $this->workflow = $workflow;
     }
 
@@ -71,10 +69,6 @@ class ResourceKind implements Identifiable, HasResourceClass {
         return in_array($id, $this->getMetadataIds());
     }
 
-    public function getDisplayStrategies(): array {
-        return $this->displayStrategies;
-    }
-
     public function getMetadataByName(string $name): Metadata {
         $name = Metadata::normalizeMetadataName($name);
         foreach ($this->getMetadataList() as $metadata) {
@@ -97,9 +91,8 @@ class ResourceKind implements Identifiable, HasResourceClass {
         );
     }
 
-    public function update(array $newLabel, array $newDisplayStrategies) {
+    public function update(array $newLabel) {
         $this->label = array_filter($newLabel, 'trim');
-        $this->setDisplayStrategies($newDisplayStrategies);
     }
 
     public function getWorkflow(): ?ResourceWorkflow {
@@ -113,10 +106,6 @@ class ResourceKind implements Identifiable, HasResourceClass {
     /** @return int[] */
     public function getMetadataIds(): array {
         return EntityUtils::mapToIds($this->getMetadataList());
-    }
-
-    private function setDisplayStrategies(array $displayStrategies) {
-        $this->displayStrategies = array_filter(array_map('trim', $displayStrategies));
     }
 
     public function setMetadataList(array $metadataList) {

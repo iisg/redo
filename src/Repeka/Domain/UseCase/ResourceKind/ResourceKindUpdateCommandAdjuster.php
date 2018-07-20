@@ -34,7 +34,6 @@ class ResourceKindUpdateCommandAdjuster extends ResourceKindCreateCommandAdjuste
             $this->findResourceKind($command->getResourceKind()),
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getLabel()),
             $this->fetchMetadataIfRequired($command->getMetadataList()),
-            $command->getDisplayStrategies(),
             $this->findWorkflow($command->getWorkflow())
         );
     }
