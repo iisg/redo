@@ -9,7 +9,6 @@ use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
-use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -17,8 +16,6 @@ use Respect\Validation\Validator;
 class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
     /** @var NotBlankInAllLanguagesRule */
     private $notBlankInAllLanguagesRule;
-    /** @var CorrectResourceDisplayStrategySyntaxRule */
-    private $correctResourceDisplayStrategySyntaxRule;
     /** @var ContainsParentMetadataRule */
     private $containsParentMetadataRule;
     /** @var MetadataUpdateCommandValidator */
@@ -28,13 +25,11 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
-        CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategySyntaxRule,
         ContainsParentMetadataRule $containsParentMetadataRule,
         MetadataUpdateCommandValidator $metadataUpdateCommandValidator,
         ChildResourceKindsAreOfSameResourceClassRule $childResourceKindsAreOfSameResourceClassRule
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
-        $this->correctResourceDisplayStrategySyntaxRule = $correctResourceDisplayStrategySyntaxRule;
         $this->containsParentMetadataRule = $containsParentMetadataRule;
         $this->childResourceKindsAreOfSameResourceClassRule = $childResourceKindsAreOfSameResourceClassRule;
         $this->metadataUpdateCommandValidator = $metadataUpdateCommandValidator;
@@ -58,8 +53,7 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
                     ->callback([$this, 'noMetadataDuplicates'])
             )
             ->attribute('metadataList', $this->containsParentMetadataRule)
-            ->attribute('metadataList', $this->childResourceKindsAreOfSameResourceClassRule)
-            ->attribute('displayStrategies', Validator::arrayType()->each($this->correctResourceDisplayStrategySyntaxRule));
+            ->attribute('metadataList', $this->childResourceKindsAreOfSameResourceClassRule);
     }
 
     /**

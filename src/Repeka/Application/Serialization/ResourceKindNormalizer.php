@@ -25,7 +25,6 @@ class ResourceKindNormalizer extends AbstractNormalizer implements NormalizerAwa
             ),
             'workflowId' => $resourceKind->getWorkflow() ? $resourceKind->getWorkflow()->getId() : null,
             'resourceClass' => $resourceKind->getResourceClass(),
-            'displayStrategies' => $this->emptyArrayAsObject($resourceKind->getDisplayStrategies()),
         ];
     }
 

@@ -42,7 +42,6 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
         return new ResourceKindCreateCommand(
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getLabel()),
             $this->fetchMetadataIfRequired($command->getMetadataList()),
-            $command->getDisplayStrategies(),
             $this->findWorkflow($command->getWorkflow())
         );
     }
@@ -76,6 +75,9 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
         }
         if (!isset($metadataList[SystemMetadata::REPRODUCTOR])) {
             $metadataList[SystemMetadata::REPRODUCTOR] = $this->metadataRepository->findOne(SystemMetadata::REPRODUCTOR);
+        }
+        if (!isset($metadataList[SystemMetadata::RESOURCE_LABEL])) {
+            $metadataList[SystemMetadata::RESOURCE_LABEL] = $this->metadataRepository->findOne(SystemMetadata::RESOURCE_LABEL);
         }
         return array_values($metadataList);
     }

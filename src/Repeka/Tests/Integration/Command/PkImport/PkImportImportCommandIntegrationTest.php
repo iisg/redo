@@ -19,7 +19,6 @@ class PkImportImportCommandIntegrationTest extends AbstractPkImportIntegrationTe
                 $rk,
                 $rk->getLabel(),
                 array_merge($rk->getMetadataList(), [$oldIdMetadata]),
-                $rk->getDisplayStrategies(),
                 $rk->getWorkflow()
             )
         );

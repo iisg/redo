@@ -17,17 +17,7 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
     private $copyToChildResource;
     private $parent;
 
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag")
-     * @param string $name
-     * @param array $label
-     * @param array $description
-     * @param array $placeholder
-     * @param string $controlName
-     * @param string $resourceClass
-     * @param array $constraints
-     * @param bool $shownInBrief
-     * @param bool $copyToChildResource
-     */
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     public function __construct(
         string $name,
         array $label,

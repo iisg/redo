@@ -32,6 +32,7 @@ export class Excel implements ComponentAttached {
       .addSystemMetadataIds(SystemMetadata.REPRODUCTOR.id)
       .onlyTopLevel()
       .get();
+    this.metadataList = this.metadataList.filter(m => m.control != 'display-strategy');
   }
 
   @computedFrom('workflow.places')

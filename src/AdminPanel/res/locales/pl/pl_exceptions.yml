@@ -19,7 +19,6 @@ unclosedStringLiteral: "Niedomknięty nawias w mapowaniu '{{mappingKey}}': {{lit
 invalidMapping: Mapowanie '{{key}}' ma niepoprawną definicję
 invalidSelector: "Mapowanie '{{mappingKey}}' ma nieprawidłowy selektor: {{selector}}"
 invalidTransform: "Nieprawidłowa definicja transformacji '{{name}}' z parametrami: {{params}}"
-incorrectResourceDisplayStrategy: "Niepoprawna strategia prezentacji zasobu. Błąd zwrócony przez kompilator szablonów: {{error}}"
 metadataNameIsNotUnique: Rodzaj metadanej o podanej nazwie już istnieje
 insufficientPermissions: Nie posiadasz wymaganych uprawnień by wykonać tę operację
 valuesDoNotMatchResourceKind: "Lista metadanych w rodzaju zasobu zmieniła się i nie zgadza się z edytowanym zasobem. Odśwież stronę i ponownie wprowadź zmiany. Szczegóły: \"{{originalMessage}}\"."

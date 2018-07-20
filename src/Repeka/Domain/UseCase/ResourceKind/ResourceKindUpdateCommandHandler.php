@@ -21,7 +21,7 @@ class ResourceKindUpdateCommandHandler {
 
     public function handle(ResourceKindUpdateCommand $command): ResourceKind {
         $resourceKind = $command->getResourceKind();
-        $resourceKind->update($command->getLabel(), $command->getDisplayStrategies());
+        $resourceKind->update($command->getLabel());
         $resourceKind->setMetadataList($command->getMetadataList());
         $this->updateWorkflow($command->getWorkflow(), $resourceKind);
         return $this->resourceKindRepository->save($resourceKind);

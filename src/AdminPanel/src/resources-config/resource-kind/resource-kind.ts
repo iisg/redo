@@ -15,9 +15,11 @@ export class ResourceKind extends Entity {
   @map('Metadata[]') metadataList: Metadata[] = [];
   @map('WorkflowId') workflow: Workflow;
   @map resourceClass: string;
-  @map displayStrategies: StringStringMap = {};
 
   public ensureHasSystemMetadata() {
+    if (!this.metadataList.find(m => m.id === SystemMetadata.RESOURCE_LABEL.id)) {
+      this.metadataList.unshift(SystemMetadata.RESOURCE_LABEL);
+    }
     if (!this.metadataList.find(m => m.id === SystemMetadata.PARENT.id)) {
       this.metadataList.unshift(SystemMetadata.PARENT);
     }

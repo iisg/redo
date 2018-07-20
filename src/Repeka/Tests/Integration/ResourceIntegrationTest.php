@@ -99,7 +99,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->resourceKindWithWorkflow = $this->createResourceKind(
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata3, $this->metadata4],
-            [],
             $workflow
         );
         $this->resource = $this->createResource(
@@ -193,10 +192,14 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => ResourceContents::fromArray([$this->metadata1->getId() => ['Test value']])->toArray(),
+                'contents' => ResourceContents::fromArray(
+                    [
+                        $this->metadata1->getId() => ['Test value'],
+                        SystemMetadata::RESOURCE_LABEL => '#' . $this->resource->getId(),
+                    ]
+                )->toArray(),
                 'resourceClass' => $this->resource->getResourceClass(),
                 'availableTransitions' => [SystemTransition::UPDATE()->toTransition($this->resourceKind, $this->resource)->toArray()],
-                'displayStrategies' => [],
             ],
             $client->getResponse()->getContent()
         );
@@ -248,7 +251,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $created */
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
-        $this->assertEquals(ResourceContents::fromArray([$this->metadata1->getId() => ['created']]), $created->getContents());
+        $this->assertEquals(['created'], $created->getValues($this->metadata1));
         return $createdId;
     }
 
@@ -277,10 +280,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $created */
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKindWithWorkflow->getId(), $created->getKind()->getId());
-        $this->assertEquals(
-            ResourceContents::fromArray([$this->metadata1->getId() => ['created'], $this->metadata3->getId() => 1]),
-            $created->getContents()
-        );
+        $this->assertEquals(['created'], $created->getValues($this->metadata1));
+        $this->assertEquals([1], $created->getValues($this->metadata3));
         $this->assertEquals(['p1' => true], $created->getMarking());
     }
 
@@ -299,7 +300,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
-        $this->assertEquals(ResourceContents::fromArray([$this->metadata1->getId() => ['edited']]), $edited->getContents());
+        $this->assertEquals(['edited'], $edited->getValues($this->metadata1));
     }
 
     public function testAutoAssignMetadataWhenEditingResourceWithWorkflow() {
@@ -318,12 +319,9 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resourceWithWorkflow->getId());
-        $this->assertEquals(
-            ResourceContents::fromArray(
-                [$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1, $this->metadata4->getId() => 1]
-            ),
-            $edited->getContents()
-        );
+        $this->assertEquals(['edited'], $edited->getValues($this->metadata1));
+        $this->assertEquals([1], $edited->getValues($this->metadata3));
+        $this->assertEquals([1], $edited->getValues($this->metadata4));
     }
 
     public function testEditingResourceKindFails() {
@@ -401,7 +399,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $resourceKindWithWorkflow = $this->createResourceKind(
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->metadata1],
-            [],
             $workflow
         );
         $client = $this->createAdminClient();

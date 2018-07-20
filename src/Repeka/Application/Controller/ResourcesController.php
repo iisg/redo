@@ -8,6 +8,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
+use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
@@ -67,6 +68,7 @@ class ResourcesController extends ApiController {
      */
     public function getAction(string $id) {
         $resource = $this->handleCommand(new ResourceQuery(intval($id)));
+        $resource = $this->handleCommand(new ResourceEvaluateDisplayStrategiesCommand($resource));
         return $this->createJsonResponse($resource);
     }
 
@@ -90,6 +92,7 @@ class ResourcesController extends ApiController {
         $resourceKind = $this->handleCommand(new ResourceKindQuery($data['kindId']));
         $command = new ResourceCreateCommand($resourceKind, $resourceContents, $this->getUser());
         $resource = $this->handleCommand($command);
+        $resource = $this->handleCommand(new ResourceEvaluateDisplayStrategiesCommand($resource));
         return $this->createJsonResponse($resource, 201);
     }
 
@@ -118,6 +121,7 @@ class ResourcesController extends ApiController {
                 : new ResourceTransitionCommand($resource, $resourceContents, $transitionId, $this->getUser());
             $resource = $this->handleCommand($command);
         }
+        $resource = $this->handleCommand(new ResourceEvaluateDisplayStrategiesCommand($resource));
         return $this->createJsonResponse($resource);
     }
 

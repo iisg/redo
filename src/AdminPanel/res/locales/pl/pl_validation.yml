@@ -1,6 +1,6 @@
 required: To pole jest wymagane.
 isLanguageCode: Tylko wielkie litery i myślnik (-), musi zaczynać i kończyć się literą.
-mustHaveMetadata: Rodzaj zasobu musi posiadać rodzaj metadanych.
+mustHaveMetadata: Dodaj rodzaj metadanej.
 metadataConstraintsNotSatisfied: Ograniczenia metadanych nie są spełnione.
 requiredInAllLanguages: ${$displayName} musi mieć wartość we wszystkich językach.
 lengthUpTo10: Długość do 10 znaków.

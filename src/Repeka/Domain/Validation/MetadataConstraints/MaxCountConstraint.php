@@ -9,7 +9,12 @@ use Respect\Validation\Validator;
 
 class MaxCountConstraint extends AbstractMetadataConstraint {
     public function getSupportedControls(): array {
-        return MetadataControl::toArray();
+        return array_filter(
+            MetadataControl::toArray(),
+            function (string $control) {
+                return $control != MetadataControl::DISPLAY_STRATEGY;
+            }
+        );
     }
 
     public function isConfigValid($maxCount): bool {

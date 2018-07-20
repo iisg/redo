@@ -54,7 +54,6 @@ class ResourceKindsController extends ApiController {
         $command = new ResourceKindCreateCommand(
             $data['label'] ?? [],
             $data['metadataList'] ?? [],
-            $data['displayStrategies'] ?? [],
             $data['workflowId'] ?? null
         );
         $resourceKind = $this->handleCommand($command);
@@ -69,12 +68,10 @@ class ResourceKindsController extends ApiController {
         $data = $request->request->all();
         Assertion::keyExists($data, 'label');
         Assertion::keyExists($data, 'metadataList');
-        Assertion::keyExists($data, 'displayStrategies');
         $command = new ResourceKindUpdateCommand(
             $resourceKind,
             $data['label'],
             $data['metadataList'],
-            $data['displayStrategies'],
             $data['workflowId'] ?? null
         );
         $resourceKind = $this->handleCommand($command);

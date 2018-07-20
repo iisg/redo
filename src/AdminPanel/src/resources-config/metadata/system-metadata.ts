@@ -27,4 +27,12 @@ export class SystemMetadata {
     baseId: -4,
     constraints: new MetadataConstraints({maxCount: 1}),
   });
+  static readonly RESOURCE_LABEL: Metadata = $.extend(new Metadata(), {
+    id: -5,
+    control: 'display-strategy',
+    baseId: -5,
+    shownInBrief: true,
+    copyToChildResource: false,
+    constraints: new MetadataConstraints({displayStrategy: '#{{ r.id }}'}),
+  });
 }

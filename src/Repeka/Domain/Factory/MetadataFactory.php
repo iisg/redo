@@ -34,7 +34,8 @@ class MetadataFactory {
             $newChildMetadata['description'] ?? [],
             $newChildMetadata['constraints'] ?? [],
             $newChildMetadata['shownInBrief'] ?? $base->isShownInBrief(),
-            $newChildMetadata['copyToChildResource'] ?? $base->isCopiedToChildResource()
+            $newChildMetadata['copyToChildResource'] ?? $base->isCopiedToChildResource(),
+            $newChildMetadata['config'] ?? null
         );
         return $metadata;
     }

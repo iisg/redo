@@ -4,7 +4,7 @@ import {ResourceKind} from "../resource-kind/resource-kind";
 import {MetadataRepository} from "./metadata-repository";
 import {Entity} from "common/entity/entity";
 import {automapped, map, mappedWith} from "common/dto/decorators";
-import {MetadataMapper, ResourceKindConstraintMapper, MinMaxConstraintMapper} from "./metadata-mapping";
+import {MetadataMapper, MinMaxConstraintMapper, ResourceKindConstraintMapper} from "./metadata-mapping";
 import {MinMaxValue} from "./metadata-min-max-value";
 
 export interface MultilingualText extends StringStringMap {
@@ -20,6 +20,7 @@ export class MetadataConstraints {
   @map regex?: string;
   @map relatedResourceMetadataFilter?: NumberMap<string> = {};
   @map(MinMaxConstraintMapper) minMaxValue?: MinMaxValue = new MinMaxValue();
+  @map displayStrategy?: string;
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
@@ -45,7 +46,7 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   relatedResourceMetadataFilter: {}
 };
 
-export const filterableControls = ['text', 'textarea', 'integer', 'relationship'];
+export const filterableControls = ['text', 'textarea', 'integer', 'relationship', 'display-strategy'];
 
 @mappedWith(MetadataMapper)
 export class Metadata extends Entity {

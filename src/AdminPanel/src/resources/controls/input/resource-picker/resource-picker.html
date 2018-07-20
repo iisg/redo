@@ -6,7 +6,7 @@
         value.bind="value"
         disabled.bind="disabled">
         <template replace-part="option-template">
-            <strong>${option | resourceDisplayStrategy:'dropdown'}</strong>
+            <strong>${option | resourceLabel}</strong>
         </template>
     </dropdown-select>
     <p if.bind="invalidValue"

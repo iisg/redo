@@ -7,7 +7,6 @@
     <require from="common/components/buttons/toggle-button"></require>
     <require from="common/components/buttons/edit-button.html"></require>
     <require from="common/components/buttons/remove-button.html"></require>
-    <require from="./display-strategies/resource-display-strategies-form"></require>
     <require from="resources-config/metadata/constraint/resource-kind/resource-kind-constraint-editor"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
@@ -87,8 +86,6 @@
             <span>${'Available child resource kind' | t}</span>
             <resource-kind-constraint-editor metadata.bind="resourceChildConstraintMetadata"
                 resource-class.bind="resourceClass"></resource-kind-constraint-editor>
-            <resource-display-strategies-form containerless
-                resource-kind.bind="resourceKind"></resource-display-strategies-form>
         </div>
         <div class="form-buttons">
             <submit-button editing.bind="editing"

@@ -29,18 +29,7 @@ class Metadata implements Identifiable, HasResourceClass {
     private function __construct() {
     }
 
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag")
-     * @param string $resourceClass
-     * @param MetadataControl $control
-     * @param string $name
-     * @param array $label
-     * @param array $placeholder
-     * @param array $description
-     * @param array $constraints
-     * @param bool $shownInBrief
-     * @param bool $copyToChildResource
-     * @return Metadata
-     */
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     public static function create(
         string $resourceClass,
         MetadataControl $control,
@@ -57,13 +46,8 @@ class Metadata implements Identifiable, HasResourceClass {
         $metadata->resourceClass = $resourceClass;
         $metadata->control = $control->getValue();  // $control must be a string internally because it's so when read from DB
         $metadata->name = self::normalizeMetadataName($name);
-        $metadata->label = $label;
         $metadata->ordinalNumber = -1;
-        $metadata->placeholder = $placeholder;
-        $metadata->description = $description;
-        $metadata->constraints = $constraints;
-        $metadata->shownInBrief = $shownInBrief;
-        $metadata->copyToChildResource = $copyToChildResource;
+        $metadata->update($label, $placeholder, $description, $constraints, $shownInBrief, $copyToChildResource);
         return $metadata;
     }
 

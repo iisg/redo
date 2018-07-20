@@ -27,14 +27,7 @@ books:
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit resource before transition
   Added resource will be in following place: Added resource will be in following place
-  To states: Do stanu
-  display_strategies:
-    header:
-      title: Header
-      description: Displayed in resource details page
-    dropdown:
-      title: Dropdown value
-      description: Displayed in a resource dropdown
+  To states: To states
 dictionaries:
   resources: Dictionaries
   resources/details: Dictionaries
@@ -63,14 +56,7 @@ dictionaries:
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit dictionary before transition
   Added resource will be in following place: Added dictionary will be in following place
-  To states: Do stanu
-  display_strategies:
-    header:
-      title: Header
-      description: Displayed in dictionary details page
-    dropdown:
-      title: Dropdown value
-      description: Displayed in a dictionary dropdown
+  To states: To states
 users:
   users: Users
   resources: Users
@@ -101,12 +87,5 @@ users:
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit user before transition
   Added resource will be in following place: Added users will be in following place
-  To states: Do stanu
-  display_strategies:
-    header:
-      title: Header
-      description: Displayed in user details page
-    dropdown:
-      title: Dropdown value
-      description: Displayed in a user dropdown
+  To states: To states
   users/details: Users

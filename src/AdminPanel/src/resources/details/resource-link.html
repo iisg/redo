@@ -5,7 +5,7 @@
     </span>
     <template if.bind="!loading && resource != undefined">
         <a route-href="route: resources/details; params.bind: {id: resource.id}; replace: true">
-            ${resource | resourceDisplayStrategy:'header'}
+            ${resource | resourceLabel}
         </a>
     </template>
     <span if.bind="!loading && resource == undefined"

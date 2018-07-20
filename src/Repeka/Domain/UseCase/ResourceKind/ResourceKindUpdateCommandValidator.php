@@ -5,7 +5,6 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
-use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -14,14 +13,12 @@ class ResourceKindUpdateCommandValidator extends ResourceKindCreateCommandValida
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
-        CorrectResourceDisplayStrategySyntaxRule $correctResourceDisplayStrategyRule,
         ContainsParentMetadataRule $containsParentMetadataRule,
         MetadataUpdateCommandValidator $metadataUpdateCommandValidator,
         ChildResourceKindsAreOfSameResourceClassRule $childResourceKindsAreOfSameResourceClassRule
     ) {
         parent::__construct(
             $notBlankInAllLanguagesRule,
-            $correctResourceDisplayStrategyRule,
             $containsParentMetadataRule,
             $metadataUpdateCommandValidator,
             $childResourceKindsAreOfSameResourceClassRule

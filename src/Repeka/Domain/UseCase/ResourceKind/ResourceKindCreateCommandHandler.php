@@ -16,7 +16,6 @@ class ResourceKindCreateCommandHandler {
         $resourceKind = new ResourceKind(
             $command->getLabel(),
             $command->getMetadataList(),
-            $command->getDisplayStrategies(),
             $command->getWorkflow()
         );
         return $this->resourceKindRepository->save($resourceKind);

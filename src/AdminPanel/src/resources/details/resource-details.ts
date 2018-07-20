@@ -9,8 +9,7 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
-import {ResourceDisplayStrategyValueConverter} from "../../resources-config/resource-kind/display-strategies/resource-display-strategy";
-import {WorkflowTransition, WorkflowPlace} from "../../workflows/workflow";
+import {WorkflowPlace, WorkflowTransition} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
@@ -18,6 +17,7 @@ import {ContextResourceClass} from "./../context/context-resource-class";
 import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 import {AuditListFilters} from "../../audit/audit-list-filters";
+import {ResourceLabelValueConverter} from "./resource-label-value-converter";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -36,7 +36,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   filters: AuditListFilters;
 
   constructor(private resourceRepository: ResourceRepository,
-              private resourceDisplayStrategy: ResourceDisplayStrategyValueConverter,
+              private resourceLabel: ResourceLabelValueConverter,
               private resourceClassTranslation: ResourceClassTranslationValueConverter,
               private router: Router,
               private ea: EventAggregator,
@@ -72,7 +72,7 @@ export class ResourceDetails implements RoutableComponentActivate {
       .filterByParentId(this.resource.id)
       .get();
     this.numberOfChildren = resources.total;
-    const title = this.resourceDisplayStrategy.toView(this.resource, 'header');
+    const title = this.resourceLabel.toView(this.resource);
     routeConfiguration.navModel.setTitle(title);
     this.activateTabs(parameters.tab);
   }

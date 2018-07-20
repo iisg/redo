@@ -16,6 +16,7 @@ use Repeka\Tests\IntegrationTestCase;
 
 class ResourceKindIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/resource-kinds';
+    const AUTO_CREATED_METADATA_COUNT = 3;
 
     /** @var ResourceKind */
     private $resourceKind;
@@ -73,12 +74,12 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $responseItem = $responseContent[1];
         $this->assertEquals($this->resourceKind->getId(), $responseItem->id);
         $this->assertEquals($this->resourceKind->getLabel(), self::objectToArray($responseItem->label));
-        $this->assertCount(4, $responseItem->metadataList);
+        $this->assertCount(self::AUTO_CREATED_METADATA_COUNT + 2, $responseItem->metadataList);
         $sortedMetadata = ($responseItem->metadataList[0]->id == $this->metadata1->getId())
             ? $responseItem->metadataList
             : array_reverse($responseItem->metadataList);
-        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[2]->id);
-        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[1]->id);
+        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[3]->id);
+        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[2]->id);
     }
 
     public function testFetchingResourceKindsWithResourceClass() {
@@ -90,12 +91,12 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $responseItem = $responseContent[0];
         $this->assertEquals($this->resourceKind->getId(), $responseItem->id);
         $this->assertEquals($this->resourceKind->getLabel(), self::objectToArray($responseItem->label));
-        $this->assertCount(4, $responseItem->metadataList);
+        $this->assertCount(self::AUTO_CREATED_METADATA_COUNT + 2, $responseItem->metadataList);
         $sortedMetadata = ($responseItem->metadataList[0]->id == $this->metadata1->getId())
             ? $responseItem->metadataList
             : array_reverse($responseItem->metadataList);
-        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[2]->id);
-        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[1]->id);
+        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[3]->id);
+        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[2]->id);
     }
 
     public function testCreatingResourceKind() {
@@ -126,7 +127,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         /** @var ResourceKind $createdResourceKind */
         $createdResourceKind = $resourceKindRepository->findOne($createdId);
         $this->assertEquals(['PL' => 'created', 'EN' => 'created'], $createdResourceKind->getLabel());
-        $this->assertCount(3, $createdResourceKind->getMetadataList());
+        $this->assertCount(self::AUTO_CREATED_METADATA_COUNT + 1, $createdResourceKind->getMetadataList());
         $assignedMetadata = $createdResourceKind->getMetadataById($metadata->getId());
         $this->assertEquals($metadata->getControl(), $assignedMetadata->getControl());
         $this->assertEquals($metadata->getId(), $assignedMetadata->getId());
@@ -146,7 +147,6 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                     ['id' => $this->metadata1->getId(), 'placeholder' => ['PL' => 'modified', 'EN' => 'modified']],
                     ['id' => SystemMetadata::PARENT],
                 ],
-                'displayStrategies' => [],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -156,7 +156,13 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $resourceKind = $resourceKindRepository->findOne($this->resourceKind->getId());
         $this->assertEquals(['PL' => 'modified', 'EN' => 'modified'], $resourceKind->getLabel());
         $this->assertEquals(
-            [$this->metadata2->getId(), $this->metadata1->getId(), SystemMetadata::PARENT, SystemMetadata::REPRODUCTOR],
+            [
+                $this->metadata2->getId(),
+                $this->metadata1->getId(),
+                SystemMetadata::PARENT,
+                SystemMetadata::REPRODUCTOR,
+                SystemMetadata::RESOURCE_LABEL,
+            ],
             $resourceKind->getMetadataIds()
         );
     }
@@ -173,7 +179,6 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                     ['id' => $this->metadata1->getId(), 'placeholder' => ['PL' => 'modified', 'DE' => 'modified'],],
                     ['id' => SystemMetadata::PARENT],
                 ],
-                'displayStrategies' => [],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -191,7 +196,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 new ResourceWorkflowPlace(['PL' => 'B', 'EN' => 'B'], 'B'),
             ],
             [
-                new ResourceWorkflowTransition(['PL' => 'przejscie', 'EN'=>'transition'], ['A'], ['B']),
+                new ResourceWorkflowTransition(['PL' => 'przejscie', 'EN' => 'transition'], ['A'], ['B']),
             ]
         );
         $resource = $this->handleCommandBypassingFirewall(
@@ -216,7 +221,6 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                     ['id' => $this->metadata1->getId()],
                     ['id' => SystemMetadata::PARENT],
                 ],
-                'displayStrategies' => [],
                 'workflowId' => $workflow->getId(),
             ]
         );

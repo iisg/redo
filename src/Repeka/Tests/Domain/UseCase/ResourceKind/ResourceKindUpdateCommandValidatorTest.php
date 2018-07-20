@@ -15,9 +15,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
-use Repeka\Domain\Validation\Rules\CorrectResourceDisplayStrategySyntaxRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
-use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Repeka\Tests\Traits\StubsTrait;
 use Respect\Validation\Validator;
 
@@ -29,8 +27,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     /** @var ResourceKindUpdateCommandValidator */
     private $validator;
-    /** @var CorrectResourceDisplayStrategySyntaxRule|\PHPUnit_Framework_MockObject_MockObject */
-    private $correctResourceDisplayStrategySyntaxRule;
     /** @var Metadata */
     private $relationshipMetadata;
     /** @var MetadataUpdateCommandValidator|\PHPUnit_Framework_MockObject_MockObject */
@@ -48,7 +44,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             ChildResourceKindsAreOfSameResourceClassRule::class,
             true
         );
-        $this->correctResourceDisplayStrategySyntaxRule = $this->createMock(CorrectResourceDisplayStrategySyntaxRule::class);
         $this->relationshipMetadata = Metadata::create(
             '',
             MetadataControl::RELATIONSHIP(),
@@ -62,7 +57,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->metadataUpdateCommandValidator = $this->createMock(MetadataUpdateCommandValidator::class);
         $this->validator = new ResourceKindUpdateCommandValidator(
             $this->notBlankInAllLanguagesRule,
-            $this->correctResourceDisplayStrategySyntaxRule,
             new ContainsParentMetadataRule(),
             $this->metadataUpdateCommandValidator,
             $this->childResourceKindsAreOfSameResourceClassRule
@@ -120,8 +114,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createMetadataMock(SystemMetadata::PARENT),
                 $this->createMetadataMock(),
                 $this->relationshipMetadata,
-            ],
-            []
+            ]
         );
         $this->validator->validate($command);
     }
@@ -137,7 +130,6 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createMetadataMock(),
                 $this->relationshipMetadata,
             ],
-            [],
             $workflow
         );
         $this->validator->validate($command);

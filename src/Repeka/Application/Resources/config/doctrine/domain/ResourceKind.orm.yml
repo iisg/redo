@@ -23,6 +23,3 @@ Repeka\Domain\Entity\ResourceKind:
     metadataOverrides:
       type: jsonb
       column: metadata_list
-    displayStrategies:
-      type: jsonb
-      column: display_strategies
