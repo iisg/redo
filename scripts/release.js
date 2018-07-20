@@ -79,7 +79,7 @@ function copyToReleaseDirectory() {
     } else {
       createVarDirectoryStructure();
       copySingleRequiredFiles();
-      clearLocalConfigFiles();
+      removeUnwantedFiles();
       preprocessSources();
       spinner.succeed('Application files copied.');
       convertToUnixLineEndings();
@@ -122,7 +122,7 @@ function copySingleRequiredFiles() {
   });
 }
 
-function clearLocalConfigFiles() {
+function removeUnwantedFiles() {
   del.sync([
     'release/docker/.env',
     'release/docker/jenkins-agent',
@@ -132,6 +132,7 @@ function clearLocalConfigFiles() {
     'release/**/.gitignore',
     'release/composer.*',
     'release/**/package.json',
+    'release/web/admin/dist',
   ]);
 }
 
