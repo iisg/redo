@@ -5,7 +5,7 @@ describe('Resource Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-
+  
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books');
 		browser.driver.manage().window().maximize();
@@ -18,6 +18,7 @@ describe('Resource Tests', function() {
 	var addResourceButton = element(by.cssContainingText('span', 'Dodaj'));
 	addResourceButton.click();
 	
+	browser.sleep(1000);
 	waitForElement(element(by.className('select2-selection__rendered')));
 	var lists = element.all(by.className('select2-selection__rendered'));
 	var listToClick = lists.get(1);	
@@ -42,6 +43,7 @@ describe('Resource Tests', function() {
 	var addResourceButton = element(by.cssContainingText('span', 'Dodaj'));
 	addResourceButton.click();
 	
+	browser.sleep(1000);
 	waitForElement(element(by.className('select2-selection__rendered')));
 	var lists = element.all(by.className('select2-selection__rendered'));
 	var listToClick = lists.get(1);	

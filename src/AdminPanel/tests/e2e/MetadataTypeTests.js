@@ -24,18 +24,18 @@ describe('Metadata Type Tests', function() {
   
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
+		browser.driver.manage().window().maximize();
   });
   
   it('Try to add without name', function() {
-	    waitForElement(element(by.buttonText('Dodaj rodzaj metadanej'))); 
-		
-		var addMetadataTypeButton = element(by.buttonText('Dodaj rodzaj metadanej'));
+		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
+		var addMetadataTypeButton = element(by.cssContainingText('span', 'Dodaj'));
 		addMetadataTypeButton.click();
 		
 		var fields = element.all(by.className('form-control au-target'));
 		var addButton = element(by.buttonText('Dodaj'));
+		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
-		fields.get(3).sendKeys('Nazwa_Testowanie_Automatyczne');
 		addButton.click();
 		
 		var errorMessage = element(by.className('help-block validation-message'));
@@ -43,15 +43,14 @@ describe('Metadata Type Tests', function() {
   });
   
   it('Try to add without Polish display name', function() {
-	    waitForElement(element(by.buttonText('Dodaj rodzaj metadanej'))); 
-		
-		var addMetadataTypeButton = element(by.buttonText('Dodaj rodzaj metadanej'));
+		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
+		var addMetadataTypeButton = element(by.cssContainingText('span', 'Dodaj'));
 		addMetadataTypeButton.click();
 		
 		var fields = element.all(by.className('form-control au-target'));
 		var addButton = element(by.buttonText('Dodaj'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
-		fields.get(3).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
 		addButton.click();
 		
 		var errorMessage = element(by.className('help-block validation-message'));
@@ -59,15 +58,14 @@ describe('Metadata Type Tests', function() {
   });
   
   it('Try to add without English display name', function() {
-	    waitForElement(element(by.buttonText('Dodaj rodzaj metadanej'))); 
-		
-		var addMetadataTypeButton = element(by.buttonText('Dodaj rodzaj metadanej'));
+		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
+		var addMetadataTypeButton = element(by.cssContainingText('span', 'Dodaj'));
 		addMetadataTypeButton.click();
 		
 		var fields = element.all(by.className('form-control au-target'));
 		var addButton = element(by.buttonText('Dodaj'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
-		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 		addButton.click();
 		
 		var errorMessage = element(by.className('help-block validation-message'));
@@ -75,16 +73,15 @@ describe('Metadata Type Tests', function() {
   });
   
   it('Add metadata type', function() {
-	    waitForElement(element(by.buttonText('Dodaj rodzaj metadanej'))); 
-		
-		var addMetadataTypeButton = element(by.buttonText('Dodaj rodzaj metadanej'));
+		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
+		var addMetadataTypeButton = element(by.cssContainingText('span', 'Dodaj'));
 		addMetadataTypeButton.click();
 		
 		var fields = element.all(by.className('form-control au-target'));
 		var addButton = element(by.buttonText('Dodaj'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
-		fields.get(3).sendKeys('Nazwa_Testowanie_Automatyczne');
 		addButton.click();
 		
 	    waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne'))); 
@@ -102,8 +99,8 @@ describe('Metadata Type Tests', function() {
 		
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
-		fields.get(2).clear();
-		fields.get(2).sendKeys('Edycja_Nazwy');
+		fields.get(1).clear();
+		fields.get(1).sendKeys('Edycja_Nazwy');
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
 		
@@ -112,7 +109,6 @@ describe('Metadata Type Tests', function() {
 		expect(parametersList.getText()).toContain('Edycja_Nazwy');
   });
   
-  // Nie działa z powodu REPEKA-514
   it('Edit metadata English display name', function() {
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
@@ -124,8 +120,8 @@ describe('Metadata Type Tests', function() {
 		
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
-		fields.get(3).clear();
-		fields.get(3).sendKeys('Edycja_Nazwy');
+		fields.get(2).clear();
+		fields.get(2).sendKeys('Edycja_Nazwy');
 		
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
