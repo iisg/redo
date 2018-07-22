@@ -5,7 +5,7 @@ describe('Transition Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-
+  
   beforeEach(function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	browser.driver.manage().window().maximize();
