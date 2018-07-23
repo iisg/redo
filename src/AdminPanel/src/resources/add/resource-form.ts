@@ -11,7 +11,7 @@ import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {numberKeysByValue} from "../../common/utils/object-utils";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
-import {RequirementState, WorkflowTransition, WorkflowPlace} from "../../workflows/workflow";
+import {RequirementState, WorkflowPlace, WorkflowTransition} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
@@ -163,11 +163,13 @@ export class ResourceForm extends ChangeLossPreventerForm {
     this.validationError = false;
     if (this.skipValidation) {
       this.resource.contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
+      this.changeLossPreventer.disable();
       return this.submit({savedResource: this.resource, transitionId, newResourceKind: this.resource.kind, places: this.places})
         .then(() => this.editing || (this.resource = new Resource)).finally(() => this.submitting = false);
     } else {
       this.validationController.validate().then(result => {
         if (result.valid) {
+          this.changeLossPreventer.disable();
           return this.submit({savedResource: this.resource, transitionId})
             .then(() => this.editing || (this.resource = new Resource));
         } else {

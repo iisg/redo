@@ -12,7 +12,11 @@ class NoAssigneeMetadataInFirstPlaceRule extends AbstractRule {
     }
 
     public function noAssigneeMetadataInFirstPlace($places) {
-        $firstPlace = $places[0] instanceof ResourceWorkflowPlace ? $places[0]->toArray() : $places[0];
-        return !key_exists('assigneeMetadataIds', $firstPlace) || count($firstPlace['assigneeMetadataIds']) == 0;
+        if ($places) {
+            $firstPlace = $places[0] instanceof ResourceWorkflowPlace ? $places[0]->toArray() : $places[0];
+            return !key_exists('assigneeMetadataIds', $firstPlace) || count($firstPlace['assigneeMetadataIds']) == 0;
+        } else {
+            return true;
+        }
     }
 }

@@ -1,5 +1,5 @@
 export class ChangeLossPreventerForm {
-  private dirty: boolean;
+  dirty: boolean;
 
   isDirty(): boolean {
     return this.dirty;
