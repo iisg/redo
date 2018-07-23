@@ -1,4 +1,4 @@
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
@@ -6,7 +6,6 @@ import {Language} from "./language";
 import {noop, VoidFunction} from "common/utils/function-utils";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
-import {ComponentAttached} from "aurelia-templating";
 import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 
 @autoinject
@@ -44,6 +43,7 @@ export class LanguageForm extends ChangeLossPreventerForm implements ComponentAt
     this.controller.validate().then(result => {
       if (result.valid) {
         return Promise.resolve(this.submit({savedLanguage: this.language}))
+          .then(() => this.changeLossPreventer.enable(this))
           .then(() => this.editing || (this.language = new Language));
       }
     }).finally(() => this.submitting = false);

@@ -123,6 +123,7 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
     this.controller.validate().then(result => {
       if (result.valid) {
         return Promise.resolve(this.submit({savedResourceKind: this.resourceKind}))
+          .then(() => this.changeLossPreventer.enable(this))
           .then(() => this.editing || (this.resourceKind = new ResourceKind()));
       }
     }).finally(() => this.submitting = false);

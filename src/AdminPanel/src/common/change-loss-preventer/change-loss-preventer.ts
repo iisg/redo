@@ -15,10 +15,18 @@ export class ChangeLossPreventer implements PipelineStep {
   private readonly titleLabel = 'Your changes in form will be lost';
 
   constructor(private i18n: I18N, private alert: Alert) {
+    window.onbeforeunload = (e) => {
+      if (this.guardedForm && this.guardedForm.isDirty()) {
+        const dialogText = this.i18n.tr(this.titleLabel);
+        e.returnValue = dialogText;
+        return dialogText;
+      }
+    };
   }
 
   enable(entityForm: ChangeLossPreventerForm) {
     this.guardedForm = entityForm;
+    this.guardedForm.dirty = false;
   }
 
   disable() {
@@ -34,6 +42,7 @@ export class ChangeLossPreventer implements PipelineStep {
     const alertOptions: AlertOptions = {
       type: 'question',
       cancelButtonText: this.i18n.tr('Stay'),
+      confirmButtonText: this.i18n.tr('Discard changes'),
       confirmButtonClass: 'danger'
     };
     return this.alert.show(alertOptions, title).then(decision => {

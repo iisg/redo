@@ -39,7 +39,6 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   }
 
   attached(): void {
-    this.changeLossPreventer.enable(this);
     this.resetValues();
   }
 
@@ -48,6 +47,7 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   }
 
   private resetValues() {
+    this.changeLossPreventer.enable(this);
     this.metadata = this.template ? this.entitySerializer.clone(this.template) : new Metadata();
   }
 
