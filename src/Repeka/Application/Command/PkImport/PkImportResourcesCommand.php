@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class PkImportResourcesCommand extends Command {
     use CommandBusAware;
 
@@ -84,7 +85,9 @@ class PkImportResourcesCommand extends Command {
             }
             $progress->clear();
         } catch (\Exception $e) {
-            $progress->clear();
+            if (isset($progress)) {
+                $progress->clear();
+            }
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
         file_put_contents(self::ID_MAPPING_FILE, json_encode($idMapping));
@@ -99,6 +102,14 @@ class PkImportResourcesCommand extends Command {
     }
 
     public static function getIdMapping(): array {
-        return (file_exists(self::ID_MAPPING_FILE) ? json_decode(file_get_contents(self::ID_MAPPING_FILE), true) : []) ?: [];
+        if (!file_exists(self::ID_MAPPING_FILE)) {
+            if (!@file_put_contents(self::ID_MAPPING_FILE, '{}')) {
+                throw new \RuntimeException(
+                    'Could not write to the file ' . self::ID_MAPPING_FILE
+                    . '. Make sure the directory exists and is writable and try again.'
+                );
+            }
+        }
+        return json_decode(file_get_contents(self::ID_MAPPING_FILE), true);
     }
 }
