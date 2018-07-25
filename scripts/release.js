@@ -92,6 +92,7 @@ function createVarDirectoryStructure() {
     'var/backups',
     'var/cache',
     'var/config',
+    'var/import',
     'var/logs',
     'var/sessions',
     'var/ssl',
