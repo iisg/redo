@@ -20,14 +20,19 @@ class ResourceGodUpdateCommandHandler {
 
     public function handle(ResourceGodUpdateCommand $command): ResourceEntity {
         $resource = $command->getResource();
+        $originalWorkflow = $resource->getWorkflow();
         if ($command->getResourceKind()) {
             EntityUtils::forceSetField($resource, $command->getResourceKind(), 'kind');
         }
         if ($resource->hasWorkflow()) {
-            $resource->getWorkflow()->setCurrentPlaces($resource, $command->getPlacesIds());
+            if ($resource->getWorkflow() == $originalWorkflow) {
+                $resource->getWorkflow()->setCurrentPlaces($resource, $command->getPlacesIds());
+            } else {
+                $resource->getWorkflow()->setCurrentPlaces($resource, [$resource->getWorkflow()->getInitialPlace()->getId()]);
+            }
         }
         $resource->updateContents($command->getContents());
-        $resource = $this->resourceRepository->save($command->getResource());
+        $resource = $this->resourceRepository->save($resource);
         $this->manageResourceFiles($resource);
         return $resource;
     }

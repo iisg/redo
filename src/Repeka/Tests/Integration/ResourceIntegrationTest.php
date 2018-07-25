@@ -372,11 +372,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $endpoint = self::oneEntityEndpoint($this->resource);
         $client->apiRequest(
             'POST',
-            $endpoint . '?' . http_build_query(['newKindId' => $this->resourceKindWithWorkflow->getId()]),
+            $endpoint,
             [
                 'id' => $this->resource->getId(),
-                'kindId' => $this->resourceKind->getId(),
+                'newKindId' => $this->resourceKindWithWorkflow->getId(),
                 'contents' => json_encode($this->resource->getContents()),
+                'placesIds' => ['p1'],
             ],
             [],
             [],
@@ -387,6 +388,43 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
         $this->assertEquals($this->resourceKindWithWorkflow->getId(), $edited->getKind()->getId());
+    }
+
+    public function testChangingResourceKindToDifferentWorkflowAsAdmin() {
+        $workflowPlace = new ResourceWorkflowPlace(['PL' => 'key1', 'EN' => 'key1'], 'p666');
+        $workflow = $this->createWorkflow(
+            ['PL' => 'Workflow 2', 'EN' => 'Workflow 2'],
+            'books',
+            [$workflowPlace],
+            []
+        );
+        $resourceKindWithWorkflow = $this->createResourceKind(
+            ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
+            [$this->metadata1],
+            [],
+            $workflow
+        );
+        $client = $this->createAdminClient();
+        $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
+        $client->apiRequest(
+            'POST',
+            $endpoint,
+            [
+                'id' => $this->resourceWithWorkflow->getId(),
+                'newKindId' => $resourceKindWithWorkflow->getId(),
+                'contents' => json_encode($this->resourceWithWorkflow->getContents()),
+                'placesIds' => ['p1'],
+            ],
+            [],
+            [],
+            ['HTTP_GOD-EDIT' => true]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $edited */
+        $edited = $repository->findOne($this->resourceWithWorkflow->getId());
+        $this->assertEquals($resourceKindWithWorkflow->getId(), $edited->getKind()->getId());
+        $this->assertEquals('p666', $edited->getWorkflow()->getPlaces($edited)[0]->getId());
     }
 
     public function testChangingParentResource() {
