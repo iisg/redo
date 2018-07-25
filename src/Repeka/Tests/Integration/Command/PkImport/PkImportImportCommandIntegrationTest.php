@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration\Command\PkImport;
 
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 
@@ -31,6 +32,14 @@ class PkImportImportCommandIntegrationTest extends AbstractPkImportIntegrationTe
         $this->assertEquals($countBefore + 2, $countAfter);
     }
 
+    public function testImportTwiceDoesNotDuplicateResources() {
+        $countBefore = $this->getResourceRepository()->count([]);
+        $this->import();
+        $this->import();
+        $countAfter = $this->getResourceRepository()->count([]);
+        $this->assertEquals($countBefore + 2, $countAfter);
+    }
+
     public function testImportsTitle() {
         $this->import();
         $resource = $this->findResourceByContents(['Tytuł' => 'scuffing']);
@@ -52,6 +61,19 @@ class PkImportImportCommandIntegrationTest extends AbstractPkImportIntegrationTe
     public function testImportsOldResourceId() {
         $this->import();
         $resource = $this->findResourceByContents(['Old ID' => 76968]);
+        $this->assertEquals(
+            $resource->getValues($this->findMetadataByName('Tytuł')),
+            ['Rozwój zużycia typu scuffing w ruchu oscylacyjnym']
+        );
+    }
+
+    public function testImportTwiceOverwritesExistingMetadata() {
+        $this->import();
+        $resource = $this->findResourceByContents(['Tytuł' => 'scuffing']);
+        $newContents = $resource->getContents()->withReplacedValues($this->findMetadataByName('Tytuł')->getId(), 'ALA MA KOTA');
+        $this->handleCommandBypassingFirewall(new ResourceUpdateContentsCommand($resource, $newContents));
+        $this->import();
+        $resource = $this->getResourceRepository()->findOne($resource->getId());
         $this->assertEquals(
             $resource->getValues($this->findMetadataByName('Tytuł')),
             ['Rozwój zużycia typu scuffing w ruchu oscylacyjnym']

@@ -3,10 +3,13 @@ namespace Repeka\Application\Command\PkImport;
 
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
+use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
@@ -24,10 +27,17 @@ class PkImportResourcesCommand extends Command {
     private $importConfigFactory;
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
+    /** @var ResourceRepository */
+    private $resourceRepository;
 
-    public function __construct(ImportConfigFactory $importConfigFactory, ResourceKindRepository $resourceKindRepository) {
+    public function __construct(
+        ImportConfigFactory $importConfigFactory,
+        ResourceKindRepository $resourceKindRepository,
+        ResourceRepository $resourceRepository
+    ) {
         $this->importConfigFactory = $importConfigFactory;
         $this->resourceKindRepository = $resourceKindRepository;
+        $this->resourceRepository = $resourceRepository;
         parent::__construct();
     }
 
@@ -44,9 +54,10 @@ class PkImportResourcesCommand extends Command {
         $stats = [
             'resources' => 0,
             'imported' => 0,
-            'ignored' => 0,
+            'updated' => 0,
         ];
         $idMapping = self::getIdMapping();
+        $error = null;
         try {
             $xml = PkImportFileLoader::load($input->getArgument('input'));
             $resourceKind = $this->resourceKindRepository->findOne($input->getArgument('resourceKindId'));
@@ -68,12 +79,20 @@ class PkImportResourcesCommand extends Command {
                 }
                 FirewallMiddleware::bypass(
                     function () use ($resourceKind, $importConfig, $resourceData, &$idMapping, &$stats) {
+                        /** @var ResourceContents $importedValues */
                         $importedValues = $this
                             ->handleCommand(new MetadataImportQuery($resourceData, $importConfig))
                             ->getAcceptedValues();
                         $resourceId = intval(trim($resourceData['ID']));
                         if (isset($idMapping[$resourceId])) {
-                            ++$stats['ignored'];
+                            $resource = $this->resourceRepository->findOne($idMapping[$resourceId]);
+                            $newContents = $resource->getContents();
+                            foreach ($importedValues as $metadataId => $values) {
+                                $newContents = $newContents->withReplacedValues($metadataId, $values);
+                            }
+                            $resourceUpdateCommand = new ResourceUpdateContentsCommand($resource, $newContents);
+                            $this->handleCommand($resourceUpdateCommand);
+                            ++$stats['updated'];
                         } else {
                             $resourceCreateCommand = new ResourceCreateCommand($resourceKind, $importedValues);
                             $resource = $this->handleCommand($resourceCreateCommand);
@@ -88,17 +107,22 @@ class PkImportResourcesCommand extends Command {
             if (isset($progress)) {
                 $progress->clear();
             }
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            $error = $e->getMessage();
         }
         file_put_contents(self::ID_MAPPING_FILE, json_encode($idMapping));
         (new Table($output))
-            ->setHeaders(['Total resources', 'Successfully imported', 'Ignored (already imported)'])
+            ->setHeaders(['Total resources', 'Successfully imported', 'Successfully updated'])
             ->addRows([$stats])
             ->render();
         $output->writeln(
             "Identifiers of the imported resoruces has been saved to:\n<info>" . realpath(self::ID_MAPPING_FILE) . "</info>\n" .
             "Keep this file untouched if you want to repeat the import process or map relations in the future."
         );
+        if ($error) {
+            $output->writeln('<error>IMPORT HAS NOT BEEN FINISHED DUE TO AN ERROR:</error>');
+            $output->writeln('<error>' . $error . '</error>');
+            return 1;
+        }
     }
 
     public static function getIdMapping(): array {
