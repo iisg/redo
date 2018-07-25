@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\Entity\Workflow;
 
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -51,35 +52,51 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
 
     public function testPlacesWithoutMetadataRequirementsAreEnterable() {
         $place = ResourceWorkflowPlace::fromArray(['label' => [], 'requiredMetadataIds' => []]);
-        $resource1 = $this->createResourceMock(1, null, []);
-        $resource2 = $this->createResourceMock(1, null, [1 => null]);
-        $this->assertTrue($place->resourceHasRequiredMetadata($resource1));
-        $this->assertTrue($place->resourceHasRequiredMetadata($resource2));
+        $rk = $this->createMock(ResourceKind::class);
+        $rk->method('getMetadataIds')->willReturn([1]);
+        $resource1 = $this->createResourceMock(1, $rk, []);
+        $resource2 = $this->createResourceMock(1, $rk, [1 => null]);
+        $this->assertEmpty($place->getMissingRequiredMetadataIds($resource1->getContents(), $rk));
+        $this->assertEmpty($place->getMissingRequiredMetadataIds($resource2->getContents(), $rk));
     }
 
     public function testCheckingForRequiredMetadata() {
         $place = ResourceWorkflowPlace::fromArray(['label' => [], 'requiredMetadataIds' => [1, 2]]);
-        $resource1 = $this->createResourceMock(1, null, []);
-        $resource2 = $this->createResourceMock(1, null, [1 => null]);
-        $resource3 = $this->createResourceMock(1, null, [1 => null, 2 => null]);
-        $resource4 = $this->createResourceMock(1, null, [1 => null, 2 => null, 3 => null]);
-        $this->assertFalse($place->resourceHasRequiredMetadata($resource1));
-        $this->assertFalse($place->resourceHasRequiredMetadata($resource2));
-        $this->assertTrue($place->resourceHasRequiredMetadata($resource3));
-        $this->assertTrue($place->resourceHasRequiredMetadata($resource4));
+        $rk = $this->createMock(ResourceKind::class);
+        $rk->method('getMetadataIds')->willReturn([1, 2, 3]);
+        $resource1 = $this->createResourceMock(1, $rk, []);
+        $resource2 = $this->createResourceMock(1, $rk, [1 => null]);
+        $resource3 = $this->createResourceMock(1, $rk, [1 => null, 2 => null]);
+        $resource4 = $this->createResourceMock(1, $rk, [1 => null, 2 => null, 3 => null]);
+        $this->assertNotEmpty($place->getMissingRequiredMetadataIds($resource1->getContents(), $rk));
+        $this->assertNotEmpty($place->getMissingRequiredMetadataIds($resource2->getContents(), $rk));
+        $this->assertEmpty($place->getMissingRequiredMetadataIds($resource3->getContents(), $rk));
+        $this->assertEmpty($place->getMissingRequiredMetadataIds($resource4->getContents(), $rk));
     }
 
     public function testGettingMissingRequiredMetadataIds() {
         $place = ResourceWorkflowPlace::fromArray(['label' => [], 'requiredMetadataIds' => [1, 2]]);
         $resourceContents = ResourceContents::empty();
-        $this->assertEquals([1, 2], $place->getMissingRequiredMetadataIds($resourceContents));
+        $rk = $this->createMock(ResourceKind::class);
+        $rk->method('getMetadataIds')->willReturn([1, 2]);
+        $this->assertEquals([1, 2], $place->getMissingRequiredMetadataIds($resourceContents, $rk));
         $resourceContents = $resourceContents->withMergedValues(1, null);
-        $this->assertEquals([2], $place->getMissingRequiredMetadataIds($resourceContents));
+        $this->assertEquals([2], $place->getMissingRequiredMetadataIds($resourceContents, $rk));
     }
 
     public function testGettingMissingRequiredMetadataIdsWhenValueIsDefinedButEmpty() {
         $place = ResourceWorkflowPlace::fromArray(['label' => [], 'requiredMetadataIds' => [1, 2]]);
+        $rk = $this->createMock(ResourceKind::class);
+        $rk->method('getMetadataIds')->willReturn([1, 2]);
         $resourceContents = ResourceContents::fromArray([1 => []]);
-        $this->assertEquals([1, 2], $place->getMissingRequiredMetadataIds($resourceContents));
+        $this->assertEquals([1, 2], $place->getMissingRequiredMetadataIds($resourceContents, $rk));
+    }
+
+    public function testIgnoringMetadataNotInResourceKind() {
+        $place = ResourceWorkflowPlace::fromArray(['label' => [], 'requiredMetadataIds' => [1, 2]]);
+        $rk = $this->createMock(ResourceKind::class);
+        $rk->method('getMetadataIds')->willReturn([1]);
+        $resourceContents = ResourceContents::fromArray([1 => []]);
+        $this->assertEquals([1], $place->getMissingRequiredMetadataIds($resourceContents, $rk));
     }
 }

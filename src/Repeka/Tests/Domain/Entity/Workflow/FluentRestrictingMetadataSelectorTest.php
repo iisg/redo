@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Entity\Workflow;
 
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\Workflow\FluentRestrictingMetadataSelector;
 
 class FluentRestrictingMetadataSelectorTest extends \PHPUnit_Framework_TestCase {
@@ -44,5 +45,12 @@ class FluentRestrictingMetadataSelectorTest extends \PHPUnit_Framework_TestCase 
         $this->assertEquals([1, 2, 3, 4], $selector->required()->all()->get());
         $selector = new FluentRestrictingMetadataSelector([1], [2], [3], [4]);
         $this->assertEquals([1, 2, 3, 4], $selector->all()->required()->get());
+    }
+
+    public function testFilteringByResourceKind() {
+        $selector = new FluentRestrictingMetadataSelector([1], [2], [3], [4]);
+        $rk = $this->createMock(ResourceKind::class);
+        $rk->method('getMetadataIds')->willReturn([1, 3, 5]);
+        $this->assertEquals([1, 3], $selector->all()->existingInResourceKind($rk)->get());
     }
 }

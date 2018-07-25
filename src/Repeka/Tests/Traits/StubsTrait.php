@@ -237,7 +237,6 @@ trait StubsTrait {
         $mock = $this->createMock(ResourceWorkflowPlace::class);
         $mock->method('getId')->willReturn($id);
         $mock->method('getMissingRequiredMetadataIds')->willReturn($missingMetadataIds);
-        $mock->method('resourceHasRequiredMetadata')->willReturn(empty($missingMetadataIds));
         $mock->method('restrictingMetadataIds')->willReturnCallback(
             function () use ($autoAssignMetadataIds, $assigneeMetadataIds) {
                 return new FluentRestrictingMetadataSelector([], [], $assigneeMetadataIds, $autoAssignMetadataIds);

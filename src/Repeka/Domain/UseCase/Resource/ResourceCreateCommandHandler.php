@@ -42,6 +42,7 @@ class ResourceCreateCommandHandler {
             ->locked()
             ->assignees()
             ->autoAssign()
+            ->existingInResourceKind($resourceToBeAdded->getKind())
             ->get();
         foreach ($lockedInTheFirstPlaceMetadataIds as $metadataId) {
             if ($resourceToBeAdded->getKind()->getMetadataById($metadataId)->isCopiedToChildResource()) {

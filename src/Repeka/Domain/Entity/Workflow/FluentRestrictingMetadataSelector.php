@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Domain\Entity\Workflow;
 
+use Repeka\Domain\Entity\ResourceKind;
+
 class FluentRestrictingMetadataSelector {
     /** @var int[] */
     private $requiredIds;
@@ -12,7 +14,7 @@ class FluentRestrictingMetadataSelector {
     private $autoAssignIds;
 
     /** @var string[] */
-    private $selectedFields = [];
+    private $selectedIds = [];
 
     /**
      * @param int[] $requiredIds
@@ -28,36 +30,37 @@ class FluentRestrictingMetadataSelector {
     }
 
     public function required(): self {
-        $this->selectedFields = array_unique(array_merge($this->selectedFields, ['requiredIds']));
+        $this->selectedIds = array_merge($this->selectedIds, $this->requiredIds);
         return $this;
     }
 
     public function locked(): self {
-        $this->selectedFields = array_unique(array_merge($this->selectedFields, ['lockedIds']));
+        $this->selectedIds = array_merge($this->selectedIds, $this->lockedIds);
         return $this;
     }
 
     public function assignees(): self {
-        $this->selectedFields = array_unique(array_merge($this->selectedFields, ['assigneeIds']));
+        $this->selectedIds = array_merge($this->selectedIds, $this->assigneeIds);
         return $this;
     }
 
     public function autoAssign(): self {
-        $this->selectedFields = array_unique(array_merge($this->selectedFields, ['autoAssignIds']));
+        $this->selectedIds = array_merge($this->selectedIds, $this->autoAssignIds);
+        return $this;
+    }
+
+    public function existingInResourceKind(ResourceKind $resourceKind): self {
+        $this->selectedIds = array_intersect($resourceKind->getMetadataIds(), $this->selectedIds);
         return $this;
     }
 
     public function all(): self {
-        $this->selectedFields = ['requiredIds', 'lockedIds', 'assigneeIds', 'autoAssignIds'];
+        $this->selectedIds = array_merge($this->requiredIds, $this->lockedIds, $this->assigneeIds, $this->autoAssignIds);
         return $this;
     }
 
     /** @return int[] */
     public function get(): array {
-        $selectedIds = [];
-        foreach ($this->selectedFields as $fieldName) {
-            $selectedIds = array_merge($selectedIds, $this->$fieldName);
-        }
-        return array_values(array_unique($selectedIds));
+        return array_values(array_unique($this->selectedIds));
     }
 }
