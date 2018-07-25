@@ -2,7 +2,6 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
-use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceKind implements Identifiable, HasResourceClass {
@@ -56,11 +55,6 @@ class ResourceKind implements Identifiable, HasResourceClass {
     }
 
     public function getMetadataById(int $id): Metadata {
-        if ($id == SystemMetadata::PARENT) {
-            return SystemMetadata::PARENT()->toMetadata();
-        } elseif ($id == SystemMetadata::REPRODUCTOR) {
-            return SystemMetadata::REPRODUCTOR()->toMetadata();
-        }
         foreach ($this->getMetadataList() as $metadata) {
             if ($metadata->getId() === $id) {
                 return $metadata;
