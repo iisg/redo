@@ -78,13 +78,12 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
     private function getLockedMetadataIds(ResourceKind $resourceKind, array $targetPlaces): array {
         $lockedIds = [];
         foreach ($targetPlaces as $targetPlace) {
-            $lockedIds = array_merge($lockedIds, $targetPlace->restrictingMetadataIds()->locked()->assignees()->autoAssign()->get());
+            $lockedIds = array_merge(
+                $lockedIds,
+                $targetPlace->restrictingMetadataIds()->locked()->assignees()->autoAssign()->existingInResourceKind($resourceKind)->get()
+            );
         }
-        $lockedIds = array_intersect(
-            $resourceKind->getMetadataIds(),
-            array_unique($lockedIds)
-        );
-        return $lockedIds;
+        return array_unique($lockedIds);
     }
 
     /**

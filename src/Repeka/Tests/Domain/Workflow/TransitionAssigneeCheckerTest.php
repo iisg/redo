@@ -29,7 +29,7 @@ class TransitionAssigneeCheckerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetAssigneeMetadataIds() {
         $this->workflow->method('getPlaces')->willReturn([$this->createWorkflowPlaceMock('p', [], [1])]);
-        $metadataIds = $this->checker->getAssigneeMetadataIds($this->workflow, $this->transition);
+        $metadataIds = $this->checker->getAssigneeMetadataIds($this->createResourceMockWithContents([]), $this->transition);
         $this->assertEquals([1], $metadataIds);
     }
 
@@ -38,13 +38,13 @@ class TransitionAssigneeCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->workflow->method('getPlaces')->willReturn(
             [$this->createWorkflowPlaceMock('p1', [], [1, 3]), $this->createWorkflowPlaceMock('p2', [], [1, 2])]
         );
-        $metadataIds = $this->checker->getAssigneeMetadataIds($this->workflow, $transition);
+        $metadataIds = $this->checker->getAssigneeMetadataIds($this->createResourceMockWithContents([]), $transition);
         $this->assertEquals([1, 3, 2], $metadataIds);
     }
 
     public function testGetAutoAssignMetadataIds() {
         $this->workflow->method('getPlaces')->willReturn([$this->createWorkflowPlaceMock('p', [], [], [1])]);
-        $metadataIds = $this->checker->getAutoAssignMetadataIds($this->workflow, $this->transition);
+        $metadataIds = $this->checker->getAutoAssignMetadataIds($this->createResourceMockWithContents([]), $this->transition);
         $this->assertEquals([1], $metadataIds);
     }
 
@@ -53,7 +53,7 @@ class TransitionAssigneeCheckerTest extends \PHPUnit_Framework_TestCase {
         $this->workflow->method('getPlaces')->willReturn(
             [$this->createWorkflowPlaceMock('p1', [], [4], [1, 3]), $this->createWorkflowPlaceMock('p2', [], [], [1, 2])]
         );
-        $metadataIds = $this->checker->getAutoAssignMetadataIds($this->workflow, $transition);
+        $metadataIds = $this->checker->getAutoAssignMetadataIds($this->createResourceMockWithContents([]), $transition);
         $this->assertEquals([1, 3, 2], $metadataIds);
     }
 

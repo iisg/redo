@@ -3,7 +3,6 @@ namespace Repeka\Domain\Workflow;
 
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
@@ -42,11 +41,9 @@ class TransitionPossibilityChecker {
         $missingMetadataIds = [];
         foreach ($targetPlaces as $targetPlace) {
             /** @var ResourceWorkflowPlace $targetPlace */
-            $metadataIdsMissingForPlace = $targetPlace->getMissingRequiredMetadataIds($resourceContents);
+            $metadataIdsMissingForPlace = $targetPlace->getMissingRequiredMetadataIds($resourceContents, $resource->getKind());
             $missingMetadataIds = array_merge($missingMetadataIds, $metadataIdsMissingForPlace);
         }
-        $resourceKindMetadataIds = $resource->getKind()->getMetadataIds();
-        $missingMetadataIds = array_intersect($missingMetadataIds, $resourceKindMetadataIds);
         return array_values(array_unique($missingMetadataIds));
     }
 
@@ -54,11 +51,11 @@ class TransitionPossibilityChecker {
      * Gets assignee and auto-assignee metadata list for each of transition tos, merges these lists, removes duplicates and returns only IDs
      * @return int[]
      */
-    public function getAssigneeMetadataIds(ResourceWorkflow $workflow, ResourceWorkflowTransition $transition): array {
-        return $this->transitionAssigneeChecker->getAssigneeMetadataIds($workflow, $transition);
+    public function getAssigneeMetadataIds(ResourceEntity $resource, ResourceWorkflowTransition $transition): array {
+        return $this->transitionAssigneeChecker->getAssigneeMetadataIds($resource, $transition);
     }
 
-    public function getAutoAssignMetadataIds(ResourceWorkflow $workflow, ResourceWorkflowTransition $transition): array {
-        return $this->transitionAssigneeChecker->getAutoAssignMetadataIds($workflow, $transition);
+    public function getAutoAssignMetadataIds(ResourceEntity $resource, ResourceWorkflowTransition $transition): array {
+        return $this->transitionAssigneeChecker->getAutoAssignMetadataIds($resource, $transition);
     }
 }

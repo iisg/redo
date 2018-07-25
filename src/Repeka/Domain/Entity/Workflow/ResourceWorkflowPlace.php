@@ -5,7 +5,7 @@ use Cocur\Slugify\Slugify;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Labeled;
 use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 
 class ResourceWorkflowPlace implements Identifiable, Labeled {
     private $id;
@@ -51,16 +51,11 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
         );
     }
 
-    public function getMissingRequiredMetadataIds(ResourceContents $resourceContents): array {
-        $requiredMetadataIds = $this->restrictingMetadataIds()->required()->assignees()->get();
+    public function getMissingRequiredMetadataIds(ResourceContents $resourceContents, ResourceKind $resourceKind): array {
+        $requiredMetadataIds = $this->restrictingMetadataIds()->required()->assignees()->existingInResourceKind($resourceKind)->get();
         $presentMetadataIds = array_keys($resourceContents->filterOutEmptyMetadata()->toArray());
         $metadataIdsMissingForPlace = array_diff($requiredMetadataIds, $presentMetadataIds);
         return array_values($metadataIdsMissingForPlace);
-    }
-
-    public function resourceHasRequiredMetadata(ResourceEntity $resource): bool {
-        $missingIds = $this->getMissingRequiredMetadataIds($resource->getContents());
-        return count($missingIds) == 0;
     }
 
     /** @return ResourceWorkflowPlacePluginConfiguration[] */

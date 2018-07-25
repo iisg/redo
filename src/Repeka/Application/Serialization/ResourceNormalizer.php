@@ -3,7 +3,6 @@ namespace Repeka\Application\Serialization;
 
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
@@ -53,7 +52,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
                 $normalizerFunc,
                 $this->getBlockedTransitions($resource, $this->tokenStorage->getToken()->getUser())
             );
-            $normalized['transitionAssigneeMetadata'] = $this->getTransitionAssigneeMetadata($workflow, $resource);
+            $normalized['transitionAssigneeMetadata'] = $this->getTransitionAssigneeMetadata($resource);
             $availableTransitions = array_merge($workflow->getTransitions($resource), $availableTransitions);
         }
         $normalized['availableTransitions'] = array_map($normalizerFunc, $availableTransitions);
@@ -80,12 +79,12 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
      * Useful for displaying which transitions are made available for users related to resource through given metadata.
      * @return array in form of metadataId => transition[]
      */
-    private function getTransitionAssigneeMetadata(ResourceWorkflow $workflow, ResourceEntity $resource): array {
+    private function getTransitionAssigneeMetadata(ResourceEntity $resource): array {
         $metadataTransitionMap = [];
-        foreach ($workflow->getTransitions($resource) as $transition) {
-            $assigneeMetadataIds = $this->transitionPossibilityChecker->getAssigneeMetadataIds($workflow, $transition);
+        foreach ($resource->getWorkflow()->getTransitions($resource) as $transition) {
+            $assigneeMetadataIds = $this->transitionPossibilityChecker->getAssigneeMetadataIds($resource, $transition);
             $assigneeMetadataIds =
-                array_merge($assigneeMetadataIds, $this->transitionPossibilityChecker->getAutoAssignMetadataIds($workflow, $transition));
+                array_merge($assigneeMetadataIds, $this->transitionPossibilityChecker->getAutoAssignMetadataIds($resource, $transition));
             foreach ($assigneeMetadataIds as $metadataId) {
                 if (!array_key_exists($metadataId, $metadataTransitionMap)) {
                     $metadataTransitionMap[$metadataId] = [];
