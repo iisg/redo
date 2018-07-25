@@ -9,7 +9,7 @@ use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
-use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
+use Repeka\Domain\UseCase\ResourceManagement\ResourceGodUpdateCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
@@ -86,19 +86,22 @@ class PkImportResourcesCommand extends Command {
                         $resourceId = intval(trim($resourceData['ID']));
                         if (isset($idMapping[$resourceId])) {
                             $resource = $this->resourceRepository->findOne($idMapping[$resourceId]);
-                            $newContents = $resource->getContents();
-                            foreach ($importedValues as $metadataId => $values) {
-                                $newContents = $newContents->withReplacedValues($metadataId, $values);
-                            }
-                            $resourceUpdateCommand = new ResourceUpdateContentsCommand($resource, $newContents);
-                            $this->handleCommand($resourceUpdateCommand);
                             ++$stats['updated'];
                         } else {
-                            $resourceCreateCommand = new ResourceCreateCommand($resourceKind, $importedValues);
+                            $resourceCreateCommand = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
                             $resource = $this->handleCommand($resourceCreateCommand);
                             $idMapping[$resourceId] = $resource->getId();
                             ++$stats['imported'];
                         }
+                        $newContents = $resource->getContents();
+                        foreach ($importedValues as $metadataId => $values) {
+                            $newContents = $newContents->withReplacedValues($metadataId, $values);
+                        }
+                        $resourceUpdateCommand = ResourceGodUpdateCommand::builder()
+                            ->setResource($resource)
+                            ->setNewContents($newContents)
+                            ->build();
+                        $this->handleCommand($resourceUpdateCommand);
                     }
                 );
             }
