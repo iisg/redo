@@ -4,8 +4,10 @@ $metadata-chooser-maximum-width: 60%;
 top-bar-search {
   max-width: 100%;
   metadata-chooser {
-    min-width: $input-box-width;
     max-width: $metadata-chooser-maximum-width;
+    .select2-container  {
+      min-width: $input-box-width;
+    }
   }
   .input-box-matching-select2-style {
     padding: 0 8px;

@@ -1,19 +1,17 @@
 @import "../../../common/styles";
 
+$diagram-height: 600px;
+
 workflow-graph-display {
-  $diagramHeight: 600px;
-  display: block;
-  width: 100%;
   position: relative;
-  .workflow-diagram {
-    height: $diagramHeight;
-    width: 100%;
-    border: 1px solid grey;
+  display: block;
+  height: $diagram-height;
+  overflow: hidden;
+  & > div {
+    height: 100%;
+    border: 1px solid $light-grey;
   }
-  .diagram-cover {
-    height: $diagramHeight;
-    width: 100%;
-    position: absolute;
-    z-index: 1000;
+  .disabled {
+    pointer-events: none;
   }
 }

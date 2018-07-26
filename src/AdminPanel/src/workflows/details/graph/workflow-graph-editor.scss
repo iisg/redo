@@ -1,7 +1,67 @@
 @import "../../../common/styles";
 
-.workflow-editor {
-  .panel-heading {
-    border-top-left-radius: 0;
+$workflow-graph-minimum-width: 60%;
+$well-basic-width: 275px;
+
+workflow-graph-editor {
+  display: block;
+  .workflow-editor {
+    display: flex;
+    workflow-graph-display {
+      flex: 1;
+      min-width: $workflow-graph-minimum-width;
+    }
+    .well {
+      &.inactive {
+        width: $well-basic-width;
+        display: flex;
+        align-items: center;
+        & > span {
+          text-align: center;
+          color: $lightish-grey;
+        }
+      }
+      &:not(.inactive) {
+        flex-basis: $well-basic-width;
+        &, & > span, & > :not(form) {
+          padding-top: $default-gap-size / 4;
+          padding-bottom: $default-gap-size / 4;
+        }
+        & > span {
+          display: block;
+          &:first-child {
+            font-size: $title-font-size;
+          }
+        }
+        .simple-form {
+          grid-column-gap: $default-gap-size / 2;
+          grid-row-gap: $default-gap-size / 4;
+        }
+        .information-with-buttons {
+          &, & > * {
+            padding-top: $default-gap-size / 8;
+            padding-bottom: $default-gap-size / 8;
+          }
+        }
+        .toggle-button, toggle-button {
+          width: 100%;
+          button {
+            width: 100%;
+            .generated-transition-name {
+              font-weight: normal;
+              font-style: italic;
+            }
+          }
+        }
+        & > toggle-button {
+          button {
+            @include toggle-button-colors($orange);
+          }
+        }
+      }
+    }
+    .panel-heading {
+      border-top-left-radius: 0;
+    }
   }
 }

@@ -1,5 +1,27 @@
+@import "../../common/styles";
+
 workflow-edit-form {
     & > form .name-with-buttons-and-tabs .buttons {
         margin-left: auto;
+    }
+    .content {
+        &, & > * {
+            padding-top: $default-gap-size / 2;
+            padding-bottom: $default-gap-size / 2;
+        }
+        & > :not(excel) {
+            position: sticky;
+            left: 0;
+            padding-left: $default-gap-size;
+            padding-right: $default-gap-size;
+        }
+        excel {
+            thead th {
+                top: - $default-gap-size / 2;
+            }
+            tfoot td {
+                bottom: - $default-gap-size / 2;
+            }
+        }
     }
 }

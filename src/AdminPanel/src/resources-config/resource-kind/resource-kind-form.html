@@ -40,7 +40,7 @@
                     click.delegate="sortingMetadata = !sortingMetadata"></toggle-button>
                 <div>
                     <div repeat.for="metadata of editableMetadataList"
-                        class="resource-kind-edit-form-metadata-item well">
+                        class="resource-kind-edit-form-metadata-item list-group-item ${metadata.overwriteForm ? 'well' : ''}">
                         <div>
                             <span class="metadata-name ${metadata.overwriteForm ? 'title' : ''}">${originalMetadata(metadata).name}</span>
                             <span class="metadata-id ${metadata.overwriteForm ? 'title' : ''}">ID: ${originalMetadata(metadata).id}</span>

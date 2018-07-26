@@ -7,6 +7,8 @@ excel-checkbox {
   vertical-align: middle;
   button {
     display: flex;
+    padding-left: 0;
+    padding-right: 0;
     color: $blue;
     &.disabled {
       color: $grey;

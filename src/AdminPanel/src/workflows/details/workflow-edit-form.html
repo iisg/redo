@@ -2,6 +2,7 @@
     <require from="./graph/workflow-graph-display"></require>
     <require from="./graph/workflow-graph-editor"></require>
     <require from="./excel/excel"></require>
+    <require from="./excel/excel-legend.html"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
 
@@ -31,23 +32,18 @@
                 <excel workflow.bind="workflow"></excel>
             </template>
             <template else>
-                <div class="form-group">
-                    <multilingual-editor value.bind="workflow.name & validate"
-                        disabled.bind="workflow.pendingRequest"
-                        on-loaded.call="updateGraphPosition()"></multilingual-editor>
-                </div>
-                <div class="form-group clearfix">
-                    <workflow-graph-editor workflow.bind="workflow"
-                        workflow-graph-editor-ready.delegate="onEditorReady($event)"></workflow-graph-editor>
-                </div>
-                <div class="form-group">
-                    <excel show.bind="workflow.places.length > 0"
-                        workflow.bind="workflow"
-                        editable.bind="!workflow.pendingRequest"></excel>
-                    <input type="hidden"
-                        model.bind="workflow.places & validate">
-                </div>
+                <multilingual-editor value.bind="workflow.name & validate"
+                    disabled.bind="workflow.pendingRequest"
+                    on-loaded.call="updateGraphPosition()"></multilingual-editor>
+                <workflow-graph-editor workflow.bind="workflow"
+                    workflow-graph-editor-ready.delegate="onEditorReady($event)"></workflow-graph-editor>
+                <excel show.bind="workflow.places.length > 0"
+                    workflow.bind="workflow"
+                    editable.bind="!workflow.pendingRequest"></excel>
+                <input type="hidden"
+                    model.bind="workflow.places & validate">
             </template>
+            <excel-legend></excel-legend>
         </div>
     </form>
 </template>

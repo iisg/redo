@@ -3,7 +3,7 @@
 aup-tab-content {
   #details.active > div {
     display: flex;
-    & > :first-child {
+    & > :first-child:not(:last-child) {
       flex: 1;
       padding: $default-gap-size;
     }

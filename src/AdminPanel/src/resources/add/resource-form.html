@@ -21,7 +21,7 @@
             value.bind="resource.kind & validate"></resource-kind-chooser>
         <cancel-button if.bind="!resource.kind"
             class="orange"
-            primary-label="Close"
+            label="Close"
             click.delegate="cancel()"></cancel-button>
     </div>
     <div if.bind="skipValidation && resource.kind.workflow"
@@ -64,7 +64,7 @@
                     ${(editing ? 'Save' : 'Add') | t}
                 </submit-button>
                 <cancel-button class.bind="editing ? '' : 'orange'"
-                    primary-label="Close"
+                    label="Close"
                     disabled.bind="resource.pendingRequest || submitting"
                     click.delegate="cancel()"></cancel-button>
             </div>
