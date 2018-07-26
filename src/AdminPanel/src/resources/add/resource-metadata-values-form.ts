@@ -32,16 +32,8 @@ export class ResourceMetadataValuesForm {
     if (this.resource && this.metadata) {
       this.ensureResourceHasMetadataContents();
       const length = this.resource.contents[this.metadata.id].length;
-      if (this.required) {
-        if (!length) {
-          this.addNew();
-        }
-      } else {
-        this.resource.contents[this.metadata.id].forEach((metadataValue, index) => {
-          if ((Array.isArray(metadataValue.value) && metadataValue.value.length === 0) || !metadataValue.value) {
-            this.deleteIndex(index, 1);
-          }
-        });
+      if (this.required && !length) {
+        this.addNew();
       }
     }
   }
