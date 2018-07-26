@@ -9,7 +9,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 class MetadataFactory {
     public function create(MetadataCreateCommand $command) {
         Assertion::notEmpty($command->getResourceClass());
-        return Metadata::create(
+        $metadata = Metadata::create(
             $command->getResourceClass(),
             new MetadataControl($command->getControlName()),
             $command->getName(),
@@ -20,12 +20,9 @@ class MetadataFactory {
             $command->isShownInBrief(),
             $command->isCopiedToChildResource()
         );
-    }
-
-    public function createWithParent(array $newChildMetadata, Metadata $parent) {
-        $newChildMetadata['resourceClass'] = $parent->getResourceClass();
-        $metadata = MetadataFactory::create(MetadataCreateCommand::fromArray($newChildMetadata));
-        $metadata->setParent($parent);
+        if ($command->getParent()) {
+            $metadata->setParent($command->getParent());
+        }
         return $metadata;
     }
 

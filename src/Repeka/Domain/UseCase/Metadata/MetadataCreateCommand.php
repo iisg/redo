@@ -3,7 +3,9 @@ namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
+use Repeka\Domain\Entity\Metadata;
 
+/** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class MetadataCreateCommand extends ResourceClassAwareCommand implements AdjustableCommand {
     private $name;
     private $label;
@@ -13,6 +15,7 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
     private $constraints;
     private $shownInBrief;
     private $copyToChildResource;
+    private $parent;
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      * @param string $name
@@ -34,9 +37,10 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
         string $resourceClass,
         array $constraints = [],
         bool $shownInBrief = false,
-        bool $copyToChildResource = false
+        bool $copyToChildResource = false,
+        ?Metadata $parent = null
     ) {
-        parent::__construct($resourceClass);
+        parent::__construct($resourceClass ?: ($parent ? $parent->getResourceClass() : ''));
         $this->name = $name;
         $this->label = $label;
         $this->description = $description;
@@ -45,6 +49,7 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
         $this->constraints = $constraints;
         $this->shownInBrief = $shownInBrief;
         $this->copyToChildResource = $copyToChildResource;
+        $this->parent = $parent;
     }
 
     public function getName(): string {
@@ -79,6 +84,10 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
         return $this->copyToChildResource;
     }
 
+    public function getParent(): ?Metadata {
+        return $this->parent;
+    }
+
     public static function fromArray(array $data): MetadataCreateCommand {
         return new MetadataCreateCommand(
             $data['name'] ?? '',
@@ -89,7 +98,8 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
             $data['resourceClass'] ?? '',
             $data['constraints'] ?? [],
             $data['shownInBrief'] ?? false,
-            $data['copyToChildResource'] ?? false
+            $data['copyToChildResource'] ?? false,
+            $data['parent'] ?? null
         );
     }
 }

@@ -94,6 +94,33 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($metadataArray['resourceClass'], $metadata->getResourceClass());
     }
 
+    public function testCreatingSubmetadataKind() {
+        $this->createLanguage('TEST', 'TE', 'Test language');
+        $client = self::createAdminClient();
+        $parent = $this->createMetadata('Metadata1', ['TEST' => 'First'], [], [], 'textarea');
+        $metadataArray = [
+            'control' => 'textarea',
+            'name' => 'Test metadata',
+            'label' => ['TEST' => 'User-friendly label'],
+            'description' => ['TEST' => 'test description'],
+            'placeholder' => ['TEST' => 'test placeholder'],
+            'constraints' => [],
+        ];
+        $client->apiRequest('POST', $this->oneEntityEndpoint($parent) . '/metadata', ['newChildMetadata' => $metadataArray]);
+        $this->assertStatusCode(201, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        /** @var $metadataRepository MetadataRepository */
+        $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
+        $metadata = $metadataRepository->findOne($response->id);
+        $this->assertEquals($metadataArray['control'], $metadata->getControl()->getValue());
+        $this->assertEquals(Metadata::normalizeMetadataName($metadataArray['name']), $metadata->getName());
+        $this->assertEquals($metadataArray['label'], $metadata->getLabel());
+        $this->assertEquals($metadataArray['description'], $metadata->getDescription());
+        $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
+        $this->assertEquals($parent->getResourceClass(), $metadata->getResourceClass());
+        $this->assertEquals($parent->getId(), $metadata->getParentId());
+    }
+
     public function testBasicOrdering() {
         $this->createLanguage('TEST', 'TE', 'Test language');
         $metadata1 = $this->createMetadata('Metadata1', ['TEST' => 'First metadata'], [], [], 'textarea');

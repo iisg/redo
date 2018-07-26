@@ -5,7 +5,6 @@ use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataChildCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataDeleteCommand;
@@ -107,7 +106,8 @@ class MetadataController extends ApiController {
         if ($baseMetadata) {
             $command = new MetadataChildWithBaseCreateCommand($parent, $baseMetadata, $newChildMetadata);
         } else {
-            $command = new MetadataChildCreateCommand($parent, $newChildMetadata);
+            $newChildMetadata['parent'] = $parent;
+            $command = MetadataCreateCommand::fromArray($newChildMetadata);
         }
         $metadata = $this->handleCommand($command);
         return $this->createJsonResponse($metadata, 201);
