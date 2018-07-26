@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
@@ -35,6 +36,11 @@ class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint 
     }
 
     public function validate(Metadata $metadata, $allowedResourceKindIds, $resourceId) {
+        if ($metadata->getId() == SystemMetadata::PARENT) {
+            // PARENT metadata constraints indicate what children can this resource has, not what parents.
+            // If the reproductor metadata allowed to reach this place, it means that it is valid.
+            return;
+        }
         try {
             $resource = $this->resourceRepository->findOne($resourceId);
             Validator::in($allowedResourceKindIds)
