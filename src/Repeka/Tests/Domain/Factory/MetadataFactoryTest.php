@@ -48,7 +48,8 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreatingChildMetadataWithParent() {
         $parent = $this->createMetadataMock();
-        $created = $this->factory->createWithParent($this->newChildMetadata, $parent);
+        $this->newChildMetadata['parent'] = $parent;
+        $created = $this->factory->create(MetadataCreateCommand::fromArray($this->newChildMetadata));
         $this->assertEquals(1, $created->getParentId());
         $this->assertEquals('nazwa', $created->getName());
         $this->assertEquals('Test', $created->getLabel()['PL']);

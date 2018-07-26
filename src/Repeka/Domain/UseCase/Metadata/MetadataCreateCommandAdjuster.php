@@ -25,7 +25,8 @@ class MetadataCreateCommandAdjuster implements CommandAdjuster {
             $command->getResourceClass(),
             $command->getConstraints(),
             $command->isShownInBrief(),
-            $command->isCopiedToChildResource()
+            $command->isCopiedToChildResource(),
+            $command->getParent()
         );
     }
 }
