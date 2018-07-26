@@ -22,7 +22,7 @@ export class MetadataBreadcrumbsProvider implements BreadcrumbsProvider {
     }
     breadcrumbs.unshift({
       label: this.resourceClassTranslationValueConverter.toView('metadata', metadata.resourceClass),
-      route: 'metadata',
+      route: metadata.resourceClass ? 'metadata' : undefined,
       params: {resourceClass: metadata.resourceClass}
     });
     return breadcrumbs;
@@ -30,7 +30,7 @@ export class MetadataBreadcrumbsProvider implements BreadcrumbsProvider {
 
   private metadataBreadcrumb(metadata: Metadata): BreadcrumbItem {
     return {
-      label: this.i18n.tr('Metadata') + ` #${metadata.id} (${metadata.name})`,
+      label: this.i18n.tr('Metadata_single') + ` #${metadata.id} (${metadata.name})`,
       route: 'metadata/details',
       params: {id: metadata.id},
       replace: true
