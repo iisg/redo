@@ -55,13 +55,14 @@ Remove: Usuń
 Manage: Zarządzaj
 Mark as initial: Oznacz jako początkowy
 New place: Nowy stan
-No transitions from current place.: Brak wyjść z obecnego stanu.
-End simulation: Zakończ symulację
+No transitions from the current place.: Brak wyjść z obecnego stanu.
+Simulation: Symulacja
+End simulation: zakończ symulację
 Transition: Przejście
 Place: Stan
 Choose the next transition: Wybierz kolejne przejście
-Select any element on the diagram to edit: Zaznacz element na grafie by go edytować
-Simulation: Symulacja
+Use the context menu (right-click to open it) to add an element, select any element on the diagram to edit it or: Użyj menu kontekstowego (dostępnego po kliknięciu prawym przyciskiem myszy) aby dodać element, zaznacz dowolny element na grafie by go edytować lub
+start the simulation: rozpocznij symulację
 Thumbnail: Miniatura
 Add new submetadata kind: Dodaj nowy rodzaj podmetadanych
 Submetadata kinds: Rodzaje podmetadanych
@@ -97,11 +98,11 @@ Resource has children: Zasób ma podzasoby
 Delete or disown them first to delete this resource: Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób
 Legend: Legenda
 In this state metadata value is:: Symbole oznaczają, że w danym stanie procesu:
-Optional_female: Metadana nie musi mieć wartości
-Required_female: Metadana musi mieć wartość
-Locked_female: Wartość metadanej nie może zostać zmieniona
-Specifies assignee: Wartość metadanej określa użytkownika przypisanego do zadania
-Specifies auto assignee: Wartość metadanej określa użytkownika przypisanego do zadania. Jeżeli nie jest ustawiona, automatycznie zostanie ustawiony użytkownik, który umieści zasób w tym stanie
+optional_female: metadana nie musi mieć wartości
+required_female: metadana musi mieć wartość
+locked_female: wartość metadanej nie może zostać zmieniona
+specifies assignee: wartość metadanej określa użytkownika przypisanego do zadania
+specifies auto assignee: wartość metadanej określa użytkownika przypisanego do zadania; jeżeli nie jest ustawiona, zostanie automatycznie wybrany użytkownik, który umieści zasób w danym stanie
 only for relationships with users: opcja dostępna tylko dla relacji z użytkownikami
 Your current tasks: Twoje bieżące zadania
 Other tasks you can do: Inne zadania, które możesz wykonać
@@ -177,7 +178,6 @@ Save the workflow in order to configure workflow plugins.: Zapisz proces, by mó
 Operator of the resource classes: Operator klas zasobów
 Administrator of the resource classes: Administrator klas zasobów
 No roles.: Brak ról.
-Add tool: Dodaj mechanizm
 Additional actions when entering this state: Dodatkowe akcje przy wejściu do stanu
 Places in workflow: Stany w procesie
 Your changes in form will be lost: Twoje zmiany w formularzu zostną utracone

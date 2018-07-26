@@ -3,11 +3,11 @@ import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import * as $ from "jquery";
+import {debounce} from "lodash";
 import "select2";
+import {ChangeEvent} from "../../change-event";
 import {changeHandler, twoWay} from "../binding-mode";
 import {booleanAttribute} from "../boolean-attribute";
-import {debounce} from "lodash";
-import {ChangeEvent} from "../../change-event";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
@@ -117,7 +117,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     });
     if (this.useComputedWidth && !this.multiple) {
       const container = $element.siblings('.select2-container');
-      container.css({'width': (parseInt(container.css('width')) + 6) + 'px'});
+      container.css({'width': (parseInt(container.css('width')) + 10) + 'px'});
     }
     this.updateSelectedItem();
     return $element;

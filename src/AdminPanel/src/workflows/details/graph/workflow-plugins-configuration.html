@@ -1,13 +1,11 @@
-<template>
+<template class="narrow-form">
     <require from="./workflow-plugin-configuration-option-input"></require>
     <require from="common/value-converters/object-to-array-value-converter"></require>
     <require from="common/components/dropdown-select/dropdown-select"></require>
     <require from="common/components/buttons/remove-button.html"></require>
 
-    <h4>${'Additional actions when entering this state' | t}</h4>
-
-    <div class="form-group">
-        <label>${'Add tool' | t}</label>
+    <div>
+        <span>${'Additional actions when entering this state' | t}</span>
         <dropdown-select
             values.bind="availableWorkflowPlugins | objectToArray"
             change.trigger="newPluginRequested($event)"
@@ -16,22 +14,27 @@
                 ${'plugins::' + option.value.name + '//label' | t & oneTime}
             </template>
         </dropdown-select>
-    </div>
-
-    <div class="list-group">
-        <div class="list-group-item"
-            repeat.for="config of pluginsConfig">
-            <label>${'plugins::' + config.name + '//label' | t & oneTime}</label>
-            <remove-button click.delegate="removePluginConfig(config)"
-                class="pull-right"
-                show-tooltips-instead-of-labels="true"></remove-button>
-            <div class="form-group"
-                repeat.for="option of availableWorkflowPlugins[config.name].configurationOptions">
-                <label>${'plugins::' + config.name + '//options//' + option.name + '//label' | t & oneTime}</label>
-                <workflow-plugin-configuration-option-input option.bind="option"
-                    value.bind="config.config[option.name]"
-                    description.one-time="'plugins::' + config.name + '//options//' + option.name + '//placeholder' | t"></workflow-plugin-configuration-option-input>
-                <span class="help-block">${'plugins::' + config.name + '//options//' + option.name + '//description' | t & oneTime}</span>
+        <div>
+            <div class="list-group-item"
+                repeat.for="config of pluginsConfig">
+                <div class="plugin-name-container">
+                    <span>${'plugins::' + config.name + '//label' | t & oneTime}</span>
+                    <remove-button click.delegate="removePluginConfig(config)"
+                        show-tooltips-instead-of-labels="true"></remove-button>
+                </div>
+                <div class="narrow-form">
+                    <div repeat.for="option of availableWorkflowPlugins[config.name].configurationOptions">
+                        <span>
+                            ${'plugins::' + config.name + '//options//' + option.name + '//label' | t & oneTime}
+                            <icon name="information"
+                                bootstrap-tooltip="${'plugins::' + config.name + '//options//' + option.name + '//description' | t & oneTime}">
+                            </icon>
+                        </span>
+                        <workflow-plugin-configuration-option-input option.bind="option"
+                            value.bind="config.config[option.name]"
+                            description.one-time="'plugins::' + config.name + '//options//' + option.name + '//placeholder' | t"></workflow-plugin-configuration-option-input>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

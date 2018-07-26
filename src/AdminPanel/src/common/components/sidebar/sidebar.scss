@@ -17,7 +17,7 @@ sidebar {
   width: $default-sidebar-width;
   transition: width $fold-animation-duration;
 
-  .title {
+  .title-container {
     overflow: hidden;
     background-color: $light-grey;
     border-bottom: $orange solid $default-gap-size / 4;

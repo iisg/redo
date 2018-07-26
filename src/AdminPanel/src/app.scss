@@ -85,7 +85,8 @@ h1, h2, h3, p {
 }
 
 label {
-  margin-bottom: $default-gap-size / 4;
+  margin-bottom: 0;
+  font-weight: normal;
 }
 
 .tooltip {
@@ -108,14 +109,18 @@ label {
 table {
   width: 100%;
   &:not(.transparent) {
-    thead {
-      th {
-        position: sticky;
-        top: 0;
-        font-weight: normal;
-        background-color: $grey;
-        color: white;
-      }
+    thead th, tfoot td {
+      position: sticky;
+      font-weight: normal;
+      background-color: $grey;
+      color: white;
+    }
+    thead th {
+      z-index: 1;
+      top: 0;
+    }
+    tfoot td {
+      bottom: 0;
     }
     tbody {
       vertical-align: top;
@@ -214,6 +219,27 @@ table {
   }
 }
 
+.narrow-form {
+  & > span {
+    padding-top: $default-gap-size / 4;
+    padding-bottom: $default-gap-size / 4;
+    font-size: $subtitle-font-size;
+    font-weight: bold;
+  }
+  & > div {
+    &, & > * {
+      padding-top: $default-gap-size / 8;
+      padding-bottom: $default-gap-size / 8;
+    }
+    & > span {
+      display: block;
+      &:not(.value):not(.additional-information) {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
 .form-with-buttons {
   display: flex;
   & > .form-content {
@@ -273,8 +299,18 @@ textarea {
 .well {
   padding: $default-gap-size / 2;
   margin-bottom: 0;
-  &:not(.floating-form) {
+  &:not(.list-group-item):not(.floating-form) {
     border-radius: 0;
+  }
+  &.list-group-item {
+    &:not(:first-child) {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+    &:not(:last-child) {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
   &.floating-form {
     z-index: $floating-form-and-sticky-table-header-z-index;
@@ -282,6 +318,10 @@ textarea {
     right: 0;
     border-top-right-radius: 0;
   }
+}
+
+.list-group-item {
+  padding: $default-gap-size / 2;
 }
 
 .form-group {

@@ -1,10 +1,10 @@
+import {computedFrom, observable} from "aurelia-binding";
 import {bindable} from "aurelia-templating";
 import {twoWay} from "common/components/binding-mode";
-import {observable, computedFrom} from "aurelia-binding";
 import {booleanAttribute} from "common/components/boolean-attribute";
-import {noop} from "common/utils/function-utils";
 import {successor} from "common/utils/enum-utils";
-import {RestrictingMetadataIdMap, RequirementState} from "workflows/workflow";
+import {noop} from "common/utils/function-utils";
+import {RequirementState, RestrictingMetadataIdMap} from "workflows/workflow";
 
 export class ExcelCheckbox {
   @bindable({changeHandler: 'updateInternalState'}) model: number;

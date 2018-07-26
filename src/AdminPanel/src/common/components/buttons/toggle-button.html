@@ -12,6 +12,7 @@
                 size="1.25"></icon>
         </div>
         <icon else
+            if.bind="primaryIconName"
             name="${primaryIconName}"
             size="1.25"></icon>
         <span if.bind="primaryLabel && !showTooltipsInsteadOfLabels">

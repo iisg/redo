@@ -1,10 +1,10 @@
-<template bindable="toggled, showTooltipsInsteadOfLabels">
+<template bindable="primaryIconName, primaryLabel, secondaryIconName, secondaryLabel, toggled, showTooltipsInsteadOfLabels">
     <require from="./toggle-button"></require>
 
-    <toggle-button primary-icon-name="edit-2"
-        primary-label="Edit"
-        secondary-icon-name="remove-3"
-        secondary-label="Cancel"
+    <toggle-button primary-icon-name.bind="primaryIconName || 'edit-2'"
+        primary-label.bind="primaryLabel || 'Edit'"
+        secondary-icon-name.bind="secondaryIconName || 'remove-3'"
+        secondary-label.bind="secondaryLabel || 'Cancel'"
         toggled.bind="toggled"
         show-tooltips-instead-of-labels.bind="showTooltipsInsteadOfLabels"></toggle-button>
 </template>

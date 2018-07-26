@@ -1,86 +1,71 @@
 <template>
+    <require from="common/components/buttons/toggle-button"></require>
     <require from="../graph/workflow-graph-display"></require>
     <require from="./workflow-plugins-configuration"></require>
 
-    <div class="btn-group pull-right">
-        <button type="button"
-            class="btn btn-default ${simulating ? 'active' : ''}"
-            if.bind="workflow.places.length > 0"
-            click.delegate="toggleSimulation()">
-            <icon name.bind="simulating ? 'square' : 'back-3'"
-                rotation.bind="simulating ? 0 : 180"></icon>
-            ${ 'Simulation' | t }
-        </button>
-    </div>
-
-    <div class="col-sm-12 hidden-xs workflow-editor">
-        <div class="row">
-            <div class="col-sm-9 no-padding">
-                <loading-bar if.bind="graph.isProcessingWorkflowPlaceRemoval"></loading-bar>
-                <workflow-graph-display workflow.bind="workflow"
-                    editable.bind="!simulating"
-                    current.bind="currentSimulationPlaces"
-                    workflow-graph-ready.delegate="onGraphBuilt($event)"></workflow-graph-display>
-            </div>
-            <div class="col-sm-3 no-padding">
-                <div class="well"
-                    if.bind="!simulating">
-                    <span if.bind="!selectedElement">${ 'Select any element on the diagram to edit' | t }</span>
-                    <span if.bind="selectedElement">
-                        <h3>
-                            <span if.bind="!selectedElement.froms">${ 'Place' | t }</span>
-                            <span if.bind="selectedElement.froms">${ 'Transition' | t}</span>
-                        </h3>
-                        <form submit.delegate="saveSelectedElementChanges()">
-                            <div class="form-group">
-                                <span>${'Label' | t}</span>
-                                <multilingual-editor class="vertical"
-                                    keyup.delegate="saveSelectedElementChanges()"
-                                    value.bind="selectedElement.label"
-                                    change.delegate="signalWorkflowPlacesUpdated()"></multilingual-editor>
-                            </div>
-                            <div class="form-group"
-                                if.bind="!selectedElement.froms">
-                                <workflow-plugins-configuration plugins-config.bind="selectedElement.pluginsConfig"
-                                    workflow.bind="workflow"
-                                    if.bind="workflow.id"
-                                    change.delegate="saveSelectedElementChanges()"></workflow-plugins-configuration>
-                                <em else>${ 'Save the workflow in order to configure workflow plugins.' | t }</em>
-                            </div>
-                        </form>
+    <div class="workflow-editor">
+        <loading-bar if.bind="graph.isProcessingWorkflowPlaceRemoval"></loading-bar>
+        <workflow-graph-display workflow.bind="workflow"
+            editable.bind="!simulating"
+            current.bind="currentSimulationPlaces"
+            workflow-graph-ready.delegate="onGraphBuilt($event)"></workflow-graph-display>
+        <div class="well ${!simulating && !selectedElement ? 'inactive' : ''}">
+            <template if.bind="!simulating">
+                <template if.bind="!selectedElement">
+                    <span>
+                        ${'Use the context menu (right-click to open it) to add an element,
+                            select any element on the diagram to edit it or' | t}
+                        <a click.delegate="toggleSimulation()">${'start the simulation' | t}</a>
                     </span>
-                </div>
-                <div class="well"
-                    if.bind="simulating">
-                    <h3>${ 'Choose the next transition' | t}</h3>
-                    <loading-bar if.bind="fetchingTransitions"></loading-bar>
-                    <div class="btn-group-vertical au-animate fade-inup-outup btn-block"
-                        if.bind="!fetchingTransitions">
-                        <button type="button"
-                            class="btn btn-success btn-block"
-                            click.delegate="advanceSimulation(transition.id)"
+                </template>
+                <template else>
+                    <span if.bind="selectedElement.froms">${'Transition' | t}</span>
+                    <span else>${'Place' | t}</span>
+                    <form class="narrow-form"
+                        submit.delegate="saveSelectedElementChanges()">
+                        <div>
+                            <span>${'Label' | t}</span>
+                            <multilingual-editor keyup.delegate="saveSelectedElementChanges()"
+                                value.bind="selectedElement.label"
+                                change.delegate="signalWorkflowPlacesUpdated()"></multilingual-editor>
+                        </div>
+                        <template if.bind="!selectedElement.froms">
+                            <workflow-plugins-configuration if.bind="workflow.id"
+                                plugins-config.bind="selectedElement.pluginsConfig"
+                                workflow.bind="workflow"
+                                change.delegate="saveSelectedElementChanges()"></workflow-plugins-configuration>
+                            <span else>${'Save the workflow in order to configure workflow plugins.' | t}</span>
+                        </template>
+                    </form>
+                </template>
+            </template>
+            <template else>
+                <span>${'Simulation' | t}</span>
+                <loading-bar if.bind="fetchingTransitions"></loading-bar>
+                <template else>
+                    <div if.bind="availableTransitions.length"
+                        class="information-with-buttons">
+                        <span>${'Choose the next transition' | t}</span>
+                        <div class="toggle-button au-animate fade-inup-outup"
                             repeat.for="transition of availableTransitions">
-                            <span ref="transition.translatedLabel"
-                                value.one-time="transition.label | inCurrentLanguage">
-                                <span if.one-time="transition.translatedLabel.value">
-                                    ${ transition.translatedLabel.value }
-                                </span>
-                                <span if.one-time="!transition.translatedLabel.value">
-                                    <em>${ 'Transition' | t } #${ $index + 1 }</em>
-                                </span>
-                            </span>
-                        </button>
+                            <button click.delegate="advanceSimulation(transition.id)">
+                                <div ref="transition.translatedLabel"
+                                    value.one-time="transition.label | inCurrentLanguage">
+                                    <span if.one-time="transition.translatedLabel.value">${transition.translatedLabel.value}</span>
+                                    <template if.one-time="!transition.translatedLabel.value">
+                                        <span class="generated-transition-name">${'Transition' | t} #${$index + 1}</span>
+                                    </template>
+                                </div>
+                            </button>
+                        </div>
                     </div>
-                    <div if.bind="!fetchingTransitions && availableTransitions.length === 0">
-                        ${ 'No transitions from current place.' | t }
-                        <button type="button"
-                            class="btn btn-warning btn-block"
-                            click.delegate="toggleSimulation()">
-                            ${ 'End simulation' | t }
-                        </button>
-                    </div>
-                </div>
-            </div>
+                    <template else>
+                        <span>${'No transitions from the current place.' | t}</span>
+                    </template>
+                </template>
+                <toggle-button primary-label="End simulation"
+                    click.delegate="toggleSimulation()"></toggle-button>
+            </template>
         </div>
     </div>
 </template>

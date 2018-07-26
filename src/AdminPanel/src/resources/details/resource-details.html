@@ -34,8 +34,6 @@
                 <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
                     <manage-button if.bind="!isFormOpenedForGod"
                         disabled.bind="resource.pendingRequest"
-                        class="orange"
-                        primary-label="Manage"
                         click.delegate="showGodForm()"></manage-button>
                 </template>
             </div>

@@ -5,7 +5,8 @@
         values.bind="resourceKinds"
         value.bind="value"
         multiple.bind="multiSelect"
-        disabled.bind="disabled">
+        disabled.bind="disabled"
+        use-computed-width.bind="useComputedWidth">
         <template replace-part="option-template">
             ${option.label | inCurrentLanguage}
         </template>

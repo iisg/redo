@@ -1,7 +1,37 @@
 @import "../../../common/styles";
 
 excel {
+  display: block;
   table {
+    thead {
+      th:first-child {
+        white-space: nowrap;
+        & > div {
+          display: flex;
+          align-items: center;
+          resource-kind-chooser {
+            flex: 1;
+            margin-left: $default-gap-size / 4;
+            ul {
+              flex-wrap: wrap;
+              color: $default-text-color;
+            }
+          }
+        }
+      }
+    }
+    tfoot {
+      td {
+        text-align: left;
+        label {
+          display: flex;
+          align-items: center;
+          span {
+            margin-left: $default-gap-size / 4;
+          }
+        }
+      }
+    }
     tr {
       vertical-align: middle;
       th, td {
@@ -12,8 +42,12 @@ excel {
         }
       }
     }
-    .legend dd {
-      line-height: 2.2;
-    }
+  }
+  table + div {
+    padding: $default-gap-size / 2;
+    background-color: $grey;
+    color: white;
+    position: sticky;
+    bottom: 0;
   }
 }
