@@ -22,7 +22,7 @@
                     <template if.bind="!editing">
                         <div class="simple-form">
                             <template repeat.for="metadata of resourceKind.metadataList">
-                                <template if.bind="metadata.id != -1">
+                                <template if.bind="metadata.resourceClass">
                                     <span>${metadata.name}</span>
                                     <span class="value">${metadata.label | inCurrentLanguage}
                                         <icon if.bind="metadata.shownInBrief"
