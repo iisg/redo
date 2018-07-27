@@ -40,6 +40,10 @@ abstract class DatabaseMigrationTestCase extends IntegrationTestCase {
         $this->loadDump('0.9.0');
     }
 
+    protected function loadDumpV10() {
+        $this->loadDump('0.10.0');
+    }
+
     protected function migrate(string $toVersion = '') {
         $this->executeCommand(trim('doctrine:migrations:migrate ' . $toVersion));
         $this->resetEntityManager(MetadataRepository::class);
