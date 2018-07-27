@@ -6,6 +6,7 @@ import {Entity} from "common/entity/entity";
 import {automapped, map, mappedWith} from "common/dto/decorators";
 import {MetadataMapper, MinMaxConstraintMapper, ResourceKindConstraintMapper} from "./metadata-mapping";
 import {MinMaxValue} from "./metadata-min-max-value";
+import {MetadataControl} from "./metadata-control";
 
 export interface MultilingualText extends StringStringMap {
 }
@@ -30,7 +31,7 @@ export class MetadataConstraints {
 export function registerMetadataConstraintsValidationRules() {
   ValidationRules
     .ensure('minMaxValue').satisfies(obj => obj === undefined || obj.min === undefined || obj.max === undefined
-  || Number.isInteger(obj.min) && Number.isInteger(obj.max) && obj.max >= obj.min)
+    || Number.isInteger(obj.min) && Number.isInteger(obj.max) && obj.max >= obj.min)
     .withMessageKey('minMaxValueRange')
     .ensure('maxCount').satisfies(obj => obj === undefined || Number.isInteger(obj) && (obj > 0 || obj === -1))
     .withMessageKey('minimalMaxCount')
@@ -46,8 +47,6 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   relatedResourceMetadataFilter: {}
 };
 
-export const filterableControls = ['text', 'textarea', 'integer', 'relationship', 'display-strategy'];
-
 @mappedWith(MetadataMapper)
 export class Metadata extends Entity {
   static NAME = 'Metadata';
@@ -57,7 +56,7 @@ export class Metadata extends Entity {
   @map label: MultilingualText = {};
   @map placeholder: MultilingualText = {};
   @map description: MultilingualText = {};
-  @map control: string = 'text';
+  @map control: MetadataControl = MetadataControl.TEXT;
   @map parentId: number;
   @map baseId: number;
   @map constraints: MetadataConstraints = new MetadataConstraints();

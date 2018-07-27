@@ -16,6 +16,7 @@ import {BindingSignaler} from "aurelia-templating-resources";
 import {MetadataValue} from "../metadata-value";
 import {WorkflowPlace} from "./../../workflows/workflow";
 import {debounce} from "lodash";
+import {MetadataControl} from "../../resources-config/metadata/metadata-control";
 
 @autoinject
 export class ResourceFormGenerated {
@@ -52,7 +53,7 @@ export class ResourceFormGenerated {
       const metadataList = this.skipValidation
         ? this.resourceKind.metadataList
         : this.resourceKind.metadataList.filter(v => v.id != SystemMetadata.PARENT.id);
-      return metadataList.filter(m => m.control != 'display-strategy');
+      return metadataList.filter(m => m.control != MetadataControl.DISPLAY_STRATEGY);
     }
   }
 

@@ -30,10 +30,6 @@ export function zip<V>(keys: Array<number | string>, values: V[]): AnyMap<V> {
   return obj;
 }
 
-export function values<T>(map: AnyMap<T>): T[] {
-  return Object.keys(map).map(k => map[k]);
-}
-
 export function filterByValues<T>(obj: AnyMap<T>, predicate: (values: T) => boolean): AnyMap<T> {
   const result = {};
   for (const key in obj) {

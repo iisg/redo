@@ -13,6 +13,7 @@ import {debounce, flatten} from "lodash";
 import {inArray} from "../../../common/utils/array-utils";
 import {ChangeEvent} from "../../../common/change-event";
 import {SystemMetadata} from "../../../resources-config/metadata/system-metadata";
+import {MetadataControl} from "../../../resources-config/metadata/metadata-control";
 
 @autoinject
 export class Excel implements ComponentAttached {
@@ -32,7 +33,7 @@ export class Excel implements ComponentAttached {
       .addSystemMetadataIds(SystemMetadata.REPRODUCTOR.id)
       .onlyTopLevel()
       .get();
-    this.metadataList = this.metadataList.filter(m => m.control != 'display-strategy');
+    this.metadataList = this.metadataList.filter(m => m.control != MetadataControl.DISPLAY_STRATEGY);
   }
 
   @computedFrom('workflow.places')

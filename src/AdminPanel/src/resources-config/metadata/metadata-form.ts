@@ -1,5 +1,4 @@
 import {computedFrom} from "aurelia-binding";
-import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
@@ -9,6 +8,8 @@ import {BootstrapValidationRenderer} from "common/validation/bootstrap-validatio
 import {Metadata} from "./metadata";
 import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
 import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
+import {values} from "lodash";
+import {MetadataControl} from "./metadata-control";
 
 @autoinject
 export class MetadataForm extends ChangeLossPreventerForm implements ComponentAttached {
@@ -17,20 +18,18 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   @bindable(changeHandler('resetValues')) template: Metadata;
   @bindable edit: Metadata;
   @bindable resourceClass: string;
-  controls: string[];
+  controls: string[] = values(MetadataControl);
   submitting: boolean = false;
   metadata: Metadata = new Metadata();
 
   private controller: ValidationController;
 
   constructor(validationControllerFactory: ValidationControllerFactory,
-              configuration: Configure,
               private entitySerializer: EntitySerializer,
               private changeLossPreventer: ChangeLossPreventer) {
     super();
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
-    this.controls = configuration.get('supported_controls');
   }
 
   @computedFrom('metadata.id')
