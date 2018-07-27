@@ -4,7 +4,7 @@ import {NavigationInstruction, Router} from "aurelia-router";
 import {RouteFilter} from "../../routes/route-filter";
 import {AbstractRoute, NavRole} from "../../routes/routing-builder";
 import {Configure} from "aurelia-configuration";
-import {values} from "../../utils/object-utils";
+import {values} from "lodash";
 import {ContextResourceClass, ResourceClassChangeEvent} from "../../../resources/context/context-resource-class";
 
 @autoinject

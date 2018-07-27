@@ -1,10 +1,11 @@
 import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {Resource} from "../resource";
-import {Metadata, filterableControls} from "../../resources-config/metadata/metadata";
+import {Metadata} from "../../resources-config/metadata/metadata";
 import {oneTime, twoWay} from "../../common/components/binding-mode";
 import {ResourceSort} from "../resource-sort";
 import {inArray} from "../../common/utils/array-utils";
+import {filterableControls} from "../../resources-config/metadata/metadata-control";
 
 @autoinject
 export class ResourcesListTable {

@@ -5,7 +5,6 @@ use Repeka\Application\Authentication\UserDataMapping;
 use Repeka\Application\Resources\FrontendLocaleProvider;
 use Repeka\Application\Upload\UploadSizeHelper;
 use Repeka\Application\Validation\ContainerAwareMetadataConstraintManager;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\MetadataImport\Mapping\Mapping;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -54,7 +53,6 @@ class ConfigController extends ApiController {
             $parameters,
             [
                 'control_constraints' => $this->metadataConstraintManager->getRequiredConstraintNamesMap(),
-                'supported_controls' => array_values(MetadataControl::toArray()),
                 'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
                 'user_mapped_metadata_ids' => $userMappedMetadataIds ?? [],
                 'max_upload_size' => [
