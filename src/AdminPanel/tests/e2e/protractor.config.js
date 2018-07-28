@@ -1,17 +1,19 @@
 exports.config = {
   framework: 'jasmine',
-  // seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: ['LoginTests.js', 'MetadataTypeTests.js', 'ResourceTypeTests.js', 'ResourceTests.js', 'TransitionTests.js'],
   getPageTimeout: 120000,
   allScriptsTimeout: 120000,
-  multiCapabilities: [
-    {
-      'browserName': 'chrome'
+  capabilities: {
+    'browserName': 'chrome',
+    chromeOptions: {
+      args: [ "--headless", "--disable-gpu", "--window-size=800x600" ]
     }
-  ],
-
-  onPrepare: function () {
-    browser.ignoreSynchronization = true;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
   },
-};
+  onPrepare: function(){
+      browser.ignoreSynchronization = true;
+      getPageTimeout: 120000;
+      allScriptsTimeout: 120000;
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
+
+   },
+}
