@@ -21,6 +21,7 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
     public function getFunctions() {
         return [
             new \Twig_Function('r', [$this, 'fetchResources']),
+            new \Twig_Function('resource', [$this, 'fetchResources']),
             new \Twig_Function('m', [$this, 'fetchMetadataIdByName']),
         ];
     }
@@ -28,8 +29,11 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
     public function getFilters() {
         return [
             new \Twig_Filter('m', [$this, 'getMetadataValues']),
+            new \Twig_Filter('metadata', [$this, 'getMetadataValues']),
+            new \Twig_Filter('metadata*', [$this, 'getMetadataValuesDynamic']),
             new \Twig_Filter('m*', [$this, 'getMetadataValuesDynamic']),
             new \Twig_Filter('r', [$this, 'fetchResources']),
+            new \Twig_Filter('resource', [$this, 'fetchResources']),
             new \Twig_Filter('sum', [$this, 'sumIterable']),
         ];
     }

@@ -62,6 +62,11 @@ class Configuration implements ConfigurationInterface {
                     ->variableNode('operators')->validate()->castToArray()->end()->end()
                 ->end()->end()->end()
                 ->arrayNode('webpack_hashes')->normalizeKeys(false)->defaultValue([])->useAttributeAsKey('name')->prototype('scalar')->end()->end()
+                ->arrayNode('expose_endpoints')->normalizeKeys(false)->defaultValue([])->arrayPrototype()->children()
+                    ->scalarNode('metadata')->isRequired()->end()
+                    ->integerNode('resourceId')->defaultValue(null)->end()
+                    ->arrayNode('headers')->normalizeKeys(false)->defaultValue([])->prototype('scalar')->end()->end()
+                ->end()->end()->end()
             ->end();
         // @formatter:on
         // @codingStandardsIgnoreEnd

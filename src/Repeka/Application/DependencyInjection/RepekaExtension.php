@@ -31,6 +31,7 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('user_data_mapping', $mergedConfig['user_data_mapping']);
         $container->setParameter('repeka.version', $mergedConfig['version']);
         $container->setParameter('repeka.webpack_hashes', $mergedConfig['webpack_hashes']);
+        $container->setParameter('repeka.exposed_endpoints', $mergedConfig['expose_endpoints']);
         $this->retrieveResourceClassesParameters($mergedConfig, $container);
     }
 

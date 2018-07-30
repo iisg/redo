@@ -7,10 +7,14 @@ api:
   type: annotation
   prefix: /api
 
+exposed_endpoints:
+  resource: 'Repeka\Application\Service\ResourcesEndpointsExposer:loadRoutes'
+  type: service
+
+logout:
+  path: /logout
+
 ocr:
   resource: "@RepekaOcrPluginBundle/Controller"
   type: annotation
   prefix: /api/plugins/ocr
-
-logout:
-  path: /logout

@@ -33,7 +33,7 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
                 $template = 'ID {{ r.id }}';
             }
             $template = $this->compile($template);
-            return $template->render(['r' => $resourceEntity]);
+            return $template->render(['r' => $resourceEntity, 'resource' => $resourceEntity]);
         } catch (\Throwable $e) {
             return $this->throwableToHumanMessage($e);
         }

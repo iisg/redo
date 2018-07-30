@@ -91,6 +91,11 @@ services:
     tags:
       - { name: doctrine.event_listener, event: postLoad }
 
+  Repeka\Application\Service\ResourcesEndpointsExposer:
+    public: true
+    arguments:
+      $exposedEndpoints: '%repeka.exposed_endpoints%'
+
   Repeka\Application\ParamConverter\ResourceContentsParamConverter:
     tags: [{ name: request.param_converter, converter: Repeka\Application\ParamConverter\ResourceContentsParamConverter }]
   Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor:
