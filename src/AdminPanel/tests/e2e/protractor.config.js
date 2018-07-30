@@ -9,6 +9,7 @@ exports.config = {
 		args: [ "--headless", "--disable-gpu", "--window-size=800x600", '--no-sandbox','-disable-popup-blocking', '-disable-dev-shm-usage' ]
     }
   },
+  chromedriver: "2.24",
   onPrepare: function(){
       browser.ignoreSynchronization = true;
       getPageTimeout: 120000;
