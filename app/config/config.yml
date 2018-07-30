@@ -70,7 +70,7 @@ framework:
   assets:
     packages:
       webpack:
-        version_strategy: Repeka\Website\Twig\WebpackAssetVersionStrategy
+        version_strategy: Repeka\Application\Twig\WebpackAssetVersionStrategy
   csrf_protection: ~
   default_locale: "%locale%"
   form:

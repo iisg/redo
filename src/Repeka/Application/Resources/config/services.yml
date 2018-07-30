@@ -96,6 +96,17 @@ services:
     arguments:
       $exposedEndpoints: '%repeka.exposed_endpoints%'
 
+  Repeka\Application\Twig\ResourcesTwigLoader:
+    arguments:
+      $templatesResourceClass: '%repeka.templates_resource_class%'
+    tags:
+      - {name: twig.loader, priority: 100}
+
+  Repeka\Application\Twig\WebpackAssetVersionStrategy:
+    arguments:
+      - "%use_webpack_dev_server%"
+      - "%repeka.webpack_hashes%"
+
   Repeka\Application\ParamConverter\ResourceContentsParamConverter:
     tags: [{ name: request.param_converter, converter: Repeka\Application\ParamConverter\ResourceContentsParamConverter }]
   Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor:
@@ -110,7 +121,9 @@ services:
     - '%repeka.upload.path%'
     - '%repeka.upload.temp_folder%'
 
-  Repeka\Application\Validation\ContainerAwareMetadataConstraintManager: ~
+  Repeka\Application\Validation\ContainerAwareMetadataConstraintManager:
+    - !tagged repeka.metadata_constraint
+
   Repeka\Domain\Validation\Rules\ResourceClassExistsRule:
     $resourceClasses: '%repeka.resource_classes%'
 

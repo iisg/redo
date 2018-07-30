@@ -33,6 +33,7 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('repeka.webpack_hashes', $mergedConfig['webpack_hashes']);
         $container->setParameter('repeka.exposed_endpoints', $mergedConfig['expose_endpoints']);
         $this->retrieveResourceClassesParameters($mergedConfig, $container);
+        $this->retrieveTemplatingParameters($mergedConfig, $container);
     }
 
     private function loadYmlConfigFile(string $name, ContainerBuilder $container) {
@@ -69,5 +70,17 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('repeka.resource_classes', $resourceClassesNames);
         $container->setParameter('repeka.resource_classes_icons', $resourceClassesIcons);
         $container->setParameter('repeka.resource_classes_config', $resourceClassesConfig);
+    }
+
+    private function retrieveTemplatingParameters(array $mergedConfig, ContainerBuilder $container) {
+        $templating = $mergedConfig['templating'] ?? [];
+        $container->setParameter('repeka.templates_resource_class', $templating['templates_resource_class'] ?? null);
+        $templates = ['login_form' => 'login-form.twig', 'homepage' => 'home.twig'];
+        foreach ($templates as $templateName => $defaultTemplateView) {
+            $container->setParameter(
+                'repeka.templates.' . $templateName,
+                ($templating['templates'] ?? [])[$templateName] ?? $defaultTemplateView
+            );
+        }
     }
 }

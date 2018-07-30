@@ -12,7 +12,7 @@ services:
   Repeka\Domain\Repository\ResourceWorkflowRepository: '@Repeka\Application\Repository\ResourceWorkflowDoctrineRepository'
   Repeka\Domain\Repository\UserRepository: '@Repeka\Application\Repository\UserDoctrineRepository'
   Repeka\Domain\Service\RegexNormalizer: '@Repeka\Application\Service\PhpRegexNormalizer'
-  Repeka\Domain\Service\ResourceDisplayStrategyEvaluator: '@Repeka\Application\Service\DisplayStrategies\TwigResourceDisplayStrategyEvaluator'
+  Repeka\Domain\Service\ResourceDisplayStrategyEvaluator: '@Repeka\Application\Twig\TwigResourceDisplayStrategyEvaluator'
   Repeka\Domain\Upload\ResourceFileHelper: '@Repeka\Application\Upload\BasicResourceFileHelper'
   Repeka\Domain\Validation\MetadataConstraintManager: '@Repeka\Application\Validation\ContainerAwareMetadataConstraintManager'
 

@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
-class ResourceKindListQuery extends AbstractCommand {
+class ResourceKindListQuery extends AbstractListQuery {
     use RequireOperatorRole;
 
     /** @var int[] */
@@ -12,9 +12,7 @@ class ResourceKindListQuery extends AbstractCommand {
     /** @var string[] */
     private $resourceClasses;
     private $metadataId;
-
-    private function __construct() {
-    }
+    private $name;
 
     public static function builder(): ResourceKindListQueryBuilder {
         return new ResourceKindListQueryBuilder();
@@ -23,12 +21,16 @@ class ResourceKindListQuery extends AbstractCommand {
     public static function withParams(
         array $ids,
         array $resourceClasses,
-        int $metadataId
+        int $metadataId,
+        array $name,
+        int $page,
+        int $resultsPerPage
     ): ResourceKindListQuery {
-        $query = new self();
+        $query = new self($page, $resultsPerPage);
         $query->ids = $ids;
         $query->resourceClasses = $resourceClasses;
         $query->metadataId = $metadataId;
+        $query->name = $name;
         return $query;
     }
 
@@ -44,5 +46,9 @@ class ResourceKindListQuery extends AbstractCommand {
 
     public function getMetadataId(): int {
         return $this->metadataId;
+    }
+
+    public function getName(): array {
+        return $this->name;
     }
 }

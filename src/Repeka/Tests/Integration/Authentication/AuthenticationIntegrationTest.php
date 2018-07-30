@@ -14,9 +14,8 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
 
     public function testAuthSuccess() {
         $client = $this->authenticate(AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD);
+        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
         /** @var UserEntity $user */
-        $content = $client->getResponse()->getContent();
-        $this->assertContains('Wyloguj', $content);
         $user = $this->getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());
@@ -28,7 +27,6 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $user = $this->getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());
-        $this->assertContains('Wyloguj', $client->getResponse()->getContent());
     }
 
     public function testAuditAuthSuccess() {
@@ -57,7 +55,7 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $client = $this->authenticate(AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD . '1');
         $user = $this->getAuthenticatedUser($client);
         $this->assertNull($user);
-        $this->assertContains('error="true"', $client->getResponse()->getContent());
+        $this->assertContains('nieudane', $client->getResponse()->getContent());
     }
 
     public function testAuditAuthFailure() {
@@ -75,11 +73,10 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
     public static function authenticate(string $username, string $password): Client {
         $client = self::createClient();
         $crawler = $client->request('GET', '/login');
-        $c = $crawler->filterXPath('descendant-or-self::login-page');
-        // $form = $buttonCrawlerNode->form();
-        $data = ['_username' => $username, '_password' => $password, '_csrf_token' => $c->attr('csrf-token')];
-        // $client->submit($form, $data);
-        $client->request('POST', '/login', $data);
+        $buttonCrawlerNode = $crawler->selectButton('Zaloguj');
+        $form = $buttonCrawlerNode->form();
+        $data = ['_username' => $username, '_password' => $password];
+        $client->submit($form, $data);
         if ($client->getResponse()->isRedirect()) {
             $client->followRedirect();
         } else {

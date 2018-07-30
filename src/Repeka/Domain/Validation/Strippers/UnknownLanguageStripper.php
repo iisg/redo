@@ -5,17 +5,18 @@ use Repeka\Domain\Repository\LanguageRepository;
 
 class UnknownLanguageStripper {
 
-    private $availableLanguages;
+    /** @var LanguageRepository */
+    private $languageRepository;
 
     public function __construct(LanguageRepository $languageRepository) {
-        $this->availableLanguages = $languageRepository->getAvailableLanguageCodes();
+        $this->languageRepository = $languageRepository;
     }
 
     public function removeUnknownLanguages(array $content): array {
         return array_filter(
             $content,
             function ($key) {
-                return in_array($key, $this->availableLanguages);
+                return in_array($key, $this->languageRepository->getAvailableLanguageCodes());
             },
             ARRAY_FILTER_USE_KEY
         );

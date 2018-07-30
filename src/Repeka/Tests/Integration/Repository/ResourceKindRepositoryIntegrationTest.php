@@ -79,4 +79,10 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
             }
         }
     }
+
+    public function testFindForbiddenBookByName() {
+        $query = ResourceKindListQuery::builder()->filterByResourceClass('books')->filterByName(['PL' => 'Zakazana książka'])->build();
+        $resourceKindList = $this->resourceKindRepository->findByQuery($query);
+        $this->assertCount(1, $resourceKindList);
+    }
 }

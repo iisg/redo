@@ -9,4 +9,12 @@ class PrintableArray extends ImmutableIteratorAggregate {
     public function flatten(): PrintableArray {
         return new self(explode(', ', (string)$this));
     }
+
+    public function offsetExists($offset) {
+        return true;
+    }
+
+    public function offsetGet($offset) {
+        return $this->contents[$offset] ?? '';
+    }
 }

@@ -1,27 +1,35 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-class ResourceKindListQueryBuilder {
+use Repeka\Domain\UseCase\Audit\AbstractListQueryBuilder;
+
+class ResourceKindListQueryBuilder extends AbstractListQueryBuilder {
     private $resourceClasses = [];
     private $ids = [];
     private $metadataId = 0;
+    private $name = [];
 
-    public function filterByResourceClass(string $resourceClass): ResourceKindListQueryBuilder {
+    public function filterByResourceClass(string $resourceClass): self {
         return $this->filterByResourceClasses([$resourceClass]);
     }
 
-    public function filterByResourceClasses(array $resourceClasses): ResourceKindListQueryBuilder {
+    public function filterByResourceClasses(array $resourceClasses): self {
         $this->resourceClasses = array_values(array_unique(array_merge($this->resourceClasses, $resourceClasses)));
         return $this;
     }
 
-    public function filterByIds(array $ids): ResourceKindListQueryBuilder {
+    public function filterByIds(array $ids): self {
         $this->ids = $ids;
         return $this;
     }
 
-    public function filterByMetadataId(int $metadataId): ResourceKindListQueryBuilder {
+    public function filterByMetadataId(int $metadataId): self {
         $this->metadataId = $metadataId;
+        return $this;
+    }
+
+    public function filterByName(array $name): self {
+        $this->name = $name;
         return $this;
     }
 
@@ -29,7 +37,10 @@ class ResourceKindListQueryBuilder {
         return ResourceKindListQuery::withParams(
             $this->ids,
             $this->resourceClasses,
-            $this->metadataId
+            $this->metadataId,
+            $this->name,
+            $this->page,
+            $this->resultsPerPage
         );
     }
 }

@@ -33,6 +33,15 @@ repeka:
     - name: users
       admins:
         - Username: admin
+    - name: cms
+  templating:
+    templates_resource_class: cms
+  expose_endpoints:
+    /about:
+      metadata: wyrenderowana_tresc_strony
+      resourceId: 18
+    /resources-title/{resourceId}:
+      metadata: tytul
 
 web_profiler:
   intercept_redirects: false
@@ -60,3 +69,6 @@ services:
       - '@test.client.cookiejar'
   Repeka\Application\Authentication\PKSoapService:
     class: Repeka\Tests\Integration\Authentication\TestPKSoapService
+
+twig:
+  cache: false

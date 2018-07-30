@@ -19,6 +19,7 @@ class ResourceKindsFixture extends RepekaFixture {
     const REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY = 'resource-kind-university';
     const REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE = 'resource-kind-publishing-house';
     const REFERENCE_RESOURCE_KIND_USER_GROUP = 'resource-kind-user-group';
+    const REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE = 'resource-kind-cms-static-page';
 
     /**
      * @inheritdoc
@@ -27,6 +28,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $this->addBooksResourceKinds();
         $this->addDictionariesResourceKinds();
         $this->addUserGroupResourceKind();
+        $this->addCmsResourceKinds();
     }
 
     private function addBooksResourceKinds() {
@@ -156,5 +158,24 @@ class ResourceKindsFixture extends RepekaFixture {
 
     private function resourceLabelMetadata(string $displayStrategy): Metadata {
         return SystemMetadata::RESOURCE_LABEL()->toMetadata()->withOverrides(['constraints' => ['displayStrategy' => $displayStrategy]]);
+    }
+
+    private function addCmsResourceKinds() {
+        $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_TITLE)->getId();
+        $this->handleCommand(
+            new ResourceKindCreateCommand(
+                [
+                    'PL' => 'Strona statyczna',
+                    'EN' => 'Static page',
+                ],
+                [
+                    $this->resourceLabelMetadata('{{r|m' . $titleMetadataId . '}}'),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_TITLE),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_CONTENT),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_RENDERED_CONTENT),
+                ]
+            ),
+            self::REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE
+        );
     }
 }

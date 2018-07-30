@@ -24,8 +24,15 @@ class ResourceKindListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testFilterByMetadataId() {
         $query = ResourceKindListQuery::builder()->filterByMetadataId(38)->build();
         $factory = new ResourceKindListQuerySqlFactory($query);
-        $this->assertArrayHasKey('searchValue', $factory->getParams());
-        $this->assertEquals('[{"id":38}]', $factory->getParams()['searchValue']);
+        $this->assertArrayHasKey('metadataIdFilters', $factory->getParams());
+        $this->assertEquals('[{"id":38}]', $factory->getParams()['metadataIdFilters']);
+    }
+
+    public function testFilterByName() {
+        $query = ResourceKindListQuery::builder()->filterByName(['PL' => 'Unicorn'])->build();
+        $factory = new ResourceKindListQuerySqlFactory($query);
+        $this->assertArrayHasKey('nameFilters', $factory->getParams());
+        $this->assertEquals('{"PL":"Unicorn"}', $factory->getParams()['nameFilters']);
     }
 
     public function testFilterByResourceClasses() {

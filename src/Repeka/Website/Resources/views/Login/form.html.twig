@@ -1,9 +1,0 @@
-{% extends "RepekaWebsiteBundle::layout.html.twig" %}
-
-{% set page_title = 'Logowanie' %}
-
-{% block content %}
-    <login-page csrf-token="{{ csrf_token('authenticate') }}"
-        last-username="{{ last_username }}"
-        :error="{{ error ? 'true' : 'false' }}"></login-page>
-{% endblock %}

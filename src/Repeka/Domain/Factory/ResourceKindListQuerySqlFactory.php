@@ -24,6 +24,7 @@ class ResourceKindListQuerySqlFactory {
         $this->filterByIds();
         $this->filterByResourceClasses();
         $this->filterByMetadataId();
+        $this->filterByName();
         $this->addOrderBy();
     }
 
@@ -64,12 +65,26 @@ class ResourceKindListQuerySqlFactory {
 
     private function filterByMetadataId(): void {
         if ($this->query->getMetadataId()) {
-            $this->wheres[] = 'jsonb_contains(rk.metadata_list, :searchValue) = TRUE';
-            $this->params['searchValue'] = json_encode([['id' => $this->query->getMetadataId()]]);
+            $this->wheres[] = 'jsonb_contains(rk.metadata_list, :metadataIdFilters) = TRUE';
+            $this->params['metadataIdFilters'] = json_encode([['id' => $this->query->getMetadataId()]]);
+        }
+    }
+
+    private function filterByName(): void {
+        if ($this->query->getName()) {
+            $this->wheres[] = 'jsonb_contains(rk.label, :nameFilters) = TRUE';
+            $this->params['nameFilters'] = json_encode($this->query->getName());
         }
     }
 
     private function addOrderBy(): void {
         $this->orderBy[] = "rk.id ASC";
+    }
+
+    protected function paginate(): void {
+        if ($this->query->paginate()) {
+            $offset = ($this->query->getPage() - 1) * $this->query->getResultsPerPage();
+            $this->limit = "LIMIT {$this->query->getResultsPerPage()} OFFSET $offset";
+        }
     }
 }

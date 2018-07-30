@@ -10,7 +10,6 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 
@@ -34,8 +33,7 @@ trait FixtureHelpers {
     }
 
     protected function findMetadataByName(string $name, string $resourceClass = 'books'): Metadata {
-        return $this->container->get(MetadataRepository::class)
-            ->findByQuery(MetadataListQuery::builder()->filterByResourceClass($resourceClass)->filterByName($name)->build())[0];
+        return $this->container->get(MetadataRepository::class)->findByName($name, $resourceClass);
     }
 
     protected function getResourceRepository(): ResourceRepository {

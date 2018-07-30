@@ -14,10 +14,10 @@ if (!Vue.config.external.baseUrl) {
   Vue.config.external.baseUrl = '';
 }
 Vue.http.options.root = Vue.config.external.baseUrl + '/api';
+Vue.prototype.$user = window.FRONTEND_CONFIG.user;
 
 const components = {
-  LoginPage: () => import("./login/login-page"),
-  RedoLogo: () => import("./common/redo-logo"),
+  RedoLogo: () => import("./redo/redo-logo"),
   RepekaVersion: () => import("./common/repeka-version")
 };
 
@@ -26,6 +26,7 @@ $(document).ready(() => {
     Vue.prototype.$user = Vue.config.external.user;
     new Vue({
       el: '.vue-container',
+      delimiters: ['${', '}'],
       // i18n,
       components,
     });

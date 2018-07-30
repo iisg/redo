@@ -76,7 +76,7 @@ users:
   Add metadata kind: Add metadata kind
   No metadata kinds.: No metadata kinds.
   No resource kinds.: No user kinds.
-  No resources.: No user.
+  No resources.: No users.
   Resource: User
   Workflow: Workflow
   No workflows.: No workflows.
@@ -86,6 +86,35 @@ users:
   New workflow: New workflow
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit user before transition
-  Added resource will be in following place: Added users will be in following place
+  Added resource will be in following place: Added user will be in following place
   To states: To states
   users/details: Users
+cms:
+  resources: CMS
+  settings: CMS settings
+  resource-kinds: Template kinds
+  resources/details: Templates
+  metadata: Metadata kinds
+  metadata/details: Metadata kinds
+  workflows: Workflows
+  workflows/new: Workflows
+  workflows/details: Workflows
+  Metadata Kinds: Metadata Kinds
+  Add new resource kind: Add new template kind
+  Add new metadata kind: Add new metadata kind
+  Add new resource: Add new template
+  Add metadata kind: Add metadata kind
+  No metadata kinds.: No metadata kinds.
+  No resource kinds.: No template kinds.
+  No resources.: No templates.
+  Resource: Template
+  Workflow: Workflow
+  No workflows.: No workflows.
+  Resource's state prevents modification of these values.: Template's state prevents modification of these values.
+  Metadata value required: Metadata value required
+  This metadata can be used to specify assignees: This metadata can be used to specify assignees
+  New workflow: New workflow
+  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
+  Edit resource before transition: Edit template before transition
+  Added resource will be in following place: Added template will be in following place
+  To states: To states

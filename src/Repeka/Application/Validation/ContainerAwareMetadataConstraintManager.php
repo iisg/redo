@@ -6,15 +6,18 @@ use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
 
 class ContainerAwareMetadataConstraintManager implements MetadataConstraintManager {
+    /** @var iterable|AbstractMetadataConstraint[] */
+    private $constraints;
+
     /** @var AbstractMetadataConstraint[] */
     private $rules = [];
 
     /** @var string[] Maps controls names to arrays of constraint names */
     private $applicableForControl = [];
 
-    public function __construct() {
-        $supportedControls = MetadataControl::toArray();
-        $this->applicableForControl = $this->makeArray($supportedControls, []);
+    public function __construct(iterable $constraints) {
+        $this->constraints = $constraints;
+        $this->registerAll();
     }
 
     /**
@@ -45,18 +48,22 @@ class ContainerAwareMetadataConstraintManager implements MetadataConstraintManag
         return $this->applicableForControl;
     }
 
-    public function register(AbstractMetadataConstraint $rule) {
-        $constraintName = $rule->getConstraintName();
-        if (array_key_exists($constraintName, $this->rules)) {
-            throw new \InvalidArgumentException("Rule for constraint '$constraintName' already registered");
-        }
-        $this->rules[$constraintName] = $rule;
-        $supportedControls = $rule->getSupportedControls();
-        foreach ($supportedControls as $control) {
-            if (!array_key_exists($control, $this->applicableForControl)) {
-                throw new \InvalidArgumentException("Control '$control' not supported");
+    private function registerAll() {
+        $supportedControls = MetadataControl::toArray();
+        $this->applicableForControl = $this->makeArray($supportedControls, []);
+        foreach ($this->constraints as $rule) {
+            $constraintName = $rule->getConstraintName();
+            if (array_key_exists($constraintName, $this->rules)) {
+                throw new \InvalidArgumentException("Rule for constraint '$constraintName' already registered");
             }
-            $this->applicableForControl[$control][] = $constraintName;
+            $this->rules[$constraintName] = $rule;
+            $supportedControls = $rule->getSupportedControls();
+            foreach ($supportedControls as $control) {
+                if (!array_key_exists($control, $this->applicableForControl)) {
+                    throw new \InvalidArgumentException("Control '$control' not supported");
+                }
+                $this->applicableForControl[$control][] = $constraintName;
+            }
         }
     }
 }

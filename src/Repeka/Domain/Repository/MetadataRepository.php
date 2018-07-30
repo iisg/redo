@@ -20,7 +20,7 @@ interface MetadataRepository {
     /**
      * @throws EntityNotFoundException if the entity could not be found
      */
-    public function findByName(string $name): Metadata;
+    public function findByName(string $name, ?string $resourceClass = null): Metadata;
 
     public function exists(int $id): bool;
 

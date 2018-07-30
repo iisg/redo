@@ -19,7 +19,6 @@ class AppKernel extends Kernel {
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
             new Repeka\Application\RepekaBundle(),
-            new Repeka\Website\RepekaWebsiteBundle(),
             new Repeka\Plugins\Ocr\RepekaOcrPluginBundle(),
             new Repeka\Plugins\MetadataValueSetter\RepekaMetadataValueSetterPluginBundle(),
         ];
@@ -82,7 +81,10 @@ class AppKernel extends Kernel {
     protected function build(\Symfony\Component\DependencyInjection\ContainerBuilder $container) {
         parent::build($container);
         if ($this->getEnvironment() === 'test') {
-            $container->addCompilerPass(new Repeka\Tests\TestContainerPass(), \Symfony\Component\DependencyInjection\Compiler\PassConfig::TYPE_OPTIMIZE);
+            $container->addCompilerPass(
+                new Repeka\Tests\TestContainerPass(),
+                \Symfony\Component\DependencyInjection\Compiler\PassConfig::TYPE_OPTIMIZE
+            );
         }
     }
 }

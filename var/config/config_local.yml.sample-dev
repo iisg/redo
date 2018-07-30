@@ -22,19 +22,26 @@ repeka:
     - name: users
       icon: user
       admins:
-        - Imię: Józef
-      operators:
+        - Username: admin
+    - name: cms
+      icon: html
+      admins:
         - Username: admin
   elasticsearch:
     host: localhost
   xml_import:
     koha: 'http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode='
+  templating:
+    templates_resource_class: cms
+    templates:
+      homepage: redo/home.twig
+      login_form: redo/login-form.twig
   expose_endpoints:
-    /resource-view/{resource}:
-      metadata: -5
-    /about-page:
-      resourceId: 12
-      metadata: Opis
+    /about:
+      resourceId: 18
+      metadata: wyrenderowana_tresc_strony
+    /resources/{resourceId}:
+      metadata: tresc_strony
 m6_statsd:
   servers:
     default:

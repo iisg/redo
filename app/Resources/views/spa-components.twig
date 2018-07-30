@@ -1,0 +1,16 @@
+<script>
+  window.FRONTEND_CONFIG = {
+    locale: '{{ app.request ? app.request.locale : 'en' }}',
+    applicationName: '{{ applicationName | escape('js') }}',
+    baseUrl: '{{ path('home')[:-1] }}'
+      {% if app.user %}
+    ,
+    user: {
+      id: {{ app.user.id }},
+      username: '{{ app.user.username }}',
+      isAdmin: {{ is_granted('ROLE_OPERATOR_SOME_CLASS') ? 'true' : 'false' }}
+    }
+      {% endif %}
+  };
+</script>
+<script src="{{ asset('assets/dist/commons.js', 'webpack') }}"></script>

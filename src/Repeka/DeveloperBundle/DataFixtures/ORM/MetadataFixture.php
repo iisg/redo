@@ -3,6 +3,7 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
@@ -31,6 +32,10 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
 
+    const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
+    const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
+    const REFERENCE_METADATA_CMS_RENDERED_CONTENT = 'metadata-cms-rendered-content';
+
     const REFERENCE_METADATA_DEPARTMENTS_NAME = 'metadata-departments-name';
     const REFERENCE_METADATA_DEPARTMENTS_ABBREV = 'metadata-departments-abbrev';
     const REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY = 'metadata-departments-university';
@@ -43,6 +48,7 @@ class MetadataFixture extends RepekaFixture {
     public function load(ObjectManager $manager) {
         $this->addBooksMetadata();
         $this->addDepartmentsMetadata();
+        $this->addCmsMetadata();
     }
 
     private function addBooksMetadata(): void {
@@ -393,6 +399,83 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY
+        );
+    }
+
+    private function addCmsMetadata() {
+        $metadata = [];
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'CMS Template',
+                    'label' => [
+                        'PL' => 'Szablon CMS',
+                        'EN' => 'CMS Template',
+                    ],
+                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'cms',
+                ]
+            )
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Tytuł strony',
+                    'label' => [
+                        'PL' => 'Tytuł strony',
+                        'EN' => 'Page title',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'shownInBrief' => true,
+                    'resourceClass' => 'cms',
+                    'constraints' => $this->textConstraints(1),
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_TITLE
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Treść strony',
+                    'label' => [
+                        'PL' => 'Treść strony',
+                        'EN' => 'Page content',
+                    ],
+                    'control' => MetadataControl::TEXTAREA,
+                    'shownInBrief' => false,
+                    'resourceClass' => 'cms',
+                    'constraints' => $this->textConstraints(1),
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_CONTENT
+        );
+        $staticPageContent = trim(
+            <<<TEMPLATE
+{% extends "redo/layout-with-navbar.twig" %}
+
+{% set page_title = r | mTytul_Strony | first %}
+
+{% block content %}
+    {{ r | mTresc_Strony | raw }}
+ {% endblock %}
+TEMPLATE
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Wyrenderowana treść strony',
+                    'label' => [
+                        'PL' => 'Wyrenderowana treść strony',
+                        'EN' => 'Rendered page content',
+                    ],
+                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'cms',
+                    'constraints' => ['displayStrategy' => $staticPageContent],
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_RENDERED_CONTENT
         );
     }
 }

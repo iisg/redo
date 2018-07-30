@@ -96,8 +96,8 @@ class MetadataIntegrationTest extends IntegrationTestCase {
 
     public function testCreatingSubmetadataKind() {
         $this->createLanguage('TEST', 'TE', 'Test language');
-        $client = self::createAdminClient();
         $parent = $this->createMetadata('Metadata1', ['TEST' => 'First'], [], [], 'textarea');
+        $client = self::createAdminClient();
         $metadataArray = [
             'control' => 'textarea',
             'name' => 'Test metadata',
@@ -247,11 +247,11 @@ class MetadataIntegrationTest extends IntegrationTestCase {
     }
 
     public function testDeletingMetadataThatIsInUse() {
-        $client = self::createAdminClient();
         $this->createLanguage('EN', 'EN', 'Test English');
         $this->createLanguage('PL', 'PL', 'Test Polish');
         $metadata = $this->createMetadata('test', ['PL' => 'test', 'EN' => 'test placeholder']);
         $this->createResourceKind(['PL' => 'testRK', 'EN' => 'testRK'], [$metadata]);
+        $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::ENDPOINT . '/' . $metadata->getId());
         $this->assertStatusCode(400, $client->getResponse());
     }
