@@ -17,6 +17,10 @@ repeka:
       icon: user
       admins:
         - Username: admin
+    - name: cms
+      icon: html
+      admins:
+        - Username: admin
   pk_auth:
     wsdl: http://soap.biblos.pk.edu.pl/soap.php?WSDL
     options:
@@ -25,9 +29,9 @@ repeka:
     local_accounts_enabled: true
   xml_import:
     koha: 'http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode='
-  expose_endpoints:
-    /resource-view/{resource}:
-      metadata: -5
-    /about-page:
-      resourceId: 12
-      metadata: Opis
+  templating:
+    templates_resource_class: cms
+    templates:
+      homepage: redo/home.twig
+      login_form: redo/login-form.twig
+  expose_endpoints: ~

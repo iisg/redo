@@ -159,9 +159,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
     }
 
     protected function createLanguage(string $code, string $flag, string $name): Language {
-        $result = $this->handleCommandBypassingFirewall(new LanguageCreateCommand($code, $flag, $name));
-        $this->container->reset();
-        return $result;
+        return $this->handleCommandBypassingFirewall(new LanguageCreateCommand($code, $flag, $name));
     }
 
     protected function createMetadata(

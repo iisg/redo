@@ -10,7 +10,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class RepekaBundle extends Bundle {
     public function build(ContainerBuilder $container) {
-        $container->addCompilerPass(new MetadataConstraintCompilerPass());
         $container->addCompilerPass(new MetadataValueProcessorPass());
         $container->registerForAutoconfiguration(ResourceWorkflowPlugin::class)->addTag('repeka.workflow_plugin');
         $container->registerForAutoconfiguration(CommandEventsListener::class)->addTag('repeka.command_events_listener');

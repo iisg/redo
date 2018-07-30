@@ -1,11 +1,11 @@
-site:
-  resource: "@RepekaWebsiteBundle/Controller"
-  type: annotation
-
 api:
-  resource: "@RepekaBundle/Controller"
+  resource: "@RepekaBundle/Controller/Api"
   type: annotation
   prefix: /api
+
+site:
+  resource: "@RepekaBundle/Controller/Site"
+  type: annotation
 
 exposed_endpoints:
   resource: 'Repeka\Application\Service\ResourcesEndpointsExposer:loadRoutes'

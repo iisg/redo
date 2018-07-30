@@ -7,19 +7,34 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlacePluginConfiguration;
 use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceWorkflowPlugins {
-    private $plugins = [];
+    /** @var iterable */
+    private $plugins;
+    /** @var ResourceWorkflowPlugin[] */
+    private $pluginsArray;
 
     /** @param ResourceWorkflowPlugin[] $plugins */
     public function __construct(iterable $plugins) {
-        foreach ($plugins as $plugin) {
-            $this->plugins[$plugin->getName()] = $plugin;
+        $this->plugins = $plugins;
+    }
+
+    /**
+     * Lazy building of this array is not a premature optimization.
+     * Its main aim is to break CommandBus -> Some listener in plugin -> CommandBus circular dependencies.
+     */
+    private function pluginsArray(): array {
+        if (!$this->pluginsArray) {
+            $this->pluginsArray = [];
+            foreach ($this->plugins as $plugin) {
+                $this->pluginsArray[$plugin->getName()] = $plugin;
+            }
         }
+        return $this->pluginsArray;
     }
 
     /** @return ResourceWorkflowPlugin[] */
     public function getRegisteredPlugins(ResourceWorkflow $workflow): array {
         return array_filter(
-            $this->plugins,
+            $this->pluginsArray(),
             function (ResourceWorkflowPlugin $plugin) use ($workflow) {
                 return $plugin->supports($workflow);
             }
@@ -27,7 +42,7 @@ class ResourceWorkflowPlugins {
     }
 
     public function getPlugin(ResourceWorkflowPlacePluginConfiguration $config): ResourceWorkflowPlugin {
-        return $this->plugins[$config->getPluginName()];
+        return $this->pluginsArray()[$config->getPluginName()];
     }
 
     /** @return ResourceWorkflowPlacePluginConfiguration[] */

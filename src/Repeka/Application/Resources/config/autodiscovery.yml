@@ -37,6 +37,9 @@ services:
   Repeka\Application\Service\:
     resource: '../../Service'
 
+  Repeka\Application\Twig\:
+    resource: '../../Twig'
+
   Repeka\Application\MetadataImport\:
     resource: '../../MetadataImport'
 

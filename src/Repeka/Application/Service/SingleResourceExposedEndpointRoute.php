@@ -1,7 +1,8 @@
 <?php
 namespace Repeka\Application\Service;
 
-use Repeka\Website\Controller\WebsiteResourcesController;
+use Repeka\Application\Controller\Site\ResourcesExposureController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 class SingleResourceExposedEndpointRoute extends Route {
@@ -9,13 +10,18 @@ class SingleResourceExposedEndpointRoute extends Route {
         parent::__construct(
             $path,
             [
-                '_controller' => WebsiteResourcesController::class . ':resourceViewAction',
+                '_controller' => ResourcesExposureController::class . ':exposeResourceAction',
                 'metadataNameOrId' => $metadataNameOrId,
                 'headers' => $headers,
-            ]
+            ],
+            [],
+            [],
+            '',
+            [],
+            [Request::METHOD_GET]
         );
         if ($resourceId) {
-            $this->setDefault('resource', $resourceId);
+            $this->setDefault('resourceId', $resourceId);
         }
     }
 }

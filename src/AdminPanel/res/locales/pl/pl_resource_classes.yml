@@ -90,3 +90,33 @@ users:
   Added resource will be in following place: Dodany użytkownika znajdzie się w stanie
   To states: Do stanu
   users/details: Użytkownicy
+cms:
+  resources: CMS
+  resources/details: CMS
+  settings: Ustawienia CMS
+  resource-kinds: Rodzaje szablonów
+  resource-kinds/details: Rodzaje szablonów
+  metadata: Rodzaje metadanych
+  metadata/details: Rodzaje metadanych
+  workflows: Procesy
+  workflows/new: Procesy
+  workflows/details: Procesy
+  Metadata Kinds: Rodzaje metadanych
+  Add new resource kind: Dodaj nowy rodzaj szablonów
+  Add new metadata kind: Dodaj nowy rodzaj metadanych
+  Add new resource: Dodaj nowy szablon
+  Add metadata kind: Dodaj rodzaj metadanej
+  No metadata kinds.: Brak rodzajów metadanych.
+  No resource kinds.: Brak rodzajów szablonów.
+  No resources.: Brak szablonów.
+  Workflow: Proces
+  No workflows.: Brak procesów
+  Resource's state prevents modification of these values.: Stan szablonu uniemożliwia modyfikację tych wartości.
+  Metadata value required: Wartość metadanej jest wymagana
+  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
+  New workflow: Nowy proces
+  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
+  Edit resource before transition: Edycja szablonu przed przejściem
+  Added resource will be in following place: Dodany szablon znajdzie się w stanie
+  To states: Do stanu
+  List of required metadata: Lista metadanych wymaganych do przejścia

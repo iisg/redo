@@ -6,25 +6,25 @@ use Respect\Validation\Rules\AbstractRule;
 use Respect\Validation\Validator;
 
 class NotBlankInAllLanguagesRule extends AbstractRule {
-    private $requiredLanguagesChecks;
-
-    private $requiredLanguagesCount;
+    /** @var LanguageRepository */
+    private $languageRepository;
 
     public function __construct(LanguageRepository $languageRepository) {
-        $availableLanguages = $languageRepository->getAvailableLanguageCodes();
-        $this->requiredLanguagesChecks = array_map(
+        $this->languageRepository = $languageRepository;
+    }
+
+    public function validate($input) {
+        $availableLanguages = $this->languageRepository->getAvailableLanguageCodes();
+        $requiredLanguagesChecks = array_map(
             function ($code) {
                 return Validator::key($code, Validator::notBlank());
             },
             $availableLanguages
         );
-        $this->requiredLanguagesCount = count($availableLanguages);
-    }
-
-    public function validate($input) {
+        $requiredLanguagesCount = count($availableLanguages);
         return Validator::allOf(
-            Validator::arrayType()->length($this->requiredLanguagesCount, $this->requiredLanguagesCount),
-            $this->requiredLanguagesChecks
+            Validator::arrayType()->length($requiredLanguagesCount, $requiredLanguagesCount),
+            $requiredLanguagesChecks
         )->validate($input);
     }
 }

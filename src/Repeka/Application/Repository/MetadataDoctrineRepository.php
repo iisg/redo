@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\Repository;
 
-use Assert\Assertion;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -28,8 +27,12 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $metadata;
     }
 
-    public function findByName(string $name): Metadata {
-        $result = $this->findByQuery(MetadataListQuery::builder()->filterByNames([$name])->build());
+    public function findByName(string $name, ?string $resourceClass = null): Metadata {
+        $query = MetadataListQuery::builder()->filterByNames([$name]);
+        if ($resourceClass) {
+            $query = $query->filterByResourceClass($resourceClass);
+        }
+        $result = $this->findByQuery($query->build());
         if (!$result) {
             throw new EntityNotFoundException($this, $name);
         }

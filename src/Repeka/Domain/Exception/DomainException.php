@@ -13,7 +13,7 @@ class DomainException extends \RuntimeException {
         string $errorMessageId,
         int $code = 400,
         array $params = [],
-        \Exception $previous = null,
+        \Throwable $previous = null,
         ?string $message = null
     ) {
         parent::__construct($message ?: "Domain exception '$errorMessageId' (error $code)", $code, $previous);

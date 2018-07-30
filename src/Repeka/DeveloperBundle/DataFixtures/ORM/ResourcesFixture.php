@@ -28,6 +28,7 @@ class ResourcesFixture extends RepekaFixture {
         $this->assignUsersToGroups();
         $this->addDictionaries();
         $this->addBooks();
+        $this->addCmsPages();
     }
 
     private function addDictionaries() {
@@ -273,6 +274,22 @@ class ResourcesFixture extends RepekaFixture {
                 $scanner->getContents()->withReplacedValues(
                     SystemMetadata::GROUP_MEMBER,
                     [$this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)]
+                )
+            )
+        );
+    }
+
+    private function addCmsPages() {
+        $cmsPageRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE);
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $cmsPageRk,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_CMS_TITLE => ['O projekcie'],
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONTENT =>
+                            '<h1>Nasz projekt jest super</h1> <repeka-version></repeka-version>',
+                    ]
                 )
             )
         );
