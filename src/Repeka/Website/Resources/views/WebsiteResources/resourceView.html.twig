@@ -1,10 +1,10 @@
 {% extends "RepekaWebsiteBundle::layout-with-navbar.html.twig" %}
 
-{% set page_title = resource.displayStrategies.header %}
+{% set page_title = resource | m('-5') %}
 
 {% block content %}
     <!-- Sample value from server side rendering: -->
-    <h1>{{ resource.displayStrategies.header }}</h1>
+    <h1>{{ resource | m('-5') }}</h1>
 
     <!-- Sample component from Vue.js: -->
     <redo-logo style="width: 150px"></redo-logo>

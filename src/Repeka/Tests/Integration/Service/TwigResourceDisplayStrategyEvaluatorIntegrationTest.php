@@ -48,15 +48,20 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
             // blank text
             ['Hello world', 'Hello world'], // simple text
             ['Hello {{ r.id }}', "Hello $phpBookId"],
+            ['Hello {{ resource.id }}', "Hello $phpBookId"],
             // get id
             ["{{ r.values($tId) | join(', ') }}", "PHP - to można leczyć!"], // get metadata values
             ["{{ r.values($tId)|first }}", "PHP - to można leczyć!"], // get metadata value
             ["{{ r|m($tId) }}", "PHP - to można leczyć!"], // get metadata values without join
+            ["{{ r|m$tId }}", "PHP - to można leczyć!"], // get metadata values without join
+            ["{{ r|metadata$tId }}", "PHP - to można leczyć!"], // get metadata values without join
+            ["{{ resource|metadata($tId) }}", "PHP - to można leczyć!"], // get metadata values without join
             ["{{ r|m($tId)[0] }}", "PHP - to można leczyć!"], // get metadata values without join
             ["{{ r|m($tId)[1] }}", ""], // get metadata values without join
             ['{{ r.values(-66)|first }}', ""], // get not existing metadata
             ["{{ r.values(m('Tytuł'))|first }}", "PHP - to można leczyć!"], // fetch metadata by name
             ["{{ r(1).values(-2)|first }} i {{ r.values($tId)|first }}", "admin i PHP - to można leczyć!"], // fetch resources
+            ["{{ resource(1).values(-2)|first }} i {{ r.values($tId)|first }}", "admin i PHP - to można leczyć!"], // fetch resources
             ["{{ r(r.values(m('Nadzorujący'))|first).values(m('Username'))|first }}", "budynek"], // supervisor's username - tough way
             ["{{ r|m('Nadzorujący')|first|r|m('Username')|first }}", "budynek"], // supervisor's username - with filters
             ["{{ r|m('Nadzorujący')|r|m('Username') }}", "budynek"], // can handle many values?

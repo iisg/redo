@@ -20,3 +20,9 @@ repeka:
         - Username: admin
   xml_import:
     koha: 'http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode='
+  expose_endpoints:
+    /resource-view/{resource}:
+      metadata: -5
+    /about-page:
+      resourceId: 12
+      metadata: Opis
