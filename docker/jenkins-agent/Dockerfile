@@ -49,6 +49,7 @@ RUN apt-get update \
 ## Install Node.js (as requested by user)
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
   && apt-get install -y --no-install-recommends nodejs \
+  && npm install -g npm@5 \
   && apt-get autoremove \
   && rm -r /var/lib/apt/lists/* \
   && apt-get clean
