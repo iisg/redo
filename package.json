@@ -34,7 +34,7 @@
     "dist": "node scripts/repeka.js && node scripts/assert-prod.js && (npm run dist:backend && npm run dist:admin && npm run dist:frontend) && php bin/console repeka:statsd:deploy",
     "dist:admin": "cd src/AdminPanel && npm run dist -s",
     "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev --prefer-dist",
-    "dist:frontend": "cd src/Frontend && npm run build -s",
+    "dist:frontend": "cd src/Frontend && npm run dist -s",
     "init": "npm run -s clean:backend && php bin/console repeka:initialize --skip-backup && php bin/console cache:warmup",
     "install-deps": "npm prune && node scripts/repeka.js && composer-runner -- install --prefer-dist && cd src/AdminPanel && npm install && npm run install-deps && cd ../Frontend && npm install",
     "lint": "rm -fr var/reports/lints/*.xml && (npm run -s lint:backend && npm run -s lint:admin && npm run -s lint:frontend)",
