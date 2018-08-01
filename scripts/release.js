@@ -58,6 +58,7 @@ function copyToReleaseDirectory() {
     'src/Repeka/Application',
     'src/Repeka/Domain',
     'src/Repeka/Plugins',
+    'src/Repeka/Website',
     'vendor/',
     'web/',
   ].forEach(function (filename) {
