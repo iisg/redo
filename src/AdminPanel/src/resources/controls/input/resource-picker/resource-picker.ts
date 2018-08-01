@@ -1,10 +1,11 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {observable} from "aurelia-binding";
+import {twoWay} from "common/components/binding-mode";
 import {ResourceRepository} from "resources/resource-repository";
 import {Resource} from "resources/resource";
-import {twoWay} from "common/components/binding-mode";
-import {PageResult} from "../../../page-result";
+import {SystemMetadata} from './../../../../resources-config/metadata/system-metadata';
+import {ResourceLabelValueConverter} from './../../../details/resource-label-value-converter';
 
 @autoinject
 export class ResourcePicker implements ComponentAttached {
@@ -17,13 +18,46 @@ export class ResourcePicker implements ComponentAttached {
   @observable value: Resource;
 
   initialized: boolean = false;
-  resources: PageResult<Resource>;
+  resources: Array<Resource> = [];
   invalidValue: boolean = false;
 
-  constructor(private resourceRepository: ResourceRepository) {
+  // cannot be less than 5: https://www.yiiframework.com/forum/index.php/topic/73474-select2-infinite-scroll-stuck-on-first-page/
+  private readonly RESULTS_PER_DROPDOWN_PAGE = 20;
+
+  constructor(private resourceRepository: ResourceRepository, private resourceLabelValueConverter: ResourceLabelValueConverter) {
   }
 
   attached() {
+    this.initialized = true;
+  }
+
+  searchFunction(term: string, page: number) {
+    if (page === 1) {
+      this.resources = [];
+    }
+    const searchContents: NumberMap<any> = {};
+    searchContents[SystemMetadata.RESOURCE_LABEL.id] = term;
+    return this.createQuery()
+      .setResultsPerPage(this.RESULTS_PER_DROPDOWN_PAGE)
+      .setCurrentPageNumber(page)
+      .filterByContents(searchContents)
+      .get()
+      .then(result => {
+        this.resources.push(...result as Array<Resource>);
+        return result;
+      })
+      .then(result => {
+        const morePages: boolean = this.resources.length < result.total;
+        return {results: result as Array<any>, pagination: {more: morePages, itemsPerPage: this.RESULTS_PER_DROPDOWN_PAGE}};
+      });
+  }
+
+  formatDropdownItem(resource: Resource) {
+    const label = this.resourceLabelValueConverter.toView(resource);
+    return {text: `<strong>${label}</strong>`};
+  }
+
+  private createQuery() {
     const query = this.resourceRepository.getListQuery();
     if (this.resourceKindIds.length > 0) {
       query.filterByResourceKindIds(this.resourceKindIds);
@@ -34,11 +68,7 @@ export class ResourcePicker implements ComponentAttached {
     if (this.contentsFilter) {
       query.filterByContents(this.contentsFilter);
     }
-    query.get().then(resources => {
-      this.resources = resources;
-      this.resourceIdChanged(this.resourceId);
-    });
-    this.initialized = true;
+    return query;
   }
 
   valueChanged(newValue: Resource) {

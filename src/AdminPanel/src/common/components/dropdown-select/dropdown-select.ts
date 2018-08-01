@@ -21,6 +21,8 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable @booleanAttribute useComputedWidth: boolean;
   @bindable @booleanAttribute disabled: boolean;
   @bindable @booleanAttribute clearAfterSelect: boolean;
+  @bindable searchFunction: ({term, page}) => Promise<{results, pagination: {more: boolean, itemsPerPage: number}}>;
+  @bindable formatter: ({item}) => {text: string};
   dropdown: Element;
 
   constructor(private i18n: I18N, private element: Element) {
@@ -35,7 +37,9 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   }
 
   valuesChanged() {
-    this.setupDropdownAgain();
+    if (!this.searchFunction) {
+      this.setupDropdownAgain();
+    }
     if (!this.multiple && this.setFirstAsDefault) {
       if (this.value) {
         this.value = this.values.find(value => value == this.value);
@@ -65,7 +69,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   private setupDropdown() {
     this.createDropdown().on('select2:select', () => this.onSelectedItem())
-    // Timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049 .
+      // Timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049 .
       .on('select2:unselect', () => setTimeout(() => this.onSelectedItem()))
       // Prevents dropdown to appear after clearing a value: https://github.com/select2/select2/issues/3320#issuecomment-350249668 .
       .on('select2:unselecting', (event) => {
@@ -79,14 +83,30 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   }
 
   private createDropdown(): JQuery {
-    const $element = $(this.dropdown).select2({
+    const options = this.select2Options();
+    if (this.searchFunction) {
+      $.extend(options, this.select2DynamicLoadingOptions());
+    }
+    const $element = $(this.dropdown).select2(options);
+    if (this.useComputedWidth && !this.multiple) {
+      const container = $element.siblings('.select2-container');
+      container.css({'width': (parseInt(container.css('width')) + 10) + 'px'});
+    }
+    this.updateSelectedItem();
+    return $element;
+  }
+
+  private select2Options(): Select2Options {
+    return {
       placeholder: this.placeholder,
       multiple: this.multiple,
       minimumResultsForSearch: this.hideSearchBox ? -1 : 0,
       allowClear: !this.hideClearButton,
       width: this.useComputedWidth ? undefined : '100%',
       language: {
-        "noResults": () => this.i18n.tr("No results")
+        noResults: () => this.i18n.tr("No results"),
+        loadingMore: () => this.i18n.tr("Loading more results") + "...",
+        searching: () => this.i18n.tr("Searching") + "..."
       },
       sorter: (data) => {
         if (this.value == undefined) {
@@ -114,13 +134,33 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
       escapeMarkup: v => v,
       templateResult: item => this.getItemHtml(item),
       templateSelection: item => this.getItemHtml(item)
-    });
-    if (this.useComputedWidth && !this.multiple) {
-      const container = $element.siblings('.select2-container');
-      container.css({'width': (parseInt(container.css('width')) + 10) + 'px'});
-    }
-    this.updateSelectedItem();
-    return $element;
+    };
+  }
+
+  private select2DynamicLoadingOptions(): {ajax: Select2AjaxOptions} {
+    return {
+      ajax: {
+        data: (params: any) => ({
+            term: params.term || '',
+            page: params.page || 1
+        }),
+        transport: (params: JQueryAjaxSettings,
+                    success: (data: any) => undefined, failure: () => undefined): JQueryXHR => {
+          const term = params.data.term || '';
+          this.searchFunction({term: term, page: params.data.page})
+            .then(data => {
+              const indexInPageIdDifference = (params.data.page - 1) * data.pagination.itemsPerPage;
+              data['results'] = data.results.map((item, index) => {
+                return $.extend(this.formatter({item}), {id: index + indexInPageIdDifference});
+              });
+              return data;
+            })
+            .then(success)
+            .catch(failure);
+          return undefined;
+        }
+      }
+    };
   }
 
   onSelectedItem() {  // Copy value from DOM to VM.
@@ -171,8 +211,8 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     return item.element ? $(item.element).html() : item.text;
   }
 
-  @computedFrom('values')
+  @computedFrom('values', 'searchFunction')
   get isFetchingOptions() {
-    return !this.values;
+    return !this.values && !this.searchFunction;
   }
 }
