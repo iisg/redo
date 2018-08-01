@@ -1,19 +1,19 @@
-import swal, {SweetAlertOptions} from "sweetalert2";
-import {I18N} from "aurelia-i18n";
-import {stringToHtml} from "../utils/string-utils";
-import {TemplatingEngine} from "aurelia-templating";
 import {inject, Lazy} from "aurelia-dependency-injection";
+import {I18N} from "aurelia-i18n";
+import {TemplatingEngine} from "aurelia-templating";
+import swal, {SweetAlertOptions} from "sweetalert2";
+import {stringToHtml} from "../utils/string-utils";
 
 export type AlertType = 'error' | 'info' | 'question' | 'success' | 'warning';
 
-export type ButtonClass = 'danger' | 'default' | 'info' |  'primary' | 'success' | 'warning';
+export type ButtonClass = '' | 'blue' | 'orange' | 'red';
 
 const alertTypeToButtonClass: StringMap<ButtonClass> = { // AlertType => ButtonClass
-  'error': 'danger',
-  'info': 'info',
-  'question': 'primary',
-  'success': 'success',
-  'warning': 'warning',
+  'error': 'red',
+  'info': '',
+  'question': '',
+  'success': '',
+  'warning': 'orange',
 };
 
 @inject(I18N, Lazy.of(TemplatingEngine)) // FIXME waiting for @autoinject fix: https://github.com/aurelia/dependency-injection/issues/153
@@ -46,15 +46,15 @@ export class Alert {
       options.confirmButtonClass = alertTypeToButtonClass[options.type];
     }
     if (options.cancelButtonClass === undefined) {
-      options.cancelButtonClass = 'default';
+      options.cancelButtonClass = '';
     }
 
-    const commonCssClasses = 'btn';
+    const commonCssClass = 'toggle-button';
     let overrides: SweetAlertOptions = {
       titleText: title,
       html: html,
-      confirmButtonClass: `${commonCssClasses} btn-${options.confirmButtonClass}`,
-      cancelButtonClass: `${commonCssClasses} btn-${options.cancelButtonClass}`,
+      confirmButtonClass: `${commonCssClass} ${options.confirmButtonClass}`,
+      cancelButtonClass: `${commonCssClass} ${options.cancelButtonClass}`,
     } as SweetAlertOptions;
     if (options.showCancelButton === undefined) {
       overrides.showCancelButton = (options.type == 'question');

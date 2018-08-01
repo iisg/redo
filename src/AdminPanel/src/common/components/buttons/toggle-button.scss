@@ -3,3 +3,19 @@
 toggle-button, .toggle-button {
   @include toggle-button();
 }
+
+button.toggle-button {
+  @include toggle-button-button();
+}
+
+.blue toggle-button button, toggle-button.blue button, button.toggle-button.blue {
+  @include toggle-button-colors($blue);
+}
+
+.orange toggle-button button, toggle-button.orange button, button.toggle-button.orange {
+  @include toggle-button-colors($orange);
+}
+
+.red toggle-button button, toggle-button.red button, button.toggle-button.red {
+  @include toggle-button-colors($red);
+}

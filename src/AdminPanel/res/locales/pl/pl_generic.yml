@@ -65,12 +65,11 @@ Choose the next transition: Wybierz kolejne przejście
 Use the context menu (right-click to open it) to add an element, select any element on the diagram to edit it or: Użyj menu kontekstowego (dostępnego po kliknięciu prawym przyciskiem myszy) aby dodać element, zaznacz dowolny element na grafie by go edytować lub
 start the simulation: rozpocznij symulację
 Thumbnail: Miniatura
-Add new submetadata kind: Dodaj nowy rodzaj podmetadanych
+Add submetadata kind: Dodaj rodzaj podmetadanych
 Submetadata kinds: Rodzaje podmetadanych
-No submetadata kinds.: Brak rodzajów podmetadanych.
-Choose existing: Wybierz istniejący
+Add based on an existing one: Dodaj na podstawie istniejącego
 Add new: Dodaj nowy
-Choose existing submetadata kind: Wybierz istniejący rodzaj podmetadanych
+No submetadata kinds.: Brak rodzajów podmetadanych.
 Roles allowed to apply transition: Uprawnieni do wykonania przejścia
 Select file: Wybierz...
 Required resource kind: Wymagany rodzaj zasobu
@@ -181,6 +180,6 @@ Administrator of the resource classes: Administrator klas zasobów
 No roles.: Brak ról.
 Additional actions when entering this state: Dodatkowe akcje przy wejściu do stanu
 Places in workflow: Stany w procesie
-Your changes in form will be lost: Twoje zmiany w formularzu zostną utracone
+Changes in the form will be lost: Zmiany w formularzu zostaną utracone
 Stay: Zostań
 Discard changes: Porzuć zmiany

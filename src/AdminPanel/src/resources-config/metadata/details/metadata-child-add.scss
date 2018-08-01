@@ -1,0 +1,21 @@
+@import "../../../common/styles";
+
+metadata-child-add {
+    .toggle-buttons-group {
+        display: flex;
+        padding: $default-gap-size / 2;
+        .active button {
+            background-color: $light-blue;
+        }
+    }
+    .entity-chooser-with-cancel-button {
+        display: flex;
+        align-items: center;
+        &, & > * {
+            padding: $default-gap-size / 4;
+        }
+        entity-chooser {
+            flex: 1;
+        }
+    }
+}

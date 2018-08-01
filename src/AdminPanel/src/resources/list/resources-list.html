@@ -15,7 +15,8 @@
             toggled.two-way="addFormOpened"
             disabled.bind="addingResourcesDisabled"></add-button>
         <div else
-            class="fade-inup-outdown au-animate well">
+            class="well add-form fade-inup-outdown au-animate">
+            <span>${'Add new resource' | resourceClassTranslation:resourceClass}</span>
             <resource-form view-model.ref="resourceForm"
                 resource-class.bind="resourceClass"
                 parent.bind="parentResource"

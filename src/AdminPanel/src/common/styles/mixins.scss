@@ -11,32 +11,36 @@
   }
 }
 
+@mixin toggle-button-button($background-color: $blue, $color: white, $minimum-height: 28px) {
+  min-height: $minimum-height;
+  padding: $default-gap-size / 8 3 / 4 * $default-gap-size;
+  text-transform: uppercase;
+  font-weight: bold;
+  @include toggle-button-colors($background-color, $color);
+  & > div {
+    position: relative;
+    display: inline-block;
+    icon {
+      opacity: 1;
+      @include transition(opacity .3s ease-out);
+      &:not(.visible) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+      }
+    }
+  }
+  icon, .icon, span {
+    display: inline-block;
+    margin: $default-gap-size / 8;
+  }
+}
+
 @mixin toggle-button($background-color: $blue, $color: white, $minimum-height: 28px) {
   display: inline-block;
   button {
-    min-height: $minimum-height;
-    padding: $default-gap-size / 8 3 / 4 * $default-gap-size;
-    text-transform: uppercase;
-    font-weight: bold;
-    @include toggle-button-colors($background-color, $color);
-    & > div {
-      position: relative;
-      display: inline-block;
-      icon {
-        opacity: 1;
-        @include transition(opacity .3s ease-out);
-        &:not(.visible) {
-          position: absolute;
-          top: 0;
-          left: 0;
-          opacity: 0;
-        }
-      }
-    }
-    icon, .icon, span {
-      display: inline-block;
-      margin: $default-gap-size / 8;
-    }
+    @include toggle-button-button($background-color, $color, $minimum-height);
   }
 }
 

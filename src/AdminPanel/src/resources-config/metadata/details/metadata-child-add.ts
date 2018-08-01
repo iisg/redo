@@ -1,5 +1,6 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
+import {MetadataForm} from "resources-config/metadata/metadata-form";
 import {Metadata} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
 
@@ -9,10 +10,12 @@ export class MetadataChildAdd implements ComponentAttached {
   @bindable resourceClass: string;
   @bindable saved: (value: { savedMetadata: Metadata }) => any;
   @bindable cancel: () => void;
+  metadataForm: MetadataForm;
   metadataList: Metadata[];
   parentMetadataChildren: Metadata[];
   baseMetadata: Metadata;
-  notSelected: (metadata: Metadata) => boolean;
+  addingNewSubmetadataKind: boolean;
+  private notSelected: (metadata: Metadata) => boolean;
 
   constructor(private metadataRepository: MetadataRepository) {
   }
@@ -30,6 +33,14 @@ export class MetadataChildAdd implements ComponentAttached {
       this.notSelected = (metadata: Metadata) => {
         return this.parentMetadataChildren.map(m => m.baseId).indexOf(metadata.id) === -1;
       };
+    });
+  }
+
+  toggleAddingNewSubmetadataKind() {
+    this.metadataForm.changeLossPreventer.canLeaveView().then(canLeaveView => {
+      if (canLeaveView) {
+        this.addingNewSubmetadataKind = !this.addingNewSubmetadataKind;
+      }
     });
   }
 

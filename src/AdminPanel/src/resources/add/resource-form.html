@@ -11,8 +11,6 @@
     <span if.bind="transition"
         class="page-title">
         ${'Edit resource before transition' | resourceClassTranslation:resourceClass}</span>
-    <span if.bind="!editing"
-        class="page-title">${'Add new resource' | resourceClassTranslation:resourceClass}</span>
     <div if.bind="!editing || skipValidation"
         class="resource-kind-chooser-with-cancel-button">
         <resource-kind-chooser
@@ -56,7 +54,7 @@
             <div class="form-buttons">
                 <transition-button if.bind="editing && transition"
                     transition.bind="transition"
-                    places.bind="edit.kind.workflow.places"
+                    places.bind="currentlyEditedResource.kind.workflow.places"
                     submitting.bind="submitting"></transition-button>
                 <submit-button if.bind="!transition"
                     editing.bind="editing"
