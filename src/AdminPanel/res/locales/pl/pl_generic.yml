@@ -90,6 +90,8 @@ bool:
 Collapse: Zwiń
 Expand: Rozwiń
 No results: Brak wyników
+Loading more results: Ładowanie kolejnych elementów
+Searching: Wyszukiwanie
 Confirm deletion: Potwierdź usunięcie
 Are you sure you want to delete {{entityType}} {{caption}}?: Czy na pewno chcesz usunąć {{entity}} {{caption}}?
 Delete: Usuń

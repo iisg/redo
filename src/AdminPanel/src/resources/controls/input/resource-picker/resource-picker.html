@@ -4,10 +4,9 @@
 
     <dropdown-select values.bind="resources"
         value.bind="value"
-        disabled.bind="disabled">
-        <template replace-part="option-template">
-            <strong>${option | resourceLabel}</strong>
-        </template>
+        disabled.bind="disabled"
+        search-function.call="searchFunction(term, page)"
+        formatter.call="formatDropdownItem(item)">
     </dropdown-select>
     <p if.bind="invalidValue"
         class="text-danger">

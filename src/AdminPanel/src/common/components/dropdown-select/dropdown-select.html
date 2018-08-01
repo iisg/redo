@@ -5,7 +5,8 @@
     <select ref="dropdown"
         disabled.bind="disabled || isFetchingOptions">
         <option></option>
-        <option repeat.for="option of values"
+        <option if.bind="!searchFunction"
+            repeat.for="option of values"
             value.bind="$index"
             model.bind="option">
             <template replaceable
