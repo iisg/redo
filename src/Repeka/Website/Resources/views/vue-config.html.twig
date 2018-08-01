@@ -1,6 +1,7 @@
 <script>
   window.FRONTEND_CONFIG = {
     locale: '{{ app.request.locale }}',
+    applicationName: '{{ applicationName | escape('js') }}',
     baseUrl: '{{ path('home')[:-1] }}',
     serverTime: '{{ "now"|date("Y-m-d\\TH:i:sP") }}',
     renderStart: new Date()

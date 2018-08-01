@@ -1,5 +1,5 @@
-import {autoinject} from "aurelia-dependency-injection";
 import {Configure} from "aurelia-configuration";
+import {autoinject} from "aurelia-dependency-injection";
 import {Aurelia} from "aurelia-framework";
 import {Backend, I18N} from "aurelia-i18n";
 import {AppRouter} from "aurelia-router";
@@ -53,6 +53,10 @@ export class I18nParams {
   ];
 
   constructor(private config: Configure) {
+  }
+
+  get applicationName(): string {
+    return this.config.get('application_name');
   }
 
   get supportedUiLanguages(): string[] {

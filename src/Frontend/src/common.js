@@ -18,7 +18,7 @@ Vue.http.options.root = Vue.config.external.baseUrl + '/api';
 const components = {
   LoginPage: () => import("./login/login-page"),
   RedoLogo: () => import("./common/redo-logo"),
-  RepekaVersion: () => import("./common/repeka-version"),
+  RepekaVersion: () => import("./common/repeka-version")
 };
 
 $(document).ready(() => {
