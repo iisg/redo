@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "rm -fr ../../web/assets/dist && cross-env NODE_ENV=production webpack --hide-modules",
+    "dist": "npm install && npm run -s build",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --hot --output-public-path http://localhost:7336/assets/dist",
     "lint": "eslint --ext js,vue src",
     "webpack-stats": "cross-env NODE_ENV=production webpack --json > stats.json"
