@@ -15,6 +15,7 @@ class Configuration implements ConfigurationInterface {
         // @formatter:off because indentation makes config structure way clearer
         $rootNode
             ->children()
+                ->scalarNode('application_name')->defaultValue('RePeKa')->end()
                 ->scalarNode('default_ui_language')->defaultValue('en')->end()
                 ->scalarNode('version')->defaultValue('X.X.X')->end()
                 ->arrayNode('static_permissions')->prototype('scalar')->end()->end()

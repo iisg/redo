@@ -53,8 +53,14 @@ sidebar.collapsed {
 }
 
 .page-title {
+  display: block;
   font-size: $title-font-size;
   font-weight: bold;
+}
+
+.page-subtitle {
+  display: block;
+  font-size: $subtitle-font-size;
 }
 
 a {

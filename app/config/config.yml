@@ -5,6 +5,8 @@ imports:
   - { resource: postgres_json_functions.yml }
 
 repeka:
+  application_name: "%applicationName%"
+
   default_ui_language: pl
 
   resource_classes: []
@@ -95,11 +97,14 @@ framework:
     enable_annotations: true
 
 parameters:
+  applicationName: Repeka
   locale: pl
   secret: some_secret
   container.autowiring.strict_mode: true
   use_webpack_dev_server: false
 
 twig:
+  globals:
+    applicationName: "%applicationName%"
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"

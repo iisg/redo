@@ -6,7 +6,7 @@
   export default {
     data() {
       return {
-        version: REPEKA_VERSION, // eslint-disable-line no-undef
+        version: REPEKA_VERSION // eslint-disable-line no-undef
       };
     }
   };

@@ -1,3 +1,4 @@
+adminPanelName: "{{applicationName}} administration"
 meta:
   translatedName: English
   flag: GB

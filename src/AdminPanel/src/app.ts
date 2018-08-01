@@ -3,19 +3,21 @@ import {I18N} from "aurelia-i18n";
 import {ConfiguresRouter, RouterConfiguration} from "aurelia-router";
 import {ComponentAttached} from "aurelia-templating";
 import {routes} from "common/routes/routes";
+import {I18nParams} from "config/i18n";
+import {ChangeLossPreventer} from "./common/change-loss-preventer/change-loss-preventer";
 import {supportMiddleClickInLinks} from "./common/routes/middle-link-opener";
 import {RouteAccessChecker} from "./common/routes/route-access-checker";
-import {ChangeLossPreventer} from "./common/change-loss-preventer/change-loss-preventer";
 
 @autoinject
 export class App implements ConfiguresRouter, ComponentAttached {
   constructor(private i18n: I18N,
+              private i18nParams: I18nParams,
               private element: Element,
               private routeAccessChecker: RouteAccessChecker, private changeLossPreventer: ChangeLossPreventer) {
   }
 
   configureRouter(configuration: RouterConfiguration) {
-    configuration.title = 'RePeKa';
+    configuration.title = this.i18nParams.applicationName;
     configuration.options.pushState = true;
     configuration.options.root = '/admin';
     configuration.map(routes);

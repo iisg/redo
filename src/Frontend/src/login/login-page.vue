@@ -13,7 +13,7 @@
                             :value="csrfToken">
                         <div>
                             <div>
-                                <h3 class="login-text administration-label">ADMINISTRACJA REDO</h3>
+                                <h3 class="login-text administration-label">Administracja {{ applicationName }}</h3>
                             </div>
                         </div>
                         <div class="login-error-element alert alert-dismissible alert-danger"
@@ -84,7 +84,12 @@
 
   export default {
     props: ['csrfToken', 'lastUsername', 'error'],
-    components: {RedoLogo}
+    components: {RedoLogo},
+    data() {
+      return {
+        applicationName: window.FRONTEND_CONFIG.applicationName
+      };
+    }
   };
 </script>
 
@@ -138,6 +143,7 @@
                     }
                     .administration-label {
                         color: $current-theme-color;
+                        text-transform: uppercase;
                         font-weight: bold;
                     }
                     .input-elements {
