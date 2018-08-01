@@ -8,6 +8,8 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {convertToObject, flatten, inArray} from "common/utils/array-utils";
 import {deepCopy} from "common/utils/object-utils";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
+import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
+import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
 import {numberKeysByValue} from "../../common/utils/object-utils";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
@@ -17,14 +19,12 @@ import {Resource} from "../resource";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportDialog} from "./xml-import/import-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
-import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
-import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 
 @autoinject
 export class ResourceForm extends ChangeLossPreventerForm {
   @bindable resourceClass: string;
   @bindable parent: Resource;
-  @bindable edit: Resource;
+  @bindable currentlyEditedResource: Resource;
   @bindable skipValidation: boolean;
   @bindable submit: (value: {
     savedResource: Resource,
@@ -53,10 +53,10 @@ export class ResourceForm extends ChangeLossPreventerForm {
   }
 
   attached() {
-    if (this.edit && this.edit.kind && this.edit.kind.workflow) {
+    if (this.currentlyEditedResource && this.currentlyEditedResource.kind && this.currentlyEditedResource.kind.workflow) {
       let params = this.router.currentInstruction.queryParams;
-      this.places = this.edit.currentPlaces;
-      this.transition = this.edit.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
+      this.places = this.currentlyEditedResource.currentPlaces;
+      this.transition = this.currentlyEditedResource.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
     }
     this.setResourceKindsAllowedByParent();
     this.changeLossPreventer.enable(this);
@@ -67,7 +67,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
     if (!this.resource.kind || !this.resource.kind.workflow) {
       return [];
     }
-    if (!this.edit) {
+    if (!this.currentlyEditedResource) {
       return [this.resource.kind.workflow.places[0]];
     }
     if (this.transition) {
@@ -144,7 +144,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
     this.resource.resourceClass = this.resourceClass;
   }
 
-  editChanged(newValue: Resource) {
+  currentlyEditedResourceChanged(newValue: Resource) {
     this.resource = this.entitySerializer.clone(newValue);
     this.resourceClass = this.resource.resourceClass;
     this.parentChanged(this.parent);

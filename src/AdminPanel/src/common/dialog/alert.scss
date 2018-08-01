@@ -1,0 +1,34 @@
+@import "../styles";
+
+.swal2-modal {
+    padding: $default-gap-size / 2 !important;
+    & > :not(.swal2-icon):not(input):not(select):not(textarea):not(.swal2-buttonswrapper):not(button) {
+        padding: $default-gap-size / 2;
+    }
+    & > .swal2-input, & > .swal2-file, & > .swal2-select, & > .swal2-textarea {
+        margin: $default-gap-size / 2;
+    }
+    .swal2-icon {
+        margin-top: $default-gap-size / 2;
+        margin-bottom: $default-gap-size / 2;
+    }
+    .swal2-image, .swal2-radio, .swal2-checkbox {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .swal2-title {
+        margin-bottom: 0;
+        font-size: $title-font-size;
+        font-weight: bold;
+    }
+    .swal2-content {
+        font-size: $subtitle-font-size;
+    }
+    .swal2-buttonswrapper {
+        margin-top: 0;
+        padding: $default-gap-size / 4;
+        & > button {
+            margin: $default-gap-size / 4;
+        }
+    }
+}

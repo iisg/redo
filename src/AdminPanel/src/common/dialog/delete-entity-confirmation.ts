@@ -1,9 +1,9 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
-import {Alert, AlertOptions} from "./alert";
 import {MultilingualText} from "../../resources-config/metadata/metadata";
 import {InCurrentLanguageValueConverter} from "../../resources-config/multilingual-field/in-current-language";
 import {isObject} from "../utils/object-utils";
+import {Alert, AlertOptions} from "./alert";
 
 @autoinject
 export class DeleteEntityConfirmation {
@@ -22,7 +22,7 @@ export class DeleteEntityConfirmation {
     const options: AlertOptions = {
       type: 'question',
       confirmButtonText: this.i18n.tr('Delete'),
-      confirmButtonClass: 'danger'
+      confirmButtonClass: 'red'
     };
     return this.alert.show(options, title, text);
   }

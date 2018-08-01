@@ -324,6 +324,13 @@ textarea {
     right: 0;
     border-top-right-radius: 0;
   }
+  &.add-form {
+    & > span {
+      display: block;
+      padding: $default-gap-size / 2;
+      @extend .page-title;
+    }
+  }
 }
 
 .list-group-item {

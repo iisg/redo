@@ -2,20 +2,19 @@ import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
-import {changeHandler} from "common/components/binding-mode";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
-import {Metadata} from "./metadata";
-import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
-import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 import {values} from "lodash";
+import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
+import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
+import {Metadata} from "./metadata";
 import {MetadataControl} from "./metadata-control";
 
 @autoinject
 export class MetadataForm extends ChangeLossPreventerForm implements ComponentAttached {
   @bindable submit: (value: { editedMetadata: Metadata }) => Promise<any>;
   @bindable cancel: () => void;
-  @bindable(changeHandler('resetValues')) template: Metadata;
+  @bindable template: Metadata;
   @bindable edit: Metadata;
   @bindable resourceClass: string;
   controls: string[] = values(MetadataControl);
@@ -23,13 +22,33 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   metadata: Metadata = new Metadata();
 
   private controller: ValidationController;
+  private restoredPreviousTemplateValue = false;
 
   constructor(validationControllerFactory: ValidationControllerFactory,
               private entitySerializer: EntitySerializer,
-              private changeLossPreventer: ChangeLossPreventer) {
+              public changeLossPreventer: ChangeLossPreventer) {
     super();
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
+  }
+
+  attached(): void {
+    this.resetValues();
+  }
+
+  templateChanged(newValue: Metadata, oldValue: Metadata) {
+    if (!this.restoredPreviousTemplateValue) {
+      this.changeLossPreventer.canLeaveView().then(canLeaveView => {
+        if (canLeaveView) {
+          this.resetValues();
+        } else {
+          this.restoredPreviousTemplateValue = true;
+          this.template = oldValue;
+        }
+      });
+    } else {
+      this.restoredPreviousTemplateValue = false;
+    }
   }
 
   @computedFrom('metadata.id')
@@ -37,12 +56,12 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
     return this.template != undefined;
   }
 
-  attached(): void {
-    this.resetValues();
-  }
-
   cancelForm(): void {
-    this.changeLossPreventer.canLeaveView().then(() => this.cancel());
+    this.changeLossPreventer.canLeaveView().then(canLeaveView => {
+      if (canLeaveView) {
+        this.cancel();
+      }
+    });
   }
 
   private resetValues() {

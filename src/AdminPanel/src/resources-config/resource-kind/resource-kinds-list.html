@@ -6,8 +6,8 @@
         entity-name="resourceKind"
         toggled.two-way="addFormOpened"></add-button>
     <div if.bind="addFormOpened"
-        class="well fade-inup-outdown au-animate">
-        <span class="page-title">${'Add new resource kind' | resourceClassTranslation:resourceClass}</span>
+        class="well add-form fade-inup-outdown au-animate">
+        <span>${'Add new resource kind' | resourceClassTranslation:resourceClass}</span>
         <resource-kind-form resource-class.bind="resourceClass"
             submit.call="addNewResourceKind(savedResourceKind)"
             cancel.call="toggleEditForm()"></resource-kind-form>

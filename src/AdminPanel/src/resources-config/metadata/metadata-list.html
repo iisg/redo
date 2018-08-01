@@ -8,17 +8,20 @@
         toggled.two-way="addFormOpened"></add-button>
 
     <div if.bind="addFormOpened"
-        class="well au-animate fade-inout-updown">
-        <span class="page-title">${'Add new metadata kind' | resourceClassTranslation:resourceClass}</span>
-        <metadata-form if.bind="!parentMetadata"
-            submit.call="addNewMetadata(editedMetadata)"
+        class="well add-form au-animate fade-inout-updown">
+        <template if.bind="!parentMetadata">
+            <span>${'Add new metadata kind' | resourceClassTranslation:resourceClass}</span>
+            <metadata-form submit.call="addNewMetadata(editedMetadata)"
             cancel.call="addFormOpened = false"
             resource-class.bind="resourceClass"></metadata-form>
-        <metadata-child-add else
-            parent-metadata.bind="parentMetadata"
-            saved.call="metadataAdded(savedMetadata)"
-            cancel.call="addFormOpened = false"
-            resource-class.bind="resourceClass"></metadata-child-add>
+        </template>
+        <template else>
+            <span>${'Add submetadata kind' | t}</span>
+            <metadata-child-add parent-metadata.bind="parentMetadata"
+                saved.call="metadataAdded(savedMetadata)"
+                cancel.call="addFormOpened = false"
+                resource-class.bind="resourceClass"></metadata-child-add>
+        </template>
     </div>
 
     <table>

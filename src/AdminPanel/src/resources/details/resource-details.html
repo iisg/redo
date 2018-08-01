@@ -61,7 +61,7 @@
                     </template>
                     <resource-form else
                         resource-class.bind="resource.resourceClass"
-                        edit.bind="resource"
+                        currently-edited-resource.bind="resource"
                         skip-validation.bind="isFormOpenedForGod"
                         submit.call="saveEditedResource(savedResource, transitionId, newResourceKind, places)"
                         cancel.call="hideForm()"></resource-form>
