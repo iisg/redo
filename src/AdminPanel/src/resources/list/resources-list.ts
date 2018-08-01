@@ -65,7 +65,8 @@ export class ResourcesList {
     this.currentPageNumberChangedOnActivate = this.activated && currentPageNumberChanged;
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']);
     this.sortBy = safeJsonParse(parameters['sortBy']);
-    this.sortBy = this.sortBy ? this.sortBy : [new ResourceSort('id', SortDirection.DESC)];
+    this.sortBy = this.sortBy ? this.sortBy : this.getSorting();
+    this.saveSortingToLocalStorage(this.sortBy);
     this.fetchResources();
     this.updateURL(true);
     this.activated = true;
@@ -219,5 +220,27 @@ export class ResourcesList {
     return this.disableAddResource
       || (this.parentResource && (this.parentResource.pendingRequest || !this.isReproductor.toView(this.parentResource)))
       || (!this.parentResource && !this.hasRole.toView('ADMIN', this.resourceClass));
+  }
+
+  private saveSortingToLocalStorage(sortBy: ResourceSort[]) {
+    try {
+      const sorting = JSON.stringify(sortBy);
+      localStorage.setItem(this.resourceClass, sorting);
+    } catch (e) {
+      this.sortBy = sortBy;
+    }
+  }
+
+  private getSorting(): ResourceSort[] {
+    const cachedSorting = this.getSortingFromLocalStorage();
+    return cachedSorting ? cachedSorting : [new ResourceSort('id', SortDirection.DESC)];
+  }
+
+  private getSortingFromLocalStorage() {
+    try {
+      return safeJsonParse(localStorage.getItem(this.resourceClass));
+    } catch (e) {
+      return this.sortBy;
+    }
   }
 }
