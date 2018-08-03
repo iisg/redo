@@ -6,6 +6,8 @@ const entries = {
   'commons': './src/common.js'
 };
 
+const VERSION = require('../../scripts/version').text;
+
 module.exports = {
   entry: entries,
   output: {
@@ -19,7 +21,7 @@ module.exports = {
       name: "commons"
     }),
     new webpack.DefinePlugin({
-      REPEKA_VERSION: JSON.stringify(process.env.npm_package_version)
+      REPEKA_VERSION: JSON.stringify(VERSION)
     })
   ],
   module: {
@@ -92,7 +94,7 @@ if (process.env.NODE_ENV === 'production') {
       this.plugin("done", function (stats) {
         var hashes = stats.toJson().assetsByChunkName;
         var phpConfig = "# Config generated automatically by running npm run build\n\nrepeka:\n";
-        phpConfig += '  version: ' + (require('./package.json').version) + "\n";
+        phpConfig += '  version: ' + VERSION + "\n";
         phpConfig += '  webpack_hashes:\n';
         for (var chunkName in hashes) {
           phpConfig += `    ${chunkName}: "${hashes[chunkName]}"\n`;
