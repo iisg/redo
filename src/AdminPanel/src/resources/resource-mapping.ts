@@ -19,6 +19,9 @@ export class ResourceMapper extends AutoMapper<Resource> {
     if (resource.kind === undefined) {
       return resource;
     }
+    if (Object.keys(resource.contents).length === 1) {
+      resource.isTeaser = true;
+    }
     for (const metadata of resource.kind.metadataList) {
       if (!(metadata.id in resource.contents)) {
         resource.contents[metadata.id] = [];

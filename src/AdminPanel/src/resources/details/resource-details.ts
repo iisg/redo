@@ -67,14 +67,18 @@ export class ResourceDetails implements RoutableComponentActivate {
   async activate(parameters: any, routeConfiguration: RouteConfig) {
     this.isFiltering = parameters.hasOwnProperty('contentsFilter');
     this.resource = await this.resourceRepository.get(parameters.id);
-    this.contextResourceClass.setCurrent(this.resource.resourceClass);
-    const resources = await this.resourceRepository.getListQuery()
-      .filterByParentId(this.resource.id)
-      .get();
-    this.numberOfChildren = resources.total;
-    const title = this.resourceLabel.toView(this.resource);
-    routeConfiguration.navModel.setTitle(title);
-    this.activateTabs(parameters.tab);
+    if (this.resource.isTeaser) {
+      this.router.navigateToRoute('not-allowed');
+    } else {
+      this.contextResourceClass.setCurrent(this.resource.resourceClass);
+      const resources = await this.resourceRepository.getListQuery()
+        .filterByParentId(this.resource.id)
+        .get();
+      this.numberOfChildren = resources.total;
+      const title = this.resourceLabel.toView(this.resource);
+      routeConfiguration.navModel.setTitle(title);
+      this.activateTabs(parameters.tab);
+    }
   }
 
   activateTabs(activeTabId) {

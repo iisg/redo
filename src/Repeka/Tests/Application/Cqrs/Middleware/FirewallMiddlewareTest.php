@@ -80,7 +80,11 @@ class FirewallMiddlewareTest extends \PHPUnit_Framework_TestCase {
             $command->method('getResourceClass')->willReturn($resourceClass);
         }
         $executor = $this->createMock(User::class);
-        $executor->method('getRoles')->willReturn($executorRoles);
+        $executor->method('hasRole')->willReturnCallback(
+            function ($role) use ($executorRoles) {
+                return in_array($role, $executorRoles);
+            }
+        );
         $command->method('getExecutor')->willReturn($executor);
         return $command;
     }

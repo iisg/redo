@@ -4,12 +4,14 @@ namespace Repeka\Application\Controller;
 use M6Web\Component\Statsd\Client;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\EventListener\CsrfRequestListener;
+use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\User\UserByUserDataQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/users")
@@ -43,7 +45,7 @@ class UsersController extends ApiController {
         $user = $this->getUser();
         $this->statsd->increment('repeka.admin_panel.visit');
         $this->csrfRequestListener->refreshToken();
-        return $this->createJsonResponse($user);
+        return $this->createJsonResponse($user, Response::HTTP_OK, [ResourceNormalizer::DO_NOT_STRIP_RESOURCE_CONTENT]);
     }
 
     /**

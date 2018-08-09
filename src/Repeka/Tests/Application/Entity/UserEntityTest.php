@@ -20,12 +20,16 @@ class UserEntityTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testHasRoleUserByDefault() {
-        $this->assertContains('ROLE_USER', $this->user->getRoles());
+        $this->assertTrue($this->user->hasRole('ROLE_USER'));
+    }
+
+    public function testNotHasRole() {
+        $this->assertFalse($this->user->hasRole('ROLE_UNICORN'));
     }
 
     public function testAddsRolePrefixToSomeClassRoles() {
         $this->user->updateRoles(['ADMIN_SOME_CLASS']);
-        $this->assertContains('ROLE_ADMIN_SOME_CLASS', $this->user->getRoles());
+        $this->assertTrue($this->user->hasRole('ROLE_ADMIN_SOME_CLASS'));
     }
 
     public function testSettingUsername() {
