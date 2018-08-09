@@ -15,21 +15,21 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   @bindable submit: (value: { editedMetadata: Metadata }) => Promise<any>;
   @bindable cancel: () => void;
   @bindable template: Metadata;
-  @bindable edit: Metadata;
+  @bindable currentlyEditedMetadata: Metadata;
   @bindable resourceClass: string;
   controls: string[] = values(MetadataControl);
   submitting: boolean = false;
   metadata: Metadata = new Metadata();
 
-  private controller: ValidationController;
+  validationController: ValidationController;
   private restoredPreviousTemplateValue = false;
 
   constructor(validationControllerFactory: ValidationControllerFactory,
               private entitySerializer: EntitySerializer,
               public changeLossPreventer: ChangeLossPreventer) {
     super();
-    this.controller = validationControllerFactory.createForCurrentScope();
-    this.controller.addRenderer(new BootstrapValidationRenderer);
+    this.validationController = validationControllerFactory.createForCurrentScope();
+    this.validationController.addRenderer(new BootstrapValidationRenderer);
   }
 
   attached(): void {
@@ -71,7 +71,7 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
 
   validateAndSubmit() {
     this.submitting = true;
-    this.controller.validate().then(result => {
+    this.validationController.validate().then(result => {
       if (result.valid) {
         return this.submit({editedMetadata: this.metadata})
           .then(() => this.resetValues());  // resets values to updated ones provided via binding

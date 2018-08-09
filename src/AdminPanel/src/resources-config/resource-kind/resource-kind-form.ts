@@ -8,20 +8,20 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {move, removeValue} from "common/utils/array-utils";
 import {noop, VoidFunction} from "common/utils/function-utils";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
+import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
+import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
 import {Metadata} from "../metadata/metadata";
 import {MetadataRepository} from "../metadata/metadata-repository";
 import {SystemMetadata} from "../metadata/system-metadata";
 import {ResourceKind} from "./resource-kind";
 import {SystemResourceKinds} from "./system-resource-kinds";
-import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
-import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
 
 @autoinject
 export class ResourceKindForm extends ChangeLossPreventerForm implements ComponentAttached, ComponentDetached {
   @bindable submit: (value: { savedResourceKind: ResourceKind }) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
   @bindable resourceClass: string;
-  @bindable edit: ResourceKind;
+  @bindable currentlyEditedResourceKind: ResourceKind;
   updateResourceKindMetadataChooserValues: () => void;
   resourceKind: ResourceKind = new ResourceKind();
 
@@ -45,7 +45,7 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
   }
 
   attached() {
-    if (!this.edit) {
+    if (!this.currentlyEditedResourceKind) {
       this.resourceKind.ensureHasSystemMetadata();
       this.resourceKind.resourceClass = this.resourceClass;
     }
@@ -72,7 +72,7 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
   }
 
   originalMetadata(metadata: Metadata): Metadata {
-    return this.originalMetadataList.find(m => m.id == metadata.id);
+    return this.originalMetadataList.find(originalMetadata => originalMetadata.id == metadata.id);
   }
 
   removeMetadata(metadata: Metadata) {
@@ -104,11 +104,11 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
     return this.resourceKind.metadataList.find(metadata => metadata.id === SystemMetadata.PARENT.id);
   }
 
-  editChanged() {
+  currentlyEditedResourceKindChanged() {
     this.resourceKind = new ResourceKind();
     this.hasWorkflowChosen = false;
-    if (this.edit) {
-      this.resourceKind = this.entitySerializer.clone(this.edit);
+    if (this.currentlyEditedResourceKind) {
+      this.resourceKind = this.entitySerializer.clone(this.currentlyEditedResourceKind);
       this.resourceKind.metadataList.forEach(metadata => {
         metadata.clearInheritedValues(this.metadataRepository).then(() => this.signaler.signal('original-metadata-changed'));
       });
@@ -118,16 +118,19 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
 
   detached() {
     this.sortingMetadata = false;
-    this.edit = undefined;
+    this.currentlyEditedResourceKind = undefined;
   }
 
   validateAndSubmit() {
     this.submitting = true;
+    $('.resource-kind-edit-form-metadata-item').removeClass('not-valid');
     this.controller.validate().then(result => {
       if (result.valid) {
         return Promise.resolve(this.submit({savedResourceKind: this.resourceKind}))
           .then(() => this.changeLossPreventer.enable(this))
           .then(() => this.editing || (this.resourceKind = new ResourceKind()));
+      } else {
+        $('.has-error').closest('.resource-kind-edit-form-metadata-item').addClass('not-valid');
       }
     }).finally(() => this.submitting = false);
   }

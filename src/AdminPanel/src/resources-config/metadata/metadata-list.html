@@ -12,8 +12,8 @@
         <template if.bind="!parentMetadata">
             <span>${'Add new metadata kind' | resourceClassTranslation:resourceClass}</span>
             <metadata-form submit.call="addNewMetadata(editedMetadata)"
-            cancel.call="addFormOpened = false"
-            resource-class.bind="resourceClass"></metadata-form>
+                cancel.call="addFormOpened = false"
+                resource-class.bind="resourceClass"></metadata-form>
         </template>
         <template else>
             <span>${'Add submetadata kind' | t}</span>

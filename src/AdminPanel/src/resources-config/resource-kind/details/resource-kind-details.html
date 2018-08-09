@@ -39,7 +39,7 @@
                     </template>
                     <resource-kind-form else
                         resource-class.bind="resourceKind.resourceClass"
-                        edit.bind="resourceKind"
+                        currently-edited-resource-kind.bind="resourceKind"
                         submit.call="saveEditedResourceKind(resourceKind, savedResourceKind)"
                         cancel.call="toggleEditForm()"></resource-kind-form>
                 </div>

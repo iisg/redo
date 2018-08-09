@@ -1,7 +1,7 @@
 @import "../../common/styles";
 
-workflow-form {
-    & > form .name-with-buttons-and-tabs .buttons {
+.workflow-form-content {
+    .name-with-buttons-and-tabs .buttons {
         margin-left: auto;
     }
     .content {

@@ -1,7 +1,7 @@
-import {bindable, useView} from "aurelia-templating";
-import {Metadata} from "../metadata/metadata";
-import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
+import {bindable, useView} from "aurelia-templating";
+import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
+import {Metadata} from "../metadata/metadata";
 
 @autoinject
 @useView("../metadata/metadata-editable-properties.html")
@@ -10,10 +10,9 @@ export class ResourceKindMetadataForm {
   @bindable originalMetadata: Metadata;
   @bindable editing: boolean = false;
   @bindable resourceClass: string;
+  validationControllerForCurrentScope: ValidationController;
 
-  private controller: ValidationController;
-
-  constructor(validationControllerFactory: ValidationControllerFactory) {
-    this.controller = validationControllerFactory.createForCurrentScope();
+  constructor(public validationController: ValidationController, validationControllerFactory: ValidationControllerFactory) {
+    this.validationControllerForCurrentScope = validationControllerFactory.createForCurrentScope();
   }
 }

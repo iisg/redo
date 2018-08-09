@@ -7,7 +7,8 @@
     <require from="common/components/buttons/submit-button.html"></require>
     <require from="common/components/buttons/make-copy-button.html"></require>
 
-    <form change.delegate="dirty = true">
+    <form class="workflow-form-content"
+        change.delegate="dirty = true">
         <div class="name-with-buttons-and-tabs">
             <span if.bind="viewing || editing"
                 class="page-title">${workflow.name | inCurrentLanguage & signal:UPDATE_SIGNAL}</span>

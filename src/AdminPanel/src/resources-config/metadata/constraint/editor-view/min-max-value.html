@@ -1,7 +1,7 @@
 <template>
     <require from="../min-max-value/min-max-value-constraint-editor"></require>
 
-    <min-max-value-constraint-editor min-max-value.bind="metadata.constraints.minMaxValue & validate"
+    <min-max-value-constraint-editor min-max-value.bind="metadata.constraints.minMaxValue & validate:validationController"
         original-min-max-value.bind="originalMetadata.constraints.minMaxValue"
         has-base.bind="!!originalMetadata"></min-max-value-constraint-editor>
 </template>

@@ -6,9 +6,9 @@ import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 import {ContextResourceClass} from "resources/context/context-resource-class";
+import {cachedResponseRegistry} from "../../common/repository/cached-response";
 import {Workflow} from "../workflow";
 import {WorkflowRepository} from "../workflow-repository";
-import {cachedResponseRegistry} from "../../common/repository/cached-response";
 
 @autoinject
 export class WorkflowDetails implements RoutableComponentActivate {
@@ -36,7 +36,6 @@ export class WorkflowDetails implements RoutableComponentActivate {
     this.navModel = routeConfig.navModel;
     this.updateWindowTitle();
     this.editing = params.action == 'edit';
-
   }
 
   private updateWindowTitle() {

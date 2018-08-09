@@ -34,7 +34,7 @@
                 view="./metadata-editable-properties.html"></compose>
         </div>
         <div class="form-buttons">
-            <submit-button editing.bind="!!edit"
+            <submit-button editing.bind="!!currentlyEditedMetadata"
                 submitting.bind="submitting"></submit-button>
             <cancel-button disabled.bind="metadata.pendingRequest || submitting"
                 click.delegate="cancelForm()"></cancel-button>

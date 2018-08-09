@@ -33,15 +33,16 @@
         ${'Label' | t}
         <required-field-indicator if.bind="required"></required-field-indicator>
     </span>
-    <multilingual-editor value.bind="metadata.label & validate"
+    <multilingual-editor value.bind="metadata.label & validateManually:validationControllerForCurrentScope"
         placeholder.bind="originalMetadata.label"></multilingual-editor>
     <span>${'Hint' | t}</span>
-    <multilingual-editor value.bind="metadata.placeholder & validate"
+    <multilingual-editor value.bind="metadata.placeholder & validateManually:validationControllerForCurrentScope"
         placeholder.bind="originalMetadata.placeholder"></multilingual-editor>
     <span>${'Description' | t}</span>
-    <multilingual-editor value.bind="metadata.description & validate"
+    <multilingual-editor value.bind="metadata.description & validateManually:validationControllerForCurrentScope"
         placeholder.bind="originalMetadata.description"></multilingual-editor>
     <metadata-constraint-form containerless
         metadata.bind="metadata"
-        original-metadata.bind="originalMetadata"></metadata-constraint-form>
+        original-metadata.bind="originalMetadata"
+        validation-controller.bind="validationController"></metadata-constraint-form>
 </template>

@@ -2,7 +2,8 @@
 
 @mixin flag-icon($flag-width) {
   display: inline-block;
-  width: $flag-width + 7px;
+  width: $flag-width;
+  margin-right: $default-gap-size / 2;
   text-align: left;
   img {
     width: $flag-width;
