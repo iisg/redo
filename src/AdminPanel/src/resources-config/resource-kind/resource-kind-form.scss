@@ -14,7 +14,7 @@ resource-kind-form {
 
     .resource-kind-edit-form-metadata-item {
       padding: $default-gap-size / 4;
-      &:first-child {
+      &:first-child:not(:last-child) {
         border-top-right-radius: 0;
       }
       & > div > :not(move-up-or-down-buttons):not(.buttons), & > resource-kind-metadata-form {
@@ -43,6 +43,10 @@ resource-kind-form {
       }
       & > resource-kind-metadata-form {
         padding: $default-gap-size /4;
+      }
+      &.not-valid {
+        z-index: 1;
+        border-color: $red;
       }
     }
 

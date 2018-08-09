@@ -38,7 +38,12 @@ export class BootstrapValidationRenderer implements ValidationRenderer {
     message.className = 'help-block validation-message';
     message.textContent = result.message;
     message.id = `validation-message-${result.id}`;
-    validationMessageContainer.appendChild(message);
+    const restoreFromOriginalButton = $(validationMessageContainer).find('restore-from-original-button');
+    if (restoreFromOriginalButton.length) {
+      $(message).insertBefore(restoreFromOriginalButton);
+    } else {
+      validationMessageContainer.appendChild(message);
+    }
   }
 
   private remove(element: Element, result: ValidateResult) {

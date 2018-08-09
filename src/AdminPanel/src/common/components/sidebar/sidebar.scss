@@ -33,13 +33,14 @@ sidebar {
         background-color: $dark-grey;
       }
       span {
-        white-space: nowrap;
         flex: 1;
         flex-shrink: 0;
-        text-align: center;
-        color: $grey;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         text-transform: uppercase;
+        text-align: center;
         font-weight: bold;
+        color: $grey;
       }
     }
   }

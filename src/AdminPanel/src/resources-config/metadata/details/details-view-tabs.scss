@@ -3,9 +3,14 @@
 aup-tab-content {
   #details.active > div {
     display: flex;
-    & > :first-child:not(:last-child) {
-      flex: 1;
-      padding: $default-gap-size;
+    & > :first-child {
+      &:not(:last-child) {
+        flex: 1;
+        padding: $default-gap-size;
+      }
+      &:last-child {
+        padding: $default-gap-size / 2;
+      }
     }
   }
 }

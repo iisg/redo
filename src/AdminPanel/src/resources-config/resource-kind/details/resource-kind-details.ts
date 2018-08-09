@@ -1,10 +1,10 @@
-import {EventAggregator, Subscription} from "aurelia-event-aggregator";
-import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
-import {ResourceKind} from "resources-config/resource-kind/resource-kind";
-import {NavigationInstruction, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
 import {autoinject} from "aurelia-dependency-injection";
-import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {I18N} from "aurelia-i18n";
+import {NavigationInstruction, RoutableComponentActivate, Router} from "aurelia-router";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
+import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {ContextResourceClass} from "resources/context/context-resource-class";
 import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
 
@@ -35,7 +35,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     this.urlListener.dispose();
   }
 
-  async activate(params: any, routeConfig: RouteConfig) {
+  async activate(params: any) {
     this.resourceKind = await this.resourceKindRepository.get(params.id);
     this.activateTabs(params.tab);
     this.contextResourceClass.setCurrent(this.resourceKind.resourceClass);

@@ -1,15 +1,15 @@
-import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
-import {autoinject} from "aurelia-dependency-injection";
-import {Metadata} from "../metadata";
+import {bindable} from "aurelia-templating";
+import {ValidationController} from "aurelia-validation";
 import * as changeCase from "change-case";
 import {oneTime} from "common/components/binding-mode";
+import {Metadata} from "../metadata";
 
-@autoinject
 export class MetadataConstraintEditor {
   @bindable(oneTime) name: string;
   @bindable metadata: Metadata;
   @bindable originalMetadata: Metadata;
+  @bindable validationController: ValidationController;
 
   composeModel = {};
 

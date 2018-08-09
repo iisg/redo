@@ -4,8 +4,7 @@ multilingual-editor {
   & > :not(.validation-message) {
     @include form-element();
   }
-  flag > span {
-    display: flex;
-    align-items: center;
+  flag {
+    line-height: 0;
   }
 }
