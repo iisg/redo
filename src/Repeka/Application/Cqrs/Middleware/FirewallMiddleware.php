@@ -38,7 +38,7 @@ class FirewallMiddleware implements CommandBusMiddleware {
             $requiredRoleName = $command instanceof HasResourceClass
                 ? $requiredRole->roleName($command->getResourceClass())
                 : $requiredRole->roleName();
-            if (!in_array($requiredRoleName, $executor->getRoles())) {
+            if (!$executor->hasRole($requiredRoleName)) {
                 throw new InsufficientPrivilegesException(
                     "User {$executor->getUsername()} does not have required role {$requiredRoleName} "
                     . "to execute {$command->getCommandName()} command."

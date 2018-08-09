@@ -3,15 +3,19 @@
         <throbber></throbber>
         ${'Resource' | t} #${id}&hellip;
     </span>
-    <template if.bind="!loading && resource != undefined">
-        <a route-href="route: resources/details; params.bind: {id: resource.id}; replace: true">
-            ${resource | resourceLabel}
-        </a>
+    <template else>
+        <template if.bind="resource !== undefined">
+            <span if.bind="resource.isTeaser">${resource | resourceLabel}</span>
+            <a else
+                route-href="route: resources/details; params.bind: {id: resource.id}; replace: true">
+                ${resource | resourceLabel}
+            </a>
+        </template>
+        <span else
+            class="text-warning"
+            title.bind="'Resource doesn\'t exist' | t">
+            <icon name="remove-5"></icon>
+            ${'Resource' | t} #${id}
+        </span>
     </template>
-    <span if.bind="!loading && resource == undefined"
-        class="text-warning"
-        title.bind="'Resource doesn\'t exist' | t">
-        <icon name="remove-5"></icon>
-        ${'Resource' | t} #${id}
-    </span>
 </template>

@@ -50,7 +50,7 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->testAuthSuccess();
         $admin = $this->getAdminUser();
         $this->assertGreaterThan(2, count($admin->getRoles()));
-        $this->assertContains(SystemRole::ADMIN()->roleName(), $admin->getRoles());
+        $this->assertTrue($admin->hasRole(SystemRole::ADMIN()->roleName()));
     }
 
     public function testAuthFailure() {

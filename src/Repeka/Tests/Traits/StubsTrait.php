@@ -120,6 +120,11 @@ trait StubsTrait {
         $mock->method('getMarking')->willReturn($marking);
         $mock->method('hasWorkflow')->willReturn($resourceKind && $resourceKind->getWorkflow());
         $mock->method('getWorkflow')->willReturn($resourceKind ? $resourceKind->getWorkflow() : null);
+        $mock->method('getValues')->willReturnCallback(
+            function ($m) use ($contents) {
+                return $contents->getValues($m);
+            }
+        );
         return $mock;
     }
 

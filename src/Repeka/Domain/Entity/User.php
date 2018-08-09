@@ -45,6 +45,10 @@ abstract class User implements Identifiable {
         return $this->roles ?? [];
     }
 
+    public function hasRole(string $roleName): bool {
+        return in_array($roleName, $this->getRoles());
+    }
+
     public function updateRoles(array $roles): void {
         $this->roles = array_values($roles);
     }
