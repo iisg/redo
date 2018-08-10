@@ -21,6 +21,8 @@ invalidSelector: "Mapping '{{mappingKey}}' has invalid selector: {{selector}}"
 invalidTransform: "Invalid transform definition '{{name}}' with parameters: {{params}}"
 metadataNameIsNotUnique: Metada kind with that name already exists
 insufficientPermissions: You do not have permissions required to perform this action
+invalidRegex: Invalid declaration of regular expression.
+invalidConstraintArguments: "contains invalid constraint arguments: '{{constraintError}}'"
 valuesDoNotMatchResourceKind: "Metadata list has been changed in resource kind and edited resource does not match. Refresh page and apply changes again. Details: \"{{originalMessage}}\"."
 metadataConstrainedToUsers: relationship '{{name}}' must be constrained to users because metadata determines assignee
 violationFields:
@@ -36,3 +38,4 @@ violationFields:
   places: Edited places
   transitions: Transitions
   contents: Resource contents
+  constraints: Constraints

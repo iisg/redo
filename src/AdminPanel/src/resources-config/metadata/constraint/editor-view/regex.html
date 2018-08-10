@@ -1,7 +1,7 @@
 <template>
     <require from="../regex/regex-constraint-editor"></require>
 
-    <regex-constraint-editor regex.bind="metadata.constraints.regex"
+    <regex-constraint-editor regex.bind="metadata.constraints.regex & validate:validationController"
         original-regex.bind="originalMetadata.constraints.regex"
         has-base.bind="!!originalMetadata"></regex-constraint-editor>
 </template>

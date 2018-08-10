@@ -28,6 +28,15 @@ export class MetadataConstraints {
   }
 }
 
+function isRegexDeclarationValid(regex: string): boolean {
+  try {
+    new RegExp(regex);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 export function registerMetadataConstraintsValidationRules() {
   ValidationRules
     .ensure('minMaxValue').satisfies(obj => obj === undefined || obj.min === undefined || obj.max === undefined
@@ -35,6 +44,8 @@ export function registerMetadataConstraintsValidationRules() {
     .withMessageKey('minMaxValueRange')
     .ensure('maxCount').satisfies(obj => obj === undefined || Number.isInteger(obj) && (obj > 0 || obj === -1))
     .withMessageKey('minimalMaxCount')
+    .ensure('regex').satisfies(obj => obj === undefined || isRegexDeclarationValid(obj.toString()))
+    .withMessageKey('invalidRegex')
     .on(MetadataConstraints);
 }
 

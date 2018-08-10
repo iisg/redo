@@ -6,3 +6,4 @@ lengthUpTo10: Length up to 10 characters.
 requiredInAllLanguages: ${$displayName} must have a value in all languages.
 minMaxValueRange: Minimal value must be less or equal to maximum value.
 minimalMaxCount: Max value count must be at least one.
+invalidRegex: Invalid declaration of regular expression.

@@ -4,6 +4,12 @@ namespace Repeka\Domain\Exception;
 class DomainException extends \RuntimeException {
     private $errorMessageId;
     protected $params;
+    /**
+     * Param name that is interpreted in frontend to detect parameters that needs further translation.
+     * Example:
+     * new DomainException('id', 400, ['p1' => 'translationKey', DomainException::TRANSLATE_PARAMS => ['p1']);
+     */
+    const TRANSLATE_PARAMS = 'translateParams';
 
     /**
      * @param string $errorMessageId Used in front-end to build localized, user-friendly error messages

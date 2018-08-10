@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\Validation\MetadataConstraints;
 
 use Repeka\Application\Service\PhpRegexNormalizer;
+use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Validation\MetadataConstraints\RegexConstraint;
 use Repeka\Tests\Traits\StubsTrait;
@@ -20,6 +21,19 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($this->constraint->isConfigValid(['bad']));
         $this->assertFalse($this->constraint->isConfigValid(0));
         $this->assertFalse($this->constraint->isConfigValid(null));
+    }
+
+    public function testRejectInvalidRegexWithExceptionParamToTranslate() {
+        try {
+            $this->assertFalse($this->constraint->isConfigValid(')'));
+        } catch (InvalidCommandException $e) {
+            $array = [
+                'field' => 'constraints',
+                'constraintError' => 'invalidRegex',
+                DomainException::TRANSLATE_PARAMS => ['constraintError'],
+            ];
+            $this->assertEquals($e->getViolations(), $array);
+        }
     }
 
     public function testAcceptsGoodArguments() {

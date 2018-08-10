@@ -1,0 +1,7 @@
+@import "../../../../common/styles";
+
+min-max-value-constraint-editor {
+    & > * {
+        @include form-element();
+    }
+}

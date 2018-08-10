@@ -3,6 +3,8 @@ namespace Repeka\Domain\Validation\MetadataConstraints;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Exception\DomainException;
+use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Service\RegexNormalizer;
 use Respect\Validation\Validator;
 
@@ -21,6 +23,7 @@ class RegexConstraint extends RespectValidationMetadataConstraint {
     /**
      * @param string $pattern
      * @see https://stackoverflow.com/a/12941133/1937994 for explanation how this regex validation works
+     * @return bool
      */
     public function isConfigValid($pattern): bool {
         if ($pattern === '') {
@@ -29,7 +32,20 @@ class RegexConstraint extends RespectValidationMetadataConstraint {
             return false;
         }
         $phpRegex = $this->regexNormalizer->normalize($pattern);
-        return @preg_match($phpRegex, null) !== false;
+        $regexValid = @preg_match($phpRegex, null) !== false;
+        if ($regexValid) {
+            return true;
+        } else {
+            throw new InvalidCommandException(
+                null,
+                [
+                    'field' => 'constraints',
+                    'constraintError' => 'invalidRegex',
+                    DomainException::TRANSLATE_PARAMS => ['constraintError'],
+                ],
+                'invalidRegex'
+            );
+        }
     }
 
     public function getValidator(Metadata $metadata, $pattern, $metadataValue) {
