@@ -8,3 +8,4 @@ Workflow must consist of at least one place: Proces musi zawierać co najmniej j
 Template compilation error: Błąd kompilacji szablonu
 minMaxValueRange: Minimalna wartość musi być mniejsza lub równa maksymalnej wartości.
 minimalMaxCount: Wartość maksymalnej liczby wartości musi wynosić przynajmniej jeden.
+invalidRegex: Niewłaściwa deklaracja wyrażenia regularnego.

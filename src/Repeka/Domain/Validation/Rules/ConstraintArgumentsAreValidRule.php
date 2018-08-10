@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
+use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Validation\Exceptions\ConstraintArgumentsAreValidRuleException;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Respect\Validation\Rules\AbstractRule;
@@ -32,6 +33,11 @@ class ConstraintArgumentsAreValidRule extends AbstractRule {
                     throw new \InvalidArgumentException('Invalid metadata constraint.');
                 }
             }
+        } catch (InvalidCommandException $e) {
+            throw $this->reportError(
+                $input,
+                $e->getViolations()
+            );
         } catch (\Exception $e) {
             throw $this->reportError(
                 $input,

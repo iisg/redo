@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Tests\Domain\Validation\Rules;
 
-use Repeka\Domain\Validation\Exceptions\ConstraintArgumentsAreValidRuleException;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
@@ -75,8 +74,10 @@ class ConstraintArgumentsAreValidRuleTest extends \PHPUnit_Framework_TestCase {
         $constraintManager = $this->createMetadataConstraintManagerStub(['a' => $constraint]);
         $rule = new ConstraintArgumentsAreValidRule($constraintManager);
         $this->assertFalse($rule->validate(['a' => 1]));
-        $this->expectExceptionMessage(ConstraintArgumentsAreValidRuleException::class);
-        $this->expectExceptionMessage('UNICORNS,');
-        $rule->assert(['a' => 1]);
+        try {
+            $rule->assert(['a' => 1]);
+        } catch (\Exception $e) {
+            $this->assertEquals($e->getParam('error'), "UNICORNS, UNICORNS EVERYWHERE");
+        }
     }
 }

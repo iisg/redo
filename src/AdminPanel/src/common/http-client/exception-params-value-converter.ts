@@ -1,13 +1,15 @@
 import {InCurrentLanguageValueConverter} from './../../resources-config/multilingual-field/in-current-language';
 import {autoinject} from 'aurelia-dependency-injection';
 import {mapValuesShallow} from "../utils/object-utils";
+import {I18N} from "aurelia-i18n";
 
 @autoinject
 export class ExceptionParamsValueConverter {
-  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter) {
+  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter, private i18n: I18N) {
   }
 
   toView(params) {
+    params = this.translateParams(params);
     return this.selectLabelTranslations(params);
   }
 
@@ -17,6 +19,15 @@ export class ExceptionParamsValueConverter {
 
   private selectLabelTranslationsArray(params: any[]): any[] {
     return params.map(param => this.selectLabelTranslationCallback(param));
+  }
+
+  private translateParams(params: AnyMap<any>): AnyMap<any> {
+    if (params.translateParams) {
+      for (let translateParam of params.translateParams) {
+        params[translateParam] = this.i18n.tr('exceptions::' + params[translateParam]);
+      }
+    }
+    return params;
   }
 
   private selectLabelTranslationCallback(value: any): string {

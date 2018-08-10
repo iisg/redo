@@ -4,7 +4,6 @@ namespace Repeka\Domain\Validation\Rules;
 use Assert\Assertion;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
-use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Utils\ArrayUtils;
 use Respect\Validation\Rules\AbstractRule;

@@ -37,6 +37,7 @@ violationFields:
   places: Edytowane Miejsca
   transitions: Przejścia
   contents: Zawartość zasobu
+  constraints: Ograniczenia
 resource has children: zasób ma podzasoby.
 resources of this kind exist: istnieją zasoby tego rodzaju.
 workflow is assigned to one of resource kinds: proces jest przypisany do jednego z rodzajów zasobów
@@ -47,3 +48,5 @@ Workflow places you want to delete are occupied: Występują zasoby w miejscach 
 First place cannot contain assignee metadata: W pierwszym stanie nie można wymagać przypisania osoby
 Places or Transitions exist without a name specified in every language: Istnieją stany albo przejścia bez nazwy określonej w każdym języku
 value must be set in all languages: musi mieć wartość we wszystkich językach
+invalidRegex: Niewłaściwa deklaracja wyrażania regularnego.
+invalidConstraintArguments: "zawierają niepoprawne deklaracje ograniczeń: '{{constraintError}}'"
