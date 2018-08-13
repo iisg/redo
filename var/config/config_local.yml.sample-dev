@@ -8,6 +8,7 @@ doctrine:
 repeka:
   resource_classes:
     - name: books
+      icon: publish-4
       admins:
         - Username: admin
       operators:
@@ -15,9 +16,11 @@ repeka:
         - Username: tester
         - Username: skaner
     - name: dictionaries
+      icon: dictionary
       admins:
         - Username: admin
     - name: users
+      icon: user
       admins:
         - Imię: Józef
       operators:

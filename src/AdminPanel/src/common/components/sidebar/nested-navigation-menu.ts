@@ -37,15 +37,18 @@ export class NestedNavigationMenu {
   private getMenuItems() {
     const resourceClasses: string[] = this.getResourceClasses();
 
-    const routeToLink: (className?: string) => (route: AbstractRoute) => NavLink =
-      (className?: string) => (route: AbstractRoute) => {
+    const routeToLink: (className?: string, classIcon?: string) => (route: AbstractRoute) => NavLink =
+      (className?: string, classIcon?: string) => (route: AbstractRoute) => {
         const labelKey = className
           ? `resource_classes::${className}//${route.name}`
           : `navigation::${route.title}`;
         if (route.route.indexOf(':resourceClass') == -1) {
           className = undefined;
         }
-        return new NavLink(route.name, labelKey, route.settings.icon, className, route.settings.requiredRole);
+        classIcon = classIcon ? classIcon : route.settings.icon;
+        const navLink = new NavLink(route.name, labelKey, classIcon, className, route.settings.requiredRole);
+        classIcon = undefined;
+        return navLink;
       };
 
     const top: NavLink[] = this.routeFilter.getRoutes(NavRole.TOP).map(routeToLink());
@@ -53,7 +56,8 @@ export class NestedNavigationMenu {
 
     let middle: NavItem[] = [];
     for (const resourceClass of resourceClasses) {
-      const primary: NavLink[] = this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS).map(routeToLink(resourceClass));
+      const classIcon = this.getIconForResourceClass(resourceClass);
+      const primary: NavLink[] = this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS).map(routeToLink(resourceClass, classIcon));
       const secondary = new NavGroup('resource_classes::' + resourceClass + '//settings', resourceClass,
         this.routeFilter.getRoutes(NavRole.PER_RESOURCE_CLASS_SECONDARY).map(routeToLink(resourceClass))
       );
@@ -65,6 +69,10 @@ export class NestedNavigationMenu {
   private getResourceClasses(): string[] {
     const classMap: AnyMap<string> = this.config.get('resource_classes');
     return values(classMap);
+  }
+
+  private getIconForResourceClass(resourceClass: string): string {
+    return this.config.get('resource_classes_icons')[resourceClass];
   }
 }
 
