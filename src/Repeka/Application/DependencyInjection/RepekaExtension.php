@@ -49,20 +49,25 @@ class RepekaExtension extends ConfigurableExtension {
         $resourceClasses = $mergedConfig['resource_classes'];
         $resourceClassesNames = array_column($mergedConfig['resource_classes'], 'name');
         foreach (SystemResourceClass::toArray() as $systemResourceClassName) {
-            if (!in_array($systemResourceClassName, $resourceClassesNames)) {
+            $systemResourceClassConfig = SystemResourceClass::toSystemResourceClassConfig($systemResourceClassName);
+            if (!in_array($systemResourceClassConfig['name'], $resourceClassesNames)) {
                 $resourceClasses[] = [
-                    'name' => $systemResourceClassName,
+                    'name' => $systemResourceClassConfig['name'],
+                    'icon' => $systemResourceClassConfig['icon'],
                     'admins' => [],
                     'operators' => [],
                 ];
             }
         }
         $resourceClassesConfig = [];
+        $resourceClassesIcons = [];
         foreach ($resourceClasses as $resourceClassConfig) {
             $resourceClassesConfig[$resourceClassConfig['name']] = array_merge(['admins' => [], 'operators' => []], $resourceClassConfig);
+            $resourceClassesIcons = array_merge($resourceClassesIcons, [$resourceClassConfig['name'] => $resourceClassConfig['icon']]);
         }
         $resourceClassesNames = array_column($resourceClasses, 'name');
         $container->setParameter('repeka.resource_classes', $resourceClassesNames);
+        $container->setParameter('repeka.resource_classes_icons', $resourceClassesIcons);
         $container->setParameter('repeka.resource_classes_config', $resourceClassesConfig);
     }
 }

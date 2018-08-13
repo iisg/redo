@@ -15,6 +15,7 @@ class ConfigController extends ApiController {
         'application_version' => 'repeka.version',
         'default_ui_language' => 'repeka.default_ui_language',
         'resource_classes' => 'repeka.resource_classes',
+        'resource_classes_icons' => 'repeka.resource_classes_icons',
         'static_permissions' => 'repeka.static_permissions',
     ];
 

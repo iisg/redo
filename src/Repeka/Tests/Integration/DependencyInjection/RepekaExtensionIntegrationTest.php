@@ -17,6 +17,7 @@ class RepekaExtensionIntegrationTest extends IntegrationTestCase {
             $this->assertArrayHasKey('admins', $resourceClass);
             $this->assertArrayHasKey('operators', $resourceClass);
             $this->assertTrue(is_string($resourceClass['name']));
+            $this->assertTrue(is_string($resourceClass['icon']));
             $this->assertTrue(is_array($resourceClass['admins']));
             $this->assertTrue(is_array($resourceClass['operators']));
         }

@@ -6,12 +6,15 @@ doctrine:
 repeka:
   resource_classes:
     - name: books
+      icon: publish-4
       admins:
         - Username: admin
     - name: dictionaries
+      icon: dictionary
       admins:
         - Username: admin
     - name: users
+      icon: user
       admins:
         - Username: admin
   pk_auth:
