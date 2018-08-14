@@ -10,9 +10,11 @@ use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
 use Repeka\Domain\Validation\Rules\ResourceMetadataSortCorrectStructureRule;
 
 class ResourceListQueryValidatorTest extends \PHPUnit_Framework_TestCase {
+    /** @var ResourceContentsCorrectStructureRule|\PHPUnit_Framework_MockObject_MockObject */
     private $resourceContentsStructureRule;
+    /** @var ResourceMetadataSortCorrectStructureRule|\PHPUnit_Framework_MockObject_MockObject */
     private $resourceMetadataSortCorrectStructureRule;
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var ResourceClassExistsRule|\PHPUnit_Framework_MockObject_MockObject */
     private $resourceClassExistsRule;
     /** @var ResourceListQueryValidator */
     private $validator;

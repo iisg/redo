@@ -91,6 +91,9 @@ Collapse: Zwiń
 Expand: Rozwiń
 No results: Brak wyników
 Loading more results: Ładowanie kolejnych elementów
+Loading: Ładowanie
+Load more: Załaduj więcej
+Load error: Błąd ładowania
 Searching: Wyszukiwanie
 Confirm deletion: Potwierdź usunięcie
 Are you sure you want to delete {{entityType}} {{caption}}?: Czy na pewno chcesz usunąć {{entity}} {{caption}}?
@@ -149,7 +152,7 @@ To states: Do stanu
 And move to state: i przejdź do stanu
 No more values are allowed: Wprowadzono maksymalną liczbę wartości
 Some metadata constraints have not been met. Fix the form errors and try again.: Wymagania niektórych metadanych nie zostały spełnione. Popraw błędy formularza i spróbuj ponownie.
-To see dropdown choose allowed resource kinds in metadata settings.: Aby zobaczyć listę zasobów, wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
+To select resources choose allowed resource kinds in metadata settings.: Aby wybrać zasoby, wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
 Additional filter limits results in this dropdown: Dodatkowy filtr ogranicza zasoby wyświetlane w powyższym polu
 Additional filter would limit results in this dropdown during normal edit: Dodatkowy filtr ograniczałby zasoby wyświetlane w powyższym polu przy standardowej edycji
 Filter defined in metadata kind settings is disabled for this resource kind: Filtr zdefiniowany w ustawieniach metadanej jest wyłączony dla tego rodzaju zasobu

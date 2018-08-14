@@ -3,19 +3,22 @@
     <require from="common/value-converters/to-array-value-converter"></require>
     <require from="resources/details/resource-link"></require>
 
-    <template if.bind="metadataValue.value">
+    <template if.bind="metadataValue.value && metadataValue.value !== 'treeSelector'">
         <resource-link id.bind="metadataValue.value"></resource-link>
     </template>
 
     <template else>
-        <resource-picker resource-id.bind="metadataValue.value & validate:validationController:validationRules"
+        <resource-picker if.bind="metadata.constraints.resourceKind.length !== 0"
+            resource-ids.bind="resource.contents[metadata.id]"
+            id.bind="metadataValue.value & validate:validationController:validationRules"
             resource-kind-ids.bind="skipValidation ? [] : metadata.constraints.resourceKind"
             contents-filter.bind="skipValidation ? undefined : metadata.constraints.relatedResourceMetadataFilter"
             resource-class.bind="!skipValidation && metadata.id == -1 ? resource.resourceClass : undefined"
-            disabled.bind="disabled || (metadata.constraints.resourceKind.length === 0 && !skipValidation)"></resource-picker>
+            disabled.bind="disabled || metadata.constraints.resourceKind.length === 0 && !skipValidation"
+        ></resource-picker>
 
         <span if.bind="!skipValidation && metadata.constraints.resourceKind.length === 0">
-            ${'To see dropdown choose allowed resource kinds in metadata settings.' | t}
+            ${'To select resources choose allowed resource kinds in metadata settings.' | t}
             <a route-href="route: metadata/details; params.bind: {id: metadata.id, action: 'edit'}"
                 if.bind="'ADMIN' | hasRole:metadata.resourceClass">
                 ${'Go to the metadata kind settings' | t}

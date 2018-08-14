@@ -1,7 +1,6 @@
 <template>
     <require from="resources/list/resources-list-table"></require>
     <require from="./possible-actions.html"></require>
-
     <div class="tasks">
         <span class="page-title">${"Your current tasks" | t}:</span>
         <div if.bind="tasksCollection && !myTasksExists"

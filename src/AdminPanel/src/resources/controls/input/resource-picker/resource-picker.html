@@ -1,16 +1,7 @@
 <template>
-    <require from="resources/details/resource-metadata-table/resource-metadata-table"></require>
-    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="common/components/tree-view/tree-view"></require>
 
-    <dropdown-select values.bind="resources"
-        value.bind="value"
-        disabled.bind="disabled"
-        search-function.call="search(term, page)"
-        formatter.call="formatDropdownItem(item)">
-    </dropdown-select>
-    <p if.bind="invalidValue"
-        class="text-danger">
-        <icon name="remove-5"></icon>
-        ${"Resource #{{id}} doesn't exist" | t:{id: resourceId}}
-    </p>
+    <tree-view load-subtree.call="loadSubtree(request)"
+        selected-keys.bind="selectedKeys"
+    ></tree-view>
 </template>

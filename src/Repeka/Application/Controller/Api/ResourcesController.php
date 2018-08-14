@@ -15,8 +15,10 @@ use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTopLevelPathQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
+use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
+use Repeka\Domain\UseCase\TreeResult;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -51,15 +53,53 @@ class ResourcesController extends ApiController {
             ->sortBy($sortByIds)
             ->filterByParentId($parentId)
             ->filterByWorkflowPlacesIds($workflowPlacesIds);
+        if ($topLevel) {
+            $resourceListQueryBuilder->onlyTopLevel();
+        }
         if ($request->query->has('page')) {
             $page = $request->query->get('page', 1);
             $resultsPerPage = $request->query->get('resultsPerPage', 10);
             $resourceListQueryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
         }
-        $resourceListQuery = $topLevel ? $resourceListQueryBuilder->onlyTopLevel()->build() : $resourceListQueryBuilder->build();
+        $resourceListQuery = $resourceListQueryBuilder->build();
         /** @var PageResult $resources */
         $resources = $this->handleCommand($resourceListQuery);
         return $this->createPageResponse($resources);
+    }
+
+    /**
+     * @Route("/tree")
+     * @Method("GET")
+     */
+    public function getTreeAction(Request $request) {
+        $rootId = $request->query->get('rootId', 0);
+        $depth = $request->query->get('depth', 0);
+        $siblings = $request->query->get('siblings', 5);
+        $resourceClasses = $request->get('resourceClasses', []);
+        $resourceKindIds = $request->get('resourceKinds', []);
+        $contentsFilter = $request->get('contentsFilter', []);
+        Assertion::isArray($resourceClasses);
+        Assertion::isArray($resourceKindIds);
+        Assertion::isArray($contentsFilter);
+        $resourceTreeQueryBuilder = ResourceTreeQuery::builder()
+            ->forRootId($rootId)
+            ->includeWithinDepth($depth)
+            ->setSiblings($siblings)
+            ->filterByResourceClasses($resourceClasses)
+            ->filterByResourceKinds($resourceKindIds)
+            ->filterByContents($contentsFilter);
+        if ($request->query->has('page')) {
+            $page = $request->query->get('page', 1);
+            $resultsPerPage = $request->query->get('resultsPerPage', 10);
+            $resourceTreeQueryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
+        }
+        if ($request->query->has('oneMoreElements')) {
+            $resourceTreeQueryBuilder->oneMoreElements();
+        }
+        $resourceTreeQuery = $resourceTreeQueryBuilder->build();
+        /** @var TreeResult $resources */
+        $resources = $this->handleCommand($resourceTreeQuery);
+        return $this->createJsonResponse($resources);
     }
 
     /**
