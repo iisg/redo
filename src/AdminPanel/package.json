@@ -105,6 +105,7 @@
       "fetch": "github:github/fetch@^1.0.0",
       "jodit": "npm:jodit@^3.2.10",
       "jquery": "npm:jquery@3.2.1",
+      "jquery.fancytree": "npm:jquery.fancytree@^2.29.1",
       "lodash": "npm:lodash@^4.17.10",
       "moment": "npm:moment@^2.22.2",
       "nprogress": "github:rstacruz/nprogress@^0.2.0",

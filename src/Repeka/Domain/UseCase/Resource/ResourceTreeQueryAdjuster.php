@@ -7,43 +7,34 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
-use Repeka\Domain\UseCase\ColumnSortDataConverter;
 
-class ResourceListQueryAdjuster implements CommandAdjuster {
+class ResourceTreeQueryAdjuster implements CommandAdjuster {
 
     /** @var MetadataRepository */
     private $metadataRepository;
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
-    /** @var ColumnSortDataConverter */
-    private $columnSortDataConverter;
 
-    public function __construct(
-        MetadataRepository $metadataRepository,
-        ResourceKindRepository $resourceKindRepository,
-        ColumnSortDataConverter $columnSortDataConverter
-    ) {
+    public function __construct(MetadataRepository $metadataRepository, ResourceKindRepository $resourceKindRepository) {
         $this->metadataRepository = $metadataRepository;
         $this->resourceKindRepository = $resourceKindRepository;
-        $this->columnSortDataConverter = $columnSortDataConverter;
     }
 
     /**
-     * @param ResourceListQuery $query
-     * @return ResourceListQuery
+     * @param ResourceTreeQuery $query
+     * @return ResourceTreeQuery
      */
     public function adjustCommand(Command $query): Command {
-        return ResourceListQuery::withParams(
-            $query->getIds(),
+        return ResourceTreeQuery::withParams(
+            $query->getRootId(),
+            $query->getDepth(),
+            $query->getSiblings(),
             $query->getResourceClasses(),
             $this->convertResourceKindIdsToResourceKinds($query->getResourceKinds()),
-            $this->columnSortDataConverter->convertSortByMetadataColumnsToIntegers($query->getSortBy()),
-            $query->getParentId(),
-            $this->mapMetadataNamesToIdsInContentFilter($query->getContentsFilters()),
-            $query->onlyTopLevel(),
+            $this->mapMetadataNamesToIdsInContentFilter($query->getContentsFilter()),
             $query->getPage(),
             $query->getResultsPerPage(),
-            $query->getWorkflowPlacesIds()
+            $query->oneMoreElements()
         );
     }
 
@@ -59,12 +50,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
         );
     }
 
-    private function mapMetadataNamesToIdsInContentFilter(array $contentsFilters) {
-        return array_map(
-            function (ResourceContents $contentsFilter) {
-                return $contentsFilter->withMetadataNamesMappedToIds($this->metadataRepository);
-            },
-            $contentsFilters
-        );
+    private function mapMetadataNamesToIdsInContentFilter(ResourceContents $contentsFilter) {
+        return $contentsFilter->withMetadataNamesMappedToIds($this->metadataRepository);
     }
 }

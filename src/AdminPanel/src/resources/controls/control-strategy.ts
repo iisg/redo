@@ -26,6 +26,9 @@ export class ControlStrategy {
       if (this.metadata.control == MetadataControl.BOOLEAN && !this.metadataValue.value) {
         this.metadataValue.value = false; // forces "undefined" boolean values to be false
       }
+      if (this.metadata.control == MetadataControl.RELATIONSHIP && !this.metadataValue.value) {
+        this.metadataValue.value = 'treeSelector'; // forces tree selector to be closed by user
+      }
     }
   }
 

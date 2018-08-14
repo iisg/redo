@@ -10,10 +10,14 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Factory\ResourceListQuerySqlFactory;
+use Repeka\Domain\Factory\ResourceTreeQuerySqlFactory;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
+use Repeka\Domain\UseCase\TreeResult;
+use Repeka\Domain\Utils\EntityUtils;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -55,6 +59,85 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             ->setParameters($queryFactory->getParams());
         $total = count($total->getScalarResult());
         return new PageResult($pageContents, $total, $query->getPage());
+    }
+
+    public function findByTreeQuery(ResourceTreeQuery $query): TreeResult {
+        $queryFactory = new ResourceTreeQuerySqlFactory($query);
+        /** @var ResourceEntity[] $allResources */
+        $treeResources = $this->getResources($queryFactory, $query->getRootId(), $query->hasSiblings() || $query->paginate());
+        $matchingResources = count($treeResources)
+            ? $this->getMatchingResources($queryFactory, $treeResources)
+            : [];
+        return new TreeResult($treeResources, $matchingResources, $query->getPage());
+    }
+
+    /** @return ResourceEntity[] */
+    private function getResources(ResourceTreeQuerySqlFactory $queryFactory, $rootId, $fixFragments) {
+        $em = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::resourceEntity($em);
+        $dbQuery = $em->createNativeQuery($queryFactory->getTreeQuery(), $resultSetMapping)->setParameters($queryFactory->getParams());
+        $resources = $dbQuery->getResult();
+        return $fixFragments
+            ? $this->filterOneConnectedComponent($resources, $rootId)
+            : $resources;
+    }
+
+    /** @return int[] */
+    private function getMatchingResources(ResourceTreeQuerySqlFactory $queryFactory, $resources) {
+        $em = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::scalar('id');
+        $ids = EntityUtils::mapToIds($resources);
+        $dbQuery = $em->createNativeQuery($queryFactory->getMatchingResourcesQuery($ids), $resultSetMapping)
+            ->setParameters($queryFactory->getParams());
+        return array_column($dbQuery->getResult(), 'id');
+    }
+
+    /**
+     * @param ResourceEntity[] $fragmentedTrees
+     * @param int $rootId
+     * @return ResourceEntity[]
+     */
+    private function filterOneConnectedComponent($fragmentedTrees, $rootId = 0) {
+        /** @var ResourceEntity[] $resourcesByIds */
+        $resourcesByIds = [];
+        foreach ($fragmentedTrees as $resource) {
+            $resourcesByIds[$resource->getId()] = $resource;
+        }
+        /** @var ResourceEntity[] $connectedResources */
+        $connectedResources = [$rootId => 'root'];
+        /** @var ResourceEntity[] $discardedResources */
+        $discardedResources = [];
+        foreach ($resourcesByIds as $id => $resource) {
+            $this->assignResourceToComponent($id, $resource, $rootId, $resourcesByIds, $connectedResources, $discardedResources);
+        }
+        unset($connectedResources[$rootId]);
+        return $connectedResources;
+    }
+
+    /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
+    private function assignResourceToComponent($id, $resource, $rootId, $resourcesByIds, &$connectedResources, &$discardedResources) {
+        /** @var ResourceEntity[] $line */
+        $line = [$id => $resource];
+        $nextToCheck = $resource;
+        $found = false;
+        // look at resource and its ancestors to determine if is below root or not
+        while (!$found) {
+            if (array_key_exists($nextToCheck->getId(), $connectedResources)
+                || (!$nextToCheck->hasParent() && $rootId === 0)
+                || $nextToCheck->getParentId() === $rootId) {
+                $connectedResources = $connectedResources + $line;
+                $found = true;
+            } elseif (array_key_exists($nextToCheck->getId(), $discardedResources)
+                || (!$nextToCheck->hasParent() && $rootId !== 0)
+                || !array_key_exists($nextToCheck->getParentId(), $resourcesByIds)) {
+                $discardedResources = $discardedResources + $line;
+                $found = true;
+            } else {
+                /** @var ResourceEntity $nextToCheck */
+                $nextToCheck = $resourcesByIds[$resource->getParentId()];
+                $line[$nextToCheck->getId()] = $nextToCheck;
+            }
+        }
     }
 
     public function exists(int $resourceId): bool {

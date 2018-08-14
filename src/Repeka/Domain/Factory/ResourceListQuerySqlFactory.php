@@ -59,7 +59,7 @@ class ResourceListQuerySqlFactory {
      *       AND $this->wheres[end]
      *       AND ($this->whereAlternatives[0] OR ... OR $this->whereAlternatives[end]).
      */
-    private function getSelectQuery(string $what) {
+    protected function getSelectQuery(string $what) {
         $wheres = $this->wheres;
         if (!empty($this->whereAlternatives)) {
             $wheres[] = '(' . implode(' OR ', $this->whereAlternatives) . ')';
@@ -79,14 +79,14 @@ class ResourceListQuerySqlFactory {
         }
     }
 
-    private function filterByResourceClasses(): void {
+    protected function filterByResourceClasses(): void {
         if ($this->query->getResourceClasses()) {
             $this->wheres[] = 'resource_class IN(:resourceClasses)';
             $this->params['resourceClasses'] = $this->query->getResourceClasses();
         }
     }
 
-    private function filterByResourceKinds(): void {
+    protected function filterByResourceKinds(): void {
         if ($this->query->getResourceKinds()) {
             $this->wheres[] = 'kind_id IN(:resourceKindIds)';
             $this->params['resourceKindIds'] = EntityUtils::mapToIds($this->query->getResourceKinds());
@@ -142,7 +142,7 @@ class ResourceListQuerySqlFactory {
         }
     }
 
-    private function addOrderBy(): void {
+    protected function addOrderBy(): void {
         $sortByIds = $this->query->getSortBy();
         foreach ($sortByIds as $columnSort) {
             $sortId = $columnSort['columnId'];

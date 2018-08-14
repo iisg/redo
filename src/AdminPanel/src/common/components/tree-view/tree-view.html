@@ -1,0 +1,15 @@
+<template>
+    <require from="jquery.fancytree/dist/skin-lion/ui.fancytree.css"></require>
+    <div class="tree-search">
+        <span>${'navigation::Search' | t}</span>
+        <input type="text"
+            class="form-control"
+            value.bind="searchValue"
+            keyup.trigger="searchKeys(undefined) & debounce:1000">
+        <icon name="search"
+            mousedown.delegate="searchKeys()"></icon>
+    </div>
+    <loading-bar if.bind="searchPending"></loading-bar>
+    <div ref="tree"
+        class="tree-view"></div>
+</template>

@@ -70,4 +70,10 @@ abstract class FunctionalTestCase extends WebTestCase {
             static::assertNotEquals('2', floor($actualStatus / 100), sprintf($message, 'non-successful'));
         }
     }
+
+    protected static function assertArrayHasAllValues($expectedValues, $actualArray) {
+        foreach ($expectedValues as $value) {
+            static::assertContains($value, $actualArray);
+        }
+    }
 }

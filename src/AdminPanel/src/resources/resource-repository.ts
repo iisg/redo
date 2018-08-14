@@ -2,6 +2,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {Resource} from "./resource";
 import {ApiRepository} from "common/repository/api-repository";
 import {ResourceListQuery} from "./resource-list-query";
+import {ResourceTreeQuery} from './resource-tree-query';
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {cachedResponse, forOneMinute} from "../common/repository/cached-response";
@@ -15,6 +16,10 @@ export class ResourceRepository extends ApiRepository<Resource> {
 
   public getListQuery(): ResourceListQuery {
     return new ResourceListQuery(this.httpClient, this.endpoint, this.entitySerializer);
+  }
+
+  public getTreeQuery(): ResourceTreeQuery {
+    return new ResourceTreeQuery(this.httpClient, `${this.endpoint}/tree`, this.entitySerializer);
   }
 
   update(resource: Resource): Promise<Resource> {

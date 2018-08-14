@@ -19,6 +19,7 @@ class ResourcesFixture extends RepekaFixture {
     const REFERENCE_DEPARTMENT_IET = 'resource-department-iet';
     const REFERENCE_USER_GROUP_ADMINS = 'resource-user-group-admins';
     const REFERENCE_USER_GROUP_SCANNERS = 'resource-user-group-scanners';
+    const REFERENCE_RESOURCE_CATEGORY_EBOOKS = 'resource-category-ebooks';
 
     /**
      * @inheritdoc
@@ -158,7 +159,8 @@ class ResourcesFixture extends RepekaFixture {
                     ]
                 ),
                 $userAdmin
-            )
+            ),
+            self::REFERENCE_RESOURCE_CATEGORY_EBOOKS
         );
         $this->handleCommand(
             new ResourceCreateCommand(

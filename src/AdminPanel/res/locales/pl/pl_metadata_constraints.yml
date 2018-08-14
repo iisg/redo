@@ -4,6 +4,7 @@
 "Value must be between {{minMaxValue.min}} and {{minMaxValue.max}}": "Wartość musi zawierać się w zakresie od {{minMaxValue.min}} do {{minMaxValue.max}}"
 "Value must be at most {{minMaxValue.max}}": "Wartość nie może być większa niż {{minMaxValue.max}}"
 "Value must be at least {{minMaxValue.min}}": "Wartość nie może być mniejsza niż {{minMaxValue.min}}"
+Tree must be closed after selecting: Po wybraniu wartości należy zamknąć drzewo
 
 labels:
   maxCount: Maksymalna liczba wartości

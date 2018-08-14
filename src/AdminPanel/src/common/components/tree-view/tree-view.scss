@@ -1,0 +1,25 @@
+@import "../../../common/styles";
+
+tree-view {
+  width: 100%;
+  padding: $default-gap-size / 4;
+  & .tree-search {
+    display: flex;
+    margin-bottom: $default-gap-size / 4;
+    & span {
+      align-self: center;
+    }
+    & input {
+      width: 100%;
+      margin-left: $default-gap-size / 2;
+      margin-right: $default-gap-size / 2;
+      background-color: white;
+    }
+    & icon {
+      color: $blue;
+      height: 1.5em;
+      align-self: center;
+      cursor: pointer;
+    }
+  }
+}
