@@ -17,9 +17,15 @@ export class TopBarSearch {
   private searchData: StringMap<SearchData> = {};
   controls = filterableControls;
 
-  constructor(eventAggregator: EventAggregator, private router: Router, private metadataRepository: MetadataRepository) {
+  constructor(
+    eventAggregator: EventAggregator,
+    private router: Router,
+    private metadataRepository: MetadataRepository
+  ) {
     eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
-      (event: ResourceClassChangeEvent) => this.updateSearchData(event));
+      (event: ResourceClassChangeEvent) => {
+        this.updateSearchData(event);
+      });
   }
 
   attached() {

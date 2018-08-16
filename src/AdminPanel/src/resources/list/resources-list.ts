@@ -15,6 +15,8 @@ import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ResourceSort, SortDirection} from "../resource-sort";
 import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproductor";
+import {Alert} from "../../common/dialog/alert";
+import {I18N} from "aurelia-i18n";
 
 @autoinject()
 export class ResourcesList {
@@ -37,7 +39,9 @@ export class ResourcesList {
   private resultsPerPageValueChangedOnActivate: boolean;
   private currentPageNumberChangedOnActivate: boolean;
 
-  constructor(private contextResourceClass: ContextResourceClass,
+  constructor(private alert: Alert,
+              private i18n: I18N,
+              private contextResourceClass: ContextResourceClass,
               private resourceRepository: ResourceRepository,
               private resourceKindRepository: ResourceKindRepository,
               private eventAggregator: EventAggregator,
@@ -132,7 +136,8 @@ export class ResourcesList {
         .filterByResourceClasses(this.resourceClass);
     }
     if (this.contentsFilter) {
-      query.filterByContents(this.contentsFilter);
+      query.filterByContents(this.contentsFilter)
+        .suppressError();
     }
     query = query.sortByMetadataIds(this.sortBy)
       .setResultsPerPage(this.resultsPerPage)
@@ -152,6 +157,12 @@ export class ResourcesList {
           }
         }
       }
+    }).catch(error => {
+      this.displayProgressBar = false;
+      this.resources = new PageResult<Resource>();
+      const title = this.i18n.tr("Invalid request");
+      const text = this.i18n.tr("The searched phrase is incorrect");
+      this.alert.show({type: 'error'}, title, text);
     });
   }
 
