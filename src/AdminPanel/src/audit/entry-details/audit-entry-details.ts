@@ -1,5 +1,5 @@
 export class AuditEntryDetails {
-  entry;
+  entry: any;
 
   activate(model: Object) {
     $.extend(this, model);

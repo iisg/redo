@@ -5,6 +5,7 @@ use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AuditedCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * This command does not authenticate user. It only audits the authentication attempt.
@@ -13,17 +14,25 @@ use Repeka\Domain\Cqrs\NonValidatedCommand;
 class UserAuthenticateCommand extends AbstractCommand implements NonValidatedCommand, AuditedCommand {
     /** @var string */
     private $username;
+    /** @var string */
+    private $addressIp;
     /** @var bool */
     private $successful;
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
-    public function __construct(string $username, bool $successful = true) {
+    public function __construct(string $username, ContainerInterface $container, bool $successful = true) {
         $this->username = $username;
+        $masterRequest  = $container->get('request_stack')->getMasterRequest();
+        $this->addressIp = $masterRequest ? $masterRequest->getClientIp() : '';
         $this->successful = $successful;
     }
 
     public function getUsername(): string {
         return $this->username;
+    }
+
+    public function getAddressIp(): string {
+        return $this->addressIp;
     }
 
     public function isSuccessful() {
