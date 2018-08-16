@@ -19,8 +19,7 @@ services:
 
   repeka-elasticsearch:
     container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch
-    image: elasticsearch:2.4.2
-    command: -Des.node.name="repeka-elasticsearch"
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
 
   repeka-postgres:
     container_name: ${COMPOSE_PROJECT_NAME}-postgres

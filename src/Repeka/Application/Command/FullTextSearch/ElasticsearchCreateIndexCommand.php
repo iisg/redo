@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Application\Command\Elasticsearch;
+namespace Repeka\Application\Command\FullTextSearch;
 
 use Repeka\Application\Elasticsearch\ESIndexManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -38,5 +38,6 @@ class ElasticsearchCreateIndexCommand extends ContainerAwareCommand {
             }
         }
         $this->esIndexManager->create($numberOfShards, $numberOfReplicas);
+        $output->writeln("New index has been created.");
     }
 }

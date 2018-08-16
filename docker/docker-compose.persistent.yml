@@ -4,3 +4,7 @@ services:
   repeka-postgres:
     volumes:
       - ${VOLUME_POSTGRES}:/var/lib/postgresql/data:z
+
+  repeka-elasticsearch:
+    volumes:
+      - ${VOLUME_ELASTICSEARCH}:/usr/share/elasticsearch/data:z

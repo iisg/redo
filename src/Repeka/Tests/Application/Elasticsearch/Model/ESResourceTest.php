@@ -4,26 +4,34 @@ namespace Repeka\Tests\Application\Elasticsearch\Model;
 use Elastica\Document;
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
-use Repeka\Application\Elasticsearch\Model\ESResource;
-use Repeka\Application\Elasticsearch\Model\IndexedMetadata;
+use Repeka\Application\Elasticsearch\Model\ElasticSearch;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Tests\Application\Elasticsearch\ElasticsearchTest;
+use Repeka\Tests\Traits\StubsTrait;
 
 class ESResourceTest extends ElasticsearchTest {
-    const METADATA1_VALUE = 'one';
-    const METADATA2_VALUE = 'two';
+    use StubsTrait;
+
+    public function setUp() {
+        parent::setUp();
+    }
 
     public function testInsertingDocument() {
+        $resourceKind = $this->createResourceKindMock(2);
+        $resource = $this->createResourceMock(1, $resourceKind, ['3' => ['value' => 'aaa']]);
         $typeMock = $this->createMock(Type::class);
+        $typeMock->expects($this->once())->method('getIndex')->willReturn($this->indexMock);
+        $this->indexMock->expects($this->once())->method('refresh');
         $typeMock->expects($this->once())->method('addDocument')->with(
             $this->callback(
                 function ($doc) {
                     /** @var $doc Document */
                     $this->assertEquals(
                         [
-                            'metadata' => [
-                                ['value' => self::METADATA1_VALUE],
-                                ['value' => self::METADATA2_VALUE],
-                            ],
+                            ResourceConstants::ID => 1,
+                            ResourceConstants::KIND_ID => 2,
+                            ResourceConstants::CONTENTS => ResourceContents::fromArray(['3' => ['value' => 'aaa']]),
+                            ResourceConstants::RESOURCE_CLASS => 'books',
                         ],
                         $doc->getData()
                     );
@@ -32,15 +40,7 @@ class ESResourceTest extends ElasticsearchTest {
             )
         );
         $this->indexMock->method('getType')->with(ResourceConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
-        $res = new ESResource($this->clientMock, self::INDEX_NAME);
-        /** @var IndexedMetadata|\PHPUnit_Framework_MockObject_MockObject $mockMetadata1 */
-        $mockMetadata1 = $this->createMock('Repeka\Application\Elasticsearch\Model\IndexedMetadata');
-        $mockMetadata1->method('toArray')->willReturn(['value' => self::METADATA1_VALUE]);
-        /** @var IndexedMetadata|\PHPUnit_Framework_MockObject_MockObject $mockMetadata2 */
-        $mockMetadata2 = $this->createMock('Repeka\Application\Elasticsearch\Model\IndexedMetadata');
-        $mockMetadata2->method('toArray')->willReturn(['value' => self::METADATA2_VALUE]);
-        $res->addMetadata($mockMetadata1);
-        $res->addMetadata($mockMetadata2);
-        $res->insert();
+        $res = new ElasticSearch($this->clientMock, self::INDEX_NAME);
+        $res->insertDocument($resource);
     }
 }
