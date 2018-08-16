@@ -98,6 +98,7 @@ Delete: Usuń
 "Resource #{{id}} doesn't exist": "Zasób #{{id}} nie istnieje"
 Resource has children: Zasób ma podzasoby
 Delete or disown them first to delete this resource: Usuń je lub zmień ich zasób nadrzędny, aby usunąć ten zasób
+The searched phrase is incorrect: Szukana fraza jest nieprawidłowa
 Legend: Legenda
 In this state metadata value is:: Symbole oznaczają, że w danym stanie procesu:
 optional_female: metadana nie musi mieć wartości
@@ -138,6 +139,7 @@ Invalid field format {{format}}: Nieprawidłowy format pola {{format}}
 Invalid subfield format {{format}}: Nieprawidłowy format podpola {{format}}
 Missing subfield {{name}}: Brakujące podpole {{name}}
 Invalid expression {{expression}}: Nieprawidłowe wyrażenie {{expression}}
+Invalid request: Nieprawidłowe żądanie
 Import successful: Import udany
 Values that are already present will be omitted.: Wartości, które są już obecne zostaną pominięte.
 Ignored values unsuitable for their metadata controls:: Zignorowane wartości nieodpowiadające kontrolkom metadanych:
