@@ -6,7 +6,7 @@ exports.config = {
   capabilities: {
     'browserName': 'chrome',
     chromeOptions: {
-		args: [ "--headless", "--disable-gpu", "--window-size=800x600", '--no-sandbox']
+		args: [ "--headless", "--disable-gpu", '-disable-popup-blocking', '-disable-dev-shm-usage']
     }
   },
   onPrepare: function(){
