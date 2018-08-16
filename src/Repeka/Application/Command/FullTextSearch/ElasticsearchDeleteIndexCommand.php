@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Application\Command\Elasticsearch;
+namespace Repeka\Application\Command\FullTextSearch;
 
 use Repeka\Application\Elasticsearch\ESIndexManager;
 use Symfony\Component\Console\Command\Command;
@@ -25,6 +25,8 @@ class ElasticsearchDeleteIndexCommand extends Command {
      * @inheritdoc
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $this->esIndexManager->delete();
+        if ($this->esIndexManager->exists()) {
+            $this->esIndexManager->delete();
+        }
     }
 }

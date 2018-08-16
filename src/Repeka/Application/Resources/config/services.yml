@@ -44,20 +44,13 @@ services:
     - '%elasticsearch.proxy%'
   Repeka\Application\Elasticsearch\ESIndexManager:
     $indexName: '%elasticsearch.index_name%'
-  Repeka\Application\Elasticsearch\Mapping\ESMappingFactory:
-    $nestingDepth: '%repeka.max_nesting_depth%'
-    $analyzerNames: '%elasticsearch.analyzers%'
-    $metadataClasses:
-      - 'Repeka\Application\Elasticsearch\Model\IntIndexedMetadata'
-      - 'Repeka\Application\Elasticsearch\Model\FloatIndexedMetadata'
-      - 'Repeka\Application\Elasticsearch\Model\DateTimeIndexedMetadata'
-      - 'Repeka\Application\Elasticsearch\Model\RawStringIndexedMetadata'
-      - 'Repeka\Application\Elasticsearch\Model\TokenizedStringIndexedMetadata'
-      - 'Repeka\Application\Elasticsearch\Model\AnalyzedStringIndexedMetadata'
-  Repeka\Application\Elasticsearch\Model\ESResource:
+  Repeka\Application\Elasticsearch\Mapping\ESMapping: ~
+  Repeka\Application\Elasticsearch\Model\ElasticSearch:
     shared: false
     arguments:
       $indexName: '%elasticsearch.index_name%'
+  Repeka\Application\Elasticsearch\Search\ESSearch:
+    $indexName: '%elasticsearch.index_name%'
 
   Repeka\Application\Entity\EntityIdGeneratorHelper: ~
 

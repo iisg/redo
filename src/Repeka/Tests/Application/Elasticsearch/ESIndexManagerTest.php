@@ -18,24 +18,24 @@ class ESIndexManagerTest extends ElasticsearchTest {
             ]
         );
         $this->indexMock->expects($this->once())->method('getType')->with(ResourceConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
-        (new ESIndexManager($this->clientMock, $this->mappingFactoryMock, self::INDEX_NAME))->create($numberOfShards, $numberOfReplicas);
+        (new ESIndexManager($this->clientMock, $this->mappingMock, self::INDEX_NAME))->create($numberOfShards, $numberOfReplicas);
     }
 
     public function testCreatingExistingIndex() {
         $this->expectException('Exception');
         $this->indexMock->expects($this->once())->method('exists')->willReturn(true);
-        (new ESIndexManager($this->clientMock, $this->mappingFactoryMock, self::INDEX_NAME))->create(3, 1);
+        (new ESIndexManager($this->clientMock, $this->mappingMock, self::INDEX_NAME))->create(3, 1);
     }
 
     public function testDeletingIndex() {
         $this->indexMock->expects($this->once())->method('exists')->willReturn(true);
         $this->indexMock->expects($this->once())->method('delete')->with();
-        (new ESIndexManager($this->clientMock, $this->mappingFactoryMock, self::INDEX_NAME))->delete();
+        (new ESIndexManager($this->clientMock, $this->mappingMock, self::INDEX_NAME))->delete();
     }
 
     public function testDeletingNonExistentIndex() {
         $this->expectException('Exception');
         $this->indexMock->expects($this->once())->method('exists')->willReturn(false);
-        (new ESIndexManager($this->clientMock, $this->mappingFactoryMock, self::INDEX_NAME))->delete();
+        (new ESIndexManager($this->clientMock, $this->mappingMock, self::INDEX_NAME))->delete();
     }
 }

@@ -36,6 +36,7 @@
     "dist:backend": "composer-runner -- install --optimize-autoloader --no-dev --prefer-dist",
     "dist:frontend": "cd src/Frontend && npm run dist -s",
     "init": "npm run -s clean:backend && php bin/console repeka:initialize --skip-backup && php bin/console cache:warmup",
+    "init:fts": "php bin/console repeka:fts:initialize",
     "install-deps": "npm prune && node scripts/repeka.js && composer-runner -- install --prefer-dist && cd src/AdminPanel && npm install && npm run install-deps && cd ../Frontend && npm install",
     "lint": "rm -fr var/reports/lints/*.xml && (npm run -s lint:backend && npm run -s lint:admin && npm run -s lint:frontend)",
     "lint:admin": "cd src/AdminPanel && npm run -s lint",
@@ -50,7 +51,7 @@
     "test:admin": "cd src/AdminPanel && npm test -s",
     "test:backend": "npm run -s test:backend:unit && npm run -s test:backend:integration",
     "test:backend:unit": "sh -c \"vendor/bin/phpunit -c scripts --testsuite unit --fail-on-warning\"",
-    "test:backend:junit": "sh -c \"vendor/bin/phpunit -c scripts --testsuite unit --fail-on-warning --testdox --log-junit var/reports/tests/phpunit.xml --coverage-clover var/reports/coverage/phpunit.xml && vendor/bin/phpunit -c scripts --testsuite integration --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration.xml && vendor/bin/phpunit -c scripts --testsuite migrations --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_migrations.xml && vendor/bin/phpunit -c scripts --testsuite integration-repositories --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration_repositories.xml && vendor/bin/phpunit -c scripts --testsuite integration-plugins --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration_plugins.xml\"",
+    "test:backend:junit": "sh -c \"vendor/bin/phpunit -c scripts --testsuite unit --fail-on-warning --testdox --log-junit var/reports/tests/phpunit.xml --coverage-clover var/reports/coverage/phpunit.xml && vendor/bin/phpunit -c scripts --testsuite integration --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration.xml && vendor/bin/phpunit -c scripts --testsuite migrations --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_migrations.xml && vendor/bin/phpunit -c scripts --testsuite integration-repositories --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration_repositories.xml && vendor/bin/phpunit -c scripts --testsuite integration-plugins --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration_plugins.xml && vendor/bin/phpunit -c scripts --testsuite integration-fts --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration_fts.xml\"",
     "test:junit": "rm -f var/reports/tests/*.xml var/reports/coverage/*.xml && npm run -s test:backend:junit && cd src/AdminPanel && npm run -s test:junit",
     "watch": "cd src/AdminPanel && npm run -s watch",
     "watch:frontend": "cd src/Frontend && npm run -s dev"

@@ -30,9 +30,13 @@
             <directory>../src/Repeka/Tests/Integration</directory>
             <exclude>../src/Repeka/Tests/Integration/Repository</exclude>
             <exclude>../src/Repeka/Tests/Integration/Migrations</exclude>
+            <exclude>../src/Repeka/Tests/Integration/FullTextSearch</exclude>
         </testsuite>
         <testsuite name="integration-repositories">
             <directory>../src/Repeka/Tests/Integration/Repository</directory>
+        </testsuite>
+        <testsuite name="integration-fts">
+            <directory>../src/Repeka/Tests/Integration/FullTextSearch</directory>
         </testsuite>
         <testsuite name="migrations">
             <directory>../src/Repeka/Tests/Integration/Migrations</directory>

@@ -1,22 +1,20 @@
 <?php
 namespace Repeka\Application\Elasticsearch;
 
-use Elastica\Type\Mapping;
-use Repeka\Application\Elasticsearch\Mapping\ESMappingFactory;
+use Repeka\Application\Elasticsearch\Mapping\ESMapping;
 use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
 
 class ESIndexManager {
-    /** @var ESMappingFactory */
-    private $mappingFactory;
-
+    /** @var ESMapping */
+    private $esMapping;
     /** @var string */
     private $indexName;
     /** @var \Elastica\Index */
     private $index;
 
-    public function __construct(ESClient $client, ESMappingFactory $mappingFactory, string $indexName) {
+    public function __construct(ESClient $client, ESMapping $esMapping, string $indexName) {
         $this->indexName = $indexName;
-        $this->mappingFactory = $mappingFactory;
+        $this->esMapping = $esMapping;
         $this->index = $client->getIndex($this->indexName);
     }
 
@@ -30,9 +28,8 @@ class ESIndexManager {
                 'number_of_replicas' => $numberOfReplicas,
             ]
         );
-        $mappingArray = $this->mappingFactory->getMappingArray();
         $type = $this->index->getType(ResourceConstants::ES_DOCUMENT_TYPE);
-        (new Mapping($type, $mappingArray))->send();
+        $this->esMapping->getMapping($type)->send();
     }
 
     public function delete() {
@@ -44,5 +41,9 @@ class ESIndexManager {
 
     public function exists(): bool {
         return $this->index->exists();
+    }
+
+    public function getIndex(): string {
+        return $this->indexName;
     }
 }
