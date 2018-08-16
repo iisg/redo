@@ -4,7 +4,7 @@ import {User} from "./user";
 import {Resource} from "../resources/resource";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
-import {cachedResponse, forSeconds} from "../common/repository/cached-response";
+import {cachedResponse, forSeconds, untilPromiseCompleted} from "../common/repository/cached-response";
 import {ResourceRepository} from "../resources/resource-repository";
 
 @autoinject
@@ -26,6 +26,21 @@ export class UserRepository extends ApiRepository<User> {
   getRelatedUser(resource: Resource): Promise<User> {
     const endpoint = `${this.endpoint}/byData/${resource.id}`;
     return this.httpClient.get(endpoint).then(response => this.toEntity(response.content));
+  }
+
+  @cachedResponse(untilPromiseCompleted)
+  getCurrentUser() {
+    return this.httpClient.createRequest(this.oneEntityEndpoint('current'))
+      .asGet()
+      .send()
+      .then(response => {
+        const userIp = response.headers.get('user_ip');
+        try {
+          localStorage.setItem('user_ip', userIp);
+        } catch (e) {
+        }
+        return this.toEntity(response.content);
+      });
   }
 
   getGroups(user: User): Promise<Resource[]> {

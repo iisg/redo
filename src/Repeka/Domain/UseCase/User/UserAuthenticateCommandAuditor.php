@@ -10,7 +10,7 @@ class UserAuthenticateCommandAuditor extends AbstractCommandAuditor {
      * @return array
      */
     public function afterHandling(Command $command, $result, ?array $beforeHandlingResult): array {
-        return ['username' => $command->getUsername()];
+        return ['username' => $command->getUsername(), 'address_ip' => $command->getAddressIp()];
     }
 
     /**
@@ -18,6 +18,6 @@ class UserAuthenticateCommandAuditor extends AbstractCommandAuditor {
      * @return array
      */
     public function afterError(Command $command, \Exception $exception, ?array $beforeHandlingResult): array {
-        return ['username' => $command->getUsername()];
+        return ['username' => $command->getUsername(), 'address_ip' => $command->getAddressIp()];
     }
 }
