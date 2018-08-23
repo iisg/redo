@@ -17,6 +17,7 @@ import {ResourceSort, SortDirection} from "../resource-sort";
 import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproductor";
 import {Alert} from "../../common/dialog/alert";
 import {I18N} from "aurelia-i18n";
+import {DisabilityReason} from "../../common/components/buttons/toggle-button";
 
 @autoinject()
 export class ResourcesList {
@@ -231,6 +232,19 @@ export class ResourcesList {
     return this.disableAddResource
       || (this.parentResource && (this.parentResource.pendingRequest || !this.isReproductor.toView(this.parentResource)))
       || (!this.parentResource && !this.hasRole.toView('ADMIN', this.resourceClass));
+  }
+
+  @computedFrom("disabledAddResource", "parentResource", "resourceClass")
+  get disabilityReason(): DisabilityReason {
+    const hasNoPermissions = (this.parentResource && !this.isReproductor.toView(this.parentResource))
+      || (!this.parentResource && !this.hasRole.toView('ADMIN', this.resourceClass));
+    if (hasNoPermissions) {
+      return {icon: 'user-2', message: 'You do not have permissions to add resource.'};
+    }
+    if (this.disableAddResource) {
+      return {icon: 'help', message: 'Resource kind does not allow to add resource.'};
+    }
+    return undefined;
   }
 
   private saveSortingToLocalStorage(sortBy: ResourceSort[]) {

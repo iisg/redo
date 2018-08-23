@@ -45,18 +45,14 @@ workflow-graph-editor {
         }
         .toggle-button, toggle-button {
           width: 100%;
-          button {
-            width: 100%;
-            .generated-transition-name {
-              font-weight: normal;
-              font-style: italic;
-            }
-          }
         }
-        & > toggle-button {
-          button {
-            @include toggle-button-colors($orange);
-          }
+        .generated-transition-name {
+          font-weight: normal;
+          font-style: italic;
+        }
+        & > toggle-button > div {
+          text-align: center;
+          @include toggle-button-colors($orange);
         }
       }
     }

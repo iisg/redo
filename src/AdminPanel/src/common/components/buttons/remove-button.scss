@@ -1,5 +1,5 @@
 @import "../../styles";
 
-remove-button toggle-button {
+remove-button toggle-button > div {
   @include toggle-button($red);
 }

@@ -1,6 +1,6 @@
-<template bindable="iconName, submitting, editing, disabled"
-    class="toggle-button">
+<template bindable="iconName, submitting, editing, disabled">
     <button type="submit"
+        class="toggle-button"
         disabled.bind="disabled || submitting">
         <icon if.bind="!submitting"
             name.bind="iconName || (editing ? 'accept-2' : 'add')"

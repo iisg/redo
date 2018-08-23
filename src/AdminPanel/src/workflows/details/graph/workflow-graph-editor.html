@@ -46,9 +46,10 @@
                     <div if.bind="availableTransitions.length"
                         class="information-with-buttons">
                         <span>${'Choose the next transition' | t}</span>
-                        <div class="toggle-button au-animate fade-inup-outup"
+                        <div class="au-animate fade-inup-outup"
                             repeat.for="transition of availableTransitions">
-                            <button click.delegate="advanceSimulation(transition.id)">
+                            <button class="toggle-button"
+                                click.delegate="advanceSimulation(transition.id)">
                                 <div ref="transition.translatedLabel"
                                     value.one-time="transition.label | inCurrentLanguage">
                                     <span if.one-time="transition.translatedLabel.value">${transition.translatedLabel.value}</span>

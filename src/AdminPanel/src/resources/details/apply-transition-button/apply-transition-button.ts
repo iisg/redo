@@ -2,6 +2,7 @@ import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
+import {DisabilityReason} from "common/components/buttons/toggle-button";
 import {WorkflowTransition} from "workflows/workflow";
 import {Resource} from "../../resource";
 
@@ -26,12 +27,12 @@ export class ApplyTransitionButton {
   }
 
   @computedFrom('resource', 'transition')
-  get transitionInactiveReasons(): TransitionInactiveReason[] {
+  get transitionInactiveReasons(): DisabilityReason[] {
     if (this.resource === undefined || this.transition === undefined) {
       return undefined;
     }
     const reasonCollection = this.resource.blockedTransitions[this.transition.id];
-    const reasons: TransitionInactiveReason[] = [];
+    const reasons: DisabilityReason[] = [];
     if (reasonCollection) {
       if (reasonCollection.otherUserAssigned) {
         reasons.push({icon: 'user-2', message: "Someone else is assigned this action"});
@@ -40,16 +41,10 @@ export class ApplyTransitionButton {
     return reasons;
   }
 
-  reasonTooltip(reason: TransitionInactiveReason) {
+  reasonTooltip(reason: DisabilityReason) {
     const message = this.i18n.tr(reason.message);
-    return (reason.detail !== undefined)
-      ? `${message} (${reason.detail})`
+    return (reason.details !== undefined)
+      ? `${message} (${reason.details})`
       : message;
   }
-}
-
-interface TransitionInactiveReason {
-  icon: string;
-  message: string;
-  detail?: string;
 }

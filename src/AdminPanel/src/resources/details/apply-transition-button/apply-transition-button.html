@@ -1,8 +1,8 @@
-<template class="toggle-button"
-    click.trigger="stopIfDisabled($event)">
+<template click.trigger="stopIfDisabled($event)">
     <require from="./transition-label"></require>
 
-    <button disabled.bind="!canApplyTransition">
+    <button class="toggle-button"
+        disabled.bind="!canApplyTransition">
         <icon if.bind="iconName"
             name="${iconName}"
             size="1.25"></icon>
