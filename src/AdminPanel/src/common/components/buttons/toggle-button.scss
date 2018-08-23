@@ -1,21 +1,23 @@
 @import "../../styles";
 
-toggle-button, .toggle-button {
+toggle-button {
+  cursor: pointer;
+  display: inline-block;
+  @include unselectable();
+}
+
+toggle-button > div, .toggle-button {
   @include toggle-button();
 }
 
-button.toggle-button {
-  @include toggle-button-button();
-}
-
-.blue toggle-button button, toggle-button.blue button, button.toggle-button.blue {
+.blue toggle-button > div, toggle-button.blue > div, .toggle-button.blue {
   @include toggle-button-colors($blue);
 }
 
-.orange toggle-button button, toggle-button.orange button, button.toggle-button.orange {
+.orange toggle-button > div, toggle-button.orange > div, .toggle-button.orange {
   @include toggle-button-colors($orange);
 }
 
-.red toggle-button button, toggle-button.red button, button.toggle-button.red {
+.red toggle-button > div, toggle-button.red > div, .toggle-button.red {
   @include toggle-button-colors($red);
 }

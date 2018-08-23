@@ -13,7 +13,8 @@
         <add-button if.bind="!addFormOpened"
             entity-name="resource"
             toggled.two-way="addFormOpened"
-            disabled.bind="addingResourcesDisabled"></add-button>
+            disabled.bind="addingResourcesDisabled"
+            disability-reason.bind="disabilityReason"></add-button>
         <div else
             class="well add-form fade-inup-outdown au-animate">
             <span>${'Add new resource' | resourceClassTranslation:resourceClass}</span>

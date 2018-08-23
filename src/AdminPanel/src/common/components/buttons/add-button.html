@@ -1,4 +1,4 @@
-<template bindable="toggled, entityName, disabled">
+<template bindable="toggled, entityName, disabled, disabilityReason">
     <require from="./toggle-button"></require>
 
     <toggle-button primary-icon-name="add-resource-3"
@@ -7,5 +7,6 @@
         secondary-label="Cancel"
         entity-name.bind="entityName"
         click.delegate="toggled = !toggled"
-        disabled.bind="disabled"></toggle-button>
+        disabled.bind="disabled"
+        disability-reason.bind="disabilityReason"></toggle-button>
 </template>
