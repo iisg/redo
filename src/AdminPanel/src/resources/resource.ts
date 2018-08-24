@@ -19,8 +19,6 @@ export class Resource extends Entity {
   @copy contents: NumberMap<MetadataValue[]> = {};
   @map resourceClass: string;
 
-  isTeaser: boolean = false;
-
   public canApplyTransition(transition: WorkflowTransition): boolean {
     const blockedTransitionReason = this.blockedTransitions[transition.id];
     return !blockedTransitionReason || !blockedTransitionReason.otherUserAssigned;

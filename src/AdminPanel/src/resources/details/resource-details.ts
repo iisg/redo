@@ -67,7 +67,8 @@ export class ResourceDetails implements RoutableComponentActivate {
   async activate(parameters: any, routeConfiguration: RouteConfig) {
     this.isFiltering = parameters.hasOwnProperty('contentsFilter');
     this.resource = await this.resourceRepository.get(parameters.id);
-    if (this.resource.isTeaser) {
+    const hasOperatorRole = this.hasRole.toView('OPERATOR', this.resource.resourceClass);
+    if (!hasOperatorRole) {
       this.router.navigateToRoute('not-allowed');
     } else {
       this.contextResourceClass.setCurrent(this.resource.resourceClass);

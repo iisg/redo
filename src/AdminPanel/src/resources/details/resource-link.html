@@ -5,7 +5,7 @@
     </span>
     <template else>
         <template if.bind="resource !== undefined">
-            <span if.bind="resource.isTeaser">${resource | resourceLabel}</span>
+            <span if.bind="!currentUserIsOperator">${resource | resourceLabel}</span>
             <a else
                 route-href="route: resources/details; params.bind: {id: resource.id}; replace: true">
                 ${resource | resourceLabel}
