@@ -23,7 +23,7 @@
                     <submit-button editing.bind="editing"
                         click.delegate="onSubmit()"></submit-button>
                     <make-copy-button if.bind="editing"
-                        click.delegate="addWorkflow()"></make-copy-button>
+                        click.delegate="cloneWorkflow()"></make-copy-button>
                     <cancel-button disabled.bind="workflow.pendingRequest"
                         click.delegate="onCancel()"></cancel-button>
                 </template>

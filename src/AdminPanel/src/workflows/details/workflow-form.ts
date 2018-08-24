@@ -9,7 +9,6 @@ import {Workflow} from "../workflow";
 import {WorkflowGraphEditor} from "./graph/workflow-graph-editor";
 import {WorkflowGraphEditorReady} from "./graph/workflow-graph-events";
 import {WorkflowGraphManager} from "./graph/workflow-graph-manager";
-import {Resource} from "../../resources/resource";
 import {WorkflowRepository} from "../workflow-repository";
 import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
 import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
@@ -18,8 +17,9 @@ import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-los
 export class WorkflowForm extends ChangeLossPreventerForm {
   @bindable workflow: Workflow = new Workflow();
   @bindable viewing: boolean;
-  @bindable submit: (value: { savedResource: Resource, transitionId: string }) => Promise<any>;
-  @bindable onCancel: VoidFunction = () => undefined;
+  @bindable onCancel = () => {
+    this.router.navigateToRoute('workflows', {resourceClass: this.workflow.resourceClass});
+  };
   @bindable @booleanAttribute editing: boolean;
   private controller: ValidationController;
   private editor: WorkflowGraphEditor;
@@ -54,39 +54,36 @@ export class WorkflowForm extends ChangeLossPreventerForm {
   }
 
   onSubmit() {
-    if (this.editing) {
-      this.saveWorkflow();
-    } else {
-      this.addWorkflow();
-    }
-  }
-
-  async saveWorkflow(): Promise<any> {
-    this.workflow.pendingRequest = true;
     this.editor.updateWorkflowBasedOnGraph(true);
     this.controller.validate().then(result => {
       if (result.valid) {
         this.changeLossPreventer.disable();
-        this.element.dispatchEvent(SubmitEvent.newInstance());
+        if (this.editing) {
+          this.element.dispatchEvent(SubmitEvent.newInstance());
+        } else {
+          this.addWorkflow();
+        }
       }
     });
-    this.router.navigateToRoute(
-      'workflows/details',
-      {id: this.workflow.id, action: this.editing ? undefined : 'edit'}, {replace: true}
-    );
-    this.workflow.pendingRequest = false;
   }
 
-  async addWorkflow(): Promise<any> {
+  private async addWorkflow() {
     this.workflow.pendingRequest = true;
     try {
-      this.editor.updateWorkflowBasedOnGraph(true);
       const savedWorkflow = await this.workflowRepository.post(this.workflow);
-      this.changeLossPreventer.disable();
       this.router.navigateToRoute('workflows/details', {id: savedWorkflow.id});
     } finally {
       this.workflow.pendingRequest = false;
     }
+  }
+
+  cloneWorkflow() {
+    this.controller.validate().then(result => {
+      if (result.valid) {
+        this.changeLossPreventer.disable();
+        this.addWorkflow();
+      }
+    });
   }
 }
 
