@@ -25,7 +25,6 @@ export class WorkflowDetails implements RoutableComponentActivate {
               private router: Router,
               private signaler: BindingSignaler,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
-              private entitySerializer: EntitySerializer,
               private contextResourceClass: ContextResourceClass) {
   }
 
