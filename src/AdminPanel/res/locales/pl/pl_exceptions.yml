@@ -46,3 +46,4 @@ Metadata kind is used as a base to another metadata kind: Rodzaj metadanej jest 
 Workflow places you want to delete are occupied: Występują zasoby w miejscach które chcesz usunąć z procesu
 First place cannot contain assignee metadata: W pierwszym stanie nie można wymagać przypisania osoby
 Places or Transitions exist without a name specified in every language: Istnieją stany albo przejścia bez nazwy określonej w każdym języku
+value must be set in all languages: musi mieć wartość we wszystkich językach
