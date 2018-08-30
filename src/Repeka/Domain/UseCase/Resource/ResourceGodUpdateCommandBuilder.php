@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\ResourceManagement;
+namespace Repeka\Domain\UseCase\Resource;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceContents;

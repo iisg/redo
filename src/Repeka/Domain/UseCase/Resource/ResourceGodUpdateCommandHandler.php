@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\ResourceManagement;
+namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -23,6 +23,7 @@ class ResourceGodUpdateCommandHandler {
         $originalWorkflow = $resource->getWorkflow();
         if ($command->getResourceKind()) {
             EntityUtils::forceSetField($resource, $command->getResourceKind(), 'kind');
+            EntityUtils::forceSetField($resource, $command->getResourceKind()->getResourceClass(), 'resourceClass');
         }
         if ($resource->hasWorkflow()) {
             if ($resource->getWorkflow() == $originalWorkflow) {
@@ -33,11 +34,6 @@ class ResourceGodUpdateCommandHandler {
         }
         $resource->updateContents($command->getContents());
         $resource = $this->resourceRepository->save($resource);
-        $this->manageResourceFiles($resource);
-        return $resource;
-    }
-
-    private function manageResourceFiles(ResourceEntity $resource): ResourceEntity {
         $this->fileHelper->prune($resource);
         $this->fileHelper->moveFilesToDestinationPaths($resource);
         return $resource;

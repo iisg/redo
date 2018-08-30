@@ -12,6 +12,7 @@ class RepekaExtension extends ConfigurableExtension {
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container) {
         $this->loadYmlConfigFile('services', $container);
         $container->setParameter('repeka.application_name', $mergedConfig['application_name']);
+        $container->setParameter('repeka.application_url', $mergedConfig['application_url']);
         $container->setParameter('repeka.default_ui_language', $mergedConfig['default_ui_language']);
         $container->setParameter('repeka.max_nesting_depth', $mergedConfig['metadata_nesting_depth']);
         $container->setParameter('repeka.static_permissions', $mergedConfig['static_permissions']);

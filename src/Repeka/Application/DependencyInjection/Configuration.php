@@ -16,6 +16,7 @@ class Configuration implements ConfigurationInterface {
         $rootNode
             ->children()
                 ->scalarNode('application_name')->defaultValue('RePeKa')->end()
+                ->scalarNode('application_url')->end()
                 ->scalarNode('default_ui_language')->defaultValue('en')->end()
                 ->scalarNode('version')->defaultValue('X.X.X')->end()
                 ->arrayNode('static_permissions')->prototype('scalar')->end()->end()

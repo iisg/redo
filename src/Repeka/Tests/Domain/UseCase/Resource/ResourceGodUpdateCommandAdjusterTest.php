@@ -1,16 +1,16 @@
 <?php
-namespace Repeka\Tests\Domain\UseCase\ResourceManagement;
+namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
-use Repeka\Domain\UseCase\ResourceManagement\ResourceGodUpdateCommand;
-use Repeka\Domain\UseCase\ResourceManagement\ResourceGodUpdateCommandAdjuster;
+use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
+use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommandAdjuster;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Traits\StubsTrait;
 
-class ResourceAdminSetupCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
+class ResourceGodUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
     /** @var  ResourceGodUpdateCommandAdjuster */

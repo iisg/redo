@@ -25,7 +25,7 @@ abstract class AbstractPkImportIntegrationTest extends IntegrationTestCase {
     protected function importFile(string $file, ResourceKind $resourceKind) {
         $filePath = addcslashes(__DIR__ . "/$file.xml", '\\');
         $configPath = addcslashes(__DIR__ . "/$file.json", '\\');
-        $this->executeCommand("repeka:pk-import:import \"$filePath\" \"$configPath\" {$resourceKind->getId()}");
+        $this->executeCommand("repeka:pk-import:import \"$filePath\" \"$configPath\" {$resourceKind->getId()} --no-report");
         $this->executeCommand("repeka:pk-import:map-relations");
     }
 }

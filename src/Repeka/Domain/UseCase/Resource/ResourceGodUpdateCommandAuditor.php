@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\ResourceManagement;
+namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AbstractCommandAuditor;
 use Repeka\Domain\Cqrs\Command;
