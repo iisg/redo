@@ -4,6 +4,7 @@ doctrine:
   dbal:
     password: CHANGE_ME_BEFORE_FIRST_LAUNCH
 repeka:
+  application_url: http://repeka.local
   resource_classes:
     - name: books
       icon: publish-4
