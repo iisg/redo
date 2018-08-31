@@ -15,7 +15,8 @@
     "test": "karma start build/karma.conf.js --singleRun",
     "test:junit": "npm test -- --reporters mocha,junit --browsers chrome_no_sandbox",
     "watch": "gulp watch",
-    "webdriver-update": "webdriver-manager update"
+    "webdriver-update": "webdriver-manager update",
+	"webdriver-start": "webdriver-manager start"
   },
   "devDependencies": {
     "access-sniff": "^2.4.7",
