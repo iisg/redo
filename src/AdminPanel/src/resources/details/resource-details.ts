@@ -27,6 +27,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   selectedTransition: WorkflowTransition;
   resourceDetailsTabs: DetailsViewTabs;
   numberOfChildren: number;
+  hasChildren: boolean;
   isFiltering: boolean;
   private urlListener: Subscription;
 
@@ -76,6 +77,7 @@ export class ResourceDetails implements RoutableComponentActivate {
         .filterByParentId(this.resource.id)
         .get();
       this.numberOfChildren = resources.total;
+      this.hasChildren = !!this.numberOfChildren;
       const title = this.resourceLabel.toView(this.resource);
       routeConfiguration.navModel.setTitle(title);
       this.activateTabs(parameters.tab);
@@ -84,12 +86,12 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   activateTabs(activeTabId) {
     this.resourceDetailsTabs.clear();
-    if (this.allowAddChildResource || this.numberOfChildren) {
+    if (this.allowAddChildResource || this.hasChildren) {
       this.resourceDetailsTabs.addTab('children', () => `${this.i18n.tr('Child resources')} (${this.numberOfChildren})`);
     }
     this.resourceDetailsTabs
       .addTab('details', this.i18n.tr('Metadata'))
-      .setDefaultTabId(this.numberOfChildren ? 'children' : 'details');
+      .setDefaultTabId(this.hasChildren ? 'children' : 'details');
     if (this.resource.kind.workflow) {
       if (this.resource.kind.workflow) {
         this.resourceDetailsTabs.addTab('workflow', this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass));
@@ -165,7 +167,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   remove() {
-    if (this.numberOfChildren) {
+    if (this.hasChildren) {
       const title = this.i18n.tr('Resource has children');
       const text = this.i18n.tr('Delete or disown them first to delete this resource');
       this.alert.show({type: 'warning'}, title, text);
