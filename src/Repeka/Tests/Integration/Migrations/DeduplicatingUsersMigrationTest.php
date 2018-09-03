@@ -46,7 +46,7 @@ class DeduplicatingUsersMigrationTest extends DatabaseMigrationTestCase {
         $user = $users[0];
         $this->assertEquals($this->testAdmins['123456']->getId(), $user->getId());
         $user = $this->getEntityManager()->find(ResourceEntity::class, $user->getId());
-        $this->assertEquals(['b/123456'], $user->getValues(SystemMetadata::USERNAME));
+        $this->assertEquals(['b/123456'], $user->getContents()->getValuesWithoutSubmetadata(SystemMetadata::USERNAME));
     }
 
     public function testPkAccountsWithLength10AreUntouched() {

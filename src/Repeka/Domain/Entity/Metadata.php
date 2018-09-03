@@ -226,6 +226,7 @@ class Metadata implements Identifiable, HasResourceClass {
     }
 
     public static function normalizeMetadataName(string $name): string {
-        return (new Slugify(['separator' => '_']))->slugify($name);
+        $unCamelCased = preg_replace('#([a-z])([A-Z])#', '$1 $2', $name);
+        return (new Slugify(['separator' => '_']))->slugify($unCamelCased);
     }
 }

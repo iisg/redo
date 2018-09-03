@@ -60,7 +60,7 @@ class ResourceEvaluateDisplayStrategiesCommandHandlerTest extends \PHPUnit_Frame
         $command = new ResourceEvaluateDisplayStrategiesCommand($resource);
         $resource->expects($this->once())->method('updateContents')->willReturnCallback(
             function (ResourceContents $contents) {
-                $this->assertEquals(['BBB'], $contents->getValues($this->displayStrategyMetadata));
+                $this->assertEquals(['BBB'], $contents->getValuesWithoutSubmetadata($this->displayStrategyMetadata));
             }
         );
         $evaluated = $this->handler->handle($command);
@@ -81,7 +81,7 @@ class ResourceEvaluateDisplayStrategiesCommandHandlerTest extends \PHPUnit_Frame
         $command = new ResourceEvaluateDisplayStrategiesCommand($resource);
         $resource->expects($this->once())->method('updateContents')->willReturnCallback(
             function (ResourceContents $contents) {
-                $this->assertEquals(['BBB'], $contents->getValues($this->displayStrategyMetadata));
+                $this->assertEquals(['BBB'], $contents->getValuesWithoutSubmetadata($this->displayStrategyMetadata));
             }
         );
         $evaluated = $this->handler->handle($command);

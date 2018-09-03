@@ -3,6 +3,7 @@ namespace Repeka\Application\Upload;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Upload\ResourceFileHelper;
@@ -30,9 +31,9 @@ class BasicResourceFileHelper implements ResourceFileHelper {
     public function prune(ResourceEntity $resource): void {
         $fileMetadataIds = $this->getPossibleFileMetadataIds($resource);
         $resourceFiles = $resource->getContents()->reduceAllValues(
-            function ($value, int $metadataId, array $resourceFiles) use ($fileMetadataIds) {
+            function (MetadataValue $value, int $metadataId, array $resourceFiles) use ($fileMetadataIds) {
                 if (in_array($metadataId, $fileMetadataIds)) {
-                    $resourceFiles[] = $value;
+                    $resourceFiles[] = $value->getValue();
                 }
                 return $resourceFiles;
             },
@@ -58,12 +59,12 @@ class BasicResourceFileHelper implements ResourceFileHelper {
         $fileMetadataIds = $this->getPossibleFileMetadataIds($resource);
         $movedFilesCount = 0;
         $contents = $resource->getContents()->mapAllValues(
-            function ($value, int $metadataId) use ($resource, $fileMetadataIds, &$movedFilesCount) {
+            function (MetadataValue $value, int $metadataId) use ($resource, $fileMetadataIds, &$movedFilesCount) {
                 if (in_array($metadataId, $fileMetadataIds)) {
-                    $path = $this->moveFileToDestinationPath($value, $resource);
+                    $path = $this->moveFileToDestinationPath($value->getValue(), $resource);
                     if ($path) {
                         $movedFilesCount++;
-                        return $path;
+                        return $value->withNewValue($path);
                     }
                 }
                 return $value;

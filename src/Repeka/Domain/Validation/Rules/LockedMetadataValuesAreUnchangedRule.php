@@ -4,6 +4,7 @@ namespace Repeka\Domain\Validation\Rules;
 use Assert\Assertion;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
@@ -109,9 +110,10 @@ class LockedMetadataValuesAreUnchangedRule extends AbstractRule {
 
     private function replaceObjectsWithIds(ResourceContents $contents): ResourceContents {
         return $contents->mapAllValues(
-            function ($value) {
-                if ($value instanceof Identifiable) {
-                    return $value->getId();
+            function (MetadataValue $value) {
+                $objectOrId = $value->getValue();
+                if ($objectOrId instanceof Identifiable) {
+                    return $value->withNewValue($objectOrId->getId());
                 } else {
                     return $value;
                 }

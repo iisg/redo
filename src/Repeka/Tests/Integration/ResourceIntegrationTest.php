@@ -282,7 +282,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKindWithWorkflow->getId(), $created->getKind()->getId());
         $this->assertEquals(['created'], $created->getValues($this->metadata1));
-        $this->assertEquals([1], $created->getValues($this->metadata3));
+        $this->assertEquals([1], $created->getContents()->getValuesWithoutSubmetadata($this->metadata3));
         $this->assertEquals(['p1' => true], $created->getMarking());
     }
 
@@ -320,9 +320,9 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resourceWithWorkflow->getId());
-        $this->assertEquals(['edited'], $edited->getValues($this->metadata1));
-        $this->assertEquals([1], $edited->getValues($this->metadata3));
-        $this->assertEquals([1], $edited->getValues($this->metadata4));
+        $this->assertEquals(['edited'], $edited->getContents()->getValuesWithoutSubmetadata($this->metadata1));
+        $this->assertEquals([1], $edited->getContents()->getValuesWithoutSubmetadata($this->metadata3));
+        $this->assertEquals([1], $edited->getContents()->getValuesWithoutSubmetadata($this->metadata4));
     }
 
     public function testEditingResourceKindFails() {
@@ -449,7 +449,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->childResource->getId());
-        $this->assertEquals([$this->resource->getId()], $edited->getContents()->getValues(-1));
+        $this->assertEquals($this->resource->getId(), $edited->getParentId());
     }
 
     public function testChangingPlaces() {

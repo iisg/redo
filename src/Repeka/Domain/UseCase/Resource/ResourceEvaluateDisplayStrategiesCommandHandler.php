@@ -27,7 +27,7 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
         $changed = false;
         foreach ($displayStrategyMetadata as $metadata) {
             $value = $this->evaluator->render($resource, $metadata->getConstraints()['displayStrategy']);
-            if ($contents->getValues($metadata) != [$value]) {
+            if ($contents->getValuesWithoutSubmetadata($metadata) != [$value]) {
                 $changed = true;
                 $contents = $contents->withReplacedValues($metadata, $value);
             }

@@ -18,11 +18,11 @@ abstract class User implements Identifiable {
     }
 
     public function getUsername(): string {
-        return $this->getUserData()->getValues(SystemMetadata::USERNAME)[0];
+        return $this->getUserData()->getValues(SystemMetadata::USERNAME)[0]->getValue();
     }
 
     public function getUserGroupsIds(): array {
-        return $this->getUserData()->getValues(SystemMetadata::GROUP_MEMBER);
+        return $this->getUserData()->getContents()->getValuesWithoutSubmetadata(SystemMetadata::GROUP_MEMBER);
     }
 
     /**

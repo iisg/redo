@@ -50,24 +50,27 @@ class ResourceCreateCommandHandlerFillCopiedLockedMetadataIntegrationTest extend
 
     public function testCopyingValueFromParentWhenTheMetadataIsLocked() {
         $resource = $this->addCategorySubresource();
-        $this->assertEquals([666], $resource->getValues(SystemMetadata::REPRODUCTOR));
+        $this->assertEquals([666], $resource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR));
     }
 
     public function testCanSetTheSameValueAsWouldBeCopiedFromParentWhenTheMetadataIsLocked() {
         $resource = $this->addCategorySubresource([SystemMetadata::REPRODUCTOR => 666]);
-        $this->assertEquals([666], $resource->getValues(SystemMetadata::REPRODUCTOR));
+        $this->assertEquals([666], $resource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR));
     }
 
     public function testDifferentValueIsReplacesWithCorrectOne() {
         $resource = $this->addCategorySubresource([SystemMetadata::REPRODUCTOR => 555]);
-        $this->assertEquals([666], $resource->getValues(SystemMetadata::REPRODUCTOR));
+        $this->assertEquals([666], $resource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR));
     }
 
     public function testCanAddIfReproductorIsTheSameAsWouldBeAutoAssigned() {
         $this->setCategoryReproductor($this->getAdminUser()->getUserData()->getId());
         $this->changeReproductorMetadataToAutoAssign();
         $resource = $this->addCategorySubresource([], $this->getAdminUser());
-        $this->assertEquals([$this->getAdminUser()->getUserData()->getId()], $resource->getValues(SystemMetadata::REPRODUCTOR));
+        $this->assertEquals(
+            [$this->getAdminUser()->getUserData()->getId()],
+            $resource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR)
+        );
     }
 
     public function testAutoAssignValueIsAssignedAndCopiedFromParent() {
@@ -77,7 +80,7 @@ class ResourceCreateCommandHandlerFillCopiedLockedMetadataIntegrationTest extend
         $resource = $this->addCategorySubresource([], $this->getAdminUser());
         $this->assertEquals(
             [$firstAdminGroupId, $this->getAdminUser()->getUserData()->getId()],
-            $resource->getValues(SystemMetadata::REPRODUCTOR)
+            $resource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR)
         );
     }
 

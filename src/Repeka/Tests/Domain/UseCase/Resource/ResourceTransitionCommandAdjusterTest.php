@@ -9,7 +9,6 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandAdjuster;
 use Repeka\Domain\Utils\EntityUtils;
@@ -50,7 +49,7 @@ class ResourceTransitionCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
             SystemTransition::CREATE()->toTransition($this->resourceKind)
         );
         $command = $this->adjuster->adjustCommand($command);
-        $this->assertEquals(1, $command->getContents()->getValues(11)[0]);
+        $this->assertEquals(1, $command->getContents()->getValuesWithoutSubmetadata(11)[0]);
     }
 
     public function testConvertTransitionIdToTransition() {

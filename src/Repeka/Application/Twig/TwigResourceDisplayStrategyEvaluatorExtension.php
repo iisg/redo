@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Application\Twig;
 
+use Repeka\Domain\Entity\HasResourceClass;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -32,6 +34,10 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
             new \Twig_Filter('metadata', [$this, 'getMetadataValues']),
             new \Twig_Filter('metadata*', [$this, 'getMetadataValuesDynamic']),
             new \Twig_Filter('m*', [$this, 'getMetadataValuesDynamic']),
+            new \Twig_Filter('submetadata', [$this, 'getSubmetadataValues']),
+            new \Twig_Filter('sub', [$this, 'getSubmetadataValues']),
+            new \Twig_Filter('submetadata*', [$this, 'getSubmetadataValuesDynamic']),
+            new \Twig_Filter('sub*', [$this, 'getSubmetadataValuesDynamic']),
             new \Twig_Filter('r', [$this, 'fetchResources']),
             new \Twig_Filter('resource', [$this, 'fetchResources']),
             new \Twig_Filter('sum', [$this, 'sumIterable']),
@@ -46,6 +52,9 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         $resources = [];
         foreach ($ids as $id) {
             try {
+                if ($id instanceof MetadataValue) {
+                    $id = $id->getValue();
+                }
                 if (is_numeric($id)) {
                     $resources[] = $this->resourceRepository->findOne($id);
                 } else {
@@ -58,9 +67,13 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         return $iterableGiven ? $resources : $resources[0];
     }
 
-    public function fetchMetadataIdByName(string $name) {
+    public function fetchMetadataIdByName(string $name, $context = null) {
         try {
-            $metadata = $this->metadataRepository->findByName($name);
+            $resourceClass = null;
+            if ($context instanceof HasResourceClass) {
+                $resourceClass = $context->getResourceClass();
+            }
+            $metadata = $this->metadataRepository->findByName($name, $resourceClass);
             return $metadata->getId();
         } catch (EntityNotFoundException $e) {
             return 0;
@@ -72,7 +85,7 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
             throw new \Twig_Error('Please specify metadata by choosing one of the following syntax: m1, mName, m(1), m("Name")');
         }
         if (!is_numeric($metadataId)) {
-            $metadataId = $this->fetchMetadataIdByName($metadataId);
+            $metadataId = $this->fetchMetadataIdByName($metadataId, $contents);
         }
         $iterableGiven = is_iterable($contents) && !$contents instanceof ResourceContents;
         if (!$iterableGiven) {
@@ -80,6 +93,9 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         }
         $values = [];
         foreach ($contents as $resource) {
+            if ($resource instanceof MetadataValue) {
+                $resource = $resource->getValue();
+            }
             if (is_numeric($resource)) {
                 $resource = $this->fetchResources($resource);
             }
@@ -92,6 +108,31 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         return $this->getMetadataValues($contents, $metadataId);
     }
 
+    public function getSubmetadataValues($metadataValues, $submetadataId = null) {
+        if ($submetadataId === null) {
+            throw new \Twig_Error(
+                'Please specify metadata by choosing one of the following syntax: '
+                . 'submetadata1, submetadataName, submetadata(1), submetadata("Name")'
+            );
+        }
+        if (!is_numeric($submetadataId)) {
+            $submetadataId = $this->fetchMetadataIdByName($submetadataId);
+        }
+        $iterableGiven = is_iterable($metadataValues);
+        if (!$iterableGiven) {
+            $metadataValues = [$metadataValues];
+        }
+        $values = [];
+        foreach ($metadataValues as $metadataValue) {
+            $values[] = new PrintableArray($metadataValue->getSubmetadata($submetadataId));
+        }
+        return $iterableGiven ? new PrintableArray($values) : $values[0];
+    }
+
+    public function getSubmetadataValuesDynamic($metadataId, $contents) {
+        return $this->getSubmetadataValues($contents, $metadataId);
+    }
+
     public function sumIterable($iterable) {
         if ($iterable instanceof PrintableArray) {
             $iterable = $iterable->flatten();
@@ -99,6 +140,12 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         if (!is_array($iterable)) {
             $iterable = iterator_to_array($iterable);
         }
+        $iterable = array_map(
+            function ($value) {
+                return is_numeric($value) ? $value : strval($value);
+            },
+            $iterable
+        );
         return array_sum($iterable);
     }
 }

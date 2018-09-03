@@ -41,6 +41,8 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
         $tId = $this->findMetadataByName('Tytuł')->getId();
         $phpBookId = $this->getPhpBookResource()->getId();
         $phpMysqlBookId = $this->findResourceByContents(['Tytuł' => 'PHP i MySQL'])->getId();
+        // @codingStandardsIgnoreStart
+        // @formatter:off because indentation makes config structure way clearer
         return [
             ['', "ID $phpBookId"],
             // empty text
@@ -67,14 +69,15 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
             ["{{ r|m('Nadzorujący')|r|m('Username') }}", "budynek"], // can handle many values?
             ["{{ r|m('Nadzorujący')|m('Username') }}", "budynek"], // can skip resource fetching?
             ["{{ r|m(1) }}", "Potop, Powódź", RC::fromArray([1 => ['Potop', 'Powódź']])], // can render directly from resource contents?
+            ["{% for title in r|m1 %}{{ loop.index }}. {{ title }}{%endfor%}", "1. Potop2. Powódź", RC::fromArray([1 => ['Potop', 'Powódź']])], // loop.index
             ["{{ r|m(1)|m('Username') }}", "admin, budynek, tester", RC::fromArray([1 => [1, 2, 3]])], // many associations
             ["{{ r|m('Liczba stron')|merge(r($phpMysqlBookId)|m('Liczba stron'))|sum }}", "1741"],
             // sum pages
             ["{{ r|m(1)|m('Liczba stron')|sum }}", "1741", RC::fromArray([1 => [$phpBookId, $phpMysqlBookId]])],
             // sum pages by associations
             ["{{ r|m$tId }}", "PHP - to można leczyć!"], // dynamic filter
-            ["{% if r|m1|first %}TAK{% else %}NIE{% endif %}", "TAK", RC::fromArray([1 => true])], // bool true
-            ["{% if r|m1|first %}TAK{% else %}NIE{% endif %}", "NIE", RC::fromArray([1 => false])], // bool false
+            ["{% if r|m1|first.value %}TAK{% else %}NIE{% endif %}", "TAK", RC::fromArray([1 => true])], // bool true
+            ["{% if r|m1|first.value %}TAK{% else %}NIE{% endif %}", "NIE", RC::fromArray([1 => false])], // bool false
             ["{% for v in r|m1 %}- {{ v }}{% endfor %}", "- A- B", RC::fromArray([1 => ['A', 'B']])], // bool false
             ["{{ r|m1 }}", "", RC::empty()], // empty metadata
             ["{{ r|mUnicorn }}", ""], // unknown metadata name
@@ -86,14 +89,22 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
             ["{{ r('ala') }}", 'Given resource ID is not valid.'], // runtime error
             ["{{ r", 'Unexpected token "end of template" of value "" ("end of print statement" expected).'], // syntax error (compile error)
             ["{{ '{{ r.id }}' | evaluate }}", $phpBookId], // eval extension
+            ["{{ r|mUrl|first }}", 'http://google.pl'], // top value of metadata with submetadata
+            ["{{ r|mUrl|first|submetadataUrlLabel }}", 'Tam znajdziesz więcej'], // submetadata of first value
+            ["{{ r|mUrl|submetadataUrlLabel }}", 'Tam znajdziesz więcej, Tam znajdziesz więcej ale inni nie dowiedzą się, że interesujesz się PHP'], // array of all submetadata values
+            ["{{ r|mUrl|submetadataUrlLabel|first }}", 'Tam znajdziesz więcej'], // first submetadata value
+            ["{{ r|mUrl|subUrlLabel|first }}", 'Tam znajdziesz więcej'], // sub shorthand
+            ['{%for url in r|mUrl%}<a href="{{url}}">{{url|submetadataUrlLabel}}</a>{%endfor%}', '<a href="http://google.pl">Tam znajdziesz więcej</a><a href="https://duckduckgo.com">Tam znajdziesz więcej ale inni nie dowiedzą się, że interesujesz się PHP</a>'], // links generation
         ];
+        // @formatter:on
+        // @codingStandardsIgnoreEnd
     }
 
     public function testShowingHowCoolItIs() {
         $rendered = $this->evaluator->render(
             $this->phpBookResource,
             "Zasób #{{r.id}}: {{r|mTytuł}} Nadzorujący: {{r|mNadzorujący|mUsername}}, Skanista: {{r|mSkanista|mUsername}}."
-            . " {%if r|m('Czy ma twardą okładkę?')|first %}Twarda{% else %}Miękka{% endif %} okładka"
+            . " {%if r|m('Czy ma twardą okładkę?')|first.value %}Twarda{% else %}Miękka{% endif %} okładka"
         );
         $id = $this->phpBookResource->getId();
         $this->assertEquals("Zasób #$id: PHP - to można leczyć! Nadzorujący: budynek, Skanista: skaner. Twarda okładka", $rendered);

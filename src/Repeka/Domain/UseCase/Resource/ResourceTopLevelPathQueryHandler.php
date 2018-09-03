@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -27,9 +28,9 @@ class ResourceTopLevelPathQueryHandler {
 
     private function parentResourceId(ResourceContents $contents, int $parentMetadataId): ?int {
         return $contents->reduceAllValues(
-            function ($value, int $metadataId, $foundParentId) use ($parentMetadataId) {
+            function (MetadataValue $value, int $metadataId, $foundParentId) use ($parentMetadataId) {
                 if (!$foundParentId && $metadataId == $parentMetadataId) {
-                    return $value;
+                    return $value->getValue();
                 }
                 return $foundParentId;
             }

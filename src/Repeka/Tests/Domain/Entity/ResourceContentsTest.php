@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Entity;
 
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\Traits\StubsTrait;
@@ -45,8 +46,8 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
     public function testMapAllValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
         $mapped = $contents->mapAllValues(
-            function ($value) {
-                return $value * 2;
+            function (MetadataValue $value) {
+                return $value->withNewValue($value->getValue() * 2);
             }
         );
         $this->assertEquals(ResourceContents::fromArray([1 => 2, 2 => 4]), $mapped);
@@ -55,8 +56,8 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
     public function testMapAllValuesDoesNotChangeOriginalContents() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
         $contents->mapAllValues(
-            function ($value) {
-                return $value * 2;
+            function (MetadataValue $value) {
+                return $value->withNewValue($value->getValue() * 2);
             }
         );
         $this->assertEquals(ResourceContents::fromArray([1 => 1, 2 => 2]), $contents);
@@ -65,8 +66,8 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
     public function testReduceAllValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
         $sum = $contents->reduceAllValues(
-            function ($value, $metadataId, $acc) {
-                return $value + $metadataId + $acc;
+            function (MetadataValue $value, $metadataId, $acc) {
+                return $value->getValue() + $metadataId + $acc;
             },
             0
         );
@@ -76,8 +77,8 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
     public function testReduceAllValuesWithSubmetadata() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2, 'submetadata' => [4 => 5]]]]);
         $sum = $contents->reduceAllValues(
-            function ($value, $metadataId, $acc) {
-                return $value + $metadataId + $acc;
+            function (MetadataValue $value, $metadataId, $acc) {
+                return $value->getValue() + $metadataId + $acc;
             },
             0
         );
@@ -135,7 +136,12 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2], ['value' => 4]]]);
-        $this->assertEquals([2, 4], $contents->getValues(2));
+        $this->assertEquals([new MetadataValue(2), new MetadataValue(4)], $contents->getValues(2));
+    }
+
+    public function testGetValuesWithoutSubmetadata() {
+        $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2], ['value' => 4]]]);
+        $this->assertEquals([2, 4], $contents->getValuesWithoutSubmetadata(2));
     }
 
     public function testGetValuesOfNotExistingMetadata() {
@@ -145,7 +151,16 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetValuesIncludesSubmetadataValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2, 'submetadata' => [2 => 5]]]]);
-        $this->assertEquals([2, 5], $contents->getValues(2));
+        $this->assertCount(2, $contents->getValues(2));
+        $this->assertEquals(2, $contents->getValues(2)[0]->getValue());
+        $this->assertEquals(5, $contents->getValues(2)[1]->getValue());
+        $this->assertCount(1, $contents->getValues(2)[0]->getSubmetadata());
+        $this->assertCount(0, $contents->getValues(2)[1]->getSubmetadata());
+    }
+
+    public function testGetValuesWithoutSubmetadataIncludesSubmetadataValues() {
+        $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2, 'submetadata' => [2 => 5]]]]);
+        $this->assertEquals([2, 5], $contents->getValuesWithoutSubmetadata(2));
     }
 
     public function testChangingContentsIsForbidden() {
@@ -204,6 +219,11 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
             [[1 => [['value' => 'a', 'someKey' => 'b']]], [1 => [['value' => 'a']]]],
             [[1 => [['value' => 'a', 'submetadata' => [1 => 'a']]]], [1 => [['value' => 'a', 'submetadata' => [1 => [['value' => 'a']]]]]]],
             [[1 => [['submetadata' => [1 => 'a']]]], [1 => [['value' => null, 'submetadata' => [1 => [['value' => 'a']]]]]]],
+            [[1 => [new MetadataValue(2)]], [1 => [['value' => 2]]]],
+            [
+                [1 => [['value' => 'a', 'submetadata' => [1 => [new MetadataValue('a')]]]]],
+                [1 => [['value' => 'a', 'submetadata' => [1 => [['value' => 'a']]]]]],
+            ],
         ];
     }
 }

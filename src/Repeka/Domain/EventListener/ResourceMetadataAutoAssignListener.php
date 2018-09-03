@@ -20,7 +20,7 @@ class ResourceMetadataAutoAssignListener extends CommandEventsListener {
             $targetPlaces = EntityUtils::filterByIds($command->getTransition()->getToIds(), $resource->getWorkflow()->getPlaces());
             $autoAssignMetadataIds = $this->getAutoAssignMetadataIds($targetPlaces, $resource->getKind());
             foreach ($autoAssignMetadataIds as $metadataId) {
-                if (!in_array($executorResourceId, $resourceContents->getValues($metadataId))) {
+                if (!in_array($executorResourceId, $resourceContents->getValuesWithoutSubmetadata($metadataId))) {
                     $resourceContents = $resourceContents->withMergedValues($metadataId, [$executorResourceId]);
                 }
             }

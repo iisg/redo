@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -23,9 +24,9 @@ class ResourceTransitionCommandAdjuster implements CommandAdjuster {
      */
     public function adjustCommand(Command $command): Command {
         $newContents = $command->getContents()->mapAllValues(
-            function ($value, int $metadataId) {
+            function (MetadataValue $value, int $metadataId) {
                 $metadata = $this->metadataRepository->findOne($metadataId);
-                return $this->replaceRelationshipResourcesWithIds($value, $metadata->getControl());
+                return $value->withNewValue($this->replaceRelationshipResourcesWithIds($value->getValue(), $metadata->getControl()));
             }
         );
         $transition = $command->getTransition();

@@ -20,6 +20,6 @@ class ResourcesAreNotDestroyedByMigrationsTest extends DatabaseMigrationTestCase
             ['Poradnik dla cierpiących na zwyrodnienie interpretera.'],
             $contents->getValues($this->findMetadataByName('Opis'))
         );
-        $this->assertEquals([1337], $contents->getValues($this->findMetadataByName('Liczba stron')));
+        $this->assertEquals([1337], $contents->getValuesWithoutSubmetadata($this->findMetadataByName('Liczba stron')));
     }
 }

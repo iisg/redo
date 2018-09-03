@@ -7,7 +7,6 @@ use Repeka\Application\Upload\ResourceFilePathGenerator;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Tests\Traits\StubsTrait;
 
 class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
@@ -24,7 +23,7 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
     private $pathGenerator;
     /** @var FilesystemDriver|\PHPUnit_Framework_MockObject_MockObject */
     private $filesystemDriver;
-    /** @var ResourceFileHelper */
+    /** @var BasicResourceFileHelper */
     private $helper;
 
     protected function setUp() {
@@ -112,7 +111,7 @@ class BasicResourceFileHelperTest extends \PHPUnit_Framework_TestCase {
             function (ResourceContents $updatedContents) use ($contents) {
                 $this->assertEquals(
                     ["$this->destinationPath/todo.list", "$this->destinationPath/cuteCat.jpg"],
-                    $updatedContents->getValues(self::FILE_METADATA_ID)
+                    $updatedContents->getValuesWithoutSubmetadata(self::FILE_METADATA_ID)
                 );
             }
         );

@@ -24,7 +24,7 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
     }
 
     /**
-     * @param callable $mapper function(mixed $value, int $metadataId)
+     * @param callable $mapper function(MetadataValue $value, int $metadataId): MetadataValue
      *                         that receives every single value of all metadata from the contents and returns the mapped value
      * @return ResourceContents new instance of the contents with all values mapped by $mapper
      */
@@ -35,7 +35,7 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
     private function mapAllValuesRecursive(callable $mapper, array $contents): array {
         foreach ($contents as $metadataId => &$values) {
             foreach ($values as &$value) {
-                $value['value'] = $mapper($value['value'], $metadataId);
+                $value = $mapper(new MetadataValue($value), $metadataId)->toArray();
                 if (isset($value['submetadata'])) {
                     $value['submetadata'] = $this->mapAllValuesRecursive($mapper, $value['submetadata']);
                 }
@@ -45,7 +45,7 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
     }
 
     /**
-     * @param callable $function function(mixed $value, int $metadataId, mixed $accumulator)
+     * @param callable $function function(MetadataValue $value, int $metadataId, mixed $accumulator)
      *                           that receives every value of all metadata from the contents and returns the new accumulator value
      * @param mixed $initial initial value for the accumulator
      * @return mixed the final accumulator value
@@ -58,7 +58,7 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
         $result = $initial;
         foreach ($contents as $metadataId => $values) {
             foreach ($values as $value) {
-                $result = $function($value['value'], $metadataId, $result);
+                $result = $function(new MetadataValue($value), $metadataId, $result);
                 if (isset($value['submetadata'])) {
                     $result = $this->reduceAllValuesRecursive($value['submetadata'], $function, $result);
                 }
@@ -68,7 +68,7 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
     }
 
     /**
-     * @param callable $callback function(mixed $value, int $metadataId) that receives every value of all metadata from the contents
+     * @param callable $callback function(MetadataValue $value, int $metadataId) that receives every value of all metadata from the contents
      */
     public function forEachValue(callable $callback) {
         $this->reduceAllValuesRecursive($this->contents, $callback, null);
@@ -94,7 +94,7 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
 
     /**
      * @param Metadata|int $metadata
-     * @return mixed[]
+     * @return MetadataValue[]
      */
     public function getValues($metadata): array {
         $desiredMetadataId = $metadata instanceof Metadata ? $metadata->getId() : $metadata;
@@ -106,6 +106,19 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
                 return $values;
             },
             []
+        );
+    }
+
+    /**
+     * @param Metadata|int $metadata
+     * @return mixed[]
+     */
+    public function getValuesWithoutSubmetadata($metadata): array {
+        return array_map(
+            function (MetadataValue $value) {
+                return $value->getValue();
+            },
+            $this->getValues($metadata)
         );
     }
 
@@ -182,6 +195,8 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
                                     $metadataValue['value'] = null;
                                 }
                                 return array_intersect_key($metadataValue, ['value' => '', 'submetadata' => '']);
+                            } elseif ($metadataValue instanceof MetadataValue) {
+                                return $metadataValue->toArray();
                             } else {
                                 return ['value' => $metadataValue];
                             }
