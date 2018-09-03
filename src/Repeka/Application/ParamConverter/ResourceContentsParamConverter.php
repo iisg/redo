@@ -3,6 +3,7 @@ namespace Repeka\Application\ParamConverter;
 
 use Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor;
 use Repeka\Application\Upload\UploadSizeHelper;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -43,9 +44,9 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
 
     public function processMetadataValues(ResourceContents $contents, Request $request): ResourceContents {
         return $contents->mapAllValues(
-            function ($value, int $metadataId) use ($request) {
+            function (MetadataValue $value, int $metadataId) use ($request) {
                 $metadata = $this->metadataRepository->findOne($metadataId);
-                return $this->metadataValueProcessor->process($value, $metadata->getControl(), $request);
+                return $value->withNewValue($this->metadataValueProcessor->process($value->getValue(), $metadata->getControl(), $request));
             }
         );
     }

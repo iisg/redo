@@ -60,7 +60,7 @@ class PkImportMapRelationsCommand extends Command {
                         $mappedContents = $resource->getContents();
                         $mappedEverything = true;
                         foreach ($relationshipMetadata as $metadata) {
-                            $values = $resource->getValues($metadata);
+                            $values = $resource->getContents()->getValuesWithoutSubmetadata($metadata);
                             if ($values) {
                                 $mappedValues = [];
                                 foreach ($values as $value) {

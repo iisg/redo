@@ -29,14 +29,14 @@ class ResourcesTwigLoaderIntegrationTest extends IntegrationTestCase {
 
     public function testRenderingFromFile() {
         $this->handleCommandBypassingFirewall(new ResourceEvaluateDisplayStrategiesCommand($this->aboutPage));
-        $contents = $this->aboutPage->getValues($this->renderedMetadata)[0];
+        $contents = $this->aboutPage->getValues($this->renderedMetadata)[0]->getValue();
         $this->assertContains('<html lang="pl">', $contents);
     }
 
     public function testRenderingAfterImport() {
         $this->executeCommand('repeka:templates:import redo');
         $this->handleCommandBypassingFirewall(new ResourceEvaluateDisplayStrategiesCommand($this->aboutPage));
-        $contents = $this->aboutPage->getValues($this->renderedMetadata)[0];
+        $contents = $this->aboutPage->getValues($this->renderedMetadata)[0]->getValue();
         $this->assertContains('<html lang="pl">', $contents);
     }
 }

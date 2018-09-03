@@ -43,18 +43,18 @@ class ResourceEntity implements Identifiable, HasResourceClass {
     /**
      * Shortcut for getContents()->getValues($metadata)
      * @param Metadata|int $metadata
-     * @return mixed[]
+     * @return MetadataValue[]
      */
     public function getValues($metadata): array {
         return $this->getContents()->getValues($metadata);
     }
 
     public function hasParent(): bool {
-        return !empty($this->getValues(SystemMetadata::PARENT));
+        return !empty($this->getContents()->getValuesWithoutSubmetadata(SystemMetadata::PARENT));
     }
 
     public function getParentId(): int {
-        return current($this->getValues(SystemMetadata::PARENT));
+        return current($this->getContents()->getValuesWithoutSubmetadata(SystemMetadata::PARENT));
     }
 
     public function updateContents(ResourceContents $contents) {

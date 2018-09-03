@@ -82,7 +82,7 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
     public function testGeneratesValueBasedOnNewContent() {
         $this->strategyEvaluator->method('render')->willReturnCallback(
             function (ResourceContents $contents) {
-                return $contents->getValues(2)[0];
+                return $contents->getValuesWithoutSubmetadata(2)[0];
             }
         );
         $this->assertEquals(

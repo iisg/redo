@@ -19,9 +19,9 @@ class ResourceCreateCommandFirewall implements CommandFirewall {
     /** @param ResourceCreateCommand $command */
     public function ensureCanExecute(Command $command, User $executor): void {
         if (!$command->isTopLevel()) {
-            $parentId = current($command->getContents()->getValues(SystemMetadata::PARENT));
+            $parentId = current($command->getContents()->getValuesWithoutSubmetadata(SystemMetadata::PARENT));
             $parentResource = $this->resourceRepository->findOne($parentId);
-            $allowedReproductors = $parentResource->getContents()->getValues(SystemMetadata::REPRODUCTOR);
+            $allowedReproductors = $parentResource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR);
             if (!$executor->belongsToAnyOfGivenUserGroupsIds($allowedReproductors)) {
                 throw new InsufficientPrivilegesException(
                     'The executor is not a reproductor of the parent resource. Allowed: ' . implode(', ', $allowedReproductors)

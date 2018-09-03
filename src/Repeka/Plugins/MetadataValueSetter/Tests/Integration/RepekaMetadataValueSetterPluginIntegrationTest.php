@@ -99,8 +99,8 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
             ]
         );
         $newContent = $this->getPhpBookResource()->getContents();
-        $this->assertContains('PHP - test', $newContent->getValues($this->findMetadataByName('Tytuł')));
-        $this->assertContains('UNICORN', $newContent->getValues($this->findMetadataByName('Opis'))[1]);
-        $this->assertContains('PHP - test', $newContent->getValues($this->findMetadataByName('Opis'))[1]);
+        $this->assertContains('PHP - test', $newContent->getValuesWithoutSubmetadata($this->findMetadataByName('Tytuł')));
+        $this->assertContains('UNICORN', $newContent->getValuesWithoutSubmetadata($this->findMetadataByName('Opis'))[1]);
+        $this->assertContains('PHP - test', $newContent->getValuesWithoutSubmetadata($this->findMetadataByName('Opis'))[1]);
     }
 }

@@ -31,8 +31,7 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
         try {
             $metadata = $resource->getKind()->getMetadataByIdOrName($metadataName);
             $value = $this->strategyEvaluator->render($newResourceContents, $metadataValue);
-
-            $sameValueExists = in_array($value, $newResourceContents->getValues($metadata));
+            $sameValueExists = in_array($value, $newResourceContents->getValuesWithoutSubmetadata($metadata));
             $anyValueExists = !empty($newResourceContents->getValues($metadata));
             $blockSettingNonEmpty = $setOnlyWhenEmpty && $anyValueExists;
             if (!$sameValueExists && !$blockSettingNonEmpty) {

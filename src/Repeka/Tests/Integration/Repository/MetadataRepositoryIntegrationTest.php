@@ -45,7 +45,7 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
     public function testFindByControlAndResourceClass() {
         $query = MetadataListQuery::builder()->filterByResourceClass('books')->filterByControl(MetadataControl::TEXT())->build();
         $textMetadata = $this->metadataRepository->findByQuery($query);
-        $this->assertCount(4, $textMetadata);
+        $this->assertCount(6, $textMetadata);
     }
 
     public function testFindByIds() {

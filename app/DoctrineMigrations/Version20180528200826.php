@@ -15,7 +15,7 @@ class Version20180528200826 extends RepekaMigration {
         $users = $this->fetchAll('SELECT id, contents FROM resource WHERE kind_id = ' . SystemResourceKind::USER . ' ORDER BY id ASC');
         foreach ($users as $user) {
             $user['contents'] = json_decode($user['contents'], true);
-            $username = ResourceContents::fromArray($user['contents'])->getValues(SystemMetadata::USERNAME)[0];
+            $username = ResourceContents::fromArray($user['contents'])->getValuesWithoutSubmetadata(SystemMetadata::USERNAME)[0];
             $unifiedUsername = ExternalServiceAuthenticator::normalizeUsername($username);
             $usersToDeduplicate[$unifiedUsername][] = $user;
         }

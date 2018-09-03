@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Validation\Rules;
 
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -30,9 +31,9 @@ class ResourceDoesNotContainDuplicatedFilenamesRule extends AbstractRule {
     public function assert($resourceContents) {
         $fileMetadataIds = $this->getPossibleFileMetadataIds();
         $resourceFilenames = $resourceContents->reduceAllValues(
-            function ($value, int $metadataId, array $resourceFilenames) use ($fileMetadataIds) {
+            function (MetadataValue $value, int $metadataId, array $resourceFilenames) use ($fileMetadataIds) {
                 if (in_array($metadataId, $fileMetadataIds)) {
-                    $resourceFilenames[] = basename($value);
+                    $resourceFilenames[] = basename($value->getValue());
                 }
                 return $resourceFilenames;
             },

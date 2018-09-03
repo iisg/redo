@@ -128,6 +128,7 @@ class ResourcesFixture extends RepekaFixture {
                 $userAdmin
             )
         );
+        $urlLabelMetadataId = $this->getReference(MetadataFixture::REFERENCE_METADATA_URL_LABEL)->getId();
         $this->handleCommand(
             new ResourceCreateCommand(
                 $bookResourceKind,
@@ -142,6 +143,18 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
                         MetadataFixture::REFERENCE_METADATA_SUPERVISOR => [$userBudynek->getUserData()],
                         MetadataFixture::REFERENCE_METADATA_HARD_COVER => [true],
+                        MetadataFixture::REFERENCE_METADATA_URL => [
+                            [
+                                'value' => 'http://google.pl',
+                                'submetadata' => [$urlLabelMetadataId => 'Tam znajdziesz więcej'],
+                            ],
+                            [
+                                'value' => 'https://duckduckgo.com',
+                                'submetadata' => [
+                                    $urlLabelMetadataId => 'Tam znajdziesz więcej ale inni nie dowiedzą się, że interesujesz się PHP',
+                                ],
+                            ],
+                        ],
                     ]
                 ),
                 $userAdmin

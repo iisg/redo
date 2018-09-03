@@ -6,6 +6,7 @@ use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -95,7 +96,7 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
         $resource = $this->addSubBookToCategory();
         $this->assertNotNull($resource);
         $this->assertTrue($resource->hasParent());
-        $this->assertEquals([$category->getId()], $resource->getValues(SystemMetadata::PARENT));
+        $this->assertEquals($category->getId(), $resource->getParentId());
     }
 
     public function testCannotAddSubresourceIfSomeoneElseIsReproductor() {
@@ -107,7 +108,7 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
         $this->addSubBookToCategory();
     }
 
-    private function addSubBookToCategory() {
+    private function addSubBookToCategory(): ResourceEntity {
         $category = $this->findResourceByContents([$this->findMetadataByName('nazwa_kategorii')->getId() => 'E-booki']);
         $command = new ResourceCreateCommand(
             $this->getPhpBookResource()->getKind(),

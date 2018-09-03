@@ -242,6 +242,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('opis', Metadata::normalizeMetadataName('   opis '));
         $this->assertEquals('opis', Metadata::normalizeMetadataName('Opis'));
         $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis szerszy'));
+        $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opisSzerszy'));
         $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis-szerszy'));
         $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis.szerszy'));
         $this->assertEquals('opis_dluzszy', Metadata::normalizeMetadataName('opis Dłuższy'));

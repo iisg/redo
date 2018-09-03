@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Factory;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
@@ -122,15 +123,15 @@ class ResourceListQuerySqlFactory {
         $nextFilterId = $this->getUnusedParamId();
         $contentWhere = [];
         $resourceContents->forEachValue(
-            function ($value, int $metadataId) use ($contentsPath, &$contentWhere, &$nextFilterId, &$metadataInFrom) {
+            function (MetadataValue $value, int $metadataId) use ($contentsPath, &$contentWhere, &$nextFilterId, &$metadataInFrom) {
                 $this->froms["m$nextFilterId"] = $this->jsonbArrayElements("$contentsPath->'$metadataId'") . " m$nextFilterId";
                 $paramName = "mFilter$nextFilterId";
-                if (is_int($value)) {
+                if (is_int($value->getValue())) {
                     $contentWhere[] = "m$nextFilterId->>'value' = :$paramName";
-                    $this->params[$paramName] = $value;
+                    $this->params[$paramName] = $value->getValue();
                 } else {
                     $contentWhere[] = "m$nextFilterId->>'value' ~* :$paramName";
-                    $this->params[$paramName] = $value;
+                    $this->params[$paramName] = $value->getValue();
                 }
                 $nextFilterId++;
             }

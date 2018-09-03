@@ -31,6 +31,8 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
     const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
+    const REFERENCE_METADATA_URL = 'metadata-url';
+    const REFERENCE_METADATA_URL_LABEL = 'metadata-url-label';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -327,6 +329,34 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_RELATED_BOOK
+        );
+        $addedMetadata[] = $urlMetadata = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'url',
+                    'label' => [
+                        'PL' => 'URL',
+                        'EN' => 'URL',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'resourceClass' => 'books',
+                ]
+            ),
+            self::REFERENCE_METADATA_URL
+        );
+        $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'urlLabel',
+                    'label' => [
+                        'PL' => 'Tekst wyświetlany',
+                        'EN' => 'URL display text',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'parent' => $urlMetadata,
+                ]
+            ),
+            self::REFERENCE_METADATA_URL_LABEL
         );
         $this->handleCommand(
             new MetadataChildWithBaseCreateCommand(
