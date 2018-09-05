@@ -5,15 +5,15 @@ describe('Resource Type Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-  
+
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
 		browser.driver.manage().window().maximize();
   });
 
   it('Try to add without metadata', function() {
-		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
-		var addResourceTypeButton = element(by.cssContainingText('span', 'Dodaj'));
+		waitForElement(element(by.cssContainingText('span', 'rodzaj zasobu')));
+		var addResourceTypeButton = element(by.cssContainingText('span', 'rodzaj zasobu'));
 		browser.sleep(500);
 		addResourceTypeButton.click();
 
@@ -25,22 +25,26 @@ describe('Resource Type Tests', function() {
 		var addButton = element(by.buttonText('Dodaj'));
 		addButton.click();
 
+		waitForElement(element(by.className('help-block validation-message')));
 		var errorMessage = element(by.className('help-block validation-message'));
-		expect(errorMessage.getText()).toContain('Dodaj rodzaj metadanej.');
+		expect(errorMessage.getText()).toContain('Dodaj rodzaj metadanej');
   });
 
   it('Try to add without Polish name', function() {
+	  	alertDialog = browser.switchTo().alert();
+		alertDialog.accept();
+
 		var EC = protractor.ExpectedConditions;
-	  
-		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
-		var addResourceTypeButton = element(by.cssContainingText('span', 'Dodaj'));
+
+		waitForElement(element(by.cssContainingText('span', 'rodzaj zasobu')));
+		var addResourceTypeButton = element(by.cssContainingText('span', 'rodzaj zasobu'));
 		browser.sleep(500);
 		addResourceTypeButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
-		
+
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
 		var listToClick = lists.get(1);
@@ -53,24 +57,27 @@ describe('Resource Type Tests', function() {
 		waitForElement(element(by.buttonText('Dodaj')));
 		var addButton = element(by.buttonText('Dodaj'));
 		addButton.click();
-		
+
 		waitForElement(element(by.className('help-block validation-message')));
 		var errorMessage = element(by.className('help-block validation-message'));
 		expect(errorMessage.getText()).toContain('Nazwa wyświetlana musi mieć wartość we wszystkich językach.');
   });
 
   it('Try to add without English name', function() {
+	  	alertDialog = browser.switchTo().alert();
+		alertDialog.accept();
+
 	  	var EC = protractor.ExpectedConditions;
-		
-		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
-		var addResourceTypeButton = element(by.cssContainingText('span', 'Dodaj'));
+
+		waitForElement(element(by.cssContainingText('span', 'rodzaj zasobu')));
+		var addResourceTypeButton = element(by.cssContainingText('span', 'rodzaj zasobu'));
 		browser.sleep(500);
 		addResourceTypeButton.click();
-		
+
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
-		
+
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
 		var listToClick = lists.get(1);
@@ -83,17 +90,20 @@ describe('Resource Type Tests', function() {
 		waitForElement(element(by.buttonText('Dodaj')));
 		var addButton = element(by.buttonText('Dodaj'));
 		addButton.click();
-		
+
 		waitForElement(element(by.className('help-block validation-message')));
 		var errorMessage = element(by.className('help-block validation-message'));
 		expect(errorMessage.getText()).toContain('Nazwa wyświetlana musi mieć wartość we wszystkich językach.');
   });
 
   it('Add resource type', function() {
+	  	alertDialog = browser.switchTo().alert();
+		alertDialog.accept();
+
 	  	var EC = protractor.ExpectedConditions;
-		
-		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
-		var addResourceTypeButton = element(by.cssContainingText('span', 'Dodaj'));
+
+		waitForElement(element(by.cssContainingText('span', 'rodzaj zasobu')));
+		var addResourceTypeButton = element(by.cssContainingText('span', 'rodzaj zasobu'));
 		browser.sleep(500);
 		addResourceTypeButton.click();
 
@@ -125,8 +135,8 @@ describe('Resource Type Tests', function() {
 		var newResourceTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newResourceTypeRowLink.click();
 
-		waitForElement(element(by.buttonText('Edytuj')));
-		var editButton = element(by.buttonText('Edytuj'));
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
+		var editButton = element(by.cssContainingText('span', 'Edytuj'));
 		editButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
@@ -135,17 +145,21 @@ describe('Resource Type Tests', function() {
 		fields.get(0).clear();
 		confirmButton.click();
 
+		waitForElement(element(by.className('help-block validation-message')));
 		var errorMessage = element(by.className('help-block validation-message'));
 		expect(errorMessage.getText()).toContain('Nazwa wyświetlana musi mieć wartość we wszystkich językach.');
   });
 
   it('Try to edit by removing English name', function() {
+	  	alertDialog = browser.switchTo().alert();
+		alertDialog.accept();
+
 	    waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newResourceTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newResourceTypeRowLink.click();
 
-		waitForElement(element(by.buttonText('Edytuj')));
-		var editButton = element(by.buttonText('Edytuj'));
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
+		var editButton = element(by.cssContainingText('span', 'Edytuj'));
 		editButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
@@ -154,59 +168,58 @@ describe('Resource Type Tests', function() {
 		fields.get(1).clear();
 		confirmButton.click();
 
+		waitForElement(element(by.className('help-block validation-message')));
 		var errorMessage = element(by.className('help-block validation-message'));
 		expect(errorMessage.getText()).toContain('Nazwa wyświetlana musi mieć wartość we wszystkich językach.');
   });
 
   it('Try to edit by removing the only metadata', function() {
+	   	alertDialog = browser.switchTo().alert();
+		alertDialog.accept();
+
 	    waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newResourceTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newResourceTypeRowLink.click();
 
-		waitForElement(element(by.buttonText('Edytuj')));
-		var editButton = element(by.buttonText('Edytuj'));
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
+		var editButton = element(by.cssContainingText('span', 'Edytuj'));
 		editButton.click();
 
 		waitForElement(element(by.className('buttons')));
-		var metadataButtonsLabel = element(by.className('buttons'));
-		var metadataButtons = metadataButtonsLabel.all(by.className('au-target'));
+		var metadataButtonsLabel = element.all(by.className('buttons'));
+		var metadataButtons = metadataButtonsLabel.get(1).all(by.className('au-target'));
 		metadataButtons.get(10).click();
 
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
 
+		waitForElement(element(by.className('help-block validation-message')));
 		var errorMessage = element(by.className('help-block validation-message'));
-		expect(errorMessage.getText()).toContain('Dodaj rodzaj metadanej.');
+		expect(errorMessage.getText()).toContain('Dodaj rodzaj metadanej');
   });
 
   it('Edit by adding metadata', function() {
-	  	var EC = protractor.ExpectedConditions;
-	  
 	    waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newResourceTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newResourceTypeRowLink.click();
 
-		waitForElement(element(by.buttonText('Edytuj')));
-		var editButton = element(by.buttonText('Edytuj'));
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
+		var editButton = element(by.cssContainingText('span', 'Edytuj'));
 		editButton.click();
-		
-		browser.sleep(1000);
-		waitForElement(element(by.className('select2-selection__rendered')));
+
+		browser.sleep(500);
 		var lists = element.all(by.className('select2-selection__rendered'));
-		var listToClick = lists.get(1);
-		var isClickable = EC.elementToBeClickable(listToClick);
-		browser.wait(isClickable, 10000);
-		listToClick.click();
+		lists.get(1).click();
 		browser.driver.switchTo().activeElement().sendKeys('Metadana_do_testowania_automatycznego2');
-		browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);		
-		
+		browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
 		browser.sleep(500);
 
-		waitForElement(element(by.className('dl-horizontal')));
-		var parametersList = element(by.className('dl-horizontal'));
-		expect(parametersList.getText()).toContain('Metadana_do_testowania_automatycznego');
+	    waitForElement(element(by.className('resource-kind-details')));
+		var parameters = element(by.className('resource-kind-details'));
+		expect(parameters.getText()).toContain('Metadana_do_testowania_automatycznego2');
   });
 
   it('Edit by changing Polish name', function() {
@@ -214,8 +227,8 @@ describe('Resource Type Tests', function() {
 		var newResourceTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newResourceTypeRowLink.click();
 
-		waitForElement(element(by.buttonText('Edytuj')));
-		var editButton = element(by.buttonText('Edytuj'));
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
+		var editButton = element(by.cssContainingText('span', 'Edytuj'));
 		editButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
@@ -236,8 +249,8 @@ describe('Resource Type Tests', function() {
 		var newResourceTypeRowLink = element(by.linkText('Nowa_Nazwa_Automatyczna'));
 		newResourceTypeRowLink.click();
 
-		waitForElement(element(by.buttonText('Edytuj')));
-		var editButton = element(by.buttonText('Edytuj'));
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
+		var editButton = element(by.cssContainingText('span', 'Edytuj'));
 		editButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
@@ -248,7 +261,7 @@ describe('Resource Type Tests', function() {
 		confirmButton.click();
 		browser.sleep(500);
 
-		waitForElement(element(by.buttonText('Edytuj')));
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
 		var languageMenu = element(by.className('au-target flag-icon-xs'));
 		languageMenu.click();
 		var englishOption = element(by.linkText('English'));
@@ -269,14 +282,14 @@ describe('Resource Type Tests', function() {
 		var newResourceTypeRowLink = element(by.linkText('Nowa_Nazwa_Automatyczna'));
 		newResourceTypeRowLink.click();
 
-		waitForElement(element(by.buttonText('Usuń')));
-		var deleteButton = element(by.buttonText('Usuń'));
+		waitForElement(element(by.cssContainingText('span', 'Usuń')));
+		var deleteButton = element(by.cssContainingText('span', 'Usuń'));
 		deleteButton.click();
 
-		var confirmButton = element.all(by.className('swal2-confirm btn btn-danger'));
+		var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 		confirmButton.click();
 
-		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
+		waitForElement(element(by.cssContainingText('span', 'rodzaj zasobu')));
 		expect(element(by.linkText('Nowa_Nazwa_Automatyczna')).isPresent()).toBe(false);
   });
 });
