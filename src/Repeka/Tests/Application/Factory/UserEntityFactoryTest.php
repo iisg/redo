@@ -16,8 +16,7 @@ class UserEntityFactoryTest extends \PHPUnit_Framework_TestCase {
         $commandBus = $this->createMock(CommandBus::class);
         $commandBus->method('handle')->willReturn($this->createMock(ResourceEntity::class));
         $passwordEncoder = $this->createMock(UserPasswordEncoder::class);
-        $userEntityFactory = new UserEntityFactory($passwordEncoder, $resourceKindRepository);
-        $userEntityFactory->setCommandBus($commandBus);
+        $userEntityFactory = new UserEntityFactory($passwordEncoder, $resourceKindRepository, $commandBus);
         $user = ($userEntityFactory)->createUser($username, $password, ResourceContents::empty());
         $this->assertNotNull($user);
     }
