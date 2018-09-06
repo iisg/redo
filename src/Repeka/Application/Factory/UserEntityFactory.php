@@ -2,6 +2,7 @@
 namespace Repeka\Application\Factory;
 
 use Repeka\Application\Entity\UserEntity;
+use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Factory\UserFactory;
@@ -12,8 +13,12 @@ class UserEntityFactory extends UserFactory {
     /** @var UserPasswordEncoderInterface */
     private $passwordEncoder;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, ResourceKindRepository $resourceKindRepository) {
-        parent::__construct($resourceKindRepository);
+    public function __construct(
+        UserPasswordEncoderInterface $passwordEncoder,
+        ResourceKindRepository $resourceKindRepository,
+        CommandBus $commandBus
+    ) {
+        parent::__construct($resourceKindRepository, $commandBus);
         $this->passwordEncoder = $passwordEncoder;
     }
 

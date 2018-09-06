@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Domain\Upload;
 
-use Repeka\Application\Upload\ResourceFileExistException;
 use Repeka\Domain\Entity\ResourceEntity;
 
 interface ResourceFileHelper {
