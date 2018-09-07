@@ -203,3 +203,5 @@ You do not have permissions to clone resource.: Nie posiadasz uprawnień do klon
 Resource kind does not allow to add resource.: Rodzaj zasobu nie pozwala na dodawanie podzasobów.
 You are editing the resource without validations.: Edytujesz zasób bez nałożonych reguł walidacyjnych.
 Make any changes wisely.: Wprowadzaj uważnie wszelkie zmiany.
+Select date mode:: Wybierz model daty:
+Select date mode for range:: Wybierz model daty dla zakresu:

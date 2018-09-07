@@ -33,6 +33,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     private $metadata3;
     /** @var Metadata */
     private $metadata4;
+    /** @var Metadata */
+    private $metadata5;
     /** @var ResourceKind */
     private $resourceKind;
     /** @var ResourceKind */
@@ -82,6 +84,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'books',
             ['resourceKind' => [-1]]
         );
+        $this->metadata5 = $this->createMetadata('M5', ['PL' => 'metadata', 'EN' => 'metadata'], [], [], 'flexible-date');
         $this->workflowPlace1 = new ResourceWorkflowPlace(['PL' => 'key1', 'EN' => 'key1'], 'p1', [], [], [], [$this->metadata3->getId()]);
         $this->workflowPlace2 = new ResourceWorkflowPlace(['PL' => 'key2', 'EN' => 'key2'], 'p2', [], [], [], [$this->metadata4->getId()]);
         $this->transition = new ResourceWorkflowTransition(['PL' => 'key3', 'EN' => 'key3'], ['p1'], ['p2'], 't1');
@@ -95,7 +98,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $workflow = $sampleResourceWorkflowDriverFactory->setForWorkflow($workflow);
         $this->resourceKind = $this->createResourceKind(
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
-            [$this->metadata1, $this->metadata2]
+            [$this->metadata1, $this->metadata2, $this->metadata5]
         );
         $this->resourceKindWithWorkflow = $this->createResourceKind(
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
@@ -382,6 +385,44 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($this->resource->getKind()->getId(), $cloned->getKind()->getId());
         $this->assertEquals(['Test value for child'], $cloned->getValues($this->metadata1));
         $this->assertEquals($this->childResource->getParentId(), $cloned->getParentId());
+    }
+
+    public function testCreatingResourceWithFlexibleDate() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => json_encode(
+                    [
+                        $this->metadata5->getId() => [
+                            ['value' => [
+                                'from' => '2018-09-13T16:39:49+02:00',
+                                'to' => '2018-09-13T16:39:49+02:00',
+                                'mode' => 'day',
+                                'rangeMode' => null],
+                            ],
+                        ],
+                    ]
+                ),
+                'resourceClass' => 'books',
+            ]
+        );
+        $this->assertStatusCode(201, $client->getResponse());
+        $createdId = json_decode($client->getResponse()->getContent())->id;
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $created */
+        $created = $repository->findOne($createdId);
+        $metadataValue = $created->getContents()->getValues($this->metadata5->getId())[0]->getValue();
+        $expectedDateValue = [
+            'from' => '2018-09-13T00:00:00',
+            'to' => '2018-09-13T23:59:59',
+            'mode' => 'day',
+            'rangeMode' => null,
+            'displayValue' => '13.09.2018',
+        ];
+        $this->assertEquals($expectedDateValue, $metadataValue);
     }
 
     public function testEditingResource() {

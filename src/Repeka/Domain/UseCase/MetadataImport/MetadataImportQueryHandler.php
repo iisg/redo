@@ -1,8 +1,8 @@
 <?php
 namespace Repeka\Domain\UseCase\MetadataImport;
 
-use Repeka\Domain\MetadataImport\ImportResult;
-use Repeka\Domain\MetadataImport\MetadataImporter;
+use Repeka\Domain\Metadata\MetadataImport\ImportResult;
+use Repeka\Domain\Metadata\MetadataImport\MetadataImporter;
 
 class MetadataImportQueryHandler {
     /** @var MetadataImporter */

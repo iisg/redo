@@ -6,6 +6,7 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\CommandAttributesValidator;
+use Repeka\Domain\Validation\Rules\FlexibleDateControlMetadataCorrectStructureRule;
 use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
 use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
@@ -31,6 +32,8 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
     private $resourceDoesNotContainDuplicatedFilenamesRule;
     /** @var LockedMetadataValuesAreUnchangedRule */
     private $lockedMetadataValuesAreUnchangedRule;
+    /** @var FlexibleDateControlMetadataCorrectStructureRule */
+    private $dateControlMetadataCorrectStructureRule;
 
     public function __construct(
         TransitionPossibilityChecker $transitionPossibilityChecker,
@@ -38,7 +41,8 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
         MetadataValuesSatisfyConstraintsRule $metadataValuesSatisfyConstraintsRule,
         ResourceContentsCorrectStructureRule $resourceContentsCorrectStructureRule,
         ResourceDoesNotContainDuplicatedFilenamesRule $resourceDoesNotContainDuplicatedFilenamesRule,
-        LockedMetadataValuesAreUnchangedRule $lockedMetadataValuesAreUnchangedRule
+        LockedMetadataValuesAreUnchangedRule $lockedMetadataValuesAreUnchangedRule,
+        FlexibleDateControlMetadataCorrectStructureRule $dateControlMetadataCorrectStructureRule
     ) {
         $this->transitionPossibilityChecker = $transitionPossibilityChecker;
         $this->valueSetMatchesResourceKindRule = $valueSetMatchesResourceKindRule;
@@ -46,6 +50,7 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
         $this->resourceContentsCorrectStructureRule = $resourceContentsCorrectStructureRule;
         $this->resourceDoesNotContainDuplicatedFilenamesRule = $resourceDoesNotContainDuplicatedFilenamesRule;
         $this->lockedMetadataValuesAreUnchangedRule = $lockedMetadataValuesAreUnchangedRule;
+        $this->dateControlMetadataCorrectStructureRule = $dateControlMetadataCorrectStructureRule;
     }
 
     /** @param ResourceTransitionCommand $command */
@@ -71,7 +76,8 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
             ->attribute(
                 'contents',
                 $this->lockedMetadataValuesAreUnchangedRule->forResourceAndTransition($command->getResource(), $command->getTransition())
-            );
+            )
+            ->attribute('contents', $this->dateControlMetadataCorrectStructureRule->forResourceKind($command->getResource()->getKind()));
     }
 
     private function assertHasTransition($transitionId) {

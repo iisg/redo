@@ -7,7 +7,7 @@ use Repeka\Application\Resources\FrontendLocaleProvider;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Application\Upload\UploadSizeHelper;
 use Repeka\Application\Validation\ContainerAwareMetadataConstraintManager;
-use Repeka\Domain\MetadataImport\Mapping\Mapping;
+use Repeka\Domain\Metadata\MetadataImport\Mapping\Mapping;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 

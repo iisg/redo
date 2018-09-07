@@ -56,6 +56,7 @@ System.config({
     "cytoscape-autopan-on-drag": "npm:cytoscape-autopan-on-drag@2.0.2",
     "cytoscape-context-menus": "npm:cytoscape-context-menus@2.1.1",
     "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.15.0",
+    "eonasdan-bootstrap-datetimepicker": "npm:eonasdan-bootstrap-datetimepicker@4.17.47",
     "fetch": "github:github/fetch@1.1.1",
     "jodit": "npm:jodit@3.2.10",
     "jquery": "npm:jquery@3.2.1",
@@ -285,6 +286,11 @@ System.config({
     "npm:bluebird@3.4.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:bootstrap@3.3.7": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:brace-expansion@1.1.11": {
       "balanced-match": "npm:balanced-match@1.0.0",
       "concat-map": "npm:concat-map@0.0.1"
@@ -353,6 +359,12 @@ System.config({
     "npm:dot-case@2.1.1": {
       "no-case": "npm:no-case@2.3.2"
     },
+    "npm:eonasdan-bootstrap-datetimepicker@4.17.47": {
+      "bootstrap": "npm:bootstrap@3.3.7",
+      "jquery": "npm:jquery@3.2.1",
+      "moment": "npm:moment@2.22.2",
+      "moment-timezone": "npm:moment-timezone@0.4.1"
+    },
     "npm:fs.realpath@1.0.0": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
@@ -416,6 +428,10 @@ System.config({
     "npm:minimatch@3.0.4": {
       "brace-expansion": "npm:brace-expansion@1.1.11",
       "path": "github:jspm/nodelibs-path@0.1.0"
+    },
+    "npm:moment-timezone@0.4.1": {
+      "moment": "npm:moment@2.22.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:no-case@2.3.2": {
       "lower-case": "npm:lower-case@1.1.4"

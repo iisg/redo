@@ -16,7 +16,7 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
             [
                 $this->createMetadataMock(1, null, MetadataControl::TEXT(), [], 'books', [], 'TEXT1'),
                 $this->createMetadataMock(2, null, MetadataControl::INTEGER(), [], 'books', [], 'INTEGER'),
-                $this->createMetadataMock(3, null, MetadataControl::DATE(), [], 'books', [], 'DATE'),
+                $this->createMetadataMock(3, null, MetadataControl::TIMESTAMP(), [], 'books', [], 'TIMESTAMP'),
                 $this->createMetadataMock(4, null, MetadataControl::FILE(), [], 'books', [], 'FILE'),
             ]
         );
@@ -72,13 +72,13 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
                 [
                     'value_text' => 'a',
                     'submetadata' => [
-                        3 => [['value_date' => '03-08-2018']],
+                        3 => [['value_timestamp' => '03-08-2018']],
                     ],
                 ],
                 [
                     'value_text' => 'b',
                     'submetadata' => [
-                        3 => [['value_date' => '09-09-2018']],
+                        3 => [['value_timestamp' => '09-09-2018']],
                     ],
                 ],
             ],
@@ -107,12 +107,12 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
             4 => [
                 [
                     'submetadata' => [
-                        3 => [['value_date' => '03-08-2018']],
+                        3 => [['value_timestamp' => '03-08-2018']],
                     ],
                 ],
                 [
                     'submetadata' => [
-                        3 => [['value_date' => '09-09-2018']],
+                        3 => [['value_timestamp' => '09-09-2018']],
                     ],
                 ],
             ],

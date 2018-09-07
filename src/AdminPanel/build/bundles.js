@@ -78,6 +78,7 @@ const bundles = function () {
           "aurelia-validation",
           "bootstrap",
           "change-case",
+          "eonasdan-bootstrap-datetimepicker",
           "jodit",
           "jodit/build/jodit.min.css!text",
           "jquery",

@@ -2,7 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\MetadataImport;
 
 use PHPUnit_Framework_TestCase;
-use Repeka\Domain\MetadataImport\Xml\XmlArrayDataExtractor;
+use Repeka\Domain\Metadata\MetadataImport\Xml\XmlArrayDataExtractor;
 use Repeka\Domain\UseCase\MetadataImport\XmlExtractQuery;
 use Repeka\Domain\UseCase\MetadataImport\XmlExtractQueryHandler;
 

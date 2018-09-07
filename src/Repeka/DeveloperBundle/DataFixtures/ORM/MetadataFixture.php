@@ -111,7 +111,7 @@ class MetadataFixture extends RepekaFixture {
                     ],
                     'description' => [],
                     'placeholder' => [],
-                    'control' => 'date',
+                    'control' => 'flexible-date',
                     'resourceClass' => 'books',
                     'constraints' => $this->constraints(1),
                 ]
@@ -128,7 +128,7 @@ class MetadataFixture extends RepekaFixture {
                     ],
                     'description' => [],
                     'placeholder' => [],
-                    'control' => 'date',
+                    'control' => 'timestamp',
                     'resourceClass' => 'books',
                     'constraints' => $this->constraints(1),
                 ]

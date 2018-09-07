@@ -12,6 +12,7 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandValidator;
+use Repeka\Domain\Validation\Rules\FlexibleDateControlMetadataCorrectStructureRule;
 use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
 use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
@@ -52,6 +53,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         bool $resourceContentsCorrectStructure,
         bool $resourceDoesNotContainDuplicatedFilenames,
         bool $lockedMetadataValuesAreUnchanged,
+        bool $dateControlMetadataCorrectStructure,
         ?TransitionPossibilityChecker $transitionPossibilityChecker = null
     ): ResourceTransitionCommandValidator {
         if (!$transitionPossibilityChecker) {
@@ -80,18 +82,23 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
             LockedMetadataValuesAreUnchangedRule::class,
             $lockedMetadataValuesAreUnchanged
         );
+        $dateControlMetadataCorrectStructureRule = $this->createRuleMock(
+            FlexibleDateControlMetadataCorrectStructureRule::class,
+            $dateControlMetadataCorrectStructure
+        );
         return new ResourceTransitionCommandValidator(
             $transitionPossibilityChecker,
             $valueSetMatchesResourceKindRule,
             $metadataValuesSatisfyConstraintsRule,
             $resourceContentsCorrectStructureRule,
             $resourceDoesNotContainDuplicatedFilenamesRule,
-            $lockedMetadataValuesAreUnchangedRule
+            $lockedMetadataValuesAreUnchangedRule,
+            $dateControlMetadataCorrectStructureRule
         );
     }
 
     public function testValid() {
-        $validator = $this->createValidator(true, true, true, true, true);
+        $validator = $this->createValidator(true, true, true, true, true, true);
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
         $this->resource->method('hasWorkflow')->willReturn(true);
         $this->workflow->method('getPlaces')->willReturn(
@@ -111,7 +118,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testValidWhenNoWorkflow() {
-        $validator = $this->createValidator(true, true, true, true, true);
+        $validator = $this->createValidator(true, true, true, true, true, true);
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
         $command = new ResourceTransitionCommand(
             $this->resource,
@@ -123,7 +130,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testInvalidWhenInvalidTransition() {
-        $validator = $this->createValidator(true, true, true, true, true);
+        $validator = $this->createValidator(true, true, true, true, true, true);
         $this->expectException(InvalidCommandException::class);
         $this->expectExceptionMessageRegExp('/transitionId/');
         $this->resource->method('getId')->willReturn(1);
@@ -145,7 +152,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->resource->expects($this->once())->method('getId')->willReturn(1);
         $transitionPossibilityChecker = $this->createMock(TransitionPossibilityChecker::class);
         $transitionPossibilityChecker->method('check')->willReturn(new TransitionPossibilityCheckResult([], true));
-        $validator = $this->createValidator(true, true, true, true, true, $transitionPossibilityChecker);
+        $validator = $this->createValidator(true, true, true, true, true, true, $transitionPossibilityChecker);
         $transition = $this->configureTransition('t1');
         $command = new ResourceTransitionCommand(
             $this->resource,
@@ -166,7 +173,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testInvalidIfContentsDoNotMatchResourceKind() {
-        $validator = $this->createValidator(false, true, true, true, true);
+        $validator = $this->createValidator(false, true, true, true, true, true);
         $command = new ResourceTransitionCommand(
             new ResourceEntity($this->resourceKind, ResourceContents::empty()),
             ResourceContents::empty(),
@@ -177,7 +184,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testInvalidWhenConstraintsNotSatisfied() {
-        $validator = $this->createValidator(true, false, true, true, true);
+        $validator = $this->createValidator(true, false, true, true, true, true);
         $command = new ResourceTransitionCommand(
             new ResourceEntity($this->resourceKind, ResourceContents::empty()),
             ResourceContents::empty(),
@@ -188,7 +195,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testInvalidWhenInvalidContentStructure() {
-        $validator = $this->createValidator(true, true, false, true, true);
+        $validator = $this->createValidator(true, true, false, true, true, true);
         $command = new ResourceTransitionCommand(
             new ResourceEntity($this->resourceKind, ResourceContents::empty()),
             ResourceContents::empty(),
@@ -199,7 +206,7 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testInvalidWhenResourceContainsDuplicatedFilenames() {
-        $validator = $this->createValidator(true, true, true, false, true);
+        $validator = $this->createValidator(true, true, true, false, true, true);
         $command = new ResourceTransitionCommand(
             new ResourceEntity($this->resourceKind, ResourceContents::empty()),
             ResourceContents::empty(),
@@ -210,7 +217,18 @@ class ResourceTransitionCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testInvalidWhenLockedMetadataValuesAreChanged() {
-        $validator = $this->createValidator(true, true, true, true, false);
+        $validator = $this->createValidator(true, true, true, true, false, true);
+        $command = new ResourceTransitionCommand(
+            new ResourceEntity($this->resourceKind, ResourceContents::empty()),
+            ResourceContents::empty(),
+            SystemTransition::UPDATE()->toTransition($this->resourceKind, $this->resource),
+            $this->user
+        );
+        $this->assertFalse($validator->isValid($command));
+    }
+
+    public function testInvalidWhenDateControlMetadataCorrectStructureInvalid() {
+        $validator = $this->createValidator(true, true, true, true, true, false);
         $command = new ResourceTransitionCommand(
             new ResourceEntity($this->resourceKind, ResourceContents::empty()),
             ResourceContents::empty(),

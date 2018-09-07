@@ -2,9 +2,9 @@
 namespace Repeka\Tests\Domain\UseCase\MetadataImport;
 
 use PHPUnit_Framework_TestCase;
-use Repeka\Domain\MetadataImport\Config\ImportConfig;
-use Repeka\Domain\MetadataImport\ImportResult;
-use Repeka\Domain\MetadataImport\MetadataImporter;
+use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfig;
+use Repeka\Domain\Metadata\MetadataImport\ImportResult;
+use Repeka\Domain\Metadata\MetadataImport\MetadataImporter;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQueryHandler;
 

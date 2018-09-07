@@ -3,8 +3,8 @@ namespace Repeka\Application\Authentication;
 
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Domain\Constants\SystemResourceKind;
-use Repeka\Domain\MetadataImport\Config\ImportConfig;
-use Repeka\Domain\MetadataImport\Config\ImportConfigFactory;
+use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfig;
+use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 
 class UserDataMapping {

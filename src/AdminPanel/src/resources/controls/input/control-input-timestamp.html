@@ -1,0 +1,7 @@
+<template>
+    <require from="./datetime-picker/datetime-picker"></require>
+
+    <datetime-picker date-mode="day"
+        value.bind="metadataValue.value & validate:validationController:validationRules"
+        disabled.bind="disabled"></datetime-picker>
+</template>

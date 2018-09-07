@@ -2,8 +2,16 @@ text: Tekst
 textarea: Długi tekst
 wysiwyg-editor: Edytor WYSIWYG
 integer: Liczba całkowita
-date: Data
+flexible-date: Elastyczna data
+timestamp: Znacznik czasu
 boolean: Tak / Nie
 relationship: Relacja
 file: Plik
 display-strategy: Strategia wyświetlania
+
+flexible-date-modes:
+  year: Rok
+  month: Miesiąc
+  day: Dzień
+  date_time: Czas
+  range: Zakres

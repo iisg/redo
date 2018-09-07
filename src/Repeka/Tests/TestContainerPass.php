@@ -16,7 +16,7 @@ class TestContainerPass implements CompilerPassInterface {
         \Doctrine\ORM\EntityManagerInterface::class,
         \Repeka\Application\Twig\ResourcesTwigLoader::class,
         \Repeka\Domain\Cqrs\CommandBus::class,
-        \Repeka\Domain\MetadataImport\Config\ImportConfigFactory::class,
+        \Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory::class,
         \Repeka\Domain\Repository\AuditEntryRepository::class,
         \Repeka\Domain\Repository\LanguageRepository::class,
         \Repeka\Domain\Repository\MetadataRepository::class,
