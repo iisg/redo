@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const glob = require('glob');
 
 const entries = {
   'commons': './src/common.js'

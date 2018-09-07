@@ -482,7 +482,7 @@ class MetadataFixture extends RepekaFixture {
         );
         $staticPageContent = trim(
             <<<TEMPLATE
-{% extends "redo/layout-with-navbar.twig" %}
+{% extends "redo/layout.twig" %}
 
 {% set page_title = r | mTytul_Strony | first %}
 

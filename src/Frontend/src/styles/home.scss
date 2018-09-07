@@ -1,0 +1,12 @@
+$search-bar-width: 500px;
+
+.home-page-content {
+    display: flex;
+    justify-content: center;
+    .search-bar {
+        width: $search-bar-width;
+        .search-box-with-options {
+            width: 100%;
+        }
+    }
+}

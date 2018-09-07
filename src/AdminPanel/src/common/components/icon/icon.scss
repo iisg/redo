@@ -13,7 +13,7 @@ icon, .icon {
     }
     &[size="1.25"] {
         height: 1.25em;
-        vertical-align: -0.24em;
+        vertical-align: -0.25em;
     }
     &[size="1.5"] {
         height: 1.5em;
@@ -26,6 +26,10 @@ icon, .icon {
     &[size="2"] {
         height: 2em;
         vertical-align: -0.65em;
+    }
+    &[size="2.5"] {
+        height: 2.5em;
+        vertical-align: -0.85em;
     }
     &[size="3"] {
         height: 3em;

@@ -1,5 +1,5 @@
 <template>
-    <span>v{{ version }}</span>
+    <span>v{{version}}</span>
 </template>
 
 <script>

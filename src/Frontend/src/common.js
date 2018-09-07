@@ -1,3 +1,4 @@
+import "./polyfills";
 import "expose-loader?jQuery!expose-loader?$!jquery";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -18,6 +19,11 @@ Vue.prototype.$user = window.FRONTEND_CONFIG.user;
 
 const components = {
   RedoLogo: () => import("./redo/redo-logo"),
+  Icon: () => import("./common/icon"),
+  GeneratedMenu: () => import("./common/generated-menu"),
+  SearchBar: () => import("./common/search-bar"),
+  Checkbox: () => import("./common/checkbox"),
+  RadioButtonsGroup: () => import("./common/radio-buttons-group"),
   RepekaVersion: () => import("./common/repeka-version")
 };
 

@@ -1,6 +1,6 @@
 <template>
     <svg viewBox="0 0 1 1">
-        <use xlink:href="/files/icons.svg#logo"></use>
+        <use xlink:href="/files/icons.svg#redo-logo"></use>
     </svg>
 </template>
 
@@ -11,7 +11,6 @@
 <style lang="scss"
     scoped>
     svg {
-        height: inherit;
         fill: currentColor;
     }
 </style>

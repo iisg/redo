@@ -1,13 +1,5 @@
+@import "base";
+@import "footer";
+@import "home";
 @import "login-form";
-
-a {
-  cursor: pointer;
-}
-
-icon, .icon {
-  > svg {
-    height: 1em;
-    vertical-align: -0.15em;
-    fill: currentColor;
-  }
-}
+@import "title-bar";
