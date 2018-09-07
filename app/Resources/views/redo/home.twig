@@ -1,9 +1,13 @@
-{% extends "redo/layout-with-navbar.twig" %}
+{% extends "redo/layout.twig" %}
 
 {% set page_title = 'Strona główna' %}
 
+{% block banner %}
+    <img class="banner"
+    src="/files/images/banner.png">
+{% endblock %}
 {% block content %}
-    <h1>{{ applicationName }}</h1>
-
-    <redo-logo style="width: 150px"></redo-logo>
+    <div class="content home-page-content">
+        <search-bar></search-bar>
+    </div>
 {% endblock %}
