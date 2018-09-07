@@ -1,0 +1,31 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="../datetime-picker/datetime-picker"></require>
+
+    <template if.bind="!selectedDateMode">
+        <span>${'Select date mode:' | t}</span>
+        <dropdown-select values.bind="dateModes"
+            value.bind="selectedDateMode">
+            <template replace-part="option-template">
+                ${'controls::flexible-date-modes//' + option | t }
+            </template>
+        </dropdown-select>
+    </template>
+
+    <template if.bind="selectedDateMode == 'range' && !selectedRangeDateMode">
+        <span >${'Select date mode for range:' | t}</span>
+        <dropdown-select values.bind="rangeDateModes"
+            value.bind="selectedRangeDateMode">
+            <template replace-part="option-template">
+                ${'controls::flexible-date-modes//' + option | t }
+            </template>
+        </dropdown-select>
+    </template>
+
+    <datetime-picker if.bind="(selectedDateMode && selectedDateMode != 'range') || (selectedRangeDateMode)"
+        flexible.bind="true"
+        date-mode.bind="selectedDateMode"
+        range-date-mode.bind="selectedRangeDateMode"
+        value.bind="value"
+        disabled.bind="disabled"></datetime-picker>
+</template>

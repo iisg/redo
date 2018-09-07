@@ -21,7 +21,7 @@ services:
   Repeka\Application\MetadataImport\KohaXmlResourceDownloader:
     - '%xml_import.koha%'
 
-  Repeka\Domain\MetadataImport\Transform\ImportTransformComposite:
+  Repeka\Domain\Metadata\MetadataImport\Transform\ImportTransformComposite:
     - !tagged repeka.import_transform
 
   Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware:
@@ -125,3 +125,6 @@ services:
     public: true
     arguments:
       $resourceClassesConfig: '%repeka.resource_classes_config%'
+
+  Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite:
+    - !tagged repeka.metadata_value_adjuster

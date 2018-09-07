@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration\UseCase\MetadataImport;
 
-use Repeka\Domain\MetadataImport\Config\ImportConfigFactory;
+use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\MetadataImport\XmlExtractQuery;

@@ -1,0 +1,6 @@
+<template>
+    <require from="./flexible-date-input/flexible-date-input"></require>
+
+    <flexible-date-input value.bind="metadataValue.value & validate:validationController:validationRules"
+        disabled.bind="disabled"></flexible-date-input>
+</template>

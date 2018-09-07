@@ -4,7 +4,7 @@ namespace Repeka\Application\Controller\Api;
 use Assert\Assertion;
 use Repeka\Application\MetadataImport\KohaXmlResourceDownloader;
 use Repeka\Domain\Exception\EntityNotFoundException;
-use Repeka\Domain\MetadataImport\Config\ImportConfigFactory;
+use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\MetadataImport\XmlExtractQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;

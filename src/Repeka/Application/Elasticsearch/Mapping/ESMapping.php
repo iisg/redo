@@ -51,8 +51,8 @@ class ESMapping {
                     ],
                 ],
                 [
-                    'as_date' => [
-                        'path_match' => '*.value_date',
+                    'as_timestamp' => [
+                        'path_match' => '*.value_timestamp',
                         'mapping' => [
                             'type' => 'date',
                         ],

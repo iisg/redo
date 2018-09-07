@@ -101,6 +101,7 @@
       "cytoscape-autopan-on-drag": "npm:cytoscape-autopan-on-drag@^2.0.2",
       "cytoscape-context-menus": "npm:cytoscape-context-menus@^2.1.1",
       "cytoscape-edgehandles": "npm:cytoscape-edgehandles@^2.14.0",
+      "eonasdan-bootstrap-datetimepicker": "npm:eonasdan-bootstrap-datetimepicker@^4.17.47",
       "fetch": "github:github/fetch@^1.0.0",
       "jodit": "npm:jodit@^3.2.10",
       "jquery": "npm:jquery@3.2.1",

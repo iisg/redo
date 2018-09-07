@@ -15,6 +15,7 @@ final class FtsConstants {
 
     const UNACCEPTABLE_TYPES = [
         MetadataControl::FILE,
+        MetadataControl::FLEXIBLE_DATE,
     ];
 
     const NUMERIC_DETECTION_PARAM = 'numeric_detection';

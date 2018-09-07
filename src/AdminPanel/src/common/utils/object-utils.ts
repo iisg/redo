@@ -7,6 +7,10 @@ export function isObject(object: any): boolean {
   return typeof object == 'object' && !Array.isArray(object);
 }
 
+export function isString(value: any): boolean {
+  return typeof value == 'string';
+}
+
 export function keysByValue<M, V>(obj: M, value: V): string[] {
   return Object.keys(obj).filter(key => obj[key] === value);
 }

@@ -3,9 +3,17 @@ textarea: Long text
 wysiwyg-editor: WYSIWYG editor
 int: Integer
 double: Real number
+flexible-date: Flexible date
 date: Date
 daterange: Date range
 boolean: Yes / No
 relationship: Relationship
 file: File
 display-strategy: Display strategy
+
+flexible-date-modes:
+  year: Year
+  month: Month
+  day: Day
+  date_time: Time
+  range: Range

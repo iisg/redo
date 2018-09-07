@@ -6,15 +6,22 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlacePluginConfiguration;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
+use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandAdjuster;
 use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
 use Repeka\Domain\Workflow\ResourceWorkflowPluginConfigurationOption;
 
 class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPlugin {
     /** @var ResourceDisplayStrategyEvaluator */
     private $strategyEvaluator;
+    /** @var ResourceTransitionCommandAdjuster */
+    private $resourceTransitionCommandAdjuster;
 
-    public function __construct(ResourceDisplayStrategyEvaluator $strategyEvaluator) {
+    public function __construct(
+        ResourceTransitionCommandAdjuster $resourceTransitionCommandAdjuster,
+        ResourceDisplayStrategyEvaluator $strategyEvaluator
+    ) {
         $this->strategyEvaluator = $strategyEvaluator;
+        $this->resourceTransitionCommandAdjuster = $resourceTransitionCommandAdjuster;
     }
 
     public function beforeEnterPlace(BeforeCommandHandlingEvent $event, ResourceWorkflowPlacePluginConfiguration $config) {
@@ -39,9 +46,9 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
             }
         } catch (\InvalidArgumentException $e) {
         }
-        $event->replaceCommand(
-            new ResourceTransitionCommand($resource, $newResourceContents, $command->getTransition(), $command->getExecutor())
-        );
+        $newCommand = new ResourceTransitionCommand($resource, $newResourceContents, $command->getTransition(), $command->getExecutor());
+        $newCommand = $this->resourceTransitionCommandAdjuster->adjustCommand($newCommand);
+        $event->replaceCommand($newCommand);
     }
 
     /** @return ResourceWorkflowPluginConfigurationOption[] */

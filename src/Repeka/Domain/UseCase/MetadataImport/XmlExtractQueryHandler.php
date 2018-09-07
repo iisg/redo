@@ -1,8 +1,8 @@
 <?php
 namespace Repeka\Domain\UseCase\MetadataImport;
 
-use Repeka\Domain\MetadataImport\Executor\XmlImportExecutor;
-use Repeka\Domain\MetadataImport\Xml\XmlArrayDataExtractor;
+use Repeka\Domain\Metadata\MetadataImport\Executor\XmlImportExecutor;
+use Repeka\Domain\Metadata\MetadataImport\Xml\XmlArrayDataExtractor;
 
 class XmlExtractQueryHandler {
     /** @var XmlArrayDataExtractor */
