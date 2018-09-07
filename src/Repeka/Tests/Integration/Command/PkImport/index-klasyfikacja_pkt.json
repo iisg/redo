@@ -1,12 +1,44 @@
 {
   "mappings": {
     "nazwa": {
-      "key": "1/VALUE_TEXT",
+      "key": "1",
       "transforms": [
+        {
+          "name": "getKey",
+          "key": "VALUE_TEXT"
+        },
         {
           "name": "trim"
         }
-      ]
+      ],
+      "submetadata": {
+        "language": {
+          "transforms": [
+            {
+              "name": "getKey",
+              "key": "INDEX_ITEM_ID"
+            }
+          ]
+        },
+        "language_description": {
+          "transforms": [
+            {
+              "name": "getKey",
+              "key": "DESCRIBED_INDEX_ITEM_ID"
+            }
+          ],
+          "submetadata": {
+            "language_id": {
+              "transforms": [
+                {
+                  "name": "getKey",
+                  "key": "ID"
+                }
+              ]
+            }
+          }
+        }
+      }
     },
     "parent": {
       "key": "PARENT_INDEX_ITEM_ID"

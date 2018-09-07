@@ -2,6 +2,7 @@
 namespace Repeka\Domain\MetadataImport\Mapping;
 
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\Traits\StubsTrait;
 use Respect\Validation\Exceptions\ValidationException;
 
@@ -34,7 +35,8 @@ class MappingLoaderTest extends \PHPUnit_Framework_TestCase {
                 throw new \InvalidArgumentException();
             }
         );
-        $this->loader = new MappingLoader();
+        $metadataRepository = $this->createMock(MetadataRepository::class);
+        $this->loader = new MappingLoader($metadataRepository);
     }
 
     private function defaultInput(): array {

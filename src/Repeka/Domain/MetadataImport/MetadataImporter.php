@@ -4,6 +4,7 @@ namespace Repeka\Domain\MetadataImport;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\MetadataImport\Config\ImportConfig;
+use Repeka\Domain\MetadataImport\Mapping\Mapping;
 use Repeka\Domain\MetadataImport\Transform\ImportTransformComposite;
 
 class MetadataImporter {
@@ -16,76 +17,93 @@ class MetadataImporter {
 
     public function import(array $data, ImportConfig $config): ImportResult {
         $resultBuilder = new ImportResultBuilder($config->getInvalidMetadataKeys());
-        foreach ($config->getMappings() as $mapping) {
-            if (isset($data[$mapping->getImportKey()])) {
-                $values = $data[$mapping->getImportKey()];
-            } else {
-                continue;
-            }
-            if (!is_array($values)) {
-                $values = [$values];
-            }
-            foreach ($mapping->getTransformsConfig() as $transformConfig) {
-                $values = $this->transforms->apply($values, $transformConfig);
-            }
-            $metadata = $mapping->getMetadata();
-            $this->importMetadataValues($metadata, $resultBuilder, $values);
-        }
+        $resourceContents = $this->importMetadataValues($data, $config->getMappings(), $resultBuilder);
+        $resultBuilder->setAcceptedValues($resourceContents);
         return $resultBuilder->build();
     }
 
-    private function importMetadataValues(Metadata $metadata, ImportResultBuilder $resultBuilder, array $values): void {
+    public function importMetadataValues($data, array $mappings, ImportResultBuilder $resultBuilder): array {
+        $allMetadataValues = [];
+        foreach ($mappings as $mapping) {
+            /** @var Mapping $mapping */
+            if ($mapping->getImportKey()) {
+                if (isset($data[$mapping->getImportKey()])) {
+                    $valuesBasedOnImportKey = $data[$mapping->getImportKey()];
+                } else {
+                    continue;
+                }
+            } else {
+                $valuesBasedOnImportKey = [$data];
+            }
+            if (!is_array($valuesBasedOnImportKey)) {
+                $valuesBasedOnImportKey = [$valuesBasedOnImportKey];
+            }
+            $metadataValues = [];
+            $metadata = $mapping->getMetadata();
+            $transformedValues = $valuesBasedOnImportKey;
+            foreach ($mapping->getTransformsConfig() as $transformConfig) {
+                $transformedValues = $this->transforms->apply($transformedValues, $transformConfig);
+            }
+            for ($i = 0; $i < count($transformedValues); $i++) {
+                $transformedValue = $this->prepareMetadataValues($resultBuilder, $metadata, $transformedValues[$i]);
+                if ($transformedValue !== null) {
+                    $metadataValue = ['value' => $transformedValue];
+                    if ($mapping->getSubmetadataMappings()) {
+                        $submetadata = $this->importMetadataValues(
+                            $valuesBasedOnImportKey[$i],
+                            $mapping->getSubmetadataMappings(),
+                            $resultBuilder
+                        );
+                        $metadataValue['submetadata'] = $submetadata;
+                    }
+                    $metadataValues[] = $metadataValue;
+                }
+            }
+            $allMetadataValues[$metadata->getId()] = $metadataValues;
+        }
+        return $allMetadataValues;
+    }
+
+    private function prepareMetadataValues(ImportResultBuilder &$resultBuilder, Metadata $metadata, string $value) {
         $id = $metadata->getId();
         switch ($metadata->getControl()->getValue()) {
             case MetadataControl::TEXT:
             case MetadataControl::TEXTAREA:
-                $resultBuilder->addAcceptedValues($id, $values);
-                break;
+                return $value;
             case MetadataControl::INTEGER:
             case MetadataControl::RELATIONSHIP:
-                $this->addIntegerValues($resultBuilder, $id, $values);
-                break;
+                return $this->transformIntegerValues($resultBuilder, $id, $value);
             case MetadataControl::BOOLEAN:
-                $this->addBooleanValues($resultBuilder, $id, $values);
-                break;
+                return $this->transformBooleanValues($resultBuilder, $id, $value);
             default:
-                $resultBuilder->addUnfitTypeValues($id, $values);
+                $resultBuilder->addUnfitTypeValues($id, $value);
+                return null;
         }
     }
 
     /**
      * @param string[] $metadataValues
      */
-    private function addIntegerValues(ImportResultBuilder $resultBuilder, int $id, array $metadataValues) {
-        $accepted = [];
-        $rejected = [];
-        foreach ($metadataValues as $value) {
-            if (preg_match('/^\d+$/', $value)) {
-                $accepted[] = intval($value);
-            } else {
-                $rejected[] = $value;
-            }
+    private function transformIntegerValues(ImportResultBuilder &$resultBuilder, int $id, string $value) {
+        if (preg_match('/^\d+$/', $value)) {
+            return intval($value);
+        } else {
+            $resultBuilder->addUnfitTypeValues($id, $value);
+            return null;
         }
-        $resultBuilder->addAcceptedValues($id, $accepted);
-        $resultBuilder->addUnfitTypeValues($id, $rejected);
     }
 
     /**
      * @param string[] $metadataValues
      */
-    private function addBooleanValues(ImportResultBuilder $resultBuilder, int $id, array $metadataValues) {
-        $accepted = [];
-        $rejected = [];
-        foreach ($metadataValues as $value) {
-            if (preg_match('/^(1|true)$/', $value)) {
-                $accepted[] = true;
-            } elseif (preg_match('/^(0|false|)$/', $value)) {
-                $accepted[] = false;
-            } else {
-                $rejected[] = $value;
-            }
+    private function transformBooleanValues(ImportResultBuilder &$resultBuilder, int $id, string $value) {
+        if (preg_match('/^(1|true)$/', $value)) {
+            return true;
+        } elseif (preg_match('/^(0|false|)$/', $value)) {
+            return false;
+        } else {
+            $resultBuilder->addUnfitTypeValues($id, $value);
+            return null;
         }
-        $resultBuilder->addAcceptedValues($id, $accepted);
-        $resultBuilder->addUnfitTypeValues($id, $rejected);
     }
 }

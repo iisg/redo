@@ -3,9 +3,22 @@ namespace Repeka\Domain\MetadataImport\Mapping;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\UseCase\Metadata\MetadataListQueryBuilder;
 use Respect\Validation\Validator;
 
 class MappingLoader {
+
+    /**
+     * @var MetadataRepository
+     */
+    private $metadataRepository;
+
+    public function __construct(MetadataRepository $metadataRepository) {
+        $this->metadataRepository = $metadataRepository;
+    }
+
     /**
      * @param array[] $mappings with ID or name string keys
      */
@@ -15,7 +28,7 @@ class MappingLoader {
         /** @var string[] $missingFromResourceKind */
         $missingFromResourceKind = [];
         foreach ($mappings as $key => $params) {
-            $result = $this->loadMapping($key, $params, $resourceKind);
+            $result = $this->loadMapping($key, $params, $resourceKind, $missingFromResourceKind);
             if ($result !== null) {
                 $loaded[] = $result;
             } else {
@@ -25,13 +38,36 @@ class MappingLoader {
         return new MappingLoaderResult($loaded, $missingFromResourceKind);
     }
 
-    private function loadMapping(string $key, array $params, ResourceKind $resourceKind): ?Mapping {
-        $this->validateParams($params);
-        $metadata = $this->findMetadataForKey($key, $resourceKind);
+    private function loadMapping(
+        string $key,
+        array $params,
+        ResourceKind $resourceKind,
+        &$missingFromResourceKind,
+        $parent = null
+    ): ?Mapping {
+
+        if ($parent) {
+            $this->validateSubmetadataParams($params);
+            $metadata = $this->findSubmetadata($key, $parent);
+        } else {
+            $this->validateParams($params);
+            $metadata = $this->findMetadataForKey($key, $resourceKind);
+        }
         if ($metadata === null) {
             return null;
         }
-        return new Mapping($metadata, $params['key'], $params['transforms'] ?? []);
+        $subMetadataMappings = [];
+        if (isset($params['submetadata'])) {
+            foreach ($params['submetadata'] as $subKey => $subParams) {
+                $submetadataMapping = $this->loadMapping($subKey, $subParams, $resourceKind, $missingFromResourceKind, $metadata);
+                if ($submetadataMapping) {
+                    $subMetadataMappings[] = $submetadataMapping;
+                } else {
+                    $missingFromResourceKind[] = $subKey;
+                }
+            }
+        }
+        return new Mapping($metadata, $params['key'] ?? null, $params['transforms'] ?? [], $subMetadataMappings);
     }
 
     /**
@@ -61,10 +97,30 @@ class MappingLoader {
         }
     }
 
+    private function findSubmetadata(string $name, Metadata $parent): ?Metadata {
+        try {
+            $metadata = $this->metadataRepository->findByName($name, $parent->getResourceClass());
+            if ($metadata->getParentId() !== $parent->getId()) {
+                return null;
+            }
+            return $metadata;
+        } catch (EntityNotFoundException $e) {
+            return null;
+        }
+    }
+
     private function validateParams(array $params): void {
         Validator::keySet(
             Validator::key('key', Validator::notBlank()),
-            Validator::key('transforms', Validator::arrayType()->each(Validator::key('name')), false)
+            Validator::key('transforms', Validator::arrayType()->each(Validator::key('name')), false),
+            Validator::key('submetadata', Validator::arrayType(), false)
+        )->assert($params);
+    }
+
+    private function validateSubmetadataParams(array $params): void {
+        Validator::keySet(
+            Validator::key('transforms', Validator::arrayType()->each(Validator::key('name'))),
+            Validator::key('submetadata', Validator::arrayType(), false)
         )->assert($params);
     }
 }
