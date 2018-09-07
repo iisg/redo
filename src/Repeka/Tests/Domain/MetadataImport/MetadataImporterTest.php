@@ -27,7 +27,7 @@ class MetadataImporterTest extends \PHPUnit_Framework_TestCase {
 
     private function defaultImport(array $data): ImportResult {
         $metadata = $this->createMetadataMock(1);
-        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [])], []);
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [], [])], []);
         $importResult = $this->importer->import($data, $importConfig);
         return $importResult;
     }
@@ -58,28 +58,28 @@ class MetadataImporterTest extends \PHPUnit_Framework_TestCase {
 
     public function testApplyingTransforms() {
         $metadata = $this->createMetadataMock(1, 2);
-        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [['name' => 'transformA']])], []);
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [['name' => 'transformA']], [])], []);
         $importResult = $this->importer->import(['a' => ['AA']], $importConfig);
         $this->assertEquals([['value' => 'transformA']], $importResult->getAcceptedValues()[1]);
     }
 
     public function testIntegerMetadata() {
         $metadata = $this->createMetadataMock(1, 2, MetadataControl::INTEGER());
-        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [])], []);
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [], [])], []);
         $importResult = $this->importer->import(['a' => [34]], $importConfig);
         $this->assertEquals([['value' => 34]], $importResult->getAcceptedValues()[1]);
     }
 
     public function testIntegerMetadataNumericValue() {
         $metadata = $this->createMetadataMock(1, 2, MetadataControl::INTEGER());
-        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [])], []);
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [], [])], []);
         $importResult = $this->importer->import(['a' => ['34']], $importConfig);
         $this->assertEquals([['value' => 34]], $importResult->getAcceptedValues()[1]);
     }
 
     public function testIntegerMetadataNonNumericValue() {
         $metadata = $this->createMetadataMock(1, 2, MetadataControl::INTEGER());
-        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [])], []);
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [], [])], []);
         $importResult = $this->importer->import(['a' => ['abc']], $importConfig);
         $this->assertEmpty($importResult->getAcceptedValues()->toArray());
         $this->assertEquals(['abc'], $importResult->getUnfitTypeValues()[1]);
@@ -87,16 +87,38 @@ class MetadataImporterTest extends \PHPUnit_Framework_TestCase {
 
     public function testBooleanMetadata() {
         $metadata = $this->createMetadataMock(1, 2, MetadataControl::BOOLEAN());
-        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [])], []);
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [], [])], []);
         $importResult = $this->importer->import(['a' => [true, '1', '0']], $importConfig);
-        $this->assertEquals([['value' => true], ['value' => true], ['value' => false]], $importResult->getAcceptedValues()[1]);
+        $this->assertEquals(
+            [['value' => true], ['value' => true], ['value' => false]],
+            $importResult->getAcceptedValues()[1]
+        );
     }
 
     public function testSomeValuesFitSomeUnfit() {
         $metadata = $this->createMetadataMock(1, 2, MetadataControl::INTEGER());
-        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [])], []);
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [], [])], []);
         $importResult = $this->importer->import(['a' => ['1', '0', false, 'abc', 23]], $importConfig);
-        $this->assertEquals([['value' => 1], ['value' => 0], ['value' => 23]], $importResult->getAcceptedValues()[1]);
+        $this->assertEquals(
+            [0 => ['value' => 1], 1 => ['value' => 0], 2 => ['value' => 23]],
+            $importResult->getAcceptedValues()[1]
+        );
         $this->assertEquals([false, 'abc'], $importResult->getUnfitTypeValues()[1]);
+    }
+
+    public function testImportWithSubmetadata() {
+        $metadata = $this->createMetadataMock(1);
+        $metadata2 = $this->createMetadataMock(2);
+        $subMetadataMapping = new Mapping($metadata2, '', [['name' => 'subTransform']], []);
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [], [$subMetadataMapping])], []);
+        $importResult = $this->importer->import(['a' => ['AA']], $importConfig);
+        $this->assertEmpty($importResult->getInvalidMetadataKeys());
+        $this->assertEmpty($importResult->getUnfitTypeValues());
+        $this->assertCount(1, $importResult->getAcceptedValues());
+        $this->assertArrayHasKey(1, $importResult->getAcceptedValues());
+        $this->assertEquals(
+            [['value' => 'AA', 'submetadata' => [2 => [['value' => 'subTransform']]]]],
+            $importResult->getAcceptedValues()[1]
+        );
     }
 }

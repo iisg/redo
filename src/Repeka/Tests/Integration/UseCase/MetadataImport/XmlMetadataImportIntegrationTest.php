@@ -29,7 +29,10 @@ class XmlMetadataImportIntegrationTest extends IntegrationTestCase {
         $importedValues = $this->handleCommandBypassingFirewall(new MetadataImportQuery($extractedValues, $importConfig))
             ->getAcceptedValues();
         $this->assertContains([['value' => 'Artyści obcy w służbie polskiej']], $importedValues);
-        $this->assertContains([['value' => 'Artyści obcy w służbie polskiej - epizody z dziejów sztuki']], $importedValues);
+        $this->assertContains(
+            [['value' => 'Artyści obcy w służbie polskiej - epizody z dziejów sztuki']],
+            $importedValues
+        );
         $this->assertContains([['value' => 'pol']], $importedValues);
         $this->assertContains([['value' => 4962]], $importedValues);
         $publishingHouse = $this->findResourceByContents(['Nazwa' => 'Narodowego']);

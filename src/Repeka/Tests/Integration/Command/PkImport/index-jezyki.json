@@ -1,8 +1,12 @@
 {
   "mappings": {
     "nazwa": {
-      "key": "1/VALUE_TEXT",
+      "key": "1",
       "transforms": [
+        {
+          "name": "getKey",
+          "key": "VALUE_TEXT"
+        },
         {
           "name": "trim"
         }

@@ -87,9 +87,11 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                 foreach ($metadataList as $metadata) {
                     $termId = (string)$metadata['TERM_ID'];
                     $terms[] = $termId;
+                    $metadataData = [];
                     foreach (current($metadata->attributes()) as $attr => $value) {
-                        $resourceData[$termId . '/' . $attr][] = $value;
+                        $metadataData[$attr] = $value;
                     }
+                    $resourceData[$termId][] = $metadataData;
                 }
                 FirewallMiddleware::bypass(
                     function () use ($reportCreator, $resourceKind, $importConfig, $resourceData, &$idMapping, &$stats, $terms) {
