@@ -28,6 +28,16 @@
         </testsuite>
         <testsuite name="integration">
             <directory>../src/Repeka/Tests/Integration</directory>
+            <exclude>../src/Repeka/Tests/Integration/Repository</exclude>
+            <exclude>../src/Repeka/Tests/Integration/Migrations</exclude>
+        </testsuite>
+        <testsuite name="integration-repositories">
+            <directory>../src/Repeka/Tests/Integration/Repository</directory>
+        </testsuite>
+        <testsuite name="migrations">
+            <directory>../src/Repeka/Tests/Integration/Migrations</directory>
+        </testsuite>
+        <testsuite name="integration-plugins">
             <directory>../src/Repeka/Plugins/*/Tests/Integration</directory>
         </testsuite>
     </testsuites>
