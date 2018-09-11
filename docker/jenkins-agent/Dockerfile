@@ -1,4 +1,4 @@
-FROM php:7.1-apache
+FROM php:7.1.16-apache
 
 RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
   && echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" >> /etc/apt/sources.list.d/pgdg.list \
