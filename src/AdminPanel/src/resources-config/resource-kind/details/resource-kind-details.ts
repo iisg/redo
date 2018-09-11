@@ -17,15 +17,15 @@ export class ResourceKindDetails implements RoutableComponentActivate {
 
   constructor(private resourceKindRepository: ResourceKindRepository,
               private router: Router,
-              private ea: EventAggregator,
+              private eventAggregator: EventAggregator,
               private i18n: I18N,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private contextResourceClass: ContextResourceClass) {
-    this.resourceKindDetailsTabs = new DetailsViewTabs(this.ea, () => this.updateUrl());
+    this.resourceKindDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
   bind() {
-    this.urlListener = this.ea.subscribe("router:navigation:success", (event: { instruction: NavigationInstruction }) => {
+    this.urlListener = this.eventAggregator.subscribe('router:navigation:success', (event: { instruction: NavigationInstruction }) => {
       this.editing = (event.instruction.queryParams.action == 'edit');
     });
   }

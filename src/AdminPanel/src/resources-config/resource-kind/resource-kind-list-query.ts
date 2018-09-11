@@ -2,11 +2,14 @@ import {DeduplicatingHttpClient} from "../../common/http-client/deduplicating-ht
 import {EntitySerializer} from "../../common/dto/entity-serializer";
 import {ResourceKind} from "./resource-kind";
 import {forOneMinute, cachedResponse} from "../../common/repository/cached-response";
+import {ResourceSort} from "../../resources/resource-sort";
 
 export class ResourceKindListQuery {
   private params: any = {};
 
-  constructor(private httpClient: DeduplicatingHttpClient, private endpoint: string, private entitySerializer: EntitySerializer) {
+  constructor(private httpClient: DeduplicatingHttpClient,
+              private endpoint: string,
+              private entitySerializer: EntitySerializer) {
   }
 
   public filterByResourceClasses(resourceClasses: string | string[]): ResourceKindListQuery {
@@ -22,6 +25,11 @@ export class ResourceKindListQuery {
 
   public filterByMetadataId(metadataId: number): ResourceKindListQuery {
     this.params.metadataId = metadataId;
+    return this;
+  }
+
+  public sortByMetadataIds(sortBy: ResourceSort[]): ResourceKindListQuery {
+    this.params.sortByIds = sortBy;
     return this;
   }
 

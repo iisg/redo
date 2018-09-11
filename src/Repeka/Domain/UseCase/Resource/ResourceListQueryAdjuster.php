@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\ColumnSortDataConverter;
 
 class ResourceListQueryAdjuster implements CommandAdjuster {
 
@@ -14,10 +15,17 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
     private $metadataRepository;
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
+    /** @var ColumnSortDataConverter */
+    private $columnSortDataConverter;
 
-    public function __construct(MetadataRepository $metadataRepository, ResourceKindRepository $resourceKindRepository) {
+    public function __construct(
+        MetadataRepository $metadataRepository,
+        ResourceKindRepository $resourceKindRepository,
+        ColumnSortDataConverter $columnSortDataConverter
+    ) {
         $this->metadataRepository = $metadataRepository;
         $this->resourceKindRepository = $resourceKindRepository;
+        $this->columnSortDataConverter = $columnSortDataConverter;
     }
 
     /**
@@ -29,7 +37,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
             $query->getIds(),
             $query->getResourceClasses(),
             $this->convertResourceKindIdsToResourceKinds($query->getResourceKinds()),
-            $this->convertSortByMetadataColumnsToIntegers($query->getSortBy()),
+            $this->columnSortDataConverter->convertSortByMetadataColumnsToIntegers($query->getSortBy()),
             $query->getParentId(),
             $this->mapMetadataIdsToNamesInContentFilter($query->getContentsFilters()),
             $query->onlyTopLevel(),
@@ -50,17 +58,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
             $resourceKindIds
         );
     }
-
-    private function convertSortByMetadataColumnsToIntegers(array $sortByIds): array {
-        return array_map(
-            function ($sortBy) {
-                $sortId = is_numeric($sortBy['columnId']) ? intval($sortBy['columnId']) : $sortBy['columnId'];
-                return ['columnId' => $sortId, 'direction' => $sortBy['direction']];
-            },
-            $sortByIds
-        );
-    }
-
+    
     private function mapMetadataIdsToNamesInContentFilter(array $contentsFilters) {
         return array_map(
             function (ResourceContents $contentsFilter) {

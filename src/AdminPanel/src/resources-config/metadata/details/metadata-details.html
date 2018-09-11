@@ -54,9 +54,9 @@
             </aup-tab-pane>
             <aup-tab-pane tab="resource-kinds">
                 <resource-kinds-list if.bind="metadataDetailsTabs.activeTabId === 'resource-kinds'"
-                    resource-kinds.bind="resourceKindList"
                     resource-class.bind="metadata.resourceClass"
-                    hide-add-button></resource-kinds-list>
+                    metadata.bind="metadata"
+                    hide-add-button.bind="true"></resource-kinds-list>
             </aup-tab-pane>
         </aup-tab-content>
     </div>

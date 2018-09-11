@@ -85,4 +85,13 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
         $resourceKindList = $this->resourceKindRepository->findByQuery($query);
         $this->assertCount(1, $resourceKindList);
     }
+
+    public function testSortingByIdFilteringByResourceClass() {
+        $resourceKindListQuery = ResourceKindListQuery::builder()
+            ->filterByResourceClass('books')
+            ->sortBy([['columnId' => 'id', 'direction' => 'ASC', 'language' => 'PL']])
+            ->build();
+        $resourceKindList = $this->resourceKindRepository->findByQuery($resourceKindListQuery);
+        $this->assertCount(3, $resourceKindList);
+    }
 }

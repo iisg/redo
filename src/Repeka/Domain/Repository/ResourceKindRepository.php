@@ -31,7 +31,7 @@ interface ResourceKindRepository {
     public function countByMetadata(Metadata $metadata): int;
 
     /** @return ResourceKind[] */
-    public function findByQuery(ResourceKindListQuery $query): array ;
+    public function findByQuery(ResourceKindListQuery $query): array;
 
     public function removeEveryResourceKindsUsageInOtherResourceKinds(ResourceKind $resourceKind): void;
 }

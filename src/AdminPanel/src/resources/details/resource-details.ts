@@ -7,16 +7,16 @@ import {Alert} from "common/dialog/alert";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
+import {AuditListFilters} from "../../audit/audit-list-filters";
 import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
+import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
+import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 import {WorkflowPlace, WorkflowTransition} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ContextResourceClass} from "./../context/context-resource-class";
-import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";
-import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
-import {AuditListFilters} from "../../audit/audit-list-filters";
 import {ResourceLabelValueConverter} from "./resource-label-value-converter";
 
 @autoinject
@@ -40,18 +40,18 @@ export class ResourceDetails implements RoutableComponentActivate {
               private resourceLabel: ResourceLabelValueConverter,
               private resourceClassTranslation: ResourceClassTranslationValueConverter,
               private router: Router,
-              private ea: EventAggregator,
+              private eventAggregator: EventAggregator,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private alert: Alert,
               private i18n: I18N,
               private entitySerializer: EntitySerializer,
               private contextResourceClass: ContextResourceClass,
               private hasRole: HasRoleValueConverter) {
-    this.resourceDetailsTabs = new DetailsViewTabs(this.ea, () => this.updateUrl());
+    this.resourceDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
   bind() {
-    this.urlListener = this.ea.subscribe("router:navigation:success",
+    this.urlListener = this.eventAggregator.subscribe('router:navigation:success',
       (event: { instruction: NavigationInstruction }) => {
         this.isFormOpened = event.instruction.queryParams.action == 'edit';
         this.isFormOpenedForGod = !!event.instruction.queryParams['god']

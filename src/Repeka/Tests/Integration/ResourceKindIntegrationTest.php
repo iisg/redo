@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
@@ -12,6 +13,7 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceKindIntegrationTest extends IntegrationTestCase {
@@ -26,6 +28,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     private $metadata2;
     /** @var  MetadataRepository */
     private $metadataRepository;
+    /** @var ResourceKind */
+    private $resourceKind2;
 
     public function setUp() {
         parent::setUp();
@@ -57,10 +61,10 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             'dictionaries'
         );
         $this->resourceKind = $this->createResourceKind(
-            ['PL' => 'Test', 'EN' => 'Test'],
+            ['PL' => 'Test', 'EN' => 'An awesome Test'],
             [$parentMetadata, $baseMetadata1, $baseMetadata2]
         );
-        $this->createResourceKind(['PL' => 'Test', 'EN' => 'Test'], [$parentMetadata, $baseDictionaryMetadata]);
+        $this->resourceKind2 = $this->createResourceKind(['PL' => 'Test', 'EN' => 'Test'], [$parentMetadata, $baseDictionaryMetadata]);
         $this->metadata1 = $this->resourceKind->getMetadataList()[1];
         $this->metadata2 = $this->resourceKind->getMetadataList()[2];
     }
@@ -80,6 +84,66 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             : array_reverse($responseItem->metadataList);
         $this->assertEquals($this->metadata1->getId(), $sortedMetadata[3]->id);
         $this->assertEquals($this->metadata2->getId(), $sortedMetadata[2]->id);
+    }
+
+    public function testFetchingAllResourceKindsOrderByIdAsc() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'GET',
+            self::ENDPOINT,
+            [],
+            [
+                'allResourceKinds' => true,
+                'sortByIds' => [['columnId' => 'id', 'direction' => 'ASC', 'language' => 'PL']],
+            ]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
+        $this->assertCount(3, $fetchedIds);
+        $this->assertEquals(
+            [SystemResourceKind::USER, $this->resourceKind->getId(), $this->resourceKind2->getId()],
+            $fetchedIds
+        );
+    }
+
+    public function testFetchingAllResourceKindsOrderByLabelAscInPolish() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'GET',
+            self::ENDPOINT,
+            [],
+            [
+                'allResourceKinds' => true,
+                'sortByIds' => [['columnId' => 'label', 'direction' => 'ASC', 'language' => 'PL']],
+            ]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
+        $this->assertCount(3, $fetchedIds);
+        $this->assertEquals(
+            [$this->resourceKind->getId(), $this->resourceKind2->getId(), SystemResourceKind::USER],
+            $fetchedIds
+        );
+    }
+
+    public function testFetchingAllResourceKindsOrderByLabelAscInEnglish() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'GET',
+            self::ENDPOINT,
+            [],
+            [
+                'allResourceKinds' => true,
+                'sortByIds' => [['columnId' => 'label', 'direction' => 'DESC', 'language' => 'EN']],
+            ]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
+        $this->assertCount(3, $fetchedIds);
+        $this->assertEquals(
+            [SystemResourceKind::USER, $this->resourceKind2->getId(), $this->resourceKind->getId()],
+            $fetchedIds
+        );
     }
 
     public function testFetchingResourceKindsWithResourceClass() {

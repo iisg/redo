@@ -1,10 +1,11 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
+use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\RequireOperatorRole;
 use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
-class ResourceKindListQuery extends AbstractListQuery {
+class ResourceKindListQuery extends AbstractListQuery implements AdjustableCommand {
     use RequireOperatorRole;
 
     /** @var int[] */
@@ -13,6 +14,8 @@ class ResourceKindListQuery extends AbstractListQuery {
     private $resourceClasses;
     private $metadataId;
     private $name;
+    /** @var array */
+    private $sortBy;
 
     public static function builder(): ResourceKindListQueryBuilder {
         return new ResourceKindListQueryBuilder();
@@ -24,13 +27,15 @@ class ResourceKindListQuery extends AbstractListQuery {
         int $metadataId,
         array $name,
         int $page,
-        int $resultsPerPage
+        int $resultsPerPage,
+        array $sortBy
     ): ResourceKindListQuery {
         $query = new self($page, $resultsPerPage);
         $query->ids = $ids;
         $query->resourceClasses = $resourceClasses;
         $query->metadataId = $metadataId;
         $query->name = $name;
+        $query->sortBy = $sortBy;
         return $query;
     }
 
@@ -50,5 +55,9 @@ class ResourceKindListQuery extends AbstractListQuery {
 
     public function getName(): array {
         return $this->name;
+    }
+
+    public function getSortBy(): array {
+        return $this->sortBy;
     }
 }

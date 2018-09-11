@@ -148,7 +148,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [],
             [
                 'resourceClasses' => ['books'],
-                'sortByIds' => [['columnId' => 'id', 'direction' => 'ASC']],
+                'sortByIds' => [['columnId' => 'id', 'direction' => 'ASC', 'language' => 'PL']],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -224,7 +224,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'resultsPerPage' => 2,
                 'resourceClasses' => ['books'],
                 'topLevel' => true,
-                'sortByIds' => [0 => ['columnId' => $this->metadata1->getId(), 'direction' => 'DESC']],
+                'sortByIds' => [0 => ['columnId' => $this->metadata1->getId(), 'direction' => 'DESC', 'language' => 'PL']],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());

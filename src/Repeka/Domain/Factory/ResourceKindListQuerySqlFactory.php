@@ -78,7 +78,20 @@ class ResourceKindListQuerySqlFactory {
     }
 
     private function addOrderBy(): void {
-        $this->orderBy[] = "rk.id ASC";
+        $sortByIds = $this->query->getSortBy();
+        foreach ($sortByIds as $columnSort) {
+            $sortBy = $columnSort['columnId'];
+            $direction = $columnSort['direction'];
+            $language = $columnSort['language'];
+            if ($sortBy == 'id') {
+                $this->orderBy[] = "rk.id " . $direction;
+            } elseif ($sortBy == 'label') {
+                $this->orderBy[] = "rk.label->'$language' $direction";
+            }
+        }
+        if (empty($this->orderBy)) {
+            $this->orderBy[] = "rk.id DESC";
+        }
     }
 
     protected function paginate(): void {
