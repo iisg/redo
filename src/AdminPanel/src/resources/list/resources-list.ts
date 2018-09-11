@@ -258,7 +258,8 @@ export class ResourcesList {
 
   private getSorting(): ResourceSort[] {
     const cachedSorting = this.getSortingFromLocalStorage();
-    return cachedSorting ? cachedSorting : [new ResourceSort('id', SortDirection.DESC)];
+    const language = this.i18n.getLocale().toUpperCase();
+    return cachedSorting ? cachedSorting : [new ResourceSort('id', SortDirection.DESC, language)];
   }
 
   private getSortingFromLocalStorage() {

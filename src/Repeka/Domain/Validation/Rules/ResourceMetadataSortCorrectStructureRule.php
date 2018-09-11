@@ -15,12 +15,13 @@ class ResourceMetadataSortCorrectStructureRule extends AbstractRule {
                         'direction',
                         Validator::in(['ASC', 'DESC'])
                             ->setTemplate('sort direction is not correct')
-                    )
+                    ),
+                    Validator::key('language', Validator::stringVal())
                 )
             )->validate($input);
     }
 
     public function isCorrectSortIdKey(string $sortId): bool {
-        return is_numeric($sortId) || in_array($sortId, ['id', 'kindId']);
+        return is_numeric($sortId) || in_array($sortId, ['id', 'kindId', 'label']);
     }
 }

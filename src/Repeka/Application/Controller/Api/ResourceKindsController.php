@@ -18,15 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ResourceKindsController extends ApiController {
     /**
-     * @Route("/{id}")
-     * @Method("GET")
-     */
-    public function getAction(string $id) {
-        $resourceKind = $this->handleCommand(new ResourceKindQuery(intval($id)));
-        return $this->createJsonResponse($resourceKind);
-    }
-
-    /**
      * @Route
      * @Method("GET")
      */
@@ -34,15 +25,27 @@ class ResourceKindsController extends ApiController {
         $resourceClasses = $request->query->get('resourceClasses', []);
         $ids = $request->query->get('ids', []);
         $metadataId = $request->query->get('metadataId', 0);
+        $sortByIds = $request->query->get('sortByIds', []);
         Assertion::isArray($resourceClasses);
         Assertion::isArray($ids);
+        Assertion::isArray($sortByIds);
         $resourceKindListQueryBuilder = ResourceKindListQuery::builder()
             ->filterByResourceClasses($resourceClasses)
             ->filterByMetadataId($metadataId)
+            ->sortBy($sortByIds)
             ->filterByIds($ids);
         $resourceKindListQuery = $resourceKindListQueryBuilder->build();
         $resourceKindList = $this->handleCommand($resourceKindListQuery);
         return $this->createJsonResponse($resourceKindList);
+    }
+
+    /**
+     * @Route("/{id}")
+     * @Method("GET")
+     */
+    public function getAction(string $id) {
+        $resourceKind = $this->handleCommand(new ResourceKindQuery(intval($id)));
+        return $this->createJsonResponse($resourceKind);
     }
 
     /**

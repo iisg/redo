@@ -8,7 +8,7 @@ export class DetailsViewTabs {
   public tabs: DetailsViewTab[] = [];
   public activeTabId: string;
 
-  public constructor(private ea: EventAggregator, private onTabChange: () => void = () => undefined) {
+  public constructor(private eventAggregator: EventAggregator, private onTabChange: () => void = () => undefined) {
   }
 
   public addTab(id: string, label: string | (() => string)): this {
@@ -18,7 +18,7 @@ export class DetailsViewTabs {
     if (!this.defaultTabId) {
       this.setDefaultTabId(id);
     }
-    this.listeners.push(this.ea.subscribe(`aurelia-plugins:tabs:tab-clicked:${id}`, () => {
+    this.listeners.push(this.eventAggregator.subscribe(`aurelia-plugins:tabs:tab-clicked:${id}`, () => {
       this.setActiveTabId(id);
       this.onTabChange();
     }));

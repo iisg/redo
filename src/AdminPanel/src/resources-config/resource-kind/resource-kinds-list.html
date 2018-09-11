@@ -1,5 +1,6 @@
 <template>
     <require from="./resource-kind-form"></require>
+    <require from="common/components/buttons/sort-button"></require>
     <require from="common/components/buttons/add-button.html"></require>
 
     <add-button if.bind="!addFormOpened && !hideAddButton"
@@ -13,11 +14,21 @@
             cancel.call="toggleEditForm()"></resource-kind-form>
     </div>
 
-    <table show.bind="!resourceKinds || resourceKinds.length > 0">
+    <table show.bind="!resourceKinds || resourceKinds.length > 0 || progressBar">
         <thead>
             <tr>
-                <th>${'ID' | t}</th>
-                <th>${'Name' | t}</th>
+                <th>
+                    ${'ID' | t}
+                    <sort-button if.bind="sortable"
+                        column-id="id"
+                        sort-by.bind="sortBy"></sort-button>
+                </th>
+                <th>
+                    ${'Name' | t}
+                    <sort-button if.bind="sortable"
+                        column-id="label"
+                        sort-by.bind="sortBy"></sort-button>
+                </th>
                 <th>${'Workflow' | t}</th>
             </tr>
         </thead>

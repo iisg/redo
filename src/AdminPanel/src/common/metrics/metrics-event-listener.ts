@@ -1,8 +1,8 @@
-import {EventAggregator} from "aurelia-event-aggregator";
 import {autoinject} from "aurelia-dependency-injection";
-import {MetricsCollector} from "./metrics-collector";
-import {NavigationInstruction} from "aurelia-router";
+import {EventAggregator} from "aurelia-event-aggregator";
 import {HttpClient} from "aurelia-http-client";
+import {NavigationInstruction} from "aurelia-router";
+import {MetricsCollector} from "./metrics-collector";
 
 @autoinject
 export class MetricsEventListener {
@@ -15,7 +15,7 @@ export class MetricsEventListener {
   }
 
   private listenForRouterEvents() {
-    this.eventAggregator.subscribe("router:navigation:processing", (event: {instruction: NavigationInstruction}) => {
+    this.eventAggregator.subscribe('router:navigation:processing', (event: {instruction: NavigationInstruction}) => {
       let viewName = event.instruction.fragment.substr(1).replace(/\//g, '.').replace(/\.$/, '') || "home";
       MetricsCollector.increment(`view.${viewName}`);
     });

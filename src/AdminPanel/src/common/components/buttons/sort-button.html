@@ -2,12 +2,12 @@
     <icon if.bind="sortDirection === 'ASC'"
         name="up-4"
         size="0.75"
-        click.delegate="fetchSortedResources()"></icon>
+        click.delegate="updateURL()"></icon>
     <icon if.bind="sortDirection === 'DESC'"
         name="down-4"
         size="0.75"
-        click.delegate="fetchSortedResources()"></icon>
+        click.delegate="updateURL()"></icon>
     <icon if.bind="!sortDirection"
         name="arrows-3"
-        click.delegate="fetchSortedResources()"></icon>
+        click.delegate="updateURL()"></icon>
 </template>

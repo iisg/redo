@@ -30,25 +30,26 @@ class ResourceMetadataSortCorrectStructureRuleTest extends \PHPUnit_Framework_Te
             [[['columnId' => 'a', 'direction' => 'ASC']], false],
             [[['badKey' => 1, 'direction' => 'ASC']], false],
             [[['columnId' => 1, 'badKey' => 'ASC']], false],
-            [[['columnId' => 1, 'direction' => 'ASC']], true],
-            [[['columnId' => 1, 'direction' => 'DESC']], true],
+            [[['columnId' => 1, 'direction' => 'ASC', 'language'=> 'PL']], true],
+            [[['columnId' => 1, 'direction' => 'DESC', 'language'=> 'PL']], true],
             [
                 [
-                    ['columnId' => 1, 'direction' => 'DESC'],
-                    ['columnId' => 2, 'direction' => 'ASC'],
+                    ['columnId' => 1, 'direction' => 'DESC', 'language'=> 'PL'],
+                    ['columnId' => 2, 'direction' => 'ASC', 'language'=> 'PL'],
                 ],
                 true,
             ],
             [
                 [
-                    ['columnId' => 1, 'direction' => 'DESC'],
-                    ['columnId' => 2, 'direction' => 'NONE'],
+                    ['columnId' => 1, 'direction' => 'DESC', 'language'=> 'PL'],
+                    ['columnId' => 2, 'direction' => 'NONE', 'language'=> 'PL'],
                 ],
                 false,
             ],
-            [[['columnId' => 'id', 'direction' => 'ASC']], true],
-            [[['columnId' => 'kindId', 'direction' => 'ASC']], true],
-            [[['columnId' => 'a', 'direction' => 'ASC']], false],
+            [[['columnId' => 'id', 'direction' => 'ASC', 'language'=> 'PL']], true],
+            [[['columnId' => 'kindId', 'direction' => 'ASC', 'language'=> 'PL']], true],
+            [[['columnId' => 'a', 'direction' => 'ASC', 'language'=> 'PL']], false],
+            [[['columnId' => 'z', 'direction' => 'ASC', 'language'=> 1]], false],
         ];
     }
 }

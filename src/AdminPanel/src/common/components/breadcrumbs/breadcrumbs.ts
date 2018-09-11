@@ -20,7 +20,7 @@ export class Breadcrumbs {
               metadata: MetadataBreadcrumbsProvider,
               workflow: WorkflowBreadcrumbsProvider,
               resourceKind: ResourceKindBreadcrumbsProvider) {
-    eventAggregator.subscribe("router:navigation:success",
+    eventAggregator.subscribe('router:navigation:success',
       (event: { instruction: NavigationInstruction }) => this.updateBreadcrumbs(event.instruction));
     this.providers = {'default': defaultBreadcrumbsProvider, resource, metadata, workflow, resourceKind};
   }

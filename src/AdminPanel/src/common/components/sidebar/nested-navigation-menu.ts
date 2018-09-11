@@ -1,11 +1,11 @@
+import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {NavigationInstruction, Router} from "aurelia-router";
-import {RouteFilter} from "../../routes/route-filter";
-import {AbstractRoute, NavRole} from "../../routes/routing-builder";
-import {Configure} from "aurelia-configuration";
 import {values} from "lodash";
 import {ContextResourceClass, ResourceClassChangeEvent} from "../../../resources/context/context-resource-class";
+import {RouteFilter} from "../../routes/route-filter";
+import {AbstractRoute, NavRole} from "../../routes/routing-builder";
 
 @autoinject
 export class NestedNavigationMenu {
@@ -18,7 +18,7 @@ export class NestedNavigationMenu {
               private config: Configure) {
     eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
       (event: ResourceClassChangeEvent) => this.updateResourceClass(event));
-    eventAggregator.subscribe("router:navigation:complete", () => this.updateActiveItems());
+    eventAggregator.subscribe('router:navigation:complete', () => this.updateActiveItems());
     this.getMenuItems();
   }
 

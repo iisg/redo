@@ -8,6 +8,7 @@ class ResourceKindListQueryBuilder extends AbstractListQueryBuilder {
     private $ids = [];
     private $metadataId = 0;
     private $name = [];
+    private $sortBy = [];
 
     public function filterByResourceClass(string $resourceClass): self {
         return $this->filterByResourceClasses([$resourceClass]);
@@ -33,6 +34,11 @@ class ResourceKindListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
+    public function sortBy(array $sortBy): ResourceKindListQueryBuilder {
+        $this->sortBy = array_replace($this->sortBy, $sortBy);
+        return $this;
+    }
+
     public function build(): ResourceKindListQuery {
         return ResourceKindListQuery::withParams(
             $this->ids,
@@ -40,7 +46,8 @@ class ResourceKindListQueryBuilder extends AbstractListQueryBuilder {
             $this->metadataId,
             $this->name,
             $this->page,
-            $this->resultsPerPage
+            $this->resultsPerPage,
+            $this->sortBy
         );
     }
 }
