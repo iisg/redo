@@ -39,6 +39,14 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $result[0];
     }
 
+    public function findByNameOrId($nameOrId, ?string $resourceClass = null): Metadata {
+        if (is_numeric($nameOrId)) {
+            return $this->findOne($nameOrId);
+        } else {
+            return $this->findByName($nameOrId, $resourceClass);
+        }
+    }
+
     public function exists(int $id): bool {
         return !!$this->find($id);
     }

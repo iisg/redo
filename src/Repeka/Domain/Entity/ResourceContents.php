@@ -181,30 +181,34 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
         return $mappedContents;
     }
 
-    public static function fromArray(array $anyArray): ResourceContents {
+    public static function fromArray(array $anyArray, callable $valueProducer = null): ResourceContents {
+        if (!$valueProducer) {
+            $valueProducer = function ($metadataValue) {
+                return is_array($metadataValue) ? ($metadataValue['value'] ?? null) : $metadataValue;
+            };
+        }
         $normalized = array_map(
-            function ($metadataEntry) {
+            function ($metadataEntry) use ($valueProducer) {
                 if (is_array($metadataEntry)) {
                     return array_map(
-                        function ($metadataValue) {
+                        function ($metadataValue) use ($valueProducer) {
                             if (is_array($metadataValue)) {
                                 if (isset($metadataValue['submetadata'])) {
-                                    $metadataValue['submetadata'] = self::fromArray($metadataValue['submetadata'])->toArray();
+                                    $metadataValue['submetadata'] = self::fromArray($metadataValue['submetadata'], $valueProducer)
+                                        ->toArray();
                                 }
-                                if (!isset($metadataValue['value'])) {
-                                    $metadataValue['value'] = null;
-                                }
+                                $metadataValue['value'] = $valueProducer($metadataValue);
                                 return array_intersect_key($metadataValue, ['value' => '', 'submetadata' => '']);
                             } elseif ($metadataValue instanceof MetadataValue) {
                                 return $metadataValue->toArray();
                             } else {
-                                return ['value' => $metadataValue];
+                                return ['value' => $valueProducer($metadataValue)];
                             }
                         },
                         $metadataEntry
                     );
                 } else {
-                    return [['value' => $metadataEntry]];
+                    return [['value' => $valueProducer($metadataEntry)]];
                 }
             },
             $anyArray

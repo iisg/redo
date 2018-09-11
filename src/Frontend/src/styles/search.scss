@@ -1,0 +1,30 @@
+.search-hits {
+  margin-top: 20px;
+  .search-hit {
+    border: 1px solid $grey;
+    border-top: 0;
+    padding: 10px;
+    &:first-child {
+      border-top: 1px solid $grey;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+    &:last-child {
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+    .score {
+      color: $very-light-grey;
+      background: $orange;
+      border-radius: 3px;
+      float: right;
+      padding: 3px 5px;
+    }
+    .highlights {
+      em {
+        font-style: normal;
+        background: lighten($orange, 10%);
+      }
+    }
+  }
+}

@@ -33,6 +33,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
     const REFERENCE_METADATA_URL = 'metadata-url';
     const REFERENCE_METADATA_URL_LABEL = 'metadata-url-label';
+    const REFERENCE_METADATA_DETAILS_PAGE = 'metadata-details-page';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -370,6 +371,22 @@ class MetadataFixture extends RepekaFixture {
                     'constraints' => $this->textConstraints(1, '^[a-z]{3}$'),
                 ]
             )
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Details page',
+                    'label' => [
+                        'PL' => 'Strona szczegółów',
+                        'EN' => 'Details page',
+                    ],
+                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'constraints' => ['displayStrategy' => '{% include "redo/resource-details.twig" %}'],
+                ]
+            ),
+            self::REFERENCE_METADATA_DETAILS_PAGE
         );
         $this->handleCommand(
             new MetadataUpdateOrderCommand(

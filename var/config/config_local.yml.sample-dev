@@ -42,7 +42,12 @@ repeka:
       resourceId: 18
       metadata: wyrenderowana_tresc_strony
     /resources/{resourceId}:
-      metadata: tresc_strony
+      metadata: detailsPage
+    /search/{phrase}:
+      template: redo/search.twig
+      fts:
+        searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
+        searchable_resource_classes: [books]
 m6_statsd:
   servers:
     default:

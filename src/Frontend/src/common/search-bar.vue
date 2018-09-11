@@ -2,7 +2,8 @@
     <form class="search-bar"
         v-on:submit.prevent="onSubmit ? onSubmit() : navigateToProcessedURL()">
         <div class="search-box-with-options">
-            <div class="icon-with-input-box" :class="displayAsSmaller ? 'with-regular-font-size' : ''">
+            <div class="icon-with-input-box"
+                :class="displayAsSmaller ? 'with-regular-font-size' : ''">
                 <icon v-if="showLogo"
                     class="redo-logo-icon"
                     name="redo-logo"
@@ -18,7 +19,8 @@
                     v-model="selectedOption"></radio-buttons-group>
                 <a :href="advancedSearchURL">
                     <icon name="settings-2"
-                        size="1.25"></icon><span>Więcej kryteriów</span>
+                        size="1.25"></icon>
+                    <span>Więcej kryteriów</span>
                 </a>
             </div>
         </div>
@@ -65,7 +67,10 @@
       placeholder: {
         default: "Szukaj w zasobach repozytorium"
       },
-      onSubmit: Function
+      onSubmit: Function,
+      phrase: {
+        default: '',
+      }
     },
     data() {
       return {
@@ -76,6 +81,9 @@
         ],
         selectedOption: 'Wszędzie'
       };
+    },
+    mounted() {
+      this.inputText = this.phrase || '';
     },
     methods: {
       processedURL() {

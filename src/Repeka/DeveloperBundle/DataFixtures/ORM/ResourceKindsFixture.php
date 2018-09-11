@@ -59,6 +59,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_REAL_SCANNER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_DETAILS_PAGE),
                 ],
                 $workflow
             ),
@@ -75,6 +76,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $parentMetadata->withOverrides([0 => $bookRK->getId()]),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_DETAILS_PAGE),
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK
