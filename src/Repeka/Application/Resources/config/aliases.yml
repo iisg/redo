@@ -8,6 +8,7 @@ services:
   Repeka\Domain\Repository\RepositoryProvider: '@Repeka\Application\Repository\ContainerAwareRepositoryProvider'
   Repeka\Domain\Repository\ResourceKindRepository: '@Repeka\Application\Repository\ResourceKindDoctrineRepository'
   Repeka\Domain\Repository\ResourceRepository: '@Repeka\Application\Repository\ResourceDoctrineRepository'
+  Repeka\Domain\Repository\ResourceFtsProvider: '@Repeka\Application\Elasticsearch\Model\ElasticSearch'
   Repeka\Domain\Repository\ResourceKindDoctrineRepository: '@Repeka\Application\Repository\ResourceKindDoctrineRepository'
   Repeka\Domain\Repository\ResourceWorkflowRepository: '@Repeka\Application\Repository\ResourceWorkflowDoctrineRepository'
   Repeka\Domain\Repository\UserRepository: '@Repeka\Application\Repository\UserDoctrineRepository'

@@ -50,8 +50,6 @@ services:
     shared: false
     arguments:
       $indexName: '%elasticsearch.index_name%'
-  Repeka\Application\Elasticsearch\Search\ESSearch:
-    $indexName: '%elasticsearch.index_name%'
 
   Repeka\Application\Entity\EntityIdGeneratorHelper: ~
 

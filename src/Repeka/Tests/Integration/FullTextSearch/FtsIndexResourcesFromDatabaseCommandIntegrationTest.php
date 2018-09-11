@@ -28,6 +28,6 @@ class FtsIndexResourcesFromDatabaseCommandIntegrationTest extends IntegrationTes
         $this->executeCommand('repeka:elasticsearch:create-index' . ' --delete-if-exists');
         $this->assertTrue($this->esIndexManager->exists());
         $output = $this->executeCommand('repeka:fts:index-database');
-        $this->assertContains('All resources from the database have been inserted into the elasticsearch index', $output);
+        $this->assertContains('All resources from the database have been inserted', $output);
     }
 }

@@ -42,6 +42,8 @@ repeka:
       resourceId: 18
     /resources-title/{resourceId}:
       metadata: tytul
+  elasticsearch:
+    index_name: repeka-testing
 
 web_profiler:
   intercept_redirects: false

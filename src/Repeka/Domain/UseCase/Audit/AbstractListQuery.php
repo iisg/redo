@@ -22,6 +22,10 @@ abstract class AbstractListQuery extends AbstractCommand {
         return $this->page;
     }
 
+    public function getOffset(): int {
+        return ($this->page - 1) * $this->resultsPerPage;
+    }
+
     public function getResultsPerPage(): int {
         return $this->resultsPerPage;
     }

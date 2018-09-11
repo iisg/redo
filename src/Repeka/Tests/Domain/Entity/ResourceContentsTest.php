@@ -226,4 +226,15 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
             ],
         ];
     }
+
+    public function testCreatingWithValueProducer() {
+        $rc = ResourceContents::fromArray(
+            [1 => 1, 2 => 2],
+            function ($value) {
+                return $value * 2;
+            }
+        );
+        $this->assertEquals([2], $rc->getValuesWithoutSubmetadata(1));
+        $this->assertEquals([4], $rc->getValuesWithoutSubmetadata(2));
+    }
 }

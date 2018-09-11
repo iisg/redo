@@ -71,9 +71,14 @@ class Configuration implements ConfigurationInterface {
                     ->end()->end()
                 ->end()->end()
                 ->arrayNode('expose_endpoints')->normalizeKeys(false)->defaultValue([])->arrayPrototype()->children()
-                    ->scalarNode('metadata')->isRequired()->end()
+                    ->scalarNode('metadata')->defaultValue(null)->end()
+                    ->scalarNode('template')->defaultValue(null)->end()
                     ->integerNode('resourceId')->defaultValue(null)->end()
                     ->arrayNode('headers')->normalizeKeys(false)->defaultValue([])->prototype('scalar')->end()->end()
+                    ->arrayNode('fts')->children()
+                        ->arrayNode('searchable_metadata_ids')->prototype('scalar')->end()->end()
+                        ->arrayNode('searchable_resource_classes')->prototype('scalar')->defaultValue([])->end()->end()
+                    ->end()->end()
                 ->end()->end()->end()
             ->end();
         // @formatter:on

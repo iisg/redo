@@ -40,6 +40,7 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
             new \Twig_Filter('sub*', [$this, 'getSubmetadataValuesDynamic']),
             new \Twig_Filter('r', [$this, 'fetchResources']),
             new \Twig_Filter('resource', [$this, 'fetchResources']),
+            new \Twig_Filter('ftsContentsToResource', [$this, 'ftsContentsToResource']),
             new \Twig_Filter('sum', [$this, 'sumIterable']),
         ];
     }
@@ -151,5 +152,23 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
             $iterable
         );
         return array_sum($iterable);
+    }
+
+    /**
+     * Its aim is to transform hits from elasticsearch to look like a resource contents.
+     * e.g. {2: [{value_text: AAA}]} into {2: [{value: AAA}]}
+     * @param array $contents
+     * @return ResourceContents
+     */
+    public function ftsContentsToResource(array $contents): ResourceContents {
+        return ResourceContents::fromArray(
+            $contents,
+            function ($hit) {
+                if (isset($hit['submetadata'])) {
+                    unset($hit['submetadata']);
+                }
+                return current($hit);
+            }
+        );
     }
 }

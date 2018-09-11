@@ -35,4 +35,11 @@ repeka:
     templates:
       homepage: redo/home.twig
       login_form: redo/login-form.twig
-  expose_endpoints: ~
+  expose_endpoints:
+    /resources/{resourceId}:
+      metadata: detailsPage
+    /search/{phrase}:
+      template: redo/search.twig
+      fts:
+        searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
+        searchable_resource_classes: [books]
