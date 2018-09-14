@@ -73,9 +73,7 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
         if (!isset($metadataList[SystemMetadata::PARENT])) {
             $metadataList[SystemMetadata::PARENT] = $this->metadataRepository->findOne(SystemMetadata::PARENT);
         }
-        if (!isset($metadataList[SystemMetadata::REPRODUCTOR])) {
-            $metadataList[SystemMetadata::REPRODUCTOR] = $this->metadataRepository->findOne(SystemMetadata::REPRODUCTOR);
-        }
+        $metadataList[SystemMetadata::REPRODUCTOR] = $this->metadataRepository->findOne(SystemMetadata::REPRODUCTOR);
         if (!isset($metadataList[SystemMetadata::RESOURCE_LABEL])) {
             $metadataList[SystemMetadata::RESOURCE_LABEL] = $this->metadataRepository->findOne(SystemMetadata::RESOURCE_LABEL);
         }
