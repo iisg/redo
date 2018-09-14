@@ -117,7 +117,7 @@ You cannot revoke system roles from yourself.: Nie możesz odebrać sobie roli s
 Resource doesn't exist: Zasób nie istnieje
 Resource kind doesn't exist: Rodzaj zasobu nie istnieje
 Metadata doesn't exist: Metadana nie istnieje
-Constraints: Ograniczenia
+Configuration: Konfiguracja
 At most: Najwyżej
 At least: Co najmniej
 Minimum: Minimum
@@ -149,8 +149,10 @@ To states: Do stanu
 And move to state: i przejdź do stanu
 No more values are allowed: Wprowadzono maksymalną liczbę wartości
 Some metadata constraints have not been met. Fix the form errors and try again.: Wymagania niektórych metadanych nie zostały spełnione. Popraw błędy formularza i spróbuj ponownie.
-To see dropdown choose allowed resource kinds in metadata settings.: Aby zobaczy listę zasobów wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
+To see dropdown choose allowed resource kinds in metadata settings.: Aby zobaczyć listę zasobów, wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
 Additional filter limits results in this dropdown: Dodatkowy filtr ogranicza zasoby wyświetlane w powyższym polu
+Additional filter would limit results in this dropdown during normal edit: Dodatkowy filtr ograniczałby zasoby wyświetlane w powyższym polu przy standardowej edycji
+Go to the metadata kind settings: Przejdź do ustawień rodzaju metadanej
 Filter: Filtr
 Metadata kind: Rodzaj metadanej
 Firstly, specify required resource kind.: Najpierw określ wymagany rodzaj zasobu.
@@ -190,3 +192,5 @@ Stay: Zostań
 Discard changes: Porzuć zmiany
 You do not have permissions to add resource.: Nie posiadasz uprawnień do dodania zasobu.
 Resource kind does not allow to add resource.: Rodzaj zasobu nie pozwala na dodawanie podzasobów.
+You are editing the resource without validations.: Edytujesz zasób bez nałożonych reguł walidacyjnych.
+Make any changes wisely.: Wprowadzaj uważnie wszelkie zmiany.

@@ -11,6 +11,12 @@
     <span if.bind="transition"
         class="page-title">
         ${'Edit resource before transition' | resourceClassTranslation:resourceClass}</span>
+    <div class="alert alert-warning"
+        if.bind="skipValidation">
+        <icon name="listen"></icon>
+        <strong>${'You are editing the resource without validations.' | t}</strong>
+        ${'Make any changes wisely.' | t}
+    </div>
     <div if.bind="!editing || skipValidation"
         class="resource-kind-chooser-with-cancel-button">
         <resource-kind-chooser

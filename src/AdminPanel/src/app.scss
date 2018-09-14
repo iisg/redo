@@ -360,6 +360,11 @@ textarea {
     background-color: $light-blue;
     color: white;
   }
+  &.alert-warning {
+    background-color: darken($orange, 10%);
+    border-color: $orange;
+    color: white;
+  }
 }
 
 

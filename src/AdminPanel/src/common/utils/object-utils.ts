@@ -4,7 +4,7 @@ export function deepCopy(object: any): any {
 }
 
 export function isObject(object: any): boolean {
-  return typeof object == 'object';
+  return typeof object == 'object' && !Array.isArray(object);
 }
 
 export function keysByValue<M, V>(obj: M, value: V): string[] {

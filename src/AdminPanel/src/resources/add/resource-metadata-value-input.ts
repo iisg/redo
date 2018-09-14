@@ -15,6 +15,7 @@ export class ResourceMetadataValueInput {
   @bindable value: MetadataValue;
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable validationController: ValidationController;
+  @bindable @booleanAttribute skipValidation: boolean = false;
   metadataInitialValue: MetadataValue;
 
   private submetadataResource: Resource;

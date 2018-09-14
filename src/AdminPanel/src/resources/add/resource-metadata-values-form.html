@@ -14,6 +14,7 @@
                         resource.bind="resource"
                         validation-controller.bind="validationController"
                         value.bind="resource.contents[metadata.id][$index]"
+                        skip-validation.bind="skipValidation"
                         disabled.bind="disabled"></resource-metadata-value-input>
                     <a if.bind="!disabled && resource.contents[metadata.id].length > 1"
                         class="drag-handle"
