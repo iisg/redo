@@ -79,6 +79,7 @@ const bundles = function () {
           "aurelia-validation",
           "bootstrap",
           "change-case",
+          "jodit",
           "jquery",
           "lodash",
           "moment",
@@ -86,7 +87,6 @@ const bundles = function () {
           "nprogress/nprogress.css!text",
           "oribella-aurelia-sortable",
           "sweetalert2",
-          "sweetalert2/dist/sweetalert2.css!text",
           "text",
           "yamljs"
         ],
