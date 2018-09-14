@@ -36,7 +36,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
             ]
         );
         $metadataConstraintManager = $this->createMock(MetadataConstraintManager::class);
-        $metadataConstraintManager->method('getSupportedConstraintNamesForControl')->willReturn(['maxCount']);
+        $metadataConstraintManager->method('getSupportedConstraintNamesForControl')->willReturn(['maxCount', 'resourceKind']);
         $workflowRepository = $this->createRepositoryStub(
             ResourceWorkflowRepository::class,
             [
@@ -109,6 +109,17 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         $this->assertCount(4, $adjustedCommand->getMetadataList());
         $ids = EntityUtils::mapToIds($adjustedCommand->getMetadataList());
         $this->assertContains(SystemMetadata::REPRODUCTOR, $ids);
+    }
+
+    public function testCannotOverwriteReproductorMetadata() {
+        $metadata = $this->createMetadataMock();
+        $command = new ResourceKindCreateCommand(
+            [],
+            [$metadata, ['id' => SystemMetadata::REPRODUCTOR, 'constraints' => ['resourceKind' => [1, 2]]]]
+        );
+        $adjustedCommand = $this->adjuster->adjustCommand($command);
+        $reproductorMetadata = EntityUtils::filterByIds([SystemMetadata::REPRODUCTOR], $adjustedCommand->getMetadataList())[0];
+        $this->assertEmpty($reproductorMetadata->getConstraints());
     }
 
     public function testAddingResourceLabelMetadataIfMissing() {
