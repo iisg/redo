@@ -250,7 +250,7 @@ export class ResourcesList {
   private saveSortingToLocalStorage(sortBy: ResourceSort[]) {
     try {
       const sorting = JSON.stringify(sortBy);
-      localStorage.setItem(this.resourceClass, sorting);
+      localStorage.setItem(`sorting-${this.resourceClass}`, sorting);
     } catch (e) {
       this.sortBy = sortBy;
     }
@@ -264,7 +264,7 @@ export class ResourcesList {
 
   private getSortingFromLocalStorage() {
     try {
-      return safeJsonParse(localStorage.getItem(this.resourceClass));
+      return safeJsonParse(localStorage.getItem(`sorting-${this.resourceClass}`));
     } catch (e) {
       return this.sortBy;
     }
