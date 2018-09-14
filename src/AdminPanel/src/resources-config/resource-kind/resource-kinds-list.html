@@ -3,68 +3,68 @@
     <require from="common/components/buttons/sort-button"></require>
     <require from="common/components/buttons/add-button.html"></require>
 
-    <add-button if.bind="!addFormOpened && !hideAddButton"
-        entity-name="resourceKind"
-        toggled.two-way="addFormOpened"></add-button>
-    <div if.bind="addFormOpened"
-        class="well add-form fade-inup-outdown au-animate">
-        <span>${'Add new resource kind' | resourceClassTranslation:resourceClass}</span>
-        <resource-kind-form resource-class.bind="resourceClass"
-            submit.call="addNewResourceKind(savedResourceKind)"
-            cancel.call="toggleEditForm()"></resource-kind-form>
-    </div>
-
-    <table show.bind="!resourceKinds || resourceKinds.length > 0 || progressBar">
-        <thead>
-            <tr>
-                <th>
-                    ${'ID' | t}
-                    <sort-button if.bind="sortable"
-                        column-id="id"
-                        sort-by.bind="sortBy"></sort-button>
-                </th>
-                <th>
-                    ${'Name' | t}
-                    <sort-button if.bind="sortable"
-                        column-id="label"
-                        sort-by.bind="sortBy"></sort-button>
-                </th>
-                <th>${'Workflow' | t}</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr if.bind="progressBar">
-                <th colspan="5">
-                    <loading-bar></loading-bar>
-                </th>
-            </tr>
-        </tfoot>
-        <tbody class="au-stagger">
-            <tr repeat.for="resourceKind of resourceKinds"
-                class="au-animate fade-inup-outdown"
-                go-to-link-on-row-click>
-                <td>
-                    <a route-href="route: resource-kinds/details; params.bind: {id: resourceKind.id}"
-                        disabled-link.bind="resourceKind.pendingRequest">
-                        ${resourceKind.id}
-                    </a>
-                </td>
-                <td>
-                    <a route-href="route: resource-kinds/details; params.bind: {id: resourceKind.id}"
-                        disabled-link.bind="resourceKind.pendingRequest">
-                        ${resourceKind.label | inCurrentLanguage}
-                    </a>
-                </td>
-                <td>
-                    ${resourceKind.workflow ? resourceKind.workflow.name : '-' | inCurrentLanguage}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="alert alert-info"
-        if.bind="resourceKinds.length === 0 && !progressBar">
-        <icon name="information"></icon>
-        ${'No resource kinds.' | resourceClassTranslation:resourceClass}
+    <div>
+        <add-button if.bind="!addFormOpened && !hideAddButton"
+            entity-name="resourceKind"
+            toggled.two-way="addFormOpened"></add-button>
+        <div if.bind="addFormOpened"
+            class="well add-form fade-inup-outdown au-animate">
+            <span>${'Add new resource kind' | resourceClassTranslation:resourceClass}</span>
+            <resource-kind-form resource-class.bind="resourceClass"
+                submit.call="addNewResourceKind(savedResourceKind)"
+                cancel.call="toggleEditForm()"></resource-kind-form>
+        </div>
+        <table show.bind="!resourceKinds || resourceKinds.length > 0 || progressBar">
+            <thead>
+                <tr>
+                    <th>
+                        ${'ID' | t}
+                        <sort-button if.bind="sortable"
+                            column-id="id"
+                            sort-by.bind="sortBy"></sort-button>
+                    </th>
+                    <th>
+                        ${'Name' | t}
+                        <sort-button if.bind="sortable"
+                            column-id="label"
+                            sort-by.bind="sortBy"></sort-button>
+                    </th>
+                    <th>${'Workflow' | t}</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr if.bind="progressBar">
+                    <th colspan="5">
+                        <loading-bar></loading-bar>
+                    </th>
+                </tr>
+            </tfoot>
+            <tbody class="au-stagger">
+                <tr repeat.for="resourceKind of resourceKinds"
+                    class="au-animate fade-inup-outdown"
+                    go-to-link-on-row-click>
+                    <td>
+                        <a route-href="route: resource-kinds/details; params.bind: {id: resourceKind.id}"
+                            disabled-link.bind="resourceKind.pendingRequest">
+                            ${resourceKind.id}
+                        </a>
+                    </td>
+                    <td>
+                        <a route-href="route: resource-kinds/details; params.bind: {id: resourceKind.id}"
+                            disabled-link.bind="resourceKind.pendingRequest">
+                            ${resourceKind.label | inCurrentLanguage}
+                        </a>
+                    </td>
+                    <td>
+                        ${resourceKind.workflow ? resourceKind.workflow.name : '-' | inCurrentLanguage}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-info"
+            if.bind="resourceKinds.length === 0 && !progressBar">
+            <icon name="information"></icon>
+            ${'No resource kinds.' | resourceClassTranslation:resourceClass}
+        </div>
     </div>
 </template>

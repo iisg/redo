@@ -50,6 +50,7 @@ System.config({
     "cytoscape-context-menus": "npm:cytoscape-context-menus@2.1.1",
     "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.15.0",
     "fetch": "github:github/fetch@1.1.1",
+    "jodit": "npm:jodit@3.2.10",
     "jquery": "npm:jquery@3.2.1",
     "lodash": "npm:lodash@4.17.10",
     "moment": "npm:moment@2.22.2",
@@ -64,7 +65,7 @@ System.config({
       "assert": "npm:assert@1.4.1"
     },
     "github:jspm/nodelibs-buffer@0.1.1": {
-      "buffer": "npm:buffer@5.1.0"
+      "buffer": "npm:buffer@5.2.1"
     },
     "github:jspm/nodelibs-events@0.1.1": {
       "events": "npm:events@1.0.2"
@@ -285,9 +286,9 @@ System.config({
       "balanced-match": "npm:balanced-match@1.0.0",
       "concat-map": "npm:concat-map@0.0.1"
     },
-    "npm:buffer@5.1.0": {
+    "npm:buffer@5.2.1": {
       "base64-js": "npm:base64-js@1.3.0",
-      "ieee754": "npm:ieee754@1.1.11"
+      "ieee754": "npm:ieee754@1.1.12"
     },
     "npm:camel-case@3.0.0": {
       "no-case": "npm:no-case@2.3.2",
@@ -391,6 +392,10 @@ System.config({
     },
     "npm:is-upper-case@1.1.2": {
       "upper-case": "npm:upper-case@1.1.3"
+    },
+    "npm:jodit@3.2.10": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:lodash.debounce@4.0.8": {
       "process": "github:jspm/nodelibs-process@0.1.2"

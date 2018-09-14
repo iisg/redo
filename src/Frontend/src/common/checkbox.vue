@@ -13,7 +13,6 @@
     props: {
       label: String,
       value: Boolean
-
     }
   };
 </script>

@@ -41,13 +41,17 @@ sidebar.collapsed {
   & > router-view {
     position: relative;
     flex: 1;
-    overflow: auto;
+    overflow: hidden;
     background-color: white;
     &, & > a, metadata-list {
-      & > add-button {
+      & > div > add-button {
         display: flex;
         justify-content: flex-end;
       }
+    }
+    & > * {
+      overflow: auto;
+      max-height: 100%;
     }
   }
 }
@@ -408,9 +412,9 @@ ux-dialog-overlay {
 }
 
 .metadata-details, .resource-kind-details, .resource-details, .workflow-details, .workflow-form-content {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 
   .name-with-buttons-and-tabs {
     display: flex;

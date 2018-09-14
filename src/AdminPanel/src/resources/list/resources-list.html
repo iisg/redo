@@ -24,21 +24,17 @@
                 submit.call="addNewResource(savedResource)"
                 cancel.call="addFormOpened = !addFormOpened"></resource-form>
         </div>
-
         <loading-bar if.bind="displayProgressBar"></loading-bar>
-
         <resources-list-table resources.bind="resources"
             column-metadata.bind="briefMetadata"
             resource-class.bind="resourceClass"
             sort-by.bind="sortBy"
             contents-filter.bind="contentsFilter"></resources-list-table>
-
         <div class="alert alert-info"
             if.bind="resources.length === 0 && !displayProgressBar">
             <icon name="information"></icon>
             ${'No resources.' | resourceClassTranslation:resourceClass}
         </div>
-
         <pagination containerless
             total-number-of-elements.bind="totalNumberOfResources"
             elements-per-page.bind="resultsPerPage"

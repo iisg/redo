@@ -1,8 +1,7 @@
 <template>
-    <require from="resources/controls/input/autosize"></require>
+    <require from="common/components/wysiwyg-editor/wysiwyg-editor"></require>
 
-    <textarea class="form-control"
-        value.bind="metadata.constraints.displayStrategy"
+    <wysiwyg-editor content.bind="metadata.constraints.displayStrategy"
         placeholder="Title: {{r|mTitle}}, Scanner: {{r|m('Scanner')|m(-2)}}"
-        autosize></textarea>
+    ></wysiwyg-editor>
 </template>
