@@ -46,7 +46,7 @@ export class ResourceListQuery extends AbstractListQuery<Resource> {
     return this;
   }
 
-  filterByContents(contentsFilter: NumberMap<string>): ResourceListQuery {
+  public filterByContents(contentsFilter: NumberMap<string>): ResourceListQuery {
     this.params.contentsFilter = contentsFilter;
     return this;
   }

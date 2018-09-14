@@ -1,4 +1,14 @@
-import {filterByValues, keysByValue, mapValues, mapValuesShallow, numberKeysByValue, zip, safeJsonParse, mapToArray} from "./object-utils";
+import {
+  filterByValues,
+  isObject,
+  keysByValue,
+  mapToArray,
+  mapValues,
+  mapValuesShallow,
+  numberKeysByValue,
+  safeJsonParse,
+  zip
+} from "./object-utils";
 
 describe('object-utils', () => {
   describe(keysByValue.name, () => {
@@ -139,6 +149,22 @@ describe('object-utils', () => {
 
     it('maps empty object', () => {
       expect(mapToArray({}, () => undefined)).toEqual([]);
+    });
+  });
+
+  describe(isObject.name, () => {
+    it('recognizes objects', () => {
+      expect(isObject({a: 'foo', b: 'bar'})).toEqual(true);
+      expect(isObject({})).toEqual(true);
+      expect(isObject(new Date())).toEqual(true);
+    });
+
+    it('recognizes not objects', () => {
+      expect(isObject([])).toEqual(false);
+      expect(isObject([5])).toEqual(false);
+      expect(isObject('AA')).toEqual(false);
+      expect(isObject(undefined)).toEqual(false);
+      expect(isObject(false)).toEqual(false);
     });
   });
 });

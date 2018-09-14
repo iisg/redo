@@ -42,8 +42,8 @@
                         cancel.call="toggleEditForm()"></metadata-form>
                 </div>
             </aup-tab-pane>
-            <aup-tab-pane tab="constraints">
-                <div if.bind="metadataDetailsTabs.activeTabId === 'constraints'"
+            <aup-tab-pane tab="configuration">
+                <div if.bind="metadataDetailsTabs.activeTabId === 'configuration'"
                     class="simple-form">
                     <template repeat.for="constraintName of constraintNames">
                         <span>${'metadata_constraints::labels//' + constraintName | t}</span>

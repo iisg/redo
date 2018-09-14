@@ -32,7 +32,7 @@
                         click.delegate="remove()"></remove-button>
                 </template>
                 <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
-                    <manage-button if.bind="!isFormOpenedForGod"
+                    <manage-button if.bind="!isFormOpened"
                         disabled.bind="resource.pendingRequest"
                         click.delegate="showGodForm()"></manage-button>
                 </template>

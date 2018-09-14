@@ -5,7 +5,7 @@
     <dropdown-select values.bind="resources"
         value.bind="value"
         disabled.bind="disabled"
-        search-function.call="searchFunction(term, page)"
+        search-function.call="search(term, page)"
         formatter.call="formatDropdownItem(item)">
     </dropdown-select>
     <p if.bind="invalidValue"

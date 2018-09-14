@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -27,6 +28,9 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
         $changed = false;
         foreach ($displayStrategyMetadata as $metadata) {
             $value = $this->evaluator->render($resource, $metadata->getConstraints()['displayStrategy']);
+            if (!trim($value) && $metadata->getId() == SystemMetadata::RESOURCE_LABEL) {
+                $value = $this->evaluator->render($resource, '#{{r.id}}');
+            }
             if ($contents->getValuesWithoutSubmetadata($metadata) != [$value]) {
                 $changed = true;
                 $contents = $contents->withReplacedValues($metadata, $value);

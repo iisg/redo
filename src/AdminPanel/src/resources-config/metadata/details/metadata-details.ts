@@ -63,7 +63,7 @@ export class MetadataDetails implements RoutableComponentActivate {
     if (this.metadata.id > 0) {
       this.metadataDetailsTabs.addTab('child-metadata', () => `${this.i18n.tr('Submetadata kinds')} (${this.numberOfChildren})`);
     }
-    this.metadataDetailsTabs.addTab('constraints', this.i18n.tr('Constraints'));
+    this.metadataDetailsTabs.addTab('configuration', this.i18n.tr('Configuration'));
     if (this.metadata.resourceClass) {
       this.metadataDetailsTabs.addTab(
         'resource-kinds',

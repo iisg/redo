@@ -14,6 +14,7 @@ export class ControlStrategy {
   disabled: boolean = false;
   validationRules: any;
   validationController: ValidationController;
+  skipValidation: boolean = false;
 
   constructor(private singleMetadataValueValidator: SingleMetadataValueValidator) {
   }

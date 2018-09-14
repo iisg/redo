@@ -3,5 +3,6 @@
         view-model="../controls/control-strategy"
         view="../controls/input/control-input-${metadata.control}.html"
         model.bind="{metadata: metadata, metadataValue: value, disabled: disabled, resource: resource,
-            validationController: validationController, description: inCurrentLanguage.toView(metadata.description)}"></compose>
+            validationController: validationController, description: inCurrentLanguage.toView(metadata.description),
+            skipValidation: skipValidation}"></compose>
 </template>

@@ -1,7 +1,7 @@
 <template>
     <require from="./metadata-constraint-editor"></require>
 
-    <span class="section-title">${'Constraints' | t}</span>
+    <span class="section-title">${'Configuration' | t}</span>
     <template repeat.for="constraintName of constraintNames">
         <span>${'metadata_constraints::labels//' + constraintName | t}<icon name="information"
             if.bind="constraintName == 'resourceKind' && metadata.constraints.resourceKind.length > 1"

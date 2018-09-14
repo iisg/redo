@@ -6,6 +6,7 @@ import {ResourceRepository} from "resources/resource-repository";
 import {Resource} from "resources/resource";
 import {SystemMetadata} from './../../../../resources-config/metadata/system-metadata';
 import {ResourceLabelValueConverter} from './../../../details/resource-label-value-converter';
+import {deepCopy, isObject} from "../../../../common/utils/object-utils";
 
 @autoinject
 export class ResourcePicker implements ComponentAttached {
@@ -31,16 +32,16 @@ export class ResourcePicker implements ComponentAttached {
     this.initialized = true;
   }
 
-  searchFunction(term: string, page: number) {
+  search(term: string, page: number) {
     if (page === 1) {
       this.resources = [];
     }
-    const searchContents: NumberMap<any> = {};
-    searchContents[SystemMetadata.RESOURCE_LABEL.id] = term;
+    const contentsFilter = deepCopy(isObject(this.contentsFilter) ? this.contentsFilter : {});
+    contentsFilter[SystemMetadata.RESOURCE_LABEL.id] = term;
     return this.createQuery()
+      .filterByContents(contentsFilter)
       .setResultsPerPage(this.RESULTS_PER_DROPDOWN_PAGE)
       .setCurrentPageNumber(page)
-      .filterByContents(searchContents)
       .get()
       .then(result => {
         this.resources.push(...result as Array<Resource>);
@@ -64,9 +65,6 @@ export class ResourcePicker implements ComponentAttached {
     }
     if (this.resourceClass) {
       query.filterByResourceClasses(this.resourceClass);
-    }
-    if (this.contentsFilter) {
-      query.filterByContents(this.contentsFilter);
     }
     return query;
   }
