@@ -9,7 +9,7 @@ describe('Metadata Type Tests', function() {
   beforeAll(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/');
 
-		var loginButton = element(by.linkText('Zaloguj się'));
+	  var loginButton = element(by.cssContainingText('span', 'Zaloguj'));
 	    loginButton.click();
 
 	    var nameField = element(by.id('username'));

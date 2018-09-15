@@ -47,7 +47,7 @@ describe('Resource Type Tests', function() {
 
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
-		var listToClick = lists.get(1);
+		var listToClick = lists.get(3);
 		var isClickable = EC.elementToBeClickable(listToClick);
 		browser.wait(isClickable, 10000);
 		listToClick.click();
@@ -80,7 +80,7 @@ describe('Resource Type Tests', function() {
 
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
-		var listToClick = lists.get(1);
+		var listToClick = lists.get(3);
 		var isClickable = EC.elementToBeClickable(listToClick);
 		browser.wait(isClickable, 10000);
 		listToClick.click();
