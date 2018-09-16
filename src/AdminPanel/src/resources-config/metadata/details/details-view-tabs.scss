@@ -4,6 +4,7 @@ aup-tab-content {
   height: 100%;
   #details.active > div {
     display: flex;
+    align-items: flex-start;
     & > :first-child {
       &:not(:last-child) {
         flex: 1;
@@ -12,6 +13,10 @@ aup-tab-content {
       &:last-child {
         padding: $default-gap-size / 2;
       }
+    }
+    & > :last-child:not(:first-child) {
+      position: sticky;
+      top: 0;
     }
   }
 }

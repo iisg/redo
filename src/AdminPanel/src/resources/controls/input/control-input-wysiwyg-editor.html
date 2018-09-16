@@ -1,0 +1,8 @@
+<template>
+    <require from="common/components/wysiwyg-editor/wysiwyg-editor"></require>
+
+    <wysiwyg-editor placeholder.one-time="metadata.placeholder[currentLanguageCode] || description | inCurrentLanguage"
+        value.bind="metadataValue.value & validate:validationController:validationRules"
+        disabled.bind="disabled"
+    ></wysiwyg-editor>
+</template>

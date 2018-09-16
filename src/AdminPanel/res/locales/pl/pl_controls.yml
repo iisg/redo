@@ -1,5 +1,6 @@
 text: Tekst
 textarea: Długi tekst
+wysiwyg-editor: Edytor WYSIWYG
 integer: Liczba całkowita
 date: Data
 boolean: Tak / Nie

@@ -270,6 +270,8 @@ table {
     }
     button, toggle-button {
       width: 100%;
+    }
+    button, toggle-button > div {
       text-align: left;
     }
   }
@@ -434,6 +436,7 @@ ux-dialog-overlay {
     }
     & > .buttons {
       display: flex;
+      flex-wrap: wrap;
       padding-left: $default-gap-size / 4;
       padding-right: $default-gap-size / 4;
       & > * {

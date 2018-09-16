@@ -80,6 +80,7 @@ const bundles = function () {
           "bootstrap",
           "change-case",
           "jodit",
+          "jodit/build/jodit.min.css!text",
           "jquery",
           "lodash",
           "moment",

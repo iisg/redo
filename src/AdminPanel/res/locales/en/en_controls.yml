@@ -1,5 +1,6 @@
 text: Text
 textarea: Long text
+wysiwyg-editor: WYSIWYG editor
 int: Integer
 double: Real number
 date: Date

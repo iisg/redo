@@ -1,7 +1,7 @@
 <template>
     <require from="common/components/wysiwyg-editor/wysiwyg-editor"></require>
 
-    <wysiwyg-editor content.bind="metadata.constraints.displayStrategy"
+    <wysiwyg-editor value.bind="metadata.constraints.displayStrategy"
         placeholder="Title: {{r|mTitle}}, Scanner: {{r|m('Scanner')|m(-2)}}"
     ></wysiwyg-editor>
 </template>
