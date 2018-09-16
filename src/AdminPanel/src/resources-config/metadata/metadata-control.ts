@@ -1,6 +1,7 @@
 export enum MetadataControl {
   TEXT = 'text',
   TEXTAREA = 'textarea',
+  WYSIWYG_EDITOR = 'wysiwyg-editor',
   INTEGER = 'integer',
   DATE = 'date',
   BOOLEAN = 'boolean',

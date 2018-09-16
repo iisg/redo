@@ -10,6 +10,14 @@ System.config({
     "npm:*": "jspm_packages/npm/*"
   },
 
+  meta: {
+    "common/components/wysiwyg-editor/wysiwyg-editor.js": {
+      "deps": [
+        "jodit"
+      ]
+    }
+  },
+
   map: {
     "arrive": "npm:arrive@2.4.1",
     "aurelia-animator-css": "npm:aurelia-animator-css@1.0.4",

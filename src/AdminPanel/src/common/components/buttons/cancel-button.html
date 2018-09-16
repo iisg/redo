@@ -2,6 +2,7 @@
 <template bindable="iconName, label">
     <require from="./toggle-button"></require>
 
-    <toggle-button primary-icon-name.bind="iconName || 'remove-3'"
+    <toggle-button class="red"
+        primary-icon-name.bind="iconName || 'remove-3'"
         primary-label.bind="label || 'Cancel'"></toggle-button>
 </template>

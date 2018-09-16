@@ -11,11 +11,13 @@ use MyCLabs\Enum\Enum;
  * @method static MetadataControl BOOLEAN()
  * @method static MetadataControl RELATIONSHIP()
  * @method static MetadataControl FILE()
+ * @method static MetadataControl WYSIWYG_EDITOR()
  * @method static MetadataControl DISPLAY_STRATEGY()
  */
 class MetadataControl extends Enum {
     const TEXT = 'text';
     const TEXTAREA = 'textarea';
+    const WYSIWYG_EDITOR = 'wysiwyg-editor';
     const INTEGER = 'integer';
     const DATE = 'date';
     const BOOLEAN = 'boolean';

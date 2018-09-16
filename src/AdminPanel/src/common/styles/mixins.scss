@@ -17,6 +17,7 @@
 @mixin toggle-button($background-color: $blue, $color: white, $minimum-height: 28px) {
   min-height: $minimum-height;
   padding: $default-gap-size / 8 3 / 4 * $default-gap-size;
+  text-align: center;
   text-transform: uppercase;
   font-weight: bold;
   @include toggle-button-colors($background-color, $color);
