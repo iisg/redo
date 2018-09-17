@@ -5,6 +5,11 @@ $well-basic-width: 275px;
 
 workflow-graph-editor {
   display: block;
+  &.has-error {
+    .workflow-editor {
+      border: 1px solid $red;
+    }
+  }
   .workflow-editor {
     display: flex;
     workflow-graph-display {

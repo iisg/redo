@@ -40,11 +40,11 @@
                     on-loaded.call="updateGraphPosition()"></multilingual-editor>
                 <workflow-graph-editor workflow.bind="workflow"
                     workflow-graph-editor-ready.delegate="onEditorReady($event)"></workflow-graph-editor>
+                <input type="hidden"
+                    model.bind="workflow.places & validate">
                 <excel show.bind="workflow.places.length > 0"
                     workflow.bind="workflow"
                     editable.bind="!workflow.pendingRequest"></excel>
-                <input type="hidden"
-                    model.bind="workflow.places & validate">
             </template>
             <excel-legend></excel-legend>
         </div>
