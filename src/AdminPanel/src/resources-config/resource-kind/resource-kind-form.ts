@@ -19,7 +19,7 @@ import {SystemResourceKinds} from "./system-resource-kinds";
 @autoinject
 export class ResourceKindForm extends ChangeLossPreventerForm implements ComponentAttached, ComponentDetached {
   @bindable submit: (value: { savedResourceKind: ResourceKind }) => Promise<any>;
-  @bindable cancel: VoidFunction = noop;
+  @bindable cancel: () => void;
   @bindable resourceClass: string;
   @bindable currentlyEditedResourceKind: ResourceKind;
   updateResourceKindMetadataChooserValues: () => void;
@@ -45,11 +45,11 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
   }
 
   attached() {
+    this.changeLossPreventer.enable(this);
     if (!this.currentlyEditedResourceKind) {
       this.resourceKind.ensureHasSystemMetadata();
       this.resourceKind.resourceClass = this.resourceClass;
     }
-    this.changeLossPreventer.enable(this);
   }
 
   async resourceClassChanged() {
@@ -126,8 +126,8 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
     $('.resource-kind-edit-form-metadata-item').removeClass('not-valid');
     this.controller.validate().then(result => {
       if (result.valid) {
+        this.changeLossPreventer.disable();
         return Promise.resolve(this.submit({savedResourceKind: this.resourceKind}))
-          .then(() => this.changeLossPreventer.enable(this))
           .then(() => this.editing || (this.resourceKind = new ResourceKind()));
       } else {
         $('.has-error').closest('.resource-kind-edit-form-metadata-item').addClass('not-valid');
@@ -141,9 +141,5 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
       return metadata.id > 0 && mappedMetadataIds.indexOf(metadata.id) === -1;
     }
     return metadata.id != SystemMetadata.RESOURCE_LABEL.id;
-  }
-
-  cancelForm(): void {
-    this.changeLossPreventer.canLeaveView().then(() => this.cancel());
   }
 }

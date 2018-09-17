@@ -91,8 +91,9 @@
             <submit-button editing.bind="editing"
                 submitting.bind="submitting"></submit-button>
             <cancel-button class="${!editing ? 'orange' : ''}"
+                label="Close"
                 disabled.bind="resourceKind.pendingRequest || submitting"
-                click.delegate="cancelForm()"></cancel-button>
+                click.delegate="cancel()"></cancel-button>
         </div>
     </form>
 </template>
