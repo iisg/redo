@@ -26,7 +26,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
 
   bind() {
     this.urlListener = this.eventAggregator.subscribe('router:navigation:success', (event: { instruction: NavigationInstruction }) => {
-      this.editing = (event.instruction.queryParams.action == 'edit');
+      this.editing = event.instruction.queryParams.action == 'edit';
     });
   }
 
@@ -50,28 +50,34 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     this.resourceKindDetailsTabs.setActiveTabId(activeTabId);
   }
 
-  private updateUrl() {
-    const parameters = {};
-    parameters['id'] = this.resourceKind.id;
-    if (this.editing) {
-      parameters['action'] = 'edit';
-    }
-    parameters['tab'] = this.resourceKindDetailsTabs.activeTabId;
-    this.router.navigateToRoute('resource-kinds/details', parameters, {replace: true});
-    this.resourceKindDetailsTabs.updateLabels();
+  showEditForm() {
+    this.updateUrl({editAction: true, triggerNavigation: true});
   }
 
-  toggleEditForm() {
-    this.editing = !this.editing;
-    this.updateUrl();
+  hideEditForm() {
+    this.updateUrl({editAction: false, triggerNavigation: true});
   }
 
   saveEditedResourceKind(resourceKind: ResourceKind, changedResourceKind: ResourceKind): Promise<any> {
     resourceKind.pendingRequest = true;
     return this.resourceKindRepository.put(changedResourceKind)
       .then(updated => $.extend(resourceKind, updated))
-      .then(() => this.toggleEditForm())
+      .then(() => this.hideEditForm())
       .finally(() => resourceKind.pendingRequest = false);
+  }
+
+  private updateUrl(args: { editAction, triggerNavigation } = {
+    editAction: this.editing,
+    triggerNavigation: false
+  }) {
+    const parameters = {};
+    parameters['id'] = this.resourceKind.id;
+    if (args.editAction) {
+      parameters['action'] = 'edit';
+    }
+    parameters['tab'] = this.resourceKindDetailsTabs.activeTabId;
+    this.router.navigateToRoute('resource-kinds/details', parameters, {replace: true});
+    this.resourceKindDetailsTabs.updateLabels();
   }
 
   deleteResourceKind(): Promise<any> {

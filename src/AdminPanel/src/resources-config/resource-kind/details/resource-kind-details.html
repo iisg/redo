@@ -35,13 +35,13 @@
                         </div>
                         <edit-button toggled.bind="editing"
                             disabled.bind="resourceKind.pendingRequest"
-                            click.delegate="toggleEditForm(false)"></edit-button>
+                            click.delegate="showEditForm()"></edit-button>
                     </template>
                     <resource-kind-form else
                         resource-class.bind="resourceKind.resourceClass"
                         currently-edited-resource-kind.bind="resourceKind"
                         submit.call="saveEditedResourceKind(resourceKind, savedResourceKind)"
-                        cancel.call="toggleEditForm()"></resource-kind-form>
+                        cancel.call="hideEditForm()"></resource-kind-form>
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="workflow">
