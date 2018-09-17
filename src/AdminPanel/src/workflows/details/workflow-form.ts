@@ -42,6 +42,9 @@ export class WorkflowForm extends ChangeLossPreventerForm {
   }
 
   activate(params: any) {
+    if (this.viewing === undefined) {
+      this.changeLossPreventer.enable(this);
+    }
     this.workflow.resourceClass = params.resourceClass;
   }
 
