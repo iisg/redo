@@ -10,14 +10,19 @@ toggle-button > div, .toggle-button {
   @include toggle-button();
 }
 
-.blue toggle-button > div, toggle-button.blue > div, .toggle-button.blue {
-  @include toggle-button-colors($blue);
-}
+$available-colors: (
+  blue: $blue,
+  orange: $orange,
+  red: $red
+);
 
-.orange toggle-button > div, toggle-button.orange > div, .toggle-button.orange {
-  @include toggle-button-colors($orange);
-}
-
-.red toggle-button > div, toggle-button.red > div, .toggle-button.red {
-  @include toggle-button-colors($red);
+@each $color-name, $color in $available-colors {
+  .#{$color-name} toggle-button > div, toggle-button.#{$color-name} > div, .toggle-button.#{$color-name} {
+    @include toggle-button-colors($color);
+  }
+  @each $second-color-name, $second-color in $available-colors {
+    .#{$color-name} toggle-button.#{$second-color-name} > div {
+      @include toggle-button-colors($color);
+    }
+  }
 }
