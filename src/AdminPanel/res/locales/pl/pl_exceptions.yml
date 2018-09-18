@@ -50,3 +50,4 @@ Places or Transitions exist without a name specified in every language: Istniej�
 value must be set in all languages: musi mieć wartość we wszystkich językach
 invalidRegex: Niewłaściwa deklaracja wyrażania regularnego.
 invalidConstraintArguments: "zawierają niepoprawne deklaracje ograniczeń: '{{constraintError}}'"
+Resource does not match required resource contents filter: Zasób nie spełnia wymagań dodatkowego filtra zasobów

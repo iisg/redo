@@ -41,7 +41,7 @@ class RelatedResourceMetadataFilterConstraint extends RespectValidationMetadataC
         $matchedResources = $this->resourceRepository->findByQuery($query);
         $valid = count($matchedResources) == 1;
         if (!$valid && $this->resourceRepository->exists($resourceId)) {
-            return Validator::alwaysInvalid()->setTemplate('Resource does not match required resource contents filter.');
+            return Validator::alwaysInvalid()->setTemplate('Resource does not match required resource contents filter');
         }
     }
 }
