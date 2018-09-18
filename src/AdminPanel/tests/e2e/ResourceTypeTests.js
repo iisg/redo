@@ -34,8 +34,6 @@ describe('Resource Type Tests', function() {
 	  	alertDialog = browser.switchTo().alert();
 		alertDialog.accept();
 
-		var EC = protractor.ExpectedConditions;
-
 		waitForElement(element(by.cssContainingText('span', 'rodzaj zasobu')));
 		var addResourceTypeButton = element(by.cssContainingText('span', 'rodzaj zasobu'));
 		browser.sleep(500);
@@ -45,14 +43,16 @@ describe('Resource Type Tests', function() {
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 
+		browser.sleep(500);
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
-		var listToClick = lists.get(3);
-		var isClickable = EC.elementToBeClickable(listToClick);
-		browser.wait(isClickable, 10000);
+		var listToClick = lists.get(1);
+		browser.sleep(500);
 		listToClick.click();
+		browser.sleep(500);
 		browser.driver.switchTo().activeElement().sendKeys('Metadana_do_testowania_automatycznego1');
 		browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+		browser.sleep(500);
 
 		waitForElement(element(by.buttonText('Dodaj')));
 		var addButton = element(by.buttonText('Dodaj'));
@@ -67,8 +67,6 @@ describe('Resource Type Tests', function() {
 	  	alertDialog = browser.switchTo().alert();
 		alertDialog.accept();
 
-	  	var EC = protractor.ExpectedConditions;
-
 		waitForElement(element(by.cssContainingText('span', 'rodzaj zasobu')));
 		var addResourceTypeButton = element(by.cssContainingText('span', 'rodzaj zasobu'));
 		browser.sleep(500);
@@ -80,12 +78,13 @@ describe('Resource Type Tests', function() {
 
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
-		var listToClick = lists.get(3);
-		var isClickable = EC.elementToBeClickable(listToClick);
-		browser.wait(isClickable, 10000);
+		var listToClick = lists.get(1);
+		browser.sleep(500);
 		listToClick.click();
+		browser.sleep(500);
 		browser.driver.switchTo().activeElement().sendKeys('Metadana_do_testowania_automatycznego1');
 		browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+		browser.sleep(500);
 
 		waitForElement(element(by.buttonText('Dodaj')));
 		var addButton = element(by.buttonText('Dodaj'));
@@ -100,8 +99,6 @@ describe('Resource Type Tests', function() {
 	  	alertDialog = browser.switchTo().alert();
 		alertDialog.accept();
 
-	  	var EC = protractor.ExpectedConditions;
-
 		waitForElement(element(by.cssContainingText('span', 'rodzaj zasobu')));
 		var addResourceTypeButton = element(by.cssContainingText('span', 'rodzaj zasobu'));
 		browser.sleep(500);
@@ -115,11 +112,12 @@ describe('Resource Type Tests', function() {
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
 		var listToClick = lists.get(1);
-		var isClickable = EC.elementToBeClickable(listToClick);
-		browser.wait(isClickable, 10000);
+		browser.sleep(500);
 		listToClick.click();
+		browser.sleep(500);
 		browser.driver.switchTo().activeElement().sendKeys('Metadana_do_testowania_automatycznego1');
 		browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+		browser.sleep(500);
 
 		waitForElement(element(by.buttonText('Dodaj')));
 		var addButton = element(by.buttonText('Dodaj'));
@@ -210,12 +208,14 @@ describe('Resource Type Tests', function() {
 		browser.sleep(500);
 		var lists = element.all(by.className('select2-selection__rendered'));
 		lists.get(1).click();
+		browser.sleep(500);
 		browser.driver.switchTo().activeElement().sendKeys('Metadana_do_testowania_automatycznego2');
 		browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+		browser.sleep(500);
 
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
-		browser.sleep(500);
+		browser.sleep(1000);
 
 	    waitForElement(element(by.className('resource-kind-details')));
 		var parameters = element(by.className('resource-kind-details'));
