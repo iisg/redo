@@ -84,13 +84,14 @@ describe('Resource Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
+	browser.driver.manage().window().setSize(1280, 1024);
 	waitForElement(element(by.className('buttons')));
 	browser.sleep(1000);
 	var buttonsPanels = element.all(by.className('buttons'));
 	var firstValueButtonPanel = buttonsPanels.get(1);
 	var deleteValueButton = firstValueButtonPanel.all(by.className('au-target')).get(0);
 	browser.sleep(500);
-	browser.actions().mouseMove(deleteValueButton).click();
+	browser.actions().mouseMove(deleteValueButton).click().perform();
 	//deleteValueButton.click();
 
 	waitForElement(element(by.buttonText('Zapisz')));
