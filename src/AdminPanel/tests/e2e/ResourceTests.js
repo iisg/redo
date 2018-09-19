@@ -90,7 +90,8 @@ describe('Resource Tests', function() {
 	var firstValueButtonPanel = buttonsPanels.get(1);
 	var deleteValueButton = firstValueButtonPanel.all(by.className('au-target')).get(0);
 	browser.sleep(500);
-	deleteValueButton.click();
+	browser.actions().mouseMove(deleteValueButton).click();
+	//deleteValueButton.click();
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
