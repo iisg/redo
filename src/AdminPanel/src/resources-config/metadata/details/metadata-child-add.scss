@@ -4,9 +4,6 @@ metadata-child-add {
     .toggle-buttons-group {
         display: flex;
         padding: $default-gap-size / 2;
-        .active button {
-            background-color: $light-blue;
-        }
     }
     .entity-chooser-with-cancel-button {
         display: flex;

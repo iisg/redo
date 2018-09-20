@@ -5,14 +5,14 @@
     <require from="../metadata-form"></require>
 
     <div class="toggle-buttons-group">
-        <toggle-button class="${addingNewSubmetadataKind ? '' : 'active'}"
-            primary-icon-name="document"
+        <toggle-button primary-icon-name="document"
             primary-label="Add based on an existing one"
-            click.delegate="toggleAddingNewSubmetadataKind()"></toggle-button>
-        <toggle-button class="${addingNewSubmetadataKind ? 'active' : ''}"
-            primary-icon-name="resource-2"
+            click.delegate="toggleAddingNewSubmetadataKind()"
+            disabled.bind="!addingNewSubmetadataKind"></toggle-button>
+        <toggle-button primary-icon-name="resource-2"
             primary-label="Add new"
-            click.delegate="toggleAddingNewSubmetadataKind()"></toggle-button>
+            click.delegate="toggleAddingNewSubmetadataKind()"
+            disabled.bind="addingNewSubmetadataKind"></toggle-button>
     </div>
     <div if.bind="!addingNewSubmetadataKind">
         <div class="entity-chooser-with-cancel-button">
