@@ -9,8 +9,11 @@ resource-form {
     padding: $default-gap-size / 2;
   }
 
+  & > .alert {
+    margin: $default-gap-size / 2;
+  }
+
   & > div {
-    line-height: 0;
     & > icon-button {
       button {
         display: block;
