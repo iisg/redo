@@ -115,9 +115,14 @@ export class ResourceDetails implements RoutableComponentActivate {
   }
 
   @computedFrom('resource.kind.metadataList', 'resource.kind.metadataList.length')
-  get allowAddChildResource(): boolean {
+  get allowedResourceKindsByParent(): ResourceKind[] | number[] {
     const parentMetadata = this.resource.kind.metadataList.find(v => v.id === SystemMetadata.PARENT.id);
-    return !!parentMetadata.constraints.resourceKind.length;
+    return parentMetadata.constraints.resourceKind;
+  }
+
+  @computedFrom('allowedResourceKindsByParent')
+  get allowAddChildResource(): boolean {
+    return !!this.allowedResourceKindsByParent.length;
   }
 
   @computedFrom("resource")

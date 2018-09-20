@@ -43,6 +43,7 @@
             <aup-tab-pane tab="children">
                 <resources-list if.bind="resourceDetailsTabs.activeTabId === 'children' && (allowAddChildResource || numberOfChildren || isFiltering)"
                     parent-resource.bind="resource"
+                    allowed-resource-kinds.bind="allowedResourceKindsByParent"
                     has-resources.bind="hasChildren"
                     results-per-page.from-view="resultsPerPage"
                     current-page-number.from-view="currentPageNumber"
