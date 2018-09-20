@@ -41,6 +41,7 @@ export class ResourcesList {
   activated: boolean;
   private resultsPerPageValueChangedOnActivate: boolean;
   private currentPageNumberChangedOnActivate: boolean;
+  private displayAllLevels: boolean = false;
 
   constructor(private alert: Alert,
               private i18n: I18N,
@@ -73,6 +74,7 @@ export class ResourcesList {
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']);
     this.sortBy = safeJsonParse(parameters['sortBy']);
     this.sortBy = this.sortBy ? this.sortBy : this.getSorting();
+    this.displayAllLevels = !!parameters['allLevels'];
     this.saveSortingToLocalStorage(this.sortBy);
     this.fetchResources();
     this.updateURL(true);
@@ -135,8 +137,10 @@ export class ResourcesList {
     if (this.parentResource) {
       query = query.filterByParentId(this.parentResource.id);
     } else {
-      query = query.onlyTopLevel()
-        .filterByResourceClasses(this.resourceClass);
+      query = query.filterByResourceClasses(this.resourceClass);
+      if (!this.displayAllLevels) {
+        query = query.onlyTopLevel();
+      }
     }
     if (this.contentsFilter) {
       query.filterByContents(this.contentsFilter)
@@ -236,6 +240,9 @@ export class ResourcesList {
     if (!queryParameters['tab'] || queryParameters['tab'] == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
       parameters['currentPageNumber'] = this.currentPageNumber;
+    }
+    if (this.displayAllLevels) {
+      parameters['allLevels'] = true;
     }
     this.router.navigateToRoute(route, parameters, {trigger: false, replace: replaceEntryInBrowserHistory});
   }
