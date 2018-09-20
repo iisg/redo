@@ -7,7 +7,7 @@
         <add-button if.bind="!addFormOpened && !hideAddButton"
             entity-name="resourceKind"
             toggled.two-way="addFormOpened"></add-button>
-        <div if.bind="addFormOpened"
+        <div if.bind="addFormOpened && !hideAddButton"
             class="well add-form fade-inup-outdown au-animate">
             <span>${'Add new resource kind' | resourceClassTranslation:resourceClass}</span>
             <resource-kind-form resource-class.bind="resourceClass"
