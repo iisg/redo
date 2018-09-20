@@ -26,6 +26,7 @@ class ESIndexManager {
             [
                 'number_of_shards' => $numberOfShards,
                 'number_of_replicas' => $numberOfReplicas,
+                'index.mapping.ignore_malformed' => true,
             ]
         );
         $type = $this->index->getType(ResourceConstants::ES_DOCUMENT_TYPE);
