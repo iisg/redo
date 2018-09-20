@@ -57,6 +57,34 @@ class PkImportImportCommandIntegrationTest extends AbstractPkImportIntegrationTe
         );
     }
 
+    public function testAddsValueIfDoesNotExist() {
+        $this->import();
+        $resourceWithExistingValue = $this->findResourceByContents(['Old ID' => 76968]);
+        $this->assertEquals(
+            $resourceWithExistingValue->getValues($this->findMetadataByName('Nadzorujacy')),
+            ['190']
+        );
+        $resourceWithDefaultValue = $this->findResourceByContents(['Old ID' => 76805]);
+        $this->assertEquals(
+            $resourceWithDefaultValue->getValues($this->findMetadataByName('Nadzorujacy')),
+            ['12345']
+        );
+    }
+
+    public function testAddsDefaultValue() {
+        $this->import();
+        $resource = $this->findResourceByContents(['Old ID' => 76805]);
+        $this->assertEquals(
+            $resource->getValues($this->findMetadataByName('Skanista')),
+            ['12345', '23456']
+        );
+        $resourceWithDefaultValue = $this->findResourceByContents(['Old ID' => 76805]);
+        $this->assertEquals(
+            $resourceWithDefaultValue->getValues($this->findMetadataByName('Nadzorujacy')),
+            ['12345']
+        );
+    }
+
     public function testImportsOldResourceId() {
         $this->import();
         $resource = $this->findResourceByContents(['Old ID' => 76968]);
