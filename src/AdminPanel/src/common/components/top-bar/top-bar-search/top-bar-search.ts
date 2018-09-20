@@ -67,6 +67,7 @@ export class TopBarSearch {
     const queryParams = this.router.currentInstruction.queryParams;
     queryParams['resourceClass'] = this.metadata.resourceClass;
     queryParams['contentsFilter'] = JSON.stringify(contentsFilter);
+    queryParams['allLevels'] = true;
     this.router.navigateToRoute('resources', queryParams);
   }
 
