@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class ConfigController extends ApiController {
     const PUBLIC_PARAMETERS = [
-        'application_name' => 'repeka.application_name',
+        'application_name' => 'applicationName',
         'application_version' => 'repeka.version',
         'default_ui_language' => 'repeka.default_ui_language',
         'resource_classes' => 'repeka.resource_classes',

@@ -5,8 +5,6 @@ imports:
   - { resource: postgres_json_functions.yml }
 
 repeka:
-  application_name: "%applicationName%"
-
   default_ui_language: pl
 
   resource_classes: []
