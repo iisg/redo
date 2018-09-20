@@ -2,9 +2,14 @@
 namespace Repeka\Tests\Integration\Twig;
 
 use Repeka\Application\Twig\TwigResourceDisplayStrategyEvaluator;
+use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceContents as RC;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
+use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -14,12 +19,15 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
     private $evaluator;
     /** @var ResourceEntity */
     private $phpBookResource;
+    /** @var Metadata */
+    private $titleMetadata;
 
     /** @before */
     public function before() {
         $this->loadAllFixtures();
         $this->evaluator = $this->container->get(ResourceDisplayStrategyEvaluator::class);
         $this->phpBookResource = $this->getPhpBookResource();
+        $this->titleMetadata = $this->findMetadataByName('Tytuł');
     }
 
     /*
@@ -38,7 +46,7 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
     }
 
     private function renderingExamples() {
-        $tId = $this->findMetadataByName('Tytuł')->getId();
+        $tId = $this->titleMetadata->getId();
         $phpBookId = $this->getPhpBookResource()->getId();
         $phpMysqlBookId = $this->findResourceByContents(['Tytuł' => 'PHP i MySQL'])->getId();
         // @codingStandardsIgnoreStart
@@ -108,5 +116,55 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
         );
         $id = $this->phpBookResource->getId();
         $this->assertEquals("Zasób #$id: PHP - to można leczyć! Nadzorujący: budynek, Skanista: skaner. Twarda okładka", $rendered);
+    }
+
+    public function testRenderingBreadcrumb() {
+        $phpBook = $this->getPhpBookResource();
+        $bookRk = $phpBook->getKind();
+        $rkMetadataList = array_filter(
+            $bookRk->getMetadataList(),
+            function (Metadata $metadata) {
+                return $metadata->getId() != SystemMetadata::PARENT;
+            }
+        );
+        $rkMetadataList[] = SystemMetadata::PARENT()->toMetadata()->withOverrides(
+            ['constraints' => ['resourceKind' => [$bookRk->getId()]]]
+        );
+        $this->handleCommandBypassingFirewall(
+            new ResourceKindUpdateCommand($bookRk, $bookRk->getLabel(), $rkMetadataList)
+        );
+        $firstLevelChild = $this->handleCommandBypassingFirewall(
+            new ResourceCreateCommand(
+                $bookRk,
+                ResourceContents::fromArray([$this->titleMetadata->getId() => 'First level', SystemMetadata::PARENT => $phpBook->getId()])
+            )
+        );
+        $secondLevelChild = $this->handleCommandBypassingFirewall(
+            new ResourceCreateCommand(
+                $bookRk,
+                ResourceContents::fromArray(
+                    [$this->titleMetadata->getId() => 'Second level', SystemMetadata::PARENT => $firstLevelChild->getId()]
+                )
+            )
+        );
+        $thirdLevelChild = $this->handleCommandBypassingFirewall(
+            new ResourceCreateCommand(
+                $bookRk,
+                ResourceContents::fromArray(
+                    [$this->titleMetadata->getId() => 'Third level', SystemMetadata::PARENT => $secondLevelChild->getId()]
+                )
+            )
+        );
+        $breadcrumbTemplate = <<<BR
+{% set parentTitles = [] %}
+{% set parent = r | mParent | first %}
+{% for i in 0..5 if parent %}
+    {% set parentTitles = [parent | mTytul] | merge(parentTitles) %}
+    {% set parent = parent | mParent | first %}
+{% endfor %}
+{% for title in parentTitles %}{{ title }} > {% endfor %}{{ r | mTytul }}
+BR;
+        $rendered = trim($this->evaluator->render($thirdLevelChild, $breadcrumbTemplate));
+        $this->assertEquals('PHP - to można leczyć! > First level > Second level > Third level', $rendered);
     }
 }
