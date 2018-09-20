@@ -1,0 +1,19 @@
+{% set ancestors = [] %}
+{% set ancestor = resource | metadata('parent') | first %}
+{% for i in 0..9 if ancestor %}
+    {% set ancestors = [ancestor] | merge(ancestors) %}
+    {% set ancestor = ancestor | metadata('parent') | first %}
+{% endfor %}
+{% if ancestor %}
+    ...
+    {% block itemSuffix %}{% endblock %}
+{% endif %}
+{% for ancestor in ancestors %}
+    {% block itemPrefix %}{% endblock %}
+    <a href="/resources/{{ancestor}}">
+        {% block itemNamePrefix %}{% endblock %}
+        {{ancestor | metadata('label')}}
+        {% block itemNameSuffix %}{% endblock %}
+    </a>
+    {{block('itemSuffix')}}
+{% endfor %}

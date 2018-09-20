@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Vue from "vue";
 // import VueI18N from "vue-i18n";
 import VueResource from "vue-resource";
-import "style-loader!css-loader!sass-loader!./styles/styles.scss";
+import "style-loader!css-loader!sass-loader!./styles.scss";
 
 // Vue.use(VueI18N);
 Vue.use(VueResource);
@@ -18,13 +18,14 @@ Vue.http.options.root = Vue.config.external.baseUrl + '/api';
 Vue.prototype.$user = window.FRONTEND_CONFIG.user;
 
 const components = {
-  RedoLogo: () => import("./redo/redo-logo"),
   Icon: () => import("./common/icon"),
-  GeneratedMenu: () => import("./common/generated-menu"),
-  SearchBar: () => import("./common/search-bar"),
+  Throbber: () => import("./common/throbber"),
   Checkbox: () => import("./common/checkbox"),
   RadioButtonsGroup: () => import("./common/radio-buttons-group"),
-  RepekaVersion: () => import("./common/repeka-version")
+  GeneratedMenu: () => import("./common/generated-menu"),
+  SearchBar: () => import("./common/search-bar"),
+  RepekaVersion: () => import("./common/repeka-version"),
+  RedoLogo: () => import("./redo/redo-logo")
 };
 
 $(document).ready(() => {
@@ -34,7 +35,7 @@ $(document).ready(() => {
       el: '.vue-container',
       delimiters: ['${', '}'],
       // i18n,
-      components,
+      components
     });
   }
 });
