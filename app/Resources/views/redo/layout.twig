@@ -1,12 +1,8 @@
 {% extends "redo/base.twig" %}
 {% block layout %}
-    {% block topPart %}
-        {% include "redo/title-bar.twig" %}
-        {% block banner %}{% endblock %}
-        {% include "redo/menu.twig" %}
-    {% endblock %}
+    {% include "redo/title-bar.twig" %}
+    {% block banner %}{% endblock %}
+    {% include "redo/menu.twig" %}
     {% block content %}{% endblock %}
-    {% block footer %}
-        {% include "redo/footer.twig" %}
-    {% endblock %}
+    {% include "redo/footer.twig" %}
 {% endblock %}
