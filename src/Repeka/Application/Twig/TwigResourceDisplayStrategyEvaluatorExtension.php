@@ -67,6 +67,17 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         return $iterableGiven ? $resources : $resources[0];
     }
 
+    private function fetchMetadataId($metadataId, $context = null) {
+        if ($metadataId === null) {
+            throw new \Twig_Error('Please specify metadata by choosing one of the following syntax: m1, mName, m(1), m("Name")');
+        }
+        if (!is_numeric($metadataId)) {
+            return $this->fetchMetadataIdByName($metadataId, $context);
+        } else {
+            return intval($metadataId);
+        }
+    }
+
     public function fetchMetadataIdByName(string $name, $context = null) {
         try {
             $resourceClass = null;
@@ -76,20 +87,21 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
             $metadata = $this->metadataRepository->findByName($name, $resourceClass);
             return $metadata->getId();
         } catch (EntityNotFoundException $e) {
-            return 0;
+            if ($context) { // maybe the metadata is classless?
+                return $this->fetchMetadataIdByName($name);
+            } else {
+                return 0;
+            }
         }
     }
 
     public function getMetadataValues($contents, $metadataId = null) {
-        if ($metadataId === null) {
-            throw new \Twig_Error('Please specify metadata by choosing one of the following syntax: m1, mName, m(1), m("Name")');
-        }
-        if (!is_numeric($metadataId)) {
-            $metadataId = $this->fetchMetadataIdByName($metadataId, $contents);
-        }
+        $metadataId = $this->fetchMetadataId($metadataId, $contents);
         $iterableGiven = is_iterable($contents) && !$contents instanceof ResourceContents;
         if (!$iterableGiven) {
             $contents = [$contents];
+        } elseif ($contents instanceof PrintableArray) {
+            $contents = $contents->flatten();
         }
         $values = [];
         foreach ($contents as $resource) {
@@ -109,15 +121,7 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
     }
 
     public function getSubmetadataValues($metadataValues, $submetadataId = null) {
-        if ($submetadataId === null) {
-            throw new \Twig_Error(
-                'Please specify metadata by choosing one of the following syntax: '
-                . 'submetadata1, submetadataName, submetadata(1), submetadata("Name")'
-            );
-        }
-        if (!is_numeric($submetadataId)) {
-            $submetadataId = $this->fetchMetadataIdByName($submetadataId);
-        }
+        $submetadataId = $this->fetchMetadataId($submetadataId);
         $iterableGiven = is_iterable($metadataValues);
         if (!$iterableGiven) {
             $metadataValues = [$metadataValues];

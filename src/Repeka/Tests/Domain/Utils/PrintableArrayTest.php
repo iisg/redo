@@ -24,6 +24,14 @@ class PrintableArrayTest extends \PHPUnit_Framework_TestCase {
         $this->assertCount(3, $flat);
     }
 
+    public function testFlatteningEmptyArray() {
+        $this->assertEmpty((new PrintableArray([]))->flatten());
+    }
+
+    public function testFlatteningNestedEmptyArray() {
+        $this->assertEmpty((new PrintableArray([new PrintableArray([])]))->flatten());
+    }
+
     public function testNotExistingKeyIsEmptyString() {
         $array = new PrintableArray([1, 2]);
         $this->assertEquals('', $array[2]);

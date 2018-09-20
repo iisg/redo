@@ -7,7 +7,7 @@ class PrintableArray extends ImmutableIteratorAggregate {
     }
 
     public function flatten(): PrintableArray {
-        return new self(explode(', ', (string)$this));
+        return count($this) > 0 ? new self(array_filter(explode(', ', (string)$this))) : new self([]);
     }
 
     public function offsetExists($offset) {

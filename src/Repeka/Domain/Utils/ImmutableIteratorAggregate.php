@@ -3,7 +3,7 @@ namespace Repeka\Domain\Utils;
 
 use Assert\Assertion;
 
-class ImmutableIteratorAggregate implements \IteratorAggregate, \ArrayAccess {
+class ImmutableIteratorAggregate implements \IteratorAggregate, \ArrayAccess, \Countable {
     /** @var array */
     protected $contents = [];
 
@@ -32,5 +32,9 @@ class ImmutableIteratorAggregate implements \IteratorAggregate, \ArrayAccess {
     /** @inheritdoc */
     public function offsetUnset($offset) {
         throw new \LogicException('Immutable!');
+    }
+
+    public function count() {
+        return count($this->contents);
     }
 }
