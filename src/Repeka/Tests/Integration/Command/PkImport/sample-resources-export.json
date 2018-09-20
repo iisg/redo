@@ -20,6 +20,29 @@
     },
     "Old ID": {
       "key": "ID"
+    },
+    "Nadzorujący": {
+      "key": "190",
+      "transforms": [
+        {
+          "name": "getKey",
+          "key": "TERM_ID"
+        },
+        {
+          "name": "defaultValue",
+          "value": "12345"
+        }
+      ]
+    },
+    "Skanista": {
+      "key": "default_value",
+      "transforms": [
+        {
+          "name": "defaultValue",
+          "value": ["12345", "23456"],
+          "override": true
+        }
+      ]
     }
   }
 }

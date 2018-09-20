@@ -30,7 +30,7 @@ class MetadataImporter {
                 if (isset($data[$mapping->getImportKey()])) {
                     $valuesBasedOnImportKey = $data[$mapping->getImportKey()];
                 } else {
-                    continue;
+                    $valuesBasedOnImportKey = [];
                 }
             } else {
                 $valuesBasedOnImportKey = [$data];
