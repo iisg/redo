@@ -18,6 +18,7 @@ import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproduc
 import {Alert} from "../../common/dialog/alert";
 import {I18N} from "aurelia-i18n";
 import {DisabilityReason} from "../../common/components/buttons/toggle-button";
+import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 
 @autoinject()
 export class ResourcesList {
@@ -29,6 +30,7 @@ export class ResourcesList {
   @bindable disableAddResource: boolean;
   @bindable resultsPerPage: number;
   @bindable currentPageNumber: number;
+  @bindable allowedResourceKinds: number[] | ResourceKind[];
   @observable resources: PageResult<Resource>;
   contentsFilter: NumberMap<string>;
   sortBy: ResourceSort[];
@@ -168,7 +170,18 @@ export class ResourcesList {
   }
 
   fetchBriefMetadata() {
-    this.resourceKindRepository.getListQuery().filterByResourceClasses(this.resourceClass).get().then(resourceKinds => {
+    let query = this.resourceKindRepository.getListQuery();
+    if (this.allowedResourceKinds) {
+      (this.allowedResourceKinds as Array<ResourceKind | number>).forEach(resourceKindOrId => {
+        return resourceKindOrId instanceof ResourceKind
+          ? resourceKindOrId.id
+          : resourceKindOrId;
+      });
+    }
+    query = (this.allowedResourceKinds && this.allowedResourceKinds.length)
+      ? query.filterByIds(this.allowedResourceKinds as number[])
+      : query.filterByResourceClasses(this.resourceClass);
+    query.get().then(resourceKinds => {
       this.briefMetadata = getMergedBriefMetadata(resourceKinds);
     });
   }

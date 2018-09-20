@@ -12,6 +12,17 @@ export class ResourceKindListQuery {
               private entitySerializer: EntitySerializer) {
   }
 
+  public filterByIds(resourceKindIds: number | number[]): ResourceKindListQuery {
+    if (!Array.isArray(resourceKindIds)) {
+      resourceKindIds = [resourceKindIds as number];
+    }
+    if (!this.params.ids) {
+      this.params.ids = [];
+    }
+    (resourceKindIds as number[]).forEach(rkId => this.params.ids.push(rkId));
+    return this;
+  }
+
   public filterByResourceClasses(resourceClasses: string | string[]): ResourceKindListQuery {
     if (!Array.isArray(resourceClasses)) {
       resourceClasses = [resourceClasses as string];
