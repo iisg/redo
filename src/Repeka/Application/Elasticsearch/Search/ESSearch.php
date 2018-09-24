@@ -5,6 +5,8 @@ use Elastica\Query;
 use Elastica\Search;
 use Repeka\Application\Elasticsearch\ESClient;
 use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 
 class ESSearch extends Search {
@@ -27,13 +29,45 @@ class ESSearch extends Search {
         $this->query = new Query();
     }
 
-    public function addPair($name, $value): bool {
-        $metadata = $this->metadataRepository->findByName($name);
+    public function addPair($key, $value): bool {
+        $metadata = $this->findMetadataForKey($key);
         if ($metadata) {
-            $this->argValArray[] = ['match' => ['contents.' . $metadata->getId() . '.value' => $value]];
-            return true;
+            $property = $metadata->getId() . '.value_' . $metadata->getControl();
+            try {
+                $parentMetadata = $metadata->getParent();
+                while ($parentMetadata) {
+                    $property = $parentMetadata->getId() . '.submetadata.' . $property;
+                    $parentMetadata = $parentMetadata->getParent();
+                }
+            } catch (\InvalidArgumentException $e) {
+                $this->argValArray[] = ['match' => ['contents.' . $property => $value]];
+                return true;
+            }
         }
         return false;
+    }
+
+    private function findMetadataForKey(string $key): ?Metadata {
+        return $this->findMetadataById($key) ?: $this->findMetadataByName($key);
+    }
+
+    private function findMetadataById(string $id): ?Metadata {
+        if (!is_numeric($id)) {
+            return null;
+        }
+        try {
+            return $this->metadataRepository->findOne(intval($id));
+        } catch (EntityNotFoundException $e) {
+            return null;
+        }
+    }
+
+    private function findMetadataByName(string $name): ?Metadata {
+        try {
+            return $this->metadataRepository->findByName($name);
+        } catch (EntityNotFoundException $e) {
+            return null;
+        }
     }
 
     public function createQuery() {

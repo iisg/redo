@@ -19,14 +19,29 @@ class ElasticSearch {
     /** @var Type */
     private $type;
 
-    public function __construct(ESClient $client, string $indexName) {
+    /** @var ESContentsAdjuster */
+    private $esContentsAdjuster;
+
+    public function __construct(ESClient $client, ESContentsAdjuster $esContentsAdjuster, string $indexName) {
         $this->client = $client;
+        $this->esContentsAdjuster = $esContentsAdjuster;
         $this->index = $this->client->getIndex($indexName);
         $this->type = $this->index->getType(ResourceConstants::ES_DOCUMENT_TYPE);
     }
 
+    private function createDocument(ResourceEntity $resource): Document {
+        $data =
+            [
+                'id' => $resource->getId(),
+                'kindId' => $resource->getKind()->getId(),
+                'contents' => $this->esContentsAdjuster->adjustContents($resource->getContents()->toArray()),
+                'resourceClass' => $resource->getResourceClass(),
+            ];
+        return new Document($resource->getId(), $data);
+    }
+
     public function insertDocument(ResourceEntity $resource) {
-        $document = new Document($resource->getId(), $resource->getFtsData());
+        $document = $this->createDocument($resource);
         $this->type->addDocument($document);
         $this->type->getIndex()->refresh();
     }
@@ -37,7 +52,7 @@ class ElasticSearch {
     public function insertDocuments($resources) {
         $documents = [];
         foreach ($resources as $resource) {
-            $documents[] = new Document($resource->getId(), $resource->getFtsData());
+            $documents[] = $this->createDocument($resource);
         }
         $this->type->addDocuments($documents);
         $this->type->getIndex()->refresh();

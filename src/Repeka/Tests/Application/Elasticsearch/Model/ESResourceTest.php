@@ -5,7 +5,8 @@ use Elastica\Document;
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
 use Repeka\Application\Elasticsearch\Model\ElasticSearch;
-use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Application\Elasticsearch\Model\ESContentsAdjuster;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Tests\Application\Elasticsearch\ElasticsearchTest;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -30,7 +31,7 @@ class ESResourceTest extends ElasticsearchTest {
                         [
                             ResourceConstants::ID => 1,
                             ResourceConstants::KIND_ID => 2,
-                            ResourceConstants::CONTENTS => ResourceContents::fromArray(['3' => ['value' => 'aaa']]),
+                            ResourceConstants::CONTENTS => ['3' => [['value_text' => 'aaa']]],
                             ResourceConstants::RESOURCE_CLASS => 'books',
                         ],
                         $doc->getData()
@@ -39,8 +40,14 @@ class ESResourceTest extends ElasticsearchTest {
                 }
             )
         );
+        $metadataRepository = $this->createMetadataRepositoryStub(
+            [
+                $this->createMetadataMock(3, null, MetadataControl::TEXT(), [], 'books', [], 'TEXT'),
+            ]
+        );
+        $esContentsAdjuster = new ESContentsAdjuster($metadataRepository);
         $this->indexMock->method('getType')->with(ResourceConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
-        $res = new ElasticSearch($this->clientMock, self::INDEX_NAME);
+        $res = new ElasticSearch($this->clientMock, $esContentsAdjuster, self::INDEX_NAME);
         $res->insertDocument($resource);
     }
 }

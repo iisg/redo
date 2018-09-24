@@ -37,6 +37,12 @@ class FtsSearchCommandIntegrationTest extends IntegrationTestCase {
         $this->assertContains('Id: ' . $this->phpAndMySQLBookResource->getId(), $output);
     }
 
+    public function testSearchSubmetadata() {
+        $output = $this->executeCommand('repeka:fts:search' . ' -m url_label -w więcej');
+        $this->assertContains('1 results', $output);
+        $this->assertContains('Id: ' . $this->phpBookResource->getId(), $output);
+    }
+
     public function testSearchWithSetSize() {
         $output = $this->executeCommand('repeka:fts:search' . ' -m tytul -w php -l 1');
         $this->assertContains('1 results', $output);
