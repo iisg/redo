@@ -45,6 +45,7 @@ services:
   Repeka\Application\Elasticsearch\ESIndexManager:
     $indexName: '%elasticsearch.index_name%'
   Repeka\Application\Elasticsearch\Mapping\ESMapping: ~
+  Repeka\Application\Elasticsearch\Model\ESContentsAdjuster: ~
   Repeka\Application\Elasticsearch\Model\ElasticSearch:
     shared: false
     arguments:
