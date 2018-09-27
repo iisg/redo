@@ -1,6 +1,6 @@
 exports.config = {
   framework: 'jasmine2',
-  specs: ['LoginTests.js', 'MetadataTypeTests.js', 'ResourceTypeTests.js', 'ResourceTests.js', 'TransitionTests.js'],
+  specs: ['LoginTests.js', 'MetadataTypeTests.js'],
   //specs: ['LoginTests.js', 'MetadataTypeTests.js', 'ResourceTypeTests.js', 'ResourceTests.js', 'TransitionTests.js'],
   getPageTimeout: 120000,
   allScriptsTimeout: 120000,
