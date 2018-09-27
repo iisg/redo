@@ -171,6 +171,7 @@ describe('Resource Tests', function() {
 	var deleteButton = element(by.cssContainingText('span', 'Usuń'));
 	deleteButton.click();
 
+	waitForElement(element(by.className('swal2-confirm toggle-button red')));
 	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 	confirmButton.click();
 
