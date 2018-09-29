@@ -19,7 +19,7 @@ describe('Resource Tests', function() {
 	waitForElement(element(by.className('select2-selection__rendered')));
 	var lists = element.all(by.className('select2-selection__rendered'));
 	var listToClick = lists.get(1);
-	browser.sleep(500);
+	browser.sleep(1000);
 	listToClick.click();
 	browser.sleep(500);
 	browser.driver.switchTo().activeElement().sendKeys('Rodzaj_do_testowania_automatycznego');
@@ -43,7 +43,7 @@ describe('Resource Tests', function() {
 	waitForElement(element(by.className('select2-selection__rendered')));
 	var lists = element.all(by.className('select2-selection__rendered'));
 	var listToClick = lists.get(1);
-	browser.sleep(500);
+	browser.sleep(1000);
 	listToClick.click();
 	browser.sleep(500);
 	browser.driver.switchTo().activeElement().sendKeys('Rodzaj_do_testowania_automatycznego');
