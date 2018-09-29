@@ -63,10 +63,12 @@
                             click.delegate="showTransitionForm(updateTransition)"></apply-transition-button>
                     </div>
                     <resource-form else
+                        parent.bind="parentResource"
                         resource-class.bind="resource.resourceClass"
                         currently-edited-resource.bind="resource"
                         skip-validation.bind="isFormOpenedForGod"
                         submit.call="saveEditedResource(savedResource, transitionId, newResourceKind, places)"
+                        clone.call="cloneResource(editedResource)"
                         cancel.call="hideForm()"></resource-form>
                 </div>
             </aup-tab-pane>

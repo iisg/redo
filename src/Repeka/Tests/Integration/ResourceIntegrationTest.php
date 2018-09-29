@@ -111,6 +111,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             $this->resourceKind,
             [
                 $this->metadata1->getId() => ['Test value for parent'],
+                SystemMetadata::REPRODUCTOR => [1],
             ]
         );
         $this->resourceWithWorkflow = $this->createResource(
@@ -284,6 +285,97 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(['created'], $created->getValues($this->metadata1));
         $this->assertEquals([1], $created->getContents()->getValuesWithoutSubmetadata($this->metadata3));
         $this->assertEquals(['p1' => true], $created->getMarking());
+    }
+
+    public function testCloningResourceWithoutWorkflow() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resource->getKind()->getId(),
+                'contents' => json_encode($this->resource->getContents()->toArray()),
+                'resourceClass' => 'books',
+            ]
+        );
+        $this->assertStatusCode(201, $client->getResponse());
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        $clonedId = json_decode($client->getResponse()->getContent())->id;
+        /** @var ResourceEntity $created */
+        $cloned = $repository->findOne($clonedId);
+        $this->assertEquals($this->resource->getKind()->getId(), $cloned->getKind()->getId());
+        $this->assertEquals(['Test value'], $cloned->getValues($this->metadata1));
+    }
+
+    public function testCloningResourceWithWorkflow() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'id' => $this->resourceWithWorkflow->getId(),
+                'kindId' => $this->resourceWithWorkflow->getKind()->getId(),
+                'contents' => json_encode($this->resourceWithWorkflow->getContents()->toArray()),
+                'resourceClass' => 'books',
+            ]
+        );
+        $this->assertStatusCode(201, $client->getResponse());
+        $clonedId = json_decode($client->getResponse()->getContent())->id;
+        /** @var ResourceEntity $created */
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        $cloned = $repository->findOne($clonedId);
+        $this->assertEquals($this->resourceWithWorkflow->getKind()->getId(), $cloned->getKind()->getId());
+        $this->assertEquals(['Test value'], $cloned->getValues($this->metadata1));
+        $this->assertEquals($this->resourceWithWorkflow->getWorkflow()->getId(), $cloned->getWorkflow()->getId());
+        $this->assertEquals(['p1' => true], $cloned->getMarking());
+    }
+
+    public function testCloningResourceWithEditedValues() {
+        $client = self::createAdminClient();
+        $newContents = $this->resource->getContents()->toArray();
+        $newContents[$this->metadata2->getId()] = [['value' => 'new Test value']];
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resource->getKind()->getId(),
+                'contents' => json_encode($newContents),
+                'resourceClass' => 'books',
+            ]
+        );
+        $this->assertStatusCode(201, $client->getResponse());
+        $clonedId = json_decode($client->getResponse()->getContent())->id;
+        /** @var ResourceEntity $created */
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        $cloned = $repository->findOne($clonedId);
+        $this->assertEquals($this->resource->getKind()->getId(), $cloned->getKind()->getId());
+        $this->assertEquals(['Test value',], $cloned->getValues($this->metadata1));
+        $this->assertEquals(['new Test value',], $cloned->getValues($this->metadata2));
+    }
+
+    public function testCloningResourceWithParent() {
+        $client = self::createAdminClient();
+        $newContents = $this->childResource->getContents()->toArray();
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resource->getKind()->getId(),
+                'contents' => json_encode($newContents),
+                'resourceClass' => 'books',
+            ]
+        );
+        $this->assertStatusCode(201, $client->getResponse());
+        $clonedId = json_decode($client->getResponse()->getContent())->id;
+        /** @var ResourceEntity $created */
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        $cloned = $repository->findOne($clonedId);
+        $this->assertEquals($this->resource->getKind()->getId(), $cloned->getKind()->getId());
+        $this->assertEquals(['Test value for child'], $cloned->getValues($this->metadata1));
+        $this->assertEquals($this->childResource->getParentId(), $cloned->getParentId());
     }
 
     public function testEditingResource() {

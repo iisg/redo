@@ -1,4 +1,5 @@
 resource_create: "Resource: created"
+resource_clone: "Resource: cloned"
 resource_delete: "Resource: deleted"
 resource_transition: "Resource: transition"
 resource_update_contents: "Resource: edit contents"

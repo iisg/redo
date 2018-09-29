@@ -6,6 +6,7 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\PageResult;
+use Repeka\Domain\UseCase\Resource\ResourceCloneCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
@@ -130,7 +131,9 @@ class ResourcesController extends ApiController {
         Assertion::keyExists($data, 'kindId', 'kindId is missing');
         Assertion::numeric($data['kindId']);
         $resourceKind = $this->handleCommand(new ResourceKindQuery($data['kindId']));
-        $command = new ResourceCreateCommand($resourceKind, $resourceContents, $this->getUser());
+        $command = isset($data['id']) && is_numeric($data['id'])
+            ? new ResourceCloneCommand($resourceKind, intval($data['id']), $resourceContents, $this->getUser())
+            : new ResourceCreateCommand($resourceKind, $resourceContents, $this->getUser());
         $resource = $this->handleCommand($command);
         $resource = $this->handleCommand(new ResourceEvaluateDisplayStrategiesCommand($resource));
         return $this->createJsonResponse($resource, 201);

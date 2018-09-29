@@ -197,6 +197,7 @@ Changes in the form will be lost: Zmiany w formularzu zostaną utracone
 Stay: Zostań
 Discard changes: Porzuć zmiany
 You do not have permissions to add resource.: Nie posiadasz uprawnień do dodania zasobu.
+You do not have permissions to clone resource.: Nie posiadasz uprawnień do klonowania zasobu.
 Resource kind does not allow to add resource.: Rodzaj zasobu nie pozwala na dodawanie podzasobów.
 You are editing the resource without validations.: Edytujesz zasób bez nałożonych reguł walidacyjnych.
 Make any changes wisely.: Wprowadzaj uważnie wszelkie zmiany.

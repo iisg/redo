@@ -19,6 +19,9 @@ import {Resource} from "../resource";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportDialog} from "./xml-import/import-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
+import {CurrentUserIsReproductorValueConverter} from "../list/current-user-is-reproductor";
+import {DisabilityReason} from "../../common/components/buttons/toggle-button";
+import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 
 @autoinject
 export class ResourceForm extends ChangeLossPreventerForm {
@@ -32,8 +35,13 @@ export class ResourceForm extends ChangeLossPreventerForm {
     newResourceKind?: ResourceKind,
     places?: WorkflowPlace[]
   }) => Promise<any>;
+  @bindable clone: (value: {
+    editedResource: Resource
+  }) => Promise<any>;
   @bindable cancel: () => void;
   submitting: boolean = false;
+  cloning: boolean = false;
+  disabled: boolean = false;
   validationError: boolean = false;
   transition: WorkflowTransition;
   places: WorkflowPlace[] = [];
@@ -46,6 +54,8 @@ export class ResourceForm extends ChangeLossPreventerForm {
               private modal: Modal,
               private router: Router,
               private changeLossPreventer: ChangeLossPreventer,
+              private hasRole: HasRoleValueConverter,
+              private isReproductor: CurrentUserIsReproductorValueConverter,
               validationControllerFactory: ValidationControllerFactory) {
     super();
     this.validationController = validationControllerFactory.createForCurrentScope();
@@ -160,6 +170,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
   validateAndSubmit() {
     const transitionId = this.transition && this.transition.id;
     this.submitting = true;
+    this.disabled = true;
     this.validationError = false;
     if (this.skipValidation) {
       this.resource.contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
@@ -175,8 +186,19 @@ export class ResourceForm extends ChangeLossPreventerForm {
         } else {
           this.validationError = true;
         }
-      }).finally(() => this.submitting = false);
+      }).finally(() => {
+        this.submitting = false;
+        this.disabled = false;
+      });
     }
+  }
+
+  @computedFrom("parent", "resource_class")
+  get disabilityReason(): DisabilityReason {
+    return this.parent && !this.isReproductor.toView(this.parent)
+    || (!this.parent && !this.hasRole.toView('ADMIN', this.resourceClass))
+      ? {icon: 'user-2', message: 'You do not have permissions to clone resource.'}
+      : undefined;
   }
 
   openImportDialog() {
@@ -206,5 +228,30 @@ export class ResourceForm extends ChangeLossPreventerForm {
         }
       }
     }
+  }
+
+  @computedFrom("disabled", "parent", "parent.pendingRequest")
+  get cloningResourceDisabled(): boolean {
+    return this.disabled
+      || (this.parent && (this.parent.pendingRequest || !this.isReproductor.toView(this.parent)))
+      || (!this.parent && !this.hasRole.toView('ADMIN', this.resourceClass));
+  }
+
+  cloneResource() {
+    this.cloning = true;
+    this.disabled = true;
+    this.validationError = false;
+    this.validationController.validate().then(result => {
+      if (result.valid) {
+        this.changeLossPreventer.disable();
+        return this.clone({editedResource: this.resource})
+          .then(() => this.editing || (this.resource = new Resource));
+      } else {
+        this.validationError = true;
+      }
+    }).finally(() => {
+      this.disabled = false;
+      this.cloning = false;
+    });
   }
 }

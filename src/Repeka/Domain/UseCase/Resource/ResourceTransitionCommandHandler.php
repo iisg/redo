@@ -2,7 +2,6 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Upload\ResourceFileHelper;
 
