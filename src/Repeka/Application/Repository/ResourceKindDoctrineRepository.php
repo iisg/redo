@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\Repository;
 
-use Assert\Assertion;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;

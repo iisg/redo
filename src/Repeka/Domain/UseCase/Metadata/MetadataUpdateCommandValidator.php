@@ -5,6 +5,7 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
+use Repeka\Domain\Validation\Rules\MetadataGroupExistsRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
@@ -16,15 +17,19 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
     private $constraintArgumentsAreValidRule;
     /** @var ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule */
     private $rkConstraintIsUserIfNecessaryRule;
+    /** @var MetadataGroupExistsRule */
+    private $metadataGroupExistsRule;
 
     public function __construct(
         ConstraintSetMatchesControlRule $constraintSetMatchesControlRule,
         ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
-        ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule $rkConstraintIsUserIfNecessaryRule
+        ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule $rkConstraintIsUserIfNecessaryRule,
+        MetadataGroupExistsRule $metadataGroupExistsRule
     ) {
         $this->constraintSetMatchesControlRule = $constraintSetMatchesControlRule;
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
         $this->rkConstraintIsUserIfNecessaryRule = $rkConstraintIsUserIfNecessaryRule;
+        $this->metadataGroupExistsRule = $metadataGroupExistsRule;
     }
 
     /** @param MetadataUpdateCommand $command */
@@ -37,6 +42,7 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
             ->attribute('newCopyToChildResource', Validator::boolType())
             ->attribute('newConstraints', $this->constraintSetMatchesControlRule->forMetadata($command->getMetadata()))
             ->attribute('newConstraints', $this->constraintArgumentsAreValidRule)
-            ->attribute('newConstraints', $this->rkConstraintIsUserIfNecessaryRule->forMetadata($command->getMetadata()));
+            ->attribute('newConstraints', $this->rkConstraintIsUserIfNecessaryRule->forMetadata($command->getMetadata()))
+            ->attribute('newGroupId', $this->metadataGroupExistsRule);
     }
 }

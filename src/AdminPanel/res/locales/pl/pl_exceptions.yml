@@ -38,6 +38,8 @@ violationFields:
   transitions: Przejścia
   contents: Zawartość zasobu
   constraints: Ograniczenia
+  group: Grupa
+  newGroup: Nowa grupa
 resource has children: zasób ma podzasoby.
 resources of this kind exist: istnieją zasoby tego rodzaju.
 workflow is assigned to one of resource kinds: proces jest przypisany do jednego z rodzajów zasobów
@@ -51,4 +53,5 @@ value must be set in all languages: musi mieć wartość we wszystkich językach
 invalidRegex: Niewłaściwa deklaracja wyrażania regularnego.
 invalidConstraintArguments: "zawierają niepoprawne deklaracje ograniczeń: '{{constraintError}}'"
 Resource does not match required resource contents filter: Zasób nie spełnia wymagań dodatkowego filtra zasobów
+Metadata group does not exist: Grupa metadanej nie istnieje
 containsUnavailableValues: "Zawiera niezdefiniowane wartości ({{originalMessage}})"

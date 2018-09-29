@@ -24,6 +24,7 @@ class MetadataCreateCommandAdjuster implements CommandAdjuster {
             $command->getControlName(),
             $command->getResourceClass(),
             $command->getConstraints(),
+            $command->getGroupId() ?: Metadata::DEFAULT_GROUP,
             $command->isShownInBrief(),
             $command->isCopiedToChildResource(),
             $command->getParent()

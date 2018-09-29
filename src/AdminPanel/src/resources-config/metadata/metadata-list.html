@@ -2,6 +2,7 @@
     <require from="./metadata-form"></require>
     <require from="./details/metadata-child-add"></require>
     <require from="common/components/buttons/add-button.html"></require>
+    <require from="./metadata-group-label-value-converter"></require>
 
     <add-button if.bind="!addFormOpened"
         entity-name="metadata"
@@ -30,6 +31,7 @@
                     <th>${'Name' | t}</th>
                     <th>${'Label' | t}</th>
                     <th>${'Control' | t}</th>
+                    <th>${'Group' | t}</th>
                     <th>${'Hint' | t}</th>
                     <th>${'Description' | t}</th>
                     <th></th>
@@ -68,6 +70,9 @@
                         <icon name="user-3"
                             if.bind="metadata.canDetermineAssignees"
                             bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></icon>
+                    </td>
+                    <td>
+                        ${metadata.groupId | metadataGroupLabel}
                     </td>
                     <td>
                         ${metadata.placeholder | inCurrentLanguage}

@@ -3,7 +3,11 @@ import {Resource} from "../../resource";
 import {Metadata} from "resources-config/metadata/metadata";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {inArray} from "common/utils/array-utils";
+import {groupMetadata} from "../../../common/utils/metadata-utils";
+import {autoinject} from "aurelia-dependency-injection";
+import {MetadataGroupRepository} from "../../../resources-config/metadata/metadata-group-repository";
 
+@autoinject
 export class ResourceMetadataTable implements ComponentAttached {
   @bindable resource: Resource;
   @bindable metadataList: Metadata[];
@@ -11,6 +15,11 @@ export class ResourceMetadataTable implements ComponentAttached {
   @bindable @booleanAttribute hidePlaceInformation: boolean = false;
   @bindable @booleanAttribute showResourceKind: boolean = false;
   @bindable @booleanAttribute briefOnly: boolean = false;
+  @bindable @booleanAttribute hideMetadataGroups: boolean = false;
+  metadataGroups: { groupId, metadataList: Metadata[] }[];
+
+  constructor(private metadataGroupRepository: MetadataGroupRepository) {
+  }
 
   metadataListChanged() {
     const emptyMetadata = this.metadataList.filter(metadata => {
@@ -24,6 +33,7 @@ export class ResourceMetadataTable implements ComponentAttached {
     if (this.briefOnly && briefMetadata.length < this.metadataList.length) {
       this.metadataList = briefMetadata;
     }
+    this.metadataGroups = groupMetadata(this.metadataList, this.metadataGroupRepository.getIds());
   }
 
   attached(): void {

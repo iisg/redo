@@ -19,9 +19,10 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
     private $newChildMetadata;
 
     protected function setUp() {
-        $this->textareaMetadataCreateCmd = new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea', 'books', [], false);
+        $this->textareaMetadataCreateCmd =
+            new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea', 'books', [], 'group', false);
         $this->relationshipMetadataCreateCmd =
-            new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship', 'books', [], false);
+            new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship', 'books', [], 'PR', false);
         $this->factory = new MetadataFactory();
         $this->newChildMetadata = [
             'name' => 'nazwa',
@@ -44,6 +45,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($metadata->getDescription());
         $this->assertEquals(MetadataControl::TEXTAREA(), $metadata->getControl());
         $this->assertEquals('books', $metadata->getResourceClass());
+        $this->assertEquals('group', $metadata->getGroupId());
     }
 
     public function testCreatingChildMetadataWithParent() {
@@ -53,6 +55,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(1, $created->getParentId());
         $this->assertEquals('nazwa', $created->getName());
         $this->assertEquals('Test', $created->getLabel()['PL']);
+        $this->assertEquals(Metadata::DEFAULT_GROUP, $created->getGroupId());
         $this->assertEmpty($created->getPlaceholder());
         $this->assertEmpty($created->getDescription());
         $this->assertEquals(MetadataControl::TEXTAREA(), $created->getControl());
@@ -67,6 +70,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(1, $created->getParentId());
         $this->assertEquals(2, $created->getBaseId());
         $this->assertEquals('Test', $created->getLabel()['PL']);
+        $this->assertEquals(Metadata::DEFAULT_GROUP, $created->getGroupId());
         $this->assertEmpty($created->getPlaceholder());
         $this->assertEmpty($created->getDescription());
         $this->assertEquals([], $created->getConstraints());

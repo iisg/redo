@@ -41,3 +41,5 @@ violationFields:
   transitions: Transitions
   contents: Resource contents
   constraints: Constraints
+  group: Group
+  newGroup: New group

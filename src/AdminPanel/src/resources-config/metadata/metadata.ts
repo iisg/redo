@@ -28,6 +28,19 @@ export class MetadataConstraints {
   }
 }
 
+@automapped
+export class MetadataGroup {
+  static NAME = 'MetadataGroup';
+  static readonly defaultGroupId = 'DEFAULT_GROUP';
+
+  @map id: string;
+  @map label: MultilingualText;
+
+  constructor(initialValues?: MetadataGroup) {
+    $.extend(this, initialValues);
+  }
+}
+
 function isRegexDeclarationValid(regex: string): boolean {
   try {
     new RegExp(regex);
@@ -71,6 +84,7 @@ export class Metadata extends Entity {
   @map parentId: number;
   @map baseId: number;
   @map constraints: MetadataConstraints = new MetadataConstraints();
+  @map groupId: string;
   @map shownInBrief: boolean;
   @map copyToChildResource: boolean;
   @map resourceClass: string;

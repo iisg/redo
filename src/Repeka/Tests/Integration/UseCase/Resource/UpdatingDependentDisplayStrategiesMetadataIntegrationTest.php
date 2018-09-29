@@ -173,6 +173,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->scannerUsernameMetadata->getDescription(),
                 $this->scannerUsernameMetadata->getPlaceholder(),
                 ['displayStrategy' => '{{ random(10) }}'],
+                'basic',
                 false,
                 false
             )
@@ -190,6 +191,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->scannerUsernameMetadata->getDescription(),
                 $this->scannerUsernameMetadata->getPlaceholder(),
                 $this->scannerUsernameMetadata->getConstraints(),
+                'basic',
                 false,
                 false
             )
@@ -210,6 +212,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->scannerUsernameMetadata->getDescription(),
                 $this->scannerUsernameMetadata->getPlaceholder(),
                 ['displayStrategy' => '{{ random(10) }}'],
+                'basic',
                 false,
                 false
             )

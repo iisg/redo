@@ -1,9 +1,9 @@
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {Metadata} from "resources-config/metadata/metadata";
-import {getMergedBriefMetadata} from "./metadata-utils";
+import {getMergedBriefMetadata, groupMetadata} from "./metadata-utils";
 
 describe('metadata-utils', () => {
-  describe('getMergedBriefMetadata', () => {
+  describe(getMergedBriefMetadata.name, () => {
     function metadataMock(id: number, shownInBrief: boolean): Metadata {
       const metadata = new Metadata();
       metadata.id = id;
@@ -40,6 +40,44 @@ describe('metadata-utils', () => {
       const expectedMetadataList = [metadata1, metadata2];
       const result = getMergedBriefMetadata(testResourceKindList);
       expect(result).toEqual(expectedMetadataList);
+    });
+  });
+  describe(groupMetadata.name, () => {
+    function metadataMock(id: number, groupId: string): Metadata {
+      const metadata = new Metadata();
+      metadata.id = id;
+      metadata.groupId = groupId;
+      return metadata;
+    }
+
+    it('groups metadata by groupId', () => {
+      const metadata1 = metadataMock(0, 'group1');
+      const metadata2 = metadataMock(1, 'group2');
+      const metadata3 = metadataMock(2, 'group2');
+      const expectedGroups = [
+        {groupId: 'group1', metadataList: [metadata1]},
+        {groupId: 'group2', metadataList: [metadata2, metadata3]}
+        ];
+      const result = groupMetadata([metadata1, metadata2, metadata3], ['group1', 'group2']);
+      expect(result).toEqual(expectedGroups);
+    });
+
+    it('handles empty lists', () => {
+      expect(groupMetadata([], [])).toEqual([]);
+    });
+
+    it('uses group order from list', () => {
+      const metadata1 = metadataMock(0, 'bbb');
+      const metadata2 = metadataMock(1, 'aaa');
+      const metadata3 = metadataMock(2, 'ccc');
+      const groupIds = ['aaa', 'ccc', 'bbb'];
+      const expectedGroups = [
+        {groupId: 'aaa', metadataList: [metadata2]},
+        {groupId: 'ccc', metadataList: [metadata3]},
+        {groupId: 'bbb', metadataList: [metadata1]}
+      ];
+      const result = groupMetadata([metadata1, metadata2, metadata3], groupIds);
+      expect(result).toEqual(expectedGroups);
     });
   });
 });

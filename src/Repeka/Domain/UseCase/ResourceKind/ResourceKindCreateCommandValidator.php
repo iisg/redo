@@ -79,6 +79,7 @@ class ResourceKindCreateCommandValidator extends CommandAttributesValidator {
             $metadata->getDescription(),
             $metadata->getPlaceholder(),
             $metadata->getConstraints(),
+            $metadata->getGroupId(),
             $metadata->isShownInBrief(),
             $metadata->isCopiedToChildResource()
         );

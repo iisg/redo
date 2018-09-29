@@ -30,6 +30,7 @@ class MetadataChildWithBaseCreateCommandHandlerTest extends PHPUnit_Framework_Te
             'placeholder' => ['PL' => 'Placeholder'],
             'description' => ['PL' => 'Description'],
             'constraints' => [],
+            'group' => '',
             'shownInBrief' => false,
             'copyToChildResource' => false,
         ];

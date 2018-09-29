@@ -3,32 +3,38 @@
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="./from-workflow-transitions-array-to-string"></require>
     <require from="common/components/required-field-indicator/required-field-indicator"></require>
+    <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
 
-    <template repeat.for="metadata of metadataList">
-        <span>
-            ${metadata | metadataLabel}
-            <span class="metadata-constraints-icons">
-                <icon if.bind="metadataDeterminesAssignee(metadata) & signal:'metadata-validators-changed'"
-                    name="user-2"
-                    class="text-info"
-                    bootstrap-tooltip="${'This metadata determines who can perform these actions:'
+    <template repeat.for="group of metadataGroups">
+        <span if.bind="metadataGroups.length > 1"
+            class="section-title">
+            ${group.groupId | metadataGroupLabel}</span>
+        <template repeat.for="metadata of group.metadataList">
+            <span>
+                ${metadata | metadataLabel}
+                <span class="metadata-constraints-icons">
+                    <icon if.bind="metadataDeterminesAssignee(metadata) & signal:'metadata-validators-changed'"
+                        name="user-2"
+                        class="text-info"
+                        bootstrap-tooltip="${'This metadata determines who can perform these actions:'
                                         | resourceClassTranslation:resource.resourceClass}&#10;${resource.transitionAssigneeMetadata[metadata.id]
                                         | fromWorkflowTransitionsArrayToString}"></icon>
-                <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
-                    translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
-                <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
-                    name="closed-lock"
-                    bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
+                    <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
+                        translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
+                    <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
+                        name="closed-lock"
+                        bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
+                </span>
             </span>
-        </span>
-        <resource-metadata-values-form if.bind="contentsValidator[metadata.id]"
-            metadata.bind="metadata"
-            resource.bind="resource"
-            validation-controller.bind="validationController"
-            disabled.bind="editingDisabledForMetadata(metadata) & signal:'metadata-validators-changed'"
-            values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id] & signal:'metadata-validators-changed'"
-            required.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
-            skip-validation.bind="skipValidation"></resource-metadata-values-form>
+            <resource-metadata-values-form if.bind="contentsValidator[metadata.id]"
+                metadata.bind="metadata"
+                resource.bind="resource"
+                validation-controller.bind="validationController"
+                disabled.bind="editingDisabledForMetadata(metadata) & signal:'metadata-validators-changed'"
+                values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id] & signal:'metadata-validators-changed'"
+                required.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
+                skip-validation.bind="skipValidation"></resource-metadata-values-form>
+        </template>
     </template>
 
 </template>
