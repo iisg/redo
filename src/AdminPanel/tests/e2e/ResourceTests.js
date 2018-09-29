@@ -4,10 +4,10 @@ describe('Resource Tests', function() {
 	   browser.driver.wait(function () {
 			return locator.isPresent()
 	   }, 10000);
-  }
-
+  } 
+  
   beforeEach(function() {
-		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books');
+		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 		browser.driver.manage().window().maximize();
   });
 
@@ -74,7 +74,6 @@ describe('Resource Tests', function() {
   });
 
   it('Try to remove required metadata value', function() {
-	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
 	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
 	var lastResource = resourcesList.get(0);
@@ -92,7 +91,6 @@ describe('Resource Tests', function() {
 	var deleteValueButton = firstValueButtonPanel.all(by.className('au-target')).get(0);
 	browser.sleep(500);
 	browser.actions().mouseMove(deleteValueButton).click().perform();
-	//deleteValueButton.click();
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
@@ -107,7 +105,6 @@ describe('Resource Tests', function() {
 	alertDialog = browser.switchTo().alert();
 	alertDialog.accept();
 
-	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
 	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
 	var lastResource = resourcesList.get(0);
@@ -133,7 +130,6 @@ describe('Resource Tests', function() {
   });
 
   it('Remove optional metadata value', function() {
-	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
 	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
 	var lastResource = resourcesList.get(0);
@@ -161,7 +157,6 @@ describe('Resource Tests', function() {
   });
 
   it('Delete resource', function() {
-	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
 	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
 	var lastResource = resourcesList.get(0);
