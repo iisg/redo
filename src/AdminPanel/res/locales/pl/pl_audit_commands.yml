@@ -1,4 +1,5 @@
 resource_create: "Zasób: stworzenie"
+resource_clone: "Zasób: sklonowanie"
 resource_delete: "Zasób: usunięcie"
 resource_transition: "Zasób: przejście"
 resource_update_contents: "Zasób: Edycja"

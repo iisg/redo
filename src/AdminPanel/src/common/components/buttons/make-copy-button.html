@@ -1,8 +1,10 @@
-<template bindable="disabled, showTooltipsInsteadOfLabels">
+<template bindable="disabled, submitting, showTooltipsInsteadOfLabels, disabilityReason">
     <require from="./toggle-button"></require>
 
     <toggle-button primary-icon-name="add"
         primary-label="Save as a copy"
-        show-tooltips-instead-of-labels.bind="showTooltipsInsteadOfLabels"
-        disabled.bind="disabled"></toggle-button>
+        disabled.bind="disabled"
+        submitting.bind="submitting"
+        disability-reason.bind="disabilityReason"
+        show-tooltips-instead-of-labels.bind="showTooltipsInsteadOfLabels"></toggle-button>
 </template>

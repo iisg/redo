@@ -1,7 +1,7 @@
 <template class="${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''}">
     <button bootstrap-tooltip.bind="showTooltipsInsteadOfLabels ? toggled ? secondaryLabel : primaryLabel : '' | t"
         click.delegate="stopIfDisabled($event)">
-        <div if.bind="secondaryIconName"
+        <div if.bind="secondaryIconName && !submitting"
             class="icons">
             <icon class="${toggled ? '' : 'visible'}"
                 name="${primaryIconName}"
@@ -11,9 +11,10 @@
                 size="1.25"></icon>
         </div>
         <icon else
-            if.bind="primaryIconName"
+            if.bind="primaryIconName && !secondaryIconName && !submitting"
             name="${primaryIconName}"
             size="1.25"></icon>
+        <throbber if.bind="submitting"></throbber>
         <span if.bind="primaryLabel && !showTooltipsInsteadOfLabels">
             ${toggled ? secondaryLabel : primaryLabel | t}
             <template if.bind="!toggled && entityName">

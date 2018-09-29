@@ -9,6 +9,7 @@ export class ToggleButton {
   @bindable showTooltipsInsteadOfLabels: boolean;
   @bindable toggled: boolean;
   @bindable disabled: boolean;
+  @bindable submitting: boolean;
   @bindable disabilityReason: DisabilityReason;
 
   stopIfDisabled(event: Event) {

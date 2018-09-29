@@ -22,6 +22,7 @@ import {ResourceLabelValueConverter} from "./resource-label-value-converter";
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
   resource: Resource;
+  parentResource: Resource;
   isFormOpened = false;
   isFormOpenedForGod: boolean;
   selectedTransition: WorkflowTransition;
@@ -68,6 +69,11 @@ export class ResourceDetails implements RoutableComponentActivate {
   async activate(parameters: any, routeConfiguration: RouteConfig) {
     this.isFiltering = parameters.hasOwnProperty('contentsFilter');
     this.resource = await this.resourceRepository.get(parameters.id);
+    const parentMetadata = this.resource.contents[SystemMetadata.PARENT.id];
+    const parentId = parentMetadata && parentMetadata[0] && parentMetadata[0].value;
+    if (parentId) {
+      this.parentResource = await this.resourceRepository.get(parentId);
+    }
     const hasOperatorRole = this.hasRole.toView('OPERATOR', this.resource.resourceClass);
     if (!hasOperatorRole) {
       this.router.navigateToRoute('not-allowed');
@@ -169,6 +175,12 @@ export class ResourceDetails implements RoutableComponentActivate {
       return this.resourceRepository.updateResourceWithNoValidation(updatedResource, newResourceKind.id, placesIds);
     }
     return this.resourceRepository.update(updatedResource);
+  }
+
+  cloneResource(resource: Resource): Promise<any> {
+    return this.resourceRepository.post(resource).then(clonedResource => {
+      this.router.navigateToRoute('resources/details', {id: clonedResource.id});
+    });
   }
 
   remove() {
