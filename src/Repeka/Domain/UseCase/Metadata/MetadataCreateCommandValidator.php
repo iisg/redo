@@ -8,11 +8,13 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
+use Repeka\Domain\Validation\Rules\MetadataGroupExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class MetadataCreateCommandValidator extends CommandAttributesValidator {
     /** @var NotBlankInAllLanguagesRule */
     private $notBlankInAllLanguagesRule;
@@ -24,6 +26,8 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
     private $constraintArgumentsAreValidRule;
     /** @var  ResourceClassExistsRule */
     private $resourceClassExistsRule;
+    /** @var MetadataGroupExistsRule */
+    private $metadataGroupExistsRule;
     /** @var MetadataRepository */
     private $metadataRepository;
 
@@ -33,6 +37,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
         ConstraintSetMatchesControlRule $constraintSetMatchesControlRule,
         ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
         ResourceClassExistsRule $resourceClassExistsRule,
+        MetadataGroupExistsRule $metadataGroupExistsRule,
         MetadataRepository $metadataRepository
     ) {
         $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
@@ -40,6 +45,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
         $this->constraintSetMatchesControlRule = $constraintSetMatchesControlRule;
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
         $this->resourceClassExistsRule = $resourceClassExistsRule;
+        $this->metadataGroupExistsRule = $metadataGroupExistsRule;
         $this->metadataRepository = $metadataRepository;
     }
 
@@ -68,7 +74,8 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('copyToChildResource', Validator::boolType())
             ->attribute('resourceClass', $this->resourceClassExistsRule)
             ->attribute('constraints', $this->constraintSetMatchesControlRule->forControl($command->getControlName()))
-            ->attribute('constraints', $this->constraintArgumentsAreValidRule);
+            ->attribute('constraints', $this->constraintArgumentsAreValidRule)
+            ->attribute('groupId', $this->metadataGroupExistsRule);
     }
 
     public function metadataNameIsUniqueInResourceClass(MetadataCreateCommand $command) {

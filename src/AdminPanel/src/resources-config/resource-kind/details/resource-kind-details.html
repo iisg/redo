@@ -4,6 +4,7 @@
     <require from="common/components/redo-footer/redo-footer.html"></require>
     <require from="../resource-kind-form"></require>
     <require from="../../../workflows/details/graph/workflow-graph-display"></require>
+    <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
 
     <loading-bar if.bind="!resourceKind"></loading-bar>
 
@@ -22,8 +23,9 @@
                 <div if.bind="resourceKindDetailsTabs.activeTabId === 'details'">
                     <div if.bind="!editing">
                         <div class="simple-form">
-                            <template repeat.for="metadata of resourceKind.metadataList">
-                                <template if.bind="metadata.resourceClass">
+                            <template repeat.for="group of metadataGroups">
+                                <span class="section-title"><hr>${group.groupId | metadataGroupLabel}</span>
+                                <template repeat.for="metadata of group.metadataList">
                                     <span>${metadata.name}</span>
                                     <span class="value">${metadata.label | inCurrentLanguage}
                                         <icon if.bind="metadata.shownInBrief"

@@ -170,6 +170,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         string $control = 'text',
         string $resourceClass = 'books',
         array $constraints = [],
+        string $groupId = '',
         Metadata $parent = null
     ): Metadata {
         return $this->handleCommandBypassingFirewall(
@@ -181,6 +182,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
                 $control,
                 $resourceClass,
                 $constraints,
+                $groupId,
                 false,
                 false,
                 $parent

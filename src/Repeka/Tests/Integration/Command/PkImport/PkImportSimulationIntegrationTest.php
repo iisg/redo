@@ -32,6 +32,7 @@ class PkImportSimulationIntegrationTest extends AbstractPkImportIntegrationTest 
             MetadataControl::RELATIONSHIP,
             'books',
             ['resourceKind' => [$this->languageRk->getId()]],
+            'basic',
             $bookTitleMetadata
         );
         $seeAlsoMetadata = $this->createMetadata(
@@ -42,6 +43,7 @@ class PkImportSimulationIntegrationTest extends AbstractPkImportIntegrationTest 
             MetadataControl::RELATIONSHIP,
             'books',
             ['resourceKind' => [$this->languageRk->getId()]],
+            'basic',
             $bookTitleMetadata
         );
         $this->bookRk = $this->handleCommandBypassingFirewall(

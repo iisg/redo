@@ -7,6 +7,9 @@ import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {ContextResourceClass} from "resources/context/context-resource-class";
 import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
+import {Metadata} from "../../metadata/metadata";
+import {groupMetadata} from "../../../common/utils/metadata-utils";
+import {MetadataGroupRepository} from "../../metadata/metadata-group-repository";
 
 @autoinject
 export class ResourceKindDetails implements RoutableComponentActivate {
@@ -14,13 +17,15 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   editing: boolean = false;
   resourceKindDetailsTabs: DetailsViewTabs;
   private urlListener: Subscription;
+  metadataGroups: { groupId, metadataList: Metadata[] }[];
 
   constructor(private resourceKindRepository: ResourceKindRepository,
               private router: Router,
               private eventAggregator: EventAggregator,
               private i18n: I18N,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
-              private contextResourceClass: ContextResourceClass) {
+              private contextResourceClass: ContextResourceClass,
+              private metadataGroupRepository: MetadataGroupRepository) {
     this.resourceKindDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
@@ -37,6 +42,8 @@ export class ResourceKindDetails implements RoutableComponentActivate {
 
   async activate(params: any) {
     this.resourceKind = await this.resourceKindRepository.get(params.id);
+    const displayedMetadata = this.resourceKind.metadataList.filter(metadata => !!metadata.resourceClass);
+    this.metadataGroups = groupMetadata(displayedMetadata, this.metadataGroupRepository.getIds());
     this.activateTabs(params.tab);
     this.contextResourceClass.setCurrent(this.resourceKind.resourceClass);
   }

@@ -36,6 +36,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                     'baseId' => $metadata1->getBaseId(),
                     'parentId' => $metadata1->getParentId(),
                     'constraints' => [],
+                    'groupId' => Metadata::DEFAULT_GROUP,
                     'shownInBrief' => false,
                     'copyToChildResource' => false,
                     'resourceClass' => $metadata1->getResourceClass(),
@@ -51,6 +52,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                     'baseId' => $metadata2->getBaseId(),
                     'parentId' => $metadata2->getParentId(),
                     'constraints' => [],
+                    'groupId' => Metadata::DEFAULT_GROUP,
                     'shownInBrief' => false,
                     'copyToChildResource' => false,
                     'resourceClass' => $metadata2->getResourceClass(),
@@ -79,6 +81,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'placeholder' => ['EN' => 'test placeholder', 'PL' => 'testowa podpowiedź'],
             'resourceClass' => 'books',
             'constraints' => [],
+            'groupId' => 'basic',
         ];
         $client->apiRequest('POST', self::ENDPOINT, $metadataArray);
         $this->assertStatusCode(201, $client->getResponse());
@@ -91,6 +94,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
+        $this->assertEquals($metadataArray['groupId'], $metadata->getGroupId());
         $this->assertEquals($metadataArray['resourceClass'], $metadata->getResourceClass());
     }
 
@@ -105,6 +109,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'description' => ['TEST' => 'test description'],
             'placeholder' => ['TEST' => 'test placeholder'],
             'constraints' => [],
+            'groupId' => 'basic',
         ];
         $client->apiRequest('POST', $this->oneEntityEndpoint($parent) . '/metadata', ['newChildMetadata' => $metadataArray]);
         $this->assertStatusCode(201, $client->getResponse());
@@ -117,6 +122,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
+        $this->assertEquals($metadataArray['groupId'], $metadata->getGroupId());
         $this->assertEquals($parent->getResourceClass(), $metadata->getResourceClass());
         $this->assertEquals($parent->getId(), $metadata->getParentId());
     }
@@ -185,6 +191,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                 'PL' => 'Testowa zaślepka',
             ],
             'constraints' => [],
+            'groupId' => 'basic',
         ];
         $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);
         self::assertStatusCode(200, $client->getResponse());
@@ -194,6 +201,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         self::assertEquals($update['label'], $updatedMetadata->getLabel());
         self::assertEquals($update['description'], $updatedMetadata->getDescription());
         self::assertEquals($update['placeholder'], $updatedMetadata->getPlaceholder());
+        self::assertEquals($update['groupId'], $updatedMetadata->getGroupId());
         self::assertEquals($metadata->getControl(), $updatedMetadata->getControl());
         self::assertEquals($metadata->getName(), $updatedMetadata->getName());
     }

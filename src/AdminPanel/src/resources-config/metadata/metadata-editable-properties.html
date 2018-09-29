@@ -2,6 +2,7 @@
     <require from="./constraint/resource-kind/resource-kind-constraint-editor"></require>
     <require from="./constraint/metadata-constraint-form"></require>
     <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
+    <require from="./metadata-group-select"></require>
 
     <div class="key">
         <span>
@@ -29,6 +30,15 @@
                 click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original-button>
         </div>
     </template>
+    <div class="key">
+        ${'Group' | t}
+    </div>
+    <div>
+        <metadata-group-select containerless
+            group-id.bind="metadata.groupId"></metadata-group-select>
+        <restore-from-original-button if.bind="originalMetadata && originalMetadata.groupId != metadata.groupId"
+            click.delegate="metadata.groupId = originalMetadata.groupId"></restore-from-original-button>
+    </div>
     <span>
         ${'Label' | t}
         <required-field-indicator if.bind="required"></required-field-indicator>

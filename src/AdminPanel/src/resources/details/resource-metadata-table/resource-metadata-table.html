@@ -2,6 +2,7 @@
     <require from="./resource-metadata-values"></require>
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="../../workflow/resource-place-display.html"></require>
+    <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
 
     <template if.one-time="showResourceKind">
         <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
@@ -13,11 +14,18 @@
         </template>
     </template>
 
-    <template repeat.for="metadata of metadataList">
-        <span>${metadata | metadataLabel}</span>
-        <resource-metadata-values resource.one-time="resource"
-            metadata.one-time="metadata"></resource-metadata-values>
+    <template repeat.for="group of metadataGroups">
+        <span if.bind="!hideMetadataGroups"
+            class="section-title">
+            <hr>
+            ${group.groupId | metadataGroupLabel}</span>
+        <template repeat.for="metadata of group.metadataList">
+            <span>${metadata | metadataLabel}</span>
+            <resource-metadata-values resource.one-time="resource"
+                metadata.one-time="metadata"></resource-metadata-values>
+        </template>
     </template>
+
     <template if.bind="!hidePlaceInformation && resource.kind.workflow">
         <span>${'Place' | t}</span>
         <resource-place-display resource.bind="resource"></resource-place-display>

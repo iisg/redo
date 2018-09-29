@@ -1,5 +1,8 @@
 <template bindable="metadata"
     class="simple-form">
+
+    <require from="../../metadata/metadata-group-label-value-converter"></require>
+
     <span>ID</span>
     <span class="value">${metadata.id}</span>
     <span>${'Name' | t}</span>
@@ -8,6 +11,8 @@
     <span class="value">${metadata.label | inCurrentLanguage}</span>
     <span>${'Control' | t}</span>
     <span class="value">${'controls::' + metadata.control | t}</span>
+    <span>${'Group' | t}</span>
+    <span class="value">${metadata.groupId | metadataGroupLabel}</span>
     <span>${'Hint' | t}</span>
     <span class="value">${metadata.placeholder | inCurrentLanguage}</span>
     <span>${'Description' | t}</span>

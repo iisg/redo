@@ -3,6 +3,7 @@ namespace Repeka\Application\DependencyInjection;
 
 use ReflectionClass;
 use Repeka\Domain\Constants\SystemResourceClass;
+use Repeka\Domain\Utils\ArrayUtils;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -29,6 +30,7 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('pk_auth.local_accounts_enabled', $mergedConfig['pk_auth']['local_accounts_enabled']);
         $container->setParameter('xml_import.koha', $mergedConfig['xml_import']['koha']);
         $container->setParameter('user_data_mapping', $mergedConfig['user_data_mapping']);
+        $container->setParameter('repeka.metadata_groups', $mergedConfig['metadata_groups']);
         $container->setParameter('repeka.version', $mergedConfig['version']);
         $container->setParameter('repeka.exposed_endpoints', $mergedConfig['expose_endpoints']);
         $this->retrieveResourceClassesParameters($mergedConfig, $container);

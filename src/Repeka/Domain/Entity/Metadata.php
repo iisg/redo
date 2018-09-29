@@ -6,7 +6,9 @@ use Cocur\Slugify\Slugify;
 use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Repository\ResourceKindRepository;
 
-/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ *  @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class Metadata implements Identifiable, HasResourceClass {
     private $id;
     /** @var string */
@@ -21,15 +23,21 @@ class Metadata implements Identifiable, HasResourceClass {
     /** @var Metadata */
     private $parentMetadata;
     private $constraints = [];
+    /** @var string */
+    private $groupId;
     private $shownInBrief = false;
     private $copyToChildResource = false;
     private $resourceClass;
     private $overrides = [];
 
+    public const DEFAULT_GROUP = 'DEFAULT_GROUP';
+
     private function __construct() {
     }
 
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public static function create(
         string $resourceClass,
         MetadataControl $control,
@@ -38,6 +46,7 @@ class Metadata implements Identifiable, HasResourceClass {
         array $placeholder = [],
         array $description = [],
         array $constraints = [],
+        string $groupId = Metadata::DEFAULT_GROUP,
         bool $shownInBrief = false,
         bool $copyToChildResource = false
     ): Metadata {
@@ -47,7 +56,7 @@ class Metadata implements Identifiable, HasResourceClass {
         $metadata->control = $control->getValue();  // $control must be a string internally because it's so when read from DB
         $metadata->name = self::normalizeMetadataName($name);
         $metadata->ordinalNumber = -1;
-        $metadata->update($label, $placeholder, $description, $constraints, $shownInBrief, $copyToChildResource);
+        $metadata->update($label, $placeholder, $description, $constraints, $groupId, $shownInBrief, $copyToChildResource);
         return $metadata;
     }
 
@@ -120,6 +129,13 @@ class Metadata implements Identifiable, HasResourceClass {
         return $this->constraints;
     }
 
+    public function getGroupId(): string {
+        if (isset($this->overrides['groupId'])) {
+            return $this->overrides['groupId'];
+        }
+        return $this->groupId ?: Metadata::DEFAULT_GROUP;
+    }
+
     public function isShownInBrief(): bool {
         return is_bool($this->overrides['shownInBrief'] ?? null) ? $this->overrides['shownInBrief'] : $this->shownInBrief;
     }
@@ -144,6 +160,7 @@ class Metadata implements Identifiable, HasResourceClass {
         array $newPlaceholder,
         array $newDescription,
         array $newConstraints,
+        string $newGroupId,
         bool $shownInBrief,
         bool $copyToChildResource
     ) {
@@ -152,6 +169,7 @@ class Metadata implements Identifiable, HasResourceClass {
         $this->placeholder = $newPlaceholder;
         $this->description = $newDescription;
         $this->constraints = $newConstraints;
+        $this->groupId = $newGroupId ?? Metadata::DEFAULT_GROUP;
         $this->shownInBrief = $shownInBrief;
         $this->copyToChildResource = $copyToChildResource;
     }
@@ -162,6 +180,7 @@ class Metadata implements Identifiable, HasResourceClass {
             'description' => $this->removeValuesOverridingToTheSameThing($overrides['description'] ?? [], $this->description),
             'placeholder' => $this->removeValuesOverridingToTheSameThing($overrides['placeholder'] ?? [], $this->placeholder),
             'constraints' => $this->removeValuesOverridingToTheSameThing($overrides['constraints'] ?? [], $this->constraints),
+            'groupId' => $this->getOverrideIfDifferentThanActualValue($overrides, 'groupId', $this->groupId),
             'shownInBrief' => $this->isSetOverride($overrides, 'shownInBrief'),
             'copyToChildResource' => $this->isSetOverride($overrides, 'copyToChildResource'),
         ];
@@ -188,6 +207,13 @@ class Metadata implements Identifiable, HasResourceClass {
             }
         }
         return $filtered;
+    }
+
+    private function getOverrideIfDifferentThanActualValue($overrides, $overrideKey, $actualValue) {
+        if (isset($overrides[$overrideKey]) && $actualValue !== $overrides[$overrideKey]) {
+            return $overrides[$overrideKey];
+        }
+        return null;
     }
 
     public function getOverrides(): array {

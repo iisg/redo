@@ -28,6 +28,7 @@ class MetadataUpdateCommandAdjuster implements CommandAdjuster {
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getNewDescription()),
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getNewPlaceholder()),
             $command->getNewConstraints(),
+            $command->getNewGroupId() ?: Metadata::DEFAULT_GROUP,
             $command->getNewShownInBrief(),
             $command->getNewCopyToChildResource()
         );

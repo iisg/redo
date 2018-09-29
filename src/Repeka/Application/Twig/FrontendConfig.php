@@ -22,6 +22,7 @@ class FrontendConfig extends \Twig_Extension {
         'resource_classes' => 'repeka.resource_classes',
         'resource_classes_icons' => 'repeka.resource_classes_icons',
         'static_permissions' => 'repeka.static_permissions',
+        'metadata_groups' => 'repeka.metadata_groups',
     ];
 
     /** @var FrontendLocaleProvider */

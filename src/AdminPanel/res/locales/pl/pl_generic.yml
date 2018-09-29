@@ -12,6 +12,9 @@ Label: Nazwa wyświetlana
 Audit: Audyt
 Child resources: Podzasoby
 Control: Kontrolka
+Group: Grupa
+Unknown group: Nieznana grupa
+Other metadata: Pozostałe metadane
 Description: Opis
 Hint: Podpowiedź
 Add: Dodaj

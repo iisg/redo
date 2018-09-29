@@ -17,6 +17,8 @@ import {MetadataValue} from "../metadata-value";
 import {WorkflowPlace} from "./../../workflows/workflow";
 import {debounce} from "lodash";
 import {MetadataControl} from "../../resources-config/metadata/metadata-control";
+import {groupMetadata} from "../../common/utils/metadata-utils";
+import {MetadataGroupRepository} from "../../resources-config/metadata/metadata-group-repository";
 
 @autoinject
 export class ResourceFormGenerated {
@@ -43,7 +45,8 @@ export class ResourceFormGenerated {
   constructor(i18n: I18N,
               private signaler: BindingSignaler,
               private allMetadataValidator: AllMetadataValueValidator,
-              private entitySerializer: EntitySerializer) {
+              private entitySerializer: EntitySerializer,
+              private metadataGroupRepository: MetadataGroupRepository) {
     this.currentLanguageCode = i18n.getLocale().toUpperCase();
   }
 
@@ -55,6 +58,11 @@ export class ResourceFormGenerated {
         : this.resourceKind.metadataList.filter(v => v.id != SystemMetadata.PARENT.id);
       return metadataList.filter(m => m.control != MetadataControl.DISPLAY_STRATEGY);
     }
+  }
+
+  @computedFrom('metadataList')
+  get metadataGroups() {
+    return groupMetadata(this.metadataList, this.metadataGroupRepository.getIds());
   }
 
   @computedFrom('parent')

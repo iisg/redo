@@ -117,6 +117,9 @@ services:
   Repeka\Domain\Validation\Rules\ResourceClassExistsRule:
     $resourceClasses: '%repeka.resource_classes%'
 
+  Repeka\Domain\Validation\Rules\MetadataGroupExistsRule:
+    $metadataGroups: '%repeka.metadata_groups%'
+
   Repeka\Domain\Workflow\ResourceWorkflowPlugins:
     - !tagged repeka.workflow_plugin
 

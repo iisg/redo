@@ -40,6 +40,7 @@ class SystemMetadata extends Enum {
                 [],
                 [],
                 [],
+                Metadata::DEFAULT_GROUP,
                 true
             );
         } elseif ($value == self::GROUP_MEMBER) {
@@ -58,6 +59,7 @@ class SystemMetadata extends Enum {
                 [],
                 [],
                 [],
+                Metadata::DEFAULT_GROUP,
                 false,
                 true
             );
@@ -70,6 +72,7 @@ class SystemMetadata extends Enum {
                 [],
                 [],
                 ['displayStrategy' => '#{{ r.id }}'],
+                Metadata::DEFAULT_GROUP,
                 true
             );
         }

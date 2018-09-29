@@ -1,0 +1,12 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="./metadata-group-label-value-converter"></require>
+    <dropdown-select values.bind="groups"
+        value.bind="value"
+        disabled.bind="disabled"
+        hide-clear-button>
+        <template replace-part="option-template">
+            ${option.id | metadataGroupLabel}
+        </template>
+    </dropdown-select>
+</template>

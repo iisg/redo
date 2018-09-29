@@ -28,6 +28,15 @@ repeka:
       icon: html
       admins:
         - Username: admin
+  metadata_groups:
+    - id: basic
+      label:
+        EN: Basic metadata
+        PL: Podstawowe metadane
+    - id: cms
+      label:
+        EN: Metadata used in CMS
+        PL: Metadane używane w CMS
   elasticsearch:
     host: localhost
   xml_import:

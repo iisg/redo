@@ -31,6 +31,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
                 MetadataControl::INTEGER,
                 'dictionaries',
                 [],
+                '',
                 false,
                 false,
                 $this->nameMetadata
@@ -45,6 +46,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
                 MetadataControl::INTEGER,
                 'dictionaries',
                 [],
+                '',
                 false,
                 false,
                 $this->nameMetadata
@@ -59,6 +61,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
                 MetadataControl::INTEGER,
                 'dictionaries',
                 [],
+                '',
                 false,
                 false,
                 $this->languageDescriptionMetadata
