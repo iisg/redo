@@ -5,7 +5,7 @@ describe('Transition Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-
+  
   beforeEach(function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	browser.driver.manage().window().maximize();
@@ -18,7 +18,7 @@ describe('Transition Tests', function() {
 	waitForElement(element(by.className('select2-selection__rendered')));
 	var lists = element.all(by.className('select2-selection__rendered'));
 	var listToClick = lists.get(1);
-	browser.sleep(500);
+	browser.sleep(1000);
 	listToClick.click();
 	browser.sleep(500);
 	browser.driver.switchTo().activeElement().sendKeys('Rodzaj_do_testowania_automatycznego');
@@ -69,6 +69,7 @@ describe('Transition Tests', function() {
 	var deleteButton = element(by.cssContainingText('span', 'Usuń'));
 	deleteButton.click();
 
+	waitForElement(element(by.className('swal2-confirm toggle-button red')));
 	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 	confirmButton.click();
 	browser.sleep(500);
@@ -125,6 +126,7 @@ describe('Transition Tests', function() {
 	var deleteButton = element(by.cssContainingText('span', 'Usuń'));
 	deleteButton.click();
 
+	waitForElement(element(by.className('swal2-confirm toggle-button red')));
 	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 	confirmButton.click();
 	browser.sleep(500);
@@ -196,6 +198,7 @@ describe('Transition Tests', function() {
 	var deleteButton = element(by.cssContainingText('span', 'Usuń'));
 	deleteButton.click();
 
+	waitForElement(element(by.className('swal2-confirm toggle-button red')));
 	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 	confirmButton.click();
 	browser.sleep(500);
@@ -258,6 +261,7 @@ describe('Transition Tests', function() {
 	var deleteButton = element(by.cssContainingText('span', 'Usuń'));
 	deleteButton.click();
 
+	waitForElement(element(by.className('swal2-confirm toggle-button red')));
 	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 	confirmButton.click();
 	browser.sleep(500);
@@ -320,6 +324,7 @@ describe('Transition Tests', function() {
 	var deleteButton = element(by.cssContainingText('span', 'Usuń'));
 	deleteButton.click();
 
+	waitForElement(element(by.className('swal2-confirm toggle-button red')));
 	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 	confirmButton.click();
 	browser.sleep(500);
