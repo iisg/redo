@@ -8,7 +8,7 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Service\RegexNormalizer;
 use Respect\Validation\Validator;
 
-class RegexConstraint extends RespectValidationMetadataConstraint {
+class RegexConstraint extends RespectValidationMetadataConstraint implements ConfigurableMetadataConstraint {
     /** @var RegexNormalizer */
     private $regexNormalizer;
 

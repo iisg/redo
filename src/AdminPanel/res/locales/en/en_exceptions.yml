@@ -25,6 +25,8 @@ invalidRegex: Invalid declaration of regular expression.
 invalidConstraintArguments: "contains invalid constraint arguments: '{{constraintError}}'"
 valuesDoNotMatchResourceKind: "Metadata list has been changed in resource kind and edited resource does not match. Refresh page and apply changes again. Details: \"{{originalMessage}}\"."
 metadataConstrainedToUsers: relationship '{{name}}' must be constrained to users because metadata determines assignee
+containsUnavailableValues: "Contains unavailable values ({{originalMessage}})"
+metadataContainUnavailableLanguage: "Metadata {{invalidMetadataIds}} contain unavailable language"
 violationFields:
   metadata: Metadata kind
   resource: Resource

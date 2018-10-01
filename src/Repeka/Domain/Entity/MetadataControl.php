@@ -14,6 +14,7 @@ use MyCLabs\Enum\Enum;
  * @method static MetadataControl FILE()
  * @method static MetadataControl WYSIWYG_EDITOR()
  * @method static MetadataControl DISPLAY_STRATEGY()
+ * @method static MetadataControl SYSTEM_LANGUAGE()
  */
 class MetadataControl extends Enum {
     const TEXT = 'text';
@@ -26,4 +27,5 @@ class MetadataControl extends Enum {
     const RELATIONSHIP = 'relationship';
     const FILE = 'file';
     const DISPLAY_STRATEGY = 'display-strategy';
+    const SYSTEM_LANGUAGE = 'system-language';
 }

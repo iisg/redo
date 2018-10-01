@@ -17,10 +17,6 @@ class TestDummyConstraint extends AbstractMetadataConstraint {
         throw new \RuntimeException('Unexpected method call');
     }
 
-    public function isConfigValid($config): bool {
-        throw new \RuntimeException('Unexpected method call');
-    }
-
     public function validateSingle(Metadata $metadata, $config, $metadataValue) {
         throw new \RuntimeException('Unexpected method call');
     }

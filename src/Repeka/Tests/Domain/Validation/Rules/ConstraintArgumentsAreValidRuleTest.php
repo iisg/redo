@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
+use Repeka\Domain\Validation\MetadataConstraints\ConfigurableMetadataConstraint;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -10,7 +11,7 @@ class ConstraintArgumentsAreValidRuleTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
     public function testAcceptsWhenAllValidatorsAccept() {
-        $constraint = $this->createMock(AbstractMetadataConstraint::class);
+        $constraint = $this->createMock(ConfigurableMetadataConstraint::class);
         $constraint->expects($this->exactly(2))->method('isConfigValid')->willReturn(true);
         $constraintManager = $this->createMetadataConstraintManagerStub(
             [
@@ -29,7 +30,7 @@ class ConstraintArgumentsAreValidRuleTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testRejectsWhenAnyValidatorRejects() {
-        $constraint = $this->createMock(AbstractMetadataConstraint::class);
+        $constraint = $this->createMock(ConfigurableMetadataConstraint::class);
         $constraint->expects($this->exactly(2))->method('isConfigValid')->willReturn(true, false, true);
         $constraintManager = $this->createMetadataConstraintManagerStub(
             [
@@ -50,7 +51,7 @@ class ConstraintArgumentsAreValidRuleTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAcceptsWhenNothingToValidate() {
-        $constraint = $this->createMock(AbstractMetadataConstraint::class);
+        $constraint = $this->createMock(ConfigurableMetadataConstraint::class);
         $constraint->expects($this->never())->method('isConfigValid')->willReturn(true);
         $constraintManager = $this->createMetadataConstraintManagerStub(
             [
@@ -68,7 +69,7 @@ class ConstraintArgumentsAreValidRuleTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testRejectsWhenValidatorThrows() {
-        $constraint = $this->createMock(AbstractMetadataConstraint::class);
+        $constraint = $this->createMock(ConfigurableMetadataConstraint::class);
         $constraint->method('isConfigValid')
             ->willThrowException(new \InvalidArgumentException('UNICORNS, UNICORNS EVERYWHERE'));
         $constraintManager = $this->createMetadataConstraintManagerStub(['a' => $constraint]);

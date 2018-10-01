@@ -39,6 +39,18 @@ class ContainerAwareMetadataConstraintManagerTest extends \PHPUnit_Framework_Tes
         $this->assertEquals(['test2'], $this->provider->getSupportedConstraintNamesForControl('integer'));
     }
 
+    public function testTracksMandatoryConstraints() {
+        $constraintMandatory = $this->createMock(AbstractMetadataConstraint::class);
+        $constraintMandatory->method('getConstraintName')->willReturn('mandatory');
+        $constraintMandatory->method('isMandatory')->willReturn(true);
+        $constraintMandatory->method('getSupportedControls')->willReturn(['integer']);
+        $this->provider = new ContainerAwareMetadataConstraintManager([$constraintMandatory]);
+        $actualMandatoryConstraints = $this->provider->getMandatoryConstraintsForControl('integer');
+        $this->assertCount(1, $actualMandatoryConstraints);
+        $this->assertSame($constraintMandatory, $actualMandatoryConstraints[0]);
+        $this->assertEquals(['mandatory'], $this->provider->getSupportedConstraintNamesForControl('integer'));
+    }
+
     public function testReturnsEmptyArrayByDefault() {
         $this->provider = new ContainerAwareMetadataConstraintManager([]);
         $this->assertEquals([], $this->provider->getSupportedConstraintNamesForControl('relationship'));

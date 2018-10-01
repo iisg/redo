@@ -5,6 +5,7 @@ use Assert\Assertion;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Validation\Exceptions\ConstraintArgumentsAreValidRuleException;
 use Repeka\Domain\Validation\MetadataConstraintManager;
+use Repeka\Domain\Validation\MetadataConstraints\ConfigurableMetadataConstraint;
 use Respect\Validation\Rules\AbstractRule;
 
 class ConstraintArgumentsAreValidRule extends AbstractRule {
@@ -29,7 +30,7 @@ class ConstraintArgumentsAreValidRule extends AbstractRule {
             Assertion::isArray($input);
             foreach ($input as $constraintName => $constraintArgument) {
                 $validator = $this->metadataConstraintManager->get($constraintName);
-                if (!$validator->isConfigValid($constraintArgument)) {
+                if ($validator instanceof ConfigurableMetadataConstraint && !$validator->isConfigValid($constraintArgument)) {
                     throw new \InvalidArgumentException('Invalid metadata constraint.');
                 }
             }

@@ -6,7 +6,7 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Respect\Validation\Validator;
 
-class DisplayStrategyConstraint extends RespectValidationMetadataConstraint {
+class DisplayStrategyConstraint extends RespectValidationMetadataConstraint implements ConfigurableMetadataConstraint {
     /** @var ResourceDisplayStrategyEvaluator */
     private $evaluator;
 

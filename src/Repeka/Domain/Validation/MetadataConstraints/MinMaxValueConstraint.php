@@ -5,7 +5,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Respect\Validation\Validator;
 
-class MinMaxValueConstraint extends AbstractMetadataConstraint {
+class MinMaxValueConstraint extends AbstractMetadataConstraint implements ConfigurableMetadataConstraint {
     public function getSupportedControls(): array {
         return [MetadataControl::INTEGER];
     }
