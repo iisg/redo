@@ -7,7 +7,7 @@ use Repeka\Domain\Exception\RespectValidationFailedException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator;
 
-class MaxCountConstraint extends AbstractMetadataConstraint {
+class MaxCountConstraint extends AbstractMetadataConstraint implements ConfigurableMetadataConstraint {
     public function getSupportedControls(): array {
         return array_filter(
             MetadataControl::toArray(),

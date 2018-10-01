@@ -68,4 +68,14 @@ final class ArrayUtils {
         );
         return $result;
     }
+
+    /**
+     * Creates array with given keys each having same value.
+     *
+     * Example: makeArray(['a', 'b', 'c'], 'X') --> ['a' => 'X', 'b' => 'X', 'c' => 'X']
+     */
+    public static function combineArrayWithSingleValue(array $keys, $value): array {
+        $values = array_fill(0, count($keys), $value);
+        return array_combine($keys, $values);
+    }
 }

@@ -10,6 +10,7 @@ boolean: Yes / No
 relationship: Relationship
 file: File
 display-strategy: Display strategy
+system-language: System language
 
 flexible-date-modes:
   year: Year

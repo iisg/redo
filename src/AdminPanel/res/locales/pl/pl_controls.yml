@@ -8,6 +8,7 @@ boolean: Tak / Nie
 relationship: Relacja
 file: Plik
 display-strategy: Strategia wyświetlania
+system-language: Język systemowy
 
 flexible-date-modes:
   year: Rok

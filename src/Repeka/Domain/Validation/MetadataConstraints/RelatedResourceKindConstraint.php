@@ -10,7 +10,7 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
 use Respect\Validation\Validator;
 
-class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint {
+class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint implements ConfigurableMetadataConstraint {
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var EntityExistsRule */

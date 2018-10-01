@@ -9,7 +9,7 @@ use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
 use Respect\Validation\Validator;
 
-class RelatedResourceMetadataFilterConstraint extends RespectValidationMetadataConstraint {
+class RelatedResourceMetadataFilterConstraint extends RespectValidationMetadataConstraint implements ConfigurableMetadataConstraint {
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var ResourceContentsCorrectStructureRule */

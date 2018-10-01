@@ -18,11 +18,9 @@ abstract class AbstractMetadataConstraint {
      */
     abstract public function getSupportedControls(): array;
 
-    /**
-     * Validates constraint configuration in metadata definition when metadata is created or updated.
-     * @throws DomainException if more info is needed (its message will be visible in the response)
-     */
-    abstract public function isConfigValid($config): bool;
+    public function isMandatory(): bool {
+        return false;
+    }
 
     public function validateAll(Metadata $metadata, $config, array $metadataValues) {
         foreach ($metadataValues as $metadataValue) {

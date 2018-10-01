@@ -1,0 +1,13 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+
+    <dropdown-select
+        values.bind="languageCodes"
+        value.bind="value"
+        disabled.bind="disabled">
+        <template replace-part="option-template">
+            ${option}
+        </template>
+    </dropdown-select>
+
+</template>
