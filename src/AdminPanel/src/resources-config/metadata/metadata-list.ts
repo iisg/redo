@@ -37,7 +37,7 @@ export class MetadataList {
     query = this.parentMetadata
       ? query.filterByParentId(this.parentMetadata.id)
       : query.filterByResourceClasses(this.resourceClass).onlyTopLevel().addSystemMetadataIds(SystemMetadata.REPRODUCTOR.id);
-    this.metadataList = await query.get();
+    this.metadataList = await query.get().then(metadataList => this.moveSystemMetadataToTheEnd(metadataList));
     this.progressBar = false;
   }
 
@@ -46,7 +46,19 @@ export class MetadataList {
   }
 
   onOrderChanged() {
+    this.metadataList = this.moveSystemMetadataToTheEnd(this.metadataList);
     this.metadataRepository.updateOrder(this.metadataList, this.resourceClass);
+  }
+
+  moveSystemMetadataToTheEnd(metadataList: Metadata[]) {
+    const metadataListCopy = metadataList.slice();
+    const systemMetadataList = [];
+    for (let index = metadataListCopy.length - 1; index >= 0; index--) {
+      if (metadataListCopy[index].id < 0) {
+        systemMetadataList.push(metadataListCopy.splice(index, 1)[0]);
+      }
+    }
+    return metadataListCopy.concat(systemMetadataList.sort());
   }
 
   addNewMetadata(newMetadata: Metadata): Promise<any> {

@@ -18,6 +18,7 @@ export class WysiwygEditor {
         const Jodit = require('jodit'); // tslint:disable-line
         const configuration = {
             "buttonsXS": "source, |, bold, image, |, brush, paragraph, , align, |, undo, redo, |, dots",
+            "toolbarSticky": false,
             "width": "100%",
             "placeholder": this.placeholder,
             "uploader": {

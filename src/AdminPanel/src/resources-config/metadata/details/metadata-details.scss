@@ -1,7 +1,7 @@
 @import "../../../common/styles";
 
 .metadata-details {
-  metadata-details-list, #constraints > div {
+  metadata-details-list, #configuration > div  {
     padding: $default-gap-size;
   }
   metadata-list, metadata-details-list, metadata-form, resource-kinds-list {
