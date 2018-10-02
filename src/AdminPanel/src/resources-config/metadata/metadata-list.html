@@ -46,7 +46,6 @@
             <tbody oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
                 <tr repeat.for="metadata of metadataList"
                     oa-sortable-item="item.bind: metadata"
-                    class="${metadata.sortingClass}"
                     go-to-link-on-row-click>
                     <td>
                         <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
@@ -77,9 +76,8 @@
                         ${metadata.description | inCurrentLanguage}
                     </td>
                     <td class="with-buttons-container">
-                        <div>
-                            <a if.bind="!parentMetadata"
-                                class="drag-handle"
+                        <div if.bind="!parentMetadata && metadata.id > 0">
+                            <a class="drag-handle"
                                 bootstrap-tooltip.bind="'Drag to change order' | t"
                                 disabled-link.bind="metadata.pendingRequest"
                                 data-placement="left">
