@@ -152,7 +152,9 @@ Some metadata constraints have not been met. Fix the form errors and try again.:
 To see dropdown choose allowed resource kinds in metadata settings.: Aby zobaczyć listę zasobów, wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
 Additional filter limits results in this dropdown: Dodatkowy filtr ogranicza zasoby wyświetlane w powyższym polu
 Additional filter would limit results in this dropdown during normal edit: Dodatkowy filtr ograniczałby zasoby wyświetlane w powyższym polu przy standardowej edycji
+Filter defined in metadata kind settings is disabled for this resource kind: Filtr zdefiniowany w ustawieniach metadanej jest wyłączony dla tego rodzaju zasobu
 Go to the metadata kind settings: Przejdź do ustawień rodzaju metadanej
+Go to the resource kind settings: Przejdź do ustawień rodzaju zasobu
 Filter: Filtr
 Metadata kind: Rodzaj metadanej
 Firstly, specify required resource kind.: Najpierw określ wymagany rodzaj zasobu.

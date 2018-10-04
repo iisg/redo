@@ -25,10 +25,15 @@ resource-form-generated {
     & > table {
       td > div {
         display: flex;
-        metadata-value-input > compose > * {
-          flex: 1;
-          dropdown-select, resource-picker {
-            width: 100%;
+        metadata-value-input > .input-container {
+          & > * {
+            flex: 1;
+            dropdown-select, resource-picker {
+              width: 100%;
+            }
+          }
+          & > resource-picker + span {
+            display: inline;
           }
         }
         & > resource-metadata-value-input {

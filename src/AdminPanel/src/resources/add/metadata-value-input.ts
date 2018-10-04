@@ -6,6 +6,7 @@ import {Resource} from "../resource";
 import {ValidationController} from "aurelia-validation";
 import {MetadataValue} from "../metadata-value";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
+import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 
 @autoinject
 export class MetadataValueInput {
@@ -16,7 +17,12 @@ export class MetadataValueInput {
   @bindable validationController: ValidationController;
   @bindable description: string;
   @bindable @booleanAttribute skipValidation: boolean = false;
+  originalMetadata: Metadata;
 
-  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter) {
+  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter, private metadataRepository: MetadataRepository) {
+  }
+
+  bind() {
+    this.metadataRepository.get(this.metadata.id).then(metadata => this.originalMetadata = metadata);
   }
 }
