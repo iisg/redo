@@ -1,0 +1,9 @@
+{% set editedResourceId = app.request.get('edit') ?? '' %}
+{% set transitionId = app.request.get('transitionId') ?? '' %}
+<div class="deposit-form">
+    <deposit-form parent-id="{{ parentResource ? parentResource.id : null}}"
+        resource-class="{{ parentResource ? parentResource.resourceClass : '' }}"
+        resource-kind-id="{{ resourceKind.id }}"
+        edited-resource-id="{{ editedResourceId }}"
+        transition-id="{{ transitionId }}"></deposit-form>
+</div>

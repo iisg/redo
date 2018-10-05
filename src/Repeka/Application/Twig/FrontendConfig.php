@@ -15,6 +15,9 @@ use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\ConfigurableMetadataConstraint;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class FrontendConfig extends \Twig_Extension {
     use ContainerAwareTrait;
     use CurrentUserAware;
@@ -70,6 +73,8 @@ class FrontendConfig extends \Twig_Extension {
                     'file' => $uploadSizeHelper->getMaxUploadSizePerFile(),
                     'total' => $uploadSizeHelper->getMaxUploadSize(),
                 ],
+                'user' => $this->getCurrentUserData(),
+                'userIp' => $this->getClientIp(),
             ]
         );
     }
@@ -97,5 +102,24 @@ class FrontendConfig extends \Twig_Extension {
             }
         }
         return $constraints;
+    }
+
+    private function getCurrentUserData() {
+        $user = $this->getCurrentUser();
+        if ($user) {
+            return [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'roles' => $user->getRoles(),
+                'groupsIds' => $user->getUserGroupsIds(),
+            ];
+        } else {
+            return new \stdClass();
+        }
+    }
+
+    private function getClientIp() {
+        $request = $this->container->get('request_stack')->getMasterRequest();
+        return $request ? $request->getClientIp() : '';
     }
 }

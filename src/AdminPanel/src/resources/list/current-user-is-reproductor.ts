@@ -12,8 +12,7 @@ export class CurrentUserIsReproductorValueConverter implements ToViewValueConver
 
   toView(resource: Resource): boolean {
     const reproductorIds = resource.contents[SystemMetadata.REPRODUCTOR.id].map(v => v.value);
-    const userIds = this.currentUser.userData.contents[SystemMetadata.GROUP_MEMBER.id].map(v => v.value);
-    userIds.push(this.currentUser.userData.id);
+    const userIds = [this.currentUser.userData.id, ...this.currentUser.groupsIds];
     return intersection(reproductorIds, userIds).length > 0;
   }
 }

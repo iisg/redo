@@ -29,6 +29,8 @@ export class ResourceFormGenerated {
   @bindable validationController: ValidationController;
   @bindable targetPlaces: WorkflowPlace[];
   @bindable skipValidation: boolean = false;
+  @bindable displayRequiredOnly: boolean;
+  @bindable treeQueryUrl: string;
 
   currentLanguageCode: string;
   lockedMetadataIds: number[];
@@ -68,6 +70,12 @@ export class ResourceFormGenerated {
   @computedFrom('parent')
   get disableParent(): boolean {
     return this.parent !== undefined;
+  }
+
+  displayMetadataValueInput(metadata: Metadata): boolean {
+    return !this.resourceKind.workflow
+      || !this.displayRequiredOnly
+      || (this.displayRequiredOnly && this.metadataIsRequired(metadata));
   }
 
   resourceKindChanged() {

@@ -1,0 +1,17 @@
+<span>Wybierz rodzaj zasobu:</span>
+{% set resourceKindList = resourceKindsToDeposit(app.user, [-4]) %}
+{% if resourceKindList | length == 0 %}
+    Brak rodzaji zasobów, w których możesz dodać zasób.
+{% else %}
+    <div class="deposit-resources">
+        <table>
+            {% for resourceKind in resourceKindList %}
+                <tr>
+                    <td>
+                        <a href="/deposit/resources?resourceKindId={{ resourceKind.id }}">{{ resourceKind.label.PL }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}

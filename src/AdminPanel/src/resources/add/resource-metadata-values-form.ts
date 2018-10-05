@@ -17,6 +17,7 @@ export class ResourceMetadataValuesForm {
   @bindable @booleanAttribute required: boolean = false;
   @bindable skipValidation: boolean = false;
   @bindable validationController: ValidationController;
+  @bindable treeQueryUrl: string;
 
   valueTable: Element;
 

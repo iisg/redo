@@ -45,7 +45,7 @@ class ResourceListQuerySqlFactory {
 
     public function getPageQuery(): string {
         return $this->getSelectQuery($this->alias . '.*')
-            . sprintf('ORDER BY %s %s', implode(', ', $this->orderBy), $this->limit);
+        . sprintf('ORDER BY %s %s', implode(', ', $this->orderBy), $this->limit);
     }
 
     public function getTotalCountQuery(): string {
@@ -127,17 +127,23 @@ class ResourceListQuerySqlFactory {
                 $this->froms["m$nextFilterId"] = $this->jsonbArrayElements("$contentsPath->'$metadataId'") . " m$nextFilterId";
                 $paramName = "mFilter$nextFilterId";
                 if (is_int($value->getValue())) {
-                    $contentWhere[] = "m$nextFilterId->>'value' = :$paramName";
-                    $this->params[$paramName] = $value->getValue();
+                    $whereClause = "m$nextFilterId->>'value' = :$paramName";
                 } else {
-                    $contentWhere[] = "m$nextFilterId->>'value' ~* :$paramName";
-                    $this->params[$paramName] = $value->getValue();
+                    $whereClause = "m$nextFilterId->>'value' ~* :$paramName";
                 }
+                $this->params[$paramName] = $value->getValue();
+                $contentWhere[$metadataId][] = $whereClause;
                 $nextFilterId++;
             }
         );
-        $alternative = implode(' AND ', $contentWhere);
-        if (!empty($alternative)) {
+        if ($contentWhere) {
+            $alternatives = array_map(
+                function (array $whereClauses) {
+                    return implode(' OR ', $whereClauses);
+                },
+                $contentWhere
+            );
+            $alternative = '(' . implode(') AND (', $alternatives) . ')';
             $this->whereAlternatives[] = $alternative;
         }
     }

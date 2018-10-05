@@ -24,6 +24,10 @@ class ResourcesEndpointsExposer {
                         $endpoint['headers']
                     )
                 );
+            } elseif (isset($endpoint['deposit'])) {
+                $builder->addRoute(
+                    new ResourceDepositExposedEndpointRoute($path, $endpoint['template'] ?? '', $endpoint['deposit'], $endpoint['headers'])
+                );
             } elseif (isset($endpoint['metadata'])) {
                 $builder->addRoute(
                     new ExposedResourceMetadataRoute(

@@ -8,7 +8,7 @@ abstract class AbstractListQueryBuilder {
     protected $resultsPerPage = 10;
 
     public function setPage(int $page): self {
-        Assertion::greaterOrEqualThan($page, 1, 'Pages starts with 1.');
+        Assertion::greaterOrEqualThan($page, 1, 'The first page is 1.');
         $this->page = $page;
         return $this;
     }

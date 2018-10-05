@@ -53,6 +53,18 @@
                         {% endif %}
                     {% endfor %}
                 </div>
+                <div class="available-transitions">
+                    {% set availableTransitions = availableTransitions(app.user, resource, ['tworca_zasobu']) %}
+                    {% for transition in  availableTransitions %}
+                        {% if transition.id != 'update' %}
+                            <div class="deposit-operations">
+                                <a href="/deposit/form?phase=form&parentResourceId={{ resource | m(-1) | first | trim }}&resourceKindId={{ resource.kind.id }}&edit={{ resource.id }}&transitionId={{ transition.id }}">
+                                    {{ icon('workflow', 1.5) }} {{ transition.label.PL }}
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
             <h3><a href="/resources/{{ resource.id }}/bibtex">BibTeX</a></h3>
         </div>

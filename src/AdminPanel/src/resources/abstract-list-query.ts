@@ -3,6 +3,7 @@ import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-cli
 import {PageResult} from "./page-result";
 import {cachedResponse, forSeconds} from "../common/repository/cached-response";
 import {suppressError as suppressErrorHeader} from "../common/http-client/headers";
+import {HttpClient} from "aurelia-http-client";
 
 export abstract class AbstractListQuery<T> {
   protected params: any = {};

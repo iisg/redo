@@ -46,6 +46,10 @@ class MetadataStage2Fixture extends RepekaFixture {
             [SystemResourceKind::USER, ResourceKindsFixture::REFERENCE_RESOURCE_KIND_USER_GROUP]
         );
         $this->addRelationshipResourceKindConstraint(
+            MetadataFixture::REFERENCE_METADATA_CREATOR,
+            [SystemResourceKind::USER, ResourceKindsFixture::REFERENCE_RESOURCE_KIND_USER_GROUP]
+        );
+        $this->addRelationshipResourceKindConstraint(
             MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER,
             [SystemResourceKind::USER, ResourceKindsFixture::REFERENCE_RESOURCE_KIND_USER_GROUP]
         );

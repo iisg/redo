@@ -61,6 +61,7 @@ class RandomResourcesFixture extends RepekaFixture {
                             MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => $faker->numberBetween(10, 1000),
                             MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => $faker->randomElement($possibleUsers),
                             MetadataFixture::REFERENCE_METADATA_SUPERVISOR => $faker->randomElement($possibleUsers),
+                            MetadataFixture::REFERENCE_METADATA_CREATOR => $faker->randomElement($possibleUsers),
             ];
             if (self::CREATE_RANDOM_TREE) {
                 $randomParentId = $createdBookIds[array_rand($createdBookIds)];

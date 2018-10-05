@@ -88,6 +88,9 @@ class Configuration implements ConfigurationInterface {
                         ->arrayNode('searchable_resource_classes')->prototype('scalar')->defaultValue([])->end()->end()
                         ->arrayNode('facets')->prototype('scalar')->defaultValue([])->end()->end()
                     ->end()->end()
+                    ->arrayNode('deposit')->children()
+                        ->arrayNode('relationship_resource_kind_ids')->prototype('scalar')->end()->end()
+                    ->end()->end()
                 ->end()->end()->end()
             ->end();
         // @formatter:on

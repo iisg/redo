@@ -65,10 +65,17 @@ class GlobalExceptionListener {
         } else {
             $responseStatus = $exception instanceof DomainException ? $exception->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
             $responseStatus = $exception instanceof HttpException ? $exception->getStatusCode() : $responseStatus;
-            $responseContent = $this->twig->render(
-                $this->errorPageTwigTemplate,
-                ['exception' => $exception, 'responseStatus' => $responseStatus]
-            );
+            try {
+                $responseContent = $this->twig->render(
+                    $this->errorPageTwigTemplate,
+                    ['exception' => $exception, 'responseStatus' => $responseStatus]
+                );
+            } catch (\Exception $e) {
+                $responseContent = $this->twig->render(
+                    'error-page.twig',
+                    ['exception' => $exception, 'responseStatus' => $responseStatus]
+                );
+            }
             $response = new Response($responseContent, $responseStatus);
             $event->setResponse($response);
         }

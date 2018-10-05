@@ -1,0 +1,54 @@
+{% set addedResources = resources({contentsFilter: {tworca_zasobu: app.user.userData.id}}) %}
+{% if addedResources | length == 0 %}
+    Brak zasobów.
+{% else %}
+    <div class="deposit-resources">
+        <table>
+            <tr>
+                <th>Zasób</th>
+                <th>Zasób nadrzędny</th>
+                <th>Stan zasobu</th>
+                <th>Dozwolone operacje</th>
+            </tr>
+            {% for deposit in addedResources %}
+                <tr>
+                    <td>
+                        <a href="/resources/{{ deposit.id }}">{{ deposit | metadata('label') }}</a>
+                    </td>
+                    <td>
+                        {% set parentResourceId = deposit | m(-1) | first %}
+                        {% if parentResourceId %}
+                            <a href="/resources/{{ deposit.id }}">{{ r(parentResourceId) | metadata('label') }}</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% for place in  deposit.kind.workflow.places %}
+                            {% if place.id in deposit.marking | keys %}
+                                <span>{{ place.label.PL }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set availableTransitions = availableTransitions(app.user, deposit) %}
+                        {% if availableTransitions.update is not defined %}
+                            <div class="deposit-operations">
+                                <a href="{{ path(app.request.attributes.get('_route'), {'phase': 'form', 'parentResourceId': (deposit | m(-1) | first | trim), 'resourceKindId': deposit.kind.id , 'edit': deposit.id, transitionId: 'update'}) }}">
+                                    {{ icon('edit', 1.5) }} Edytuj
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% for transition in availableTransitions %}
+                            {% if transition.id != 'update' %}
+                                <div class="deposit-operations">
+                                    <a href="{{ path(app.request.attributes.get('_route'), {'phase': 'form', 'parentResourceId': (deposit | m(-1) | first | trim), 'resourceKindId': deposit.kind.id , 'edit': deposit.id, 'transitionId': transition.id }) }}">
+                                        {{ icon('workflow', 1.5) }} {{ transition.label.PL }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}

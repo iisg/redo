@@ -1,0 +1,55 @@
+$image-height: 200px;
+
+.deposit {
+  .search-bar-container {
+    padding: $default-gap-size;
+    border-bottom: $default-gap-size / 4 solid $orange;
+  }
+  .deposit-container {
+    padding: $default-gap-size / 2;
+    h1 {
+      font-weight: bold;
+      text-align: center;
+    }
+    .deposit-resource-kind {
+      font-weight: bold;
+    }
+    .deposit-resources {
+      padding: 20px 20px 0 20px;
+      table {
+        width: 100%;
+        tr {
+          border-bottom: solid 1px $orange;
+          &:first-child {
+            border-top: none;
+          }
+          &:last-child {
+            border-bottom: none;
+          }
+          td {
+            padding: 3px 3px 3px 0;
+            vertical-align: top;
+            max-width: 300px;
+            .deposit-operations {
+              padding: 3px;
+            }
+          }
+        }
+      }
+    }
+    .deposit-form {
+      a {
+        text-decoration: none;
+        color: inherit;
+        cursor: inherit;
+      }
+      button {
+        border: none;
+        outline: none;
+      }
+      table {
+        width: 100%;
+      }
+    }
+  }
+}

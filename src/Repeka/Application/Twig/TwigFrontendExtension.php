@@ -120,6 +120,10 @@ ICON;
         }
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     */
     public function fetchResources(array $filters): iterable {
         $builder = ResourceListQuery::builder();
         if (array_key_exists('parentId', $filters)) {
@@ -137,6 +141,13 @@ ICON;
         }
         if (isset($filters['resourceKindIds']) && $filters['resourceKindIds']) {
             $builder->filterByResourceKinds($filters['resourceKindIds']);
+        }
+        if (isset($filters['contentsFilter']) && is_array($filters['contentsFilter'])) {
+            $builder->filterByContents($filters['contentsFilter']);
+        }
+        if (isset($filters['resultsPerPage']) && $filters['resultsPerPage']) {
+            $builder->setPage(1);
+            $builder->setResultsPerPage($filters['resultsPerPage']);
         }
         return FirewallMiddleware::bypass(
             function () use ($builder) {
