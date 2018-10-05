@@ -44,8 +44,10 @@ class ResourceCreateCommandHandler {
             ->autoAssign()
             ->existingInResourceKind($resourceToBeAdded->getKind())
             ->get();
+        $parentResourceKind = $this->resourceRepository->findOne($parentId)->getKind();
         foreach ($lockedInTheFirstPlaceMetadataIds as $metadataId) {
-            if ($resourceToBeAdded->getKind()->getMetadataById($metadataId)->isCopiedToChildResource()) {
+            if ($parentResourceKind->hasMetadata($metadataId)
+                && $parentResourceKind->getMetadataById($metadataId)->isCopiedToChildResource()) {
                 $parentMetadataValues = $this->resourceRepository->findOne($parentId)->getValues($metadataId);
                 $resourceBeforeAdd->updateContents(
                     $resourceBeforeAdd->getContents()->withReplacedValues($metadataId, $parentMetadataValues)
