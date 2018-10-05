@@ -16,6 +16,14 @@ class ESIndexManagerTest extends ElasticsearchTest {
                 'number_of_shards' => $numberOfShards,
                 'number_of_replicas' => $numberOfReplicas,
                 'index.mapping.ignore_malformed' => true,
+                'analysis' => [
+                    'analyzer' => [
+                        'default' => [
+                            "tokenizer" => "standard",
+                            "filter" => ["standard", "lowercase", "morfologik_stem"],
+                        ],
+                    ],
+                ],
             ]
         );
         $this->indexMock->expects($this->once())->method('getType')->with(ResourceConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);

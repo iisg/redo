@@ -3,6 +3,7 @@ namespace Repeka\Tests\Integration\FullTextSearch;
 
 use Elastica\Result;
 use Elastica\ResultSet;
+use Repeka\Application\Elasticsearch\Model\ElasticSearch;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
@@ -19,9 +20,14 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     /** @var ResourceEntity */
     private $phpAndMySQLBookResource;
 
+    private $title;
+
     public function setUp() {
         parent::setUp();
         $this->loadAllFixtures();
+        $this->title = 'ala ma psa';
+        $metadata = $this->findMetadataByName('Tytul');
+        $this->createResource($this->getPhpBookResource()->getKind(), [$metadata->getId() => [$this->title]]);
         $this->executeCommand('repeka:evaluate-display-strategies');
         $this->executeCommand('repeka:fts:initialize');
         $this->phpBookResource = $this->findResourceByContents(['Tytul' => 'PHP - to można leczyć!']);
@@ -93,5 +99,13 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('wiecej', ['urlLabel']));
         $ids = EntityUtils::mapToIds($results);
         $this->assertContains($this->phpBookResource->getId(), $ids);
+    }
+
+    public function testSearchWithPolishVariety() {
+        /** @var Result[] $results */
+        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('PIES', [SystemMetadata::RESOURCE_LABEL]));
+        $ids = EntityUtils::mapToIds($results);
+        $newResource = $this->findResourceByContents(['Tytul' => $this->title]);
+        $this->assertContains($newResource->getId(), $ids);
     }
 }
