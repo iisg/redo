@@ -35,6 +35,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
     const REFERENCE_METADATA_URL = 'metadata-url';
     const REFERENCE_METADATA_URL_LABEL = 'metadata-url-label';
+    const REFERENCE_METADATA_CREATOR = 'metadata-creator';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -286,6 +287,23 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_SUPERVISOR
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Twórca zasobu',
+                    'label' => [
+                        'PL' => 'Twórca zasobu',
+                        'EN' => 'Resource creator',
+                    ],
+                    'description' => [],
+                    'placeholder' => [],
+                    'control' => 'relationship',
+                    'resourceClass' => 'books',
+                    'constraints' => $this->relationshipConstraints(1, [SystemResourceKind::USER]),
+                ]
+            ),
+            self::REFERENCE_METADATA_CREATOR
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(

@@ -2,17 +2,13 @@
 namespace Repeka\Application\Controller\Api;
 
 use M6Web\Component\Statsd\Client;
-use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\EventListener\CsrfRequestListener;
-use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\User\UserByUserDataQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/users")
@@ -35,23 +31,6 @@ class UsersController extends ApiController {
     public function getListAction() {
         $user = $this->handleCommand(new UserListQuery());
         return $this->createJsonResponse($user);
-    }
-
-    /**
-     * @Route("/current")
-     * @Method("GET")
-     */
-    public function getCurrentUserAction() {
-        /** @var UserEntity $user */
-        $user = $this->getUser();
-        $this->statsd->increment('repeka.admin_panel.visit');
-        $this->csrfRequestListener->refreshToken();
-        /** current address ip can be different than master
-         * @see https://stackoverflow.com/a/16895859 **/
-        $userIp = $this->container->get('request_stack')->getMasterRequest()->getClientIp();
-        $response = $this->createJsonResponse($user, Response::HTTP_OK, [ResourceNormalizer::DO_NOT_STRIP_RESOURCE_CONTENT]);
-        $response->headers->set('user_ip', $userIp);
-        return $response;
     }
 
     /**

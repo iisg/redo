@@ -1,0 +1,37 @@
+{% extends "redo/layout.twig" %}
+
+{% if phase == 'resource-kind' %}
+    {% set page_title = 'Deponuj - rodzaj zasobu' %}
+{% elseif phase == 'resources' %}
+    {% set page_title = 'Deponuj - kolekcja' %}
+{% elseif phase == 'form' %}
+    {% set page_title = 'Deponuj - dodaj' %}
+{% elseif phase == 'deposit-list' %}
+    {% set page_title = 'Moje zasoby' %}
+{% endif %}
+
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+    <div class="big-search-bar">
+        {% include "redo/search/search-bar.twig" %}
+    </div>
+    <div class="deposit">
+        <div class="deposit-container">
+            {% if phase == 'resource-kind' %}
+                <h1>Deponowanie zasobu - wybór rodzaju zasobu</h1>
+                {% include "redo/deposit/resource-kind-list.twig" %}
+            {% elseif phase == 'resources' %}
+                <h1>Deponowanie zasobu - wybór kolekcji</h1>
+                {% include "redo/deposit/resources-list.twig" %}
+            {% elseif phase == 'form' %}
+                <h1>Deponowanie zasobu - dane zasobu</h1>
+                {% include "redo/deposit/deposit-form.twig" %}
+            {% elseif phase == 'deposit-list' %}
+                <h1>Moje zasoby</h1>
+                {% include "redo/deposit/deposit-list.twig" %}
+            {% endif %}
+        </div>
+    </div>
+    {% include "redo/footer.twig" %}
+{% endblock %}

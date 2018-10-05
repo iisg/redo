@@ -9,7 +9,8 @@ export class TreeRelationshipSelector {
   @bindable resource: Resource;
   @bindable disabled: boolean = false;
   @bindable skipValidation: boolean = false;
-  @bindable showByDefault: false;
+  @bindable showByDefault: boolean = false;
+  @bindable treeQueryUrl: string;
   loaded: boolean = false;
   shown: boolean = false;
 

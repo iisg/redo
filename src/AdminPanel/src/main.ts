@@ -20,6 +20,7 @@ import {ResourceMapper} from "./resources/resource-mapping";
 import {User} from "./users/user";
 import {Workflow} from "./workflows/workflow";
 import "polyfills";
+import {FrontendConfig} from "./config/FrontendConfig";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -62,35 +63,42 @@ export function configure(aurelia: Aurelia) {
       .plugin('aurelia-i18n', i18nConfiguratorFactory(aurelia))
       .plugin('aurelia-dialog', dialogConfigurator)
       .globalResources([
-      'common/custom-attributes/local-storage-value-custom-attribute',
-      'common/components/redo-footer/redo-footer.html',
-      'common/components/redo-logo/redo-logo.html',
-      'common/components/icon/icon',
-      'themes/admin-styles-loader',
-      'themes/redo/search-bar',
-    ]);
+        'common/custom-attributes/local-storage-value-custom-attribute',
+        'common/authorization/has-role-value-converter',
+        'common/components/redo-footer/redo-footer.html',
+        'common/components/redo-logo/redo-logo.html',
+        'common/components/icon/icon',
+        'common/components/loading-bar/throbber.html',
+        'common/value-converters/resource-class-translation-value-converter',
+        'common/http-client/invalid-command-message.html',
+        'resources/details/resource-label-value-converter',
+        'resources-config/multilingual-field/in-current-language',
+        'themes/admin-styles-loader',
+        'themes/redo/search-bar/search-bar',
+        'themes/redo/deposit-form/deposit-form',
+      ]);
   }
 
   preloadEntityTypes();
   configureHttpClient(aurelia);
   installValidationMessageLocalization(aurelia);
 
-  (adminPanel ? aurelia.container.get(CurrentUserFetcher).fetch() : Promise.resolve(undefined))
-    .then(user => aurelia.container.registerInstance(CurrentUserFetcher.CURRENT_USER_KEY, user))
-    .then(() => aurelia.start())
+  const currentUser = $.extend(new User(), FrontendConfig.get('user'));
+  aurelia.container.registerInstance(CurrentUserFetcher.CURRENT_USER_KEY, currentUser);
+
+  aurelia.start()
     .then(() => onAureliaStarted(aurelia))
     .then(() => {
       adminPanel ? aurelia.setRoot() : aurelia.enhance();
-    })
-    .then(() => MetricsCollector.timeEnd("bootstrap"));
+    });
 }
 
 function onAureliaStarted(aurelia: Aurelia): void {
   if (adminPanel) {
     aurelia.container.get(MetricsEventListener).register();
     aurelia.container.get(CustomValidationRules).register();
-    aurelia.container.get(GuiLanguage).apply();
   }
+  aurelia.container.get(GuiLanguage).apply();
 }
 
 function preloadEntityTypes() {

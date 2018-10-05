@@ -90,6 +90,17 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
     }
 
+    public function testFindByTwoValuesOfTheSameMetadata() {
+        $query = ResourceListQuery::builder()->filterByContents(
+            [
+                $this->titleMetadata->getId() => ['PHP', 'Webpack'],
+            ]
+        )->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(3, $results);
+        $this->assertContains($this->phpBook->getId(), EntityUtils::mapToIds($results));
+    }
+
     public function testFindsWithAdditionalResourceClassFilter() {
         $query = ResourceListQuery::builder()
             ->filterByResourceClass($this->phpBook->getResourceClass())

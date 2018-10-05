@@ -4,8 +4,8 @@ namespace Repeka\Tests\Application\Upload;
 use Repeka\Application\Twig\TwigFrontendExtension;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Tests\Traits\StubsTrait;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;

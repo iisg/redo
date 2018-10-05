@@ -31,8 +31,4 @@ describe(MetricsCollector.name, () => {
     MetricsCollector.timeEnd("timer");
     expect(MetricsCollector.hasStatsInQueue()).toBeTruthy();
   });
-
-  it("fails on unknown timer", () => {
-    expect(() => MetricsCollector.timeEnd("timer")).toThrow();
-  });
 });

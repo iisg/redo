@@ -15,6 +15,7 @@
         <p>Strona, na którą trafiłeś {{ responseStatus == 404 ? 'nie istnieje' : 'spowodowała błąd aplikacji' }}.</p>
         {% if app.environment == 'dev' %}
             <code>{{ exception.message }}</code>
+            <p>{{ exception.params ?? ( exception.previous.params ?? '') | json_encode }}</p>
         {% endif %}
     </div>
 

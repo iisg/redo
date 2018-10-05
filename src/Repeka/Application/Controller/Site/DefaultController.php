@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Controller\Site;
 
+use Repeka\Domain\Constants\SystemRole;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,6 +16,10 @@ class DefaultController extends Controller {
     public function adminAction($suffix = null) {
         if ($suffix && preg_match('#\..{2,4}$#', $suffix)) {
             throw new NotFoundHttpException("$suffix file could not be found");
+        } elseif (!$this->getUser()) {
+            $this->redirectToRoute('login');
+        } elseif (!$this->getUser()->hasRole(SystemRole::OPERATOR()->roleName())) {
+            throw $this->createAccessDeniedException();
         }
     }
 

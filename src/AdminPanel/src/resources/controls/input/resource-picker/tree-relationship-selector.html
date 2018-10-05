@@ -14,6 +14,7 @@
                 contents-filter.bind="skipValidation ? undefined : metadata.constraints.relatedResourceMetadataFilter"
                 resource-class.bind="!skipValidation && metadata.id == -1 ? resource.resourceClass : undefined"
                 disabled.bind="disabled || metadata.constraints.resourceKind.length === 0 && !skipValidation"
+                tree-query-url.bind="treeQueryUrl"
             ></resource-picker>
 
             <span if.bind="!skipValidation && metadata.constraints.resourceKind.length === 0">

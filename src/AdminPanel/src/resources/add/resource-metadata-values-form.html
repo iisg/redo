@@ -14,7 +14,8 @@
                     metadata.bind="metadata"
                     skip-validation.bind="skipValidation"
                     disabled.bind="disabled"
-                    show-by-default.one-time="required && resource.contents[metadata.id].length === 0"></tree-relationship-selector>
+                    show-by-default.one-time="required && resource.contents[metadata.id].length === 0"
+                    tree-query-url.bind="treeQueryUrl"></tree-relationship-selector>
             </td>
         </tr>
         <tr repeat.for="item of resource.contents[metadata.id]"

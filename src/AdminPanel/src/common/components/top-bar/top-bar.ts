@@ -1,19 +1,12 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {Router} from "aurelia-router";
-import {ComponentAttached} from "aurelia-templating";
+import {FrontendConfig} from "../../../config/FrontendConfig";
 
 @autoinject
-export class TopBar implements ComponentAttached {
+export class TopBar {
   userIp: string;
 
   constructor(private router: Router) {
-  }
-
-  attached() {
-    try {
-      this.userIp = localStorage.getItem('user_ip');
-    } catch (e) {
-      this.userIp = '';
-    }
+    this.userIp = FrontendConfig.get('userIp');
   }
 }

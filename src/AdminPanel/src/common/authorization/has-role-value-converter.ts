@@ -6,7 +6,7 @@ export class HasRoleValueConverter implements ToViewValueConverter {
   constructor(private userRoleChecker: UserRoleChecker) {
   }
 
-  toView(role: string, resourceClass?: string): any {
+  toView(role: string, resourceClass?: string): boolean {
     if (role) {
       const roleName = role + (resourceClass ? '-' + resourceClass : '_SOME_CLASS');
       return this.userRoleChecker.hasAll([roleName]);

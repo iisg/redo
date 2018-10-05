@@ -25,10 +25,12 @@ import {HasRoleValueConverter} from "../../common/authorization/has-role-value-c
 
 @autoinject
 export class ResourceForm extends ChangeLossPreventerForm {
-  @bindable resourceClass: string;
+  @bindable({changeHandler: 'updateResource'}) resourceClass: string;
   @bindable parent: Resource;
   @bindable currentlyEditedResource: Resource;
   @bindable skipValidation: boolean;
+  @bindable deposit: boolean;
+  @bindable transition: WorkflowTransition;
   @bindable submit: (value: {
     savedResource: Resource,
     transitionId: string,
@@ -39,11 +41,11 @@ export class ResourceForm extends ChangeLossPreventerForm {
     editedResource: Resource
   }) => Promise<any>;
   @bindable cancel: () => void;
+  @bindable treeQueryUrl: string;
   submitting: boolean = false;
   cloning: boolean = false;
   disabled: boolean = false;
   validationError: boolean = false;
-  transition: WorkflowTransition;
   places: WorkflowPlace[] = [];
   resourceKindIdsAllowedByParent: number[];
   resource: Resource;
@@ -63,10 +65,13 @@ export class ResourceForm extends ChangeLossPreventerForm {
   }
 
   attached() {
-    if (this.currentlyEditedResource && this.currentlyEditedResource.kind && this.currentlyEditedResource.kind.workflow) {
+    if (this.currentlyEditedResource
+      && this.currentlyEditedResource.kind
+      && this.currentlyEditedResource.kind.workflow
+      && !this.deposit) {
       let params = this.router.currentInstruction.queryParams;
       this.places = this.currentlyEditedResource.currentPlaces;
-      this.transition = this.currentlyEditedResource.kind.workflow.transitions.filter(item => item.id === params.transitionId)[0];
+      this.transition = this.currentlyEditedResource.availableTransitions.filter(item => item.id === params.transitionId)[0];
     }
     this.setResourceKindsAllowedByParent();
     this.changeLossPreventer.enable(this);
@@ -77,16 +82,16 @@ export class ResourceForm extends ChangeLossPreventerForm {
     if (!this.resource.kind || !this.resource.kind.workflow) {
       return [];
     }
-    if (!this.currentlyEditedResource) {
-      return [this.resource.kind.workflow.places[0]];
-    }
     if (this.transition) {
       return this.transition.tos.map((value) => {
         const workflowPlaces = this.resource.kind.workflow.places;
         return workflowPlaces.find(place => place.id === value);
       });
     }
-    return this.resource.currentPlaces;
+    if (!this.currentlyEditedResource || !this.resource.currentPlaces) {
+      return [this.resource.kind.workflow.places[0]];
+    }
+    return [];
   }
 
   @computedFrom('resource.id')
@@ -94,7 +99,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
     return !!this.resource.id;
   }
 
-  @computedFrom('resource.kind', 'targetPlaces')
+  @computedFrom('resource.kind', 'targetPlaces', 'targetPlaces.length')
   get requiredMetadataIds(): number[] {
     if (this.resource.kind && !this.skipValidation) {
       const restrictingMetadata: NumberMap<any> = convertToObject(this.targetPlaces.map(v => v.restrictingMetadataIds));
@@ -110,7 +115,10 @@ export class ResourceForm extends ChangeLossPreventerForm {
   }
 
   get showRequiredMetadataAndWorkflowInfo(): boolean {
-    return (!!this.transition || !this.editing) && this.resource.kind && !!this.resource.kind.workflow && !this.skipValidation;
+    return ((!!this.transition && this.transition.id !== 'update')
+      || !this.editing) && this.resource.kind
+      && !!this.resource.kind.workflow
+      && !this.skipValidation;
   }
 
   private setResourceKindsAllowedByParent() {
@@ -149,8 +157,8 @@ export class ResourceForm extends ChangeLossPreventerForm {
     return copiedContents;
   }
 
-  resourceClassChanged() {
-    this.resource = new Resource();
+  updateResource() {
+    this.resource = this.resource ? this.resource : new Resource();
     this.resource.resourceClass = this.resourceClass;
   }
 

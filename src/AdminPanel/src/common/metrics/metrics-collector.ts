@@ -26,7 +26,8 @@ export class MetricsCollector {
 
   static timeEnd(name: string) {
     if (!MetricsCollector.timings[name]) {
-      throw new Error('Invalid timer referenced: ' + name);
+      console.warn('Invalid timer referenced: ' + name);  // tslint:disable-line
+      return;
     }
     let end = new Date().getTime();
     let time = end - MetricsCollector.timings[name];

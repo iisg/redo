@@ -59,3 +59,7 @@ repeka:
       template: bibtex/bibtex.twig
       headers:
         Content-Type: 'text/plain'
+    /deposit/{phase}:
+      template: redo/deposit.twig
+      deposit:
+        relationship_resource_kind_ids: [1, 2]

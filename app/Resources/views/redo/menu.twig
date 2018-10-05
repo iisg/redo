@@ -25,6 +25,20 @@
                     <span>{{ app.user.username }}</span>
                 </button>
                 <div>
+                    {% if resourceKindsToDeposit(app.user, [-4]) | length != 0 %}
+                        <a class="isActive() ? 'active' : ''"
+                            href="/deposit/resource-kind">
+                            {{ icon('add-resource-3', 1.5) }}
+                            <span>Deponuj</span>
+                        </a>
+                    {% endif %}
+                    {% if resources({contentsFilter: {tworca_zasobu: app.user.userData.id}, resultsPerPage: 1}) | length == 1 %}
+                        <a class="isActive() ? 'active' : ''"
+                            href="/deposit/deposit-list">
+                            {{ icon('resources', 1.5) }}
+                            <span>Moje zasoby</span>
+                        </a>
+                    {% endif %}
                     {% if is_granted('ROLE_OPERATOR_SOME_CLASS') %}
                         <a href="/admin">
                             {{ icon('created', 1.5) }}

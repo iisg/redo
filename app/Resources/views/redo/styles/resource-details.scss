@@ -38,6 +38,9 @@ $image-height: 200px;
                     height: $image-height;
                 }
             }
+            .metadata {
+                flex: 1;
+            }
             & > div {
                 & {
                     padding: 3 * $default-gap-size / 4 $default-gap-size / 2;

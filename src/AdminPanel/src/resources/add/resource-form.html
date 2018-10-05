@@ -9,16 +9,13 @@
     <require from="common/components/buttons/submit-button.html"></require>
     <require from="common/components/buttons/make-copy-button.html"></require>
 
-    <span if.bind="transition"
-        class="page-title">
-        ${'Edit resource before transition' | resourceClassTranslation:resourceClass}</span>
     <div class="alert alert-warning"
         if.bind="skipValidation">
         <icon name="listen"></icon>
         <strong>${'You are editing the resource without validations.' | t}</strong>
         ${'Make any changes wisely.' | t}
     </div>
-    <div if.bind="!editing || skipValidation"
+    <div if.bind="(!editing || skipValidation) && !deposit"
         class="resource-kind-chooser-with-cancel-button">
         <resource-kind-chooser
             resource-class.bind="resourceClass"
@@ -41,7 +38,8 @@
         resource-class.bind="resourceClass"></workflow-froms-tos-display>
 
     <template if.bind="resource.kind">
-        <toggle-button primary-icon-name="koha"
+        <toggle-button if.bind="!deposit"
+            primary-icon-name="koha"
             primary-label="Import data from KOHA"
             click.delegate="openImportDialog()"></toggle-button>
         <span if.bind="validationError"
@@ -57,25 +55,27 @@
                 validation-controller.bind="validationController"
                 contents-validation.bind="resource.contents & validate"
                 target-places.bind="targetPlaces"
-                required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"></resource-form-generated>
+                required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"
+                tree-query-url.bind="treeQueryUrl"
+                display-required-only.bind="!!deposit"></resource-form-generated>
             <div class="form-buttons">
-                <transition-button if.bind="editing && transition"
+                <transition-button if.bind="editing && (transition.id !== 'update')"
                     transition.bind="transition"
                     places.bind="currentlyEditedResource.kind.workflow.places"
                     submitting.bind="submitting"></transition-button>
-                <submit-button if.bind="!transition"
+                <submit-button if.bind="!transition || transition.id === 'update'"
                     editing.bind="editing"
                     disabled.bind="disabled"
                     submitting.bind="submitting">
-                    ${(editing ? 'Save' : 'Add') | t}
+                    ${(!editing ? deposit ? 'Create' : 'Add' : 'Save') | t}
                 </submit-button>
-                <make-copy-button if.bind="!transition && editing && !skipValidation"
+                <make-copy-button if.bind="!transition && editing && !skipValidation && !deposit"
                     submitting.bind="cloning"
                     disabled.bind="cloningResourceDisabled"
                     disability-reason.bind="disabilityReason"
                     click.delegate="cloneResource()"></make-copy-button>
                 <cancel-button class.bind="!editing ? 'orange' : ''"
-                    label.bind="!editing ? 'Close' : ''"
+                    label.bind="deposit ? 'Back to list' : !editing ? 'Close' : ''"
                     disabled.bind="resource.pendingRequest || submitting"
                     click.delegate="cancel()"></cancel-button>
             </div>

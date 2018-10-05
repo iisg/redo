@@ -1,0 +1,13 @@
+<template>
+    <require from="resources/add/resource-form"></require>
+    <template if.bind="showForm">
+        <resource-form parent.bind="parentResource"
+            resource-class.bind="resourceClass"
+            currently-edited-resource.bind="editedResource"
+            deposit.bind="true"
+            transition.bind="transition"
+            tree-query-url.bind="relationshipUrl"
+            submit.call="saveResource(savedResource, transitionId)"
+            cancel.call="backToList()"></resource-form>
+    </template>
+</template>
