@@ -72,19 +72,18 @@ class MetadataImporter {
                 return $value;
             case MetadataControl::INTEGER:
             case MetadataControl::RELATIONSHIP:
-                return $this->transformIntegerValues($resultBuilder, $id, $value);
+                return $this->transformIntegerValue($resultBuilder, $id, $value);
             case MetadataControl::BOOLEAN:
-                return $this->transformBooleanValues($resultBuilder, $id, $value);
+                return $this->transformBooleanValue($resultBuilder, $id, $value);
+            case MetadataControl::DATE:
+                return $this->transformDateValue($resultBuilder, $id, $value);
             default:
                 $resultBuilder->addUnfitTypeValues($id, $value);
                 return null;
         }
     }
 
-    /**
-     * @param string[] $metadataValues
-     */
-    private function transformIntegerValues(ImportResultBuilder &$resultBuilder, int $id, string $value) {
+    private function transformIntegerValue(ImportResultBuilder &$resultBuilder, int $id, string $value) {
         if (preg_match('/^\d+$/', $value)) {
             return intval($value);
         } else {
@@ -93,14 +92,20 @@ class MetadataImporter {
         }
     }
 
-    /**
-     * @param string[] $metadataValues
-     */
-    private function transformBooleanValues(ImportResultBuilder &$resultBuilder, int $id, string $value) {
+    private function transformBooleanValue(ImportResultBuilder &$resultBuilder, int $id, string $value) {
         if (preg_match('/^(1|true)$/', $value)) {
             return true;
         } elseif (preg_match('/^(0|false|)$/', $value)) {
             return false;
+        } else {
+            $resultBuilder->addUnfitTypeValues($id, $value);
+            return null;
+        }
+    }
+
+    private function transformDateValue(ImportResultBuilder $resultBuilder, int $id, string $value) {
+        if ($time = strtotime($value)) {
+            return date('Y-m-d', $time);
         } else {
             $resultBuilder->addUnfitTypeValues($id, $value);
             return null;

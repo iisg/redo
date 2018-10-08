@@ -29,6 +29,7 @@ class EvaluateDisplayStrategiesCommand extends Command {
 
     /** @inheritdoc */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        ini_set('memory_limit', '768M');
         FirewallMiddleware::bypass(
             function () use ($output) {
                 $resources = $this->resourceRepository->findAll();

@@ -1,0 +1,44 @@
+{
+  "mappings": {
+    "tytul": {
+      "key": "1",
+      "transforms": [
+        {
+          "name": "getKey",
+          "key": "VALUE_TEXT"
+        },
+        {
+          "name": "trim"
+        }
+      ],
+      "submetadata": {
+        "language": {
+          "transforms": [
+            {
+              "name": "getKey",
+              "key": "INDEX_ITEM_ID"
+            }
+          ]
+        }
+      }
+    },
+    "parent": {
+      "key": "4",
+      "transforms": [
+        {
+          "name": "getKey",
+          "key": "RELATED_RESOURCE_ID"
+        }
+      ]
+    },
+    "zobaczTez": {
+      "key": "666",
+      "transforms": [
+        {
+          "name": "getKey",
+          "key": "RELATED_RESOURCE_ID"
+        }
+      ]
+    }
+  }
+}

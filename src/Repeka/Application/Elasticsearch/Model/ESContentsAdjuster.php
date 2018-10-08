@@ -2,6 +2,7 @@
 namespace Repeka\Application\Elasticsearch\Model;
 
 use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 
 class ESContentsAdjuster {
@@ -17,7 +18,11 @@ class ESContentsAdjuster {
         $adjustedContents = [];
         foreach ($contents as $key => $values) {
             $adjustedMetadata = [];
-            $metadata = $this->metadataRepository->findOne($key);
+            try {
+                $metadata = $this->metadataRepository->findOne($key);
+            } catch (EntityNotFoundException $e) {
+                continue;
+            }
             $control = $metadata->getControl();
             foreach ($values as $value) {
                 $singleMetadata = [];
