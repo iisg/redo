@@ -20,7 +20,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
+/**
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.NPathComplexity")
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ */
 class PkImportResourcesCommand extends ContainerAwareCommand {
     use CommandBusAware;
 
@@ -51,9 +56,11 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         $this
             ->setName('repeka:pk-import:import')
             ->addArgument('input', InputArgument::REQUIRED)
-            ->addArgument('config', InputArgument::REQUIRED)
-            ->addArgument('resourceKindId', InputArgument::REQUIRED)
+            ->addArgument('config', InputArgument::OPTIONAL)
+            ->addOption('resourceKindId', null, InputOption::VALUE_REQUIRED)
             ->addOption('no-report', null, InputOption::VALUE_NONE)
+            ->addOption('id-namespace', null, InputOption::VALUE_OPTIONAL)
+            ->addOption('unmap-updated', null, InputOption::VALUE_NONE)
             ->setDescription('Imports resources from given file.');
     }
 
@@ -65,16 +72,31 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             'updated' => 0,
         ];
         $idMapping = self::getIdMapping();
+        $mappedResourceIds = PkImportMapRelationsCommand::getAlreadyMappedResourceIds();
         $error = null;
         $xmlFileName = $input->getArgument('input');
+        $configFileName = $input->getArgument('config');
+        if (!$configFileName) {
+            $configFileName = substr($xmlFileName, 0, -4) . '.yml';
+            if (!file_exists($configFileName)) {
+                $configFileName = substr($xmlFileName, 0, -4) . '.json';
+            }
+        }
         $applicationUrl = $this->getContainer()->getParameter('repeka.application_url');
         $reportCreator = new PkImportHtmlReport($applicationUrl, $xmlFileName);
         try {
             $xml = PkImportFileLoader::load($xmlFileName);
-            $resourceKind = $this->resourceKindRepository->findOne($input->getArgument('resourceKindId'));
-            $importConfig = $this->importConfigFactory->fromFile($input->getArgument('config'), $resourceKind);
+            $resourceKind = $this->resourceKindRepository->findOne($input->getOption('resourceKindId'));
+            $importConfig = $this->importConfigFactory->fromFile($configFileName, $resourceKind);
             $reportCreator->setInvalidMetadataKeysInfo($importConfig->getInvalidMetadataKeys());
             $resources = $xml->xpath('/*/*');
+            $idMappingNamespace = $input->getOption('id-namespace');
+            if (!$idMappingNamespace) {
+                $idMappingNamespace = $resources[0]->getName();
+            }
+            if (!isset($idMapping[$idMappingNamespace])) {
+                $idMapping[$idMappingNamespace] = [];
+            }
             $output->writeln('Importing resources');
             $progress = new ProgressBar($output, count($resources));
             $progress->display();
@@ -94,20 +116,34 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                     $resourceData[$termId][] = $metadataData;
                 }
                 FirewallMiddleware::bypass(
-                    function () use ($reportCreator, $resourceKind, $importConfig, $resourceData, &$idMapping, &$stats, $terms) {
+                    function () use (
+                        $input,
+                        $idMappingNamespace,
+                        $reportCreator,
+                        $resourceKind,
+                        $importConfig,
+                        $resourceData,
+                        &$mappedResourceIds,
+                        &$idMapping,
+                        &$stats,
+                        $terms
+                    ) {
                         $importedResult = $this
                             ->handleCommand(new MetadataImportQuery($resourceData, $importConfig));
                         /** @var ResourceContents $importedValues */
                         $importedValues = $importedResult->getAcceptedValues();
                         $resourceId = intval(trim($resourceData['ID']));
-                        if (isset($idMapping[$resourceId])) {
-                            $resource = $this->resourceRepository->findOne($idMapping[$resourceId]);
+                        if (isset($idMapping[$idMappingNamespace][$resourceId])) {
+                            $resource = $this->resourceRepository->findOne($idMapping[$idMappingNamespace][$resourceId]);
                             ++$stats[PkImportResourcesCommand::UPDATED];
                             $status = PkImportResourcesCommand::UPDATED;
+                            if ($input->getOption('unmap-updated')) {
+                                $mappedResourceIds = array_diff($mappedResourceIds, [$resource->getId()]);
+                            }
                         } else {
                             $resourceCreateCommand = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
                             $resource = $this->handleCommand($resourceCreateCommand);
-                            $idMapping[$resourceId] = $resource->getId();
+                            $idMapping[$idMappingNamespace][$resourceId] = $resource->getId();
                             ++$stats[PkImportResourcesCommand::IMPORTED];
                             $status = PkImportResourcesCommand::IMPORTED;
                         }
@@ -133,6 +169,9 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             $reportCreator->setError($error);
         }
         file_put_contents(self::ID_MAPPING_FILE, json_encode($idMapping));
+        if ($input->getOption('unmap-updated')) {
+            file_put_contents(PkImportMapRelationsCommand::MAPPED_RESOURCES_FILE, json_encode($mappedResourceIds));
+        }
         (new Table($output))
             ->setHeaders(['Total resources', 'Successfully imported', 'Successfully updated'])
             ->addRows([$stats])

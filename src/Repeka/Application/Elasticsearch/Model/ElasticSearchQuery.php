@@ -21,7 +21,7 @@ class ElasticSearchQuery {
             $boolQuery->addFilter(new Query\Terms(ResourceConstants::RESOURCE_CLASS, $this->query->getResourceClasses()));
         }
         $finalQuery = new Query($boolQuery);
-        $finalQuery->setHighlight(['fields' => ['*' => new \stdClass()]]);
+        $finalQuery->setHighlight(['fields' => [ResourceConstants::CONTENTS . '.*' => new \stdClass()]]);
         if ($this->query->paginate()) {
             $finalQuery->setSize($this->query->getResultsPerPage());
             $finalQuery->setFrom($this->query->getOffset());

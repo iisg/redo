@@ -23,9 +23,13 @@ abstract class AbstractPkImportIntegrationTest extends IntegrationTestCase {
     }
 
     protected function importFile(string $file, ResourceKind $resourceKind) {
-        $filePath = addcslashes(__DIR__ . "/$file.xml", '\\');
-        $configPath = addcslashes(__DIR__ . "/$file.json", '\\');
-        $this->executeCommand("repeka:pk-import:import \"$filePath\" \"$configPath\" {$resourceKind->getId()} --no-report");
-        $this->executeCommand("repeka:pk-import:map-relations");
+        $filePath = addcslashes(__DIR__ . "/dumps/$file.xml", '\\');
+        $this->executeCommand(
+            "repeka:pk-import:import \"$filePath\" --resourceKindId {$resourceKind->getId()} --no-report"
+        );
+    }
+
+    protected function mapRelations(string $params = '') {
+        $this->executeCommand("repeka:pk-import:map-relations $params");
     }
 }

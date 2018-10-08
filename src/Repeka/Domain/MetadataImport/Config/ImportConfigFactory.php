@@ -5,6 +5,8 @@ use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\MetadataImport\Mapping\MappingLoader;
 use Repeka\Domain\MetadataImport\Transform\TransformLoader;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Yaml;
 
 class ImportConfigFactory {
     /** @var MappingLoader */
@@ -16,7 +18,13 @@ class ImportConfigFactory {
 
     public function fromFile(string $configPath, ResourceKind $resourceKind): ImportConfig {
         Assertion::file($configPath);
-        return $this->fromString(file_get_contents($configPath), $resourceKind);
+        if (preg_match('#.ya?ml$#', $configPath)) {
+            $yamlParser = new Parser();
+            $configuration = $yamlParser->parseFile($configPath, Yaml::PARSE_CONSTANT | Yaml::PARSE_CUSTOM_TAGS);
+            return $this->fromArray($configuration, $resourceKind);
+        } else {
+            return $this->fromString(file_get_contents($configPath), $resourceKind);
+        }
     }
 
     public function fromString(string $config, ResourceKind $resourceKind): ImportConfig {

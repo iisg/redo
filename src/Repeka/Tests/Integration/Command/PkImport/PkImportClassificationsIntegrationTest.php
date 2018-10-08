@@ -89,6 +89,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
 
     public function testMapsRelationships() {
         $this->import();
+        $this->mapRelations();
         $historiaFilozofii = $this->findResourceByContents(['nazwa' => 'Historia filozofii']);
         $pathToTop = $this->handleCommandBypassingFirewall(new ResourceTopLevelPathQuery($historiaFilozofii, SystemMetadata::PARENT));
         $this->assertTrue($historiaFilozofii->hasParent());
@@ -99,6 +100,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
 
     public function testMapsMultipleRelationships() {
         $this->import();
+        $this->mapRelations();
         $historiaReligioznawstwa = $this->findResourceByContents(['nazwa' => 'Historia i stan współczesny religioznawstwa']);
         $pathToTop = $this->handleCommandBypassingFirewall(new ResourceTopLevelPathQuery($historiaReligioznawstwa, SystemMetadata::PARENT));
         $this->assertTrue($historiaReligioznawstwa->hasParent());

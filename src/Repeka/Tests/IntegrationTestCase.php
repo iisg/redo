@@ -169,10 +169,22 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         array $placeholder = [],
         string $control = 'text',
         string $resourceClass = 'books',
-        array $constraints = []
+        array $constraints = [],
+        Metadata $parent = null
     ): Metadata {
         return $this->handleCommandBypassingFirewall(
-            new MetadataCreateCommand($name, $label, $description, $placeholder, $control, $resourceClass, $constraints)
+            new MetadataCreateCommand(
+                $name,
+                $label,
+                $description,
+                $placeholder,
+                $control,
+                $resourceClass,
+                $constraints,
+                false,
+                false,
+                $parent
+            )
         );
     }
 
