@@ -9,6 +9,9 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Utils\PrintableArray;
 
+/**
+ * All Twig extensions required for resource & metadata fetching in resource display strategies.
+ */
 class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
     /** @var ResourceRepository */
     private $resourceRepository;
@@ -24,7 +27,8 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         return [
             new \Twig_Function('r', [$this, 'fetchResources']),
             new \Twig_Function('resource', [$this, 'fetchResources']),
-            new \Twig_Function('m', [$this, 'fetchMetadataIdByName']),
+            new \Twig_Function('m', [$this, 'fetchMetadataId']),
+            new \Twig_Function('metadata', [$this, 'fetchMetadataByNameOrId']),
         ];
     }
 
@@ -40,8 +44,6 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
             new \Twig_Filter('sub*', [$this, 'getSubmetadataValuesDynamic']),
             new \Twig_Filter('r', [$this, 'fetchResources']),
             new \Twig_Filter('resource', [$this, 'fetchResources']),
-            new \Twig_Filter('ftsContentsToResource', [$this, 'ftsContentsToResource']),
-            new \Twig_Filter('sum', [$this, 'sumIterable']),
         ];
     }
 
@@ -68,30 +70,29 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         return $iterableGiven ? $resources : $resources[0];
     }
 
-    private function fetchMetadataId($metadataId, $context = null) {
+    public function fetchMetadataId($metadataId, $context = null) {
         if ($metadataId === null) {
             throw new \Twig_Error('Please specify metadata by choosing one of the following syntax: m1, mName, m(1), m("Name")');
         }
-        if (!is_numeric($metadataId)) {
-            return $this->fetchMetadataIdByName($metadataId, $context);
-        } else {
-            return intval($metadataId);
+        try {
+            return $this->fetchMetadataByNameOrId($metadataId, $context)->getId();
+        } catch (EntityNotFoundException $e) {
+            return 0;
         }
     }
 
-    public function fetchMetadataIdByName(string $name, $context = null) {
+    public function fetchMetadataByNameOrId($name, $context = null) {
         try {
             $resourceClass = null;
             if ($context instanceof HasResourceClass) {
                 $resourceClass = $context->getResourceClass();
             }
-            $metadata = $this->metadataRepository->findByName($name, $resourceClass);
-            return $metadata->getId();
+            return $this->metadataRepository->findByNameOrId($name, $resourceClass);
         } catch (EntityNotFoundException $e) {
             if ($context) { // maybe the metadata is classless?
-                return $this->fetchMetadataIdByName($name);
+                return $this->fetchMetadataByNameOrId($name);
             } else {
-                return 0;
+                throw $e;
             }
         }
     }
@@ -136,39 +137,5 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
 
     public function getSubmetadataValuesDynamic($metadataId, $contents) {
         return $this->getSubmetadataValues($contents, $metadataId);
-    }
-
-    public function sumIterable($iterable) {
-        if ($iterable instanceof PrintableArray) {
-            $iterable = $iterable->flatten();
-        }
-        if (!is_array($iterable)) {
-            $iterable = iterator_to_array($iterable);
-        }
-        $iterable = array_map(
-            function ($value) {
-                return is_numeric($value) ? $value : strval($value);
-            },
-            $iterable
-        );
-        return array_sum($iterable);
-    }
-
-    /**
-     * Its aim is to transform hits from elasticsearch to look like a resource contents.
-     * e.g. {2: [{value_text: AAA}]} into {2: [{value: AAA}]}
-     * @param array $contents
-     * @return ResourceContents
-     */
-    public function ftsContentsToResource(array $contents): ResourceContents {
-        return ResourceContents::fromArray(
-            $contents,
-            function ($hit) {
-                if (isset($hit['submetadata'])) {
-                    unset($hit['submetadata']);
-                }
-                return current($hit);
-            }
-        );
     }
 }

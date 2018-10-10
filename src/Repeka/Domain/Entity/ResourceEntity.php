@@ -95,13 +95,4 @@ class ResourceEntity implements Identifiable, HasResourceClass {
             ],
         ];
     }
-
-    public function getFtsData(): array {
-        return [
-           'id' => $this->getId(),
-           'kindId' => $this->getKind()->getId(),
-           'contents' => $this->contents,
-           'resourceClass' => $this->getResourceClass(),
-        ];
-    }
 }

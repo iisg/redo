@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Tests\Traits;
 
-use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
 use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
@@ -125,14 +124,6 @@ trait StubsTrait {
             function ($m) use ($contents) {
                 return $contents->getValues($m);
             }
-        );
-        $mock->method('getFtsData')->willReturn(
-            [
-                ResourceConstants::ID => $id,
-                ResourceConstants::KIND_ID => $resourceKind->getId(),
-                ResourceConstants::CONTENTS => $contents,
-                ResourceConstants::RESOURCE_CLASS => $resourceKind->getResourceClass(),
-            ]
         );
         return $mock;
     }

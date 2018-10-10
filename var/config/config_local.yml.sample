@@ -43,3 +43,4 @@ repeka:
       fts:
         searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
         searchable_resource_classes: [books]
+        facets: [kindId, skanista]

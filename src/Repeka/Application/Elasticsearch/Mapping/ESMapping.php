@@ -9,13 +9,13 @@ class ESMapping {
     public static function getMapping($elasticaType): Mapping {
         $mapping = new Mapping();
         $mapping->setType($elasticaType);
-        $mapping->setParam(ResourceConstants::NUMERIC_DETECTION_PARAM, true);
+        $mapping->setParam(FtsConstants::NUMERIC_DETECTION_PARAM, true);
         $mapping->setProperties(
             [
-                ResourceConstants::ID => [ResourceConstants::VALUE_TYPE => 'long'],
-                ResourceConstants::RESOURCE_CLASS => [ResourceConstants::VALUE_TYPE => 'keyword'],
-                ResourceConstants::CONTENTS => [ResourceConstants::VALUE_TYPE => 'object', 'dynamic' => true],
-                ResourceConstants::KIND_ID => [ResourceConstants::VALUE_TYPE => 'long'],
+                FtsConstants::ID => [FtsConstants::VALUE_TYPE => 'long'],
+                FtsConstants::RESOURCE_CLASS => [FtsConstants::VALUE_TYPE => 'keyword'],
+                FtsConstants::CONTENTS => [FtsConstants::VALUE_TYPE => 'object', 'dynamic' => true],
+                FtsConstants::KIND_ID => [FtsConstants::VALUE_TYPE => 'long'],
             ]
         );
         $mapping->setParam(

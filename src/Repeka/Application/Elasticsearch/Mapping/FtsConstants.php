@@ -3,7 +3,7 @@ namespace Repeka\Application\Elasticsearch\Mapping;
 
 use Repeka\Domain\Entity\MetadataControl;
 
-final class ResourceConstants {
+final class FtsConstants {
     const ES_DOCUMENT_TYPE = 'resource';
 
     const VALUE_TYPE = 'type';
@@ -18,4 +18,7 @@ final class ResourceConstants {
     ];
 
     const NUMERIC_DETECTION_PARAM = 'numeric_detection';
+
+    private function __construct() {
+    }
 }

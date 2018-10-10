@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Application\Elasticsearch\Model;
 
-use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
+use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 
@@ -26,7 +26,7 @@ class ESContentsAdjuster {
             $control = $metadata->getControl();
             foreach ($values as $value) {
                 $singleMetadata = [];
-                if (!in_array($control, ResourceConstants::UNACCEPTABLE_TYPES)) {
+                if (!in_array($control, FtsConstants::UNACCEPTABLE_TYPES)) {
                     $singleMetadata['value_' . $control] = $value['value'];
                 }
                 if (isset($value['submetadata'])) {

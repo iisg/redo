@@ -3,6 +3,7 @@ namespace Repeka\Domain\Validation;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandValidator;
+use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Exception\RespectValidationFailedException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validatable;
@@ -20,6 +21,10 @@ abstract class CommandAttributesValidator extends CommandValidator {
     }
 
     final public function isValid(Command $command) {
-        return $this->getValidator($command)->validate($command);
+        try {
+            return $this->getValidator($command)->validate($command);
+        } catch (DomainException $e) {
+            return false;
+        }
     }
 }
