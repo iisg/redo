@@ -10,8 +10,7 @@ class FtsResourcesExposedEndpointRoute extends Route {
     public function __construct(
         string $path,
         string $template,
-        array $searchableMetadataIds,
-        array $searchableResourceClasses,
+        array $ftsConfig,
         array $headers = []
     ) {
         Assertion::notEmpty($template, 'template must be set for search resource exposed endpoint: ' . $path);
@@ -20,8 +19,7 @@ class FtsResourcesExposedEndpointRoute extends Route {
             [
                 '_controller' => ResourcesSearchController::class . ':searchResourcesAction',
                 'template' => $template,
-                'searchableMetadataNamesOrIds' => $searchableMetadataIds,
-                'searchableResourceClasses' => $searchableResourceClasses,
+                'ftsConfig' => $ftsConfig,
                 'headers' => $headers,
             ],
             [],

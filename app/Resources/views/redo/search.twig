@@ -1,13 +1,34 @@
 {% extends "redo/layout.twig" %}
 
-{% set page_title = 'Wyniki wyszukiwania' %}
+{% set page_title = phrase ~ ' - wyniki wyszukiwania' %}
 
 {% block content %}
     <div class="content home-page-content">
         <search-bar phrase="{{ phrase }}"></search-bar>
     </div>
 
-    <h1>Wyniki wyszukiwania ({{ results|length }})</h1>
+    <h1>Wyniki wyszukiwania ({{ results.totalHits }})</h1>
+
+    <div class="facets">
+        {% for aggregationName, aggregation in results.aggregations if aggregation.buckets.0[aggregationName].buckets %}
+            <div>
+                <strong>{{ aggregationName == 'kindId' ? aggregationName : metadata(aggregationName).label.PL }}:</strong>
+                {% for bucket in aggregation.buckets.0[aggregationName].buckets %}
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key, app.request.query.all.facetFilters ?? [])})) }}">
+                        {% if aggregationName == 'kindId' %}
+                            {{ resourceKind(bucket.key).label.PL }}
+                        {% else %}
+                            {{ r(bucket.key)|mLabel }}
+                        {% endif %}
+                        ({{ bucket.doc_count }})
+                        {% if isFilteringByFacet(aggregationName, bucket.key, app.request.query.all.facetFilters ?? []) %}
+                            <span class="cross">&cross;</span>
+                        {% endif %}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
 
     <div class="search-hits">
         {% for result in results %}

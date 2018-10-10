@@ -3,7 +3,6 @@ namespace Repeka\Tests\Integration\FullTextSearch;
 
 use Elastica\Result;
 use Elastica\ResultSet;
-use Repeka\Application\Elasticsearch\Model\ElasticSearch;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
@@ -79,7 +78,9 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
 
     public function testSearchWithPagination() {
         /** @var ResultSet $results */
-        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('PHP', [SystemMetadata::RESOURCE_LABEL], [], 1, 1));
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('PHP', [SystemMetadata::RESOURCE_LABEL], [], false, [], [], 1, 1)
+        );
         $this->assertCount(1, $results);
         $this->assertEquals(2, $results->getTotalHits());
         $ids = EntityUtils::mapToIds($results);
@@ -88,7 +89,9 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
 
     public function testQueryTheSecondPage() {
         /** @var ResultSet $results */
-        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('PHP', [SystemMetadata::RESOURCE_LABEL], [], 2, 1));
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('PHP', [SystemMetadata::RESOURCE_LABEL], [], false, [], [], 2, 1)
+        );
         $this->assertCount(1, $results);
         $this->assertEquals(2, $results->getTotalHits());
         $ids = EntityUtils::mapToIds($results);
@@ -107,5 +110,67 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $ids = EntityUtils::mapToIds($results);
         $newResource = $this->findResourceByContents(['Tytul' => $this->title]);
         $this->assertContains($newResource->getId(), $ids);
+    }
+
+    public function testSearchFacets() {
+        $powiazanaKsiazka = $this->findMetadataByName('powiazanaKsiazka');
+        $phpIMysqlId = $this->findResourceByContents(['tytul' => 'PHP i MySQL'])->getId();
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('php python', ['tytul'], [], true, ['powiazanaKsiazka']));
+        $kindIdAggregations = $this->extractAggregation($results, 'kindId');
+        $this->assertEquals([['key' => 1, 'doc_count' => 2], ['key' => 2, 'doc_count' => 1]], $kindIdAggregations);
+        $powiazanaKsiazkaAggregations = $this->extractAggregation($results, $powiazanaKsiazka->getId());
+        $this->assertEquals([['key' => $phpIMysqlId, 'doc_count' => 1]], $powiazanaKsiazkaAggregations);
+    }
+
+    public function testFilteringByFacets() {
+        $powiazanaKsiazka = $this->findMetadataByName('powiazanaKsiazka');
+        $phpIMysqlId = $this->findResourceByContents(['tytul' => 'PHP i MySQL'])->getId();
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('php python', ['tytul'], [], true, ['powiazanaKsiazka'], ['powiazanaKsiazka' => [$phpIMysqlId]])
+        );
+        $this->assertCount(1, $results);
+        $kindIdAggregations = $this->extractAggregation($results, 'kindId');
+        $this->assertEquals([['key' => 1, 'doc_count' => 1]], $kindIdAggregations);
+        $powiazanaKsiazkaAggregations = $this->extractAggregation($results, $powiazanaKsiazka->getId());
+        $this->assertEquals([['key' => $phpIMysqlId, 'doc_count' => 1]], $powiazanaKsiazkaAggregations);
+    }
+
+    public function testFilteringClearNotexistentFacets() {
+        $powiazanaKsiazka = $this->findMetadataByName('powiazanaKsiazka');
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('php python', ['tytul'], [], true, ['powiazanaKsiazka'], ['kindId' => [2]])
+        );
+        $this->assertCount(1, $results);
+        $kindIdAggregations = $this->extractAggregation($results, 'kindId');
+        $this->assertEquals([['key' => 1, 'doc_count' => 2], ['key' => 2, 'doc_count' => 1]], $kindIdAggregations);
+        $powiazanaKsiazkaAggregations = $this->extractAggregation($results, $powiazanaKsiazka->getId());
+        $this->assertEmpty($powiazanaKsiazkaAggregations);
+    }
+
+    public function testMultipleFacetsNarrowSearchResults() {
+        $phpIMysqlId = $this->findResourceByContents(['tytul' => 'PHP i MySQL'])->getId();
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery(
+                'php python',
+                ['tytul'],
+                [],
+                true,
+                ['powiazanaKsiazka'],
+                ['kindId' => [1], 'powiazanaKsiazka' => [$phpIMysqlId]]
+            )
+        );
+        $this->assertCount(1, $results);
+    }
+
+    /**
+     * Aggregations are nested twice, because of the filters applied. This method extracts them.
+     * @see https://madewithlove.be/faceted-search-using-elasticsearch/
+     */
+    private function extractAggregation(ResultSet $resultSet, string $aggregationName): array {
+        return current($resultSet->getAggregation($aggregationName)['buckets'])[$aggregationName]['buckets'];
     }
 }

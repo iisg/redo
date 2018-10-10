@@ -5,6 +5,7 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceListFtsQueryAdjuster implements CommandAdjuster {
     /** @var MetadataRepository */
@@ -23,6 +24,9 @@ class ResourceListFtsQueryAdjuster implements CommandAdjuster {
             $query->getPhrase(),
             $this->replaceMetadataNamesOrIdsWithMetadata($query->getSearchableMetadata()),
             $query->getResourceClasses(),
+            $query->hasResourceKindFacet(),
+            $this->replaceMetadataNamesOrIdsWithMetadata($query->getFacetedMetadata()),
+            $this->adjustFacetsFilters($query->getFacetsFilters()),
             $query->getPage(),
             $query->getResultsPerPage()
         );
@@ -38,5 +42,18 @@ class ResourceListFtsQueryAdjuster implements CommandAdjuster {
             }
         }
         return $metadata;
+    }
+
+    private function adjustFacetsFilters(array $facetsFilters): array {
+        $kindIdFilter = $facetsFilters['kindId'] ?? false;
+        unset($facetsFilters['kindId']);
+        $metadataNamesOrIds = array_keys($facetsFilters);
+        $filters = array_values($facetsFilters);
+        $metadataIds = EntityUtils::mapToIds($this->replaceMetadataNamesOrIdsWithMetadata($metadataNamesOrIds));
+        if ($kindIdFilter) {
+            $metadataIds[] = 'kindId';
+            $filters[] = $kindIdFilter;
+        }
+        return array_combine($metadataIds, $filters);
     }
 }

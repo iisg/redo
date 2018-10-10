@@ -1,11 +1,15 @@
 <?php
 namespace Repeka\Application\Elasticsearch\Model;
 
+use Elastica\Aggregation\Filters;
+use Elastica\Aggregation\Terms;
 use Elastica\Query;
-use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
+use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
+use Repeka\Domain\Utils\EntityUtils;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) it really has to use all of these Elastica helpers... */
 class ElasticSearchQuery {
     /** @var ResourceListFtsQuery */
     private $query;
@@ -18,10 +22,16 @@ class ElasticSearchQuery {
         $boolQuery = new Query\BoolQuery();
         $boolQuery->addMust($this->atLeastOneMetadataShouldMatchThePhrase());
         if ($this->query->getResourceClasses()) {
-            $boolQuery->addFilter(new Query\Terms(ResourceConstants::RESOURCE_CLASS, $this->query->getResourceClasses()));
+            $boolQuery->addFilter(new Query\Terms(FtsConstants::RESOURCE_CLASS, $this->query->getResourceClasses()));
         }
         $finalQuery = new Query($boolQuery);
-        $finalQuery->setHighlight(['fields' => [ResourceConstants::CONTENTS . '.*' => new \stdClass()]]);
+        $finalQuery->setHighlight(['fields' => [FtsConstants::CONTENTS . '.*' => new \stdClass()]]);
+        $facetFilters = $this->createFacetFilters();
+        $facetDefinitions = $this->createFacetDefinitions($facetFilters);
+        array_walk($facetDefinitions, [$finalQuery, 'addAggregation']);
+        $postQueryFilter = new Query\BoolQuery();
+        array_walk($facetFilters, [$postQueryFilter, 'addMust']);
+        $finalQuery->setPostFilter($postQueryFilter);
         if ($this->query->paginate()) {
             $finalQuery->setSize($this->query->getResultsPerPage());
             $finalQuery->setFrom($this->query->getOffset());
@@ -47,6 +57,75 @@ class ElasticSearchQuery {
             $metadataPath = $parentMetadata->getId() . '.submetadata.' . $metadataPath;
             $metadata = $parentMetadata;
         }
-        return ResourceConstants::CONTENTS . '.' . $metadataPath;
+        return FtsConstants::CONTENTS . '.' . $metadataPath;
+    }
+
+    /**
+     * For every requested facet filter, create a Terms query that will be used to filter the search results according to the selection.
+     * @return Query\Terms[]
+     */
+    private function createFacetFilters(): array {
+        $metadataFacets = EntityUtils::getLookupMap($this->query->getFacetedMetadata());
+        $facetFilters = [];
+        foreach ($this->query->getFacetsFilters() as $aggregationName => $aggregationFilters) {
+            if ($aggregationName == FtsConstants::KIND_ID) {
+                $filter = new Query\Terms($aggregationName, $aggregationFilters);
+            } else {
+                $metadata = $metadataFacets[$aggregationName];
+                $filter = new Query\Terms($this->getMetadataPath($metadata), $aggregationFilters);
+            }
+            $facetFilters[$aggregationName] = $filter;
+        }
+        return $facetFilters;
+    }
+
+    /**
+     * Creates a facets definitions with ES aggregations feature. The definitions are nested, so they can respond to the filters of other
+     * facets.
+     *
+     * Consider an example:
+     * Resource 1: {color: red, thing: flower}
+     * Resource 2: {color: red, thing: shirt}
+     * Resource 3: {color: blue: thing: flower}
+     * Resource 4: {color: blue: thing:: shirt}
+     *
+     * When they all appear in the search results, there are two facets:
+     * COLOR: red (2), blue (2)
+     * THING: flower (2), shirt (2)
+     *
+     * When now user filters by red, color, the facets should be:
+     * COLOR: red (2) (remove), blue (2)
+     * THING: flower (1), shirt (1)
+     *
+     * So we do not want to limit current filter (the blue color is still there), but other filters should respond to changes in others
+     * (there is only 1 red flower and 1 red shirt, we filtered out blues here)
+     *
+     * @see https://madewithlove.be/faceted-search-using-elasticsearch/
+     * @param $facetFilters
+     * @return Filters[]
+     */
+    private function createFacetDefinitions(array $facetFilters): array {
+        $facetedFields = $this->query->getFacetedMetadata();
+        if ($this->query->hasResourceKindFacet()) {
+            $facetedFields[] = FtsConstants::KIND_ID;
+        }
+        $facetAggregations = [];
+        foreach ($facetedFields as $facetedMetadata) {
+            $aggregationName = $facetedMetadata == FtsConstants::KIND_ID ? FtsConstants::KIND_ID : $facetedMetadata->getId();
+            $aggregationFieldPath = $facetedMetadata == FtsConstants::KIND_ID
+                ? FtsConstants::KIND_ID
+                : $this->getMetadataPath($facetedMetadata);
+            $facetAggregation = new Filters($aggregationName);
+            $filtersForThisFacet = array_diff_key($facetFilters, [$aggregationName => '']);
+            foreach ($filtersForThisFacet as $filter) {
+                $facetAggregation->addFilter($filter);
+            }
+            if (!$filtersForThisFacet) {
+                $facetAggregation->addFilter(new Query\MatchAll());
+            }
+            $facetAggregation->addAggregation((new Terms($aggregationName))->setField($aggregationFieldPath));
+            $facetAggregations[] = $facetAggregation;
+        }
+        return $facetAggregations;
     }
 }

@@ -78,6 +78,7 @@ class Configuration implements ConfigurationInterface {
                     ->arrayNode('fts')->children()
                         ->arrayNode('searchable_metadata_ids')->prototype('scalar')->end()->end()
                         ->arrayNode('searchable_resource_classes')->prototype('scalar')->defaultValue([])->end()->end()
+                        ->arrayNode('facets')->prototype('scalar')->defaultValue([])->end()->end()
                     ->end()->end()
                 ->end()->end()->end()
             ->end();

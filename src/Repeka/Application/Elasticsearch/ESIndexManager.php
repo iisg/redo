@@ -2,7 +2,7 @@
 namespace Repeka\Application\Elasticsearch;
 
 use Repeka\Application\Elasticsearch\Mapping\ESMapping;
-use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
+use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 
 class ESIndexManager {
     /** @var ESMapping */
@@ -37,7 +37,7 @@ class ESIndexManager {
                 ],
             ]
         );
-        $type = $this->index->getType(ResourceConstants::ES_DOCUMENT_TYPE);
+        $type = $this->index->getType(FtsConstants::ES_DOCUMENT_TYPE);
         $this->esMapping->getMapping($type)->send();
     }
 

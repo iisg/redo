@@ -20,8 +20,7 @@ class ResourcesEndpointsExposer {
                     new FtsResourcesExposedEndpointRoute(
                         $path,
                         $endpoint['template'] ?? '',
-                        $endpoint['fts']['searchable_metadata_ids'] ?? [],
-                        $endpoint['fts']['searchable_resource_classes'] ?? [],
+                        $endpoint['fts'],
                         $endpoint['headers']
                     )
                 );

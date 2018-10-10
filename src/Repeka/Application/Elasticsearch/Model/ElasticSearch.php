@@ -7,7 +7,7 @@ use Elastica\ResultSet;
 use Elastica\Search;
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\ESClient;
-use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
+use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceFtsProvider;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
@@ -29,7 +29,7 @@ class ElasticSearch implements ResourceFtsProvider {
         $this->client = $client;
         $this->esContentsAdjuster = $esContentsAdjuster;
         $this->index = $this->client->getIndex($indexName);
-        $this->type = $this->index->getType(ResourceConstants::ES_DOCUMENT_TYPE);
+        $this->type = $this->index->getType(FtsConstants::ES_DOCUMENT_TYPE);
     }
 
     private function createDocument(ResourceEntity $resource): Document {
@@ -63,7 +63,7 @@ class ElasticSearch implements ResourceFtsProvider {
         $esQuery = new ElasticSearchQuery($query);
         $search = new Search($this->client);
         $search->addIndex($this->index->getName());
-        $search->addType(ResourceConstants::ES_DOCUMENT_TYPE);
+        $search->addType(FtsConstants::ES_DOCUMENT_TYPE);
         $search->setQuery($esQuery->getQuery());
         return $search->search();
     }

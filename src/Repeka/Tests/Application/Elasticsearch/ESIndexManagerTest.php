@@ -3,7 +3,7 @@ namespace Repeka\Tests\Application\Elasticsearch;
 
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\ESIndexManager;
-use Repeka\Application\Elasticsearch\Mapping\ResourceConstants;
+use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 
 class ESIndexManagerTest extends ElasticsearchTest {
     public function testCreatingIndex() {
@@ -26,7 +26,7 @@ class ESIndexManagerTest extends ElasticsearchTest {
                 ],
             ]
         );
-        $this->indexMock->expects($this->once())->method('getType')->with(ResourceConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
+        $this->indexMock->expects($this->once())->method('getType')->with(FtsConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
         (new ESIndexManager($this->clientMock, $this->mappingMock, self::INDEX_NAME))->create($numberOfShards, $numberOfReplicas);
     }
 
