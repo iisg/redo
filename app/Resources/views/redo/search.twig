@@ -37,13 +37,18 @@
                 <div class="score">{{ result.score | number_format(1) }}%</div>
                 <h3><a href="/resources/{{ result.id }}">{{ resource | mLabel }} (#{{ result.id }})</a></h3>
                 <p>{{ resource | mOpis }}</p>
-                <div class="highlights">
+                <table class="highlights">
                     {% for fieldName, highlights in result.highlights %}
-                        {% for highlight in highlights %}
-                            <p>{{ highlight | raw }}</p>
-                        {% endfor %}
+                        <tr>
+                            <th scope="row">{{ metadata(fieldName | slice(9) | number_format).label.PL }}</th>
+                            <td>
+                                {% for highlight in highlights %}
+                                    <p>{{ highlight | raw }}</p>
+                                {% endfor %}
+                            </td>
+                        </tr>
                     {% endfor %}
-                </div>
+                </table>
             </div>
         {% endfor %}
     </div>
