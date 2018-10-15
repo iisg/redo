@@ -1,14 +1,13 @@
 <template>
     <div class="radio-buttons-group">
-        <label v-for="label in labels"
-            :key="label">
+        <label v-for="option in values"
+            :key="option.label">
             <input type="radio"
-                :checked="label == value"
+                :checked="option == value"
                 :name="name"
-                :value="label"
-                v-on:change="$emit('input', $event.target.value)">
+                @change="$emit('input', option)">
             <div></div>
-            <span>{{label}}</span>
+            <span>{{option.label}}</span>
         </label>
     </div>
 </template>
@@ -17,8 +16,13 @@
   export default {
     props: {
       name: String,
-      labels: Array,
-      value: String
+      values: Array,
+      value: {}
+    },
+    mounted() {
+      if (!this.value) {
+        this.$emit('input', this.values[0]);
+      }
     }
   };
 </script>

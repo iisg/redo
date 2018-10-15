@@ -14,9 +14,10 @@
             </div>
             <div v-if="showOptions"
                 class="options">
-                <radio-buttons-group name="search-options"
-                    :labels="searchOptions"
-                    v-model="selectedOption"></radio-buttons-group>
+                <radio-buttons-group v-if="metadataSubsetOptions.length"
+                    name="search-options"
+                    :values="metadataSubsetOptions"
+                    v-model="selectedMetadataSubset"></radio-buttons-group>
                 <a :href="advancedSearchURL">
                     <icon name="settings-2"
                         size="1.25"></icon>
@@ -70,27 +71,43 @@
       onSubmit: Function,
       phrase: {
         default: '',
+      },
+      metadataSubsets: Array,
+      metadataSubset: {
+        default: '*',
       }
     },
     data() {
       return {
         inputText: '',
-        searchOptions: [
-          'Wszędzie',
-          'Tytuł, autor'
-        ],
-        selectedOption: 'Wszędzie'
+        selectedMetadataSubset: undefined
       };
     },
     mounted() {
       this.inputText = this.phrase || '';
+      this.selectedMetadataSubset = this.metadataSubsetOptions.find(option => option.ids == this.metadataSubset);
     },
     methods: {
       processedURL() {
-        return this.url.replace("%s", this.inputText);
+        let targetUrl = this.url.replace("%s", this.inputText);
+        if (this.selectedMetadataSubset && this.selectedMetadataSubset.ids != '*') {
+          targetUrl += '?metadataSubset=' + this.selectedMetadataSubset.ids;
+        }
+        return targetUrl;
       },
       navigateToProcessedURL() {
         window.location.href = this.processedURL();
+      }
+    },
+    computed: {
+      metadataSubsetOptions() {
+        if (this.metadataSubsets) {
+          const options = this.metadataSubsets;
+          options.unshift({ids: '*', label: 'Wszędzie'});
+          return options;
+        } else {
+          return [];
+        }
       }
     }
   };
