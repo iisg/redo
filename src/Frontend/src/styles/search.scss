@@ -25,6 +25,10 @@
         font-style: normal;
         background: lighten($orange, 10%);
       }
+      td, th {
+        padding: 2px 3px 2px 0;
+        vertical-align: top;
+      }
     }
   }
 }
