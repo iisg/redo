@@ -15,6 +15,7 @@ export class RelatedResourceMetadataFilterEditor {
 
   filteredMetadata: Metadata;
   filterValue: MetadataValue = new MetadataValue();
+  metadataKindsToChooseFrom: Metadata[];
 
   private resourceKindConstraintObserver: Disposable;
   private filteredMetadataObserver: Disposable;
@@ -32,6 +33,9 @@ export class RelatedResourceMetadataFilterEditor {
     if (currentFilterId) {
       this.filteredMetadata = await this.metadataRepository.get(currentFilterId);
       this.filterValue.value = this.metadata.constraints.relatedResourceMetadataFilter[currentFilterId];
+    } else {
+      this.filteredMetadata = undefined;
+      this.filterValue.value = undefined;
     }
   }
 
@@ -59,7 +63,7 @@ export class RelatedResourceMetadataFilterEditor {
   }
 
   private recreateFilteredMetadataObserver() {
-    this.disposeFilteredMetadataObserver;
+    this.disposeFilteredMetadataObserver();
     this.filteredMetadataObserver = this.bindingEngine
       .propertyObserver(this, 'filteredMetadata')
       .subscribe(() => this.updateConstraint());
@@ -109,7 +113,14 @@ export class RelatedResourceMetadataFilterEditor {
   @computedFrom('metadata.constraints.relatedResourceMetadataFilter', 'originalFilters', 'filteredMetadata', 'filterValue.value')
   get wasModified(): boolean {
     return (!this.originalFilters && !!this.filteredMetadata)
+      || (this.originalFilters && Object.keys(this.originalFilters).length && !this.filteredMetadata)
       || (this.originalFilters && this.filteredMetadata && !this.originalFilters[this.filteredMetadata.id])
       || (this.originalFilters && this.filteredMetadata && this.originalFilters[this.filteredMetadata.id] != this.filterValue.value);
+  }
+
+  @computedFrom('metadataKindsToChooseFrom', 'originalFilters')
+  get canBeRestored(): boolean {
+    return this.metadataKindsToChooseFrom && Object.keys(this.originalFilters)
+      .every(id => !!this.metadataKindsToChooseFrom.find(metadata => metadata.id == parseInt(id)));
   }
 }
