@@ -17,8 +17,10 @@ export class EntityChooser extends DropdownSelect {
     }
   }
   private valueUpdated: boolean;
+  private notFoundEntity: Entity;
 
   entitiesChanged() {
+    this.notFoundEntity = undefined;
     this.selectEquivalentEntity();
     this.updateValues();
     if (this.valueUpdated && !this.filter) {
@@ -26,13 +28,17 @@ export class EntityChooser extends DropdownSelect {
     }
   }
 
-  valueChanged() {
+  valueChanged(newValue?: Entity, previousValue?: Entity) {
     if (!this.valueUpdated) {
-      this.selectEquivalentEntity();
-      if (this.filter) {
-        this.updateValues();
-      } else {
-        super.valueChanged();
+      const entityFoundOrNotYetVerified = !this.notFoundEntity || (this.value && (this.value as Entity).id) != this.notFoundEntity.id;
+      const entityNotYetSelected = !newValue || !previousValue || newValue.id != previousValue.id;
+      if (entityFoundOrNotYetVerified && entityNotYetSelected) {
+        this.selectEquivalentEntity();
+        if (this.filter) {
+          this.updateValues();
+        } else {
+          super.valueChanged();
+        }
       }
     } else {
       this.valueUpdated = false;
@@ -40,9 +46,13 @@ export class EntityChooser extends DropdownSelect {
   }
 
   private selectEquivalentEntity() {
-    if (this.entities && this.value) {
-      this.valueUpdated = true;
-      this.value = this.entities.find(entity => entity.id == (this.value as Entity).id);
+    if (this.value && this.entities) {
+      const value = this.entities.find(entity => entity.id == (this.value as Entity).id);
+      if (!value) {
+        this.notFoundEntity = this.value as Entity;
+      }
+      this.valueUpdated = this.value != value;
+      this.value = value;
     }
   }
 }

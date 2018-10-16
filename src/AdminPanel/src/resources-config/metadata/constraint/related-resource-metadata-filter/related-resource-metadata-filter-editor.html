@@ -7,7 +7,8 @@
         <span>${'Metadata kind' | t}</span>
         <metadata-chooser value.bind="filteredMetadata"
             resource-class.bind="resourceClasses"
-            control.one-time="['text', 'textarea', 'relationship', 'integer']"></metadata-chooser>
+            control.one-time="['text', 'textarea', 'relationship', 'integer']"
+            entities.from-view="metadataKindsToChooseFrom"></metadata-chooser>
         <template if.bind="filteredMetadata">
             <span>${'Filter' | t}</span>
             <input type="text"
@@ -18,7 +19,7 @@
     <span else
         class="full-width value">${'Firstly, specify required resource kind.' | t}</span>
 
-    <restore-from-original-button if.bind="hasBase && wasModified"
+    <restore-from-original-button if.bind="hasBase && wasModified && canBeRestored"
         class="full-width"
         click.delegate="resetToOriginalValues()"></restore-from-original-button>
 </template>

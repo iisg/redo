@@ -1,5 +1,5 @@
-import {bindable} from "aurelia-templating";
 import {computedFrom, observable} from "aurelia-binding";
+import {bindable} from "aurelia-templating";
 import {changeHandler, twoWay} from "common/components/binding-mode";
 import {generateId} from "common/utils/string-utils";
 
@@ -32,8 +32,8 @@ export class MaxCountConstraintEditor {
 
   maxCountChanged(): void {
     this.modelIsChanging = true;
-    this.count = this.maxCount !== this.UNLIMITED_COUNT ? this.maxCount : this.DISPLAYED_COUNT_IF_UNLIMITED;
     this.isUnlimited = !this.maxCount || this.maxCount == this.UNLIMITED_COUNT;
+    this.count = this.isUnlimited ? this.DISPLAYED_COUNT_IF_UNLIMITED : this.maxCount;
     this.modelIsChanging = false;
   }
 
@@ -43,6 +43,7 @@ export class MaxCountConstraintEditor {
 
   @computedFrom('maxCount', 'originalMaxCount')
   get wasModified(): boolean {
-    return this.maxCount != this.originalMaxCount;
+    return this.maxCount != this.originalMaxCount && !(this.maxCount == this.UNLIMITED_COUNT && this.originalMaxCount == undefined);
+
   }
 }
