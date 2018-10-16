@@ -1,10 +1,17 @@
 @import "../../../common/styles";
 
 .metadata-details {
+  #child-metadata {
+    height: inherit;
+    metadata-list {
+      height: inherit;
+      overflow: auto;
+    }
+  }
   metadata-details-list, #configuration > div  {
     padding: $default-gap-size;
   }
-  metadata-list, metadata-details-list, metadata-form, resource-kinds-list {
+  metadata-list, metadata-details-list, resource-kinds-list {
     flex: 1;
   }
 }

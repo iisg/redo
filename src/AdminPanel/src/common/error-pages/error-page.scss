@@ -1,28 +1,32 @@
 @import "../styles";
 
 error-page {
-    text-align: center;
-    &, span {
-        padding: $default-gap-size / 2;
-    }
-    span {
-        display: block;
-    }
-    .title, .subtitle {
-        font-weight: bold;
-    }
-    .title {
-        font-size: 100px;
-        line-height: 100px;
-    }
-    .subtitle {
-        font-size: 40px;
-        line-height: 40px;
-    }
-    span:not(.title):not(.subtitle) {
-        line-height: 14px;
-    }
-    .subtitle + span {
-        margin-top: $default-gap-size + $default-gap-size / 2;
+    display: flex;
+    flex-direction: column;
+    & > div {
+        text-align: center;
+        &, span {
+            padding: $default-gap-size / 2;
+        }
+        span {
+            display: block;
+        }
+        .title, .subtitle {
+            font-weight: bold;
+        }
+        .title {
+            font-size: 100px;
+            line-height: 100px;
+        }
+        .subtitle {
+            font-size: 40px;
+            line-height: 40px;
+        }
+        span:not(.title):not(.subtitle) {
+            line-height: 14px;
+        }
+        .subtitle + span {
+            margin-top: $default-gap-size + $default-gap-size / 2;
+        }
     }
 }

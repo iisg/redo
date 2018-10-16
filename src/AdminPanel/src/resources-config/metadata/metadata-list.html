@@ -3,26 +3,26 @@
     <require from="./details/metadata-child-add"></require>
     <require from="common/components/buttons/add-button.html"></require>
 
-    <div>
-        <add-button if.bind="!addFormOpened"
-            entity-name="metadata"
-            toggled.two-way="addFormOpened"></add-button>
-        <div if.bind="addFormOpened"
-            class="well add-form au-animate fade-inout-updown">
-            <template if.bind="!parentMetadata">
-                <span>${'Add new metadata kind' | resourceClassTranslation:resourceClass}</span>
-                <metadata-form submit.call="addNewMetadata(editedMetadata)"
-                    cancel.call="addFormOpened = false"
-                    resource-class.bind="resourceClass"></metadata-form>
-            </template>
-            <template else>
-                <span>${'Add submetadata kind' | t}</span>
-                <metadata-child-add parent-metadata.bind="parentMetadata"
-                    saved.call="metadataAdded(savedMetadata)"
-                    cancel.call="addFormOpened = false"
-                    resource-class.bind="resourceClass"></metadata-child-add>
-            </template>
-        </div>
+    <add-button if.bind="!addFormOpened"
+        entity-name="metadata"
+        toggled.two-way="addFormOpened"></add-button>
+    <div if.bind="addFormOpened"
+        class="add-form well au-animate fade-inout-updown">
+        <template if.bind="!parentMetadata">
+            <span>${'Add new metadata kind' | resourceClassTranslation:resourceClass}</span>
+            <metadata-form submit.call="addNewMetadata(editedMetadata)"
+                cancel.call="addFormOpened = false"
+                resource-class.bind="resourceClass"></metadata-form>
+        </template>
+        <template else>
+            <span>${'Add submetadata kind' | t}</span>
+            <metadata-child-add parent-metadata.bind="parentMetadata"
+                saved.call="metadataAdded(savedMetadata)"
+                cancel.call="addFormOpened = false"
+                resource-class.bind="resourceClass"></metadata-child-add>
+        </template>
+    </div>
+    <div class="table-container"> <!-- For some reason this is required by Chrome to make horizontal scrolling possible. -->
         <table>
             <thead>
                 <tr>
@@ -90,10 +90,11 @@
                 </tr>
             </tbody>
         </table>
-        <div class="alert alert-info"
-            if.bind="metadataList.length === 0 && !progressBar">
-            <icon name="information"></icon>
-            ${'No metadata kinds.' | resourceClassTranslation:resourceClass}
-        </div>
     </div>
+    <div class="alert alert-info"
+        if.bind="metadataList.length === 0 && !progressBar">
+        <icon name="information"></icon>
+        ${'No metadata kinds.' | resourceClassTranslation:resourceClass}
+    </div>
+    <slot></slot>
 </template>

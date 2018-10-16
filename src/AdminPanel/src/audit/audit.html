@@ -1,0 +1,98 @@
+<template>
+    <require from="resources/details/resource-link"></require>
+    <require from="common/value-converters/date-value-converter"></require>
+    <require from="common/components/pagination/pagination"></require>
+    <require from="common/components/buttons/toggle-button"></require>
+    <require from="common/components/buttons/remove-button.html"></require>
+    <require from="./filters/audit-command-name-chooser"></require>
+    <require from="./filters/resource-contents-yaml-filter"></require>
+    <require from="./underscores-to-hyphens"></require>
+
+    <span class="page-subtitle">${'Filters' | t}</span>
+    <div class="form-with-buttons">
+        <div class="form-content simple-form">
+            <span>${'Operation' | t}</span>
+            <audit-command-name-chooser command-names.bind="filters.commandNames"
+                resource-id.bind="resourceId"></audit-command-name-chooser>
+            <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
+        </div>
+        <div class="form-buttons">
+            <toggle-button primary-icon-name="filter-2"
+                primary-label="Filter_verb"
+                click.delegate="onFiltersChanged()"></toggle-button>
+        </div>
+    </div>
+    <div if.bind="error"
+        class="alert alert-danger">
+        <strong>${'Invalid audit filters.' | t}</strong>
+        <span if.bind="error.statusCode == 404">
+            ${'Could not find metadata' | t}
+            ${error.content.params.query}
+        </span>
+    </div>
+    <pagination if.bind="entries.length"
+        total-number-of-elements.bind="entries.total"
+        elements-per-page.bind="filters.resultsPerPage"
+        current-page-number.bind="filters.currentPageNumber"
+        hide-elements-per-page-dropdown="true"></pagination>
+    <loading-bar if.bind="displayProgressBar"></loading-bar>
+    <div class="table-container"> <!-- For some reason this is required by Chrome to make horizontal scrolling possible. -->
+        <table if.bind="entries.length > 0">
+            <thead>
+            <tr>
+                <th>${'Date' | t}</th>
+                <th>${'Operation' | t}</th>
+                <th>${'User' | t}</th>
+                <th>${'Details' | t}</th>
+                <th repeat.for="column of filters.customColumns">
+                    <div class="input-with-remove-button">
+                        <input class="form-control"
+                            type="text"
+                            value.bind="column.displayStrategy"
+                            placeholder="Title: {{ r|mTitle }}, Scanner: {{ r|m('Scanner')|m(-2) }}"
+                            keyup.trigger="onFiltersChanged() & debounce:600">
+                        <remove-button click.delegate="filters.removeCustomColumn(column)"
+                            show-tooltips-instead-of-labels.bind="true"></remove-button>
+                    </div>
+                </th>
+                <th>
+                    <toggle-button primary-icon-name="add-2"
+                        primary-label="Add dynamic column"
+                        click.delegate="filters.addNewCustomColumn()"
+                        show-tooltips-instead-of-labels.bind="true"></toggle-button>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr repeat.for="entry of entries"
+                class="${entry.successful ? '' : 'failure'}">
+                <td>${entry.createdAt | date:'LLL'}</td>
+                <td>${'audit_commands::' + entry.commandName | t}</td>
+                <td>
+                    <resource-link if.bind="entry.user"
+                        id.bind="entry.user.userData.id"></resource-link>
+                </td>
+                <td>
+                    <compose view-model="./entry-details/audit-entry-details"
+                        view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
+                        model.bind="{entry: entry}"></compose>
+                </td>
+                <td repeat.for="column of filters.customColumns">
+                    ${entry.customColumns[column.displayStrategy] || '-'}
+                </td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div if.bind="entries.length === 0 && !displayProgressBar && !error"
+        class="alert alert-info">
+        <icon name="information"></icon>
+        ${'No entry matches given filters.' | t}
+    </div>
+    <pagination if.bind="entries.length"
+        total-number-of-elements.bind="entries.total"
+        elements-per-page.bind="filters.resultsPerPage"
+        current-page-number.bind="filters.currentPageNumber"></pagination>
+    <slot></slot>
+</template>

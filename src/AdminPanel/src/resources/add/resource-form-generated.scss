@@ -2,44 +2,31 @@
 
 $icons-width: 1.5em;
 $gap-size: $default-gap-size / 2;
+$resource-metadata-value-input-with-buttons-minimum-width: 200px;
 
 resource-form-generated {
-  padding-top: $default-gap-size / 4;
-  padding-bottom: $default-gap-size / 4;
-
-  &.simple-form, .simple-form {
-    grid-row-gap: 0;
-  }
-
   & > span, .input-container > *, .new-metadata-value-button-container, .drag-handle, .buttons {
     @include form-element();
-    margin-top: $gap-size / 2;
-    margin-bottom: $gap-size / 2;
   }
-
   .metadata-constraints-icons > * {
     margin-left: $gap-size / 2
   }
-
   resource-metadata-values-form {
     & > table {
       td > div {
         display: flex;
-        metadata-value-input > .input-container {
-          & > * {
-            flex: 1;
-            dropdown-select, resource-picker {
-              width: 100%;
-            }
-          }
-          & > resource-picker + span {
-            display: inline;
+        min-width: $resource-metadata-value-input-with-buttons-minimum-width; // To also keep correct right margin when the form is narrow.
+        metadata-value-input > compose > * {
+          flex: 1;
+          dropdown-select, resource-picker {
+            width: 100%;
           }
         }
         & > resource-metadata-value-input {
           flex: 1;
           margin-right: $gap-size / 2;
           & > resource-form-generated {
+            margin-top: $gap-size / 2;
             margin-left: $gap-size;
           }
         }
@@ -61,5 +48,4 @@ resource-form-generated {
       }
     }
   }
-
 }

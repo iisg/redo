@@ -14,6 +14,11 @@ $simple-form-number-input-box-minimum-width: 75px;
 body {
   font-family: 'Open Sans', sans-serif;
   color: $default-text-color;
+  overflow: hidden; // Without it, this used to happen for a narrower window: https://i.imgur.com/N5YyPm9.png.
+}
+
+[aurelia-app] {
+  overflow: hidden;
 }
 
 sidebar.collapsed {
@@ -39,20 +44,97 @@ sidebar.collapsed {
     z-index: $top-bar-z-index;
   }
   & > router-view {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     flex: 1;
-    overflow: hidden;
     background-color: white;
-    &, & > a, metadata-list {
-      & > div > add-button {
-        display: flex;
-        justify-content: flex-end;
+    overflow: hidden;
+    & > * {
+      height: 100%;
+      &:not(.resource-details):not(.metadata-details):not(.resource-kind-details):not(.workflow-details) {
+        overflow: auto;
+      }
+      &:not(audit):not(.about-the-application) > redo-footer {
+        padding-top: $default-gap-size;
       }
     }
-    & > * {
-      overflow: auto;
-      max-height: 100%;
+  }
+}
+
+.metadata-details, .resource-kind-details, .resource-details, .workflow-details, .workflow-form-content {
+  display: flex;
+  flex-direction: column;
+  .name-with-buttons-and-tabs {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: $default-gap-size / 4;
+    padding-bottom: $default-gap-size / 4;
+    border-bottom: $default-gap-size / 4 solid $light-blue;
+    overflow: auto;
+    & > :not(.buttons):not(aup-tabs) {
+      margin: $default-gap-size / 4 $default-gap-size / 2;
     }
+    & > .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      padding-left: $default-gap-size / 4;
+      padding-right: $default-gap-size / 4;
+      & > * {
+        margin: $default-gap-size / 4;
+      }
+    }
+    aup-tabs {
+      align-self: flex-end;
+      margin-top: $default-gap-size / 4;
+      margin-bottom: - $default-gap-size / 4;
+      margin-left: auto;
+      padding-left: $default-gap-size / 2;
+      & > ul {
+        border: none;
+        & > li {
+          margin-bottom: 0;
+          & > a {
+            margin-right: 0;
+            padding: $default-gap-size / 8 $default-gap-size / 2;
+            border: 0;
+            border-radius: 0;
+            text-transform: uppercase;
+            color: $default-text-color;
+            @include transition(background-color .3s ease-out, color .3s ease-out);
+            &.active, &:hover {
+              background-color: $light-blue;
+              color: white;
+            }
+            &.active {
+              font-style: normal;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+metadata-list, resource-kinds-list, workflows-list, .languages-list, audit {
+  display: flex;
+  flex-direction: column;
+  & > :not(table):not(.table-container):not(.add-form):not(.form-with-buttons) {
+    position: sticky;
+    left: 0;
+  }
+}
+metadata-list, resource-kinds-list, workflows-list, .languages-list {
+  & > add-button {
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+}
+resources-list, metadata-list, resource-kinds-list {
+  & > .add-form {
+    flex-shrink: 0;
   }
 }
 
@@ -194,6 +276,7 @@ table {
 .simple-form {
   display: grid;
   grid-template-columns: auto minmax(60%, 1fr);
+  grid-template-columns: fit-content(40%) auto;
   grid-column-gap: $default-gap-size;
   grid-row-gap: $default-gap-size / 2;
   & > span:not(.value):not(.validation-message), & > .key {
@@ -252,9 +335,12 @@ table {
 
 .form-with-buttons {
   display: flex;
+  flex-wrap: wrap;
+  padding-top: $default-gap-size / 4;
+  padding-bottom: $default-gap-size / 4;
   & > .form-content {
     flex: 1;
-    padding: $default-gap-size / 2;
+    padding: $default-gap-size / 4 $default-gap-size / 2;
   }
   & > .form-buttons {
     position: sticky;
@@ -262,8 +348,11 @@ table {
     flex-direction: column;
     flex: 0;
     top: $default-gap-size / 2;
-    align-self: baseline;
-    &, & > * {
+    margin-left: auto;
+    align-self: flex-start;
+    padding-left: $default-gap-size / 4;
+    padding-right: $default-gap-size / 4;
+    & > * {
       padding: $default-gap-size / 4;
     }
     & > * {
@@ -309,6 +398,17 @@ textarea {
   height: initial;
 }
 
+.add-form {
+  align-self: flex-start;
+  flex-shrink: 0;
+  min-width: 100%;
+  & > span {
+    display: block;
+    padding: $default-gap-size / 2;
+    @extend .page-title;
+  }
+}
+
 .well {
   padding: $default-gap-size / 2;
   margin-bottom: 0;
@@ -330,13 +430,6 @@ textarea {
     position: absolute;
     right: 0;
     border-top-right-radius: 0;
-  }
-  &.add-form {
-    & > span {
-      display: block;
-      padding: $default-gap-size / 2;
-      @extend .page-title;
-    }
   }
 }
 
@@ -418,68 +511,6 @@ ux-dialog-overlay {
     @include animation(fadeOutUp .3s);
   }
 }
-
-.metadata-details, .resource-kind-details, .resource-details, .workflow-details, .workflow-form-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
-  .name-with-buttons-and-tabs {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    flex-wrap: wrap;
-    padding-top: $default-gap-size / 4;
-    padding-bottom: $default-gap-size / 4;
-    border-bottom: $default-gap-size / 4 solid $light-blue;
-    & > :not(.buttons):not(aup-tabs) {
-      margin: $default-gap-size / 4 $default-gap-size / 2;
-    }
-    & > .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      padding-left: $default-gap-size / 4;
-      padding-right: $default-gap-size / 4;
-      & > * {
-        margin: $default-gap-size / 4;
-      }
-    }
-    aup-tabs {
-      align-self: flex-end;
-      margin-top: $default-gap-size / 4;
-      margin-bottom: - $default-gap-size / 4;
-      margin-left: auto;
-      padding-left: $default-gap-size / 2;
-      & > ul {
-        border: none;
-        & > li {
-          margin-bottom: 0;
-          & > a {
-            margin-right: 0;
-            padding: $default-gap-size / 8 $default-gap-size / 2;
-            border: 0;
-            border-radius: 0;
-            text-transform: uppercase;
-            color: $default-text-color;
-            @include transition(background-color .3s ease-out, color .3s ease-out);
-            &.active, &:hover {
-              background-color: $light-blue;
-              color: white;
-            }
-            &.active {
-              font-style: normal;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  aup-tab-content, .content {
-    overflow: auto;
-  }
-}
-
 
 // max-height animation, idea based on: http://stackoverflow.com/a/8331169/878514
 @mixin anim-height-inout($max-height) {

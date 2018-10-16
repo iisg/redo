@@ -1,11 +1,11 @@
+import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {TaskFinder} from "./task-finder";
 import {ComponentAttached} from "aurelia-templating";
-import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
 import {getMergedBriefMetadata} from "../common/utils/metadata-utils";
 import {Metadata} from "../resources-config/metadata/metadata";
+import {ResourceKindRepository} from "../resources-config/resource-kind/resource-kind-repository";
+import {TaskFinder} from "./task-finder";
 import {TasksCollection} from "./tasks-collection";
-import {computedFrom} from "aurelia-binding";
 
 @autoinject
 export class Tasks implements ComponentAttached {

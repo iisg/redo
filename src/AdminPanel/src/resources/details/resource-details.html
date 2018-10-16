@@ -7,12 +7,12 @@
     <require from="common/components/buttons/remove-button.html"></require>
     <require from="common/components/buttons/edit-button.html"></require>
     <require from="common/components/buttons/manage-button.html"></require>
+    <require from="common/components/redo-footer/redo-footer.html"></require>
     <require from="users/details/users-in-group"></require>
     <require from="users/details/user-roles"></require>
-    <require from="../../audit/audit-page"></require>
+    <require from="../../audit/audit"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
-
     <div else
         class="resource-details au-animate fade-inup-outup">
         <div class="name-with-buttons-and-tabs">
@@ -47,11 +47,13 @@
                     has-resources.bind="hasChildren"
                     results-per-page.from-view="resultsPerPage"
                     current-page-number.from-view="currentPageNumber"
-                    disable-add-resource.bind="!allowAddChildResource"></resources-list>
+                    disable-add-resource.bind="!allowAddChildResource">
+                    <redo-footer></redo-footer>
+                </resources-list>
             </aup-tab-pane>
             <aup-tab-pane tab="details">
                 <div if.bind="resourceDetailsTabs.activeTabId === 'details'">
-                    <template if.bind="!isFormOpened">
+                    <div if.bind="!isFormOpened">
                         <resource-metadata-table resource.bind="resource"
                             show-resource-kind></resource-metadata-table>
                         <apply-transition-button
@@ -59,7 +61,7 @@
                             resource.bind="resource"
                             transition.bind="updateTransition"
                             click.delegate="showTransitionForm(updateTransition)"></apply-transition-button>
-                    </template>
+                    </div>
                     <resource-form else
                         resource-class.bind="resource.resourceClass"
                         currently-edited-resource.bind="resource"
@@ -73,9 +75,11 @@
                     resource.bind="resource"></resource-workflow>
             </aup-tab-pane>
             <aup-tab-pane tab="audit">
-                <audit-page if.bind="resourceDetailsTabs.activeTabId === 'audit'"
+                <audit if.bind="resourceDetailsTabs.activeTabId === 'audit'"
                     resource-id.bind="resource.id"
-                    filters.from-view="filters"></audit-page>
+                    filters.from-view="filters">
+                    <redo-footer></redo-footer>
+                </audit>
             </aup-tab-pane>
             <aup-tab-pane tab="users-in-group">
                 <users-in-group if.bind="resourceDetailsTabs.activeTabId === 'users-in-group'"
@@ -85,6 +89,7 @@
                 <user-roles if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"
                     user-data.bind="resource"></user-roles>
             </aup-tab-pane>
+            <redo-footer if.bind="resourceDetailsTabs.activeTabId !== 'children' && resourceDetailsTabs.activeTabId !== 'audit'"></redo-footer>
         </aup-tab-content>
     </div>
 </template>

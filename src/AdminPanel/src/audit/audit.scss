@@ -1,0 +1,55 @@
+@import "../common/styles";
+
+$minimum-width-of-input-field-for-dynamic-column: 75px;
+$input-box-height: 34px;
+
+audit {
+  & > :not(.page-subtitle):not(.table-container):not(redo-footer) {
+    padding-left: $default-gap-size / 2;
+    padding-right: $default-gap-size / 2;
+  }
+  .page-subtitle {
+    padding-top: $default-gap-size;
+    padding-left: $default-gap-size;
+    padding-right: $default-gap-size;
+  }
+  .form-with-buttons {
+    flex-shrink: 0;
+    .simple-form {
+      & > * {
+        @include form-element();
+      }
+      resource-contents-yaml-filter {
+        display: contents;
+      }
+    }
+  }
+  pagination {
+    display: block;
+    &:last-of-type {
+      padding-bottom: $default-gap-size;
+    }
+  }
+  table {
+    .input-with-remove-button {
+      display: flex;
+      input {
+        min-width: $minimum-width-of-input-field-for-dynamic-column;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    toggle-button {
+      height: $input-box-height;
+      button:only-child {
+        padding-left: $default-gap-size / 2;
+        padding-right: $default-gap-size / 2;
+      }
+    }
+  }
+  .failure {
+    td {
+      background-color: rgba($red, .2);
+    }
+  }
+}

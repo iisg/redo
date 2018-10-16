@@ -2,73 +2,77 @@
     <require from="./language-form"></require>
     <require from="common/components/flag/flag"></require>
     <require from="common/components/buttons/add-button.html"></require>
+    <require from="common/components/redo-footer/redo-footer.html"></require>
 
-    <add-button toggled.two-way="addFormOpened"></add-button>
-
-    <div if.bind="addFormOpened"
-        class="well fade-inup-outdown au-animate">
-        <language-form submit.call="addNewLanguage(savedLanguage)"></language-form>
+    <div class="languages-list">
+        <add-button toggled.two-way="addFormOpened"></add-button>
+        <div if.bind="addFormOpened"
+            class="add-form well fade-inup-outdown au-animate">
+            <language-form submit.call="addNewLanguage(savedLanguage)"></language-form>
+        </div>
+        <div class="table-container"> <!-- For some reason this is required by Chrome to make horizontal scrolling possible. -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>${'Code' | t}</th>
+                        <th>${'Flag' | t}</th>
+                        <th>${'Language' | t}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr if.bind="!languages">
+                        <th colspan="5">
+                            <loading-bar></loading-bar>
+                        </th>
+                    </tr>
+                </tfoot>
+                <tbody class="au-stagger">
+                    <tr class="au-animate fade-inup-outdown ${language.editing ? 'edit-form' : ''}"
+                        repeat.for="language of languages">
+                        <td if.bind="!language.editing">
+                            ${language.code}
+                        </td>
+                        <td if.bind="!language.editing">
+                            <flag name.one-time="language.flag"></flag>
+                            ${language.flag}
+                        </td>
+                        <td if.bind="!language.editing">
+                            ${language.name}
+                        </td>
+                        <td if.bind="!language.editing"
+                            class="with-buttons-container">
+                            <div>
+                                <button type="button"
+                                    click.trigger="language.editing = true"
+                                    disabled.bind="language.pendingRequest">
+                                    <icon name="edit-2"
+                                        size="1.25"></icon>
+                                </button>
+                                <button type="button"
+                                    class="remove"
+                                    click.trigger="deleteLanguage(language)"
+                                    disabled.bind="language.pendingRequest">
+                                    <icon name="remove-4"
+                                        size="1.25"></icon>
+                                </button>
+                            </div>
+                        </td>
+                        <td colspan="4"
+                            if.bind="language.editing">
+                            <div if.bind="language.editing"
+                                class="au-animate anim-height-inout-600">
+                                <language-form submit.call="saveEditedLanguage(language, savedLanguage) && (language.editing = false)"
+                                    edit.bind="language"
+                                    cancel.call="language.editing = false"></language-form>
+                            </div>
+                        </td>
+                        <td class="with-throbber"><throbber if.bind="language.pendingRequest"></throbber></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <redo-footer></redo-footer>
     </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>${'Code' | t}</th>
-                <th>${'Flag' | t}</th>
-                <th>${'Language' | t}</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr if.bind="!languages">
-                <th colspan="5">
-                    <loading-bar></loading-bar>
-                </th>
-            </tr>
-        </tfoot>
-        <tbody class="au-stagger">
-            <tr class="au-animate fade-inup-outdown ${language.editing ? 'edit-form' : ''}"
-                repeat.for="language of languages">
-                <td if.bind="!language.editing">
-                    ${language.code}
-                </td>
-                <td if.bind="!language.editing">
-                    <flag name.one-time="language.flag"></flag>
-                    ${language.flag}
-                </td>
-                <td if.bind="!language.editing">
-                    ${language.name}
-                </td>
-                <td if.bind="!language.editing"
-                    class="with-buttons-container">
-                    <div>
-                        <button type="button"
-                            click.trigger="language.editing = true"
-                            disabled.bind="language.pendingRequest">
-                            <icon name="edit-2"
-                                size="1.25"></icon>
-                        </button>
-                        <button type="button"
-                            class="remove"
-                            click.trigger="deleteLanguage(language)"
-                            disabled.bind="language.pendingRequest">
-                            <icon name="remove-4"
-                                size="1.25"></icon>
-                        </button>
-                    </div>
-                </td>
-                <td colspan="4"
-                    if.bind="language.editing">
-                    <div if.bind="language.editing"
-                        class="au-animate anim-height-inout-600">
-                        <language-form submit.call="saveEditedLanguage(language, savedLanguage) && (language.editing = false)"
-                            edit.bind="language"
-                            cancel.call="language.editing = false"></language-form>
-                    </div>
-                </td>
-                <td class="with-throbber"><throbber if.bind="language.pendingRequest"></throbber></td>
-            </tr>
-        </tbody>
-    </table>
 </template>

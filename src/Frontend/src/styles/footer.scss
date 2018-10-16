@@ -2,17 +2,17 @@
 // https://www.funduszeeuropejskie.gov.pl/media/9916/KIW_CMYK_09102015.pdf.
 // Please take it into consideration while making some changes affecting any of them.
 
-$width-of-the-separator: 1px;
-$powered-by-redo-logo-maximum-width: 143px;
-$creative-commons-icons-with-description-max-width: 275px;
-$creative-commons-icons-description-font-size: 0.75rem;
-$fe-and-ue-logos-height-to-keep-correct-gap-size: 41px;
-$fe-and-ue-logos-minimum-width-to-keep-correct-gap-size: 259px;
-$fe-and-ue-logos-maximum-width-to-keep-correct-gap-size: 261px;
-$ue-logo-image-height-to-keep-correct-proportions-between-logos: 32px;
-$fe-logo-image-height-to-keep-correct-proportions-between-logos: 43px;
+@mixin redo-footer($maximum-width-before-changing-layout-to-horizontal-offset: 0) {
+    $width-of-the-separator: 1px;
+    $powered-by-redo-logo-maximum-width: 143px;
+    $creative-commons-icons-with-description-max-width: 275px;
+    $creative-commons-icons-description-font-size: 0.75rem;
+    $fe-and-ue-logos-height-to-keep-correct-gap-size: 41px;
+    $fe-and-ue-logos-minimum-width-to-keep-correct-gap-size: 259px;
+    $fe-and-ue-logos-maximum-width-to-keep-correct-gap-size: 261px;
+    $ue-logo-image-height-to-keep-correct-proportions-between-logos: 32px;
+    $fe-logo-image-height-to-keep-correct-proportions-between-logos: 43px;
 
-.footer {
     display: flex;
     flex-shrink: 0; // Required by Internet Explorer.
     flex-wrap: wrap;
@@ -66,7 +66,8 @@ $fe-logo-image-height-to-keep-correct-proportions-between-logos: 43px;
     .vertical {
         display: none;
     }
-    @media (max-width: #{$fe-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size}) {
+    @media (max-width: #{$fe-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
+        + $maximum-width-before-changing-layout-to-horizontal-offset}) {
         & > :last-child {
             flex-direction: column;
             align-items: flex-start;
@@ -88,4 +89,8 @@ $fe-logo-image-height-to-keep-correct-proportions-between-logos: 43px;
             }
         }
     }
+}
+
+.footer {
+    @include redo-footer();
 }

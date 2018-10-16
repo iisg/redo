@@ -1,6 +1,7 @@
 <template>
     <require from="common/components/buttons/remove-button.html"></require>
     <require from="common/components/buttons/edit-button.html"></require>
+    <require from="common/components/redo-footer/redo-footer.html"></require>
     <require from="../resource-kind-form"></require>
     <require from="../../../workflows/details/graph/workflow-graph-display"></require>
 
@@ -19,7 +20,7 @@
         <aup-tab-content>
             <aup-tab-pane tab="details">
                 <div if.bind="resourceKindDetailsTabs.activeTabId === 'details'">
-                    <template if.bind="!editing">
+                    <div if.bind="!editing">
                         <div class="simple-form">
                             <template repeat.for="metadata of resourceKind.metadataList">
                                 <template if.bind="metadata.resourceClass">
@@ -36,7 +37,7 @@
                         <edit-button toggled.bind="editing"
                             disabled.bind="resourceKind.pendingRequest"
                             click.delegate="showEditForm()"></edit-button>
-                    </template>
+                    </div>
                     <resource-kind-form else
                         resource-class.bind="resourceKind.resourceClass"
                         currently-edited-resource-kind.bind="resourceKind"
@@ -48,6 +49,7 @@
                 <workflow-graph-display if.bind="resourceKindDetailsTabs.activeTabId === 'workflow'"
                     workflow.bind="resourceKind.workflow"></workflow-graph-display>
             </aup-tab-pane>
+            <redo-footer></redo-footer>
         </aup-tab-content>
     </div>
 </template>

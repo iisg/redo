@@ -1,45 +1,51 @@
 <template>
     <require from="resources/list/resources-list-table"></require>
     <require from="./possible-actions.html"></require>
+    <require from="common/components/redo-footer/redo-footer.html"></require>
+
     <div class="tasks">
-        <span class="page-title">${"Your current tasks" | t}:</span>
+        <span class="page-title">${"Your current tasks" | t}</span>
         <div if.bind="tasksCollection && !myTasksExists"
             class="alert alert-success">
             <icon name="accept-2"></icon>
             ${"No current tasks!" | t}
         </div>
+        <template else>
+            <template repeat.for="tasks of tasksCollection">
+                <span if.bind="tasks.myTasks.length > 0"
+                    class="page-subtitle">${'resource_classes::' + tasks.resourceClass + '//resources' | t}</span>
+                <resources-list-table if.bind="tasks.myTasks.length > 0"
+                    resources.bind="tasks.myTasks"
+                    sortable.bind="false"
+                    filterable.bind="false"
+                    column-metadata.bind="briefMetadata[tasks.resourceClass]"
+                    extra-column-names.one-time="['Possible actions']"
+                    extra-column-views.one-time="['tasks/possible-actions.html']">
+                </resources-list-table>
+            </template>
+        </template>
         <loading-bar if.bind="tasksCollection === undefined"></loading-bar>
-        <div repeat.for="tasks of tasksCollection">
-            <span if.bind="tasks.myTasks.length > 0"
-                class="tasks-class">${'resource_classes::' + tasks.resourceClass + '//resources' | t}</span>
-            <resources-list-table if.bind="tasks.myTasks.length > 0"
-                resources.bind="tasks.myTasks"
-                sortable.bind="false"
-                filterable.bind="false"
-                column-metadata.bind="briefMetadata[tasks.resourceClass]"
-                extra-column-names.one-time="['Possible actions']"
-                extra-column-views.one-time="['tasks/possible-actions.html']">
-            </resources-list-table>
-        </div>
-
-        <span class="page-title">${"Other tasks you can do" | t}:</span>
+        <span class="page-title">${"Other tasks you can do" | t}</span>
         <div if.bind="tasksCollection && !possibleTasksExists"
             class="alert alert-success">
             <icon name="accept-2"></icon>
             ${"No current tasks!" | t}
         </div>
+        <template else>
+            <template repeat.for="tasks of tasksCollection">
+                <span if.bind="tasks.possibleTasks.length > 0"
+                    class="page-subtitle">${'resource_classes::' + tasks.resourceClass + '//resources' | t}</span>
+                <resources-list-table if.bind="tasks.possibleTasks.length > 0"
+                    resources.bind="tasks.possibleTasks"
+                    sortable.bind="false"
+                    filterable.bind="false"
+                    column-metadata.bind="briefMetadata[tasks.resourceClass]"
+                    extra-column-names.one-time="['Possible actions']"
+                    extra-column-views.one-time="['tasks/possible-actions.html']">
+                </resources-list-table>
+            </template>
+        </template>
         <loading-bar if.bind="tasksCollection === undefined"></loading-bar>
-        <div repeat.for="tasks of tasksCollection">
-            <span if.bind="tasks.possibleTasks.length > 0"
-                class="tasks-class">${'resource_classes::' + tasks.resourceClass + '//resources' | t}</span>
-            <resources-list-table if.bind="tasks.possibleTasks.length > 0"
-                resources.bind="tasks.possibleTasks"
-                sortable.bind="false"
-                filterable.bind="false"
-                column-metadata.bind="briefMetadata[tasks.resourceClass]"
-                extra-column-names.one-time="['Possible actions']"
-                extra-column-views.one-time="['tasks/possible-actions.html']">
-            </resources-list-table>
-        </div>
+        <redo-footer></redo-footer>
     </div>
 </template>
