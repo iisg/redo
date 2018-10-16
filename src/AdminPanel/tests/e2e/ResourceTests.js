@@ -4,8 +4,8 @@ describe('Resource Tests', function() {
 	   browser.driver.wait(function () {
 			return locator.isPresent()
 	   }, 10000);
-  } 
-  
+  }
+
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 		browser.driver.manage().window().maximize();
@@ -40,6 +40,7 @@ describe('Resource Tests', function() {
 	var addResourceButton = element(by.cssContainingText('span', 'Dodaj'));
 	addResourceButton.click();
 
+	waitForElement(element(by.className('current-page-number')));
 	waitForElement(element(by.className('select2-selection__rendered')));
 	var lists = element.all(by.className('select2-selection__rendered'));
 	var listToClick = lists.get(1);
@@ -65,12 +66,10 @@ describe('Resource Tests', function() {
 	newMetadataValueFieldBlanks.get(1).sendKeys('Value2');
 
 	waitForElement(element(by.buttonText('Dodaj')));
-	var addRButton = element(by.buttonText('Dodaj'));
-	addRButton.click();
+	var addButton = element(by.buttonText('Dodaj'));
+	addButton.click();
 
-	waitForElement(element(by.className('au-target resources-list')));
-	var resourcesListNew = element(by.className('au-target resources-list'));
-	expect(resourcesListNew.getText()).toContain('Rodzaj_do_testowania_automatycznego');
+	waitForElement(element(by.cssContainingText('span', 'Rodzaj_do_testowania_automatycznego')));
   });
 
   it('Try to remove required metadata value', function() {
