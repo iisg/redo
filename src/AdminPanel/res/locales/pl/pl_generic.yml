@@ -149,6 +149,7 @@ Ignored values unsuitable for their metadata controls:: Zignorowane wartości ni
 Ignored values that have no matching metadata in this resource kind:: Zignorowane wartości nieposiadające odpowiadającej im metadanej w rodzaju zasobu:
 File is not a valid import configuration: Plik nie jest poprawną konfiguracją importu.
 To states: Do stanu
+And move to states: i przejdź do stanów
 And move to state: i przejdź do stanu
 No more values are allowed: Wprowadzono maksymalną liczbę wartości
 Some metadata constraints have not been met. Fix the form errors and try again.: Wymagania niektórych metadanych nie zostały spełnione. Popraw błędy formularza i spróbuj ponownie.

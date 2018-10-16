@@ -6,7 +6,6 @@ import {BindingSignaler} from "aurelia-templating-resources";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {move, removeValue} from "common/utils/array-utils";
-import {noop, VoidFunction} from "common/utils/function-utils";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
@@ -123,14 +122,14 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
 
   validateAndSubmit() {
     this.submitting = true;
-    $('.resource-kind-edit-form-metadata-item').removeClass('not-valid');
+    $('.metadata-list-item').removeClass('not-valid');
     this.controller.validate().then(result => {
       if (result.valid) {
         this.changeLossPreventer.disable();
         return Promise.resolve(this.submit({savedResourceKind: this.resourceKind}))
           .then(() => this.editing || (this.resourceKind = new ResourceKind()));
       } else {
-        $('.has-error').closest('.resource-kind-edit-form-metadata-item').addClass('not-valid');
+        $('.has-error').closest('.metadata-list-item').addClass('not-valid');
       }
     }).finally(() => this.submitting = false);
   }

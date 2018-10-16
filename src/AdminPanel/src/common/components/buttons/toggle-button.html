@@ -1,8 +1,8 @@
-<template>
-    <div class="${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''}"
+<template class="${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''}">
+    <button bootstrap-tooltip.bind="showTooltipsInsteadOfLabels ? toggled ? secondaryLabel : primaryLabel : '' | t"
         click.delegate="stopIfDisabled($event)">
         <div if.bind="secondaryIconName"
-            bootstrap-tooltip.bind="showTooltipsInsteadOfLabels ? toggled ? secondaryLabel : primaryLabel : '' | t">
+            class="icons">
             <icon class="${toggled ? '' : 'visible'}"
                 name="${primaryIconName}"
                 size="1.25"></icon>
@@ -13,16 +13,17 @@
         <icon else
             if.bind="primaryIconName"
             name="${primaryIconName}"
-            size="1.25"
-            bootstrap-tooltip.bind="showTooltipsInsteadOfLabels ? primaryLabel : '' | t"></icon>
+            size="1.25"></icon>
         <span if.bind="primaryLabel && !showTooltipsInsteadOfLabels">
             ${toggled ? secondaryLabel : primaryLabel | t}
-            <span if.bind="!toggled && entityName">
+            <template if.bind="!toggled && entityName">
                 ${'entity_types::' + entityName | t:{context: 'accusative'} }
-            </span>
+            </template>
         </span>
-        <icon if.bind="disabled && !!disabilityReason"
-            class="disability-reason-icon"
+    </button>
+    <div if.bind="disabled && !!disabilityReason"
+        click.delegate="stopIfDisabled($event)">
+        <icon class="disability-reason-icon"
             name.bind="disabilityReason.icon"
             bootstrap-tooltip.bind="disabilityReason.message | t"></icon>
     </div>

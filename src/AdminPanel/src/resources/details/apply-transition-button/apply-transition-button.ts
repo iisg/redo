@@ -27,7 +27,7 @@ export class ApplyTransitionButton {
   }
 
   @computedFrom('resource', 'transition')
-  get transitionInactiveReasons(): DisabilityReason[] {
+  get transitionInactivityReasons(): DisabilityReason[] {
     if (this.resource === undefined || this.transition === undefined) {
       return undefined;
     }

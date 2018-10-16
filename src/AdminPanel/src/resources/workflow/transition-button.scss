@@ -1,12 +1,25 @@
 @import "../../common/styles";
 
+$additional-information-font-size: 0.75em;
+$additional-information-min-height: 15px;
+
 transition-button {
-  button {
-    text-align: left;
-    span.additional-information {
-      display: block;
-      font-size: 0.75em;
-      white-space: normal;
+  submit-button {
+    button {
+      text-align: left;
+      flex-wrap: wrap;
+      .additional-information {
+        display: block;
+        width: 100%;
+        min-height: $additional-information-min-height;
+        font-size: $additional-information-font-size;
+        &:not(:first-of-type) {
+          white-space: normal;
+        }
+      }
+      & > div {
+        min-height: inherit;
+      }
     }
   }
 }

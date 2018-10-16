@@ -50,13 +50,16 @@
                             repeat.for="transition of availableTransitions">
                             <button class="toggle-button"
                                 click.delegate="advanceSimulation(transition.id)">
-                                <div ref="transition.translatedLabel"
-                                    value.one-time="transition.label | inCurrentLanguage">
-                                    <span if.one-time="transition.translatedLabel.value">${transition.translatedLabel.value}</span>
-                                    <template if.one-time="!transition.translatedLabel.value">
-                                        <span class="generated-transition-name">${'Transition' | t} #${$index + 1}</span>
+                                <span ref="transition.translatedLabel"
+                                    value.one-time="transition.label | inCurrentLanguage"
+                                    class.one-time="transition.translatedLabel.value ? '' : 'generated-transition-name'">
+                                    <template if.one-time="transition.translatedLabel.value">
+                                        ${transition.translatedLabel.value}
                                     </template>
-                                </div>
+                                    <template else>
+                                        ${'Transition' | t} #${$index + 1}
+                                    </template>
+                                </span>
                             </button>
                         </div>
                     </div>

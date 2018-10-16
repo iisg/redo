@@ -1,7 +1,7 @@
 @import "../../styles";
 
 add-button toggle-button {
-  .toggled {
+  &.toggled {
     @include toggle-button-colors($orange);
   }
 }

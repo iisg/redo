@@ -5,11 +5,11 @@ resource-form {
     display: block;
   }
 
-  & > span, & > toggle-button, & > .resource-kind-chooser-with-cancel-button > *, & > .workflow-place-chooser-container {
+  & > span, & > .resource-kind-chooser-with-cancel-button > *, & > .workflow-place-chooser-container {
     padding: $default-gap-size / 2;
   }
 
-  & > .alert {
+  & > .alert, & > toggle-button {
     margin: $default-gap-size / 2;
   }
 

@@ -1,15 +1,18 @@
-<template click.trigger="stopIfDisabled($event)">
+<template class="toggle-button ${canApplyTransition ? '' : 'disabled'}">
     <require from="./transition-label"></require>
 
-    <button class="toggle-button"
-        disabled.bind="!canApplyTransition">
+    <button click.delegate="stopIfDisabled($event)">
         <icon if.bind="iconName"
             name="${iconName}"
             size="1.25"></icon>
         <span>${transition | transitionLabel}</span>
-        <throbber if.bind="!transitionInactiveReasons"></throbber>
-        <icon repeat.for="reason of transitionInactiveReasons"
+        <throbber if.bind="!transitionInactivityReasons"></throbber>
+    </button>
+    <div if.bind="transitionInactivityReasons.length"
+        click.delegate="stopIfDisabled($event)">
+        <icon repeat.for="reason of transitionInactivityReasons"
+            class="disability-reason-icon"
             name.bind="reason.icon"
             bootstrap-tooltip.bind="reasonTooltip(reason)"></icon>
-    </button>
+    </div>
 </template>
