@@ -6,7 +6,8 @@
         secondary-icon-name="remove-3"
         secondary-label="Cancel"
         entity-name.bind="entityName"
-        click.delegate="toggled = !toggled"
+        toggled.bind="toggled"
         disabled.bind="disabled"
-        disability-reason.bind="disabilityReason"></toggle-button>
+        disability-reason.bind="disabilityReason"
+        click.delegate="toggled = !toggled"></toggle-button>
 </template>

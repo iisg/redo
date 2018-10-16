@@ -1,36 +1,80 @@
-@mixin toggle-button-colors($background-color: $blue, $color: white) {
-  background-color: $background-color;
-  color: $color;
-  @include transition(color .3s, background-color .3s);
-  &:hover:not(.disabled):not([disabled]) {
-    background-color: lighten($background-color, $default-value-to-lighten-colors-by);
+@mixin toggle-button-colors($background-color: $blue, $color: white, $button-wrapper: true) {
+  #{if($button-wrapper, "& > *", "&")} {
+    background-color: $background-color;
+    color: $color;
+    @include transition(color .3s, background-color .3s);
+  }
+  &:not(.disabled):not([disabled]) {
+    &:hover {
+      #{if($button-wrapper, "& > *", "&")} {
+        background-color: lighten($background-color, $default-value-to-lighten-colors-by);
+      }
+    }
+    #{if($button-wrapper, "& > button", "&")} {
+      &:focus {
+        #{if($button-wrapper, "&, & ~ *", "&")} {
+          background-color: lighten($background-color, $default-value-to-lighten-colors-by);
+        }
+      }
+    }
   }
   &.disabled, &[disabled] {
-    color: $grey;
-    background-color: $light-grey;
-    .disability-reason-icon {
-      color: $dark-grey;
+    #{if($button-wrapper, "& > *", "&")} {
+      color: $grey;
+      background-color: $light-grey;
+    }
+    #{if($button-wrapper, "& > button", "&")} {
+      &:focus {
+        #{if($button-wrapper, "&, & + *", "&")} {
+          background-color: darken($light-grey, $default-value-to-lighten-colors-by);
+        }
+      }
+    }
+    @if $button-wrapper {
+      .disability-reason-icon {
+        color: $dark-grey;
+      }
     }
   }
 }
 
-@mixin toggle-button($background-color: $blue, $color: white, $minimum-height: 28px) {
-  $correct-vertical-align-for-alone-icons-of-default-size: -.385em;
-
-  min-height: $minimum-height;
-  padding: $default-gap-size / 8 3 / 4 * $default-gap-size;
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: bold;
-  @include toggle-button-colors($background-color, $color);
-  & > div {
-    position: relative;
-    display: inline-block;
-    &:only-child {
-      icon[size="1.25"] {
-        vertical-align: $correct-vertical-align-for-alone-icons-of-default-size;
+@mixin toggle-button($background-color: $blue, $color: white, $minimum-height: 30px, $button-wrapper: true) {
+  display: inline-flex;
+  @include toggle-button-colors($background-color, $color, $button-wrapper);
+  &:not(.disabled):not([disabled]) {
+    cursor: pointer;
+  }
+  #{if($button-wrapper, "& > *", "&")} {
+    @if $button-wrapper {
+      cursor: inherit;
+      display: inherit;
+    }
+    min-height: $minimum-height;
+    padding-top: $default-gap-size / 4;
+    padding-bottom: $default-gap-size / 4;
+    align-items: center;
+    #{if($button-wrapper, "&:first-child", "&")} {
+      padding-left: 3 / 4 * $default-gap-size;
+      @if $button-wrapper {
+        &:not(:last-child) {
+          padding-right: 0;
+        }
       }
     }
+    #{if($button-wrapper, "&:last-child", "&")} {
+      padding-right: 3 / 4 * $default-gap-size;
+      @if $button-wrapper {
+        &:not(:first-child) {
+          padding-left: 0;
+        }
+      }
+    }
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+  }
+  .icons {
+    position: relative;
     icon {
       opacity: 1;
       @include transition(opacity .3s ease-out);
@@ -42,14 +86,17 @@
       }
     }
   }
-  icon, .icon, span {
-    display: inline-block;
-    margin: $default-gap-size / 8;
-  }
   icon, .icon {
-    &[size="1.25"]:only-child {
-      vertical-align: $correct-vertical-align-for-alone-icons-of-default-size;
-    }
+    margin: $default-gap-size / 8 $default-gap-size / 4;
+  }
+  span {
+    margin: $default-gap-size / 8 - 1px $default-gap-size / 4 $default-gap-size / 8; // Because `line-height` property in Firefox seems to
+                                                                                     // work differently than in Chrome and simple
+                                                                                     // centering does not seem to work as expected - for
+                                                                                     // Open Sans at least.
+  }
+  span {
+    line-height: calc(1em + #{$default-gap-size / 4});
   }
 }
 

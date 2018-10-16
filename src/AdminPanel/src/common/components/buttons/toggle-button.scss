@@ -1,13 +1,11 @@
 @import "../../styles";
 
-toggle-button {
-  cursor: pointer;
-  display: inline-block;
-  @include unselectable();
+toggle-button, .toggle-button:not(button) {
+  @include toggle-button();
 }
 
-toggle-button > div, .toggle-button {
-  @include toggle-button();
+button.toggle-button {
+  @include toggle-button($button-wrapper: false);
 }
 
 $available-colors: (
@@ -17,11 +15,14 @@ $available-colors: (
 );
 
 @each $color-name, $color in $available-colors {
-  .#{$color-name} toggle-button > div, toggle-button.#{$color-name} > div, .toggle-button.#{$color-name} {
+  .#{$color-name} toggle-button, toggle-button.#{$color-name}, .toggle-button.#{$color-name}:not(button) {
     @include toggle-button-colors($color);
   }
+  button.toggle-button.#{$color-name} {
+    @include toggle-button-colors($color, $button-wrapper: false);
+  }
   @each $second-color-name, $second-color in $available-colors {
-    .#{$color-name} toggle-button.#{$second-color-name} > div {
+    .#{$color-name} toggle-button.#{$second-color-name} {
       @include toggle-button-colors($color);
     }
   }

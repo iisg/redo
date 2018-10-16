@@ -258,9 +258,10 @@ table {
   }
   & > .form-buttons {
     position: sticky;
-    top: $default-gap-size / 2;
     display: flex;
     flex-direction: column;
+    flex: 0;
+    top: $default-gap-size / 2;
     align-self: baseline;
     &, & > * {
       padding: $default-gap-size / 4;

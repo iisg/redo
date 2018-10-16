@@ -5,8 +5,10 @@
         icon-name="forward"
         submitting.bind="submitting">
         ${!transition || transition.label | inCurrentLanguage}
-        <span class="additional-information">${'And move to state' | t}:</span>
-        <span class="additional-information"
-            repeat.for="place of tos">${place.label | inCurrentLanguage}</span>
+        <span slot="additional-information"
+            class="additional-information">${tos.length > 1 ? 'And move to states' : 'And move to state' | t}:</span>
+        <span repeat.for="place of tos"
+            slot="additional-information"
+            class="additional-information">${place.label | inCurrentLanguage}</span>
     </submit-button>
 </template>

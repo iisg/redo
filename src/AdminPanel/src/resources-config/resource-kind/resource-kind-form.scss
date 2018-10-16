@@ -7,12 +7,16 @@ resource-kind-form {
       @include form-element();
     }
 
-    .change-order-button {
+    .metadata-list-container {
       display: flex;
-      justify-content: flex-end;
+      flex-direction: column;
     }
 
-    .resource-kind-edit-form-metadata-item {
+    .change-order-button {
+      margin-left: auto;
+    }
+
+    .metadata-list-item {
       padding: $default-gap-size / 4;
       &:first-child:not(:last-child) {
         border-top-right-radius: 0;

@@ -27,7 +27,7 @@
                     metadata-list-validate.bind="resourceKind.metadataList & validate"></resource-kind-metadata-chooser>
             </div>
             <div if.bind="originalMetadataList && (editableMetadataList.length === 0 || originalMetadata(editableMetadataList[0])) & signal:'original-metadata-changed'"
-                class="full-width ${sortingMetadata ? 'sorting-enabled' : ''} validation-message-container">
+                class="full-width metadata-list-container ${sortingMetadata ? 'sorting-enabled' : ''} validation-message-container">
                 <toggle-button if.bind="editableMetadataList.length > 1"
                     class="change-order-button"
                     primary-icon-name="arrows"
@@ -39,7 +39,7 @@
                     click.delegate="sortingMetadata = !sortingMetadata"></toggle-button>
                 <div>
                     <div repeat.for="metadata of editableMetadataList"
-                        class="resource-kind-edit-form-metadata-item list-group-item ${metadata.overwriteForm ? 'well' : ''}">
+                        class="metadata-list-item list-group-item ${metadata.overwriteForm ? 'well' : ''}">
                         <div>
                             <span class="metadata-name ${metadata.overwriteForm ? 'title' : ''}">${originalMetadata(metadata).name}</span>
                             <span class="metadata-id ${metadata.overwriteForm ? 'title' : ''}">ID: ${originalMetadata(metadata).id}</span>

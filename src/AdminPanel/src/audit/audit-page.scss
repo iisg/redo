@@ -23,7 +23,7 @@ $minimum-width-of-input-field-for-dynamic-column: 75px;
         toggle-button, button {
           height: 100%;
         }
-        button {
+        button:only-child {
           padding-left: $default-gap-size / 2;
           padding-right: $default-gap-size / 2;
         }
