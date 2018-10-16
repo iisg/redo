@@ -1,17 +1,20 @@
 <?php
 namespace Repeka\Application\Command\PkImport;
 
+use Assert\Assertion;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
+use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
@@ -61,6 +64,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             ->addOption('no-report', null, InputOption::VALUE_NONE)
             ->addOption('id-namespace', null, InputOption::VALUE_OPTIONAL)
             ->addOption('unmap-updated', null, InputOption::VALUE_NONE)
+            ->addOption('workflow-place', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY)
             ->setDescription('Imports resources from given file.');
     }
 
@@ -87,6 +91,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         try {
             $xml = PkImportFileLoader::load($xmlFileName);
             $resourceKind = $this->resourceKindRepository->findOne($input->getOption('resourceKindId'));
+            $workflowPlacesIds = $this->findWorkflowPlacesIds($resourceKind, $input->getOption('workflow-place'));
             $importConfig = $this->importConfigFactory->fromFile($configFileName, $resourceKind);
             $reportCreator->setInvalidMetadataKeysInfo($importConfig->getInvalidMetadataKeys());
             $resources = $xml->xpath('/*/*');
@@ -121,6 +126,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                         $idMappingNamespace,
                         $reportCreator,
                         $resourceKind,
+                        $workflowPlacesIds,
                         $importConfig,
                         $resourceData,
                         &$mappedResourceIds,
@@ -147,7 +153,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                             ++$stats[PkImportResourcesCommand::IMPORTED];
                             $status = PkImportResourcesCommand::IMPORTED;
                         }
-                        $this->updateResource($resource, $importedValues, $resourceKind);
+                        $this->updateResource($resource, $importedValues, $resourceKind, $workflowPlacesIds);
                         $unfitTypeValues = $importedResult->getUnfitTypeValues();
                         $notUsedTerms = $this->getNotUsedTerms($terms, $importConfig);
                         $reportCreator->addResourceImportStatus(
@@ -214,7 +220,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         return array_unique(array_diff($terms, $importKeys));
     }
 
-    public function updateResource(ResourceEntity $resource, $importedValues, ResourceKind $resourceKind) {
+    public function updateResource(ResourceEntity $resource, $importedValues, ResourceKind $resourceKind, array $placesIds = []) {
         $newContents = $resource->getContents();
         foreach ($importedValues as $metadataId => $values) {
             $newContents = $newContents->withReplacedValues($metadataId, $values);
@@ -222,8 +228,25 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         $resourceUpdateCommand = ResourceGodUpdateCommand::builder()
             ->setResource($resource)
             ->setNewContents($newContents)
-            ->changeResourceKind($resourceKind)
-            ->build();
-        $this->handleCommand($resourceUpdateCommand);
+            ->changeResourceKind($resourceKind);
+        if ($placesIds) {
+            $resourceUpdateCommand = $resourceUpdateCommand->changePlaces($placesIds);
+        }
+        $this->handleCommand($resourceUpdateCommand->build());
+    }
+
+    private function findWorkflowPlacesIds(ResourceKind $resourceKind, array $placesLabelsOrIds): array {
+        if ($placesLabelsOrIds) {
+            $places = $resourceKind->getWorkflow()->getPlaces();
+            $places = array_filter(
+                $places,
+                function (ResourceWorkflowPlace $place) use ($placesLabelsOrIds) {
+                    return in_array($place->getId(), $placesLabelsOrIds) || array_intersect($place->getLabel(), $placesLabelsOrIds);
+                }
+            );
+            Assertion::count($places, count($placesLabelsOrIds), 'Some places were not found.');
+            return EntityUtils::mapToIds($places);
+        }
+        return [];
     }
 }
