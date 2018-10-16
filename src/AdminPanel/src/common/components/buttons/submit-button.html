@@ -5,8 +5,7 @@
         <div>
             <icon if.bind="!submitting"
                 name.bind="iconName || (editing ? 'accept-2' : 'add')"
-                size="1.25">
-            </icon>
+                size="1.25"></icon>
             <throbber else></throbber>
             <span><slot>${(editing ? 'Apply' : 'Add') | t}</slot></span>
         </div>

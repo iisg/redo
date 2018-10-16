@@ -1,9 +1,10 @@
 <template>
     <require from="common/components/buttons/add-button.html"></require>
+    <require from="common/components/redo-footer/redo-footer.html"></require>
 
-    <div>
-        <add-button entity-name="workflow"
-            click.delegate="router.navigateToRoute('workflows/new', {resourceClass})"></add-button>
+    <add-button entity-name="workflow"
+        click.delegate="router.navigateToRoute('workflows/new', {resourceClass})"></add-button>
+    <div class="table-container"> <!-- For some reason this is required by Chrome to make horizontal scrolling possible. -->
         <table>
             <thead>
                 <tr>
@@ -40,10 +41,11 @@
                 </tr>
             </tbody>
         </table>
-        <div class="alert alert-info"
-            if.bind="workflows.length === 0 && !progressBar">
-            <icon name="information"></icon>
-            ${'No workflows.' | resourceClassTranslation:resourceClass}
-        </div>
     </div>
+    <div class="alert alert-info"
+        if.bind="workflows.length === 0 && !progressBar">
+        <icon name="information"></icon>
+        ${'No workflows.' | resourceClassTranslation:resourceClass}
+    </div>
+    <slot></slot>
 </template>

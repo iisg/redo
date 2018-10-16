@@ -1,12 +1,17 @@
 @import "../common/styles";
 
 .about-the-application {
-    text-align: center;
-    &, & > :not(redo-logo) {
-        padding: $default-gap-size / 2;
-    }
-    redo-logo {
-        margin: $default-gap-size / 2;
-        height: 200px;
+    display: flex;
+    flex-direction: column;
+    & > div {
+        margin-top: auto;
+        text-align: center;
+        &, & > :not(redo-logo) {
+            padding: $default-gap-size / 2;
+        }
+        redo-logo {
+            margin: $default-gap-size / 2;
+            height: 200px;
+        }
     }
 }

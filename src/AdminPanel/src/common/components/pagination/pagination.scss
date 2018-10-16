@@ -8,8 +8,8 @@ $page-number-margin-size: $default-gap-size / 4;
     white-space: nowrap;
     flex-wrap: wrap;
     &, a, icon, .ellipsis, .current-page-number {
-        margin-left: $page-number-margin-size;
-        margin-right: $page-number-margin-size;
+        padding-left: $page-number-margin-size;
+        padding-right: $page-number-margin-size;
     }
     .with-ellipsis {
         overflow: hidden;
@@ -34,7 +34,7 @@ $page-number-margin-size: $default-gap-size / 4;
     justify-content: flex-end;
     align-items: center;
     &, & > * {
-        margin-left: $page-number-margin-size;
-        margin-right: $page-number-margin-size;
+        padding-left: $page-number-margin-size;
+        padding-right: $page-number-margin-size;
     }
 }

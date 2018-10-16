@@ -1,20 +1,20 @@
 <template>
-    <template if.bind="operatorInClasses.length > 0">
-        <h2>${ 'Operator of the resource classes' | t }</h2>
+    <div if.bind="operatorInClasses.length > 0">
+        <span class="page-title">${'Operator of the resource classes' | t}</span>
         <ul>
             <li repeat.for="resourceClass of operatorInClasses">
-                ${ 'resources' | resourceClassTranslation:resourceClass }
+                ${'resources' | resourceClassTranslation:resourceClass}
             </li>
         </ul>
-    </template>
-    <template if.bind="adminInClasses.length > 0">
-        <h2>${ 'Administrator of the resource classes' | t }</h2>
+    </div>
+    <div if.bind="adminInClasses.length > 0">
+        <span class="page-title">${'Administrator of the resource classes' | t}</span>
         <ul>
             <li repeat.for="resourceClass of adminInClasses">
-                ${ 'resources' | resourceClassTranslation:resourceClass }
+                ${'resources' | resourceClassTranslation:resourceClass}
             </li>
         </ul>
-    </template>
+    </div>
     <div if.bind="user && operatorInClasses.length === 0"
         class="alert alert-info">
         <icon name="roles"></icon>

@@ -143,13 +143,6 @@
   box-shadow: $box-shadow;
 }
 
-@mixin unselectable {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 @mixin on-and-down($size) {
   @media only screen and (max-width: $size) {
     @content;

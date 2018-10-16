@@ -1,43 +1,42 @@
-<template>
+<template class="${addFormOpened ? 'add-form-opened' : ''}">
     <require from="common/components/buttons/add-button.html"></require>
     <require from="common/components/pagination/pagination"></require>
     <require from="./resources-list-table"></require>
     <require from="../add/resource-form"></require>
     <require from="../workflow/resource-place-display.html"></require>
 
-    <div class="resources-list ${addFormOpened ? 'add-form-opened' : ''}">
-        <pagination total-number-of-elements.bind="totalNumberOfResources"
-            elements-per-page.bind="resultsPerPage"
-            current-page-number.bind="currentPageNumber"
-            hide-elements-per-page-dropdown="true"></pagination>
-        <add-button if.bind="!addFormOpened"
-            entity-name="resource"
-            toggled.two-way="addFormOpened"
-            disabled.bind="addingResourcesDisabled"
-            disability-reason.bind="disabilityReason"></add-button>
-        <div else
-            class="well add-form fade-inup-outdown au-animate">
-            <span>${'Add new resource' | resourceClassTranslation:resourceClass}</span>
-            <resource-form view-model.ref="resourceForm"
-                resource-class.bind="resourceClass"
-                parent.bind="parentResource"
-                submit.call="addNewResource(savedResource)"
-                cancel.call="addFormOpened = !addFormOpened"></resource-form>
-        </div>
-        <loading-bar if.bind="displayProgressBar"></loading-bar>
-        <resources-list-table resources.bind="resources"
-            column-metadata.bind="briefMetadata"
+    <pagination total-number-of-elements.bind="totalNumberOfResources"
+        elements-per-page.bind="resultsPerPage"
+        current-page-number.bind="currentPageNumber"
+        hide-elements-per-page-dropdown="true"></pagination>
+    <add-button if.bind="!addFormOpened"
+        entity-name="resource"
+        toggled.two-way="addFormOpened"
+        disabled.bind="addingResourcesDisabled"
+        disability-reason.bind="disabilityReason"></add-button>
+    <div else
+        class="add-form well fade-inup-outdown au-animate">
+        <span>${'Add new resource' | resourceClassTranslation:resourceClass}</span>
+        <resource-form view-model.ref="resourceForm"
             resource-class.bind="resourceClass"
-            sort-by.bind="sortBy"
-            contents-filter.bind="contentsFilter"></resources-list-table>
-        <div class="alert alert-info"
-            if.bind="resources.length === 0 && !displayProgressBar">
-            <icon name="information"></icon>
-            ${'No resources.' | resourceClassTranslation:resourceClass}
-        </div>
-        <pagination containerless
-            total-number-of-elements.bind="totalNumberOfResources"
-            elements-per-page.bind="resultsPerPage"
-            current-page-number.bind="currentPageNumber"></pagination>
+            parent.bind="parentResource"
+            submit.call="addNewResource(savedResource)"
+            cancel.call="addFormOpened = !addFormOpened"></resource-form>
     </div>
+    <loading-bar if.bind="displayProgressBar"></loading-bar>
+    <resources-list-table resources.bind="resources"
+        column-metadata.bind="briefMetadata"
+        resource-class.bind="resourceClass"
+        sort-by.bind="sortBy"
+        contents-filter.bind="contentsFilter"></resources-list-table>
+    <div class="alert alert-info"
+        if.bind="resources.length === 0 && !displayProgressBar">
+        <icon name="information"></icon>
+        ${'No resources.' | resourceClassTranslation:resourceClass}
+    </div>
+    <pagination containerless
+        total-number-of-elements.bind="totalNumberOfResources"
+        elements-per-page.bind="resultsPerPage"
+        current-page-number.bind="currentPageNumber"></pagination>
+    <slot></slot>
 </template>

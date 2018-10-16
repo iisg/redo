@@ -1,11 +1,9 @@
-<template>
+<template class="${yamlValid ? '' : 'has-error'}">
     <require from="resources/controls/input/autosize"></require>
 
-    <div class="form-group ${yamlValid ? '' : 'has-error'}">
-        <label>${ 'Resource contents' | t}</label>
-        <textarea value.bind="yamlValue"
-            class="form-control"
-            autosize
-            placeholder="Title: Foo&#10;34: bar"></textarea>
-    </div>
+    <span>${'Resource contents' | t}</span>
+    <textarea value.bind="yamlValue"
+        class="form-control"
+        placeholder="Title: Foo&#10;34: bar"
+        autosize></textarea>
 </template>

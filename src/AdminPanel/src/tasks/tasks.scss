@@ -1,13 +1,18 @@
 @import "../common/styles";
 
 .tasks {
-    .page-title {
-        display: block;
-        padding: $default-gap-size / 2;
+    display: flex;
+    flex-direction: column;
+    & > :not(resources-list-table) {
+        position: sticky;
+        left: 0;
     }
-    .tasks-class {
-        font-size: 16px;
-        font-weight: 600;
-        padding: $default-gap-size;
+    .page-title {
+        padding-top: $default-gap-size;
+    }
+    .page-title, .page-subtitle {
+        padding-bottom: $default-gap-size / 2;
+        padding-left: $default-gap-size;
+        padding-right: $default-gap-size;
     }
 }

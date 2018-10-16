@@ -1,0 +1,6 @@
+@import "../../styles";
+@import "../../../../../Frontend/src/styles/footer.scss";
+
+redo-footer {
+  @include redo-footer($default-sidebar-width);
+}

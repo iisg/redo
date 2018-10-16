@@ -3,17 +3,17 @@
     <require from="common/components/buttons/sort-button"></require>
     <require from="common/components/buttons/add-button.html"></require>
 
-    <div>
-        <add-button if.bind="!addFormOpened && !hideAddButton"
-            entity-name="resourceKind"
-            toggled.two-way="addFormOpened"></add-button>
-        <div if.bind="addFormOpened && !hideAddButton"
-            class="well add-form fade-inup-outdown au-animate">
-            <span>${'Add new resource kind' | resourceClassTranslation:resourceClass}</span>
-            <resource-kind-form resource-class.bind="resourceClass"
-                submit.call="addNewResourceKind(savedResourceKind)"
-                cancel.call="toggleEditForm()"></resource-kind-form>
-        </div>
+    <add-button if.bind="!addFormOpened && !hideAddButton"
+        entity-name="resourceKind"
+        toggled.two-way="addFormOpened"></add-button>
+    <div if.bind="addFormOpened && !hideAddButton"
+        class="add-form well fade-inup-outdown au-animate">
+        <span>${'Add new resource kind' | resourceClassTranslation:resourceClass}</span>
+        <resource-kind-form resource-class.bind="resourceClass"
+            submit.call="addNewResourceKind(savedResourceKind)"
+            cancel.call="toggleEditForm()"></resource-kind-form>
+    </div>
+    <div class="table-container"> <!-- For some reason this is required by Chrome to make horizontal scrolling possible. -->
         <table show.bind="!resourceKinds || resourceKinds.length > 0 || progressBar">
             <thead>
                 <tr>
@@ -61,10 +61,11 @@
                 </tr>
             </tbody>
         </table>
-        <div class="alert alert-info"
-            if.bind="resourceKinds.length === 0 && !progressBar">
-            <icon name="information"></icon>
-            ${'No resource kinds.' | resourceClassTranslation:resourceClass}
-        </div>
     </div>
+    <div class="alert alert-info"
+        if.bind="resourceKinds.length === 0 && !progressBar">
+        <icon name="information"></icon>
+        ${'No resource kinds.' | resourceClassTranslation:resourceClass}
+    </div>
+    <slot></slot>
 </template>

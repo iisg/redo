@@ -1,6 +1,7 @@
 <template>
     <require from="common/components/buttons/remove-button.html"></require>
     <require from="common/components/buttons/edit-button.html"></require>
+    <require from="common/components/redo-footer/redo-footer.html"></require>
     <require from="./metadata-constraint"></require>
     <require from="./metadata-details-list.html"></require>
     <require from="../metadata-list"></require>
@@ -24,16 +25,19 @@
             <aup-tab-pane tab="child-metadata">
                 <metadata-list if.bind="metadataDetailsTabs.activeTabId === 'child-metadata'"
                     parent-metadata.bind="metadata"
-                    resource-class.bind="metadata.resourceClass"></metadata-list>
+                    resource-class.bind="metadata.resourceClass">
+                    <redo-footer></redo-footer>
+                </metadata-list>
             </aup-tab-pane>
             <aup-tab-pane tab="details">
-                <div if.bind="metadataDetailsTabs.activeTabId === 'details'">
-                    <template if.bind="!editing">
+                <div if.bind="metadataDetailsTabs.activeTabId === 'details'"
+                    class="${editing ? 'with-opened-edit-form' : ''}">
+                    <div if.bind="!editing">
                         <metadata-details-list metadata.bind="metadata"></metadata-details-list>
                         <edit-button toggled.bind="editing"
                             disabled.bind="metadata.pendingRequest"
                             click.delegate="toggleEditForm()"></edit-button>
-                    </template>
+                    </div>
                     <metadata-form else
                         currently-edited-metadata.bind="metadata"
                         resource-class.bind="resourceClass"
@@ -58,6 +62,7 @@
                     metadata.bind="metadata"
                     hide-add-button.bind="true"></resource-kinds-list>
             </aup-tab-pane>
+            <redo-footer if.bind="metadataDetailsTabs.activeTabId !== 'child-metadata'"></redo-footer>
         </aup-tab-content>
     </div>
 </template>

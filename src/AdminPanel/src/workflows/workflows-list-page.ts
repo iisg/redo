@@ -1,17 +1,17 @@
-import {Audit} from "./audit";
+import {WorkflowsList} from "./workflows-list";
 
 export class WorkflowsListPage {
-    audit: Audit;
+    workflowsList: WorkflowsList;
     private parameters: any;
 
     activate(parameters: any) {
         this.parameters = parameters;
-        if (this.audit) {
+        if (this.workflowsList) {
             this.bind();
         }
     }
 
     bind() {
-        this.audit.activate(this.parameters);
+        this.workflowsList.activate(this.parameters);
     }
 }

@@ -2,16 +2,20 @@
     <require from="common/components/redo-logo/redo-logo.html"></require>
     <require from="common/components/application-name/application-name"></require>
     <require from="common/components/version-display/version-display"></require>
+    <require from="common/components/redo-footer/redo-footer.html"></require>
 
     <div class="about-the-application">
-        <redo-logo></redo-logo>
         <div>
-            <span class="page-title">
-                <application-name></application-name>
-            </span>
-            <span class="page-subtitle">
-                v<version-display></version-display>
-            </span>
+            <redo-logo></redo-logo>
+            <div>
+                <span class="page-title">
+                    <application-name></application-name>
+                </span>
+                <span class="page-subtitle">
+                    v<version-display></version-display>
+                </span>
+            </div>
         </div>
+        <redo-footer></redo-footer>
     </div>
 </template>

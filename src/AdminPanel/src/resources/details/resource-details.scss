@@ -1,6 +1,17 @@
 @import "../../common/styles";
 
 .resource-details {
+  #children, #audit {
+    overflow: hidden;
+    &.active {
+      display: flex;
+    }
+    flex: 1;
+    & > * {
+      overflow: auto;
+      flex: 1;
+    }
+  }
   resource-metadata-table {
     padding: $default-gap-size;
   }
@@ -9,7 +20,16 @@
   }
   resource-workflow, user-roles {
     display: block;
-    padding: $default-gap-size;
+  }
+  user-roles {
+    &, & > * {
+      padding-top: $default-gap-size / 2;
+      padding-bottom: $default-gap-size / 2;
+    }
+    & > :not(.alert) {
+      padding-left: $default-gap-size;
+      padding-right: $default-gap-size;
+    }
   }
 }
 

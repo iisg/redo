@@ -1,5 +1,5 @@
-import {Resource} from "../resources/resource";
-import {map, automapped} from "../common/dto/decorators";
+import {Resource} from "resources/resource";
+import {automapped, map} from "common/dto/decorators";
 
 @automapped
 export class TasksCollection {

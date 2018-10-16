@@ -6,6 +6,7 @@
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
     <require from="common/components/buttons/make-copy-button.html"></require>
+    <require from="common/components/redo-footer/redo-footer.html"></require>
 
     <form class="workflow-form-content"
         change.delegate="dirty = true">
@@ -47,6 +48,7 @@
                     editable.bind="!workflow.pendingRequest"></excel>
             </template>
             <excel-legend></excel-legend>
+            <redo-footer></redo-footer>
         </div>
     </form>
 </template>
