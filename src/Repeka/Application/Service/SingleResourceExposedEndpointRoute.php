@@ -7,7 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 class SingleResourceExposedEndpointRoute extends Route {
-    public function __construct(string $path, $metadataNameOrId, ?int $resourceId = null, array $headers = []) {
+    public function __construct(
+        string $path,
+        $metadataNameOrId,
+        ?int $resourceId,
+        ?string $endpointUsageTrackingKey,
+        array $headers = []
+    ) {
         Assertion::notNull($metadataNameOrId, 'metadataId must be set for single resource exposed endpoint: ' . $path);
         parent::__construct(
             $path,
@@ -15,6 +21,7 @@ class SingleResourceExposedEndpointRoute extends Route {
                 '_controller' => ResourcesExposureController::class . ':exposeResourceAction',
                 'metadataNameOrId' => $metadataNameOrId,
                 'headers' => $headers,
+                'endpointUsageTrackingKey' => $endpointUsageTrackingKey,
             ],
             [],
             [],
