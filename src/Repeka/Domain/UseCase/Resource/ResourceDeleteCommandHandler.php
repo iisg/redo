@@ -17,8 +17,9 @@ class ResourceDeleteCommandHandler {
         $this->commandBus = $commandBus;
     }
 
-    public function handle(ResourceDeleteCommand $command): void {
+    public function handle(ResourceDeleteCommand $command): int {
         $resource = $command->getResource();
+        $resourceId = $resource->getId();
         $resource = $this->commandBus->handle(
             new ResourceTransitionCommand(
                 $resource,
@@ -28,5 +29,6 @@ class ResourceDeleteCommandHandler {
             )
         );
         $this->resourceRepository->delete($resource);
+        return $resourceId;
     }
 }
