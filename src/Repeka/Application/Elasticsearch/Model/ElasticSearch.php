@@ -48,6 +48,11 @@ class ElasticSearch implements ResourceFtsProvider {
         $this->type->getIndex()->refresh();
     }
 
+    public function deleteDocument(int $resourceId) {
+        $this->type->deleteById(strval($resourceId));
+        $this->type->getIndex()->refresh();
+    }
+
     /** @param ResourceEntity[] $resources */
     public function insertDocuments(iterable $resources) {
         $documents = [];

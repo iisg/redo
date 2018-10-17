@@ -12,6 +12,7 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\AuditEntryRepository;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 use Repeka\Tests\Domain\Factory\SampleResourceWorkflowDriverFactory;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
@@ -253,6 +254,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
         $this->assertEquals(['created'], $created->getValues($this->metadata1));
+        $this->assertContains($created->getId(), $this->foundResourceIdsByMetadataValue('created', $this->metadata1->getId()));
         return $createdId;
     }
 
@@ -306,6 +308,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $cloned = $repository->findOne($clonedId);
         $this->assertEquals($this->resource->getKind()->getId(), $cloned->getKind()->getId());
         $this->assertEquals(['Test value'], $cloned->getValues($this->metadata1));
+        $this->assertContains(
+            $cloned->getId(),
+            $this->foundResourceIdsByMetadataValue('Test value', $this->metadata1->getId())
+        );
     }
 
     public function testCloningResourceWithWorkflow() {
@@ -379,6 +385,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     }
 
     public function testEditingResource() {
+        $this->assertNotContains(
+            $this->resource->getId(),
+            $this->foundResourceIdsByMetadataValue('edited', $this->metadata1->getId())
+        );
         $client = self::createAdminClient();
         $client->apiRequest(
             'POST',
@@ -394,6 +404,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
         $this->assertEquals(['edited'], $edited->getValues($this->metadata1));
+        $this->assertContains($edited->getId(), $this->foundResourceIdsByMetadataValue('edited', $this->metadata1->getId()));
     }
 
     public function testAutoAssignMetadataWhenEditingResourceWithWorkflow() {
@@ -441,12 +452,20 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     }
 
     public function testDeletingLeafResource() {
+        $this->assertContains(
+            $this->childResource->getId(),
+            $this->foundResourceIdsByMetadataValue($this->childResource->getValues($this->metadata1->getId())[0], $this->metadata1->getId())
+        );
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::oneEntityEndpoint($this->childResource->getId()));
         $this->assertStatusCode(204, $client->getResponse());
         /** @var ResourceRepository $repository */
         $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
         $this->assertFalse($repository->exists($this->childResource->getId()));
+        $this->assertNotContains(
+            $this->childResource->getId(),
+            $this->foundResourceIdsByMetadataValue($this->childResource->getValues($this->metadata1->getId())[0], $this->metadata1->getId())
+        );
     }
 
     public function testDeletingParentResourceIsForbidden() {
@@ -599,5 +618,18 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             ['HTTP_GOD-EDIT' => true]
         );
         $this->assertStatusCode(403, $client->getResponse());
+    }
+
+    private function foundResourceIdsByMetadataValue($metadataValue, $metadataId): array {
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery($metadataValue, [$metadataId])
+        );
+        $resultIds = array_map(
+            function ($result) {
+                return intval($result->getId());
+            },
+            $results->getResults()
+        );
+        return $resultIds;
     }
 }
