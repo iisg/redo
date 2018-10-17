@@ -43,7 +43,7 @@ describe('Transition Tests', function() {
 	var addRButton = element(by.buttonText('Dodaj'));
 	addRButton.click();
 
-	waitForElement(element(by.className('au-target resources-list')));
+	waitForElement(element(by.cssContainingText('span', 'Rodzaj_do_testowania_automatycznego')));
   });
 
   it('Try to make a transition without any designated person', function() {
@@ -74,7 +74,7 @@ describe('Transition Tests', function() {
 	confirmButton.click();
 	browser.sleep(500);
 
-	waitForElement(element(by.className('au-target resources-list')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
   });
 
@@ -136,7 +136,7 @@ describe('Transition Tests', function() {
 	confirmButton.click();
 	browser.sleep(500);
 
-	waitForElement(element(by.className('au-target resources-list')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
   });
 
@@ -212,7 +212,7 @@ describe('Transition Tests', function() {
 	confirmButton.click();
 	browser.sleep(500);
 
-	waitForElement(element(by.className('au-target resources-list')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
   });
 
@@ -279,7 +279,7 @@ describe('Transition Tests', function() {
 	confirmButton.click();
 	browser.sleep(500);
 
-	waitForElement(element(by.className('au-target resources-list')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
   });
 
@@ -346,7 +346,7 @@ describe('Transition Tests', function() {
 	confirmButton.click();
 	browser.sleep(500);
 
-	waitForElement(element(by.className('au-target resources-list')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
   });
 });
