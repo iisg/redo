@@ -169,9 +169,7 @@ describe('Resource Tests', function() {
 	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 	confirmButton.click();
 
-	waitForElement(element(by.className('au-target resources-list')));
-	browser.sleep(1000);
-	var resourcesListNew = element(by.className('au-target resources-list'));
-	expect(resourcesListNew.getText()).not.toContain('Rodzaj_do_testowania_automatycznego');
+	waitForElement(element(by.className('current-page-number')));
+	expect(element(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego')).isPresent()).toBe(false);
   });
 });
