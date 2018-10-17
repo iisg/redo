@@ -30,6 +30,7 @@ class ResourcesEndpointsExposer {
                         $path,
                         $endpoint['metadata'] ?? null,
                         $endpoint['resourceId'],
+                        $endpoint['endpointUsageTrackingKey'],
                         $endpoint['headers']
                     )
                 );
