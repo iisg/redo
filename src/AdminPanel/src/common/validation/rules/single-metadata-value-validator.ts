@@ -1,4 +1,3 @@
-import { MetadataControl } from './../../../resources-config/metadata/metadata-control';
 import {Metadata} from "resources-config/metadata/metadata";
 import {Resource} from "resources/resource";
 import {autoinject} from "aurelia-dependency-injection";
@@ -21,10 +20,6 @@ export class SingleMetadataValueValidator {
           validator.addRule(rules, constraintArgument);
         }
       }
-    }
-    if (metadata.control == MetadataControl.RELATIONSHIP) {
-      const validator = this.metadataConstraintValidators.singleValueValidators['noOpenTree'];
-      validator.addRule(rules, undefined);
     }
     return rules;
   }

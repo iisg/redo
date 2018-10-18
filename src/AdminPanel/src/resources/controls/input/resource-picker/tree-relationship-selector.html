@@ -1,0 +1,66 @@
+<template>
+    <require from="./resource-picker"></require>
+    <require from="resources/controls/input/resource-picker/resource-picker"></require>
+    <require from="common/value-converters/to-array-value-converter"></require>
+    <require from="resources/details/resource-link"></require>
+    <require from="common/components/buttons/icon-button"></require>
+
+    <div if.bind="loaded"
+        show.bind="shown">
+        <div class="metadata-row">
+            <resource-picker if.bind="metadata.constraints.resourceKind.length !== 0"
+                resource-ids.bind="resource.contents[metadata.id]"
+                resource-kind-ids.bind="skipValidation ? [] : metadata.constraints.resourceKind"
+                contents-filter.bind="skipValidation ? undefined : metadata.constraints.relatedResourceMetadataFilter"
+                resource-class.bind="!skipValidation && metadata.id == -1 ? resource.resourceClass : undefined"
+                disabled.bind="disabled || metadata.constraints.resourceKind.length === 0 && !skipValidation"
+            ></resource-picker>
+
+            <span if.bind="!skipValidation && metadata.constraints.resourceKind.length === 0">
+                ${'To select resources choose allowed resource kinds in metadata settings.' | t}
+                <a route-href="route: metadata/details; params.bind: {id: metadata.id, action: 'edit'}"
+                    if.bind="'ADMIN' | hasRole:metadata.resourceClass">
+                    ${'Go to the metadata kind settings' | t}
+                </a>
+            </span>
+            <span show.bind="relatedResourceMetadataFilterInfo.filters.length || relatedResourceMetadataFilterInfo.originalFilters.length"
+                ref="relatedResourceMetadataFilterInfo"
+                filters.bind="metadata.constraints.relatedResourceMetadataFilter | toArray"
+                original-filters.bind="originalMetadata.constraints.relatedResourceMetadataFilter | toArray">
+                <template if.bind="relatedResourceMetadataFilterInfo.filters.length">
+                    <template if.bind="skipValidation">${'Additional filter would limit results in this dropdown during normal edit' | t}:</template>
+                    <template else>${'Additional filter limits results in this dropdown' | t}:</template>
+                    <strong>${relatedResourceMetadataFilterInfo.filters[0].value}</strong>.
+                </template>
+                <template else>
+                    ${'Filter defined in metadata kind settings is disabled for this resource kind' | t}.
+                </template>
+                <template if.bind="'ADMIN' | hasRole:metadata.resourceClass">
+                    <template if.bind="relatedResourceMetadataFilterInfo.originalFilters != ''">
+                        <template if.bind="relatedResourceMetadataFilterInfo.filters.length && relatedResourceMetadataFilterInfo.originalFilters[0].value == relatedResourceMetadataFilterInfo.filters[0].value">
+                            <a route-href="route: metadata/details; params.bind: {id: metadata.id, action: 'edit'}">
+                                ${'Go to the metadata kind settings' | t}</a>.
+                        </template>
+                        <template else>
+                            <a route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id, action: 'edit'}">
+                                ${'Go to the resource kind settings' | t}</a>.
+                        </template>
+                    </template>
+                </template>
+            </span>
+        </div>
+        <div class="buttons">
+            <icon-button icon-name="remove-2"
+                click.trigger="shown = false"
+                tooltip-text-when-enabled.one-time="'Hide tree' | t"
+                tab-index="-1"></icon-button>
+        </div>
+    </div>
+    <template if.bind="!shown && !disabled">
+        <icon-button icon-name="add-2"
+            click.trigger="showTree()"
+            tooltip-text-when-enabled.one-time="'Select values' | t"
+            tab-index="-1"></icon-button>
+    </template>
+
+</template>
