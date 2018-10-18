@@ -20,9 +20,10 @@ class DispatchCommandEventsMiddleware implements CommandBusMiddleware {
         $beforeCommandHandlingEvent = new BeforeCommandHandlingEvent($command);
         $this->dispatch($beforeCommandHandlingEvent);
         $command = $beforeCommandHandlingEvent->getCommand();
+        $dataForHandledEvent = $beforeCommandHandlingEvent->getDataForHandledEvent();
         try {
             $result = $next($command);
-            $this->dispatch(new CommandHandledEvent($command, $result));
+            $this->dispatch(new CommandHandledEvent($command, $result, $dataForHandledEvent));
             return $result;
         } catch (\Exception $e) {
             $this->dispatch(new CommandErrorEvent($command, $e));

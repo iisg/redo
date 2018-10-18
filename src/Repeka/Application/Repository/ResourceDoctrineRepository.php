@@ -13,6 +13,7 @@ use Repeka\Domain\Factory\ResourceListQuerySqlFactory;
 use Repeka\Domain\Factory\ResourceTreeQuerySqlFactory;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
+use Repeka\Domain\Service\ResourceDisplayStrategyDependencyMap;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
@@ -207,5 +208,29 @@ SQL
             ResourceContents::fromArray([SystemMetadata::GROUP_MEMBER => $userGroup->getId()])
         )->build();
         return $this->findByQuery($query)->getResults();
+    }
+
+    public function findByDisplayStrategyDependencies(ResourceEntity $resource, array $changedMetadataIds): array {
+        $dependentKeys = array_map(
+            function ($changedMetadataId) use ($resource) {
+                return ResourceDisplayStrategyDependencyMap::createDependencyKey($resource->getId(), $changedMetadataId);
+            },
+            $changedMetadataIds
+        );
+        $em = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::resourceEntity($em);
+        $query = $em->createNativeQuery(
+            <<<SQL
+        SELECT * FROM (
+          SELECT resource.*, jsonb_object_keys(display_strategy_dependencies) dependent_keys
+          FROM resource
+          WHERE jsonb_typeof(display_strategy_dependencies) = 'object') t
+        WHERE dependent_keys IN(:deps)
+SQL
+            ,
+            $resultSetMapping
+        );
+        $query->setParameter('deps', $dependentKeys);
+        return $query->getResult();
     }
 }

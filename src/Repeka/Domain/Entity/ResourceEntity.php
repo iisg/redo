@@ -4,6 +4,8 @@ namespace Repeka\Domain\Entity;
 use Assert\Assertion;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemTransition;
+use Repeka\Domain\Service\ResourceDisplayStrategyDependencyMap;
+use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
 use Repeka\Domain\Utils\EntityUtils;
 
 // ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
@@ -13,6 +15,7 @@ class ResourceEntity implements Identifiable, HasResourceClass {
     private $marking;
     private $contents;
     private $resourceClass;
+    private $displayStrategyDependencies = [];
 
     public function __construct(ResourceKind $kind, ResourceContents $contents) {
         $this->kind = $kind;
@@ -82,6 +85,18 @@ class ResourceEntity implements Identifiable, HasResourceClass {
         } else {
             return $this->getWorkflow()->apply($this, $transitionId);
         }
+    }
+
+    public function updateDisplayStrategyDependencies(int $metadataId, ResourceDisplayStrategyUsedMetadataCollector $collector) {
+        $this->displayStrategyDependencies = (new ResourceDisplayStrategyDependencyMap($this->displayStrategyDependencies))
+            ->clear($metadataId)
+            ->merge(new ResourceDisplayStrategyDependencyMap($metadataId, $collector))
+            ->toArray();
+    }
+
+    public function getDependentMetadataIds(ResourceEntity $resource, array $changedMetadataIds): array {
+        return (new ResourceDisplayStrategyDependencyMap($this->displayStrategyDependencies))
+            ->getDependentMetadataIds($resource, $changedMetadataIds);
     }
 
     public function getAuditData(): array {

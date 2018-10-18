@@ -28,6 +28,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_CATEGORY_NAME = 'metadata-category-name';
     const REFERENCE_METADATA_ASSIGNED_SCANNER = 'metadata-assigned-scanner';
     const REFERENCE_METADATA_REAL_SCANNER = 'metadata-real-scanner';
+    const REFERENCE_METADATA_SCANNER_USERNAME = 'metadata-scanner-username';
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
     const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
@@ -387,6 +388,22 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_DETAILS_PAGE
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'nazwaSkanisty',
+                    'label' => [
+                        'PL' => 'Username skanisty',
+                        'EN' => 'Scanner username',
+                    ],
+                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'constraints' => ['displayStrategy' => '{{ r | mSkanista | mUsername }}'],
+                ]
+            ),
+            self::REFERENCE_METADATA_SCANNER_USERNAME
         );
         $this->handleCommand(
             new MetadataUpdateOrderCommand(

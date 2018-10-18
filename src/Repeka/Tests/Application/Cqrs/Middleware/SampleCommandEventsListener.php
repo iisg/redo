@@ -14,12 +14,16 @@ class SampleCommandEventsListener extends CommandEventsListener {
     public $error = [];
 
     public $commandToReplace;
+    public $dataToSet;
 
     public function onBeforeCommandHandling(BeforeCommandHandlingEvent $event): void {
         $this->before[] = $event;
         if ($this->commandToReplace) {
             $event->replaceCommand($this->commandToReplace);
             $this->commandToReplace = null;
+        }
+        if ($this->dataToSet) {
+            $event->setDataForHandledEvent(self::class, $this->dataToSet);
         }
     }
 

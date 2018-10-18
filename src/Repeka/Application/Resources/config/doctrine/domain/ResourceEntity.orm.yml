@@ -23,3 +23,8 @@ Repeka\Domain\Entity\ResourceEntity:
       length: 64
       nullable: false
       column: resource_class
+    displayStrategyDependencies:
+      type: jsonb
+      column: display_strategy_dependencies
+      nullable: false
+      options: {default: '{}'}

@@ -32,6 +32,6 @@ class ValidateCommandMiddleware implements CommandBusMiddleware {
     }
 
     private function getValidatorId(Command $command) {
-        return get_class($command) . 'Validator';
+        return $command->getCommandClassName() . 'Validator';
     }
 }

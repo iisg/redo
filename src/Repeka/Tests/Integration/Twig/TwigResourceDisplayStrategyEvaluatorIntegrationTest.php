@@ -8,6 +8,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceContents as RC;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
+use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
@@ -161,5 +162,32 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
 BR;
         $rendered = trim($this->evaluator->render($thirdLevelChild, $breadcrumbTemplate));
         $this->assertEquals('PHP - to można leczyć! > First level > Second level > Third level', $rendered);
+    }
+
+    public function testDetectingUsedMetadata() {
+        foreach ($this->detectingUsedMetadataTestCases() as $testCase) {
+            list($template, $expectedUsedMetadata) = $testCase;
+            $usedMetadataCollector = new ResourceDisplayStrategyUsedMetadataCollector();
+            $this->evaluator->render($this->phpBookResource, $template, $usedMetadataCollector);
+            $this->assertEquals($expectedUsedMetadata, $usedMetadataCollector->getUsedMetadata(), $template);
+        }
+    }
+
+    private function detectingUsedMetadataTestCases() {
+        $tId = $this->titleMetadata->getId();
+        $phpBookId = $this->getPhpBookResource()->getId();
+        $supervisorMetadataId = $this->findMetadataByName('nadzorujacy')->getId();
+        $urlMetadataId = $this->findMetadataByName('url')->getId();
+        // @codingStandardsIgnoreStart
+        // @formatter:off because indentation makes config structure way clearer
+        return [
+            ["{{ r|mTytul }}", [$tId => [$phpBookId]]],
+            ["{{ r|mInvalid }}", []],
+            ["{{ r(1)|m(-2) }}", [-2 => [1]]],
+            ["{{ r|m('Nadzorujący')|first|r|m('Username')|first }}", [$supervisorMetadataId => [$phpBookId], -2 => [2]]],
+            ["{{ r|mUrl|submetadataUrlLabel }}", [$urlMetadataId => [$phpBookId]]],
+        ];
+        // @formatter:on
+        // @codingStandardsIgnoreEnd
     }
 }

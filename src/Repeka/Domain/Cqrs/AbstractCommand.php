@@ -25,8 +25,12 @@ abstract class AbstractCommand implements Command {
         return strtolower(preg_replace('/(?<!^)[A-Z]+/', '_$0', $camelCase));
     }
 
+    public function getCommandClassName() {
+        return get_class($this);
+    }
+
     public function getCommandName() {
-        return self::getCommandNameFromClassName(get_class($this));
+        return self::getCommandNameFromClassName($this->getCommandClassName());
     }
 
     public function __toString() {

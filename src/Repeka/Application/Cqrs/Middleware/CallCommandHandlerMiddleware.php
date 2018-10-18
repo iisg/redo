@@ -13,7 +13,7 @@ class CallCommandHandlerMiddleware implements CommandBusMiddleware {
     }
 
     public function handle(Command $command, callable $next) {
-        $handlerName = get_class($command) . 'Handler';
+        $handlerName = $command->getCommandClassName() . 'Handler';
         try {
             $handler = $this->container->get($handlerName);
             return $handler->handle($command);

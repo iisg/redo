@@ -32,6 +32,6 @@ class AdjustCommandMiddleware implements CommandBusMiddleware {
     }
 
     private function getAdjusterId(Command $command) {
-        return get_class($command) . 'Adjuster';
+        return $command->getCommandClassName() . 'Adjuster';
     }
 }

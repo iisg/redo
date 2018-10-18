@@ -17,7 +17,7 @@ abstract class CommandEventsListener {
     }
 
     final public function isSubscribed(CqrsCommandEvent $event): bool {
-        return in_array(get_class($event->getCommand()), $this->subscribedFor());
+        return in_array($event->getCommand()->getCommandClassName(), $this->subscribedFor());
     }
 
     protected function subscribedFor(): array {
