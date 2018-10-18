@@ -3,6 +3,7 @@ namespace Repeka\Application\Twig;
 
 use Repeka\Domain\Exception\InvalidResourceDisplayStrategyException;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
+use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
 use Twig\Environment;
 use Twig\Template;
 
@@ -26,13 +27,23 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
         return $this->twig->createTemplate($template);
     }
 
-    public function render($resourceEntity, string $template): string {
+    public function render(
+        $resourceEntity,
+        string $template,
+        ResourceDisplayStrategyUsedMetadataCollector $usedMetadataCollector = null
+    ): string {
         try {
             if (!trim($template)) {
                 $template = 'ID {{ r.id }}';
             }
             $template = $this->compile($template);
-            return $template->render(['r' => $resourceEntity, 'resource' => $resourceEntity]);
+            return $template->render(
+                [
+                    'r' => $resourceEntity,
+                    'resource' => $resourceEntity,
+                    TwigResourceDisplayStrategyEvaluatorExtension::USED_METADATA_COLLECTOR_KEY => $usedMetadataCollector,
+                ]
+            );
         } catch (\Throwable $e) {
             return $this->throwableToHumanMessage($e);
         }

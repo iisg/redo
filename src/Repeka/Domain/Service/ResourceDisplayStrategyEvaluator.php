@@ -11,7 +11,11 @@ interface ResourceDisplayStrategyEvaluator {
      * @param string $template
      * @return string
      */
-    public function render($resourceEntity, string $template): string;
+    public function render(
+        $resourceEntity,
+        string $template,
+        ResourceDisplayStrategyUsedMetadataCollector $usedMetadataCollector = null
+    ): string;
 
     /**
      * @throws InvalidResourceDisplayStrategyException when the template is not valid

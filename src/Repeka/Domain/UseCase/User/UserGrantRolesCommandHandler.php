@@ -61,7 +61,7 @@ class UserGrantRolesCommandHandler {
                 }
             }
         }
-        $user->updateRoles(array_unique($roles));
+        $user->updateRoles(array_values(array_unique($roles)));
         $this->userRepository->save($user);
     }
 }

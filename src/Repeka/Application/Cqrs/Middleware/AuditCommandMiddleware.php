@@ -53,7 +53,7 @@ class AuditCommandMiddleware implements CommandBusMiddleware {
     }
 
     private function getAuditorId(Command $command) {
-        return get_class($command) . 'Auditor';
+        return $command->getCommandClassName() . 'Auditor';
     }
 
     private function auditSuccess(Command $command, ?array $beforeEntry, ?array $afterEntry, bool $saveBeforeEntry) {

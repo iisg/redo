@@ -77,4 +77,15 @@ class DispatchCommandEventsMiddlewareTest extends \PHPUnit_Framework_TestCase {
             }
         );
     }
+
+    public function testPassingDataFromBeforeToAfterEvent() {
+        $this->listener->dataToSet = 'unicorn';
+        $this->middleware->handle(
+            new ResourceQuery(1),
+            function () {
+                return 2;
+            }
+        );
+        $this->assertEquals('unicorn', $this->listener->handled[0]->getDataFromBeforeEvent(SampleCommandEventsListener::class));
+    }
 }

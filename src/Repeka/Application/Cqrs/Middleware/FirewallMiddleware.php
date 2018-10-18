@@ -79,7 +79,7 @@ class FirewallMiddleware implements CommandBusMiddleware {
     }
 
     private function getCommandFirewallId(Command $command) {
-        return get_class($command) . 'Firewall';
+        return $command->getCommandClassName() . 'Firewall';
     }
 
     public static function bypass(callable $callback) {

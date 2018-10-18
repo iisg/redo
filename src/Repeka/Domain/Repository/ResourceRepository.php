@@ -34,4 +34,7 @@ interface ResourceRepository {
 
     /** @return ResourceEntity[] */
     public function findUsersInGroup(ResourceEntity $userGroup): array;
+
+    /** @return ResourceEntity[] */
+    public function findByDisplayStrategyDependencies(ResourceEntity $resource, array $changedMetadataIds): array;
 }

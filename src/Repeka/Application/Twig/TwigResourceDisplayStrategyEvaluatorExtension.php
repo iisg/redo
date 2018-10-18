@@ -7,12 +7,15 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
 use Repeka\Domain\Utils\PrintableArray;
 
 /**
  * All Twig extensions required for resource & metadata fetching in resource display strategies.
  */
 class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
+    const USED_METADATA_COLLECTOR_KEY = '__usedMetadataCollector';
+
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var MetadataRepository */
@@ -34,10 +37,10 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
 
     public function getFilters() {
         return [
-            new \Twig_Filter('m', [$this, 'getMetadataValues']),
-            new \Twig_Filter('metadata', [$this, 'getMetadataValues']),
-            new \Twig_Filter('metadata*', [$this, 'getMetadataValuesDynamic']),
-            new \Twig_Filter('m*', [$this, 'getMetadataValuesDynamic']),
+            new \Twig_Filter('m', [$this, 'getMetadataValues'], ['needs_context' => true]),
+            new \Twig_Filter('metadata', [$this, 'getMetadataValues'], ['needs_context' => true]),
+            new \Twig_Filter('metadata*', [$this, 'getMetadataValuesDynamic'], ['needs_context' => true]),
+            new \Twig_Filter('m*', [$this, 'getMetadataValuesDynamic'], ['needs_context' => true]),
             new \Twig_Filter('submetadata', [$this, 'getSubmetadataValues']),
             new \Twig_Filter('sub', [$this, 'getSubmetadataValues']),
             new \Twig_Filter('submetadata*', [$this, 'getSubmetadataValuesDynamic']),
@@ -97,7 +100,7 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         }
     }
 
-    public function getMetadataValues($contents, $metadataId = null) {
+    public function getMetadataValues(array $twigContext, $contents, $metadataId = null) {
         $metadataId = $this->fetchMetadataId($metadataId, $contents);
         $iterableGiven = is_iterable($contents) && !$contents instanceof ResourceContents;
         if (!$iterableGiven) {
@@ -114,12 +117,13 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
                 $resource = $this->fetchResources($resource);
             }
             $values[] = new PrintableArray($resource->getValues($metadataId));
+            $this->collectUsedMetadata($twigContext, $metadataId, $resource);
         }
         return $iterableGiven ? new PrintableArray($values) : $values[0];
     }
 
-    public function getMetadataValuesDynamic($metadataId, $contents) {
-        return $this->getMetadataValues($contents, $metadataId);
+    public function getMetadataValuesDynamic(array $twigContext, $metadataId, $contents) {
+        return $this->getMetadataValues($twigContext, $contents, $metadataId);
     }
 
     public function getSubmetadataValues($metadataValues, $submetadataId = null) {
@@ -137,5 +141,12 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
 
     public function getSubmetadataValuesDynamic($metadataId, $contents) {
         return $this->getSubmetadataValues($contents, $metadataId);
+    }
+
+    private function collectUsedMetadata(array $twigContext, int $metadataId, $resource): void {
+        /** @var ResourceDisplayStrategyUsedMetadataCollector $collector */
+        if ($collector = ($twigContext[self::USED_METADATA_COLLECTOR_KEY] ?? null)) {
+            $collector->addUsedMetadata($metadataId, $resource);
+        }
     }
 }
