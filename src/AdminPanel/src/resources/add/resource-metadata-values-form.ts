@@ -7,6 +7,7 @@ import {ValidationController} from "aurelia-validation";
 import {MetadataValue} from "../metadata-value";
 import {changeHandler} from "../../common/components/binding-mode";
 import {ChangeEvent} from "../../common/change-event";
+import {MetadataControl} from "../../resources-config/metadata/metadata-control";
 
 @autoinject
 export class ResourceMetadataValuesForm {
@@ -32,7 +33,7 @@ export class ResourceMetadataValuesForm {
     if (this.resource && this.metadata) {
       this.ensureResourceHasMetadataContents();
       const length = this.resource.contents[this.metadata.id].length;
-      if (this.required && !length) {
+      if (this.required && !length && this.metadata.control !== MetadataControl.RELATIONSHIP) {
         this.addNew();
       }
     }

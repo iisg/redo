@@ -22,7 +22,7 @@ resource-form-generated {
             width: 100%;
           }
         }
-        & > resource-metadata-value-input {
+        & > resource-metadata-value-input, & > .metadata-row {
           flex: 1;
           margin-right: $gap-size / 2;
           & > resource-form-generated {
@@ -42,7 +42,7 @@ resource-form-generated {
           margin-left: $gap-size / 2;
         }
       }
-      td > new-metadata-value-button {
+      td > new-metadata-value-button, td > icon-button {
         margin-top: $gap-size / 2;
         margin-bottom: $gap-size / 2;
       }
