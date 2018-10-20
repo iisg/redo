@@ -14,13 +14,7 @@ services:
       - "${PORT_HTTP}:80"
       - "${PORT_HTTPS}:443"
     links:
-      - repeka-elasticsearch:elasticsearch
       - repeka-postgres:postgres
-
-  repeka-elasticsearch:
-    container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch
-    build:
-      context: ./elasticsearch
 
   repeka-postgres:
     container_name: ${COMPOSE_PROJECT_NAME}-postgres

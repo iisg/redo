@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  repeka:
+    links:
+      - repeka-elasticsearch:elasticsearch
+
+  repeka-elasticsearch:
+    container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch
+    build:
+      context: ./elasticsearch
+    volumes:
+      - ${VOLUME_ELASTICSEARCH}:/usr/share/elasticsearch/data:z
