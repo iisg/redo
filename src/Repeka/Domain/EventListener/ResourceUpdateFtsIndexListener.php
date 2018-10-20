@@ -1,35 +1,36 @@
 <?php
 namespace Repeka\Domain\EventListener;
 
-use Repeka\Application\Elasticsearch\Model\ElasticSearch;
 use Repeka\Domain\Constants\SystemTransition;
-use Repeka\Domain\Cqrs\Event\CommandErrorEvent;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
 use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
+use Repeka\Domain\Repository\ResourceFtsProvider;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
-use Symfony\Component\Workflow\Transition;
 
 class ResourceUpdateFtsIndexListener extends CommandEventsListener {
+    /** @var ResourceFtsProvider */
+    private $resourceFtsProvider;
 
-    /** @var ElasticSearch */
-    private $elasticSearch;
-
-    public function __construct(ElasticSearch $elasticSearch) {
-        $this->elasticSearch = $elasticSearch;
+    public function __construct(ResourceFtsProvider $resourceFtsProvider) {
+        $this->resourceFtsProvider = $resourceFtsProvider;
     }
 
     public function onCommandHandled(CommandHandledEvent $event): void {
         $command = $event->getCommand();
-        if ($this->isProductiveCommand($command)) {
-            /** @var  $ResourceEntity */
-            $resource = $event->getResult();
-            $this->elasticSearch->insertDocument($resource);
-        } elseif ($command instanceof ResourceDeleteCommand) {
-            $resourceId = $event->getResult();
-            $this->elasticSearch->deleteDocument($resourceId);
+        try {
+            if ($this->isProductiveCommand($command)) {
+                /** @var  $ResourceEntity */
+                $resource = $event->getResult();
+                $this->resourceFtsProvider->index($resource);
+            } elseif ($command instanceof ResourceDeleteCommand) {
+                $resourceId = $event->getResult();
+                $this->resourceFtsProvider->delete($resourceId);
+            }
+        } catch (\Exception $e) {
+            // we want the application to work without FTS
         }
     }
 

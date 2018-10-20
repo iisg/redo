@@ -7,7 +7,6 @@ use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceGodUpdateCommandHandler {
-
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var ResourceFileHelper */
@@ -27,7 +26,9 @@ class ResourceGodUpdateCommandHandler {
         }
         if ($resource->hasWorkflow()) {
             if ($resource->getWorkflow() == $originalWorkflow) {
-                $resource->getWorkflow()->setCurrentPlaces($resource, $command->getPlacesIds());
+                if ($command->getPlacesIds()) {
+                    $resource->getWorkflow()->setCurrentPlaces($resource, $command->getPlacesIds());
+                }
             } else {
                 $resource->getWorkflow()->setCurrentPlaces($resource, [$resource->getWorkflow()->getInitialPlace()->getId()]);
             }
