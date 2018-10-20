@@ -12,6 +12,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceFtsProvider;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class ElasticSearch implements ResourceFtsProvider {
     /** @var ESClient */
     private $client;
@@ -71,5 +72,13 @@ class ElasticSearch implements ResourceFtsProvider {
         $search->addType(FtsConstants::ES_DOCUMENT_TYPE);
         $search->setQuery($esQuery->getQuery());
         return $search->search();
+    }
+
+    public function index(ResourceEntity $resource): void {
+        $this->insertDocument($resource);
+    }
+
+    public function delete(int $resourceId): void {
+        $this->deleteDocument($resourceId);
     }
 }
