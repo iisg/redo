@@ -48,7 +48,11 @@ class AuditEntryNormalizer extends AbstractNormalizer implements NormalizerAware
                 $evaluated = [];
                 $contents = ResourceContents::fromArray($data[$dataField]['resource']['contents']);
                 foreach ($customColumns as $displayStrategy) {
-                    $evaluated[$displayStrategy] = $this->displayStrategyEvaluator->render($contents, $displayStrategy);
+                    if (!trim($displayStrategy)) {
+                        $evaluated[$displayStrategy] = "";
+                    } else {
+                        $evaluated[$displayStrategy] = $this->displayStrategyEvaluator->render($contents, $displayStrategy);
+                    }
                 }
                 return $evaluated;
             }
