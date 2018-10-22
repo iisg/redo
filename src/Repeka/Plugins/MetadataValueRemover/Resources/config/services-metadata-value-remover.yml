@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Repeka\Plugins\MetadataValueRemover\Model\:
+    resource: '../../Model'

@@ -38,8 +38,9 @@ export const inputDateConfig = {
   [DateMode.DATE_TIME]: {
     options: {
       allowInputToggle: true,
+      format: 'DD.MM.YYYY, HH:mm:ss'
     },
-    format: 'DD.MM.YYYY, HH:mm',
+    format: 'DD.MM.YYYY, HH:mm:ss',
   },
 };
 
