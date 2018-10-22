@@ -61,6 +61,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             ->addArgument('input', InputArgument::REQUIRED)
             ->addArgument('config', InputArgument::OPTIONAL)
             ->addOption('resourceKindId', null, InputOption::VALUE_REQUIRED)
+            ->addOption('exportFormat', null, InputOption::VALUE_REQUIRED)
             ->addOption('no-report', null, InputOption::VALUE_NONE)
             ->addOption('id-namespace', null, InputOption::VALUE_OPTIONAL)
             ->addOption('unmap-updated', null, InputOption::VALUE_NONE)
@@ -94,7 +95,10 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             $workflowPlacesIds = $this->findWorkflowPlacesIds($resourceKind, $input->getOption('workflow-place'));
             $importConfig = $this->importConfigFactory->fromFile($configFileName, $resourceKind);
             $reportCreator->setInvalidMetadataKeysInfo($importConfig->getInvalidMetadataKeys());
-            $resources = $xml->xpath('/*/*');
+            $resourceContentsFetcherName = 'Repeka\\Application\\Command\\PkImport\\XmlExtractStrategy\\';
+            $resourceContentsFetcherName .= $input->getOption('exportFormat') . 'XmlExtractor';
+            $resourceContentsFetcher = new $resourceContentsFetcherName();
+            $resources = $resourceContentsFetcher->extractAllResources($xml);
             $idMappingNamespace = $input->getOption('id-namespace');
             if (!$idMappingNamespace) {
                 $idMappingNamespace = $resources[0]->getName();
@@ -108,18 +112,12 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             $stats['resources'] = count($resources);
             foreach ($resources as $resource) {
                 $progress->advance();
-                $resourceData = current($resource->attributes());
-                $metadataList = $resource->metadata;
-                $terms = [];
-                foreach ($metadataList as $metadata) {
-                    $termId = (string)$metadata['TERM_ID'];
-                    $terms[] = $termId;
-                    $metadataData = [];
-                    foreach (current($metadata->attributes()) as $attr => $value) {
-                        $metadataData[$attr] = $value;
-                    }
-                    $resourceData[$termId][] = $metadataData;
+                $resourceData = $resourceContentsFetcher->extractResourceData($resource);
+                Assertion::keyExists($resourceData, 'ID');
+                if (is_array($resourceData['ID'])) {
+                    $resourceData['ID'] = current($resourceData['ID']);
                 }
+                $terms = array_keys($resourceData);
                 FirewallMiddleware::bypass(
                     function () use (
                         $input,
