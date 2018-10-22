@@ -25,7 +25,7 @@ abstract class AbstractPkImportIntegrationTest extends IntegrationTestCase {
     protected function importFile(string $file, ResourceKind $resourceKind) {
         $filePath = addcslashes(__DIR__ . "/dumps/$file.xml", '\\');
         $this->executeCommand(
-            "repeka:pk-import:import \"$filePath\" --resourceKindId {$resourceKind->getId()} --no-report"
+            "repeka:pk-import:import \"$filePath\" --resourceKindId {$resourceKind->getId()} --no-report --exportFormat PkResourcesDump"
         );
     }
 

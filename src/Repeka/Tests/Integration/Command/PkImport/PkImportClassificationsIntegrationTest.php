@@ -110,10 +110,6 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
         $this->assertEquals(['Religioznawstwo. Religie'], $pathToTop[1]->getValues($nameMetadata));
     }
 
-    private function import() {
-        $this->importFile('index-klasyfikacja_pkt', $this->classificationRk);
-    }
-
     public function testImportSubmetadata() {
         $this->import();
         $classificationByName = $this->findResourceByContents(['nazwa' => 'brak']);
@@ -139,5 +135,9 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
         $secMetadataLangIdSubSubmetadata = $secondMetadataLangDescSubmetadata[0]->getSubmetadata($this->languageIdMetadata);
         $this->assertCount(1, $secMetadataLangIdSubSubmetadata);
         $this->assertEquals(1464, $secMetadataLangIdSubSubmetadata[0]->getValue());
+    }
+
+    private function import() {
+        $this->importFile('index-klasyfikacja_pkt', $this->classificationRk);
     }
 }
