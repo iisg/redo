@@ -89,12 +89,12 @@ describe('Transition Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
-	waitForElement(element(by.className('new-metadata-value-button-container')));
-	var newMetadataValuesFields = element.all(by.className('new-metadata-value-button-container'));
-	var personMetadataValueField = newMetadataValuesFields.get(0);
+	waitForElement(element(by.className('transparent au-target')));
+	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
+	var personMetadataValueField = newMetadataValuesFields.get(3);
 	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
-	personMetadataValueButton.get(0).click();
-	browser.sleep(500);
+	personMetadataValueButton.get(2).click();
+	browser.sleep(5000);
 
 	var formsList = element.all(by.className('form-control au-target'));
 	formsList.get(3).sendKeys('ZZZ_automatyczne_testowanie');
@@ -102,13 +102,6 @@ describe('Transition Tests', function() {
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
 	checkboxProper.click();
-
-	var valueBoxes = element.all(by.className('transparent au-target'));
-	var properBox = valueBoxes.get(3);
-	var properBoxButtons = properBox.all(by.className('buttons'));
-	var rightButtonsSet = properBoxButtons.get(0);
-	var buttonsWithinSet = rightButtonsSet.all(by.className('au-target'));
-	buttonsWithinSet.get(0).click();
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
@@ -151,11 +144,11 @@ describe('Transition Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
-	waitForElement(element(by.className('new-metadata-value-button-container')));
-	var newMetadataValuesFields = element.all(by.className('new-metadata-value-button-container'));
-	var personMetadataValueField = newMetadataValuesFields.get(0);
+	waitForElement(element(by.className('transparent au-target')));
+	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
+	var personMetadataValueField = newMetadataValuesFields.get(3);
 	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
-	personMetadataValueButton.get(0).click();
+	personMetadataValueButton.get(2).click();
 	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
@@ -164,13 +157,6 @@ describe('Transition Tests', function() {
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
 	checkboxProper.click();
-
-	var valueBoxes = element.all(by.className('transparent au-target'));
-	var properBox = valueBoxes.get(3);
-	var properBoxButtons = properBox.all(by.className('buttons'));
-	var rightButtonsSet = properBoxButtons.get(0);
-	var buttonsWithinSet = rightButtonsSet.all(by.className('au-target'));
-	buttonsWithinSet.get(0).click();
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
@@ -227,11 +213,12 @@ describe('Transition Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
-	waitForElement(element(by.className('new-metadata-value-button-container')));
-	var newMetadataValuesFields = element.all(by.className('new-metadata-value-button-container'));
-	var personMetadataValueField = newMetadataValuesFields.get(0);
+	waitForElement(element(by.className('transparent au-target')));
+	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
+	var personMetadataValueField = newMetadataValuesFields.get(3);
 	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
-	personMetadataValueButton.get(0).click();
+	personMetadataValueButton.get(2).click();
+	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
 	formsList.get(3).sendKeys('AAA_testowanie_automatyczne');
@@ -239,13 +226,6 @@ describe('Transition Tests', function() {
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
 	checkboxProper.click();
-
-	var valueBoxes = element.all(by.className('transparent au-target'));
-	var properBox = valueBoxes.get(3);
-	var properBoxButtons = properBox.all(by.className('buttons'));
-	var rightButtonsSet = properBoxButtons.get(0);
-	var buttonsWithinSet = rightButtonsSet.all(by.className('au-target'));
-	buttonsWithinSet.get(0).click();
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
@@ -294,11 +274,12 @@ describe('Transition Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
-	waitForElement(element(by.className('new-metadata-value-button-container')));
-	var newMetadataValuesFields = element.all(by.className('new-metadata-value-button-container'));
-	var personMetadataValueField = newMetadataValuesFields.get(0);
+	waitForElement(element(by.className('transparent au-target')));
+	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
+	var personMetadataValueField = newMetadataValuesFields.get(3);
 	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
-	personMetadataValueButton.get(0).click();
+	personMetadataValueButton.get(2).click();
+	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
 	formsList.get(3).sendKeys('AAA_testowanie_automatyczne');
@@ -306,13 +287,6 @@ describe('Transition Tests', function() {
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
 	checkboxProper.click();
-
-	var valueBoxes = element.all(by.className('transparent au-target'));
-	var properBox = valueBoxes.get(3);
-	var properBoxButtons = properBox.all(by.className('buttons'));
-	var rightButtonsSet = properBoxButtons.get(0);
-	var buttonsWithinSet = rightButtonsSet.all(by.className('au-target'));
-	buttonsWithinSet.get(0).click();
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
