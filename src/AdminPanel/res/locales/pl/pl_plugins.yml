@@ -28,3 +28,14 @@ repekaMetadataValueSetter:
       label: Tylko jeśli metadana nie ma wartości
       placeholder: ~
       description: Niezależnie od wybranej opcji, jeżeli wygenerowana wartość metadanej już istnieje w zasobie, to nie zostanie dodana ponownie
+repekaMetadataValueRemover:
+  label: Usuń wartość metadanej
+  options:
+    metadataName:
+      label: Rodzaj metadanej
+      placeholder: Nazwa lub id
+      description: ~
+    metadataValuePattern:
+      label: Wzór wartości do usuwania
+      placeholder: Np. .*
+      description: "Podaj wyrażenie regularne. Jeżeli wartość dopasuje się do wzoru zostanie usunięty, w przeciwnym wypadku nie. Aby usunać dowolną wartość, podaj: .*"

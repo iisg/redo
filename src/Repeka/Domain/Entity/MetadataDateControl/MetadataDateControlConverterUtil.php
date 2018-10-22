@@ -93,6 +93,8 @@ final class MetadataDateControlConverterUtil {
     }
 
     public static function convertDateToAtomFormat($value): string {
-        return (new DateTime($value))->format(DateTime::ATOM);
+        $dateTime = new DateTime($value);
+        $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        return $dateTime->format(DateTime::ATOM);
     }
 }

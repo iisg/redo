@@ -27,6 +27,7 @@ class TestContainerPass implements CompilerPassInterface {
         \Repeka\Domain\Service\ResourceDisplayStrategyEvaluator::class,
         \Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule::class,
         \Repeka\Plugins\MetadataValueSetter\Model\RepekaMetadataValueSetterResourceWorkflowPlugin::class,
+        \Repeka\Plugins\MetadataValueRemover\Model\RepekaMetadataValueRemoverResourceWorkflowPlugin::class,
         \Repeka\Plugins\Ocr\Model\RepekaOcrResourceWorkflowPlugin::class,
         \Repeka\Application\Elasticsearch\ESIndexManager::class,
         'sensio_framework_extra.view.guesser',

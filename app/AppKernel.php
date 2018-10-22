@@ -20,6 +20,7 @@ class AppKernel extends Kernel {
             new Repeka\Application\RepekaBundle(),
             new Repeka\Plugins\Ocr\RepekaOcrPluginBundle(),
             new Repeka\Plugins\MetadataValueSetter\RepekaMetadataValueSetterPluginBundle(),
+            new Repeka\Plugins\MetadataValueRemover\RepekaMetadataValueRemoverPluginBundle(),
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
