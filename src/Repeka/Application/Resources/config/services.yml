@@ -18,6 +18,9 @@ services:
   Repeka\Application\Authentication\UserDataMapping:
     $mappingConfigPath: '%user_data_mapping%'
 
+  Repeka\Application\Command\Cyclic\DispatchCyclicTasksCommand:
+    - !tagged repeka.cyclic_command
+
   Repeka\Application\MetadataImport\KohaXmlResourceDownloader:
     - '%xml_import.koha%'
 
