@@ -5,6 +5,7 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
@@ -31,7 +32,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
         $this->scannerUsernameMetadata = $this->findMetadataByName('nazwaSkanisty');
     }
 
-    public function testUpdatingScannerUsername() {
+    private function changeScannerUsernameToNewScanner(): void {
         $this->assertEquals('skaner', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
         $this->handleCommandBypassingFirewall(
             new ResourceUpdateContentsCommand(
@@ -39,8 +40,13 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->scannerData->getContents()->withReplacedValues(SystemMetadata::USERNAME, 'nowyskaner')
             )
         );
-        $this->phpBook = $this->getPhpBookResource();
+    }
+
+    public function testUpdatingScannerUsername() {
+        $this->changeScannerUsernameToNewScanner();
+        $this->getEntityManager()->refresh($this->phpBook);
         $this->assertEquals('nowyskaner', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+        $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
     }
 
     public function testCalculatingForNewResource() {
@@ -58,7 +64,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
         $this->updateDisplayStrategyOfPhpBookKind($detailsPage, '{{ random(1000) }}');
         $number = $this->phpBook->getValues($detailsPage)[0]->getValue();
         $this->assertGreaterThanOrEqual(0, $number);
-        $this->testUpdatingScannerUsername();
+        $this->changeScannerUsernameToNewScanner();
         $this->assertEquals($number, $this->phpBook->getValues($detailsPage)[0]->getValue());
     }
 
@@ -67,7 +73,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
         $this->updateDisplayStrategyOfPhpBookKind($detailsPage, '{{ r|mNazwaSkanisty|upper }}');
         $upperScanner = $this->phpBook->getValues($detailsPage)[0]->getValue();
         $this->assertEquals('SKANER', $upperScanner);
-        $this->testUpdatingScannerUsername();
+        $this->changeScannerUsernameToNewScanner();
         $this->assertEquals('NOWYSKANER', $this->phpBook->getValues($detailsPage)[0]->getValue());
     }
 
@@ -91,7 +97,105 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
         $this->assertContains('Skaner', $capitalizedScanner);
     }
 
-    private function updateDisplayStrategyOfPhpBookKind(Metadata $metadataToChange, string $template) {
+    public function testMarksDirtyIfTooManyResources() {
+        $skanistaId = $this->findMetadataByName('skanista')->getId();
+        /** @var ResourceEntity $resource */
+        $resource = $this->handleCommandBypassingFirewall(
+            new ResourceCreateCommand(
+                $this->phpBook->getKind(),
+                ResourceContents::fromArray([$skanistaId => $this->phpBook->getValues($skanistaId)[0]->getValue()])
+            )
+        );
+        for ($i = 0; $i < 30; $i++) {
+            $cloned = clone $resource;
+            $this->getEntityManager()->persist($cloned);
+        }
+        $this->getEntityManager()->flush();
+        $this->changeScannerUsernameToNewScanner();
+        $this->getEntityManager()->refresh($resource);
+        $this->assertTrue($resource->isDisplayStrategiesDirty());
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertTrue($this->phpBook->isDisplayStrategiesDirty());
+        $this->assertEquals('skaner', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+    }
+
+    public function testEvaluatingDirtyResourcesWithCrontab() {
+        $this->testMarksDirtyIfTooManyResources();
+        $this->executeCommand('repeka:cyclic-tasks:dispatch');
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
+        $this->assertEquals('nowyskaner', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+    }
+
+    public function testMarksDirtyOnResourceKindDisplayStrategyChange() {
+        $this->updateDisplayStrategyOfPhpBookKind($this->scannerUsernameMetadata, '{{ random(10) }}', false);
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertTrue($this->phpBook->isDisplayStrategiesDirty());
+        $this->assertEquals('skaner', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+    }
+
+    public function testDoesNotMarksDirtyIfNoDisplayStrategyHasChanged() {
+        $this->updateDisplayStrategyOfPhpBookKind(SystemMetadata::USERNAME()->toMetadata(), '{{ random(10) }}', false);
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
+    }
+
+    public function testMarksDirtyOnMetadataDisplayStrategyChange() {
+        $this->handleCommandBypassingFirewall(
+            new MetadataUpdateCommand(
+                $this->scannerUsernameMetadata,
+                $this->scannerUsernameMetadata->getLabel(),
+                $this->scannerUsernameMetadata->getDescription(),
+                $this->scannerUsernameMetadata->getPlaceholder(),
+                ['displayStrategy' => '{{ random(10) }}'],
+                false,
+                false
+            )
+        );
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertTrue($this->phpBook->isDisplayStrategiesDirty());
+        $this->assertEquals('skaner', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+    }
+
+    public function testDoesNotMarkDirtyIfMetadataDisplayStrategyDoesNotChange() {
+        $this->handleCommandBypassingFirewall(
+            new MetadataUpdateCommand(
+                $this->scannerUsernameMetadata,
+                $this->scannerUsernameMetadata->getLabel(),
+                $this->scannerUsernameMetadata->getDescription(),
+                $this->scannerUsernameMetadata->getPlaceholder(),
+                $this->scannerUsernameMetadata->getConstraints(),
+                false,
+                false
+            )
+        );
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
+        $this->assertEquals('skaner', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+    }
+
+    public function testDoesNotMarkDirtyOnMetadataDisplayStrategyChangeIfOverriddenInResourceKind() {
+        $this->updateDisplayStrategyOfPhpBookKind($this->scannerUsernameMetadata, 'UNICORN');
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
+        $this->handleCommandBypassingFirewall(
+            new MetadataUpdateCommand(
+                $this->scannerUsernameMetadata,
+                $this->scannerUsernameMetadata->getLabel(),
+                $this->scannerUsernameMetadata->getDescription(),
+                $this->scannerUsernameMetadata->getPlaceholder(),
+                ['displayStrategy' => '{{ random(10) }}'],
+                false,
+                false
+            )
+        );
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
+        $this->assertEquals('UNICORN', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+    }
+
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
+    private function updateDisplayStrategyOfPhpBookKind(Metadata $metadataToChange, string $template, bool $evaluate = true) {
         $newMetadataOverrides = array_map(
             function (Metadata $metadata) use ($template, $metadataToChange) {
                 $override = array_merge(['id' => $metadata->getId()], $metadata->getOverrides());
@@ -110,6 +214,9 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->phpBook->getWorkflow()
             )
         );
-        $this->handleCommandBypassingFirewall(new ResourceEvaluateDisplayStrategiesCommand($this->phpBook));
+        if ($evaluate) {
+            $this->getEntityManager()->refresh($this->phpBook);
+            $this->handleCommandBypassingFirewall(new ResourceEvaluateDisplayStrategiesCommand($this->phpBook));
+        }
     }
 }

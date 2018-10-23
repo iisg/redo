@@ -43,6 +43,10 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
                 $resource->updateDisplayStrategyDependencies($metadata->getId(), $usedMetadataCollector);
             }
         }
+        if ($resource->isDisplayStrategiesDirty() && !$command->getMetadataIds()) {
+            $changed = true;
+            $resource->clearDisplayStrategiesDirty();
+        }
         if ($changed) {
             $resource->updateContents($contents);
             $resource = $this->resourceRepository->save($resource);

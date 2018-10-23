@@ -28,3 +28,7 @@ Repeka\Domain\Entity\ResourceEntity:
       column: display_strategy_dependencies
       nullable: false
       options: {default: '{}'}
+    displayStrategiesDirty:
+      type: boolean
+      column: display_strategies_dirty
+      options: {default: true}

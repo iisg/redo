@@ -204,6 +204,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                     ]
                 )->toArray(),
                 'resourceClass' => $this->resource->getResourceClass(),
+                'displayStrategiesDirty' => false,
                 'availableTransitions' => [SystemTransition::UPDATE()->toTransition($this->resourceKind, $this->resource)->toArray()],
             ],
             $client->getResponse()->getContent()

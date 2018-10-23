@@ -37,6 +37,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             'kindId' => $resource->getKind()->getId(),
             'contents' => $this->getContentsArray($resource, $returnTeaser),
             'resourceClass' => $resource->getResourceClass(),
+            'displayStrategiesDirty' => $resource->isDisplayStrategiesDirty(),
         ];
         if (!$returnTeaser) {
             $availableTransitions = [SystemTransition::UPDATE()->toTransition($resource->getKind(), $resource)];

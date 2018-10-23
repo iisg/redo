@@ -233,4 +233,37 @@ SQL
         $query->setParameter('deps', $dependentKeys);
         return $query->getResult();
     }
+
+    public function markDisplayStrategiesDirty($resources): void {
+        if (!is_array($resources)) {
+            $resources = [$resources];
+        }
+        $resourceIds = [];
+        $resourceKinds = [];
+        foreach ($resources as $resourceOrResourceKind) {
+            if ($resourceOrResourceKind instanceof ResourceEntity) {
+                $resourceIds[] = $resourceOrResourceKind->getId();
+            } elseif ($resourceOrResourceKind instanceof ResourceKind) {
+                $resourceKinds[] = $resourceOrResourceKind;
+            } else {
+                throw new \InvalidArgumentException('Cannot update display strategies of ' . get_class($resourceOrResourceKind));
+            }
+        }
+        if ($resourceIds) {
+            $this->createQueryBuilder('r')->update()
+                ->set('r.displayStrategiesDirty', 'true')
+                ->where('r.id IN(:ids)')
+                ->setParameter('ids', $resourceIds)
+                ->getQuery()
+                ->execute();
+        }
+        if ($resourceKinds) {
+            $this->createQueryBuilder('r')->update()
+                ->set('r.displayStrategiesDirty', 'true')
+                ->where('r.kind IN(:kinds)')
+                ->setParameter('kinds', $resourceKinds)
+                ->getQuery()
+                ->execute();
+        }
+    }
 }

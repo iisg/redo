@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\EventListener;
 
+use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
@@ -24,6 +25,12 @@ class UpdateDependentDisplayStrategiesListener extends CommandEventsListener {
      */
     private const MAX_EVALUATION_DEPTH = 5;
 
+    /**
+     * If there are more resources to evaluate, mark them as dirty for postponed evaluation instead of evaluating them immediately.
+     * @var int
+     */
+    private const MARK_AS_DIRTY_QUANTITY_THRESHOLD = 30;
+
     public function __construct(ResourceRepository $resourceRepository, CommandBus $commandBus) {
         $this->resourceRepository = $resourceRepository;
         $this->commandBus = $commandBus;
@@ -41,29 +48,26 @@ class UpdateDependentDisplayStrategiesListener extends CommandEventsListener {
         if ($contentsBefore && count($contentsBefore)) {
             /** @var ResourceEntity $resource */
             $resource = $event->getResult();
-            $evaluationDepth = 0;
-            if ($command instanceof ResourceEvaluateDisplayStrategiesFromDependenciesCommand) {
-                $evaluationDepth = $command->getEvaluationDepth();
-            }
+            $evaluationDepth = $this->getEvaluationDepth($command);
             if ($evaluationDepth > self::MAX_EVALUATION_DEPTH) {
                 return;
             }
             $changedMetadataIds = $this->detectChangedMetadataIds($resource, $contentsBefore);
             if ($changedMetadataIds) {
                 $resources = $this->resourceRepository->findByDisplayStrategyDependencies($resource, $changedMetadataIds);
-                foreach ($resources as $resourceToUpdate) {
-                    $dependentMetadataIds = $resourceToUpdate->getDependentMetadataIds($resource, $changedMetadataIds);
-                    $evaluateCommand =
-                        (new ResourceEvaluateDisplayStrategiesFromDependenciesCommand($resourceToUpdate, $dependentMetadataIds))
-                            ->setEvaluationDepth($evaluationDepth + 1);
-                    $this->commandBus->handle($evaluateCommand);
+                if (count($resources) > self::MARK_AS_DIRTY_QUANTITY_THRESHOLD) {
+                    $this->resourceRepository->markDisplayStrategiesDirty($resources);
+                } else {
+                    foreach ($resources as $resourceToUpdate) {
+                        $dependentMetadataIds = $resourceToUpdate->getDependentMetadataIds($resource, $changedMetadataIds);
+                        $evaluateCommand =
+                            (new ResourceEvaluateDisplayStrategiesFromDependenciesCommand($resourceToUpdate, $dependentMetadataIds))
+                                ->setEvaluationDepth($evaluationDepth + 1);
+                        $this->commandBus->handle($evaluateCommand);
+                    }
                 }
             }
         }
-    }
-
-    protected function subscribedFor(): array {
-        return [ResourceTransitionCommand::class, ResourceEvaluateDisplayStrategiesCommand::class];
     }
 
     private function detectChangedMetadataIds(ResourceEntity $resource, ResourceContents $contentsBefore): array {
@@ -77,5 +81,15 @@ class UpdateDependentDisplayStrategiesListener extends CommandEventsListener {
             }
         }
         return $changedMetadataIds;
+    }
+
+    private function getEvaluationDepth(Command $command): int {
+        return $command instanceof ResourceEvaluateDisplayStrategiesFromDependenciesCommand
+            ? $command->getEvaluationDepth()
+            : 0;
+    }
+
+    protected function subscribedFor(): array {
+        return [ResourceTransitionCommand::class, ResourceEvaluateDisplayStrategiesCommand::class];
     }
 }
