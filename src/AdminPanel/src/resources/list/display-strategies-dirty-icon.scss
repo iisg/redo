@@ -1,0 +1,12 @@
+@import "../../common/styles";
+
+.display-strategies-dirty-icon {
+  color: $orange;
+  transition: color .2s;
+}
+
+tr:hover {
+  .display-strategies-dirty-icon {
+    color: $red;
+  }
+}

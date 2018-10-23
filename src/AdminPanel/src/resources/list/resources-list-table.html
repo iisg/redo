@@ -4,6 +4,7 @@
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="common/components/buttons/sort-button"></require>
     <require from="./resource-list-metadata-filter/resource-list-metadata-filter"></require>
+    <require from="./display-strategies-dirty-icon.html"></require>
 
     <table>
         <thead>
@@ -48,6 +49,7 @@
             <td>
                 <a route-href="route: resources/details; params.bind: {id: resource.id}"
                     disabled-link.bind="resource.pendingRequest">${resource.id & oneTime}</a>
+                <display-strategies-dirty-icon if.bind="resource.displayStrategiesDirty"></display-strategies-dirty-icon>
             </td>
             <td>
                 ${resource.kind.label | inCurrentLanguage}

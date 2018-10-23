@@ -37,4 +37,7 @@ interface ResourceRepository {
 
     /** @return ResourceEntity[] */
     public function findByDisplayStrategyDependencies(ResourceEntity $resource, array $changedMetadataIds): array;
+
+    /** @param ResourceEntity|ResourceEntity[]|ResourceKind|ResourceKind[] $resources */
+    public function markDisplayStrategiesDirty($resources): void;
 }

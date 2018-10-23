@@ -16,6 +16,7 @@ class ResourceEntity implements Identifiable, HasResourceClass {
     private $contents;
     private $resourceClass;
     private $displayStrategyDependencies = [];
+    private $displayStrategiesDirty = true;
 
     public function __construct(ResourceKind $kind, ResourceContents $contents) {
         $this->kind = $kind;
@@ -97,6 +98,14 @@ class ResourceEntity implements Identifiable, HasResourceClass {
     public function getDependentMetadataIds(ResourceEntity $resource, array $changedMetadataIds): array {
         return (new ResourceDisplayStrategyDependencyMap($this->displayStrategyDependencies))
             ->getDependentMetadataIds($resource, $changedMetadataIds);
+    }
+
+    public function isDisplayStrategiesDirty(): bool {
+        return $this->displayStrategiesDirty;
+    }
+
+    public function clearDisplayStrategiesDirty() {
+        $this->displayStrategiesDirty = false;
     }
 
     public function getAuditData(): array {

@@ -9,6 +9,7 @@ use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceCloneCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
+use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
@@ -107,7 +108,11 @@ class ResourcesController extends ApiController {
      * @Method("GET")
      */
     public function getAction(string $id) {
+        /** @var ResourceEntity $resource */
         $resource = $this->handleCommand(new ResourceQuery(intval($id)));
+        if ($resource->isDisplayStrategiesDirty()) {
+            $resource = $this->handleCommand(new ResourceEvaluateDisplayStrategiesCommand($resource));
+        }
         return $this->createJsonResponse($resource);
     }
 
