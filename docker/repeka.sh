@@ -24,14 +24,7 @@ CONTAINER_NAME="$(echo -e "${COMPOSE_PROJECT_NAME}" | sed -e 's/\r$//')"
 
 if [ "$1" = "start" ]; then
   echo -e "${GREEN}Starting Repeka containers${NC}"
-
-  docker-compose up --build -d
-
-  sleep 1
-
-  docker exec -u www-data "$CONTAINER_NAME" php bin/console cache:clear --no-warmup -e prod
-  docker exec -u www-data "$CONTAINER_NAME" php bin/console repeka:initialize
-  docker exec -u www-data "$CONTAINER_NAME" php bin/console cache:warmup -e prod
+  docker-compose up --build -d && \
   echo -e "${GREEN}Repeka containers have been started.${NC}"
 
 elif [ "$1" = "stop" ]; then
