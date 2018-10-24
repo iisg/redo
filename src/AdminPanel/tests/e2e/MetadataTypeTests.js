@@ -305,6 +305,68 @@ describe('Metadata Type Tests', function() {
 		expect(element(by.linkText('SUBNazwaNEW_Testowanie_Automatyczne')).isPresent()).toBe(false);
   });
 
+  it('Set maximal number of values', function() {
+		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
+		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
+		newMetadataTypeRowLink.click();
+
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
+		var editButton = element(by.cssContainingText('span', 'Edytuj'));
+		editButton.click();
+
+		waitForElement(element(by.className('au-target simple-form')));
+		var fields = element.all(by.className('au-target simple-form'));
+		var properField = fields.get(3);
+		var controls = properField.all(by.className('au-target'));
+		controls.get(1).click();
+		browser.sleep(500);
+
+		var valueFields = element.all(by.className('form-control au-target'));
+		valueFields.get(7).sendKeys(10);
+
+		var confirmButton = element(by.buttonText('Zatwierdź'));
+		confirmButton.click();
+
+		waitForElement(element(by.cssContainingText('a', 'Konfiguracja')));
+		var submetadataLink = element(by.cssContainingText('a', 'Konfiguracja'));
+		submetadataLink.click();
+
+		waitForElement(element(by.className('tab-pane au-target active')));
+		var panel = element(by.className('tab-pane au-target active'));
+		expect(panel.getText()).toContain('110');
+  });
+
+  it('Set regular expression', function() {
+		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
+		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
+		newMetadataTypeRowLink.click();
+
+		waitForElement(element(by.cssContainingText('span', 'Edytuj')));
+		var editButton = element(by.cssContainingText('span', 'Edytuj'));
+		editButton.click();
+
+		waitForElement(element(by.className('au-target simple-form')));
+		var fields = element.all(by.className('au-target simple-form'));
+		var properField = fields.get(3);
+		var controls = properField.all(by.className('au-target'));
+		controls.get(1).click();
+		browser.sleep(500);
+
+		var valueFields = element.all(by.className('form-control au-target'));
+		valueFields.get(8).sendKeys('XXXX');
+
+		var confirmButton = element(by.buttonText('Zatwierdź'));
+		confirmButton.click();
+
+		waitForElement(element(by.cssContainingText('a', 'Konfiguracja')));
+		var submetadataLink = element(by.cssContainingText('a', 'Konfiguracja'));
+		submetadataLink.click();
+
+		waitForElement(element(by.className('tab-pane au-target active')));
+		var panel = element(by.className('tab-pane au-target active'));
+		expect(panel.getText()).toContain('XXXX');
+  });
+
   it('Edit metadata Polish display name', function() {
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
