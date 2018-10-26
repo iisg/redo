@@ -23,7 +23,6 @@ System.config({
     "aurelia-animator-css": "npm:aurelia-animator-css@1.0.4",
     "aurelia-binding": "npm:aurelia-binding@1.5.0",
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@1.0.1",
-    "aurelia-configuration": "github:vheissu/aurelia-configuration@1.0.4",
     "aurelia-cookie": "npm:aurelia-cookie@1.0.10",
     "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
     "aurelia-dialog": "npm:aurelia-dialog@1.0.0-rc.1.0.3",
@@ -102,11 +101,6 @@ System.config({
     },
     "github:twbs/bootstrap@3.3.7": {
       "jquery": "npm:jquery@3.2.1"
-    },
-    "github:vheissu/aurelia-configuration@1.0.4": {
-      "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.3.2",
-      "aurelia-loader": "npm:aurelia-loader@1.0.0",
-      "aurelia-path": "npm:aurelia-path@1.1.1"
     },
     "npm:argparse@1.0.10": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",

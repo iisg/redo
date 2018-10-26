@@ -4,6 +4,7 @@ const changed = require('gulp-changed');
 const concat = require('gulp-concat');
 const convert = require('gulp-convert');
 const gulp = require('gulp');
+const fs = require('fs');
 const htmlmin = require('gulp-htmlmin');
 const minifyCSS = require('gulp-clean-css');
 const minifyJSON = require('gulp-jsonminify');
@@ -60,6 +61,27 @@ gulp.task('build-css', () => {
     .pipe(gulp.dest(paths.output));
 });
 
+gulp.task('build-themes-css', (cb) => {
+  const availableThemes = fs.readdirSync(paths.themes);
+  const buildStyles = () => {
+    if (availableThemes.length) {
+      const template = availableThemes.pop();
+      gulp.src(path.join(paths.themes, template, 'styles.scss'))
+        .pipe(plumber({errorHandler: notify.onError('SCSS: <%= error.message %>')}))
+        .pipe(sourcemaps.init())
+        .pipe(sass())
+        .pipe(concat(template + `.css`))
+        .pipe(minifyCSS())
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(paths.webRoot + '/themes'))
+        .on('end', buildStyles)
+    } else {
+      cb();
+    }
+  };
+  buildStyles();
+});
+
 gulp.task('build-locales', () => {
   //noinspection JSCheckFunctionSignatures
   return gulp.src(path.join(paths.locales, '**/*.yml'), {base: paths.resourcesRoot})
@@ -88,7 +110,7 @@ gulp.task('symlink-dist', () => {
 gulp.task('build', (callback) => {
   return runSequence(
     'clean',
-    ['build-scripts', 'build-css', 'symlink-jspm-packages'],
+    ['build-scripts', 'build-css', 'build-themes-css', 'symlink-jspm-packages'],
     'copy-jspm-config',
     'symlink-dist',
     'bundle',

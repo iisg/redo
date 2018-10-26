@@ -5,8 +5,8 @@
 {% block content %}
     <div class="content home-page-content">
         <search-bar phrase="{{ phrase }}"
-            :metadata-subsets="[{ids: 'tytul,opis', label: 'Tytuł, Opis'}]"
-            metadata-subset="{{ app.request.query.all.metadataSubset ?? '*' }}"></search-bar>
+            metadata-subsets.bind="[{ids: 'tytul,opis', label: 'Tytuł, Opis'}]"
+            selected-metadata-subset.bind="{ids: '{{ app.request.query.all.metadataSubset ?? '*' }}'}"></search-bar>
     </div>
 
     <h1>Wyniki wyszukiwania ({{ results.totalHits }})</h1>

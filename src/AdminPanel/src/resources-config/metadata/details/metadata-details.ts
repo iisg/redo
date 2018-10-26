@@ -1,5 +1,4 @@
 import {computedFrom} from "aurelia-binding";
-import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {I18N} from "aurelia-i18n";
@@ -13,6 +12,7 @@ import {ResourceKindRepository} from "../../resource-kind/resource-kind-reposito
 import {Metadata} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
 import {DetailsViewTabs} from "./details-view-tabs";
+import {FrontendConfig} from "../../../config/FrontendConfig";
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
@@ -30,8 +30,7 @@ export class MetadataDetails implements RoutableComponentActivate {
               private eventAggregator: EventAggregator,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private entitySerializer: EntitySerializer,
-              private contextResourceClass: ContextResourceClass,
-              private config: Configure) {
+              private contextResourceClass: ContextResourceClass) {
     this.metadataDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
@@ -75,7 +74,7 @@ export class MetadataDetails implements RoutableComponentActivate {
 
   @computedFrom('metadata.constraints', 'metadata.control')
   get constraintNames(): string[] {
-    return this.config.get('control_constraints')[this.metadata.control];
+    return FrontendConfig.get('control_constraints')[this.metadata.control];
   }
 
   deleteMetadata(): Promise<any> {

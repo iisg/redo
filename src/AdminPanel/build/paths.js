@@ -18,5 +18,6 @@ module.exports = {
   webAdminRoot: path.join(webRoot, 'admin/'),
   webAdminResources: path.join(webRoot, 'admin/res/'),
   icons: '../../src/Repeka/DeveloperBundle/Resources/icons/',
-  lintReports: '../../var/reports/lints/'
+  lintReports: '../../var/reports/lints/',
+  themes: '../../app/Resources/views',
 };

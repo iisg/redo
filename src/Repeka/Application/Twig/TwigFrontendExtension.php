@@ -21,6 +21,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('resourceKind', [$this, 'fetchResourceKind']),
             new \Twig_Function('ftsFacetFilterParam', [$this, 'ftsFacetFilterParam']),
             new \Twig_Function('isFilteringByFacet', [$this, 'isFilteringByFacet']),
+            new \Twig_Function('icon', [$this, 'icon']),
         ];
     }
 
@@ -84,6 +85,18 @@ class TwigFrontendExtension extends \Twig_Extension {
 
     public function isFilteringByFacet(string $aggregationName, $filterValue, array $currentFilters): bool {
         return in_array($filterValue, $this->getCurrentFacetFilters($aggregationName, $currentFilters));
+    }
+
+    public function icon(string $name, string $size = '1'): \Twig_Markup {
+        $size = str_replace('.', '_', $size);
+        $iconTemplate = <<<ICON
+<span class="icon icon-$size">
+    <svg class="logo" viewBox="0 0 1 1">
+        <use xlink:href="/files/icons.svg#$name"></use>
+    </svg>
+</span>
+ICON;
+        return new \Twig_Markup($iconTemplate, 'UTF-8');
     }
 
     private function getCurrentFacetFilters(string $aggregationName, array $currentFilters): array {

@@ -1,8 +1,8 @@
-import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
 import {Aurelia} from "aurelia-framework";
 import {Backend, I18N} from "aurelia-i18n";
 import {AppRouter} from "aurelia-router";
+import {FrontendConfig} from "./FrontendConfig";
 
 export function i18nConfiguratorFactory(aurelia: Aurelia) {
   return (i18n: I18N) => {
@@ -52,18 +52,15 @@ export class I18nParams {
     'validation',
   ];
 
-  constructor(private config: Configure) {
-  }
-
   get applicationName(): string {
-    return this.config.get('application_name');
+    return FrontendConfig.get('application_name');
   }
 
   get supportedUiLanguages(): string[] {
-    return this.config.get('supported_ui_languages');
+    return FrontendConfig.get('supported_ui_languages');
   }
 
   get defaultUiLanguage(): string {
-    return this.config.get('default_ui_language');
+    return FrontendConfig.get('default_ui_language');
   }
 }

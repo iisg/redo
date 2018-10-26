@@ -1,6 +1,91 @@
 @import "../../styles";
-@import "../../../../../Frontend/src/styles/footer.scss";
 
 redo-footer {
-  @include redo-footer($default-sidebar-width);
+  $maximum-width-before-changing-layout-to-horizontal-offset: 0;
+  $width-of-the-separator: 1px;
+  $powered-by-redo-logo-maximum-width: 143px;
+  $creative-commons-icons-with-description-max-width: 275px;
+  $creative-commons-icons-description-font-size: 0.75rem;
+  $fe-and-ue-logos-height-to-keep-correct-gap-size: 41px;
+  $fe-and-ue-logos-minimum-width-to-keep-correct-gap-size: 259px;
+  $fe-and-ue-logos-maximum-width-to-keep-correct-gap-size: 261px;
+  $ue-logo-image-height-to-keep-correct-proportions-between-logos: 32px;
+  $fe-logo-image-height-to-keep-correct-proportions-between-logos: 43px;
+
+  display: flex;
+  flex-shrink: 0; // Required by Internet Explorer.
+  flex-wrap: wrap;
+  margin-top: auto;
+  overflow: hidden;
+  & > :first-child {
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-right: -$width-of-the-separator;
+    & > * {
+      margin-right: $width-of-the-separator;
+      padding: $default-gap-size;
+    }
+    img {
+      height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
+      &.horizontal {
+        max-width: $powered-by-redo-logo-maximum-width; // Required by Chrome.
+      }
+    }
+    .creative-commons-icons-with-description {
+      display: inline-block;
+      max-width: $creative-commons-icons-with-description-max-width;
+      line-height: 0;
+      margin-left: -$width-of-the-separator;
+      border-left: $width-of-the-separator solid $orange;
+      .icon {
+        margin-bottom: $default-gap-size / 4;
+      }
+      span {
+        display: block;
+        line-height: normal;
+        font-size: $creative-commons-icons-description-font-size;
+        color: $grey;
+      }
+    }
+  }
+  & > :last-child {
+    display: flex;
+    margin-left: auto;
+    & > * {
+      padding: $default-gap-size;
+    }
+    .fe-and-ue-logos {
+      height: $fe-and-ue-logos-height-to-keep-correct-gap-size + 2 * $default-gap-size;
+      min-width: $fe-and-ue-logos-minimum-width-to-keep-correct-gap-size + 2 * $default-gap-size;
+      max-width: $fe-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size;
+    }
+  }
+  .vertical {
+    display: none;
+  }
+  @media (max-width: #{$fe-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
+        + $maximum-width-before-changing-layout-to-horizontal-offset}) {
+    & > :last-child {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%; // Required by Internet Explorer.
+      margin-left: 0;
+    }
+    .horizontal {
+      display: none;
+    }
+    .vertical {
+      display: block;
+      width: 100%;
+      max-width: 142px + 2 * $default-gap-size;
+      &.fe-logo {
+        max-height: $fe-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
+      }
+      &.ue-logo {
+        max-height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
+      }
+    }
+  }
 }

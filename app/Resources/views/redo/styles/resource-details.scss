@@ -34,11 +34,13 @@ $image-height: 200px;
             display: flex;
             .resource-image {
                 flex-shrink: 0;
-                height: $image-height;
                 margin: $default-gap-size / 2;
                 padding: $default-gap-size;
                 background-color: $very-light-grey;
                 color: $lightish-grey;
+                svg {
+                    height: $image-height;
+                }
             }
             & > div {
                 & {

@@ -1,16 +1,9 @@
 <script>
-  window.FRONTEND_CONFIG = {
-    locale: '{{ app.request ? app.request.locale : 'en' }}',
-    applicationName: '{{ applicationName | escape('js') }}',
-    baseUrl: '{{ path('home')[:-1] }}'
-      {% if app.user %}
-    ,
-    user: {
-      id: {{ app.user.id }},
-      username: '{{ app.user.username }}',
-      isAdmin: {{ is_granted('ROLE_OPERATOR_SOME_CLASS') ? 'true' : 'false' }}
-    }
-      {% endif %}
-  };
+  window.FRONTEND_CONFIG = {{ getFrontendConfig() | json_encode | raw }};
 </script>
-<script src="{{ asset('assets/dist/commons.js', 'webpack') }}"></script>
+<script src="/jspm_packages/npm/bluebird@3.4.1/js/browser/bluebird.min.js"></script>
+<script src="/jspm_packages/system.js"></script>
+<script src="/admin/jspm.config.js"></script>
+<script>
+  SystemJS.import('aurelia-bootstrapper');
+</script>

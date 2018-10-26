@@ -1,5 +1,4 @@
 import {BindingEngine, computedFrom, Disposable} from "aurelia-binding";
-import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import {ValidationController} from "aurelia-validation";
@@ -7,6 +6,7 @@ import {twoWay} from "common/components/binding-mode";
 import {diff} from "common/utils/array-utils";
 import {deepCopy, propertyKeys} from "common/utils/object-utils";
 import {Metadata, metadataConstraintDefaults, MetadataConstraints} from "../metadata";
+import {FrontendConfig} from "../../../config/FrontendConfig";
 
 @autoinject
 export class MetadataConstraintForm implements ComponentAttached, ComponentDetached {
@@ -24,7 +24,7 @@ export class MetadataConstraintForm implements ComponentAttached, ComponentDetac
    */
   private deletedConstraints: MetadataConstraints = new MetadataConstraints();
 
-  constructor(private bindingEngine: BindingEngine, private config: Configure) {
+  constructor(private bindingEngine: BindingEngine) {
   }
 
   @computedFrom('metadata.constraints', 'metadata.control')
@@ -48,7 +48,7 @@ export class MetadataConstraintForm implements ComponentAttached, ComponentDetac
   }
 
   private metadataControlChanged(): void {
-    const expectedConstraints = this.config.get('control_constraints')[this.metadata.control];
+    const expectedConstraints = FrontendConfig.get('control_constraints')[this.metadata.control];
     this.updateConstraints(expectedConstraints);
   }
 

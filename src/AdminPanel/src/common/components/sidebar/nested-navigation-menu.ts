@@ -1,4 +1,3 @@
-import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {NavigationInstruction, Router} from "aurelia-router";
@@ -6,6 +5,7 @@ import {values} from "lodash";
 import {ContextResourceClass, ResourceClassChangeEvent} from "../../../resources/context/context-resource-class";
 import {RouteFilter} from "../../routes/route-filter";
 import {AbstractRoute, NavRole} from "../../routes/routing-builder";
+import {FrontendConfig} from "../../../config/FrontendConfig";
 
 @autoinject
 export class NestedNavigationMenu {
@@ -14,8 +14,7 @@ export class NestedNavigationMenu {
 
   constructor(private eventAggregator: EventAggregator,
               private router: Router,
-              private routeFilter: RouteFilter,
-              private config: Configure) {
+              private routeFilter: RouteFilter) {
     eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
       (event: ResourceClassChangeEvent) => this.updateResourceClass(event));
     eventAggregator.subscribe('router:navigation:complete', () => this.updateActiveItems());
@@ -67,12 +66,12 @@ export class NestedNavigationMenu {
   }
 
   private getResourceClasses(): string[] {
-    const classMap: AnyMap<string> = this.config.get('resource_classes');
+    const classMap: AnyMap<string> = FrontendConfig.get('resource_classes');
     return values(classMap);
   }
 
   private getIconForResourceClass(resourceClass: string): string {
-    return this.config.get('resource_classes_icons')[resourceClass];
+    return FrontendConfig.get('resource_classes_icons')[resourceClass];
   }
 }
 

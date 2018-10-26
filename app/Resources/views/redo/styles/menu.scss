@@ -1,0 +1,35 @@
+.site-menu {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  background-color: $very-light-grey;
+  & > div {
+    display: inherit;
+    flex-wrap: wrap-reverse;
+    counter-reset: section;
+    &:last-child {
+      margin-left: auto;
+    }
+  }
+  a {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    padding: $default-gap-size / 2 $default-gap-size;
+    text-decoration: none;
+    text-align: center;
+    color: $blue;
+    transition: box-shadow $default-transition-duration;
+    &:hover, &:focus, &.active {
+      box-shadow: inset 0 #{-$default-gap-size / 4} 0 0 $blue;
+    }
+    & > * {
+      margin: $default-gap-size / 8;
+    }
+    .icon {
+      flex-shrink: 0;
+    }
+  }
+}
+
+
