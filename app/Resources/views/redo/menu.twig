@@ -1,52 +1,40 @@
-<generated-menu :first-group-of-items="[
-    {
-        label: 'Szukaj',
-        iconName: 'search',
-        url: '/',
-        highlightOnlyWhenPathnameEqualsURL: true
-    },
-    {
-        label: 'Przeglądaj',
-        iconName: 'folder',
-        url: '/resources'
-    },
-    {
-        label: 'Dla autorów',
-        iconName: 'edit',
-        url: '/for-authors'
-    },
-    {
-        label: 'Informacje o RPK',
-        iconName: 'information',
-        url: '/about'
-    },
-    {
-        label: 'Pomoc',
-        iconName: 'help-2',
-        url: '/help'
-    }
-]"
-:second-group-of-items="$user ? [
-    {
-        label: $user.username,
-        iconName: 'user-2',
-        url: '/user-details'
-    },
-    {
-        label: 'Panel Administracyjny',
-        iconName: 'created',
-        url: '/admin'
-    },
-    {
-        label: 'Wyloguj',
-        iconName: 'logout',
-        url: '/logout'
-    }
-] : [
-    {
-        label: 'Zaloguj',
-        iconName: 'user-2',
-        url: '/login'
-    }
-]"
-icons-size="1.5"></generated-menu>
+<div class="site-menu">
+    <div>
+        <a class="isActive() ? 'active' : ''"
+            href="/">
+            {{ icon('search', 1.5) }}
+            <span>Szukaj</span>
+        </a>
+        <a class="isActive() ? 'active' : ''"
+            href="/resources">
+            {{ icon('folder', 1.5) }}
+            <span>Przeglądaj</span>
+        </a>
+        <a class="isActive() ? 'active' : ''"
+            href="/for-authors">
+            {{ icon('edit', 1.5) }}
+            <span>Dla autorów</span>
+        </a>
+    </div>
+    <div>
+        {% if app.user %}
+            <a href="/me">
+                {{ icon('user-2', 1.5) }}
+                <span>{{ app.user.username }}</span>
+            </a>
+            <a href="/admin">
+                {{ icon('created', 1.5) }}
+                <span>Panel administracyjny</span>
+            </a>
+            <a href="/logout">
+                {{ icon('logout', 1.5) }}
+                <span>Wyloguj</span>
+            </a>
+        {% else %}
+            <a href="/login">
+                {{ icon('user-2', 1.5) }}
+                <span>Zaloguj</span>
+            </a>
+        {% endif %}
+    </div>
+</div>

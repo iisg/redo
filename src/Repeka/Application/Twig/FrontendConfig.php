@@ -1,16 +1,21 @@
 <?php
-namespace Repeka\Application\Controller\Api;
+namespace Repeka\Application\Twig;
 
+use Psr\Container\ContainerInterface;
 use Repeka\Application\Authentication\UserDataMapping;
 use Repeka\Application\Resources\FrontendLocaleProvider;
+use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Application\Upload\UploadSizeHelper;
 use Repeka\Application\Validation\ContainerAwareMetadataConstraintManager;
 use Repeka\Domain\MetadataImport\Mapping\Mapping;
 use Repeka\Domain\Validation\MetadataConstraintManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class ConfigController extends ApiController {
-    const PUBLIC_PARAMETERS = [
+class FrontendConfig extends \Twig_Extension {
+    use ContainerAwareTrait;
+    use CurrentUserAware;
+
+    private const PUBLIC_PARAMETERS = [
         'application_name' => 'applicationName',
         'application_version' => 'repeka.version',
         'default_ui_language' => 'repeka.default_ui_language',
@@ -29,20 +34,25 @@ class ConfigController extends ApiController {
     public function __construct(
         FrontendLocaleProvider $frontendLocaleProvider,
         MetadataConstraintManager $metadataConstraintManager,
-        UserDataMapping $userDataMapping
+        UserDataMapping $userDataMapping,
+        ContainerInterface $container
     ) {
         $this->frontendLocaleProvider = $frontendLocaleProvider;
         $this->metadataConstraintManager = $metadataConstraintManager;
         $this->userDataMapping = $userDataMapping;
+        $this->container = $container;
     }
 
-    /**
-     * @Route("/config.json")
-     */
-    public function getConfigAction() {
-        $parameters = array_map([$this, 'getParameter'], self::PUBLIC_PARAMETERS);
+    public function getFunctions() {
+        return [
+            new \Twig_Function('getFrontendConfig', [$this, 'getConfig']),
+        ];
+    }
+
+    public function getConfig() {
+        $parameters = array_map([$this->container, 'getParameter'], self::PUBLIC_PARAMETERS);
         $uploadSizeHelper = new UploadSizeHelper();
-        if ($this->userDataMapping->mappingExists()) {
+        if ($this->userDataMapping->mappingExists() && $this->getCurrentUser()) {
             $userMappedMetadataIds = array_map(
                 function (Mapping $mapping) {
                     return $mapping->getMetadata()->getId();
@@ -50,7 +60,7 @@ class ConfigController extends ApiController {
                 $this->userDataMapping->getImportConfig()->getMappings()
             );
         }
-        $response = array_merge(
+        return array_merge(
             $parameters,
             [
                 'control_constraints' => $this->metadataConstraintManager->getRequiredConstraintNamesMap(),
@@ -62,6 +72,5 @@ class ConfigController extends ApiController {
                 ],
             ]
         );
-        return $this->createJsonResponse($response);
     }
 }

@@ -94,11 +94,6 @@ services:
     tags:
       - {name: twig.loader, priority: 100}
 
-  Repeka\Application\Twig\WebpackAssetVersionStrategy:
-    arguments:
-      - "%use_webpack_dev_server%"
-      - "%repeka.webpack_hashes%"
-
   Repeka\Application\ParamConverter\ResourceContentsParamConverter:
     tags: [{ name: request.param_converter, converter: Repeka\Application\ParamConverter\ResourceContentsParamConverter }]
   Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor:

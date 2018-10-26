@@ -92,7 +92,8 @@ abstract class AbstractTemplateCommand extends \Symfony\Component\Console\Comman
         $fileIterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($templatePath));
         $templates = [];
         foreach ($fileIterator as $file) {
-            if (!$file->isDir()) {
+            /** @var \SplFileInfo $file */
+            if (!$file->isDir() && !in_array($file->getExtension(), ['scss'])) {
                 $templates[] = str_replace(
                     '\\',
                     '/',

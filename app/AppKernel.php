@@ -1,7 +1,6 @@
 <?php
 
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel {
@@ -56,26 +55,6 @@ class AppKernel extends Kernel {
         if (file_exists($localConfigPath)) {
             $loader->load($localConfigPath);
         }
-        // optional webpack dev server: https://www.slideshare.net/nachomartin/webpacksf/60
-        $loader->load(
-            function ($container) {
-                /** @var ContainerInterface $container */
-                if ($this->getEnvironment() === 'dev' && $container->getParameter('use_webpack_dev_server')) {
-                    $container->loadFromExtension(
-                        'framework',
-                        [
-                            'assets' => [
-                                'packages' => [
-                                    'webpack' => [
-                                        'base_urls' => ['http://localhost:7336'],
-                                    ],
-                                ],
-                            ],
-                        ]
-                    );
-                }
-            }
-        );
     }
 
     protected function build(\Symfony\Component\DependencyInjection\ContainerBuilder $container) {

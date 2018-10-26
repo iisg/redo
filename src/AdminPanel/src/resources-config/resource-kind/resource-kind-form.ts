@@ -1,5 +1,4 @@
 import {computedFrom} from "aurelia-binding";
-import {Configure} from "aurelia-configuration";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import {BindingSignaler} from "aurelia-templating-resources";
@@ -14,6 +13,7 @@ import {MetadataRepository} from "../metadata/metadata-repository";
 import {SystemMetadata} from "../metadata/system-metadata";
 import {ResourceKind} from "./resource-kind";
 import {SystemResourceKinds} from "./system-resource-kinds";
+import {FrontendConfig} from "../../config/FrontendConfig";
 
 @autoinject
 export class ResourceKindForm extends ChangeLossPreventerForm implements ComponentAttached, ComponentDetached {
@@ -36,7 +36,6 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
               private signaler: BindingSignaler,
               private metadataRepository: MetadataRepository,
               private entitySerializer: EntitySerializer,
-              private config: Configure,
               private changeLossPreventer: ChangeLossPreventer) {
     super();
     this.controller = validationControllerFactory.createForCurrentScope();
@@ -136,7 +135,7 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
 
   canRemoveMetadata(metadata: Metadata): boolean {
     if (this.resourceKind.id == SystemResourceKinds.USER_ID) {
-      const mappedMetadataIds = this.config.get('user_mapped_metadata_ids') || [];
+      const mappedMetadataIds = FrontendConfig.get('user_mapped_metadata_ids') || [];
       return metadata.id > 0 && mappedMetadataIds.indexOf(metadata.id) === -1;
     }
     return metadata.id != SystemMetadata.RESOURCE_LABEL.id;

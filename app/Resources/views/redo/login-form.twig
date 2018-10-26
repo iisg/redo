@@ -7,10 +7,7 @@
         <div class="login-container">
             <div class="login-box">
                 <div class="logo-box">
-                    <svg class="logo"
-                        viewBox="0 0 1 1">
-                        <use xlink:href="/files/icons.svg#redo-logo"></use>
-                    </svg>
+                    {{ icon('redo-logo') }}
                 </div>
                 <form class="form-box"
                     method="post">
@@ -33,10 +30,7 @@
                     {% endif %}
                     <div class="input-elements">
                         <div class="form-group username-input">
-                            <svg class="login-box-icon"
-                                viewBox="0 0 1 1">
-                                <use xlink:href="/files/icons.svg#user-2"></use>
-                            </svg>
+                            {{ icon('user-2') }}
                             <input name="_username"
                                 type="text"
                                 id="username"
@@ -44,10 +38,7 @@
                                 value="{{ last_username }}">
                         </div>
                         <div class="form-group">
-                            <svg class="login-box-icon"
-                                viewBox="0 0 1 1">
-                                <use xlink:href="/files/icons.svg#key"></use>
-                            </svg>
+                            {{ icon('key') }}
                             <input name="_password"
                                 type="password"
                                 id="password"
@@ -55,10 +46,7 @@
                             <button class="submit-button"
                                 type="submit"
                                 name="Zaloguj">
-                                <svg class="login-box-icon"
-                                    viewBox="0 0 1 1">
-                                    <use xlink:href="/files/icons.svg#accept-2"></use>
-                                </svg>
+                                {{ icon('accept-2') }}
                             </button>
                         </div>
                     </div>
@@ -67,17 +55,11 @@
             </div>
             <div class="information-links-box">
                 <a class="information-link-element">
-                    <svg class="information-link-icon"
-                        viewBox="0 0 1 1">
-                        <use xlink:href="/files/icons.svg#help"></use>
-                    </svg>
+                    {{ icon('help') }}
                     <span class="information-link-text">przypomnij hasło</span>
                 </a>
                 <a class="information-link-element">
-                    <svg class="information-link-icon"
-                        viewBox="0 0 1 1">
-                        <use xlink:href="/files/icons.svg#mail"></use>
-                    </svg>
+                    {{ icon('mail') }}
                     <span class="information-link-text">kontakt z administratorem</span>
                 </a>
             </div>

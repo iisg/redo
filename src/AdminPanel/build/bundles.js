@@ -61,7 +61,6 @@ const bundles = function () {
           "arrive",
           "aurelia-animator-css",
           "aurelia-bootstrapper",
-          "aurelia-configuration",
           "aurelia-cookie",
           "aurelia-dialog",
           "aurelia-i18n",

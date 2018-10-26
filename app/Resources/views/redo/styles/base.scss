@@ -1,0 +1,64 @@
+$maximum-width: 960px;
+
+.narrow-page-container {
+  display: flex;
+  flex-direction: column;
+  max-width: $maximum-width;
+  min-height: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Open Sans", sans-serif;
+  color: $default-text-color;
+  .banner {
+    width: 100%;
+    height: 100%;
+  }
+  .content {
+    padding: $default-gap-size;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+  }
+  h1, h2, h3, h4, h5, h6, p {
+    margin-bottom: 0;
+  }
+  h1 {
+    font-size: $title-font-size;
+  }
+  h2 {
+    font-size: $subtitle-font-size + 1px;
+  }
+  h3 {
+    font-size: $subtitle-font-size;
+  }
+  h4 {
+    font-size: $default-font-size + 1px;
+  }
+  h5 {
+    font-size: $default-font-size - 1px;
+  }
+  h6 {
+    font-size: $default-font-size - 2px;
+  }
+  a {
+    cursor: pointer;
+  }
+  label {
+    font-weight: normal;
+    margin-bottom: 0;
+  }
+}
+
+#nprogress {
+  .bar {
+    background: $orange !important;
+    height: 4px !important;
+  }
+  .peg {
+    box-shadow: 0 0 10px $orange, 0 0 5px $orange !important;
+  }
+  .spinner-icon {
+    border-top-color: $orange !important;
+    border-left-color: $orange !important;
+  }
+}

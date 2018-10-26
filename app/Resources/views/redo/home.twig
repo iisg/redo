@@ -4,10 +4,10 @@
 
 {% block banner %}
     <img class="banner"
-    src="/files/images/banner.png">
+        src="/files/images/banner.png">
 {% endblock %}
 {% block content %}
     <div class="content home-page-content">
-        <search-bar></search-bar>
+        <search-bar metadata-subsets.bind="[{ids: 'tytul,opis', label: 'Tytuł, Opis'}]"></search-bar>
     </div>
 {% endblock %}

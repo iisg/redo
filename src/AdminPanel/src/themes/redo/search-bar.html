@@ -1,0 +1,42 @@
+<template>
+    <form class="search-bar"
+        submit.delegate="navigateToSearchUrl()">
+        <div class="search-box-with-options">
+            <div class="icon-with-input-box"
+                class.bind="displayAsSmaller ? 'with-regular-font-size' : ''">
+                <icon class="redo-logo-icon"
+                    name="redo-logo"
+                    size.bind="displayAsSmaller ? 1.5 : 2.5"></icon>
+                <input type="text"
+                    value.bind="phrase"
+                    placeholder="Szukaj w zasobach repozytorium">
+            </div>
+            <div class="options"
+                if.bind="!displayAsSmaller">
+                <div class="radio-buttons-group"
+                    if.bind="metadataSubsets.length">
+                    <label repeat.for="option of metadataSubsets">
+                        <input type="radio"
+                            model.bind="option"
+                            matcher.bind="metadataSubsetComparator"
+                            checked.bind="selectedMetadataSubset"
+                            name="metadata-subset-radio">
+                        <div></div>
+                        <span>${option.label}</span>
+                    </label>
+                </div>
+                <a href.bind="advancedSearchUrl">
+                    <icon name="settings-2"
+                        size="1.25"></icon>
+                    <span>Więcej kryteriów</span>
+                </a>
+            </div>
+        </div>
+        <button v-if="onSubmit"
+            class="search-button"
+            type="submit">
+            <icon name="search"
+                size.one-time="displayAsSmaller ? 1.5 : 3"></icon>
+        </button>
+    </form>
+</template>

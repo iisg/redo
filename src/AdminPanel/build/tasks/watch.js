@@ -8,6 +8,7 @@ gulp.task('watch', ['build'], () => {
   gulp.watch(paths.scripts, ['build-scripts']);
   gulp.watch(paths.html, ['bundle-views']);
   gulp.watch(paths.scss, ['build-css']);
+  gulp.watch(path.join(paths.themes, '**/*.scss'), ['build-themes-css']);
   gulp.watch(path.join(paths.locales, '**/*'), ['bundle-locales']);
 });
 

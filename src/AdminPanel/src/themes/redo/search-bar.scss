@@ -1,0 +1,117 @@
+@import "../../common/styles/colors";
+@import "../../common/styles/variables";
+
+$bigger-then-regular-input-font-size: 18px;
+
+.search-bar {
+  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  .search-box-with-options {
+    display: inline-block;
+    .icon-with-input-box {
+      display: inline-block;
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      border: 1px solid $orange;
+      border-radius: 3 * $default-gap-size / 4;
+      &:not(.with-regular-font-size) {
+        .redo-logo-icon {
+          padding-left: $default-gap-size / 4;
+          padding-right: $default-gap-size / 4;
+        }
+        input {
+          min-width: 0;
+          margin: $default-gap-size / 2;
+          font-size: $bigger-then-regular-input-font-size;
+        }
+      }
+      &.with-regular-font-size {
+        .redo-logo-icon {
+          padding-left: $default-gap-size / 8;
+          padding-right: $default-gap-size / 8;
+        }
+        input {
+          margin: $default-gap-size / 4;
+        }
+      }
+      .redo-logo-icon {
+        margin-top: $default-gap-size / 4;
+        margin-bottom: $default-gap-size / 4;
+        border-right: 1px solid $orange;
+        color: $orange;
+      }
+      input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+      }
+    }
+    .options {
+      display: flex;
+      align-items: center;
+      margin-top: $default-gap-size / 4;
+      .radio-buttons-group {
+        label:last-child {
+          margin-right: $default-gap-size / 2;
+        }
+      }
+      a {
+        margin-left: auto;
+        padding-left: $default-gap-size / 4;
+        text-align: right;
+        color: inherit;
+        .icon, span {
+          margin-left: $default-gap-size / 4;
+        }
+        .icon {
+          color: $orange;
+        }
+
+      }
+    }
+  }
+  .search-button {
+    display: inline-block;
+    margin-left: $default-gap-size / 2;
+    padding: $default-gap-size / 3;
+    border-radius: 50%;
+    background-color: $orange;
+    color: white;
+  }
+  button.search-button {
+    border: 0;
+  }
+  .radio-buttons-group {
+    display: inline-block;
+    label {
+      cursor: pointer;
+      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      &:not(:last-child) {
+        margin-right: $default-gap-size / 2;
+      }
+      input[type=radio] {
+        display: none;
+        & + div {
+          display: inline-block;
+          width: $default-gap-size;
+          height: $default-gap-size;
+          vertical-align: middle;
+          border: 1px solid $orange;
+          border-radius: 50%;
+        }
+        &:checked + div {
+          background: $orange;
+          background: radial-gradient($orange 40%, transparent 40%);
+        }
+      }
+      span {
+        margin-left: $default-gap-size / 4;
+        vertical-align: middle;
+      }
+    }
+  }
+}

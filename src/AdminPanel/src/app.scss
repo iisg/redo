@@ -11,473 +11,466 @@ $admin-content-left-border-width: $default-gap-size / 4;
 $simple-form-text-input-box-minimum-width: 100px;
 $simple-form-number-input-box-minimum-width: 75px;
 
-body {
-  font-family: 'Open Sans', sans-serif;
-  color: $default-text-color;
-  overflow: hidden; // Without it, this used to happen for a narrower window: https://i.imgur.com/N5YyPm9.png.
-}
+.repeka-admin-panel {
 
-[aurelia-app] {
-  overflow: hidden;
-}
+  body {
+    font-family: 'Open Sans', sans-serif;
+    color: $default-text-color;
+    overflow: hidden; // Without it, this used to happen for a narrower window: https://i.imgur.com/N5YyPm9.png.
+  }
 
-sidebar.collapsed {
-  .with-overflow-scrollbar-on-the-left > * > * > * {
-    z-index: $admin-content-z-index-when-sidebar-is-collapsed;
-    position: relative;
-    &:hover {
-      z-index: $collapsed-sidebar-elements-z-index-on-hover;
+  [aurelia-app] {
+    overflow: hidden;
+  }
+
+  sidebar.collapsed {
+    .with-overflow-scrollbar-on-the-left > * > * > * {
+      z-index: $admin-content-z-index-when-sidebar-is-collapsed;
+      position: relative;
+      &:hover {
+        z-index: $collapsed-sidebar-elements-z-index-on-hover;
+      }
+    }
+    & + .admin-content {
+      z-index: $admin-content-z-index-when-sidebar-is-collapsed;
     }
   }
-  & + .admin-content {
-    z-index: $admin-content-z-index-when-sidebar-is-collapsed;
-  }
-}
 
-.admin-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-  border-left: $lightish-grey solid $admin-content-left-border-width;
-  top-bar {
-    z-index: $top-bar-z-index;
-  }
-  & > router-view {
+  .admin-content {
     display: flex;
     flex-direction: column;
     flex: 1;
-    background-color: white;
     overflow: hidden;
-    & > * {
-      height: 100%;
-      &:not(.resource-details):not(.metadata-details):not(.resource-kind-details):not(.workflow-details) {
-        overflow: auto;
-      }
-      &:not(audit):not(.about-the-application) > redo-footer {
-        padding-top: $default-gap-size;
+    border-left: $lightish-grey solid $admin-content-left-border-width;
+    top-bar {
+      z-index: $top-bar-z-index;
+    }
+    & > router-view {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      background-color: white;
+      overflow: hidden;
+      & > * {
+        height: 100%;
+        &:not(.resource-details):not(.metadata-details):not(.resource-kind-details):not(.workflow-details) {
+          overflow: auto;
+        }
+        &:not(audit):not(.about-the-application) > redo-footer {
+          padding-top: $default-gap-size;
+        }
       }
     }
   }
-}
 
-.metadata-details, .resource-kind-details, .resource-details, .workflow-details, .workflow-form-content {
-  display: flex;
-  flex-direction: column;
-  .name-with-buttons-and-tabs {
+  .metadata-details, .resource-kind-details, .resource-details, .workflow-details, .workflow-form-content {
     display: flex;
-    flex-shrink: 0;
-    align-items: center;
+    flex-direction: column;
+    .name-with-buttons-and-tabs {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      flex-wrap: wrap;
+      padding-top: $default-gap-size / 4;
+      padding-bottom: $default-gap-size / 4;
+      border-bottom: $default-gap-size / 4 solid $light-blue;
+      overflow: auto;
+      & > :not(.buttons):not(aup-tabs) {
+        margin: $default-gap-size / 4 $default-gap-size / 2;
+      }
+      & > .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: $default-gap-size / 4;
+        padding-right: $default-gap-size / 4;
+        & > * {
+          margin: $default-gap-size / 4;
+        }
+      }
+      aup-tabs {
+        align-self: flex-end;
+        margin-top: $default-gap-size / 4;
+        margin-bottom: - $default-gap-size / 4;
+        margin-left: auto;
+        padding-left: $default-gap-size / 2;
+        & > ul {
+          border: none;
+          & > li {
+            margin-bottom: 0;
+            & > a {
+              margin-right: 0;
+              padding: $default-gap-size / 8 $default-gap-size / 2;
+              border: 0;
+              border-radius: 0;
+              text-transform: uppercase;
+              color: $default-text-color;
+              @include transition(background-color .3s ease-out, color .3s ease-out);
+              &.active, &:hover {
+                background-color: $light-blue;
+                color: white;
+              }
+              &.active {
+                font-style: normal;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  metadata-list, resource-kinds-list, workflows-list, .languages-list, audit {
+    display: flex;
+    flex-direction: column;
+    & > :not(table):not(.table-container):not(.add-form):not(.form-with-buttons) {
+      position: sticky;
+      left: 0;
+    }
+  }
+  metadata-list, resource-kinds-list, workflows-list, .languages-list {
+    & > add-button {
+      display: flex;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+  }
+  resources-list, metadata-list, resource-kinds-list {
+    & > .add-form {
+      flex-shrink: 0;
+    }
+  }
+
+  .page-title {
+    display: block;
+    font-size: $title-font-size;
+    font-weight: bold;
+  }
+
+  .page-subtitle {
+    display: block;
+    font-size: $subtitle-font-size;
+  }
+
+  a {
+    cursor: pointer;
+    color: $blue;
+    &:focus, &:hover {
+      color: $light-blue;
+    }
+  }
+
+  button {
+    border: none;
+    outline: none;
+  }
+
+  dl {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  ul {
+    margin-bottom: 0;
+  }
+
+  h1, h2, h3, p {
+    margin-top: $default-gap-size / 2;
+    margin-bottom: $default-gap-size / 2;
+  }
+
+  label {
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+
+  .tooltip {
+    white-space: pre-wrap;
+  }
+
+  .has-error .help-block {
+    display: block;
+  }
+
+  .help-block {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .drag-handle {
+    cursor: n-resize;
+  }
+
+  table {
+    width: 100%;
+    &:not(.transparent) {
+      thead th, tfoot td {
+        position: sticky;
+        font-weight: normal;
+        background-color: $grey;
+        color: white;
+      }
+      thead th {
+        z-index: 1;
+        top: 0;
+      }
+      tfoot td {
+        bottom: 0;
+      }
+      tbody {
+        vertical-align: top;
+        tr {
+          @include transition(background-color .3s);
+          &:nth-child(2n + 1) {
+            background-color: $light-grey;
+          }
+          &:not(.edit-form):hover {
+            background-color: $orange;
+          }
+          a {
+            color: $default-text-color;
+          }
+        }
+      }
+      th, td {
+        padding: $default-gap-size / 4;
+        &:first-child {
+          padding-left: $default-gap-size / 2;
+        }
+        &:last-child {
+          padding-right: $default-gap-size / 2;
+          &:empty {
+            padding: 0;
+            width: $default-gap-size / 4;
+          }
+        }
+      }
+      td.with-buttons-container {
+        padding: 0;
+        & > div {
+          display: flex;
+          justify-content: flex-end;
+          & > * {
+            margin: $default-gap-size / 4;
+            padding: 0;
+            background-color: initial;
+            color: $blue;
+            &.remove:not([disabled]) {
+              color: $red;
+            }
+            &[disabled] {
+              color: $grey;
+            }
+          }
+          & > a {
+            color: inherit;
+          }
+        }
+      }
+    }
+    &.transparent {
+      background: none;
+    }
+    td.with-throbber {
+      width: 1em;
+    }
+  }
+
+  .simple-form {
+    display: grid;
+    grid-template-columns: auto minmax(60%, 1fr);
+    grid-template-columns: fit-content(40%) auto;
+    grid-column-gap: $default-gap-size;
+    grid-row-gap: $default-gap-size / 2;
+    & > span:not(.value):not(.validation-message), & > .key {
+      font-weight: bold;
+    }
+    & > span, & > .key {
+      icon {
+        margin-left: $default-gap-size / 4;
+      }
+    }
+    & > .full-width, & > .section-title, & > .validation-message {
+      grid-column: 1/3;
+    }
+    & > .section-title {
+      font-size: $subtitle-font-size;
+    }
+    &:not(:last-child) > .validation-message {
+      margin-bottom: $default-gap-size / 2;
+    }
+    input[type=text], dropdown-select, metadata-chooser {
+      min-width: $simple-form-text-input-box-minimum-width;
+    }
+    input[type=number] {
+      min-width: $simple-form-number-input-box-minimum-width;
+      &:not(:first-child) {
+        flex: 1;
+        margin-left: $default-gap-size / 2;
+      }
+    }
+    input[type=radio] {
+      position: relative;
+      top: 1px;
+    }
+  }
+
+  .narrow-form {
+    & > span {
+      padding-top: $default-gap-size / 4;
+      padding-bottom: $default-gap-size / 4;
+      font-size: $subtitle-font-size;
+      font-weight: bold;
+    }
+    & > div {
+      &, & > * {
+        padding-top: $default-gap-size / 8;
+        padding-bottom: $default-gap-size / 8;
+      }
+      & > span {
+        display: block;
+        &:not(.value):not(.additional-information) {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .form-with-buttons {
+    display: flex;
     flex-wrap: wrap;
     padding-top: $default-gap-size / 4;
     padding-bottom: $default-gap-size / 4;
-    border-bottom: $default-gap-size / 4 solid $light-blue;
-    overflow: auto;
-    & > :not(.buttons):not(aup-tabs) {
-      margin: $default-gap-size / 4 $default-gap-size / 2;
+    & > .form-content {
+      flex: 1;
+      padding: $default-gap-size / 4 $default-gap-size / 2;
     }
-    & > .buttons {
+    & > .form-buttons {
+      position: sticky;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      flex: 0;
+      top: $default-gap-size / 2;
+      margin-left: auto;
+      align-self: flex-start;
       padding-left: $default-gap-size / 4;
       padding-right: $default-gap-size / 4;
       & > * {
-        margin: $default-gap-size / 4;
+        padding: $default-gap-size / 4;
       }
-    }
-    aup-tabs {
-      align-self: flex-end;
-      margin-top: $default-gap-size / 4;
-      margin-bottom: - $default-gap-size / 4;
-      margin-left: auto;
-      padding-left: $default-gap-size / 2;
-      & > ul {
-        border: none;
-        & > li {
-          margin-bottom: 0;
-          & > a {
-            margin-right: 0;
-            padding: $default-gap-size / 8 $default-gap-size / 2;
-            border: 0;
-            border-radius: 0;
-            text-transform: uppercase;
-            color: $default-text-color;
-            @include transition(background-color .3s ease-out, color .3s ease-out);
-            &.active, &:hover {
-              background-color: $light-blue;
-              color: white;
-            }
-            &.active {
-              font-style: normal;
-            }
-          }
-        }
+      & > * {
+        white-space: nowrap;
+      }
+      button, toggle-button {
+        width: 100%;
+      }
+      button, toggle-button > div {
+        text-align: left;
       }
     }
   }
-}
 
-metadata-list, resource-kinds-list, workflows-list, .languages-list, audit {
-  display: flex;
-  flex-direction: column;
-  & > :not(table):not(.table-container):not(.add-form):not(.form-with-buttons) {
-    position: sticky;
-    left: 0;
+  .validation-message {
+    color: $red;
   }
-}
-metadata-list, resource-kinds-list, workflows-list, .languages-list {
-  & > add-button {
-    display: flex;
-    justify-content: flex-end;
-    flex-shrink: 0;
+
+  body > tr[oa-sortable-item] {
+    display: none;
   }
-}
-resources-list, metadata-list, resource-kinds-list {
-  & > .add-form {
-    flex-shrink: 0;
-  }
-}
 
-.page-title {
-  display: block;
-  font-size: $title-font-size;
-  font-weight: bold;
-}
-
-.page-subtitle {
-  display: block;
-  font-size: $subtitle-font-size;
-}
-
-a {
-  cursor: pointer;
-  color: $blue;
-  &:focus, &:hover {
-    color: $light-blue;
-  }
-}
-
-button {
-  border: none;
-  outline: none;
-}
-
-dl {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-ul {
-  margin-bottom: 0;
-}
-
-h1, h2, h3, p {
-  margin-top: $default-gap-size / 2;
-  margin-bottom: $default-gap-size / 2;
-}
-
-label {
-  margin-bottom: 0;
-  font-weight: normal;
-}
-
-.tooltip {
-  white-space: pre-wrap;
-}
-
-.has-error .help-block {
-  display: block;
-}
-
-.help-block {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.drag-handle {
-  cursor: n-resize;
-}
-
-table {
-  width: 100%;
-  &:not(.transparent) {
-    thead th, tfoot td {
-      position: sticky;
-      font-weight: normal;
-      background-color: $grey;
-      color: white;
-    }
-    thead th {
-      z-index: 1;
-      top: 0;
-    }
-    tfoot td {
-      bottom: 0;
-    }
-    tbody {
-      vertical-align: top;
-      tr {
-        @include transition(background-color .3s);
-        &:nth-child(2n + 1) {
-          background-color: $light-grey;
-        }
-        &:not(.edit-form):hover {
-          background-color: $orange;
-        }
-        a {
-          color: $default-text-color;
-        }
-      }
-    }
-    th, td {
-      padding: $default-gap-size / 4;
-      &:first-child {
-        padding-left: $default-gap-size / 2;
-      }
-      &:last-child {
-        padding-right: $default-gap-size / 2;
-        &:empty {
-          padding: 0;
-          width: $default-gap-size / 4;
-        }
-      }
-    }
-    td.with-buttons-container {
-      padding: 0;
-      & > div {
-        display: flex;
-        justify-content: flex-end;
-        & > * {
-          margin: $default-gap-size / 4;
-          padding: 0;
-          background-color: initial;
-          color: $blue;
-          &.remove:not([disabled]) {
-            color: $red;
-          }
-          &[disabled] {
-            color: $grey;
-          }
-        }
-        & > a {
-          color: inherit;
-        }
-      }
-    }
-  }
-  &.transparent {
+  button.unstyled {
     background: none;
+    border: none;
   }
-  td.with-throbber {
-    width: 1em;
-  }
-}
 
-.simple-form {
-  display: grid;
-  grid-template-columns: auto minmax(60%, 1fr);
-  grid-template-columns: fit-content(40%) auto;
-  grid-column-gap: $default-gap-size;
-  grid-row-gap: $default-gap-size / 2;
-  & > span:not(.value):not(.validation-message), & > .key {
-    font-weight: bold;
-  }
-  & > span, & > .key {
-    icon {
-      margin-left: $default-gap-size / 4;
+  input, textarea, select {
+    &[disabled] {
+      color: $lightish-grey;
     }
   }
-  & > .full-width, & > .section-title, & > .validation-message {
-    grid-column: 1/3;
-  }
-  & > .section-title {
-    font-size: $subtitle-font-size;
-  }
-  &:not(:last-child) > .validation-message {
-    margin-bottom: $default-gap-size / 2;
-  }
-  input[type=text], dropdown-select, metadata-chooser {
-    min-width: $simple-form-text-input-box-minimum-width;
-  }
-  input[type=number] {
-    min-width: $simple-form-number-input-box-minimum-width;
-    &:not(:first-child) {
-      flex: 1;
-      margin-left: $default-gap-size / 2;
-    }
-  }
-  input[type=radio] {
-    position: relative;
-    top: 1px;
-  }
-}
 
-.narrow-form {
-  & > span {
-    padding-top: $default-gap-size / 4;
-    padding-bottom: $default-gap-size / 4;
-    font-size: $subtitle-font-size;
-    font-weight: bold;
+  input[type=checkbox], input[type=radio] {
+    margin-top: 0;
   }
-  & > div {
-    &, & > * {
-      padding-top: $default-gap-size / 8;
-      padding-bottom: $default-gap-size / 8;
-    }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .form-control:not([type=date]) {
+    height: initial;
+  }
+
+  .add-form {
+    align-self: flex-start;
+    flex-shrink: 0;
+    min-width: 100%;
     & > span {
       display: block;
-      &:not(.value):not(.additional-information) {
-        font-weight: bold;
+      padding: $default-gap-size / 2;
+      @extend .page-title;
+    }
+  }
+
+  .well {
+    padding: $default-gap-size / 2;
+    margin-bottom: 0;
+    &:not(.list-group-item):not(.floating-form) {
+      border-radius: 0;
+    }
+    &.list-group-item {
+      &:not(:first-child) {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+      &:not(:last-child) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
     }
-  }
-}
-
-.form-with-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  padding-top: $default-gap-size / 4;
-  padding-bottom: $default-gap-size / 4;
-  & > .form-content {
-    flex: 1;
-    padding: $default-gap-size / 4 $default-gap-size / 2;
-  }
-  & > .form-buttons {
-    position: sticky;
-    display: flex;
-    flex-direction: column;
-    flex: 0;
-    top: $default-gap-size / 2;
-    margin-left: auto;
-    align-self: flex-start;
-    padding-left: $default-gap-size / 4;
-    padding-right: $default-gap-size / 4;
-    & > * {
-      padding: $default-gap-size / 4;
-    }
-    & > * {
-      white-space: nowrap;
-    }
-    button, toggle-button {
-      width: 100%;
-    }
-    button, toggle-button > div {
-      text-align: left;
-    }
-  }
-}
-
-.validation-message {
-  color: $red;
-}
-
-body > tr[oa-sortable-item] {
-  display: none;
-}
-
-button.unstyled {
-  background: none;
-  border: none;
-}
-
-input, textarea, select {
-  &[disabled] {
-    color: $lightish-grey;
-  }
-}
-
-input[type=checkbox], input[type=radio] {
-  margin-top: 0;
-}
-
-textarea {
-  resize: vertical;
-}
-
-.form-control:not([type=date]) {
-  height: initial;
-}
-
-.add-form {
-  align-self: flex-start;
-  flex-shrink: 0;
-  min-width: 100%;
-  & > span {
-    display: block;
-    padding: $default-gap-size / 2;
-    @extend .page-title;
-  }
-}
-
-.well {
-  padding: $default-gap-size / 2;
-  margin-bottom: 0;
-  &:not(.list-group-item):not(.floating-form) {
-    border-radius: 0;
-  }
-  &.list-group-item {
-    &:not(:first-child) {
-      border-top-left-radius: 0;
+    &.floating-form {
+      z-index: $floating-form-and-sticky-table-header-z-index;
+      position: absolute;
+      right: 0;
       border-top-right-radius: 0;
     }
-    &:not(:last-child) {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
+  }
+
+  .list-group-item {
+    padding: $default-gap-size / 2;
+  }
+
+  .form-group {
+    margin-bottom: 0;
+    padding-top: $default-gap-size / 2;
+    padding-bottom: $default-gap-size / 2;
+  }
+
+  .no-padding {
+    padding: 0 !important;
+  }
+
+  .alert {
+    margin-bottom: 0;
+    padding: $default-gap-size;
+    border: none;
+    border-radius: 0;
+    &.alert-info {
+      background-color: $light-blue;
+      color: white;
+    }
+    &.alert-warning {
+      background-color: darken($orange, 10%);
+      border-color: $orange;
+      color: white;
     }
   }
-  &.floating-form {
-    z-index: $floating-form-and-sticky-table-header-z-index;
-    position: absolute;
-    right: 0;
-    border-top-right-radius: 0;
+
+  .diagram-cover {
+    z-index: 999 !important; // Fix UI elements like menus displaying over graphs, but not interacting with mouse.
   }
-}
 
-.list-group-item {
-  padding: $default-gap-size / 2;
-}
-
-.form-group {
-  margin-bottom: 0;
-  padding-top: $default-gap-size / 2;
-  padding-bottom: $default-gap-size / 2;
-}
-
-.no-padding {
-  padding: 0 !important;
-}
-
-.alert {
-  margin-bottom: 0;
-  padding: $default-gap-size;
-  border: none;
-  border-radius: 0;
-  &.alert-info {
-    background-color: $light-blue;
-    color: white;
-  }
-  &.alert-warning {
-    background-color: darken($orange, 10%);
-    border-color: $orange;
-    color: white;
-  }
-}
-
-
-.diagram-cover {
-  z-index: 999 !important; // Fix UI elements like menus displaying over graphs, but not interacting with mouse.
-}
-
-ux-dialog-overlay {
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-// Z-depth helpers from MaterializeCSS.
-// See: https://github.com/FezVrasta/bootstrap-material-design/issues/1109.
-
-@for $i from 0 through 5 {
-  .z-depth-#{$i} {
-    @include z-depth($i);
+  ux-dialog-overlay {
+    background-color: rgba(0, 0, 0, 0.3);
   }
 }
 

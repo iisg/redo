@@ -4,12 +4,11 @@
 
 {% block content %}
     <div class="resource-details">
-    {% if resource | metadata('parent') | first %}
-        {% include "redo/breadcrumbs.twig" %}
-    {% endif %}
+        {% if resource | metadata('parent') | first %}
+            {% include "redo/breadcrumbs.twig" %}
+        {% endif %}
         <div class="search-bar-container">
-            <search-bar :show-options="false"
-                :display-as-smaller="true"></search-bar>
+            <search-bar display-as-smaller.bind="true"></search-bar>
         </div>
         <div class="details-container">
             {% if resource | metadata('parent') | first %}
@@ -26,10 +25,11 @@
             {% endif %}
             <div class="details">
                 {% block details %}
-                    <icon class="resource-image"
-                        name="book-2"></icon>
+                    <span class="resource-image">
+                        {{ icon('book-2') }}
+                    </span>
                     <div>
-                        <h1>{{resource | metadata('label')}}</h1>
+                        <h1>{{ resource | metadata('label') }}</h1>
                         {% for metadata in resource.kind.metadataList %}
                             {% set metadataValue = resource | metadata(metadata.id) | first %}
                             {% if metadataValue
@@ -38,7 +38,9 @@
                                 and metadata.name != 'parent'
                                 and metadata.control != 'display-strategy'
                                 and metadata.control != 'wysiwyg-editor' %}
-                                <p><b>{{metadata.label['PL'] | default(metadata.label | first) | default(metadata.name)}}:</b> {{metadataValue}}</p>
+                                <p>
+                                    <b>{{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}:</b> {{ metadataValue }}
+                                </p>
                             {% endif %}
                         {% endfor %}
                     </div>
