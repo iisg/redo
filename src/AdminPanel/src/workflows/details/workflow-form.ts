@@ -81,6 +81,7 @@ export class WorkflowForm extends ChangeLossPreventerForm {
   }
 
   cloneWorkflow() {
+    this.editor.updateWorkflowBasedOnGraph(true);
     this.controller.validate().then(result => {
       if (result.valid) {
         this.changeLossPreventer.disable();
