@@ -1,6 +1,8 @@
-import {AbstractRoute, BaseRoute, NavRole, Route, RouteGroup, RoutingBuilder} from "./routing-builder";
+import {AbstractRoute, BaseRoute, NavRole, Route, RouteGroup} from "./routing-builder";
 
-export const routes: AbstractRoute[] = new RoutingBuilder([
+// `configuration.options.root` is not defined and `RouteGroup` is used here due to this issue:
+// https://github.com/aurelia/router/issues/457.
+export const routes: AbstractRoute[] = new RouteGroup('admin', '', '', '', [
   new Route('', 'tasks', 'tasks/tasks')
     .withMenuItem('Tasks', NavRole.TOP, 'tasks')
     .requireRole('OPERATOR'),
@@ -58,7 +60,7 @@ export const routes: AbstractRoute[] = new RoutingBuilder([
     .withMenuItem('About', NavRole.BOTTOM, 'information'),
 ]).toArray();
 
-// used in contexts where DI is available for better testability
+// Used in contexts where DI is available for better testability.
 export class RouteProvider {
   getRoutes(): AbstractRoute[] {
     return routes;
