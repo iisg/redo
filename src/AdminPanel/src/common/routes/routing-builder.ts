@@ -100,21 +100,22 @@ export class RouteGroup extends RoutingBuilder {
     }
   }
 
-  private join(s1: string, s2: string): string {
-    const slashless1 = this.removeTrailingSlash(s1);
-    if (s2 == '') {
-      return slashless1;
-    } else {
-      return slashless1 + '/' + s2;
+  private join(firstPath: string, secondPath: string): string {
+    if (firstPath == '') {
+      return secondPath;
     }
+    const firstPathWithoutTrailingSlash = this.removeTrailingSlash(firstPath);
+    if (secondPath == '') {
+      return firstPathWithoutTrailingSlash;
+    }
+    return firstPathWithoutTrailingSlash + '/' + secondPath;
   }
 
-  private removeTrailingSlash(str: string): string {
-    if (str.length == 0 || str[str.length - 1] != '/') {
-      return str;
-    } else {
-      return str.substr(0, str.length - 1);
+  private removeTrailingSlash(path: string): string {
+    if (path.length == 0 || path[path.length - 1] != '/') {
+      return path;
     }
+    return path.substr(0, path.length - 1);
   }
 
   toArray(): AbstractRoute[] {

@@ -5,7 +5,6 @@ import {ComponentAttached} from "aurelia-templating";
 import {routes} from "common/routes/routes";
 import {I18nParams} from "config/i18n";
 import {ChangeLossPreventer} from "./common/change-loss-preventer/change-loss-preventer";
-import {supportMiddleClickInLinks} from "./common/routes/middle-link-opener";
 import {RouteAccessChecker} from "./common/routes/route-access-checker";
 
 @autoinject
@@ -19,15 +18,13 @@ export class App implements ConfiguresRouter, ComponentAttached {
   configureRouter(configuration: RouterConfiguration) {
     configuration.title = this.i18nParams.applicationName;
     configuration.options.pushState = true;
-    configuration.options.root = '/admin';
     configuration.map(routes);
-    configuration.mapRoute({route: ['not-allowed'], name: 'not-allowed', moduleId: 'common/error-pages/not-allowed'});
-    const pageNotFoundRouteConfiguration = {route: ['not-found'], name: 'not-found', moduleId: 'common/error-pages/not-found'};
+    configuration.mapRoute({route: ['admin/not-allowed'], name: 'not-allowed', moduleId: 'common/error-pages/not-allowed'});
+    const pageNotFoundRouteConfiguration = {route: ['admin/not-found'], name: 'not-found', moduleId: 'common/error-pages/not-found'};
     configuration.mapRoute(pageNotFoundRouteConfiguration);
     configuration.mapUnknownRoutes(pageNotFoundRouteConfiguration);
     configuration.addAuthorizeStep(this.changeLossPreventer);
     configuration.addAuthorizeStep(this.routeAccessChecker);
-    supportMiddleClickInLinks(configuration);
   }
 
   attached() {

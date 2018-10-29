@@ -74,8 +74,8 @@
                     disabled.bind="cloningResourceDisabled"
                     disability-reason.bind="disabilityReason"
                     click.delegate="cloneResource()"></make-copy-button>
-                <cancel-button class.bind="editing ? '' : 'orange'"
-                    label="Close"
+                <cancel-button class.bind="!editing ? 'orange' : ''"
+                    label.bind="!editing ? 'Close' : ''"
                     disabled.bind="resource.pendingRequest || submitting"
                     click.delegate="cancel()"></cancel-button>
             </div>
