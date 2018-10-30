@@ -27,7 +27,7 @@ class FrontendLocaleProvider {
     }
 
     private function getFrontendLocaleList(): array {
-        $locales = glob('admin/res/locales/*', GLOB_ONLYDIR);
+        $locales = glob(\AppKernel::APP_PATH . '/../web/admin/res/locales/*', GLOB_ONLYDIR);
         return array_map('basename', $locales);
     }
 }
