@@ -8,6 +8,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
+use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
@@ -55,6 +56,18 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->phpBook,
                 $this->phpBook->getContents()->withReplacedValues($this->findMetadataByName('skanista'), 1)
             )
+        );
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertEquals('admin', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+        $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
+    }
+
+    public function testUpdatingScannerUsernameWhenScannerChangedByGod() {
+        $this->handleCommandBypassingFirewall(
+            ResourceGodUpdateCommand::builder()
+                ->setResource($this->phpBook)
+                ->setNewContents($this->phpBook->getContents()->withReplacedValues($this->findMetadataByName('skanista'), 1))
+                ->build()
         );
         $this->getEntityManager()->refresh($this->phpBook);
         $this->assertEquals('admin', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
