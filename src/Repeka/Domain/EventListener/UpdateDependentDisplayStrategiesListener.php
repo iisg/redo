@@ -11,6 +11,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesFromDependenciesCommand;
+use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 
 class UpdateDependentDisplayStrategiesListener extends CommandEventsListener {
@@ -90,6 +91,6 @@ class UpdateDependentDisplayStrategiesListener extends CommandEventsListener {
     }
 
     protected function subscribedFor(): array {
-        return [ResourceTransitionCommand::class, ResourceEvaluateDisplayStrategiesCommand::class];
+        return [ResourceTransitionCommand::class, ResourceEvaluateDisplayStrategiesCommand::class, ResourceGodUpdateCommand::class];
     }
 }
