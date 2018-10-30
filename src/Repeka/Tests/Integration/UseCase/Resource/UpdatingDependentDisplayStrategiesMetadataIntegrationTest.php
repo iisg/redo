@@ -49,6 +49,18 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
         $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
     }
 
+    public function testUpdatingScannerUsernameWhenScannerChanges() {
+        $this->handleCommandBypassingFirewall(
+            new ResourceUpdateContentsCommand(
+                $this->phpBook,
+                $this->phpBook->getContents()->withReplacedValues($this->findMetadataByName('skanista'), 1)
+            )
+        );
+        $this->getEntityManager()->refresh($this->phpBook);
+        $this->assertEquals('admin', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+        $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
+    }
+
     public function testCalculatingForNewResource() {
         $resource = $this->handleCommandBypassingFirewall(
             new ResourceCreateCommand(
