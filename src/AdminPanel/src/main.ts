@@ -3,9 +3,13 @@ import {Aurelia, LogManager} from "aurelia-framework";
 import {ConsoleAppender} from "aurelia-logging-console";
 import "bootstrap";
 import {MetricsCollector} from "common/metrics/metrics-collector";
+import {MetricsEventListener} from "common/metrics/metrics-event-listener";
+import {CustomValidationRules} from "common/validation/custom-validation-rules";
+import {installValidationMessageLocalization} from "common/validation/validation-message-localization";
 import {configure as configureHttpClient} from "config/http-client";
 import {i18nConfiguratorFactory} from "config/i18n";
 import {CurrentUserFetcher} from "users/current/current-user-fetcher";
+import {GuiLanguage} from "./common/i18n/gui-language";
 import {dialogConfigurator} from "./config/dialog";
 import {Language} from "./resources-config/language-config/language";
 import {Metadata} from "./resources-config/metadata/metadata";
@@ -15,11 +19,7 @@ import {Resource} from "./resources/resource";
 import {ResourceMapper} from "./resources/resource-mapping";
 import {User} from "./users/user";
 import {Workflow} from "./workflows/workflow";
-import {installValidationMessageLocalization} from "./common/validation/validation-message-localization";
-import {GuiLanguage} from "./common/i18n/gui-language";
 import "polyfills";
-import {MetricsEventListener} from "./common/metrics/metrics-event-listener";
-import {CustomValidationRules} from "./common/validation/custom-validation-rules";
 
 MetricsCollector.timeStart("bootstrap");
 
@@ -29,16 +29,14 @@ LogManager.setLevel(LogManager.logLevel.info);
 const adminPanel = window.location.pathname.startsWith('/admin');
 
 export function configure(aurelia: Aurelia) {
-  const aureliaConfig = aurelia.use
-    .standardConfiguration()
-    .plugin('aurelia-animator-css')
-    .plugin('aurelia-validation')
-    .plugin('aurelia-i18n', i18nConfiguratorFactory(aurelia))
-    .plugin('aurelia-dialog', dialogConfigurator);
-
   if (adminPanel) {
-    aureliaConfig
+    aurelia.use
+      .standardConfiguration()
+      .plugin('aurelia-animator-css')
+      .plugin('aurelia-validation')
       .plugin('aurelia-cookie')
+      .plugin('aurelia-i18n', i18nConfiguratorFactory(aurelia))
+      .plugin('aurelia-dialog', dialogConfigurator)
       .plugin("oribella-aurelia-sortable")
       .plugin('aurelia-plugins-tabs')
       .globalResources([
@@ -54,10 +52,16 @@ export function configure(aurelia: Aurelia) {
         'common/http-client/invalid-command-message.html', // Used in alerts by GlobalExceptionInterceptor.
         'resources/details/resource-link',
         'resources/details/resource-label-value-converter',
-        'common/value-converters/resource-class-translation-value-converter',
+        'common/value-converters/resource-class-translation-value-converter'
       ]);
   } else {
-    aureliaConfig.globalResources([
+    aurelia.use
+      .standardConfiguration()
+      .plugin('aurelia-animator-css')
+      .plugin('aurelia-validation')
+      .plugin('aurelia-i18n', i18nConfiguratorFactory(aurelia))
+      .plugin('aurelia-dialog', dialogConfigurator)
+      .globalResources([
       'common/components/redo-footer/redo-footer.html',
       'common/components/redo-logo/redo-logo.html',
       'common/components/icon/icon',
@@ -75,11 +79,7 @@ export function configure(aurelia: Aurelia) {
     .then(() => aurelia.start())
     .then(() => onAureliaStarted(aurelia))
     .then(() => {
-      if (adminPanel) {
-        aurelia.setRoot();
-      } else {
-        aurelia.enhance();
-      }
+      adminPanel ? aurelia.setRoot() : aurelia.enhance();
     })
     .then(() => MetricsCollector.timeEnd("bootstrap"));
 }
