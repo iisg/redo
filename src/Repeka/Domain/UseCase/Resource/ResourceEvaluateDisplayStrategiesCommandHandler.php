@@ -40,6 +40,8 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
             if ($contents->getValuesWithoutSubmetadata($metadata) != [$value]) {
                 $changed = true;
                 $contents = $contents->withReplacedValues($metadata, $value);
+            }
+            if ($changed || $resource->isDisplayStrategiesDirty()) {
                 $resource->updateDisplayStrategyDependencies($metadata->getId(), $usedMetadataCollector);
             }
         }
