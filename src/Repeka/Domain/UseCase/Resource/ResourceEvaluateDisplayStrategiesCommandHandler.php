@@ -9,6 +9,10 @@ use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
 use Repeka\Domain\Utils\EntityUtils;
 
+/**
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.NPathComplexity")
+ */
 class ResourceEvaluateDisplayStrategiesCommandHandler {
     /** @var ResourceDisplayStrategyEvaluator */
     private $evaluator;
