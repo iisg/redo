@@ -56,20 +56,35 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
+    public function testBibtexEscaping() {
+        foreach ([
+                     ['{ala}', '"\{ala\}"'],
+                     ['"a$a"', '"\"a\$a\""'],
+                     ['a\a', '"a\\\\a"'],
+                     ['a\$\"{}a', '"a\\\\\$\\\\\"\{\}a"'],
+                 ] as $testCase) {
+            list($initialValue, $expectedValue) = $testCase;
+            $this->assertEquals(
+                $expectedValue,
+                $this->extension->bibtexEscape($initialValue)
+            );
+        }
+    }
+
     public function testMatchingUrls() {
         $requestStack = $this->createMock(RequestStack::class);
         foreach ([
-                    [null, ['/'], false],
-                    [false, ['/#'], false],
-                    ['/resources', [], false],
-                    ['/', ['/#', '/search'], true],
-                    ['/search/1', ['/#', '/search'], true],
-                    ['/search/1/2', ['/#', '/search'], true],
-                    ['/resources', ['/#', '/search'], false],
-                    ['/resources/123', ['/resources/123'], true],
-                    ['/resources/1234', ['/resources/123'], true],
-                    ['/resources/123/4', ['/resources/123'], true],
-                    ['/resources', ['/resources/123'], false],
+                     [null, ['/'], false],
+                     [false, ['/#'], false],
+                     ['/resources', [], false],
+                     ['/', ['/#', '/search'], true],
+                     ['/search/1', ['/#', '/search'], true],
+                     ['/search/1/2', ['/#', '/search'], true],
+                     ['/resources', ['/#', '/search'], false],
+                     ['/resources/123', ['/resources/123'], true],
+                     ['/resources/1234', ['/resources/123'], true],
+                     ['/resources/123/4', ['/resources/123'], true],
+                     ['/resources', ['/resources/123'], false],
                  ] as $testCase) {
             list($requestUri, $urls, $expected) = $testCase;
             $requestStack->expects($this->atLeastOnce())

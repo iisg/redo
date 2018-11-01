@@ -7,7 +7,6 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\PrintableArray;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -34,7 +33,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('isFilteringByFacet', [$this, 'isFilteringByFacet']),
             new \Twig_Function('icon', [$this, 'icon']),
             new \Twig_Function('resources', [$this, 'fetchResources']),
-            new \Twig_Function('urlMatches', [$this, 'urlMatches'])
+            new \Twig_Function('urlMatches', [$this, 'urlMatches']),
         ];
     }
 
@@ -42,6 +41,7 @@ class TwigFrontendExtension extends \Twig_Extension {
         return [
             new \Twig_Filter('ftsContentsToResource', [$this, 'ftsContentsToResource']),
             new \Twig_Filter('sum', [$this, 'sumIterable']),
+            new \Twig_Filter('bibtexEscape', [$this, 'bibtexEscape']),
         ];
     }
 
@@ -143,6 +143,10 @@ ICON;
                 return $this->handleCommand($builder->build());
             }
         );
+    }
+
+    public function bibtexEscape($value) {
+        return '"' . addcslashes($value, '{}"$\\') . '"';
     }
 
     public function urlMatches(string ...$urls): bool {

@@ -24,11 +24,21 @@ class ResourcesEndpointsExposer {
                         $endpoint['headers']
                     )
                 );
-            } else {
+            } elseif (isset($endpoint['metadata'])) {
                 $builder->addRoute(
-                    new SingleResourceExposedEndpointRoute(
+                    new ExposedResourceMetadataRoute(
                         $path,
                         $endpoint['metadata'] ?? null,
+                        $endpoint['resourceId'],
+                        $endpoint['endpointUsageTrackingKey'],
+                        $endpoint['headers']
+                    )
+                );
+            } else {
+                $builder->addRoute(
+                    new ExposedResourceTemplateRoute(
+                        $path,
+                        $endpoint['template'] ?? '',
                         $endpoint['resourceId'],
                         $endpoint['endpointUsageTrackingKey'],
                         $endpoint['headers']
