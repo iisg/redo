@@ -17,7 +17,7 @@ class ResourcesExposureController extends Controller {
         $this->entityManager = $entityManager;
     }
 
-    public function exposeResourceAction(
+    public function exposeResourceMetadataAction(
         ResourceEntity $resourceId,
         $metadataNameOrId,
         array $headers,
@@ -36,14 +36,35 @@ class ResourcesExposureController extends Controller {
         if (!$content) {
             $response = new Response('', Response::HTTP_NOT_FOUND);
         } else {
-            if ($endpointUsageTrackingKey) {
-                $endpointUsageLogEntry = new EndpointUsageLogEntry($request, $resource, $endpointUsageTrackingKey);
-                $this->entityManager->persist($endpointUsageLogEntry);
-                $this->entityManager->flush();
-            }
+            $this->persistAndFlushUsageTrackKey($endpointUsageTrackingKey, $request, $resource);
             $response = new Response($content, Response::HTTP_OK);
         }
         $response->headers->add($headers);
         return $response;
+    }
+
+    public function exposeResourceTemplateAction(
+        ResourceEntity $resourceId,
+        string $template,
+        array $headers,
+        ?string $endpointUsageTrackingKey,
+        Request $request
+    ) {
+        // $resourceId parameter name is required to write understandable URLs in config, like /resources/{resourceId}/export_type
+        /** @var ResourceEntity $resource */
+        $resource = $resourceId;
+        $responseData = ['resource' => $resource];
+        $this->persistAndFlushUsageTrackKey($endpointUsageTrackingKey, $request, $resource);
+        $response = $this->render($template, $responseData);
+        $response->headers->add($headers);
+        return $response;
+    }
+
+    private function persistAndFlushUsageTrackKey($endpointUsageTrackingKey, $request, $resource) {
+        if ($endpointUsageTrackingKey) {
+            $endpointUsageLogEntry = new EndpointUsageLogEntry($request, $resource, $endpointUsageTrackingKey);
+            $this->entityManager->persist($endpointUsageLogEntry);
+            $this->entityManager->flush();
+        }
     }
 }

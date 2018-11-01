@@ -54,3 +54,7 @@ repeka:
         filterable_metadata_ids: [tytul, parent, skanista, nadzorujacy]
         searchable_resource_classes: [books]
         facets: [kindId, skanista]
+    /resources/{resourceId}/bibtex:
+      template: bibtex/bibtex.twig
+      headers:
+        Content-Type: 'text/plain'

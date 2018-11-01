@@ -1,25 +1,23 @@
 <?php
 namespace Repeka\Application\Service;
 
-use Assert\Assertion;
 use Repeka\Application\Controller\Site\ResourcesExposureController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
-class SingleResourceExposedEndpointRoute extends Route {
+class ExposedResourceTemplateRoute extends Route {
     public function __construct(
         string $path,
-        $metadataNameOrId,
+        string $template,
         ?int $resourceId,
         ?string $endpointUsageTrackingKey,
         array $headers = []
     ) {
-        Assertion::notNull($metadataNameOrId, 'metadataId must be set for single resource exposed endpoint: ' . $path);
         parent::__construct(
             $path,
             [
-                '_controller' => ResourcesExposureController::class . ':exposeResourceAction',
-                'metadataNameOrId' => $metadataNameOrId,
+                '_controller' => ResourcesExposureController::class . ':exposeResourceTemplateAction',
+                'template' => $template,
                 'headers' => $headers,
                 'endpointUsageTrackingKey' => $endpointUsageTrackingKey,
             ],
