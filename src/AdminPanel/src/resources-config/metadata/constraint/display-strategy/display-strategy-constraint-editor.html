@@ -1,0 +1,9 @@
+<template>
+    <require from="common/components/wysiwyg-editor/wysiwyg-editor"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
+
+    <wysiwyg-editor value.bind="value"
+        placeholder="Title: {{r|mTitle}}, Scanner: {{r|m('Scanner')|m(-2)}}"></wysiwyg-editor>
+    <restore-from-original-button if.bind="hasBase && wasModified"
+        click.delegate="resetToOriginalValues()"></restore-from-original-button>
+</template>
