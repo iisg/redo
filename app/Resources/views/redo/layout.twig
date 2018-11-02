@@ -4,6 +4,8 @@
         {% include "redo/title-bar.twig" %}
         {% block banner %}{% endblock %}
         {% include "redo/menu.twig" %}
+        {% block breadcrumbs %}{% endblock %}
+        {% include "redo/search-bar-container.twig" %}
         {% block content %}{% endblock %}
         <redo-footer></redo-footer>
     </div>

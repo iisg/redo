@@ -1,0 +1,57 @@
+{% extends "redo/layout.twig" %}
+
+{% set page_title = phrase ~ ' - wyniki wyszukiwania' %}
+
+{% set search_bar_phrase = phrase %}
+{% set display_bigger_search_bar = true %}
+{% if app.request.query.all.metadataSubset is defined %}
+    {% set selected_search_bar_metadata_subset = app.request.query.all.metadataSubset %}
+{% endif %}
+
+{% block content %}
+    <div class="search-results-container">
+        <div class="left-panel ${collapsed ? 'collapsed' : ''}"
+            class-name-when-toggled="collapsed">
+            <icon name.bind="collapsed ? 'forward' : 'back-2'"
+                size="2"
+                click.delegate="collapsed = !collapsed"
+                local-storage-value="key: 'leftPanelToggled'; value.bind: collapsed"></icon>
+            <div class="facets">
+                {% for aggregationName, aggregation in results.aggregations if aggregation.buckets.0[aggregationName].buckets %}
+                    <strong>{{aggregationName == 'kindId' ? aggregationName : metadata(aggregationName).label.PL}}</strong>
+                    {% for bucket in aggregation.buckets.0[aggregationName].buckets %}
+                        <a href="{{path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key, app.request.query.all.facetFilters ?? [])}))}}">
+                            <label class="label-with-checkbox">
+                                <input type="checkbox"
+                                    {% if isFilteringByFacet(aggregationName, bucket.key, app.request.query.all.facetFilters ?? []) %}
+                                        checked
+                                    {% endif %}>
+                                <span>{{aggregationName == 'kindId' ? resourceKind(bucket.key).label.PL : r(bucket.key) | mLabel}} ({{bucket.doc_count}})</span>
+                            </label>
+                        </a>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="search-results">
+            <h1>Wyniki wyszukiwania ({{results | length}})</h1>
+            {% for result in results %}
+                {% set resource = result.data.contents | ftsContentsToResource %}
+                <div class="search-result">
+                    <icon name="document"
+                        size="1.5"></icon>
+                    <div class="details">
+                        <h3><a href="/resources/{{result.id}}">{{ resource | mLabel }} (#{{result.id}})</a></h3>
+                        <div class="highlights">
+                            {% for fieldName, highlights in result.highlights %}
+                                {% for highlight in highlights %}
+                                    <p>{{ highlight | raw }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

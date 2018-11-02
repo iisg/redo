@@ -2,14 +2,13 @@
 
 {% set page_title = resource | metadata('label') %}
 
+{% block breadcrumbs %}
+    {% if resource | metadata('parent') | first %}
+        {% include "redo/breadcrumbs.twig" %}
+    {% endif %}
+{% endblock %}
 {% block content %}
     <div class="resource-details">
-        {% if resource | metadata('parent') | first %}
-            {% include "redo/breadcrumbs.twig" %}
-        {% endif %}
-        <div class="search-bar-container">
-            <search-bar display-as-smaller.bind="true"></search-bar>
-        </div>
         <div class="details-container">
             {% if resource | metadata('parent') | first %}
                 <div class="resource-ancestors">

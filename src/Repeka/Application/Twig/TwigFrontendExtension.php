@@ -88,10 +88,9 @@ class TwigFrontendExtension extends \Twig_Extension {
     }
 
     public function icon(string $name, string $size = '1'): \Twig_Markup {
-        $size = str_replace('.', '_', $size);
         $iconTemplate = <<<ICON
-<span class="icon icon-$size">
-    <svg class="logo" viewBox="0 0 1 1">
+<span class="icon" size="$size">
+    <svg viewBox="0 0 1 1">
         <use xlink:href="/files/icons.svg#$name"></use>
     </svg>
 </span>
