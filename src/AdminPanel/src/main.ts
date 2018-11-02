@@ -62,6 +62,7 @@ export function configure(aurelia: Aurelia) {
       .plugin('aurelia-i18n', i18nConfiguratorFactory(aurelia))
       .plugin('aurelia-dialog', dialogConfigurator)
       .globalResources([
+      'common/custom-attributes/local-storage-value-custom-attribute',
       'common/components/redo-footer/redo-footer.html',
       'common/components/redo-logo/redo-logo.html',
       'common/components/icon/icon',

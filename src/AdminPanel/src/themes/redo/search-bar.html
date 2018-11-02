@@ -13,27 +13,24 @@
             </div>
             <div class="options"
                 if.bind="!displayAsSmaller">
-                <div class="radio-buttons-group"
-                    if.bind="metadataSubsets.length">
+                <div if.bind="metadataSubsets"
+                    class="radio-buttons-group">
                     <label repeat.for="option of metadataSubsets">
                         <input type="radio"
-                            model.bind="option"
-                            matcher.bind="metadataSubsetComparator"
-                            checked.bind="selectedMetadataSubset"
-                            name="metadata-subset-radio">
-                        <div></div>
+                            model.bind="option.ids"
+                            checked.bind="selectedMetadataSubsetIds"
+                            name="metadata-subsets">
                         <span>${option.label}</span>
                     </label>
                 </div>
                 <a href.bind="advancedSearchUrl">
                     <icon name="settings-2"
-                        size="1.25"></icon>
-                    <span>Więcej kryteriów</span>
+                        size="1.25">
+                    </icon><span>Więcej kryteriów</span>
                 </a>
             </div>
         </div>
-        <button v-if="onSubmit"
-            class="search-button"
+        <button class="search-button"
             type="submit">
             <icon name="search"
                 size.one-time="displayAsSmaller ? 1.5 : 3"></icon>

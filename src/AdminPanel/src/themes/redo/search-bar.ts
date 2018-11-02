@@ -5,25 +5,22 @@ export class SearchBar {
   @bindable phrase = '';
   @bindable url = '/search/%s';
   @bindable advancedSearchUrl = '/advanced-search';
-  @bindable metadataSubsets = [];
-  @bindable selectedMetadataSubset = {ids: '*'};
+  @bindable metadataSubsets;
+  @bindable selectedMetadataSubsetIds = '*';
 
   navigateToSearchUrl() {
-    let targetUrl = this.url.replace("%s", this.phrase);
-    if (this.selectedMetadataSubset && this.selectedMetadataSubset.ids != '*') {
-      targetUrl += '?metadataSubset=' + this.selectedMetadataSubset.ids;
+    if (this.phrase) {
+      let targetUrl = this.url.replace("%s", this.phrase);
+      if (this.selectedMetadataSubsetIds != '*') {
+        targetUrl += '?metadataSubset=' + this.selectedMetadataSubsetIds;
+      }
+      window.location.assign(targetUrl);
     }
-    window.location.assign(targetUrl);
   }
 
   metadataSubsetsChanged() {
-    const allOption = this.metadataSubsets.find(option => option.ids == '*');
-    if (!allOption) {
+    if (!this.metadataSubsets.find(option => option.ids == '*')) {
       this.metadataSubsets.unshift({ids: '*', label: 'Wszędzie'});
     }
-  }
-
-  metadataSubsetComparator(a, b) {
-    return a.ids == b.ids;
   }
 }

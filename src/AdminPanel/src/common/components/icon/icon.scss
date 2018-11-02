@@ -1,42 +1,22 @@
+@import "../../styles";
+
+$available-sizes: 0.5, 0.75, 1.25, 1.5, 1.75, 2, 2.5, 3;
+
 icon, .icon {
-  display: inline-block;
-  height: 1em;
-  line-height: 0;
-  vertical-align: -0.15em;
-  &.icon-0_5 {
-    height: 0.5em;
-    vertical-align: 0.075em;
-  }
-  &.icon-0_75 {
-    height: 0.75em;
-    vertical-align: -0.05em;
-  }
-  &.icon-1_25 {
-    height: 1.25em;
-    vertical-align: -0.25em;
-  }
-  &.icon-1_5 {
-    height: 1.5em;
-    vertical-align: -0.4em;
-  }
-  &.icon-1_75 {
-    height: 1.75em;
-    vertical-align: -0.5em;
-  }
-  &.icon-2 {
-    height: 2em;
-    vertical-align: -0.65em;
-  }
-  &.icon-2_5 {
-    height: 2.5em;
-    vertical-align: -0.85em;
-  }
-  &.icon-3 {
-    height: 3em;
-    vertical-align: -1.15em;
-  }
-  & > svg {
-    height: inherit;
-    fill: currentColor;
-  }
+    display: inline-block;
+    height: 1em;
+    line-height: 0;
+    vertical-align: calc((#{$capital-letter-of-the-default-font-height} - 1em) / 2);
+
+    @each $size in $available-sizes {
+        &[size="#{$size}"], &[data-size="#{$size}"] {
+            height: #{$size}em;
+            vertical-align: calc((#{$capital-letter-of-the-default-font-height} - #{$size}em) / 2);
+        }
+    }
+
+    & > svg {
+        height: inherit;
+        fill: currentColor;
+    }
 }

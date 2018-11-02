@@ -1,10 +1,6 @@
 $image-height: 200px;
 
 .resource-details {
-    .search-bar-container {
-        padding: $default-gap-size;
-        border-bottom: $default-gap-size / 4 solid $orange;
-    }
     .details-container {
         padding: $default-gap-size / 2;
         .resource-ancestors {

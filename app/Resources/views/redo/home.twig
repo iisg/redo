@@ -6,8 +6,6 @@
     <img class="banner"
         src="/files/images/banner.png">
 {% endblock %}
-{% block content %}
-    <div class="content home-page-content">
-        <search-bar metadata-subsets.bind="[{ids: 'tytul,opis', label: 'Tytuł, Opis'}]"></search-bar>
-    </div>
-{% endblock %}
+
+{% set search_bar_container_additional_classes = "home-page-search-bar-container" %}
+{% set display_bigger_search_bar = true %}

@@ -2,6 +2,7 @@
 @import "../../common/styles/variables";
 
 $bigger-then-regular-input-font-size: 18px;
+$radio-button-width-and-height: $default-gap-size;
 
 .search-bar {
   display: inline-block;
@@ -62,13 +63,12 @@ $bigger-then-regular-input-font-size: 18px;
         padding-left: $default-gap-size / 4;
         text-align: right;
         color: inherit;
-        .icon, span {
+        icon, span {
           margin-left: $default-gap-size / 4;
         }
-        .icon {
+        icon {
           color: $orange;
         }
-
       }
     }
   }
@@ -88,29 +88,25 @@ $bigger-then-regular-input-font-size: 18px;
     label {
       cursor: pointer;
       display: inline-block;
-      display: inline-flex;
-      align-items: center;
       &:not(:last-child) {
-        margin-right: $default-gap-size / 2;
+          margin-right: $default-gap-size / 2;
       }
       input[type=radio] {
-        display: none;
-        & + div {
-          display: inline-block;
-          width: $default-gap-size;
-          height: $default-gap-size;
-          vertical-align: middle;
-          border: 1px solid $orange;
-          border-radius: 50%;
-        }
-        &:checked + div {
-          background: $orange;
-          background: radial-gradient($orange 40%, transparent 40%);
-        }
-      }
-      span {
-        margin-left: $default-gap-size / 4;
-        vertical-align: middle;
+          display: none;
+          & + ::before {
+              display: inline-block;
+              width: $radio-button-width-and-height;
+              height: $radio-button-width-and-height;
+              margin-right: $default-gap-size / 4;
+              content: '';
+              vertical-align: calc((#{$capital-letter-of-the-default-font-height} - #{$radio-button-width-and-height}) / 2);
+              border: 1px solid $orange;
+              border-radius: 50%;
+          }
+          &:checked + ::before {
+              background: $orange;
+              background: radial-gradient($orange 40%, transparent 40%);
+          }
       }
     }
   }
