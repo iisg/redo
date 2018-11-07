@@ -123,7 +123,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
   }
 
   copyParentResourceToChildResource() {
-    if (this.parent) {
+    if (this.parent && !this.editing) {
       this.parent.kind.metadataList.forEach(v => {
         if (v.copyToChildResource) {
           this.resource.contents[v.id] = deepCopy(this.parent.contents[v.id]);
