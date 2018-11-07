@@ -1,14 +1,19 @@
 <?php
 namespace Repeka\Application\Twig;
 
+use Repeka\Application\Cqrs\CommandBusAware;
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\PrintableArray;
 
 /**
  * All Twig extensions that are not strictly connected to display strategies, but helps to achieve specific tasks in frontend.
  */
 class TwigFrontendExtension extends \Twig_Extension {
+    use CommandBusAware;
+
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
 
@@ -22,6 +27,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('ftsFacetFilterParam', [$this, 'ftsFacetFilterParam']),
             new \Twig_Function('isFilteringByFacet', [$this, 'isFilteringByFacet']),
             new \Twig_Function('icon', [$this, 'icon']),
+            new \Twig_Function('resources', [$this, 'fetchResources']),
         ];
     }
 
@@ -105,5 +111,30 @@ ICON;
         } else {
             return [];
         }
+    }
+
+    public function fetchResources(array $filters): iterable {
+        $builder = ResourceListQuery::builder();
+        if (array_key_exists('parentId', $filters)) {
+            if ($filters['parentId']) {
+                $builder->filterByParentId($filters['parentId']);
+            } else {
+                $builder->onlyTopLevel();
+            }
+        }
+        if (isset($filters['resourceClass'])) {
+            $filters['resourceClasses'] = [$filters['resourceClass']];
+        }
+        if (isset($filters['resourceClasses']) && $filters['resourceClasses']) {
+            $builder->filterByResourceClasses($filters['resourceClasses']);
+        }
+        if (isset($filters['resourceKindIds']) && $filters['resourceKindIds']) {
+            $builder->filterByResourceKinds($filters['resourceKindIds']);
+        }
+        return FirewallMiddleware::bypass(
+            function () use ($builder) {
+                return $this->handleCommand($builder->build());
+            }
+        );
     }
 }

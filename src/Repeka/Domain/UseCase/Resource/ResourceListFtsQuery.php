@@ -16,6 +16,8 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
     /** @var array */
     private $searchableMetadata = [];
     /** @var array */
+    private $metadataFilters;
+    /** @var array */
     private $resourceClasses = [];
     /** @var array */
     private $facetedMetadata = [];
@@ -30,6 +32,7 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
     public function __construct(
         string $phrase,
         array $searchableMetadata,
+        array $metadataFilters = [],
         array $resourceClasses = [],
         bool $resourceKindFacet = false,
         array $facetedMetadata = [],
@@ -40,6 +43,7 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
         parent::__construct($page, $resultsPerPage);
         $this->phrase = $phrase;
         $this->searchableMetadata = $searchableMetadata;
+        $this->metadataFilters = $metadataFilters;
         $this->resourceClasses = $resourceClasses;
         $this->resourceKindFacet = $resourceKindFacet;
         $this->facetedMetadata = $facetedMetadata;
@@ -57,6 +61,10 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
     /** @return Metadata[] */
     public function getSearchableMetadata(): array {
         return $this->searchableMetadata;
+    }
+
+    public function getMetadataFilters(): array {
+        return $this->metadataFilters;
     }
 
     public function getResourceClasses(): array {

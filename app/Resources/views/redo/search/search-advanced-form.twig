@@ -1,0 +1,37 @@
+{% extends "redo/layout.twig" %}
+
+{% set page_title = 'Wyszukiwanie zaawansowane' %}
+{% set display_bigger_search_bar = true %}
+
+{% block content %}
+    <div class="container-fluid advanced-filters">
+        <div class="form-group">
+            <h2>Wyszukiwanie zaawansowane</h2>
+        </div>
+        <form action=""
+            method="get">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label t="Parent resource">Zasób nadrzędny</label>
+                    {% for filterableMetadata in filterableMetadataList if filterableMetadata.id == -1 %}
+                        {% include 'redo/search/search-metadata-filter.twig' %}
+                    {% endfor %}
+                </div>
+                <div class="col-sm-4">
+                    {% for filterableMetadata in filterableMetadataList if filterableMetadata.id != -1 and filterableMetadata.control.value in ['relationship'] %}
+                        {% include 'redo/search/search-metadata-filter.twig' %}
+                    {% endfor %}
+                </div>
+                <div class="col-sm-4">
+                    {% for filterableMetadata in filterableMetadataList if filterableMetadata.control.value not in ['relationship'] %}
+                        {% include 'redo/search/search-metadata-filter.twig' %}
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="btn btn-orange"
+                t="Search">
+                Szukaj
+            </button>
+        </form>
+    </div>
+{% endblock %}

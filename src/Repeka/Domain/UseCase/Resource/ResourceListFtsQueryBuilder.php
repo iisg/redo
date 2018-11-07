@@ -20,11 +20,14 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
     private $resourceKindFacet = false;
     /** @var array */
     private $facetsFilters = [];
+    /** @var */
+    private $metadataFilters = [];
 
     public function build(): ResourceListFtsQuery {
         return new ResourceListFtsQuery(
             $this->phrase,
             $this->searchableMetadata,
+            $this->metadataFilters,
             $this->resourceClasses,
             $this->resourceKindFacet,
             $this->metadataFacets,
@@ -62,6 +65,11 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
 
     public function setFacetsFilters(array $facetsFilters): self {
         $this->facetsFilters = $facetsFilters;
+        return $this;
+    }
+
+    public function setMetadataFilters(array $metadataFilters): self {
+        $this->metadataFilters = $metadataFilters;
         return $this;
     }
 }

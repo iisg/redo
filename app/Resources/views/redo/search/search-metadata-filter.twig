@@ -1,0 +1,47 @@
+{% if filterableMetadata.control.value in ['text', 'textarea', 'display-strategy'] %}
+    <div class="form-group">
+        <label>{{ filterableMetadata.label.PL }}</label>
+        <input type="text"
+            class="form-control"
+            name="metadataFilters[{{ filterableMetadata.id }}]"
+            value="{{ app.request.query.all.metadataFilters[filterableMetadata.id] ?? '' }}">
+    </div>
+{% elseif filterableMetadata.id == -1 %}
+    <div class="form-group">
+        {% set parentFilters = app.request.query.all.metadataFilters[-1] ?? [] %}
+        {% for resource in resources({resourceClasses: searchableResourceClasses, parentId: null}) %}
+            <label class="label-with-checkbox">
+                <input type="checkbox"
+                    name="metadataFilters[-1][]"
+                    value="{{ resource.id }}"
+                    {% if resource.id in parentFilters %}checked{% endif %}>
+                <span>{{ resource|mLabel }}</span>
+            </label>
+            <div class="children">
+                {% for childResource in resources({parentId: resource.id}) %}
+                    <label class="label-with-checkbox">
+                        <input type="checkbox"
+                            name="metadataFilters[parent][]"
+                            value="{{ childResource.id }}"
+                            {% if childResource.id in parentFilters %}checked{% endif %}>
+                        <span>{{ childResource|mLabel }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+{% elseif filterableMetadata.control.value in ['relationship'] %}
+    <div class="form-group">
+        <label>{{ filterableMetadata.label.PL }}</label>
+        {% set relationshipFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? [] %}
+        {% for resource in resources({resourceKindIds: filterableMetadata.constraints.resourceKind, parentId: null}) %}
+            <label class="label-with-checkbox">
+                <input type="checkbox"
+                    name="metadataFilters[{{ filterableMetadata.id }}][]"
+                    value="{{ resource.id }}"
+                    {% if resource.id in relationshipFilters %}checked{% endif %}>
+                <span>{{ resource|mLabel }}</span>
+            </label>
+        {% endfor %}
+    </div>
+{% endif %}

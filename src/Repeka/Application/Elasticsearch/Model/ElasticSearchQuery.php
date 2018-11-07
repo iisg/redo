@@ -6,8 +6,8 @@ use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
-use Repeka\Domain\Utils\EntityUtils;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) it really has to use all of these Elastica helpers... */
 class ElasticSearchQuery {
@@ -20,9 +20,14 @@ class ElasticSearchQuery {
 
     public function getQuery(): Query {
         $boolQuery = new Query\BoolQuery();
-        $boolQuery->addMust($this->atLeastOneMetadataShouldMatchThePhrase());
+        if ($this->query->getPhrase()) {
+            $boolQuery->addMust($this->atLeastOneMetadataShouldMatchThePhrase());
+        }
         if ($this->query->getResourceClasses()) {
             $boolQuery->addFilter(new Query\Terms(FtsConstants::RESOURCE_CLASS, $this->query->getResourceClasses()));
+        }
+        if ($this->query->getMetadataFilters()) {
+            $boolQuery->addFilter($this->buildMetadataFilters());
         }
         $finalQuery = new Query($boolQuery);
         $finalQuery->setHighlight(['fields' => [FtsConstants::CONTENTS . '.*' => new \stdClass()]]);
@@ -65,13 +70,14 @@ class ElasticSearchQuery {
      * @return Query\Terms[]
      */
     private function createFacetFilters(): array {
-        $metadataFacets = EntityUtils::getLookupMap($this->query->getFacetedMetadata());
         $facetFilters = [];
-        foreach ($this->query->getFacetsFilters() as $aggregationName => $aggregationFilters) {
+        foreach ($this->query->getFacetsFilters() as $facetFilter) {
+            list($aggregationName, $aggregationFilters) = $facetFilter;
             if ($aggregationName == FtsConstants::KIND_ID) {
                 $filter = new Query\Terms($aggregationName, $aggregationFilters);
             } else {
-                $metadata = $metadataFacets[$aggregationName];
+                $metadata = $aggregationName;
+                $aggregationName = $metadata->getId();
                 $filter = new Query\Terms($this->getMetadataPath($metadata), $aggregationFilters);
             }
             $facetFilters[$aggregationName] = $filter;
@@ -127,5 +133,41 @@ class ElasticSearchQuery {
             $facetAggregations[] = $facetAggregation;
         }
         return $facetAggregations;
+    }
+
+    private function buildMetadataFilters(): Query\AbstractQuery {
+        $metadataFilters = new Query\BoolQuery();
+        foreach ($this->query->getMetadataFilters() as $filterDef) {
+            list($metadata, $filter) = $filterDef;
+            if (!$filter) {
+                continue;
+            }
+            if (!is_array($filter)) {
+                $filter = [$filter];
+            }
+            $metadataFilter = new Query\BoolQuery();
+            switch ($metadata->getControl()->getValue()) {
+                case MetadataControl::DISPLAY_STRATEGY:
+                case MetadataControl::TEXTAREA:
+                case MetadataControl::TEXT:
+                    foreach ($filter as $phrase) {
+                        $metadataFilter->addShould(
+                            [
+                                new Query\Fuzzy($this->getMetadataPath($metadata), $phrase),
+                                new Query\Match($this->getMetadataPath($metadata), $phrase),
+                            ]
+                        );
+                    }
+                    break;
+                default:
+                    $metadataFilter->addShould(
+                        [
+                            new Query\Terms($this->getMetadataPath($metadata), $filter),
+                        ]
+                    );
+            }
+            $metadataFilters->addMust($metadataFilter);
+        }
+        return $metadataFilters;
     }
 }

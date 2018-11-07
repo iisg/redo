@@ -26,7 +26,7 @@ class ResourceListFtsQueryValidatorTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceListFtsQuery::builder()
             ->setPhrase('Unicorn')
             ->setMetadataFacets([$this->createMetadataMock(1)])
-            ->setFacetsFilters([1 => [123]])
+            ->setFacetsFilters([[$this->createMetadataMock(), [123]]])
             ->build();
         $this->assertTrue($this->validator->isValid($query));
     }
@@ -35,7 +35,7 @@ class ResourceListFtsQueryValidatorTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceListFtsQuery::builder()
             ->setPhrase('Unicorn')
             ->setMetadataFacets([$this->createMetadataMock(1)])
-            ->setFacetsFilters([1 => ['123']])
+            ->setFacetsFilters([[$this->createMetadataMock(), ['123']]])
             ->build();
         $this->assertTrue($this->validator->isValid($query));
     }
@@ -44,7 +44,7 @@ class ResourceListFtsQueryValidatorTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceListFtsQuery::builder()
             ->setPhrase('Unicorn')
             ->setResourceKindFacet()
-            ->setFacetsFilters(['kindId' => ['123']])
+            ->setFacetsFilters([['kindId', ['123']]])
             ->build();
         $this->assertTrue($this->validator->isValid($query));
     }
@@ -53,16 +53,16 @@ class ResourceListFtsQueryValidatorTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceListFtsQuery::builder()
             ->setPhrase('Unicorn')
             ->setMetadataFacets([$this->createMetadataMock(1)])
-            ->setFacetsFilters([1 => 123])
+            ->setFacetsFilters([[1, 123]])
             ->build();
         $this->assertFalse($this->validator->isValid($query));
     }
 
-    public function testRejectsWhenFacetFilterValueIsNotAnInteger() {
+    public function testRejectsWhenFacetFilterValueIsNotMetadata() {
         $query = ResourceListFtsQuery::builder()
             ->setPhrase('Unicorn')
             ->setMetadataFacets([$this->createMetadataMock(1)])
-            ->setFacetsFilters([1 => ['unicorn']])
+            ->setFacetsFilters([[1, ['unicorn']]])
             ->build();
         $this->assertFalse($this->validator->isValid($query));
     }
@@ -71,17 +71,17 @@ class ResourceListFtsQueryValidatorTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceListFtsQuery::builder()
             ->setPhrase('Unicorn')
             ->setMetadataFacets([$this->createMetadataMock(1)])
-            ->setFacetsFilters([2 => [123]])
+            ->setFacetsFilters([[$this->createMetadataMock(2), [123]]])
             ->build();
         $this->assertFalse($this->validator->isValid($query));
     }
 
     public function testTellsWhichFacetIsForbidden() {
-        $this->expectExceptionMessage('unicorn');
+        $this->expectExceptionMessage('123');
         $query = ResourceListFtsQuery::builder()
             ->setPhrase('Unicorn')
             ->setMetadataFacets([$this->createMetadataMock(1)])
-            ->setFacetsFilters(['unicorn' => [123]])
+            ->setFacetsFilters([[$this->createMetadataMock(123), [123]]])
             ->build();
         $this->validator->validate($query);
     }
