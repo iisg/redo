@@ -74,7 +74,9 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
             ->setFacetsFilters(['tytul' => 'aaa'])
             ->build();
         $adjusted = $this->adjuster->adjustCommand($query);
-        $this->assertEquals([1 => 'aaa'], $adjusted->getFacetsFilters());
+        $this->assertCount(1, $adjusted->getFacetsFilters());
+        $this->assertEquals(1, $adjusted->getFacetsFilters()[0][0]->getId());
+        $this->assertEquals('aaa', $adjusted->getFacetsFilters()[0][1]);
     }
 
     public function testLeavesKindIdFacetFilters() {
@@ -83,6 +85,10 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
             ->setFacetsFilters(['tytul' => 'aaa', 'kindId' => 'bbb'])
             ->build();
         $adjusted = $this->adjuster->adjustCommand($query);
-        $this->assertEquals([1 => 'aaa', 'kindId' => 'bbb'], $adjusted->getFacetsFilters());
+        $this->assertCount(2, $adjusted->getFacetsFilters());
+        $this->assertEquals(1, $adjusted->getFacetsFilters()[0][0]->getId());
+        $this->assertEquals('aaa', $adjusted->getFacetsFilters()[0][1]);
+        $this->assertEquals('kindId', $adjusted->getFacetsFilters()[1][0]);
+        $this->assertEquals('bbb', $adjusted->getFacetsFilters()[1][1]);
     }
 }

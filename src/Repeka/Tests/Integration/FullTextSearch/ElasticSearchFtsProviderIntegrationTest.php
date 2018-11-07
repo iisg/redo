@@ -70,7 +70,9 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
 
     public function testSearchOnlyInGivenResourceClasses() {
         $resultsAll = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('i', [SystemMetadata::RESOURCE_LABEL]));
-        $resultsInBooks = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('i', [SystemMetadata::RESOURCE_LABEL], ['books']));
+        $resultsInBooks = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('i', [SystemMetadata::RESOURCE_LABEL], [], ['books'])
+        );
         $this->assertLessThan(count($resultsAll), count($resultsInBooks));
         $ids = EntityUtils::mapToIds($resultsInBooks);
         $this->assertContains($this->phpAndMySQLBookResource->getId(), $ids);
@@ -79,7 +81,12 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     public function testSearchWithPagination() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('PHP', [SystemMetadata::RESOURCE_LABEL], [], false, [], [], 1, 1)
+            ResourceListFtsQuery::builder()
+                ->setPhrase('PHP')
+                ->setSearchableMetadata([SystemMetadata::RESOURCE_LABEL])
+                ->setPage(1)
+                ->setResultsPerPage(1)
+                ->build()
         );
         $this->assertCount(1, $results);
         $this->assertEquals(2, $results->getTotalHits());
@@ -90,7 +97,12 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     public function testQueryTheSecondPage() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('PHP', [SystemMetadata::RESOURCE_LABEL], [], false, [], [], 2, 1)
+            ResourceListFtsQuery::builder()
+                ->setPhrase('PHP')
+                ->setSearchableMetadata([SystemMetadata::RESOURCE_LABEL])
+                ->setPage(2)
+                ->setResultsPerPage(1)
+                ->build()
         );
         $this->assertCount(1, $results);
         $this->assertEquals(2, $results->getTotalHits());
@@ -116,7 +128,9 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $powiazanaKsiazka = $this->findMetadataByName('powiazanaKsiazka');
         $phpIMysqlId = $this->findResourceByContents(['tytul' => 'PHP i MySQL'])->getId();
         /** @var ResultSet $results */
-        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('php python', ['tytul'], [], true, ['powiazanaKsiazka']));
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('php python', ['tytul'], [], [], true, ['powiazanaKsiazka'])
+        );
         $kindIdAggregations = $this->extractAggregation($results, 'kindId');
         $this->assertEquals([['key' => 1, 'doc_count' => 2], ['key' => 2, 'doc_count' => 1]], $kindIdAggregations);
         $powiazanaKsiazkaAggregations = $this->extractAggregation($results, $powiazanaKsiazka->getId());
@@ -128,7 +142,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $phpIMysqlId = $this->findResourceByContents(['tytul' => 'PHP i MySQL'])->getId();
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('php python', ['tytul'], [], true, ['powiazanaKsiazka'], ['powiazanaKsiazka' => [$phpIMysqlId]])
+            new ResourceListFtsQuery('php python', ['tytul'], [], [], true, ['powiazanaKsiazka'], ['powiazanaKsiazka' => [$phpIMysqlId]])
         );
         $this->assertCount(1, $results);
         $kindIdAggregations = $this->extractAggregation($results, 'kindId');
@@ -141,7 +155,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $powiazanaKsiazka = $this->findMetadataByName('powiazanaKsiazka');
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('php python', ['tytul'], [], true, ['powiazanaKsiazka'], ['kindId' => [2]])
+            new ResourceListFtsQuery('php python', ['tytul'], [], [], true, ['powiazanaKsiazka'], ['kindId' => [2]])
         );
         $this->assertCount(1, $results);
         $kindIdAggregations = $this->extractAggregation($results, 'kindId');
@@ -158,10 +172,60 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
                 'php python',
                 ['tytul'],
                 [],
+                [],
                 true,
                 ['powiazanaKsiazka'],
                 ['kindId' => [1], 'powiazanaKsiazka' => [$phpIMysqlId]]
             )
+        );
+        $this->assertCount(1, $results);
+    }
+
+    public function testFilteringByTextMetadata() {
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('php', ['tytul'], ['tytul' => 'można'])
+        );
+        $this->assertCount(1, $results);
+    }
+
+    public function testFilteringByParentMetadata() {
+        $ebooks = $this->findResourceByContents(['Nazwa kategorii' => 'E-booki']);
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('php', ['tytul'], [SystemMetadata::PARENT => $ebooks->getId()])
+        );
+        $this->assertEmpty($results);
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('webpacka', ['tytul'], [SystemMetadata::PARENT => $ebooks->getId()])
+        );
+        $this->assertCount(1, $results);
+    }
+
+    public function testFilteringByRelationshipMetadata() {
+        /** @var ResultSet $results */
+        $this->assertEmpty(
+            $this->handleCommandBypassingFirewall(
+                new ResourceListFtsQuery('php', ['tytul'], ['skanista' => 2])
+            )
+        );
+        $this->assertCount(
+            2,
+            $this->handleCommandBypassingFirewall(
+                new ResourceListFtsQuery('php', ['tytul'], ['skanista' => 4])
+            )
+        );
+    }
+
+    public function testFilteringByManyMetadata() {
+        $ebooks = $this->findResourceByContents(['Nazwa kategorii' => 'E-booki']);
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('webpacka', ['tytul'], [SystemMetadata::PARENT => $ebooks->getId(), 'tytul' => 'npma'])
+        );
+        $this->assertEmpty($results);
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('webpacka', ['tytul'], [SystemMetadata::PARENT => $ebooks->getId(), 'tytul' => 'użyć'])
         );
         $this->assertCount(1, $results);
     }

@@ -5,7 +5,6 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceListFtsQueryAdjuster implements CommandAdjuster {
     /** @var MetadataRepository */
@@ -23,10 +22,11 @@ class ResourceListFtsQueryAdjuster implements CommandAdjuster {
         return new ResourceListFtsQuery(
             $query->getPhrase(),
             $this->replaceMetadataNamesOrIdsWithMetadata($query->getSearchableMetadata()),
+            $this->adjustMetadataFilters($query->getMetadataFilters()),
             $query->getResourceClasses(),
             $query->hasResourceKindFacet(),
             $this->replaceMetadataNamesOrIdsWithMetadata($query->getFacetedMetadata()),
-            $this->adjustFacetsFilters($query->getFacetsFilters()),
+            $this->adjustMetadataFilters($query->getFacetsFilters()),
             $query->getPage(),
             $query->getResultsPerPage()
         );
@@ -44,16 +44,22 @@ class ResourceListFtsQueryAdjuster implements CommandAdjuster {
         return $metadata;
     }
 
-    private function adjustFacetsFilters(array $facetsFilters): array {
+    private function adjustMetadataFilters(array $facetsFilters): array {
         $kindIdFilter = $facetsFilters['kindId'] ?? false;
         unset($facetsFilters['kindId']);
         $metadataNamesOrIds = array_keys($facetsFilters);
         $filters = array_values($facetsFilters);
-        $metadataIds = EntityUtils::mapToIds($this->replaceMetadataNamesOrIdsWithMetadata($metadataNamesOrIds));
+        $metadataList = $this->replaceMetadataNamesOrIdsWithMetadata($metadataNamesOrIds);
+        $filters = array_map(
+            function (Metadata $metadata, $filter) {
+                return [$metadata, $filter];
+            },
+            $metadataList,
+            $filters
+        );
         if ($kindIdFilter) {
-            $metadataIds[] = 'kindId';
-            $filters[] = $kindIdFilter;
+            $filters[] = ['kindId', $kindIdFilter];
         }
-        return array_combine($metadataIds, $filters);
+        return $filters;
     }
 }

@@ -53,9 +53,10 @@ repeka:
     /resources/{resourceId}:
       metadata: detailsPage
     /search/{phrase}:
-      template: redo/search-results.twig
+      template: redo/search/search-results-page.twig
       fts:
         searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
+        filterable_metadata_ids: [tytul, parent, skanista, nadzorujacy]
         searchable_resource_classes: [books]
         facets: [kindId, skanista, nadzorujacy, powiazanaKsiazka]
 m6_statsd:

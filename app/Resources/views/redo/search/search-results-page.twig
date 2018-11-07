@@ -1,0 +1,5 @@
+{% if results is defined %}
+    {% include 'redo/search/search-results.twig' %}
+{% else %}
+    {% include 'redo/search/search-advanced-form.twig' %}
+{% endif %}

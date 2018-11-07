@@ -18,30 +18,39 @@
                 local-storage-value="key: 'leftPanelToggled'; value.bind: collapsed"></icon>
             <div class="facets">
                 {% for aggregationName, aggregation in results.aggregations if aggregation.buckets.0[aggregationName].buckets %}
-                    <strong>{{aggregationName == 'kindId' ? aggregationName : metadata(aggregationName).label.PL}}</strong>
+                    <strong>{{ aggregationName == 'kindId' ? aggregationName : metadata(aggregationName).label.PL }}</strong>
                     {% for bucket in aggregation.buckets.0[aggregationName].buckets %}
-                        <a href="{{path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key, app.request.query.all.facetFilters ?? [])}))}}">
+                        <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key, app.request.query.all.facetFilters ?? [])})) }}">
                             <label class="label-with-checkbox">
                                 <input type="checkbox"
                                     {% if isFilteringByFacet(aggregationName, bucket.key, app.request.query.all.facetFilters ?? []) %}
-                                        checked
+                                checked
                                     {% endif %}>
-                                <span>{{aggregationName == 'kindId' ? resourceKind(bucket.key).label.PL : r(bucket.key) | mLabel}} ({{bucket.doc_count}})</span>
+                                <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label.PL : r(bucket.key) | mLabel }} ({{ bucket.doc_count }})</span>
                             </label>
                         </a>
                     {% endfor %}
                 {% endfor %}
             </div>
+            <div class="advanced-filters">
+                <form action=""
+                    method="get">
+                    {% for filterableMetadata in filterableMetadataList %}
+                        {% include 'redo/search/search-metadata-filter.twig' %}
+                    {% endfor %}
+                    <button class="btn btn-block btn-orange">Filtruj</button>
+                </form>
+            </div>
         </div>
         <div class="search-results">
-            <h1>Wyniki wyszukiwania ({{results | length}})</h1>
+            <h1>Wyniki wyszukiwania ({{ results | length }})</h1>
             {% for result in results %}
                 {% set resource = result.data.contents | ftsContentsToResource %}
                 <div class="search-result">
                     <icon name="document"
                         size="1.5"></icon>
                     <div class="details">
-                        <h3><a href="/resources/{{result.id}}">{{ resource | mLabel }} (#{{result.id}})</a></h3>
+                        <h3><a href="/resources/{{ result.id }}">{{ resource | mLabel }} (#{{ result.id }})</a></h3>
                         <div class="highlights">
                             {% for fieldName, highlights in result.highlights %}
                                 {% for highlight in highlights %}

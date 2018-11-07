@@ -4,7 +4,7 @@ export class SearchBar {
   @bindable displayAsSmaller = false;
   @bindable phrase = '';
   @bindable url = '/search/%s';
-  @bindable advancedSearchUrl = '/advanced-search';
+  @bindable advancedSearchUrl = '/search';
   @bindable metadataSubsets;
   @bindable selectedMetadataSubsetIds = '*';
 

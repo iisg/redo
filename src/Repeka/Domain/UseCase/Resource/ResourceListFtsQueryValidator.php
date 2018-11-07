@@ -2,6 +2,7 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\CommandAttributesValidator;
@@ -15,17 +16,34 @@ class ResourceListFtsQueryValidator extends CommandAttributesValidator {
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('facetsFilters', Validator::arrayType()->each(Validator::arrayType()->each(Validator::numericVal())))
+            ::attribute(
+                'facetsFilters',
+                Validator::arrayType()->each(
+                    Validator::arrayType()->keySet(
+                        Validator::key(0, Validator::anyOf(Validator::equals('kindId'), Validator::instance(Metadata::class))),
+                        Validator::key(1, Validator::arrayType())
+                    )
+                )
+            )
             ->attribute('facetsFilters', Validator::callback($this->allowOnlyWhitelistedFacetFilters($command)));
     }
 
     private function allowOnlyWhitelistedFacetFilters(ResourceListFtsQuery $command): callable {
         return function (array $filters) use ($command) {
-            $filteredKeys = array_keys($filters);
             $allowedKeys = EntityUtils::mapToIds($command->getFacetedMetadata());
             if ($command->hasResourceKindFacet()) {
                 $allowedKeys[] = 'kindId';
             }
+            $filteredKeys = array_map(
+                function ($filter) {
+                    list($aggregationName,) = $filter;
+                    if ($aggregationName instanceof Metadata) {
+                        $aggregationName = $aggregationName->getId();
+                    }
+                    return $aggregationName;
+                },
+                $filters
+            );
             $forbiddenKeys = array_diff($filteredKeys, $allowedKeys);
             if ($forbiddenKeys) {
                 throw new DomainException(
