@@ -14,12 +14,12 @@ describe('Metadata Type Tests', function() {
 
 	    var nameField = element(by.id('username'));
 	    var passwordField = element(by.id('password'));
-	    var loginIcons = element.all(by.className('login-box-icon'));
+	    var loginIcon = element(by.className('submit-button'));
 	    nameField.clear();
 		passwordField.clear();
 		nameField.sendKeys('admin');
 	    passwordField.sendKeys('admin');
-	    loginIcons.get(2).click();
+	    loginIcon.click();
   });
 
   beforeEach(function() {
