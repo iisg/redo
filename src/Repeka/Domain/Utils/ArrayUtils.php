@@ -78,4 +78,13 @@ final class ArrayUtils {
         $values = array_fill(0, count($keys), $value);
         return array_combine($keys, $values);
     }
+
+    /**
+     * Behaves like range function, but result is always ascending.
+     * PHP function has arguably incorrect behavior:
+     * range(4, 2), or even range(4, 2, 1) with explicit positive step, returns [4,3,2] instead of [].
+     */
+    public static function rangeAscending($start, $endInclusive): array {
+        return $start <= $endInclusive ? range($start, $endInclusive) : [];
+    }
 }
