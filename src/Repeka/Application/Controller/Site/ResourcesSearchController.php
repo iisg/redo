@@ -5,6 +5,7 @@ use Assert\Assertion;
 use Elastica\ResultSet;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
+use Repeka\Application\Twig\Paginator;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\Utils\EntityUtils;
@@ -16,9 +17,12 @@ class ResourcesSearchController extends Controller {
 
     /** @var MetadataRepository */
     private $metadataRepository;
+    private $paginator;
+    private $resultsPerPage = 10;
 
-    public function __construct(MetadataRepository $metadataRepository) {
+    public function __construct(MetadataRepository $metadataRepository, Paginator $paginator) {
         $this->metadataRepository = $metadataRepository;
+        $this->paginator = $paginator;
     }
 
     public function searchResourcesAction(
@@ -40,15 +44,22 @@ class ResourcesSearchController extends Controller {
             $metadataFilters = array_intersect_key($metadataFilters, array_combine($filterableMetadataIds, $filterableMetadataIds));
         }
         if ($phrase || $metadataFilters) {
-            $results = $this->fetchSearchResults($ftsConfig, $request, $metadataFilters, $phrase);
+            $page = intval($request->get('page', 1));
+            if ($page < 1) {
+                $page = 1;
+            }
+            $results = $this->fetchSearchResults($ftsConfig, $request, $metadataFilters, $phrase, $page);
             $responseData['results'] = $results;
+            $totalPages = intval(ceil($results->getTotalHits() / $this->resultsPerPage));
+            $pagination = $this->paginator->paginate($page, $totalPages);
+            $responseData['pagination'] = $pagination;
         }
         $response = $this->render($template, $responseData);
         $response->headers->add($headers);
         return $response;
     }
 
-    private function fetchSearchResults(array $ftsConfig, Request $request, array $metadataFilters, string $phrase): ResultSet {
+    private function fetchSearchResults(array $ftsConfig, Request $request, array $metadataFilters, string $phrase, int $page): ResultSet {
         $facetsFilters = array_map(
             function ($filter) {
                 return explode(',', $filter);
@@ -69,6 +80,8 @@ class ResourcesSearchController extends Controller {
             ->setMetadataFacets(array_diff($facets, [FtsConstants::KIND_ID]))
             ->setFacetsFilters($facetsFilters)
             ->setMetadataFilters($metadataFilters)
+            ->setPage($page)
+            ->setResultsPerPage($this->resultsPerPage)
             ->build();
         /** @var ResultSet $results */
         $results = $this->handleCommand($query);

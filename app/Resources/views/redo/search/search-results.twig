@@ -20,7 +20,7 @@
                 {% for aggregationName, aggregation in results.aggregations if aggregation.buckets.0[aggregationName].buckets %}
                     <strong>{{ aggregationName == 'kindId' ? aggregationName : metadata(aggregationName).label.PL }}</strong>
                     {% for bucket in aggregation.buckets.0[aggregationName].buckets %}
-                        <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key, app.request.query.all.facetFilters ?? [])})) }}">
+                        <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key, app.request.query.all.facetFilters ?? []), 'page': 1})) }}">
                             <label class="label-with-checkbox">
                                 <input type="checkbox"
                                     {% if isFilteringByFacet(aggregationName, bucket.key, app.request.query.all.facetFilters ?? []) %}
@@ -43,24 +43,31 @@
             </div>
         </div>
         <div class="search-results">
-            <h1>Wyniki wyszukiwania ({{ results | length }})</h1>
-            {% for result in results %}
-                {% set resource = result.data.contents | ftsContentsToResource %}
-                <div class="search-result">
-                    <icon name="document"
-                        size="1.5"></icon>
-                    <div class="details">
-                        <h3><a href="/resources/{{ result.id }}">{{ resource | mLabel }} (#{{ result.id }})</a></h3>
-                        <div class="highlights">
-                            {% for fieldName, highlights in result.highlights %}
-                                {% for highlight in highlights %}
-                                    <p>{{ highlight | raw }}</p>
+            {% if results|length == 0 %}
+                <h1>Brak wyników.</h1>
+            {% else %}
+                <h1>Wyniki wyszukiwania ({{ results | length }})</h1>
+                {% for result in results %}
+                    {% set resource = result.data.contents | ftsContentsToResource %}
+                    <div class="search-result">
+                        <icon name="document"
+                            size="1.5"></icon>
+                        <div class="details">
+                            <h3><a href="/resources/{{ result.id }}">{{ resource | mLabel }} (#{{ result.id }})</a></h3>
+                            <div class="highlights">
+                                {% for fieldName, highlights in result.highlights %}
+                                    {% for highlight in highlights %}
+                                        <p>{{ highlight | raw }}</p>
+                                    {% endfor %}
                                 {% endfor %}
-                            {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            {% endif %}
+            {% if pagination is not empty %}
+                {%  include 'redo/pagination.twig' %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
