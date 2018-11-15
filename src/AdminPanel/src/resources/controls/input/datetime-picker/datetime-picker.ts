@@ -5,7 +5,10 @@ import "eonasdan-bootstrap-datetimepicker";
 import {twoWay} from "../../../../common/components/binding-mode";
 import {isString} from "../../../../common/utils/object-utils";
 import * as moment from "moment";
+import {ChangeEvent} from "../../../../common/change-event";
+import {autoinject} from "aurelia-dependency-injection";
 
+@autoinject
 export class DatetimePicker implements ComponentAttached {
   @bindable dateMode: DateMode;
   @bindable rangeDateMode: DateMode;
@@ -14,6 +17,10 @@ export class DatetimePicker implements ComponentAttached {
   @bindable flexible: boolean = false;
   datepicker: Element;
   linkedDatepicker: Element;
+  private isLoaded = false;
+
+  constructor(private element: Element) {
+  }
 
   attached() {
     if (!this.flexible) {
@@ -26,6 +33,7 @@ export class DatetimePicker implements ComponentAttached {
     setTimeout(() => {
       this.createDateTimePickers();
       this.valueChanged();
+      this.isLoaded = true;
     });
   }
 
@@ -44,7 +52,10 @@ export class DatetimePicker implements ComponentAttached {
     let dateData = new FlexibleDateContent();
     dateData.mode = this.dateMode;
     $(this.datepicker).on('dp.change', e => {
-      const inputDate = e.date;
+      if (!this.isLoaded) {
+        return;
+      }
+      const inputDate: moment.Moment = e.date;
       if (!this.flexible) {
         this.value = inputDate.format();
       } else {
@@ -52,6 +63,7 @@ export class DatetimePicker implements ComponentAttached {
         dateData.to = inputDate.format();
         this.value = dateData;
       }
+      this.element.dispatchEvent(ChangeEvent.newInstance());
     });
   }
 
@@ -60,16 +72,24 @@ export class DatetimePicker implements ComponentAttached {
     dateData.mode = this.dateMode;
     dateData.rangeMode = this.rangeDateMode;
     $(this.datepicker).on('dp.change', e => {
+      if (!this.isLoaded) {
+        return;
+      }
       const inputDate = e.date;
       $(this.linkedDatepicker).data("DateTimePicker").minDate(inputDate);
       dateData.from = inputDate.format();
       this.value = dateData;
+      this.element.dispatchEvent(ChangeEvent.newInstance());
     });
     $(this.linkedDatepicker).on('dp.change', e => {
+      if (!this.isLoaded) {
+        return;
+      }
       const inputDate = e.date;
       $(this.datepicker).data('DateTimePicker').maxDate(e.date);
       dateData.to = inputDate.format();
       this.value = dateData;
+      this.element.dispatchEvent(ChangeEvent.newInstance());
     });
   }
 
