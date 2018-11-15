@@ -58,6 +58,7 @@ System.config({
     "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.15.0",
     "eonasdan-bootstrap-datetimepicker": "npm:eonasdan-bootstrap-datetimepicker@4.17.47",
     "fetch": "github:github/fetch@1.1.1",
+    "focus-within": "npm:focus-within@2.0.0",
     "jodit": "npm:jodit@3.2.10",
     "jquery": "npm:jquery@3.2.1",
     "jquery.fancytree": "npm:jquery.fancytree@2.29.1",

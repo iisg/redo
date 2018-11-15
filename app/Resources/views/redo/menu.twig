@@ -1,35 +1,37 @@
 <div class="site-menu">
     <div>
-        <a class="isActive() ? 'active' : ''"
-            href="/">
+        <a class="{{ urlMatches('/#', '/search') ? 'active' : '' }}" href="/">
             {{ icon('search', 1.5) }}
             <span>Szukaj</span>
         </a>
-        <a class="isActive() ? 'active' : ''"
-            href="/resources">
+        <a class="{{ urlMatches('/resources') ? 'active' : '' }}" href="/resources">
             {{ icon('folder', 1.5) }}
             <span>Przeglądaj</span>
         </a>
-        <a class="isActive() ? 'active' : ''"
-            href="/for-authors">
+        <a class="{{ urlMatches('/for-authors') ? 'active' : '' }}" href="/for-authors">
             {{ icon('edit', 1.5) }}
             <span>Dla autorów</span>
         </a>
     </div>
-    <div>
+    <div class="right-aligned {{ app.user ? 'contains-submenu' : '' }}">
         {% if app.user %}
-            <a href="/me">
-                {{ icon('user-2', 1.5) }}
-                <span>{{ app.user.username }}</span>
-            </a>
-            <a href="/admin">
-                {{ icon('created', 1.5) }}
-                <span>Panel administracyjny</span>
-            </a>
-            <a href="/logout">
-                {{ icon('logout', 1.5) }}
-                <span>Wyloguj</span>
-            </a>
+            <div class="button-with-submenu with-submenu-on-the-left">
+                <button class="{{ urlMatches('/user') ? 'active' : '' }}"
+                    data-toggle="dropdown">
+                    {{ icon('user-2', 1.5) }}
+                    <span>{{ app.user.username }}</span>
+                </button>
+                <div>
+                    <a href="/admin">
+                        {{ icon('created', 1.5) }}
+                        <span>Panel administracyjny</span>
+                    </a>
+                    <a href="/logout">
+                        {{ icon('logout', 1.5) }}
+                        <span>Wyloguj</span>
+                    </a>
+                </div>
+            </div>
         {% else %}
             <a href="/login">
                 {{ icon('user-2', 1.5) }}

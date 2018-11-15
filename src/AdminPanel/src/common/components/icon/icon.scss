@@ -16,6 +16,8 @@ icon, .icon {
     }
 
     & > svg {
+        display: none; // Used to temporarily hide icons on Internet Explorer because it does not support this way of displaying them.
+        display: initial; //
         height: inherit;
         fill: currentColor;
     }
