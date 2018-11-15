@@ -1,35 +1,172 @@
+$maximum-number-of-elements: 25;
+$background-color: $very-light-grey;
+$submenu-z-index: 1;
+$phone-screen-width: 420px;
+$menu-item-top-and-bottom-padding: $default-gap-size / 2;
+$icon-width-and-height: 1.5em;
+$icon-top-and-bottom-margin: $default-gap-size / 8;
+$icon-left-and-right-margin: $default-gap-size / 4;
+$negative-menu-item-height: calc(-#{2 * $menu-item-top-and-bottom-padding} - #{2 * $icon-top-and-bottom-margin} - #{$icon-width-and-height});
+$folding-animation-duration: 4 * $default-transition-duration;
+$folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+
+%submenu-on-the-right {
+  left: 100%;
+  right: auto;
+}
+%submenu-on-the-left {
+  left: auto;
+  right: 100%;
+}
+
 .site-menu {
   display: flex;
   flex-wrap: wrap-reverse;
-  background-color: $very-light-grey;
+  background-color: $background-color;
   & > div {
     display: inherit;
     flex-wrap: wrap-reverse;
-    counter-reset: section;
-    &:last-child {
+    flex-direction: row-reverse;
+    &.right-aligned {
       margin-left: auto;
+      & + .right-aligned {
+        margin-left: initial;
+      }
+      & > .button-with-submenu {
+        &:not(.with-submenu-on-the-right) > div:not(.dropdown-backdrop) {
+          right: 0;
+        }
+        .button-with-submenu {
+          &:not(.with-submenu-on-the-right) > div:not(.dropdown-backdrop) {
+            @extend %submenu-on-the-left;
+          }
+          &.with-submenu-on-the-right > div:not(.dropdown-backdrop) {
+            @extend %submenu-on-the-right;
+          }
+        }
+      }
+    }
+    &:not(.right-aligned) {
+      & > .button-with-submenu .button-with-submenu {
+        &:not(.with-submenu-on-the-left) > div:not(.dropdown-backdrop) {
+          @extend %submenu-on-the-right;
+        }
+        &.with-submenu-on-the-left > div:not(.dropdown-backdrop) {
+          @extend %submenu-on-the-left;
+        }
+      }
+    }
+    & > .button-with-submenu {
+      & > div:not(.dropdown-backdrop) {
+        top: 100%;
+      }
+      .button-with-submenu > div:not(.dropdown-backdrop) {
+        top: 0;
+      }
+    }
+    @for $index from 1 to $maximum-number-of-elements {
+      & > :nth-child(#{$index}) {
+        order: -#{$index};
+      }
+    }
+    a, button {
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      justify-content: center;
+      padding: $menu-item-top-and-bottom-padding 3 * $default-gap-size / 4;
+      text-decoration: none;
+      text-align: center;
+      color: $blue;
+      transition: box-shadow $default-transition-duration;
+      &:hover, &:focus, &.active {
+        box-shadow: inset 0 #{-$default-gap-size / 4} 0 0 $blue;
+      }
+      & > * {
+        margin: $icon-top-and-bottom-margin $icon-left-and-right-margin;
+      }
+      .icon {
+        flex-shrink: 0;
+      }
+    }
+    .button-with-submenu {
+      position: relative;
+      white-space: nowrap;
+      &:not(.open):not(:hover) > button:focus + div,
+      &:not(:hover):not(:focus-within):not([focus-within]) > div {
+          visibility: hidden;
+        }
+        &.open > .dropdown-backdrop {
+          display: none;
+      }
+      &:hover, &:focus-within, &[focus-within] {
+        & > a, & > button {
+          box-shadow: inset 0 #{-$default-gap-size / 4} 0 0 $blue;
+        }
+        & > div {
+          display: flex;
+        }
+      }
+      & > div:not(.dropdown-backdrop) {
+        transition: none;
+        z-index: $submenu-z-index;
+        position: absolute;
+        flex-direction: column;
+        background-color: $background-color;
+      }
+      a, button {
+        justify-content: flex-start;
+      }
+      button {
+        width: 100%;
+        background: none;
+        border: none;
+        outline: none;
+      }
     }
   }
-  a {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    padding: $default-gap-size / 2 $default-gap-size;
-    text-decoration: none;
-    text-align: center;
-    color: $blue;
-    transition: box-shadow $default-transition-duration;
-    &:hover, &:focus, &.active {
-      box-shadow: inset 0 #{-$default-gap-size / 4} 0 0 $blue;
-    }
-    & > * {
-      margin: $default-gap-size / 8;
-    }
-    .icon {
-      flex-shrink: 0;
+
+  @media (max-width: $phone-screen-width) {
+    & > div {
+      &.contains-submenu {
+        width: 100%;
+      }
+      .button-with-submenu {
+        width: 100%;
+        & > div:not(.dropdown-backdrop) {
+          position: static;
+          display: flex;
+          visibility: visible;
+          padding-left: calc(#{$icon-width-and-height} + #{2 * $icon-left-and-right-margin});
+          overflow: hidden;
+          transition: visibility $folding-animation-duration;
+          & > * {
+            z-index: $submenu-z-index;
+            margin-top: 0;
+            background-color: $background-color;
+            transition: margin-top $folding-animation-duration;
+            transition-timing-function: $folding-animation-timing-function;
+          }
+        }
+        &:not(.open):not(:hover) > button:focus + div,
+        &:not(:hover):not(:focus-within):not([focus-within]) > div {
+          visibility: hidden;
+          & > * {
+            margin-top: $negative-menu-item-height;
+          }
+        }
+        &:not(.open):hover:not(:focus-within):not([focus-within]) > div,
+        &:not(.open) > button:focus + div {
+          visibility: hidden;
+          & > * {
+            margin-top: $negative-menu-item-height;
+          }
+        }
+        &.open:not(:hover):not(:focus-within):not([focus-within]) > div:not(.dropdown-backdrop) {
+          display: flex;
+          visibility: visible;
+        }
+      }
     }
   }
 }
-
-

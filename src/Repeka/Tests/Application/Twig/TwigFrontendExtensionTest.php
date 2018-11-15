@@ -4,16 +4,21 @@ namespace Repeka\Tests\Application\Upload;
 use Repeka\Application\Twig\TwigFrontendExtension;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Tests\Traits\StubsTrait;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 
 class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
+    /** @var ResourceKindRepository|\PHPUnit_Framework_MockObject_MockObject */
+    private $resourceKindRepository;
     /** @var TwigFrontendExtension */
     private $extension;
 
     /** @before */
     public function init() {
-        $this->extension = new TwigFrontendExtension($this->createMock(ResourceKindRepository::class));
+        $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
+        $this->extension = new TwigFrontendExtension($this->createMock(RequestStack::class), $this->resourceKindRepository);
     }
 
     public function testCheckingFacetFilter() {
@@ -47,6 +52,37 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
             $this->assertEquals(
                 $expected,
                 $this->extension->ftsFacetFilterParam($aggregationName, $filterValue, $filters)
+            );
+        }
+    }
+
+    public function testMatchingUrls() {
+        $requestStack = $this->createMock(RequestStack::class);
+        foreach ([
+                    [null, ['/'], false],
+                    [false, ['/#'], false],
+                    ['/resources', [], false],
+                    ['/', ['/#', '/search'], true],
+                    ['/search/1', ['/#', '/search'], true],
+                    ['/search/1/2', ['/#', '/search'], true],
+                    ['/resources', ['/#', '/search'], false],
+                    ['/resources/123', ['/resources/123'], true],
+                    ['/resources/1234', ['/resources/123'], true],
+                    ['/resources/123/4', ['/resources/123'], true],
+                    ['/resources', ['/resources/123'], false],
+                 ] as $testCase) {
+            list($requestUri, $urls, $expected) = $testCase;
+            $requestStack->expects($this->atLeastOnce())
+                ->method('getCurrentRequest')
+                ->willReturnCallback(
+                    function () use (&$requestUri) {
+                        return $requestUri ? Request::create($requestUri) : null;
+                    }
+                );
+            $extension = new TwigFrontendExtension($requestStack, $this->resourceKindRepository);
+            $this->assertEquals(
+                $expected,
+                $extension->urlMatches(...$urls)
             );
         }
     }

@@ -7,6 +7,8 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\PrintableArray;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * All Twig extensions that are not strictly connected to display strategies, but helps to achieve specific tasks in frontend.
@@ -14,10 +16,14 @@ use Repeka\Domain\Utils\PrintableArray;
 class TwigFrontendExtension extends \Twig_Extension {
     use CommandBusAware;
 
+    /** @var string */
+    private $currentUri;
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
 
-    public function __construct(ResourceKindRepository $resourceKindRepository) {
+    public function __construct(RequestStack $requestStack, ResourceKindRepository $resourceKindRepository) {
+        $request = $requestStack->getCurrentRequest();
+        $this->currentUri = $request ? $request->getRequestUri() : null;
         $this->resourceKindRepository = $resourceKindRepository;
     }
 
@@ -28,6 +34,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('isFilteringByFacet', [$this, 'isFilteringByFacet']),
             new \Twig_Function('icon', [$this, 'icon']),
             new \Twig_Function('resources', [$this, 'fetchResources']),
+            new \Twig_Function('urlMatches', [$this, 'urlMatches'])
         ];
     }
 
@@ -136,5 +143,19 @@ ICON;
                 return $this->handleCommand($builder->build());
             }
         );
+    }
+
+    public function urlMatches(string ...$urls): bool {
+        foreach ($urls as $url) {
+            $urlLength = strlen($url);
+            if (substr($url, $urlLength - 1) == '#') {
+                if ($this->currentUri == substr($url, 0, $urlLength - 1)) {
+                    return true;
+                }
+            } elseif (substr($this->currentUri, 0, $urlLength) == $url) {
+                return true;
+            }
+        }
+        return false;
     }
 }
