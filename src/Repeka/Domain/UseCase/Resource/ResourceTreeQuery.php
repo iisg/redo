@@ -2,12 +2,15 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AdjustableCommand;
+use Repeka\Domain\Cqrs\RequireOperatorRole;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
 /** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class ResourceTreeQuery extends AbstractListQuery implements AdjustableCommand {
+    use RequireOperatorRole;
+
     /** @var int */
     private $rootId;
     /** @var int */
