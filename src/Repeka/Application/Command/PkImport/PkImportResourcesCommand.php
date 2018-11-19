@@ -94,7 +94,8 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             $resourceKind = $this->resourceKindRepository->findOne($input->getOption('resourceKindId'));
             $workflowPlacesIds = $this->findWorkflowPlacesIds($resourceKind, $input->getOption('workflow-place'));
             $importConfig = $this->importConfigFactory->fromFile($configFileName, $resourceKind);
-            $reportCreator->setInvalidMetadataKeysInfo($importConfig->getInvalidMetadataKeys());
+            $invalidMetadataKeys = $importConfig->getInvalidMetadataKeys();
+            Assertion::count($invalidMetadataKeys, 0, 'Invalid metadata keys: ' . implode(', ', $invalidMetadataKeys));
             $resourceContentsFetcherName = 'Repeka\\Application\\Command\\PkImport\\XmlExtractStrategy\\';
             $resourceContentsFetcherName .= $input->getOption('exportFormat') . 'XmlExtractor';
             $resourceContentsFetcher = new $resourceContentsFetcherName();
