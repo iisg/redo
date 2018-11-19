@@ -75,7 +75,7 @@ class MetadataImporter {
                 return $this->transformIntegerValue($resultBuilder, $id, $value);
             case MetadataControl::BOOLEAN:
                 return $this->transformBooleanValue($resultBuilder, $id, $value);
-            case MetadataControl::DATE:
+            case MetadataControl::TIMESTAMP:
                 return $this->transformDateValue($resultBuilder, $id, $value);
             default:
                 $resultBuilder->addUnfitTypeValues($id, $value);
@@ -84,8 +84,8 @@ class MetadataImporter {
     }
 
     private function transformIntegerValue(ImportResultBuilder &$resultBuilder, int $id, string $value) {
-        if (preg_match('/^\d+$/', $value)) {
-            return intval($value);
+        if (preg_match('/^\d/', $value)) {
+            return round(floatval(str_replace(',', '.', $value)));
         } else {
             $resultBuilder->addUnfitTypeValues($id, $value);
             return null;
