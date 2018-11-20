@@ -22,6 +22,7 @@ export class MetadataConstraints {
   @map relatedResourceMetadataFilter?: NumberMap<string> = {};
   @map(MinMaxConstraintMapper) minMaxValue?: MinMaxValue = new MinMaxValue();
   @map displayStrategy?: string;
+  @map doublePrecision?: number;
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);

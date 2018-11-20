@@ -1,0 +1,12 @@
+<template>
+    <require from="./only-valid-numbers"></require>
+
+    <input type="number"
+        class="form-control"
+        placeholder.one-time="metadata.placeholder[currentLanguageCode] || description"
+        bootstrap-tooltip.bind="description"
+        value.bind="metadataValue.value & validate:validationController:validationRules"
+        disabled.bind="disabled"
+        step="any"
+        only-valid-numbers="true">
+</template>

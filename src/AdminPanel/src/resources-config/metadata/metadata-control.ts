@@ -3,6 +3,7 @@ export enum MetadataControl {
   TEXTAREA = 'textarea',
   WYSIWYG_EDITOR = 'wysiwyg-editor',
   INTEGER = 'integer',
+  DOUBLE = 'double',
   FLEXIBLE_DATE = 'flexible-date',
   TIMESTAMP = 'timestamp',
   BOOLEAN = 'boolean',

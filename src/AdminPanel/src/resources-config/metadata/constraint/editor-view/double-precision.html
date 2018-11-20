@@ -1,0 +1,7 @@
+<template>
+    <require from="../double-precision/double-precision-constraint-editor"></require>
+
+    <double-precision-constraint-editor value.bind="metadata.constraints.doublePrecision"
+        original-value.bind="originalMetadata.constraints.doublePrecision"
+        has-base.bind="!!originalMetadata"></double-precision-constraint-editor>
+</template>

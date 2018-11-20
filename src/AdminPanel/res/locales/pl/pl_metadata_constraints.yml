@@ -13,3 +13,4 @@ labels:
   relatedResourceMetadataFilter: Dodatkowy filtr zasobów
   minMaxValue: Minimalna i maksymalna wartość
   displayStrategy: Szablon
+  doublePrecision: Liczba miejsc po przecinku przy wyświetlaniu

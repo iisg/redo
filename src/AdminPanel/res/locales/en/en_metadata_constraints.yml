@@ -5,3 +5,4 @@ labels:
   relatedResourceMetadataFilter: Additional resources filter
   minMaxValue: Minimal and maximal value
   displayStrategy: Template
+  doublePrecision: Double precision for display purposes
