@@ -71,6 +71,11 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   relatedResourceMetadataFilter: {}
 };
 
+export interface GroupMetadataList {
+  groupId;
+  metadataList: Metadata[];
+}
+
 @mappedWith(MetadataMapper)
 export class Metadata extends Entity {
   static NAME = 'Metadata';

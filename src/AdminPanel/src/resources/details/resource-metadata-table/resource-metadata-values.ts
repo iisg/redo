@@ -6,6 +6,7 @@ import {computedFrom} from "aurelia-binding";
 export class ResourceMetadataValues {
   @bindable resource: Resource;
   @bindable metadata: Metadata;
+  @bindable checkMetadataBrief: boolean = false;
 
   @computedFrom('resource', 'metadata')
   get determinesAssignee(): boolean {

@@ -11,6 +11,7 @@ export class ResourceMetadataValueDisplay {
   @bindable metadata: Metadata;
   @bindable resource: Resource;
   @bindable value: MetadataValue;
+  @bindable checkMetadataBrief: boolean = false;
 
   private submetadataResource: Resource;
 

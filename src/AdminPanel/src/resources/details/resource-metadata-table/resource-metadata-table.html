@@ -20,9 +20,12 @@
             <hr>
             ${group.groupId | metadataGroupLabel}</span>
         <template repeat.for="metadata of group.metadataList">
-            <span>${metadata | metadataLabel}</span>
-            <resource-metadata-values resource.one-time="resource"
-                metadata.one-time="metadata"></resource-metadata-values>
+            <template if.bind="checkMetadataBrief ? metadata.shownInBrief : true">
+                <span>${metadata | metadataLabel}</span>
+                <resource-metadata-values resource.one-time="resource"
+                    metadata.one-time="metadata"
+                    check-metadata-brief.bind="checkMetadataBrief"></resource-metadata-values>
+            </template>
         </template>
     </template>
 

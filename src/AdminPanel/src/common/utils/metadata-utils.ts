@@ -1,5 +1,5 @@
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
-import {Metadata, MetadataGroup} from "../../resources-config/metadata/metadata";
+import {Metadata, MetadataGroup, GroupMetadataList} from "../../resources-config/metadata/metadata";
 
 function getMergedMetadata(resourceKinds: ResourceKind[]): Metadata[] {
   let mergedMetadata = [];
@@ -31,7 +31,7 @@ export function getIndexOfMetadataInArray(metadataList: Metadata[], metadata: Me
   return metadataList.map(metadata => metadata.id).indexOf(metadata.id);
 }
 
-export function groupMetadata(metadataList: Metadata[], groupIds: string[]): { groupId, metadataList: Metadata[] }[] {
+export function groupMetadata(metadataList: Metadata[], groupIds: string[]): GroupMetadataList[] {
   const orderedGroups = groupIds.map(id => ({groupId: id, metadataList: []}));
   const lookup = orderedGroups.reduce((obj, group) => ({...obj, [group.groupId]: group}), {});
   if (!lookup.hasOwnProperty(MetadataGroup.defaultGroupId)) {

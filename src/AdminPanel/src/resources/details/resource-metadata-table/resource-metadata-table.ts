@@ -1,6 +1,6 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {Resource} from "../../resource";
-import {Metadata} from "resources-config/metadata/metadata";
+import {Metadata, GroupMetadataList} from "resources-config/metadata/metadata";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {inArray} from "common/utils/array-utils";
 import {groupMetadata} from "../../../common/utils/metadata-utils";
@@ -16,7 +16,8 @@ export class ResourceMetadataTable implements ComponentAttached {
   @bindable @booleanAttribute showResourceKind: boolean = false;
   @bindable @booleanAttribute briefOnly: boolean = false;
   @bindable @booleanAttribute hideMetadataGroups: boolean = false;
-  metadataGroups: { groupId, metadataList: Metadata[] }[];
+  @bindable checkMetadataBrief: boolean = false;
+  metadataGroups: GroupMetadataList[];
 
   constructor(private metadataGroupRepository: MetadataGroupRepository) {
   }
