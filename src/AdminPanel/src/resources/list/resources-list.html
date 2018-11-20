@@ -9,12 +9,12 @@
         elements-per-page.bind="resultsPerPage"
         current-page-number.bind="currentPageNumber"
         hide-elements-per-page-dropdown="true"></pagination>
-    <add-button if.bind="!addFormOpened"
+    <add-button if.bind="!hideAddButton && !addFormOpened"
         entity-name="resource"
         toggled.two-way="addFormOpened"
         disabled.bind="addingResourcesDisabled"
         disability-reason.bind="disabilityReason"></add-button>
-    <div else
+    <div if.bind="addFormOpened"
         class="add-form well fade-inup-outdown au-animate">
         <span>${'Add new resource' | resourceClassTranslation:resourceClass}</span>
         <resource-form view-model.ref="resourceForm"

@@ -10,6 +10,8 @@ import {groupMetadata} from "../../../common/utils/metadata-utils";
 import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
 import {GroupMetadataList} from "../../metadata/metadata";
 import {MetadataGroupRepository} from "../../metadata/metadata-group-repository";
+import {Resource} from "../../../resources/resource";
+import {ResourceRepository} from "../../../resources/resource-repository";
 
 @autoinject
 export class ResourceKindDetails implements RoutableComponentActivate {
@@ -19,6 +21,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   resourceKindDetailsTabs: DetailsViewTabs;
   metadataGroups: GroupMetadataList[];
   private urlListener: Subscription;
+  resourceList: Resource[];
 
   constructor(private resourceKindRepository: ResourceKindRepository,
               private router: Router,
@@ -26,7 +29,8 @@ export class ResourceKindDetails implements RoutableComponentActivate {
               private i18n: I18N,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private contextResourceClass: ContextResourceClass,
-              private metadataGroupRepository: MetadataGroupRepository) {
+              private metadataGroupRepository: MetadataGroupRepository,
+              private resourceRepository: ResourceRepository) {
     this.resourceKindDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
@@ -45,6 +49,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     this.resourceKind = await this.resourceKindRepository.get(params.id);
     const displayedMetadata = this.resourceKind.metadataList.filter(metadata => !!metadata.resourceClass);
     this.metadataGroups = groupMetadata(displayedMetadata, this.metadataGroupRepository.getIds());
+    this.resourceList = await this.resourceRepository.getListQuery().filterByResourceKindIds(this.resourceKind.id).get();
     this.activateTabs(params.tab);
     this.contextResourceClass.setCurrent(this.resourceKind.resourceClass);
   }
@@ -52,6 +57,10 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   activateTabs(activeTabId: string) {
     this.resourceKindDetailsTabs.clear()
       .addTab('details', () => `${this.i18n.tr('Metadata')} (${this.resourceKind.metadataList.filter(m => !!m.resourceClass).length})`);
+    this.resourceKindDetailsTabs.addTab(
+      'resources',
+      () => `${this.i18n.tr('resource_classes::' + this.resourceKind.resourceClass + '//resources')} (${this.resourceList.length})`
+    );
     if (this.resourceKind.workflow) {
       this.resourceKindDetailsTabs.addTab('workflow', this.i18n.tr('Workflow'));
     }
@@ -84,7 +93,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
       parameters['action'] = 'edit';
     }
     parameters['tab'] = this.resourceKindDetailsTabs.activeTabId;
-    this.router.navigateToRoute('resource-kinds/details', parameters, {replace: true});
+    this.router.navigateToRoute('resource-kinds/details', parameters, {trigger: args.triggerNavigation, replace: true});
     this.resourceKindDetailsTabs.updateLabels();
   }
 
