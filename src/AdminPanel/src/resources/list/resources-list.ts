@@ -1,25 +1,26 @@
 import {bindingMode, computedFrom, observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {EventAggregator} from "aurelia-event-aggregator";
+import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {I18N} from "aurelia-i18n";
 import {NavigationInstruction, Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
 import {LocalStorage} from "common/utils/local-storage";
 import {getQueryParameters} from "common/utils/url-utils";
-import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
-import {DisabilityReason} from "../../common/components/buttons/toggle-button";
-import {Alert} from "../../common/dialog/alert";
-import {getMergedBriefMetadata} from "../../common/utils/metadata-utils";
-import {safeJsonParse} from "../../common/utils/object-utils";
-import {Metadata} from "../../resources-config/metadata/metadata";
-import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
-import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
+import {HasRoleValueConverter} from "common/authorization/has-role-value-converter";
+import {DisabilityReason} from "common/components/buttons/toggle-button";
+import {Alert} from "common/dialog/alert";
+import {getMergedBriefMetadata} from "common/utils/metadata-utils";
+import {safeJsonParse} from "common/utils/object-utils";
+import {Metadata} from "resources-config/metadata/metadata";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
+import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {ContextResourceClass} from "../context/context-resource-class";
 import {PageResult} from "../page-result";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ResourceSort, SortDirection} from "../resource-sort";
 import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproductor";
+import {booleanAttribute} from "common/components/boolean-attribute";
 
 @autoinject()
 export class ResourcesList {
@@ -33,6 +34,8 @@ export class ResourcesList {
   @bindable resultsPerPage: number;
   @bindable currentPageNumber: number;
   @bindable allowedResourceKinds: number[] | ResourceKind[];
+  @bindable resourceKind: ResourceKind;
+  @bindable @booleanAttribute hideAddButton = false;
   @observable resources: PageResult<Resource>;
   contentsFilter: NumberMap<string>;
   sortBy: ResourceSort[];
@@ -44,6 +47,8 @@ export class ResourcesList {
   private resultsPerPageValueChangedOnActivate: boolean;
   private currentPageNumberChangedOnActivate: boolean;
   private displayAllLevels: boolean = false;
+  private sortButtonToggledSubscription: Subscription;
+  private resourceFilteredSubscription: Subscription;
 
   constructor(private alert: Alert,
               private i18n: I18N,
@@ -64,10 +69,28 @@ export class ResourcesList {
           this.activate(event.instruction.queryParams);
         });
     }
+    if (this.resourceKind) {
+      this.sortButtonToggledSubscription = this.eventAggregator.subscribe('sortButtonToggled',
+        (parameters: any) => {
+          this.activate(parameters);
+        });
+      this.resourceFilteredSubscription = this.eventAggregator.subscribe('resourceFiltered',
+        (parameters: any) => {
+          this.activate(parameters);
+        });
+      this.activate(this.router.currentInstruction.queryParams);
+    }
+  }
+
+  unbind() {
+    if (this.resourceKind) {
+      this.sortButtonToggledSubscription.dispose();
+      this.resourceFilteredSubscription.dispose();
+    }
   }
 
   activate(parameters: any) {
-    this.prepareBeforeFetchingResources(parameters.resourceClass || this.parentResource.resourceClass);
+    this.prepareBeforeFetchingResources(parameters.resourceClass || this.resourceClass || this.parentResource.resourceClass);
     this.contextResourceClass.setCurrent(this.resourceClass);
     const resultsPerPageChanged = this.obtainResultsPerPageValue(parameters);
     this.resultsPerPageValueChangedOnActivate = this.activated && resultsPerPageChanged;
@@ -76,8 +99,8 @@ export class ResourcesList {
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']);
     this.sortBy = safeJsonParse(parameters['sortBy']);
     this.sortBy = this.sortBy ? this.sortBy : this.getSorting();
-    this.displayAllLevels = !!parameters['allLevels'];
     LocalStorage.set(`sorting-${this.resourceClass}`, this.sortBy);
+    this.displayAllLevels = !!parameters['allLevels'] || !!this.resourceKind;
     this.fetchResources();
     this.updateURL(true);
     this.activated = true;
@@ -141,8 +164,11 @@ export class ResourcesList {
         query = query.onlyTopLevel();
       }
     }
+    if (this.resourceKind) {
+      query = query.filterByResourceKindIds(this.resourceKind.id);
+    }
     if (this.contentsFilter) {
-      query.filterByContents(this.contentsFilter)
+      query = query.filterByContents(this.contentsFilter)
         .suppressError();
     }
     query = query.sortByMetadataIds(this.sortBy)
@@ -228,6 +254,10 @@ export class ResourcesList {
     if (this.parentResource) {
       route = 'resources/details';
       parameters['id'] = this.parentResource.id;
+    } else if (this.resourceKind) {
+      route = 'resource-kinds/details';
+      parameters['id'] = this.resourceKind.id;
+      parameters['tab'] = 'resources';
     } else {
       route = 'resources';
       parameters['resourceClass'] = this.resourceClass;

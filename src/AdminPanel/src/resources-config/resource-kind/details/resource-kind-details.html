@@ -5,6 +5,8 @@
     <require from="common/components/collapsible-metadata-group/collapsible-metadata-group"></require>
     <require from="../resource-kind-form"></require>
     <require from="../../../workflows/details/graph/workflow-graph-display"></require>
+    <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
+    <require from="resources/list/resources-list"></require>
 
     <loading-bar if.bind="!resourceKind"></loading-bar>
 
@@ -50,6 +52,13 @@
                         submit.call="saveEditedResourceKind(resourceKind, savedResourceKind)"
                         cancel.call="hideEditForm()"></resource-kind-form>
                 </div>
+            </aup-tab-pane>
+            <aup-tab-pane tab="resources">
+                <resources-list if.bind="resourceKindDetailsTabs.activeTabId === 'resources'"
+                    resource-kind.bind="resourceKind"
+                    resource-class.bind="resourceKind.resourceClass"
+                    hide-add-button.bind="true">
+                </resources-list>
             </aup-tab-pane>
             <aup-tab-pane tab="workflow">
                 <workflow-graph-display if.bind="resourceKindDetailsTabs.activeTabId === 'workflow'"

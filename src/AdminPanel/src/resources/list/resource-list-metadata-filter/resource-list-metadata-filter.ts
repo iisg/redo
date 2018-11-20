@@ -3,8 +3,10 @@ import {autoinject} from "aurelia-dependency-injection";
 import {Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
 import {pickBy} from "lodash";
-import {twoWay} from "../../../common/components/binding-mode";
-import {Metadata} from "../../../resources-config/metadata/metadata";
+import {twoWay} from "common/components/binding-mode";
+import {Metadata} from "resources-config/metadata/metadata";
+import {getQueryParameters} from "common/utils/url-utils";
+import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class ResourceListMetadataFilter {
@@ -16,7 +18,7 @@ export class ResourceListMetadataFilter {
   inputBoxFocused: boolean;
   inputBoxSize = 1;
 
-  constructor(private router: Router) {
+  constructor(private eventAggregator: EventAggregator, private router: Router) {
   }
 
   attached() {
@@ -64,10 +66,11 @@ export class ResourceListMetadataFilter {
     this.previousMetadataValue = this.metadataValue || undefined;
     this.contentsFilter[this.metadata.id] = this.metadataValue;
     const currentInstruction = this.router.currentInstruction;
-    let parameters = Object.assign(currentInstruction.params, currentInstruction.queryParams);
+    let parameters = Object.assign(currentInstruction.params, getQueryParameters());
     const notEmptyFilters = pickBy(this.contentsFilter, v => v && v.trim());
     parameters['contentsFilter'] = JSON.stringify(notEmptyFilters);
     this.router.navigateToRoute(currentInstruction.config.name, parameters, {replace: true});
+    this.eventAggregator.publish('resourceFiltered', parameters);
   }
 
   private fetchFilteredResourcesIfMetadataValueChanged() {
