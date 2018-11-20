@@ -4,7 +4,10 @@ namespace Repeka\Tests\Integration\FullTextSearch;
 use Elastica\Result;
 use Elastica\ResultSet;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
@@ -19,6 +22,18 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCaseWithout
     /** @var ResourceEntity */
     private $phpAndMySQLBookResource;
 
+    /** @var ResourceEntity */
+    private $timeResource;
+
+    /** @var Metadata */
+    private $flexibleDateMetadata;
+
+    /** @var Metadata */
+    private $timestampMetadata;
+
+    /** @var Metadata */
+    private $rangeDateMetadata;
+
     private $title = 'ala ma psa';
 
     protected function initializeDatabaseBeforeTheFirstTest() {
@@ -27,12 +42,68 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCaseWithout
         $this->createResource($this->getPhpBookResource()->getKind(), [$metadata->getId() => [$this->title]]);
         $this->executeCommand('repeka:evaluate-display-strategies');
         $this->executeCommand('repeka:fts:initialize');
+        $this->timestampMetadata = $this->createMetadata(
+            'timestamp_example',
+            ['PL' => 'timestamp', 'EN' => 'timestamp'],
+            [],
+            [],
+            MetadataControl::TIMESTAMP
+        );
+        $this->flexibleDateMetadata = $this->createMetadata(
+            'flexibleDate_example',
+            ['PL' => 'flexibleDate', 'EN' => 'flexibleDate'],
+            [],
+            [],
+            MetadataControl::FLEXIBLE_DATE
+        );
+        $this->rangeDateMetadata = $this->createMetadata(
+            'rangeDate_example',
+            ['PL' => 'rangeDate', 'EN' => 'rangeDate'],
+            [],
+            [],
+            MetadataControl::DATE_RANGE
+        );
+        $timeResourceKind = $this->createResourceKind(
+            ['PL' => 'timeKind', 'EN' => 'timeKind'],
+            [$this->timestampMetadata, $this->flexibleDateMetadata, $this->rangeDateMetadata]
+        );
+        $this->timeResource = $this->createResource(
+            $timeResourceKind,
+            [
+                $this->flexibleDateMetadata->getId() => [
+                    [
+                        'value' => [
+                            "from" => "1999-06-01T00:00:00",
+                            "to" => "1999-06-30T23:59:59",
+                            "mode" => "range",
+                            "rangeMode" => 'day',
+                            "displayValue" => "06.1996",
+                        ],
+                    ],
+                ],
+                $this->timestampMetadata->getId() => [["value" => "2001-12-05T13:59:44+00:00"]],
+                $this->rangeDateMetadata->getId() => [
+                    [
+                        'value' => [
+                            "from" => "1999-06-01T00:00:00",
+                            "to" => null,
+                            'mode' => 'range',
+                            "rangeMode" => 'day',
+                        ],
+                    ],
+                ],
+            ]
+        );
     }
 
     /** @before */
-    public function fetchResources() {
+    public function fetchData() {
         $this->phpBookResource = $this->findResourceByContents(['Tytul' => 'PHP - to można leczyć!']);
         $this->phpAndMySQLBookResource = $this->findResourceByContents(['Tytuł' => 'PHP i MySQL']);
+        $metadataRepository = $this->container->get(MetadataRepository::class);
+        $this->timestampMetadata = $metadataRepository->findByName('timestamp_example');
+        $this->flexibleDateMetadata = $metadataRepository->findByName('flexibleDate_example');
+        $this->rangeDateMetadata = $metadataRepository->findByName('rangeDate_example');
     }
 
     public function testSearchByPhpPhrase() {
@@ -235,13 +306,104 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCaseWithout
     public function testFindAll() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('', [], [], ['books']));
-        $this->assertCount(7, $results);
+        $this->assertCount(8, $results);
     }
 
     public function testFindOnlyTopLevel() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('', [], [], ['books'], false, [], [], true));
-        $this->assertCount(5, $results);
+        $this->assertCount(6, $results);
+    }
+
+    public function testFilteringByTimestamp() {
+        $id = $this->timestampMetadata->getId();
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('', [$id], [$id => ['from' => '2000-11-21T11:40:09+00:00']])
+        );
+        $this->assertCount(1, $results);
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('', [$id], [$id => ['to' => '2002-11-21T11:40:09+00:00']])
+        );
+        $this->assertCount(1, $results);
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('', [$id], [$id => ['from' => '2000-11-21T11:40:09+00:00', 'to' => '2002-11-21T11:40:09+00:00']])
+        );
+        $this->assertCount(1, $results);
+    }
+
+    public function testFilteringByFlexibleDate() {
+        $id = $this->flexibleDateMetadata->getId();
+        foreach ([   // searched range 1999-06-01T00:00:00 -
+                     [1, ['from' => '1998-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // > | | TRUE
+                     [1, ['from' => '1999-06-21T11:40:09+00:00', 'rangeMode' => 'date_time']],
+                     // | > | TRUE
+                     [0, ['from' => '2000-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | | > FALSE
+                     [1, ['to' => '2000-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | | < TRUE
+                     [1, ['to' => '1999-06-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | < | TRUE
+                     [0, ['to' => '1998-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // < | | FALSE
+                     [1, ['from' => '1998-11-21T11:40:09+00:00', 'to' => '2000-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // > | | < TRUE
+                     [1, ['from' => '1999-06-11T11:40:09+00:00', 'to' => '1999-06-22T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | > < | TRUE
+                     [1, ['from' => '1999-06-11T11:40:09+00:00', 'to' => '2000-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | > | < TRUE
+                     [1, ['from' => '1998-11-21T11:40:09+00:00', 'to' => '1999-06-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // > | < | TRUE
+                     [0, ['from' => '2100-11-21T11:40:09+00:00', 'to' => '2200-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | | > < FALSE
+                     [0, ['from' => '1700-11-21T11:40:09+00:00', 'to' => '1800-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     //> < | | FALSE
+                 ] as $testCase) {
+            list($expectedCount, $range) = $testCase;
+            /** @var ResultSet $results */
+            $results = $this->handleCommandBypassingFirewall(
+                new ResourceListFtsQuery('', [$id], [$id => $range])
+            );
+            $this->assertCount($expectedCount, $results);
+        }
+    }
+
+    public function testFilteringByRangeDate() {
+        $id = $this->rangeDateMetadata->getId();
+        foreach ([   // searched range 1999-06-01T00:00:00 -
+                     [1, ['from' => '1998-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // > | oo TRUE
+                     [1, ['from' => '1999-06-21T11:40:09+00:00', 'rangeMode' => 'date_time']],
+                     // | > oo TRUE
+                     [1, ['from' => '2000-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | oo > TRUE
+                     [1, ['to' => '2000-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | oo < TRUE
+                     [1, ['to' => '1999-06-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | < oo TRUE
+                     [0, ['to' => '1998-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // < | oo FALSE
+                     [1, ['from' => '1998-11-21T11:40:09+00:00', 'to' => '2000-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // > | oo < TRUE
+                     [1, ['from' => '1999-06-11T11:40:09+00:00', 'to' => '1999-06-22T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | > < oo TRUE
+                     [1, ['from' => '1999-06-11T11:40:09+00:00', 'to' => '2000-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | > oo < TRUE
+                     [1, ['from' => '1998-11-21T11:40:09+00:00', 'to' => '1999-06-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // > | < oo TRUE
+                     [1, ['from' => '2100-11-21T11:40:09+00:00', 'to' => '2200-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // | oo > < TRUE
+                     [0, ['from' => '1700-11-21T11:40:09+00:00', 'to' => '1800-11-21T11:40:09+00:00', 'rangeMode' => 'day']],
+                     // > < | oo FALSE
+                 ] as $testCase) {
+            list($expectedCount, $range) = $testCase;
+            /** @var ResultSet $results */
+            $results = $this->handleCommandBypassingFirewall(
+                new ResourceListFtsQuery('', [$id], [$id => $range])
+            );
+            $this->assertCount($expectedCount, $results);
+        }
     }
 
     /**

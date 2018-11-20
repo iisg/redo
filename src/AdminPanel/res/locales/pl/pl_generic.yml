@@ -2,6 +2,10 @@ adminPanelName: Administracja {{applicationName}}
 meta:
   translatedName: Polski
   flag: PL
+day: dzień
+month: miesiąc
+year: rok
+date_time: czas
 Upload max file size: Maksymalna wielkość pliku
 Administration Panel: Panel administracyjny
 Data import: Import danych

@@ -5,6 +5,7 @@ use Elastica\Document;
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Application\Elasticsearch\Model\ElasticSearch;
+use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite;
 use Repeka\Application\Elasticsearch\Model\ESContentsAdjuster;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Tests\Application\Elasticsearch\ElasticsearchTest;
@@ -46,9 +47,10 @@ class ESResourceTest extends ElasticsearchTest {
                 $this->createMetadataMock(3, null, MetadataControl::TEXT(), [], 'books', [], 'TEXT'),
             ]
         );
+        $elasticSearchQueryCreatorComposite = $this->createMock(ElasticSearchQueryCreatorComposite::class);
         $esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $this->createMock(ContainerInterface::class));
         $this->indexMock->method('getType')->with(FtsConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
-        $res = new ElasticSearch($this->clientMock, $esContentsAdjuster, self::INDEX_NAME);
+        $res = new ElasticSearch($this->clientMock, $esContentsAdjuster, self::INDEX_NAME, $elasticSearchQueryCreatorComposite);
         $res->insertDocument($resource);
     }
 }

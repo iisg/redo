@@ -12,6 +12,7 @@ export const inputDateConfig = {
   [DateMode.YEAR]: {
     options: {
       allowInputToggle: true,
+      useCurrent: false,
       viewMode: 'years' as ViewMode,
       format: 'YYYY'
     },
@@ -38,6 +39,7 @@ export const inputDateConfig = {
   [DateMode.DATE_TIME]: {
     options: {
       allowInputToggle: true,
+      useCurrent: false,
       format: 'DD.MM.YYYY, HH:mm:ss'
     },
     format: 'DD.MM.YYYY, HH:mm:ss',

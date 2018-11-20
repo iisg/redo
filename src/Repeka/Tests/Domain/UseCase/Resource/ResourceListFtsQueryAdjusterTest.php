@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Metadata\SearchValueAdjuster\SearchValueAdjusterComposite;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQueryAdjuster;
@@ -16,6 +17,8 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $metadataRepository = $this->createMock(MetadataRepository::class);
+        $searchValueAdjusterComposite = $this->createMock(SearchValueAdjusterComposite::class);
+        $searchValueAdjusterComposite->method('adjustSearchValue')->withAnyParameters()->willReturn('aaa');
         $knownMetadata = ['tytul' => $this->createMetadataMock(1), 'opis' => $this->createMetadataMock(2)];
         $metadataRepository->method('findByNameOrId')->willReturnCallback(
             function ($nameOrId) use ($knownMetadata) {
@@ -29,7 +32,7 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
                 throw new EntityNotFoundException('metadata', $nameOrId);
             }
         );
-        $this->adjuster = new ResourceListFtsQueryAdjuster($metadataRepository);
+        $this->adjuster = new ResourceListFtsQueryAdjuster($metadataRepository, $searchValueAdjusterComposite);
     }
 
     public function testConvertsSearchableMetadataNamesToIds() {

@@ -55,6 +55,34 @@ class ESMapping {
                         'path_match' => '*.value_timestamp',
                         'mapping' => [
                             'type' => 'date',
+                            'format' => FtsConstants::TIMESTAMP_FORMAT,
+                        ],
+                    ],
+                ],
+                [
+                    'as_flexible-date' => [
+                        'path_match' => '*.value_(flexible|range)-date',
+                        'mapping' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'to' => [
+                                    'type' => 'date',
+                                    'format' => FtsConstants::FLEXIBLE_DATE_FORMAT,
+                                ],
+                                'from' => [
+                                    'type' => 'date',
+                                    'format' => FtsConstants::FLEXIBLE_DATE_FORMAT,
+                                ],
+                                'mode' => [
+                                    'type' => 'text',
+                                ],
+                                'rangeMode' => [
+                                    'type' => 'text',
+                                ],
+                                'displayValue' => [
+                                    'type' => 'text',
+                                ],
+                            ],
                         ],
                     ],
                 ],

@@ -8,6 +8,7 @@ use Elastica\Search;
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\ESClient;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
+use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceFtsProvider;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
@@ -26,11 +27,20 @@ class ElasticSearch implements ResourceFtsProvider {
     /** @var ESContentsAdjuster */
     private $esContentsAdjuster;
 
-    public function __construct(ESClient $client, ESContentsAdjuster $esContentsAdjuster, string $indexName) {
+    /** @var ElasticSearchQueryCreatorComposite */
+    private $elasticSearchQueryCreatorComposite;
+
+    public function __construct(
+        ESClient $client,
+        ESContentsAdjuster $esContentsAdjuster,
+        string $indexName,
+        ElasticSearchQueryCreatorComposite $elasticSearchQueryCreatorComposite
+    ) {
         $this->client = $client;
         $this->esContentsAdjuster = $esContentsAdjuster;
         $this->index = $this->client->getIndex($indexName);
         $this->type = $this->index->getType(FtsConstants::ES_DOCUMENT_TYPE);
+        $this->elasticSearchQueryCreatorComposite = $elasticSearchQueryCreatorComposite;
     }
 
     private function createDocument(ResourceEntity $resource): Document {
@@ -66,7 +76,7 @@ class ElasticSearch implements ResourceFtsProvider {
 
     /** @return ResultSet */
     public function search(ResourceListFtsQuery $query) {
-        $esQuery = new ElasticSearchQuery($query);
+        $esQuery = new ElasticSearchQuery($query, $this->elasticSearchQueryCreatorComposite);
         $search = new Search($this->client);
         $search->addIndex($this->index->getName());
         $search->addType(FtsConstants::ES_DOCUMENT_TYPE);

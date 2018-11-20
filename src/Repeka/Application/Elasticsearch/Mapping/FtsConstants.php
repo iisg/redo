@@ -13,8 +13,11 @@ final class FtsConstants {
     const KIND_ID = 'kindId';
     const CONTENTS = 'contents';
 
+    const TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZ";
+    const FLEXIBLE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
     const UNACCEPTABLE_TYPES = [
-        MetadataControl::FLEXIBLE_DATE,
+        MetadataControl::DOUBLE,
     ];
 
     const SUPPORTED_FILE_EXTENSIONS = [

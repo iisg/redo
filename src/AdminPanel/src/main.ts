@@ -75,6 +75,7 @@ export function configure(aurelia: Aurelia) {
         'themes/admin-styles-loader',
         'themes/redo/child-resources-group/child-resources-group',
         'themes/redo/deposit-form/deposit-form',
+        'common/date-search/datetime-search'
       ]);
   }
 

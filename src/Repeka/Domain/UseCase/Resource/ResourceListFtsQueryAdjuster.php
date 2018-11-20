@@ -4,14 +4,18 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Metadata\SearchValueAdjuster\SearchValueAdjusterComposite;
 use Repeka\Domain\Repository\MetadataRepository;
 
 class ResourceListFtsQueryAdjuster implements CommandAdjuster {
     /** @var MetadataRepository */
     private $metadataRepository;
+    /** @var SearchValueAdjusterComposite */
+    private $searchValueAdjusterComposite;
 
-    public function __construct(MetadataRepository $metadataRepository) {
+    public function __construct(MetadataRepository $metadataRepository, SearchValueAdjusterComposite $searchValueAdjusterComposite) {
         $this->metadataRepository = $metadataRepository;
+        $this->searchValueAdjusterComposite = $searchValueAdjusterComposite;
     }
 
     /**
@@ -58,9 +62,22 @@ class ResourceListFtsQueryAdjuster implements CommandAdjuster {
             $metadataList,
             $filters
         );
+        $filters = $this->adjustMetadataFiltersValues($filters);
         if ($kindIdFilter) {
             $filters[] = ['kindId', $kindIdFilter];
         }
         return $filters;
+    }
+
+    private function adjustMetadataFiltersValues(array $facetsFilters): array {
+        $newFacetsFilters = [];
+        /** @var Metadata $metadata */
+        foreach ($facetsFilters as [$metadata, $value]) {
+            $newValue = $this->searchValueAdjusterComposite->adjustSearchValue($value, $metadata->getControl());
+            if ($newValue !== null) {
+                $newFacetsFilters[] = [$metadata, $newValue];
+            }
+        }
+        return $newFacetsFilters;
     }
 }

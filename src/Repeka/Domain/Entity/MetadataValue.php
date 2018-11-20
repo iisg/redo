@@ -63,6 +63,6 @@ class MetadataValue {
     }
 
     public function __toString(): string {
-        return is_array($this->value) ? $this->value['displayValue'] : strval($this->value);
+        return is_array($this->value) ? ($this->value['displayValue'] ?? '?') : strval($this->value);
     }
 }

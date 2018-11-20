@@ -6,6 +6,7 @@ use DateTime;
 final class MetadataDateControlConverterUtil {
 
     private const FLEXIBLE_DATE_FORMAT = 'Y-m-d\TH:i:s';
+    private const TIMESTAMP_DATE_FORMAT = \DateTime::ATOM;
 
     private function __construct() {
     }
@@ -21,8 +22,8 @@ final class MetadataDateControlConverterUtil {
         $from = !is_null($from) ? self::toFlexibleDateFormat($from) : $from;
         $to = !is_null($to) ? self::toFlexibleDateFormat($to) : $to;
         return ($mode == MetadataDateControlMode::RANGE)
-            ? self::getFlexibleRangeDateMode($from, $to, $mode, $rangeMode)
-            : self::getFlexibleDateMode($from, $mode);
+            ? self::getFlexibleRangeDateMode($from, $to, $mode, $rangeMode, self::FLEXIBLE_DATE_FORMAT)
+            : self::getFlexibleDateMode($from, $mode, self::FLEXIBLE_DATE_FORMAT);
     }
 
     /**
@@ -32,16 +33,30 @@ final class MetadataDateControlConverterUtil {
      * @param string | MetadataDateControlMode $rangeMode
      * @return FlexibleDate
      */
-    private static function getFlexibleRangeDateMode($from, $to, $mode, $rangeMode) {
+    public static function convertDateToFlexibleDateWithTimestampDates($from, $to, $mode, $rangeMode): FlexibleDate {
+        return ($mode == MetadataDateControlMode::RANGE)
+            ? self::getFlexibleRangeDateMode($from, $to, $mode, $rangeMode, self::TIMESTAMP_DATE_FORMAT)
+            : self::getFlexibleDateMode($from, $mode, self::TIMESTAMP_DATE_FORMAT);
+    }
+
+    /**
+     * @param string | int | null $from
+     * @param string | int | null $to
+     * @param string | MetadataDateControlMode $mode
+     * @param string | MetadataDateControlMode $rangeMode
+     * @param string $dateFormat
+     * @return FlexibleDate
+     */
+    private static function getFlexibleRangeDateMode($from, $to, $mode, $rangeMode, $dateFormat = self::FLEXIBLE_DATE_FORMAT) {
         if (!is_null($from)) {
             $from = !is_null($from) ? new DateTime($from) : null;
             $from = self::startOf($rangeMode, $from);
-            $from = $from->format(self::FLEXIBLE_DATE_FORMAT);
+            $from = $from->format($dateFormat);
         }
         if (!is_null($to)) {
             $to = !is_null($to) ? new DateTime($to) : null;
             $to = self::endOf($rangeMode, $to);
-            $to = $to->format(self::FLEXIBLE_DATE_FORMAT);
+            $to = $to->format($dateFormat);
         }
         return new FlexibleDate($from, $to, $mode, $rangeMode);
     }
@@ -49,15 +64,16 @@ final class MetadataDateControlConverterUtil {
     /**
      * @param string | int | null $from
      * @param string | MetadataDateControlMode $mode
+     * @param string $dateFormat
      * @return FlexibleDate
      */
-    private static function getFlexibleDateMode($from, $mode) {
+    private static function getFlexibleDateMode($from, $mode, $dateFormat = self::FLEXIBLE_DATE_FORMAT) {
         $to = new DateTime($from);
         $from = new DateTime($from);
         $from = self::startOf($mode, $from);
         $to = self::endOf($mode, $to);
-        $from = $from->format(self::FLEXIBLE_DATE_FORMAT);
-        $to = $to->format(self::FLEXIBLE_DATE_FORMAT);
+        $from = $from->format($dateFormat);
+        $to = $to->format($dateFormat);
         return new FlexibleDate($from, $to, $mode, null);
     }
 

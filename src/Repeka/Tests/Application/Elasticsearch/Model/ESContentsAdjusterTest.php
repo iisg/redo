@@ -24,7 +24,6 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
                 $this->createMetadataMock(2, null, MetadataControl::INTEGER(), [], 'books', [], 'INTEGER'),
                 $this->createMetadataMock(3, null, MetadataControl::TIMESTAMP(), [], 'books', [], 'TIMESTAMP'),
                 $this->createMetadataMock(4, null, MetadataControl::FILE(), [], 'books', [], 'FILE'),
-                $this->createMetadataMock(5, null, MetadataControl::FLEXIBLE_DATE(), [], 'books', [], 'FLEXIBLE_DATE'),
             ]
         );
         $this->resource = $this->createResourceMock(1);
@@ -47,17 +46,6 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
         $contentsAfterAdjust = [
             1 => [['value_text' => 'a']],
             2 => [['value_integer' => 5]],
-        ];
-        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
-    }
-
-    public function testAdjustContentsWithNotIndexedMetadata() {
-        $contentsToAdjust = [
-            1 => [['value' => 'a']],
-            5 => [['value' => 'slfhddlfksd;sdksngs']],
-        ];
-        $contentsAfterAdjust = [
-            1 => [['value_text' => 'a']],
         ];
         $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
     }
@@ -89,40 +77,6 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
                 ],
                 [
                     'value_text' => 'b',
-                    'submetadata' => [
-                        3 => [['value_timestamp' => '09-09-2018']],
-                    ],
-                ],
-            ],
-        ];
-        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
-    }
-
-    public function testAdjustContentsWithSubmetadataAndNotIndexedParentMetadata() {
-        $contentsToAdjust = [
-            5 => [
-                [
-                    'value' => 'alsdkfj',
-                    'submetadata' => [
-                        3 => [['value' => '03-08-2018']],
-                    ],
-                ],
-                [
-                    'value' => 'blsdjf',
-                    'submetadata' => [
-                        3 => [['value' => '09-09-2018']],
-                    ],
-                ],
-            ],
-        ];
-        $contentsAfterAdjust = [
-            5 => [
-                [
-                    'submetadata' => [
-                        3 => [['value_timestamp' => '03-08-2018']],
-                    ],
-                ],
-                [
                     'submetadata' => [
                         3 => [['value_timestamp' => '09-09-2018']],
                     ],

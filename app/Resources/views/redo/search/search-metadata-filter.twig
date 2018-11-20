@@ -7,6 +7,22 @@
                 value="{{ app.request.query.all.metadataFilters[filterableMetadata.id] ?? '' }}">
         </div>
     </div>
+{% elseif filterableMetadata.control.value in ['flexible-date','timestamp', 'date-range'] %}
+    <div class="form-group">
+        <label>{{ filterableMetadata.label.PL }}</label>
+
+        {% set from =  app.request.query.all.metadataFilters[filterableMetadata.id]['from'] ?? "" %}
+        {% set to = app.request.query.all.metadataFilters[filterableMetadata.id]['to'] ?? "" %}
+        {% set rangeMode = app.request.query.all.metadataFilters[filterableMetadata.id]['rangeMode'] ?? "year" %}
+        {% set dateSearchValue =  {
+            'from': from,
+            'to': to,
+            'rangeMode': rangeMode
+        } %}
+
+        <datetime-search filterable-metadata-id.one-time="{{ filterableMetadata.id }}"
+            stringified-value="{{ dateSearchValue | json_encode }}"></datetime-search>
+    </div>
 {% elseif filterableMetadata.control.value in ['relationship'] %}
     {% set filterUsed = app.request.query.all.metadataFilters[filterableMetadata.id] is defined %}
     {% set variableName = ("property" ~ filterableMetadata.id ~ "Expanded") | replace({"-": "0"}) %}

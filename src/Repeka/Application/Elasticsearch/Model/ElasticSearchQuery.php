@@ -6,6 +6,7 @@ use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
@@ -15,8 +16,12 @@ class ElasticSearchQuery {
     /** @var ResourceListFtsQuery */
     private $query;
 
-    public function __construct(ResourceListFtsQuery $query) {
+    /** @var ElasticSearchQueryCreatorComposite */
+    private $elasticSearchQueryCreatorComposite;
+
+    public function __construct(ResourceListFtsQuery $query, ElasticSearchQueryCreatorComposite $elasticSearchQueryCreatorComposite) {
         $this->query = $query;
+        $this->elasticSearchQueryCreatorComposite = $elasticSearchQueryCreatorComposite;
     }
 
     public function getQuery(): Query {
@@ -69,7 +74,7 @@ class ElasticSearchQuery {
         return $metadataQuery;
     }
 
-    private function getMetadataPath(Metadata $metadata): string {
+    public static function getMetadataPath(Metadata $metadata): string {
         $metadataPath = $metadata->getId() . '.value_' . $metadata->getControl();
         while (!$metadata->isTopLevel()) {
             $parentMetadata = $metadata->getParent();
@@ -159,27 +164,7 @@ class ElasticSearchQuery {
             if (!is_array($filter)) {
                 $filter = [$filter];
             }
-            $metadataFilter = new Query\BoolQuery();
-            switch ($metadata->getControl()->getValue()) {
-                case MetadataControl::DISPLAY_STRATEGY:
-                case MetadataControl::TEXTAREA:
-                case MetadataControl::TEXT:
-                    foreach ($filter as $phrase) {
-                        $metadataFilter->addShould(
-                            [
-                                new Query\Fuzzy($this->getMetadataPath($metadata), $phrase),
-                                new Query\Match($this->getMetadataPath($metadata), $phrase),
-                            ]
-                        );
-                    }
-                    break;
-                default:
-                    $metadataFilter->addShould(
-                        [
-                            new Query\Terms($this->getMetadataPath($metadata), $filter),
-                        ]
-                    );
-            }
+            $metadataFilter = $this->elasticSearchQueryCreatorComposite->createSearchQuery($filter, $metadata);
             $metadataFilters->addMust($metadataFilter);
         }
         return $metadataFilters;

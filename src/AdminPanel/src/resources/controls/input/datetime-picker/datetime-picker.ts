@@ -37,6 +37,18 @@ export class DatetimePicker implements ComponentAttached {
     });
   }
 
+  rangeDateModeChanged(newDateMode: DateMode, oldDateMode: DateMode) {
+    if (newDateMode && this.datepicker && this.linkedDatepicker) {
+      $(this.datepicker).data('DateTimePicker').options(inputDateConfig[newDateMode].options);
+      $(this.linkedDatepicker).data('DateTimePicker').options(inputDateConfig[newDateMode].options);
+      if (this.flexible) {
+        let dateData = this.createCurrentFlexibleDateValue();
+        dateData.rangeMode = newDateMode;
+        this.value = dateData;
+      }
+    }
+  }
+
   private createDateTimePickers() {
     if (this.isRange) {
       $(this.datepicker).datetimepicker(inputDateConfig[this.rangeDateMode].options);
@@ -77,11 +89,7 @@ export class DatetimePicker implements ComponentAttached {
   }
 
   listenForDateRangePickerEvents() {
-    let dateData = new FlexibleDateContent();
-    dateData.mode = this.dateMode;
-    dateData.rangeMode = this.rangeDateMode;
-    dateData.from = (this.value && this.flexible) ? this.value['from'] : this.value;
-    dateData.to = (this.value && this.flexible) ? this.value['to'] : this.value;
+    let dateData = this.createCurrentFlexibleDateValue();
     if (dateData.from) {
       $(this.linkedDatepicker).data("DateTimePicker").minDate(moment(dateData.from).format(inputDateConfig[this.rangeDateMode].format));
     }
@@ -94,6 +102,7 @@ export class DatetimePicker implements ComponentAttached {
       }
       const inputDate = e.date;
       $(this.linkedDatepicker).data("DateTimePicker").minDate(inputDate);
+      let dateData = this.createCurrentFlexibleDateValue();
       dateData.from = inputDate ? inputDate.format() : undefined;
       this.value = dateData.from || dateData.to ? dateData : undefined;
       this.element.dispatchEvent(ChangeEvent.newInstance());
@@ -104,6 +113,7 @@ export class DatetimePicker implements ComponentAttached {
       }
       const inputDate = e.date;
       $(this.datepicker).data('DateTimePicker').maxDate(e.date);
+      let dateData = this.createCurrentFlexibleDateValue();
       dateData.to = inputDate ? inputDate.format() : undefined;
       this.value = dateData.from || dateData.to ? dateData : undefined;
       this.element.dispatchEvent(ChangeEvent.newInstance());
@@ -139,5 +149,14 @@ export class DatetimePicker implements ComponentAttached {
   @computedFrom('dateMode')
   get isRange(): boolean {
     return this.dateMode === DateMode.RANGE;
+  }
+
+  private createCurrentFlexibleDateValue(): FlexibleDateContent {
+    let dateData = new FlexibleDateContent();
+    dateData.mode = this.dateMode;
+    dateData.rangeMode = this.rangeDateMode;
+    dateData.from = (this.value && this.flexible) ? this.value['from'] : this.value;
+    dateData.to = (this.value && this.flexible) ? this.value['to'] : this.value;
+    return dateData;
   }
 }

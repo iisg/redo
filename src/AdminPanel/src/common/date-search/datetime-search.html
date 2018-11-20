@@ -1,0 +1,38 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="resources/controls/input/datetime-picker/datetime-picker"></require>
+
+    <div>
+        <button class="btn btn-xs default-button"
+            click.delegate="changeMode()">
+            <icon name="workflow-2"></icon>
+        </button>
+        <span>
+            ${selectedRangeDateMode | t}
+        </span>
+    </div>
+
+    <datetime-picker
+        class="datetimepicker-search"
+        flexible.bind="true"
+        date-mode.bind="selectedDateMode"
+        range-date-mode.bind="selectedRangeDateMode"
+        value.bind="value"
+        disabled.bind="disabled"></datetime-picker>
+
+    <div if.bind="isDateFilterSet">
+        <input
+            type="hidden"
+            value.bind="value.from"
+            name="metadataFilters[${filterableMetadataId}][from]">
+
+        <input
+            type="hidden"
+            value.bind="value.to"
+            name="metadataFilters[${filterableMetadataId}][to]">
+        <input
+            type="hidden"
+            value.bind="value.rangeMode"
+            name="metadataFilters[${filterableMetadataId}][rangeMode]">
+    </div>
+</template>
