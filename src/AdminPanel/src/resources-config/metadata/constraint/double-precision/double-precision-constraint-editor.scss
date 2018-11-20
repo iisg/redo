@@ -1,0 +1,8 @@
+@import "../../../../common/styles";
+
+double-precision-constraint-editor {
+  restore-from-original-button {
+    display: inline-block;
+    margin-top: $default-gap-size / 2;
+  }
+}

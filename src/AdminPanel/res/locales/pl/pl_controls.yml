@@ -2,6 +2,7 @@ text: Tekst
 textarea: Długi tekst
 wysiwyg-editor: Edytor WYSIWYG
 integer: Liczba całkowita
+double: Liczba rzeczywista
 flexible-date: Elastyczna data
 timestamp: Znacznik czasu
 boolean: Tak / Nie

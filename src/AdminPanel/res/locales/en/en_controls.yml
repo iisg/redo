@@ -1,7 +1,7 @@
 text: Text
 textarea: Long text
 wysiwyg-editor: WYSIWYG editor
-int: Integer
+integer: Integer
 double: Real number
 flexible-date: Flexible date
 date: Date

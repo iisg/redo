@@ -1,0 +1,5 @@
+<template>
+    <require from="common/value-converters/round-value-converter"></require>
+
+    ${metadataValue.value | round:(metadata.constraints.doublePrecision === undefined ? 2 : metadata.constraints.doublePrecision)}
+</template>
