@@ -7,7 +7,7 @@ import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {ContextResourceClass} from "resources/context/context-resource-class";
 import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
-import {Metadata} from "../../metadata/metadata";
+import {Metadata, GroupMetadataList} from "../../metadata/metadata";
 import {groupMetadata} from "../../../common/utils/metadata-utils";
 import {MetadataGroupRepository} from "../../metadata/metadata-group-repository";
 
@@ -17,7 +17,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   editing: boolean = false;
   resourceKindDetailsTabs: DetailsViewTabs;
   private urlListener: Subscription;
-  metadataGroups: { groupId, metadataList: Metadata[] }[];
+  metadataGroups: GroupMetadataList[];
 
   constructor(private resourceKindRepository: ResourceKindRepository,
               private router: Router,

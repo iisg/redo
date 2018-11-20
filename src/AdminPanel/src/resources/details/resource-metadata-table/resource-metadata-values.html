@@ -9,7 +9,8 @@
             <resource-metadata-value-display
                 metadata.bind="metadata"
                 resource.bind="resource"
-                value.bind="value"></resource-metadata-value-display>
+                value.bind="value"
+                check-metadata-brief.bind="checkMetadataBrief"></resource-metadata-value-display>
         </li>
     </ul>
     <span if.bind="resource.contents[metadata.id].length == 0 || resource.contents[metadata.id] == undefined">&mdash;</span>
