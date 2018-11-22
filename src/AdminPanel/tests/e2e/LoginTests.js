@@ -15,10 +15,13 @@ describe('Login Tests', function() {
 	  passwordField.sendKeys('admin');
 	  loginIcon.click();
 
-	  expect(element(by.linkText('admin')).isPresent()).toBe(true);
+	  expect(element(by.cssContainingText('span', 'admin')).isPresent()).toBe(true);
   });
 
   it('Log out', function() {
+	  var adminDropdown = element(by.cssContainingText('span', 'admin'));
+	  adminDropdown.click();
+	  
 	  var logOutButton = element(by.cssContainingText('span', 'Wyloguj'));
 	  logOutButton.click();
 

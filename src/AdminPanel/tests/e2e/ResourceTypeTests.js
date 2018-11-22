@@ -5,10 +5,10 @@ describe('Resource Type Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-
+  
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
-		browser.driver.manage().window().maximize();
+		browser.driver.manage().window().setSize(1536, 864);
   });
 
   it('Try to add without metadata', function() {
@@ -41,7 +41,7 @@ describe('Resource Type Tests', function() {
 
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
-		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
 
 		browser.sleep(500);
 		waitForElement(element(by.className('select2-selection__rendered')));
@@ -74,7 +74,7 @@ describe('Resource Type Tests', function() {
 
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
-		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
@@ -140,7 +140,7 @@ describe('Resource Type Tests', function() {
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
 		var confirmButton = element(by.buttonText('Zatwierdź'));
-		fields.get(0).clear();
+		fields.get(1).clear();
 		confirmButton.click();
 
 		waitForElement(element(by.className('help-block validation-message')));
@@ -163,7 +163,7 @@ describe('Resource Type Tests', function() {
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
 		var confirmButton = element(by.buttonText('Zatwierdź'));
-		fields.get(1).clear();
+		fields.get(0).clear();
 		confirmButton.click();
 
 		waitForElement(element(by.className('help-block validation-message')));
@@ -234,8 +234,8 @@ describe('Resource Type Tests', function() {
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
 		var confirmButton = element(by.buttonText('Zatwierdź'));
-		fields.get(0).clear();
-		fields.get(0).sendKeys('Nowa_Nazwa_Automatyczna');
+		fields.get(1).clear();
+		fields.get(1).sendKeys('Nowa_Nazwa_Automatyczna');
 		confirmButton.click();
 		browser.sleep(500);
 
@@ -256,8 +256,8 @@ describe('Resource Type Tests', function() {
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
 		var confirmButton = element(by.buttonText('Zatwierdź'));
-		fields.get(1).clear();
-		fields.get(1).sendKeys('Nowa_Nazwa_AutomatycznaENG');
+		fields.get(0).clear();
+		fields.get(0).sendKeys('Nowa_Nazwa_AutomatycznaENG');
 		confirmButton.click();
 		browser.sleep(500);
 

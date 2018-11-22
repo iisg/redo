@@ -8,7 +8,7 @@ describe('Transition Tests', function() {
 
   beforeEach(function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	browser.driver.manage().window().maximize();
+	browser.driver.manage().window().setSize(1536, 864);
 
 	waitForElement(element(by.cssContainingText('span', 'Dodaj')));
 	var addResourceButton = element(by.cssContainingText('span', 'Dodaj'));
