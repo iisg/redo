@@ -9,7 +9,7 @@ describe('Metadata Type Tests', function() {
   beforeAll(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/');
 
-	  var loginButton = element(by.cssContainingText('span', 'Zaloguj'));
+	    var loginButton = element(by.cssContainingText('span', 'Zaloguj'));
 	    loginButton.click();
 
 	    var nameField = element(by.id('username'));
@@ -24,7 +24,7 @@ describe('Metadata Type Tests', function() {
 
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
-		browser.driver.manage().window().maximize();
+		browser.driver.manage().window().setSize(1536, 864);
   });
 
   it('Try to add without name', function() {
@@ -52,7 +52,7 @@ describe('Metadata Type Tests', function() {
 		var fields = element.all(by.className('form-control au-target'));
 		var addButton = element(by.buttonText('Dodaj'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
-		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 		addButton.click();
 
 		var errorMessage = element(by.className('help-block validation-message'));
@@ -69,7 +69,7 @@ describe('Metadata Type Tests', function() {
 		var fields = element.all(by.className('form-control au-target'));
 		var addButton = element(by.buttonText('Dodaj'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
-		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
 		addButton.click();
 
 		var errorMessage = element(by.className('help-block validation-message'));
@@ -209,7 +209,7 @@ describe('Metadata Type Tests', function() {
 
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
-		fields.get(1).clear();
+		fields.get(2).clear();
 
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
@@ -246,8 +246,8 @@ describe('Metadata Type Tests', function() {
 
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
-		fields.get(1).clear();
-		fields.get(1).sendKeys('SUBNazwaNEW_Testowanie_Automatyczne');
+		fields.get(2).clear();
+		fields.get(2).sendKeys('SUBNazwaNEW_Testowanie_Automatyczne');
 
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
@@ -378,8 +378,8 @@ describe('Metadata Type Tests', function() {
 
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
-		fields.get(1).clear();
-		fields.get(1).sendKeys('Edycja_Nazwy');
+		fields.get(2).clear();
+		fields.get(2).sendKeys('Edycja_Nazwy');
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
 
@@ -400,8 +400,8 @@ describe('Metadata Type Tests', function() {
 
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
-		fields.get(2).clear();
-		fields.get(2).sendKeys('Edycja_NazwyENG');
+		fields.get(1).clear();
+		fields.get(1).sendKeys('Edycja_NazwyENG');
 
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		confirmButton.click();
