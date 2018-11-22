@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\EventListener\Doctrine;
 
-use Assert\Assertion;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Psr\Container\ContainerInterface;
 use Repeka\Domain\Entity\ResourceKind;
@@ -46,7 +45,11 @@ class ResourceKindMetadataListConverterListener {
             $metadataOverrides = array_combine($metadataIds, $metadataOverrides);
             $metadataRepository = $this->container->get(MetadataRepository::class);
             $metadataList = $metadataRepository->findByIds($metadataIds);
-            Assertion::count($metadataList, count($metadataIds), 'Some metadata used in RK do not exist.');
+            if (count($metadataList) !== count($metadataIds)) {
+                $foundIds = EntityUtils::mapToIds($metadataList);
+                $missingIds = array_diff_key($metadataIds, $foundIds);
+                throw new \InvalidArgumentException('RK uses metadata that does not exist: ' . implode(', ', $missingIds));
+            }
             foreach ($metadataList as $metadata) {
                 $metadataWithOverrides = clone $metadata;
                 EntityUtils::forceSetField($metadataWithOverrides, $metadataOverrides[$metadata->getId()], 'overrides');
