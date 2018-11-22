@@ -23,7 +23,7 @@ class DeduplicatingUsersMigrationTest extends DatabaseMigrationTestCase {
         // added when introduced user roles; allows to create user with a command without messing up with custom SQLs that worked back then
         $this->getEntityManager()->getConnection()->exec('ALTER TABLE "user" ADD roles jsonb DEFAULT \'[]\' NOT NULL');
         // added when introduced metadata groups
-        $this->getEntityManager()->getConnection()->exec('ALTER TABLE "metadata" ADD "groupid" VARCHAR(64) DEFAULT NULL');
+        $this->getEntityManager()->getConnection()->exec('ALTER TABLE "metadata" ADD "group_id" VARCHAR(64) DEFAULT NULL');
         // added when calculating display strategies after changes
         $this->getEntityManager()->getConnection()->exec(
             'ALTER TABLE resource ADD display_strategies_dirty BOOLEAN DEFAULT \'true\' NOT NULL'

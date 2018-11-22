@@ -20,7 +20,7 @@ class UnifyingMetadataNamesMigrationTest extends DatabaseMigrationTestCase {
     public function prepare() {
         $this->loadDumpV8();
         // added when introduced metadata groups
-        $this->getEntityManager()->getConnection()->exec('ALTER TABLE "metadata" ADD "groupid" VARCHAR(64) DEFAULT NULL');
+        $this->getEntityManager()->getConnection()->exec('ALTER TABLE "metadata" ADD "group_id" VARCHAR(64) DEFAULT NULL');
         $this->metadataRepository = $this->container->get(MetadataRepository::class);
         $this->metadataRepository->save(Metadata::create('books', MetadataControl::TEXT(), 'żółw ', ['PL' => 'Test']));
         $this->metadataRepository->save(Metadata::create('books', MetadataControl::TEXT(), '"żóŁw', ['PL' => 'Test']));
