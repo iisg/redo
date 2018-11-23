@@ -54,7 +54,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     if (this.resourceKind.workflow) {
       this.resourceKindDetailsTabs.addTab('workflow', this.i18n.tr('Workflow'));
     }
-    this.resourceKindDetailsTabs.setActiveTabId(activeTabId);
+    this.resourceKindDetailsTabs.activateTab(activeTabId);
   }
 
   showEditForm() {
