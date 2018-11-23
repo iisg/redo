@@ -69,7 +69,7 @@ export class MetadataDetails implements RoutableComponentActivate {
         () => `${this.i18n.tr('resource_classes::' + this.metadata.resourceClass + '//resource-kinds')} (${this.resourceKindList.length})`
       );
     }
-    this.metadataDetailsTabs.setActiveTabId(activeTabId);
+    this.metadataDetailsTabs.activateTab(activeTabId);
   }
 
   @computedFrom('metadata.constraints', 'metadata.control')

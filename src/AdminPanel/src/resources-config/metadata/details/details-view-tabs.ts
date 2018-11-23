@@ -19,33 +19,41 @@ export class DetailsViewTabs {
       this.setDefaultTabId(id);
     }
     this.listeners.push(this.eventAggregator.subscribe(`aurelia-plugins:tabs:tab-clicked:${id}`, () => {
-      this.setActiveTabId(id);
+      this.updateTabs(id);
       this.onTabChange();
     }));
     return this;
   }
 
-  public setDefaultTabId(tabId: string): this {
-    this.defaultTabId = tabId;
+  public setDefaultTabId(id: string): this {
+    this.defaultTabId = id;
     if (!this.activeTabId) {
-      this.setActiveTabId(tabId);
+      this.activateTab(id);
     }
     return this;
   }
 
-  public setActiveTabId(activeTabId: string): this {
-    this.tabs.forEach(tab => tab.active = false);
-    const requestedTabId = activeTabId;
-    if (!this.tabExists(activeTabId)) {
-      activeTabId = this.defaultTabId;
+  public activateTab(id: string): this {
+    if (!this.tabExists(id)) {
+      id = this.defaultTabId;
     }
-    this.tabs.find(tab => tab.id == activeTabId).active = true;
-    this.activeTabId = activeTabId;
-    if (requestedTabId && requestedTabId != activeTabId) {
+    const tabChanged = this.activeTabId != id;
+    if (tabChanged) {
+      $('#' + this.activeTabId).removeClass('active'); // It seems that aurelia-plugins-tabs itself does it only when other tab is clicked.
+    }
+    this.updateTabs(id);
+    if (tabChanged) {
+      $('#' + this.activeTabId).addClass('active'); // Because aurelia-plugins-tabs doesn't seem to do it when simply changing `tab.active`
+                                                    // value and changing the whole list would be required.
       this.onTabChange();
     }
-    this.updateLabels();
     return this;
+  }
+
+  private updateTabs(activeTabId: string) {
+      this.activeTabId = activeTabId;
+      this.tabs.forEach(tab => tab.active = tab.id == activeTabId);
+      this.updateLabels();
   }
 
   public clear(): this {
