@@ -159,11 +159,6 @@ $simple-form-number-input-box-minimum-width: 75px;
     }
   }
 
-  button {
-    border: none;
-    outline: none;
-  }
-
   dl {
     margin-top: 0;
     margin-bottom: 0;
@@ -472,6 +467,11 @@ $simple-form-number-input-box-minimum-width: 75px;
   ux-dialog-overlay {
     background-color: rgba(0, 0, 0, 0.3);
   }
+}
+
+button {
+  border: none;
+  outline: none;
 }
 
 // Animations.
