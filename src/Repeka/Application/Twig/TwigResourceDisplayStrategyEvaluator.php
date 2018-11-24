@@ -30,7 +30,8 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
     public function render(
         $resourceEntity,
         string $template,
-        ResourceDisplayStrategyUsedMetadataCollector $usedMetadataCollector = null
+        ResourceDisplayStrategyUsedMetadataCollector $usedMetadataCollector = null,
+        array $additionalContext = []
     ): string {
         try {
             if (!trim($template)) {
@@ -38,11 +39,14 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
             }
             $template = $this->compile($template);
             return $template->render(
-                [
-                    'r' => $resourceEntity,
-                    'resource' => $resourceEntity,
-                    TwigResourceDisplayStrategyEvaluatorExtension::USED_METADATA_COLLECTOR_KEY => $usedMetadataCollector,
-                ]
+                array_merge(
+                    [
+                        'r' => $resourceEntity,
+                        'resource' => $resourceEntity,
+                        TwigResourceDisplayStrategyEvaluatorExtension::USED_METADATA_COLLECTOR_KEY => $usedMetadataCollector,
+                    ],
+                    $additionalContext
+                )
             );
         } catch (\Throwable $e) {
             return $this->throwableToHumanMessage($e);

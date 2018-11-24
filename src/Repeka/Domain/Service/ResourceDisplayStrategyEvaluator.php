@@ -14,7 +14,8 @@ interface ResourceDisplayStrategyEvaluator {
     public function render(
         $resourceEntity,
         string $template,
-        ResourceDisplayStrategyUsedMetadataCollector $usedMetadataCollector = null
+        ResourceDisplayStrategyUsedMetadataCollector $usedMetadataCollector = null,
+        array $additionalContext = []
     ): string;
 
     /**
