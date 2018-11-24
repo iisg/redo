@@ -19,15 +19,15 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
     private $strategyEvaluator;
     /** @var RepekaMetadataValueSetterResourceWorkflowPlugin */
     private $valueSetter;
-    private $resourceTransitionCommandAdjuster;
 
     /** @before */
     public function init() {
-        $this->resourceTransitionCommandAdjuster = $this->createMock(ResourceTransitionCommandAdjuster::class);
+        $resourceTransitionCommandAdjuster = $this->createMock(ResourceTransitionCommandAdjuster::class);
+        $resourceTransitionCommandAdjuster->method('adjustCommand')->willReturnArgument(0);
         $this->strategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
         $metadataRepository = $this->createRepositoryStub(MetadataRepository::class);
         $this->valueSetter = new RepekaMetadataValueSetterResourceWorkflowPlugin(
-            $this->resourceTransitionCommandAdjuster,
+            $resourceTransitionCommandAdjuster,
             $this->strategyEvaluator,
             $metadataRepository
         );
@@ -42,7 +42,6 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
             [],
             $this->getContentsAfterEvent(
                 [],
-                [],
                 ['metadataName' => 5, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false]
             )->toArray()
         );
@@ -52,7 +51,7 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
         $this->assertEquals(
             ResourceContents::fromArray([1 => 'YY']),
-            $this->getContentsAfterEvent([], [1 => 'YY'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false])
+            $this->getContentsAfterEvent([], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false])
         );
     }
 
@@ -60,11 +59,7 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
         $this->assertEquals(
             ResourceContents::fromArray([1 => ['XX', 'YY']]),
-            $this->getContentsAfterEvent(
-                [1 => 'XX'],
-                [1 => ['XX', 'YY']],
-                ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false]
-            )
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false])
         );
     }
 
@@ -72,11 +67,15 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
         $this->assertEquals(
             ResourceContents::fromArray([1 => ['XX']]),
-            $this->getContentsAfterEvent(
-                [1 => 'XX'],
-                [1 => ['XX']],
-                ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => true]
-            )
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => true])
+        );
+    }
+
+    public function testDoesNothingWhenEmptyValueIsCalculated() {
+        $this->strategyEvaluator->method('render')->willReturn('');
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => ['XX']]),
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY'])
         );
     }
 
@@ -84,7 +83,7 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
         $this->assertEquals(
             ResourceContents::fromArray([1 => ['XX']]),
-            $this->getContentsAfterEvent([], [1 => ['XX']], ['metadataName' => 1, 'metadataValue' => 'XX', 'setOnlyWhenEmpty' => true])
+            $this->getContentsAfterEvent([], ['metadataName' => 1, 'metadataValue' => 'XX', 'setOnlyWhenEmpty' => true])
         );
     }
 
@@ -92,11 +91,7 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
         $this->assertEquals(
             ResourceContents::fromArray([1 => ['XX']]),
-            $this->getContentsAfterEvent(
-                [1 => 'XX'],
-                [1 => ['XX']],
-                ['metadataName' => 1, 'metadataValue' => 'XX', 'setOnlyWhenEmpty' => false]
-            )
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'XX', 'setOnlyWhenEmpty' => false])
         );
     }
 
@@ -108,27 +103,19 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         );
         $this->assertEquals(
             ResourceContents::fromArray([1 => 'AA', 2 => 'AA']),
-            $this->getContentsAfterEvent(
-                [2 => 'AA'],
-                [1 => 'AA', 2 => 'AA'],
-                ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false]
-            )
+            $this->getContentsAfterEvent([2 => 'AA'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false])
         );
     }
 
     public function testOptionFalseSameAsNotDefined() {
         $this->strategyEvaluator->method('render')->willReturnArgument(1);
         $this->assertEquals(
-            $this->getContentsAfterEvent(
-                [1 => 'XX'],
-                [1 => 'XX'],
-                ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false]
-            ),
-            $this->getContentsAfterEvent([1 => 'XX'], [1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY',])
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY', 'setOnlyWhenEmpty' => false]),
+            $this->getContentsAfterEvent([1 => 'XX'], ['metadataName' => 1, 'metadataValue' => 'YY',])
         );
     }
 
-    private function getContentsAfterEvent(array $contents, array $expectedContents, array $config): ResourceContents {
+    private function getContentsAfterEvent(array $contents, array $config): ResourceContents {
         $workflow = $this->createMock(ResourceWorkflow::class);
         $workflow->method('getPlaces')->willReturn([$this->createWorkflowPlaceMock('a')]);
         $resourceKind = $this->createResourceKindMock(1, 'books', [$this->createMetadataMock(1)], $workflow);
@@ -137,12 +124,6 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
             ResourceContents::fromArray($contents),
             $this->createWorkflowTransitionMock([], [], ['a'])
         );
-        $expectedCommand = new ResourceTransitionCommand(
-            $this->createResourceMock(1, $resourceKind),
-            ResourceContents::fromArray($expectedContents),
-            $this->createWorkflowTransitionMock([], [], ['a'])
-        );
-        $this->resourceTransitionCommandAdjuster->method('adjustCommand')->willReturn($expectedCommand);
         $event = new BeforeCommandHandlingEvent($command);
         $this->valueSetter->beforeEnterPlace(
             $event,

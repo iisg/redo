@@ -37,11 +37,17 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
         }
         try {
             $metadata = $resource->getKind()->getMetadataByIdOrName($metadataName);
-            $value = $this->strategyEvaluator->render($newResourceContents, $metadataValue);
+            $value = $this->strategyEvaluator->render(
+                $newResourceContents,
+                $metadataValue,
+                null,
+                ['command' => $command, 'resourceBeforeTransition' => $resource]
+            );
+            $value = trim($value);
             $sameValueExists = in_array($value, $newResourceContents->getValuesWithoutSubmetadata($metadata));
             $anyValueExists = !empty($newResourceContents->getValues($metadata));
             $blockSettingNonEmpty = $setOnlyWhenEmpty && $anyValueExists;
-            if (!$sameValueExists && !$blockSettingNonEmpty) {
+            if ($value !== '' && !$sameValueExists && !$blockSettingNonEmpty) {
                 $newResourceContents = $newResourceContents->withMergedValues($metadata, $value);
             }
         } catch (\InvalidArgumentException $e) {
@@ -55,7 +61,7 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
     public function getConfigurationOptions(): array {
         return [
             new ResourceWorkflowPluginConfigurationOption('metadataName', MetadataControl::TEXT()),
-            new ResourceWorkflowPluginConfigurationOption('metadataValue', MetadataControl::TEXT()),
+            new ResourceWorkflowPluginConfigurationOption('metadataValue', MetadataControl::TEXTAREA()),
             new ResourceWorkflowPluginConfigurationOption('setOnlyWhenEmpty', MetadataControl::BOOLEAN()),
         ];
     }

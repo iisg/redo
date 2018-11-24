@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Plugins\MetadataValueSetter\Tests\Integration;
 
+use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
@@ -26,7 +27,6 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
      * @param $pluginConfiguration
      */
     protected function usePluginWithResource($resource, $pluginConfiguration) {
-        $transitions = $resource->getWorkflow()->getTransitions($resource);
         $workflow = $resource->getWorkflow();
         $places = array_map(
             function (ResourceWorkflowPlace $place) use ($pluginConfiguration) {
@@ -52,7 +52,12 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
             )
         );
         $this->handleCommandBypassingFirewall(
-            new ResourceTransitionCommand($resource, $resource->getContents(), $transitions[0]->getId(), $this->getAdminUser())
+            new ResourceTransitionCommand(
+                $resource,
+                $resource->getContents(),
+                SystemTransition::UPDATE()->toTransition($resource->getKind(), $resource),
+                $this->getAdminUser()
+            )
         );
     }
 
@@ -102,5 +107,58 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
         $this->assertContains('PHP - test', $newContent->getValuesWithoutSubmetadata($this->findMetadataByName('Tytuł')));
         $this->assertContains('UNICORN', $newContent->getValuesWithoutSubmetadata($this->findMetadataByName('Opis'))[1]);
         $this->assertContains('PHP - test', $newContent->getValuesWithoutSubmetadata($this->findMetadataByName('Opis'))[1]);
+    }
+
+    public function testSettingTheValueConditionally() {
+        $resource = $this->getPhpBookResource();
+        $oldContent = $resource->getContents();
+        $this->usePluginWithResource(
+            $resource,
+            [
+                [
+                    'name' => 'repekaMetadataValueSetter',
+                    'config' => [
+                        'metadataName' => 'opis',
+                        'metadataValue' => '{% if 1==2 %}UNICORN{%endif%}',
+                    ],
+                ],
+            ]
+        );
+        $newContent = $this->getPhpBookResource()->getContents();
+        $this->assertEquals($oldContent, $newContent);
+        $this->usePluginWithResource(
+            $resource,
+            [
+                [
+                    'name' => 'repekaMetadataValueSetter',
+                    'config' => [
+                        'metadataName' => 'opis',
+                        'metadataValue' => '{%if 1==1%}UNICORN{%endif%}',
+                    ],
+                ],
+            ]
+        );
+        $newContent = $this->getPhpBookResource()->getContents();
+        $this->assertNotEquals($oldContent, $newContent);
+    }
+
+    public function testSettingTheValueConditionallyBasedOnUserRole() {
+        $resource = $this->getPhpBookResource();
+        $oldContent = $resource->getContents();
+        $this->usePluginWithResource(
+            $resource,
+            [
+                [
+                    'name' => 'repekaMetadataValueSetter',
+                    'config' => [
+                        'metadataName' => 'opis',
+                        'metadataValue' => '{% if ("OPERATOR-" ~ resourceBeforeTransition.resourceClass) in command.executor.roles %}'
+                            . '{{command.executor.userData.id}}{%endif%}',
+                    ],
+                ],
+            ]
+        );
+        $newContent = $this->getPhpBookResource()->getContents();
+        $this->assertNotEquals($oldContent, $newContent);
     }
 }
