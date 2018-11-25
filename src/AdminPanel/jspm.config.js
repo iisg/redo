@@ -58,7 +58,7 @@ System.config({
     "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.15.0",
     "eonasdan-bootstrap-datetimepicker": "npm:eonasdan-bootstrap-datetimepicker@4.17.47",
     "fetch": "github:github/fetch@1.1.1",
-    "focus-within": "npm:focus-within@2.0.0",
+    "focus-within": "npm:focus-within@3.0.2",
     "jodit": "npm:jodit@3.2.10",
     "jquery": "npm:jquery@3.2.1",
     "jquery.fancytree": "npm:jquery.fancytree@2.29.1",
@@ -366,6 +366,11 @@ System.config({
       "moment": "npm:moment@2.22.2",
       "moment-timezone": "npm:moment-timezone@0.4.1"
     },
+    "npm:focus-within@3.0.2": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "postcss": "npm:postcss@7.0.6",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:fs.realpath@1.0.0": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
@@ -475,6 +480,12 @@ System.config({
     "npm:path-is-absolute@1.0.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:postcss@7.0.6": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.1",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "source-map": "npm:source-map@0.6.1"
+    },
     "npm:process@0.11.10": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
@@ -486,6 +497,9 @@ System.config({
     },
     "npm:snake-case@2.1.0": {
       "no-case": "npm:no-case@2.3.2"
+    },
+    "npm:source-map@0.6.1": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:swap-case@1.1.2": {
       "lower-case": "npm:lower-case@1.1.4",
