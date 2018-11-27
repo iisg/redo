@@ -8,8 +8,11 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\EventListener\EvaluateDisplayStrategiesOnResourceCreationListener;
+use Repeka\Domain\EventListener\UpdateDependentDisplayStrategiesListener;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class RandomResourcesFixture extends RepekaFixture {
     // if you want to populate your database with some random resources, increase these numbers and run npm run db:fixture
     // do not forget to revert them to zeros afterwards, as random resources are likely to break integration tests
@@ -24,6 +27,7 @@ class RandomResourcesFixture extends RepekaFixture {
      */
     public function load(ObjectManager $manager) {
         if (self::RANDOM_BOOKS_COUNT) {
+            UpdateDependentDisplayStrategiesListener::$alwaysLeaveDirty = true;
             $this->addFakeBooks($manager);
         }
     }

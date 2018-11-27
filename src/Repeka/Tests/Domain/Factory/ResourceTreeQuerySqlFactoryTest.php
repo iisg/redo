@@ -91,7 +91,7 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
             ->build();
         $factory =  (new ResourceTreeQuerySqlFactory($query));
         $sql = $factory->getMatchingResourcesQuery([1,2,500]);
-        $this->assertContains('SELECT r.* FROM', $sql);
+        $this->assertContains('SELECT r.id AS id FROM', $sql);
         $this->assertArrayHasEntry('res1', 1, $factory->getParams());
         $this->assertArrayHasEntry('res2', 2, $factory->getParams());
         $this->assertArrayHasEntry('res500', 500, $factory->getParams());

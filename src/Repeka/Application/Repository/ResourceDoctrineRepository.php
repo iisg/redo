@@ -135,7 +135,7 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
                 $found = true;
             } else {
                 /** @var ResourceEntity $nextToCheck */
-                $nextToCheck = $resourcesByIds[$resource->getParentId()];
+                $nextToCheck = $resourcesByIds[$nextToCheck->getParentId()];
                 $line[$nextToCheck->getId()] = $nextToCheck;
             }
         }

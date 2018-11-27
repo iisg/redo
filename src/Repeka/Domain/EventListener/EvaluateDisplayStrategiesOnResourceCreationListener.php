@@ -17,6 +17,9 @@ class EvaluateDisplayStrategiesOnResourceCreationListener extends CommandEventsL
     }
 
     public function onCommandHandled(CommandHandledEvent $event): void {
+        if (UpdateDependentDisplayStrategiesListener::$alwaysLeaveDirty) {
+            return;
+        }
         /** @var ResourceTransitionCommand $command */
         $command = $event->getCommand();
         if ($command->getTransition()->getId() == SystemTransition::CREATE) {
