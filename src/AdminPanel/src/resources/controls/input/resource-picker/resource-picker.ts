@@ -11,6 +11,8 @@ import {ResourceLabelValueConverter} from './../../../details/resource-label-val
 import {deepCopy, isObject} from "../../../../common/utils/object-utils";
 import {LoadSubtreeRequest, TreeItem} from '../../../../common/components/tree-view/tree-view';
 import {remove, debounce} from "lodash";
+import {Alert} from "../../../../common/dialog/alert";
+import {I18N} from "aurelia-i18n";
 
 @autoinject
 export class ResourcePicker implements ComponentAttached, ComponentDetached {
@@ -31,7 +33,9 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
 
   constructor(private resourceRepository: ResourceRepository,
               private resourceLabelValueConverter: ResourceLabelValueConverter,
-              private bindingEngine: BindingEngine) {
+              private bindingEngine: BindingEngine,
+              private alert: Alert,
+              private i18n: I18N) {
   }
 
   attached() {
@@ -90,7 +94,12 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
       };
       this.processItem(rootItem, tree.matching, isSearching, this.SIBLINGS, resultsPerPage, isSearching ? Infinity : this.DEPTH);
       return rootItem;
-    });
+    }).catch(() => {
+        const title = this.i18n.tr("Invalid request");
+        const text = this.i18n.tr("The searched phrase is incorrect");
+        this.alert.show({type: 'error'}, title, text);
+        return {} as TreeItem;
+      });
   }
 
   private createQuery(rootId, page, term, contentsFilter, resultsPerPage): ResourceTreeQuery {

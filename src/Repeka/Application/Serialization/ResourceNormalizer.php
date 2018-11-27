@@ -18,6 +18,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
     use NormalizerAwareTrait;
 
     const DO_NOT_STRIP_RESOURCE_CONTENT = 'doNotStripResourceContent';
+    const ALWAYS_RETURN_TEASER = 'alwaysReturnTeaser';
 
     /** @var TransitionPossibilityChecker */
     private $transitionPossibilityChecker;
@@ -60,12 +61,19 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
     private function shouldReturnTeaser(ResourceEntity $resource, array $context): bool {
         $user = $this->getCurrentUser();
         $doNotCheckRole = in_array(self::DO_NOT_STRIP_RESOURCE_CONTENT, $context);
-        return !$doNotCheckRole && (!$user || !$user->hasRole(SystemRole::OPERATOR()->roleName($resource->getResourceClass())));
+        $alwaysReturnTeaser = in_array(self::ALWAYS_RETURN_TEASER, $context);
+        return $alwaysReturnTeaser
+            || !$doNotCheckRole && (!$user || !$user->hasRole(SystemRole::OPERATOR()->roleName($resource->getResourceClass())));
     }
 
     private function getContentsArray(ResourceEntity $resource, bool $teaser): array {
         if ($teaser) {
-            return ResourceContents::fromArray([SystemMetadata::RESOURCE_LABEL => $resource->getValues(SystemMetadata::RESOURCE_LABEL)])
+            return ResourceContents::fromArray(
+                [
+                    SystemMetadata::RESOURCE_LABEL => $resource->getValues(SystemMetadata::RESOURCE_LABEL),
+                    SystemMetadata::PARENT => $resource->getValues(SystemMetadata::PARENT),
+                ]
+            )
                 ->toArray();
         } else {
             return $resource->getContents()->toArray();

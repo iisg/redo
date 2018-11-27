@@ -20,6 +20,8 @@ class UpdateDependentDisplayStrategiesListener extends CommandEventsListener {
     /** @var CommandBus */
     private $commandBus;
 
+    public static $alwaysLeaveDirty = false;
+
     /**
      * If we detect recursive display strategies (dependent on each other), how many times should we try them to settle down?
      * @var int
@@ -44,6 +46,9 @@ class UpdateDependentDisplayStrategiesListener extends CommandEventsListener {
     }
 
     public function onCommandHandled(CommandHandledEvent $event): void {
+        if (self::$alwaysLeaveDirty) {
+            return;
+        }
         $contentsBefore = $event->getDataFromBeforeEvent(self::class);
         $command = $event->getCommand();
         if ($contentsBefore && count($contentsBefore)) {

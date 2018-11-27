@@ -149,7 +149,7 @@ SQL;
     }
 
     public function getMatchingResourcesQuery(array $idsToCheck): string {
-        $query = $this->getSelectQuery($this->alias . '.*');
+        $query = $this->getSelectQuery($this->alias . '.id AS id');
         $parametrizedIds = [];
         foreach ($idsToCheck as $id) {
             $paramName = "res${id}";

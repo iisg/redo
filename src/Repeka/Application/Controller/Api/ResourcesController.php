@@ -2,6 +2,7 @@
 namespace Repeka\Application\Controller\Api;
 
 use Assert\Assertion;
+use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -100,7 +101,8 @@ class ResourcesController extends ApiController {
         $resourceTreeQuery = $resourceTreeQueryBuilder->build();
         /** @var TreeResult $resources */
         $resources = $this->handleCommand($resourceTreeQuery);
-        return $this->createJsonResponse($resources);
+        $json = $this->createJsonResponse($resources, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
+        return $json;
     }
 
     /**

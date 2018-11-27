@@ -118,12 +118,13 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingStrippedContentIfNotOperator() {
-        $resource = $this->createResourceMock(1, null, [SystemMetadata::RESOURCE_LABEL => 'ala', 2 => 'kot']);
+        $resource = $this->createResourceMock(1, null, [SystemMetadata::RESOURCE_LABEL => 'ala', 2 => 'kot', SystemMetadata::PARENT => 10]);
         $normalized = $this->normalizer->normalize($resource);
         $this->assertArrayHasKey('contents', $normalized);
         $contents = $normalized['contents'];
-        $this->assertCount(1, $contents);
+        $this->assertCount(2, $contents);
         $this->assertEquals([['value' => 'ala']], $contents[SystemMetadata::RESOURCE_LABEL]);
+        $this->assertEquals([['value' => 10]], $contents[SystemMetadata::PARENT]);
     }
 
     private function transition(string $id): ResourceWorkflowTransition {
