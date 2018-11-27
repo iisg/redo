@@ -1,8 +1,9 @@
 import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
+import {twoWay} from "../../../../common/components/binding-mode";
 
 export class DisplayStrategyConstraintEditor {
-  @bindable value: string;
+  @bindable(twoWay) value: string;
   @bindable originalValue: string;
   @bindable hasBase: boolean;
 
