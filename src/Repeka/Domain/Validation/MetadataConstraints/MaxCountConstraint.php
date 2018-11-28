@@ -26,8 +26,9 @@ class MaxCountConstraint extends AbstractMetadataConstraint implements Configura
             : true;
     }
 
-    public function validateAll(Metadata $metadata, $maxCount, array $metadataValues) {
-        if (isset($maxCount) && $maxCount !== -1) {
+    public function validateAll(Metadata $metadata, array $metadataValues) {
+        $maxCount = $metadata->getConstraints()[$this->getConstraintName()] ?? null;
+        if ($maxCount !== null && $maxCount !== -1) {
             try {
                 Validator::length(0, $maxCount)->setName($metadata->getName())->assert($metadataValues);
             } catch (NestedValidationException $e) {
@@ -36,7 +37,7 @@ class MaxCountConstraint extends AbstractMetadataConstraint implements Configura
         }
     }
 
-    public function validateSingle(Metadata $metadata, $config, $metadataValue) {
+    public function validateSingle(Metadata $metadata, $metadataValue) {
         throw new \BadMethodCallException('This validator can validate only the whole array of metadata');
     }
 }

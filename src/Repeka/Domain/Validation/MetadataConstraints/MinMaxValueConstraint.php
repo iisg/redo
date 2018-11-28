@@ -26,9 +26,10 @@ class MinMaxValueConstraint extends AbstractMetadataConstraint implements Config
         }
     }
 
-    public function validateSingle(Metadata $metadata, $config, $metadataValue) {
-        if (!Validator::intType()->validate($metadataValue)) {
-            throw new \InvalidArgumentException('Value must be an integer');
+    public function validateSingle(Metadata $metadata, $metadataValue) {
+        $config = $metadata->getConstraints()[$this->getConstraintName()] ?? [];
+        if (!Validator::numericVal()->validate($metadataValue)) {
+            throw new \InvalidArgumentException('Value must be a number');
         }
         if (array_key_exists('min', $config)) {
             if (isset($config['min']) & $config['min'] > $metadataValue) {

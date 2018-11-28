@@ -48,7 +48,7 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
         if (!$shouldBeValid) {
             $this->expectException(InvalidCommandException::class);
         }
-        $this->constraint->validateSingle($this->createMetadataMock(), $regex, $value);
+        $this->constraint->validateSingle($this->createMetadataMock(1, null, null, ['regex' => $regex]), $value);
     }
 
     public function regexTestCases() {
@@ -70,6 +70,9 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailsIfOneValueInArrayIsIncorrect() {
         $this->expectException(InvalidCommandException::class);
-        $this->constraint->validateAll($this->createMetadataMock(), '^a', [['value' => 'abc'], ['value' => 'bcd']]);
+        $this->constraint->validateAll(
+            $this->createMetadataMock(1, null, null, ['regex' => '^a']),
+            [['value' => 'abc'], ['value' => 'bcd']]
+        );
     }
 }

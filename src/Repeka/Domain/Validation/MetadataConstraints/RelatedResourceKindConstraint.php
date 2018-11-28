@@ -35,12 +35,13 @@ class RelatedResourceKindConstraint extends RespectValidationMetadataConstraint 
         )->validate($allowedResourceKindIds);
     }
 
-    public function validate(Metadata $metadata, $allowedResourceKindIds, $resourceId) {
+    public function validate(Metadata $metadata, $resourceId) {
         if ($metadata->getId() == SystemMetadata::PARENT) {
             // PARENT metadata constraints indicate what children can this resource has, not what parents.
             // If the reproductor metadata allowed to reach this place, it means that it is valid.
             return;
         }
+        $allowedResourceKindIds = $metadata->getConstraints()[$this->getConstraintName()] ?? [];
         try {
             $resource = $this->resourceRepository->findOne($resourceId);
             Validator::in($allowedResourceKindIds)

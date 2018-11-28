@@ -13,9 +13,6 @@ class MetadataConstraintManager {
     /** @var string[][] Maps controls names to arrays of constraint names */
     private $applicableForControl = [];
 
-    /** @var AbstractMetadataConstraint[][] Maps controls names to arrays of mandatory constraints */
-    private $mandatoryConstraints = [];
-
     public function __construct(iterable $constraints) {
         $this->registerAll($constraints);
     }
@@ -27,11 +24,6 @@ class MetadataConstraintManager {
         } else {
             throw new \InvalidArgumentException("Rule for constraint '$constraintName' isn't registered");
         }
-    }
-
-    /** @return AbstractMetadataConstraint[] */
-    public function getMandatoryConstraintsForControl(string $controlName): array {
-        return $this->mandatoryConstraints[$controlName] ?? [];
     }
 
     public function getSupportedConstraintNamesForControl(string $controlName): array {
@@ -56,18 +48,11 @@ class MetadataConstraintManager {
             }
             $this->constraints[$constraintName] = $constraint;
             $supportedControls = $constraint->getSupportedControls();
-            $isMandatory = $constraint->isMandatory();
             foreach ($supportedControls as $control) {
                 if (!array_key_exists($control, $this->applicableForControl)) {
                     throw new \InvalidArgumentException("Control '$control' not supported");
                 }
                 $this->applicableForControl[$control][] = $constraintName;
-                if ($isMandatory) {
-                    if (!array_key_exists($control, $this->mandatoryConstraints)) {
-                        $this->mandatoryConstraints[$control] = [];
-                    }
-                    $this->mandatoryConstraints[$control][] = $constraint;
-                }
             }
         }
     }

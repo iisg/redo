@@ -26,7 +26,7 @@ class DisplayStrategyConstraint extends RespectValidationMetadataConstraint impl
         return true;
     }
 
-    public function getValidator(Metadata $metadata, $displayStrategy, $metadataValue) {
+    public function getValidator(Metadata $metadata, $metadataValue) {
         return Validator::alwaysValid();
     }
 }

@@ -14,7 +14,7 @@ class DoublePrecisionConstraint extends RespectValidationMetadataConstraint impl
         return is_numeric($precision) && $precision >= 0;
     }
 
-    public function getValidator(Metadata $metadata, $displayStrategy, $metadataValue) {
+    public function getValidator(Metadata $metadata, $metadataValue) {
         return Validator::alwaysValid();
     }
 }

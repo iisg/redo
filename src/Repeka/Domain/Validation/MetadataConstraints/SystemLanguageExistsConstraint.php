@@ -18,11 +18,7 @@ class SystemLanguageExistsConstraint extends RespectValidationMetadataConstraint
         return [MetadataControl::SYSTEM_LANGUAGE];
     }
 
-    public function isMandatory(): bool {
-        return true;
-    }
-
-    protected function getValidator(Metadata $metadata, $config, $metadataValue) {
+    protected function getValidator(Metadata $metadata, $metadataValue) {
         return Validator::in($this->languageRepository->getAvailableLanguageCodes());
     }
 }
