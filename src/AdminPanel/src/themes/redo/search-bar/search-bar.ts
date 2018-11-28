@@ -9,7 +9,8 @@ export class SearchBar {
 
   navigateToSearchUrl() {
     if (this.phrase) {
-      let targetUrl = this.url.replace("%s", this.phrase);
+      const encodedPhrase = encodeURIComponent(this.phrase);
+      let targetUrl = this.url.replace("%s", encodedPhrase);
       if (this.selectedMetadataSubsetIds != '*') {
         targetUrl += '?metadataSubset=' + this.selectedMetadataSubsetIds;
       }
