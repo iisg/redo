@@ -8,8 +8,11 @@ use Repeka\Application\Resources\FrontendLocaleProvider;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Application\Upload\UploadSizeHelper;
 use Repeka\Application\Validation\ContainerAwareMetadataConstraintManager;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Metadata\MetadataImport\Mapping\Mapping;
+use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
+use Repeka\Domain\Validation\MetadataConstraints\ConfigurableMetadataConstraint;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 class FrontendConfig extends \Twig_Extension {
@@ -60,7 +63,7 @@ class FrontendConfig extends \Twig_Extension {
         return array_merge(
             $parameters,
             [
-                'control_constraints' => $this->metadataConstraintManager->getRequiredConstraintNamesMap(),
+                'control_constraints' => $this->getConfigurableMetadataConstraints(),
                 'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
                 'user_mapped_metadata_ids' => $userMappedMetadataIds ?? [],
                 'max_upload_size' => [
@@ -82,5 +85,17 @@ class FrontendConfig extends \Twig_Extension {
                 );
             }
         );
+    }
+
+    private function getConfigurableMetadataConstraints() {
+        $constraints = ArrayUtils::combineArrayWithSingleValue(MetadataControl::toArray(), []);
+        foreach ($this->metadataConstraintManager->getConstraints() as $constraint) {
+            if ($constraint instanceof ConfigurableMetadataConstraint) {
+                foreach ($constraint->getSupportedControls() as $supportedControl) {
+                    $constraints[$supportedControl][] = $constraint->getConstraintName();
+                }
+            }
+        }
+        return $constraints;
     }
 }

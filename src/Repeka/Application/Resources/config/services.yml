@@ -112,7 +112,7 @@ services:
     - '%repeka.upload.path%'
     - '%repeka.upload.temp_folder%'
 
-  Repeka\Application\Validation\ContainerAwareMetadataConstraintManager:
+  Repeka\Domain\Validation\MetadataConstraintManager:
     - !tagged repeka.metadata_constraint
 
   Repeka\Domain\Validation\Rules\ResourceClassExistsRule:
