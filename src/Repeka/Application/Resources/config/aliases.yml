@@ -15,7 +15,6 @@ services:
   Repeka\Domain\Service\RegexNormalizer: '@Repeka\Application\Service\PhpRegexNormalizer'
   Repeka\Domain\Service\ResourceDisplayStrategyEvaluator: '@Repeka\Application\Twig\TwigResourceDisplayStrategyEvaluator'
   Repeka\Domain\Upload\ResourceFileHelper: '@Repeka\Application\Upload\BasicResourceFileHelper'
-  Repeka\Domain\Validation\MetadataConstraintManager: '@Repeka\Application\Validation\ContainerAwareMetadataConstraintManager'
 
   Doctrine\ORM\EntityManagerInterface: '@doctrine.orm.entity_manager'
   M6Web\Component\Statsd\Client: '@m6_statsd'
