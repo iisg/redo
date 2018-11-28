@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Twig\Environment;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class GlobalExceptionListenerTest extends \PHPUnit_Framework_TestCase {
@@ -26,16 +27,24 @@ class GlobalExceptionListenerTest extends \PHPUnit_Framework_TestCase {
     private $session;
     /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $logger;
+    /** @var Environment|\PHPUnit_Framework_MockObject_MockObject */
+    private $twig;
+    /** @var Request */
+    private $jsonRequest;
 
     public function setUp() {
         $this->tokenStorage = $this->createMock(TokenStorage::class);
         $this->session = $this->createMock(SessionInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->twig = $this->createMock(Environment::class);
+        $this->jsonRequest = $this->createMock(Request::class);
+        $this->jsonRequest->method('getAcceptableContentTypes')->willReturn(['application/json']);
     }
 
     public function testHandleException() {
-        $this->listener = new GlobalExceptionListener(true, $this->tokenStorage, $this->session, $this->logger);
+        $this->listener = new GlobalExceptionListener(true, 'error.twig', $this->tokenStorage, $this->session, $this->logger, $this->twig);
         $mockedEvent = $this->createMock(GetResponseForExceptionEvent::class);
+        $mockedEvent->expects($this->once())->method('getRequest')->willReturn($this->jsonRequest);
         $mockedEvent->expects($this->once())->method('getException')->willReturn(new DomainException('a'));
         $mockedEvent->expects($this->once())->method('setResponse');
         $mockedEvent->method('getRequest')->willReturn($this->createMock(Request::class));
@@ -44,7 +53,7 @@ class GlobalExceptionListenerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testDomainExceptionResponse() {
-        $this->listener = new GlobalExceptionListener(false, $this->tokenStorage, $this->session, $this->logger);
+        $this->listener = new GlobalExceptionListener(false, 'error.twig', $this->tokenStorage, $this->session, $this->logger, $this->twig);
         $response = $this->listener->createErrorResponse(new DomainException('Error', 123, ['foo' => 'bar']), new Request());
         $this->assertEquals(123, $response->getStatusCode());
         $content = json_decode($response->getContent());
@@ -57,7 +66,7 @@ class GlobalExceptionListenerTest extends \PHPUnit_Framework_TestCase {
         $mockedUser->method('getUser')->willReturn(null);
         $mockedToken = $this->createMock(TokenStorage::class);
         $mockedToken->method('getToken')->willReturn($mockedUser);
-        $this->listener = new GlobalExceptionListener(false, $mockedToken, $this->session, $this->logger);
+        $this->listener = new GlobalExceptionListener(false, 'error.twig', $mockedToken, $this->session, $this->logger, $this->twig);
         $response = $this->listener->createErrorResponse(new AuthenticationException(), new Request());
         $expectedResponse = new JsonResponse(['message' => 'Unauthorized'], 401);
         $this->assertEquals($expectedResponse, $response);
@@ -68,14 +77,14 @@ class GlobalExceptionListenerTest extends \PHPUnit_Framework_TestCase {
         $mockedUser->method('getUser')->willReturn($this->createMock(UserEntity::class));
         $mockedToken = $this->createMock(TokenStorage::class);
         $mockedToken->method('getToken')->willReturn($mockedUser);
-        $this->listener = new GlobalExceptionListener(false, $mockedToken, $this->session, $this->logger);
+        $this->listener = new GlobalExceptionListener(false, 'error.twig', $mockedToken, $this->session, $this->logger, $this->twig);
         $response = $this->listener->createErrorResponse(new AccessDeniedException('Forbidden'), new Request());
         $expectedResponse = new JsonResponse(['message' => 'Forbidden'], 403);
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testNotFoundExceptionResponse() {
-        $this->listener = new GlobalExceptionListener(false, $this->tokenStorage, $this->session, $this->logger);
+        $this->listener = new GlobalExceptionListener(false, 'error.twig', $this->tokenStorage, $this->session, $this->logger, $this->twig);
         $exception = new NotFoundHttpException('Foo not found');
         $response = $this->listener->createErrorResponse($exception, new Request());
         $expectedResponse = new JsonResponse(['message' => $exception->getMessage()], 404);
@@ -83,14 +92,14 @@ class GlobalExceptionListenerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testOtherExceptionResponses() {
-        $this->listener = new GlobalExceptionListener(false, $this->tokenStorage, $this->session, $this->logger);
+        $this->listener = new GlobalExceptionListener(false, 'error.twig', $this->tokenStorage, $this->session, $this->logger, $this->twig);
         $response = $this->listener->createErrorResponse(new \Exception('ExceptionError'), new Request());
         $expectedResponse = new JsonResponse(['message' => 'Internal server error.'], 500);
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testDisplayingOtherExceptionMessageIfDebug() {
-        $this->listener = new GlobalExceptionListener(true, $this->tokenStorage, $this->session, $this->logger);
+        $this->listener = new GlobalExceptionListener(true, 'error.twig', $this->tokenStorage, $this->session, $this->logger, $this->twig);
         $response = $this->listener->createErrorResponse(new \Exception('ExceptionError'), new Request());
         $expectedResponse = new JsonResponse(['message' => 'ExceptionError'], 500);
         $this->assertEquals($expectedResponse, $response);

@@ -31,9 +31,13 @@ class ResourcesSearchController extends Controller {
         array $headers,
         Request $request
     ) {
+        if (!in_array('text/html', $request->getAcceptableContentTypes())) {
+            throw $this->createNotFoundException();
+        }
         $phrase = $request->get('phrase');
         $filterableMetadataNamesOrIds = $ftsConfig['filterable_metadata_ids'] ?? [];
         $filterableMetadata = array_map([$this->metadataRepository, 'findByNameOrId'], $filterableMetadataNamesOrIds);
+        $request->getSession()->set('search.phrase', $phrase);
         $responseData = [
             'phrase' => $phrase,
             'filterableMetadataList' => $filterableMetadata,

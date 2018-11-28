@@ -33,14 +33,14 @@ class ResourcesExposureController extends Controller {
             $content = implode('', $resource->getValues($metadata));
         } catch (\Throwable $e) {
         }
-        if (!$content) {
-            $response = new Response('', Response::HTTP_NOT_FOUND);
-        } else {
-            $this->persistAndFlushUsageTrackKey($endpointUsageTrackingKey, $request, $resource);
+        if ($content) {
+            $this->trackUsage($endpointUsageTrackingKey, $request, $resource);
             $response = new Response($content, Response::HTTP_OK);
+            $response->headers->add($headers);
+            return $response;
+        } else {
+            throw $this->createNotFoundException();
         }
-        $response->headers->add($headers);
-        return $response;
     }
 
     public function exposeResourceTemplateAction(
@@ -54,13 +54,17 @@ class ResourcesExposureController extends Controller {
         /** @var ResourceEntity $resource */
         $resource = $resourceId;
         $responseData = ['resource' => $resource];
-        $this->persistAndFlushUsageTrackKey($endpointUsageTrackingKey, $request, $resource);
+        $this->trackUsage($endpointUsageTrackingKey, $request, $resource);
         $response = $this->render($template, $responseData);
-        $response->headers->add($headers);
-        return $response;
+        if ($response->getContent()) {
+            $response->headers->add($headers);
+            return $response;
+        } else {
+            throw $this->createNotFoundException();
+        }
     }
 
-    private function persistAndFlushUsageTrackKey($endpointUsageTrackingKey, $request, $resource) {
+    private function trackUsage($endpointUsageTrackingKey, $request, $resource) {
         if ($endpointUsageTrackingKey) {
             $endpointUsageLogEntry = new EndpointUsageLogEntry($request, $resource, $endpointUsageTrackingKey);
             $this->entityManager->persist($endpointUsageLogEntry);

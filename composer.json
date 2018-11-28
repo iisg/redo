@@ -22,6 +22,7 @@
     "php": ">=7.1",
     "ext-curl": "*",
     "ext-fileinfo": "*",
+    "ext-json": "*",
     "ext-mbstring": "*",
     "ext-pdo_pgsql": "*",
     "ext-pgsql": "*",

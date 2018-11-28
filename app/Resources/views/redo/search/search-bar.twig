@@ -1,0 +1,7 @@
+<div class="search-bar-container">
+    <search-bar metadata-subsets.bind="[{ids: 'tytul,opis', label: 'Tytuł, Opis'}]"
+        {% if app.request.query.all.metadataSubset is defined %}
+            selected-metadata-subset-ids="{{ app.request.query.all.metadataSubset }}"
+        {% endif %}
+        phrase="{{ app.session.get('search.phrase') }}"></search-bar>
+</div>

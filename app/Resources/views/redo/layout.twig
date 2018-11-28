@@ -1,12 +1,6 @@
 {% extends "redo/base.twig" %}
 {% block layout %}
     <div class="narrow-page-container">
-        {% include "redo/title-bar.twig" %}
-        {% block banner %}{% endblock %}
-        {% include "redo/menu.twig" %}
-        {% block breadcrumbs %}{% endblock %}
-        {% include "redo/search-bar-container.twig" %}
         {% block content %}{% endblock %}
-        <redo-footer></redo-footer>
     </div>
 {% endblock %}

@@ -1,0 +1,22 @@
+{% extends "redo/layout.twig" %}
+
+{% set page_title = 'Błąd' %}
+
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+
+    <div class="big-search-bar">
+        {% include "redo/search/search-bar.twig" %}
+    </div>
+
+    <div class="form-group">
+        <h1>Błąd</h1>
+        <p>Strona, na którą trafiłeś {{ responseStatus == 404 ? 'nie istnieje' : 'spowodowała błąd aplikacji' }}.</p>
+        {% if app.environment == 'dev' %}
+            <code>{{ exception.message }}</code>
+        {% endif %}
+    </div>
+
+    {% include "redo/footer.twig" %}
+{% endblock %}

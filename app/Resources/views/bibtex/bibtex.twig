@@ -1,6 +1,6 @@
 {% set bibtexType = (resource | mBibtexType) is null ? (resource | mBibtexType) : '@misc' %}
 {% set bibtexKey = (resource | mBibtexKey) is null ? (resource | mBibtexType) : 'abramowitz+stegun' %}
-{{ bibtexType }} { {{ bibtexKey }}
+{{ bibtexType }}{{ '{' }}{{ bibtexKey }}
     title = {{ resource | mtytul | bibtexEscape | raw }},
     year = {{ "1996" | bibtexEscape | raw }},
 {% for metadata in resource.kind.metadataList %}{% set metadataValue = resource | metadata(metadata.id) | first %}

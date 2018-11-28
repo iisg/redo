@@ -1,10 +1,30 @@
 $search-bar-width: 500px;
 
-.home-page-search-bar-container {
-    .search-bar {
-        width: $search-bar-width;
-        .search-box-with-options {
-            width: 100%;
-        }
+.big-search-bar {
+  .search-bar {
+    width: $search-bar-width;
+
+    .search-box-with-options {
+      width: 100%;
     }
+
+    .metadata-subsets-chooser {
+      display: flex !important;
+    }
+
+    .redo-logo-icon {
+      padding-left: $default-gap-size / 4;
+      padding-right: $default-gap-size / 4;
+    }
+
+    input {
+      min-width: 0;
+      margin: $default-gap-size / 2;
+      font-size: 18px;
+    }
+
+    icon.redo-logo-icon, icon[name=search] {
+      height: 2.5em;
+    }
+  }
 }

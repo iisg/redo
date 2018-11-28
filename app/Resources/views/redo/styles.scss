@@ -1,15 +1,16 @@
 @import "styles/variables";
 @import "styles/colors";
 
-@import "styles/menu";
 @import "styles/breadcrumbs";
 @import "styles/base";
 @import "styles/buttons";
 @import "styles/search-bar-container";
 @import "styles/home";
 @import "styles/login-form";
+@import "styles/menu";
 @import "styles/search-results";
 @import "styles/pagination";
 @import "styles/resource-details";
 @import "styles/title-bar";
 @import "../../../../src/AdminPanel/src/common/components/icon/icon";
+@import "../../../../src/AdminPanel/src/common/components/redo-footer/redo-footer";
