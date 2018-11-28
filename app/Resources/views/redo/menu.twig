@@ -1,14 +1,17 @@
 <div class="site-menu">
     <div>
-        <a class="{{ urlMatches('/#', '/search') ? 'active' : '' }}" href="/">
+        <a class="{{ urlMatches('/#', '/search') ? 'active' : '' }}"
+            href="/">
             {{ icon('search', 1.5) }}
             <span>Szukaj</span>
         </a>
-        <a class="{{ urlMatches('/resources') ? 'active' : '' }}" href="/resources">
+        <a class="{{ urlMatches('/resources') ? 'active' : '' }}"
+            href="/resources">
             {{ icon('folder', 1.5) }}
             <span>Przeglądaj</span>
         </a>
-        <a class="{{ urlMatches('/for-authors') ? 'active' : '' }}" href="/for-authors">
+        <a class="{{ urlMatches('/for-authors') ? 'active' : '' }}"
+            href="/for-authors">
             {{ icon('edit', 1.5) }}
             <span>Dla autorów</span>
         </a>
@@ -22,10 +25,12 @@
                     <span>{{ app.user.username }}</span>
                 </button>
                 <div>
-                    <a href="/admin">
-                        {{ icon('created', 1.5) }}
-                        <span>Panel administracyjny</span>
-                    </a>
+                    {% if is_granted('ROLE_OPERATOR_SOME_CLASS') %}
+                        <a href="/admin">
+                            {{ icon('created', 1.5) }}
+                            <span>Panel administracyjny</span>
+                        </a>
+                    {% endif %}
                     <a href="/logout">
                         {{ icon('logout', 1.5) }}
                         <span>Wyloguj</span>
