@@ -2,17 +2,15 @@
     <form class="search-bar"
         submit.delegate="navigateToSearchUrl()">
         <div class="search-box-with-options">
-            <div class="icon-with-input-box"
-                class.bind="displayAsSmaller ? 'with-regular-font-size' : ''">
+            <div class="icon-with-input-box">
                 <icon class="redo-logo-icon"
                     name="redo-logo"
-                    size.bind="displayAsSmaller ? 1.5 : 2.5"></icon>
+                    size="1.5"></icon>
                 <input type="text"
                     value.bind="phrase"
                     placeholder="Szukaj w zasobach repozytorium">
             </div>
-            <div class="options"
-                if.bind="!displayAsSmaller">
+            <div class="metadata-subsets-chooser">
                 <div if.bind="metadataSubsets"
                     class="radio-buttons-group">
                     <label repeat.for="option of metadataSubsets">
@@ -26,14 +24,15 @@
                 <a href.bind="advancedSearchUrl">
                     <icon name="settings-2"
                         size="1.25">
-                    </icon><span>Więcej kryteriów</span>
+                    </icon>
+                    <span>Więcej kryteriów</span>
                 </a>
             </div>
         </div>
         <button class="search-button"
             type="submit">
             <icon name="search"
-                size.one-time="displayAsSmaller ? 1.5 : 3"></icon>
+                size="1.5"></icon>
         </button>
     </form>
 </template>

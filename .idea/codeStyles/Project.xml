@@ -27,7 +27,6 @@
       <option name="ENABLED" value="false" />
     </editorconfig>
     <yaml>
-      <option name="INDENT_SEQUENCE_VALUE" value="true" />
       <option name="SEQUENCE_ON_NEW_LINE" value="true" />
     </yaml>
     <codeStyleSettings language="CSS">

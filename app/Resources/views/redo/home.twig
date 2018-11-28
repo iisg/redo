@@ -2,10 +2,11 @@
 
 {% set page_title = 'Strona główna' %}
 
-{% block banner %}
-    <img class="banner"
-        src="/files/images/banner.png">
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+    <div class="big-search-bar">
+        {% include "redo/search/search-bar.twig" %}
+    </div>
+    {% include "redo/footer.twig" %}
 {% endblock %}
-
-{% set search_bar_container_additional_classes = "home-page-search-bar-container" %}
-{% set display_bigger_search_bar = true %}

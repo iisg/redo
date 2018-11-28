@@ -30,11 +30,11 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_REAL_SCANNER = 'metadata-real-scanner';
     const REFERENCE_METADATA_SCANNER_USERNAME = 'metadata-scanner-username';
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
+    const REFERENCE_METADATA_SUPERVISOR_USERNAME = 'metadata-supervisor-username';
     const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
     const REFERENCE_METADATA_URL = 'metadata-url';
     const REFERENCE_METADATA_URL_LABEL = 'metadata-url-label';
-    const REFERENCE_METADATA_DETAILS_PAGE = 'metadata-details-page';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -376,22 +376,6 @@ class MetadataFixture extends RepekaFixture {
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
                 [
-                    'name' => 'Details page',
-                    'label' => [
-                        'PL' => 'Strona szczegółów',
-                        'EN' => 'Details page',
-                    ],
-                    'control' => MetadataControl::DISPLAY_STRATEGY(),
-                    'shownInBrief' => false,
-                    'resourceClass' => 'books',
-                    'constraints' => ['displayStrategy' => '{% include "redo/resource-details.twig" %}'],
-                ]
-            ),
-            self::REFERENCE_METADATA_DETAILS_PAGE
-        );
-        $addedMetadata[] = $this->handleCommand(
-            MetadataCreateCommand::fromArray(
-                [
                     'name' => 'nazwaSkanisty',
                     'label' => [
                         'PL' => 'Username skanisty',
@@ -404,6 +388,22 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_SCANNER_USERNAME
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'nazwaNadzorujacego',
+                    'label' => [
+                        'PL' => 'Username nadzorującego',
+                        'EN' => 'Supervisor username',
+                    ],
+                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'constraints' => ['displayStrategy' => '{{ r | mNadzorujacy | mUsername }}'],
+                ]
+            ),
+            self::REFERENCE_METADATA_SUPERVISOR_USERNAME
         );
         $this->handleCommand(
             new MetadataUpdateOrderCommand(

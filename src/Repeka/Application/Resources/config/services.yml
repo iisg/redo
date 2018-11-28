@@ -72,6 +72,7 @@ services:
   Repeka\Application\EventListener\GlobalExceptionListener:
     arguments:
       $isDebug: '%kernel.debug%'
+      $errorPageTwigTemplate: '%repeka.templates.error_page%'
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onException, priority: 1000 }
       - { name: monolog.logger, channel: exception_listener }

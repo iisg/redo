@@ -6,13 +6,16 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Exception\DomainException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Twig\Environment;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -31,20 +34,44 @@ class GlobalExceptionListener {
     private $session;
     /** @var LoggerInterface */
     private $logger;
+    /** @var Environment */
+    private $twig;
+    /** @var string */
+    private $errorPageTwigTemplate;
 
-    public function __construct($isDebug, TokenStorageInterface $tokenStorage, SessionInterface $session, LoggerInterface $logger) {
+    public function __construct(
+        $isDebug,
+        string $errorPageTwigTemplate,
+        TokenStorageInterface $tokenStorage,
+        SessionInterface $session,
+        LoggerInterface $logger,
+        Environment $twig
+    ) {
         $this->isDebug = $isDebug;
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
         $this->logger = $logger;
+        $this->twig = $twig;
+        $this->errorPageTwigTemplate = $errorPageTwigTemplate;
     }
 
     public function onException(GetResponseForExceptionEvent $event) {
         $exception = $event->getException();
         $this->logger->error($this->getFormattedExceptionString($exception));
         $request = $event->getRequest();
-        $errorResponse = $this->createErrorResponse($exception, $request);
-        $event->setResponse($errorResponse);
+        if (in_array('application/json', $request->getAcceptableContentTypes())) {
+            $errorResponse = $this->createErrorResponse($exception, $request);
+            $event->setResponse($errorResponse);
+        } else {
+            $responseStatus = $exception instanceof DomainException ? $exception->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
+            $responseStatus = $exception instanceof HttpException ? $exception->getStatusCode() : $responseStatus;
+            $responseContent = $this->twig->render(
+                $this->errorPageTwigTemplate,
+                ['exception' => $exception, 'responseStatus' => $responseStatus]
+            );
+            $response = new Response($responseContent, $responseStatus);
+            $event->setResponse($response);
+        }
     }
 
     public function createErrorResponse(\Exception $e, Request $request) {

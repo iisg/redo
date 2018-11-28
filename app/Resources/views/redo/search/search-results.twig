@@ -2,13 +2,12 @@
 
 {% set page_title = phrase ~ ' - wyniki wyszukiwania' %}
 
-{% set search_bar_phrase = phrase %}
-{% set display_bigger_search_bar = true %}
-{% if app.request.query.all.metadataSubset is defined %}
-    {% set selected_search_bar_metadata_subset = app.request.query.all.metadataSubset %}
-{% endif %}
-
 {% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+    <div class="big-search-bar">
+        {% include "redo/search/search-bar.twig" %}
+    </div>
     <div class="search-results-container">
         <div class="left-panel ${collapsed ? 'collapsed' : ''}"
             class-name-when-toggled="collapsed">
@@ -66,8 +65,9 @@
                 {% endfor %}
             {% endif %}
             {% if pagination is not empty %}
-                {%  include 'redo/pagination.twig' %}
+                {% include 'redo/search/pagination.twig' %}
             {% endif %}
         </div>
     </div>
+    {% include "redo/footer.twig" %}
 {% endblock %}

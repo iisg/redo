@@ -73,6 +73,7 @@ class Configuration implements ConfigurationInterface {
                     ->arrayNode('templates')->children()
                         ->scalarNode('login_form')->defaultValue('login-form.twig')->end()
                         ->scalarNode('homepage')->defaultValue('home.twig')->end()
+                        ->scalarNode('error_page')->defaultValue('error-page.twig')->end()
                     ->end()->end()
                 ->end()->end()
                 ->arrayNode('expose_endpoints')->normalizeKeys(false)->defaultValue([])->arrayPrototype()->children()

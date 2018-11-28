@@ -1,0 +1,61 @@
+{% set resourceVisible = resource.resourceClass == 'books' %}
+{% extends resourceVisible ? 'redo/layout.twig' : 'empty.twig' %}
+
+{% set page_title = resource | metadata('label') %}
+
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+    {% include "redo/search/search-bar.twig" %}
+    {% if resource | metadata('parent') | first %}
+        <div class="breadcrumbs">
+            {% embed "redo/resource-details/ancestors-list.twig" %}
+                {% block itemSuffix %}
+                    &gt;
+                {% endblock %}
+            {% endembed %}
+            {{ resource | metadata('label') }}
+        </div>
+    {% endif %}
+
+
+    <div class="resource-details">
+        <div class="details-container">
+            {% if resource | metadata('parent') | first %}
+                <div class="resource-ancestors">
+                    <span>Kolekcja</span>
+                    <div class="ancestors-list">
+                        {% embed "redo/resource-details/ancestors-list.twig" %}
+                            {% block itemNamePrefix %}
+                                <icon name="folder"></icon>
+                            {% endblock %}
+                        {% endembed %}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="details">
+                <span class="resource-image">
+                    {{ icon('book-2') }}
+                </span>
+                <div>
+                    <h1>{{ resource | metadata('label') }}</h1>
+                    {% for metadata in resource.kind.metadataList %}
+                        {% set metadataValue = resource | metadata(metadata.id) | first %}
+                        {% if metadataValue
+                            and metadata.name != 'tytul'
+                            and metadata.name != 'label'
+                            and metadata.name != 'parent'
+                            and metadata.control != 'display-strategy'
+                            and metadata.control != 'wysiwyg-editor' %}
+                            <p>
+                                <b>{{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}:</b> {{ metadataValue }}
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <h3><a href="/resources/{{ resource.id }}/bibtex">BibTeX</a></h3>
+        </div>
+    </div>
+    {% include "redo/footer.twig" %}
+{% endblock %}

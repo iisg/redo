@@ -44,9 +44,10 @@ repeka:
     templates:
       homepage: redo/home.twig
       login_form: redo/login-form.twig
+      error_page: redo/error-page.twig
   expose_endpoints:
     /resources/{resourceId}:
-      metadata: detailsPage
+      template: redo/resource-details/resource-details.twig
     /search/{phrase}:
       template: redo/search/search-results-page.twig
       fts:

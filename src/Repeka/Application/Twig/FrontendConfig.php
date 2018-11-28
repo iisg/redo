@@ -3,6 +3,7 @@ namespace Repeka\Application\Twig;
 
 use Psr\Container\ContainerInterface;
 use Repeka\Application\Authentication\UserDataMapping;
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Resources\FrontendLocaleProvider;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Application\Upload\UploadSizeHelper;
@@ -54,12 +55,7 @@ class FrontendConfig extends \Twig_Extension {
         $parameters = array_map([$this->container, 'getParameter'], self::PUBLIC_PARAMETERS);
         $uploadSizeHelper = new UploadSizeHelper();
         if ($this->userDataMapping->mappingExists() && $this->getCurrentUser()) {
-            $userMappedMetadataIds = array_map(
-                function (Mapping $mapping) {
-                    return $mapping->getMetadata()->getId();
-                },
-                $this->userDataMapping->getImportConfig()->getMappings()
-            );
+            $userMappedMetadataIds = $this->getUserMappedMetadataIds();
         }
         return array_merge(
             $parameters,
@@ -72,6 +68,19 @@ class FrontendConfig extends \Twig_Extension {
                     'total' => $uploadSizeHelper->getMaxUploadSize(),
                 ],
             ]
+        );
+    }
+
+    private function getUserMappedMetadataIds() {
+        return FirewallMiddleware::bypass(
+            function () {
+                return array_map(
+                    function (Mapping $mapping) {
+                        return $mapping->getMetadata()->getId();
+                    },
+                    $this->userDataMapping->getImportConfig()->getMappings()
+                );
+            }
         );
     }
 }

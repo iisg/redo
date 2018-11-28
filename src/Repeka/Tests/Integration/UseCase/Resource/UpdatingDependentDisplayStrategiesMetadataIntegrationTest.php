@@ -85,38 +85,41 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
     }
 
     public function testNotUpdatingNotDependentMetadata() {
-        $detailsPage = $this->findMetadataByName('detailsPage');
-        $this->updateDisplayStrategyOfPhpBookKind($detailsPage, '{{ random(1000) }}');
-        $number = $this->phpBook->getValues($detailsPage)[0]->getValue();
+        $displayStrategyMetadata = $this->findMetadataByName('nazwaNadzorujacego');
+        $this->updateDisplayStrategyOfPhpBookKind($displayStrategyMetadata, '{{ random(1000) }}');
+        $number = $this->phpBook->getValues($displayStrategyMetadata)[0]->getValue();
         $this->assertGreaterThanOrEqual(0, $number);
         $this->changeScannerUsernameToNewScanner();
-        $this->assertEquals($number, $this->phpBook->getValues($detailsPage)[0]->getValue());
+        $this->assertEquals($number, $this->phpBook->getValues($displayStrategyMetadata)[0]->getValue());
     }
 
     public function testUpdatingMetadataDependentOnAnotherDisplayStrategyMetadata() {
-        $detailsPage = $this->findMetadataByName('detailsPage');
-        $this->updateDisplayStrategyOfPhpBookKind($detailsPage, '{{ r|mNazwaSkanisty|upper }}');
-        $upperScanner = $this->phpBook->getValues($detailsPage)[0]->getValue();
+        $displayStrategyMetadata = $this->findMetadataByName('nazwaNadzorujacego');
+        $this->updateDisplayStrategyOfPhpBookKind($displayStrategyMetadata, '{{ r|mNazwaSkanisty|upper }}');
+        $upperScanner = $this->phpBook->getValues($displayStrategyMetadata)[0]->getValue();
         $this->assertEquals('SKANER', $upperScanner);
         $this->changeScannerUsernameToNewScanner();
-        $this->assertEquals('NOWYSKANER', $this->phpBook->getValues($detailsPage)[0]->getValue());
+        $this->assertEquals('NOWYSKANER', $this->phpBook->getValues($displayStrategyMetadata)[0]->getValue());
     }
 
     public function testMetadataDependentOnEachOther() {
-        $detailsPage = $this->findMetadataByName('detailsPage');
-        $this->updateDisplayStrategyOfPhpBookKind($detailsPage, '{{ r|mNazwaSkanisty|upper }}');
-        $this->updateDisplayStrategyOfPhpBookKind($this->scannerUsernameMetadata, '{{ r|mDetailsPage|capitalize }}');
-        $upperScanner = $this->phpBook->getValues($detailsPage)[0]->getValue();
+        $displayStrategyMetadata = $this->findMetadataByName('nazwaNadzorujacego');
+        $this->updateDisplayStrategyOfPhpBookKind($displayStrategyMetadata, '{{ r|mNazwaSkanisty|upper }}');
+        $this->updateDisplayStrategyOfPhpBookKind($this->scannerUsernameMetadata, '{{ r|mNazwaNadzorujacego|capitalize }}');
+        $upperScanner = $this->phpBook->getValues($displayStrategyMetadata)[0]->getValue();
         $this->assertEquals('SKANER', $upperScanner);
         $capitalizedScanner = $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue();
         $this->assertEquals('Skaner', $capitalizedScanner);
     }
 
     public function testMetadataDependentOnEachOtherGivesUpInfiniteRecursion() {
-        $detailsPage = $this->findMetadataByName('detailsPage');
-        $this->updateDisplayStrategyOfPhpBookKind($detailsPage, '{{ r|mNazwaSkanisty|upper }} {{ random(1000) }}');
-        $this->updateDisplayStrategyOfPhpBookKind($this->scannerUsernameMetadata, '{{ r|mDetailsPage|capitalize }} {{ random(1000) }}');
-        $upperScanner = $this->phpBook->getValues($detailsPage)[0]->getValue();
+        $displayStrategyMetadata = $this->findMetadataByName('nazwaNadzorujacego');
+        $this->updateDisplayStrategyOfPhpBookKind($displayStrategyMetadata, '{{ r|mNazwaSkanisty|upper }} {{ random(1000) }}');
+        $this->updateDisplayStrategyOfPhpBookKind(
+            $this->scannerUsernameMetadata,
+            '{{ r|mNazwaNadzorujacego|capitalize }} {{ random(1000) }}'
+        );
+        $upperScanner = $this->phpBook->getValues($displayStrategyMetadata)[0]->getValue();
         $this->assertContains('SKANER', $upperScanner);
         $capitalizedScanner = $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue();
         $this->assertContains('Skaner', $capitalizedScanner);

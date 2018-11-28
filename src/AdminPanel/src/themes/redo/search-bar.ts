@@ -1,7 +1,6 @@
 import {bindable} from "aurelia-templating";
 
 export class SearchBar {
-  @bindable displayAsSmaller = false;
   @bindable phrase = '';
   @bindable url = '/search/%s';
   @bindable advancedSearchUrl = '/search';
