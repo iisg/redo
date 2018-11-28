@@ -5,7 +5,7 @@ describe('Transition Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-
+  
   beforeEach(function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	browser.driver.manage().window().setSize(1536, 864);
@@ -97,8 +97,9 @@ describe('Transition Tests', function() {
 	browser.sleep(5000);
 
 	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(3).sendKeys('ZZZ_automatyczne_testowanie');
+	formsList.get(2).sendKeys('ZZZ_automatyczne_testowanie');
 	waitForElement(element(by.cssContainingText('ul', 'ZZZ_automatyczne_testowanie')));
+	browser.sleep(3000);
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
 	checkboxProper.click();
@@ -152,8 +153,9 @@ describe('Transition Tests', function() {
 	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(3).sendKeys('AAA_testowanie_automatyczne');
+	formsList.get(2).sendKeys('AAA_testowanie_automatyczne');
 	waitForElement(element(by.cssContainingText('ul', 'AAA_testowanie_automatyczne')));
+	browser.sleep(3000);
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
 	checkboxProper.click();
@@ -221,8 +223,9 @@ describe('Transition Tests', function() {
 	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(3).sendKeys('AAA_testowanie_automatyczne');
+	formsList.get(2).sendKeys('AAA_testowanie_automatyczne');
 	waitForElement(element(by.cssContainingText('ul', 'AAA_testowanie_automatyczne')));
+	browser.sleep(3000);
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
 	checkboxProper.click();
@@ -242,7 +245,7 @@ describe('Transition Tests', function() {
 
 	waitForElement(element(by.buttonText('Edytuj')));
     var metadataValuesList = element(by.className('resource-details'));
-	expect(metadataValuesList.getText()).toContain('admin');
+	expect(metadataValuesList.getText()).toContain('#8251');
 
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
@@ -282,8 +285,9 @@ describe('Transition Tests', function() {
 	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(3).sendKeys('AAA_testowanie_automatyczne');
+	formsList.get(2).sendKeys('AAA_testowanie_automatyczne');
 	waitForElement(element(by.cssContainingText('ul', 'AAA_testowanie_automatyczne')));
+	browser.sleep(3000);
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
 	checkboxProper.click();
