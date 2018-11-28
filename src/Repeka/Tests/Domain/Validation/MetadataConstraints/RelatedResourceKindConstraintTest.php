@@ -28,28 +28,27 @@ class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAcceptsWhenNoResourceKindIdsAndNoValueAreProvided() {
-        $this->constraint->validateAll($this->createMetadataMock(), [], []);
+        $this->constraint->validateAll($this->createMetadataMock(), []);
     }
 
     public function testRejectsWhenValueAndNoResourceKindIdsAreProvided() {
         $this->expectException(InvalidCommandException::class);
-        $this->constraint->validateAll($this->createMetadataMock(), [], [1]);
+        $this->constraint->validateAll($this->createMetadataMock(), [1]);
     }
 
     public function testAcceptsValueWhenSoleResourceKindIdMatches() {
-        $this->resourceKind->method('getId')->willReturn(123);
-        $this->constraint->validateAll($this->createMetadataMock(), [123], [1]);
+        $this->constraint->validateAll($this->createMetadataMockWithResourceKindConstraint([123]), [1]);
     }
 
     public function testAcceptsValueWhenAnyResourceKindIdMatches() {
         $this->resourceKind->method('getId')->willReturn(123);
-        $this->constraint->validateAll($this->createMetadataMock(), [100, 111, 123, 200], [1]);
+        $this->constraint->validateAll($this->createMetadataMockWithResourceKindConstraint([100, 111, 123, 200]), [1]);
     }
 
     public function testRejectsValueWhenResourceKindIdDoesNotMatch() {
         $this->expectException(InvalidCommandException::class);
         $this->resourceKind->method('getId')->willReturn(123);
-        $this->constraint->validateAll($this->createMetadataMock(), [100], [1]);
+        $this->constraint->validateAll($this->createMetadataMockWithResourceKindConstraint([100]), [1]);
     }
 
     public function testAcceptsValueWhenResourceDoesNotExist() {
@@ -57,7 +56,7 @@ class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
         $repository->method('findOne')->willThrowException(new EntityNotFoundException('dummy', 0));
         $constraint = new RelatedResourceKindConstraint($repository, $this->createMock(EntityExistsRule::class));
         $this->resourceKind->expects($this->never())->method('getId');
-        $constraint->validateAll($this->createMetadataMock(), [100], [2]);
+        $constraint->validateAll($this->createMetadataMockWithResourceKindConstraint([100]), [2]);
     }
 
     public function testAcceptsArgumentWhenResourceKindsExist() {
@@ -82,5 +81,9 @@ class RelatedResourceKindConstraintTest extends \PHPUnit_Framework_TestCase {
         $entityExists->method('forEntityType')->willReturnSelf();
         $constraint = new RelatedResourceKindConstraint($this->createMock(ResourceRepository::class), $entityExists);
         $this->assertFalse($constraint->isConfigValid([0, 1, 2]));
+    }
+
+    private function createMetadataMockWithResourceKindConstraint(array $allowedResourceKindIds) {
+        return $this->createMetadataMock(1, null, null, ['resourceKind' => $allowedResourceKindIds]);
     }
 }

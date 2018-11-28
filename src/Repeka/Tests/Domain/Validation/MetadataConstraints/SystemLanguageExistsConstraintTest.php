@@ -28,20 +28,20 @@ class SystemLanguageExistsConstraintTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAcceptMetadataWithoutLanguages() {
-        $this->rule->validateAll($this->metadata, null, []);
+        $this->rule->validateAll($this->metadata, []);
     }
 
     public function testAcceptMetadataWithAvailableLanguages() {
-        $this->rule->validateAll($this->metadata, null, [1 => "PL", 2 => "EN"]);
+        $this->rule->validateAll($this->metadata, [1 => "PL", 2 => "EN"]);
     }
 
     public function testRejectMetadataWithUnavailableLanguage() {
         $this->expectException(RespectValidationFailedException::class);
-        $this->rule->validateAll($this->metadata, null, [1 => "EN", 2 => "AA"]);
+        $this->rule->validateAll($this->metadata, [1 => "EN", 2 => "AA"]);
     }
 
     public function testRejectMetadataWithUnavailableLanguages() {
         $this->expectException(RespectValidationFailedException::class);
-        $this->rule->validateAll($this->metadata, null, [1 => "AA", 2 => "CC"]);
+        $this->rule->validateAll($this->metadata, [1 => "AA", 2 => "CC"]);
     }
 }

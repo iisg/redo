@@ -48,7 +48,8 @@ class RegexConstraint extends RespectValidationMetadataConstraint implements Con
         }
     }
 
-    public function getValidator(Metadata $metadata, $pattern, $metadataValue) {
+    public function getValidator(Metadata $metadata, $metadataValue) {
+        $pattern = $metadata->getConstraints()[$this->getConstraintName()] ?? null;
         if ($pattern) {
             $phpRegex = $this->regexNormalizer->normalize($pattern);
             return Validator::regex($phpRegex);

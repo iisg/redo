@@ -39,12 +39,10 @@ class MetadataValuesSatisfyConstraintsRule extends AbstractRule {
                 $metadataKind = $this->resourceKind->hasMetadata($metadataId)
                     ? $this->resourceKind->getMetadataById($metadataId)
                     : $this->metadataRepository->findOne($metadataId);
-                foreach ($this->metadataConstraintManager->getMandatoryConstraintsForControl($metadataKind->getControl()) as $constraint) {
-                    $constraint->validateAll($metadataKind, null, $values);
-                }
-                foreach ($metadataKind->getConstraints() as $constraintName => $constraintArgument) {
+                $constraints = $this->metadataConstraintManager->getSupportedConstraintNamesForControl($metadataKind->getControl());
+                foreach ($constraints as $constraintName) {
                     $constraint = $this->metadataConstraintManager->get($constraintName);
-                    $constraint->validateAll($metadataKind, $constraintArgument, $values);
+                    $constraint->validateAll($metadataKind, $values);
                 }
             }
         );

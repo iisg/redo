@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
@@ -12,7 +13,9 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\AuditEntryRepository;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
 use Repeka\Tests\Domain\Factory\SampleResourceWorkflowDriverFactory;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
@@ -83,6 +86,19 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'relationship',
             'books',
             ['resourceKind' => [-1]]
+        );
+        $reproductor = SystemMetadata::REPRODUCTOR()->toMetadata();
+        $this->handleCommandBypassingFirewall(
+            new MetadataUpdateCommand(
+                $reproductor->getId(),
+                $reproductor->getLabel(),
+                $reproductor->getDescription(),
+                $reproductor->getPlaceholder(),
+                ['resourceKind' => [SystemResourceKind::USER]],
+                $reproductor->getGroupId(),
+                $reproductor->isShownInBrief(),
+                $reproductor->isCopiedToChildResource()
+            )
         );
         $this->metadata5 = $this->createMetadata('M5', ['PL' => 'metadata', 'EN' => 'metadata'], [], [], 'flexible-date');
         $this->workflowPlace1 = new ResourceWorkflowPlace(['PL' => 'key1', 'EN' => 'key1'], 'p1', [], [], [], [$this->metadata3->getId()]);
@@ -258,7 +274,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $created = $repository->findOne($createdId);
         $this->assertEquals($this->resourceKind->getId(), $created->getKind()->getId());
         $this->assertEquals(['created'], $created->getValues($this->metadata1));
-        $this->assertContains($created->getId(), $this->foundResourceIdsByMetadataValue('created', $this->metadata1->getId()));
+        $this->assertContains($created->getId(), $this->findResourceIdsByMetadataValue('created', $this->metadata1->getId()));
         return $createdId;
     }
 
@@ -314,7 +330,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(['Test value'], $cloned->getValues($this->metadata1));
         $this->assertContains(
             $cloned->getId(),
-            $this->foundResourceIdsByMetadataValue('Test value', $this->metadata1->getId())
+            $this->findResourceIdsByMetadataValue('Test value', $this->metadata1->getId())
         );
     }
 
@@ -398,11 +414,13 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'contents' => json_encode(
                     [
                         $this->metadata5->getId() => [
-                            ['value' => [
-                                'from' => '2018-09-13T16:39:49+02:00',
-                                'to' => '2018-09-13T16:39:49+02:00',
-                                'mode' => 'day',
-                                'rangeMode' => null],
+                            [
+                                'value' => [
+                                    'from' => '2018-09-13T16:39:49+02:00',
+                                    'to' => '2018-09-13T16:39:49+02:00',
+                                    'mode' => 'day',
+                                    'rangeMode' => null,
+                                ],
                             ],
                         ],
                     ]
@@ -429,7 +447,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     public function testEditingResource() {
         $this->assertNotContains(
             $this->resource->getId(),
-            $this->foundResourceIdsByMetadataValue('edited', $this->metadata1->getId())
+            $this->findResourceIdsByMetadataValue('edited', $this->metadata1->getId())
         );
         $client = self::createAdminClient();
         $client->apiRequest(
@@ -446,7 +464,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         /** @var ResourceEntity $edited */
         $edited = $repository->findOne($this->resource->getId());
         $this->assertEquals(['edited'], $edited->getValues($this->metadata1));
-        $this->assertContains($edited->getId(), $this->foundResourceIdsByMetadataValue('edited', $this->metadata1->getId()));
+        $this->assertContains($edited->getId(), $this->findResourceIdsByMetadataValue('edited', $this->metadata1->getId()));
     }
 
     public function testAutoAssignMetadataWhenEditingResourceWithWorkflow() {
@@ -496,7 +514,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     public function testDeletingLeafResource() {
         $this->assertContains(
             $this->childResource->getId(),
-            $this->foundResourceIdsByMetadataValue($this->childResource->getValues($this->metadata1->getId())[0], $this->metadata1->getId())
+            $this->findResourceIdsByMetadataValue($this->childResource->getValues($this->metadata1->getId())[0], $this->metadata1->getId())
         );
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::oneEntityEndpoint($this->childResource->getId()));
@@ -506,7 +524,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertFalse($repository->exists($this->childResource->getId()));
         $this->assertNotContains(
             $this->childResource->getId(),
-            $this->foundResourceIdsByMetadataValue($this->childResource->getValues($this->metadata1->getId())[0], $this->metadata1->getId())
+            $this->findResourceIdsByMetadataValue($this->childResource->getValues($this->metadata1->getId())[0], $this->metadata1->getId())
         );
     }
 
@@ -662,16 +680,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(403, $client->getResponse());
     }
 
-    private function foundResourceIdsByMetadataValue($metadataValue, $metadataId): array {
-        $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery($metadataValue, [$metadataId])
-        );
-        $resultIds = array_map(
-            function ($result) {
-                return intval($result->getId());
-            },
-            $results->getResults()
-        );
-        return $resultIds;
+    private function findResourceIdsByMetadataValue($metadataValue, $metadataId): array {
+        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery($metadataValue, [$metadataId]));
+        return EntityUtils::mapToIds($results);
     }
 }

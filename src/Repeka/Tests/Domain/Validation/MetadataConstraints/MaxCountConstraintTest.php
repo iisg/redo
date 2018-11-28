@@ -34,30 +34,38 @@ class MaxCountConstraintTest extends \PHPUnit_Framework_TestCase {
 
     public function testRejectsSingleValidateCall() {
         $this->expectException(\BadMethodCallException::class);
-        $this->constraint->validateSingle($this->createMetadataMock(), 0, null);
+        $this->constraint->validateSingle($this->createMetadataMockWithMaxCountConstraint(0), null);
     }
 
     public function testAcceptsNotGreater() {
         $max = 5;
         for ($count = 0; $count <= $max; $count++) {
             $values = array_fill(0, $count, null);
-            $this->constraint->validateAll($this->createMetadataMock(), $max, $values);
+            $this->constraint->validateAll($this->createMetadataMockWithMaxCountConstraint($max), $values);
         }
     }
 
     public function testRejectsGreater() {
         $this->expectException(InvalidCommandException::class);
         $max = 5;
-        $this->constraint->validateAll($this->createMetadataMock(), $max, array_fill(0, 6, null));
+        $this->constraint->validateAll($this->createMetadataMockWithMaxCountConstraint($max), array_fill(0, 6, null));
+    }
+
+    public function testAcceptsWhenNoConstraintConfig() {
+        $this->constraint->validateAll($this->createMetadataMock(), array_fill(0, 10, null));
     }
 
     public function testTreatsNullAsInfinity() {
         $hugeArray = array_fill(0, 10000, null);
-        $this->constraint->validateAll($this->createMetadataMock(), null, $hugeArray);
+        $this->constraint->validateAll($this->createMetadataMockWithMaxCountConstraint(null), $hugeArray);
     }
 
     public function testTreatsMinusOneAsInfinity() {
         $hugeArray = array_fill(0, 10000, null);
-        $this->constraint->validateAll($this->createMetadataMock(), -1, $hugeArray);
+        $this->constraint->validateAll($this->createMetadataMockWithMaxCountConstraint(-1), $hugeArray);
+    }
+
+    private function createMetadataMockWithMaxCountConstraint($maxCount) {
+        return $this->createMetadataMock(1, null, null, ['maxCount' => $maxCount]);
     }
 }

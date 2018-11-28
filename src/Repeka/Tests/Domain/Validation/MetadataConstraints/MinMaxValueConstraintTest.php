@@ -29,41 +29,49 @@ class MinMaxValueConstraintTest extends \PHPUnit_Framework_TestCase {
 
     public function testRejectsMinMaxRange() {
         $this->expectException(\DomainException::class);
-        $this->constraint->validateSingle($this->createMetadataMock(), ['min' => 0, 'max' => 1000], 2000);
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint(['min' => 0, 'max' => 1000]), 2000);
     }
 
     public function testRejectsOnlyMaxRange() {
         $this->expectException(\DomainException::class);
-        $this->constraint->validateSingle($this->createMetadataMock(), ['max' => 1000], 2000);
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint(['max' => 1000]), 2000);
     }
 
     public function testRejectsOnlyMinRange() {
         $this->expectException(\DomainException::class);
-        $this->constraint->validateSingle($this->createMetadataMock(), ['min' => 1000], 100);
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint(['min' => 1000]), 100);
     }
 
     public function testRejectsString() {
         $this->expectException(\InvalidArgumentException::class);
-        $this->constraint->validateSingle($this->createMetadataMock(), ['min' => 200], 'foo');
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint(['min' => 200]), 'foo');
     }
 
     public function testAcceptsMinMaxRange() {
-        $this->constraint->validateSingle($this->createMetadataMock(), ['min' => 1900, 'max' => 2100], 2018);
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint(['min' => 1900, 'max' => 2100]), 2018);
     }
 
     public function testAcceptsNoRange() {
-        $this->constraint->validateSingle($this->createMetadataMock(), [], 1900);
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint([]), 1900);
     }
 
     public function testAcceptsEqualRange() {
-        $this->constraint->validateSingle($this->createMetadataMock(), ['min' => 100, 'max' => 100], 100);
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint(['min' => 100, 'max' => 100]), 100);
     }
 
     public function testAcceptsOnlyMaxRange() {
-        $this->constraint->validateSingle($this->createMetadataMock(), ['max' => 1000], 10);
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint(['max' => 1000]), 10);
     }
 
     public function testAcceptsOnlyMinRange() {
-        $this->constraint->validateSingle($this->createMetadataMock(), ['min' => 1900], 2100);
+        $this->constraint->validateSingle($this->createMetadataMockWithMinMaxConstraint(['min' => 1900]), 2100);
+    }
+
+    public function testAcceptsWhenNoConstraintConfig() {
+        $this->constraint->validateSingle($this->createMetadataMock(), 2100);
+    }
+
+    private function createMetadataMockWithMinMaxConstraint(array $constraint) {
+        return $this->createMetadataMock(1, null, null, ['minMaxValue' => $constraint]);
     }
 }

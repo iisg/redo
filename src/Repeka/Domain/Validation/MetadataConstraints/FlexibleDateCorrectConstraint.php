@@ -21,11 +21,7 @@ class FlexibleDateCorrectConstraint extends RespectValidationMetadataConstraint 
         return [MetadataControl::FLEXIBLE_DATE];
     }
 
-    public function isMandatory(): bool {
-        return true;
-    }
-
-    protected function getValidator(Metadata $metadata, $config, $metadataValue) {
+    protected function getValidator(Metadata $metadata, $metadataValue) {
         return Validator::allOf(
             Validator::keySet(
                 Validator::key('from', Validator::callback([$this, 'hasCustomDateFormat'])),

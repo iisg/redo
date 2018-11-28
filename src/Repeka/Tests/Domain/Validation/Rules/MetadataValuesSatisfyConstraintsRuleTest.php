@@ -34,6 +34,9 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
         $constraintManager = $this->createMetadataConstraintManagerStub(
             ['constraint1' => $this->constraint1, 'constraint2' => $this->constraint2]
         );
+        $constraintManager->method('getSupportedConstraintNamesForControl')->willReturn(
+            ['constraint1', 'constraint2']
+        );
         $this->metadataWithoutConstraints = $this->createMetadataMock(1, null, MetadataControl::TEXT(), []);
         $this->metadataWithConstraint1 = $this->createMetadataMock(2, null, MetadataControl::TEXT(), ['constraint1' => 'c1m2cfg']);
         $this->metadataWithBothConstraints = $this->createMetadataMock(
@@ -64,10 +67,14 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
     public function testAcceptsWhenAllRulesAccept() {
         $this->constraint1->expects($this->exactly(2))->method('validateAll')
             ->withConsecutive(
-                [$this->metadataWithConstraint1, 'c1m2cfg', ['a', 'b']],
-                [$this->metadataWithBothConstraints, 'c1m3cfg', ['d']]
+                [$this->metadataWithConstraint1, ['a', 'b']],
+                [$this->metadataWithBothConstraints, ['d']]
             );
-        $this->constraint2->expects($this->once())->method('validateAll')->with($this->metadataWithBothConstraints, 'c2m3cfg', ['d']);
+        $this->constraint2->expects($this->exactly(2))->method('validateAll')
+            ->withConsecutive(
+                [$this->metadataWithConstraint1, ['a', 'b']],
+                [$this->metadataWithBothConstraints, ['d']]
+            );
         $this->assertTrue(
             $this->rule->validate(
                 ResourceContents::fromArray(
@@ -94,17 +101,8 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
     }
 
     public function testValidatesSubmetadata() {
-        $this->constraint1->expects($this->exactly(3))->method('validateAll')
-            ->withConsecutive(
-                [$this->metadataWithConstraint1, 'c1m2cfg', ['a', 'c']],
-                [$this->metadataWithBothConstraints, 'c1m3cfg', ['b', 'c']],
-                [$this->metadataWithBothConstraints, 'c1m3cfg', ['e']]
-            );
-        $this->constraint2->expects($this->exactly(2))->method('validateAll')
-            ->withConsecutive(
-                [$this->metadataWithBothConstraints, 'c2m3cfg', ['b', 'c']],
-                [$this->metadataWithBothConstraints, 'c2m3cfg', ['e']]
-            );
+        $this->constraint1->expects($this->exactly(3))->method('validateAll');
+        $this->constraint2->expects($this->exactly(3))->method('validateAll');
         $this->assertTrue(
             $this->rule->validate(
                 ResourceContents::fromArray(

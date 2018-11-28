@@ -33,15 +33,18 @@ class RelatedResourceMetadataFilterConstraint extends RespectValidationMetadataC
             ->validate(ResourceContents::fromArray($contentsFilter)->toArray());
     }
 
-    public function getValidator(Metadata $metadata, $contentsFilter, $resourceId) {
-        $query = ResourceListQuery::builder()
-            ->filterByIds([$resourceId])
-            ->filterByContents(ResourceContents::fromArray($contentsFilter))
-            ->build();
-        $matchedResources = $this->resourceRepository->findByQuery($query);
-        $valid = count($matchedResources) == 1;
-        if (!$valid && $this->resourceRepository->exists($resourceId)) {
-            return Validator::alwaysInvalid()->setTemplate('Resource does not match required resource contents filter');
+    public function getValidator(Metadata $metadata, $resourceId) {
+        $contentsFilter = $metadata->getConstraints()[$this->getConstraintName()] ?? null;
+        if ($contentsFilter) {
+            $query = ResourceListQuery::builder()
+                ->filterByIds([$resourceId])
+                ->filterByContents(ResourceContents::fromArray($contentsFilter))
+                ->build();
+            $matchedResources = $this->resourceRepository->findByQuery($query);
+            $valid = count($matchedResources) == 1;
+            if (!$valid && $this->resourceRepository->exists($resourceId)) {
+                return Validator::alwaysInvalid()->setTemplate('Resource does not match required resource contents filter');
+            }
         }
     }
 }
