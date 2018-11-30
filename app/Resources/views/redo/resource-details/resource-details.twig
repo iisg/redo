@@ -27,7 +27,7 @@
                     <div class="ancestors-list">
                         {% embed "redo/resource-details/ancestors-list.twig" %}
                             {% block itemNamePrefix %}
-                                <icon name="folder"></icon>
+                                {{ icon('folder') }}
                             {% endblock %}
                         {% endembed %}
                     </div>
@@ -69,6 +69,7 @@
                 {% endif %}
             </div>
             <h3><a href="/resources/{{ resource.id }}/bibtex">BibTeX</a></h3>
+            {% include "redo/resource-details/child-resources.twig" %}
         </div>
     </div>
     {% include "redo/footer.twig" %}

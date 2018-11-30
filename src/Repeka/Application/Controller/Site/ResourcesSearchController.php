@@ -54,8 +54,7 @@ class ResourcesSearchController extends Controller {
             }
             $results = $this->fetchSearchResults($ftsConfig, $request, $metadataFilters, $phrase, $page);
             $responseData['results'] = $results;
-            $totalPages = intval(ceil($results->getTotalHits() / $this->resultsPerPage));
-            $pagination = $this->paginator->paginate($page, $totalPages);
+            $pagination = $this->paginator->paginate($page, $this->resultsPerPage, $results->getTotalHits());
             $responseData['pagination'] = $pagination;
         }
         $response = $this->render($template, $responseData);

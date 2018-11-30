@@ -8,7 +8,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase {
     public function testSinglePage() {
         // [1]
         $paginator = new Paginator(2, 2, 3, 3);
-        $pages = $paginator->paginate(1, 1);
+        $pages = $paginator->calculatePageNumbers(1, 1);
         $this->assertEquals(1, $pages['current']);
         $this->assertEmpty($pages['first']);
         $this->assertEmpty($pages['left']);
@@ -21,7 +21,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase {
     public function testPagesWithEllipses() {
         // 1 2 ... 7 8 9 [10] 11 12 13 ... 19 20
         $paginator = new Paginator(2, 2, 3, 3);
-        $pages = $paginator->paginate(10, 20);
+        $pages = $paginator->calculatePageNumbers(10, 20);
         $this->assertEquals(10, $pages['current']);
         $this->assertEquals([1, 2], $pages['first']);
         $this->assertEquals([7, 8, 9], $pages['left']);
@@ -34,7 +34,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase {
     public function testFirstPage() {
         // [1] 2 3 4  ... 9 10
         $paginator = new Paginator(2, 2, 3, 3);
-        $pages = $paginator->paginate(1, 10);
+        $pages = $paginator->calculatePageNumbers(1, 10);
         $this->assertEquals(1, $pages['current']);
         $this->assertEmpty($pages['first']);
         $this->assertEmpty($pages['left']);
@@ -47,7 +47,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase {
     public function testLastPage() {
         // 1 2 ... 7 8 9 [10]
         $paginator = new Paginator(2, 2, 3, 3);
-        $pages = $paginator->paginate(10, 10);
+        $pages = $paginator->calculatePageNumbers(10, 10);
         $this->assertEquals(10, $pages['current']);
         $this->assertEquals([1, 2], $pages['first']);
         $this->assertEquals([7, 8, 9], $pages['left']);
@@ -61,7 +61,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase {
     public function testMiddlePagesContiguousToEndings() {
         // 1 2 3 4 5 [6] 7 8 9 10 11
         $paginator = new Paginator(2, 2, 3, 3);
-        $pages = $paginator->paginate(6, 11);
+        $pages = $paginator->calculatePageNumbers(6, 11);
         $this->assertEquals(6, $pages['current']);
         $this->assertEquals([1, 2], $pages['first']);
         $this->assertEquals([3, 4, 5], $pages['left']);
@@ -74,7 +74,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase {
     public function testMiddlePagesOverlapWithEnding() {
         // 1 2 3 4 [5] 6 7 8 9
         $paginator = new Paginator(2, 2, 3, 3);
-        $pages = $paginator->paginate(5, 9);
+        $pages = $paginator->calculatePageNumbers(5, 9);
         $this->assertEquals(5, $pages['current']);
         $this->assertEquals([1, 2, 3, 4], array_merge($pages['first'], $pages['left']));
         $this->assertEquals([6, 7, 8, 9], array_merge($pages['right'], $pages['last']));
@@ -85,7 +85,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase {
     public function testCurrentOutsideRange() {
         // 1 2 ... 8 9 10
         $paginator = new Paginator(2, 2, 3, 3);
-        $pages = $paginator->paginate(11, 10);
+        $pages = $paginator->calculatePageNumbers(11, 10);
         $this->assertFalse($pages['showCurrent']);
         $this->assertEquals([1, 2], $pages['first']);
         $this->assertEquals([8, 9, 10], $pages['left']);
@@ -93,5 +93,12 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($pages['last']);
         $this->assertTrue($pages['leftEllipsis']);
         $this->assertFalse($pages['rightEllipsis']);
+    }
+
+    public function testCalculatingTotalPages() {
+        $this->assertEquals(0, Paginator::totalPagesFromResultCounts(10, 0));
+        $this->assertEquals(3, Paginator::totalPagesFromResultCounts(10, 29));
+        $this->assertEquals(3, Paginator::totalPagesFromResultCounts(10, 30));
+        $this->assertEquals(4, Paginator::totalPagesFromResultCounts(10, 31));
     }
 }

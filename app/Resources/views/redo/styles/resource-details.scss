@@ -51,4 +51,32 @@ $image-height: 200px;
             }
         }
     }
+    .resource-children {
+        margin-top: $default-gap-size;
+        margin-bottom: $default-gap-size;
+        padding-left: $default-gap-size;
+        padding-right: $default-gap-size;
+        flex: 1;
+        .children-list {
+            border-top: solid 1px #000000;
+            margin-top: $default-gap-size / 2;
+            .child-item {
+                display: flex;
+                align-items: flex-start;
+                &:not(:last-of-type) {
+                    border-bottom: solid 1px $light-grey;
+                }
+                & > :not(.icon) {
+                    padding: $default-gap-size / 2;
+                }
+                & > .icon {
+                    font-size: $subtitle-font-size;
+                    margin: $default-gap-size / 2;
+                }
+                h3 {
+                    line-height: $icons-size;
+                }
+            }
+        }
+    }
 }

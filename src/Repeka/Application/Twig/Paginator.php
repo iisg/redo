@@ -16,25 +16,37 @@ class Paginator {
         $this->rightPagesNumber = $rightPagesNumber;
     }
 
-    public function paginate($current, $total) {
-        if ($total === 0) {
+    public static function totalPagesFromResultCounts($resultsPerPage, $totalResults) {
+        return intval(ceil($totalResults / $resultsPerPage));
+    }
+
+    public function paginate($currentPage, $resultsPerPage, $totalResults) {
+        $totalPages = self::totalPagesFromResultCounts($resultsPerPage, $totalResults);
+        return $this->calculatePageNumbers($currentPage, $totalPages);
+    }
+
+    public function calculatePageNumbers($currentPage, $totalPages) {
+        if ($totalPages === 0) {
             return [];
         }
-        if ($current > $total) {
-            $current = $total + 1;
+        if ($currentPage > $totalPages) {
+            $currentPage = $totalPages + 1;
             $showCurrent = false;
         }
         return [
-            'first' => ArrayUtils::rangeAscending(1, min($this->firstPagesNumber, $current - $this->leftPagesNumber - 1)),
-            'left' => ArrayUtils::rangeAscending(max(1, $current - $this->leftPagesNumber), $current - 1),
-            'right' => ArrayUtils::rangeAscending($current + 1, min($current + $this->rightPagesNumber, $total)),
-            'last' => ArrayUtils::rangeAscending(max($current + $this->rightPagesNumber + 1, $total - $this->lastPagesNumber + 1), $total),
-            'leftEllipsis' => $this->firstPagesNumber + $this->leftPagesNumber + 1 < $current,
-            'rightEllipsis' => $current + $this->rightPagesNumber < $total - $this->lastPagesNumber,
-            'previous' => $current > 1 ? $current - 1 : '',
-            'next' => $current < $total ? $current + 1 : '',
-            'current' => $current,
-            'total' => $total,
+            'first' => ArrayUtils::rangeAscending(1, min($this->firstPagesNumber, $currentPage - $this->leftPagesNumber - 1)),
+            'left' => ArrayUtils::rangeAscending(max(1, $currentPage - $this->leftPagesNumber), $currentPage - 1),
+            'right' => ArrayUtils::rangeAscending($currentPage + 1, min($currentPage + $this->rightPagesNumber, $totalPages)),
+            'last' => ArrayUtils::rangeAscending(
+                max($currentPage + $this->rightPagesNumber + 1, $totalPages - $this->lastPagesNumber + 1),
+                $totalPages
+            ),
+            'leftEllipsis' => $this->firstPagesNumber + $this->leftPagesNumber + 1 < $currentPage,
+            'rightEllipsis' => $currentPage + $this->rightPagesNumber < $totalPages - $this->lastPagesNumber,
+            'previous' => $currentPage > 1 ? $currentPage - 1 : '',
+            'next' => $currentPage < $totalPages ? $currentPage + 1 : '',
+            'current' => $currentPage,
+            'total' => $totalPages,
             'showCurrent' => $showCurrent ?? true,
         ];
     }
