@@ -3,6 +3,7 @@ namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 
 use Stringy\StaticStringy;
 
+/** @SuppressWarnings("PHPMD.NumberOfChildren") */
 abstract class AbstractImportTransform implements ImportTransform {
     public function getName(): string {
         $reflectionClass = new \ReflectionClass($this);

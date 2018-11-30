@@ -26,6 +26,7 @@
     "ext-mbstring": "*",
     "ext-pdo_pgsql": "*",
     "ext-pgsql": "*",
+    "ext-simplexml": "*",
     "ext-soap": "*",
     "beberlei/assert": "^2.7",
     "cocur/slugify": "^3.0",

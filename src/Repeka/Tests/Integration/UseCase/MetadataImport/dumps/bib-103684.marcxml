@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+    xmlns="http://www.loc.gov/MARC21/slim">
+
+  <leader>02573cam a2200457 i 4500</leader>
+  <controlfield tag="005">20180803001600.0</controlfield>
+  <controlfield tag="008">040430s1877    pl a   g     |000 0 pol c</controlfield>
+  <datafield tag="024" ind1="8" ind2="0">
+    <subfield code="a">a0871e95589e659f2d51d550c81a6e62</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">zz2004984987</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">TOR U/KMo</subfield>
+    <subfield code="c">TOR U/AP</subfield>
+    <subfield code="d">TOR U/AP</subfield>
+    <subfield code="d">WA 72/01OMW</subfield>
+    <subfield code="d">Ł U/MSs</subfield>
+    <subfield code="d">LUBL M/JK</subfield>
+    <subfield code="d">WR O/PC</subfield>
+    <subfield code="d">LUBL KUL/JG</subfield>
+    <subfield code="d">POZN U/HAs</subfield>
+    <subfield code="d">KR 048/AS</subfield>
+    <subfield code="d">PZ 001/LP</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">94(438) A/Z</subfield>
+    <subfield code="j">Historia Polski - historia poszczególnych miast i regionów.</subfield>
+    <subfield code="9">4901</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">75</subfield>
+    <subfield code="j">Malarstwo.</subfield>
+    <subfield code="9">4463</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">1907</subfield>
+    <subfield code="a">069</subfield>
+    <subfield code="j">Muzeologia. Muzealnictwo. Muzea.</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">728.8</subfield>
+    <subfield code="j">Zamki. Pałace. Dwory szlacheckie.</subfield>
+    <subfield code="9">4423</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">482</subfield>
+    <subfield code="a">(084.1)</subfield>
+    <subfield code="j">Przedstawienia obrazowe. Ilustracje. Albumy.</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">1004</subfield>
+    <subfield code="a">(438.111)</subfield>
+    <subfield code="j">Warszawa.</subfield>
+  </datafield>
+  <datafield tag="095" ind1=" " ind2=" ">
+    <subfield code="a">SKIMBROWICZ H.</subfield>
+  </datafield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Skimborowicz, Hipolit</subfield>
+    <subfield code="d">(1815-1880).</subfield>
+    <subfield code="0">n  99707033</subfield>
+    <subfield code="9">113281</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Willanów :</subfield>
+    <subfield code="b">album : zbiór widoków i pamiątek oraz kopje z obrazów Galeryi Willanowskiej wykonane na drzewie w Drzeworytni Warszawskiej /</subfield>
+    <subfield code="c">z dodaniem opisów skreślonych przez H. Skimborowicza i W. Gersona.</subfield>
+  </datafield>
+  <datafield tag="246" ind1="1" ind2="4">
+    <subfield code="a">Album Willanowa</subfield>
+  </datafield>
+  <datafield tag="246" ind1="1" ind2="5">
+    <subfield code="a">Willanów dawny i teraźniejszy</subfield>
+  </datafield>
+  <datafield tag="246" ind1="1" ind2="7">
+    <subfield code="a">Album Willanowski</subfield>
+  </datafield>
+  <datafield tag="246" ind1="3" ind2=" ">
+    <subfield code="a">Wilanów</subfield>
+  </datafield>
+  <datafield tag="246" ind1="3" ind2=" ">
+    <subfield code="a">Willanów :</subfield>
+    <subfield code="b">album widoków i pamiątek oraz kopje z obrazów Galerii Willanowskiej wykonane na drzewie w Drzeworytni Warszawskiej</subfield>
+  </datafield>
+  <datafield tag="246" ind1="3" ind2=" ">
+    <subfield code="a">Willanów :</subfield>
+    <subfield code="b">album widoków i pamiątek oraz kopie z obrazów Galerii Willanowskiej wykonane na drzewie w Drzeworytni Warszawskiej</subfield>
+  </datafield>
+  <datafield tag="246" ind1="1" ind2="4">
+    <subfield code="a">Wilanów :</subfield>
+    <subfield code="b">album widoków obrazów i pamiątek z opisem</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Warszawa :</subfield>
+    <subfield code="b">nakł. S. Orgelbranda Synów :</subfield>
+    <subfield code="b">Drzeworytnia Warszawska,</subfield>
+    <subfield code="c">1877</subfield>
+    <subfield code="e">(Warszawa :</subfield>
+    <subfield code="f">dr. S. Orgelbranda Synów).</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">[4], 186, II s., [48] k. tabl. :</subfield>
+    <subfield code="b">il., err. ;</subfield>
+    <subfield code="c">38 cm.</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Pomyłka w paginacji s. 138-143.</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Całe dzieło ukazało się w 12 zeszytach w l. 1876-1877 (informacja o wydawnictwie w zeszycie 3, rok 1876).</subfield>
+  </datafield>
+  <datafield tag="510" ind1="4" ind2=" ">
+    <subfield code="a">Estr.,</subfield>
+    <subfield code="c">t. 5 (W-Z), s. 93-94</subfield>
+  </datafield>
+  <datafield tag="510" ind1="4" ind2=" ">
+    <subfield code="a">Estr. XIX,</subfield>
+    <subfield code="c">T. 4, s. 260 (pod hasłem Skimborowicz, Hipolit)</subfield>
+  </datafield>
+  <datafield tag="530" ind1=" " ind2=" ">
+    <subfield code="a">Dostępny również w formie elektronicznej.</subfield>
+  </datafield>
+  <datafield tag="593" ind1=" " ind2=" ">
+    <subfield code="a">W egz. IV-37861, nr rzymska po s. nienumerowanych.</subfield>
+  </datafield>
+  <datafield tag="596" ind1=" " ind2=" ">
+    <subfield code="a">EDT_4</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Gerson, Wojciech</subfield>
+    <subfield code="d">(1831-1901).</subfield>
+    <subfield code="0">n  93090075</subfield>
+    <subfield code="9">100004</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="u">http://bcpw.bg.pw.edu.pl/publication/604</subfield>
+    <subfield code="z">Biblioteka Cyfrowa Politechniki Warszawskiej</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="u">http://dlibra.kul.pl/publication/4273</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="u">http://suw.biblos.pk.edu.pl/resourceDetails&amp;rId=3996</subfield>
+    <subfield code="y">Pełny tekst dostępny w Repozytorium PK</subfield>
+  </datafield>
+  <datafield tag="942" ind1=" " ind2=" ">
+    <subfield code="2">udc</subfield>
+  </datafield>
+  <datafield tag="999" ind1=" " ind2=" ">
+    <subfield code="c">103684</subfield>
+    <subfield code="d">103684</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="2">udc</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">IV37861</subfield>
+    <subfield code="7">1</subfield>
+    <subfield code="8">EDT-PIODO</subfield>
+    <subfield code="9">214930</subfield>
+    <subfield code="a">BPK</subfield>
+    <subfield code="b">BPK</subfield>
+    <subfield code="c">BPK-MAG</subfield>
+    <subfield code="d">2014-08-31</subfield>
+    <subfield code="i">IV-37861</subfield>
+    <subfield code="o">IV-37861</subfield>
+    <subfield code="p">100000228666</subfield>
+    <subfield code="r">2014-08-31</subfield>
+    <subfield code="w">2014-08-31</subfield>
+    <subfield code="y">BK-NDW</subfield>
+  </datafield>
+</record>

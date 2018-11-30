@@ -10,14 +10,14 @@ class SplitImportTransformTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testTransforming() {
-        $this->assertEquals([['a', 'b']], $this->splitTransform->apply(['a,b'], []));
+        $this->assertEquals([['a', 'b']], $this->splitTransform->apply(['a,b'], [], []));
     }
 
     public function testTransformingWithSeparator() {
-        $this->assertEquals([['a', 'b']], $this->splitTransform->apply(['a-b'], ['separator' => '-']));
+        $this->assertEquals([['a', 'b']], $this->splitTransform->apply(['a-b'], ['separator' => '-'], []));
     }
 
     public function testPassingNotString() {
-        $this->assertEquals([['a']], $this->splitTransform->apply([['a']], []));
+        $this->assertEquals([['a']], $this->splitTransform->apply([['a']], [], []));
     }
 }

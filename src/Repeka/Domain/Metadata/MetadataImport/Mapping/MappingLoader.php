@@ -5,7 +5,6 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataListQueryBuilder;
 use Respect\Validation\Validator;
 
 class MappingLoader {
@@ -28,9 +27,16 @@ class MappingLoader {
         /** @var string[] $missingFromResourceKind */
         $missingFromResourceKind = [];
         foreach ($mappings as $key => $params) {
-            $result = $this->loadMapping($key, $params, $resourceKind, $missingFromResourceKind);
-            if ($result !== null) {
-                $loaded[] = $result;
+            $results = [];
+            if (isset($params['key'])) {
+                $params = [$params];
+            }
+            foreach ($params as $arrayParams) {
+                $results[] = $this->loadMapping($key, $arrayParams, $resourceKind, $missingFromResourceKind);
+            }
+            $results = array_values(array_filter($results));
+            if ($results) {
+                $loaded = array_merge($loaded, $results);
             } else {
                 $missingFromResourceKind[] = $key;
             }
@@ -99,7 +105,7 @@ class MappingLoader {
 
     private function findSubmetadata(string $name, Metadata $parent): ?Metadata {
         try {
-            $metadata = $this->metadataRepository->findByName($name, $parent->getResourceClass());
+            $metadata = $this->metadataRepository->findByNameOrId($name, $parent->getResourceClass());
             if ($metadata->getParentId() !== $parent->getId()) {
                 return null;
             }

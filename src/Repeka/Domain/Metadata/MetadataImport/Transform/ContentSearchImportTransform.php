@@ -20,7 +20,7 @@ class ContentSearchImportTransform extends AbstractImportTransform {
         $this->resourceRepository = $resourceRepository;
     }
 
-    public function apply(array $values, array $config): array {
+    public function apply(array $values, array $config, array $dataBeingImported): array {
         $metadataId = $config['metadata'] ?? null;
         Assertion::notNull($metadataId, 'contentSearch transform require metadata to be configured');
         $resourceIds = array_map(

@@ -42,7 +42,7 @@ class MetadataImporter {
             $metadata = $mapping->getMetadata();
             $transformedValues = $valuesBasedOnImportKey;
             foreach ($mapping->getTransformsConfig() as $transformConfig) {
-                $transformedValues = $this->transforms->apply($transformedValues, $transformConfig);
+                $transformedValues = $this->transforms->apply($transformedValues, $transformConfig, $data);
             }
             for ($i = 0; $i < count($transformedValues); $i++) {
                 $transformedValue = $this->prepareMetadataValues($resultBuilder, $metadata, $transformedValues[$i]);
@@ -59,7 +59,7 @@ class MetadataImporter {
                     $metadataValues[] = $metadataValue;
                 }
             }
-            $allMetadataValues[$metadata->getId()] = $metadataValues;
+            $allMetadataValues[$metadata->getId()] = array_merge($allMetadataValues[$metadata->getId()] ?? [], $metadataValues);
         }
         return $allMetadataValues;
     }
@@ -78,6 +78,7 @@ class MetadataImporter {
             case MetadataControl::BOOLEAN:
                 return $this->transformBooleanValue($resultBuilder, $id, $value);
             case MetadataControl::TIMESTAMP:
+            case MetadataControl::FLEXIBLE_DATE:
                 return $this->transformDateValue($resultBuilder, $id, $value);
             default:
                 $resultBuilder->addUnfitTypeValues($id, $value);

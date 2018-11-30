@@ -71,7 +71,7 @@ class MappingLoaderTest extends \PHPUnit_Framework_TestCase {
         $this->expectException(ValidationException::class);
         $this->loader->load(
             [
-                'invalidMetadataName' => ['selector' => '[test3]', 'value' => 'c'],
+                'invalidMetadataName' => ['key' => '[test3]', 'value' => 'c'],
                 'test' => ['selector' => '[test2]', 'value' => 'b', 'extra?' => 'extra!'],
             ],
             $this->resourceKind
@@ -82,7 +82,7 @@ class MappingLoaderTest extends \PHPUnit_Framework_TestCase {
         $this->expectException(ValidationException::class);
         $this->loader->load(
             [
-                'invalidMetadataName' => ['selector' => '[test3]', 'value' => 'c'],
+                'invalidMetadataName' => ['key' => '[test3]', 'value' => 'c'],
                 'test' => ['selector' => '[test2]'],
             ],
             $this->resourceKind

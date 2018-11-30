@@ -2,6 +2,7 @@
 namespace Repeka\Application\Command\PkImport;
 
 use Assert\Assertion;
+use Repeka\Application\Command\PkImport\XmlExtractStrategy\PkImportXmlExtractor;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Entity\ResourceContents;
@@ -98,6 +99,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             Assertion::count($invalidMetadataKeys, 0, 'Invalid metadata keys: ' . implode(', ', $invalidMetadataKeys));
             $resourceContentsFetcherName = 'Repeka\\Application\\Command\\PkImport\\XmlExtractStrategy\\';
             $resourceContentsFetcherName .= $input->getOption('exportFormat') . 'XmlExtractor';
+            /** @var PkImportXmlExtractor $resourceContentsFetcher */
             $resourceContentsFetcher = new $resourceContentsFetcherName();
             $resources = $resourceContentsFetcher->extractAllResources($xml);
             $idMappingNamespace = $input->getOption('id-namespace');

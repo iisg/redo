@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Application\Command\PkImport\XmlExtractStrategy;
 
-use Repeka\Domain\MetadataImport\Xml\XmlArrayDataExtractor;
+use Repeka\Domain\Metadata\MetadataImport\Xml\XmlArrayDataExtractor;
 
 class PkKohaDumpXmlExtractor implements PkImportXmlExtractor {
 
