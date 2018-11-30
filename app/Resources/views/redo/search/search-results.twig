@@ -67,9 +67,7 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            {% if pagination is not empty %}
-                {% include 'redo/search/pagination.twig' %}
-            {% endif %}
+            {% include 'redo/search/pagination.twig' with {'route_params': {'phrase': phrase}} %}
         </div>
     </div>
     {% include "redo/footer.twig" %}

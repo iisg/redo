@@ -3,7 +3,9 @@ namespace Repeka\Application\Twig;
 
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\PrintableArray;
@@ -11,6 +13,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * All Twig extensions that are not strictly connected to display strategies, but helps to achieve specific tasks in frontend.
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TwigFrontendExtension extends \Twig_Extension {
     use CommandBusAware;
@@ -19,11 +23,14 @@ class TwigFrontendExtension extends \Twig_Extension {
     private $currentUri;
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
+    /** @var Paginator */
+    private $paginator;
 
-    public function __construct(RequestStack $requestStack, ResourceKindRepository $resourceKindRepository) {
+    public function __construct(RequestStack $requestStack, ResourceKindRepository $resourceKindRepository, Paginator $paginator) {
         $request = $requestStack->getCurrentRequest();
         $this->currentUri = $request ? $request->getRequestUri() : null;
         $this->resourceKindRepository = $resourceKindRepository;
+        $this->paginator = $paginator;
     }
 
     public function getFunctions() {
@@ -34,6 +41,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('icon', [$this, 'icon']),
             new \Twig_Function('resources', [$this, 'fetchResources']),
             new \Twig_Function('urlMatches', [$this, 'urlMatches']),
+            new \Twig_Function('paginate', [$this->paginator, 'paginate']),
         ];
     }
 
@@ -42,6 +50,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Filter('ftsContentsToResource', [$this, 'ftsContentsToResource']),
             new \Twig_Filter('sum', [$this, 'sumIterable']),
             new \Twig_Filter('bibtexEscape', [$this, 'bibtexEscape']),
+            new \Twig_Filter('childrenAllowed', [$this, 'resourceCanHaveChildren']),
         ];
     }
 
@@ -149,6 +158,9 @@ ICON;
             $builder->setPage(1);
             $builder->setResultsPerPage($filters['resultsPerPage']);
         }
+        if (isset($filters['page']) && $filters['page']) {
+            $builder->setPage($filters['page']);
+        }
         return FirewallMiddleware::bypass(
             function () use ($builder) {
                 return $this->handleCommand($builder->build());
@@ -172,5 +184,11 @@ ICON;
             }
         }
         return false;
+    }
+
+    public function resourceCanHaveChildren(ResourceEntity $resource): bool {
+        $parentMetadata = $resource->getKind()->getMetadataById(SystemMetadata::PARENT);
+        $constraints = $parentMetadata->getConstraints();
+        return array_key_exists('resourceKind', $constraints) && count($constraints['resourceKind']) > 0;
     }
 }

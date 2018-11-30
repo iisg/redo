@@ -8,7 +8,6 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\EventListener\EvaluateDisplayStrategiesOnResourceCreationListener;
 use Repeka\Domain\EventListener\UpdateDependentDisplayStrategiesListener;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 
@@ -61,7 +60,6 @@ class RandomResourcesFixture extends RepekaFixture {
                             MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => $faker->numberBetween(10, 1000),
                             MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => $faker->randomElement($possibleUsers),
                             MetadataFixture::REFERENCE_METADATA_SUPERVISOR => $faker->randomElement($possibleUsers),
-                            MetadataFixture::REFERENCE_METADATA_CREATOR => $faker->randomElement($possibleUsers),
             ];
             if (self::CREATE_RANDOM_TREE) {
                 $randomParentId = $createdBookIds[array_rand($createdBookIds)];

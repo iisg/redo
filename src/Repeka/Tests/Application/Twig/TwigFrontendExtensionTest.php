@@ -1,11 +1,13 @@
 <?php
 namespace Repeka\Tests\Application\Upload;
 
+use Repeka\Application\Twig\Paginator;
 use Repeka\Application\Twig\TwigFrontendExtension;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Tests\Traits\StubsTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\TwigFunction;
 
 class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
@@ -14,11 +16,18 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     private $resourceKindRepository;
     /** @var TwigFrontendExtension */
     private $extension;
+    /** @var Paginator|\PHPUnit_Framework_MockObject_MockObject */
+    private $paginator;
 
     /** @before */
     public function init() {
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
-        $this->extension = new TwigFrontendExtension($this->createMock(RequestStack::class), $this->resourceKindRepository);
+        $this->paginator = $this->createMock(Paginator::class);
+        $this->extension = new TwigFrontendExtension(
+            $this->createMock(RequestStack::class),
+            $this->resourceKindRepository,
+            $this->paginator
+        );
     }
 
     public function testCheckingFacetFilter() {
@@ -94,7 +103,7 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
                         return $requestUri ? Request::create($requestUri) : null;
                     }
                 );
-            $extension = new TwigFrontendExtension($requestStack, $this->resourceKindRepository);
+            $extension = new TwigFrontendExtension($requestStack, $this->resourceKindRepository, $this->paginator);
             $this->assertEquals(
                 $expected,
                 $extension->urlMatches(...$urls)

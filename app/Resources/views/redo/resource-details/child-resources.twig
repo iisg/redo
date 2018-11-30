@@ -1,0 +1,22 @@
+{% if resource | childrenAllowed %}
+    <div class="resource-children">
+        {% set page = app.request.query.get('page') | default(1) %}
+        {% set childrenPerPage = 10 %}
+        {% set children = resources({parentId: resource.id, page: page, resultsPerPage: childrenPerPage}) %}
+        {% set pagination = paginate(page, childrenPerPage, children.getTotalCount) %}
+        <h2>Elementy kolekcji ({{ children.getTotalCount }}):</h2>
+        <div class="children-list">
+            {% for childResource in children %}
+                <div class="child-item">
+                    {{ icon('document', 1.5) }}
+                    <div class="details">
+                        <h3>
+                            <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'resourceId': childResource.id})) }}">{{ childResource | mLabel }}</a>
+                        </h3>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% include "redo/search/pagination.twig" with {'pagination': pagination, 'route_params': {'resourceId': resource.id}} %}
+    </div>
+{% endif %}

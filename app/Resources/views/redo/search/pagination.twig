@@ -1,15 +1,17 @@
+{% set all_params = app.request.query.all|merge(route_params) %}
+{% if pagination is not empty %}
 <div class="pagination">
     <ul class="pages-list">
         <li class="text-button">
             {% if pagination.previous is empty %}
                 <span class="disabled">&lt; Poprzednia</span>
             {% else %}
-                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'page': pagination.previous})) }}">&lt; Poprzednia</a>
+                <a href="{{ path(app.request.attributes.get('_route'), all_params|merge({'page': pagination.previous})) }}">&lt; Poprzednia</a>
             {% endif %}
         </li>
         {% for page in pagination.first %}
             <li>
-                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'page': page})) }}">{{ page }}</a>
+                <a href="{{ path(app.request.attributes.get('_route'), all_params|merge({'page': page})) }}">{{ page }}</a>
             </li>
         {% endfor %}
         {% if pagination.leftEllipsis %}
@@ -17,7 +19,7 @@
         {% endif %}
         {% for page in pagination.left %}
             <li>
-                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'page': page})) }}">{{ page }}</a>
+                <a href="{{ path(app.request.attributes.get('_route'), all_params|merge({'page': page})) }}">{{ page }}</a>
             </li>
         {% endfor %}
         {% if pagination.showCurrent %}
@@ -25,7 +27,7 @@
         {% endif %}
         {% for page in pagination.right %}
             <li>
-                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'page': page})) }}">{{ page }}</a>
+                <a href="{{ path(app.request.attributes.get('_route'), all_params|merge({'page': page})) }}">{{ page }}</a>
             </li>
         {% endfor %}
         {% if pagination.rightEllipsis %}
@@ -33,15 +35,16 @@
         {% endif %}
         {% for page in pagination.last %}
             <li>
-                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'page': page})) }}">{{ page }}</a>
+                <a href="{{ path(app.request.attributes.get('_route'), all_params|merge({'page': page})) }}">{{ page }}</a>
             </li>
         {% endfor %}
         <li class="text-button">
             {% if pagination.next is empty %}
                 <span class="disabled">Następna &gt;</span>
             {% else %}
-                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'page': pagination.next})) }}">Następna &gt;</a>
+                <a href="{{ path(app.request.attributes.get('_route'), all_params|merge({'page': pagination.next})) }}">Następna &gt;</a>
             {% endif %}
         </li>
     </ul>
 </div>
+{% endif %}
