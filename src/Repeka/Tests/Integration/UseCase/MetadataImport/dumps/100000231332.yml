@@ -1,0 +1,45 @@
+xmlMappings:
+  Tytuł: "[tag=245]>[code=a]"
+  Opis: "[tag=245]>[code=a],[tag=245]>[code=b]"
+  Język: "[tag=008]"
+  Zobacz też: "[tag=999]>[code=c]"
+  Nazwa wydawnictwa: "[tag=260]>[code=b]"
+
+mappings:
+  Tytuł:
+    key: Tytuł
+    transforms:
+      -
+        name: trim
+        characters: " :"
+  Opis:
+    key: Opis
+    transforms:
+      -
+        name: trim
+        characters: " :/"
+      -
+        name: join
+        glue: " - "
+  Język:
+    key: Język
+    transforms:
+      -
+        name: substring
+        start: 35
+        length: 3
+  Zobacz też:
+    key: Zobacz też
+  Wydawnictwo:
+    key: Nazwa wydawnictwa
+    transforms:
+      -
+        name: regexReplace
+        regex: "Wydaw."
+        replacement: ""
+      -
+        name: trim
+        characters: " ,"
+      -
+        name: contentSearch
+        metadata: Nazwa

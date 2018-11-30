@@ -14,9 +14,9 @@ class ImportTransformComposite {
         }
     }
 
-    public function apply(array $values, array $config): array {
+    public function apply(array $values, array $config, $data): array {
         $name = $config['name'];
         Assertion::keyExists($this->transforms, $name, "Invalid transform name: $name");
-        return $this->transforms[$name]->apply($values, $config);
+        return $this->transforms[$name]->apply($values, $config, $data);
     }
 }

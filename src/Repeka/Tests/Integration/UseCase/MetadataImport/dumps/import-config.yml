@@ -1,0 +1,685 @@
+mappings:
+  53:
+    -
+      key: '008'
+      transforms:
+        -
+          name: 'substring'
+          start: 35
+          length: 3
+        -
+          name: 'displayStrategy'
+          separator: ','
+          template: >-
+            {% if data['41'] is not defined %}
+              {% for code in values %}
+                {{code}}{{separator}}
+              {% endfor %}
+            {% endif %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+        -
+          name: 'regexReplace'
+          regex: 'ger'
+          replacement: 'deu'
+        -
+          name: 'contentSearch'
+          metadata: 140
+    -
+      key: '041'
+      transforms:
+        -
+          name: 'arrayColumn'
+          keys: 'a'
+        -
+          name: 'flatten'
+        -
+          name: 'arrayUnique'
+        -
+          name: 'regexReplace'
+          regex: 'ger'
+          replacement: 'deu'
+        -
+          name: 'contentSearch'
+          metadata: 140
+  156:
+    key: '035'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'a'
+      -
+        name: 'flatten'
+  125:
+    -
+      key: '080'
+      transforms:
+        -
+          name: 'arrayColumn'
+          keys: '9'
+        -
+          name: 'flatten'
+    -
+      key: '080'
+      transforms:
+        -
+          name: 'arrayColumn'
+          keys: 'a'
+        -
+          name: 'flatten'
+    -
+      key: '080'
+      transforms:
+        -
+          name: 'arrayColumn'
+          keys: 'j,k'
+        -
+          name: 'join'
+          glue: ' '
+        -
+          name: 'flatten'
+  4:
+    -
+      key: '100'
+      transforms:
+        -
+          name: 'displayStrategy'
+          splitter: '###'
+          template: >-
+            {% for value in values %}
+              {% if value['e'] is not defined or 'Autor' in value['e'] %}
+                {% set autor = value['a'][0] %}
+                {% if autor matches '/.* [a-zA-Z][.]/' %}
+                  {{autor}}
+                {% else %}
+                  {{autor|trim('.')}}
+                {% endif%}
+              {% endif %}
+            {% endfor %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+      submetadata:
+#        147:
+        179:
+          transforms:
+            -
+              name: 'arrayColumn'
+              keys: '9'
+            -
+              name: 'flatten'
+        180:
+          transforms:
+            -
+              name: 'arrayColumn'
+              keys: '0'
+            -
+              name: 'flatten'
+    -
+      key: '700'
+      transforms:
+        -
+          name: 'displayStrategy'
+          splitter: '###'
+          template: >-
+            {% for value in values %}
+              {% if value['e'] is not defined or 'Autor' in value['e'] %}
+                {% set autor = value['a'][0] %}
+                {% if autor matches '/.* [a-zA-Z][.]/' %}
+                  {{autor}}
+                {% else %}
+                  {{autor|trim('.')}}
+                {% endif%}
+              {% endif %}
+            {% endfor %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+      submetadata:
+#        147:
+        179:
+          transforms:
+            -
+              name: 'arrayColumn'
+              keys: '9'
+            -
+              name: 'flatten'
+        180:
+          transforms:
+            -
+              name: 'arrayColumn'
+              keys: '0'
+            -
+              name: 'flatten'
+  63:
+    -
+      key: '100'
+      transforms:
+        -
+          name: 'displayStrategy'
+          separator: '###'
+          template: >-
+            {% if data['100'] is defined %}
+              {% for codeValues in data['100'] %}
+                {% if codeValues['e'] is defined %}
+                  {% set isCoCreator = false %}
+                  {% for person in codeValues['e'] %}
+                    {% if person != 'Autor' %}
+                      {% set isCoCreator = true %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if isCoCreator == true %}
+                    {% for value in codeValues['a'] %}
+                      {% if value matches '/.* [a-zA-Z][.]/' %}
+                        {{value}}
+                      {% else %}
+                        {{value|trim('.')}}
+                      {% endif%}
+                    {% endfor %}
+                  {% endif %}
+                  {{separator}}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+      submetadata:
+        176:
+          transforms:
+            -
+              name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% set values = values[0] %}
+                {% if values['e'] is defined %}
+                  {% for person in values['e'] %}
+                    {% if person != 'Autor' %}
+                      {{ person }}{{ separator }}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+            -
+              name: 'trim'
+            -
+              name: 'removeEmpty'
+    #    186: #daty biograficzne
+        207: #koha id
+          transforms:
+            -
+              name: 'arrayColumn'
+              keys: '9'
+            -
+              name: 'flatten'
+        208: #nukat id
+          transforms:
+            -
+              name: 'arrayColumn'
+              keys: '0'
+            -
+              name: 'flatten'
+    -
+      key: '110'
+      transforms:
+        -
+          name: 'arrayColumn'
+          keys: 'a,b,c,d,n'
+        -
+          name: 'join'
+          glue: ' '
+        -
+          name: 'flatten'
+        -
+          name: 'removeEmpty'
+        -
+          name: 'displayStrategy'
+          separator: '###'
+          template: >-
+            {% for value in values %}
+              [Instytucja sprawcza]: {{value}} {{separator}}
+            {% endfor %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+      submetadata:
+        176:
+          transforms:
+            -
+              name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% set values = values[0] %}
+                {% if values['e'] is defined %}
+                  {% for person in values['e'] %}
+                    {{ person }}{{ separator }}
+                  {% endfor %}
+                {% endif %}
+            -
+              name: 'trim'
+            -
+              name: 'removeEmpty'
+    -
+      key: '700'
+      transforms:
+        -
+          name: 'displayStrategy'
+          separator: '###'
+          template: >-
+            {% if data['700'] is defined %}
+              {% for codeValues in data['700'] %}
+                {% if codeValues['e'] is defined %}
+                  {% set isCoCreator = false %}
+                  {% for person in codeValues['e'] %}
+                    {% if person != 'Autor' %}
+                      {% set isCoCreator = true %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if isCoCreator == true %}
+                    {% for value in codeValues['a'] %}
+                      {% if value matches '/.* [a-zA-Z][.]/' %}
+                        {{value}}
+                      {% else %}
+                        {{value|trim('.')}}
+                      {% endif%}
+                    {% endfor %}
+                  {% endif %}
+                  {{ separator }}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+      submetadata:
+        176:
+          transforms:
+            -
+              name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% set values = values[0] %}
+                {% if values['e'] is defined %}
+                  {% for person in values['e'] %}
+                    {% if person != 'Autor' %}
+                      {{ person }}{{ separator }}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+            -
+              name: 'trim'
+            -
+              name: 'removeEmpty'
+    #    186: #daty biograficzne
+        207: #koha id
+          transforms:
+            -
+              name: 'arrayColumn'
+              keys: '9'
+            -
+              name: 'flatten'
+        208: #nukat id
+          transforms:
+            -
+              name: 'arrayColumn'
+              keys: '0'
+            -
+              name: 'flatten'
+  3:
+    key: '245'
+    transforms:
+      -
+        name: 'displayStrategy'
+        separator: '###'
+        template: "
+          {% if data['245'] is defined %}
+            {% for element in data['245'] %}
+              {% set codeOrderArray = {'a' : 0, 'b': 0, 'n': 0, 'p': 0 } %}
+              {% for code in element['order'] %}
+                {% if code in ['a', 'b', 'n', 'p'] %}
+                {{element[code][codeOrderArray[code]]}}
+                {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}{% endif %}
+              {% endfor %}
+              {{separator}}
+            {% endfor %}
+          {% endif %}"
+      -
+        name: 'trim'
+      -
+        name: 'regexReplace'
+        regex: ' +'
+        replacement: ' '
+      -
+        name: 'trim'
+        characters: " /"
+      -
+        name: 'removeEmpty'
+  61:
+    key: '246'
+    transforms:
+      -
+         name: 'displayStrategy'
+         separator: '###'
+         template: "
+          {% if data['246'] is defined %}
+            {% for element in data['246'] %}
+              {% if element['ind2'] is defined and element['ind2'] in [' ', '0', '1'] %}
+                {% set codeOrderArray = {'a' : 0, 'b': 0, 'i': 0, 'n': 0, 'p': 0} %}
+                {% for code in element['order'] %}
+                  {% if code in ['a', 'b', 'i', 'n', 'p'] %}
+                    {{element[code][codeOrderArray[code]]}}
+                    {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}
+                  {% endif %}
+                {% endfor %}
+                {{separator}}
+              {% endif %}
+            {% endfor %}
+          {% endif %}"
+      -
+        name: 'trim'
+      -
+        name: 'regexReplace'
+        regex: ' +'
+        replacement: ' '
+      -
+        name: 'removeEmpty'
+  64:
+    key: '260'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'a'
+      -
+        name: 'flatten'
+      -
+        name: trim
+        characters: " ;:"
+  65:
+    key: '260'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'b'
+      -
+        name: 'flatten'
+      -
+        name: trim
+        characters: " ,"
+#  5:
+#    key: '260'
+#    transforms:
+#      -
+#        name: 'arrayColumn'
+#        keys: 'c'
+#      -
+#        name: 'flatten'
+#      -
+#        name: trim
+#        characters: " ."
+  172:
+    key: '260'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'e'
+      -
+        name: 'flatten'
+      -
+        name: trim
+        characters: " (:"
+  66:
+    key: '260'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'f'
+      -
+        name: 'flatten'
+      -
+        name: trim
+        characters: " )."
+  129:
+    key: '300'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'a'
+      -
+        name: flatten
+      -
+        name: trim
+        characters: " :;."
+  99:
+    -
+      key: '300'
+      transforms:
+        -
+          name: 'arrayColumn'
+          keys: 'e'
+        -
+          name: 'flatten'
+        -
+          name: 'trim'
+          characters: ' +'
+        -
+          name: 'displayStrategy'
+          separator: '###'
+          template: >-
+            {% for value in values %}
+              Dodatek do tytułu: {{value}} {{separator}}
+            {% endfor %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+    -
+      key: '111'
+      transforms:
+        -
+           name: 'displayStrategy'
+           separator: '###'
+           template: >-
+            {% if data['111'] is defined %}
+              {% for key, element in data['111'] %}
+                Konferencja:
+                {% if element is iterable and key != 'order' %}
+                  {% for value in element %}
+                    {{value|trim('.')}}
+                  {% endfor %}
+                {% endif %}
+              {{separator}}
+              {% endfor %}
+            {% endif %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+
+  70:
+    key: '561'
+    transforms:
+      - name: 'displayStrategy'
+        separator: '###'
+        template: >-
+          {% if data['952'] is defined and data['952'][0]['o'] is defined %}
+            {% for value in values %}
+              {% if value['a'] is defined and value['3'] == data['952'][0]['o'] %}
+                {{value['a'][0]}}{{separator}}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+      -
+        name: 'trim'
+        characters: ' .'
+      -
+        name: 'removeEmpty'
+      -
+        name: 'split'
+        separator: ';'
+      -
+        name: 'flatten'
+      -
+        name: 'trim'
+  86:
+    -
+      key: '500'
+      transforms:
+        -
+          name: 'arrayColumn'
+          keys: 'a'
+        -
+          name: 'flatten'
+        -
+          name: 'displayStrategy'
+          template: >-
+            {% if values is not empty %}
+              {% set isGotyck = 'false' %}
+              {% for value in values %}
+                {% if 'gotyck' in value %}
+                  {% set isGotyck = 'true' %}
+                {% endif %}
+              {% endfor %}
+              {% if data['592'] is defined %}
+                {% for tag in data['592'] %}
+                  {% for element in tag %}
+                    {% if element['a'] is defined %}
+                      {% for value in element['a'] %}
+                        {% if 'gotyck' in value%}
+                          {% set isGotyck = 'true' %}
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+              {% endif %}
+              {{isGotyck}}
+            {% endif %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+    -
+      key: '592'
+      transforms:
+        -
+          name: 'arrayColumn'
+          keys: 'a'
+        -
+          name: 'flatten'
+        -
+          name: 'displayStrategy'
+          template: >-
+            {% if data['500'] is not defined and values is not empty %}
+              {% set isGotyck = 'false' %}
+              {% for value in values %}
+                {% if 'gotyck' in value%}
+                  {% set isGotyck = 'true' %}
+                {% endif %}
+              {% endfor %}
+              {{isGotyck}}
+            {% endif %}
+        -
+          name: 'trim'
+        -
+          name: 'removeEmpty'
+  181:
+    key: '596'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'a,b'
+      -
+        name: 'join'
+        characters: ''
+      -
+        name: 'flatten'
+      -
+        name: 'trim'
+        characters: ' .'
+      -
+        name: 'displayStrategy'
+        separator: '###'
+        template: >-
+          {% for value in values %}{{value}}
+            {% if value == 'EDT_1' %}Nieznana data śmierci autora
+            {% elseif value == 'EDT_2' %}Nieznana data śmierci współautora
+            {% elseif value == 'EDT_3' %}Nie do udostępnienia na zewnątrz
+            {% elseif value == 'EDT_4' %}Do udostępnienia na zewnątrz
+            {% endif %}
+            {{ separator }}
+          {% endfor%}
+      -
+        name: 'trim'
+      -
+        name: 'regexReplace'
+        regex: ' +'
+        replacement: ' '
+      -
+        name: 'regexReplace'
+        regex: "\n"
+      -
+        name: 'removeEmpty'
+  135:
+    key: '830'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'a,f,k,l,s,v,x,n,p'
+      -
+        name: 'join'
+        glue: ' '
+      -
+        name: 'flatten'
+      -
+        name: 'removeEmpty'
+  72:
+    key: '920'
+    transforms:
+    -
+      name: 'arrayColumn'
+      keys: 'a,q,z'
+    -
+      name: 'join'
+      glue: ' '
+    -
+      name: 'flatten'
+    -
+      name: 'removeEmpty'
+  79:
+    key: '952'
+    transforms:
+    -
+      name: 'arrayColumn'
+      keys: 'o'
+    -
+      name: 'flatten'
+  76:
+    key: '952'
+    transforms:
+    -
+      name: 'arrayColumn'
+      keys: 'p'
+    -
+      name: 'flatten'
+  117:
+    key: '952'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'p'
+      -
+        name: 'flatten'
+  173:
+    key: '999'
+    transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'c'
+      -
+        name: 'flatten'

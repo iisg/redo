@@ -4,7 +4,7 @@ namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 use Assert\Assertion;
 
 class GetKeyImportTransform extends AbstractImportTransform {
-    public function apply(array $values, array $config): array {
+    public function apply(array $values, array $config, array $dataBeingImported): array {
         Assertion::keyExists($config, 'key');
         Assertion::allIsArray($values);
         return array_map(

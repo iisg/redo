@@ -14,7 +14,7 @@ class RegexImportTransformTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testTransforming() {
-        $this->assertEquals(['a'], $this->regexTransform->apply(['b'], ['regex' => '/b/', 'replacement' => 'a']));
-        $this->assertEquals(['oko'], $this->regexTransform->apply(['babka'], ['regex' => '/[abc]+/', 'replacement' => 'o']));
+        $this->assertEquals(['a'], $this->regexTransform->apply(['b'], ['regex' => '/b/', 'replacement' => 'a'], []));
+        $this->assertEquals(['oko'], $this->regexTransform->apply(['babka'], ['regex' => '/[abc]+/', 'replacement' => 'o'], []));
     }
 }

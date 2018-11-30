@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+    xmlns="http://www.loc.gov/MARC21/slim">
+
+  <leader>02172nam a2200385 i 4500</leader>
+  <controlfield tag="005">20180717011400.0</controlfield>
+  <controlfield tag="008">180709s1879    gw a   f f   |001 0 ger c</controlfield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">xx004361056</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">KR 048/RW</subfield>
+    <subfield code="b">pol</subfield>
+    <subfield code="e">rda</subfield>
+    <subfield code="c">KR 048/RW</subfield>
+    <subfield code="d">KR 048/AK</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">3549</subfield>
+    <subfield code="a">626/627</subfield>
+    <subfield code="j">Inżynieria wodna. Budownictwo wodne. Hydrotechnika.</subfield>
+  </datafield>
+  <datafield tag="245" ind1="0" ind2="4">
+    <subfield code="a">Der Wasserbau /</subfield>
+    <subfield code="c">in Verein mit G. Franzius, A. Frühling, H. Garbe, A. Hess, F. Lincke, K. Pestalozzi, J. Schlichting, Ed. Schmitt ; bearbeitet und herausgegeben von L. Franzius und Ed. Sonne.</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Leipzig :</subfield>
+    <subfield code="b">Verlag von Wilhelm Engelmann,</subfield>
+    <subfield code="c">1879.</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">XVI, 1158 stron, [1] karta tablic złożona :</subfield>
+    <subfield code="b">ilustracje ;</subfield>
+    <subfield code="c">27 cm +</subfield>
+    <subfield code="e">Atlas : XVI stron, LXVII kart tablic złożonych.</subfield>
+  </datafield>
+  <datafield tag="336" ind1=" " ind2=" ">
+    <subfield code="a">Tekst</subfield>
+    <subfield code="b">txt</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield tag="337" ind1=" " ind2=" ">
+    <subfield code="a">Bez urządzenia pośredniczącego</subfield>
+    <subfield code="b">n</subfield>
+    <subfield code="2">rdamedia</subfield>
+  </datafield>
+  <datafield tag="338" ind1=" " ind2=" ">
+    <subfield code="a">Wolumin</subfield>
+    <subfield code="b">nc</subfield>
+    <subfield code="2">rdacarrier</subfield>
+  </datafield>
+  <datafield tag="490" ind1="1" ind2=" ">
+    <subfield code="a">Handbuch der Ingenieurwissenschaften in vier Bänden ;</subfield>
+    <subfield code="v">Bd. 3</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Na stronie tytulowej: "Mit 325 Holzschnitten, vollstandigem Sachregister und einem Atlas von 68 Zeichnungstafeln".</subfield>
+  </datafield>
+  <datafield tag="504" ind1=" " ind2=" ">
+    <subfield code="a">Bibliografia przy rozdziałach. Indeks.</subfield>
+  </datafield>
+  <datafield tag="593" ind1=" " ind2=" ">
+    <subfield code="a">W egz. III-307350 brak tablic XXX i XXXI.</subfield>
+  </datafield>
+  <datafield tag="596" ind1=" " ind2=" ">
+    <subfield code="a">EDT_2</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Franzius, Georg.</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2006115366</subfield>
+    <subfield code="9">114802</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Frühling, August</subfield>
+    <subfield code="d">(1847-1910).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n  00052595</subfield>
+    <subfield code="9">114801</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Garbe, Heinrich</subfield>
+    <subfield code="d">(1840-1901).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2009148736</subfield>
+    <subfield code="9">114768</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Hess, August</subfield>
+    <subfield code="d">(1827-1894).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2017034023</subfield>
+    <subfield code="9">116096</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Lincke, Felix</subfield>
+    <subfield code="d">(1840-1917).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2006095632</subfield>
+    <subfield code="9">114490</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Pestalozzi, Karl</subfield>
+    <subfield code="d">(1825-1891).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2018128701</subfield>
+    <subfield code="9">120897</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Schlichting, Julius</subfield>
+    <subfield code="d">(1835-1894).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2012060437</subfield>
+    <subfield code="9">114861</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Schmitt, Eduard</subfield>
+    <subfield code="d">(1842-1913).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2005134349</subfield>
+    <subfield code="9">110144</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Franzius, Ludwig</subfield>
+    <subfield code="d">(1832-1903).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2006115367</subfield>
+    <subfield code="9">114488</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Sonne, Eduard</subfield>
+    <subfield code="d">(1828-1917).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2006122145</subfield>
+    <subfield code="9">114767</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">Verlag von Wilhelm Engelmann.</subfield>
+    <subfield code="e">Wydawca</subfield>
+    <subfield code="4">pbl</subfield>
+    <subfield code="0">n 2013007406</subfield>
+    <subfield code="9">111721</subfield>
+  </datafield>
+  <datafield tag="830" ind1=" " ind2="0">
+    <subfield code="a">Handbuch der Ingenieurwissenschaften in vier Bänden</subfield>
+    <subfield code="v">Bd. 3</subfield>
+    <subfield code="0">t 2017244547</subfield>
+    <subfield code="9">115862</subfield>
+  </datafield>
+  <datafield tag="942" ind1=" " ind2=" ">
+    <subfield code="2">udc</subfield>
+  </datafield>
+  <datafield tag="999" ind1=" " ind2=" ">
+    <subfield code="c">136095</subfield>
+    <subfield code="d">136095</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="2">udc</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">III307350</subfield>
+    <subfield code="7">1</subfield>
+    <subfield code="8">EDT-PIODO</subfield>
+    <subfield code="9">335096</subfield>
+    <subfield code="a">BPK</subfield>
+    <subfield code="b">BPK</subfield>
+    <subfield code="c">BPK-MAG</subfield>
+    <subfield code="d">2018-06-18</subfield>
+    <subfield code="e">51</subfield>
+    <subfield code="g">40.00</subfield>
+    <subfield code="i">307350</subfield>
+    <subfield code="o">III-307350</subfield>
+    <subfield code="p">100000305812</subfield>
+    <subfield code="r">2018-06-20</subfield>
+    <subfield code="v">40.00</subfield>
+    <subfield code="w">2018-06-18</subfield>
+    <subfield code="y">BK-NDW</subfield>
+    <subfield code="z">+ dod.</subfield>
+  </datafield>
+</record>

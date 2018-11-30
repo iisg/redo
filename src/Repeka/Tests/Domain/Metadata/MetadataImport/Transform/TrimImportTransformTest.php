@@ -11,14 +11,18 @@ class TrimImportTransformTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testTransforming() {
-        $this->assertEquals(['a'], $this->trimTransform->apply([' a '], []));
+        $this->assertEquals(['a'], $this->trimTransform->apply([' a '], [], []));
     }
 
     public function testTransformingMany() {
-        $this->assertEquals(['a', 'bś'], $this->trimTransform->apply([' a ', '    bś     '], []));
+        $this->assertEquals(['a', 'bś'], $this->trimTransform->apply([' a ', '    bś     '], [], []));
     }
 
     public function testTransformingWithCharList() {
-        $this->assertEquals(['IONIQ'], $this->trimTransform->apply([',, IONIQ! ! '], ['characters' => ' ,!']));
+        $this->assertEquals(['IONIQ'], $this->trimTransform->apply([',, IONIQ! ! '], ['characters' => ' ,!'], []));
+    }
+
+    public function testTransformingDeepArray() {
+        $this->assertEquals(['b', ['a', 'c']], $this->trimTransform->apply(['b ,,', ['a !!', '  ,  c']], ['characters' => ' ,!'], []));
     }
 }
