@@ -14,7 +14,7 @@
         class="metadata-details au-animate fade-inup-outup">
 
         <div class="name-with-buttons-and-tabs">
-            <span class="page-title">${'Metadata_single' | t} #${metadata.id}</span>
+            <span class="page-title">${metadata.name} #${metadata.id}</span>
             <throbber if.bind="metadata.pendingRequest"></throbber>
             <remove-button if.bind="!editing && metadata.id > 0"
                 disabled.bind="metadata.pendingRequest"
