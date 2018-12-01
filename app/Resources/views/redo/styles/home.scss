@@ -28,3 +28,39 @@ $search-bar-width: 500px;
     }
   }
 }
+
+
+.stats-home {
+  margin-top: 20px;
+  width: 100%;
+
+  .sec-title {
+    color: $light-blue;
+    border-bottom: 3px solid $light-blue;
+    margin-bottom: 15px;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      width: 100%;
+      display: flex;
+
+      .item-label {
+        width: 60%;
+        margin-bottom: 10px;
+      }
+
+      .item-content {
+        margin-left: auto;
+
+        a {
+          color: $default-text-color;
+        }
+      }
+    }
+  }
+}

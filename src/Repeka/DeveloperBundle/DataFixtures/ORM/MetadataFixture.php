@@ -124,7 +124,7 @@ class MetadataFixture extends RepekaFixture {
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
                 [
-                    'name' => 'Data utworzenia',
+                    'name' => 'data_utworzenia_rekordu',
                     'label' => [
                         'PL' => 'Data utworzenia',
                         'EN' => 'Creation date',
