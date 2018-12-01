@@ -168,7 +168,7 @@ export class ResourceDetails implements RoutableComponentActivate {
                           transitionId: string,
                           newResourceKind: ResourceKind,
                           places: WorkflowPlace[]): Promise<Resource> {
-    if (transitionId) {
+    if (transitionId && transitionId !== 'update') {
       return this.resourceRepository.updateAndApplyTransition(updatedResource, transitionId);
     } else if (this.isFormOpenedForGod) {
       const placesIds = places.map(place => place.id);

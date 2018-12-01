@@ -43,7 +43,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
         if (!$returnTeaser) {
             $availableTransitions = [SystemTransition::UPDATE()->toTransition($resource->getKind(), $resource)];
             $normalizerFunc = [$this->normalizer, 'normalize'];
-            if ($resource->hasWorkflow()) {
+            if ($resource->hasWorkflow() && $this->normalizer) {
                 $workflow = $resource->getWorkflow();
                 $normalized['currentPlaces'] = array_map($normalizerFunc, $workflow->getPlaces($resource));
                 $normalized['blockedTransitions'] = array_map(
@@ -53,7 +53,9 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
                 $normalized['transitionAssigneeMetadata'] = $this->getTransitionAssigneeMetadata($resource);
                 $availableTransitions = array_merge($workflow->getTransitions($resource), $availableTransitions);
             }
-            $normalized['availableTransitions'] = array_map($normalizerFunc, $availableTransitions);
+            if ($this->normalizer) {
+                $normalized['availableTransitions'] = array_map($normalizerFunc, $availableTransitions);
+            }
         }
         return $normalized;
     }

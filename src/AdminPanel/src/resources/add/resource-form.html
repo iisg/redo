@@ -59,7 +59,7 @@
                 tree-query-url.bind="treeQueryUrl"
                 display-required-only.bind="!!deposit"></resource-form-generated>
             <div class="form-buttons">
-                <transition-button if.bind="editing && (transition.id !== 'update')"
+                <transition-button if.bind="editing && (transition && transition.id !== 'update')"
                     transition.bind="transition"
                     places.bind="currentlyEditedResource.kind.workflow.places"
                     submitting.bind="submitting"></transition-button>

@@ -5,9 +5,9 @@ use Psr\Container\ContainerInterface;
 use Repeka\Application\Authentication\UserDataMapping;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Resources\FrontendLocaleProvider;
+use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Application\Upload\UploadSizeHelper;
-use Repeka\Application\Validation\ContainerAwareMetadataConstraintManager;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Metadata\MetadataImport\Mapping\Mapping;
 use Repeka\Domain\Utils\ArrayUtils;
@@ -34,21 +34,25 @@ class FrontendConfig extends \Twig_Extension {
 
     /** @var FrontendLocaleProvider */
     private $frontendLocaleProvider;
-    /** @var ContainerAwareMetadataConstraintManager */
+    /** @var MetadataConstraintManager */
     private $metadataConstraintManager;
     /** @var UserDataMapping */
     private $userDataMapping;
+    /** @var ResourceNormalizer */
+    private $resourceNormalizer;
 
     public function __construct(
         FrontendLocaleProvider $frontendLocaleProvider,
         MetadataConstraintManager $metadataConstraintManager,
         UserDataMapping $userDataMapping,
-        ContainerInterface $container
+        ContainerInterface $container,
+        ResourceNormalizer $resourceNormalizer
     ) {
         $this->frontendLocaleProvider = $frontendLocaleProvider;
         $this->metadataConstraintManager = $metadataConstraintManager;
         $this->userDataMapping = $userDataMapping;
         $this->container = $container;
+        $this->resourceNormalizer = $resourceNormalizer;
     }
 
     public function getFunctions() {
@@ -110,6 +114,7 @@ class FrontendConfig extends \Twig_Extension {
             return [
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
+                'userData' => $this->resourceNormalizer->normalize($user->getUserData()),
                 'roles' => $user->getRoles(),
                 'groupsIds' => $user->getUserGroupsIds(),
             ];
