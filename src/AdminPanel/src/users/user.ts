@@ -7,11 +7,7 @@ export class User {
 
   @map id: number;
   @map username: string;
-  @map email: string;
   @map userData: Resource = new Resource();
   @map('string[]') roles: string[] = [];
   groupsIds: number[] = [];
 }
-
-// export class CurrentUser extends User {
-// }

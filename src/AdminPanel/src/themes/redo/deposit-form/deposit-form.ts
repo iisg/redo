@@ -63,6 +63,10 @@ export class DepositForm {
       return this.resourceRepository.post(resource).then(resource => {
         this.redirectResource(resource);
       });
+    } else if (transitionId === 'update') {
+      return this.resourceRepository.update(resource).then(resource => {
+        this.redirectResource(resource);
+      });
     } else {
       return this.resourceRepository.updateAndApplyTransition(resource, transitionId).then(resource => {
         this.redirectResource(resource);

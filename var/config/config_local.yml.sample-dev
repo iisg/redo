@@ -1,5 +1,6 @@
 parameters:
   secret: soo_secret
+  applicationName: repeka
 doctrine:
   dbal:
     host: 127.0.0.1

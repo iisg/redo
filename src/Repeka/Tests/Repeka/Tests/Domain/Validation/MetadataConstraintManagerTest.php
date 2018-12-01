@@ -4,7 +4,7 @@ namespace Repeka\Tests\Domain\Validation;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
 
-class ContainerAwareMetadataConstraintManagerTest extends \PHPUnit_Framework_TestCase {
+class MetadataConstraintManagerTest extends \PHPUnit_Framework_TestCase {
     /** @var MetadataConstraintManager */
     private $provider;
 

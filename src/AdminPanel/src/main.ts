@@ -2,7 +2,6 @@ import "arrive";
 import {Aurelia, LogManager} from "aurelia-framework";
 import {ConsoleAppender} from "aurelia-logging-console";
 import "bootstrap";
-import {MetricsCollector} from "common/metrics/metrics-collector";
 import {MetricsEventListener} from "common/metrics/metrics-event-listener";
 import {CustomValidationRules} from "common/validation/custom-validation-rules";
 import {installValidationMessageLocalization} from "common/validation/validation-message-localization";
@@ -21,8 +20,6 @@ import {User} from "./users/user";
 import {Workflow} from "./workflows/workflow";
 import "polyfills";
 import {FrontendConfig} from "./config/FrontendConfig";
-
-MetricsCollector.timeStart("bootstrap");
 
 LogManager.addAppender(new ConsoleAppender());
 LogManager.setLevel(LogManager.logLevel.info);
@@ -83,10 +80,9 @@ export function configure(aurelia: Aurelia) {
   configureHttpClient(aurelia);
   installValidationMessageLocalization(aurelia);
 
-  const currentUser = $.extend(new User(), FrontendConfig.get('user'));
-  aurelia.container.registerInstance(CurrentUserFetcher.CURRENT_USER_KEY, currentUser);
-
-  aurelia.start()
+  Promise.resolve($.extend(new User(), FrontendConfig.get('user')))
+    .then(user => aurelia.container.registerInstance(CurrentUserFetcher.CURRENT_USER_KEY, user))
+    .then(() => aurelia.start())
     .then(() => onAureliaStarted(aurelia))
     .then(() => {
       adminPanel ? aurelia.setRoot() : aurelia.enhance();
