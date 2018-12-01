@@ -161,6 +161,9 @@ ICON;
         if (isset($filters['page']) && $filters['page']) {
             $builder->setPage($filters['page']);
         }
+        if (isset($filters['sortBy']) && is_array($filters['sortBy'])) {
+            $builder->sortBy([$filters['sortBy']]);
+        }
         return FirewallMiddleware::bypass(
             function () use ($builder) {
                 return $this->handleCommand($builder->build());

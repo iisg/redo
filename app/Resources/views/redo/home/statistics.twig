@@ -1,0 +1,60 @@
+{% set resources = resources({
+    page: 1,
+    resultsPerPage: 5,
+    resourceClass: 'books',
+    contentsFilter: {data_utworzenia_rekordu: '.+'},
+    sortBy: {columnId: m('data_utworzenia_rekordu'), direction: 'DESC', language: 'PL'}
+}) %}
+{% set lastMonthCount = resources({
+    page: 1,
+    resultsPerPage: 1,
+    resourceClass: 'books',
+    contentsFilter: {data_utworzenia_rekordu: ('now' | date('Y-m')) ~ '.+'}
+}).totalCount %}
+{% set lastYearCount = resources({
+    page: 1,
+    resultsPerPage: 1,
+    resourceClass: 'books',
+    contentsFilter: {data_utworzenia_rekordu: ('now' | date('Y')) ~ '.+'}
+}).totalCount %}
+<div class="stats-home">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="sec-title">
+                <h1>OSTATNIO DODANE</h1>
+            </div>
+            <ul>
+                {% for resource in resources.results %}
+                    <li>
+                        <div class="item-label">{{ resource | mLabel }}</div>
+                        <div class="item-content">
+                            <a href="/resources/{{ resource.id }}">
+                                {{ icon('read-more', 2.5) }}
+                                Dowiedz się więcej
+                            </a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-sm-6">
+            <div class="sec-title">
+                <h1>STATYSTYKI</h1>
+            </div>
+            <ul>
+                <li>
+                    <div class="item-label">Liczba wszystkich pozycji</div>
+                    <div class="item-content">{{ resources.totalCount }}</div>
+                </li>
+                <li>
+                    <div class="item-label">Liczba pozycji dodanych w ostatnim miesiącu</div>
+                    <div class="item-content">{{ lastMonthCount }}</div>
+                </li>
+                <li>
+                    <div class="item-label">Liczba pozycji dodanych w ostatnim roku</div>
+                    <div class="item-content">{{ lastYearCount }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

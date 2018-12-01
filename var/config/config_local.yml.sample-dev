@@ -45,7 +45,7 @@ repeka:
   templating:
     templates_resource_class: cms
     templates:
-      homepage: redo/home.twig
+      homepage: redo/home/home.twig
       login_form: redo/login-form.twig
       error_page: redo/error-page.twig
   expose_endpoints:
