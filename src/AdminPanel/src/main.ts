@@ -20,6 +20,7 @@ import {User} from "./users/user";
 import {Workflow} from "./workflows/workflow";
 import "polyfills";
 import {FrontendConfig} from "./config/FrontendConfig";
+import {UserRepository} from "./users/user-repository";
 
 LogManager.addAppender(new ConsoleAppender());
 LogManager.setLevel(LogManager.logLevel.info);
@@ -99,5 +100,5 @@ function onAureliaStarted(aurelia: Aurelia): void {
 
 function preloadEntityTypes() {
   // This function does nothing, but its presence and dependence on these classes ensures that their decorators are evaluated.
-  return [User, Language, Metadata, ResourceKind, ResourceMapper, Resource, Workflow, WorkflowIdMapper] && undefined;
+  return [User, Language, Metadata, ResourceKind, ResourceMapper, Resource, Workflow, WorkflowIdMapper, UserRepository] && undefined;
 }
