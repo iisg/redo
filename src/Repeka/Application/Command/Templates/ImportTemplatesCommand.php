@@ -15,6 +15,7 @@ class ImportTemplatesCommand extends AbstractTemplateCommand {
         $this
             ->setName('repeka:templates:import')
             ->addArgument('namespace', InputArgument::REQUIRED)
+            ->addArgument('nameFilter', InputArgument::OPTIONAL)
             ->setDescription('Import templates from files into the database.');
     }
 
@@ -26,7 +27,11 @@ class ImportTemplatesCommand extends AbstractTemplateCommand {
         $discoverFilesTemplates = $this->discoverFilesTemplates($namespace);
         $progress = new ProgressBar($output, count($discoverFilesTemplates));
         $progress->display();
+        $nameFilter = $input->getArgument('nameFilter');
         foreach ($discoverFilesTemplates as $templateName) {
+            if ($nameFilter && strpos($templateName, $nameFilter) === false) {
+                continue;
+            }
             $existingResourceKind = $this->loader->getTemplateResourceKind($templateName);
             $templateContents = $this->getTemplateFromFile($templateName);
             $templateMetadata = $templateMetadataKind->withOverrides(['constraints' => ['displayStrategy' => $templateContents]]);
