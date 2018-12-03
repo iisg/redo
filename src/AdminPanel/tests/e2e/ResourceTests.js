@@ -5,7 +5,7 @@ describe('Resource Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-  
+
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 		browser.driver.manage().window().setSize(1536, 864);
@@ -168,8 +168,9 @@ describe('Resource Tests', function() {
 	waitForElement(element(by.className('swal2-confirm toggle-button red')));
 	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
 	confirmButton.click();
-
 	waitForElement(element(by.className('current-page-number')));
+
+	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	expect(element(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego')).isPresent()).toBe(false);
   });
 });

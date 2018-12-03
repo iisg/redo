@@ -31,9 +31,10 @@ describe('Metadata Type Tests', function() {
 		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
 		var addMetadataTypeButton = element(by.cssContainingText('span', 'Dodaj'));
 		addMetadataTypeButton.click();
+		browser.sleep(1000);
 
-		var fields = element.all(by.className('form-control au-target'));
 		var addButton = element(by.buttonText('Dodaj'));
+		var fields = element.all(by.className('form-control au-target'));
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
 		addButton.click();
@@ -94,6 +95,7 @@ describe('Metadata Type Tests', function() {
   });
 
   it('Try to add submetadata without name', function() {
+	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newMetadataTypeRowLink.click();
@@ -180,6 +182,7 @@ describe('Metadata Type Tests', function() {
   });
 
   it('Try to edit submetadata by removing Polish name', function() {
+	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newMetadataTypeRowLink.click();
@@ -254,6 +257,7 @@ describe('Metadata Type Tests', function() {
   });
 
   it('Try to delete metadata having a submetadata', function() {
+	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		waitForElement(element(by.linkText('nazwa_testowanie_automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('nazwa_testowanie_automatyczne'));
 		newMetadataTypeRowLink.click();
@@ -271,6 +275,7 @@ describe('Metadata Type Tests', function() {
   });
 
   it('Delete submetadata', function() {
+	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newMetadataTypeRowLink.click();
@@ -301,6 +306,7 @@ describe('Metadata Type Tests', function() {
   });
 
   it('Set maximal number of values', function() {
+	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newMetadataTypeRowLink.click();
@@ -332,6 +338,7 @@ describe('Metadata Type Tests', function() {
   });
 
   it('Set regular expression', function() {
+	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newMetadataTypeRowLink.click();
@@ -363,6 +370,7 @@ describe('Metadata Type Tests', function() {
   });
 
   it('Edit metadata Polish display name', function() {
+	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newMetadataTypeRowLink.click();
@@ -382,6 +390,7 @@ describe('Metadata Type Tests', function() {
   });
 
   // it('Edit metadata English display name', function() {
+	    // browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		// waitForElement(element(by.linkText('nazwa_testowanie_automatyczne')));
 		// var newMetadataTypeRowLink = element(by.linkText('nazwa_testowanie_automatyczne'));
 		// newMetadataTypeRowLink.click();
@@ -417,6 +426,7 @@ describe('Metadata Type Tests', function() {
   // });
 
   it('Delete metadata type', function() {
+	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
 		waitForElement(element(by.linkText('nazwa_testowanie_automatyczne')));
 		var newMetadataTypeRowLink = element(by.linkText('nazwa_testowanie_automatyczne'));
 		newMetadataTypeRowLink.click();
