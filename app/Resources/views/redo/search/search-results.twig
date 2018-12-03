@@ -56,7 +56,10 @@
                             <div class="highlights">
                                 {% for fieldName, highlights in result.highlights %}
                                     {% for highlight in highlights %}
-                                        <p>{{ highlight | raw }}</p>
+                                        <p>
+                                            <strong>{{ metadata(fieldName | slice(9) | number_format).label.PL }}:</strong>
+                                            {{ highlight | raw }}
+                                        </p>
                                     {% endfor %}
                                 {% endfor %}
                             </div>
