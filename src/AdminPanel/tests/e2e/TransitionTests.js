@@ -97,8 +97,8 @@ describe('Transition Tests', function() {
 	browser.sleep(5000);
 
 	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(2).sendKeys('ZZZ_automatyczne_testowanie');
-	waitForElement(element(by.cssContainingText('ul', 'ZZZ_automatyczne_testowanie')));
+	formsList.get(2).sendKeys('#1000001');
+	waitForElement(element(by.cssContainingText('ul', '#1000001')));
 	browser.sleep(3000);
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
@@ -153,8 +153,8 @@ describe('Transition Tests', function() {
 	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(2).sendKeys('AAA_testowanie_automatyczne');
-	waitForElement(element(by.cssContainingText('ul', 'AAA_testowanie_automatyczne')));
+	formsList.get(2).sendKeys('#1000000');
+	waitForElement(element(by.cssContainingText('ul', '#1000000')));
 	browser.sleep(3000);
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
@@ -223,8 +223,8 @@ describe('Transition Tests', function() {
 	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(2).sendKeys('AAA_testowanie_automatyczne');
-	waitForElement(element(by.cssContainingText('ul', 'AAA_testowanie_automatyczne')));
+	formsList.get(2).sendKeys('#1000000');
+	waitForElement(element(by.cssContainingText('ul', '#1000000')));
 	browser.sleep(3000);
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
@@ -245,7 +245,7 @@ describe('Transition Tests', function() {
 
 	waitForElement(element(by.buttonText('Edytuj')));
     var metadataValuesList = element(by.className('resource-details'));
-	expect(metadataValuesList.getText()).toContain('#8251');
+	expect(metadataValuesList.getText()).toContain('(admin)');
 
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
@@ -285,8 +285,8 @@ describe('Transition Tests', function() {
 	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(2).sendKeys('AAA_testowanie_automatyczne');
-	waitForElement(element(by.cssContainingText('ul', 'AAA_testowanie_automatyczne')));
+	formsList.get(2).sendKeys('#1000000');
+	waitForElement(element(by.cssContainingText('ul', '#1000000')));
 	browser.sleep(3000);
 	waitForElement(element(by.className('fancytree-checkbox')));
 	var checkboxProper = element(by.className('fancytree-checkbox'));
