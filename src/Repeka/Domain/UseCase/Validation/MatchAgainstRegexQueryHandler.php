@@ -14,7 +14,7 @@ class MatchAgainstRegexQueryHandler {
     }
 
     public function handle(MatchAgainstRegexQuery $query) {
-        $dummyMetadata = Metadata::create('books', MetadataControl::TEXT(), 'dummy', []);
-        $this->regexConstraint->validateSingle($dummyMetadata, $query->getRegex(), $query->getValue());
+        $dummyMetadata = Metadata::create('books', MetadataControl::TEXT(), 'dummy', [], [], [], ['regex' => $query->getRegex()]);
+        $this->regexConstraint->validateSingle($dummyMetadata, $query->getValue());
     }
 }
