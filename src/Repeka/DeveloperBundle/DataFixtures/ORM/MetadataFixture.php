@@ -291,7 +291,7 @@ class MetadataFixture extends RepekaFixture {
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
                 [
-                    'name' => 'Twórca zasobu',
+                    'name' => 'osoba_tworzaca_rekord',
                     'label' => [
                         'PL' => 'Twórca zasobu',
                         'EN' => 'Resource creator',

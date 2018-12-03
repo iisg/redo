@@ -1,4 +1,4 @@
-{% set addedResources = resources({contentsFilter: {tworca_zasobu: app.user.userData.id}}) %}
+{% set addedResources = resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}}) %}
 {% if addedResources | length == 0 %}
     Brak zasobów.
 {% else %}

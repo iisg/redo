@@ -68,7 +68,7 @@ repeka:
     /deposit/{phase}:
       template: redo/deposit.twig
       deposit:
-        relationship_resource_kind_ids: [1, 2]
+        relationship_resource_kind_ids: [1, 2, -1, 7]
 m6_statsd:
   servers:
     default:

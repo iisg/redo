@@ -82,6 +82,10 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
     }
 
     public function testCannotAddSubresourceIfNoReproductorsSet() {
+        $category = $this->findResourceByContents([$this->findMetadataByName('nazwa_kategorii')->getId() => 'E-booki']);
+        $category->updateContents($category->getContents()->withReplacedValues(SystemMetadata::REPRODUCTOR, []));
+        $this->getEntityManager()->persist($category);
+        $this->resetEntityManager(ResourceRepository::class);
         $this->expectException(InsufficientPrivilegesException::class);
         $this->addSubBookToCategory();
     }
@@ -97,6 +101,13 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
         $this->assertNotNull($resource);
         $this->assertTrue($resource->hasParent());
         $this->assertEquals($category->getId(), $resource->getParentId());
+    }
+
+    public function testCanAddSubresourceIfGroupReproductor() {
+        // preconditions are ensured in fixtures
+        $resource = $this->addSubBookToCategory();
+        $this->assertNotNull($resource);
+        $this->assertTrue($resource->hasParent());
     }
 
     public function testCannotAddSubresourceIfSomeoneElseIsReproductor() {
