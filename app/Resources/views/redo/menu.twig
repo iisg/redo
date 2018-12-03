@@ -32,7 +32,7 @@
                             <span>Deponuj</span>
                         </a>
                     {% endif %}
-                    {% if resources({contentsFilter: {tworca_zasobu: app.user.userData.id}, resultsPerPage: 1}) | length == 1 %}
+                    {% if resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}, resultsPerPage: 1}) | length == 1 %}
                         <a class="isActive() ? 'active' : ''"
                             href="/deposit/deposit-list">
                             {{ icon('resources', 1.5) }}

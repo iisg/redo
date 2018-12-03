@@ -181,6 +181,7 @@ class ResourcesFixture extends RepekaFixture {
                 $this->contents(
                     [
                         MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME => ['E-booki'],
+                        SystemMetadata::REPRODUCTOR => [$this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId()],
                     ]
                 ),
                 $userAdmin

@@ -54,7 +54,7 @@
                     {% endfor %}
                 </div>
                 <div class="available-transitions">
-                    {% set availableTransitions = availableTransitions(app.user, resource, ['tworca_zasobu']) %}
+                    {% set availableTransitions = availableTransitions(app.user, resource, ['osoba_tworzaca_rekord']) %}
                     {% for transition in  availableTransitions %}
                         {% if transition.id != 'update' %}
                             <div class="deposit-operations">
