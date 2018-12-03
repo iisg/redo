@@ -99,6 +99,12 @@ $background-color: white;
                 &, & > * {
                     padding: $default-gap-size / 8;
                 }
+                svg {
+                    padding: 4px;
+                    height: 2em;
+                    color: $dark-grey;
+                    background-color: $orange;
+                }
             }
             .resource-image .icon {
                 color: $lightish-grey;

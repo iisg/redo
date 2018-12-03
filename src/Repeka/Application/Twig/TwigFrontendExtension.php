@@ -60,6 +60,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Filter('ftsContentsToResource', [$this, 'ftsContentsToResource']),
             new \Twig_Filter('sum', [$this, 'sumIterable']),
             new \Twig_Filter('bibtexEscape', [$this, 'bibtexEscape']),
+            new \Twig_Filter('xmlEscape', [$this, 'xmlEscape']),
             new \Twig_Filter('childrenAllowed', [$this, 'resourceCanHaveChildren']),
             new \Twig_Filter('wrap', [$this, 'wrap']),
             new \Twig_Filter('basename', [$this, 'basename']),
@@ -194,6 +195,10 @@ ICON;
 
     public function bibtexEscape($value) {
         return '"' . addcslashes($value, '{}"$\\') . '"';
+    }
+
+    public function xmlEscape($value) {
+        return htmlspecialchars($value, ENT_XML1, 'UTF-8');
     }
 
     public function urlMatches(string ...$urls): bool {

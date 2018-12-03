@@ -2,6 +2,7 @@
 {% extends resourceVisible ? 'redo/layout.twig' : 'empty.twig' %}
 
 {% set page_title = resource | metadata('label') %}
+{% set childrenAllowed = resource | childrenAllowed %}
 
 {% block content %}
     {% include "redo/title-bar.twig" %}
@@ -62,6 +63,12 @@
                         <h3><strong>Pobierz</strong></h3>
                         <h4><a href="/download/pdf">{{ icon('mobi') }} MOBI (7KB) </a></h4>
                         <h4><a href="/download/pdf">{{ icon('pdf') }} PDF (144000KB) </a></h4>
+                        {% if childrenAllowed %}
+                            <h4><a href="/resources/{{ resource.id }}/rss" title="Kanał RSS">
+                                {{ icon('rss', 1.5) }}
+                                Kanał RSS
+                                </a></h4>
+                        {% endif %}
                         <a href="/resources/{{ resource.id }}/bibtex">BibTeX</a>
                     </div>
                 </div>
@@ -119,7 +126,7 @@
                 </div>
             </div>
         </div>
-        {% if resource | childrenAllowed %}
+        {% if childrenAllowed %}
             <div class="resource-children">
                 {% set page = app.request.query.get('page') | default(1) %}
                 {% set childrenPerPage = 10 %}

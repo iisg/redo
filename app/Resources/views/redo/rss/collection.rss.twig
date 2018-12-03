@@ -1,0 +1,33 @@
+{% if resource | childrenAllowed %}
+{% set url = app.request.schemeAndHttpHost | default('https://example.com') %}
+{% set page = (app.request.query.get('page') | default(1)) | number_format(0) %}
+{% set resources_per_page = 20 %}
+{% set children = resources({parentId: resource.id, page: page, resultsPerPage: resources_per_page}) %}
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"
+    xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>REDO kolekcja {{ resource | metadata('label') | xmlEscape }}</title>
+        <atom:link rel="self" href="{{ url }}{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'resourceId': resource.id, 'page': page})) }}"/>
+        <atom:link rel="first" href="{{ url }}{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'resourceId': resource.id, 'page': 1})) }}"/>
+        <atom:link rel="last" href="{{ url }}{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'resourceId': resource.id, 'page': (children.getTotalCount / resources_per_page) | round(0, 'ceil')})) }}"/>
+{% if page > 1 %}
+        <atom:link rel="previous" href="{{ url }}{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'resourceId': resource.id, 'page': page - 1})) }}"/>{% endif %}
+{% if page * resources_per_page < children.getTotalCount %}
+        <atom:link rel="next" href="{{ url }}{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'resourceId': resource.id, 'page': page + 1})) }}"/>{% endif %}
+
+        <link>{{ url }}</link>
+        <description>Kolekcja REDO</description>
+        {% for child in children %}<item>
+            <title>{{ child | mLabel | xmlEscape }}</title>
+            <link>{{ url }}/resources/{{ child.id }}</link>
+            <description>{{ child | metadata('opis') | xmlEscape }}</description>
+            <guid>{{ url }}/resources/{{  child.id }}</guid>
+        </item>
+        {% endfor %}
+
+    </channel>
+</rss>
+{% else %}
+404
+{% endif %}

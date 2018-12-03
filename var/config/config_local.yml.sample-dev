@@ -65,6 +65,10 @@ repeka:
       template: bibtex/bibtex.twig
       headers:
         Content-Type: 'text/plain'
+    /resources/{resourceId}/rss:
+      template: redo/rss/collection.rss.twig
+      headers:
+        Content-Type: 'application/rss+xml'
     /deposit/{phase}:
       template: redo/deposit.twig
       deposit:
