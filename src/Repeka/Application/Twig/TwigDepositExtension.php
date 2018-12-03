@@ -42,7 +42,7 @@ class TwigDepositExtension extends \Twig_Extension {
 
     public function getFunctions() {
         return [
-            new \Twig_Function('resourceKindsToDeposit', [$this, 'allowedResourceKinds']),
+            new \Twig_Function('resourceKindsToDeposit', [$this, 'depositableResourceKinds']),
             new \Twig_Function('resourcesToDeposit', [$this, 'allowedResourcesForResourceKind']),
             new \Twig_Function('availableTransitions', [$this, 'getAvailableTransitions']),
         ];
@@ -53,14 +53,21 @@ class TwigDepositExtension extends \Twig_Extension {
      * @param array $metadataIdsOrNames array of metadata ids or names that should be filtered by
      * @return ResourceKind[]
      */
-    public function allowedResourceKinds(User $user, $metadataIdsOrNames) {
+    public function depositableResourceKinds(User $user, $metadataIdsOrNames) {
         $resources = $this->fetchFilteredByUserResources($user, $metadataIdsOrNames);
         $resourceKindIds = $this->allowedSubresourceKindIds($resources->getResults());
         if (empty($resourceKindIds)) {
             return [];
         }
-        $resourceKindListQuery = ResourceKindListQuery::builder()->filterByIds(array_unique($resourceKindIds))->build();
-        return $this->resourceKindRepository->findByQuery($resourceKindListQuery);
+        $resourceKindListQuery = ResourceKindListQuery::builder()
+            ->filterByIds(array_unique($resourceKindIds))
+            ->build();
+        return array_filter(
+            $this->resourceKindRepository->findByQuery($resourceKindListQuery),
+            function (ResourceKind $resourceKind) {
+                return !!$resourceKind->getWorkflow();
+            }
+        );
     }
 
     /**
@@ -139,10 +146,13 @@ class TwigDepositExtension extends \Twig_Extension {
                 try {
                     $metadata = $resource->getKind()->getMetadataByIdOrName($metadataIdOrName);
                     $values = $resource->getContents()->getValues($metadata);
-                    $values = array_map(function ($metadataValue) {
-                        /** @var MetadataValue $metadataValue */
-                        return $metadataValue->getValue();
-                    }, $values);
+                    $values = array_map(
+                        function ($metadataValue) {
+                            /** @var MetadataValue $metadataValue */
+                            return $metadataValue->getValue();
+                        },
+                        $values
+                    );
                     $contentsValues = array_merge($contentsValues, $values);
                 } catch (\InvalidArgumentException $e) {
                     continue;
