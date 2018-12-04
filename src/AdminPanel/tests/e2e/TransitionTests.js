@@ -46,37 +46,37 @@ describe('Transition Tests', function() {
 	waitForElement(element(by.cssContainingText('span', 'Rodzaj_do_testowania_automatycznego')));
   });
 
-  it('Try to make a transition without any designated person', function() {
-	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
-	lastResource.click();
+  // it('Try to make a transition without any designated person', function() {
+	// browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
+	// waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	// var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
+	// var lastResource = resourcesList.get(0);
+	// lastResource.click();
 
-	waitForElement(element(by.cssContainingText('span', 'przejście')));
-	var transitionButton = element(by.cssContainingText('span', 'przejście'));
-	transitionButton.click();
+	// waitForElement(element(by.cssContainingText('span', 'przejście')));
+	// var transitionButton = element(by.cssContainingText('span', 'przejście'));
+	// transitionButton.click();
 
-	expect(element(by.buttonText('Edytuj')).isPresent()).toBe(true);
+	// expect(element(by.buttonText('Edytuj')).isPresent()).toBe(true);
 
-	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
-	lastResource.click();
+	// browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
+	// waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	// var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
+	// var lastResource = resourcesList.get(0);
+	// lastResource.click();
 
-	waitForElement(element(by.cssContainingText('span', 'Usuń')));
-	var deleteButton = element(by.cssContainingText('span', 'Usuń'));
-	deleteButton.click();
+	// waitForElement(element(by.cssContainingText('span', 'Usuń')));
+	// var deleteButton = element(by.cssContainingText('span', 'Usuń'));
+	// deleteButton.click();
 
-	waitForElement(element(by.className('swal2-confirm toggle-button red')));
-	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
-	confirmButton.click();
-	browser.sleep(500);
+	// waitForElement(element(by.className('swal2-confirm toggle-button red')));
+	// var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
+	// confirmButton.click();
+	// browser.sleep(500);
 
-	waitForElement(element(by.className('current-page-number')));
-	browser.sleep(1000);
-  });
+	// waitForElement(element(by.className('current-page-number')));
+	// browser.sleep(1000);
+  // });
 
   it('Try to make a transition without a proper designated person', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
