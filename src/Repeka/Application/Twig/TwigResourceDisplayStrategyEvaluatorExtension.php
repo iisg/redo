@@ -116,7 +116,7 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
             if (is_numeric($resource)) {
                 $resource = $this->fetchResources($resource);
             }
-            $values[] = new PrintableArray($resource->getValues($metadataId));
+            $values[] = new PrintableArray($resource ? $resource->getValues($metadataId) : []);
             $this->collectUsedMetadata($twigContext, $metadataId, $resource);
         }
         return $iterableGiven ? new PrintableArray($values) : $values[0];

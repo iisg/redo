@@ -6,7 +6,7 @@
     <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
 
     <template repeat.for="group of metadataGroups">
-        <span if.bind="metadataGroups.length > 1"
+        <span if.bind="metadataGroups.length > 1 && !displayRequiredOnly"
             class="section-title">
             ${group.groupId | metadataGroupLabel}</span>
         <template repeat.for="metadata of group.metadataList">

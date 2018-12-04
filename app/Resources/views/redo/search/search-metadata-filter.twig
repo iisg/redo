@@ -34,7 +34,7 @@
     <div class="form-group">
         <label>{{ filterableMetadata.label.PL }}</label>
         {% set relationshipFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? [] %}
-        {% for resource in resources({resourceKindIds: filterableMetadata.constraints.resourceKind, parentId: null}) %}
+        {% for resource in resources({resourceKindIds: filterableMetadata.constraints.resourceKind}) %}
             <label class="label-with-checkbox">
                 <input type="checkbox"
                     name="metadataFilters[{{ filterableMetadata.id }}][]"
