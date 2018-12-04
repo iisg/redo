@@ -35,5 +35,7 @@ class DispatchCyclicTasksCommand extends Command {
                 }
             }
         );
+        $cacheDir = realpath(\AppKernel::VAR_PATH . '/cache');
+        exec("chown -R www-data:www-data $cacheDir");
     }
 }

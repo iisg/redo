@@ -53,7 +53,7 @@ class ResourcesExposureController extends Controller {
         // $resourceId parameter name is required to write understandable URLs in config, like /resources/{resourceId}/export_type
         /** @var ResourceEntity $resource */
         $resource = $resourceId;
-        $responseData = ['resource' => $resource];
+        $responseData = ['r' => $resource, 'resource' => $resource];
         $this->trackUsage($endpointUsageTrackingKey, $request, $resource);
         $response = $this->render($template, $responseData);
         if ($response->getContent()) {
