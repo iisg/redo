@@ -1,35 +1,22 @@
-$logo-height: 60px;
+$logo-height: 72px;
 $title-font-size: 18px;
-$pk-logo-height: 54px;
+$pk-logo-height: 48px;
 
 .title-bar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   border-bottom: $default-gap-size / 4 solid $orange;
-  .logo-container {
-    display: flex;
-    align-self: stretch;
-    align-items: center;
-    padding: $default-gap-size/2;
-    background-color: $orange;
-    color: white;
-    .icon, svg {
-      height: $logo-height;
-    }
-  }
-  .title-container {
-    display: inline-block;
+  .logo-container, .pk-logo-container {
     padding: $default-gap-size / 2 $default-gap-size;
-    vertical-align: top;
-    color: $grey;
-    span {
-      display: block;
-      font-size: $title-font-size;
+  }
+  .logo-container {
+    img {
+      height: $logo-height;
     }
   }
   .pk-logo-container {
     margin-left: auto;
-    padding: $default-gap-size / 2 $default-gap-size;
     img {
       height: $pk-logo-height;
     }
