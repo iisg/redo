@@ -444,6 +444,24 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($expectedDateValue, $metadataValue);
     }
 
+    public function testIgnoringBullshitOrDeletedMetadataDuringEdit() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'POST',
+            self::oneEntityEndpoint($this->resource->getId()),
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => json_encode([666 => ['edited']]),
+            ]
+        );
+        $this->assertStatusCode(200, $client->getResponse());
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $edited */
+        $edited = $repository->findOne($this->resource->getId());
+        $this->assertEmpty($edited->getValues(666));
+    }
+
     public function testEditingResource() {
         $this->assertNotContains(
             $this->resource->getId(),

@@ -63,6 +63,16 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(ResourceContents::fromArray([1 => 1, 2 => 2]), $contents);
     }
 
+    public function testMappingValuesToNullRemovesThem() {
+        $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
+        $contents = $contents->mapAllValues(
+            function (MetadataValue $value, $metadataId) {
+                return $metadataId == 1 ? null : $value;
+            }
+        );
+        $this->assertEquals(ResourceContents::fromArray([1 => [], 2 => 2]), $contents);
+    }
+
     public function testMapAllValuesWithSubmetadata() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2, 'submetadata' => [3 => 4]]]]);
         $mapped = $contents->mapAllValues(
