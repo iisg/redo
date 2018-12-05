@@ -6,6 +6,7 @@ use Repeka\Application\Upload\UploadSizeHelper;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\DomainException;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
@@ -45,8 +46,15 @@ class ResourceContentsParamConverter implements ParamConverterInterface {
     public function processMetadataValues(ResourceContents $contents, Request $request): ResourceContents {
         return $contents->mapAllValues(
             function (MetadataValue $value, int $metadataId) use ($request) {
-                $metadata = $this->metadataRepository->findOne($metadataId);
-                return $value->withNewValue($this->metadataValueProcessor->process($value->getValue(), $metadata->getControl(), $request));
+                try {
+                    $metadata = $this->metadataRepository->findOne($metadataId);
+                    return $value->withNewValue(
+                        $this->metadataValueProcessor->process($value->getValue(), $metadata->getControl(), $request)
+                    );
+                } catch (EntityNotFoundException $e) {
+                    // this metadata does not exist so will be cleared by the adjuster
+                    return $value;
+                }
             }
         );
     }

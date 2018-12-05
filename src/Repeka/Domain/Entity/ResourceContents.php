@@ -35,11 +35,20 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
     private function mapAllValuesRecursive(callable $mapper, array $contents): array {
         foreach ($contents as $metadataId => &$values) {
             foreach ($values as &$value) {
-                $value = $mapper(new MetadataValue($value), $metadataId)->toArray();
-                if (isset($value['submetadata'])) {
-                    $value['submetadata'] = $this->mapAllValuesRecursive($mapper, $value['submetadata']);
+                $value = $mapper(new MetadataValue($value), $metadataId);
+                if ($value) {
+                    $value = $value->toArray();
+                    if (isset($value['submetadata'])) {
+                        $value['submetadata'] = $this->mapAllValuesRecursive($mapper, $value['submetadata']);
+                    }
                 }
             }
+            $values = array_filter(
+                $values,
+                function ($value) {
+                    return $value !== null;
+                }
+            );
         }
         return $contents;
     }
