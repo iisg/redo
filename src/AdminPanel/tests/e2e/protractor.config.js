@@ -7,7 +7,7 @@ exports.config = {
   capabilities: {
     'browserName': 'chrome',
     chromeOptions: {
-      args: ["--headless", '--no-sandbox']
+      args: ["--headless", '--no-sandbox', "--window-size=1536x864"]
     }
   },
   onPrepare: function(){
