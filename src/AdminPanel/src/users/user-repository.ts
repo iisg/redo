@@ -1,11 +1,11 @@
-import {ApiRepository} from "common/repository/api-repository";
 import {autoinject} from "aurelia-dependency-injection";
-import {User} from "./user";
-import {Resource} from "../resources/resource";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
+import {ApiRepository} from "common/repository/api-repository";
 import {cachedResponse, forSeconds} from "../common/repository/cached-response";
+import {Resource} from "../resources/resource";
 import {ResourceRepository} from "../resources/resource-repository";
+import {User} from "./user";
 
 @autoinject
 export class UserRepository extends ApiRepository<User> {

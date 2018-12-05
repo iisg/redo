@@ -5,46 +5,54 @@ $gap-size: $default-gap-size / 2;
 $resource-metadata-value-input-with-buttons-minimum-width: 200px;
 
 resource-form-generated {
-  & > span, .input-container > *, .new-metadata-value-button-container, .drag-handle, .buttons {
-    @include form-element();
-  }
-  .metadata-constraints-icons > * {
-    margin-left: $gap-size / 2
-  }
-  resource-metadata-values-form {
-    & > table {
-      td > div {
-        display: flex;
-        min-width: $resource-metadata-value-input-with-buttons-minimum-width; // To also keep correct right margin when the form is narrow.
-        metadata-value-input > compose > * {
-          flex: 1;
-          dropdown-select, resource-picker {
-            width: 100%;
+  &, & > collapsible-metadata-group {
+    & > span, .input-container > *, .new-metadata-value-button-container, .drag-handle, .buttons {
+      @include form-element();
+    }
+    .metadata-constraints-icons > * {
+      margin-left: $gap-size / 2
+    }
+    resource-metadata-values-form {
+      & > table {
+        tr:not(:first-child) > td > div {
+          margin-top: $gap-size / 4;
+        }
+        tr:not(:last-child) > td > div {
+          margin-bottom: $gap-size / 4;
+        }
+        td > div {
+          display: flex;
+          min-width: $resource-metadata-value-input-with-buttons-minimum-width; // To also keep correct right margin when the form is narrow.
+          metadata-value-input > compose > * {
+            flex: 1;
+            dropdown-select, resource-picker {
+              width: 100%;
+            }
+          }
+          & > resource-metadata-value-input, & > .metadata-row {
+            flex: 1;
+            margin-right: $gap-size / 2;
+            & > resource-form-generated {
+              margin-top: $gap-size / 2;
+              margin-left: $gap-size;
+            }
+          }
+          & > a {
+            line-height: 0;
+            margin-left: $gap-size / 2;
+            margin-right: $gap-size / 2;
+            @include transition(color $default-transition-duration);
+          }
+          & > div {
+            width: calc(2 * #{$icons-width} + #{$gap-size});
+            justify-content: space-between;
+            margin-left: $gap-size / 2;
           }
         }
-        & > resource-metadata-value-input, & > .metadata-row {
-          flex: 1;
-          margin-right: $gap-size / 2;
-          & > resource-form-generated {
-            margin-top: $gap-size / 2;
-            margin-left: $gap-size;
-          }
+        td > new-metadata-value-button, td > icon-button {
+          margin-top: $gap-size / 2;
+          margin-bottom: $gap-size / 2;
         }
-        & > a {
-          line-height: 0;
-          margin-left: $gap-size / 2;
-          margin-right: $gap-size / 2;
-          @include transition(color .3s);
-        }
-        & > div {
-          width: calc(2 * #{$icons-width} + #{$gap-size});
-          justify-content: space-between;
-          margin-left: $gap-size / 2;
-        }
-      }
-      td > new-metadata-value-button, td > icon-button {
-        margin-top: $gap-size / 2;
-        margin-bottom: $gap-size / 2;
       }
     }
   }

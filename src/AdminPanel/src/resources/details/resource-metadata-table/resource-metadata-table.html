@@ -1,8 +1,9 @@
-<template class="simple-form">
+<template class="simple-form contains-collapsible-metadata-group">
     <require from="./resource-metadata-values"></require>
+    <require from="common/components/collapsible-metadata-group/collapsible-metadata-group"></require>
     <require from="resources-config/metadata/metadata-label"></require>
-    <require from="../../workflow/resource-place-display.html"></require>
     <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
+    <require from="../../workflow/resource-place-display.html"></require>
 
     <template if.one-time="showResourceKind">
         <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
@@ -11,22 +12,24 @@
                 <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
                 <span else>#${ resource.kind.id }</span>
             </a>
+            <hr if.bind="metadataGroups.length || !hidePlaceInformation && resource.kind.workflow">
         </template>
     </template>
 
-    <template repeat.for="group of metadataGroups">
-        <span if.bind="!hideMetadataGroups"
-            class="section-title">
-            <hr>
-            ${group.groupId | metadataGroupLabel}</span>
-        <template repeat.for="metadata of group.metadataList">
-            <template if.bind="checkMetadataBrief ? metadata.shownInBrief : true">
-                <span>${metadata | metadataLabel}</span>
-                <resource-metadata-values resource.one-time="resource"
-                    metadata.one-time="metadata"
-                    check-metadata-brief.bind="checkMetadataBrief"></resource-metadata-values>
+    <template repeat.for="metadataGroup of metadataGroups">
+        <collapsible-metadata-group resource-kind-id.bind="resource.kind.id"
+            metadata-group-id.bind="metadataGroup.groupId"
+            disabled.bind="hideMetadataGroups">
+            <template repeat.for="metadata of metadataGroup.metadataList">
+                <template if.bind="checkMetadataBrief ? metadata.shownInBrief : true">
+                    <span>${metadata | metadataLabel}</span>
+                    <resource-metadata-values resource.one-time="resource"
+                        metadata.one-time="metadata"
+                        check-metadata-brief.bind="checkMetadataBrief"></resource-metadata-values>
+                </template>
             </template>
-        </template>
+        </collapsible-metadata-group>
+        <hr if.bind="!$last || !hidePlaceInformation && resource.kind.workflow">
     </template>
 
     <template if.bind="!hidePlaceInformation && resource.kind.workflow">

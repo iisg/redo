@@ -14,7 +14,7 @@
     align-items: center;
     color: $default-text-color;
     outline: none;
-    @include transition(color .3s, background-color .3s);
+    @include transition(color $default-transition-duration, background-color $default-transition-duration);
     &:hover, &:focus {
       text-decoration: none;
     }

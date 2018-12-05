@@ -2,7 +2,7 @@
 
 .display-strategies-dirty-icon {
   color: $orange;
-  transition: color .2s;
+  transition: color $default-transition-duration;
 }
 
 tr:hover {

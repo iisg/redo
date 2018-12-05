@@ -10,7 +10,8 @@
             </a>
             <template else>
                 <a click.delegate="item.toggle()">
-                    <icon name.bind="item.expanded ? 'down-2' : 'forward'"></icon>
+                    <icon name="forward"
+                        rotation.bind="item.expanded ? 90 : 0"></icon>
                     <span>${item.labelKey | t}</span>
                 </a>
                 <ul if.bind="item.expanded"

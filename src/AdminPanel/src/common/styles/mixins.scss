@@ -2,7 +2,7 @@
   #{if($button-wrapper, "& > *", "&")} {
     background-color: $background-color;
     color: $color;
-    @include transition(color .3s, background-color .3s);
+    @include transition(color $default-transition-duration, background-color $default-transition-duration);
   }
   &:not(.disabled):not([disabled]) {
     &:hover {
@@ -77,7 +77,7 @@
     position: relative;
     icon {
       opacity: 1;
-      @include transition(opacity .3s ease-out);
+      @include transition(opacity $default-transition-duration ease-out);
       &:not(.visible) {
         position: absolute;
         top: 0;
@@ -107,7 +107,7 @@
     padding: 0;
     background-color: initial;
     color: $color;
-    @include transition(color .3s ease-out);
+    @include transition(color $default-transition-duration ease-out);
     &:hover:not([disabled]), &:focus {
       color: lighten($color, $default-value-to-lighten-colors-by);
     }
@@ -153,4 +153,12 @@
   @include on-and-down($screen-sm) {
     @content;
   }
+}
+
+@function transitions-with-common-settings($transitions-properties, $transitions-settings) {
+  $transitions: null;
+  @each $transitions-property in $transitions-properties {
+    $transitions: $transitions, $transitions-property $transitions-settings;
+  }
+  @return $transitions;
 }

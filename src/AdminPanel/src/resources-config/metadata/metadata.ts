@@ -73,7 +73,7 @@ export const metadataConstraintDefaults: MetadataConstraints = {
 };
 
 export interface GroupMetadataList {
-  groupId;
+  groupId: string;
   metadataList: Metadata[];
 }
 

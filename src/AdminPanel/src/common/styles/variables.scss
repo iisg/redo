@@ -1,8 +1,15 @@
 $default-gap-size: 16px;
 
+$default-transition-duration: 0.3s;
+
 $title-font-size: 18px;
 $subtitle-font-size: 16px;
 
 $capital-letter-of-the-default-font-height: 0.714em;
 
+$default-line-height: 1.42857143;
+
 $default-sidebar-width: 275px;
+
+$simple-form-column-gap-size: $default-gap-size;
+$simple-form-row-gap-size: $default-gap-size / 2;

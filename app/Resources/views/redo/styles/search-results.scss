@@ -54,7 +54,6 @@ $checkbox-width-and-height: $default-gap-size;
     .search-result {
       display: flex;
       align-items: flex-start;
-      flex: start;
       &:not(:last-of-type) {
         border-bottom: solid 1px $light-grey;
       }

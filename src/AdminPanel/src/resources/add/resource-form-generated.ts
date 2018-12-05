@@ -4,7 +4,7 @@ import {Resource} from "resources/resource";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {Metadata} from "resources-config/metadata/metadata";
+import {Metadata, GroupMetadataList} from "resources-config/metadata/metadata";
 import {diff, flatten, inArray} from "common/utils/array-utils";
 import {numberKeysByValue} from "common/utils/object-utils";
 import {RequirementState} from "workflows/workflow";
@@ -63,8 +63,11 @@ export class ResourceFormGenerated {
   }
 
   @computedFrom('metadataList')
-  get metadataGroups() {
-    return groupMetadata(this.metadataList, this.metadataGroupRepository.getIds());
+  get nonEmptyMetadataGroups() {
+    const metadataGroups = groupMetadata(this.metadataList, this.metadataGroupRepository.getIds());
+    return metadataGroups.filter(metadataGroup =>
+      metadataGroup.metadataList.filter(metadata => this.displayMetadataValueInput(metadata)).length
+    );
   }
 
   @computedFrom('parent')

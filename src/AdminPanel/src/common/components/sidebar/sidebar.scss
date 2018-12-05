@@ -58,8 +58,16 @@ sidebar {
     & > * {
       direction: ltr;
     }
+    & > nested-navigation-menu {
+      & > ul > .navigation-menu-item > a > icon > svg {
+        transition: transform $default-transition-duration;
+      }
+    }
     & > ul {
       margin-top: auto;
+      & > .navigation-menu-item > a > icon > svg {
+        transition: transform $fold-animation-duration;
+      }
       & > .navigation-menu-item > a:not(:hover) {
         background-color: $dark-grey;
         color: white;

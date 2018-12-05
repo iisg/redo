@@ -1,13 +1,18 @@
 import {bindingMode, computedFrom, observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
+import {I18N} from "aurelia-i18n";
 import {NavigationInstruction, Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
+import {LocalStorage} from "common/utils/local-storage";
 import {getQueryParameters} from "common/utils/url-utils";
 import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
+import {DisabilityReason} from "../../common/components/buttons/toggle-button";
+import {Alert} from "../../common/dialog/alert";
 import {getMergedBriefMetadata} from "../../common/utils/metadata-utils";
 import {safeJsonParse} from "../../common/utils/object-utils";
 import {Metadata} from "../../resources-config/metadata/metadata";
+import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
 import {ContextResourceClass} from "../context/context-resource-class";
 import {PageResult} from "../page-result";
@@ -15,14 +20,11 @@ import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ResourceSort, SortDirection} from "../resource-sort";
 import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproductor";
-import {Alert} from "../../common/dialog/alert";
-import {I18N} from "aurelia-i18n";
-import {DisabilityReason} from "../../common/components/buttons/toggle-button";
-import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 
 @autoinject()
 export class ResourcesList {
   private readonly RESULTS_PER_PAGE_KEY = 'resourcesListElementsPerPage';
+  private readonly RESULTS_PER_PAGE_DEFAULT_VALUE = 10;
 
   @bindable parentResource: Resource = undefined;
   @bindable({defaultBindingMode: bindingMode.twoWay}) hasResources: boolean = undefined;
@@ -75,7 +77,7 @@ export class ResourcesList {
     this.sortBy = safeJsonParse(parameters['sortBy']);
     this.sortBy = this.sortBy ? this.sortBy : this.getSorting();
     this.displayAllLevels = !!parameters['allLevels'];
-    this.saveSortingToLocalStorage(this.sortBy);
+    LocalStorage.set(`sorting-${this.resourceClass}`, this.sortBy);
     this.fetchResources();
     this.updateURL(true);
     this.activated = true;
@@ -104,12 +106,9 @@ export class ResourcesList {
       resultsPerPage = parseInt(parameters.resourcesPerPage);
     }
     else {
-      try {
-        const resultsPerPageValueFromLocalStorage = localStorage[this.RESULTS_PER_PAGE_KEY];
-        resultsPerPage = resultsPerPageValueFromLocalStorage > 0 ? parseInt(resultsPerPageValueFromLocalStorage) : 10;
-      }
-      catch (exception) {
-        resultsPerPage = 10;
+      resultsPerPage = LocalStorage.get(this.RESULTS_PER_PAGE_KEY);
+      if (!resultsPerPage) {
+        resultsPerPage = this.RESULTS_PER_PAGE_DEFAULT_VALUE;
       }
     }
     const resultsPerPageChanged = this.resultsPerPage != resultsPerPage;
@@ -203,10 +202,7 @@ export class ResourcesList {
 
   resultsPerPageChanged(newValue: number, previousValue: number) {
     if (!this.resultsPerPageValueChangedOnActivate && previousValue) {
-      try {
-        localStorage[this.RESULTS_PER_PAGE_KEY] = newValue;
-      } catch (exception) {
-      }
+      LocalStorage.set(this.RESULTS_PER_PAGE_KEY, newValue);
       if (this.activated && this.currentPageNumber == 1) {
         this.updateURL();
         this.fetchResources();
@@ -267,26 +263,9 @@ export class ResourcesList {
     return undefined;
   }
 
-  private saveSortingToLocalStorage(sortBy: ResourceSort[]) {
-    try {
-      const sorting = JSON.stringify(sortBy);
-      localStorage.setItem(`sorting-${this.resourceClass}`, sorting);
-    } catch (e) {
-      this.sortBy = sortBy;
-    }
-  }
-
   private getSorting(): ResourceSort[] {
-    const cachedSorting = this.getSortingFromLocalStorage();
+    const cachedSorting = LocalStorage.get(`sorting-${this.resourceClass}`);
     const language = this.i18n.getLocale().toUpperCase();
     return cachedSorting ? cachedSorting : [new ResourceSort('id', SortDirection.DESC, language)];
-  }
-
-  private getSortingFromLocalStorage() {
-    try {
-      return safeJsonParse(localStorage.getItem(`sorting-${this.resourceClass}`));
-    } catch (e) {
-      return this.sortBy;
-    }
   }
 }
