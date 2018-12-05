@@ -10,6 +10,7 @@ excel-checkbox {
     padding-left: 0;
     padding-right: 0;
     color: $blue;
+    background-color: initial;
     &.disabled {
       color: $grey;
     }

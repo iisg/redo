@@ -31,7 +31,7 @@ $navigation-bar-border-with-shadow-size-on-smaller-screens: 2px;
 
 top-bar {
   position: relative;
-  @include transition(color .3s, background-color .3s);
+  @include transition(color $default-transition-duration, background-color $default-transition-duration);
   .first-row {
     display: flex;
     flex-wrap: wrap-reverse;
@@ -66,7 +66,7 @@ top-bar {
       }
       a {
         color: inherit;
-        @include transition(color .3s, background-color .3s);
+        @include transition(color $default-transition-duration, background-color $default-transition-duration);
         &:hover {
           background-color: $options-background-color-on-bover;
           color: $options-text-color-on-hover;
@@ -152,7 +152,7 @@ top-bar {
         right: 0;
         a {
           color: $dropdown-menu-items-text-color;
-          @include transition(color .3s, background-color .3s);
+          @include transition(color $default-transition-duration, background-color $default-transition-duration);
           &:hover {
             background-color: $dropdown-menu-items-background-color-on-hover;
             color: $dropdown-menu-items-text-color-on-hover;
@@ -164,7 +164,7 @@ top-bar {
       color: $second-row-text-color;
     }
     button, a {
-      @include transition(color .3s, background-color .3s);
+      @include transition(color $default-transition-duration, background-color $default-transition-duration);
     }
     button:hover, a:hover, a[aria-expanded="true"] {
       background-color: $second-row-background-color-of-active-elements-on-hover;

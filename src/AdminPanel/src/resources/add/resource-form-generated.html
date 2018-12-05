@@ -1,16 +1,17 @@
-<template class="simple-form">
+<template class="simple-form contains-collapsible-metadata-group">
     <require from="./resource-metadata-values-form"></require>
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="./from-workflow-transitions-array-to-string"></require>
     <require from="common/components/required-field-indicator/required-field-indicator"></require>
+    <require from="common/components/collapsible-metadata-group/collapsible-metadata-group"></require>
     <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
 
-    <template repeat.for="group of metadataGroups">
-        <span if.bind="metadataGroups.length > 1 && !displayRequiredOnly"
-            class="section-title">
-            ${group.groupId | metadataGroupLabel}</span>
-        <template repeat.for="metadata of group.metadataList">
-            <template if.bind="displayMetadataValueInput(metadata)">
+    <template repeat.for="metadataGroup of nonEmptyMetadataGroups">
+        <collapsible-metadata-group resource-kind-id.bind="resourceKind.id"
+            metadata-group-id.bind="metadataGroup.groupId"
+            disabled.bind="nonEmptyMetadataGroups.length < 2 || displayRequiredOnly">
+            <template repeat.for="metadata of metadataGroup.metadataList"
+                if.bind="contentsValidator[metadata.id]">
                 <span>
                     ${metadata | metadataLabel}
                     <span class="metadata-constraints-icons">
@@ -18,8 +19,8 @@
                             name="user-2"
                             class="text-info"
                             bootstrap-tooltip="${'This metadata determines who can perform these actions:'
-                                        | resourceClassTranslation:resource.resourceClass}&#10;${resource.transitionAssigneeMetadata[metadata.id]
-                                        | fromWorkflowTransitionsArrayToString}"></icon>
+                                                | resourceClassTranslation:resource.resourceClass}&#10;${resource.transitionAssigneeMetadata[metadata.id]
+                                                | fromWorkflowTransitionsArrayToString}"></icon>
                         <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
                             translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
                         <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
@@ -27,8 +28,7 @@
                             bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
                     </span>
                 </span>
-                <resource-metadata-values-form if.bind="contentsValidator[metadata.id]"
-                    metadata.bind="metadata"
+                <resource-metadata-values-form metadata.bind="metadata"
                     resource.bind="resource"
                     validation-controller.bind="validationController"
                     disabled.bind="editingDisabledForMetadata(metadata) & signal:'metadata-validators-changed'"
@@ -37,6 +37,7 @@
                     skip-validation.bind="skipValidation"
                     tree-query-url.bind="treeQueryUrl"></resource-metadata-values-form>
             </template>
-        </template>
+        </collapsible-metadata-group>
+        <hr if.bind="!$last">
     </template>
 </template>

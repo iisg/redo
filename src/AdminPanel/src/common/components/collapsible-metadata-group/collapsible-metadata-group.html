@@ -1,0 +1,16 @@
+<template class="${!collapsedMetadataGroupsIds || !disabled && collapsed ? 'collapsed' : 'expanded'}
+    ${!collapseAnimationEnabled && (!collapsedMetadataGroupsIds || !disabled && collapsed) ? 'with-disabled-collapse-animation' : ''}"
+    click.delegate="collapseAnimationEnabled = true">
+    <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
+
+    <button if.bind="!disabled"
+        class="section-title"
+        click.delegate="toggleMetadataGroupVisibility()">
+        ${metadataGroupId | metadataGroupLabel}<template if.bind="collapsedMetadataGroupsIds && collapsed">...</template>
+        <div>
+            <icon name="forward"
+                rotation.bind="collapsedMetadataGroupsIds && collapsed ? 0 : 90"></icon>
+        </div>
+    </button>
+    <slot></slot>
+</template>

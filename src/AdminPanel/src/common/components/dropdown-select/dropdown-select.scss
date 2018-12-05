@@ -76,7 +76,7 @@ audit-command-name-chooser, resource-kind-chooser, flags-select, workflow-choose
     }
     .select2-selection__clear, .select2-selection--multiple .select2-selection__choice__remove {
       color: $grey;
-      @include transition(color .3s);
+      @include transition(color $default-transition-duration);
       &:hover {
         color: $dark-grey;
       }

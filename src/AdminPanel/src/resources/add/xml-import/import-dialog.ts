@@ -1,10 +1,11 @@
-import {DialogController} from "aurelia-dialog";
-import {autoinject} from "aurelia-dependency-injection";
-import {XmlImportClient} from "./xml-import-client";
 import {observable} from "aurelia-binding";
-import {ResourceKind} from "resources-config/resource-kind/resource-kind";
-import {GlobalExceptionInterceptor} from "common/http-client/global-exception-interceptor";
+import {autoinject} from "aurelia-dependency-injection";
+import {DialogController} from "aurelia-dialog";
 import {HttpResponseMessage} from "aurelia-http-client";
+import {GlobalExceptionInterceptor} from "common/http-client/global-exception-interceptor";
+import {LocalStorage} from "common/utils/local-storage";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
+import {XmlImportClient} from "./xml-import-client";
 
 @autoinject
 export class ImportDialog {
@@ -25,19 +26,15 @@ export class ImportDialog {
   constructor(private dialogController: DialogController,
               private xmlImportClient: XmlImportClient,
               private globalExceptionInterceptor: GlobalExceptionInterceptor) {
-    const storedJson = localStorage[this.MOST_RECENT_CONFIG_KEY];
-    if (storedJson !== undefined) {
-      try {
-        const storedConfig = JSON.parse(storedJson);
-        if (!('fileName' in storedConfig) || !('json' in storedConfig) || Object.keys(storedConfig).length > 2) {
-          delete localStorage[this.MOST_RECENT_CONFIG_KEY];
-        } else {
-          this.importConfig = storedConfig;
-        }
-      } catch (_) {
-        // value is invalid, erase it
-        delete localStorage[this.MOST_RECENT_CONFIG_KEY];
+    const storedConfiguration = LocalStorage.get(this.MOST_RECENT_CONFIG_KEY);
+    if (storedConfiguration !== undefined) {
+      if (!('fileName' in storedConfiguration) || !('json' in storedConfiguration) || Object.keys(storedConfiguration).length > 2) {
+        LocalStorage.remove(this.MOST_RECENT_CONFIG_KEY);
+      } else {
+        this.importConfig = storedConfiguration;
       }
+    } else {
+      LocalStorage.remove(this.MOST_RECENT_CONFIG_KEY);
     }
   }
 
@@ -72,7 +69,7 @@ export class ImportDialog {
         fileName: this.configFile.name,
         json: reader.result,
       };
-      localStorage[this.MOST_RECENT_CONFIG_KEY] = JSON.stringify(this.importConfig);
+      LocalStorage.set(this.MOST_RECENT_CONFIG_KEY, this.importConfig);
     };
   }
 

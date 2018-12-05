@@ -104,7 +104,7 @@ $simple-form-number-input-box-minimum-width: 75px;
               border-radius: 0;
               text-transform: uppercase;
               color: $default-text-color;
-              @include transition(background-color .3s ease-out, color .3s ease-out);
+              @include transition(background-color $default-transition-duration ease-out, color $default-transition-duration ease-out);
               &.active, &:hover {
                 background-color: $light-blue;
                 color: white;
@@ -214,7 +214,7 @@ $simple-form-number-input-box-minimum-width: 75px;
       tbody {
         vertical-align: top;
         tr {
-          @include transition(background-color .3s);
+          @include transition(background-color $default-transition-duration);
           &:nth-child(2n + 1) {
             background-color: $light-grey;
           }
@@ -270,17 +270,9 @@ $simple-form-number-input-box-minimum-width: 75px;
     }
   }
 
-  .validation-message {
-    color: $red;
-  }
-
-  body > tr[oa-sortable-item] {
-    display: none;
-  }
-
-  button.unstyled {
-    background: none;
-    border: none;
+  hr {
+    margin-top: $default-gap-size / 2;
+    margin-bottom: $default-gap-size / 2;
   }
 
   input, textarea, select {
@@ -295,6 +287,10 @@ $simple-form-number-input-box-minimum-width: 75px;
 
   textarea {
     resize: vertical;
+  }
+
+  .validation-message {
+    color: $red;
   }
 
   .form-control:not([type=date]) {
@@ -375,93 +371,54 @@ $simple-form-number-input-box-minimum-width: 75px;
   }
 }
 
+
+body > tr[oa-sortable-item] {
+  display: none;
+}
+
 button {
   border: none;
   outline: none;
-}
-
-// Animations.
-// See: http://blog.aurelia.io/2015/07/17/animating-apps-with-aurelia-part-1.
-.au-stagger {
-  -webkit-animation-delay: 30ms;
-  animation-delay: 30ms;
-}
-
-.fade-inup-outdown {
-  &.au-enter {
-    opacity: 0 !important;
-  }
-  &.au-enter-active {
-    @include animation(fadeInDown .3s);
-  }
-  &.au-leave-active {
-    @include animation(fadeOutUp .3s);
-  }
-}
-
-.fade-inup-outup {
-  &.au-enter {
-    opacity: 0 !important;
-  }
-  &.au-enter-active {
-    @include animation(fadeInUp .3s);
-  }
-  &.au-leave-active {
-    @include animation(fadeOutUp .3s);
-  }
-}
-
-// max-height animation, idea based on: http://stackoverflow.com/a/8331169/878514
-@mixin anim-height-inout($max-height) {
-  @include keyframes(heightIn#{$max-height}) {
-    0% {
-      max-height: 0;
-    }
-    100% {
-      max-height: $max-height * 1px;
-    }
-  }
-
-  @include keyframes(heightOut#{$max-height}) {
-    0% {
-      max-height: $max-height * 1px;
-    }
-    100% {
-      max-height: 0;
-    }
-  }
-
-  .anim-height-inout-#{$max-height} {
-    &.au-enter-active {
-      overflow: hidden;
-      @include animation(heightIn#{$max-height} .3s);
-    }
-    &.au-leave-active {
-      overflow: hidden;
-      @include animation(heightOut#{$max-height} .3s);
-    }
-  }
+  background: none;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .simple-form {
   display: grid;
-  grid-template-columns: auto minmax(60%, 1fr);
-  grid-template-columns: fit-content(40%) auto;
-  grid-column-gap: $default-gap-size;
-  grid-row-gap: $default-gap-size / 2;
-  & > span:not(.value):not(.validation-message), & > .key {
-    font-weight: bold;
+  grid-template-columns: fit-content(40%) auto; // It is solved this way as otherwise, for example, edit button would not stick to the
+                                                // right side while scrolling horizontally when there would be a lot content in the first
+                                                // column and the window would be narrow.
+  grid-column-gap: $simple-form-column-gap-size;
+  &:not(.contains-collapsible-metadata-group) {
+    grid-row-gap: $simple-form-row-gap-size;
   }
-  & > span, & > .key {
-    icon {
-      margin-left: $default-gap-size / 4;
+  &.contains-collapsible-metadata-group {
+    margin-top: -$simple-form-row-gap-size / 2;
+    margin-bottom: -$simple-form-row-gap-size / 2;
+    & > :not(collapsible-metadata-group), & > collapsible-metadata-group > * {
+        margin-top: $simple-form-row-gap-size / 2;
+        margin-bottom: $simple-form-row-gap-size / 2;
     }
   }
-  & > .full-width, & > .section-title, & > .validation-message {
-    grid-column: 1/3;
-  }
-  & > .section-title {
-    font-size: $subtitle-font-size;
+  &, & > collapsible-metadata-group {
+    & > span:not(.value):not(.validation-message), & > button, & > .key {
+      font-weight: bold;
+    }
+    & > span, & > .key {
+      icon {
+        margin-left: $default-gap-size / 4;
+      }
+    }
+    & > .full-width, & > .section-title, & > .validation-message, & > hr {
+      grid-column: 1/3;
+    }
+    & > hr {
+      width: 100%;
+    }
+    & > .section-title {
+      font-size: $subtitle-font-size;
+    }
   }
   &:not(:last-child) > .validation-message {
     margin-bottom: $default-gap-size / 2;
@@ -479,6 +436,10 @@ button {
   input[type=radio] {
     position: relative;
     top: 1px;
+  }
+  hr {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 
@@ -508,6 +469,7 @@ button {
   flex-wrap: wrap;
   padding-top: $default-gap-size / 4;
   padding-bottom: $default-gap-size / 4;
+  align-items: flex-start;
   & > .form-content {
     flex: 1;
     padding: $default-gap-size / 4 $default-gap-size / 2;
@@ -519,7 +481,6 @@ button {
     flex: 0;
     top: $default-gap-size / 2;
     margin-left: auto;
-    align-self: flex-start;
     padding-left: $default-gap-size / 4;
     padding-right: $default-gap-size / 4;
     & > * {
@@ -533,6 +494,69 @@ button {
     }
     button, toggle-button > div {
       text-align: left;
+    }
+  }
+}
+
+// Animations.
+// See: http://blog.aurelia.io/2015/07/17/animating-apps-with-aurelia-part-1.
+.au-stagger {
+  -webkit-animation-delay: 30ms;
+  animation-delay: 30ms;
+}
+
+.fade-inup-outdown {
+  &.au-enter {
+    opacity: 0 !important;
+  }
+  &.au-enter-active {
+    @include animation(fadeInDown $default-transition-duration);
+  }
+  &.au-leave-active {
+    @include animation(fadeOutUp $default-transition-duration);
+  }
+}
+
+.fade-inup-outup {
+  &.au-enter {
+    opacity: 0 !important;
+  }
+  &.au-enter-active {
+    @include animation(fadeInUp $default-transition-duration);
+  }
+  &.au-leave-active {
+    @include animation(fadeOutUp $default-transition-duration);
+  }
+}
+
+// max-height animation, idea based on: http://stackoverflow.com/a/8331169/878514
+@mixin anim-height-inout($max-height) {
+  @include keyframes(heightIn#{$max-height}) {
+    0% {
+      max-height: 0;
+    }
+    100% {
+      max-height: $max-height * 1px;
+    }
+  }
+
+  @include keyframes(heightOut#{$max-height}) {
+    0% {
+      max-height: $max-height * 1px;
+    }
+    100% {
+      max-height: 0;
+    }
+  }
+
+  .anim-height-inout-#{$max-height} {
+    &.au-enter-active {
+      overflow: hidden;
+      @include animation(heightIn#{$max-height} $default-transition-duration);
+    }
+    &.au-leave-active {
+      overflow: hidden;
+      @include animation(heightOut#{$max-height} $default-transition-duration);
     }
   }
 }

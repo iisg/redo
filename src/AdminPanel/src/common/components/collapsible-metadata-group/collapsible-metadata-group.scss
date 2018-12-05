@@ -1,0 +1,142 @@
+@import "../../styles";
+
+$collapse-and-expand-animations-duration: 0.4s;
+$elements-movement-animation-duration: $collapse-and-expand-animations-duration / 2;
+$basic-opacity-transition-duration: $collapse-and-expand-animations-duration - $elements-movement-animation-duration;
+$additional-opacity-transition-duration: 0.08;
+$collapse-and-expand-animations-timing-function: linear;
+
+// Basic idea is that opacity transition partially overlaps elements movement transition.
+$collapse-animation-elements-movement-transition-settings:
+    $elements-movement-animation-duration
+    $basic-opacity-transition-duration
+    $collapse-and-expand-animations-timing-function;
+$collapse-animation-opacity-and-visibility-transitions-settings:
+    $basic-opacity-transition-duration + $additional-opacity-transition-duration
+    $collapse-and-expand-animations-timing-function;
+$expand-animation-elements-movement-transition-settings:
+    $elements-movement-animation-duration
+    $collapse-and-expand-animations-timing-function;
+$expand-animation-opacity-and-visibility-transitions-settings:
+    $basic-opacity-transition-duration + $additional-opacity-transition-duration
+    $elements-movement-animation-duration - $additional-opacity-transition-duration
+    $collapse-and-expand-animations-timing-function;
+
+$metadata-group-elements-default-line-height: $default-line-height * 1em;
+$line-height-to-be-rendered-as-zero: 0.001px;
+
+.simple-form.contains-collapsible-metadata-group {
+    collapsible-metadata-group {
+        display: contents;
+        &.collapsed {
+            .section-title {
+                transition: margin-bottom
+                    $collapse-animation-elements-movement-transition-settings;
+            }
+            .section-title ~ *, collapsible-metadata-group > * {
+                transition:
+                    transitions-with-common-settings(margin-top margin-bottom min-height line-height,
+                        $collapse-animation-elements-movement-transition-settings),
+                    transitions-with-common-settings(opacity visibility,
+                        $collapse-animation-opacity-and-visibility-transitions-settings);
+                opacity: 0;
+                min-height: 0;
+                line-height: $line-height-to-be-rendered-as-zero;
+                margin-top: calc(-#{$metadata-group-elements-default-line-height} - #{$simple-form-row-gap-size / 2});
+                visibility: hidden;
+            }
+            resource-metadata-table {
+                transition: transitions-with-common-settings(padding-top padding-bottom,
+                    $collapse-animation-elements-movement-transition-settings);
+                padding-top: 0;
+                padding-bottom: 0;
+                & > :not(collapsible-metadata-group) {
+                    transition: transitions-with-common-settings(margin-top margin-bottom,
+                        $collapse-animation-elements-movement-transition-settings);
+                    margin-top: 0;
+                    margin-bottom: 0;
+                }
+            }
+            &:not(.with-disabled-collapse-animation) {
+                wysiwyg-editor, resource-metadata-values-form {
+                    @keyframes collapse {
+                        0% {
+                            max-height: 100vh;
+                        }
+                        100% {
+                            max-height: 0;
+                        }
+                    }
+                    animation: collapse $collapse-animation-elements-movement-transition-settings forwards;
+                    overflow: hidden;
+                }
+            }
+            &.with-disabled-collapse-animation {
+                wysiwyg-editor, resource-metadata-values-form {
+                    max-height: 0;
+                    overflow: hidden;
+                }
+            }
+        }
+        &.expanded {
+            .section-title {
+                transition: margin-bottom
+                    $expand-animation-elements-movement-transition-settings;
+            }
+            .section-title ~ *, collapsible-metadata-group > * {
+                transition:
+                    transitions-with-common-settings(margin-top margin-bottom min-height line-height,
+                        $expand-animation-elements-movement-transition-settings),
+                    transitions-with-common-settings(opacity visibility,
+                        $expand-animation-opacity-and-visibility-transitions-settings);
+                opacity: 1;
+                line-height: $metadata-group-elements-default-line-height;
+            }
+            resource-metadata-table {
+                transition: transitions-with-common-settings(padding-top padding-bottom,
+                    $expand-animation-elements-movement-transition-settings);
+                & > :not(collapsible-metadata-group) {
+                    transition: transitions-with-common-settings(margin-top margin-bottom,
+                        $expand-animation-elements-movement-transition-settings);
+                }
+            }
+            wysiwyg-editor, resource-metadata-values-form {
+                @keyframes expand {
+                    0% {
+                        max-height: 0;
+                        overflow: hidden;
+                    }
+                    100% {
+                        max-height: 100vh;
+                    }
+                }
+                animation: expand $expand-animation-elements-movement-transition-settings backwards;
+            }
+            resource-form-generated > collapsible-metadata-group > * {
+                transition:
+                    transitions-with-common-settings(margin-top margin-bottom min-height line-height,
+                        $expand-animation-elements-movement-transition-settings),
+                    transitions-with-common-settings(opacity visibility,
+                        $expand-animation-opacity-and-visibility-transitions-settings);
+            }
+        }
+        & > :not(button.section-title):not(hr) {
+            line-height: $metadata-group-elements-default-line-height;
+            opacity: 1;
+        }
+        & > button.section-title {
+            display: flex;
+            & > div {
+                position: sticky;
+                right: $default-gap-size;
+                margin-left: auto;
+                & > icon > svg {
+                    transition: transform $collapse-and-expand-animations-duration $collapse-and-expand-animations-timing-function;
+                }
+            }
+        }
+        wysiwyg-editor {
+            display: block;
+        }
+    }
+}

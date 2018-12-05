@@ -36,7 +36,7 @@ excel {
       vertical-align: middle;
       th, td {
         text-align: center;
-        @include transition(background-color .3s);
+        @include transition(background-color $default-transition-duration);
         &.highlighted {
           background-color: $orange;
         }
