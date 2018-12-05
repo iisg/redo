@@ -43,11 +43,13 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
                     }
                 }
             }
-            $values = array_filter(
-                $values,
-                function ($value) {
-                    return $value !== null;
-                }
+            $values = array_values(
+                array_filter(
+                    $values,
+                    function ($value) {
+                        return $value !== null;
+                    }
+                )
             );
         }
         return $contents;

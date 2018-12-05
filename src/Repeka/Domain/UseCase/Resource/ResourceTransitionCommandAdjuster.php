@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\MetadataValue;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -29,9 +30,8 @@ class ResourceTransitionCommandAdjuster implements CommandAdjuster {
         $newContents = $command->getContents();
         $newContents = $this->clearNotExistingMetadata($newContents);
         $newContents = $newContents->mapAllValues([$this, 'adjustResourceContents']);
-        $command->getResource()->updateContents(
-            $command->getResource()->getContents()->mapAllValues([$this, 'adjustResourceContents'])
-        );
+        $currentContents = $this->clearNotExistingMetadata($command->getResource()->getContents());
+        $command->getResource()->updateContents($currentContents->mapAllValues([$this, 'adjustResourceContents']));
         $transition = $command->getTransition();
         $workflow = $command->getResource()->getKind()->getWorkflow();
         if (!$transition instanceof ResourceWorkflowTransition && $workflow !== null) {
@@ -47,7 +47,7 @@ class ResourceTransitionCommandAdjuster implements CommandAdjuster {
     }
 
     /** @SuppressWarnings("PHPMD.UnusedFormalParameter") */
-    private function clearNotExistingMetadata(\Repeka\Domain\Entity\ResourceContents $newContents) {
+    private function clearNotExistingMetadata(ResourceContents $newContents) {
         $usedMetadataIds = $newContents->reduceAllValues(
             function (MetadataValue $value, int $metadataId, array $usedMetadataIds) {
                 if (!in_array($metadataId, $usedMetadataIds)) {
