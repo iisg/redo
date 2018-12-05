@@ -48,7 +48,7 @@ final class EntityUtils {
 
     /**
      * Maps entities to their IDs, preserving order.
-     * @param Identifiable[] $entities
+     * @param array|Identifiable[] $entities
      * @return (int|string)[]
      */
     public static function mapToIds($entities): array {

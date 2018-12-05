@@ -3,6 +3,7 @@ namespace Repeka\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -23,7 +24,9 @@ abstract class RepekaMigration extends AbstractMigration implements ContainerAwa
         $this->abortIf(true, 'There is no way back.');
     }
 
-    protected function fetchAll(string $sqlQuery): array {
-        return $this->container->get('doctrine.orm.entity_manager')->getConnection()->fetchAll($sqlQuery);
+    protected function fetchAll(string $sqlQuery, array $params = []): array {
+        /** @var EntityManagerInterface $em */
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        return $em->getConnection()->fetchAll($sqlQuery, $params);
     }
 }

@@ -18,13 +18,13 @@ class SystemRole extends Enum {
     /**
      * Creates role with name or without the resource class context.
      *
-     * @param null|string $roleClass
+     * @param null|string $resourceClass
      * @return string role name
      * @example roleName() -> 'ADMIN_SOME_CLASS'
      * @example roleName('foo') -> 'ADMIN-foo'
      */
-    public function roleName(?string $roleClass = null): string {
-        return strtoupper($this->getValue()) . ($roleClass ? '-' . $roleClass : '_SOME_CLASS');
+    public function roleName(?string $resourceClass = null): string {
+        return strtoupper($this->getValue()) . ($resourceClass ? '-' . $resourceClass : '_SOME_CLASS');
     }
 
     /** @return SystemRole[] */

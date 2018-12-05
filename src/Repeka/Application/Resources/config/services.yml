@@ -98,19 +98,8 @@ services:
     tags:
       - {name: twig.loader, priority: 100}
 
-  Repeka\Application\ParamConverter\ResourceContentsParamConverter:
-    tags: [{ name: request.param_converter, converter: Repeka\Application\ParamConverter\ResourceContentsParamConverter }]
-  Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessor:
-    public: true
-
   Repeka\Application\Resources\FrontendLocaleProvider:
     $defaultUiLanguage: '%repeka.default_ui_language%'
-
-  Repeka\Application\Upload\FilesystemDriver: ~
-  Repeka\Application\Upload\BasicResourceFileHelper: ~
-  Repeka\Application\Upload\ResourceFilePathGenerator:
-    - '%repeka.upload.path%'
-    - '%repeka.upload.temp_folder%'
 
   Repeka\Domain\Validation\MetadataConstraintManager:
     - !tagged repeka.metadata_constraint

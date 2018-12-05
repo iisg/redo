@@ -11,7 +11,8 @@ button.toggle-button {
 $available-colors: (
   blue: $blue,
   orange: $orange,
-  red: $red
+  red: $red,
+  grey: $grey
 );
 
 @each $color-name, $color in $available-colors {

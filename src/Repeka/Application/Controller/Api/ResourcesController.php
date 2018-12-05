@@ -11,7 +11,6 @@ use Repeka\Domain\UseCase\Resource\ResourceCloneCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
-use Repeka\Domain\UseCase\Resource\ResourceFileQuery;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
@@ -23,7 +22,6 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Domain\UseCase\TreeResult;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -131,11 +129,13 @@ class ResourcesController extends ApiController {
      * @Route
      * @Method("POST")
      */
-    public function postAction(Request $request, ResourceContents $resourceContents) {
+    public function postAction(Request $request) {
         $data = $request->request->all();
         Assertion::keyExists($data, 'kindId', 'kindId is missing');
+        Assertion::keyExists($data, 'contents', 'contents are missing');
         Assertion::numeric($data['kindId']);
         $resourceKind = $this->handleCommand(new ResourceKindQuery($data['kindId']));
+        $resourceContents = ResourceContents::fromArray($data['contents']);
         $command = isset($data['id']) && is_numeric($data['id'])
             ? new ResourceCloneCommand($resourceKind, intval($data['id']), $resourceContents, $this->getUser())
             : new ResourceCreateCommand($resourceKind, $resourceContents, $this->getUser());
@@ -145,11 +145,12 @@ class ResourcesController extends ApiController {
 
     /**
      * @Route("/{resource}")
-     * @Method("POST")
-     * POST instead of PUT, caused by multipart data, HTTP fills $_FILES only when using POST
-     * @see http://stackoverflow.com/questions/24385301/symfony-rest-file-upload-over-put-method
+     * @Method("PUT")
      */
-    public function putAction(Request $request, ResourceEntity $resource, ResourceContents $resourceContents) {
+    public function putAction(Request $request, ResourceEntity $resource) {
+        $requestData = $request->request->all();
+        Assertion::keyExists($requestData, 'contents', 'contents are missing');
+        $resourceContents = ResourceContents::fromArray($requestData['contents']);
         $godEdit = $request->headers->get('god-edit');
         if ($godEdit) {
             $kindId = $request->get('newKindId');
@@ -178,14 +179,5 @@ class ResourcesController extends ApiController {
     public function deleteAction(ResourceEntity $resource) {
         $this->handleCommand(new ResourceDeleteCommand($resource));
         return new Response('', 204);
-    }
-
-    /**
-     * @Route("/{resource}/files/{filename}")
-     * @Method("GET")
-     */
-    public function downloadFileAction(ResourceEntity $resource, string $filename) {
-        $filePath = $this->handleCommand(new ResourceFileQuery($resource, $filename));
-        return new BinaryFileResponse($filePath);
     }
 }

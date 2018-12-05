@@ -263,7 +263,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => json_encode([$this->metadata1->getId() => ['created']]),
+                'contents' => [$this->metadata1->getId() => ['created']],
                 'resourceClass' => 'books',
             ]
         );
@@ -294,7 +294,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'kindId' => $this->resourceKindWithWorkflow->getId(),
-                'contents' => json_encode([$this->metadata1->getId() => ['created']]),
+                'contents' => [$this->metadata1->getId() => ['created']],
                 'resourceClass' => 'books',
             ]
         );
@@ -317,7 +317,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resource->getKind()->getId(),
-                'contents' => json_encode($this->resource->getContents()->toArray()),
+                'contents' => $this->resource->getContents()->toArray(),
                 'resourceClass' => 'books',
             ]
         );
@@ -342,7 +342,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resourceWithWorkflow->getId(),
                 'kindId' => $this->resourceWithWorkflow->getKind()->getId(),
-                'contents' => json_encode($this->resourceWithWorkflow->getContents()->toArray()),
+                'contents' => $this->resourceWithWorkflow->getContents()->toArray(),
                 'resourceClass' => 'books',
             ]
         );
@@ -367,7 +367,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resource->getKind()->getId(),
-                'contents' => json_encode($newContents),
+                'contents' => $newContents,
                 'resourceClass' => 'books',
             ]
         );
@@ -390,7 +390,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resource->getKind()->getId(),
-                'contents' => json_encode($newContents),
+                'contents' => $newContents,
                 'resourceClass' => 'books',
             ]
         );
@@ -411,20 +411,18 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => json_encode(
-                    [
-                        $this->metadata5->getId() => [
-                            [
-                                'value' => [
-                                    'from' => '2018-09-13T16:39:49+02:00',
-                                    'to' => '2018-09-13T16:39:49+02:00',
-                                    'mode' => 'day',
-                                    'rangeMode' => null,
-                                ],
+                'contents' => [
+                    $this->metadata5->getId() => [
+                        [
+                            'value' => [
+                                'from' => '2018-09-13T16:39:49+02:00',
+                                'to' => '2018-09-13T16:39:49+02:00',
+                                'mode' => 'day',
+                                'rangeMode' => null,
                             ],
                         ],
-                    ]
-                ),
+                    ],
+                ],
                 'resourceClass' => 'books',
             ]
         );
@@ -451,19 +449,17 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => json_encode(
-                    [
-                        $this->metadata5->getId() => [
-                            [
-                                'value' => [
-                                    'from' => '2013-09-13T16:39:49+02:00',
-                                    'mode' => 'range',
-                                    'rangeMode' => 'year',
-                                ],
+                'contents' => [
+                    $this->metadata5->getId() => [
+                        [
+                            'value' => [
+                                'from' => '2013-09-13T16:39:49+02:00',
+                                'mode' => 'range',
+                                'rangeMode' => 'year',
                             ],
                         ],
-                    ]
-                ),
+                    ],
+                ],
                 'resourceClass' => 'books',
             ]
         );
@@ -486,12 +482,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     public function testIgnoringBullshitOrDeletedMetadataDuringEdit() {
         $client = self::createAdminClient();
         $client->apiRequest(
-            'POST',
+            'PUT',
             self::oneEntityEndpoint($this->resource->getId()),
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => json_encode([666 => ['edited']]),
+                'contents' => [666 => ['edited']],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -508,12 +504,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         );
         $client = self::createAdminClient();
         $client->apiRequest(
-            'POST',
+            'PUT',
             self::oneEntityEndpoint($this->resource->getId()),
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => json_encode([$this->metadata1->getId() => ['edited']]),
+                'contents' => [$this->metadata1->getId() => ['edited']],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -528,12 +524,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = self::createAdminClient();
         $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
         $client->apiRequest(
-            'POST',
+            'PUT',
             $endpoint . '?' . http_build_query(['transitionId' => 't1']),
             [
                 'id' => $this->resourceWithWorkflow->getId(),
                 'kindId' => $this->resourceKindWithWorkflow->getId(),
-                'contents' => json_encode([$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1]),
+                'contents' => [$this->metadata1->getId() => ['edited'], $this->metadata3->getId() => 1],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -554,11 +550,11 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->persistAndFlush($newResourceKind->getMetadataList()[1]);
         $client = self::createAdminClient();
         $client->apiRequest(
-            'POST',
+            'PUT',
             self::oneEntityEndpoint($this->resource->getId()),
             [
                 'kindId' => $newResourceKind->getId(),
-                'contents' => json_encode($this->resource->getContents()),
+                'contents' => $this->resource->getContents(),
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -598,12 +594,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = $this->createAdminClient();
         $endpoint = self::oneEntityEndpoint($this->resource);
         $client->apiRequest(
-            'POST',
+            'PUT',
             $endpoint,
             [
                 'id' => $this->resource->getId(),
                 'newKindId' => $this->resourceKindWithWorkflow->getId(),
-                'contents' => json_encode($this->resource->getContents()),
+                'contents' => $this->resource->getContents(),
                 'placesIds' => ['p1'],
             ],
             [],
@@ -633,12 +629,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = $this->createAdminClient();
         $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
         $client->apiRequest(
-            'POST',
+            'PUT',
             $endpoint,
             [
                 'id' => $this->resourceWithWorkflow->getId(),
                 'newKindId' => $resourceKindWithWorkflow->getId(),
-                'contents' => json_encode($this->resourceWithWorkflow->getContents()),
+                'contents' => $this->resourceWithWorkflow->getContents(),
                 'placesIds' => ['p1'],
             ],
             [],
@@ -657,17 +653,16 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = $this->createAdminClient();
         $endpoint = self::oneEntityEndpoint($this->childResource);
         $client->apiRequest(
-            'POST',
+            'PUT',
             $endpoint,
             [
                 'id' => $this->childResource->getId(),
                 'newKindId' => $this->resourceKind->getId(),
-                'contents' => json_encode(
+                'contents' =>
                     [
                         -1 => [$this->resource->getId()],
                         $this->metadata1->getId() => ['Test value for child'],
-                    ]
-                ),
+                    ],
             ],
             [],
             [],
@@ -684,12 +679,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = $this->createAdminClient();
         $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
         $client->apiRequest(
-            'POST',
+            'PUT',
             $endpoint . '?' . http_build_query(['placesIds' => [$this->workflowPlace2->getId()]]),
             [
                 'id' => $this->resourceWithWorkflow->getId(),
                 'kindId' => $this->resourceWithWorkflow->getId(),
-                'contents' => json_encode($this->resourceWithWorkflow->getContents()),
+                'contents' => $this->resourceWithWorkflow->getContents(),
             ],
             [],
             [],
@@ -707,12 +702,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = $this->createAuthenticatedClient('tester', 'tester');
         $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
         $client->apiRequest(
-            'POST',
+            'PUT',
             $endpoint,
             [
                 'id' => $this->resourceWithWorkflow->getId(),
                 'kindId' => $this->resourceWithWorkflow->getId(),
-                'contents' => json_encode($this->resourceWithWorkflow->getContents()),
+                'contents' => $this->resourceWithWorkflow->getContents(),
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -723,12 +718,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client = $this->createAuthenticatedClient('tester', 'tester');
         $endpoint = self::oneEntityEndpoint($this->resourceWithWorkflow);
         $client->apiRequest(
-            'POST',
+            'PUT',
             $endpoint . '?' . http_build_query(['placesIds' => [$this->workflowPlace2->getId()]]),
             [
                 'id' => $this->resourceWithWorkflow->getId(),
                 'kindId' => $this->resourceWithWorkflow->getId(),
-                'contents' => json_encode($this->resourceWithWorkflow->getContents()),
+                'contents' => $this->resourceWithWorkflow->getContents(),
             ],
             [],
             [],

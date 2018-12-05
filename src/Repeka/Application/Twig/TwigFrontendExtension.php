@@ -61,6 +61,8 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Filter('sum', [$this, 'sumIterable']),
             new \Twig_Filter('bibtexEscape', [$this, 'bibtexEscape']),
             new \Twig_Filter('childrenAllowed', [$this, 'resourceCanHaveChildren']),
+            new \Twig_Filter('wrap', [$this, 'wrap']),
+            new \Twig_Filter('basename', [$this, 'basename']),
         ];
     }
 
@@ -212,5 +214,28 @@ ICON;
         $parentMetadata = $resource->getKind()->getMetadataById(SystemMetadata::PARENT);
         $constraints = $parentMetadata->getConstraints();
         return array_key_exists('resourceKind', $constraints) && count($constraints['resourceKind']) > 0;
+    }
+
+    public function wrap($value, $prefix, $suffix = null) {
+        if (is_numeric($value)) {
+            $value = strval($value);
+        }
+        if (is_string($value)) {
+            return $prefix . $value . $suffix;
+        } elseif (is_array($value)) {
+            return array_map(
+                function ($element) use ($prefix, $suffix) {
+                    return $this->wrap($element, $prefix, $suffix);
+                },
+                $value
+            );
+        } else {
+            throw new \InvalidArgumentException('Unsupported value for wrap filter: ' . gettype($value));
+        }
+    }
+
+    public function basename(string $value) {
+        $parts = preg_split('#[\\\/]#', $value);
+        return $parts[count($parts) - 1];
     }
 }

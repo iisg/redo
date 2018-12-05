@@ -31,7 +31,7 @@ class CsrfRequestListener {
 
     public function onKernelRequest(GetResponseEvent $event) {
         $request = $event->getRequest();
-        if (!$request->isMethodSafe(false) && $this->isApi($request)) {
+        if (!$request->isMethodSafe(false) && $this->isApi($request) && !$this->isFileManager($request)) {
             $token = new CsrfToken(self::class, $request->headers->get(self::TOKEN_HEADER));
             if (!$this->tokenManager->isTokenValid($token)) {
                 $event->setResponse(new Response('Invalid CSRF Token.', 400));
@@ -55,5 +55,10 @@ class CsrfRequestListener {
 
     private function isApi(Request $request) {
         return strpos($request->getPathInfo(), '/api/') === 0;
+    }
+
+    // esFinder file manager has its own CSRF protection
+    private function isFileManager(Request $request) {
+        return strpos($request->getPathInfo(), '/file-manager') > 0;
     }
 }

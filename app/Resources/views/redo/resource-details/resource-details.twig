@@ -97,7 +97,11 @@
                                             <b>{{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}</b>
                                         </td>
                                         <td>
-                                            {{ metadataValue }}
+                                            {% if metadata.control == 'file' %}
+                                                {{ metadataValue | basename }}
+                                            {% else %}
+                                                {{ metadataValue }}
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endif %}

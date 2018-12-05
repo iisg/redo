@@ -1,6 +1,5 @@
 <template>
-    <require from="common/components/file-upload/file-upload"></require>
-    <file-upload value.bind="metadataValue.value & validate:validationController:validationRules"
-        resource.bind="resource"
-        disabled.bind="disabled"></file-upload>
+    <compose view-model="../control-strategy"
+        view="../display/control-display-${metadata.control}.html"
+        model.bind="{metadataValue: metadataValue, resource: resource}"></compose>
 </template>

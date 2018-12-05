@@ -5,8 +5,6 @@ services:
     public: false
 
   _instanceof:
-    Repeka\Application\ParamConverter\MetadataValueProcessor\MetadataValueProcessorStrategy:
-      tags: [repeka.metadata_value_processor]
     Repeka\Domain\Metadata\MetadataImport\Transform\ImportTransform:
       tags: [repeka.import_transform]
     Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint:
@@ -31,9 +29,6 @@ services:
 
   Repeka\Application\Factory\:
     resource: '../../Factory'
-
-  Repeka\Application\ParamConverter\MetadataValueProcessor\:
-    resource: '../../ParamConverter/MetadataValueProcessor'
 
   Repeka\Application\Serialization\:
     resource: '../../Serialization'

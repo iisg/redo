@@ -3,15 +3,12 @@ namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemTransition;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandHandler;
 use Repeka\Tests\Traits\StubsTrait;
@@ -29,7 +26,6 @@ class ResourceTransitionCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     /** @var ResourceTransitionCommandHandler */
     private $handler;
-    private $fileHelper;
     private $user;
 
     protected function setUp() {
@@ -39,8 +35,7 @@ class ResourceTransitionCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->resource->method('hasWorkflow')->willReturn(true);
         $resourceRepository = $this->createRepositoryStub(ResourceRepository::class);
         $this->executor = $this->createMock(User::class);
-        $this->fileHelper = $this->createMock(ResourceFileHelper::class);
-        $this->handler = new ResourceTransitionCommandHandler($resourceRepository, $this->fileHelper);
+        $this->handler = new ResourceTransitionCommandHandler($resourceRepository);
     }
 
     public function testTransition() {
@@ -66,38 +61,6 @@ class ResourceTransitionCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->resource->expects($this->once())->method('applyTransition')->with('t1');
         $resource = $this->handler->handle($command);
         $this->assertEquals($this->resource, $resource);
-    }
-
-    public function testMovingFiles() {
-        $resource = $this->createResourceMock(1);
-        $resourceKind = $this->createMock(ResourceKind::class);
-        $command = new ResourceTransitionCommand(
-            $resource,
-            new ResourceContents([]),
-            SystemTransition::UPDATE()->toTransition($resourceKind, $resource),
-            $this->user
-        );
-        $this->fileHelper->expects($this->once())->method('moveFilesToDestinationPaths');
-        $this->handler->handle($command);
-    }
-
-    public function testMovingFilesWhenCreatingResource() {
-        $fileBaseMetadataId = 1;
-        $resourceKind = $this->createResourceKindMock(
-            1,
-            'books',
-            [$this->createMetadataMock(11, $fileBaseMetadataId, MetadataControl::FILE()),]
-        );
-        $contents = ResourceContents::fromArray([$fileBaseMetadataId => []]);
-        $resource = new ResourceEntity($resourceKind, ResourceContents::empty());
-        $command = new ResourceTransitionCommand(
-            $resource,
-            $contents,
-            SystemTransition::CREATE()->toTransition($resourceKind),
-            $this->user
-        );
-        $this->fileHelper->expects($this->once())->method('moveFilesToDestinationPaths');
-        $this->handler->handle($command);
     }
 
     public function testCreatingResourceWithWorkflow() {

@@ -56,11 +56,13 @@ System.config({
     "cytoscape-autopan-on-drag": "npm:cytoscape-autopan-on-drag@2.0.2",
     "cytoscape-context-menus": "npm:cytoscape-context-menus@2.1.1",
     "cytoscape-edgehandles": "npm:cytoscape-edgehandles@2.15.0",
+    "elfinder": "github:Studio-42/elFinder@2.1.43",
     "eonasdan-bootstrap-datetimepicker": "npm:eonasdan-bootstrap-datetimepicker@4.17.47",
     "fetch": "github:github/fetch@1.1.1",
     "focus-within": "npm:focus-within@3.0.2",
     "jodit": "npm:jodit@3.2.10",
     "jquery": "npm:jquery@3.2.1",
+    "jquery-ui-dist": "npm:jquery-ui-dist@1.12.1",
     "jquery.fancytree": "npm:jquery.fancytree@2.29.1",
     "lodash": "npm:lodash@4.17.10",
     "moment": "npm:moment@2.22.2",
@@ -416,6 +418,9 @@ System.config({
     },
     "npm:jodit@3.2.10": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:jquery-ui-dist@1.12.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:jquery.fancytree@2.29.1": {

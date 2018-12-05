@@ -27,14 +27,14 @@ export class ResourceRepository extends ApiRepository<Resource> {
   }
 
   updateAndApplyTransition(resource: Resource, transitionId: string): Promise<Resource> {
-    return this.httpClient.post(this.oneEntityEndpoint(resource) + `?transitionId=${transitionId}`, this.toBackend(resource))
+    return this.httpClient.put(this.oneEntityEndpoint(resource) + `?transitionId=${transitionId}`, this.toBackend(resource))
       .then(response => this.toEntity(response.content));
   }
 
   updateResourceWithNoValidation(resource: Resource, newKindId: number, placesIds: string[]): Promise<Resource> {
     const params = {newKindId, placesIds};
     return this.httpClient.createRequest(this.oneEntityEndpoint(resource))
-      .asPost()
+      .asPut()
       .withHeader("GOD-EDIT", "true")
       .withContent(this.toBackend(resource))
       .withParams(params)
