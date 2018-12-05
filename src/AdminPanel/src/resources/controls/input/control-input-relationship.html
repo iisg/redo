@@ -1,10 +1,7 @@
 <template>
-    <require from="resources/controls/input/resource-picker/resource-picker"></require>
-    <require from="common/value-converters/to-array-value-converter"></require>
     <require from="resources/details/resource-link"></require>
 
     <template if.bind="metadataValue.value">
         <resource-link id.bind="metadataValue.value"></resource-link>
     </template>
-
 </template>

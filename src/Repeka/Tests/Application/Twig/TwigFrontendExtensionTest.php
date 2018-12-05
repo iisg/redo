@@ -116,4 +116,11 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
             );
         }
     }
+
+    public function testBasename() {
+        $this->assertEquals(
+            'file.gif',
+            $this->extension->basename('common/file.gif')
+        );
+    }
 }

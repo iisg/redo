@@ -1,14 +1,9 @@
 import {Resource} from "resources/resource";
 import {autoinject} from "aurelia-dependency-injection";
-import {BasenameValueConverter} from "common/value-converters/basename-value-converter";
 
 @autoinject
 export class ResourceFileUrlValueConverter implements ToViewValueConverter {
-  constructor(private basenameValueConverter: BasenameValueConverter) {
-  }
-
   toView(filename: string, resource: Resource): any {
-    const fileBasename = this.basenameValueConverter.toView(filename);
-    return `/api/resources/${resource.id}/files/${fileBasename}`;
+    return `/api/resources/${resource.id}/file/${filename}`;
   }
 }

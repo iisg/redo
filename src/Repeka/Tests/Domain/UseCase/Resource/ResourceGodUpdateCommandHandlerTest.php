@@ -4,7 +4,6 @@ namespace Repeka\Tests\Domain\UseCase\Resource;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommandHandler;
 use Repeka\Tests\Traits\StubsTrait;
@@ -19,8 +18,7 @@ class ResourceGodUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $resourceRepository = $this->createRepositoryStub(ResourceRepository::class, []);
-        $fileHelper = $this->createMock(ResourceFileHelper::class);
-        $this->handler = new ResourceGodUpdateCommandHandler($resourceRepository, $fileHelper);
+        $this->handler = new ResourceGodUpdateCommandHandler($resourceRepository);
         $this->resource = new ResourceEntity($this->createResourceKindMock(), ResourceContents::empty());
     }
 

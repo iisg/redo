@@ -5,9 +5,6 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\UseCase\Resource\ResourceCloneCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCloneCommandHandler;
 use Repeka\Tests\Traits\StubsTrait;
@@ -30,8 +27,6 @@ class ResourceCloneCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->resourceKind = $this->createResourceKindMock();
         $this->resource = $this->createResourceMock(1);
         $this->commandBus = $this->createMock(CommandBus::class);
-        $this->resourceRepository = $this->createMock(ResourceRepository::class);
-        $this->fileHelper = $this->createMock(ResourceFileHelper::class);
     }
 
     public function testCloningResource() {

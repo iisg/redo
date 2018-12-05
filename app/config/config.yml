@@ -16,9 +16,6 @@ repeka:
     analyzers:
       en: english
       de: german
-  upload:
-    path: "%kernel.root_dir%/../var/uploads"
-    temp_folder: temp
 
   pk_auth:
     wsdl: ~
@@ -30,6 +27,22 @@ repeka:
     local_accounts_enabled: true
 
   user_data_mapping: '%kernel.root_dir%/../var/config/user_data_mapping.json'
+
+  upload_dirs:
+    - id: resourceFiles
+      label: Pliki zasobu
+      # resource with ID=123 will have var/uploads/i1/i2/i3/r123
+      path: '%kernel.root_dir%/../var/uploads/{{resource.id|split("")|wrap("i","/")|join}}r{{resource.id}}'
+    - id: commonResourceClass
+      label: Wspólne pliki klasy zasobu
+      path: '%kernel.root_dir%/../var/uploads/common-{{resource.resourceClass}}'
+    - id: common
+      label: Wspólne pliki globalne
+      path: '%kernel.root_dir%/../var/uploads/common'
+    - id: user
+      label: Twoje pliki
+      path: '%kernel.root_dir%/../var/uploads/users/{{app.user.username}}'
+      canBeUsedInResources: false
 
 doctrine:
   dbal:

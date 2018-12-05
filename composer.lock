@@ -4,7 +4,7 @@
       "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-  "content-hash": "494b93b32112861a1b9c5a174e909579",
+  "content-hash": "7d3f8231d6eec8ff0ae6b10adbf8f58c",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -2527,6 +2527,64 @@
             "time": "2018-01-11T05:54:03+00:00"
         },
         {
+          "name": "studio-42/elfinder",
+          "version": "2.1.43",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/Studio-42/elFinder.git",
+            "reference": "878daf75321c5c81d1ae308298241d94b383ea62"
+          },
+          "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/878daf75321c5c81d1ae308298241d94b383ea62",
+            "reference": "878daf75321c5c81d1ae308298241d94b383ea62",
+            "shasum": ""
+          },
+          "require": {
+            "php": ">=5.2"
+          },
+          "suggest": {
+            "barryvdh/elfinder-flysystem-driver": "VolumeDriver for elFinder to use Flysystem as a root.",
+            "google/apiclient": "VolumeDriver GoogleDrive require `google/apiclient:^2.0.",
+            "kunalvarma05/dropbox-php-sdk": "VolumeDriver `Dropbox`2 require `kunalvarma05/dropbox-php-sdk.",
+            "nao-pon/flysystem-google-drive": "require in GoogleDrive network volume mounting with Flysystem."
+          },
+          "type": "library",
+          "autoload": {
+            "classmap": [
+              "php"
+            ]
+          },
+          "notification-url": "https://packagist.org/downloads/",
+          "license": [
+            "BSD-3-Clause"
+          ],
+          "authors": [
+            {
+              "name": "Dmitry Levashov",
+              "email": "dio@std42.ru",
+              "homepage": "http://std42.ru"
+            },
+            {
+              "name": "Troex Nevelin",
+              "email": "troex@fury.scancode.ru",
+              "homepage": "http://std42.ru"
+            },
+            {
+              "name": "Community contributions",
+              "homepage": "https://github.com/Studio-42/elFinder/contributors"
+            },
+            {
+              "name": "Naoki Sawada",
+              "email": "hypweb+elfinder@gmail.com",
+              "homepage": "http://xoops.hypweb.net"
+            }
+          ],
+          "description": "File manager for web",
+          "homepage": "http://elfinder.org",
+          "time": "2018-11-24T01:37:42+00:00"
+        },
+      {
             "name": "symfony/monolog-bundle",
             "version": "v3.1.2",
             "source": {

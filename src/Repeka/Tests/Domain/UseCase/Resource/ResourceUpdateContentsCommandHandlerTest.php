@@ -5,7 +5,6 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommandHandler;
 use Repeka\Tests\Traits\StubsTrait;
@@ -23,11 +22,10 @@ class ResourceUpdateContentsCommandHandlerTest extends \PHPUnit_Framework_TestCa
     protected function setUp() {
         $user = new UserEntity();
         $this->commandBus = $this->createMock(CommandBus::class);
-        $fileHelper = $this->createMock(ResourceFileHelper::class);
         $resourceKind = $this->createResourceKindMock();
         $resource = $this->createResourceMock(1, $resourceKind);
         $this->command = new ResourceUpdateContentsCommand($resource, ResourceContents::fromArray(['1' => ['AA']]), $user);
-        $this->handler = new ResourceUpdateContentsCommandHandler($fileHelper, $this->commandBus);
+        $this->handler = new ResourceUpdateContentsCommandHandler($this->commandBus);
     }
 
     public function testUpdatingResource() {

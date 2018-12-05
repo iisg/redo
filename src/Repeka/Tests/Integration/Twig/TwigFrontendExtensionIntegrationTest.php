@@ -47,6 +47,9 @@ class TwigFrontendExtensionIntegrationTest extends IntegrationTestCase {
             ["{{ r|m('Liczba stron')|merge(r($phpMysqlBookId)|m('Liczba stron'))|sum }}", "1741"],// sum pages
             ["{{ r|m(1)|m('Liczba stron')|sum }}", "1741", RC::fromArray([1 => [$phpBookId, $phpMysqlBookId]])],// sum pages by associations
             ["{{ resourceKind(-1).label.PL }}", "user"],// resource kind fetching
+            ["{{ '123'|wrap('a','z') }}", "a123z"],// wrapping string
+            ["{{ 123|wrap('a','z') }}", "a123z"],// wrapping number
+            ["{{ '123'|split('')|wrap('a','z')|join }}", "a1za2za3z"],// wrapping array of strings
         ];
         // @formatter:on
         // @codingStandardsIgnoreEnd

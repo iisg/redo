@@ -3,10 +3,7 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Cqrs\CommandBus;
-use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceFileHelper;
 
 class ResourceCloneCommandHandler {
     /** @var CommandBus */

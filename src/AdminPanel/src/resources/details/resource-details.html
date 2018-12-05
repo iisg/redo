@@ -11,6 +11,8 @@
     <require from="users/details/users-in-group"></require>
     <require from="users/details/user-roles"></require>
     <require from="../../audit/audit"></require>
+    <require from="resources/controls/input/file-manager/resource-file-manager"></require>
+    <require from="common/components/buttons/toggle-button"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
     <div else
@@ -36,6 +38,12 @@
                         disabled.bind="resource.pendingRequest"
                         click.delegate="showGodForm()"></manage-button>
                 </template>
+                <resource-file-manager resource.bind="resource"
+                    skip-validation.bind="isFormOpenedForGod">
+                    <toggle-button class="grey"
+                        primary-icon-name="scan"
+                        primary-label="Resource files"></toggle-button>
+                </resource-file-manager>
             </div>
             <aup-tabs tabs.bind="resourceDetailsTabs.tabs"></aup-tabs>
         </div>

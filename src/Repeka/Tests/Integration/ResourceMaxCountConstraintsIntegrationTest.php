@@ -63,7 +63,7 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
             '/api/resources',
             [
                 'kindId' => $resourceKind->getId(),
-                'contents' => json_encode([$this->baseMetadata->getId() => $values]),
+                'contents' => [$this->baseMetadata->getId() => $values],
                 'resourceClass' => 'books',
             ]
         );

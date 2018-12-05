@@ -3,18 +3,14 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Upload\ResourceFileHelper;
 use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceGodUpdateCommandHandler {
     /** @var ResourceRepository */
     private $resourceRepository;
-    /** @var ResourceFileHelper */
-    private $fileHelper;
 
-    public function __construct(ResourceRepository $resourceRepository, ResourceFileHelper $fileHelper) {
+    public function __construct(ResourceRepository $resourceRepository) {
         $this->resourceRepository = $resourceRepository;
-        $this->fileHelper = $fileHelper;
     }
 
     public function handle(ResourceGodUpdateCommand $command): ResourceEntity {
@@ -35,8 +31,6 @@ class ResourceGodUpdateCommandHandler {
         }
         $resource->updateContents($command->getContents());
         $resource = $this->resourceRepository->save($resource);
-        $this->fileHelper->prune($resource);
-        $this->fileHelper->moveFilesToDestinationPaths($resource);
         return $resource;
     }
 }

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible"
+        content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=2">
+    <title>Resource File Manager</title>
+
+    <link rel="stylesheet"
+        type="text/css"
+        href="/jspm_packages/npm/jquery-ui-dist@1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet"
+        type="text/css"
+        href="/jspm_packages/github/Studio-42/elFinder@2.1.43/css/elfinder.min.css">
+    <link rel="stylesheet"
+        type="text/css"
+        href="/jspm_packages/github/Studio-42/elFinder@2.1.43/css/theme.css">
+
+    <script src="/jspm_packages/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+    <script src="/jspm_packages/npm/jquery-ui-dist@1.12.1/jquery-ui.min.js"></script>
+    <script src="/jspm_packages/github/Studio-42/elFinder@2.1.43/js/elfinder.min.js"></script>
+    <script src="/jspm_packages/github/Studio-42/elFinder@2.1.43/js/i18n/elfinder.pl.js"></script>
+
+    <style>
+        .elfinder-button-icon-addFilesAsMetadata {
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjY5MTQyMDdFRjlBNTExRTg4RUUzQjJGMkNDREJERTM2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjY5MTQyMDdGRjlBNTExRTg4RUUzQjJGMkNDREJERTM2Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NjkxNDIwN0NGOUE1MTFFODhFRTNCMkYyQ0NEQkRFMzYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NjkxNDIwN0RGOUE1MTFFODhFRTNCMkYyQ0NEQkRFMzYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz50GoXUAAAAoElEQVR42mJkKNyzgoGBIZyBPHCQBar5HRCvIVGzDRDbs0A5T//3OaeTopuxaO80IKXFxEAhYMFiMjJ3NxC7gIRhAkCXoqin2AU0MWAmyKVQ7AJzORLGHwZAcBaIZ0HZIAOUkPjviTFgFlogggxIp1kYsBCQ3wP1EvEGoMVzJ82jkRGYG0FR8x2Ir5GoVw6IRUFeWADECUBsTIYD1gAEGABMhiONL5yCpAAAAABJRU5ErkJggg==');
+        }
+    </style>
+
+    <script>
+      var instance;
+
+      {% if metadata is defined %}
+      elFinder.prototype.commands.addFilesAsMetadata = function () {
+        this.exec = function (hashes, c) {
+          var urls = hashes.map(this.fm.url).map(url => url.substr('file/'.length));
+          window.opener.postMessage({
+            command: 'addFileMetadata',
+            resourceId: {{ resource.id }},
+            metadataId: {{ metadata.id }},
+            files: urls
+          }, '*');
+          instance.toast({
+            msg: 'Wybrane pliki dodano do metadanej {{ metadata.name }}.',
+            hideDuration: 500,
+            showDuration: 800,
+            timeOut: 1000,
+            mode: 'info'
+          });
+        };
+        this.getstate = function (select) {
+          //return 0 to enable, -1 to disable icon access
+          return this.files(select).length > 0 ? 0 : -1;
+        };
+      };
+
+      elFinder.prototype._options.commands.push('addFilesAsMetadata');
+      elFinder.prototype._options.contextmenu.files.unshift('addFilesAsMetadata');
+      elFinder.prototype._options.uiOptions.toolbar.unshift(['addFilesAsMetadata']);
+
+      elFinder.prototype.i18.pl.messages.cmdaddFilesAsMetadata = 'Dodaj do metadanej';
+
+      {% endif %}
+
+      var elFinderConfig = {
+        url: '/api/resources/{{ resource.id }}/file-manager{{ godMode ? '?god=1' : '' }}',
+        height: 400,
+        lang: 'pl'
+      };
+    </script>
+</head>
+<body>
+
+<div id="elfinder"></div>
+
+<script>
+  instance = $('#elfinder').elfinder(elFinderConfig).elfinder('instance');
+</script>
+
+</body>
+</html>

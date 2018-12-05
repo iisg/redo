@@ -7,7 +7,6 @@ use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Resources\FrontendLocaleProvider;
 use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Application\Service\CurrentUserAware;
-use Repeka\Application\Upload\UploadSizeHelper;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Metadata\MetadataImport\Mapping\Mapping;
 use Repeka\Domain\Utils\ArrayUtils;
@@ -63,7 +62,6 @@ class FrontendConfig extends \Twig_Extension {
 
     public function getConfig() {
         $parameters = array_map([$this->container, 'getParameter'], self::PUBLIC_PARAMETERS);
-        $uploadSizeHelper = new UploadSizeHelper();
         if ($this->userDataMapping->mappingExists() && $this->getCurrentUser()) {
             $userMappedMetadataIds = $this->getUserMappedMetadataIds();
         }
@@ -73,10 +71,6 @@ class FrontendConfig extends \Twig_Extension {
                 'control_constraints' => $this->getConfigurableMetadataConstraints(),
                 'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
                 'user_mapped_metadata_ids' => $userMappedMetadataIds ?? [],
-                'max_upload_size' => [
-                    'file' => $uploadSizeHelper->getMaxUploadSizePerFile(),
-                    'total' => $uploadSizeHelper->getMaxUploadSize(),
-                ],
                 'user' => $this->getCurrentUserData(),
                 'userIp' => $this->getClientIp(),
             ]

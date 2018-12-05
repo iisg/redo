@@ -10,7 +10,6 @@ use Repeka\Domain\Entity\ResourceEntity;
  * Migrate date control content to atom format. Migrate date control to timestamp control
  */
 class Version20180914084855 extends RepekaMigration {
-
     public function migrate() {
         $resources = $this->fetchAll('SELECT id, contents FROM resource');
         $metadataList = $this->connection->fetchAll('SELECT id, control FROM metadata');

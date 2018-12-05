@@ -4,7 +4,6 @@ namespace Repeka\Plugins\Ocr\Controller;
 use Assert\Assertion;
 use Repeka\Application\Controller\Api\ApiController;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
-use Repeka\Application\ParamConverter\ResourceContentsParamConverter;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlacePluginConfiguration;
@@ -17,13 +16,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RepekaOcrController extends ApiController {
 
-    /** @var ResourceContentsParamConverter */
-    private $contentsParamConverter;
     /** @var ResourceWorkflowPlugins */
     private $resourceWorkflowPlugins;
 
-    public function __construct(ResourceWorkflowPlugins $resourceWorkflowPlugins, ResourceContentsParamConverter $contentsParamConverter) {
-        $this->contentsParamConverter = $contentsParamConverter;
+    public function __construct(ResourceWorkflowPlugins $resourceWorkflowPlugins) {
         $this->resourceWorkflowPlugins = $resourceWorkflowPlugins;
     }
 
@@ -49,7 +45,6 @@ class RepekaOcrController extends ApiController {
         $content = $resource->getContents();
         $metadata = $resource->getKind()->getMetadataByIdOrName($metadataForResult);
         $content = $content->withMergedValues($metadata, 'OCRed!');
-        $content = $this->contentsParamConverter->processMetadataValues($content, $request);
         $this->handleCommandBypassingFirewall(new ResourceUpdateContentsCommand($resource, $content));
         $transitionToExecute = $targetConfig->getConfigValue('transitionAfterOcr');
         if ($transitionToExecute) {
