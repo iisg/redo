@@ -21,10 +21,12 @@ class FlexibleDate {
     ];
 
     /**
+     * @param string | null $from
+     * @param string | null $to
      * @param string | MetadataDateControlMode $mode
      * @param string | MetadataDateControlMode $rangeMode
      */
-    public function __construct(string $from, string $to, $mode, $rangeMode = null) {
+    public function __construct($from, $to, $mode, $rangeMode = null) {
         $this->from = $from;
         $this->to = $to;
         $this->mode = $mode;
@@ -35,11 +37,13 @@ class FlexibleDate {
         $this->buildDisplayValue();
     }
 
-    public function getFrom(): string {
+    /** @return string | null */
+    public function getFrom() {
         return $this->from;
     }
 
-    public function getTo(): string {
+    /** @return string | null */
+    public function getTo() {
         return $this->to;
     }
 
@@ -56,15 +60,19 @@ class FlexibleDate {
     private function buildDisplayValue() {
         try {
             if ($this->mode == MetadataDateControlMode::RANGE) {
-                $this->displayValue = (new DateTime($this->getFrom()))->format(self::$dateFormats[$this->getRangeMode()])
+                $this->displayValue = $this->getDate($this->getFrom(), $this->getRangeMode())
                     . ' - '
-                    . (new DateTime($this->getTo()))->format(self::$dateFormats[$this->getRangeMode()]);
+                    . $this->getDate($this->getTo(), $this->getRangeMode());
             } else {
-                $this->displayValue = (new DateTime($this->getFrom()))->format(self::$dateFormats[$this->getMode()]);
+                $this->displayValue = $this->getDate($this->getFrom(), $this->getMode());
             }
         } catch (Exception $e) {
             throw new FlexibleDateControlMetadataCorrectStructureRuleException();
         }
+    }
+
+    private function getDate($date, $mode): string {
+        return !is_null($date) ? (new DateTime($date))->format(self::$dateFormats[$mode]) : '';
     }
 
     public function getDisplayValue() {

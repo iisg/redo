@@ -81,6 +81,20 @@ class MetadataDateControlConverterUtilTest extends \PHPUnit_Framework_TestCase {
                 ),
             ],
             [
+                [
+                    'from' => $dateFromAtom,
+                    'to' => null,
+                    'mode' => MetadataDateControlMode::RANGE,
+                    'rangeMode' => MetadataDateControlMode::YEAR,
+                ],
+                new FlexibleDate(
+                    '2018-01-01T00:00:00',
+                    null,
+                    MetadataDateControlMode::RANGE,
+                    MetadataDateControlMode::YEAR
+                ),
+            ],
+            [
                 ['from' => $dateFromAtom, 'to' => '2018-10-15T16:32:50+02:00', 'mode' => MetadataDateControlMode::DAY, 'rangeMode' => null],
                 new FlexibleDate('2018-09-13T00:00:00', '2018-09-13T23:59:59', MetadataDateControlMode::DAY, null),
             ],

@@ -9,6 +9,7 @@ use MyCLabs\Enum\Enum;
  * @method static MetadataControl INTEGER()
  * @method static MetadataControl DOUBLE()
  * @method static MetadataControl FLEXIBLE_DATE()
+ * @method static MetadataControl DATE_RANGE()
  * @method static MetadataControl TIMESTAMP()
  * @method static MetadataControl BOOLEAN()
  * @method static MetadataControl RELATIONSHIP()
@@ -24,6 +25,7 @@ class MetadataControl extends Enum {
     const INTEGER = 'integer';
     const DOUBLE = 'double';
     const FLEXIBLE_DATE = 'flexible-date';
+    const DATE_RANGE = 'date-range';
     const TIMESTAMP = 'timestamp';
     const BOOLEAN = 'boolean';
     const RELATIONSHIP = 'relationship';

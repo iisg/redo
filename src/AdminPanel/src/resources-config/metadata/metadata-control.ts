@@ -5,6 +5,7 @@ export enum MetadataControl {
   INTEGER = 'integer',
   DOUBLE = 'double',
   FLEXIBLE_DATE = 'flexible-date',
+  DATE_RANGE = 'date-range',
   TIMESTAMP = 'timestamp',
   BOOLEAN = 'boolean',
   RELATIONSHIP = 'relationship',

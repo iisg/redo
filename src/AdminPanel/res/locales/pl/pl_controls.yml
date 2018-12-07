@@ -4,6 +4,7 @@ wysiwyg-editor: Edytor WYSIWYG
 integer: Liczba całkowita
 double: Liczba rzeczywista
 flexible-date: Elastyczna data
+date-range: Zakres dat
 timestamp: Znacznik czasu
 boolean: Tak / Nie
 relationship: Relacja

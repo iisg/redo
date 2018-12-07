@@ -1,14 +1,14 @@
 import {DateMode, FlexibleDateContent} from "./flexible-date-config";
 import {values} from "lodash";
 import {ComponentAttached, bindable} from "aurelia-templating";
-import {twoWay} from "../../../../common/components/binding-mode";
+import {twoWay} from "common/components/binding-mode";
 
 export class FlexibleDateInput implements ComponentAttached {
   @bindable(twoWay) value: FlexibleDateContent | string;
   @bindable disabled: boolean;
+  @bindable selectedDateMode: DateMode;
   dateModes: string[] = values(DateMode);
   rangeDateModes: string[] = values(DateMode).filter(v => v != DateMode.RANGE);
-  selectedDateMode: DateMode;
   selectedRangeDateMode: DateMode;
 
   attached(): void {
