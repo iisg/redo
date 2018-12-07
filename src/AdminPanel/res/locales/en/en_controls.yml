@@ -4,8 +4,8 @@ wysiwyg-editor: WYSIWYG editor
 integer: Integer
 double: Real number
 flexible-date: Flexible date
+date-range: Date range
 date: Date
-daterange: Date range
 boolean: Yes / No
 relationship: Relationship
 file: File

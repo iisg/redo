@@ -18,7 +18,7 @@ class FlexibleDateCorrectConstraint extends RespectValidationMetadataConstraint 
     }
 
     public function getSupportedControls(): array {
-        return [MetadataControl::FLEXIBLE_DATE];
+        return [MetadataControl::FLEXIBLE_DATE, MetadataControl::DATE_RANGE];
     }
 
     protected function getValidator(Metadata $metadata, $metadataValue) {
@@ -33,12 +33,17 @@ class FlexibleDateCorrectConstraint extends RespectValidationMetadataConstraint 
                 Validator::key('rangeMode', Validator::callback([$this, 'isRangeModeCorrect'])),
                 Validator::key('displayValue')
             ),
-            Validator::callback([$this, 'fromDateIsLowerThanTo'])
+            Validator::callback([$this, 'fromDateIsLowerThanTo']),
+            Validator::callback([$this, 'atLeastOneDateProvided'])
         );
     }
 
-    public function hasCustomDateFormat(string $date): bool {
-        return preg_match(self::FLEXIBLE_DATE_REGEX, $date);
+    /**
+     * @param string | null $date
+     * @return bool
+     */
+    public function hasCustomDateFormat($date) {
+        return is_null($date) ? true : preg_match(self::FLEXIBLE_DATE_REGEX, $date);
     }
 
     /**
@@ -47,7 +52,19 @@ class FlexibleDateCorrectConstraint extends RespectValidationMetadataConstraint 
      */
     public function fromDateIsLowerThanTo($value) {
         $flexibleDate = FlexibleDate::fromArray($value);
+        if (is_null($flexibleDate->getFrom()) || is_null($flexibleDate->getTo())) {
+            return true;
+        }
         return strtotime($flexibleDate->getFrom()) <= strtotime($flexibleDate->getTo());
+    }
+
+    /**
+     * @param array $value
+     * @return bool
+     */
+    public function atLeastOneDateProvided($value) {
+        $flexibleDate = FlexibleDate::fromArray($value);
+        return !is_null($flexibleDate->getFrom()) || !is_null($flexibleDate->getTo());
     }
 
     public function isRangeModeCorrect($mode) {

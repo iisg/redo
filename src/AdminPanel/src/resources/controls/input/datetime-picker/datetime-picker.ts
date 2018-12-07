@@ -77,7 +77,7 @@ export class DatetimePicker implements ComponentAttached {
       }
       const inputDate = e.date;
       $(this.linkedDatepicker).data("DateTimePicker").minDate(inputDate);
-      dateData.from = inputDate.format();
+      dateData.from = inputDate ? inputDate.format() : undefined;
       this.value = dateData;
       this.element.dispatchEvent(ChangeEvent.newInstance());
     });
@@ -87,7 +87,7 @@ export class DatetimePicker implements ComponentAttached {
       }
       const inputDate = e.date;
       $(this.datepicker).data('DateTimePicker').maxDate(e.date);
-      dateData.to = inputDate.format();
+      dateData.to = inputDate ? inputDate.format() : undefined;
       this.value = dateData;
       this.element.dispatchEvent(ChangeEvent.newInstance());
     });

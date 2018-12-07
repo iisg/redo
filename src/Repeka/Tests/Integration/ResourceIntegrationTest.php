@@ -444,6 +444,45 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($expectedDateValue, $metadataValue);
     }
 
+    public function testCreatingResourceWithRangeDateWithOneDateGiven() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'kindId' => $this->resourceKind->getId(),
+                'contents' => json_encode(
+                    [
+                        $this->metadata5->getId() => [
+                            [
+                                'value' => [
+                                    'from' => '2013-09-13T16:39:49+02:00',
+                                    'mode' => 'range',
+                                    'rangeMode' => 'year',
+                                ],
+                            ],
+                        ],
+                    ]
+                ),
+                'resourceClass' => 'books',
+            ]
+        );
+        $this->assertStatusCode(201, $client->getResponse());
+        $createdId = json_decode($client->getResponse()->getContent())->id;
+        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
+        /** @var ResourceEntity $created */
+        $created = $repository->findOne($createdId);
+        $metadataValue = $created->getContents()->getValues($this->metadata5->getId())[0]->getValue();
+        $expectedDateValue = [
+            'from' => '2013-01-01T00:00:00',
+            'to' => '',
+            'mode' => 'range',
+            'rangeMode' => 'year',
+            'displayValue' => '2013 - ',
+        ];
+        $this->assertEquals($expectedDateValue, $metadataValue);
+    }
+
     public function testIgnoringBullshitOrDeletedMetadataDuringEdit() {
         $client = self::createAdminClient();
         $client->apiRequest(
