@@ -5,7 +5,7 @@ describe('Resource Type Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-  
+ 
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
 		browser.driver.manage().window().setSize(1536, 864);
@@ -130,6 +130,7 @@ describe('Resource Type Tests', function() {
 
   it('Try to edit by removing Polish name', function() {
 	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
+		browser.sleep(5000);
 	    waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newResourceTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newResourceTypeRowLink.click();
@@ -228,6 +229,7 @@ describe('Resource Type Tests', function() {
 
   it('Edit by changing Polish name', function() {
 	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
+		browser.sleep(5000);
 	    waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newResourceTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newResourceTypeRowLink.click();
@@ -284,6 +286,7 @@ describe('Resource Type Tests', function() {
 
   it('Delete resource type', function() {
 	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
+		browser.sleep(5000);
 		waitForElement(element(by.linkText('Nowa_Nazwa_Automatyczna')));
 		var newResourceTypeRowLink = element(by.linkText('Nowa_Nazwa_Automatyczna'));
 		browser.sleep(3000);
