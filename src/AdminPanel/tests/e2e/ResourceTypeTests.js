@@ -202,6 +202,7 @@ describe('Resource Type Tests', function() {
 
   it('Edit by adding metadata', function() {
 	    browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
+		browser.sleep(5000);
 	    waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		var newResourceTypeRowLink = element(by.linkText('Nazwa_Testowanie_Automatyczne'));
 		newResourceTypeRowLink.click();
