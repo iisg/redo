@@ -17,30 +17,33 @@ class NonExistingMetadataStripper {
     }
 
     /**
-     * @param array $content
+     * @param array $workflowPlaces
      * @param string $resourceClass
      * @return ResourceWorkflowPlace[]
      */
-    public function removeNonExistingMetadata(array $content, string $resourceClass): array {
+    public function removeNonExistingMetadata(array $workflowPlaces, string $resourceClass): array {
         $metadataListQuery = MetadataListQuery::builder()
             ->filterByResourceClass($resourceClass)
             ->addSystemMetadataIds(SystemMetadata::toArray())
             ->build();
         $metadata = $this->metadataRepository->findByQuery($metadataListQuery);
         $metadataIds = EntityUtils::mapToIds($metadata);
-        return array_map(function ($workflowPlace) use ($metadataIds) {
-            $workflowPlace = $workflowPlace instanceof ResourceWorkflowPlace
-                ? $workflowPlace->toArray()
-                : ResourceWorkflowPlace::fromArray($workflowPlace)->toArray();  // ensure we have all keys
-            return new ResourceWorkflowPlace(
-                $workflowPlace['label'],
-                $workflowPlace['id'],
-                array_intersect($workflowPlace['requiredMetadataIds'], $metadataIds),
-                array_intersect($workflowPlace['lockedMetadataIds'], $metadataIds),
-                array_intersect($workflowPlace['assigneeMetadataIds'], $metadataIds),
-                array_intersect($workflowPlace['autoAssignMetadataIds'], $metadataIds),
-                $workflowPlace['pluginsConfig']
-            );
-        }, $content);
+        return array_map(
+            function ($workflowPlace) use ($metadataIds) {
+                $workflowPlace = $workflowPlace instanceof ResourceWorkflowPlace
+                    ? $workflowPlace->toArray()
+                    : ResourceWorkflowPlace::fromArray($workflowPlace)->toArray();  // ensure we have all keys
+                return new ResourceWorkflowPlace(
+                    $workflowPlace['label'],
+                    $workflowPlace['id'],
+                    array_values(array_intersect($workflowPlace['requiredMetadataIds'], $metadataIds)),
+                    array_values(array_intersect($workflowPlace['lockedMetadataIds'], $metadataIds)),
+                    array_values(array_intersect($workflowPlace['assigneeMetadataIds'], $metadataIds)),
+                    array_values(array_intersect($workflowPlace['autoAssignMetadataIds'], $metadataIds)),
+                    $workflowPlace['pluginsConfig']
+                );
+            },
+            $workflowPlaces
+        );
     }
 }

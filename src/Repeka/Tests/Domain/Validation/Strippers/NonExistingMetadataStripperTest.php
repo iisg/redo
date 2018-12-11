@@ -29,4 +29,11 @@ class NonExistingMetadataStripperTest extends \PHPUnit_Framework_TestCase {
         ];
         $this->assertEquals($expectedPlaces, $result);
     }
+
+    public function testDoesNotPreserveKeysOfFilteredOutMetadata() {
+        $places = [new ResourceWorkflowPlace(['PL' => 'label1'], 'id1', [2, 1])];
+        $result = $this->nonExistingMetadataStripper->removeNonExistingMetadata($places, 'books');
+        $expectedPlaces = [new ResourceWorkflowPlace(['PL' => 'label1'], 'id1', [1])];
+        $this->assertEquals($expectedPlaces, $result);
+    }
 }
