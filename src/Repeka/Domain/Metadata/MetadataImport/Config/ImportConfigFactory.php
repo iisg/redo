@@ -17,19 +17,17 @@ class ImportConfigFactory {
 
     public function fromFile(string $configPath, ResourceKind $resourceKind): ImportConfig {
         Assertion::file($configPath);
-        if (preg_match('#.ya?ml$#', $configPath)) {
-            $yamlParser = new Parser();
-            $configuration = $yamlParser->parseFile($configPath, Yaml::PARSE_CONSTANT | Yaml::PARSE_CUSTOM_TAGS);
-            return $this->fromArray($configuration, $resourceKind);
-        } else {
-            return $this->fromString(file_get_contents($configPath), $resourceKind);
-        }
+        return $this->fromString(file_get_contents($configPath), $resourceKind);
     }
 
     public function fromString(string $config, ResourceKind $resourceKind): ImportConfig {
-        $jsonConfig = json_decode($config, true);
-        Assertion::isArray($jsonConfig, 'Invalid import config. ' . json_last_error_msg());
-        return $this->fromArray($jsonConfig, $resourceKind);
+        if (trim($config){0} === '{') {
+            $config = json_decode($config, true);
+        } else {
+            $config = YAML::parse($config);
+        }
+        Assertion::isArray($config, 'Invalid import config. ' . json_last_error_msg());
+        return $this->fromArray($config, $resourceKind);
     }
 
     public function fromArray(array $configArray, ResourceKind $resourceKind): ImportConfig {

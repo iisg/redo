@@ -6,11 +6,12 @@ use Repeka\Application\MetadataImport\KohaXmlResourceDownloader;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
-use Repeka\Domain\UseCase\MetadataImport\XmlExtractQuery;
+use Repeka\Domain\UseCase\MetadataImport\MarcxmlExtractQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @Route("/xml-import")
@@ -35,16 +36,12 @@ class XmlImportController extends ApiController {
         Assertion::notEmpty($data['config'] ?? []);
         Assertion::notEmpty($data['resourceKind'] ?? []);
         $resourceKind = $this->handleCommand(new ResourceKindQuery($data['resourceKind']));
-        Assertion::isJsonString($data['config'], 'Invalid config.');
-        $config = json_decode($data['config'], true);
-        Assertion::isArray($config, 'Invalid config.');
-        Assertion::keyExists($config, 'xmlMappings', 'Missing xmlMappings key in config.');
         $resourceXml = $this->downloader->downloadById($id);
         if ($resourceXml === null) {
             throw new EntityNotFoundException('xmlResource', $id);
         }
-        $extractedValues = $this->handleCommand(new XmlExtractQuery($resourceXml, $config['xmlMappings']));
-        $importConfig = $this->importConfigFactory->fromArray($config, $resourceKind);
+        $extractedValues = $this->handleCommand(new MarcxmlExtractQuery($resourceXml));
+        $importConfig = $this->importConfigFactory->fromString($data['config'], $resourceKind);
         $importedValues = $this->handleCommand(new MetadataImportQuery($extractedValues, $importConfig));
         return $this->createJsonResponse($importedValues);
     }

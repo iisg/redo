@@ -1,20 +1,23 @@
-xmlMappings:
-  Tytuł: "[tag=245]>[code=a]"
-  Opis: "[tag=245]>[code=a],[tag=245]>[code=b]"
-  Język: "[tag=008]"
-  Zobacz też: "[tag=999]>[code=c]"
-  Nazwa wydawnictwa: "[tag=260]>[code=b]"
-
 mappings:
   Tytuł:
-    key: Tytuł
+    key: '245'
     transforms:
       -
+        name: arrayColumn
+        keys: 'a'
+      -
+        name: flatten
+      -
         name: trim
-        characters: " :"
+        characters: " :/"
   Opis:
-    key: Opis
+    key: '245'
     transforms:
+      -
+        name: arrayColumn
+        keys: 'a,b'
+      -
+        name: flatten
       -
         name: trim
         characters: " :/"
@@ -22,17 +25,28 @@ mappings:
         name: join
         glue: " - "
   Język:
-    key: Język
+    key: '008'
     transforms:
       -
         name: substring
         start: 35
         length: 3
   Zobacz też:
-    key: Zobacz też
-  Wydawnictwo:
-    key: Nazwa wydawnictwa
+    key: '999'
     transforms:
+      -
+        name: 'arrayColumn'
+        keys: 'c'
+      -
+        name: 'flatten'
+  Wydawnictwo:
+    key: '260'
+    transforms:
+      -
+        name: arrayColumn
+        keys: 'b'
+      -
+        name: flatten
       -
         name: regexReplace
         regex: "Wydaw."

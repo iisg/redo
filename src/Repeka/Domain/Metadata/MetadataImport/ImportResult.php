@@ -22,7 +22,7 @@ class ImportResult {
             Validator::arrayType(),
             Validator::intType()  // keys are base IDs
         )->assert($acceptedValues->toArray());
-        Validator::arrayType()->each(Validator::stringType())->assert($invalidMetadataKeys);
+        Validator::arrayType()->each(Validator::anyOf(Validator::stringType(), Validator::intType()))->assert($invalidMetadataKeys);
         $this->acceptedValues = $acceptedValues;
         $this->unfitTypeValues = $unfitTypeValues;
         $this->invalidMetadataKeys = $invalidMetadataKeys;

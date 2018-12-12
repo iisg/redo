@@ -1,15 +1,15 @@
 <?php
 namespace Repeka\Application\Command\PkImport\XmlExtractStrategy;
 
-use Repeka\Domain\Metadata\MetadataImport\Xml\XmlArrayDataExtractor;
+use Repeka\Domain\Metadata\MetadataImport\Xml\MarcxmlArrayDataExtractor;
 
 class PkKohaDumpXmlExtractor implements PkImportXmlExtractor {
 
-    /** @var XmlArrayDataExtractor */
+    /** @var MarcxmlArrayDataExtractor */
     private $xmlArrayDataExtractor;
 
     public function __construct() {
-        $this->xmlArrayDataExtractor = new XmlArrayDataExtractor();
+        $this->xmlArrayDataExtractor = new MarcxmlArrayDataExtractor();
     }
 
     public function extractAllResources(\SimpleXmlElement $xml) {

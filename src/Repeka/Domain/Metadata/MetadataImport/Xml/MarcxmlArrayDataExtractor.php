@@ -1,7 +1,7 @@
 <?php
-namespace Repeka\Application\Command\PkImport\XmlExtractStrategy;
+namespace Repeka\Domain\Metadata\MetadataImport\Xml;
 
-class PkResourceDumpMarcXmlExtractor {
+class MarcxmlArrayDataExtractor {
 
     /** Input:
      * <record
@@ -39,10 +39,9 @@ class PkResourceDumpMarcXmlExtractor {
      *
      * ]
      */
-    public function extractResourceData($path): array {
-        $fileContents = file_get_contents($path);
+    public function import(string $xmlString): array {
         $xmlParser = xml_parser_create();
-        xml_parse_into_struct($xmlParser, $fileContents, $object);
+        xml_parse_into_struct($xmlParser, $xmlString, $object);
         $marcxmlResource = [];
         $tag = null;
         $codes = [];

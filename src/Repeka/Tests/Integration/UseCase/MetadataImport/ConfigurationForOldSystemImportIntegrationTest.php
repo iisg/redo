@@ -1,11 +1,11 @@
 <?php
 namespace Repeka\Tests\Integration\UseCase\MetadataImport;
 
-use Repeka\Application\Command\PkImport\XmlExtractStrategy\PkResourceDumpMarcXmlExtractor;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\MetadataImport\MarcxmlExtractQuery;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Tests\Integration\Migrations\DatabaseMigrationTestCase;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
@@ -239,10 +239,10 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
     }
 
     private function configImportTest($resourcePath, $configPath, array $expectedImportValues) {
-        $pkDumpMarcxmlExtractor = new PkResourceDumpMarcXmlExtractor();
-        $extractedValues = $pkDumpMarcxmlExtractor->extractResourceData($resourcePath);
-        $importConfig = $this->container->get(ImportConfigFactory::class)->fromFile($configPath, $this->testResourceKind);
-        $importedValues = $this->handleCommandBypassingFirewall(new MetadataImportQuery($extractedValues, $importConfig))
+        $config = $this->container->get(ImportConfigFactory::class)->fromFile($configPath, $this->testResourceKind);
+        $resourceXml = file_get_contents($resourcePath);
+        $extractedValues = $this->handleCommandBypassingFirewall(new MarcxmlExtractQuery($resourceXml));
+        $importedValues = $this->handleCommandBypassingFirewall(new MetadataImportQuery($extractedValues, $config))
             ->getAcceptedValues();
         $this->assertEquals($expectedImportValues, $importedValues->toArray());
     }
