@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Domain\Utils;
 
+use Repeka\Domain\Entity\Identifiable;
+
 final class EntityUtils {
     private function __construct() {
     }
@@ -57,7 +59,7 @@ final class EntityUtils {
             array_map(
                 function ($entity) {
                     /** @var Identifiable $entity */
-                    return $entity->getId();
+                    return is_array($entity) ? $entity['id'] : $entity->getId();
                 },
                 $entities
             )

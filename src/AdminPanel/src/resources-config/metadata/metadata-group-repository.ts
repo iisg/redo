@@ -1,6 +1,6 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {MetadataGroup} from "./metadata";
 import {FrontendConfig} from "../../config/FrontendConfig";
+import {MetadataGroup} from "./metadata";
 
 @autoinject
 export class MetadataGroupRepository {
@@ -10,6 +10,5 @@ export class MetadataGroupRepository {
 
   public getIds(): string[] {
     return this.getList().map(group => group.id);
-
   }
 }

@@ -1,80 +1,128 @@
-$image-height: 200px;
+$image-height: 100px;
+$initially-hidden-title-font-size: $subtitle-font-size;
+$initially-hidden-title-height: $default-gap-size / 2 + $default-line-height * $initially-hidden-title-font-size;
+$background-color: white;
 
 .resource-details {
-    .details-container {
+    &, & > :not(.available-transitions):not(.details-container):not(.resource-children) {
         padding: $default-gap-size / 2;
-        .resource-ancestors {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            & > * {
-                padding: $default-gap-size / 2;
-            }
-            & > span {
-                font-weight: bold;
-            }
-            .ancestors-list {
-                border-left: 1px solid $default-text-color;
-                a {
-                    display: block;
-                    text-decoration: none;
-                    color: $grey;
-                    transition: color $default-transition-duration;
-                    &:hover, &:focus {
-                        color: $default-text-color;
-                    }
-                }
-            }
+    }
+    & > .resource-ancestors, & > h1 {
+        padding: $default-gap-size / 2 $default-gap-size;
+    }
+    & > .resource-ancestors {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        & > * {
+            padding: $default-gap-size / 2;
         }
-        .details {
-            display: flex;
-            .resource-image {
-                flex-shrink: 0;
-                margin: $default-gap-size / 2;
-                padding: $default-gap-size;
-                background-color: $very-light-grey;
-                color: $lightish-grey;
-                svg {
-                    height: $image-height;
-                }
-            }
-            .metadata {
-                flex: 1;
-            }
-            & > div {
-                & {
-                    padding: 3 * $default-gap-size / 4 $default-gap-size / 2;
-                }
-                & > * {
-                    padding: $default-gap-size / 4;
+        & > span {
+            font-weight: bold;
+        }
+        .ancestors-list {
+            border-left: 1px solid $default-text-color;
+            a {
+                display: block;
+                text-decoration: none;
+                color: $grey;
+                transition: color $default-transition-duration;
+                &:hover, &:focus {
+                    color: $default-text-color;
                 }
             }
         }
     }
-    .resource-children {
-        margin-top: $default-gap-size;
-        margin-bottom: $default-gap-size;
-        padding-left: $default-gap-size;
-        padding-right: $default-gap-size;
-        flex: 1;
-        .children-list {
-            border-top: solid 1px #000000;
-            margin-top: $default-gap-size / 2;
-            .child-item {
-                display: flex;
-                align-items: flex-start;
-                &:not(:last-of-type) {
-                    border-bottom: solid 1px $light-grey;
+    & > h1 {
+        text-align: center;
+    }
+    & > .available-transitions {
+        text-align: center;
+        &, & > * {
+            padding: $default-gap-size / 4;
+        }
+        & > * {
+            display: inline-block;
+        }
+    }
+    & > .details-container {
+        display: flex;
+        justify-content: space-evenly;
+        flex-direction: row-reverse; // It's used instead of setting `flex-wrap: wrap-reverse` to keep correct layout in Internet Explorer.
+        flex-wrap: wrap;
+        .details {
+            z-index: 1;
+            display: flex;
+            padding-top: $default-gap-size / 4;
+            padding-bottom: $default-gap-size / 4;
+            background-color: $background-color;
+            td {
+                padding: $default-gap-size / 4 $default-gap-size / 2;
+                &:not([colspan]) {
+                    &:first-child {
+                        text-align: right;
+                    }
+                    &:not(:first-child) {
+                        min-width: 50%;
+                    }
                 }
-                & > :not(.icon) {
-                    padding: $default-gap-size / 2;
+                &[colspan] {
+                    text-align: center;
+                }
+            }
+        }
+        .title-container-visible-when-scrolled-down {
+            position: sticky;
+            top: 0;
+            & > span {
+                position: absolute;
+                top: 0;
+                width: 100%;
+                padding-top: $default-gap-size / 2;
+                padding-left: $default-gap-size / 2;
+                padding-right: $default-gap-size / 2;
+                font-size: $initially-hidden-title-font-size;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+        .resource-image-with-download-links {
+            position: sticky;
+            top: $initially-hidden-title-height;
+            text-align: center;
+            background: white;
+            &, .resource-image {
+                padding: $default-gap-size / 4;
+            }
+            & > :not(.resource-image) {
+                &, & > * {
+                    padding: $default-gap-size / 8;
+                }
+            }
+            .resource-image .icon {
+                color: $lightish-grey;
+                display: block;
+                height: $image-height;
+            }
+        }
+    }
+    .resource-children {
+        & > h2 {
+            padding: $default-gap-size / 2;
+            text-align: center;
+        }
+        .children-list {
+            .child-item {
+                &, & > :not(.icon) {
+                    padding: $default-gap-size / 4;
                 }
                 & > .icon {
+                    margin: $default-gap-size / 4;
                     font-size: $subtitle-font-size;
-                    margin: $default-gap-size / 2;
                 }
-                h3 {
-                    line-height: $icons-size;
+                & > h3 {
+                    display: inline;
                 }
             }
         }

@@ -7,6 +7,7 @@
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}
     {% include "redo/search/search-bar.twig" %}
+
     {% if resource | metadata('parent') | first %}
         <div class="breadcrumbs">
             {% embed "redo/resource-details/ancestors-list.twig" %}
@@ -18,59 +19,126 @@
         </div>
     {% endif %}
 
-
     <div class="resource-details">
-        <div class="details-container">
-            {% if resource | metadata('parent') | first %}
-                <div class="resource-ancestors">
-                    <span>Kolekcja</span>
-                    <div class="ancestors-list">
-                        {% embed "redo/resource-details/ancestors-list.twig" %}
-                            {% block itemNamePrefix %}
-                                {{ icon('folder') }}
-                            {% endblock %}
-                        {% endembed %}
-                    </div>
+        {% if resource | metadata('parent') | first %}
+            <div class="resource-ancestors">
+                <span>Kolekcja</span>
+                <div class="ancestors-list">
+                    {% embed "redo/resource-details/ancestors-list.twig" %}
+                        {% block itemNamePrefix %}
+                            {{ icon('folder') }}
+                        {% endblock %}
+                    {% endembed %}
                 </div>
-            {% endif %}
-            <div class="details">
-                <span class="resource-image">
-                    {{ icon('book-2') }}
-                </span>
-                <div>
-                    <h1>{{ resource | metadata('label') }}</h1>
-                    {% for metadata in resource.kind.metadataList %}
-                        {% set metadataValue = resource | metadata(metadata.id) | first %}
-                        {% if metadataValue
-                            and metadata.name != 'tytul'
-                            and metadata.name != 'label'
-                            and metadata.name != 'parent'
-                            and metadata.control != 'display-strategy'
-                            and metadata.control != 'wysiwyg-editor' %}
-                            <p>
-                                <b>{{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}:</b> {{ metadataValue }}
-                            </p>
+            </div>
+        {% endif %}
+        <h1>{{ resource | metadata('label') }}</h1>
+        {% if app.user %}
+            {% set availableTransitions = availableTransitions(app.user, resource, ['osoba_tworzaca_rekord']) %}
+            {% if availableTransitions is not empty %}
+                <div class="available-transitions">
+                    {% for transition in  availableTransitions %}
+                        {% if transition.id != 'update' %}
+                            <div class="deposit-operations">
+                                <a href="/deposit/form?phase=form&parentResourceId={{ resource | m(-1) | first | trim }}&resourceKindId={{ resource.kind.id }}&edit={{ resource.id }}&transitionId={{ transition.id }}">
+                                    {{ icon('workflow', 1.5) }} {{ transition.label.PL }}
+                                </a>
+                            </div>
+                            <div class="deposit-operations">
+                                <a href="/deposit/form?phase=form&parentResourceId={{ resource | m(-1) | first | trim }}&resourceKindId={{ resource.kind.id }}&edit={{ resource.id }}&transitionId={{ transition.id }}">
+                                    {{ icon('workflow', 1.5) }} {{ transition.label.PL }}
+                                </a>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 </div>
-                {% if app.user %}
-                    <div class="available-transitions">
-                        {% set availableTransitions = availableTransitions(app.user, resource, ['osoba_tworzaca_rekord']) %}
-                        {% for transition in  availableTransitions %}
-                            {% if transition.id != 'update' %}
-                                <div class="deposit-operations">
-                                    <a href="/deposit/form?phase=form&parentResourceId={{ resource | m(-1) | first | trim }}&resourceKindId={{ resource.kind.id }}&edit={{ resource.id }}&transitionId={{ transition.id }}">
-                                        {{ icon('workflow', 1.5) }} {{ transition.label.PL }}
-                                    </a>
-                                </div>
+            {% endif %}
+        {% endif %}
+        <div class="details-container">
+            <div>
+                <div class="title-container-visible-when-scrolled-down">
+                    <span>{{ resource | metadata('label') }}</span>
+                </div>
+                <div class="resource-image-with-download-links">
+                    <div class="resource-image">
+                        {{ icon('book-2') }}
+                    </div>
+                    <div>
+                        <h3><strong>Pobierz</strong></h3>
+                        <h4><a href="/download/pdf">{{ icon('mobi') }} MOBI (7KB) </a></h4>
+                        <h4><a href="/download/pdf">{{ icon('pdf') }} PDF (144000KB) </a></h4>
+                        <a href="/resources/{{ resource.id }}/bibtex">BibTeX</a>
+                    </div>
+                </div>
+            </div>
+            <div class="details">
+                <div>
+                    <table>
+                        {% for metadataGroupId, metadataList in resource.kind.groupedMetadataList %}
+                            {% set metadataGroup = metadataGroup(metadataGroupId) %}
+                            <tr>
+                                <td colspan="2">
+                                    <h4>
+                                        <strong>
+                                            {% if metadataGroup.label is defined %}
+                                                {{ metadataGroup.label['PL'] | default(metadataGroup.label | first) }}
+                                            {% else %}
+                                                Pozostałe informacje
+                                            {% endif %}
+                                        </strong>
+                                    </h4>
+                                </td>
+                            </tr>
+                            {% for metadata in metadataList %}
+                                {% set metadataValue = resource | metadata(metadata.id) | first %}
+                                {% if metadataValue
+                                    and metadata.name != 'tytul'
+                                    and metadata.name != 'label'
+                                    and metadata.name != 'parent'
+                                    and metadata.control != 'display-strategy'
+                                    and metadata.control != 'wysiwyg-editor' %}
+                                    <tr>
+                                        <td>
+                                            <b>{{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}</b>
+                                        </td>
+                                        <td>
+                                            {{ metadataValue }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not loop.last %}
+                                <tr>
+                                    <td colspan="2">
+                                        <hr>
+                                    </td>
+                                </tr>
                             {% endif %}
                         {% endfor %}
-                    </div>
-                {% endif %}
+                    </table>
+                </div>
             </div>
-            <h3><a href="/resources/{{ resource.id }}/bibtex">BibTeX</a></h3>
-            {% include "redo/resource-details/child-resources.twig" %}
         </div>
+        {% if resource | childrenAllowed %}
+            <div class="resource-children">
+                {% set page = app.request.query.get('page') | default(1) %}
+                {% set childrenPerPage = 10 %}
+                {% set children = resources({parentId: resource.id, page: page, resultsPerPage: childrenPerPage}) %}
+                {% set pagination = paginate(page, childrenPerPage, children.getTotalCount) %}
+                <h2>Elementy kolekcji ({{ children.getTotalCount }})</h2>
+                <div class="children-list">
+                    {% for childResource in children %}
+                        <div class="child-item">
+                            {{ icon('document', 1.5) }}
+                            <h3>
+                                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'resourceId': childResource.id})) }}">{{ childResource | mLabel }}</a>
+                            </h3>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% include "redo/search/pagination.twig" with {'pagination': pagination, 'route_params': {'resourceId': resource.id}} %}
+            </div>
+        {% endif %}
     </div>
     {% include "redo/footer.twig" %}
 {% endblock %}

@@ -8,6 +8,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Utils\PrintableArray;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -25,17 +26,26 @@ class TwigFrontendExtension extends \Twig_Extension {
     private $resourceKindRepository;
     /** @var Paginator */
     private $paginator;
+    /** @var FrontendConfig */
+    private $frontendConfig;
 
-    public function __construct(RequestStack $requestStack, ResourceKindRepository $resourceKindRepository, Paginator $paginator) {
+    public function __construct(
+        RequestStack $requestStack,
+        ResourceKindRepository $resourceKindRepository,
+        Paginator $paginator,
+        FrontendConfig $frontendConfig
+    ) {
         $request = $requestStack->getCurrentRequest();
         $this->currentUri = $request ? $request->getRequestUri() : null;
         $this->resourceKindRepository = $resourceKindRepository;
         $this->paginator = $paginator;
+        $this->frontendConfig = $frontendConfig;
     }
 
     public function getFunctions() {
         return [
             new \Twig_Function('resourceKind', [$this, 'fetchResourceKind']),
+            new \Twig_Function('metadataGroup', [$this, 'getMetadataGroup']),
             new \Twig_Function('ftsFacetFilterParam', [$this, 'ftsFacetFilterParam']),
             new \Twig_Function('isFilteringByFacet', [$this, 'isFilteringByFacet']),
             new \Twig_Function('icon', [$this, 'icon']),
@@ -90,6 +100,15 @@ class TwigFrontendExtension extends \Twig_Extension {
 
     public function fetchResourceKind($id) {
         return $this->resourceKindRepository->findOne($id);
+    }
+
+    public function getMetadataGroup($metadataGroupId): array {
+        $lookup = EntityUtils::getLookupMap($this->frontendConfig->getConfig()['metadata_groups']);
+        return $lookup[$metadataGroupId] ?? [];
+    }
+
+    public function getMetadataGroupsDetails() {
+        return $this->frontendConfig->getConfig()['metadata_groups'];
     }
 
     public function ftsFacetFilterParam(string $aggregationName, $filterValue, array $currentFilters): array {
