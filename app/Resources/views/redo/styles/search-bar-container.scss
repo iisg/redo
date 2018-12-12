@@ -1,7 +1,6 @@
 .search-bar-container {
     display: flex;
     justify-content: center;
-    padding-bottom: $default-gap-size;
+    padding: $default-gap-size;
     border-bottom: $default-gap-size / 4 solid $orange;
-    margin-bottom: $default-gap-size;
 }

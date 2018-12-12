@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceKind implements Identifiable, HasResourceClass {
@@ -50,6 +51,16 @@ class ResourceKind implements Identifiable, HasResourceClass {
     /** @return Metadata[] */
     public function getMetadataList(): array {
         return $this->metadataList;
+    }
+
+    /** @return array ['group1' => [$m1, $m2], 'group2' => [$m3]] */
+    public function getGroupedMetadataList(): array {
+        return ArrayUtils::groupBy(
+            $this->getMetadataList(),
+            function ($metadata) {
+                return $metadata->getGroupId();
+            }
+        );
     }
 
     public function getMetadataById(int $id): Metadata {
