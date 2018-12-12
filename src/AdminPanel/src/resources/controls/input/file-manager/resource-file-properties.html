@@ -1,0 +1,16 @@
+<template>
+    <require from="./filesize-value-converter"></require>
+
+    <span if.bind="fileInfo">
+        ${ fileInfo.size | filesize }
+        <span if.bind="fileInfo.files">
+            (${ 'files: {{files}}, directories: {{directories}}' | t:fileInfo })
+        </span>
+    </span>
+    <a click.trigger="fetchFileInfo()"
+        else>
+        <icon name="information"
+            if.bind="!fetching"></icon>
+        <throbber else></throbber>
+    </a>
+</template>

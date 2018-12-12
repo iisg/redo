@@ -214,3 +214,4 @@ Dynamic metadata values may be obsolete.: Wartości dynamicznych metadanych mog�
 Save resource to upload its files: Zapisz zasób by umożliwić przesyłanie plików
 Resource files: Pliki zasobu
 Open resource file manager: Otwórz pliki zasobu
+"files: {{files}}, directories: {{directories}}": "pliki: {{files}}, podkatalogi: {{directories}}"
