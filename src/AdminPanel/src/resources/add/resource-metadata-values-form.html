@@ -5,6 +5,7 @@
     <require from="resources/controls/input/resource-picker/tree-relationship-selector"></require>
     <require from="resources/controls/input/file-manager/resource-file-manager"></require>
     <require from="common/components/buttons/icon-button"></require>
+    <require from="common/value-converters/in-value-converter"></require>
 
     <table class="transparent"
         ref="valueTable">
@@ -20,7 +21,7 @@
                     tree-query-url.bind="treeQueryUrl"></tree-relationship-selector>
             </td>
         </tr>
-        <tr if.bind="metadata.control === 'file'">
+        <tr if.bind="metadata.control | in:['file', 'directory']">
             <td>
                 <resource-file-manager
                     resource.bind="resource"
@@ -56,7 +57,7 @@
                             click.delegate="deleteIndex($index)"
                             tooltip-text-when-enabled.one-time="'Remove value' | t"
                             tab-index="-1"></icon-button>
-                        <new-metadata-value-button if.bind="$first && metadata.control !== 'relationship' && metadata.control !== 'file'"
+                        <new-metadata-value-button if.bind="$first && !metadataValuesReadOnly"
                             metadata.bind="metadata"
                             resource.bind="resource"
                             skip-validation.bind="skipValidation"
@@ -65,7 +66,7 @@
                 </div>
             </td>
         </tr>
-        <tr if.bind="!resource.contents[metadata.id].length && metadata.control !== 'relationship' && metadata.control !== 'file'">
+        <tr if.bind="!resource.contents[metadata.id].length && !metadataValuesReadOnly">
             <td if.bind="!disabled">
                 <div class="new-metadata-value-button-container">
                     <new-metadata-value-button metadata.bind="metadata"

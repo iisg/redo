@@ -87,6 +87,10 @@ services:
     tags:
       - { name: doctrine.event_listener, event: postLoad }
 
+  Repeka\Application\Service\FilesystemResourceFileStorage:
+    arguments:
+      $uploadDirs: '%repeka.upload_dirs%'
+
   Repeka\Application\Service\ResourcesEndpointsExposer:
     public: true
     arguments:

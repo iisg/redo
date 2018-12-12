@@ -56,8 +56,8 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
                 $this->metadataWithBothConstraints,
             ]
         );
-        $resourceKind = $this->createResourceKindMock(1, 'books', [$this->metadataWithConstraint1]);
-        $this->rule = (new MetadataValuesSatisfyConstraintsRule($constraintManager, $metadataRepository))->forResourceKind($resourceKind);
+        $resourceKind = $this->createResourceMock(1);
+        $this->rule = (new MetadataValuesSatisfyConstraintsRule($constraintManager, $metadataRepository))->forResource($resourceKind);
     }
 
     public function testAcceptsWhenThereAreNoConstraints() {

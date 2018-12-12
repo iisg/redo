@@ -43,16 +43,19 @@
             files: urls
           }, '*');
           instance.toast({
-            msg: 'Wybrane pliki dodano do metadanej {{ metadata.name }}.',
+            msg: 'Wybrane {{ metadata.control == 'directory' ? 'katalogi' : 'pliki' }} dodano do metadanej {{ metadata.name }}.',
             hideDuration: 500,
             showDuration: 800,
             timeOut: 1000,
             mode: 'info'
           });
         };
-        this.getstate = function (select) {
+        this.getstate = function () {
           //return 0 to enable, -1 to disable icon access
-          return this.files(select).length > 0 ? 0 : -1;
+          const selectedFilesCount = this.files().length;
+            {% set fileAcceptanceCondition = metadata.control == 'directory' ? ' == "directory"' : '!= "directory"' %}
+          const allowedFilesCount = this.files().filter(file => file.mime {{ fileAcceptanceCondition | raw }}).length;
+          return selectedFilesCount > 0 && selectedFilesCount == allowedFilesCount ? 0 : -1;
         };
       };
 

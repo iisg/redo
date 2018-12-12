@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\RespectValidationFailedException;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -17,7 +18,8 @@ abstract class RespectValidationMetadataConstraint extends AbstractMetadataConst
         }
     }
 
-    final public function validateSingle(Metadata $metadata, $metadataValue) {
+    /** @inheritdoc */
+    final public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
         try {
             $this->validate($metadata, $metadataValue);
         } catch (NestedValidationException $e) {

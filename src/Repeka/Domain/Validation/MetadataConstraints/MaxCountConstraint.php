@@ -3,6 +3,7 @@ namespace Repeka\Domain\Validation\MetadataConstraints;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\RespectValidationFailedException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator;
@@ -26,7 +27,8 @@ class MaxCountConstraint extends AbstractMetadataConstraint implements Configura
             : true;
     }
 
-    public function validateAll(Metadata $metadata, array $metadataValues) {
+    /** @inheritdoc */
+    public function validateAll(Metadata $metadata, array $metadataValues, ResourceEntity $resource = null) {
         $maxCount = $metadata->getConstraints()[$this->getConstraintName()] ?? null;
         if ($maxCount !== null && $maxCount !== -1) {
             try {
@@ -37,7 +39,8 @@ class MaxCountConstraint extends AbstractMetadataConstraint implements Configura
         }
     }
 
-    public function validateSingle(Metadata $metadata, $metadataValue) {
+    /** @inheritdoc */
+    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
         throw new \BadMethodCallException('This validator can validate only the whole array of metadata');
     }
 }

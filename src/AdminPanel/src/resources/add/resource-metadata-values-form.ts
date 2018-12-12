@@ -8,6 +8,7 @@ import {MetadataValue} from "../metadata-value";
 import {changeHandler} from "../../common/components/binding-mode";
 import {ChangeEvent} from "../../common/change-event";
 import {MetadataControl} from "../../resources-config/metadata/metadata-control";
+import {computedFrom} from "aurelia-binding";
 
 @autoinject
 export class ResourceMetadataValuesForm {
@@ -66,5 +67,10 @@ export class ResourceMetadataValuesForm {
 
   isDragHandle(data: { evt: MouseEvent }) {
     return $(data.evt.target).is('.drag-handle') || $(data.evt.target).parents('.drag-handle').length > 0;
+  }
+
+  @computedFrom("metadata.control")
+  get metadataValuesReadOnly(): boolean {
+    return ['relationship', 'file', 'directory'].indexOf(this.metadata.control) !== -1;
   }
 }

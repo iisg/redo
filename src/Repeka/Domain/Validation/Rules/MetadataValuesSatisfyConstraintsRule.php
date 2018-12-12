@@ -3,14 +3,14 @@ namespace Repeka\Domain\Validation\Rules;
 
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Respect\Validation\Rules\AbstractRule;
 
 class MetadataValuesSatisfyConstraintsRule extends AbstractRule {
-    /** @var ResourceKind */
-    private $resourceKind;
+    /** @var ResourceEntity */
+    private $resource;
     /** @var MetadataConstraintManager */
     private $metadataConstraintManager;
     /** @var MetadataRepository */
@@ -21,28 +21,29 @@ class MetadataValuesSatisfyConstraintsRule extends AbstractRule {
         $this->metadataRepository = $metadataRepository;
     }
 
-    public function forResourceKind($resourceKind): MetadataValuesSatisfyConstraintsRule {
+    public function forResource(ResourceEntity $resource): MetadataValuesSatisfyConstraintsRule {
         $instance = new self($this->metadataConstraintManager, $this->metadataRepository);
-        $instance->resourceKind = $resourceKind;
+        $instance->resource = $resource;
         return $instance;
     }
 
     /** @param ResourceContents $contents */
     public function validate($contents) {
         Assertion::notNull(
-            $this->resourceKind,
-            'Resource kind not set. Use forResourceKind() to create validator for specific resource kind first.'
+            $this->resource,
+            'Resource not set. Use forResource() to create validator for specific resource first.'
         );
         Assertion::isInstanceOf($contents, ResourceContents::class);
+        $resourceKind = $this->resource->getKind();
         $contents->forEachMetadata(
-            function (array $values, int $metadataId) {
-                $metadataKind = $this->resourceKind->hasMetadata($metadataId)
-                    ? $this->resourceKind->getMetadataById($metadataId)
+            function (array $values, int $metadataId) use ($resourceKind) {
+                $metadataKind = $resourceKind->hasMetadata($metadataId)
+                    ? $resourceKind->getMetadataById($metadataId)
                     : $this->metadataRepository->findOne($metadataId);
                 $constraints = $this->metadataConstraintManager->getSupportedConstraintNamesForControl($metadataKind->getControl());
                 foreach ($constraints as $constraintName) {
                     $constraint = $this->metadataConstraintManager->get($constraintName);
-                    $constraint->validateAll($metadataKind, $values);
+                    $constraint->validateAll($metadataKind, $values, $this->resource);
                 }
             }
         );

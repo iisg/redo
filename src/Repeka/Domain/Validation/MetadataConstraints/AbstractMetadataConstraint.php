@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Validation\MetadataConstraints;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceEntity;
 use Stringy\StaticStringy;
 
 abstract class AbstractMetadataConstraint {
@@ -17,11 +18,11 @@ abstract class AbstractMetadataConstraint {
      */
     abstract public function getSupportedControls(): array;
 
-    public function validateAll(Metadata $metadata, array $metadataValues) {
+    public function validateAll(Metadata $metadata, array $metadataValues, ResourceEntity $resource = null) {
         foreach ($metadataValues as $metadataValue) {
-            $this->validateSingle($metadata, $metadataValue);
+            $this->validateSingle($metadata, $metadataValue, $resource);
         }
     }
 
-    abstract public function validateSingle(Metadata $metadata, $metadataValue);
+    abstract public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null);
 }

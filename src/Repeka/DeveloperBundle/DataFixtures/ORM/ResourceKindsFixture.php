@@ -55,6 +55,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SEE_ALSO),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_RELATED_BOOK),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_FILE),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_DIRECTORY),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISHING_HOUSE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SUPERVISOR),
