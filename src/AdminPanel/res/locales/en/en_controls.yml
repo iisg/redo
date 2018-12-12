@@ -9,6 +9,7 @@ date: Date
 boolean: Yes / No
 relationship: Relationship
 file: File
+directory: Directory
 display-strategy: Display strategy
 system-language: System language
 

@@ -9,7 +9,6 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
 use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
-use Repeka\Domain\Validation\Rules\ResourceDoesNotContainDuplicatedFilenamesRule;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Respect\Validation\Validatable;
@@ -27,8 +26,6 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
     private $metadataValuesSatisfyConstraintsRule;
     /** @var ResourceContentsCorrectStructureRule */
     private $resourceContentsCorrectStructureRule;
-    /** @var ResourceDoesNotContainDuplicatedFilenamesRule */
-    private $resourceDoesNotContainDuplicatedFilenamesRule;
     /** @var LockedMetadataValuesAreUnchangedRule */
     private $lockedMetadataValuesAreUnchangedRule;
 
@@ -37,14 +34,12 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
         ValueSetMatchesResourceKindRule $valueSetMatchesResourceKindRule,
         MetadataValuesSatisfyConstraintsRule $metadataValuesSatisfyConstraintsRule,
         ResourceContentsCorrectStructureRule $resourceContentsCorrectStructureRule,
-        ResourceDoesNotContainDuplicatedFilenamesRule $resourceDoesNotContainDuplicatedFilenamesRule,
         LockedMetadataValuesAreUnchangedRule $lockedMetadataValuesAreUnchangedRule
     ) {
         $this->transitionPossibilityChecker = $transitionPossibilityChecker;
         $this->valueSetMatchesResourceKindRule = $valueSetMatchesResourceKindRule;
         $this->metadataValuesSatisfyConstraintsRule = $metadataValuesSatisfyConstraintsRule;
         $this->resourceContentsCorrectStructureRule = $resourceContentsCorrectStructureRule;
-        $this->resourceDoesNotContainDuplicatedFilenamesRule = $resourceDoesNotContainDuplicatedFilenamesRule;
         $this->lockedMetadataValuesAreUnchangedRule = $lockedMetadataValuesAreUnchangedRule;
     }
 
@@ -66,8 +61,7 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
             )->callback([$this, 'transitionIsPossible'])
             ->attribute('contents', $this->resourceContentsCorrectStructureRule)
             ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getResource()->getKind()))
-            ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResourceKind($command->getResource()->getKind()))
-            ->attribute('contents', $this->resourceDoesNotContainDuplicatedFilenamesRule)
+            ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResource($command->getResource()))
             ->attribute(
                 'contents',
                 $this->lockedMetadataValuesAreUnchangedRule->forResourceAndTransition($command->getResource(), $command->getTransition())

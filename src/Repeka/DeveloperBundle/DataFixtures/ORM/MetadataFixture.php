@@ -26,6 +26,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_LANGUAGE = 'metadata-language';
     const REFERENCE_METADATA_SEE_ALSO = 'metadata-see-also';
     const REFERENCE_METADATA_FILE = 'metadata-file';
+    const REFERENCE_METADATA_DIRECTORY = 'metadata-directory';
     const REFERENCE_METADATA_CATEGORY_NAME = 'metadata-category-name';
     const REFERENCE_METADATA_ASSIGNED_SCANNER = 'metadata-assigned-scanner';
     const REFERENCE_METADATA_REAL_SCANNER = 'metadata-real-scanner';
@@ -237,6 +238,22 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_FILE
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Obrazki',
+                    'label' => [
+                        'PL' => 'Obrazki',
+                        'EN' => 'Pictures',
+                    ],
+                    'description' => [],
+                    'placeholder' => [],
+                    'control' => 'directory',
+                    'resourceClass' => 'books',
+                ]
+            ),
+            self::REFERENCE_METADATA_DIRECTORY
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(

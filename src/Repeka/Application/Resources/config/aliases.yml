@@ -9,9 +9,9 @@ services:
   Repeka\Domain\Repository\ResourceKindRepository: '@Repeka\Application\Repository\ResourceKindDoctrineRepository'
   Repeka\Domain\Repository\ResourceRepository: '@Repeka\Application\Repository\ResourceDoctrineRepository'
   Repeka\Domain\Repository\ResourceFtsProvider: '@Repeka\Application\Elasticsearch\Model\ElasticSearch'
-  Repeka\Domain\Repository\ResourceKindDoctrineRepository: '@Repeka\Application\Repository\ResourceKindDoctrineRepository'
   Repeka\Domain\Repository\ResourceWorkflowRepository: '@Repeka\Application\Repository\ResourceWorkflowDoctrineRepository'
   Repeka\Domain\Repository\UserRepository: '@Repeka\Application\Repository\UserDoctrineRepository'
+  Repeka\Domain\Service\ResourceFileStorage: '@Repeka\Application\Service\FilesystemResourceFileStorage'
   Repeka\Domain\Service\RegexNormalizer: '@Repeka\Application\Service\PhpRegexNormalizer'
   Repeka\Domain\Service\ResourceDisplayStrategyEvaluator: '@Repeka\Application\Twig\TwigResourceDisplayStrategyEvaluator'
 

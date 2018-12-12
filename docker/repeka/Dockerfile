@@ -19,6 +19,7 @@ RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - 
      postgresql-client-10 \
      supervisor \
      cron \
+     libpng-dev \
   && update-ca-certificates \
   && docker-php-ext-install \
      pdo_pgsql \

@@ -9,6 +9,7 @@ timestamp: Znacznik czasu
 boolean: Tak / Nie
 relationship: Relacja
 file: Plik
+directory: Folder plików
 display-strategy: Strategia wyświetlania
 system-language: Język systemowy
 

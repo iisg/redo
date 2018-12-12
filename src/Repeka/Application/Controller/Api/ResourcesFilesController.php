@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
-use Assert\Assertion;
 use elFinder;
 use elFinderConnector;
 use Repeka\Application\Serialization\ResourceNormalizer;
@@ -9,6 +8,7 @@ use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
+use Repeka\Domain\Service\ResourceFileStorage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -25,15 +25,19 @@ class ResourcesFilesController extends ApiController {
     private $metadataRepository;
     /** @var ResourceNormalizer */
     private $resourceNormalizer;
+    /** @var ResourceFileStorage */
+    private $resourceFileStorage;
 
     public function __construct(
         ResourceDisplayStrategyEvaluator $displayStrategyEvaluator,
         MetadataRepository $metadataRepository,
-        ResourceNormalizer $resourceNormalizer
+        ResourceNormalizer $resourceNormalizer,
+        ResourceFileStorage $resourceFileStorage
     ) {
         $this->displayStrategyEvaluator = $displayStrategyEvaluator;
         $this->metadataRepository = $metadataRepository;
         $this->resourceNormalizer = $resourceNormalizer;
+        $this->resourceFileStorage = $resourceFileStorage;
     }
 
     /**
@@ -68,7 +72,7 @@ class ResourcesFilesController extends ApiController {
                 $readOnly = count($availableTransitions) + 1 == count($blockedTransitions); // +1 - add EDIT transition
             }
         }
-        $uploadDirs = $this->getUploadDirs($resource);
+        $uploadDirs = $this->resourceFileStorage->uploadDirsForResource($resource);
         $roots = array_map(
             function (array $uploadDir) use ($readOnly, $godMode) {
                 $dirSpec = [
@@ -115,13 +119,14 @@ class ResourcesFilesController extends ApiController {
         // example thumbnail path: lresourceFiles_SU1HXzIwMTgxMDE0XzE1NDI0OC5KUEc1544087790.png
         preg_match('#l(.+)_(.+)#', $filepath, $matches);
         if ($matches) {
-            return $this->fileAction($resource, $matches[1], '.tmb/' . $filepath);
+            return $this->fileAction($resource, $matches[1] . '/.tmb/' . $filepath);
         } elseif (strpos($filepath, 'temp_') === 0) {
             // temp files can be in any directory... look for them.
-            $uploadDirs = $this->getUploadDirs($resource);
+            $uploadDirs = $this->resourceFileStorage->uploadDirsForResource($resource);
             foreach ($uploadDirs as $uploadDir) {
-                if (file_exists($uploadDir['path'] . '/.tmb/' . $filepath)) {
-                    return $this->fileAction($resource, $uploadDir['id'], '.tmb/' . $filepath);
+                $possibleThumbPath = $uploadDir['path'] . '/.tmb/' . $filepath;
+                if (file_exists($possibleThumbPath)) {
+                    return $this->fileAction($resource, $possibleThumbPath);
                 }
             }
         }
@@ -129,19 +134,14 @@ class ResourcesFilesController extends ApiController {
     }
 
     /**
-     * @Route("/{resource}/file/{uploadDirId}/{filepath}", requirements={"filepath"=".*"})
+     * @Route("/{resource}/file/{filepath}", requirements={"filepath"=".*"})
      * @Method("GET")
      */
-    public function fileAction(ResourceEntity $resource, string $uploadDirId, string $filepath) {
+    public function fileAction(ResourceEntity $resource, string $filepath) {
         $this->ensureCanManageFiles($resource);
-        $uploadDirs = $this->getUploadDirs($resource);
-        foreach ($uploadDirs as $uploadDir) {
-            if ($uploadDir['id'] == $uploadDirId) {
-                $thumbPath = $uploadDir['path'] . '/' . $filepath;
-                if (file_exists($thumbPath)) {
-                    return new BinaryFileResponse($thumbPath);
-                }
-            }
+        $filepath = $this->resourceFileStorage->getFileSystemPath($resource, $filepath);
+        if (file_exists($filepath)) {
+            return new BinaryFileResponse($filepath);
         }
         throw $this->createNotFoundException();
     }
@@ -169,30 +169,5 @@ class ResourcesFilesController extends ApiController {
 
     private function ensureCanManageFiles(ResourceEntity $resource): void {
         $this->ensureHasRole($resource, SystemRole::OPERATOR());
-    }
-
-    private function getUploadDirs(ResourceEntity $resource): array {
-        $uploadDirs = $this->container->getParameter('repeka.upload_dirs');
-        $uploadDirs = array_map(
-            function (array $uploadDir) use ($resource) {
-                $uploadDir['path'] = $this->displayStrategyEvaluator->render($resource, $uploadDir['path']);
-                return $uploadDir;
-            },
-            $uploadDirs
-        );
-        foreach ($uploadDirs as &$uploadDir) {
-            if (!file_exists($uploadDir['path'])) {
-                $this->mkdirRecursive($uploadDir['path']);
-            }
-            $uploadDir['path'] = realpath($uploadDir['path']);
-        }
-        return $uploadDirs;
-    }
-
-    private function mkdirRecursive(string $path) {
-        if (!file_exists($path)) {
-            $result = mkdir($path, 0750, true);
-            Assertion::true($result, 'Could not create upload dir: ' . $path);
-        }
     }
 }

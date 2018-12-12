@@ -10,6 +10,7 @@ export enum MetadataControl {
   BOOLEAN = 'boolean',
   RELATIONSHIP = 'relationship',
   FILE = 'file',
+  DIRECTORY = 'directory',
   DISPLAY_STRATEGY = 'display-strategy',
   SYSTEM_LANGUAGE = 'system-language'
 }

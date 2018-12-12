@@ -3,6 +3,7 @@ namespace Repeka\Domain\Validation\MetadataConstraints;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\ResourceEntity;
 use Respect\Validation\Validator;
 
 class MinMaxValueConstraint extends AbstractMetadataConstraint implements ConfigurableMetadataConstraint {
@@ -26,7 +27,8 @@ class MinMaxValueConstraint extends AbstractMetadataConstraint implements Config
         }
     }
 
-    public function validateSingle(Metadata $metadata, $metadataValue) {
+    /** @inheritdoc */
+    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
         $config = $metadata->getConstraints()[$this->getConstraintName()] ?? [];
         if (!Validator::numericVal()->validate($metadataValue)) {
             throw new \InvalidArgumentException('Value must be a number');
