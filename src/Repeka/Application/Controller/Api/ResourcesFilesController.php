@@ -106,7 +106,7 @@ class ResourcesFilesController extends ApiController {
             },
             $uploadDirs
         );
-        $opts = ['debug' => true, 'roots' => $roots];
+        $opts = ['debug' => false, 'roots' => $roots];
         $connector = new elFinderConnector(new elFinder($opts));
         $connector->run();
     }
