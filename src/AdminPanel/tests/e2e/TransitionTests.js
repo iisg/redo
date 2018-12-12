@@ -5,7 +5,7 @@ describe('Transition Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-  
+
   beforeEach(function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	browser.driver.manage().window().setSize(1536, 864);
@@ -90,11 +90,12 @@ describe('Transition Tests', function() {
 	editButton.click();
 
 	waitForElement(element(by.className('transparent au-target')));
+	browser.sleep(3000);
 	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
 	var personMetadataValueField = newMetadataValuesFields.get(3);
 	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
 	personMetadataValueButton.get(2).click();
-	browser.sleep(5000);
+	browser.sleep(500);
 
 	var formsList = element.all(by.className('form-control au-target'));
 	formsList.get(2).sendKeys('#1000001');
@@ -146,6 +147,7 @@ describe('Transition Tests', function() {
 	editButton.click();
 
 	waitForElement(element(by.className('transparent au-target')));
+	browser.sleep(3000);
 	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
 	var personMetadataValueField = newMetadataValuesFields.get(3);
 	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
@@ -204,7 +206,7 @@ describe('Transition Tests', function() {
 	browser.sleep(1000);
   });
 
-  it('Automatic ascription of a designated person', function() {
+   it('Automatic ascription of a designated person', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
 	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
@@ -216,6 +218,7 @@ describe('Transition Tests', function() {
 	editButton.click();
 
 	waitForElement(element(by.className('transparent au-target')));
+	browser.sleep(3000);
 	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
 	var personMetadataValueField = newMetadataValuesFields.get(3);
 	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
@@ -265,7 +268,7 @@ describe('Transition Tests', function() {
 	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
   });
-
+  
   it('Sucessful transition', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
@@ -278,6 +281,7 @@ describe('Transition Tests', function() {
 	editButton.click();
 
 	waitForElement(element(by.className('transparent au-target')));
+	browser.sleep(3000);
 	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
 	var personMetadataValueField = newMetadataValuesFields.get(3);
 	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
