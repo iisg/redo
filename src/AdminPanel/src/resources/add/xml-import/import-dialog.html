@@ -21,7 +21,7 @@
                         files.bind="configFile | singleFileList"
                         focus.bind="importFileIsFocused"
                         keydown.trigger="handleEscPressed($event)"
-                        accept="application/json">
+                        accept="application/json, .yml, .yaml">
                     <input type="text"
                         class="form-control"
                         value.bind="configFile ? '' : importConfig.fileName"

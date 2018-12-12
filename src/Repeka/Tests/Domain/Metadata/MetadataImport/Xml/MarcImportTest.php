@@ -1,63 +1,44 @@
 <?php
 namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 
-use Repeka\Domain\Metadata\MetadataImport\Xml\XmlArrayDataExtractor;
+use PHPUnit_Framework_TestCase;
+use Repeka\Domain\Metadata\MetadataImport\Xml\MarcxmlArrayDataExtractor;
 
-class MarcImportTest extends \PHPUnit_Framework_TestCase {
+class MarcImportTest extends PHPUnit_Framework_TestCase {
+
     private static $xmlString;
 
-    /** @var XmlArrayDataExtractor */
+    /** @var MarcxmlArrayDataExtractor */
     private $importer;
 
     /** @beforeClass */
     public static function loadSampleXmlMarcFile() {
-        self::$xmlString = file_get_contents(__DIR__ . '/sample.marcxml');
+        self::$xmlString = file_get_contents(__DIR__ . '/bib-103684.marcxml');
     }
 
     /** @before */
     public function init() {
-        $this->importer = new XmlArrayDataExtractor();
+        $this->importer = new MarcxmlArrayDataExtractor();
     }
 
-    public function testImportTitle() {
-        $result = $this->importer->import(['Tytuł' => '[tag="245"]>[code="a"]'], self::$xmlString);
-        $this->assertEquals(['Tytuł' => ['Advances in water treatment and environmental management :']], $result);
-    }
-
-    public function testImportDescription() {
-        $result = $this->importer->import(['Opis' => '[tag="245"]>[code="a"],[tag="245"]>[code="b"]'], self::$xmlString);
-        $this->assertEquals(
-            [
-                'Opis' => [
-                    'Advances in water treatment and environmental management :',
-                    'proceedings of the 1st International Conference (Lyon, France 27-29 june 1990) /',
-                ],
-            ],
-            $result
+    public function testImport() {
+        $marcXmlResource = $this->importer->import(self::$xmlString);
+        $this->assertCount(1, $marcXmlResource['260']);
+        $this->assertCount(2, $marcXmlResource['260'][0]['b']);
+        $this->assertEquals('nakł. S. Orgelbranda Synów :', $marcXmlResource['260'][0]['b'][0]);
+        $this->assertContains('Drzeworytnia Warszawska,', $marcXmlResource['260'][0]['b'][1]);
+        $this->assertCount(7, $marcXmlResource['246']);
+        $this->assertCount(5, $marcXmlResource['246'][4]); //order ind1 ind2 a
+        $this->assertEquals('Willanów :', $marcXmlResource['246'][4]['a'][0]);
+        $this->assertContains(
+            'album widoków i pamiątek oraz kopje z obrazów Galerii Willanowskiej wykonane na drzewie w Drzeworytni Warszawskiej',
+            $marcXmlResource['246'][4]['b'][0]
         );
-    }
-
-    public function testImportLangauge() {
-        $result = $this->importer->import(['Język' => '[tag="008"]'], self::$xmlString);
-        $this->assertEquals(['Język' => ['051129s1991    xxka   | |||||1|| | eng||']], $result);
-    }
-
-    public function testImportMultipleMetadataAtOnce() {
-        $result = $this->importer->import(
-            [
-                'Rok wydania' => '[tag="111"]>[code="d"]',
-                'Data pojawienia się pomysłu o napisaniu tej książki' => '[tag="700"]>[code="d"]',
-                'Jeszcze jakaś inna wartość' => '[tag="700"]>[code="9"]',
-            ],
-            self::$xmlString
-        );
+        $this->assertEquals("1", $marcXmlResource['856'][1]['ind2']);
+        $this->assertEquals("4", $marcXmlResource['856'][1]['ind1']);
         $this->assertEquals(
-            [
-                'Rok wydania' => ['1990 ;'],
-                'Data pojawienia się pomysłu o napisaniu tej książki' => ['(1942- ).'],
-                'Jeszcze jakaś inna wartość' => ['35884', '72169'],
-            ],
-            $result
+            ['0', '1', '2', '4', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'i', 'o', 'p', 'r', 'w', 'y'],
+            $marcXmlResource['952'][0]['order']
         );
     }
 }

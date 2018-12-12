@@ -28,7 +28,7 @@ export class ImportDialog {
               private globalExceptionInterceptor: GlobalExceptionInterceptor) {
     const storedConfiguration = LocalStorage.get(this.MOST_RECENT_CONFIG_KEY);
     if (storedConfiguration !== undefined) {
-      if (!('fileName' in storedConfiguration) || !('json' in storedConfiguration) || Object.keys(storedConfiguration).length > 2) {
+      if (!('fileName' in storedConfiguration) || !('fileContents' in storedConfiguration) || Object.keys(storedConfiguration).length > 2) {
         LocalStorage.remove(this.MOST_RECENT_CONFIG_KEY);
       } else {
         this.importConfig = storedConfiguration;
@@ -60,16 +60,18 @@ export class ImportDialog {
     reader.onload = () => {
       this.configFileError = false;
       this.importConfig = undefined;
-      try {
-        JSON.parse(reader.result);
-      } catch (e) {
+      let fileExtension = this.configFile.name.split('.').pop();
+      const supportedExtensions = ['yml', 'yaml', 'json'];
+      if (supportedExtensions.indexOf(fileExtension) !== -1) {
+        this.importConfig = {
+          fileName: this.configFile.name,
+          fileContents: reader.result,
+        };
+        LocalStorage.set(this.MOST_RECENT_CONFIG_KEY, this.importConfig);
+      }
+      else {
         this.configFileError = true;
       }
-      this.importConfig = {
-        fileName: this.configFile.name,
-        json: reader.result,
-      };
-      LocalStorage.set(this.MOST_RECENT_CONFIG_KEY, this.importConfig);
     };
   }
 
@@ -77,7 +79,7 @@ export class ImportDialog {
     this.importPending = true;
     this.notFoundError = false;
     this.serverError = undefined;
-    this.xmlImportClient.getMetadataValues(this.resourceId, this.importConfig.json, this.resourceKind)
+    this.xmlImportClient.getMetadataValues(this.resourceId, this.importConfig.fileContents, this.resourceKind)
       .then(importResult => {
         this.dialogController.ok(importResult);
       })
@@ -106,5 +108,5 @@ interface ImportDialogModel {
 
 interface XmlImportConfig {
   fileName: string;
-  json: string;
+  fileContents: string;
 }
