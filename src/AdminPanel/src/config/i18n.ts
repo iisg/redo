@@ -41,6 +41,7 @@ export function i18nConfiguratorFactory(aurelia: Aurelia) {
 export class I18nParams {
   readonly namespaces = [
     'audit_commands',
+    'audit_dates',
     'controls',
     'entity_types',
     'exceptions',

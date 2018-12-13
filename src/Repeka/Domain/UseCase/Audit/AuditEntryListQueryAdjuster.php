@@ -13,10 +13,24 @@ class AuditEntryListQueryAdjuster implements CommandAdjuster {
         $this->metadataRepository = $metadataRepository;
     }
 
+    public function isDate(string $date): bool {
+        return (date('Y-m-d', strtotime($date)) == $date);
+    }
+
+    public function adjustDateFrom(string $dateFrom): string {
+        return $this->isDate($dateFrom) ? $dateFrom : "";
+    }
+
+    public function adjustDateTo(string $dateTo): string {
+        return $this->isDate($dateTo) ? date('Y-m-d', strtotime('+1 day', strtotime($dateTo))) : "";
+    }
+
     /** @param AuditEntryListQuery $command */
     public function adjustCommand(Command $command): Command {
         return new AuditEntryListQuery(
             $command->getCommandNames(),
+            $this->adjustDateFrom($command->getDateFrom()),
+            $this->adjustDateTo($command->getDateTo()),
             $command->getResourceContentsFilter()->withMetadataNamesMappedToIds($this->metadataRepository),
             $command->getPage(),
             $command->getResultsPerPage(),

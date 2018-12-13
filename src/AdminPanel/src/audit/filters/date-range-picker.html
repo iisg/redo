@@ -1,0 +1,42 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"></require>
+
+    <dropdown-select class="available-options"
+        values.bind="availableDateOptions"
+        value.bind="dateOption"
+        hide-clear-button>
+        <template replace-part="option-template">
+            ${'audit_dates::date-range-config//' + option | t }
+        </template>
+    </dropdown-select>
+
+    <div ref="datepicker"
+        class="start-date input-group date datepicker-input-range"
+        data-target-input="nearest">
+        <input type="text"
+            class="form-control datetimepicker-input"
+            disabled.bind="disabled"
+            data-target.bind="datepicker"
+            data-toggle="datetimepicker">
+        <span class="input-group-addon"
+            data-target.bind="datepicker"
+            data-toggle="datetimepicker">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+
+    <div ref="linkedDatepicker"
+        class="end-date input-group date datepicker-input-range"
+        data-target-input="nearest">
+        <input type="text"
+            class="form-control datetimepicker-input"
+            disabled.bind="disabled"
+            data-target.bind="linkedDatepicker">
+        <span class="input-group-addon"
+            data-target.bind="linkedDatepicker"
+            data-toggle="datetimepicker">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+</template>

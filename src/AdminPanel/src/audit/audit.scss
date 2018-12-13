@@ -1,7 +1,6 @@
 @import "../common/styles";
 
 $minimum-width-of-input-field-for-dynamic-column: 75px;
-$input-box-height: 34px;
 
 audit {
   & > :not(.page-subtitle):not(.table-container):not(redo-footer) {
@@ -40,7 +39,7 @@ audit {
       }
     }
     toggle-button {
-      height: $input-box-height;
+      height: $default-input-box-height;
       button:only-child {
         padding-left: $default-gap-size / 2;
         padding-right: $default-gap-size / 2;

@@ -24,6 +24,16 @@ class AuditController extends ApiController {
             $resourceId = intval($request->query->get('resourceId', 0));
             $queryBuilder = $queryBuilder->filterByResourceId($resourceId);
         }
+        if ($request->query->has('dateFrom')) {
+            Assertion::date($request->get('dateFrom'), 'Y-m-d');
+            $dateFrom = $request->get('dateFrom');
+            $queryBuilder->filterByDateFrom($dateFrom);
+        }
+        if ($request->query->has('dateTo')) {
+            Assertion::date($request->get('dateTo'), 'Y-m-d');
+            $dateTo = $request->get('dateTo');
+            $queryBuilder->filterByDateTo($dateTo);
+        }
         Assertion::isArray($commandNames);
         $queryBuilder->filterByCommandNames($commandNames)
             ->filterByResourceContents(is_array($contentsFilter) ? $contentsFilter : []);
