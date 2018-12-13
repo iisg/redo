@@ -40,4 +40,6 @@ interface ResourceRepository {
 
     /** @param ResourceEntity|ResourceEntity[]|ResourceKind|ResourceKind[] $resources */
     public function markDisplayStrategiesDirty($resources): void;
+
+    public function hasChildren(ResourceEntity $resource): bool;
 }

@@ -34,9 +34,9 @@ export class ResourceKindsList {
   bind() {
     if (this.metadata) {
       this.sortButtonToggledSubscription = this.eventAggregator.subscribe('sortButtonToggled',
-      (parameters: any) => {
-        this.activate(parameters);
-      });
+        (parameters: any) => {
+          this.activate(parameters);
+        });
       this.activate(this.router.currentInstruction.queryParams);
     }
   }

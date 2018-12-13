@@ -7,6 +7,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Repeka\Domain\Workflow\TransitionPossibilityCheckResult;
@@ -15,6 +16,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
@@ -29,10 +33,14 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
     private $normalizer;
     /** @var User|\PHPUnit_Framework_MockObject_MockObject */
     private $user;
+    private $resourceWithChild;
+    /** @var ResourceRepository|\PHPUnit_Framework_MockObject_MockObject */
+    private $resourceRepository;
 
     protected function setUp() {
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->resource = $this->createResourceMock(1, $this->createResourceKindMock(1, 'books', [], $this->workflow));
+        $this->resourceWithChild = $this->createResourceMock(2);
         // TokenStorage
         $this->user = $this->createMock(User::class);
         $token = $this->createMock(TokenInterface::class);
@@ -41,8 +49,9 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $tokenStorage->method('getToken')->willReturn($token);
         // TransitionPossibilityChecker
         $this->checker = $this->createMock(TransitionPossibilityChecker::class);
+        $this->resourceRepository = $this->createMock(ResourceRepository::class);
         // test subject
-        $this->normalizer = new ResourceNormalizer($this->checker);
+        $this->normalizer = new ResourceNormalizer($this->checker, $this->resourceRepository);
         $this->normalizer->setTokenStorage($tokenStorage);
         $normalizerService = $this->createMock(NormalizerInterface::class);
         $normalizerService->method('normalize')->willReturnArgument(0);
@@ -125,6 +134,20 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $this->assertCount(2, $contents);
         $this->assertEquals([['value' => 'ala']], $contents[SystemMetadata::RESOURCE_LABEL]);
         $this->assertEquals([['value' => 10]], $contents[SystemMetadata::PARENT]);
+    }
+
+    public function testHasChildrenReturnTrueIfHasChildren() {
+        $this->resourceRepository->method('hasChildren')->willReturn(true);
+        $normalized = $this->normalizer->normalize($this->resourceWithChild);
+        $hasChildren = $normalized['hasChildren'];
+        $this->assertTrue($hasChildren);
+    }
+
+    public function testHasChildrenReturnFalseIfNoChildren() {
+        $this->resourceRepository->method('hasChildren')->willReturn(false);
+        $normalized = $this->normalizer->normalize($this->resource);
+        $hasChildren = $normalized['hasChildren'];
+        $this->assertFalse($hasChildren);
     }
 
     private function transition(string $id): ResourceWorkflowTransition {

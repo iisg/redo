@@ -162,6 +162,7 @@ export class ResourcesList {
               : (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter;
           }
         }
+        this.eventAggregator.publish('resourceChildrenAmount', this.totalNumberOfResources);
       }
     }).catch(error => {
       this.displayProgressBar = false;
