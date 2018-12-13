@@ -12,30 +12,32 @@
             disabled.bind="nonEmptyMetadataGroups.length < 2 || displayRequiredOnly">
             <template repeat.for="metadata of metadataGroup.metadataList"
                 if.bind="contentsValidator[metadata.id]">
-                <span>
-                    ${metadata | metadataLabel}
-                    <span class="metadata-constraints-icons">
-                        <icon if.bind="metadataDeterminesAssignee(metadata) & signal:'metadata-validators-changed'"
-                            name="user-2"
-                            class="text-info"
-                            bootstrap-tooltip="${'This metadata determines who can perform these actions:'
+                <template if.bind="displayMetadataValueInput(metadata)">
+                    <span>
+                        ${metadata | metadataLabel}
+                        <span class="metadata-constraints-icons">
+                            <icon if.bind="metadataDeterminesAssignee(metadata) & signal:'metadata-validators-changed'"
+                                name="user-2"
+                                class="text-info"
+                                bootstrap-tooltip="${'This metadata determines who can perform these actions:'
                                                 | resourceClassTranslation:resource.resourceClass}&#10;${resource.transitionAssigneeMetadata[metadata.id]
                                                 | fromWorkflowTransitionsArrayToString}"></icon>
-                        <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
-                            translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
-                        <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
-                            name="closed-lock"
-                            bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
+                            <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
+                                translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
+                            <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
+                                name="closed-lock"
+                                bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
+                        </span>
                     </span>
-                </span>
-                <resource-metadata-values-form metadata.bind="metadata"
-                    resource.bind="resource"
-                    validation-controller.bind="validationController"
-                    disabled.bind="editingDisabledForMetadata(metadata) & signal:'metadata-validators-changed'"
-                    values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id] & signal:'metadata-validators-changed'"
-                    required.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
-                    skip-validation.bind="skipValidation"
-                    tree-query-url.bind="treeQueryUrl"></resource-metadata-values-form>
+                    <resource-metadata-values-form metadata.bind="metadata"
+                        resource.bind="resource"
+                        validation-controller.bind="validationController"
+                        disabled.bind="editingDisabledForMetadata(metadata) & signal:'metadata-validators-changed'"
+                        values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id] & signal:'metadata-validators-changed'"
+                        required.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
+                        skip-validation.bind="skipValidation"
+                        tree-query-url.bind="treeQueryUrl"></resource-metadata-values-form>
+                </template>
             </template>
         </collapsible-metadata-group>
         <hr if.bind="!$last">

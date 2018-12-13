@@ -29,36 +29,39 @@ $search-bar-width: 500px;
   }
 }
 
-
 .stats-home {
   margin-top: 20px;
   width: 100%;
 
-  .sec-title {
-    color: $light-blue;
-    border-bottom: 3px solid $light-blue;
-    margin-bottom: 15px;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
+  .row {
     margin: 0;
 
-    li {
-      width: 100%;
-      display: flex;
+    .sec-title {
+      color: $light-blue;
+      border-bottom: 3px solid $light-blue;
+      margin-bottom: 15px;
+    }
 
-      .item-label {
-        width: 60%;
-        margin-bottom: 10px;
-      }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
 
-      .item-content {
-        margin-left: auto;
+      li {
+        width: 100%;
+        display: flex;
 
-        a {
-          color: $default-text-color;
+        .item-label {
+          width: 60%;
+          margin-bottom: 10px;
+        }
+
+        .item-content {
+          margin-left: auto;
+
+          a {
+            color: $default-text-color;
+          }
         }
       }
     }
