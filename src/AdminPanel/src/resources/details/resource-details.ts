@@ -31,6 +31,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   hasChildren: boolean;
   isFiltering: boolean;
   private urlListener: Subscription;
+  private childrenListener: Subscription;
 
   resultsPerPage: number;
   currentPageNumber: number;
@@ -59,10 +60,15 @@ export class ResourceDetails implements RoutableComponentActivate {
           && this.hasRole.toView('ADMIN', this.resource.resourceClass);
       }
     );
+    this.childrenListener = this.eventAggregator.subscribe('resourceChildrenAmount', (resourceChildrenAmount: number) => {
+        this.updateResourceListTab(resourceChildrenAmount);
+      }
+    );
   }
 
   unbind() {
     this.urlListener.dispose();
+    this.childrenListener.dispose();
     this.resourceDetailsTabs.clear();
   }
 
@@ -78,22 +84,26 @@ export class ResourceDetails implements RoutableComponentActivate {
     if (!hasOperatorRole) {
       this.router.navigateToRoute('not-allowed');
     } else {
+      this.hasChildren = this.resource.hasChildren;
       this.contextResourceClass.setCurrent(this.resource.resourceClass);
-      const resources = await this.resourceRepository.getListQuery()
-        .filterByParentId(this.resource.id)
-        .get();
-      this.numberOfChildren = resources.total;
-      this.hasChildren = !!this.numberOfChildren;
       const title = this.resourceLabel.toView(this.resource);
       routeConfiguration.navModel.setTitle(title);
       this.activateTabs(parameters.tab);
     }
   }
 
+  updateResourceListTab(numberOfChildren: number) {
+    this.numberOfChildren = numberOfChildren;
+    this.resourceDetailsTabs.updateLabels();
+  }
+
   activateTabs(activeTabId) {
     this.resourceDetailsTabs.clear();
     if (this.allowAddChildResource || this.hasChildren) {
-      this.resourceDetailsTabs.addTab('children', () => `${this.i18n.tr('Child resources')} (${this.numberOfChildren})`);
+      this.resourceDetailsTabs.addTab(
+        'children',
+        () => `${this.i18n.tr('Child resources')}` + (this.numberOfChildren === undefined ? '' : ` (${this.numberOfChildren})`)
+      );
     }
     this.resourceDetailsTabs
       .addTab('details', this.i18n.tr('Metadata'))
@@ -109,8 +119,7 @@ export class ResourceDetails implements RoutableComponentActivate {
         if (this.hasRole.toView('ADMIN', 'users')) {
           this.resourceDetailsTabs.addTab('user-roles', this.i18n.tr('Roles'));
         }
-      }
-      else {
+      } else {
         this.resourceDetailsTabs.addTab('users-in-group', this.i18n.tr('Users'));
       }
     }

@@ -261,6 +261,12 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertContains($this->getAdminUser()->getUserData(), $users);
     }
 
+    public function testCheckingIfChildrenExist() {
+        $ebooks = $this->findResourceByContents(['nazwaKategorii' => 'E-booki']);
+        $this->assertTrue($this->resourceRepository->hasChildren($ebooks));
+        $this->assertFalse($this->resourceRepository->hasChildren($this->getPhpBookResource()));
+    }
+
     private function getEbooksCategoryResourceId(): int {
         $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
         $categoryNameMetadataId = $connection->query("SELECT id FROM metadata WHERE label->'EN' = '\"Category name\"';")->fetch()['id'];

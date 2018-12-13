@@ -266,4 +266,16 @@ SQL
                 ->execute();
         }
     }
+
+    public function hasChildren(ResourceEntity $resource): bool {
+        $em = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::scalar('exists', 'boolean');
+        $parentId = SystemMetadata::PARENT;
+        $query = $em->createNativeQuery(
+            "SELECT exists (SELECT 1 FROM resource r WHERE r.contents->'$parentId'@>:parentId)",
+            $resultSetMapping
+        );
+        $query->setParameter('parentId', '[{"value":' . $resource->getId() . '}]');
+        return $query->getSingleScalarResult();
+    }
 }
