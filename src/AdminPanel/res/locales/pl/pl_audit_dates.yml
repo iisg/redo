@@ -1,0 +1,13 @@
+date-range-config:
+  today: dzisiaj
+  yesterday: wczoraj
+  current_week: aktualny tydzień
+  last_7_days: ostatnie 7 dni
+  previous_week: poprzedni tydzień
+  current_month: aktualny miesiąc
+  last_30_days: ostatnie 30 dni
+  previous_month: poprzedni miesiąc
+  previous_two_months: poprzednie dwa miesiące
+  current_year: aktualny rok
+  last_365_days: ostatnie 365 dni
+  previous_year: poprzedni rok

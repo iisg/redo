@@ -23,6 +23,16 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     return this;
   }
 
+  public filterByDateFrom(dateFrom: string): this {
+    this.params.dateFrom = dateFrom;
+    return this;
+  }
+
+  public filterByDateTo(dateTo: string): this {
+    this.params.dateTo = dateTo;
+    return this;
+  }
+
   public addCustomColumns(templates: string[]): this {
     this.params.customColumns = templates;
     return this;

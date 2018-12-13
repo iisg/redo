@@ -13,6 +13,7 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
     private function build() {
         $this->froms[] = 'audit ae';
         $this->filterByCommandNames();
+        $this->filterByDate();
         $this->filterByContents($this->query->getResourceContentsFilter(), "ae.data->'before'->'resource'->'contents'");
         $this->filterByContents($this->query->getResourceContentsFilter(), "ae.data->'after'->'resource'->'contents'");
         $this->filterByResourceId();
@@ -24,6 +25,17 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
         if ($this->query->getCommandNames()) {
             $this->wheres[] = 'ae.commandName IN(:commandNames)';
             $this->params['commandNames'] = $this->query->getCommandNames();
+        }
+    }
+
+    private function filterByDate() {
+        if ($this->query->getDateFrom()) {
+            $this->wheres[] = 'ae.created_at >= :dateFrom';
+            $this->params['dateFrom'] = $this->query->getDateFrom();
+        }
+        if ($this->query->getDateTo()) {
+            $this->wheres[] = 'ae.created_at < :dateTo';
+            $this->params['dateTo'] = $this->query->getDateTo();
         }
     }
 
