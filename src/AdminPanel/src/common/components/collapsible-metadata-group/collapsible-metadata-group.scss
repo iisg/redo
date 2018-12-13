@@ -23,7 +23,7 @@ $expand-animation-opacity-and-visibility-transitions-settings:
     $collapse-and-expand-animations-timing-function;
 
 $metadata-group-elements-default-line-height: $default-line-height * 1em;
-$line-height-to-be-rendered-as-zero: 0.001px;
+$line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to be converted to 0 after all and breaks the animation.
 
 .simple-form.contains-collapsible-metadata-group {
     collapsible-metadata-group {

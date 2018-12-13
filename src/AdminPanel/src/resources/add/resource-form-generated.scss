@@ -6,7 +6,7 @@ $resource-metadata-value-input-with-buttons-minimum-width: 200px;
 
 resource-form-generated {
   &, & > collapsible-metadata-group {
-    & > span, .input-container > *, .new-metadata-value-button-container, .drag-handle, .buttons {
+    & > span, & > resource-metadata-values-form, .input-container > *, .new-metadata-value-button-container, .drag-handle, .buttons {
       @include form-element();
     }
     .metadata-constraints-icons > * {
@@ -23,6 +23,7 @@ resource-form-generated {
         td > div {
           display: flex;
           min-width: $resource-metadata-value-input-with-buttons-minimum-width; // To also keep correct right margin when the form is narrow.
+          align-items: center;
           metadata-value-input > compose > * {
             flex: 1;
             dropdown-select, resource-picker {
