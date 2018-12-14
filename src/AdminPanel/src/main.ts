@@ -63,6 +63,7 @@ export function configure(aurelia: Aurelia) {
       .globalResources([
         'common/custom-attributes/local-storage-value-custom-attribute',
         'common/authorization/has-role-value-converter',
+        'common/bootstrap/bootstrap-tooltip',
         'common/components/redo-footer/redo-footer.html',
         'common/components/redo-logo/redo-logo.html',
         'common/components/icon/icon',
