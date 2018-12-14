@@ -71,6 +71,10 @@ export class DatetimePicker implements ComponentAttached {
     let dateData = new FlexibleDateContent();
     dateData.mode = this.dateMode;
     dateData.rangeMode = this.rangeDateMode;
+    dateData.from = (this.value && this.flexible) ? this.value['from'] : this.value;
+    dateData.to = (this.value && this.flexible) ? this.value['to'] : this.value;
+    $(this.datepicker).data('DateTimePicker').maxDate(dateData.to);
+    $(this.linkedDatepicker).data("DateTimePicker").minDate(dateData.from);
     $(this.datepicker).on('dp.change', e => {
       if (!this.isLoaded) {
         return;
