@@ -1,14 +1,11 @@
 mappings:
   53:
-    -
-      key: '008'
+    - key: '008'
       transforms:
-        -
-          name: 'substring'
+        - name: 'substring'
           start: 35
           length: 3
-        -
-          name: 'displayStrategy'
+        - name: 'displayStrategy'
           separator: ','
           template: >-
             {% if data['41'] is not defined %}
@@ -16,76 +13,52 @@ mappings:
                 {{code}}{{separator}}
               {% endfor %}
             {% endif %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
-        -
-          name: 'regexReplace'
+        - name: 'trim'
+        - name: 'removeEmpty'
+        - name: 'regexReplace'
           regex: 'ger'
           replacement: 'deu'
-        -
-          name: 'contentSearch'
+        - name: 'contentSearch'
           metadata: 140
-    -
-      key: '041'
+    - key: '041'
       transforms:
-        -
-          name: 'arrayColumn'
+        - name: 'arrayColumn'
           keys: 'a'
-        -
-          name: 'flatten'
-        -
-          name: 'arrayUnique'
-        -
-          name: 'regexReplace'
+        - name: 'flatten'
+        - name: 'arrayUnique'
+        - name: 'regexReplace'
           regex: 'ger'
           replacement: 'deu'
-        -
-          name: 'contentSearch'
+        - name: 'contentSearch'
           metadata: 140
   156:
     key: '035'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'a'
-      -
-        name: 'flatten'
+      - name: 'flatten'
   125:
-    -
-      key: '080'
+    - key: '080'
       transforms:
-        -
-          name: 'arrayColumn'
+        - name: 'arrayColumn'
           keys: '9'
-        -
-          name: 'flatten'
-    -
-      key: '080'
+        - name: 'flatten'
+    - key: '080'
       transforms:
-        -
-          name: 'arrayColumn'
+        - name: 'arrayColumn'
           keys: 'a'
-        -
-          name: 'flatten'
-    -
-      key: '080'
+        - name: 'flatten'
+    - key: '080'
       transforms:
-        -
-          name: 'arrayColumn'
+        - name: 'arrayColumn'
           keys: 'j,k'
-        -
-          name: 'join'
+        - name: 'join'
           glue: ' '
-        -
-          name: 'flatten'
+        - name: 'flatten'
   4:
-    -
-      key: '100'
+    - key: '100'
       transforms:
-        -
-          name: 'displayStrategy'
+        - name: 'displayStrategy'
           splitter: '###'
           template: >-
             {% for value in values %}
@@ -98,31 +71,23 @@ mappings:
                 {% endif%}
               {% endif %}
             {% endfor %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
+        - name: 'trim'
+        - name: 'removeEmpty'
       submetadata:
-#        147:
+        #        147:
         179:
           transforms:
-            -
-              name: 'arrayColumn'
+            - name: 'arrayColumn'
               keys: '9'
-            -
-              name: 'flatten'
+            - name: 'flatten'
         180:
           transforms:
-            -
-              name: 'arrayColumn'
+            - name: 'arrayColumn'
               keys: '0'
-            -
-              name: 'flatten'
-    -
-      key: '700'
+            - name: 'flatten'
+    - key: '700'
       transforms:
-        -
-          name: 'displayStrategy'
+        - name: 'displayStrategy'
           splitter: '###'
           template: >-
             {% for value in values %}
@@ -135,32 +100,24 @@ mappings:
                 {% endif%}
               {% endif %}
             {% endfor %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
+        - name: 'trim'
+        - name: 'removeEmpty'
       submetadata:
-#        147:
+        #        147:
         179:
           transforms:
-            -
-              name: 'arrayColumn'
+            - name: 'arrayColumn'
               keys: '9'
-            -
-              name: 'flatten'
+            - name: 'flatten'
         180:
           transforms:
-            -
-              name: 'arrayColumn'
+            - name: 'arrayColumn'
               keys: '0'
-            -
-              name: 'flatten'
+            - name: 'flatten'
   63:
-    -
-      key: '100'
+    - key: '100'
       transforms:
-        -
-          name: 'displayStrategy'
+        - name: 'displayStrategy'
           separator: '###'
           template: >-
             {% if data['100'] is defined %}
@@ -185,15 +142,12 @@ mappings:
                 {% endif %}
               {% endfor %}
             {% endif %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
+        - name: 'trim'
+        - name: 'removeEmpty'
       submetadata:
         176:
           transforms:
-            -
-              name: 'displayStrategy'
+            - name: 'displayStrategy'
               separator: '###'
               template: >-
                 {% set values = values[0] %}
@@ -204,54 +158,39 @@ mappings:
                     {% endif %}
                   {% endfor %}
                 {% endif %}
-            -
-              name: 'trim'
-            -
-              name: 'removeEmpty'
-    #    186: #daty biograficzne
+            - name: 'trim'
+            - name: 'removeEmpty'
+        #    186: #daty biograficzne
         207: #koha id
           transforms:
-            -
-              name: 'arrayColumn'
+            - name: 'arrayColumn'
               keys: '9'
-            -
-              name: 'flatten'
+            - name: 'flatten'
         208: #nukat id
           transforms:
-            -
-              name: 'arrayColumn'
+            - name: 'arrayColumn'
               keys: '0'
-            -
-              name: 'flatten'
-    -
-      key: '110'
+            - name: 'flatten'
+    - key: '110'
       transforms:
-        -
-          name: 'arrayColumn'
+        - name: 'arrayColumn'
           keys: 'a,b,c,d,n'
-        -
-          name: 'join'
+        - name: 'join'
           glue: ' '
-        -
-          name: 'flatten'
-        -
-          name: 'removeEmpty'
-        -
-          name: 'displayStrategy'
+        - name: 'flatten'
+        - name: 'removeEmpty'
+        - name: 'displayStrategy'
           separator: '###'
           template: >-
             {% for value in values %}
               [Instytucja sprawcza]: {{value}} {{separator}}
             {% endfor %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
+        - name: 'trim'
+        - name: 'removeEmpty'
       submetadata:
         176:
           transforms:
-            -
-              name: 'displayStrategy'
+            - name: 'displayStrategy'
               separator: '###'
               template: >-
                 {% set values = values[0] %}
@@ -260,15 +199,11 @@ mappings:
                     {{ person }}{{ separator }}
                   {% endfor %}
                 {% endif %}
-            -
-              name: 'trim'
-            -
-              name: 'removeEmpty'
-    -
-      key: '700'
+            - name: 'trim'
+            - name: 'removeEmpty'
+    - key: '700'
       transforms:
-        -
-          name: 'displayStrategy'
+        - name: 'displayStrategy'
           separator: '###'
           template: >-
             {% if data['700'] is defined %}
@@ -293,15 +228,12 @@ mappings:
                 {% endif %}
               {% endfor %}
             {% endif %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
+        - name: 'trim'
+        - name: 'removeEmpty'
       submetadata:
         176:
           transforms:
-            -
-              name: 'displayStrategy'
+            - name: 'displayStrategy'
               separator: '###'
               template: >-
                 {% set values = values[0] %}
@@ -312,30 +244,23 @@ mappings:
                     {% endif %}
                   {% endfor %}
                 {% endif %}
-            -
-              name: 'trim'
-            -
-              name: 'removeEmpty'
-    #    186: #daty biograficzne
+            - name: 'trim'
+            - name: 'removeEmpty'
+        #    186: #daty biograficzne
         207: #koha id
           transforms:
-            -
-              name: 'arrayColumn'
+            - name: 'arrayColumn'
               keys: '9'
-            -
-              name: 'flatten'
+            - name: 'flatten'
         208: #nukat id
           transforms:
-            -
-              name: 'arrayColumn'
+            - name: 'arrayColumn'
               keys: '0'
-            -
-              name: 'flatten'
+            - name: 'flatten'
   3:
     key: '245'
     transforms:
-      -
-        name: 'displayStrategy'
+      - name: 'displayStrategy'
         separator: '###'
         template: "
           {% if data['245'] is defined %}
@@ -349,24 +274,19 @@ mappings:
               {{separator}}
             {% endfor %}
           {% endif %}"
-      -
-        name: 'trim'
-      -
-        name: 'regexReplace'
+      - name: 'trim'
+      - name: 'regexReplace'
         regex: ' +'
         replacement: ' '
-      -
-        name: 'trim'
+      - name: 'trim'
         characters: " /"
-      -
-        name: 'removeEmpty'
+      - name: 'removeEmpty'
   61:
     key: '246'
     transforms:
-      -
-         name: 'displayStrategy'
-         separator: '###'
-         template: "
+      - name: 'displayStrategy'
+        separator: '###'
+        template: "
           {% if data['246'] is defined %}
             {% for element in data['246'] %}
               {% if element['ind2'] is defined and element['ind2'] in [' ', '0', '1'] %}
@@ -381,110 +301,83 @@ mappings:
               {% endif %}
             {% endfor %}
           {% endif %}"
-      -
-        name: 'trim'
-      -
-        name: 'regexReplace'
+      - name: 'trim'
+      - name: 'regexReplace'
         regex: ' +'
         replacement: ' '
-      -
-        name: 'removeEmpty'
+      - name: 'removeEmpty'
   64:
     key: '260'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'a'
-      -
-        name: 'flatten'
-      -
-        name: trim
+      - name: 'flatten'
+      - name: trim
         characters: " ;:"
   65:
     key: '260'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'b'
-      -
-        name: 'flatten'
-      -
-        name: trim
+      - name: 'flatten'
+      - name: trim
         characters: " ,"
-#  5:
-#    key: '260'
-#    transforms:
-#      -
-#        name: 'arrayColumn'
-#        keys: 'c'
-#      -
-#        name: 'flatten'
-#      -
-#        name: trim
-#        characters: " ."
+  #  5:
+  #    key: '260'
+  #    transforms:
+  #      -
+  #        name: 'arrayColumn'
+  #        keys: 'c'
+  #      -
+  #        name: 'flatten'
+  #      -
+  #        name: trim
+  #        characters: " ."
   172:
     key: '260'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'e'
-      -
-        name: 'flatten'
-      -
-        name: trim
+      - name: 'flatten'
+      - name: trim
         characters: " (:"
   66:
     key: '260'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'f'
-      -
-        name: 'flatten'
-      -
-        name: trim
+      - name: 'flatten'
+      - name: trim
         characters: " )."
   129:
     key: '300'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'a'
-      -
-        name: flatten
-      -
-        name: trim
+      - name: flatten
+      - name: trim
         characters: " :;."
   99:
-    -
-      key: '300'
+    - key: '300'
       transforms:
-        -
-          name: 'arrayColumn'
+        - name: 'arrayColumn'
           keys: 'e'
-        -
-          name: 'flatten'
-        -
-          name: 'trim'
+        - name: 'flatten'
+        - name: 'trim'
           characters: ' +'
-        -
-          name: 'displayStrategy'
+        - name: 'displayStrategy'
           separator: '###'
           template: >-
             {% for value in values %}
               Dodatek do tytułu: {{value}} {{separator}}
             {% endfor %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
-    -
-      key: '111'
+        - name: 'trim'
+        - name: 'removeEmpty'
+    - key: '111'
       transforms:
-        -
-           name: 'displayStrategy'
-           separator: '###'
-           template: >-
+        - name: 'displayStrategy'
+          separator: '###'
+          template: >-
             {% if data['111'] is defined %}
               {% for key, element in data['111'] %}
                 Konferencja:
@@ -496,10 +389,8 @@ mappings:
               {{separator}}
               {% endfor %}
             {% endif %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
+        - name: 'trim'
+        - name: 'removeEmpty'
 
   70:
     key: '561'
@@ -514,29 +405,20 @@ mappings:
               {% endif %}
             {% endfor %}
           {% endif %}
-      -
-        name: 'trim'
+      - name: 'trim'
         characters: ' .'
-      -
-        name: 'removeEmpty'
-      -
-        name: 'split'
+      - name: 'removeEmpty'
+      - name: 'split'
         separator: ';'
-      -
-        name: 'flatten'
-      -
-        name: 'trim'
+      - name: 'flatten'
+      - name: 'trim'
   86:
-    -
-      key: '500'
+    - key: '500'
       transforms:
-        -
-          name: 'arrayColumn'
+        - name: 'arrayColumn'
           keys: 'a'
-        -
-          name: 'flatten'
-        -
-          name: 'displayStrategy'
+        - name: 'flatten'
+        - name: 'displayStrategy'
           template: >-
             {% if values is not empty %}
               {% set isGotyck = 'false' %}
@@ -560,20 +442,14 @@ mappings:
               {% endif %}
               {{isGotyck}}
             {% endif %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
-    -
-      key: '592'
+        - name: 'trim'
+        - name: 'removeEmpty'
+    - key: '592'
       transforms:
-        -
-          name: 'arrayColumn'
+        - name: 'arrayColumn'
           keys: 'a'
-        -
-          name: 'flatten'
-        -
-          name: 'displayStrategy'
+        - name: 'flatten'
+        - name: 'displayStrategy'
           template: >-
             {% if data['500'] is not defined and values is not empty %}
               {% set isGotyck = 'false' %}
@@ -584,26 +460,19 @@ mappings:
               {% endfor %}
               {{isGotyck}}
             {% endif %}
-        -
-          name: 'trim'
-        -
-          name: 'removeEmpty'
+        - name: 'trim'
+        - name: 'removeEmpty'
   181:
     key: '596'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'a,b'
-      -
-        name: 'join'
+      - name: 'join'
         characters: ''
-      -
-        name: 'flatten'
-      -
-        name: 'trim'
+      - name: 'flatten'
+      - name: 'trim'
         characters: ' .'
-      -
-        name: 'displayStrategy'
+      - name: 'displayStrategy'
         separator: '###'
         template: >-
           {% for value in values %}{{value}}
@@ -614,72 +483,52 @@ mappings:
             {% endif %}
             {{ separator }}
           {% endfor%}
-      -
-        name: 'trim'
-      -
-        name: 'regexReplace'
+      - name: 'trim'
+      - name: 'regexReplace'
         regex: ' +'
         replacement: ' '
-      -
-        name: 'regexReplace'
+      - name: 'regexReplace'
         regex: "\n"
-      -
-        name: 'removeEmpty'
+      - name: 'removeEmpty'
   135:
     key: '830'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'a,f,k,l,s,v,x,n,p'
-      -
-        name: 'join'
+      - name: 'join'
         glue: ' '
-      -
-        name: 'flatten'
-      -
-        name: 'removeEmpty'
+      - name: 'flatten'
+      - name: 'removeEmpty'
   72:
     key: '920'
     transforms:
-    -
-      name: 'arrayColumn'
-      keys: 'a,q,z'
-    -
-      name: 'join'
-      glue: ' '
-    -
-      name: 'flatten'
-    -
-      name: 'removeEmpty'
+      - name: 'arrayColumn'
+        keys: 'a,q,z'
+      - name: 'join'
+        glue: ' '
+      - name: 'flatten'
+      - name: 'removeEmpty'
   79:
     key: '952'
     transforms:
-    -
-      name: 'arrayColumn'
-      keys: 'o'
-    -
-      name: 'flatten'
+      - name: 'arrayColumn'
+        keys: 'o'
+      - name: 'flatten'
   76:
     key: '952'
     transforms:
-    -
-      name: 'arrayColumn'
-      keys: 'p'
-    -
-      name: 'flatten'
+      - name: 'arrayColumn'
+        keys: 'p'
+      - name: 'flatten'
   117:
     key: '952'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'p'
-      -
-        name: 'flatten'
+      - name: 'flatten'
   173:
     key: '999'
     transforms:
-      -
-        name: 'arrayColumn'
+      - name: 'arrayColumn'
         keys: 'c'
-      -
-        name: 'flatten'
+      - name: 'flatten'

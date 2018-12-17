@@ -27,7 +27,7 @@ export class ImportDialog {
               private xmlImportClient: XmlImportClient,
               private globalExceptionInterceptor: GlobalExceptionInterceptor) {
     const storedConfiguration = LocalStorage.get(this.MOST_RECENT_CONFIG_KEY);
-    if (storedConfiguration !== undefined) {
+    if (storedConfiguration) {
       if (!('fileName' in storedConfiguration) || !('fileContents' in storedConfiguration) || Object.keys(storedConfiguration).length > 2) {
         LocalStorage.remove(this.MOST_RECENT_CONFIG_KEY);
       } else {
@@ -68,8 +68,7 @@ export class ImportDialog {
           fileContents: reader.result,
         };
         LocalStorage.set(this.MOST_RECENT_CONFIG_KEY, this.importConfig);
-      }
-      else {
+      } else {
         this.configFileError = true;
       }
     };
