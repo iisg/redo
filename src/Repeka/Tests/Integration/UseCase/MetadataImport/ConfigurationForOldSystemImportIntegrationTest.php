@@ -39,7 +39,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             ['PL' => 'testResourceKind', 'GB' => 'testResourceKind'],
             $metadata
         );
-        $this->configPath = __DIR__ . '/dumps/import-config.yml';
+        $this->configPath = __DIR__ . '/dumps/marc-import-config.yml';
     }
 
     public function testImportFromMarcXml1() {
