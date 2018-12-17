@@ -2,10 +2,10 @@ import {bindable, ComponentAttached} from "aurelia-templating";
 import {DateMode, FlexibleDateContent, inputDateConfig} from "../flexible-date-input/flexible-date-config";
 import {computedFrom} from "aurelia-binding";
 import "eonasdan-bootstrap-datetimepicker";
-import {twoWay} from "../../../../common/components/binding-mode";
-import {isString} from "../../../../common/utils/object-utils";
+import {twoWay} from "common/components/binding-mode";
+import {isString} from "common/utils/object-utils";
 import * as moment from "moment";
-import {ChangeEvent} from "../../../../common/change-event";
+import {ChangeEvent} from "common/change-event";
 import {autoinject} from "aurelia-dependency-injection";
 
 @autoinject
@@ -73,8 +73,12 @@ export class DatetimePicker implements ComponentAttached {
     dateData.rangeMode = this.rangeDateMode;
     dateData.from = (this.value && this.flexible) ? this.value['from'] : this.value;
     dateData.to = (this.value && this.flexible) ? this.value['to'] : this.value;
-    $(this.datepicker).data('DateTimePicker').maxDate(dateData.to);
-    $(this.linkedDatepicker).data("DateTimePicker").minDate(dateData.from);
+    if (dateData.from) {
+      $(this.linkedDatepicker).data("DateTimePicker").minDate(moment(dateData.from).format(inputDateConfig[this.rangeDateMode].format));
+    }
+    if (dateData.to) {
+      $(this.datepicker).data('DateTimePicker').maxDate(moment(dateData.to).format(inputDateConfig[this.rangeDateMode].format));
+    }
     $(this.datepicker).on('dp.change', e => {
       if (!this.isLoaded) {
         return;
