@@ -7,12 +7,13 @@ import {MetadataValue} from './../../../metadata-value';
 import {ResourceTreeQuery} from './../../../resource-tree-query';
 import {ResourceRepository} from "resources/resource-repository";
 import {Resource} from "resources/resource";
-import {ResourceLabelValueConverter} from './../../../details/resource-label-value-converter';
+import {ResourceLabelValueConverter} from "./../../../details/resource-label-value-converter";
 import {deepCopy, isObject} from "../../../../common/utils/object-utils";
-import {LoadSubtreeRequest, TreeItem} from '../../../../common/components/tree-view/tree-view';
+import {LoadSubtreeRequest, TreeItem} from "common/components/tree-view/tree-view";
 import {remove, debounce} from "lodash";
-import {Alert} from "../../../../common/dialog/alert";
+import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
+import {ChangeEvent} from "common/change-event";
 
 @autoinject
 export class ResourcePicker implements ComponentAttached, ComponentDetached {
@@ -28,6 +29,8 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
   private selectedKeysSubscription: Disposable;
   private resourceListSubscription: Disposable;
 
+  private dirty: any;
+
   private readonly TOP_LEVEL_RESULTS = 8;
   private readonly DEPTH = 1;
   private readonly SIBLINGS = 4;
@@ -36,7 +39,8 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
               private resourceLabelValueConverter: ResourceLabelValueConverter,
               private bindingEngine: BindingEngine,
               private alert: Alert,
-              private i18n: I18N) {
+              private i18n: I18N,
+              private element: Element) {
   }
 
   attached() {
@@ -85,17 +89,17 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
     const resultsPerPage = rootId && this.SIBLINGS || this.TOP_LEVEL_RESULTS;
     const query = this.createQuery(rootId, request.pagination.page, request.term, contentsFilter, resultsPerPage);
     return query.get(this.treeQueryUrl)
-    .then(tree => {
-      const items = this.treeify(tree.tree, rootId).sort((a, b) => +a.key - +b.key);
-      const rootItem: TreeItem = {
-        children: items,
-        title: 'root',
-        key: request.rootKey || 'root',
-        childrenPagination: {more: false, page: request.pagination.page}
-      };
-      this.processItem(rootItem, tree.matching, isSearching, this.SIBLINGS, resultsPerPage, isSearching ? Infinity : this.DEPTH);
-      return rootItem;
-    }).catch(() => {
+      .then(tree => {
+        const items = this.treeify(tree.tree, rootId).sort((a, b) => +a.key - +b.key);
+        const rootItem: TreeItem = {
+          children: items,
+          title: 'root',
+          key: request.rootKey || 'root',
+          childrenPagination: {more: false, page: request.pagination.page}
+        };
+        this.processItem(rootItem, tree.matching, isSearching, this.SIBLINGS, resultsPerPage, isSearching ? Infinity : this.DEPTH);
+        return rootItem;
+      }).catch(() => {
         const title = this.i18n.tr("Invalid request");
         const text = this.i18n.tr("The searched phrase is incorrect");
         this.alert.show({type: 'error'}, title, text);
@@ -169,6 +173,9 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
         addedKeys.filter(key => !alreadyAddedKeys.includes(key)).forEach(key => this.resourceIds.push(new MetadataValue(+key)));
       }
       remove(this.resourceIds, (value => change.removed.includes('' + value.value)));
+      if ((!!change.addedCount || !!change.removed) && !this.dirty) {
+        this.dirty = this.element.dispatchEvent(ChangeEvent.newInstance());
+      }
     });
   }
 
