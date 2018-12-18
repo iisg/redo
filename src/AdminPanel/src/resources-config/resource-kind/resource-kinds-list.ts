@@ -76,12 +76,10 @@ export class ResourceKindsList {
       });
   }
 
-  addNewResourceKind(resourceKind: ResourceKind): Promise<ResourceKind> {
+  addNewResourceKind(resourceKind: ResourceKind): Promise<any> {
     resourceKind.resourceClass = this.resourceClass;
     return this.resourceKindRepository.post(resourceKind).then(resourceKind => {
-      this.addFormOpened = false;
-      this.resourceKinds.push(resourceKind);
-      return resourceKind;
+      this.router.navigateToRoute('resource-kinds/details', {id: resourceKind.id});
     });
   }
 
