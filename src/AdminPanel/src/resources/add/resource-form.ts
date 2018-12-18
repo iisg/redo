@@ -61,10 +61,12 @@ export class ResourceForm extends ChangeLossPreventerForm {
               validationControllerFactory: ValidationControllerFactory) {
     super();
     this.validationController = validationControllerFactory.createForCurrentScope();
-    this.validationController.addRenderer(new BootstrapValidationRenderer());
   }
 
   attached() {
+    if (!this.skipValidation) {
+      this.validationController.addRenderer(new BootstrapValidationRenderer());
+    }
     if (this.currentlyEditedResource
       && this.currentlyEditedResource.kind
       && this.currentlyEditedResource.kind.workflow
