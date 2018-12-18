@@ -21,7 +21,7 @@
                 {% for childResource in resources({parentId: resource.id}) %}
                     <label class="label-with-checkbox">
                         <input type="checkbox"
-                            name="metadataFilters[parent][]"
+                            name="metadataFilters[-1][]"
                             value="{{ childResource.id }}"
                             {% if childResource.id in parentFilters %}checked{% endif %}>
                         <span>{{ childResource|mLabel }}</span>
