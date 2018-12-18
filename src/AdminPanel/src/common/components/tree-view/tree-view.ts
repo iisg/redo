@@ -71,6 +71,9 @@ export class TreeView implements ComponentAttached {
           data.node.setActive(false);
         }
       },
+      dblclick(event: JQueryEventObject, data: Fancytree.EventData): boolean {
+        return false;
+      }
     };
   }
 
@@ -103,7 +106,11 @@ export class TreeView implements ComponentAttached {
       });
   }
 
-  private onNodeSelect(node: Fancytree.FancytreeNode) {
+  private onNodeSelect(node: Fancytree.FancytreeNode & TreeItem) {
+    if (node.checkbox === false) {
+      node.toggleExpanded();
+      return;
+    }
     if (node.isSelected()) {
       if (!this.selectedKeys.includes(node.key)) {
         this.selectedKeys.push(node.key);
