@@ -8,10 +8,10 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {convertToObject, flatten, inArray} from "common/utils/array-utils";
 import {deepCopy} from "common/utils/object-utils";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
-import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
-import {numberKeysByValue} from "../../common/utils/object-utils";
-import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
+import {ChangeLossPreventer} from "common/change-loss-preventer/change-loss-preventer";
+import {ChangeLossPreventerForm} from "common/form/change-loss-preventer-form";
+import {numberKeysByValue} from "common/utils/object-utils";
+import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 import {RequirementState, WorkflowPlace, WorkflowTransition} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
@@ -20,8 +20,8 @@ import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-imp
 import {ImportDialog} from "./xml-import/import-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
 import {CurrentUserIsReproductorValueConverter} from "../list/current-user-is-reproductor";
-import {DisabilityReason} from "../../common/components/buttons/toggle-button";
-import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
+import {DisabilityReason} from "common/components/buttons/toggle-button";
+import {HasRoleValueConverter} from "common/authorization/has-role-value-converter";
 
 @autoinject
 export class ResourceForm extends ChangeLossPreventerForm {
@@ -175,6 +175,16 @@ export class ResourceForm extends ChangeLossPreventerForm {
     }
   }
 
+  private allRequiredMetadataFilled(resource: Resource): boolean {
+    const missedMetadata = [];
+    this.requiredMetadataIds.forEach(metadataId => {
+      if (!resource.contents[metadataId].length) {
+        missedMetadata.push(metadataId);
+      }
+    });
+    return !missedMetadata.length;
+  }
+
   validateAndSubmit() {
     const transitionId = this.transition && this.transition.id;
     this.submitting = true;
@@ -187,7 +197,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
         .then(() => this.editing || (this.resource = new Resource)).finally(() => this.submitting = false);
     } else {
       this.validationController.validate().then(result => {
-        if (result.valid) {
+        if (result.valid && this.allRequiredMetadataFilled(this.resource)) {
           this.changeLossPreventer.disable();
           return this.submit({savedResource: this.resource, transitionId})
             .then(() => this.editing || (this.resource = new Resource));
