@@ -9,7 +9,7 @@
         show.bind="shown">
         <div class="metadata-row">
             <resource-picker if.bind="skipValidation || metadata.constraints.resourceKind.length"
-                resource-ids.bind="resource.contents[metadata.id]"
+                resource-ids.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id] & signal:'metadata-validators-changed'"
                 resource-kind-ids.bind="skipValidation ? [] : metadata.constraints.resourceKind"
                 contents-filter.bind="skipValidation ? undefined : metadata.constraints.relatedResourceMetadataFilter"
                 resource-class.bind="!skipValidation && metadata.id == -1 ? resource.resourceClass : undefined"
