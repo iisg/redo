@@ -1,7 +1,6 @@
 <template class="${yamlValid ? '' : 'has-error'}">
     <require from="resources/controls/input/autosize"></require>
 
-    <span>${'Resource contents' | t}</span>
     <textarea value.bind="yamlValue"
         class="form-control"
         placeholder="Title: Foo&#10;34: bar"

@@ -7,7 +7,7 @@ $page-number-margin-size: $default-gap-size / 4;
     justify-content: center;
     white-space: nowrap;
     flex-wrap: wrap;
-    &, a, icon, .ellipsis, .current-page-number {
+    &, a, .ellipsis, .current-page-number {
         padding-left: $page-number-margin-size;
         padding-right: $page-number-margin-size;
     }
@@ -15,9 +15,6 @@ $page-number-margin-size: $default-gap-size / 4;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        span {
-            cursor: default;
-        }
     }
     .different-direction {
         direction: rtl;

@@ -112,31 +112,16 @@ top-bar {
     display: flex;
     background-color: $second-row-background-color;
     flex-wrap: wrap;
-    & > top-bar-search {
-      form {
-        display: flex;
-        flex-wrap: wrap;
-        & > * {
-          display: flex;
-          align-items: center;
-          &:not(input) {
-            padding: $default-padding-or-margin-of-elements;
-          }
-        }
-        & > span {
-          font-size: $subtitle-font-size;
-        }
-        & > button {
-          cursor: pointer;
-          background: none;
-          border: none;
-        }
-        & > input {
-          height: initial;
-          margin: $default-padding-or-margin-of-elements;
-          padding-top: 0;
-          padding-bottom: 0;
-        }
+    & > top-bar-search form {
+      padding-top: $default-padding-or-margin-of-elements / 2;
+      padding-bottom: $default-padding-or-margin-of-elements / 2;
+      & > :not(.search-bar-with-button), .search-bar-with-button > :not(input) {
+        padding: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements
+          $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
+      }
+      .search-bar-with-button > input {
+        margin: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements
+          $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
       }
     }
     & > div {

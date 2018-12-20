@@ -1,19 +1,47 @@
+@import "../../../styles";
+
 $input-box-width: 200px;
 $metadata-chooser-maximum-width: 60%;
 
 top-bar-search {
   max-width: 100%;
-  metadata-chooser {
-    max-width: $metadata-chooser-maximum-width;
-    .select2-container  {
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    & > span {
+      font-size: $subtitle-font-size;
+    }
+    & > span, metadata-chooser, .search-bar-with-button, .search-bar-with-button > :not(input) {
+      display: flex;
+    }
+    & > span, .search-bar-with-button > :not(input) {
+      align-items: center;
+    }
+    metadata-chooser {
       min-width: $input-box-width;
     }
-  }
-  .input-box-matching-select2-style {
-    padding: 0 8px;
-    line-height: 28px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    width: $input-box-width;
+    .search-bar-with-button  {
+      max-width: 100%;
+      input {
+        min-width: 0;
+        width: $input-box-width;
+        height: initial;
+        padding-top: 0;
+        padding-bottom: 0;
+        &.input-box-matching-select2-style {
+          padding: 0 8px;
+          line-height: 28px;
+          border: 1px solid #aaa;
+          border-radius: 4px;
+        }
+      }
+      button {
+        cursor: pointer;
+        border: none;
+        &:not(:hover) {
+          background: none;
+        }
+      }
+    }
   }
 }

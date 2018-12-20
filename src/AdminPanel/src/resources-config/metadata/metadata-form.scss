@@ -2,11 +2,11 @@
 
 metadata-form {
     & > form > .simple-form {
-        dropdown-select {
-            width: 100%;
-        }
         & > :not(.simple-form):not(metadata-constraint-editor), resource-kind-constraint-editor > * {
             @include form-element();
+        }
+        dropdown-select {
+            width: 100%;
         }
     }
 }

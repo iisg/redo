@@ -11,17 +11,16 @@ $admin-content-left-border-width: $default-gap-size / 4;
 $simple-form-text-input-box-minimum-width: 100px;
 $simple-form-number-input-box-minimum-width: 75px;
 
+$list-group-item-background-color: white;
+$well-background-color: #f5f5f5;
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: $default-text-color;
+}
+
 .repeka-admin-panel {
-
-  body {
-    font-family: 'Open Sans', sans-serif;
-    color: $default-text-color;
-    overflow: hidden; // Without it, this used to happen for a narrower window: https://i.imgur.com/N5YyPm9.png.
-  }
-
-  [aurelia-app] {
-    overflow: hidden;
-  }
+  overflow: hidden;
 
   sidebar.collapsed {
     .with-overflow-scrollbar-on-the-left > * > * > * {
@@ -197,7 +196,7 @@ $simple-form-number-input-box-minimum-width: 75px;
 
   table {
     width: 100%;
-    &:not(.transparent) {
+    &:not(.transparent):not(.table-condensed) {
       thead th, tfoot td {
         position: sticky;
         font-weight: normal;
@@ -265,6 +264,14 @@ $simple-form-number-input-box-minimum-width: 75px;
     &.transparent {
       background: none;
     }
+    &.table-condensed { // Appears in the datepicker.
+      td.active, td.active:hover, td span.active {
+        background-color: $blue;
+      }
+      td.today:before {
+        border-bottom-color: $blue;
+      }
+    }
     td.with-throbber {
       width: 1em;
     }
@@ -305,6 +312,14 @@ $simple-form-number-input-box-minimum-width: 75px;
       display: block;
       padding: $default-gap-size / 2;
       @extend .page-title;
+    }
+    resource-kind-form {
+      .list-group-item {
+        background-color: $well-background-color;
+      }
+      .well {
+        background-color: $list-group-item-background-color;
+      }
     }
   }
 

@@ -1,5 +1,7 @@
 @import "../../../common/styles";
 
+$edit-button-z-index: 1;
+
 aup-tab-content {
   flex: 1;
   overflow: hidden;
@@ -26,6 +28,7 @@ aup-tab-content {
             }
           }
           & > :last-child:not(:first-child) {
+            z-index: $edit-button-z-index; // To prevent collapsible-metadata-group button from being displayed on top of this one.
             order: -1;
             position: sticky;
             top: 0;
