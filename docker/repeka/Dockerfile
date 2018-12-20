@@ -19,7 +19,6 @@ RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - 
      postgresql-client-10 \
      supervisor \
      cron \
-     libpng-dev \
   && update-ca-certificates \
   && docker-php-ext-install \
      pdo_pgsql \
@@ -29,10 +28,19 @@ RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - 
      bcmath \
      zip \
      soap \
-     gd \
   && apt-get autoremove \
   && rm -r /var/lib/apt/lists/* \
   && apt-get clean
+
+RUN apt-get update && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+    && docker-php-ext-install -j$(nproc) iconv \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && apt-get autoremove \
+    && rm -r /var/lib/apt/lists/*
 
 # @exclude
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
