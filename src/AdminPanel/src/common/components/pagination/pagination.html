@@ -7,51 +7,61 @@
             <a click.delegate="currentPageNumber = 1">${pageIdentifier(1, elementsPerPage, totalNumberOfElements)}</a>
             <icon name="squares"></icon>
         </div>
-        <div if.bind="currentPageNumber - 2 - numberOfAdditionalPageNumbersBeforeCurrentPageNumber - 1 == 1">
-            <a click.delegate="currentPageNumber = 2">${pageIdentifier(2, elementsPerPage, totalNumberOfElements)}</a>
-            <icon name="squares"></icon>
-        </div>
-        <div else
-            if.bind="currentPageNumber - 2 - numberOfAdditionalPageNumbersBeforeCurrentPageNumber - 1 > 1">
-            <span class="ellipsis">…</span>
-            <icon name="squares"></icon>
-        </div>
         <div class="with-ellipsis different-direction">
-            <span repeat.for="pageNumber of additionalPageNumbersBeforeCurrentPageNumber">
+            &lrm;
+            <template if.bind="currentPageNumber - 2 - numberOfAdditionalPageNumbersBeforeCurrentPageNumber - 1 == 1">
+                <a click.delegate="currentPageNumber = 2">${pageIdentifier(2, elementsPerPage, totalNumberOfElements)}</a>
+                <icon name="squares"></icon>
+            </template>
+            <template if.bind="currentPageNumber - 2 - numberOfAdditionalPageNumbersBeforeCurrentPageNumber - 1 > 1">
+                <span class="ellipsis">…</span>
+                <icon name="squares"></icon>
+            </template>
+            <template repeat.for="pageNumber of additionalPageNumbersBeforeCurrentPageNumber">
                 <a click.delegate="currentPageNumber = pageNumber">${pageIdentifier(pageNumber, elementsPerPage, totalNumberOfElements)}</a>
-                <icon name="squares"></icon>&lrm;</span>
+                <icon name="squares"></icon>
+            </template>
+            <template if.bind="currentPageNumber > 2">
+                <a click.delegate="currentPageNumber = currentPageNumber - 1">${pageIdentifier(currentPageNumber - 1,
+                    elementsPerPage, totalNumberOfElements)}</a>
+                <icon name="squares"></icon>
+            </template>
+            &lrm;
         </div>
-        <div if.bind="currentPageNumber > 2">
-            <a click.delegate="currentPageNumber = currentPageNumber - 1">${pageIdentifier(currentPageNumber - 1, elementsPerPage, totalNumberOfElements)}</a>
-            <icon name="squares"></icon>
-        </div>
+        <template if.bind="currentPageNumber != 1">&nbsp;</template> <!-- Not margins, but `&nbsp;` characters and automatically added text
+                                                                        nodes are used to avoid fighting them - we just use them
+                                                                        instead. -->
         <div>
             <span class="current-page-number">${pageIdentifier(currentPageNumber, elementsPerPage, totalNumberOfElements)}</span>
             <icon if.bind="currentPageNumber < numberOfPages"
                 name="squares"></icon>
         </div>
-        <div if.bind="currentPageNumber < numberOfPages - 1">
-            <a click.delegate="currentPageNumber = currentPageNumber + 1">${
-                pageIdentifier(currentPageNumber + 1, elementsPerPage, totalNumberOfElements)}</a>
-            <icon name="squares"></icon>
-        </div>
+        <template if.bind="numberOfPages - currentPageNumber > 1">&nbsp;</template>
         <div class="with-ellipsis">
-            <span repeat.for="pageNumber of additionalPageNumbersAfterCurrentPageNumber"><a click.delegate="currentPageNumber
-                = pageNumber">${pageIdentifier(pageNumber, elementsPerPage, totalNumberOfElements)}</a>
+            <template if.bind="currentPageNumber < numberOfPages - 1">
+                <a click.delegate="currentPageNumber = currentPageNumber + 1">${
+                    pageIdentifier(currentPageNumber + 1, elementsPerPage, totalNumberOfElements)}</a>
                 <icon name="squares"></icon>
-            </span>
+            </template>
+            <template repeat.for="pageNumber of additionalPageNumbersAfterCurrentPageNumber">
+                <a click.delegate="currentPageNumber = pageNumber">${pageIdentifier(pageNumber,
+                    elementsPerPage, totalNumberOfElements)}</a>
+                <icon name="squares"></icon>
+            </template>
+            <template if.bind="numberOfPages - numberOfAdditionalPageNumbersAfterCurrentPageNumber - 1 - currentPageNumber - 1 == 1">
+                <a click.delegate="currentPageNumber = numberOfPages - 1">${pageIdentifier(numberOfPages - 1,
+                    elementsPerPage, totalNumberOfElements)}</a>
+                <icon name="squares"></icon>
+            </template>
+            <template if.bind="numberOfPages - numberOfAdditionalPageNumbersAfterCurrentPageNumber - 1 - currentPageNumber - 1 > 1">
+                <span class="ellipsis">…</span>
+                <icon name="squares"></icon>
+            </template>
         </div>
-        <div if.bind="numberOfPages - numberOfAdditionalPageNumbersAfterCurrentPageNumber - 1 - currentPageNumber - 1 == 1">
-            <a click.delegate="currentPageNumber = numberOfPages - 1">${pageIdentifier(numberOfPages - 1, elementsPerPage, totalNumberOfElements)}</a>
-            <icon name="squares"></icon>
-        </div>
-        <div else
-            if.bind="numberOfPages - numberOfAdditionalPageNumbersAfterCurrentPageNumber - 1 - currentPageNumber - 1 > 1">
-            <span class="ellipsis">…</span>
-            <icon name="squares"></icon>
-        </div>
+        <template if.bind="numberOfPages > 1">&nbsp;</template>
         <div if.bind="numberOfPages && currentPageNumber < numberOfPages">
-            <a click.delegate="currentPageNumber = numberOfPages">${pageIdentifier(numberOfPages, elementsPerPage, totalNumberOfElements)}</a>
+            <a click.delegate="currentPageNumber = numberOfPages">${pageIdentifier(numberOfPages, elementsPerPage,
+                totalNumberOfElements)}</a>
         </div>
     </div>
 

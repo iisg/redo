@@ -1,5 +1,5 @@
 <template data-size.bind="size">
-    <svg viewBox="0 0 1 1"
+    <svg view-box.bind="viewBox ? viewBox : '0 0 1 1'"
         style.bind="rotation ? 'transform: rotate(' + rotation + 'deg)' : ''">
         <use xlink:href="${path}#${name}"></use>
     </svg>

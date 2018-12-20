@@ -3,5 +3,16 @@
 resource-kind-metadata-form {
     & > :not(.simple-form):not(metadata-constraint-editor), .simple-form > *, resource-kind-constraint-editor > * {
         @include form-element();
+        flex-wrap: wrap;
+        & > restore-from-original-button {
+            margin-top: $default-gap-size / 2;
+        }
+    }
+    dropdown-select {
+        width: 100%;
+    }
+    label {
+        display: flex;
+        width: 100%;
     }
 }

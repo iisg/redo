@@ -55,15 +55,11 @@ $maximum-width: 960px;
 }
 
 #nprogress {
-  .bar {
-    background: $orange !important;
-    height: 4px !important;
+  div.bar {
+    background: $orange;
+    height: $default-gap-size / 4;
   }
-  .peg {
-    box-shadow: 0 0 10px $orange, 0 0 5px $orange !important;
-  }
-  .spinner-icon {
-    border-top-color: $orange !important;
-    border-left-color: $orange !important;
+  div.peg {
+    box-shadow: 0 0 10px $orange, 0 0 5px $orange;
   }
 }

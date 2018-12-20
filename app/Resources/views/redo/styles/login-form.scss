@@ -2,27 +2,45 @@ $current-theme-color: $orange;
 $background-color: $light-grey;
 $information-link-elements-color: $grey;
 
-$login-box-padding: 30px;
-$icon-width: 2em;
-$input-margin: 15px;
-$username-input-right-margin: $icon-width;
-$logo-width: 10em;
-$login-container-max-width: 600px;
-$center-administration-label: 455px;
-$text-font-size: 23.8px;
 $text-font-family: "Open Sans", sans-serif;
+$close-error-box-button-font-size: 20px;
+$login-box-padding: 2 * $default-gap-size;
+$logo-height: 140px;
+$icon-height: 2em;
+$username-input-right-margin: calc(#{$icon-height} + #{$default-gap-size / 2});
+$text-font-size: 24px;
+$icons-drop-shadow-spread-radius: 5px;
 
 .main-container {
   background-color: $background-color;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
+  font-family: $text-font-family;
 
   .login-container {
     background-color: $background-color;
     margin-right: auto;
     margin-left: auto;
-    width: $login-container-max-width;
+
+    .login-error-element {
+      display: flex;
+      flex-direction: row-reverse;
+      margin-bottom: $default-gap-size;
+      border-radius: 0;
+      &, & > * {
+        padding: $default-gap-size / 2;
+      }
+      strong {
+        flex: 1;
+      }
+      .close {
+        align-self: flex-start;
+        top: initial;
+        right: initial;
+        font-size: $close-error-box-button-font-size;
+      }
+    }
 
     .login-box {
       padding: $login-box-padding;
@@ -30,86 +48,108 @@ $text-font-family: "Open Sans", sans-serif;
       flex-wrap: wrap;
       background-color: #4c4c4c;
       .logo-box {
-        margin: auto;
-        text-align: center;
-        .icon svg {
-          margin: auto;
-          height: $logo-width;
-          fill: $current-theme-color;
+        margin-left: auto;
+        margin-right: auto;
+        padding: $default-gap-size;
+        .logo {
+          &:hover, &:focus {
+            filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $current-theme-color);
+          }
+          &:focus {
+            outline: unset; // `unset` is used to keep it in Internet Explorer.
+          }
+          .icon {
+            height: $logo-height;
+            color: $current-theme-color;
+          }
         }
       }
 
       .form-box {
         flex: 1;
-        padding: 15px;
-        .login-error-element {
-          border-radius: 0;
+        &, .administration-label {
+          padding: $default-gap-size / 2;
+        }
+        & > :not(.administration-label) {
+          padding: $default-gap-size / 4;
+          .icon {
+            margin: $default-gap-size / 4;
+          }
         }
         .administration-label {
-          color: $current-theme-color;
+          margin-top: 0;
+          margin-bottom: 0;
+          text-align: center;
+          font-size: $text-font-size;
           font-weight: bold;
+          color: $current-theme-color;
         }
-        .input-elements {
-          .username-input {
-            margin-right: $username-input-right-margin;
+        .username-input {
+          margin-right: $username-input-right-margin;
+        }
+        .input-box {
+          display: flex;
+          align-items: center;
+          .icon {
+            height: $icon-height;
+            color: $current-theme-color;
           }
-          .form-group {
-            display: flex;
-            align-items: center;
-            .form-control {
-              margin-right: $input-margin;
-              border-radius: 0;
-              flex: 1;
-              margin-left: $input-margin;
-              &:focus {
-                box-shadow: inset 0 1px 1px $current-theme-color, 0 0 8px $current-theme-color;
-                border-color: $current-theme-color;
-              }
+          .form-control {
+            border-radius: 0;
+            flex: 1;
+            min-width: 0;
+            margin: $default-gap-size / 4 $default-gap-size / 4 + $default-gap-size / 2;
+            &:focus {
+              box-shadow: inset 0 1px 1px $current-theme-color, 0 0 8px $current-theme-color;
+              border-color: $current-theme-color;
             }
-            .icon svg {
-              display: block;
-              height: $icon-width;
-              fill: $current-theme-color;
-            }
-            .submit-button {
-              padding: 0;
-              border: none;
-              background: none;
-              outline: none;
-              &:hover {
-                filter: drop-shadow(0px 0px 5px $current-theme-color);
-              }
+            &:focus {
+              outline: unset;
             }
           }
-        }
-      }
-    }
 
-    .login-text {
-      @media (max-width: $center-administration-label) {
-        text-align: center;
+          .submit-button {
+            padding: 0;
+            border: none;
+            background: none;
+            .icon {
+              display: block;
+            }
+            &:hover, &:focus {
+              filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $current-theme-color);
+            }
+          }
+        }
       }
-      font-size: $text-font-size;
-      font-family: $text-font-family;
     }
 
     .information-links-box {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-evenly;
+      padding: $default-gap-size / 2;
+      & > * {
+        &, & > :not(.icon) {
+          padding: $default-gap-size / 4;
+        }
+        & > .icon {
+          margin: $default-gap-size / 4;
+        }
+      }
       .information-link-element {
+        cursor: pointer;
         display: inherit;
         align-items: center;
-        margin-top: 15px;
         text-decoration: none;
-        &:hover {
-          filter: drop-shadow(0px 0px 5px $information-link-elements-color);
+        &:hover, &:focus {
+          filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $information-link-elements-color);
         }
-        .icon svg {
-          height: $icon-width;
-          display: block;
-          padding-right: 15px;
-          fill: $information-link-elements-color;
+        &:focus {
+          outline: unset;
+        }
+        .icon {
+          height: $icon-height;
+          color: $information-link-elements-color;
         }
         .information-link-text {
           flex: 1;

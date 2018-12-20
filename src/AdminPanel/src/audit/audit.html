@@ -18,6 +18,7 @@
             <span>${'Date' | t}</span>
             <date-range-picker date-from.bind="filters.dateFrom"
                 date-to.bind="filters.dateTo"></date-range-picker>
+            <span>${'Resource contents' | t}</span>
             <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
         </div>
         <div class="form-buttons">
@@ -40,7 +41,8 @@
         current-page-number.bind="filters.currentPageNumber"
         hide-elements-per-page-dropdown="true"></pagination>
     <loading-bar if.bind="displayProgressBar"></loading-bar>
-    <div class="table-container"> <!-- For some reason this wrapper is required by Chrome to make horizontal scrolling possible. -->
+    <div class="table-container">
+        <!-- For some reason this wrapper is required by Chrome to make horizontal scrolling possible. -->
         <table if.bind="entries.length > 0">
             <thead>
                 <tr>

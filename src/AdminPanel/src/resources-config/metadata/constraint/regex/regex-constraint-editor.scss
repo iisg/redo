@@ -1,7 +1,8 @@
 @import "../../../../common/styles";
 
-min-max-value-constraint-editor {
-    & > * {
-        @include form-element();
+regex-constraint-editor {
+    restore-from-original-button {
+        display: block;
+        margin-top: $default-gap-size / 2;
     }
 }

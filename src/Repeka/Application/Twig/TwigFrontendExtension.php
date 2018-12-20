@@ -131,10 +131,10 @@ class TwigFrontendExtension extends \Twig_Extension {
         return in_array($filterValue, $this->getCurrentFacetFilters($aggregationName, $currentFilters));
     }
 
-    public function icon(string $name, string $size = '1'): \Twig_Markup {
+    public function icon(string $name, string $size = '1', string $viewBox = '0 0 1 1'): \Twig_Markup {
         $iconTemplate = <<<ICON
 <span class="icon" size="$size">
-    <svg viewBox="0 0 1 1">
+    <svg viewBox="$viewBox">
         <use xlink:href="/files/icons.svg#$name"></use>
     </svg>
 </span>

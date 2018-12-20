@@ -18,9 +18,6 @@ audit {
       & > * {
         @include form-element();
       }
-      resource-contents-yaml-filter {
-        display: contents;
-      }
     }
   }
   pagination {

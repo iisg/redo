@@ -29,13 +29,5 @@
                 padding-right: $default-gap-size;
             }
         }
-        excel {
-            thead th {
-                top: - $default-gap-size / 2;
-            }
-            tfoot td {
-                bottom: - $default-gap-size / 2;
-            }
-        }
     }
 }

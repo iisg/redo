@@ -11,8 +11,10 @@
         </span>
     </div>
     <div>
-        <input type="checkbox"
-            checked.bind="metadata.shownInBrief">
+        <label>
+            <input type="checkbox"
+                checked.bind="metadata.shownInBrief">
+        </label>
         <restore-from-original-button if.bind="originalMetadata && originalMetadata.shownInBrief != metadata.shownInBrief"
             click.delegate="metadata.shownInBrief = originalMetadata.shownInBrief"></restore-from-original-button>
     </div>
@@ -24,8 +26,10 @@
             </span>
         </div>
         <div>
-            <input type="checkbox"
-                checked.bind="metadata.copyToChildResource">
+            <label>
+                <input type="checkbox"
+                    checked.bind="metadata.copyToChildResource">
+            </label>
             <restore-from-original-button if.bind="originalMetadata && originalMetadata.copyToChildResource != metadata.copyToChildResource"
                 click.delegate="metadata.copyToChildResource = originalMetadata.copyToChildResource"></restore-from-original-button>
         </div>
@@ -33,7 +37,7 @@
     <div class="key">
         ${'Group' | t}
     </div>
-    <div>
+    <div class="metadata-group-select-container">
         <metadata-group-select containerless
             group-id.bind="metadata.groupId"></metadata-group-select>
         <restore-from-original-button if.bind="originalMetadata && originalMetadata.groupId != metadata.groupId"
