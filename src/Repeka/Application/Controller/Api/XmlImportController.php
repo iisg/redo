@@ -40,7 +40,7 @@ class XmlImportController extends ApiController {
         if ($resourceXml === null) {
             throw new EntityNotFoundException('xmlResource', $id);
         }
-        $extractedValues = $this->handleCommand(new MarcxmlExtractQuery($resourceXml));
+        $extractedValues = $this->handleCommand(new MarcxmlExtractQuery($resourceXml, $id));
         $importConfig = $this->importConfigFactory->fromString($data['config'], $resourceKind);
         $importedValues = $this->handleCommand(new MetadataImportQuery($extractedValues, $importConfig));
         return $this->createJsonResponse($importedValues);
