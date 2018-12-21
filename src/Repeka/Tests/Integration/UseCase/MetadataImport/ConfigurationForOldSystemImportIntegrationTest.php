@@ -44,29 +44,10 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
 
     public function testImportFromMarcXml1() {
         $filePath = __DIR__ . '/dumps/bib-103684.marcxml';
+        $importedId = 100000228666;
         $expectedImportedValues = [
             53 => [['value' => 502]],
             156 => [['value' => 'zz2004984987']],
-            125 => [
-                ['value' => '4901'],
-                ['value' => '4463'],
-                ['value' => '1907'],
-                ['value' => '4423'],
-                ['value' => '482'],
-                ['value' => '1004'],
-                ['value' => '94(438) A/Z'],
-                ['value' => '75'],
-                ['value' => '069'],
-                ['value' => ' 728.8'],
-                ['value' => '(084.1)'],
-                ['value' => '(438.111)'],
-                ['value' => 'Historia Polski - historia poszczególnych miast i regionów.'],
-                ['value' => 'Malarstwo.'],
-                ['value' => 'Muzeologia. Muzealnictwo. Muzea.'],
-                ['value' => 'Zamki. Pałace. Dwory szlacheckie.'],
-                ['value' => 'Przedstawienia obrazowe. Ilustracje. Albumy.'],
-                ['value' => 'Warszawa.'],
-            ],
             4 => [
                 [
                     'value' => 'Skimborowicz, Hipolit',
@@ -119,24 +100,24 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             117 => [['value' => '100000228666']],
             173 => [['value' => '103684']],
         ];
-        $this->configImportTest($filePath, $this->configPath, $expectedImportedValues);
+        $this->configImportTest($filePath, $this->configPath, $expectedImportedValues, $importedId);
     }
 
     /** @SuppressWarnings("PHPMD.ExcessiveMethodLength") */
     public function testImportFromMarcXml2() {
         $filePath = __DIR__ . '/dumps/bib-136095.marcxml';
+        $importedId = 100000305812;
         $expectedImportedValues = [
             53 => [['value' => 511]],
             156 => [['value' => 'xx004361056']],
-            125 => [['value' => '3549'], ['value' => '626/627'], ['value' => 'Inżynieria wodna. Budownictwo wodne. Hydrotechnika.']],
             63 => [
                 [
                     'value' => 'Franzius, Georg',
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '114802']],
-                        208 => [['value' => 'n 2006115366']],
+                        187 => [['value' => '114802']],
+                        188 => [['value' => 'n 2006115366']],
                     ],
                 ],
                 [
@@ -144,8 +125,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '114801']],
-                        208 => [['value' => 'n  00052595']],
+                        187 => [['value' => '114801']],
+                        188 => [['value' => 'n  00052595']],
                     ],
                 ],
                 [
@@ -153,8 +134,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '114768']],
-                        208 => [['value' => 'n 2009148736']],
+                        187 => [['value' => '114768']],
+                        188 => [['value' => 'n 2009148736']],
                     ],
                 ],
                 [
@@ -162,8 +143,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '116096']],
-                        208 => [['value' => 'n 2017034023']],
+                        187 => [['value' => '116096']],
+                        188 => [['value' => 'n 2017034023']],
                     ],
                 ],
                 [
@@ -171,8 +152,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '114490']],
-                        208 => [['value' => 'n 2006095632']],
+                        187 => [['value' => '114490']],
+                        188 => [['value' => 'n 2006095632']],
                     ],
                 ],
                 [
@@ -180,8 +161,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '120897']],
-                        208 => [['value' => 'n 2018128701']],
+                        187 => [['value' => '120897']],
+                        188 => [['value' => 'n 2018128701']],
                     ],
                 ],
                 [
@@ -189,8 +170,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '114861']],
-                        208 => [['value' => 'n 2012060437']],
+                        187 => [['value' => '114861']],
+                        188 => [['value' => 'n 2012060437']],
                     ],
                 ],
                 [
@@ -198,8 +179,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '110144']],
-                        208 => [['value' => 'n 2005134349']],
+                        187 => [['value' => '110144']],
+                        188 => [['value' => 'n 2005134349']],
                     ],
                 ],
                 [
@@ -207,8 +188,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '114488']],
-                        208 => [['value' => 'n 2006115367']],
+                        187 => [['value' => '114488']],
+                        188 => [['value' => 'n 2006115367']],
                     ],
                 ],
                 [
@@ -216,8 +197,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         //182 => [],
-                        207 => [['value' => '114767']],
-                        208 => [['value' => 'n 2006122145']],
+                        187 => [['value' => '114767']],
+                        188 => [['value' => 'n 2006122145']],
                     ],
                 ],
             ],
@@ -235,13 +216,13 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             117 => [['value' => '100000305812']],
             173 => [['value' => '136095']],
         ];
-        $this->configImportTest($filePath, $this->configPath, $expectedImportedValues);
+        $this->configImportTest($filePath, $this->configPath, $expectedImportedValues, $importedId);
     }
 
-    private function configImportTest($resourcePath, $configPath, array $expectedImportValues) {
+    private function configImportTest($resourcePath, $configPath, array $expectedImportValues, $importedId) {
         $config = $this->container->get(ImportConfigFactory::class)->fromFile($configPath, $this->testResourceKind);
         $resourceXml = file_get_contents($resourcePath);
-        $extractedValues = $this->handleCommandBypassingFirewall(new MarcxmlExtractQuery($resourceXml));
+        $extractedValues = $this->handleCommandBypassingFirewall(new MarcxmlExtractQuery($resourceXml, $importedId));
         $importedValues = $this->handleCommandBypassingFirewall(new MetadataImportQuery($extractedValues, $config))
             ->getAcceptedValues();
         $this->assertEquals($expectedImportValues, $importedValues->toArray());

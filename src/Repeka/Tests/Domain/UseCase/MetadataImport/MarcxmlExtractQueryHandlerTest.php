@@ -8,7 +8,8 @@ use Repeka\Domain\UseCase\MetadataImport\MarcxmlExtractQueryHandler;
 
 class MarcxmlExtractQueryHandlerTest extends PHPUnit_Framework_TestCase {
     public function testHandling() {
-        $query = new MarcxmlExtractQuery('<abc>ala</abc>');
+        $id = 10;
+        $query = new MarcxmlExtractQuery('<abc>ala</abc>', $id);
         $dataExtractor = $this->createMock(MarcxmlArrayDataExtractor::class);
         $handler = new MarcxmlExtractQueryHandler($dataExtractor);
         $dataExtractor->expects($this->once())
@@ -16,6 +17,6 @@ class MarcxmlExtractQueryHandlerTest extends PHPUnit_Framework_TestCase {
             ->with($query->getXml())
             ->willReturn([1 => 'ala']);
         $result = $handler->handle($query);
-        $this->assertEquals([1 => 'ala'], $result);
+        $this->assertEquals([1 => 'ala', 'importedId' => 10], $result);
     }
 }

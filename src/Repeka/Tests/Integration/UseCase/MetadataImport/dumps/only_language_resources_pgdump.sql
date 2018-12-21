@@ -497,8 +497,8 @@ INSERT INTO metadata VALUES (82, 'relationship', '{"PL": "Osoba przydzielająca 
 INSERT INTO metadata VALUES (84, 'relationship', '{"PL": "Osoba wykonująca obróbkę graficzną i wprowadzająca metadane "}', '[]', '[]', 'osoba_wprowadzajaca_metadane', NULL, 94, NULL, '{"resourceKind": [-1], "relatedResourceMetadataFilter": []}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (85, 'relationship', '{"PL": "Osoba sprawdzająca poprawność  rekordu "}', '[]', '[]', 'osoba_sprawdzajaca_poprawnosc_rekordu', NULL, 95, NULL, '{"resourceKind": [-1], "relatedResourceMetadataFilter": []}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (246, 'integer', '{"GB": "liczba palców prawej dłoni", "PL": "liczba palców prawej dłoni"}', '[]', '{"GB": "aa", "PL": "aa"}', 'liczba_palcow_prawej_dloni', NULL, -1, NULL, '{"maxCount": -1, "minMaxValue": {"max": 15, "min": 0}}', false, 'users', false, 'DEFAULT_GROUP');
-INSERT INTO metadata VALUES (207, 'text', '{"PL": "Koha ID "}', '[]', '[]', 'koha_id_coautor', NULL, 7, 63, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
-INSERT INTO metadata VALUES (208, 'text', '{"PL": "NUKAT ID"}', '[]', '[]', NULL, 178, -1, 63, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
+INSERT INTO metadata VALUES (187, 'text', '{"PL": "Koha ID "}', '[]', '[]', 'koha_id_coautor', NULL, 7, 63, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
+INSERT INTO metadata VALUES (188, 'text', '{"PL": "NUKAT ID"}', '[]', '[]', NULL, 178, -1, 63, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
 
 
 --

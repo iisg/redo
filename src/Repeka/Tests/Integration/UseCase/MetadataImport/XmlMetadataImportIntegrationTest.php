@@ -22,9 +22,10 @@ class XmlMetadataImportIntegrationTest extends IntegrationTestCase {
 
     public function testFlagExampleImport() {
         $rk = $this->resourceKindRepository->findOne(1);
+        $importedId = 100000231332;
         $config = $this->container->get(ImportConfigFactory::class)->fromFile(__DIR__ . '/dumps/100000231332.yml', $rk);
         $resourceXml = file_get_contents(__DIR__ . '/dumps/100000231332.marcxml');
-        $extractedValues = $this->handleCommandBypassingFirewall(new MarcxmlExtractQuery($resourceXml));
+        $extractedValues = $this->handleCommandBypassingFirewall(new MarcxmlExtractQuery($resourceXml, $importedId));
         $importedValues = $this->handleCommandBypassingFirewall(new MetadataImportQuery($extractedValues, $config))
             ->getAcceptedValues();
         $this->assertContains([['value' => 'Artyści obcy w służbie polskiej']], $importedValues);

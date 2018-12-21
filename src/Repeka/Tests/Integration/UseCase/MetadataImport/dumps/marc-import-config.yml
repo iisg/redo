@@ -8,7 +8,7 @@ mappings:
         - name: 'displayStrategy'
           separator: ','
           template: >-
-            {% if data['41'] is not defined %}
+            {% if data['041'] is not defined %}
               {% for code in values %}
                 {{code}}{{separator}}
               {% endfor %}
@@ -38,23 +38,17 @@ mappings:
         keys: 'a'
       - name: 'flatten'
   125:
-    - key: '080'
-      transforms:
-        - name: 'arrayColumn'
-          keys: '9'
-        - name: 'flatten'
-    - key: '080'
-      transforms:
-        - name: 'arrayColumn'
-          keys: 'a'
-        - name: 'flatten'
+    
     - key: '080'
       transforms:
         - name: 'arrayColumn'
           keys: 'j,k'
         - name: 'join'
-          glue: ' '
+          glue: ''
         - name: 'flatten'
+        - name: 'contentSearch'
+          metadata: 170
+        
   4:
     - key: '100'
       transforms:
@@ -161,12 +155,12 @@ mappings:
             - name: 'trim'
             - name: 'removeEmpty'
         #    186: #daty biograficzne
-        207: #koha id
+        187: #koha id
           transforms:
             - name: 'arrayColumn'
               keys: '9'
             - name: 'flatten'
-        208: #nukat id
+        188: #nukat id
           transforms:
             - name: 'arrayColumn'
               keys: '0'
@@ -247,12 +241,12 @@ mappings:
             - name: 'trim'
             - name: 'removeEmpty'
         #    186: #daty biograficzne
-        207: #koha id
+        187: #koha id
           transforms:
             - name: 'arrayColumn'
               keys: '9'
             - name: 'flatten'
-        208: #nukat id
+        188: #nukat id
           transforms:
             - name: 'arrayColumn'
               keys: '0'
@@ -398,13 +392,18 @@ mappings:
       - name: 'displayStrategy'
         separator: '###'
         template: >-
-          {% if data['952'] is defined and data['952'][0]['o'] is defined %}
-            {% for value in values %}
-              {% if value['a'] is defined and value['3'] == data['952'][0]['o'] %}
-                {{value['a'][0]}}{{separator}}
-              {% endif %}
+          {% if data['952'] is defined %}
+            {% for value in data['952'] %}
+              {% if value['p'] is defined and data['importedId'] is defined and data['importedId'] == value['p'][0] and value['o'] is defined %}
+              {% set compareValue = value['o'][0] %}
+            {% endif %}
             {% endfor %}
           {% endif %}
+          {% for value in values %}
+            {% if value['a'] is defined and value['3'] == compareValue %}
+              {{value['a'][0]}}{{separator}}
+            {% endif %}
+          {% endfor %}
       - name: 'trim'
         characters: ' .'
       - name: 'removeEmpty'
@@ -511,21 +510,42 @@ mappings:
   79:
     key: '952'
     transforms:
-      - name: 'arrayColumn'
-        keys: 'o'
-      - name: 'flatten'
+      - name: 'displayStrategy'
+        template: >-
+          {% if data['952'] is defined %}
+            {% for value in data['952'] %}
+              {% if value['p'] is defined and data['importedId'] is defined and data['importedId'] == value['p'][0] and value['o'] is defined %}
+              {{ value['o'][0]}}
+            {% endif %}
+            {% endfor %}
+          {% endif %}
+      - name: 'trim'
   76:
     key: '952'
     transforms:
-      - name: 'arrayColumn'
-        keys: 'p'
-      - name: 'flatten'
+      - name: 'displayStrategy'
+        template: >-
+          {% if data['952'] is defined %}
+            {% for value in data['952'] %}
+              {% if value['p'] is defined and data['importedId'] is defined and data['importedId'] == value['p'][0] %}
+                {{ data['importedId'] }}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+      - name: 'trim'
   117:
     key: '952'
     transforms:
-      - name: 'arrayColumn'
-        keys: 'p'
-      - name: 'flatten'
+      - name: 'displayStrategy'
+        template: >-
+          {% if data['952'] is defined %}
+            {% for value in data['952'] %}
+              {% if value['p'] is defined and data['importedId'] is defined and data['importedId'] == value['p'][0] %}
+                {{ data['importedId'] }}
+                {% endif %}
+            {% endfor %}
+          {% endif %}
+      - name: 'trim'
   173:
     key: '999'
     transforms:

@@ -12,6 +12,8 @@ class MarcxmlExtractQueryHandler {
     }
 
     public function handle(MarcxmlExtractQuery $query): array {
-        return $this->xmlArrayDataExtractor->import($query->getXml());
+        $marcxmlExtractedData = $this->xmlArrayDataExtractor->import($query->getXml());
+        $marcxmlExtractedData['importedId'] = $query->getId();
+        return $marcxmlExtractedData;
     }
 }
