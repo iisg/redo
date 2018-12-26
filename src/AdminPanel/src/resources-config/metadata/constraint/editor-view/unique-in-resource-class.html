@@ -1,0 +1,7 @@
+<template>
+    <require from="../unique-in-resource-class/unique-in-resource-class-editor"></require>
+
+    <unique-in-resource-class-editor unique.bind="metadata.constraints.uniqueInResourceClass"
+        original-unique.bind="originalMetadata.constraints.uniqueInResourceClass"
+        has-base.bind="!!originalMetadata"></unique-in-resource-class-editor>
+</template>

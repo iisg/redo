@@ -23,6 +23,7 @@ export class MetadataConstraints {
   @map(MinMaxConstraintMapper) minMaxValue?: MinMaxValue = new MinMaxValue();
   @map displayStrategy?: string;
   @map doublePrecision?: number;
+  @map uniqueInResourceClass?: boolean = false;
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
@@ -69,7 +70,8 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   maxCount: undefined,
   minMaxValue: {min: undefined, max: undefined},
   regex: '',
-  relatedResourceMetadataFilter: {}
+  relatedResourceMetadataFilter: {},
+  uniqueInResourceClass: false
 };
 
 export interface GroupMetadataList {

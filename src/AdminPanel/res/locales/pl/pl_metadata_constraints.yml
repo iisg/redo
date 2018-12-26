@@ -5,6 +5,7 @@
 "Value must be at most {{minMaxValue.max}}": "Wartość nie może być większa niż {{minMaxValue.max}}"
 "Value must be at least {{minMaxValue.min}}": "Wartość nie może być mniejsza niż {{minMaxValue.min}}"
 Tree must be closed after selecting: Po wybraniu wartości należy zamknąć drzewo
+Metadata with given value already exists: Metadana o podanej wartości już istnieje
 
 labels:
   maxCount: Maksymalna liczba wartości
@@ -14,3 +15,4 @@ labels:
   minMaxValue: Minimalna i maksymalna wartość
   displayStrategy: Szablon
   doublePrecision: Liczba miejsc po przecinku przy wyświetlaniu
+  uniqueInResourceClass: Unikatowość w klasie zasobów
