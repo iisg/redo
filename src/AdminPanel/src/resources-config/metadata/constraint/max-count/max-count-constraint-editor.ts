@@ -44,6 +44,5 @@ export class MaxCountConstraintEditor {
   @computedFrom('maxCount', 'originalMaxCount')
   get wasModified(): boolean {
     return this.maxCount != this.originalMaxCount && !(this.maxCount == this.UNLIMITED_COUNT && this.originalMaxCount == undefined);
-
   }
 }

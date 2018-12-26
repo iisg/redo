@@ -3,6 +3,7 @@ import {Resource} from "resources/resource";
 import {autoinject} from "aurelia-dependency-injection";
 import {FluentRuleCustomizer, ValidationRules} from "aurelia-validation";
 import {MetadataConstraintValidators} from "./metadata-constraint-validators";
+import {UniqueConstraintConfig} from "./constraints/unique-in-resource-class-validator";
 
 @autoinject
 export class SingleMetadataValueValidator {
@@ -16,7 +17,14 @@ export class SingleMetadataValueValidator {
       if (metadata.constraints.hasOwnProperty(constraintName)) {
         const validator = this.metadataConstraintValidators.singleValueValidators[constraintName];
         if (validator) {
-          const constraintArgument = metadata.constraints[constraintName];
+          const constraintArgument = constraintName != 'uniqueInResourceClass'
+            ? metadata.constraints[constraintName]
+            : new UniqueConstraintConfig(
+              resource.id,
+              metadata.resourceClass,
+              metadata.id,
+              metadata.constraints[constraintName]
+            );
           validator.addRule(rules, constraintArgument);
         }
       }

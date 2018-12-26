@@ -1,0 +1,7 @@
+@import "../../../../common/styles";
+
+unique-in-resource-class-editor {
+  & > * {
+    @include form-element();
+  }
+}
