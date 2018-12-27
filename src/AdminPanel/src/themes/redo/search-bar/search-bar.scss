@@ -3,66 +3,37 @@
 
 $radio-button-width-and-height: $default-gap-size;
 
-.search-bar {
+search-bar > form {
   display: inline-block;
   display: inline-flex;
   align-items: center;
 
   .search-box-with-options {
     display: inline-block;
-
-    .icon-with-input-box {
-      display: inline-block;
-      display: inline-flex;
+    input {
       width: 100%;
-      align-items: center;
+      padding: $default-gap-size / 4 $default-gap-size;
       border: 1px solid $orange;
       border-radius: 3 * $default-gap-size / 4;
-
-      .redo-logo-icon {
-        padding-left: $default-gap-size / 8;
-        padding-right: $default-gap-size / 8;
-      }
-
-      input {
-        margin: $default-gap-size / 4;
-      }
-
-      .redo-logo-icon {
-        margin-top: $default-gap-size / 4;
-        margin-bottom: $default-gap-size / 4;
-        border-right: 1px solid $orange;
-        color: $orange;
-      }
-
-      input {
-        width: 100%;
-        border: 0;
-        outline: 0;
-      }
+      outline: 0;
     }
-
     .metadata-subsets-chooser {
       display: none;
       align-items: center;
       margin-top: $default-gap-size / 4;
-
       .radio-buttons-group {
         label:last-child {
           margin-right: $default-gap-size / 2;
         }
       }
-
       a {
         margin-left: auto;
         padding-left: $default-gap-size / 4;
         text-align: right;
         color: inherit;
-
         icon, span {
           margin-left: $default-gap-size / 4;
         }
-
         icon {
           color: $orange;
         }
@@ -85,18 +56,14 @@ $radio-button-width-and-height: $default-gap-size;
 
   .radio-buttons-group {
     display: inline-block;
-
     label {
       cursor: pointer;
       display: inline-block;
-
       &:not(:last-child) {
         margin-right: $default-gap-size / 2;
       }
-
       input[type=radio] {
         display: none;
-
         & + ::before {
           display: inline-block;
           width: $radio-button-width-and-height;
@@ -107,7 +74,6 @@ $radio-button-width-and-height: $default-gap-size;
           border: 1px solid $orange;
           border-radius: 50%;
         }
-
         &:checked + ::before {
           background: $orange;
           background: radial-gradient($orange 40%, transparent 40%);
