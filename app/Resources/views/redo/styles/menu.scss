@@ -1,7 +1,6 @@
 $maximum-number-of-elements: 25;
 $background-color: $very-light-grey;
 $submenu-z-index: 1;
-$phone-screen-width: 420px;
 $menu-item-top-and-bottom-padding: $default-gap-size / 2;
 $icon-width-and-height: 1.5em;
 $icon-top-and-bottom-margin: $default-gap-size / 8;
@@ -126,7 +125,7 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
     }
   }
 
-  @media (max-width: $phone-screen-width) {
+  @media (max-width: $maximum-screen-width-for-mobile-layout) {
     & > div {
       &.contains-submenu {
         width: 100%;

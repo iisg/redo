@@ -1,24 +1,37 @@
-$logo-height: 72px;
+$logo-height: 64px;
 $title-font-size: 18px;
 $pk-logo-height: 48px;
 
 .title-bar {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   border-bottom: $default-gap-size / 4 solid $orange;
-  .logo-container, .pk-logo-container {
-    padding: $default-gap-size / 2 $default-gap-size;
+  &, & > * {
+    padding: $default-gap-size / 4 $default-gap-size / 2;
   }
-  .logo-container {
-    img {
-      height: $logo-height;
+  .logo-container img {
+    height: $logo-height;
+  }
+  .title-container {
+    display: inline-block; // For browsers with worst or none Flexbox support.
+    vertical-align: top; //
+    color: $grey;
+    span {
+      display: block;
+      font-size: $title-font-size;
     }
   }
   .pk-logo-container {
     margin-left: auto;
     img {
       height: $pk-logo-height;
+    }
+  }
+
+  @media (max-width: $maximum-screen-width-for-mobile-layout) {
+    flex-wrap: wrap;
+    .title-container {
+      order: 1;
     }
   }
 }
