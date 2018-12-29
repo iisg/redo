@@ -4,8 +4,8 @@ describe('Resource Tests', function() {
 	   browser.driver.wait(function () {
 			return locator.isPresent()
 	   }, 10000);
-  }
-
+  } 
+  
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 		browser.driver.manage().window().setSize(1536, 864);
@@ -114,6 +114,7 @@ describe('Resource Tests', function() {
 	editButton.click();
 
 	waitForElement(element(by.className('form-control au-target')));
+	browser.sleep(1000);
 	var metadataValueFields = element.all(by.className('form-control au-target'));
 	metadataValueFields.get(0).clear();
 	metadataValueFields.get(0).sendKeys('NewValue');

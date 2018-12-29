@@ -5,7 +5,7 @@ describe('Resource Type Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
- 
+  
   beforeEach(function() {
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
 		browser.driver.manage().window().setSize(1536, 864);
@@ -124,6 +124,7 @@ describe('Resource Type Tests', function() {
 		addButton.click();
 		browser.sleep(1000);
 
+		browser.get('https://repekadev.fslab.agh.edu.pl/admin/resource-kinds/books');
 		waitForElement(element(by.linkText('Nazwa_Testowanie_Automatyczne')));
 		expect(element(by.linkText('Nazwa_Testowanie_Automatyczne')).isPresent()).toBe(true);
   });
