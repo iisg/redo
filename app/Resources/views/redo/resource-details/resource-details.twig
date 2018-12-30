@@ -61,13 +61,20 @@
                     </div>
                     <div>
                         <h3><strong>Pobierz</strong></h3>
-                        <h4><a href="/download/pdf">{{ icon('mobi') }} MOBI (7KB) </a></h4>
-                        <h4><a href="/download/pdf">{{ icon('pdf') }} PDF (144000KB) </a></h4>
+                        <h4><a href="/download/pdf">
+                            {{ icon('mobi', 2) }}
+                            <span>MOBI (7KB)</span>
+                        </a></h4>
+                        <h4><a href="/download/pdf">
+                            {{ icon('pdf', 2) }}
+                            <span>PDF (144000KB)</span>
+                        </a></h4>
                         {% if childrenAllowed %}
-                            <h4><a href="/resources/{{ resource.id }}/rss" title="Kanał RSS">
+                            <h4><a href="/resources/{{ resource.id }}/rss"
+                                title="Kanał RSS">
                                 {{ icon('rss', 1.5) }}
-                                Kanał RSS
-                                </a></h4>
+                                <span>Kanał RSS</span>
+                            </a></h4>
                         {% endif %}
                         <a href="/resources/{{ resource.id }}/bibtex">BibTeX</a>
                     </div>

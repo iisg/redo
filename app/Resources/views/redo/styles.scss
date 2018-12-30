@@ -1,17 +1,20 @@
 @import "styles/variables";
 @import "styles/colors";
 
-@import "styles/breadcrumbs";
-@import "styles/base";
 @import "styles/buttons";
-@import "styles/search-bar-container";
-@import "styles/home";
-@import "styles/login-form";
-@import "styles/menu";
-@import "styles/search-results";
-@import "styles/pagination";
-@import "styles/resource-details";
 @import "styles/title-bar";
+@import "styles/menu";
+@import "styles/breadcrumbs";
+@import "styles/pagination";
+
+@import "styles/base";
+@import "styles/statistics";
+@import "styles/home";
+@import "styles/search-results";
+@import "styles/resource-details";
 @import "styles/deposit";
+
+@import "styles/login-form";
+
 @import "../../../../src/AdminPanel/src/common/components/icon/icon";
 @import "../../../../src/AdminPanel/src/common/components/redo-footer/redo-footer";

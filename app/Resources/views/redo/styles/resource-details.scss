@@ -49,7 +49,6 @@ $background-color: white;
         display: flex;
         justify-content: space-evenly;
         flex-direction: row-reverse; // It's used instead of setting `flex-wrap: wrap-reverse` to keep correct layout in Internet Explorer.
-        flex-wrap: wrap;
         .details {
             z-index: 1;
             display: flex;
@@ -61,9 +60,6 @@ $background-color: white;
                 &:not([colspan]) {
                     &:first-child {
                         text-align: right;
-                    }
-                    &:not(:first-child) {
-                        min-width: 50%;
                     }
                 }
                 &[colspan] {
@@ -99,9 +95,14 @@ $background-color: white;
                 &, & > * {
                     padding: $default-gap-size / 8;
                 }
+                & > h4 > a {
+                    text-decoration: none;
+                    &:hover > :not(.icon) {
+                        text-decoration: underline;
+                    }
+                }
                 svg {
-                    padding: 4px;
-                    height: 2em;
+                    padding: $default-gap-size / 4;
                     color: $dark-grey;
                     background-color: $orange;
                 }
@@ -131,6 +132,12 @@ $background-color: white;
                     display: inline;
                 }
             }
+        }
+    }
+
+    @media (max-width: $maximum-screen-width-for-mobile-layout) {
+        & > .details-container {
+            flex-wrap: wrap;
         }
     }
 }

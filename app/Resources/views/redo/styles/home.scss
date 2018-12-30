@@ -1,61 +1,12 @@
-$search-bar-width: 500px;
-
-.big-search-bar {
-  search-bar {
-    width: $search-bar-width;
-    & > form {
-      &, .search-box-with-options {
-        width: 100%;
-      }
-      .search-box-with-options .metadata-subsets-chooser {
-        display: flex;
-      }
-      input {
-        min-width: 0;
-        font-size: 18px;
-      }
-      icon[name=search] {
-        height: 2.5em;
-      }
-    }
+.home-page-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  &, .big-search-bar {
+    padding: $default-gap-size / 2;
   }
-}
-
-.stats-home {
-  margin-top: 20px;
-  width: 100%;
-
-  .row {
-    margin: 0;
-
-    .sec-title {
-      color: $light-blue;
-      border-bottom: 3px solid $light-blue;
-      margin-bottom: 15px;
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-
-      li {
-        width: 100%;
-        display: flex;
-
-        .item-label {
-          width: 60%;
-          margin-bottom: 10px;
-        }
-
-        .item-content {
-          margin-left: auto;
-
-          a {
-            color: $default-text-color;
-          }
-        }
-      }
-    }
+  .big-search-bar {
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }

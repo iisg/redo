@@ -1,57 +1,70 @@
-$maximum-width: 960px;
+$main-container-maximum-width: 960px;
 
-.narrow-page-container {
+.main-container {
   display: flex;
   flex-direction: column;
-  max-width: $maximum-width;
+  max-width: $main-container-maximum-width;
   min-height: 100vh;
+  height: 0; // For Internet Explorer to make `flex-grow` property of child elements work correctly: https://stackoverflow.com/a/42930574 .
   margin-left: auto;
   margin-right: auto;
   font-family: "Open Sans", sans-serif;
   color: $default-text-color;
-  .banner {
-    width: 100%;
-    height: 100%;
-  }
-  .content {
-    padding: $default-gap-size;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
-  }
-  h1, h2, h3, h4, h5, h6, p {
-    margin-bottom: 0;
-  }
-  h1 {
-    font-size: $title-font-size;
-    font-weight: bold;
-  }
-  h2 {
-    font-size: $subtitle-font-size + 1px;
-  }
-  h3 {
-    font-size: $subtitle-font-size;
-  }
-  h4 {
-    font-size: $default-font-size + 1px;
-  }
-  h5 {
-    font-size: $default-font-size - 1px;
-  }
-  h6 {
-    font-size: $default-font-size - 2px;
-  }
-  hr {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  a {
-    cursor: pointer;
-  }
-  label {
-    font-weight: normal;
-    margin-bottom: 0;
-  }
+}
+
+.banner {
+  width: 100%;
+  height: 100%;
+}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+}
+
+:not(.big-search-bar) > .search-bar-container {
+  padding: $default-gap-size;
+  border-bottom: $default-gap-size / 4 solid $orange;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+  margin-bottom: 0;
+}
+h1 {
+  font-size: $title-font-size;
+  font-weight: bold;
+}
+h2 {
+  font-size: $subtitle-font-size + 1px;
+}
+h3 {
+  font-size: $subtitle-font-size;
+}
+h4 {
+  font-size: $default-font-size + 1px;
+}
+h5 {
+  font-size: $default-font-size - 1px;
+}
+h6 {
+  font-size: $default-font-size - 2px;
+}
+
+hr {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+a {
+  cursor: pointer;
+}
+
+label {
+  font-weight: normal;
+  margin-bottom: 0;
 }
 
 #nprogress {

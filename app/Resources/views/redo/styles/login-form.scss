@@ -11,7 +11,7 @@ $username-input-right-margin: calc(#{$icon-height} + #{$default-gap-size / 2});
 $text-font-size: 24px;
 $icons-drop-shadow-spread-radius: 5px;
 
-.main-container {
+.login-form-main-container {
   background-color: $background-color;
   min-height: 100vh;
   display: flex;
