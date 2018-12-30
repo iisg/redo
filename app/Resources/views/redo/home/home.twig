@@ -5,9 +5,11 @@
 {% block content %}
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}
-    <div class="big-search-bar">
-        {% include "redo/search/search-bar.twig" %}
+    <div class="home-page-content">
+        <div class="big-search-bar">
+            {% include "redo/search/search-bar.twig" %}
+        </div>
+        {% include "redo/home/statistics.twig" %}
     </div>
-    {% include "redo/home/statistics.twig" %}
     {% include "redo/footer.twig" %}
 {% endblock %}

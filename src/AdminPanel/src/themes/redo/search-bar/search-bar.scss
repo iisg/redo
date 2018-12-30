@@ -2,6 +2,7 @@
 @import "../../../common/styles/variables";
 
 $radio-button-width-and-height: $default-gap-size;
+$big-search-bar-width: 500px;
 
 search-bar > form {
   display: inline-block;
@@ -79,6 +80,25 @@ search-bar > form {
           background: radial-gradient($orange 40%, transparent 40%);
         }
       }
+    }
+  }
+}
+
+.big-search-bar search-bar {
+  width: $big-search-bar-width;
+  & > form {
+    &, .search-box-with-options {
+      width: 100%;
+    }
+    .search-box-with-options .metadata-subsets-chooser {
+      display: flex;
+    }
+    input {
+      min-width: 0;
+      font-size: 18px;
+    }
+    icon[name=search] {
+      height: 2.5em;
     }
   }
 }
