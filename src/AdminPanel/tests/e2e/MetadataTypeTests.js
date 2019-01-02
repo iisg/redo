@@ -91,6 +91,7 @@ describe('Metadata Type Tests', function() {
 		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
 		addButton.click();
 		
+		browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');		
 		waitForElement(element(by.cssContainingText('span', 'Nazwa_Testowanie_Automatyczne')));
   });
 
