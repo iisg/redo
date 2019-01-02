@@ -1,0 +1,10 @@
+{% set endNoteType = (resource | mEndNoteType) is null ? (resource | mEndNoteType) : 'BOOK' %}
+TY  - {{ endNoteType }}
+AU  - {{ resource | mautor }}
+PY  - {{ resource | mdata_wydania }}
+TI  - {{ resource | mtytul }}
+T2  - {{ resource | mwydawnictwo }}
+SP  - {{ resource | mliczba_stron }}
+EP  - {{ resource | mliczba_stron }}
+VL  - {{ resource | mwydawnictwo }}
+ER  -
