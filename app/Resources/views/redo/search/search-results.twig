@@ -17,7 +17,7 @@
                 local-storage-value="key: 'leftPanelToggled'; value.bind: collapsed"></icon>
             <div class="facets">
                 {% for aggregationName, aggregation in results.aggregations if aggregation.buckets.0[aggregationName].buckets %}
-                    <strong>{{ aggregationName == 'kindId' ? aggregationName : metadata(aggregationName).label.PL }}</strong>
+                    <strong>{{ aggregationName == 'kindId' ? 'Typ zasobu' : metadata(aggregationName).label.PL }}</strong>
                     {% for bucket in aggregation.buckets.0[aggregationName].buckets %}
                         <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'phrase': phrase, 'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key, app.request.query.all.facetFilters ?? []), 'page': 1})) }}">
                             <label class="label-with-checkbox">

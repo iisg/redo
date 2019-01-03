@@ -1,4 +1,4 @@
-<h3>Rodzaj zasobu: <span class="deposit-resource-kind">{{ resourceKind.label.PL }}</span></h3>
+<h3>Typ zasobu: <span class="deposit-resource-kind">{{ resourceKind.label.PL }}</span></h3>
 <span>Wybierz kolekcję:</span>
 {% set parentResources = resourcesToDeposit(resourceKind, app.user, [-4]) %}
 {% if parentResources | length == 0 %}
@@ -9,7 +9,6 @@
             {% for deposit in parentResources %}
                 <tr>
                     <td>
-                        {#<a href="/deposit/resource-kind?parentResourceId={{ deposit.id }}">{{ deposit | metadata('label') }}</a>#}
                         <a href="/deposit/form?parentResourceId={{ deposit.id }}&resourceKindId={{ resourceKind.id }}">{{ deposit | metadata('label') }}</a>
                     </td>
                 </tr>

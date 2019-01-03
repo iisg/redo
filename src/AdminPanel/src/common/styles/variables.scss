@@ -10,6 +10,11 @@ $capital-letter-of-the-default-font-height: 0.714em;
 $default-line-height: 1.42857143;
 
 $default-sidebar-width: 275px;
+$navigation-menu-item-icon-width-and-height: 22px;
+$navigation-menu-item-icon-left-and-right-padding-size: 20px;
+$collapsed-sidebar-width: 2 * $navigation-menu-item-icon-left-and-right-padding-size + $navigation-menu-item-icon-width-and-height;
+
+$expected-scrollbar-width: 17px;
 
 $simple-form-column-gap-size: $default-gap-size;
 $simple-form-row-gap-size: $default-gap-size / 2;

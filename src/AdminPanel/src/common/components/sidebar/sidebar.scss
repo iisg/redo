@@ -1,9 +1,5 @@
 @import "../../styles";
 
-$navigation-menu-item-icon-width-and-heigth: 22px;
-$navigation-menu-item-icon-left-and-right-padding-size: 20px;
-$collapsed-sidebar-width: 2 * $navigation-menu-item-icon-left-and-right-padding-size + $navigation-menu-item-icon-width-and-heigth;
-$expected-scrollbar-width: 17px;
 $logo-container-top-and-bottom-padding-size: 4px;
 $navigation-menu-item-background-color-on-hover-when-sidebar-is-collapsed: white;
 $navigation-menu-item-shadow-width: 5px;
@@ -26,7 +22,7 @@ sidebar {
       align-items: center;
       redo-logo {
         box-sizing: content-box;
-        width: $navigation-menu-item-icon-width-and-heigth;
+        width: $navigation-menu-item-icon-width-and-height;
         padding: $logo-container-top-and-bottom-padding-size $navigation-menu-item-icon-left-and-right-padding-size;
         color: $orange;
         background-color: $dark-grey;
@@ -82,7 +78,7 @@ sidebar {
         padding-top: $default-gap-size / 2;
         padding-bottom: $default-gap-size / 2;
         & > icon {
-          height: $navigation-menu-item-icon-width-and-heigth;
+          height: $navigation-menu-item-icon-width-and-height;
           padding-left: $navigation-menu-item-icon-left-and-right-padding-size;
           padding-right: $navigation-menu-item-icon-left-and-right-padding-size;
         }

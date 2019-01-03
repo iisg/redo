@@ -4,6 +4,7 @@ $pk-logo-height: 48px;
 
 .title-bar {
   display: flex;
+  flex-shrink: 0; // Required by Internet Explorer.
   align-items: center;
   border-bottom: $default-gap-size / 4 solid $orange;
   &, & > * {
