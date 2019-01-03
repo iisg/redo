@@ -3,7 +3,8 @@ $checkbox-width-and-height: $default-gap-size;
 
 .search-results-container {
   display: flex;
-  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 0; // Required by Chrome and Internet Explorer.
   .left-panel {
     max-width: 300px;
     padding: 3 * $default-gap-size / 4;

@@ -23,6 +23,7 @@
                     data-toggle="dropdown">
                     {{ icon('user-2', 1.5) }}
                     <span>{{ app.user.username }}</span>
+                    {{ icon('down-4', 0.75) }}
                 </button>
                 <div>
                     {% if resourceKindsToDeposit(app.user, [-4]) | length != 0 %}

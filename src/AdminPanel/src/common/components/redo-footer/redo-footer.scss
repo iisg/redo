@@ -1,17 +1,17 @@
 @import "../../styles";
 
-redo-footer, .redo-footer {
-  $maximum-width-before-changing-layout-to-horizontal-offset: 0;
-  $width-of-the-separator: 1px;
-  $powered-by-redo-logo-maximum-width: 143px;
-  $creative-commons-icons-with-description-max-width: 275px;
-  $creative-commons-icons-description-font-size: 0.75rem;
-  $fe-and-ue-logos-height-to-keep-correct-gap-size: 41px;
-  $fe-and-ue-logos-minimum-width-to-keep-correct-gap-size: 259px;
-  $fe-and-ue-logos-maximum-width-to-keep-correct-gap-size: 261px;
-  $ue-logo-image-height-to-keep-correct-proportions-between-logos: 32px;
-  $fe-logo-image-height-to-keep-correct-proportions-between-logos: 43px;
+$maximum-width-before-changing-layout-to-horizontal-offset: 0;
+$width-of-the-separator: 1px;
+$powered-by-redo-logo-maximum-width: 143px;
+$creative-commons-icons-with-description-max-width: 275px;
+$creative-commons-icons-description-font-size: 0.75rem;
+$fe-and-edt-and-ue-logos-height-to-keep-correct-gap-size: 41px;
+$fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size: 385px;
+$ue-logo-image-height-to-keep-correct-proportions-between-logos: 32px;
+$fe-logo-image-height-to-keep-correct-proportions-between-logos: 43px;
+$second-group-maximum-logos-width-when-displayed-vertically: 142px;
 
+redo-footer, .redo-footer {
   display: flex;
   flex-shrink: 0; // Required by Internet Explorer.
   flex-wrap: wrap;
@@ -39,14 +39,14 @@ redo-footer, .redo-footer {
       line-height: 0;
       margin-left: -$width-of-the-separator;
       border-left: $width-of-the-separator solid $orange;
-      .icon {
-        margin-bottom: $default-gap-size / 4;
-      }
-      span {
+      & > span {
         display: block;
         line-height: normal;
         font-size: $creative-commons-icons-description-font-size;
         color: $grey;
+      }
+      .icon {
+        margin-bottom: $default-gap-size / 4;
       }
     }
   }
@@ -56,17 +56,17 @@ redo-footer, .redo-footer {
     & > * {
       padding: $default-gap-size;
     }
-    .fe-and-ue-logos {
-      height: $fe-and-ue-logos-height-to-keep-correct-gap-size + 2 * $default-gap-size;
-      min-width: $fe-and-ue-logos-minimum-width-to-keep-correct-gap-size + 2 * $default-gap-size;
-      max-width: $fe-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size;
+    .fe-and-edt-and-ue-logos {
+      height: $fe-and-edt-and-ue-logos-height-to-keep-correct-gap-size + 2 * $default-gap-size;
+      max-width: $fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size;
     }
   }
   .vertical {
     display: none;
   }
-  @media (max-width: #{$fe-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
-        + $maximum-width-before-changing-layout-to-horizontal-offset}) {
+}
+
+@mixin vertical-align() {
     & > :last-child {
       flex-direction: column;
       align-items: flex-start;
@@ -79,7 +79,7 @@ redo-footer, .redo-footer {
     .vertical {
       display: block;
       width: 100%;
-      max-width: 142px + 2 * $default-gap-size;
+      max-width: $second-group-maximum-logos-width-when-displayed-vertically + 2 * $default-gap-size;
       &.fe-logo {
         max-height: $fe-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
       }
@@ -87,5 +87,30 @@ redo-footer, .redo-footer {
         max-height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
       }
     }
+}
+
+.repeka-admin-panel {
+  sidebar:not(.collapsed) + * {
+    redo-footer {
+      @media (max-width: #{$fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
+        + $default-sidebar-width + $expected-scrollbar-width}) {
+        @include vertical-align();
+      }
+    }
+  }
+  sidebar.collapsed + * {
+    redo-footer {
+      @media (max-width: #{$fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
+        + $collapsed-sidebar-width + $expected-scrollbar-width}) {
+        @include vertical-align();
+      }
+    }
+  }
+}
+
+.redo-footer {
+  @media (max-width: #{$fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
+    + $expected-scrollbar-width}) {
+      @include vertical-align();
   }
 }

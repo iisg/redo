@@ -1,7 +1,8 @@
 .home-page-content {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 0; // Required by Internet Explorer.
   &, .big-search-bar {
     padding: $default-gap-size / 2;
   }
