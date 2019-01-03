@@ -3,11 +3,13 @@
 
 $default-padding-or-margin-of-elements: $default-gap-size / 2;
 
+$top-bar-title-with-breadcrumbs-flex-grow: 10;
 $resource-class-name-font-size: $subtitle-font-size;
 $breadcrumbs-font-size: 11px;
 $page-title-background-color: white;
 $breadcrumbs-and-options-text-color: $grey;
 
+$options-flex-grow: 1;
 $options-background-color: $light-grey;
 $options-background-color-on-bover: $grey;
 $options-text-color-on-hover: white;
@@ -24,8 +26,6 @@ $dropdown-menu-items-text-color-on-hover: white;
 $second-row-background-color-of-active-elements-on-hover: white;
 $second-row-text-color-of-active-elements-on-hover: $blue;
 
-$maximum-window-width-when-wrap-is-required: 480px;
-
 $navigation-bar-height-on-smaller-screens: 50px;
 $navigation-bar-border-with-shadow-size-on-smaller-screens: 2px;
 
@@ -35,13 +35,11 @@ top-bar {
   .first-row {
     display: flex;
     flex-wrap: wrap-reverse;
-    .top-bar-title-with-breadcrumbs, .options {
-      display: flex;
-      flex: 1;
-      max-width: 100%;
-    }
     .top-bar-title-with-breadcrumbs {
+      display: flex;
+      flex-grow: $top-bar-title-with-breadcrumbs-flex-grow;
       align-items: center;
+      max-width: 100%;
       padding: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
       background-color: $page-title-background-color;
       & > div {
@@ -57,12 +55,20 @@ top-bar {
       }
     }
     .options {
+      display: flex;
+      flex-grow: $options-flex-grow;
+      flex-wrap: wrap;
       background-color: $options-background-color;
       color: $breadcrumbs-and-options-text-color;
+      overflow: hidden;
       & > * {
         display: flex;
-        align-items: center;
-        padding: $default-padding-or-margin-of-elements;
+        &:not(.exit-and-logout-buttons), &.exit-and-logout-buttons > * {
+          padding: $default-padding-or-margin-of-elements;
+        }
+        &:not(.exit-and-logout-buttons) {
+          align-items: center;
+        }
       }
       a {
         color: inherit;
@@ -73,11 +79,16 @@ top-bar {
         }
       }
       .user-data {
+        &, & > div {
+          overflow: hidden;
+        }
         span {
           display: block;
           line-height: $label-with-user-name-line-height;
           font-size: $label-with-user-name-font-size;
           white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
           current-user-label {
             font-weight: bold;
           }
@@ -87,23 +98,29 @@ top-bar {
           }
         }
       }
-      .logout-button {
+      .exit-and-logout-buttons {
         display: flex;
-        align-items: center;
         margin-left: auto;
-        color: inherit;
-        white-space: nowrap;
-        font-weight: bold;
-        text-transform: uppercase;
-        &, & > * {
-          padding-left: $default-padding-or-margin-of-elements / 2;
-          padding-right: $default-padding-or-margin-of-elements / 2;
-        }
-        &:hover, &:focus {
-          text-decoration: none;
-        }
-        span {
-          font-size: inherit;
+        flex-wrap: wrap;
+        overflow: hidden;
+        & > * {
+          display: flex;
+          align-items: center;
+          font-weight: bold;
+          text-transform: uppercase;
+          overflow: hidden;
+          &, & > * {
+            padding-left: $default-padding-or-margin-of-elements / 2;
+            padding-right: $default-padding-or-margin-of-elements / 2;
+          }
+          &:hover, &:focus {
+            text-decoration: none;
+          }
+          span {
+            font-size: inherit;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
         }
       }
     }
@@ -160,17 +177,6 @@ top-bar {
     height: 22px;
     &[name=user-2] {
       height: 26px;
-    }
-  }
-
-  @include on-and-down($maximum-window-width-when-wrap-is-required) {
-    .first-row {
-      .top-bar-title-with-breadcrumbs {
-        flex: 0;
-      }
-      .options {
-        flex-wrap: wrap;
-      }
     }
   }
 }

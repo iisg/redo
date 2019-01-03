@@ -42,12 +42,18 @@
                     <span>${'navigation::from computer' | t}: ${userIp}</span>
                 </div>
             </div>
-            <a class="logout-button"
-                href="/logout"
-                target="_top">
-                <icon name="logout"></icon>
-                <span>${'navigation::Log Out' | t}</span>
-            </a>
+            <div class="exit-and-logout-buttons">
+                <a href="/"
+                    target="_top">
+                    <icon name="undo-3"></icon>
+                    <span>${'Exit' | t}</span>
+                </a>
+                <a href="/logout"
+                    target="_top">
+                    <icon name="logout"></icon>
+                    <span>${'navigation::Log Out' | t}</span>
+                </a>
+            </div>
         </div>
     </div>
     <div class="second-row">
