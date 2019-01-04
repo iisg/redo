@@ -4,6 +4,8 @@ import {RequiredInAllLanguagesValidationRule} from "common/validation/rules/requ
 import {Entity} from "common/entity/entity";
 import {automapped, map} from "common/dto/decorators";
 import {RestrictingMetadataMapper} from "./workflow-mapping";
+import {numberKeysByValue} from "../common/utils/object-utils";
+import {flatten} from "../common/utils/array-utils";
 
 @automapped
 export class WorkflowPlace {
@@ -22,6 +24,13 @@ export class WorkflowPlace {
     this.label = label;
     this.restrictingMetadataIds = restrictingMetadataIds;
     this.pluginsConfig = pluginsConfig;
+  }
+
+  static getPlacesRequirementState(targetPlaces: WorkflowPlace[], requirementState: RequirementState) {
+    return targetPlaces ?
+      flatten(
+        targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, requirementState))
+      ) : [];
   }
 }
 

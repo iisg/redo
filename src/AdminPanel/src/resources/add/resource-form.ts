@@ -6,11 +6,10 @@ import {ValidationController, ValidationControllerFactory} from "aurelia-validat
 import {Modal} from "common/dialog/modal";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {convertToObject, flatten, inArray} from "common/utils/array-utils";
-import {deepCopy} from "common/utils/object-utils";
+import {deepCopy, numberKeysByValue} from "common/utils/object-utils";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {ChangeLossPreventer} from "common/change-loss-preventer/change-loss-preventer";
 import {ChangeLossPreventerForm} from "common/form/change-loss-preventer-form";
-import {numberKeysByValue} from "common/utils/object-utils";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 import {RequirementState, WorkflowPlace, WorkflowTransition} from "../../workflows/workflow";
@@ -235,6 +234,10 @@ export class ResourceForm extends ChangeLossPreventerForm {
   }
 
   importValues(valueMap: StringArrayMap): void {
+    const assigneeMetadataIds = WorkflowPlace.getPlacesRequirementState(this.targetPlaces, RequirementState.ASSIGNEE);
+    const autoAssignMetadataIds = WorkflowPlace.getPlacesRequirementState(this.targetPlaces, RequirementState.AUTOASSIGN);
+    const lockedMetadataIds = WorkflowPlace.getPlacesRequirementState(this.targetPlaces, RequirementState.LOCKED)
+      .concat(assigneeMetadataIds).concat(autoAssignMetadataIds);
     const metadataIds = this.resource.kind.metadataList.map(metadata => metadata.id);
     for (const metadataId in valueMap) {
       if (!inArray(parseInt(metadataId), metadataIds)) {
@@ -243,7 +246,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
       const importedValues = valueMap[metadataId];
       const currentValues = this.resource.contents[metadataId].map(v => v.value);
       for (const metadataValue of importedValues) {
-        if (!inArray(metadataValue.value, currentValues)) {
+        if (!inArray(+metadataId, lockedMetadataIds)! && inArray(metadataValue.value, currentValues)) {
           this.resource.contents[metadataId].push(metadataValue);
         }
       }
