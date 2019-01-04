@@ -4,9 +4,8 @@ import {Resource} from "resources/resource";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {Metadata, GroupMetadataList} from "resources-config/metadata/metadata";
-import {diff, flatten, inArray} from "common/utils/array-utils";
-import {numberKeysByValue} from "common/utils/object-utils";
+import {Metadata} from "resources-config/metadata/metadata";
+import {diff, inArray} from "common/utils/array-utils";
 import {RequirementState} from "workflows/workflow";
 import {computedFrom} from "aurelia-binding";
 import {AllMetadataValueValidator} from "common/validation/rules/all-metadata-value-validator";
@@ -139,20 +138,12 @@ export class ResourceFormGenerated {
   }
 
   targetPlacesChanged() {
-    if (this.targetPlaces) {
-      const assigneeMetadataIds = flatten(
-        this.targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.ASSIGNEE))
-      );
-      const autoAssignMetadataIds = flatten(
-        this.targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.AUTOASSIGN))
-      );
-      this.requiredMetadataIds = flatten(
-        this.targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.REQUIRED))
-      ).concat(assigneeMetadataIds);
-      this.lockedMetadataIds = flatten(
-        this.targetPlaces.map(place => numberKeysByValue(place.restrictingMetadataIds, RequirementState.LOCKED))
-      ).concat(assigneeMetadataIds).concat(autoAssignMetadataIds);
-    }
+    const assigneeMetadataIds = WorkflowPlace.getPlacesRequirementState(this.targetPlaces, RequirementState.ASSIGNEE);
+    const autoAssignMetadataIds = WorkflowPlace.getPlacesRequirementState(this.targetPlaces, RequirementState.AUTOASSIGN);
+    this.requiredMetadataIds = WorkflowPlace.getPlacesRequirementState(this.targetPlaces, RequirementState.REQUIRED)
+      .concat(assigneeMetadataIds);
+    this.lockedMetadataIds = WorkflowPlace.getPlacesRequirementState(this.targetPlaces, RequirementState.LOCKED)
+      .concat(assigneeMetadataIds).concat(autoAssignMetadataIds);
     this.resourceKindChanged();
   }
 
