@@ -45,6 +45,7 @@ mappings:
           keys: 'j,k'
         - name: 'join'
           glue: ''
+        - name: 'trim'
         - name: 'flatten'
         - name: 'contentSearch'
           metadata: 170
@@ -392,18 +393,21 @@ mappings:
       - name: 'displayStrategy'
         separator: '###'
         template: >-
+          {% set compareValue = '' %}
           {% if data['952'] is defined %}
             {% for value in data['952'] %}
               {% if value['p'] is defined and data['importedId'] is defined and data['importedId'] == value['p'][0] and value['o'] is defined %}
-              {% set compareValue = value['o'][0] %}
-            {% endif %}
+                {% set compareValue = value['o'][0] %}
+              {% endif %}
             {% endfor %}
           {% endif %}
-          {% for value in values %}
-            {% if value['a'] is defined and value['3'] == compareValue %}
-              {{value['a'][0]}}{{separator}}
-            {% endif %}
-          {% endfor %}
+          {% if data['561'] is defined%}
+            {% for value in data['561'] %}
+              {% if value['a'] is defined and value['3'][0] == compareValue %}
+                {{value['a'][0]}}{{separator}}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
       - name: 'trim'
         characters: ' .'
       - name: 'removeEmpty'
