@@ -1,10 +1,14 @@
 <?php
 namespace Repeka\Tests\Domain\Factory;
 
+use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Factory\ResourceListQuerySqlFactory;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
+
     public function testEmptyPageQuery() {
         $query = ResourceListQuery::builder()->build();
         $sql = (new ResourceListQuerySqlFactory($query))->getPageQuery();
@@ -89,5 +93,19 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
             ->build();
         $factory = new ResourceListQuerySqlFactory($query);
         $this->assertNotContains(' OR ', $factory->getPageQuery());
+    }
+
+    public function testFilterByVisibility() {
+        $query = ResourceListQuery::builder()->build();
+        EntityUtils::forceSetField($query, SystemResource::UNAUTHENTICATED_USER()->toUser(), 'executor');
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertArrayHasKey('allowedViewers', $factory->getParams());
+        $this->assertEquals($factory->getParams()['allowedViewers'][0], SystemResource::UNAUTHENTICATED_USER);
+        $visibilityMetadataId = SystemMetadata::VISIBILITY;
+        $this->assertContains(
+            "EXISTS (SELECT FROM jsonb_array_elements(COALESCE(r.contents->'$visibilityMetadataId', '[{}]')) " .
+            "WHERE value->>'value' IN(:allowedViewers))",
+            $factory->getPageQuery()
+        );
     }
 }

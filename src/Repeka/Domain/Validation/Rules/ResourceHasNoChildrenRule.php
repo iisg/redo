@@ -4,7 +4,6 @@ namespace Repeka\Domain\Validation\Rules;
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\Resource\ResourceChildrenQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Respect\Validation\Rules\AbstractRule;
 

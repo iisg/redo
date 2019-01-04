@@ -2,7 +2,9 @@
 namespace Repeka\Tests\Integration\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -12,6 +14,7 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -28,6 +31,8 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
     private $userRepository;
     /** @var Metadata */
     private $titleMetadata;
+    /** @var UserEntity */
+    private $admin;
 
     protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
@@ -38,6 +43,18 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
         $this->resourceRepository = $this->container->get(ResourceRepository::class);
         $this->userRepository = $this->container->get(UserRepository::class);
         $this->titleMetadata = $this->findMetadataByName('Tytuł');
+        $this->admin = $this->getAdminUser();
+    }
+
+    public function testResourcesFilteredByVisibilityWhenExecutorIsSet() {
+        $query = ResourceListQuery::builder()->build();
+        EntityUtils::forceSetField($query, SystemResource::UNAUTHENTICATED_USER()->toUser(), 'executor');
+        $resourcesIds = EntityUtils::mapToIds($this->resourceRepository->findByQuery($query)->getResults());
+        $this->assertCount(6, $resourcesIds);
+        $this->assertNotContains(1, $resourcesIds);
+        $this->assertNotContains(5, $resourcesIds);
+        $this->assertNotContains(6, $resourcesIds);
+        $this->assertNotContains(13, $resourcesIds);
     }
 
     public function testFindAll() {
@@ -152,20 +169,20 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
         $userResourceKind = $this->container->get(ResourceKindRepository::class)->findOne(SystemResourceKind::USER);
         $query = ResourceListQuery::builder()->filterByResourceKind($userResourceKind)->setPage(1)->setResultsPerPage(6)->build();
         $paginatedResources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(4, $paginatedResources->getResults());
+        $this->assertCount(5, $paginatedResources->getResults());
     }
 
     public function testFindTopLevel() {
-        $paginatedTopLevelResources = $this->resourceRepository->findByQuery(
-            ResourceListQuery::builder()->setPage(1)->setResultsPerPage(6)->onlyTopLevel()->build()
-        );
+        $query = ResourceListQuery::builder()->setPage(1)->setResultsPerPage(6)->onlyTopLevel()->build();
+        $paginatedTopLevelResources = $this->resourceRepository->findByQuery($query);
         foreach ($paginatedTopLevelResources->getResults() as $topLevelResource) {
             $this->assertFalse($topLevelResource->hasParent());
         }
     }
 
     public function testFindByEmptyQuery() {
-        $resources = $this->resourceRepository->findByQuery(ResourceListQuery::builder()->build());
+        $query = ResourceListQuery::builder()->build();
+        $resources = $this->resourceRepository->findByQuery($query);
         $this->assertCount($this->resourceRepository->count([]), $resources);
     }
 

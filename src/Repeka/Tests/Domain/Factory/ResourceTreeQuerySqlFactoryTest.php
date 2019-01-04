@@ -1,13 +1,15 @@
 <?php
 namespace Repeka\Domain\Factory;
 
+use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
 
 class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testEmptyTreeQuery() {
         $query = ResourceTreeQuery::builder()
             ->build();
-        $factory =  (new ResourceTreeQuerySqlFactory($query));
+        $factory = (new ResourceTreeQuerySqlFactory($query));
         $sql = $factory->getTreeQuery();
         $this->assertContains('SELECT r.*', $sql);
         $this->assertContains('WHERE ancestors.next_ancestor_id IS NULL', $sql);
@@ -20,7 +22,7 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceTreeQuery::builder()
             ->forRootId(123)
             ->build();
-        $factory =  (new ResourceTreeQuerySqlFactory($query));
+        $factory = (new ResourceTreeQuerySqlFactory($query));
         $sql = $factory->getTreeQuery();
         $this->assertArrayHasEntry('root', '123', $factory->getParams());
         $this->assertContains('WHERE ancestors.list [1] = :root', $sql);
@@ -33,7 +35,7 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $query = ResourceTreeQuery::builder()
             ->includeWithinDepth(40)
             ->build();
-        $factory =  (new ResourceTreeQuerySqlFactory($query));
+        $factory = (new ResourceTreeQuerySqlFactory($query));
         $sql = $factory->getTreeQuery();
         $this->assertContains('WHERE ancestors.next_ancestor_id IS NULL', $sql);
         $this->assertContains('[1 : 40]', $sql);
@@ -46,7 +48,7 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
             ->includeWithinDepth(40)
             ->forRootId(123)
             ->build();
-        $factory =  (new ResourceTreeQuerySqlFactory($query));
+        $factory = (new ResourceTreeQuerySqlFactory($query));
         $sql = $factory->getTreeQuery();
         $this->assertArrayHasEntry('root', '123', $factory->getParams());
         $this->assertContains('WHERE ancestors.list [1] = :root', $sql);
@@ -61,7 +63,7 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
             ->setPage(2)
             ->setResultsPerPage(5)
             ->build();
-        $factory =  (new ResourceTreeQuerySqlFactory($query));
+        $factory = (new ResourceTreeQuerySqlFactory($query));
         $sql = $factory->getTreeQuery();
         $this->assertArrayHasEntry('pageStart', '6', $factory->getParams());
         $this->assertArrayHasEntry('pageEnd', '11', $factory->getParams());
@@ -79,7 +81,7 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
             ->setPage(2)
             ->setResultsPerPage(5)
             ->build();
-        $factory =  (new ResourceTreeQuerySqlFactory($query));
+        $factory = (new ResourceTreeQuerySqlFactory($query));
         $sql = $factory->getTreeQuery();
         $this->assertArrayHasEntry('pageStart', '6', $factory->getParams());
         $this->assertArrayHasEntry('pageEnd', '12', $factory->getParams());
@@ -93,18 +95,16 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testMatchingResourcesQuery() {
         $query = ResourceTreeQuery::builder()
             ->build();
-        $factory =  (new ResourceTreeQuerySqlFactory($query));
-        $sql = $factory->getMatchingResourcesQuery([1,2,500]);
+        $factory = (new ResourceTreeQuerySqlFactory($query));
+        $sql = $factory->getMatchingResourcesQuery([1, 2, 500]);
         $this->assertContains('SELECT r.id AS id FROM', $sql);
-        $this->assertArrayHasEntry('res1', 1, $factory->getParams());
-        $this->assertArrayHasEntry('res2', 2, $factory->getParams());
-        $this->assertArrayHasEntry('res500', 500, $factory->getParams());
-        $this->assertContains('AND id IN (:res1, :res2, :res500)', $sql);
+        $this->assertArrayHasEntry('idsToCheck', [1, 2, 500], $factory->getParams());
+        $this->assertContains('AND id IN (:idsToCheck)', $sql);
     }
 
     private function assertArrayHasEntry($key, $value, array $array) {
         $this->assertArrayHasKey($key, $array);
         $actualValue = $array[$key];
-        $this->assertEquals($value, $actualValue, "Expected that key ${key} has value of ${value}, but has ${actualValue}");
+        $this->assertEquals($value, $actualValue, "Value for $key id different than expected");
     }
 }

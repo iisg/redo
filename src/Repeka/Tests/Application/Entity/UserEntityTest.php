@@ -3,6 +3,7 @@ namespace Repeka\Tests\Application\Entity;
 
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Utils\EntityUtils;
@@ -30,6 +31,11 @@ class UserEntityTest extends \PHPUnit_Framework_TestCase {
     public function testAddsRolePrefixToSomeClassRoles() {
         $this->user->updateRoles(['ADMIN_SOME_CLASS']);
         $this->assertTrue($this->user->hasRole('ROLE_ADMIN_SOME_CLASS'));
+    }
+
+    public function testGetAdminResourceClasses() {
+        $this->user->updateRoles(['ADMIN-books', 'ADMIN_SOME_CLASS', 'OPERATOR-dictionaries']);
+        $this->assertEquals(['books'], $this->user->resourceClassesInWhichUserHasRole(SystemRole::ADMIN()));
     }
 
     public function testSettingUsername() {

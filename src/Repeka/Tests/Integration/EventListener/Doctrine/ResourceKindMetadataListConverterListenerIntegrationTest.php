@@ -96,13 +96,29 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
         );
         $this->assertCount(ResourceKindIntegrationTest::AUTO_CREATED_METADATA_COUNT + 2, $resourceKind->getMetadataList());
         $this->assertEquals(
-            [2, SystemMetadata::PARENT, 1, SystemMetadata::REPRODUCTOR, SystemMetadata::RESOURCE_LABEL],
+            [
+                2,
+                SystemMetadata::PARENT,
+                1,
+                SystemMetadata::REPRODUCTOR,
+                SystemMetadata::RESOURCE_LABEL,
+                SystemMetadata::VISIBILITY,
+                SystemMetadata::TEASER_VISIBILITY,
+            ],
             $resourceKind->getMetadataIds()
         );
         $this->getEntityManager()->clear();
         $resourceKind = $this->handleCommandBypassingFirewall(new ResourceKindQuery($resourceKind->getId()));
         $this->assertEquals(
-            [2, SystemMetadata::PARENT, 1, SystemMetadata::REPRODUCTOR, SystemMetadata::RESOURCE_LABEL],
+            [
+                2,
+                SystemMetadata::PARENT,
+                1,
+                SystemMetadata::REPRODUCTOR,
+                SystemMetadata::RESOURCE_LABEL,
+                SystemMetadata::VISIBILITY,
+                SystemMetadata::TEASER_VISIBILITY,
+            ],
             $resourceKind->getMetadataIds()
         );
     }

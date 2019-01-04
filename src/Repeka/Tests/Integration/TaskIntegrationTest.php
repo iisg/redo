@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
@@ -34,6 +35,10 @@ class TaskIntegrationTest extends IntegrationTestCase {
 
     protected function setUp() {
         parent::setUp();
+        $this->addSupportForResourceKindToMetadata(
+            SystemMetadata::VISIBILITY,
+            SystemResourceKind::USER
+        );
         $this->clearDefaultLanguages();
         $this->createLanguage('PL', 'PL', 'polski'); //for validate parentMetadata
         $this->createLanguage('EN', 'EN', 'angielski'); //for validate parentMetadata
@@ -67,11 +72,12 @@ class TaskIntegrationTest extends IntegrationTestCase {
             [$this->parentMetadata, $this->metadata1, $this->metadata2],
             $workflow
         );
+        $adminId = $this->getAdminUser()->getUserData()->getId();
         $this->resource = $this->createResource(
             $this->resourceKind,
             [
                 $this->metadata1->getId() => ['Test value'],
-                $this->metadata2->getId() => [$this->getAdminUser()->getUserData()->getId()],
+                $this->metadata2->getId() => [$adminId],
             ]
         );
     }
@@ -92,11 +98,12 @@ class TaskIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFetchingTasksReturnsOnlyPossibleTasks() {
+        $adminId = $this->getAdminUser()->getUserData()->getId();
         $groupResource = $this->createResource(
             $this->resourceKind,
             [
                 $this->metadata1->getId() => ['Test value 2'],
-                $this->metadata2->getId() => [$this->getAdminUser()->getUserData()->getId(), 5],
+                $this->metadata2->getId() => [$adminId, 5],
             ]
         );
         $client = self::createAdminClient();

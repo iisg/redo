@@ -10,6 +10,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +21,7 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getListAction(Request $request) {
         $resourceClasses = $request->query->get('resourceClasses', []);
@@ -44,6 +46,7 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getAction(string $id) {
         $resourceKind = $this->handleCommand(new ResourceKindQuery(intval($id)));
@@ -53,6 +56,7 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route
      * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function postAction(Request $request) {
         $data = $request->request->all();
@@ -69,6 +73,7 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("PUT")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function putAction(ResourceKind $resourceKind, Request $request) {
         $data = $request->request->all();
@@ -87,6 +92,7 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("DELETE")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function deleteAction(ResourceKind $resourceKind) {
         $this->handleCommand(new ResourceKindDeleteCommand($resourceKind));

@@ -2,14 +2,14 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AdjustableCommand;
-use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
 /** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
-    use RequireOperatorRole;
+    use RequireNoRoles;
 
     private $ids;
     /** @var ResourceKind[] | int[] */
@@ -26,6 +26,8 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
     private $sortBy;
     /** @var array */
     private $workflowPlacesIds;
+    /** @var int */
+    private $permissionMetadataId;
 
     protected function __construct(int $page, int $resultsPerPage) {
         parent::__construct($page, $resultsPerPage);
@@ -45,7 +47,8 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
         bool $onlyTopLevel,
         int $page,
         int $resultsPerPage,
-        array $workflowPlacesIds
+        array $workflowPlacesIds,
+        int $permissionMetadataId
     ): ResourceListQuery {
         $query = new self($page, $resultsPerPage);
         $query->ids = $ids;
@@ -56,6 +59,7 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
         $query->contentsFilters = $contentsFilters;
         $query->onlyTopLevel = $onlyTopLevel;
         $query->workflowPlacesIds = $workflowPlacesIds;
+        $query->permissionMetadataId = $permissionMetadataId;
         return $query;
     }
 
@@ -93,5 +97,9 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
     /** @return ResourceContents[] */
     public function getContentsFilters(): array {
         return $this->contentsFilters;
+    }
+
+    public function getPermissionMetadataId(): int {
+        return $this->permissionMetadataId;
     }
 }

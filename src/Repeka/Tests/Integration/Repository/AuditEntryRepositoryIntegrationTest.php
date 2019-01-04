@@ -39,7 +39,7 @@ class AuditEntryRepositoryIntegrationTest extends IntegrationTestCase {
     public function testFindByCommandName() {
         $query = AuditEntryListQuery::builder()->filterByCommandNames(['resource_create'])->build();
         $entries = $this->auditEntryRepository->findByQuery($query);
-        $this->assertCount($this->resourceRepository->count([]), $entries);
+        $this->assertCount($this->resourceRepository->count([]) - 1, $entries); //-1 because unauthenticated user creation is not audited
     }
 
     public function testPaginate() {
@@ -57,7 +57,7 @@ class AuditEntryRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindByResourceId() {
-        $resourceId = 12;
+        $resourceId = $this->findResourceByContents(['Tytuł' => 'PHP i MySQL'])->getId();
         $query = AuditEntryListQuery::builder()->filterByResourceId($resourceId)->build();
         $entries = $this->auditEntryRepository->findByQuery($query);
         $this->assertCount(3, $entries);

@@ -1,5 +1,5 @@
 <template>
-    <resource-label if.bind="!resource || !currentUserIsOperator"
+    <resource-label if.bind="!resource || !resource.canView"
         resource.bind="resource"
         id.bind="id"
         load.trigger="resource = $event.detail"></resource-label>

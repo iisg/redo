@@ -13,6 +13,8 @@ use Repeka\Domain\Utils\EntityUtils;
  * @method static SystemMetadata GROUP_MEMBER()
  * @method static SystemMetadata REPRODUCTOR()
  * @method static SystemMetadata RESOURCE_LABEL()
+ * @method static SystemMetadata VISIBILITY()
+ * @method static SystemMetadata TEASER_VISIBILITY()
  */
 class SystemMetadata extends Enum {
     const PARENT = -1;
@@ -20,6 +22,8 @@ class SystemMetadata extends Enum {
     const GROUP_MEMBER = -3;
     const REPRODUCTOR = -4;
     const RESOURCE_LABEL = -5;
+    const VISIBILITY = -6;
+    const TEASER_VISIBILITY = -7;
 
     public function toMetadata() {
         $value = $this->getValue();
@@ -77,6 +81,20 @@ class SystemMetadata extends Enum {
                 Metadata::DEFAULT_GROUP,
                 '#{{ r.id }}',
                 true
+            );
+        } elseif ($value == self::VISIBILITY) {
+            $metadata = Metadata::create(
+                '',
+                MetadataControl::RELATIONSHIP(),
+                'Visibility',
+                ['EN' => 'Visibility', 'PL' => 'Widoczność']
+            );
+        } elseif ($value == self::TEASER_VISIBILITY) {
+            $metadata = Metadata::create(
+                '',
+                MetadataControl::RELATIONSHIP(),
+                'Teaser Visibility',
+                ['EN' => 'Visibility in relationship', 'PL' => 'Widoczność w relacjach']
             );
         }
         /** @noinspection PhpUndefinedVariableInspection */

@@ -2,12 +2,16 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Service\ResourceDisplayStrategyDependencyMap;
 use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
 use Repeka\Domain\Utils\EntityUtils;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 // ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
 class ResourceEntity implements Identifiable, HasResourceClass {
     private $id;
@@ -118,5 +122,19 @@ class ResourceEntity implements Identifiable, HasResourceClass {
                 'places' => $this->hasWorkflow() ? EntityUtils::mapToIds($this->getWorkflow()->getPlaces($this)) : [],
             ],
         ];
+    }
+
+    public function isTeaserVisibleFor(UserEntity $user): bool {
+        return $this->isUserReferencedInMetadata($user, SystemMetadata::TEASER_VISIBILITY);
+    }
+
+    public function isVisibleFor(UserEntity $user): bool {
+        return $this->isUserReferencedInMetadata($user, SystemMetadata::VISIBILITY);
+    }
+
+    public function isUserReferencedInMetadata(UserEntity $user, $metadataOrId): bool {
+        $metadataId = $metadataOrId instanceof Metadata ? $metadataOrId->getId() : $metadataOrId;
+        $allowedViewers = $this->getContents()->getValuesWithoutSubmetadata($metadataId);
+        return !empty(array_intersect($user->getGroupIdsWithUserId(), $allowedViewers));
     }
 }

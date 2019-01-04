@@ -3,6 +3,7 @@ namespace Repeka\Application\Service;
 
 use Repeka\Application\Entity\UserEntity;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 trait CurrentUserAware {
     /** @var TokenStorageInterface */
@@ -13,14 +14,16 @@ trait CurrentUserAware {
         $this->tokenStorage = $tokenStorage;
     }
 
+    public function getCurrentUserToken(): ?TokenInterface {
+        return $this->tokenStorage->getToken();
+    }
+
     /** @return UserEntity|null */
     public function getCurrentUser() {
-        if (null === $token = $this->tokenStorage->getToken()) {
+        if (null === $token = $this->getCurrentUserToken()) {
             return null;
         }
-        if (!is_object($user = $token->getUser())) {
-            return null;
-        }
-        return $user;
+        $user = $token->getUser();
+        return is_object($user) ? $user : null;
     }
 }

@@ -20,6 +20,8 @@ export class Resource extends Entity {
   @map resourceClass: string;
   @map displayStrategiesDirty: boolean;
   @map hasChildren: boolean;
+  @map isTeaser: boolean;
+  @map canView: boolean;
 
   public canApplyTransition(transition: WorkflowTransition): boolean {
     const blockedTransitionReason = this.blockedTransitions[transition.id];

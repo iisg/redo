@@ -10,6 +10,7 @@ use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Domain\UseCase\PageResult;
 
 class AuditEntryDoctrineRepository extends EntityRepository implements AuditEntryRepository {
+
     public function findByQuery(AuditEntryListQuery $query): PageResult {
         $queryFactory = new AuditEntryListQuerySqlFactory($query);
         $em = $this->getEntityManager();

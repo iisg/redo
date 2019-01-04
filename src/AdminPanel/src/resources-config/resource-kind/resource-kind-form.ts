@@ -4,7 +4,7 @@ import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating
 import {BindingSignaler} from "aurelia-templating-resources";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {EntitySerializer} from "common/dto/entity-serializer";
-import {move, removeValue} from "common/utils/array-utils";
+import {inArray, move, removeValue} from "common/utils/array-utils";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
@@ -99,8 +99,16 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
   @computedFrom('resourceKind.metadataList', 'resourceKind.metadataList.length')
   get editableMetadataList(): Metadata[] {
     return this.resourceKind.metadataList
-      .filter(metadata => metadata.id != SystemMetadata.PARENT.id)
-      .filter(metadata => metadata.id != SystemMetadata.REPRODUCTOR.id);
+      .filter(metadata => !inArray(metadata.id, this.notEditableMetadata));
+  }
+
+  private get notEditableMetadata(): number[] {
+    return [
+      SystemMetadata.PARENT.id,
+      SystemMetadata.REPRODUCTOR.id,
+      SystemMetadata.VISIBILITY.id,
+      SystemMetadata.TEASER_VISIBILITY.id
+    ];
   }
 
   get resourceChildConstraintMetadata(): Metadata {

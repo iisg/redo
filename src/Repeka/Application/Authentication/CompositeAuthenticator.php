@@ -24,9 +24,9 @@ class CompositeAuthenticator implements SimpleFormAuthenticatorInterface {
     /** @var UserLoaderInterface */
     private $userLoader;
 
-    public function __construct(iterable $authenticators, UserLoaderInterface $useLoader) {
+    public function __construct(iterable $authenticators, UserLoaderInterface $userLoader) {
         $this->authenticators = $authenticators;
-        $this->userLoader = $useLoader;
+        $this->userLoader = $userLoader;
     }
 
     /** @inheritdoc */

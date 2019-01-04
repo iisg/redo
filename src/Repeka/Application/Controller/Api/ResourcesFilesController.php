@@ -11,6 +11,7 @@ use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Service\ResourceFileStorage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,9 +45,9 @@ class ResourcesFilesController extends ApiController {
      * @Route("/{resource}/file-manager.html")
      * @Method("GET")
      * @Template()
+     * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function fileManagerAction(ResourceEntity $resource, Request $request) {
-        $this->ensureCanManageFiles($resource);
         $templateData = ['resource' => $resource, 'godMode' => (bool)$request->get('god', false)];
         if ($metadataId = $request->get('metadataId')) {
             $templateData['metadata'] = $this->metadataRepository->findByNameOrId($metadataId);
@@ -57,19 +58,21 @@ class ResourcesFilesController extends ApiController {
     /**
      * @Route("/{resource}/file-manager")
      * @Method({"GET", "POST", "PUT"})
+     * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function fileConnectorAction(ResourceEntity $resource, Request $request) {
-        $this->ensureCanManageFiles($resource);
         $godMode = $request->get('god');
         $readOnly = false;
         if ($godMode) {
-            $this->ensureHasRole($resource, SystemRole::ADMIN());
+            $this->denyAccessUnlessGranted(SystemRole::ADMIN()->roleName(), $resource);
         } else {
             $readOnly = $resource->hasWorkflow();
             if ($readOnly) {
                 $availableTransitions = $resource->getWorkflow()->getTransitions($resource);
                 $blockedTransitions = $this->resourceNormalizer->getBlockedTransitions($resource, $this->getUser());
                 $readOnly = count($availableTransitions) + 1 == count($blockedTransitions); // +1 - add EDIT transition
+            } else {
+                $this->denyAccessUnlessGranted(SystemRole::OPERATOR()->roleName(), $resource);
             }
         }
         $uploadDirs = $this->resourceFileStorage->uploadDirsForResource($resource);
@@ -114,6 +117,7 @@ class ResourcesFilesController extends ApiController {
     /**
      * @Route("/{resource}/thumbnail/{filepath}")
      * @Method("GET")
+     * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function thumbnailAction(ResourceEntity $resource, string $filepath) {
         // example thumbnail path: lresourceFiles_SU1HXzIwMTgxMDE0XzE1NDI0OC5KUEc1544087790.png
@@ -136,9 +140,9 @@ class ResourcesFilesController extends ApiController {
     /**
      * @Route("/{resource}/file/{filepath}", requirements={"filepath"=".*"})
      * @Method("GET")
+     * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function fileAction(ResourceEntity $resource, string $filepath) {
-        $this->ensureCanManageFiles($resource);
         $filepath = $this->resourceFileStorage->getFileSystemPath($resource, $filepath);
         if (file_exists($filepath)) {
             return new BinaryFileResponse($filepath);
@@ -154,20 +158,5 @@ class ResourcesFilesController extends ApiController {
     public function filesFilter($attr, $path, $data, $volume, $isDir, $relpath) {
         $basename = basename($path);
         return $basename[0] === '.' && strlen($relpath) !== 1 ? !($attr == 'read' || $attr == 'write') : null;
-    }
-
-    private function hasRole(ResourceEntity $resource, SystemRole $role): bool {
-        $requiredRole = $role->roleName($resource->getResourceClass());
-        return $this->getUser()->hasRole($requiredRole);
-    }
-
-    private function ensureHasRole(ResourceEntity $resource, SystemRole $role): void {
-        if (!$this->hasRole($resource, $role)) {
-            throw $this->createAccessDeniedException();
-        }
-    }
-
-    private function ensureCanManageFiles(ResourceEntity $resource): void {
-        $this->ensureHasRole($resource, SystemRole::OPERATOR());
     }
 }

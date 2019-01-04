@@ -1,5 +1,4 @@
-{% set resourceVisible = resource.resourceClass == 'books' %}
-{% extends resourceVisible ? 'redo/layout.twig' : 'empty.twig' %}
+{% extends resource.resourceClass == 'books' and canView(resource) ? 'redo/layout.twig' : 'empty.twig' %}
 
 {% set page_title = resource | metadata('label') %}
 {% set childrenAllowed = resource | childrenAllowed %}
@@ -54,7 +53,8 @@
                 <div class="download-options">
                     <span class="download-options-icon">{{ icon('download', 1.5) }}</span>
                     <fieldset>
-                        <legend align="left"><span title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span></legend>
+                        <legend align="left"><span title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span>
+                        </legend>
                         <div class="download-formats">
                             <h4><a href="/download/mobi"
                                     title="{{ 'Download resource in MOBI format' | trans }} - 7KB">MOBI</a></h4>
@@ -108,9 +108,9 @@
                                         {{ metadataValue | basename }}
                                     {% elseif metadata.control == 'relationship' %}
                                         {% set relatedResource = resource(metadataValue) %}
-                                        {% if relatedResource.resourceClass == 'books' %}
+                                        {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
                                             <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
-                                        {% else %}
+                                        {% elseif canViewTeaser(relatedResource) %}
                                             {{ relatedResource | mLabel | raw }}
                                         {% endif %}
                                     {% elseif metadata.dynamic %}

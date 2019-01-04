@@ -66,6 +66,7 @@ class GlobalExceptionListener {
         } else {
             $responseStatus = $exception instanceof DomainException ? $exception->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
             $responseStatus = $exception instanceof HttpException ? $exception->getStatusCode() : $responseStatus;
+            $responseStatus = $exception instanceof AccessDeniedException ? Response::HTTP_FORBIDDEN : $responseStatus;
             try {
                 $responseContent = $this->twig->render(
                     $this->errorPageTwigTemplate,

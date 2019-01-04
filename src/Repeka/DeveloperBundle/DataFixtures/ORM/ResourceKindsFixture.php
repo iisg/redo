@@ -32,7 +32,7 @@ class ResourceKindsFixture extends RepekaFixture {
     }
 
     private function addBooksResourceKinds() {
-        $workflow = $this
+        $bookWorkflow = $this
             ->handleCommand(new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::BOOK_WORKFLOW)->getId()));
         $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId();
         $parentMetadata = $this->handleCommand(new MetadataGetQuery(-1));
@@ -68,7 +68,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL_LINK),
                 ],
-                $workflow
+                $bookWorkflow
             ),
             self::REFERENCE_RESOURCE_KIND_BOOK
         );

@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Validation\CommandAttributesValidator;
@@ -15,7 +16,7 @@ class ResourceUpdateContentsCommandValidator extends CommandAttributesValidator 
                 'resource',
                 Validator::instance(ResourceEntity::class)->callback(
                     function (ResourceEntity $r) {
-                        return $r->getId() > 0;
+                        return $r->getId() > 0 || $r->getId() == SystemResource::UNAUTHENTICATED_USER;
                     }
                 )
             );

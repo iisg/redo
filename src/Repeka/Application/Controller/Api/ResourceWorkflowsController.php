@@ -13,6 +13,7 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,6 +25,7 @@ class ResourceWorkflowsController extends ApiController {
     /**
      * @Route
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getListAction(Request $request) {
         $resourceClass = $request->query->get('resourceClass', '');
@@ -35,6 +37,7 @@ class ResourceWorkflowsController extends ApiController {
     /**
      * @Route("/simulation")
      * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function simulateAction(Request $request) {
         $data = $request->request->all();
@@ -51,6 +54,7 @@ class ResourceWorkflowsController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getAction(string $id) {
         $workflow = $this->handleCommand(new ResourceWorkflowQuery(intval($id)));
@@ -60,6 +64,7 @@ class ResourceWorkflowsController extends ApiController {
     /**
      * @Route("/{workflow}")
      * @Method("PUT")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function putAction(ResourceWorkflow $workflow, Request $request) {
         $data = $request->request->all();
@@ -78,6 +83,7 @@ class ResourceWorkflowsController extends ApiController {
     /**
      * @Route
      * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function postAction(Request $request) {
         $data = $request->request->all();
@@ -96,6 +102,7 @@ class ResourceWorkflowsController extends ApiController {
     /**
      * @Route("/{workflow}")
      * @Method("DELETE")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function deleteAction(ResourceWorkflow $workflow) {
         $this->handleCommand(new ResourceWorkflowDeleteCommand($workflow));
@@ -105,6 +112,7 @@ class ResourceWorkflowsController extends ApiController {
     /**
      * @Route("/{workflow}/plugins")
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getWorkflowPluginsAction(ResourceWorkflow $workflow) {
         /** @var ResourceWorkflowPlugin[] $plugins */

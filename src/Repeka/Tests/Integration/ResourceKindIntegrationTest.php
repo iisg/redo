@@ -17,7 +17,7 @@ use Repeka\Tests\IntegrationTestCase;
 
 class ResourceKindIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/resource-kinds';
-    const AUTO_CREATED_METADATA_COUNT = 3;
+    const AUTO_CREATED_METADATA_COUNT = 5;
 
     /** @var ResourceKind */
     private $resourceKind;
@@ -88,8 +88,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $sortedMetadata = ($responseItem->metadataList[0]->id == $this->metadata1->getId())
             ? $responseItem->metadataList
             : array_reverse($responseItem->metadataList);
-        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[3]->id);
-        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[2]->id);
+        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[5]->id);
+        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[4]->id);
     }
 
     /** @small */
@@ -169,8 +169,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $sortedMetadata = ($responseItem->metadataList[0]->id == $this->metadata1->getId())
             ? $responseItem->metadataList
             : array_reverse($responseItem->metadataList);
-        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[3]->id);
-        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[2]->id);
+        $this->assertEquals($this->metadata1->getId(), $sortedMetadata[5]->id);
+        $this->assertEquals($this->metadata2->getId(), $sortedMetadata[4]->id);
     }
 
     /** @small */
@@ -244,6 +244,8 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                 SystemMetadata::PARENT,
                 SystemMetadata::REPRODUCTOR,
                 SystemMetadata::RESOURCE_LABEL,
+                SystemMetadata::VISIBILITY,
+                SystemMetadata::TEASER_VISIBILITY,
             ],
             $resourceKind->getMetadataIds()
         );

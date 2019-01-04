@@ -15,6 +15,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,6 +35,7 @@ class MetadataController extends ApiController {
     /**
      * @Route
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getListAction(Request $request) {
         $queryBuilder = MetadataListQuery::builder();
@@ -79,6 +81,7 @@ class MetadataController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getAction(string $id) {
         $metadata = $this->handleCommand(new MetadataGetQuery(intval($id)));
@@ -88,6 +91,7 @@ class MetadataController extends ApiController {
     /**
      * @Route("/{id}/hierarchy")
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getHierarchy(Metadata $metadata) {
         $path = $this->handleCommand(new MetadataTopLevelPathQuery($metadata));
@@ -97,6 +101,7 @@ class MetadataController extends ApiController {
     /**
      * @Route
      * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function postAction(Request $request) {
         $command = MetadataCreateCommand::fromArray($request->request->all());
@@ -107,6 +112,7 @@ class MetadataController extends ApiController {
     /**
      * @Route("/{parent}/metadata")
      * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function postChildAction(Metadata $parent, Request $request) {
         $data = $request->request->all();
@@ -125,6 +131,7 @@ class MetadataController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("PATCH")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function patchAction(int $id, Request $request) {
         $command = MetadataUpdateCommand::fromArray($id, $request->request->all());
@@ -135,6 +142,7 @@ class MetadataController extends ApiController {
     /**
      * @Route
      * @Method("PUT")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function updateOrderAction(Request $request) {
         $ids = $request->request->all();
@@ -147,6 +155,7 @@ class MetadataController extends ApiController {
     /**
      * @Route("/{metadata}")
      * @Method("DELETE")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function deleteAction(Metadata $metadata) {
         $this->handleCommand(new MetadataDeleteCommand($metadata));

@@ -5,6 +5,7 @@ use Repeka\Domain\UseCase\Validation\CheckUniquenessQuery;
 use Repeka\Domain\UseCase\Validation\MatchAgainstRegexQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,6 +16,7 @@ class ValidationController extends ApiController {
     /**
      * @Route("/regex")
      * @Method("POST")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function regexMatch(Request $request) {
         $query = MatchAgainstRegexQuery::fromArray($request->request->all());
@@ -25,6 +27,7 @@ class ValidationController extends ApiController {
     /**
      * @Route("/uniqueInResourceClass")
      * @Method("POST")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function uniqueInResourceClass(Request $request) {
         $query = CheckUniquenessQuery::fromArray($request->request->all());

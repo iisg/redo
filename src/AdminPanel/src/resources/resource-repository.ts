@@ -5,11 +5,15 @@ import {ResourceListQuery} from "./resource-list-query";
 import {ResourceTreeQuery} from './resource-tree-query';
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
-import {cachedResponse, forOneMinute} from "../common/repository/cached-response";
+import {cachedResponse, forOneMinute, forSeconds} from "../common/repository/cached-response";
 import {suppressError as suppressErrorHeader} from "../common/http-client/headers";
+import {debouncePromise} from "../common/utils/function-utils";
+import {keyBy} from "lodash";
 
 @autoinject
 export class ResourceRepository extends ApiRepository<Resource> {
+  private resourceIdsToQueryForTeaser = [];
+
   constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer) {
     super(httpClient, entitySerializer, Resource, 'resources');
   }
@@ -21,6 +25,27 @@ export class ResourceRepository extends ApiRepository<Resource> {
   public getTreeQuery(): ResourceTreeQuery {
     return new ResourceTreeQuery(this.httpClient, `${this.endpoint}/tree`, this.entitySerializer);
   }
+
+  @cachedResponse(forSeconds(30))
+  public getTeaser(id: number): Promise<Resource> {
+    if (this.resourceIdsToQueryForTeaser.indexOf(id) === -1) {
+      this.resourceIdsToQueryForTeaser.push(id);
+    }
+    return this.fetchTeasers().then(teasers => teasers[id]);
+  }
+
+  private fetchTeasers = debouncePromise(() => {
+    if (this.resourceIdsToQueryForTeaser.length) {
+      const endpoint = 'teasers/' + this.resourceIdsToQueryForTeaser.join(',');
+      const request = this.httpClient.createRequest(this.oneEntityEndpoint(endpoint))
+        .asGet()
+        .withHeader(suppressErrorHeader.name, suppressErrorHeader.value);
+      this.resourceIdsToQueryForTeaser = [];
+      return request.send()
+        .then(response => this.responseToEntities(response))
+        .then(entities => keyBy(entities, 'id'));
+    }
+  }, 100);
 
   update(resource: Resource): Promise<Resource> {
     return this.updateAndApplyTransition(resource, '');

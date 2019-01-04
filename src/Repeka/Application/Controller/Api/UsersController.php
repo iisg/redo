@@ -9,6 +9,7 @@ use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/users")
@@ -27,6 +28,7 @@ class UsersController extends ApiController {
     /**
      * @Route
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getListAction() {
         $user = $this->handleCommand(new UserListQuery());
@@ -36,6 +38,7 @@ class UsersController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("GET")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getUserAction(int $id) {
         $query = new UserQuery($id);
@@ -46,6 +49,7 @@ class UsersController extends ApiController {
     /**
      * @Route("/byData/{resource}")
      * @Method("GET")
+     * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function getUserByDataAction(ResourceEntity $resource) {
         $relatedUser = $this->handleCommand(new UserByUserDataQuery($resource));

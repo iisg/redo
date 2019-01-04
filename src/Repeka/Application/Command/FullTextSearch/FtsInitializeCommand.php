@@ -18,11 +18,7 @@ class FtsInitializeCommand extends Command {
     protected function execute(InputInterface $input, OutputInterface $output) {
         ini_set('memory_limit', '1G');
         $this->getApplication()->setAutoExit(false);
-        FirewallMiddleware::bypass(
-            function () use ($output) {
-                $this->getApplication()->run(new StringInput('repeka:elasticsearch:create-index --delete-if-exists'), $output);
-                $this->getApplication()->run(new StringInput('repeka:fts:index-database'), $output);
-            }
-        );
+        $this->getApplication()->run(new StringInput('repeka:elasticsearch:create-index --delete-if-exists'), $output);
+        $this->getApplication()->run(new StringInput('repeka:fts:index-database'), $output);
     }
 }

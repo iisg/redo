@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -9,6 +10,7 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\LockedMetadataValuesAreUnchangedRule;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
 use Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule;
+use Repeka\Domain\Validation\Rules\TeaserVisibilityWiderOrEqualToFullVisibilityRule;
 use Repeka\Domain\Validation\Rules\ValueSetMatchesResourceKindRule;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Respect\Validation\Validatable;
@@ -28,19 +30,23 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
     private $resourceContentsCorrectStructureRule;
     /** @var LockedMetadataValuesAreUnchangedRule */
     private $lockedMetadataValuesAreUnchangedRule;
+    /** @var TeaserVisibilityWiderOrEqualToFullVisibilityRule */
+    private $teaserVisibilityWiderOrEqualToFullVisibilityRule;
 
     public function __construct(
         TransitionPossibilityChecker $transitionPossibilityChecker,
         ValueSetMatchesResourceKindRule $valueSetMatchesResourceKindRule,
         MetadataValuesSatisfyConstraintsRule $metadataValuesSatisfyConstraintsRule,
         ResourceContentsCorrectStructureRule $resourceContentsCorrectStructureRule,
-        LockedMetadataValuesAreUnchangedRule $lockedMetadataValuesAreUnchangedRule
+        LockedMetadataValuesAreUnchangedRule $lockedMetadataValuesAreUnchangedRule,
+        TeaserVisibilityWiderOrEqualToFullVisibilityRule $teaserAndFullVisibilityRule
     ) {
         $this->transitionPossibilityChecker = $transitionPossibilityChecker;
         $this->valueSetMatchesResourceKindRule = $valueSetMatchesResourceKindRule;
         $this->metadataValuesSatisfyConstraintsRule = $metadataValuesSatisfyConstraintsRule;
         $this->resourceContentsCorrectStructureRule = $resourceContentsCorrectStructureRule;
         $this->lockedMetadataValuesAreUnchangedRule = $lockedMetadataValuesAreUnchangedRule;
+        $this->teaserVisibilityWiderOrEqualToFullVisibilityRule = $teaserAndFullVisibilityRule;
     }
 
     /** @param ResourceTransitionCommand $command */
@@ -52,7 +58,9 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
                 Validator::allOf(
                     Validator::callback(
                         function (ResourceEntity $resource) {
-                            return $resource->getId() > 0 || $resource->getId() == null;
+                            return $resource->getId() > 0
+                                || $resource->getId() == SystemResource::UNAUTHENTICATED_USER
+                                || $resource->getId() == null;
                         }
                     )->setTemplate('Resource ID must not be less than 0'),
                     Validator::callback($this->assertHasTransition($command->getTransition()->getId()))
@@ -60,6 +68,7 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
                 )
             )->callback([$this, 'transitionIsPossible'])
             ->attribute('contents', $this->resourceContentsCorrectStructureRule)
+            ->attribute('contents', $this->teaserVisibilityWiderOrEqualToFullVisibilityRule)
             ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getResource()->getKind()))
             ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResource($command->getResource()))
             ->attribute(

@@ -4,6 +4,7 @@ namespace Repeka\Domain\Factory;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 
 class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
+
     public function __construct(AuditEntryListQuery $query) {
         $this->query = $query;
         $this->alias = 'ae';

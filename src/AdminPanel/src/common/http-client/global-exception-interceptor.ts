@@ -26,6 +26,7 @@ export class GlobalExceptionInterceptor implements Interceptor {
     if (!suppressError
       && response.statusCode >= 400
       && response.statusCode != 401
+      && response.statusCode != 403
       && response.statusCode != 404
       && this.userAuthenticated) {
       this.alert.showHtml(options, title, html).then(() => {

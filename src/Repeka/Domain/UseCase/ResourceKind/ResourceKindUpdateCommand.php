@@ -13,6 +13,9 @@ class ResourceKindUpdateCommand extends ResourceClassAwareCommand implements Adj
     private $metadataList;
     private $workflow;
 
+    /**
+     * @param ResourceKind | int $resourceKindOrId
+     */
     public function __construct($resourceKindOrId, array $label, array $metadataList, $workflowOrId = null) {
         parent::__construct(ResourceKind::detectResourceClass($metadataList));
         $this->resourceKind = $resourceKindOrId;

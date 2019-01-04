@@ -72,8 +72,8 @@ export class ResourceDetails implements RoutableComponentActivate {
       }
     );
     this.childrenListener = this.eventAggregator.subscribe('resourceChildrenAmount', (resourceChildrenAmount: number) => {
-      this.numberOfChildren = resourceChildrenAmount;
-      this.resourceDetailsTabs.updateLabels();
+        this.numberOfChildren = resourceChildrenAmount;
+        this.resourceDetailsTabs.updateLabels();
       }
     );
     this.resourceFormOpenedListener = this.eventAggregator.subscribe('resourceFormOpened', (disabled: boolean) => {
@@ -100,30 +100,25 @@ export class ResourceDetails implements RoutableComponentActivate {
       } catch (e) {
       }
     }
-    const hasOperatorRole = this.hasRole.toView('OPERATOR', this.resource.resourceClass);
-    if (!hasOperatorRole) {
-      this.router.navigateToRoute('not-allowed');
-    } else {
-      this.hasChildren = this.resource.hasChildren;
-      this.contextResourceClass.setCurrent(this.resource.resourceClass);
-      const title = unescape(this.resourceLabel.toView(this.resource));
-      routeConfiguration.navModel.setTitle(title);
-      const contentsFilter = safeJsonParse(parameters['contentsFilter']) || {};
-      this.metadataList = await this.metadataRepository.getListQuery()
-        .filterByRequiredKindIds(this.resource.kind.id)
-        .filterByControls(MetadataControl.RELATIONSHIP)
-        .excludeIds(SystemMetadata.PARENT.id)
-        .get();
-      if (this.metadataList && this.metadataList.length) {
-        if (contentsFilter) {
-          const key = Object.keys(contentsFilter).find(key => +contentsFilter[key] === this.resource.id);
-          this.metadata = key ? this.metadataList.find(metadata => metadata.id == +key) : this.metadataList[0];
-        } else {
-          this.metadata = this.metadataList[0];
-        }
+    this.hasChildren = this.resource.hasChildren;
+    this.contextResourceClass.setCurrent(this.resource.resourceClass);
+    const title = unescape(this.resourceLabel.toView(this.resource));
+    routeConfiguration.navModel.setTitle(title);
+    const contentsFilter = safeJsonParse(parameters['contentsFilter']) || {};
+    this.metadataList = await this.metadataRepository.getListQuery()
+      .filterByRequiredKindIds(this.resource.kind.id)
+      .filterByControls(MetadataControl.RELATIONSHIP)
+      .excludeIds(SystemMetadata.PARENT.id)
+      .get();
+    if (this.metadataList && this.metadataList.length) {
+      if (contentsFilter) {
+        const key = Object.keys(contentsFilter).find(key => +contentsFilter[key] === this.resource.id);
+        this.metadata = key ? this.metadataList.find(metadata => metadata.id == +key) : this.metadataList[0];
+      } else {
+        this.metadata = this.metadataList[0];
       }
-      this.activateTabs(parameters.tab);
     }
+    this.activateTabs(parameters.tab);
   }
 
   activateTabs(activeTabId) {

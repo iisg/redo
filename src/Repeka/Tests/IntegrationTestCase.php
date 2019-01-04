@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use ReflectionClass;
 use ReflectionProperty;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
+use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
@@ -197,6 +198,12 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
                 return $commandBus->handle($command);
             }
         );
+    }
+
+    protected function handleCommandAs(User $executor, Command $command) {
+        EntityUtils::forceSetField($command, $executor, 'executor');
+        $commandBus = $this->container->get(CommandBus::class);
+        return $commandBus->handle($command);
     }
 
     protected function clearDefaultLanguages() {

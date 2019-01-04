@@ -28,6 +28,3 @@ security:
         secret: '%secret%'
         lifetime: 604800 # 1 week in seconds
         path: /
-
-  access_control:
-    - { path: ^/api, roles: ROLE_OPERATOR_SOME_CLASS }

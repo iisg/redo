@@ -11,6 +11,7 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\Workflow\TransitionPossibilityCheckResult;
@@ -54,6 +55,7 @@ class TwigDepositExtension extends \Twig_Extension {
      * @return ResourceKind[]
      */
     public function depositableResourceKinds(User $user, $metadataIdsOrNames) {
+        /** @var PageResult $resources */
         $resources = $this->fetchFilteredByUserResources($user, $metadataIdsOrNames);
         $resourceKindIds = $this->allowedSubresourceKindIds($resources->getResults());
         if (empty($resourceKindIds)) {
@@ -79,7 +81,7 @@ class TwigDepositExtension extends \Twig_Extension {
         $resourceListQueryBuilder = ResourceListQuery::builder();
         foreach ($metadataIdsOrNames as $metadataIdOrName) {
             $metadata = $this->metadataRepository->findByNameOrId($metadataIdOrName);
-            $userIdAndGroupIds = array_merge([$user->getUserData()->getId()], $user->getUserGroupsIds());
+            $userIdAndGroupIds = $user->getGroupIdsWithUserId();
             $resourceListQueryBuilder = $resourceListQueryBuilder
                 ->filterByContents([$metadata->getId() => $userIdAndGroupIds]);
         }

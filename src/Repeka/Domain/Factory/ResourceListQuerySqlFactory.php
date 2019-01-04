@@ -2,12 +2,14 @@
 namespace Repeka\Domain\Factory;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
 
 class ResourceListQuerySqlFactory {
+
     /** @var ResourceListQuery */
     protected $query;
 
@@ -35,6 +37,7 @@ class ResourceListQuerySqlFactory {
         foreach ($this->query->getContentsFilters() as $filter) {
             $this->filterByContents($filter);
         }
+        $this->filterByPermissionMetadata();
         $this->addOrderBy();
         $this->paginate();
     }
@@ -119,6 +122,22 @@ class ResourceListQuerySqlFactory {
         }
     }
 
+    private function filterByPermissionMetadata(): void {
+        $executor = $this->query->getExecutor();
+        if ($executor) {
+            $permissionMetadataId = $this->query->getPermissionMetadataId();
+            $jsonQuery = $this->jsonbArrayElements("r.contents->'$permissionMetadataId'");
+            $visibilityQuery = "EXISTS (SELECT FROM $jsonQuery WHERE value->>'value' IN(:allowedViewers))";
+            $this->params['allowedViewers'] = $executor->getGroupIdsWithUserId();
+            $resourceClasses = $executor->resourceClassesInWhichUserHasRole(SystemRole::ADMIN());
+            if (!empty($resourceClasses)) {
+                $visibilityQuery .= ' OR resource_class IN(:userAdminClasses)';
+                $this->params['userAdminClasses'] = $resourceClasses;
+            }
+            $this->wheres[] = '(' . $visibilityQuery . ')';
+        }
+    }
+
     /**
      * Each call to filterByContents adds an alternative to search query.
      */
@@ -183,7 +202,7 @@ class ResourceListQuerySqlFactory {
         return count($this->params);
     }
 
-    private function jsonbArrayElements($arg) {
+    protected function jsonbArrayElements($arg) {
         return "jsonb_array_elements(COALESCE($arg, '[{}]'))";
     }
 }

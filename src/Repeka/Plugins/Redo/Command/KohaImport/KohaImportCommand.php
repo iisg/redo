@@ -4,7 +4,6 @@ namespace Repeka\Plugins\Redo\Command\KohaImport;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\MetadataRepository;

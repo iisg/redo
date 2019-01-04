@@ -10,10 +10,18 @@
 {% endif %}
 {% for ancestor in ancestors %}
     {% block itemPrefix %}{% endblock %}
-    <a href="/resources/{{ancestor}}">
-        {% block itemNamePrefix %}{% endblock %}
-        {{ancestor | metadata('label')}}
-        {% block itemNameSuffix %}{% endblock %}
-    </a>
-    {{block('itemSuffix')}}
+    {% if canView(ancestor | resource) %}
+        <a href="/resources/{{ ancestor }}">
+            {% block linkPrefix %}{% endblock %}
+            {{ ancestor | metadata('label') }}
+            {% block linkSuffix %}{% endblock %}
+        </a>
+    {% else %}
+        <span>
+            {% block labelPrefix %}{% endblock %}
+            {{ ancestor | metadata('label') }}
+            {% block labelSuffix %}{% endblock %}
+        </span>
+    {% endif %}
+    {{ block('itemSuffix') }}
 {% endfor %}

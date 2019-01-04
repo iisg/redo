@@ -4,9 +4,12 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Entity\ResourceEntity;
 
 class ResourceEvaluateDisplayStrategiesCommand extends AbstractCommand implements NonValidatedCommand {
+    use RequireNoRoles;
+
     /** @var ResourceEntity */
     private $resource;
     private $metadataIds;
@@ -22,9 +25,5 @@ class ResourceEvaluateDisplayStrategiesCommand extends AbstractCommand implement
 
     public function getMetadataIds(): array {
         return $this->metadataIds;
-    }
-
-    public function getRequiredRole(): ?SystemRole {
-        return null;
     }
 }

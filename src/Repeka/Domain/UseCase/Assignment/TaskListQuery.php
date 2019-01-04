@@ -3,11 +3,12 @@ namespace Repeka\Domain\UseCase\Assignment;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Cqrs\RequireOperatorRole;
 use Repeka\Domain\Entity\User;
 
 class TaskListQuery extends AbstractCommand implements NonValidatedCommand {
-    use RequireOperatorRole;
+    use RequireNoRoles;
 
     /** @var User */
     private $user;

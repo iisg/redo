@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\MetadataValue;
@@ -30,6 +31,7 @@ class ResourceTransitionCommandAdjuster implements CommandAdjuster {
         $newContents = $command->getContents();
         $newContents = $this->clearNotExistingMetadata($newContents);
         $newContents = $newContents->mapAllValues([$this, 'adjustResourceContents']);
+        $newContents = $this->adjustTeaserVisibilityValuesToFullVisibility($newContents);
         $currentContents = $this->clearNotExistingMetadata($command->getResource()->getContents());
         $command->getResource()->updateContents($currentContents->mapAllValues([$this, 'adjustResourceContents']));
         $transition = $command->getTransition();
@@ -66,5 +68,12 @@ class ResourceTransitionCommandAdjuster implements CommandAdjuster {
                 }
             )
             ->filterOutEmptyMetadata();
+    }
+
+    private function adjustTeaserVisibilityValuesToFullVisibility(ResourceContents $resourceContents): ResourceContents {
+        $fullVisibility = $resourceContents->getValuesWithoutSubmetadata(SystemMetadata::VISIBILITY);
+        $teaserVisibility = $resourceContents->getValuesWithoutSubmetadata(SystemMetadata::TEASER_VISIBILITY);
+        $adjustedTeaserVisibility =  array_merge(array_diff($fullVisibility, $teaserVisibility), $teaserVisibility);
+        return $resourceContents->withReplacedValues(SystemMetadata::TEASER_VISIBILITY, $adjustedTeaserVisibility);
     }
 }

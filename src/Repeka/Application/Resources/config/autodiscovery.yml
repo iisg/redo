@@ -37,6 +37,9 @@ services:
   Repeka\Application\Factory\:
     resource: '../../Factory'
 
+  Repeka\Application\Security\:
+    resource: '../../Security'
+
   Repeka\Application\Serialization\:
     resource: '../../Serialization'
 

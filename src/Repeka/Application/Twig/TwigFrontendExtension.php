@@ -2,7 +2,6 @@
 namespace Repeka\Application\Twig;
 
 use Repeka\Application\Cqrs\CommandBusAware;
-use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Elasticsearch\PageNumberFinder;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
@@ -179,11 +178,7 @@ ICON;
         if (isset($filters['sortBy']) && is_array($filters['sortBy'])) {
             $builder->sortBy([$filters['sortBy']]);
         }
-        return FirewallMiddleware::bypass(
-            function () use ($builder) {
-                return $this->handleCommand($builder->build());
-            }
-        );
+        return $this->handleCommand($builder->build());
     }
 
     public function bibtexEscape($value) {

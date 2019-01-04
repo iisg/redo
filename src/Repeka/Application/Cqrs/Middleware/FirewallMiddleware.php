@@ -2,11 +2,11 @@
 namespace Repeka\Application\Cqrs\Middleware;
 
 use Repeka\Application\Service\CurrentUserAware;
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandFirewall;
 use Repeka\Domain\Cqrs\FirewalledCommand;
 use Repeka\Domain\Entity\HasResourceClass;
-use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
 use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,6 +25,7 @@ class FirewallMiddleware implements CommandBusMiddleware {
 
     public function handle(Command $command, callable $next) {
         if (self::$firewallEnabled) {
+            $this->setExecutor($command);
             $this->ensureHasRequiredRole($command);
             $this->ensureCommandFirewallAllows($command);
         }
@@ -34,7 +35,7 @@ class FirewallMiddleware implements CommandBusMiddleware {
     private function ensureHasRequiredRole(Command $command): void {
         $requiredRole = $command->getRequiredRole();
         if ($requiredRole) {
-            $executor = $this->getExecutor($command);
+            $executor = $command->getExecutor();
             $requiredRoleName = $command instanceof HasResourceClass
                 ? $requiredRole->roleName($command->getResourceClass())
                 : $requiredRole->roleName();
@@ -49,12 +50,11 @@ class FirewallMiddleware implements CommandBusMiddleware {
 
     private function ensureCommandFirewallAllows(Command $command): void {
         if ($command instanceof FirewalledCommand) {
-            $executor = $this->getExecutor($command);
             $firewallId = $this->getCommandFirewallId($command);
             if ($this->container->has($firewallId)) {
                 /** @var CommandFirewall $firewall */
                 $firewall = $this->container->get($firewallId);
-                $firewall->ensureCanExecute($command, $executor);
+                $firewall->ensureCanExecute($command, $command->getExecutor());
             } else {
                 throw new \InvalidArgumentException(
                     "Could not find a firewall for the {$command->getCommandName()}. "
@@ -65,16 +65,13 @@ class FirewallMiddleware implements CommandBusMiddleware {
         }
     }
 
-    private function getExecutor(Command $command): User {
-        if ($command->getExecutor()) {
-            return $command->getExecutor();
-        } else {
+    private function setExecutor(Command $command) {
+        if (!$command->getExecutor()) {
             $executor = $this->getCurrentUser();
             if (!$executor) {
-                throw new InsufficientPrivilegesException('Could not detect the executor: nobody is authenticated');
+                $executor = SystemResource::UNAUTHENTICATED_USER()->toUser();
             }
             EntityUtils::forceSetField($command, $executor, 'executor');
-            return $executor;
         }
     }
 

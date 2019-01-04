@@ -35,7 +35,7 @@ class KohaImportCommandIntegrationTest extends DatabaseMigrationTestCase {
             file_get_contents(__DIR__ . '/../MetadataImport/dumps/only_language_resources_pgdump.sql')
         );
         $this->getEntityManager()->getConnection()->exec(
-            file_get_contents(__DIR__.'/../MetadataImport/dumps/only_language_resources_fix_metadata.sql')
+            file_get_contents(__DIR__ . '/../MetadataImport/dumps/only_language_resources_fix_metadata.sql')
         );
         $this->executeCommand('doctrine:migrations:migrate');
         $this->barcode1 = 100000231505;
@@ -216,7 +216,10 @@ class KohaImportCommandIntegrationTest extends DatabaseMigrationTestCase {
         $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
         $resourceKind = $this->resourceKindRepository->findOne($this->resourceKindId);
         $builder = new ResourceListQueryBuilder();
-        $query = $builder->filterByContents([$this->barcodeMetadataId => $barcode])->filterByResourceKind($resourceKind)->build();
+        $query = $builder
+            ->filterByContents([$this->barcodeMetadataId => $barcode])
+            ->filterByResourceKind($resourceKind)
+            ->build();
         $resources = $this->resourceRepository->findByQuery($query);
         return $resources->getResults()[0]->getContents();
     }

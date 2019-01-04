@@ -3,13 +3,13 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Cqrs\AdjustableCommand;
-use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
 /** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class ResourceListFtsQuery extends AbstractListQuery implements AdjustableCommand {
-    use RequireOperatorRole;
+    use RequireNoRoles;
 
     /** @var string */
     private $phrase;

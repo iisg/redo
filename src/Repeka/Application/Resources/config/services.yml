@@ -27,10 +27,12 @@ services:
     - !tagged repeka.initialization_command
 
   Repeka\Application\Command\Initialization\InitializeSystemLanguagesCommand:
-    tags: [{name: repeka.initialization_command, priority: 500}]
+    tags: [{name: repeka.initialization_command, priority: 600}]
   Repeka\Application\Command\Initialization\InitializeSystemMetadataCommand:
-    tags: [{name: repeka.initialization_command, priority: 400}]
+    tags: [{name: repeka.initialization_command, priority: 500}]
   Repeka\Application\Command\Initialization\InitializeSystemResourceKindsCommand:
+    tags: [{name: repeka.initialization_command, priority: 400}]
+  Repeka\Application\Command\Initialization\InitializeSystemResourcesCommand:
     tags: [{name: repeka.initialization_command, priority: 300}]
 
   Repeka\Application\Cqrs\RepekaCommandBus:
@@ -98,6 +100,10 @@ services:
   Repeka\Application\EventListener\Doctrine\ResourceWorkflowDriverInjector:
     tags:
       - { name: doctrine.event_listener, event: postLoad }
+
+  Repeka\Application\Security\Voters\ResourceClassAdminVoter:
+    tags:
+      - { name: security.voter, priority: 100 }
 
   Repeka\Application\Service\FilesystemResourceFileStorage:
     $uploadDirs: '%repeka.upload_dirs%'

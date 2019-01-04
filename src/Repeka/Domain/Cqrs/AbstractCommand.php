@@ -9,6 +9,7 @@ use Repeka\Domain\Entity\User;
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class AbstractCommand implements Command {
+
     /** @var User|null */
     protected $executor;
 

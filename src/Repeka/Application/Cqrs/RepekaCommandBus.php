@@ -11,6 +11,7 @@ use Repeka\Domain\Cqrs\CommandBus;
  * @see http://www.blogcoward.com/archive/2011/05/14/cqrs-for-dummies-ndash-example-ndash-when-returning-a-value.aspx
  */
 class RepekaCommandBus implements CommandBus {
+
     /** @var CommandBusMiddleware[] */
     private $middlewares;
 

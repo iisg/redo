@@ -5,27 +5,36 @@ use Elastica\Aggregation\Filters;
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
-use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite;
+use Repeka\Application\Entity\UserEntity;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) it really has to use all of these Elastica helpers... */
 class ElasticSearchQuery {
+
     /** @var ResourceListFtsQuery */
     private $query;
 
     /** @var ElasticSearchQueryCreatorComposite */
     private $elasticSearchQueryCreatorComposite;
 
-    public function __construct(ResourceListFtsQuery $query, ElasticSearchQueryCreatorComposite $elasticSearchQueryCreatorComposite) {
+    public function __construct(
+        ResourceListFtsQuery $query,
+        ElasticSearchQueryCreatorComposite $elasticSearchQueryCreatorComposite
+    ) {
         $this->query = $query;
         $this->elasticSearchQueryCreatorComposite = $elasticSearchQueryCreatorComposite;
     }
 
     public function getQuery(): Query {
         $boolQuery = new Query\BoolQuery();
+        $executor = $this->query->getExecutor();
+        if ($executor) {
+            $boolQuery->addFilter($this->buildVisibilityFilterQuery($executor));
+        }
         if ($this->query->getPhrase()) {
             $boolQuery->addMust($this->atLeastOneMetadataShouldMatchThePhrase());
         }
@@ -51,6 +60,11 @@ class ElasticSearchQuery {
             $finalQuery->setFrom($this->query->getOffset());
         }
         return $finalQuery;
+    }
+
+    private function buildVisibilityFilterQuery(UserEntity $executor): Query\Terms {
+        $visibilityMetadataPath = $this->getMetadataPath(SystemMetadata::VISIBILITY()->toMetadata());
+        return new Query\Terms($visibilityMetadataPath, $executor->getGroupIdsWithUserId());
     }
 
     private function atLeastOneMetadataShouldMatchThePhrase(): Query\AbstractQuery {

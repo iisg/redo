@@ -36,7 +36,9 @@ export class MetadataList {
     let query = this.metadataRepository.getListQuery();
     query = this.parentMetadata
       ? query.filterByParentId(this.parentMetadata.id)
-      : query.filterByResourceClasses(this.resourceClass).onlyTopLevel().addSystemMetadataIds(SystemMetadata.REPRODUCTOR.id);
+      : query.filterByResourceClasses(this.resourceClass)
+      .onlyTopLevel()
+      .addSystemMetadataIds([SystemMetadata.REPRODUCTOR.id, SystemMetadata.VISIBILITY.id, SystemMetadata.TEASER_VISIBILITY.id]);
     this.metadataList = await query.get().then(metadataList => this.moveSystemMetadataToTheEnd(metadataList));
     this.progressBar = false;
   }

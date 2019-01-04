@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQueryBuilder;
 use Respect\Validation\Validator;
 
@@ -54,7 +55,7 @@ class UniqueInResourceClassConstraint extends AbstractMetadataConstraint impleme
     }
 
     private function valueAlreadyExists($metadataId, $metadataValue, $resourceClass, $resourceId): bool {
-        $builder = new ResourceListQueryBuilder();
+        $builder = ResourceListQuery::builder();
         $query = $builder
             ->filterByResourceClass($resourceClass)
             ->filterByContents([$metadataId => '^' . $metadataValue . '$'])
@@ -66,6 +67,6 @@ class UniqueInResourceClassConstraint extends AbstractMetadataConstraint impleme
                 return $matchedResource->getId() !== $resourceId;
             }
         );
-        return sizeof($matchingResources) > 0;
+        return count($matchingResources) > 0;
     }
 }

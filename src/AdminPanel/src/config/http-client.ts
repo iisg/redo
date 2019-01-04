@@ -6,6 +6,7 @@ import {RedirectToErrorPageIfElementNotFoundInterceptor} from "common/http-clien
 import {RedirectToLoginIfUnauthenticatedInterceptor} from "common/http-client/redirect-to-login-if-unauthenticated-interceptor";
 import {MetricsSenderInterceptor} from "common/metrics/metrics-sender-interceptor";
 import {ClearCachedResponseInterceptor} from "../common/repository/clear-cached-response-interceptor";
+import {RedirectToErrorPageIfContentForbidden} from "../common/http-client/redirect-to-error-page-if-content-forbidden";
 
 export function configure(aurelia: Aurelia) {
   const client: HttpClient = aurelia.container.get(HttpClient);
@@ -16,6 +17,7 @@ export function configure(aurelia: Aurelia) {
       .withHeader('Accept', 'application/json')
       .withHeader('X-Requested-With', 'XMLHttpRequest')
       .withInterceptor(new RedirectToLoginIfUnauthenticatedInterceptor())
+      .withInterceptor(new RedirectToErrorPageIfContentForbidden())
       .withInterceptor(new RedirectToErrorPageIfElementNotFoundInterceptor())
       .withInterceptor(new MetricsSenderInterceptor())
       .withInterceptor(new CsrfHeaderInterceptor())

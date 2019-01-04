@@ -6,6 +6,7 @@ use Repeka\Domain\Cqrs\NonValidatedCommand;
 use Repeka\Domain\Entity\ResourceContents;
 
 class AuditEntryListQuery extends AbstractListQuery implements NonValidatedCommand, AdjustableCommand {
+
     /** @var array */
     private $commandNames;
     private $users;

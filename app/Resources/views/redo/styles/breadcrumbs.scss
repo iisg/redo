@@ -5,7 +5,7 @@
     padding: $default-gap-size / 2 $default-gap-size / 4;
     background-color: $very-light-grey;
     color: $grey;
-    a {
+    a, span {
         padding-left: $default-gap-size / 4;
         padding-right: $default-gap-size / 4;
     }

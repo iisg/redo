@@ -72,13 +72,7 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
                 $metadataList[$id] = $metadata->withOverrides($metadataOrOverride);
             }
         }
-        if (!isset($metadataList[SystemMetadata::PARENT])) {
-            $metadataList[SystemMetadata::PARENT] = $this->metadataRepository->findOne(SystemMetadata::PARENT);
-        }
-        $metadataList[SystemMetadata::REPRODUCTOR] = $this->metadataRepository->findOne(SystemMetadata::REPRODUCTOR);
-        if (!isset($metadataList[SystemMetadata::RESOURCE_LABEL])) {
-            $metadataList[SystemMetadata::RESOURCE_LABEL] = $this->metadataRepository->findOne(SystemMetadata::RESOURCE_LABEL);
-        }
+        $this->addSystemMetadataIfMissing($metadataList);
         return array_values($metadataList);
     }
 
@@ -87,6 +81,16 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
         $controlKeys = array_combine($controlKeys, $controlKeys);
         $allowedConstraints = array_intersect_key($constraints, $controlKeys);
         return $allowedConstraints;
+    }
+
+    private function addSystemMetadataIfMissing(&$metadataList) {
+        $userRelatedSystemMetadata = [SystemMetadata::USERNAME, SystemMetadata::GROUP_MEMBER];
+        $obligatorySystemMetadata = array_diff(SystemMetadata::toArray(), $userRelatedSystemMetadata);
+        foreach ($obligatorySystemMetadata as $systemMetadata) {
+            if (!isset($metadataList[$systemMetadata]) || $systemMetadata == SystemMetadata::REPRODUCTOR) {
+                $metadataList[$systemMetadata] = $this->metadataRepository->findOne($systemMetadata);
+            }
+        }
     }
 
     protected function findWorkflow($workflowOrId) {

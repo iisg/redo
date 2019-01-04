@@ -13,7 +13,7 @@ export class ResourceBreadcrumbsProvider implements BreadcrumbsProvider {
   }
 
   async getBreadcrumbs(navigationInstruction: NavigationInstruction): Promise<BreadcrumbItem[]> {
-    const resource = await this.resourceRepository.get(navigationInstruction.params.id);
+    const resource = await this.resourceRepository.getTeaser(navigationInstruction.params.id);
     const resources = await this.resourceRepository.getHierarchy(resource.id);
     const breadcrumbs: BreadcrumbItem[] = [this.resourceBreadcrumb(resource)];
     for (let resource of resources) {
@@ -22,7 +22,7 @@ export class ResourceBreadcrumbsProvider implements BreadcrumbsProvider {
     breadcrumbs.unshift({
       label: this.i18n.tr(`resource_classes::${resource.resourceClass}//resources`),
       route: 'resources',
-      params: {resourceClass: resource.resourceClass}
+      params: {resourceClass: resource.resourceClass},
     });
     return breadcrumbs;
   }
@@ -31,9 +31,9 @@ export class ResourceBreadcrumbsProvider implements BreadcrumbsProvider {
     return {
       label: this.resourceLabel.toView(resource),
       labelHtml: true,
-      route: 'resources/details',
+      route: resource.canView && 'resources/details',
       params: {id: resource.id},
-      replace: true
+      replace: true,
     };
   }
 }

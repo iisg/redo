@@ -36,4 +36,14 @@ export class SystemMetadata {
     copyToChildResource: false,
     displayStrategy: '#{{ r.id }}',
   });
+  static readonly VISIBILITY: Metadata = $.extend(new Metadata(), {
+    id: -6,
+    control: MetadataControl.RELATIONSHIP,
+    baseId: -6,
+  });
+  static readonly TEASER_VISIBILITY: Metadata = $.extend(new Metadata(), {
+    id: -7,
+    control: MetadataControl.RELATIONSHIP,
+    baseId: -7,
+  });
 }

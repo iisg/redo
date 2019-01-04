@@ -7,11 +7,17 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQueryAdjuster;
 
 class ResourceKindListQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
 
-    public function testAdjustResourceKindListQuery() {
+    /** @var ResourceKindListQueryAdjuster */
+    private $adjuster;
+
+    public function setUp() {
         $columnSortDataConverter = $this->createMock(ColumnSortDataConverter::class);
         $columnSortDataConverter->expects($this->once())->method('convertSortByMetadataColumnsToIntegers');
-        $adjuster = new ResourceKindListQueryAdjuster($columnSortDataConverter);
+        $this->adjuster = new ResourceKindListQueryAdjuster($columnSortDataConverter);
+    }
+
+    public function testAdjustResourceKindListQuery() {
         $command = ResourceKindListQuery::builder()->build();
-        $adjuster->adjustCommand($command);
+        $this->adjuster->adjustCommand($command);
     }
 }

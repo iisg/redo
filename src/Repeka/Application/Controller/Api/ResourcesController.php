@@ -14,7 +14,6 @@ use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
-use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTopLevelPathQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
@@ -23,6 +22,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Domain\UseCase\TreeResult;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -76,6 +76,20 @@ class ResourcesController extends ApiController {
     }
 
     /**
+     * @Route("/teasers/{ids}")
+     * @Method("GET")
+     */
+    public function getTeasersAction(string $ids) {
+        $ids = array_values(array_filter(array_map('trim', explode(',', $ids))));
+        if (!$ids) {
+            throw $this->createNotFoundException();
+        }
+        $query = ResourceListQuery::builder()->filterByIds($ids)->setPermissionMetadataId(SystemMetadata::TEASER_VISIBILITY)->build();
+        $resources = $this->handleCommand($query);
+        return $this->createJsonResponse($resources, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
+    }
+
+    /**
      * @Route("/tree")
      * @Method("GET")
      */
@@ -114,10 +128,9 @@ class ResourcesController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("GET")
+     * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
-    public function getAction(string $id) {
-        /** @var ResourceEntity $resource */
-        $resource = $this->handleCommand(new ResourceQuery(intval($id)));
+    public function getAction(ResourceEntity $resource) {
         if ($resource->isDisplayStrategiesDirty()) {
             $resource = $this->handleCommand(new ResourceEvaluateDisplayStrategiesCommand($resource));
         }
@@ -127,10 +140,11 @@ class ResourcesController extends ApiController {
     /**
      * @Route("/{id}/hierarchy")
      * @Method("GET")
+     * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function getHierarchy(ResourceEntity $resource) {
         $path = $this->handleCommand(new ResourceTopLevelPathQuery($resource, SystemMetadata::PARENT));
-        return $this->createJsonResponse($path);
+        return $this->createJsonResponse($path, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
     }
 
     /**
@@ -148,6 +162,7 @@ class ResourcesController extends ApiController {
     /**
      * @Route
      * @Method("POST")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function postAction(Request $request) {
         $data = $request->request->all();
@@ -166,6 +181,7 @@ class ResourcesController extends ApiController {
     /**
      * @Route("/{resource}")
      * @Method("PUT")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function putAction(Request $request, ResourceEntity $resource) {
         $requestData = $request->request->all();
@@ -195,6 +211,7 @@ class ResourcesController extends ApiController {
     /**
      * @Route("/{resource}")
      * @Method("DELETE")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function deleteAction(ResourceEntity $resource) {
         $this->handleCommand(new ResourceDeleteCommand($resource));

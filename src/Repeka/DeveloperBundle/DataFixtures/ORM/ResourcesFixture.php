@@ -4,9 +4,11 @@ namespace Repeka\DeveloperBundle\DataFixtures\ORM;
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
@@ -19,6 +21,7 @@ class ResourcesFixture extends RepekaFixture {
     const REFERENCE_DEPARTMENT_IET = 'resource-department-iet';
     const REFERENCE_USER_GROUP_ADMINS = 'resource-user-group-admins';
     const REFERENCE_USER_GROUP_SCANNERS = 'resource-user-group-scanners';
+    const REFERENCE_USER_GROUP_SIGNED = 'resource-user-group-signed';
     const REFERENCE_RESOURCE_CATEGORY_EBOOKS = 'resource-category-ebooks';
 
     /**
@@ -26,7 +29,9 @@ class ResourcesFixture extends RepekaFixture {
      */
     public function load(ObjectManager $manager) {
         $this->addUserGroups();
-        $this->assignUsersToGroups();
+        $this->addVisibilityMetadataToGroups();
+        $this->assignUsersToGroupsAndSetThemVisibility();
+        $this->addVisibilityToUnauthenticatedUserResource();
         $this->addDictionaries();
         $this->addBooks();
         $this->addCmsPages();
@@ -44,6 +49,15 @@ class ResourcesFixture extends RepekaFixture {
                     [
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Akademia Górniczo Hutnicza',
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'AGH',
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -56,6 +70,15 @@ class ResourcesFixture extends RepekaFixture {
                     [
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Politechnika Krakowska',
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'PK',
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -69,6 +92,18 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Informatyki, Elektroniki i Telekomunikacji',
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'IET',
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY => $agh,
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -83,6 +118,15 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Elektroniki, Automatyki i Inżynierii Biomedycznej',
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV => 'EAIB',
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY => $agh,
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -94,6 +138,16 @@ class ResourcesFixture extends RepekaFixture {
                 $this->contents(
                     [
                         MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Wydawnictwo Zakładu Narodowego im. Ossolińskich',
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -124,6 +178,16 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [404],
                         MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
                         MetadataFixture::REFERENCE_METADATA_SUPERVISOR => [$userBudynek->getUserData()],
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -156,6 +220,18 @@ class ResourcesFixture extends RepekaFixture {
                                 ],
                             ],
                         ],
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -169,6 +245,18 @@ class ResourcesFixture extends RepekaFixture {
                     [
                         MetadataFixture::REFERENCE_METADATA_TITLE => ['Python dla opornych'],
                         MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT => $this->getReference(self::REFERENCE_DEPARTMENT_IET),
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -182,6 +270,18 @@ class ResourcesFixture extends RepekaFixture {
                     [
                         MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME => ['E-booki'],
                         SystemMetadata::REPRODUCTOR => [$this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId()],
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -194,6 +294,18 @@ class ResourcesFixture extends RepekaFixture {
                     [
                         SystemMetadata::PARENT => [$ebooks->getId()],
                         MetadataFixture::REFERENCE_METADATA_TITLE => ['"Mogliśmy użyć Webpacka" i inne spóźnione mądrości'],
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
                     ]
                 ),
                 $userAdmin
@@ -207,6 +319,18 @@ class ResourcesFixture extends RepekaFixture {
                         SystemMetadata::PARENT => [$ebooks->getId()],
                         MetadataFixture::REFERENCE_METADATA_TITLE => [
                             'Pair programming: jak równocześnie pisać na jednej klawiaturze w dwie osoby',
+                        ],
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
                         ],
                     ]
                 ),
@@ -259,9 +383,65 @@ class ResourcesFixture extends RepekaFixture {
             ),
             self::REFERENCE_USER_GROUP_SCANNERS
         );
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $userGroupResourceKind,
+                $this->contents(
+                    [
+                        SystemMetadata::USERNAME => ['Zalogowani'],
+                    ]
+                )
+            ),
+            self::REFERENCE_USER_GROUP_SIGNED
+        );
     }
 
-    private function assignUsersToGroups() {
+    private function addVisibilityMetadataToGroups() {
+        /** @var ResourceEntity $userGroupAdmins */
+        $userGroupAdmins = $this->getReference(self::REFERENCE_USER_GROUP_ADMINS);
+        /** @var ResourceEntity $userGroupScanners */
+        $userGroupScanners = $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS);
+        /** @var ResourceEntity $userGroupSigned */
+        $userGroupSigned = $this->getReference(self::REFERENCE_USER_GROUP_SIGNED);
+        $this->handleCommand(
+            new ResourceUpdateContentsCommand(
+                $userGroupAdmins,
+                $userGroupAdmins->getContents()->withMergedValues(
+                    SystemMetadata::VISIBILITY,
+                    [$userGroupAdmins->getId()]
+                )->withMergedValues(
+                    SystemMetadata::TEASER_VISIBILITY,
+                    [$userGroupAdmins->getId(), $userGroupScanners->getId(), $userGroupSigned->getId()]
+                )
+            )
+        );
+        $this->handleCommand(
+            new ResourceUpdateContentsCommand(
+                $userGroupScanners,
+                $userGroupScanners->getContents()->withMergedValues(
+                    SystemMetadata::VISIBILITY,
+                    [$userGroupAdmins->getId()]
+                )->withMergedValues(
+                    SystemMetadata::TEASER_VISIBILITY,
+                    [$userGroupAdmins->getId(), $userGroupScanners->getId(), $userGroupSigned->getId()]
+                )
+            )
+        );
+        $this->handleCommand(
+            new ResourceUpdateContentsCommand(
+                $userGroupSigned,
+                $userGroupSigned->getContents()->withMergedValues(
+                    SystemMetadata::VISIBILITY,
+                    [$userGroupAdmins->getId()]
+                )->withMergedValues(
+                    SystemMetadata::TEASER_VISIBILITY,
+                    [$userGroupAdmins->getId(), $userGroupScanners->getId(), $userGroupSigned->getId()]
+                )
+            )
+        );
+    }
+
+    private function assignUsersToGroupsAndSetThemVisibility() {
         /** @var ResourceEntity $admin */
         $admin = $this->getReference(AdminAccountFixture::REFERENCE_USER_ADMIN)->getUserData();
         $this->handleCommand(
@@ -269,27 +449,116 @@ class ResourcesFixture extends RepekaFixture {
                 $admin,
                 $admin->getContents()->withReplacedValues(
                     SystemMetadata::GROUP_MEMBER,
-                    [$this->getReference(self::REFERENCE_USER_GROUP_ADMINS), $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)]
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SIGNED),
+                    ]
+                )->withReplacedValues(
+                    SystemMetadata::VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                    ]
+                )->withMergedValues(
+                    SystemMetadata::TEASER_VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SIGNED),
+                    ]
                 )
             )
         );
+        /** @var ResourceEntity $budynek */
         $budynek = $this->getReference(UsersFixture::REFERENCE_USER_BUDYNEK)->getUserData();
         $this->handleCommand(
             new ResourceUpdateContentsCommand(
                 $budynek,
                 $budynek->getContents()->withReplacedValues(
                     SystemMetadata::GROUP_MEMBER,
-                    [$this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)]
+                    [$this->getReference(self::REFERENCE_USER_GROUP_SCANNERS), $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)]
+                )->withReplacedValues(
+                    SystemMetadata::VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                    ]
+                )->withMergedValues(
+                    SystemMetadata::TEASER_VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SIGNED),
+                    ]
                 )
             )
         );
+        /** @var ResourceEntity $scanner */
         $scanner = $this->getReference(UsersFixture::REFERENCE_USER_SCANNER)->getUserData();
         $this->handleCommand(
             new ResourceUpdateContentsCommand(
                 $scanner,
                 $scanner->getContents()->withReplacedValues(
                     SystemMetadata::GROUP_MEMBER,
-                    [$this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)]
+                    [$this->getReference(self::REFERENCE_USER_GROUP_SCANNERS), $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)]
+                )->withReplacedValues(
+                    SystemMetadata::VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                    ]
+                )->withMergedValues(
+                    SystemMetadata::TEASER_VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SIGNED),
+                    ]
+                )
+            )
+        );
+        /** @var ResourceEntity $tester */
+        $tester = $this->getReference(UsersFixture::REFERENCE_USER_TESTER)->getUserData();
+        $this->handleCommand(
+            new ResourceUpdateContentsCommand(
+                $tester,
+                $tester->getContents()->withReplacedValues(
+                    SystemMetadata::GROUP_MEMBER,
+                    [$this->getReference(self::REFERENCE_USER_GROUP_SIGNED)]
+                )->withReplacedValues(
+                    SystemMetadata::VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                    ]
+                )->withMergedValues(
+                    SystemMetadata::TEASER_VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SIGNED),
+                    ]
+                )
+            )
+        );
+    }
+
+    private function addVisibilityToUnauthenticatedUserResource() {
+        $resourceRepository = $this->container->get(ResourceRepository::class);
+        $unauthenticatedUserResource = $resourceRepository->findOne(SystemResource::UNAUTHENTICATED_USER);
+        $this->handleCommand(
+            new ResourceUpdateContentsCommand(
+                $unauthenticatedUserResource,
+                $unauthenticatedUserResource->getContents()->withMergedValues(
+                    SystemMetadata::VISIBILITY,
+                    []
+                )->withMergedValues(
+                    SystemMetadata::TEASER_VISIBILITY,
+                    [
+                        $this->getReference(self::REFERENCE_USER_GROUP_ADMINS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS),
+                        $this->getReference(self::REFERENCE_USER_GROUP_SIGNED),
+                    ]
+                )->withReplacedValues(
+                    SystemMetadata::USERNAME,
+                    'Wszyscy'
                 )
             )
         );
@@ -297,14 +566,24 @@ class ResourcesFixture extends RepekaFixture {
 
     private function addCmsPages() {
         $cmsPageRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE);
+        $pageContent = '<h1>Nasz projekt jest super</h1> <repeka-version></repeka-version>';
         $this->handleCommand(
             new ResourceCreateCommand(
                 $cmsPageRk,
                 $this->contents(
                     [
                         MetadataFixture::REFERENCE_METADATA_CMS_TITLE => ['O projekcie'],
-                        MetadataFixture::REFERENCE_METADATA_CMS_CONTENT =>
-                            '<h1>Nasz projekt jest super</h1> <repeka-version></repeka-version>',
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONTENT => $pageContent,
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
                     ]
                 )
             )

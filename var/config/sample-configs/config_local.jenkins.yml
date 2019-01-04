@@ -16,6 +16,7 @@ repeka:
       icon: dictionary
       admins:
         - Username: admin
+        - Username: skaner
     - name: users
       icon: user
       admins:

@@ -33,7 +33,7 @@ export class Excel implements ComponentAttached {
   attached() {
     this.metadataRepository.getListQuery()
       .filterByResourceClasses(this.workflow.resourceClass)
-      .addSystemMetadataIds(SystemMetadata.REPRODUCTOR.id)
+      .addSystemMetadataIds([SystemMetadata.REPRODUCTOR.id, SystemMetadata.VISIBILITY.id, SystemMetadata.TEASER_VISIBILITY.id])
       .onlyTopLevel()
       .get()
       .then(metadataList => metadataList.filter(m => !m.isDynamic))

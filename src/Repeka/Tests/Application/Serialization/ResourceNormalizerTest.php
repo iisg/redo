@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Tests\Application\Serialization;
 
+use Repeka\Application\Entity\UserEntity;
+use Repeka\Application\Security\SecurityOracle;
 use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -36,13 +38,15 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
     private $resourceWithChild;
     /** @var ResourceRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $resourceRepository;
+    /** @var  SecurityOracle|\PHPUnit_Framework_MockObject_MockObject */
+    private $securityOracle;
 
     protected function setUp() {
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->resource = $this->createResourceMock(1, $this->createResourceKindMock(1, 'books', [], $this->workflow));
         $this->resourceWithChild = $this->createResourceMock(2);
         // TokenStorage
-        $this->user = $this->createMock(User::class);
+        $this->user = $this->createMock(UserEntity::class);
         $token = $this->createMock(TokenInterface::class);
         $token->method('getUser')->willReturn($this->user);
         $tokenStorage = $this->createMock(TokenStorage::class);
@@ -50,8 +54,9 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         // TransitionPossibilityChecker
         $this->checker = $this->createMock(TransitionPossibilityChecker::class);
         $this->resourceRepository = $this->createMock(ResourceRepository::class);
+        $this->securityOracle = $this->createMock(SecurityOracle::class);
         // test subject
-        $this->normalizer = new ResourceNormalizer($this->checker, $this->resourceRepository);
+        $this->normalizer = new ResourceNormalizer($this->checker, $this->resourceRepository, $this->securityOracle);
         $this->normalizer->setTokenStorage($tokenStorage);
         $normalizerService = $this->createMock(NormalizerInterface::class);
         $normalizerService->method('normalize')->willReturnArgument(0);
@@ -60,7 +65,7 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
 
     /** @SuppressWarnings("PHPMD.UnusedLocalVariable") */
     public function testGettingBlockedTransitions() {
-        $this->user->method('hasRole')->willReturn(true);
+        $this->securityOracle->method('hasMetadataPermission')->willReturn(true);
         $this->workflow->method('getTransitions')->willReturn(
             [
                 $this->transition('a'),
@@ -85,7 +90,7 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingAvailableTransitions() {
-        $this->user->method('hasRole')->willReturn(true);
+        $this->securityOracle->method('hasMetadataPermission')->willReturn(true);
         $this->workflow->method('getTransitions')->willReturn([$this->transition('a')]);
         $this->checker->method('check')->willReturn(new TransitionPossibilityCheckResult([], false));
         $normalized = $this->normalizer->normalize($this->resource);
@@ -96,7 +101,7 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGettingAvailableTransitionsForResourceWithoutWorkflow() {
-        $this->user->method('hasRole')->willReturn(true);
+        $this->securityOracle->method('hasMetadataPermission')->willReturn(true);
         $resource = $this->createResourceMock(1);
         $normalized = $this->normalizer->normalize($resource);
         $this->assertArrayHasKey('availableTransitions', $normalized);
@@ -105,35 +110,37 @@ class ResourceNormalizerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['update'], EntityUtils::mapToIds($availableTransitions));
     }
 
-    public function testGettingFullContentIfOperator() {
-        $this->user->method('hasRole')->willReturn(true);
-        $resource = $this->createResourceMock(1, null, [SystemMetadata::RESOURCE_LABEL => 'ala', 2 => 'kot']);
+    public function testGettingFullContent() {
+        $resource = $this->createResourceMock(
+            1,
+            null,
+            [SystemMetadata::RESOURCE_LABEL => 'ala', 2 => 'kot', SystemMetadata::VISIBILITY => [1]]
+        );
         $normalized = $this->normalizer->normalize($resource);
+        $this->assertArrayHasKey('isTeaser', $normalized);
+        $this->assertFalse($normalized['isTeaser']);
+        $this->assertArrayHasKey('canView', $normalized);
+        $this->assertTrue($normalized['canView']);
         $this->assertArrayHasKey('contents', $normalized);
         $contents = $normalized['contents'];
-        $this->assertCount(2, $contents);
+        $this->assertCount(3, $contents);
         $this->assertEquals([['value' => 'ala']], $contents[SystemMetadata::RESOURCE_LABEL]);
         $this->assertEquals([['value' => 'kot']], $contents[2]);
+        $this->assertEquals([['value' => 1]], $contents[SystemMetadata::VISIBILITY]);
     }
 
-    public function testGettingFullIfToldInContext() {
-        $resource = $this->createResourceMock(1, null, [SystemMetadata::RESOURCE_LABEL => 'ala', 2 => 'kot']);
-        $normalized = $this->normalizer->normalize($resource, 'json', [ResourceNormalizer::DO_NOT_STRIP_RESOURCE_CONTENT]);
-        $this->assertArrayHasKey('contents', $normalized);
-        $contents = $normalized['contents'];
-        $this->assertCount(2, $contents);
-        $this->assertEquals([['value' => 'ala']], $contents[SystemMetadata::RESOURCE_LABEL]);
-        $this->assertEquals([['value' => 'kot']], $contents[2]);
-    }
-
-    public function testGettingStrippedContentIfNotOperator() {
-        $resource = $this->createResourceMock(1, null, [SystemMetadata::RESOURCE_LABEL => 'ala', 2 => 'kot', SystemMetadata::PARENT => 10]);
-        $normalized = $this->normalizer->normalize($resource);
-        $this->assertArrayHasKey('contents', $normalized);
-        $contents = $normalized['contents'];
-        $this->assertCount(2, $contents);
-        $this->assertEquals([['value' => 'ala']], $contents[SystemMetadata::RESOURCE_LABEL]);
-        $this->assertEquals([['value' => 10]], $contents[SystemMetadata::PARENT]);
+    public function testSetsCanViewToFalseIfFullNotGranted() {
+        $this->securityOracle->method('hasMetadataPermission')->willReturn(false);
+        $resource = $this->createResourceMock(
+            1,
+            null,
+            [SystemMetadata::RESOURCE_LABEL => 'ala', 2 => 'kot']
+        );
+        $normalized = $this->normalizer->normalize($resource, null, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
+        $this->assertArrayHasKey('isTeaser', $normalized);
+        $this->assertArrayHasKey('canView', $normalized);
+        $this->assertTrue($normalized['isTeaser']);
+        $this->assertFalse($normalized['canView']);
     }
 
     public function testHasChildrenReturnTrueIfHasChildren() {

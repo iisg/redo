@@ -9,6 +9,7 @@ use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Tests\Traits\StubsTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
@@ -97,7 +98,8 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
                 $this->resourceKindRepository,
                 $this->paginator,
                 $this->createMock(FrontendConfig::class),
-                $this->createMock(PageNumberFinder::class)
+                $this->createMock(PageNumberFinder::class),
+                $this->createMock(AccessDecisionManagerInterface::class)
             );
             $this->assertEquals(
                 $expected,

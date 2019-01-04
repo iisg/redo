@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Application\Serialization;
 
+use Repeka\Application\Security\SecurityOracle;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -18,17 +18,23 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
     use CurrentUserAware;
     use NormalizerAwareTrait;
 
-    const DO_NOT_STRIP_RESOURCE_CONTENT = 'doNotStripResourceContent';
     const ALWAYS_RETURN_TEASER = 'alwaysReturnTeaser';
 
     /** @var TransitionPossibilityChecker */
     private $transitionPossibilityChecker;
     /** @var ResourceRepository */
     private $resourceRepository;
+    /** @var SecurityOracle */
+    private $securityOracle;
 
-    public function __construct(TransitionPossibilityChecker $transitionPossibilityChecker, ResourceRepository $resourceRepository) {
+    public function __construct(
+        TransitionPossibilityChecker $transitionPossibilityChecker,
+        ResourceRepository $resourceRepository,
+        SecurityOracle $securityOracle
+    ) {
         $this->transitionPossibilityChecker = $transitionPossibilityChecker;
         $this->resourceRepository = $resourceRepository;
+        $this->securityOracle = $securityOracle;
     }
 
     /**
@@ -36,7 +42,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
      * @inheritdoc
      */
     public function normalize($resource, $format = null, array $context = []) {
-        $returnTeaser = $this->shouldReturnTeaser($resource, $context);
+        $returnTeaser = in_array(self::ALWAYS_RETURN_TEASER, $context);
         $normalized = [
             'id' => $resource->getId(),
             'kindId' => $resource->getKind()->getId(),
@@ -44,8 +50,11 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             'resourceClass' => $resource->getResourceClass(),
             'displayStrategiesDirty' => $resource->isDisplayStrategiesDirty(),
             'hasChildren' => $this->resourceRepository->hasChildren($resource),
+            'isTeaser' => $returnTeaser,
+            'canView' => !$returnTeaser || $this->securityOracle->hasMetadataPermission($resource, SystemMetadata::VISIBILITY()),
         ];
-        if (!$returnTeaser) {
+        $user = $this->getCurrentUser();
+        if (!$returnTeaser && $user) {
             $availableTransitions = [SystemTransition::UPDATE()->toTransition($resource->getKind(), $resource)];
             $normalizerFunc = [$this->normalizer, 'normalize'];
             if ($resource->hasWorkflow() && $this->normalizer) {
@@ -53,7 +62,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
                 $normalized['currentPlaces'] = array_map($normalizerFunc, $workflow->getPlaces($resource));
                 $normalized['blockedTransitions'] = array_map(
                     $normalizerFunc,
-                    $this->getBlockedTransitions($resource, $this->getCurrentUser())
+                    $this->getBlockedTransitions($resource, $user)
                 );
                 $normalized['transitionAssigneeMetadata'] = $this->getTransitionAssigneeMetadata($resource);
                 $availableTransitions = array_merge($workflow->getTransitions($resource), $availableTransitions);
@@ -63,14 +72,6 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             }
         }
         return $normalized;
-    }
-
-    private function shouldReturnTeaser(ResourceEntity $resource, array $context): bool {
-        $user = $this->getCurrentUser();
-        $doNotCheckRole = in_array(self::DO_NOT_STRIP_RESOURCE_CONTENT, $context);
-        $alwaysReturnTeaser = in_array(self::ALWAYS_RETURN_TEASER, $context);
-        return $alwaysReturnTeaser
-            || !$doNotCheckRole && (!$user || !$user->hasRole(SystemRole::OPERATOR()->roleName($resource->getResourceClass())));
     }
 
     private function getContentsArray(ResourceEntity $resource, bool $teaser): array {

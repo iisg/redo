@@ -14,7 +14,6 @@ export const routes: AbstractRoute[] = new RouteGroup('admin', '', '', '', [
     new Route('details/:id', 'details', 'details/resource-details')
       .setActivationStrategy('replace')
       .withBreadcrumbsProvider('resource')
-      .requireRole('OPERATOR')
   ]),
 
   new RouteGroup('metadata', 'metadata', 'resources-config/metadata', 'Metadata Kinds', [

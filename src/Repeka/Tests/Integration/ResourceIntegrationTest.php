@@ -13,7 +13,6 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\AuditEntryRepository;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Workflow\ResourceWorkflowDriver;
@@ -23,6 +22,8 @@ use Repeka\Tests\IntegrationTestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  */
 class ResourceIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
@@ -87,20 +88,9 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'books',
             ['resourceKind' => [-1]]
         );
-        $reproductor = SystemMetadata::REPRODUCTOR()->toMetadata();
-        $this->handleCommandBypassingFirewall(
-            new MetadataUpdateCommand(
-                $reproductor->getId(),
-                $reproductor->getLabel(),
-                $reproductor->getDescription(),
-                $reproductor->getPlaceholder(),
-                ['resourceKind' => [SystemResourceKind::USER]],
-                $reproductor->getGroupId(),
-                $reproductor->getDisplayStrategy(),
-                $reproductor->isShownInBrief(),
-                $reproductor->isCopiedToChildResource()
-            )
-        );
+        $this->addSupportForResourceKindToMetadata(SystemMetadata::REPRODUCTOR, SystemResourceKind::USER);
+        $this->addSupportForResourceKindToMetadata(SystemMetadata::VISIBILITY, SystemResourceKind::USER);
+        $this->addSupportForResourceKindToMetadata(SystemMetadata::TEASER_VISIBILITY, SystemResourceKind::USER);
         $this->metadata5 = $this->createMetadata('M5', ['PL' => 'metadata', 'EN' => 'metadata'], [], [], 'flexible-date');
         $this->workflowPlace1 = new ResourceWorkflowPlace(['PL' => 'key1', 'EN' => 'key1'], 'p1', [], [], [], [$this->metadata3->getId()]);
         $this->workflowPlace2 = new ResourceWorkflowPlace(['PL' => 'key2', 'EN' => 'key2'], 'p2', [], [], [], [$this->metadata4->getId()]);
@@ -128,6 +118,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             $this->resourceKind,
             [
                 $this->metadata1->getId() => ['Test value'],
+                SystemMetadata::VISIBILITY => [1],
+                SystemMetadata::TEASER_VISIBILITY => [1],
             ]
         );
         $this->parentResource = $this->createResource(
@@ -135,19 +127,25 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 $this->metadata1->getId() => ['Test value for parent'],
                 SystemMetadata::REPRODUCTOR => [1],
+                SystemMetadata::VISIBILITY => [1],
+                SystemMetadata::TEASER_VISIBILITY => [1],
             ]
         );
         $this->resourceWithWorkflow = $this->createResource(
             $this->resourceKindWithWorkflow,
             [
                 $this->metadata1->getId() => ['Test value'],
+                SystemMetadata::VISIBILITY => [1],
+                SystemMetadata::TEASER_VISIBILITY => [1],
             ]
         );
         $this->childResource = $this->createResource(
             $this->resourceKind,
             [
-                -1 => [$this->parentResource->getId()],
+                SystemMetadata::PARENT => [$this->parentResource->getId()],
                 $this->metadata1->getId() => ['Test value for child'],
+                SystemMetadata::VISIBILITY => [1],
+                SystemMetadata::TEASER_VISIBILITY => [1],
             ]
         );
     }
@@ -226,18 +224,21 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                     [
                         $this->metadata1->getId() => ['Test value'],
                         SystemMetadata::RESOURCE_LABEL => '#' . $this->resource->getId(),
+                        SystemMetadata::VISIBILITY => $this->resource->getValues(SystemMetadata::VISIBILITY),
+                        SystemMetadata::TEASER_VISIBILITY => $this->resource->getValues(SystemMetadata::TEASER_VISIBILITY),
                     ]
                 )->toArray(),
                 'resourceClass' => $this->resource->getResourceClass(),
                 'displayStrategiesDirty' => false,
                 'hasChildren' => false,
                 'availableTransitions' => [SystemTransition::UPDATE()->toTransition($this->resourceKind, $this->resource)->toArray()],
+                'isTeaser' => false,
+                'canView' => true,
             ],
             $client->getResponse()->getContent()
         );
     }
 
-    /** @small */
     public function testFetchingByParentId() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['parentId' => $this->parentResource->getId()]);
@@ -275,7 +276,11 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => ['created']],
+                'contents' => [
+                    $this->metadata1->getId() => ['created'],
+                    SystemMetadata::VISIBILITY => [1],
+                    SystemMetadata::TEASER_VISIBILITY => [1],
+                ],
                 'resourceClass' => 'books',
             ]
         );
@@ -521,7 +526,11 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             [
                 'id' => $this->resource->getId(),
                 'kindId' => $this->resourceKind->getId(),
-                'contents' => [$this->metadata1->getId() => ['edited']],
+                'contents' => [
+                    $this->metadata1->getId() => ['edited'],
+                    SystemMetadata::VISIBILITY => [1],
+                    SystemMetadata::TEASER_VISIBILITY => [1],
+                ],
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -747,7 +756,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     }
 
     private function findResourceIdsByMetadataValue($metadataValue, $metadataId): array {
-        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery($metadataValue, [$metadataId]));
+        $query = new ResourceListFtsQuery($metadataValue, [$metadataId]);
+        $results = $this->handleCommandBypassingFirewall($query);
         return EntityUtils::mapToIds($results);
     }
 }

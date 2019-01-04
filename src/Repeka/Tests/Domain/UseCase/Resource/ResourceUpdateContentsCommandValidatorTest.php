@@ -30,10 +30,10 @@ class ResourceUpdateContentsCommandValidatorTest extends \PHPUnit_Framework_Test
         $validator->validate($command);
     }
 
-    public function testInvalidForResourceIdLessThanZero() {
+    public function testInvalidForResourceIdLessThanZeroIfNotSystemResource() {
         $validator = new ResourceUpdateContentsCommandValidator();
         $command = new ResourceUpdateContentsCommand(
-            $this->createResourceMock(-1),
+            $this->createResourceMock(-1024),
             ResourceContents::fromArray([1 => ['Some value']]),
             $this->user
         );

@@ -11,6 +11,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Plugins\Redo\Service\KohaXmlResourceDownloader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -30,6 +31,7 @@ class XmlImportController extends ApiController {
     /**
      * @Route("/{id}")
      * @Method("POST")
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getAction(string $id, Request $request) {
         $data = $request->request->all();

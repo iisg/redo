@@ -4,6 +4,7 @@ namespace Repeka\Application\Cqrs\Middleware;
 use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
+use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdjustCommandMiddleware implements CommandBusMiddleware {
@@ -19,7 +20,9 @@ class AdjustCommandMiddleware implements CommandBusMiddleware {
             if ($this->container->has($adjusterId)) {
                 /** @var CommandAdjuster $adjuster */
                 $adjuster = $this->container->get($adjusterId);
+                $executor = $command->getExecutor();
                 $command = $adjuster->adjustCommand($command);
+                EntityUtils::forceSetField($command, $executor, 'executor');
             } else {
                 throw new \InvalidArgumentException(
                     "Could not find an adjuster for the {$command->getCommandName()}. "

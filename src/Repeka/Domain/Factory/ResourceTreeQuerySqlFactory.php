@@ -1,6 +1,9 @@
 <?php
 namespace Repeka\Domain\Factory;
 
+use Repeka\Application\Entity\UserEntity;
+use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
 
 class ResourceTreeQuerySqlFactory extends ResourceListQuerySqlFactory {
@@ -22,7 +25,25 @@ class ResourceTreeQuerySqlFactory extends ResourceListQuerySqlFactory {
         $this->filterByContents($this->query->getContentsFilter());
         $this->filterByRoot();
         $this->filterByDepth();
+        $this->filterByTeaserVisibility();
         $this->paginateLevels();
+    }
+
+    private function filterByTeaserVisibility($contentsPath = 'r.contents'): void {
+        /** @var UserEntity|null $executor */
+        $executor = $this->query->getExecutor();
+        if ($executor) {
+            $visibilityMetadataId = SystemMetadata::TEASER_VISIBILITY;
+            $jsonQuery = $this->jsonbArrayElements("$contentsPath->'$visibilityMetadataId'");
+            $visibilityQuery = "EXISTS (SELECT FROM $jsonQuery WHERE value->>'value' IN(:allowedViewers))";
+            $this->params['allowedViewers'] = $executor->getGroupIdsWithUserId();
+            $resourceClasses = $executor->resourceClassesInWhichUserHasRole(SystemRole::ADMIN());
+            if (!empty($resourceClasses)) {
+                $visibilityQuery .= ' OR r.resource_class IN(:userAdminClasses)';
+                $this->params['userAdminClasses'] = $resourceClasses;
+            }
+            $this->wheres[] = '(' . $visibilityQuery . ')';
+        }
     }
 
     private function filterByRoot() {
@@ -147,17 +168,8 @@ SQL;
 
     public function getMatchingResourcesQuery(array $idsToCheck): string {
         $query = $this->getSelectQuery($this->alias . '.id AS id');
-        $parametrizedIds = [];
-        foreach ($idsToCheck as $id) {
-            $paramName = "res${id}";
-            $this->params[$paramName] = $id;
-            $parametrizedIds[] = ":${paramName}";
-        }
-        if (count($idsToCheck)) {
-            $query .= ' AND id IN (' . implode(', ', $parametrizedIds) . ')';
-        } else {
-            $query .= ' AND 1=0 ';
-        }
+        $query .= ' AND id IN (:idsToCheck)';
+        $this->params['idsToCheck'] = $idsToCheck;
         return $query;
     }
 }

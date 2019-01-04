@@ -59,12 +59,13 @@ class TwigFrontendExtensionIntegrationTest extends IntegrationTestCase {
         // @codingStandardsIgnoreEnd
     }
 
+    //This test can use only publicly visible resources due to visibility filtering
     public function testFetchingResources() {
         $couldUseWebpackId = $this->findResourceByContents(['tytul' => 'Mogliśmy użyć Webpacka'])->getId();
         $phpBookId = $this->getPhpBookResource()->getId();
         $testCases = [
-            ['{}', [18, 10, 1], [100]],
-            ['{parentId: null}', [18, 10, 1], [$couldUseWebpackId]],
+            ['{}', [18, 10, 14], [100]],
+            ['{parentId: null}', [14, 10, 16], [$couldUseWebpackId]],
             ['{resourceClass: "books"}', [$phpBookId, $couldUseWebpackId], [1, 2]],
             ["{resourceKindIds: [{$this->getPhpBookResource()->getKind()->getId()}]}", [$phpBookId, $couldUseWebpackId], [1, 2]],
         ];

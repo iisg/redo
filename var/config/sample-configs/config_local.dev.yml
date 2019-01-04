@@ -21,6 +21,7 @@ repeka:
       icon: dictionary
       admins:
         - Username: admin
+        - Username: skaner
     - name: users
       icon: user
       admins:
@@ -71,7 +72,7 @@ repeka:
         PL: Wszystkie wpisy audytu z paginacją i tytułem
   expose_endpoints:
     /about:
-      resourceId: 18
+      resourceId: 19
       metadata: wyrenderowana_tresc_strony
     /resources/{resourceId}:
       template: redo/resource-details/resource-details.twig

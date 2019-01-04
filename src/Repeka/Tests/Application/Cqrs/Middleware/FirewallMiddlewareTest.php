@@ -2,12 +2,16 @@
 namespace Repeka\Tests\Application\Cqrs\Middleware;
 
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
+use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @SuppressWarnings("PHPMD.UnusedLocalVariable")
@@ -71,6 +75,43 @@ class FirewallMiddlewareTest extends \PHPUnit_Framework_TestCase {
     public function testFirewallIsEnabledAfterAMoment() {
         $this->testAllowsWhenFirewallIsDisabled();
         $this->testThrowsWhenRequiredRoleIsMissing();
+    }
+
+    public function testFirewallSetsExecutor() {
+        $user = $this->createMock(UserEntity::class);
+        $tokenStorage = $this->createMock(TokenStorage::class);
+        $token = $this->createMock(TokenInterface::class);
+        $tokenStorage->method('getToken')->willReturn($token);
+        $token->method('getUser')->willReturn($user);
+        $this->middleware->setTokenStorage($tokenStorage);
+        $command = ResourceListQuery::builder()->build();
+        $this->middleware->handle(
+            $command,
+            function (Command $firewalledCommand) use ($user) {
+                $this->assertEquals($user, $firewalledCommand->getExecutor());
+            }
+        );
+    }
+
+    public function testFirewallDoesNotSetExecutorIfDisabled() {
+        $user = $this->createMock(UserEntity::class);
+        $tokenStorage = $this->createMock(TokenStorage::class);
+        $token = $this->createMock(TokenInterface::class);
+        $tokenStorage->method('getToken')->willReturn($token);
+        $token->method('getUser')->willReturn($user);
+        $this->middleware->setTokenStorage($tokenStorage);
+        $command = ResourceListQuery::builder()->build();
+        $this->assertNull($command->getExecutor());
+        FirewallMiddleware::bypass(
+            function () use ($command) {
+                $this->middleware->handle(
+                    $command,
+                    function (Command $firewalledCommand) {
+                        $this->assertNull($firewalledCommand->getExecutor());
+                    }
+                );
+            }
+        );
     }
 
     private function createCommand(array $executorRoles = [], ?SystemRole $requiredRole = null, ?string $resourceClass = null): Command {

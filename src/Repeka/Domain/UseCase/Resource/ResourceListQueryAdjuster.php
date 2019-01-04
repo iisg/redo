@@ -43,7 +43,8 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
             $query->onlyTopLevel(),
             $query->getPage(),
             $query->getResultsPerPage(),
-            $query->getWorkflowPlacesIds()
+            $query->getWorkflowPlacesIds(),
+            $query->getPermissionMetadataId()
         );
     }
 
