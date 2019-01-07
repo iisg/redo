@@ -78,7 +78,16 @@ class ESMapping {
                     'as_file' => [
                         'path_match' => '*.value_file',
                         'mapping' => [
-                            'type' => 'text',
+                            'type' => 'object',
+                            'properties' => [
+                                'name' => [
+                                    'analyzer' => 'underscore_analyzer',
+                                    'type' => 'text',
+                                ],
+                                'content' => [
+                                    'type' => 'text',
+                                ],
+                            ],
                         ],
                     ],
                 ],
