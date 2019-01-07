@@ -12,6 +12,7 @@ services:
   Repeka\Domain\Repository\ResourceFtsProvider: '@Repeka\Application\Elasticsearch\Model\ElasticSearch'
   Repeka\Domain\Repository\ResourceWorkflowRepository: '@Repeka\Application\Repository\ResourceWorkflowDoctrineRepository'
   Repeka\Domain\Repository\UserRepository: '@Repeka\Application\Repository\UserDoctrineRepository'
+  Repeka\Domain\Service\FileSystemDriver: '@Repeka\Application\Service\RealFileSystemDriver'
   Repeka\Domain\Service\ResourceFileStorage: '@Repeka\Application\Service\FilesystemResourceFileStorage'
   Repeka\Domain\Service\RegexNormalizer: '@Repeka\Application\Service\PhpRegexNormalizer'
   Repeka\Domain\Service\ResourceDisplayStrategyEvaluator: '@Repeka\Application\Twig\TwigResourceDisplayStrategyEvaluator'

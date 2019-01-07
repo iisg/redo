@@ -2,6 +2,7 @@
 namespace Repeka\Application\Service;
 
 use Repeka\Domain\Exception\DomainException;
+use Repeka\Domain\Service\FileSystemDriver;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -19,7 +20,8 @@ class FileSystemResourceFileStorageTest extends \PHPUnit_Framework_TestCase {
             [
                 ['id' => 'here', 'path' => __DIR__, 'label' => 'This directory'],
             ],
-            $displayStrategyEvaluator
+            $displayStrategyEvaluator,
+            $this->createMock(FileSystemDriver::class)
         );
     }
 

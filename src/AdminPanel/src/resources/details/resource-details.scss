@@ -12,6 +12,13 @@
       flex: 1;
     }
   }
+  #audit {
+    .audit-entry-details {
+      resource-link {
+        display: none;
+      }
+    }
+  }
   resource-metadata-table {
     padding: $default-gap-size;
   }

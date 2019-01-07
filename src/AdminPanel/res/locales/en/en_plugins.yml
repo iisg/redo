@@ -1,5 +1,14 @@
-repekaOcr:
+repekaOcrAbbyy:
   label: Send metadata to OCR
+  audit:
+    sent: "Resource files have been sent to the OCR server (metadata kind: {{metadataName}}, files: {{filesCount}})"
+    sendFailure: "Sending resource files to the OCR server failed (metadata kind: {{metadataName}}) - {{message}}"
+    resultsMarked: "OCR server claimed completion of the files from metadata ID{{metadataId}}. They will be available withing a few minutes."
+    resultsCollectedToMetadata: "Files from OCR server ({{filesCount}}) have been moved to resource files and assigned to metadata {{metadataName}}."
+    resultsCollectedRestFiles: "Files that were not assigned to any metadata ({{filesCount}}) have been moved to the resource files."
+    transitionAfterOcrSuccess: "Automatically applied transition after completed OCR: {{ transition }}"
+    transitionAfterOcrNotFound: "The transition that should be executed after OCR could not be found: {{ transition }}. Omitted."
+    resultsCollectError: "Could not receive resulting files from OCR: {{message}}"
   options:
     metadataToOcr:
       label: Source metadata kind

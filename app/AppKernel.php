@@ -18,7 +18,7 @@ class AppKernel extends Kernel {
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
             new Repeka\Application\RepekaBundle(),
-            new Repeka\Plugins\Ocr\RepekaOcrPluginBundle(),
+            new Repeka\Plugins\OcrAbbyy\RepekaOcrAbbyyPluginBundle(),
             new Repeka\Plugins\MetadataValueSetter\RepekaMetadataValueSetterPluginBundle(),
             new Repeka\Plugins\MetadataValueRemover\RepekaMetadataValueRemoverPluginBundle(),
         ];

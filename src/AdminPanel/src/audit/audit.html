@@ -79,7 +79,7 @@
                     <resource-link if.bind="entry.user"
                         id.bind="entry.user.userData.id"></resource-link>
                 </td>
-                <td>
+                <td class="audit-entry-details">
                     <compose view-model="./entry-details/audit-entry-details"
                         view="./entry-details/audit-entry-details-${entry.data.workflowPluginName ? 'resource-workflow-plugin' : entry.commandName | underscoresToHyphens}.html"
                         model.bind="{entry: entry}"></compose>
