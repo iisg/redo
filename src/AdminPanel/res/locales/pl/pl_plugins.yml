@@ -15,6 +15,11 @@ repekaOcr:
       placeholder: Nazwa przejścia w dowolnym języku
 repekaMetadataValueSetter:
   label: Wygeneruj wartość metadanej
+  audit:
+    sameValueExists: Pominięto wstawianie wartości {{value}} do metadanej {{metadataName}}, ponieważ taka sama wartość już była dodana
+    nonEmpty: Pominięto wstawianie wartości {{value}} do metadanej {{metadataName}}, ponieważ metadana zawierała już inne wartości
+    emptyValue: Pominięto wstawianie pustej wartości do metadanej {{metadataName}}
+    failure: Błąd przy generowaniu wartości metadanej {{metadataName}} - {{message}}
   options:
     metadataName:
       label: Rodzaj metadanej

@@ -5,7 +5,7 @@ use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlacePluginConfiguration;
-use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Factory\Audit;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandAdjuster;
@@ -25,12 +25,11 @@ class RepekaMetadataValueSetterResourceWorkflowPluginTest extends \PHPUnit_Frame
         $resourceTransitionCommandAdjuster = $this->createMock(ResourceTransitionCommandAdjuster::class);
         $resourceTransitionCommandAdjuster->method('adjustCommand')->willReturnArgument(0);
         $this->strategyEvaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class);
         $this->valueSetter = new RepekaMetadataValueSetterResourceWorkflowPlugin(
             $resourceTransitionCommandAdjuster,
-            $this->strategyEvaluator,
-            $metadataRepository
+            $this->strategyEvaluator
         );
+        $this->valueSetter->setAudit($this->createMock(Audit::class));
     }
 
     public function testDoesNothingIfNoConfig() {

@@ -24,17 +24,18 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
         $this->resourceTransitionCommandAdjuster = $resourceTransitionCommandAdjuster;
     }
 
+    /** @SuppressWarnings("PHPMD.CyclomaticComplexity") */
     public function beforeEnterPlace(BeforeCommandHandlingEvent $event, ResourceWorkflowPlacePluginConfiguration $config) {
-        /** @var ResourceTransitionCommand $command */
-        $command = $event->getCommand();
-        $resource = $command->getResource();
-        $newResourceContents = $command->getContents();
         $metadataName = $config->getConfigValue('metadataName');
         $metadataValue = $config->getConfigValue('metadataValue');
         $setOnlyWhenEmpty = $config->getConfigValue('setOnlyWhenEmpty');
         if (!$metadataName || !$metadataValue) {
             return;
         }
+        /** @var ResourceTransitionCommand $command */
+        $command = $event->getCommand();
+        $resource = $command->getResource();
+        $newResourceContents = $command->getContents();
         try {
             $metadata = $resource->getKind()->getMetadataByIdOrName($metadataName);
             $value = $this->strategyEvaluator->render(
@@ -47,10 +48,22 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
             $sameValueExists = in_array($value, $newResourceContents->getValuesWithoutSubmetadata($metadata));
             $anyValueExists = !empty($newResourceContents->getValues($metadata));
             $blockSettingNonEmpty = $setOnlyWhenEmpty && $anyValueExists;
+            $auditData = ['metadataId' => $metadata->getId(), 'metadataName' => $metadata->getName(), 'value' => $value];
             if ($value !== '' && !$sameValueExists && !$blockSettingNonEmpty) {
                 $newResourceContents = $newResourceContents->withMergedValues($metadata, $value);
+            } else {
+                $skipReason = $sameValueExists ? 'sameValueExists' : ($blockSettingNonEmpty ? 'nonEmpty' : 'emptyValue');
+                $this->newAuditEntry($event, $skipReason, $auditData, false);
             }
         } catch (\InvalidArgumentException $e) {
+            $entryData = ['message' => $e->getMessage()];
+            if (isset($metadata)) {
+                $entryData['metadataId'] = $metadata->getId();
+                $entryData['metadataName'] = $metadata->getName();
+            } else {
+                $entryData['metadataName'] = $metadataName;
+            }
+            $this->newAuditEntry($event, 'failure', $entryData, false);
         }
         $newCommand = new ResourceTransitionCommand($resource, $newResourceContents, $command->getTransition(), $command->getExecutor());
         $newCommand = $this->resourceTransitionCommandAdjuster->adjustCommand($newCommand);

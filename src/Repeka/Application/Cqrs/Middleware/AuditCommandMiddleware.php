@@ -1,26 +1,21 @@
 <?php
 namespace Repeka\Application\Cqrs\Middleware;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Repeka\Application\Entity\UserEntity;
-use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Domain\Cqrs\AuditedCommand;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAuditor;
-use Repeka\Domain\Entity\AuditEntry;
+use Repeka\Domain\Factory\Audit;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AuditCommandMiddleware implements CommandBusMiddleware {
-    use CurrentUserAware;
-
     private $container;
 
-    /** @var ManagerRegistry */
-    private $managerRegistry;
+    /** @var Audit */
+    private $audit;
 
-    public function __construct(ContainerInterface $container, ManagerRegistry $managerRegistry) {
+    public function __construct(ContainerInterface $container, Audit $audit) {
         $this->container = $container;
-        $this->managerRegistry = $managerRegistry;
+        $this->audit = $audit;
     }
 
     public function handle(Command $command, callable $next) {
@@ -65,19 +60,10 @@ class AuditCommandMiddleware implements CommandBusMiddleware {
     }
 
     private function saveAuditEntries(Command $command, ?array $beforeEntry, ?array $afterEntry, bool $successful) {
-        $entityManager = $this->managerRegistry->getManager();
-        $user = $this->getCurrentUser();
-        if ($user) {
-            // fetch the user again so it is managed in the current EntityManager
-            // previous EM could have been closed and reset if the command has failed
-            $user = $entityManager->find(UserEntity::class, $user->getId());
-        }
         foreach ([$beforeEntry, $afterEntry] as $entryData) {
             if (is_array($entryData)) {
-                $entry = new AuditEntry($command->getCommandName(), $user, $entryData, $successful);
-                $entityManager->persist($entry);
+                $this->audit->newEntry($command->getCommandName(), $command->getExecutor(), $entryData, $successful);
             }
         }
-        $entityManager->flush();
     }
 }

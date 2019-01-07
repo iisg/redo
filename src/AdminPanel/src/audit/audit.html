@@ -45,49 +45,50 @@
         <!-- For some reason this wrapper is required by Chrome to make horizontal scrolling possible. -->
         <table if.bind="entries.length > 0">
             <thead>
-                <tr>
-                    <th>${'Date' | t}</th>
-                    <th>${'Operation' | t}</th>
-                    <th>${'User' | t}</th>
-                    <th>${'Details' | t}</th>
-                    <th repeat.for="column of filters.customColumns">
-                        <div class="input-with-remove-button">
-                            <input class="form-control"
-                                type="text"
-                                value.bind="column.displayStrategy"
-                                placeholder="Title: {{ r|mTitle }}, Scanner: {{ r|m('Scanner')|m(-2) }}"
-                                keyup.trigger="onFiltersChanged() & debounce:600">
-                            <remove-button click.delegate="filters.removeCustomColumn(column)"
-                                show-tooltips-instead-of-labels.bind="true"></remove-button>
-                        </div>
-                    </th>
-                    <th>
-                        <toggle-button primary-icon-name="add-2"
-                            primary-label="Add dynamic column"
-                            click.delegate="filters.addNewCustomColumn()"
-                            show-tooltips-instead-of-labels.bind="true"></toggle-button>
-                    </th>
-                </tr>
+            <tr>
+                <th>${'Date' | t}</th>
+                <th>${'Operation' | t}</th>
+                <th>${'User' | t}</th>
+                <th>${'Details' | t}</th>
+                <th repeat.for="column of filters.customColumns">
+                    <div class="input-with-remove-button">
+                        <input class="form-control"
+                            type="text"
+                            value.bind="column.displayStrategy"
+                            placeholder="Title: {{ r|mTitle }}, Scanner: {{ r|m('Scanner')|m(-2) }}"
+                            keyup.trigger="onFiltersChanged() & debounce:600">
+                        <remove-button click.delegate="filters.removeCustomColumn(column)"
+                            show-tooltips-instead-of-labels.bind="true"></remove-button>
+                    </div>
+                </th>
+                <th>
+                    <toggle-button primary-icon-name="add-2"
+                        primary-label="Add dynamic column"
+                        click.delegate="filters.addNewCustomColumn()"
+                        show-tooltips-instead-of-labels.bind="true"></toggle-button>
+                </th>
+            </tr>
             </thead>
             <tbody>
-                <tr repeat.for="entry of entries"
-                    class="${entry.successful ? '' : 'failure'}">
-                    <td>${entry.createdAt | date:'LLL'}</td>
-                    <td>${'audit_commands::' + entry.commandName | t}</td>
-                    <td>
-                        <resource-link if.bind="entry.user"
-                            id.bind="entry.user.userData.id"></resource-link>
-                    </td>
-                    <td>
-                        <compose view-model="./entry-details/audit-entry-details"
-                            view="./entry-details/audit-entry-details-${entry.commandName | underscoresToHyphens}.html"
-                            model.bind="{entry: entry}"></compose>
-                    </td>
-                    <td repeat.for="column of filters.customColumns">
-                        ${entry.customColumns[column.displayStrategy] || '-'}
-                    </td>
-                    <td></td>
-                </tr>
+            <tr repeat.for="entry of entries"
+                class="${entry.successful ? '' : 'failure'}">
+                <td>${entry.createdAt | date:'LLL'}</td>
+                <td if.bind="entry.data.workflowPluginName">${'Plugin'|t}: ${'plugins::' + entry.data.workflowPluginName + '//label' | t}</td>
+                <td else>${'audit_commands::' + entry.commandName | t}</td>
+                <td>
+                    <resource-link if.bind="entry.user"
+                        id.bind="entry.user.userData.id"></resource-link>
+                </td>
+                <td>
+                    <compose view-model="./entry-details/audit-entry-details"
+                        view="./entry-details/audit-entry-details-${entry.data.workflowPluginName ? 'resource-workflow-plugin' : entry.commandName | underscoresToHyphens}.html"
+                        model.bind="{entry: entry}"></compose>
+                </td>
+                <td repeat.for="column of filters.customColumns">
+                    ${entry.customColumns[column.displayStrategy] || '-'}
+                </td>
+                <td></td>
+            </tr>
             </tbody>
         </table>
     </div>
