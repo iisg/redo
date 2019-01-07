@@ -43,6 +43,8 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
         if ($this->query->getResourceId() != null) {
             $this->whereAlternatives[] = "ae.data->'before'->'resource'->'id' = :id";
             $this->whereAlternatives[] = "ae.data->'after'->'resource'->'id' = :id";
+            $this->whereAlternatives[] = "ae.data->'resource'->'id' = :id";
+            $this->whereAlternatives[] = "ae.data->'resourceId' = :id";
             $this->params['id'] = $this->query->getResourceId();
         }
     }

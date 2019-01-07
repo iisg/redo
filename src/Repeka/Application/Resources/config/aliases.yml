@@ -1,5 +1,6 @@
 services:
   Repeka\Domain\Cqrs\CommandBus: '@Repeka\Application\Cqrs\RepekaCommandBus'
+  Repeka\Domain\Factory\Audit: '@Repeka\Application\Factory\RepekaAudit'
   Repeka\Domain\Factory\ResourceWorkflowDriverFactory: '@Repeka\Application\Factory\SymfonyResourceWorkflowDriverFactory'
   Repeka\Domain\Factory\UserFactory: '@Repeka\Application\Factory\UserEntityFactory'
   Repeka\Domain\Repository\AuditEntryRepository: '@Repeka\Application\Repository\AuditEntryDoctrineRepository'

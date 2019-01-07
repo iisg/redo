@@ -18,7 +18,7 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
         $dateFrom = date('Y-m-d', strtotime('-1 month', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateFrom($dateFrom)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(23, $entries);
+        $this->assertCount(25, $entries);
     }
 
     public function testFilterByDateTo() {
@@ -26,7 +26,7 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
         $dateTo = date('Y-m-d', strtotime('+1 month', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateTo($dateTo)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(23, $entries);
+        $this->assertCount(25, $entries);
     }
 
     public function testFilterByDateFromTo() {
@@ -35,7 +35,7 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
         $dateTo = date('Y-m-d', strtotime('+2 week', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateFrom($dateFrom)->filterByDateTo($dateTo)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(23, $entries);
+        $this->assertCount(25, $entries);
     }
 
     public function testFilterByFutureDateFrom() {

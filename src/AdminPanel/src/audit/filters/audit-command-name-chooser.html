@@ -6,7 +6,7 @@
         value.bind="commandNames"
         multiple>
         <template replace-part="option-template">
-            ${'audit_commands::' + option | t}
+            ${operationLabel(option)}
         </template>
     </dropdown-select>
 </template>
