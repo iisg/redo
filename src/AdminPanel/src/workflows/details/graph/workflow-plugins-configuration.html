@@ -32,7 +32,7 @@
                         </span>
                         <workflow-plugin-configuration-option-input option.bind="option"
                             value.bind="config.config[option.name]"
-                            description.one-time="'plugins::' + config.name + '//options//' + option.name + '//placeholder' | t"></workflow-plugin-configuration-option-input>
+                            description.one-time="'plugins::' + config.name + '//options//' + option.name + '//placeholder' | t:{interpolation:{prefix:'${{'}}"></workflow-plugin-configuration-option-input>
                     </div>
                 </div>
             </div>

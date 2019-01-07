@@ -56,4 +56,16 @@ class ResourceWorkflowPlugins {
         }
         return $configs;
     }
+
+    public function getPluginConfigs(array $placesOrIds, ResourceWorkflow $workflow, string $pluginClassName) {
+        $allConfigs = $this->getPluginsConfig($placesOrIds, $workflow);
+        return array_values(
+            array_filter(
+                $allConfigs,
+                function (ResourceWorkflowPlacePluginConfiguration $config) use ($pluginClassName) {
+                    return $config->isForPlugin($pluginClassName);
+                }
+            )
+        );
+    }
 }

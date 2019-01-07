@@ -13,8 +13,3 @@ exposed_endpoints:
 
 logout:
   path: /logout
-
-ocr:
-  resource: "@RepekaOcrPluginBundle/Controller"
-  type: annotation
-  prefix: /api/plugins/ocr

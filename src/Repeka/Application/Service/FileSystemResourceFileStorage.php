@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Application\Service;
 
-use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\DomainException;
+use Repeka\Domain\Service\FileSystemDriver;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Service\ResourceFileStorage;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,10 +13,17 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
     private $uploadDirs;
     /** @var ResourceDisplayStrategyEvaluator */
     private $displayStrategyEvaluator;
+    /** @var FileSystemDriver */
+    private $fileSystemDriver;
 
-    public function __construct(array $uploadDirs, ResourceDisplayStrategyEvaluator $displayStrategyEvaluator) {
+    public function __construct(
+        array $uploadDirs,
+        ResourceDisplayStrategyEvaluator $displayStrategyEvaluator,
+        FileSystemDriver $fileSystemDriver
+    ) {
         $this->uploadDirs = $uploadDirs;
         $this->displayStrategyEvaluator = $displayStrategyEvaluator;
+        $this->fileSystemDriver = $fileSystemDriver;
     }
 
     public function getFileSystemPath(ResourceEntity $resource, string $path): string {
@@ -43,17 +50,20 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
         );
         foreach ($uploadDirs as &$uploadDir) {
             if (!file_exists($uploadDir['path'])) {
-                $this->mkdirRecursive($uploadDir['path']);
+                try {
+                    $this->fileSystemDriver->mkdirRecursive($uploadDir['path']);
+                } catch (\Exception $e) {
+                }
             }
             $uploadDir['path'] = realpath($uploadDir['path']);
         }
-        return $uploadDirs;
-    }
-
-    private function mkdirRecursive(string $path) {
-        if (!file_exists($path)) {
-            $result = mkdir($path, 0750, true);
-            Assertion::true($result, 'Could not create upload dir: ' . $path);
-        }
+        return array_values(
+            array_filter(
+                $uploadDirs,
+                function (array $config) {
+                    return $config['path'];
+                }
+            )
+        );
     }
 }
