@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  repeka-oai-pmh:
+    container_name: ${COMPOSE_PROJECT_NAME}-oai
+    build: repeka-oai-pmh
+    volumes:
+      - ${VOLUME_OAI_PMH}:/var/www:z
+    links:
+      - repeka-postgres:postgres
