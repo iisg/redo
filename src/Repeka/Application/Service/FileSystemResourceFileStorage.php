@@ -3,6 +3,7 @@ namespace Repeka\Application\Service;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\DomainException;
+use Repeka\Domain\Exception\NotFoundException;
 use Repeka\Domain\Service\FileSystemDriver;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Service\ResourceFileStorage;
@@ -65,5 +66,13 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
                 }
             )
         );
+    }
+
+    public function getFileContents(ResourceEntity $resource, string $path): string {
+        $fullPath = $this->getFileSystemPath($resource, $path);
+        if (file_exists($fullPath)) {
+            return file_get_contents($fullPath);
+        }
+        throw new NotFoundException("File $fullPath does not exist");
     }
 }

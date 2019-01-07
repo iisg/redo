@@ -9,6 +9,7 @@ use Repeka\Application\Elasticsearch\Model\ESContentsAdjuster;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Tests\Application\Elasticsearch\ElasticsearchTest;
 use Repeka\Tests\Traits\StubsTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ESResourceTest extends ElasticsearchTest {
     use StubsTrait;
@@ -45,7 +46,7 @@ class ESResourceTest extends ElasticsearchTest {
                 $this->createMetadataMock(3, null, MetadataControl::TEXT(), [], 'books', [], 'TEXT'),
             ]
         );
-        $esContentsAdjuster = new ESContentsAdjuster($metadataRepository);
+        $esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $this->createMock(ContainerInterface::class));
         $this->indexMock->method('getType')->with(FtsConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
         $res = new ElasticSearch($this->clientMock, $esContentsAdjuster, self::INDEX_NAME);
         $res->insertDocument($resource);

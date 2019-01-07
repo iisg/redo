@@ -37,7 +37,7 @@ class ElasticSearch implements ResourceFtsProvider {
         $data = [
             'id' => $resource->getId(),
             'kindId' => $resource->getKind()->getId(),
-            'contents' => $this->esContentsAdjuster->adjustContents($resource->getContents()->toArray()),
+            'contents' => $this->esContentsAdjuster->adjustContents($resource, $resource->getContents()->toArray()),
             'resourceClass' => $resource->getResourceClass(),
         ];
         return new Document($resource->getId(), $data);

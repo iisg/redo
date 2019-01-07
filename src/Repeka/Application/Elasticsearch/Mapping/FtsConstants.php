@@ -14,11 +14,20 @@ final class FtsConstants {
     const CONTENTS = 'contents';
 
     const UNACCEPTABLE_TYPES = [
-        MetadataControl::FILE,
         MetadataControl::FLEXIBLE_DATE,
     ];
 
+    const SUPPORTED_FILE_EXTENSIONS = [
+        'txt',
+    ];
+
+    const SUPPORTED_ENCODING_TYPES = [
+        'UTF-8',
+    ];
+
     const NUMERIC_DETECTION_PARAM = 'numeric_detection';
+    const NAME = 'name';
+    const CONTENT = 'content';
 
     private function __construct() {
     }

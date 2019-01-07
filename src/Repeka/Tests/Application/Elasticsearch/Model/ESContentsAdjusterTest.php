@@ -1,15 +1,21 @@
 <?php
 namespace Repeka\Tests\Application\Elasticsearch\Model;
 
+use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Application\Elasticsearch\Model\ESContentsAdjuster;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Service\ResourceFileStorage;
 use Repeka\Tests\Traits\StubsTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
     /** @var ESContentsAdjuster */
     private $esContentsAdjuster;
+    /** @var ResourceEntity */
+    private $resource;
 
     protected function setUp() {
         $metadataRepository = $this->createMetadataRepositoryStub(
@@ -18,13 +24,19 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
                 $this->createMetadataMock(2, null, MetadataControl::INTEGER(), [], 'books', [], 'INTEGER'),
                 $this->createMetadataMock(3, null, MetadataControl::TIMESTAMP(), [], 'books', [], 'TIMESTAMP'),
                 $this->createMetadataMock(4, null, MetadataControl::FILE(), [], 'books', [], 'FILE'),
+                $this->createMetadataMock(5, null, MetadataControl::FLEXIBLE_DATE(), [], 'books', [], 'FLEXIBLE_DATE'),
             ]
         );
-        $this->esContentsAdjuster = new ESContentsAdjuster($metadataRepository);
+        $this->resource = $this->createResourceMock(1);
+        $container = $this->createMock(ContainerInterface::class);
+        $resourceFileStorage = $this->createMock(ResourceFileStorage::class);
+        $resourceFileStorage->method('getFileContents')->willReturn('mocked content');
+        $container->method('get')->willReturn($resourceFileStorage);
+        $this->esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $container);
     }
 
     public function testAdjustEmptyContents() {
-        $this->assertEquals([], $this->esContentsAdjuster->adjustContents([]));
+        $this->assertEquals([], $this->esContentsAdjuster->adjustContents($this->resource, []));
     }
 
     public function testAdjustContentsWithCorrectOneLevelMetadata() {
@@ -36,18 +48,18 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
             1 => [['value_text' => 'a']],
             2 => [['value_integer' => 5]],
         ];
-        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($contentsToAdjust));
+        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
     }
 
     public function testAdjustContentsWithNotIndexedMetadata() {
         $contentsToAdjust = [
             1 => [['value' => 'a']],
-            4 => [['value' => 'slfhddlfksd;sdksngs']],
+            5 => [['value' => 'slfhddlfksd;sdksngs']],
         ];
         $contentsAfterAdjust = [
             1 => [['value_text' => 'a']],
         ];
-        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($contentsToAdjust));
+        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
     }
 
     public function testAdjustContentsWithSubmetadata() {
@@ -83,12 +95,12 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
                 ],
             ],
         ];
-        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($contentsToAdjust));
+        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
     }
 
     public function testAdjustContentsWithSubmetadataAndNotIndexedParentMetadata() {
         $contentsToAdjust = [
-            4 => [
+            5 => [
                 [
                     'value' => 'alsdkfj',
                     'submetadata' => [
@@ -104,7 +116,7 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
             ],
         ];
         $contentsAfterAdjust = [
-            4 => [
+            5 => [
                 [
                     'submetadata' => [
                         3 => [['value_timestamp' => '03-08-2018']],
@@ -117,6 +129,26 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
                 ],
             ],
         ];
-        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($contentsToAdjust));
+        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
+    }
+
+    public function testAdjustFileContents() {
+        $contentsToAdjust = [
+            4 => [
+                ['value' => 'file.unsupported'],
+                ['value' => 'a'],
+                ['value' => 'file.txt'],
+                ['value' => '/home/user/file.txt'],
+            ],
+        ];
+        $contentsAfterAdjust = [
+            4 => [
+                ['value_file' => [FtsConstants::NAME => 'file.unsupported']],
+                ['value_file' => [FtsConstants::NAME => 'a']],
+                ['value_file' => [FtsConstants::NAME => 'file.txt', FtsConstants::CONTENT => 'mocked content']],
+                ['value_file' => [FtsConstants::NAME => 'file.txt', FtsConstants::CONTENT => 'mocked content']],
+            ],
+        ];
+        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
     }
 }

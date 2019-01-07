@@ -46,11 +46,21 @@ class ElasticSearchQuery {
 
     private function atLeastOneMetadataShouldMatchThePhrase(): Query\AbstractQuery {
         $metadataFilters = [];
-        foreach ($this->query->getSearchableMetadata() as $metadata) {
-            $metadataFilters[] = new Query\Fuzzy($this->getMetadataPath($metadata), $this->query->getPhrase());
-            $metadataFilters[] = new Query\Match($this->getMetadataPath($metadata), $this->query->getPhrase());
-        }
         $metadataQuery = new Query\BoolQuery();
+        foreach ($this->query->getSearchableMetadata() as $metadata) {
+            $path = $this->getMetadataPath($metadata);
+            if ($metadata->getControl() == MetadataControl::FILE) {
+                $namePath = $path . '.' . FtsConstants::NAME;
+                $contentPath = $path . '.' . FtsConstants::CONTENT;
+                $metadataFilters[] = new Query\Match($namePath, $this->query->getPhrase());
+                $metadataFilters[] = new Query\Match($contentPath, $this->query->getPhrase());
+                $metadataFilters[] = new Query\Fuzzy($namePath, $this->query->getPhrase());
+                $metadataFilters[] = new Query\Fuzzy($contentPath, $this->query->getPhrase());
+            } else {
+                $metadataFilters[] = new Query\Fuzzy($path, $this->query->getPhrase());
+                $metadataFilters[] = new Query\Match($path, $this->query->getPhrase());
+            }
+        }
         $metadataQuery->addShould($metadataFilters);
         return $metadataQuery;
     }
