@@ -1,7 +1,11 @@
 <?php
 namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 
+use DateTime;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\MetadataDateControl\MetadataDateControlConverterUtil;
+use Repeka\Domain\Entity\MetadataDateControl\MetadataDateControlMode;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfig;
 use Repeka\Domain\Metadata\MetadataImport\ImportResult;
 use Repeka\Domain\Metadata\MetadataImport\Mapping\Mapping;
@@ -92,6 +96,31 @@ class MetadataImporterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(
             [['value' => true], ['value' => true], ['value' => false]],
             $importResult->getAcceptedValues()[1]
+        );
+    }
+
+    public function testFlexibleDateMetadata() {
+        //Example given string '1888-1999'
+        $dateFrom = '1888';
+        $dateTo = '1999';
+        $metadata = $this->createMetadataMock(1, 2, MetadataControl::FLEXIBLE_DATE());
+        $importConfig = new ImportConfig([new Mapping($metadata, 'a', [], [])], []);
+        $importResult = $this->importer->import(['a' => [$dateFrom . '-' . $dateTo]], $importConfig);
+        $flexibleDate = [
+            'from' => DateTime::createFromFormat('Y', $dateFrom)->format(DateTime::ATOM),
+            'to' => DateTime::createFromFormat('Y', $dateTo)->format(DateTime::ATOM),
+            'mode' => MetadataDateControlMode::RANGE,
+            'rangeMode' => MetadataDateControlMode::YEAR,
+        ];
+        $flexibleDate = MetadataDateControlConverterUtil::convertDateToFlexibleDate(
+            $flexibleDate['from'],
+            $flexibleDate['to'],
+            $flexibleDate['mode'],
+            $flexibleDate['rangeMode']
+        )->toArray();
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => [['value' => $flexibleDate]]]),
+            $importResult->getAcceptedValues()
         );
     }
 

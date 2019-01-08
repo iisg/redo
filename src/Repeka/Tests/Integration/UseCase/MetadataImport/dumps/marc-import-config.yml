@@ -87,7 +87,25 @@ mappings:
         - name: 'trim'
         - name: 'removeEmpty'
       submetadata:
-        #        147:
+        147:
+          transforms:
+            - name: 'arrayColumn'
+              keys: 'd'
+            - name: 'flatten'
+            - name: trim
+              characters: ' .'
+            - name: trim
+              characters: '()'
+          submetadata:
+            original_value_biographical_dates_author:
+              transforms:
+                - name: 'arrayColumn'
+                  keys: 'd'
+                - name: 'flatten'
+                - name: trim
+                  characters: ' .'
+                - name: trim
+                  characters: '()'
         179:
           transforms:
             - name: 'arrayColumn'
@@ -116,7 +134,25 @@ mappings:
         - name: 'trim'
         - name: 'removeEmpty'
       submetadata:
-        #        147:
+        147:
+          transforms:
+            - name: 'arrayColumn'
+              keys: 'd'
+            - name: 'flatten'
+            - name: trim
+              characters: ' .'
+            - name: trim
+              characters: '()'
+          submetadata:
+            original_value_biographical_dates_author:
+              transforms:
+                - name: 'arrayColumn'
+                  keys: 'd'
+                - name: 'flatten'
+                - name: trim
+                  characters: ' .'
+                - name: trim
+                  characters: '()'
         179:
           transforms:
             - name: 'arrayColumn'
@@ -173,7 +209,25 @@ mappings:
                 {% endif %}
             - name: 'trim'
             - name: 'removeEmpty'
-        #    186: #daty biograficzne
+        182:
+          transforms:
+            - name: 'arrayColumn'
+              keys: 'd'
+            - name: 'flatten'
+            - name: trim
+              characters: ' .'
+            - name: trim
+              characters: '()'
+          submetadata:
+            original_value_biographical_dates_coauthor:
+              transforms:
+                - name: 'arrayColumn'
+                  keys: 'd'
+                - name: 'flatten'
+                - name: trim
+                  characters: ' .'
+                - name: trim
+                  characters: '()'
         187: #koha id
           transforms:
             - name: 'arrayColumn'
@@ -259,7 +313,25 @@ mappings:
                 {% endif %}
             - name: 'trim'
             - name: 'removeEmpty'
-        #    186: #daty biograficzne
+        182:
+          transforms:
+            - name: 'arrayColumn'
+              keys: 'd'
+            - name: 'flatten'
+            - name: trim
+              characters: ' .'
+            - name: trim
+              characters: '()'
+          submetadata:
+            original_value_biographical_dates_coauthor:
+              transforms:
+                - name: 'arrayColumn'
+                  keys: 'd'
+                - name: 'flatten'
+                - name: trim
+                  characters: ' .'
+                - name: trim
+                  characters: '()'
         187: #koha id
           transforms:
             - name: 'arrayColumn'
@@ -370,17 +442,26 @@ mappings:
       - name: 'flatten'
       - name: trim
         characters: " ,"
-  #  5:
-  #    key: '260'
-  #    transforms:
-  #      -
-  #        name: 'arrayColumn'
-  #        keys: 'c'
-  #      -
-  #        name: 'flatten'
-  #      -
-  #        name: trim
-  #        characters: " ."
+  5:
+    key: '260'
+    transforms:
+      - name: 'arrayColumn'
+        keys: 'c'
+      - name: 'flatten'
+      - name: trim
+        characters: " .:"
+      - name: trim
+        characters: "()[]"
+    submetadata:
+      original_value_publish_date:
+        transforms:
+          - name: 'arrayColumn'
+            keys: 'c'
+          - name: 'flatten'
+          - name: trim
+            characters: " .:"
+          - name: trim
+            characters: "()[]"
   172:
     key: '260'
     transforms:

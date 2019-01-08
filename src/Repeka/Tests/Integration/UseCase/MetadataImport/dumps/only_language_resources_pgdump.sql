@@ -397,8 +397,10 @@ INSERT INTO metadata VALUES (150, 'text', '{"PL": "Tytuł strony"}', '[]', '{"PL
 INSERT INTO metadata VALUES (166, 'relationship', '{"PL": "Język"}', '[]', '[]', 'jezyk_slow_kluczowych', NULL, -1, 116, '{"resourceKind": [48], "relatedResourceMetadataFilter": []}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (179, 'text', '{"PL": "Koha ID "}', '[]', '[]', NULL, 177, -1, 4, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (22, 'timestamp', '{"PL": "data powstania"}', '[]', '[]', 'data_powstania', NULL, -1, NULL, '{}', false, 'dictionaries', false, 'DEFAULT_GROUP');
-INSERT INTO metadata VALUES (147, 'timestamp', '{"PL": "Daty biograficzne"}', '[]', '[]', NULL, 62, -1, 4, '[]', false, 'books', false, 'DEFAULT_GROUP');
-INSERT INTO metadata VALUES (182, 'timestamp', '{"PL": "Daty biograficzne"}', '[]', '[]', NULL, 62, -1, 63, '[]', false, 'books', false, 'DEFAULT_GROUP');
+INSERT INTO metadata VALUES (147, 'flexible-date', '{"PL": "Daty biograficzne"}', '[]', '[]', NULL, 62, -1, 4, '[]', false, 'books', false, 'DEFAULT_GROUP');
+INSERT INTO metadata VALUES (182, 'flexible-date', '{"PL": "Daty biograficzne"}', '[]', '[]', NULL, 62, -1, 63, '[]', false, 'books', false, 'DEFAULT_GROUP');
+INSERT INTO metadata VALUES (301, 'text', '{"PL": "oryginalna wartość"}', '[]', '[]', 'original_value_biographical_dates_author', 62, -1, 147, '{"regex": "", "maxCount": 1}', false, 'books', false, 'DEFAULT_GROUP');
+INSERT INTO metadata VALUES (302, 'text', '{"PL": "oryginalna wartość"}', '[]', '[]', 'original_value_biographical_dates_coauthor', 62, -1, 182, '{"regex": "", "maxCount": 1}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (-4, 'relationship', '{"GB": "Reproduktor", "PL": "Reproduktor"}', '[]', '[]', 'reproductor', NULL, -1, NULL, '{"maxCount": -1, "resourceKind": [-1, 10], "relatedResourceMetadataFilter": []}', false, '', true, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (101, 'timestamp', '{"PL": "Data utworzenia rekordu"}', '{"PL": "wypełniana automatycznie"}', '[]', 'data_utworzenia_rekordu', NULL, 28, NULL, '{"maxCount": 1}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (102, 'text', '{"PL": "Opis problemów ze skanami"}', '{"PL": "Wypełniany podczas obróbki gdy wykryte zostaną błędy"}', '[]', 'opis_problemow_ze_skanami', NULL, 29, NULL, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
@@ -465,7 +467,8 @@ INSERT INTO metadata VALUES (61, 'text', '{"PL": "Wariant tytułu"}', '[]', '[]'
 INSERT INTO metadata VALUES (4, 'text', '{"PL": "Autor"}', '[]', '[]', 'autor', NULL, 62, NULL, '{}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (62, 'timestamp', '{"PL": "Daty biograficzne"}', '[]', '[]', 'daty_bibliograficzne', NULL, 63, NULL, '{}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (63, 'text', '{"PL": "Współtwórca"}', '[]', '[]', 'wspoltworca', NULL, 64, NULL, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
-INSERT INTO metadata VALUES (5, 'timestamp', '{"EN": "Data", "PL": "Data wydania"}', '[]', '[]', 'data_wydania', NULL, 65, NULL, '{}', false, 'books', false, 'DEFAULT_GROUP');
+INSERT INTO metadata VALUES (5, 'flexible-date', '{"EN": "Data", "PL": "Data wydania"}', '[]', '[]', 'data_wydania', NULL, 65, NULL, '{}', false, 'books', false, 'DEFAULT_GROUP');
+INSERT INTO metadata VALUES (303, 'text', '{"PL": "oryginalna wartość"}', '[]', '[]', 'original_value_publish_date', 62, -1, 5, '{"regex": "", "maxCount": 1}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (64, 'text', '{"PL": "Miejsce wydania"}', '[]', '[]', 'miejsce_wydania', NULL, 66, NULL, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (65, 'text', '{"PL": "Wydawca"}', '[]', '[]', 'wydawca', NULL, 67, NULL, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
 INSERT INTO metadata VALUES (66, 'text', '{"PL": "Drukarnia"}', '[]', '[]', 'drukarnia', NULL, 68, NULL, '{"regex": ""}', false, 'books', false, 'DEFAULT_GROUP');
