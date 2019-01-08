@@ -22,9 +22,13 @@ class ContentSearchImportTransform extends AbstractImportTransform {
 
     public function apply(array $values, array $config, array $dataBeingImported): array {
         $metadataId = $config['metadata'] ?? null;
+        $exactValue = isset($config['exact']) && $config['exact'];
         Assertion::notNull($metadataId, 'contentSearch transform require metadata to be configured');
         $resourceIds = array_map(
-            function ($searchValue) use ($metadataId) {
+            function ($searchValue) use ($metadataId, $exactValue) {
+                if ($exactValue) {
+                    $searchValue = '$' . $searchValue . '^';
+                }
                 $filters = ResourceContents::fromArray([$metadataId => $searchValue])
                     ->withMetadataNamesMappedToIds($this->metadataRepository);
                 $query = ResourceListQuery::builder()->filterByContents($filters)->build();

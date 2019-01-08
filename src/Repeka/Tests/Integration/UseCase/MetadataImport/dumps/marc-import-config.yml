@@ -49,6 +49,7 @@ mappings:
         - name: 'flatten'
         - name: 'contentSearch'
           metadata: 170
+          exact: 'true'
         
   4:
     - key: '100'

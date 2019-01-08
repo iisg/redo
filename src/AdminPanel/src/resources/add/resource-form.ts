@@ -246,7 +246,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
       const importedValues = valueMap[metadataId];
       const currentValues = this.resource.contents[metadataId].map(v => v.value);
       for (const metadataValue of importedValues) {
-        if (!inArray(+metadataId, lockedMetadataIds)! && inArray(metadataValue.value, currentValues)) {
+        if (!inArray(+metadataId, lockedMetadataIds) && !inArray(metadataValue.value, currentValues)) {
           this.resource.contents[metadataId].push(metadataValue);
         }
       }
