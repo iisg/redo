@@ -27,7 +27,7 @@ class ContentSearchImportTransform extends AbstractImportTransform {
         $resourceIds = array_map(
             function ($searchValue) use ($metadataId, $exactValue) {
                 if ($exactValue) {
-                    $searchValue = '$' . $searchValue . '^';
+                    $searchValue = '^' . $searchValue . '$';
                 }
                 $filters = ResourceContents::fromArray([$metadataId => $searchValue])
                     ->withMetadataNamesMappedToIds($this->metadataRepository);
