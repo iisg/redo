@@ -416,6 +416,7 @@ mappings:
         separator: ';'
       - name: 'flatten'
       - name: 'trim'
+      - name: 'removeEmpty'
   86:
     - key: '500'
       transforms:
