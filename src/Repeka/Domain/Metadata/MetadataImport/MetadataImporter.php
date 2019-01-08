@@ -3,6 +3,7 @@ namespace Repeka\Domain\Metadata\MetadataImport;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\MetadataDateControl\FlexibleDateImportConverterUtil;
 use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfig;
 use Repeka\Domain\Metadata\MetadataImport\Mapping\Mapping;
 use Repeka\Domain\Metadata\MetadataImport\Transform\ImportTransformComposite;
@@ -64,6 +65,7 @@ class MetadataImporter {
         return $allMetadataValues;
     }
 
+    /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
     private function prepareMetadataValues(ImportResultBuilder &$resultBuilder, Metadata $metadata, string $value) {
         $id = $metadata->getId();
         switch ($metadata->getControl()->getValue()) {
@@ -78,8 +80,10 @@ class MetadataImporter {
             case MetadataControl::BOOLEAN:
                 return $this->transformBooleanValue($resultBuilder, $id, $value);
             case MetadataControl::TIMESTAMP:
-            case MetadataControl::FLEXIBLE_DATE:
                 return $this->transformDateValue($resultBuilder, $id, $value);
+            case MetadataControl::DATE_RANGE:
+            case MetadataControl::FLEXIBLE_DATE:
+                return $this->transformFlexibleDateValue($resultBuilder, $id, $value);
             default:
                 $resultBuilder->addUnfitTypeValues($id, $value);
                 return null;
@@ -114,6 +118,16 @@ class MetadataImporter {
     private function transformDateValue(ImportResultBuilder $resultBuilder, int $id, string $value) {
         if ($time = strtotime($value)) {
             return date('Y-m-d', $time);
+        } else {
+            $resultBuilder->addUnfitTypeValues($id, $value);
+            return null;
+        }
+    }
+
+    private function transformFlexibleDateValue(ImportResultBuilder $resultBuilder, int $id, string $value) {
+        $newValue = FlexibleDateImportConverterUtil::importInputToFlexibleDateConverter($value);
+        if ($newValue) {
+            return $newValue;
         } else {
             $resultBuilder->addUnfitTypeValues($id, $value);
             return null;
