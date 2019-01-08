@@ -6,6 +6,7 @@ use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +29,8 @@ class EvaluateDisplayStrategiesCommand extends Command implements CyclicCommand 
             ->setName('repeka:evaluate-display-strategies')
             ->setDescription('Updates every display strategy metadata in every resource.')
             ->addOption('batch', 'b', InputOption::VALUE_REQUIRED, null, 100)
-            ->addOption('all', 'a', InputOption::VALUE_NONE);
+            ->addOption('all', 'a', InputOption::VALUE_NONE)
+            ->addOption('resourceIds', 'r', InputOption::VALUE_REQUIRED);
     }
 
     /** @inheritdoc */
@@ -36,6 +38,9 @@ class EvaluateDisplayStrategiesCommand extends Command implements CyclicCommand 
         ini_set('memory_limit', '768M');
         if ($input->getOption('all')) {
             $resources = $this->resourceRepository->findAll();
+        } elseif ($resourceIds = $input->getOption('resourceIds')) {
+            $resourceIds = explode(',', $resourceIds);
+            $resources = $this->resourceRepository->findByQuery(ResourceListQuery::builder()->filterByIds($resourceIds)->build());
         } else {
             $limit = $input->getOption('batch');
             $resources = $this->resourceRepository->findBy(['displayStrategiesDirty' => true], null, $limit);
