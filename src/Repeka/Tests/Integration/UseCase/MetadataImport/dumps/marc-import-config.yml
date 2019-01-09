@@ -31,6 +31,28 @@ mappings:
           replacement: 'deu'
         - name: 'contentSearch'
           metadata: 140
+  113:
+    key: '022'
+    transforms:
+      - name: 'displayStrategy'
+        separator: '###'
+        template: "
+          {% if data['022'] is defined %}
+            {% for element in data['022'] %}
+              {% set codeOrderArray = {'a' : 0, 'y': 0, 'z': 0 } %}
+              {% for code in element['order'] %}
+                {% if code in ['a', 'y', 'z'] %}
+                {{element[code][codeOrderArray[code]]}}
+                {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}{% endif %}
+              {% endfor %}
+              {{separator}}
+            {% endfor %}
+          {% endif %}"
+      - name: 'trim'
+      - name: 'regexReplace'
+        regex: ' +'
+        replacement: ' '
+      - name: 'removeEmpty'
   156:
     key: '035'
     transforms:
@@ -285,8 +307,43 @@ mappings:
         template: "
           {% if data['246'] is defined %}
             {% for element in data['246'] %}
-              {% if element['ind2'] is defined and element['ind2'] in [' ', '0', '1'] %}
-                {% set codeOrderArray = {'a' : 0, 'b': 0, 'i': 0, 'n': 0, 'p': 0} %}
+              {% if element['ind2'] != '2' %}
+                {% if element['ind2'] == '0' %}Część tytułu, dodatek do tytułu:
+                {% elseif element['ind2'] == '1' %}Tytuł równoległy:
+                {% elseif element['ind2'] == '3' %}Inny tytuł:
+                {% elseif element['ind2'] == '4' %}Tytuł okładkowy:
+                {% elseif element['ind2'] == '5' %}Tytuł z dodatkowej strony tytułowej:
+                {% elseif element['ind2'] == '6' %}Tytuł nagłówkowy:
+                {% elseif element['ind2'] == '7' %}Tytuł w żywej paginie:
+                {% elseif element['ind2'] == '8' %}Tytuł grzbietowy:
+                {% endif %}
+                {% set codeOrderArray = {'a' : 0, 'b': 0, 'i': 0, 'n': 0, 'p': 0, 'f': 0, 'g': 0, 'i': 0} %}
+                {% for code in element['order'] %}
+                  {% if code in ['a', 'b', 'i', 'n', 'p'] %}
+                    {{element[code][codeOrderArray[code]]}}
+                    {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}
+                  {% endif %}
+                {% endfor %}
+                {{separator}}
+              {% endif %}
+            {% endfor %}
+          {% endif %}"
+      - name: 'trim'
+      - name: 'regexReplace'
+        regex: ' +'
+        replacement: ' '
+      - name: 'removeEmpty'
+  120:
+    key: '246'
+    transforms:
+      - name: 'displayStrategy'
+        separator: '###'
+        template: "
+          {% if data['246'] is defined %}
+            {% for element in data['246'] %}
+              {% if element['ind2'] == '2' %}
+                Indywidualny tytuł tomu:
+                {% set codeOrderArray = {'a' : 0, 'b': 0, 'i': 0, 'n': 0, 'p': 0, 'f': 0, 'g': 0, 'i': 0} %}
                 {% for code in element['order'] %}
                   {% if code in ['a', 'b', 'i', 'n', 'p'] %}
                     {{element[code][codeOrderArray[code]]}}
@@ -345,14 +402,14 @@ mappings:
       - name: 'flatten'
       - name: trim
         characters: " )."
-  129:
+  136:
     key: '300'
     transforms:
       - name: 'arrayColumn'
         keys: 'a'
       - name: flatten
       - name: trim
-        characters: " :;."
+        characters: " :;"
   99:
     - key: '300'
       transforms:
@@ -373,19 +430,26 @@ mappings:
       transforms:
         - name: 'displayStrategy'
           separator: '###'
-          template: >-
+          template: "
             {% if data['111'] is defined %}
-              {% for key, element in data['111'] %}
+              {% for element in data['111'] %}
                 Konferencja:
-                {% if element is iterable and key != 'order' %}
-                  {% for value in element %}
-                    {{value|trim('.')}}
-                  {% endfor %}
-                {% endif %}
-              {{separator}}
+                {% set codeOrderArray = [] %}
+                {% for code in element['order'] %}
+                  {% if codeOrderArray[code] is defined%}
+                    {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}
+                  {% else %}
+                    {% set codeOrderArray = codeOrderArray|merge({(code): 0}) %}
+                  {% endif %}
+                  {{element[code][codeOrderArray[code]]}}
+                {% endfor %}
+                {{separator}}
               {% endfor %}
-            {% endif %}
+            {% endif %}"
         - name: 'trim'
+        - name: 'regexReplace'
+          regex: ' +'
+          replacement: ' '
         - name: 'removeEmpty'
 
   70:
