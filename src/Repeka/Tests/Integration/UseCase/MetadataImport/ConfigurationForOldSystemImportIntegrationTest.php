@@ -31,7 +31,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
         $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
         $this->metadataRepository = $this->container->get(MetadataRepository::class);
         $metadata = [];
-        $ids = [53, 156, 125, 4, 63, 62, 99, 3, 61, 64, 65, 5, 172, 66, 129, 70, 86, 181, 135, 72, 79, 76, 117, 173];
+        $ids = [53, 156, 125, 4, 63, 62, 99, 3, 61, 64, 65, 5, 172, 66, 136, 70, 86, 181, 135, 72, 79, 76, 117, 173];
         foreach ($ids as $id) {
             $metadata[] = $this->metadataRepository->findOne($id);
         }
@@ -75,6 +75,9 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             ],
             // to znaczy ze mam usunac code c i znak '/'
             61 => [
+                ['value' => 'Tytuł okładkowy: Album Willanowa'],
+                ['value' => 'Tytuł z dodatkowej strony tytułowej: Willanów dawny i teraźniejszy'],
+                ['value' => 'Tytuł w żywej paginie: Album Willanowski'],
                 ['value' => 'Wilanów'],
                 [
                     'value' =>
@@ -86,13 +89,14 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         'Willanów : album widoków i pamiątek oraz kopie z obrazów Galerii Willanowskiej wykonane na drzewie' .
                         ' w Drzeworytni Warszawskiej',
                 ],
+                ['value' => 'Tytuł okładkowy: Wilanów : album widoków obrazów i pamiątek z opisem'],
             ],
             64 => [['value' => 'Warszawa']],
             65 => [['value' => 'nakł. S. Orgelbranda Synów :'], ['value' => 'Drzeworytnia Warszawska']],
             // 5 => [['value' => '1877']],
             172 => [['value' => 'Warszawa']], // usuwac nawias i dwukropek?
             66 => [['value' => 'dr. S. Orgelbranda Synów']],
-            129 => [['value' => '[4], 186, II s., [48] k. tabl']], // ma tu być kropka czy nie (orginalnie jest)
+            136 => [['value' => '[4], 186, II s., [48] k. tabl.']], // ma tu być kropka czy nie (orginalnie jest)
             86 => [['value' => false]],
             181 => [['value' => 'EDT_4 Do udostępnienia na zewnątrz']],
             79 => [['value' => 'IV-37861']], //uwaga mnie dotyczy?
@@ -206,7 +210,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             64 => [['value' => 'Leipzig']],
             65 => [['value' => 'Verlag von Wilhelm Engelmann']],
             //  5 => [['value' => ]],
-            129 => [['value' => 'XVI, 1158 stron, [1] karta tablic złożona']],
+            136 => [['value' => 'XVI, 1158 stron, [1] karta tablic złożona']],
             99 => [['value' => 'Dodatek do tytułu: Atlas : XVI stron, LXVII kart tablic złożonych.']],
             86 => [['value' => false]],
             181 => [['value' => 'EDT_2 Nieznana data śmierci współautora']],
