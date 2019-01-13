@@ -10,7 +10,9 @@ icon, .icon {
 
     @each $size in $available-sizes {
         &[size="#{$size}"], &[data-size="#{$size}"] {
-            height: #{$size}em;
+            &, & > svg {
+                height: #{$size}em;
+            }
             vertical-align: ($capital-letter-of-the-default-font-height - $size * 1em) / 2; // Using `calc` hasn't worked in Edge.
         }
     }

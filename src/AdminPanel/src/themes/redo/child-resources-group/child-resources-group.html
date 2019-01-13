@@ -1,0 +1,29 @@
+<template>
+    <div class="parent">
+        <label class="label-with-checkbox">
+            <input type="checkbox"
+                name.bind="name"
+                value.bind="resourceId"
+                checked.bind="checked">
+            <span><span>${resourceLabel}</span></span>
+        </label>
+        <button if.bind="childResourcesData"
+            class.bind="expanded ? 'toggled' : ''"
+            type="button"
+            click.delegate="expanded = !expanded">
+            <icon name="forward"></icon>
+        </button>
+    </div>
+    <div if.bind="childResourcesData"
+        class="children collapsible ${expanded ? 'expanded' : 'collapsed'}">
+        <label repeat.for="childResourceData of childResourcesData"
+            class="label-with-checkbox">
+            <input type="checkbox"
+                name.bind="name"
+                value.bind="childResourceData.id"
+                model.bind="childResourceData.id"
+                checked.bind="selectedChildrenIds">
+            <span><span>${childResourceData.label}</span></span>
+        </label>
+    </div>
+</template>

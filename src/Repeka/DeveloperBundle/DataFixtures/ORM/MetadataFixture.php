@@ -343,9 +343,9 @@ class MetadataFixture extends RepekaFixture {
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
                 [
-                    'name' => 'Wydział wydający',
+                    'name' => 'Wydział',
                     'label' => [
-                        'PL' => 'Wydział wydający',
+                        'PL' => 'Wydział',
                         'EN' => 'Issued on',
                     ],
                     'control' => 'relationship',

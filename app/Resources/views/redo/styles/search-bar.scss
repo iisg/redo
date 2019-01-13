@@ -1,0 +1,109 @@
+$big-search-bar-width: 500px;
+$advanced-options-column-border-width: $default-gap-size / 8;
+
+.search-bar-with-advanced-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .search-bar {
+    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    padding: $default-gap-size / 2;
+
+    .search-box-with-options {
+      display: inline-block;
+      .input-with-button {
+        display: flex;
+        input {
+          flex-grow: 1;
+          padding: $default-gap-size / 4 $default-gap-size;
+          border-top-width: 1px;
+          border-bottom-width: 1px;
+          border-left-width: 1px;
+          border-style: solid;
+          border-color: $orange;
+          border-top-left-radius: 3 * $default-gap-size / 4;
+          border-bottom-left-radius: 3 * $default-gap-size / 4;
+          outline: 0;
+          &::placeholder {
+            font-size: $default-font-size;
+            font-style: italic;
+          }
+        }
+        button {
+          display: inline-block;
+          padding: $default-gap-size / 3;
+          border-top-right-radius: 3 * $default-gap-size / 4;
+          border-bottom-right-radius: 3 * $default-gap-size / 4;
+          background-color: $orange;
+          color: white;
+        }
+      }
+      .metadata-subsets-chooser {
+        display: none;
+        align-items: center;
+        margin-top: $default-gap-size / 4;
+        .radio-buttons-group {
+          label:last-child {
+            margin-right: $default-gap-size / 2;
+          }
+        }
+        button {
+          margin-left: auto;
+          padding-left: $default-gap-size / 4;
+          text-align: right;
+          color: inherit;
+          .icon, span {
+            margin-left: $default-gap-size / 4;
+          }
+          .icon {
+            color: $orange;
+          }
+        }
+      }
+    }
+  }
+
+  .advanced-options {
+    display: flex;
+    margin: $default-gap-size / 2 $default-gap-size / 2 - $advanced-options-column-border-width $default-gap-size / 2 $default-gap-size / 2;
+    flex-wrap: wrap;
+    & > * {
+      flex: 1;
+      padding: $default-gap-size / 4 $default-gap-size / 2 + $default-gap-size / 4;
+      margin-right: $advanced-options-column-border-width;
+      &:not(:first-child) {
+        border-left: $advanced-options-column-border-width solid $orange;
+        margin-left: -$advanced-options-column-border-width; // To have the border hidden when column is wrapped.
+      }
+    }
+  }
+}
+
+.big-search-bar {
+  padding: $default-gap-size / 2;
+  .search-bar-with-advanced-options {
+    max-width: 100%;
+    .search-bar {
+      width: $big-search-bar-width;
+      max-width: 100%;
+      .search-box-with-options {
+        width: 100%;
+      }
+      .search-box-with-options .metadata-subsets-chooser {
+        display: flex;
+      }
+      input {
+        min-width: 0;
+        font-size: 18px;
+      }
+      .search-button .icon {
+        &, & > svg {
+            height: 2.5em;
+        }
+      }
+    }
+  }
+}

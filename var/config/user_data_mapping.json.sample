@@ -21,7 +21,7 @@
     "Kategoria": {
       "key": "categorycode"
     },
-    "Wydział": {
+    "Wydział użytkownika": {
       "key": "department"
     },
     "Identyfikator wydziału": {
