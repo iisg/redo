@@ -1,6 +1,6 @@
 {% extends "redo/layout.twig" %}
 
-{% set page_title = 'Logowanie' %}
+{% set page_title = 'sign_in_title' %}
 
 {% block content %}
     {% include "redo/title-bar.twig" %}
@@ -14,7 +14,7 @@
                         class="close"
                         data-dismiss="alert">×
                     </button>
-                    <strong>Logowanie nieudane.</strong>
+                    <strong>{{ 'Signing in failed' | trans }}.</strong>
                 </div>
             {% endif %}
             <div class="login-box">
@@ -30,7 +30,7 @@
                     <input type="hidden"
                         name="_csrf_token"
                         value="{{ csrf_token('authenticate') }}">
-                    <h3 class="administration-label">Logowanie {{ applicationName }}</h3>
+                    <h3 class="administration-label">{{ 'logging_in_app_name' | trans({'{{applicationName}}': applicationName}) }}</h3>
                     <div class="input-box username-input">
                         {{ icon('user-2') }}
                         <input name="_username"
@@ -45,7 +45,7 @@
                             id="password">
                         <button class="submit-button"
                             type="submit"
-                            name="Zaloguj">
+                            name="{{ 'Sign in' | trans }}">
                             {{ icon('accept-2') }}
                         </button>
                     </div>
@@ -57,12 +57,12 @@
                 <a class="information-link-element"
                     tabindex="0">
                     {{ icon('help') }}
-                    <span class="information-link-text">przypomnij hasło</span>
+                    <span class="information-link-text">{{ 'Remind password' | trans }}</span>
                 </a>
                 <a class="information-link-element"
                     tabindex="0">
                     {{ icon('mail') }}
-                    <span class="information-link-text">kontakt z administratorem</span>
+                    <span class="information-link-text">{{ 'Contact administrator' | trans }}</span>
                 </a>
             </div>
             -->

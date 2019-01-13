@@ -79,6 +79,12 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onException, priority: 1000 }
       - { name: monolog.logger, channel: exception_listener }
+  Repeka\Application\EventListener\UserLocaleListener:
+    arguments:
+      $fallbackLocales: '%repeka.fallback_ui_languages%'
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
+      # must be called before LocaleListener, which has priority of 16, by assigning higher priority
 
   Repeka\Application\EventListener\Doctrine\ResourceKindMetadataListConverterListener:
     tags:

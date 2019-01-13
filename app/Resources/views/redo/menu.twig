@@ -2,15 +2,15 @@
     <div class="menu-items">
         <a class="{{ urlMatches('/#') ? 'active' : '' }}"
             href="/">
-            <span>Szukaj</span>
+            <span>{{ 'Search' | trans }}</span>
         </a>
         <a class="{{ urlMatches('/search', '/resources') ? 'active' : '' }}"
             href="/search">
-            <span>Przeglądaj</span>
+            <span>{{ 'Browse' | trans }}</span>
         </a>
         <a class="{{ urlMatches('/for-authors') ? 'active' : '' }}"
             href="/for-authors">
-            <span>Dla autorów</span>
+            <span>{{ 'For authors' | trans }}</span>
         </a>
     </div>
     {% if app.request.requestUri != '/'
@@ -22,7 +22,7 @@
                 {% if app.request.query.has('phrase') %}
                     value="{{ app.request.query.get('phrase') }}"
                 {% endif %}
-                placeholder="szukaj w zasobach">
+                placeholder={{ "search_small_placeholder" | trans }}>
             <button class="search-button"
                 type="submit">
                 {{ icon("search") }}
@@ -42,22 +42,22 @@
                     {% if resourceKindsToDeposit(app.user, [-4]) | length != 0 %}
                         <a class="isActive() ? 'active' : ''"
                             href="/deposit/resource-kind">
-                            <span>Deponuj</span>
+                            <span>{{ 'Deposit' | trans }}</span>
                         </a>
                     {% endif %}
                     {% if resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}, resultsPerPage: 1}) | length == 1 %}
                         <a class="isActive() ? 'active' : ''"
                             href="/deposit/deposit-list">
-                            <span>Moje zasoby</span>
+                            <span>{{ 'My resources' | trans }}</span>
                         </a>
                     {% endif %}
                     {% if is_granted('ROLE_OPERATOR_SOME_CLASS') %}
                         <a href="/admin">
-                            <span>Panel administracyjny</span>
+                            <span>{{ 'Admin panel' | trans}}</span>
                         </a>
                     {% endif %}
                     <a href="/logout">
-                        <span>Wyloguj</span>
+                        <span>{{ 'Sign out' | trans }}</span>
                     </a>
                 </div>
             </div>
@@ -65,7 +65,7 @@
             <a href="/login"
                 class="{{ urlMatches('/login') ? 'active' : '' }}">
                 {{ icon('user-2') }}
-                <span>Zaloguj</span>
+                <span>{{ 'Sign in' | trans }}</span>
             </a>
         {% endif %}
     </div>

@@ -18,7 +18,7 @@ repekaOcrAbbyy:
     metadataForResult:
       label: Docelowy rodzaj metadanej
       description: "Podaj tu pary wyrażenieRegularne: metadana. Wszystkie pliki wynikowe, których nazwy będą pasować do podanych wyrażeń reuglarnych zostaną przypisane odpowiednim metadanym w zasobie."
-      placeholder: "\.pdf$: ocredPdfs\n.+: allOcredFiles"
+      placeholder: "\\.pdf$: ocredPdfs\\n.+: allOcredFiles"
     ocrWorkflow:
       label: Ścieżka pracy OCR
       description: Podaj tu nazwę katalogu wejściowego dla pożądanej ścieżki pracy ABBYY RS. Możesz używać strategii wyświetlania.

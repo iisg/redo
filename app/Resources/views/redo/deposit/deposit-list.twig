@@ -1,14 +1,14 @@
 {% set addedResources = resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}}) %}
 {% if addedResources | length == 0 %}
-    Brak zasobów.
+    {{ 'No resources' | trans }}.
 {% else %}
     <div class="deposit-resources">
         <table>
             <tr>
-                <th>Zasób</th>
-                <th>Zasób nadrzędny</th>
-                <th>Stan zasobu</th>
-                <th>Dozwolone operacje</th>
+                <th>{{ 'Resource' | trans({}, 'generic') }}</th>
+                <th>{{ 'Parent resource' | trans }}</th>
+                <th>{{ 'Resource state' | trans }}</th>
+                <th>{{ 'Allowed operations' | trans }}</th>
             </tr>
             {% for deposit in addedResources %}
                 <tr>
@@ -24,7 +24,7 @@
                     <td>
                         {% for place in  deposit.kind.workflow.places %}
                             {% if place.id in deposit.marking | keys %}
-                                <span>{{ place.label.PL }}</span>
+                                <span>{{ place.label | inCurrentLanguage }}</span>
                             {% endif %}
                         {% endfor %}
                     </td>
@@ -33,7 +33,7 @@
                         {% if availableTransitions.update is not defined %}
                             <div class="deposit-operations">
                                 <a href="{{ path(app.request.attributes.get('_route'), {'phase': 'form', 'parentResourceId': (deposit | m(-1) | first | trim), 'resourceKindId': deposit.kind.id , 'edit': deposit.id, transitionId: 'update'}) }}">
-                                    {{ icon('edit', 1.5) }} Edytuj
+                                    {{ icon('edit', 1.5) }} {{ 'Edit' | trans }}
                                 </a>
                             </div>
                         {% endif %}
@@ -41,7 +41,7 @@
                             {% if transition.id != 'update' %}
                                 <div class="deposit-operations">
                                     <a href="{{ path(app.request.attributes.get('_route'), {'phase': 'form', 'parentResourceId': (deposit | m(-1) | first | trim), 'resourceKindId': deposit.kind.id , 'edit': deposit.id, 'transitionId': transition.id }) }}">
-                                        {{ icon('workflow', 1.5) }} {{ transition.label.PL }}
+                                        {{ icon('workflow', 1.5) }} {{ transition.label | inCurrentLanguage }}
                                     </a>
                                 </div>
                             {% endif %}

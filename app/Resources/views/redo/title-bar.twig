@@ -16,7 +16,23 @@
             <div class="page-view-options">
                 <button>{{ icon('font') }}</button>
                 <button>{{ icon('rss') }}</button>
-                <button>{{ icon('languages') }}</button>
+                <div class="button-with-submenu languages">
+                    {% set currentLocale = app.request.getLocale() %}
+                    <button data-toggle="dropdown">
+                        <span>
+                            {{ currentLocale | upper }}
+                        </span>
+                    </button>
+                    <div>
+                        {% for language in [{locale:'pl', name: 'Polski'}, {locale:'en', name: 'English'}, {locale:'de', name: 'Deutsch'}] %}
+                            {% if language.locale != currentLocale %}
+                                <language-option language.bind="'{{ language.locale }}'">
+                                    {{ language.name }}
+                                </language-option>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="pk-logo-container">

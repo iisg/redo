@@ -7,7 +7,7 @@
                 {% if app.request.query.has('phrase') %}
                     value="{{ app.request.query.get('phrase') }}"
                 {% endif %}
-                placeholder="szukaj w zasobach repozytorium">
+                placeholder="{{ 'search_large_placeholder' | trans }}">
             <button class="search-button"
                 type="submit">
                 {{ icon("search", "2") }}
@@ -17,7 +17,7 @@
             <button class="expand-toggle ${advancedOptionsExpanded ? 'toggled' : ''}"
                 type="button"
                 click.delegate="advancedOptionsExpanded = !advancedOptionsExpanded">
-                <span>Wyszukiwanie zaawansowane</span>
+                <span>{{ 'Advanced search' | trans }}</span>
                 {{ icon('forward') }}
             </button>
         {% endif %}
@@ -42,13 +42,13 @@
                 {% set filterableMetadata = parentMetadata %}
                 {% embed 'redo/search/search-metadata-filter.twig' %}
                     {% block propertyNameContainer %}
-                        <h3 class="section-title">Kolekcje</h3>
+                        <h3 class="section-title">{{ 'Collections' | trans }}</h3>
                     {% endblock %}
                 {% endembed %}
             {% endif %}
             {% if departmentMetadata %}
                 <div>
-                    <h3 class="section-title">{{ departmentMetadata.label.PL }}</h3>
+                    <h3 class="section-title">{{ departmentMetadata.label | inCurrentLanguage }}</h3>
                     {% set filterableMetadata = departmentMetadata %}
                     {% embed 'redo/search/search-metadata-filter.twig' %}
                         {% block propertyNameContainer %}{% endblock %}
@@ -57,7 +57,7 @@
             {% endif %}
             {% if configurableProperties is not empty %}
                 <div>
-                    <h3 class="section-title">Cechy zasobu</h3>
+                    <h3 class="section-title">{{ 'Resource attributes' | trans }}</h3>
                     {% for filterableMetadata in configurableProperties %}
                         {% include 'redo/search/search-metadata-filter.twig' %}
                     {% endfor %}

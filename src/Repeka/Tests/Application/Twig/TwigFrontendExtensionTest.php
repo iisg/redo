@@ -23,6 +23,7 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     public function init() {
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
         $this->paginator = $this->createMock(Paginator::class);
+        $this->frontendConfig = $this->createMock(FrontendConfig::class);
         $this->extension = new TwigFrontendExtension(
             $this->createMock(RequestStack::class),
             $this->resourceKindRepository,

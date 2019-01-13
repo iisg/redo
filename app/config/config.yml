@@ -6,6 +6,7 @@ imports:
 
 repeka:
   default_ui_language: pl
+  fallback_ui_languages: [pl, en]
 
   resource_classes: []
 
@@ -90,6 +91,8 @@ framework:
   templating:
     engines:
       - twig
+  translator:
+    fallbacks: ["en"] # must be ['en'] for EN locale to work because of missing translation keys
   trusted_hosts: ~
   validation:
     enable_annotations: true

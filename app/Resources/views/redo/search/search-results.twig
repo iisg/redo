@@ -13,7 +13,7 @@
             class.bind="leftPanelExpanded ? 'expanded' : ''"
             id="left-panel">
             <div class="title-with-toggle">
-                <h3 class="title horizontally-collapsible"><strong>Filtry</strong></h3>
+                <h3 class="title horizontally-collapsible"><strong>{{ 'Filters' | trans }}</strong></h3>
                 <button class="horizontally-expand-toggle"
                     class.bind="leftPanelExpanded ? 'toggled' : ''"
                     click.delegate="leftPanelExpanded = !leftPanelExpanded"
@@ -29,7 +29,7 @@
                     value="{{ phrase }}">
                 <div class="filter-button-container">
                     <div>
-                        <button class="default">Filtruj</button>
+                        <button class="default">{{ 'Filter' | trans }}</button>
                     </div>
                 </div>
                 <hr>
@@ -65,7 +65,8 @@
                                 {% set aggregationName = aggregation | keys | first %}
                                 {% set aggregationData = aggregation | first %}
                                 <div>
-                                    <strong>{{ aggregationName == 'kindId' ? 'Typ zasobu' : metadata(aggregationName).label.PL }}</strong>
+                                    <strong>{{ aggregationName == 'kindId' ? 'Resource kind' | trans
+                                        : metadata(aggregationName).label | inCurrentLanguage }}</strong>
                                     {% for bucket in aggregationData.buckets.0[aggregationName].buckets %}
                                         <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({
                                             'phrase': phrase,
@@ -79,7 +80,7 @@
                                                         app.request.query.get('facetFilters') ?? []) %}
                                                 checked
                                                     {% endif %}>
-                                                <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label.PL
+                                                <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label | inCurrentLanguage
                                                     : r(bucket.key) | mLabel }} ({{ bucket.doc_count }})</span>
                                             </label>
                                         </a>
@@ -99,9 +100,9 @@
                     <hr>
                 {% endif %}
                 <div class="filter-button-container">
-                    <a href={{ path(app.request.attributes.get('_route'), {phrase: app.request.query.get('phrase')}) }}>Wyczyść filtry</a>
+                    <a href={{ path(app.request.attributes.get('_route'), {phrase: app.request.query.get('phrase')}) }}>{{ 'Clear filters' | trans }}</a>
                     <div>
-                        <button class="default">Filtruj</button>
+                        <button class="default">{{ 'Filter' | trans }}</button>
                     </div>
                 </div>
             </form>
@@ -116,9 +117,9 @@
         </script>
         <div class="search-results">
             {% if results | length == 0 %}
-                <h1>Brak wyników.</h1>
+                <h1>{{ 'No results' | trans }}.</h1>
             {% else %}
-                <h1 class="title"><strong>Wyniki wyszukiwania ({{ results.totalHits }})</strong></h1>
+                <h1 class="title"><strong>{{ 'Search results' | trans }} ({{ results.totalHits }})</strong></h1>
                 {% set resources = [] %}
                 <div>
                     {% for searchResult in results %}

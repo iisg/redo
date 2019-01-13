@@ -12,7 +12,7 @@ module.exports = {
   html: path.join(appRoot, '**/*.html'),
   jspmConfig: 'jspm.config.js',
   scss: path.join(appRoot, '**/*.scss'),
-  locales: path.join(resourcesRoot, 'locales'),
+  locales: '../../src/Repeka/Application/Resources/translations',
   output: outputRoot,
   webRoot: webRoot,
   webAdminRoot: path.join(webRoot, 'admin/'),

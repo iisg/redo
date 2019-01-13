@@ -45,7 +45,7 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
         }
       }
       .page-view-options {
-        a, button:not(:first-child) {
+        & > *:not(:first-child) {
           border-left: $default-border-width $default-border-style $lightish-grey;
         }
       }
@@ -55,6 +55,26 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
         & > * {
           padding-right: $default-gap-size / 4;
           padding-left: $default-gap-size / 4;
+        }
+      }
+      .languages {
+        & > div {
+          font-size: $default-font-size;
+          right: 0;
+          padding: $default-gap-size / 2;
+          text-align: right;
+          background-color: $very-light-grey;
+          a {
+            padding: $default-gap-size / 2;
+            margin-top: $default-gap-size / 4;
+            color: $dark-grey;
+            &:hover, &:focus {
+              color: black;
+            }
+            &:not(:last-child) {
+              margin-bottom: $default-gap-size;
+            }
+          }
         }
       }
     }

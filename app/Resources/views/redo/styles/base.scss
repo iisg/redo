@@ -1,6 +1,7 @@
 $main-container-maximum-width: 1100px;
 $fieldset-border-width: 1px;
 $fieldset-legend-line-height: 1px; // Some positive value seems required to have the fieldset border hidden.
+$submenu-z-index: 1;
 
 .main-container {
   display: flex;
@@ -180,5 +181,31 @@ input {
   }
   div.peg {
     box-shadow: 0 0 10px $accents-color, 0 0 5px $accents-color;
+  }
+}
+
+.button-with-submenu {
+  position: relative;
+  white-space: nowrap;
+  &:not(.open):not(:hover) > button:focus + div,
+  &:not(:hover):not(:focus-within):not([focus-within]) > div {
+    visibility: hidden;
+  }
+  &.open > .dropdown-backdrop {
+    display: none;
+  }
+  &:hover, &:focus-within, &[focus-within] {
+    & > div {
+      display: flex;
+    }
+  }
+  & > div:not(.dropdown-backdrop) {
+    transition: none;
+    z-index: $submenu-z-index;
+    position: absolute;
+    flex-direction: column;
+  }
+  a, button {
+    justify-content: flex-start;
   }
 }

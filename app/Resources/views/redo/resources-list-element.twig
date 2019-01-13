@@ -44,12 +44,12 @@
                     <h4>{{ resource | metadata('autor') }}</h4>
                 {% endif %}
                 <div>
-                    <span class="metadata-label">Typ:</span> {{ resource.kind.label.PL }}
+                    <span class="metadata-label">{{ 'Type'| trans }}:</span> {{ resource.kind.label | inCurrentLanguage }}
                 </div>
                 {% for visibleMetadataName in visibleMetadataNames %}
                     {% set metadata = metadata(visibleMetadataName) %}
                     {% if metadata %}
-                        {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
+                        {% set metadataLabel = metadata.label | inCurrentLanguage | default(metadata.label | first) | default(metadata.name) %}
                         {% set metadataValue = resource | metadata(visibleMetadataName) %}
                         {% if metadataValue is not empty %}
                             <div>
@@ -62,12 +62,12 @@
             {% if not childrenAllowedInResource %}
                 <fieldset>
                     <legend align="left"><span class="title"
-                            title="Pobierz zasób">Pobierz zasób</span></legend>
+                            title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span></legend>
                     <div class="download-formats">
                         <h4><a href="/resources/{{ resource.id }}/download/mobi"
-                                title="Pobierz zasób w formacie MOBI - 7KB">MOBI</a></h4>
+                                title="{{ 'Download resource in MOBI format' | trans }} - 7KB">MOBI</a></h4>
                         <h4><a href="/resources/{{ resource.id }}/download/pdf"
-                                title="Pobierz zasób w formacie PDF - 144000KB">PDF</a></h4>
+                                title="{{ 'Download resource in PDF format' | trans }} - 144000KB">PDF</a></h4>
                     </div>
                 </fieldset>
             {% endif %}
@@ -77,7 +77,7 @@
         {% for collapsedMetadataName in collapsedMetadataNames %}
             {% set metadata = metadata(collapsedMetadataName) %}
             {% if metadata and (highlightedMetadata is not defined or highlightedMetadata[metadata.name] is not defined) %}
-                {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
+                {% set metadataLabel = metadata.label | inCurrentLanguage | default(metadata.label | first) | default(metadata.name) %}
                 {% set metadataValue = resource | metadata(collapsedMetadataName) %}
                 {% if metadataValue is not empty %}
                     {% set collapsedMetadataLabelsWithValues = collapsedMetadataLabelsWithValues| merge([{
@@ -107,7 +107,7 @@
                                             <span class="metadata-label">
                                                 {{ metadataLabelWithHighlights.label }}{% if not
                                                     metadataLabelWithHighlights.representsWholeValue %}
-                                                    <em>(fragmenty)</em>{% endif %}:</span>
+                                                    <em>({{ 'fragments' | trans }})</em>{% endif %}:</span>
                                             {{ metadataLabelWithHighlights.highlights
                                                 | join(metadataLabelWithHighlights.representsWholeValue ? ' ' : '<br>') | raw }}
                                         </div>
@@ -140,7 +140,7 @@
                                     and loop.first ? 'text-container': '' }}">
                                         {{ metadataLabelWithHighlights.label }}{% if not
                                             metadataLabelWithHighlights.representsWholeValue %}
-                                            <em>(fragmenty)</em>{% endif %}:</span>
+                                            <em>({{ 'fragments' | trans }})</em>{% endif %}:</span>
                                     {{ metadataLabelWithHighlights.highlights
                                         | join(metadataLabelWithHighlights.representsWholeValue ? ' ' : '<br>') | raw }}
                             </div>

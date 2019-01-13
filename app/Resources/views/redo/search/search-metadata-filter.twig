@@ -1,6 +1,6 @@
 {% if filterableMetadata.control.value in ['text', 'textarea', 'display-strategy'] %}
     <div class="text-property-filter">
-        <span>{{ filterableMetadata.label.PL }}</span>
+        <span>{{ filterableMetadata.label | inCurrentLanguage }}</span>
         <div>
             <input type="text"
                 name="metadataFilters[{{ filterableMetadata.id }}]"
@@ -34,7 +34,7 @@
                 class.bind="{{ variableName }} ? 'toggled' : ''"
                 type="button"
                 click.delegate="{{ variableName }} = !{{ variableName }}">
-                <h4 class="property-name">{{ parentMetadata ? 'Kolekcje' : filterableMetadata.label.PL }}</h4>
+                <h4 class="property-name">{{ parentMetadata ? 'Collections' | trans : filterableMetadata.label | inCurrentLanguage }}</h4>
                 <span>{{ icon('forward') }}</span>
             </button>
         {% endblock %}

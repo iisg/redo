@@ -13,6 +13,7 @@ class RepekaExtension extends ConfigurableExtension {
         $this->loadYmlConfigFile('services', $container);
         $container->setParameter('repeka.application_url', $mergedConfig['application_url']);
         $container->setParameter('repeka.default_ui_language', $mergedConfig['default_ui_language']);
+        $container->setParameter('repeka.fallback_ui_languages', $mergedConfig['fallback_ui_languages']);
         $container->setParameter('repeka.max_nesting_depth', $mergedConfig['metadata_nesting_depth']);
         $container->setParameter('repeka.static_permissions', $mergedConfig['static_permissions']);
         $container->setParameter('elasticsearch.index_name', $mergedConfig['elasticsearch']['index_name']);

@@ -75,6 +75,7 @@ export function configure(aurelia: Aurelia) {
         'themes/admin-styles-loader',
         'themes/redo/child-resources-group/child-resources-group',
         'themes/redo/deposit-form/deposit-form',
+        'themes/redo/language-option/language-option',
         'common/date-search/datetime-search'
       ]);
   }
@@ -96,8 +97,8 @@ function onAureliaStarted(aurelia: Aurelia): void {
   if (adminPanel) {
     aurelia.container.get(MetricsEventListener).register();
     aurelia.container.get(CustomValidationRules).register();
+    aurelia.container.get(GuiLanguage).apply();
   }
-  aurelia.container.get(GuiLanguage).apply();
 }
 
 function preloadEntityTypes() {

@@ -84,12 +84,12 @@ gulp.task('build-themes-css', (cb) => {
 
 gulp.task('build-locales', () => {
   //noinspection JSCheckFunctionSignatures
-  return gulp.src(path.join(paths.locales, '**/*.yml'), {base: paths.resourcesRoot})
+  return gulp.src(path.join(paths.locales, '**/*.yml'))
     .pipe(plumber({errorHandler: notify.onError('Locales: <%= error.message %>')}))
     .pipe(changed(paths.webAdminResources))
     .pipe(convert({from: 'yml', to: 'json'}))
     .pipe(minifyJSON())
-    .pipe(gulp.dest(paths.webAdminResources));
+    .pipe(gulp.dest(paths.webAdminResources + '/locales'));
 });
 
 gulp.task('copy-jspm-config', () => {

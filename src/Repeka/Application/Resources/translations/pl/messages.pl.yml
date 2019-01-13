@@ -1,0 +1,80 @@
+Search: Szukaj
+Browse: Przeglądaj
+For authors: Dla autorów
+Deposit: Deponuj
+My resources: Moje zasoby
+Admin panel: Panel administracyjny
+Home page: Strona główna
+logging_in_app_name: "Logowanie {{applicationName}}"
+Search in repository resources: Szukaj w zasobach repozytorium
+search_large_placeholder: Szukaj w zasobach repozytorium
+search_small_placeholder: szukaj w zasobach
+search_results_page_title: wyniki wyszukiwania
+
+Error: Błąd
+The page you requested does not exist: Strona, na którą trafiłeś nie istnieje
+The page you requested caused application error: Strona, na którą trafiłeś spowodowała błąd aplikacji
+Signing in failed: Logowanie nieudane
+
+Sign out: Wyloguj
+Sign in: Zaloguj
+next_page: Następna
+previous_page: Poprzednia
+Remind password: Przypomnij hasło
+Contact administrator: Kontakt z administratorem
+sign_in_title: Logowanie
+
+Recently added: Ostatnio dodane
+Statistics: Statystyki
+All items: Liczba wszystkich pozycji
+Items added last month: Liczba pozycji dodanych w ostatnim miesiącu
+Items added last year: Liczba pozycji dodanych w ostatnim roku
+Collection: Kolekcja
+Download: Pobierz
+RSS feed: Kanał RSS
+Additional information: Pozostałe informacje
+Collection items: Elementy kolekcji
+REDO collection: Kolekcja REDO
+Resource attributes: Cechy zasobu # attributes?
+Collections: Kolekcje
+Filter: Filtruj
+No results: Brak wyników
+Search results: Wyniki wyszukiwania
+Advanced search: Wyszukiwanie zaawansowane
+Filters: Filtry
+Clear filters: Wyczyść filtry
+Type: Typ
+fragments: fragmenty
+
+Deposit - resource kind: Deponuj - typ zasobu
+Deposit - collection: Deponuj - kolekcja
+Deposit - add: Deponuj - dodaj
+Resource depositing - select resource kind: Deponowanie zasobu - wybór typu zasobu
+Resource depositing - select collection: Deponowanie zasobu - wybór kolekcji
+Resource depositing - resource data: Deponowanie zasobu - dane zasobu
+No resources: Brak zasobów
+Parent resource: Zasób nadrzędny
+Resource state: Stan zasobu
+Allowed operations: Dozwolone operacje
+Edit: Edytuj
+Select resource kind: Wybierz typ zasobu
+No kinds available to add resource: Brak typów, w których możesz dodać zasób
+Resource kind: Typ zasobu
+Select collection: Wybierz kolekcję
+No collections available to add resource: Brak kolekcji, w których możesz dodać zasób
+Back to search results: Wróć do wyników wyszukiwania
+Report an issue with the resource: Zgłoś problem z zasobem
+Share on Twitter: Udostępnij na Twitterze
+Share on Facebook: Udostępnij na Facebooku
+Share on Google+: Udostępnij na Google+
+Download resource: Pobierz zasób
+Download resource in MOBI format: Pobierz zasób w formacie MOBI
+Download resource in PDF format: Pobierz zasób w formacie PDF
+Download resource data in BibTeX format: Pobierz informacje o zasobie w formacie BibTeX
+Download resource data in EndNote format: Pobierz informacje o zasobie w formacie EndNote
+Download resource data in ISO 690 format: Pobierz informacje o zasobie w formacie ISO 690
+Cite resource: Cytuj zasób
+Add to favorites: Dodaj do ulubionych
+Resource RSS channel: Kanał RSS zasobu
+
+Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.: Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.

@@ -39,7 +39,7 @@ export class GuiLanguage {
   }
 
   private setCookie(language: string): void {
-    AureliaCookie.set(this.COOKIE_NAME, language, {path: '/admin'});
+    AureliaCookie.set(this.COOKIE_NAME, language, {path: '/'});
   }
 
   get currentLanguage(): string {

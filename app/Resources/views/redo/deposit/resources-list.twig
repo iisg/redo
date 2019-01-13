@@ -1,8 +1,8 @@
-<h3>Typ zasobu: <span class="deposit-resource-kind">{{ resourceKind.label.PL }}</span></h3>
-<span>Wybierz kolekcję:</span>
+<h3>{{ 'Resource kind' | trans }}: <span class="deposit-resource-kind">{{ resourceKind.label | inCurrentLanguage }}</span></h3>
+<span>{{ 'Select collection' | trans }}:</span>
 {% set parentResources = resourcesToDeposit(resourceKind, app.user, [-4]) %}
 {% if parentResources | length == 0 %}
-    Brak kolekcji, w których możesz dodać zasób.
+    {{ 'No collections available to add resource' | trans }}
 {% else %}
     <div class="deposit-resources">
         <table>

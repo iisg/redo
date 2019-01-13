@@ -10,7 +10,7 @@
 
     {% if resource | metadata('parent') | first %}
         <div class="breadcrumbs">
-            Kolekcja:
+            {{ 'Collection' | trans }}:
             {% embed "redo/resource-details/ancestors-list.twig" %}
                 {% block itemSuffix %}
                     &gt;
@@ -23,7 +23,7 @@
     {% set referer = app.request.headers.get('referer') %}
     {% if referer starts with app.request.schemeAndHttpHost ~ '/search' %}
         <a class="link-to-the-previous-page"
-            href="{{ referer }}">{{ icon('undo-3') }}Wróć do wyników wyszukiwania</a>
+            href="{{ referer }}">{{ icon('undo-3') }}{{ 'Back to search results' | trans }}</a>
     {% endif %}
 
     <div class="resource-details">
@@ -35,18 +35,18 @@
                 <div class="title-container-with-actions">
                     <div class="title-container">
                         <h1>{{ resource | metadata('label') | raw }}</h1>
-                        Typ: {{ resource.kind.label.PL }}
+                        Typ: {{ resource.kind.label | inCurrentLanguage }}
                     </div>
                     <div class="actions">
-                        <button title="Dodaj do ulubionych">{{ icon('bookmark', 2) }}</button>
+                        <button title="{{ 'Add to favorites' | trans }}">{{ icon('bookmark', 2) }}</button>
                         {% if childrenAllowed %}
                             <a href="/resources/{{ resource.id }}/rss"
-                                title="Kanał RSS zasobu">{{ icon('rss', 1.75) }}</a>
+                                title="{{ 'Resource RSS channel' | trans }}">{{ icon('rss', 1.75) }}</a>
                         {% endif %}
-                        <button title="Zgłoś problem z zasobem">{{ icon('mail', 2 ) }}</button>
-                        <button title="Udostępnij na Twitterze">{{ icon('twitter', 2) }}</button>
-                        <button title="Udostępnij na Facebooku">{{ icon('facebook', 2) }}</button>
-                        <button title="Udostępnij na Google+">{{ icon('google+', 2) }}</button>
+                        <button title="{{ 'Report an issue with the resource' | trans}}">{{ icon('mail', 2 ) }}</button>
+                        <button title="{{ 'Share on Twitter' | trans }}">{{ icon('twitter', 2) }}</button>
+                        <button title="{{ 'Share on Facebook' | trans }}">{{ icon('facebook', 2) }}</button>
+                        <button title="{{ 'Share on Google+' | trans }}">{{ icon('google+', 2) }}</button>
                     </div>
                 </div>
             </div>
@@ -54,26 +54,26 @@
                 <div>
                     <span>{{ icon('download', 1.5) }}</span>
                     <fieldset>
-                        <legend align="left"><span title="Pobierz zasób">Pobierz zasób</span></legend>
+                        <legend align="left"><span title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span></legend>
                         <div class="download-formats">
                             <h4><a href="/download/mobi"
-                                    title="Pobierz zasób w formacie MOBI - 7KB">MOBI</a></h4>
+                                    title="{{ 'Download resource in MOBI format' | trans }} - 7KB">MOBI</a></h4>
                             <h4><a href="/download/pdf"
-                                    title="Pobierz zasób w formacie PDF - 144000KB">PDF</a></h4>
+                                    title="{{ 'Download resource in PDF format' | trans }} - 144000KB">PDF</a></h4>
                         </div>
                     </fieldset>
                 </div>
                 <div>
                     {{ icon('examination', 1.5) }}
                     <fieldset align="left">
-                        <legend align="left"><span title="Cytuj zasób">Cytuj zasób</span></legend>
+                        <legend align="left"><span title="{{ 'Cite resource' | trans }}">{{ 'Cite resource' | trans }}</span></legend>
                         <div class="download-formats">
                             <h4><a href="/resources/{{ resource.id }}/bibtex"
-                                    title="Pobierz informacje o zasobie w formacie BibTeX">BibTeX</a></h4>
+                                    title="{{ 'Download resource data in BibTeX format' }}">BibTeX</a></h4>
                             <h4><a href="/resources/{{ resource.id }}/endnote"
-                                    title="Pobierz informacje o zasobie w formacie EndNote">EndNote</a></h4>
+                                    title="{{ 'Download resource data in EndNote format' }}">EndNote</a></h4>
                             <h4><a href="/resources/{{ resource.id }}/iso-690"
-                                    title="Pobierz informacje o zasobie w formacie ISO 690">ISO 690</a></h4>
+                                    title="{{ 'Download resource data in ISO 690 format' }}">ISO 690</a></h4>
                         </div>
                     </fieldset>
                 </div>
@@ -89,9 +89,9 @@
                                 <div class="name-with-separator">
                                     <strong>
                                         {% if metadataGroup.label is defined %}
-                                            {{ metadataGroup.label['PL'] | default(metadataGroup.label | first) }}
+                                            {{ metadataGroup.label | inCurrentLanguage }}
                                         {% else %}
-                                            Pozostałe informacje
+                                            {{ 'Additional information' | trans }}
                                         {% endif %}
                                     </strong>
                                     <hr>
@@ -105,7 +105,7 @@
                             {% if metadataValues|length %}
                                 <tr>
                                     <td>
-                                        {{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}
+                                        {{ metadata.label | inCurrentLanguage | default(metadata.label | first) | default(metadata.name) }}
                                     </td>
                                     <td>
                                         {% for metadataValue in metadataValues %}
@@ -140,7 +140,7 @@
                 {% set children = resources({parentId: resource.id, page: page, resultsPerPage: childrenPerPage}) %}
                 {% set pagination = paginate(page, childrenPerPage, children.getTotalCount) %}
                 <div class="name-with-separator">
-                    <h3><strong>Elementy kolekcji ({{ children.getTotalCount }})</strong></h3>
+                    <h3><strong>{{ 'Collection items' | trans }} ({{ children.getTotalCount }})</strong></h3>
                     <hr>
                 </div>
                 <div>

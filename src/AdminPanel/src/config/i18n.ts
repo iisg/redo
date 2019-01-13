@@ -10,7 +10,7 @@ export function i18nConfiguratorFactory(aurelia: Aurelia) {
     const config: I18nParams = aurelia.container.get(I18nParams);
     return i18n.setup({
       backend: {
-        loadPath: 'res/locales/{{lng}}/{{lng}}_{{ns}}.json',
+        loadPath: 'res/locales/{{lng}}/{{ns}}.{{lng}}.json',
       },
       preload: config.supportedUiLanguages,
       fallbackLng: ['en'], // CAREFUL! Anything but 'en' here will break English translation because it's missing 99% of terms

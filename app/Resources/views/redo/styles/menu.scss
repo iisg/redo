@@ -98,32 +98,13 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
       }
     }
     .button-with-submenu {
-      position: relative;
-      white-space: nowrap;
-      &:not(.open):not(:hover) > button:focus + div,
-      &:not(:hover):not(:focus-within):not([focus-within]) > div {
-          visibility: hidden;
-        }
-        &.open > .dropdown-backdrop {
-          display: none;
-      }
       &:hover, &:focus-within, &[focus-within] {
         & > a, & > button {
           box-shadow: inset 0 #{-$default-gap-size / 4} 0 0 $blue;
         }
-        & > div {
-          display: flex;
-        }
       }
       & > div:not(.dropdown-backdrop) {
-        transition: none;
-        z-index: $submenu-z-index;
-        position: absolute;
-        flex-direction: column;
         background-color: $background-color;
-      }
-      a, button {
-        justify-content: flex-start;
       }
       button {
         width: 100%;
