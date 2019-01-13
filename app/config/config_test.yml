@@ -37,6 +37,13 @@ repeka:
   templating:
     templates_resource_class: cms
   expose_endpoints:
+    /:
+      template: redo/home/home.twig
+      fts:
+        searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
+        filterable_metadata_ids: [tytul, opis, parent, wydzial, skanista, nadzorujacy]
+        searchable_resource_classes: [books]
+        facets: [kindId, skanista]
     /about:
       metadata: wyrenderowana_tresc_strony
       resourceId: 18

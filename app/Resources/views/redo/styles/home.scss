@@ -3,11 +3,15 @@
   flex-direction: column;
   flex-grow: 1;
   flex-shrink: 0; // Required by Internet Explorer.
-  &, .big-search-bar {
-    padding: $default-gap-size / 2;
-  }
+  padding: $default-gap-size / 2;
   .big-search-bar {
-    margin-top: auto;
+    padding-top: 3 * $default-gap-size + $default-gap-size / 2;
+    padding-bottom: 3 * $default-gap-size + $default-gap-size / 2;
     margin-bottom: auto;
+    .title {
+      padding: $default-gap-size / 2;
+      text-align: center;
+      color: $grey;
+    }
   }
 }

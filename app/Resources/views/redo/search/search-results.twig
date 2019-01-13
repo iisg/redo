@@ -34,6 +34,7 @@
             <div class="advanced-filters">
                 <form action=""
                     method="get">
+                    <input type="hidden" name="phrase" value="{{ phrase }}">
                     {% for filterableMetadata in filterableMetadataList %}
                         {% include 'redo/search/search-metadata-filter.twig' %}
                     {% endfor %}

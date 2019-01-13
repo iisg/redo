@@ -23,11 +23,6 @@ class DefaultController extends Controller {
         }
     }
 
-    /** @Route("/", methods={"GET"}, name="home") */
-    public function homeAction() {
-        return $this->render($this->getParameter('repeka.templates.homepage'));
-    }
-
     /** @Route("/login", name="login") */
     public function loginAction() {
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {

@@ -1,0 +1,122 @@
+$collapse-and-expand-animations-duration: 0.4s;
+$elements-movement-animation-duration: $collapse-and-expand-animations-duration / 2;
+$basic-opacity-transition-duration: $collapse-and-expand-animations-duration - $elements-movement-animation-duration;
+$additional-opacity-transition-duration: 0.08;
+$collapse-and-expand-animations-timing-function: linear;
+
+// Basic idea is that opacity transition partially overlaps elements movement transition.
+$collapse-animation-elements-movement-transition-settings:
+    $elements-movement-animation-duration
+    $basic-opacity-transition-duration
+    $collapse-and-expand-animations-timing-function;
+$collapse-animation-opacity-and-visibility-transitions-settings:
+    $basic-opacity-transition-duration + $additional-opacity-transition-duration
+    $collapse-and-expand-animations-timing-function;
+$expand-animation-elements-movement-transition-settings:
+    $elements-movement-animation-duration
+    $collapse-and-expand-animations-timing-function;
+$expand-animation-opacity-and-visibility-transitions-settings:
+    $basic-opacity-transition-duration + $additional-opacity-transition-duration
+    $elements-movement-animation-duration - $additional-opacity-transition-duration
+    $collapse-and-expand-animations-timing-function;
+
+$line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to be converted to 0 after all and breaks the animation.
+
+@function transitions-with-common-settings($transitions-properties, $transitions-settings) {
+  $transitions: null;
+  @each $transitions-property in $transitions-properties {
+    $transitions: $transitions, $transitions-property $transitions-settings;
+  }
+  @return $transitions;
+}
+
+@mixin expanded-collapsible() {
+    opacity: 1;
+    transition:
+        transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom,
+            $expand-animation-elements-movement-transition-settings),
+        transitions-with-common-settings(opacity visibility,
+            $expand-animation-opacity-and-visibility-transitions-settings);
+    &, :not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
+        line-height: $default-line-height * 1em;;
+    }
+    :not(.label-with-checkbox > ::before):not(.collapsible):not(.icon):not(svg) {
+        transition: transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom border-top-width border-bottom-width,
+            $expand-animation-elements-movement-transition-settings),
+    }
+    .label-with-checkbox > ::before {
+        transition: transitions-with-common-settings(height border-top-width border-bottom-width vertical-align,
+            $expand-animation-elements-movement-transition-settings);
+    }
+    .icon {
+        transition: transitions-with-common-settings(height,
+            $expand-animation-elements-movement-transition-settings);
+    }
+}
+
+@mixin collapsed-collapsible() {
+    line-height: $line-height-to-be-rendered-as-zero !important;
+    margin-top: 0 !important; // `&, :not(& > *)` doesn't seem not to work for some reason.
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition:
+        transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom
+            border-top-width border-bottom-width, $collapse-animation-elements-movement-transition-settings),
+        transitions-with-common-settings(opacity visibility,
+            $collapse-animation-opacity-and-visibility-transitions-settings);
+    &, * {
+        margin-bottom: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        border-top-width: 0 !important;
+        border-bottom-width: 0 !important;
+    }
+    :not(& > *) {
+        margin-top: 0 !important;
+    }
+    & > * {
+        margin-top: -$default-line-height * $default-font-size !important;
+    }
+    :not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
+        line-height: $line-height-to-be-rendered-as-zero !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        line-height: 0;
+    }
+    :not(.label-with-checkbox > ::before):not(.icon):not(svg) {
+        transition: transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom
+            border-top-width border-bottom-width, $collapse-animation-elements-movement-transition-settings) !important;
+    }
+    .label-with-checkbox > ::before {
+        height: 0;
+        border-top-width: 0;
+        border-bottom-width: 0;
+        vertical-align: 0;
+        transition: transitions-with-common-settings(height border-top-width border-bottom-width vertical-align,
+            $collapse-animation-elements-movement-transition-settings) !important;
+    }
+    .icon {
+        height: 0;
+        transition: transitions-with-common-settings(height,
+            $collapse-animation-elements-movement-transition-settings) !important;
+    }
+}
+
+.collapsible {
+    overflow: hidden;
+    .label-with-checkbox input[type="checkbox"] + ::before {
+        content: '.'; // To have height equal 0 when necessary and have animations look correctly.
+        color: transparent; //
+    }
+    .icon:not([height]), .icon[height="1"] {
+        & > svg {
+            height: 1em;
+        }
+    }
+    &:not(.collapsed) {
+        @include expanded-collapsible();
+    }
+    &.collapsed {
+        @include collapsed-collapsible();
+    }
+}

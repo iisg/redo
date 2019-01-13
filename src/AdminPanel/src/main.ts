@@ -73,7 +73,7 @@ export function configure(aurelia: Aurelia) {
         'resources/details/resource-label-value-converter',
         'resources-config/multilingual-field/in-current-language',
         'themes/admin-styles-loader',
-        'themes/redo/search-bar/search-bar',
+        'themes/redo/child-resources-group/child-resources-group',
         'themes/redo/deposit-form/deposit-form',
       ]);
   }
