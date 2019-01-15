@@ -22,11 +22,6 @@ $main-container-maximum-width: 960px;
   justify-content: center;
 }
 
-:not(.big-search-bar) > .search-bar-container {
-  padding: $default-gap-size;
-  border-bottom: $default-gap-size / 4 solid $orange;
-}
-
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
 }

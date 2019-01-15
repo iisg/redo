@@ -1,73 +1,79 @@
-<div class="search-bar-container">
-    <form class="search-bar-with-advanced-options"
-        action="/search">
-        <div class="search-bar">
-            <div class="search-box-with-options">
-                <div class="input-with-button">
-                    <input type="text"
-                        name="phrase"
-                        {% if app.request.query.all.phrase is defined %}
-                            value="{{ app.request.query.all.phrase }}"
-                        {% endif %}
-                        placeholder="szukaj w zasobach repozytorium">
-                    <button class="search-button"
-                        type="submit">
-                        {{ icon("search", "1.5") }}
-                    </button>
-                </div>
-                <div class="metadata-subsets-chooser">
-                    <div class="radio-buttons-group">
-                        {% for option in [{ids: '', label: 'Wszędzie'}, {ids: 'tytul', label: 'Tytuł'}, {ids: 'opis', label: 'Opis'}] %}
-                            <label>
-                                <input type="radio"
-                                    name="metadataSubset"
-                                    value="{{ option.ids }}"
-                                    {% if app.request.query.all.metadataSubset is defined %}
-                                        {% if option.ids == app.request.query.all.metadataSubset %}
-                                            checked
-                                        {% endif %}
-                                    {% elseif option.ids == "" %}
-                                        checked
-                                    {% endif %}>
-                                <span>{{ option.label }}</span>
-                            </label>
-                        {% endfor %}
-                    </div>
-                    <button type="button"
-                        click.delegate="advancedOptionsExpanded = !advancedOptionsExpanded">
-                        {{ icon('settings-2', '1.25') }}<span>Więcej kryteriów</span>
-                    </button>
-                </div>
+<form class="search-bar"
+    action="/search">
+    <div class="search-box-with-options">
+        <div class="input-with-button">
+            <input type="text"
+                name="phrase"
+                {% if app.request.query.has('phrase') %}
+                    value="{{ app.request.query.get('phrase') }}"
+                {% endif %}
+                placeholder="szukaj w zasobach repozytorium">
+            <button class="search-button"
+                type="submit">
+                {{ icon("search", "2.5") }}
+            </button>
+        </div>
+        <div class="metadata-subsets-chooser">
+            <div class="radio-buttons-group">
+                {% for option in [{ids: '', label: 'Wszędzie'}, {ids: 'tytul', label: 'Tytuł'}, {ids: 'opis', label: 'Opis'}] %}
+                    <label>
+                        <input type="radio"
+                            name="metadataSubset"
+                            value="{{ option.ids }}"
+                            {% if app.request.query.has('metadataSubset') %}
+                                {% if option.ids == app.request.query.get('metadataSubset') %}
+                                    checked
+                                {% endif %}
+                            {% elseif option.ids == "" %}
+                                checked
+                            {% endif %}>
+                        <span>{{ option.label }}</span>
+                    </label>
+                {% endfor %}
             </div>
+            <button type="button"
+                click.delegate="advancedOptionsExpanded = !advancedOptionsExpanded">
+                {{ icon('settings-2', '1.25') }}<span>Więcej kryteriów</span>
+            </button>
         </div>
-        <div class="advanced-options collapsible collapsed"
-            class.bind="advancedOptionsExpanded ? '' : 'collapsed'">
-            {% for filterableMetadata in filterableMetadataList if filterableMetadata.id == -1 %}
-                <div>
-                    {% include 'redo/search/search-metadata-filter.twig' %}
-                </div>
-            {% endfor %}
-            {% for filterableMetadata in filterableMetadataList if filterableMetadata.name == "wydzial" %}
-                <div>
-                    <h3 class="title">{{ filterableMetadata.label.PL }}</h3>
-                    {% embed 'redo/search/search-metadata-filter.twig' %}
-                        {% block propertyName %}{% endblock %}
-                    {% endembed %}
-                </div>
-            {% endfor %}
-            {% set configurableProperties = [] %}
-            {% for filterableMetadata in filterableMetadataList if filterableMetadata.name != "wydzial"
-                and filterableMetadata.id != -1 and filterableMetadata.control.value not in ['text', 'textarea', 'display-strategy'] %}
+    </div>
+    <div class="advanced-options collapsible collapsed"
+        class.bind="advancedOptionsExpanded ? '' : 'collapsed'">
+        {% set parentMetadata = null %}
+        {% set departmentMetadata = null %}
+        {% set configurableProperties = [] %}
+        {% for filterableMetadata in filterableMetadataList %}
+            {% if filterableMetadata.id == -1 %}
+                {% set parentMetadata = filterableMetadata %}
+            {% elseif filterableMetadata.name == "wydzial" %}
+                {% set departmentMetadata = filterableMetadata %}
+            {% elseif filterableMetadata.control.value not in ['text', 'textarea', 'display-strategy'] %}
                 {% set configurableProperties = configurableProperties | merge([filterableMetadata]) %}
-            {% endfor %}
-            {% if configurableProperties is not empty %}
-                <div>
-                    <h3 class="title">Cechy zasobu</h3>
-                    {% for filterableMetadata in configurableProperties %}
-                        {% include 'redo/search/search-metadata-filter.twig' %}
-                    {% endfor %}
-                </div>
             {% endif %}
-        </div>
-    </form>
-</div>
+        {% endfor %}
+
+        {% if parentMetadata %}
+            <div>
+                {% set filterableMetadata = parentMetadata %}
+                {% include 'redo/search/search-metadata-filter.twig' %}
+            </div>
+        {% endif %}
+        {% if departmentMetadata %}
+            <div>
+                <h3 class="title">{{ departmentMetadata.label.PL }}</h3>
+                {% set filterableMetadata = departmentMetadata %}
+                {% embed 'redo/search/search-metadata-filter.twig' %}
+                    {% block propertyName %}{% endblock %}
+                {% endembed %}
+            </div>
+        {% endif %}
+        {% if configurableProperties is not empty %}
+            <div>
+                <h3 class="title">Cechy zasobu</h3>
+                {% for filterableMetadata in configurableProperties %}
+                    {% include 'redo/search/search-metadata-filter.twig' %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</form>

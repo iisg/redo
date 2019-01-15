@@ -4,11 +4,11 @@
   flex-grow: 1;
   flex-shrink: 0; // Required by Internet Explorer.
   padding: $default-gap-size / 2;
-  .big-search-bar {
+  .title-with-search-bar {
     padding-top: 3 * $default-gap-size + $default-gap-size / 2;
     padding-bottom: 3 * $default-gap-size + $default-gap-size / 2;
     margin-bottom: auto;
-    .title {
+    & > .title {
       padding: $default-gap-size / 2;
       text-align: center;
       color: $grey;
