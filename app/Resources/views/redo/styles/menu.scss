@@ -2,10 +2,10 @@ $maximum-number-of-elements: 25;
 $background-color: $very-light-grey;
 $submenu-z-index: 1;
 $menu-item-top-and-bottom-padding: $default-gap-size / 2;
-$icon-width-and-height: 1.5em;
-$icon-top-and-bottom-margin: $default-gap-size / 8;
-$icon-left-and-right-margin: $default-gap-size / 4;
-$negative-menu-item-height: calc(-#{2 * $menu-item-top-and-bottom-padding} - #{2 * $icon-top-and-bottom-margin} - #{$icon-width-and-height});
+$menu-item-icon-width-and-height: 20px;
+$menu-item-icon-top-and-bottom-margin: $default-gap-size / 8;
+$menu-item-icon-left-and-right-margin: $default-gap-size / 4;
+$negative-menu-item-height: calc(-#{2 * $menu-item-top-and-bottom-padding} - #{2 * $menu-item-icon-top-and-bottom-margin} - #{$menu-item-icon-width-and-height});
 $folding-animation-duration: 4 * $default-transition-duration;
 $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
 
@@ -22,16 +22,23 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
   display: flex;
   flex-shrink: 0; // Required by Internet Explorer.
   flex-wrap: wrap-reverse;
+  align-items: flex-start;
   background-color: $background-color;
-  & > div {
+  & > .menu-items {
     display: inherit;
     flex-wrap: wrap-reverse;
     flex-direction: row-reverse;
-    &.right-aligned {
-      margin-left: auto;
-      & + .right-aligned {
-        margin-left: initial;
+    &:not(.right-aligned) {
+      & > .button-with-submenu .button-with-submenu {
+        &:not(.with-submenu-on-the-left) > div:not(.dropdown-backdrop) {
+          @extend %submenu-on-the-right;
+        }
+        &.with-submenu-on-the-left > div:not(.dropdown-backdrop) {
+          @extend %submenu-on-the-left;
+        }
       }
+    }
+    &.right-aligned {
       & > .button-with-submenu {
         &:not(.with-submenu-on-the-right) > div:not(.dropdown-backdrop) {
           right: 0;
@@ -43,16 +50,6 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
           &.with-submenu-on-the-right > div:not(.dropdown-backdrop) {
             @extend %submenu-on-the-right;
           }
-        }
-      }
-    }
-    &:not(.right-aligned) {
-      & > .button-with-submenu .button-with-submenu {
-        &:not(.with-submenu-on-the-left) > div:not(.dropdown-backdrop) {
-          @extend %submenu-on-the-right;
-        }
-        &.with-submenu-on-the-left > div:not(.dropdown-backdrop) {
-          @extend %submenu-on-the-left;
         }
       }
     }
@@ -83,10 +80,13 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
         box-shadow: inset 0 #{-$default-gap-size / 4} 0 0 $blue;
       }
       & > * {
-        margin: $icon-top-and-bottom-margin $icon-left-and-right-margin;
+        margin: $menu-item-icon-top-and-bottom-margin $menu-item-icon-left-and-right-margin;
       }
       .icon {
         flex-shrink: 0;
+        &, & > svg {
+          height: $menu-item-icon-width-and-height;
+        }
       }
     }
     .button-with-submenu {
@@ -125,6 +125,46 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
       }
     }
   }
+  & > .top-search-bar {
+    display: flex;
+    color: $blue;
+    padding: 3 * $default-gap-size / 8 $default-gap-size / 2;
+    & > * {
+      background-color: white;
+      transition: box-shadow $default-transition-duration;
+    }
+    input {
+      padding: $default-gap-size / 4 3 * $default-gap-size / 4;
+      border-top-left-radius: 3 * $default-gap-size / 4;
+      border-bottom-left-radius: 3 * $default-gap-size / 4;
+      border: none;
+      outline: 0;
+      &::placeholder {
+        font-size: $default-font-size;
+        font-style: italic;
+      }
+      &:focus, &.active {
+        &, & + button {
+          box-shadow: inset 0 #{-$default-gap-size / 4 + 1px} 0 0 $blue;
+        }
+      }
+    }
+
+    button {
+      padding: $default-gap-size / 4 $default-gap-size / 2;
+      border-top-right-radius: 3 * $default-gap-size / 4;
+      border-bottom-right-radius: 3 * $default-gap-size / 4;
+      &:hover, &:focus, &.active {
+        box-shadow: inset #{-$default-gap-size / 4 + 1} 0 0 0 $blue;
+      }
+    }
+  }
+  & > .right-aligned {
+    margin-left: auto;
+    & + .right-aligned {
+      margin-left: initial;
+    }
+  }
 
   @media (max-width: $maximum-screen-width-for-mobile-layout) {
     & > div {
@@ -137,7 +177,7 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
           position: static;
           display: flex;
           visibility: visible;
-          padding-left: calc(#{$icon-width-and-height} + #{2 * $icon-left-and-right-margin});
+          padding-left: calc(#{$menu-item-icon-width-and-height} + #{2 * $menu-item-icon-left-and-right-margin});
           overflow: hidden;
           transition: visibility $folding-animation-duration;
           & > * {

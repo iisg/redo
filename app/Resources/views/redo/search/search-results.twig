@@ -5,9 +5,9 @@
 {% block content %}
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}
-    <div class="big-search-bar">
-        {% include "redo/search/search-bar.twig" %}
-    </div>
+
+    {% include "redo/search/search-bar.twig" %}
+
     <div class="search-results-container">
         <div class="left-panel ${collapsed ? 'collapsed' : ''}"
             class-name-when-toggled="collapsed">
