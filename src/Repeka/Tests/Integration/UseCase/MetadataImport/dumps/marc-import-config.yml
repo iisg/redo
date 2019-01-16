@@ -60,19 +60,14 @@ mappings:
         keys: 'a'
       - name: 'flatten'
   125:
-    
-    - key: '080'
-      transforms:
-        - name: 'arrayColumn'
-          keys: 'j,k'
-        - name: 'join'
-          glue: ''
-        - name: 'trim'
-        - name: 'flatten'
-        - name: 'contentSearch'
-          metadata: 170
-          exact: 'true'
-        
+    key: '080'
+    transforms:
+      - name: 'arrayColumn'
+        keys: '9'
+      - name: 'flatten'
+      - name: 'contentSearch'
+        metadata: 168
+        exact: 'true'
   4:
     - key: '100'
       transforms:
