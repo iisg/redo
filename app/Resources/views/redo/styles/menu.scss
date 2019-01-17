@@ -84,8 +84,10 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
       }
       .icon {
         flex-shrink: 0;
-        &, & > svg {
-          height: $menu-item-icon-width-and-height;
+        &:not([size]), &[size="1"] {
+          &, & > svg {
+            height: $menu-item-icon-width-and-height;
+          }
         }
       }
     }
@@ -127,7 +129,6 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
   }
   & > .top-search-bar {
     display: flex;
-    color: $blue;
     padding: 3 * $default-gap-size / 8 $default-gap-size / 2;
     & > * {
       background-color: white;
@@ -148,6 +149,9 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
           box-shadow: inset 0 #{-$default-gap-size / 4 + 1px} 0 0 $blue;
         }
       }
+      &:focus + button {
+        color: $blue;
+      }
     }
 
     button {
@@ -155,6 +159,7 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
       border-top-right-radius: 3 * $default-gap-size / 4;
       border-bottom-right-radius: 3 * $default-gap-size / 4;
       &:hover, &:focus, &.active {
+        color: $blue;
         box-shadow: inset #{-$default-gap-size / 4 + 1} 0 0 0 $blue;
       }
     }

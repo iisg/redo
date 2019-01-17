@@ -11,7 +11,7 @@ $breadcrumbs-and-options-text-color: $grey;
 
 $options-flex-grow: 1;
 $options-background-color: $light-grey;
-$options-background-color-on-bover: $grey;
+$options-background-color-on-hover: $grey;
 $options-text-color-on-hover: white;
 $label-with-user-name-line-height: 16px;
 $label-with-user-name-font-size: 12px;
@@ -74,7 +74,7 @@ top-bar {
         color: inherit;
         @include transition(color $default-transition-duration, background-color $default-transition-duration);
         &:hover {
-          background-color: $options-background-color-on-bover;
+          background-color: $options-background-color-on-hover;
           color: $options-text-color-on-hover;
         }
       }

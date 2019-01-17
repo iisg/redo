@@ -65,6 +65,9 @@
     .children {
       margin-left: $checkbox-and-radio-button-width-and-height + $checkbox-and-radio-button-right-margin;
     }
+    .collapsible {
+        flex-direction: column;
+    }
     .property-name-container:not(.toggled) + div {
         @include collapsed-collapsible();
     }

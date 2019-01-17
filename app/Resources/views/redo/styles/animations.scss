@@ -31,16 +31,15 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
 }
 
 @mixin expanded-collapsible() {
-    opacity: 1;
     transition:
-        transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom,
-            $expand-animation-elements-movement-transition-settings),
+        transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom
+            border-top-width border-bottom-width, $expand-animation-elements-movement-transition-settings),
         transitions-with-common-settings(opacity visibility,
             $expand-animation-opacity-and-visibility-transitions-settings);
     &, :not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
         line-height: $default-line-height * 1em;;
     }
-    :not(.label-with-checkbox > ::before):not(.collapsible):not(.icon):not(svg) {
+    :not(.label-with-checkbox > ::before):not(.collapsible):not(.icon):not(icon):not(svg) {
         transition: transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom border-top-width border-bottom-width,
             $expand-animation-elements-movement-transition-settings),
     }
@@ -48,7 +47,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
         transition: transitions-with-common-settings(height border-top-width border-bottom-width vertical-align,
             $expand-animation-elements-movement-transition-settings);
     }
-    .icon {
+    .icon, icon {
         transition: transitions-with-common-settings(height,
             $expand-animation-elements-movement-transition-settings);
     }
@@ -83,7 +82,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
     h1, h2, h3, h4, h5, h6 {
         line-height: 0;
     }
-    :not(.label-with-checkbox > ::before):not(.icon):not(svg) {
+    :not(.label-with-checkbox > ::before):not(.icon):not(icon):not(svg) {
         transition: transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom
             border-top-width border-bottom-width, $collapse-animation-elements-movement-transition-settings) !important;
     }
@@ -95,7 +94,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
         transition: transitions-with-common-settings(height border-top-width border-bottom-width vertical-align,
             $collapse-animation-elements-movement-transition-settings) !important;
     }
-    .icon {
+    .icon, icon {
         height: 0;
         transition: transitions-with-common-settings(height,
             $collapse-animation-elements-movement-transition-settings) !important;
@@ -103,12 +102,12 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
 }
 
 .collapsible {
-    overflow: hidden;
+    display: flex;
     .label-with-checkbox input[type="checkbox"] + ::before {
         content: '.'; // To have height equal 0 when necessary and have animations look correctly.
         color: transparent; //
     }
-    .icon:not([height]), .icon[height="1"] {
+    .icon:not([size]), .icon[size="1"], icon:not([data-size]), icon[data-size="1"] {
         & > svg {
             height: 1em;
         }
