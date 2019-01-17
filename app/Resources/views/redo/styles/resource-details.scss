@@ -1,143 +1,139 @@
+$gap-size: $default-gap-size * 2;
 $image-height: 100px;
-$initially-hidden-title-font-size: $subtitle-font-size;
-$initially-hidden-title-height: $default-gap-size / 2 + $default-line-height * $initially-hidden-title-font-size;
-$background-color: white;
+$resource-image-with-title-container-with-actions-flex-grow: 10000;
+$resource-image-with-title-container-with-actions-flex-basis: 300px;
+$download-options-flex-grow: 1;
 
 .resource-details {
-    &, & > :not(.available-transitions):not(.details-container):not(.resource-children) {
-        padding: $default-gap-size / 2;
-    }
-    & > .resource-ancestors, & > h1 {
-        padding: $default-gap-size / 2 $default-gap-size;
-    }
-    & > .resource-ancestors {
+    padding: $gap-size * 3 / 2;
+    .top-container {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        & > * {
-            padding: $default-gap-size / 2;
-        }
-        & > span {
-            font-weight: bold;
-        }
-        .ancestors-list {
-            border-left: 1px solid $default-text-color;
-            a {
-                display: block;
-                text-decoration: none;
-                color: $grey;
-                transition: color $default-transition-duration;
-                &:hover, &:focus {
-                    color: $default-text-color;
-                }
-            }
-        }
-    }
-    & > h1 {
-        text-align: center;
-    }
-    & > .available-transitions {
-        text-align: center;
-        &, & > * {
-            padding: $default-gap-size / 4;
-        }
-        & > * {
-            display: inline-block;
-        }
-    }
-    & > .details-container {
-        display: flex;
-        justify-content: space-evenly;
-        flex-direction: row-reverse; // It's used instead of setting `flex-wrap: wrap-reverse` to keep correct layout in Internet Explorer.
-        .details {
-            z-index: 1;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        .resource-image-with-title-container-with-actions {
             display: flex;
-            padding-top: $default-gap-size / 4;
-            padding-bottom: $default-gap-size / 4;
-            background-color: $background-color;
-            td {
-                padding: $default-gap-size / 4 $default-gap-size / 2;
-                &:not([colspan]) {
-                    &:first-child {
-                        text-align: right;
-                    }
-                }
-                &[colspan] {
-                    text-align: center;
-                }
-            }
-        }
-        .title-container-visible-when-scrolled-down {
-            position: sticky;
-            top: 0;
-            & > span {
-                position: absolute;
-                top: 0;
-                width: 100%;
-                padding-top: $default-gap-size / 2;
-                padding-left: $default-gap-size / 2;
-                padding-right: $default-gap-size / 2;
-                font-size: $initially-hidden-title-font-size;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-            }
-        }
-        .resource-image-with-download-links {
-            position: sticky;
-            top: $initially-hidden-title-height;
-            text-align: center;
-            background: white;
-            &, .resource-image {
-                padding: $default-gap-size / 4;
-            }
-            & > :not(.resource-image) {
-                &, & > * {
-                    padding: $default-gap-size / 8;
-                }
-                & > h4 > a {
-                    text-decoration: none;
-                    &:hover > :not(.icon) {
-                        text-decoration: underline;
-                    }
-                }
-                svg {
-                    padding: $default-gap-size / 4;
-                    color: $dark-grey;
-                    background-color: $orange;
-                }
-            }
-            .resource-image .icon {
-                color: $lightish-grey;
-                display: block;
-                height: $image-height;
-            }
-        }
-    }
-    .resource-children {
-        & > h2 {
-            padding: $default-gap-size / 2;
-            text-align: center;
-        }
-        .children-list {
-            .child-item {
-                &, & > :not(.icon) {
-                    padding: $default-gap-size / 4;
+            flex-grow: $resource-image-with-title-container-with-actions-flex-grow;
+            flex-basis: $resource-image-with-title-container-with-actions-flex-basis;
+            flex-wrap: wrap;
+            .resource-image {
+                padding: $gap-size / 2;
+                & > * {
+                    height: $image-height;
                 }
                 & > .icon {
-                    margin: $default-gap-size / 4;
-                    font-size: $subtitle-font-size;
+                    color: $grey;
                 }
-                & > h3 {
-                    display: inline;
+            }
+            .title-container-with-actions {
+                display: flex;
+                flex-direction: column;
+                flex-basis: 0;
+                flex-grow: 1;
+                padding: $gap-size / 4;
+                .title-container {
+                    padding: $gap-size / 4;
+                }
+                .actions {
+                    display: flex;
+                    margin-top: auto;
+                    margin-bottom: auto;
+                    padding-top: $gap-size / 4;
+                    padding-bottom: $gap-size / 4;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    & > * {
+                        margin: $gap-size / 4;
+                        color: $grey;
+                        transition: color $default-transition-duration;
+                        &:hover {
+                            color: $dark-grey;
+                        }
+                    }
+                }
+            }
+        }
+        .download-options {
+            margin-left: auto;
+            max-width: 100%;
+            flex-grow: $download-options-flex-grow;
+            & > div {
+                display: flex;
+                align-items: center;
+                padding: $gap-size / 4;
+                & > * {
+                    margin: $gap-size / 4;
+                }
+                .icon {
+                    color: $grey;
+                }
+                fieldset {
+                    flex: 1;
+                    & > legend {
+                        margin-top: calc(-1em / 2);
+                    }
                 }
             }
         }
     }
-
-    @media (max-width: $maximum-screen-width-for-mobile-layout) {
-        & > .details-container {
-            flex-wrap: wrap;
+    .details {
+        padding-top: $gap-size / 4;
+        padding-bottom: $gap-size / 4;
+        td {
+            &:not(:only-child) {
+                padding: $gap-size / 4 $gap-size / 2;
+                &:first-child {
+                    white-space: nowrap;
+                    text-align: right;
+                    color: $grey;
+                }
+                &:last-child {
+                    width: 100%;
+                }
+            }
+        }
+    }
+    .child-resources-list {
+        .child-resources-list-item {
+            display: flex;
+            align-items: center;
+            padding: $gap-size / 4;
+            justify-content: space-between;
+            &:not(:hover):not(:focus-within):not([focus-within]) {
+                fieldset {
+                    opacity: 0;
+                    visibility: hidden;
+                }
+            }
+            & > :not(fieldset) {
+                padding: $gap-size / 4;
+            }
+            fieldset {
+                margin: $gap-size / 4;
+                transition: transitions-with-common-settings(visibility opacity, $default-transition-duration);
+            }
+        }
+        hr {
+            margin: $gap-size / 4 $gap-size / 2;
+        }
+    }
+    .name-with-separator {
+        padding: $gap-size * 5 / 4 $gap-size / 2 $gap-size / 4;
+        display: flex;
+        align-items: center;
+        hr {
+            flex: 1;
+            margin-left: $gap-size / 2;
+        }
+    }
+    .download-formats {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        & > * {
+            padding: $gap-size / 8 $gap-size / 2;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
     }
 }

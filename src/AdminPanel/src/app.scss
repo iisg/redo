@@ -280,6 +280,7 @@ body {
   hr {
     margin-top: $default-gap-size / 2;
     margin-bottom: $default-gap-size / 2;
+    border-top: 1px solid $light-grey;
   }
 
   input, textarea, select {

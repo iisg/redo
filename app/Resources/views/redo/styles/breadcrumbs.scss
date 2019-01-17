@@ -1,12 +1,11 @@
 .breadcrumbs {
-    padding: $default-gap-size / 2;
+    display: flex;
+    flex-wrap: wrap;
+    padding: $default-gap-size / 2 $default-gap-size / 4;
+    background-color: lighten($very-light-grey, $default-value-to-lighten-colors-by / 10);
     color: $grey;
     a {
-        color: inherit;
-        text-decoration: none;
-        transition: color $default-transition-duration;
-        &:hover, &:focus {
-            color: $blue;
-        }
+        padding-left: $default-gap-size / 4;
+        padding-right: $default-gap-size / 4;
     }
 }

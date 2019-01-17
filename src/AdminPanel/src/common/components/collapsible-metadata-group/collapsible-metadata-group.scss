@@ -59,7 +59,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
             }
             &:not(.with-disabled-collapse-animation) {
                 wysiwyg-editor, resource-metadata-values-form {
-                    @keyframes collapse {
+                    @keyframes Collapse {
                         0% {
                             max-height: 100vh;
                         }
@@ -67,7 +67,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
                             max-height: 0;
                         }
                     }
-                    animation: collapse $collapse-animation-elements-movement-transition-settings forwards;
+                    animation: Collapse $collapse-animation-elements-movement-transition-settings forwards;
                     overflow: hidden;
                 }
             }
@@ -101,7 +101,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
                 }
             }
             wysiwyg-editor, resource-metadata-values-form {
-                @keyframes expand {
+                @keyframes Expand {
                     0% {
                         max-height: 0;
                         overflow: hidden;
@@ -110,7 +110,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
                         max-height: 100vh;
                     }
                 }
-                animation: expand $expand-animation-elements-movement-transition-settings backwards;
+                animation: Expand $expand-animation-elements-movement-transition-settings backwards;
             }
             resource-form-generated > collapsible-metadata-group > * {
                 transition:
