@@ -49,10 +49,11 @@
                         class="drag-handle"
                         bootstrap-tooltip.bind="'Drag to change order' | t"
                         data-placement="left">
+
                         <icon name="arrows-2"
                             size="1.5"></icon>
                     </a>
-                    <div if.bind="!disabled"
+                    <div if.bind="!disabled && !metadataShownWithoutButtons"
                         class="buttons">
                         <icon-button icon-name="remove-2"
                             click.delegate="deleteIndex($index)"
@@ -67,7 +68,7 @@
                 </div>
             </td>
         </tr>
-        <tr if.bind="!resource.contents[metadata.id].length && !metadataValuesReadOnly">
+        <tr if.bind="!resource.contents[metadata.id].length && !metadataValuesReadOnly && !metadataShownWithoutButtons">
             <td if.bind="!disabled">
                 <div class="new-metadata-value-button-container">
                     <new-metadata-value-button metadata.bind="metadata"

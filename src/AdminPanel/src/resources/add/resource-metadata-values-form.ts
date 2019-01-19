@@ -73,4 +73,9 @@ export class ResourceMetadataValuesForm {
   get metadataValuesReadOnly(): boolean {
     return ['relationship', 'file', 'directory'].indexOf(this.metadata.control) !== -1;
   }
+
+  @computedFrom("required", "metadata.constraints")
+  get metadataShownWithoutButtons(): boolean {
+    return this.required && this.metadata.constraints.maxCount === 1;
+  }
 }
