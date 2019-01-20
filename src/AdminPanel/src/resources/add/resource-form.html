@@ -53,6 +53,7 @@
                 target-places.bind="targetPlaces"
                 required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"
                 tree-query-url.bind="treeQueryUrl"
+                force-simple-file-upload.bind="forceSimpleFileUpload"
                 display-required-only.bind="!!deposit"></resource-form-generated>
             <div class="form-buttons">
                 <transition-button if.bind="editing && transition && transition.id !== 'update'"

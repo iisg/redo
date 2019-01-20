@@ -1,0 +1,7 @@
+<template>
+    <require from="../file-uploader-type/file-uploader-type-editor"></require>
+
+    <file-uploader-type-editor value.bind="metadata.constraints.fileUploaderType"
+        original-value.bind="originalMetadata.constraints.fileUploaderType"
+        has-base.bind="!!originalMetadata"></file-uploader-type-editor>
+</template>

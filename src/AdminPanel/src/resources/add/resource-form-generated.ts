@@ -30,6 +30,7 @@ export class ResourceFormGenerated {
   @bindable skipValidation: boolean = false;
   @bindable displayRequiredOnly: boolean;
   @bindable treeQueryUrl: string;
+  @bindable forceSimpleFileUpload: boolean = false;
   @bindable disabled: boolean = false;
 
   currentLanguageCode: string;

@@ -18,6 +18,7 @@ export class ResourceMetadataValuesForm {
   @bindable skipValidation: boolean = false;
   @bindable validationController: ValidationController;
   @bindable treeQueryUrl: string;
+  @bindable forceSimpleFileUpload: boolean = false;
 
   valueTable: Element;
 

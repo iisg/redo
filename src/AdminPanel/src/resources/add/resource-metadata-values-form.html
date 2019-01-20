@@ -3,8 +3,8 @@
     <require from="./new-metadata-value-button"></require>
     <require from="common/components/buttons/icon-button"></require>
     <require from="resources/controls/input/resource-picker/tree-relationship-selector"></require>
+    <require from="resources/controls/input/file-manager/file-upload"></require>
     <require from="resources/controls/input/file-manager/resource-file-manager"></require>
-    <require from="common/components/buttons/icon-button"></require>
     <require from="common/value-converters/in-value-converter"></require>
 
     <table class="transparent"
@@ -21,7 +21,17 @@
                     tree-query-url.bind="treeQueryUrl"></tree-relationship-selector>
             </td>
         </tr>
-        <tr if.bind="metadata.control | in:['file', 'directory']">
+        <tr if.bind="metadata.control === 'file'">
+            <td>
+                <file-upload containerless
+                    resource.bind="resource"
+                    metadata.bind="metadata"
+                    skip-validation.bind="skipValidation"
+                    disabled.bind="disabled"
+                    force-simple-file-upload.bind="forceSimpleFileUpload"></file-upload>
+            </td>
+        </tr>
+        <tr if.bind="metadata.control === 'directory'">
             <td>
                 <resource-file-manager resource.bind="resource"
                     metadata.bind="metadata"
@@ -42,6 +52,7 @@
                         validation-controller.bind="validationController"
                         value.bind="resource.contents[metadata.id][$index]"
                         skip-validation.bind="skipValidation"
+                        force-simple-file-upload.bind="forceSimpleFileUpload"
                         disabled.bind="disabled"
                         required.bind="required"></resource-metadata-value-input>
                     <a if.bind="!disabled && resource.contents[metadata.id].length > 1"

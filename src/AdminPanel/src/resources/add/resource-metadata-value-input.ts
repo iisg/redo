@@ -16,6 +16,7 @@ export class ResourceMetadataValueInput {
   @bindable @booleanAttribute disabled: boolean = false;
   @bindable validationController: ValidationController;
   @bindable @booleanAttribute skipValidation: boolean = false;
+  @bindable forceSimpleFileUpload: boolean = false;
   @bindable @booleanAttribute required: boolean = false;
   metadataInitialValue: MetadataValue;
 

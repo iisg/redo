@@ -19,3 +19,7 @@ flexible-date-modes:
   day: Dzień
   date_time: Czas
   range: Zakres
+
+file-uploader-types:
+  simple: Prosty wybór pliku
+  file_manager: Menedżer plików zasobu

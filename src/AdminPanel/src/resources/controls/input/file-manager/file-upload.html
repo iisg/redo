@@ -1,0 +1,21 @@
+<template>
+    <require from="resources/controls/input/file-manager/resource-file-manager"></require>
+    <require from="resources/controls/input/file-manager/simple-file-upload"></require>
+    <require from="common/components/buttons/icon-button"></require>
+    <em if.bind="!resource.id">${'Save resource to upload its files'|t}</em>
+    <template else>
+        <simple-file-upload if.bind="useSimpleUpload && !disabled"
+            resource.bind="resource"
+            metadata.bind="metadata"
+            skip-validation.bind="skipValidation"
+            disabled.bind="disabled"></simple-file-upload>
+        <resource-file-manager else
+            if.bind="!disabled"
+            resource.bind="resource"
+            metadata.bind="metadata"
+            skip-validation.bind="skipValidation">
+            <icon-button icon-name="scan"
+                tooltip-text-when-enabled.one-time="'Open resource file manager' | t"></icon-button>
+        </resource-file-manager>
+    </template>
+</template>

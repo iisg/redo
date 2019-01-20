@@ -17,3 +17,4 @@ labels:
   displayStrategy: Szablon
   doublePrecision: Liczba miejsc po przecinku przy wyświetlaniu
   uniqueInResourceClass: Unikatowość w klasie zasobów
+  fileUploaderType: Wgrywanie plików za pomocą

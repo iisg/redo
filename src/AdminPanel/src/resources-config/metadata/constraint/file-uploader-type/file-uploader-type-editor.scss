@@ -1,0 +1,7 @@
+@import "../../../../common/styles";
+
+file-uploader-type-editor {
+  & > * {
+    @include form-element();
+  }
+}

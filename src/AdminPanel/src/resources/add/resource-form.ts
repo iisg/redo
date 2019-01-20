@@ -41,6 +41,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
   }) => Promise<any>;
   @bindable cancel: () => void;
   @bindable treeQueryUrl: string;
+  @bindable forceSimpleFileUpload: boolean = false;
   submitting: boolean = false;
   cloning: boolean = false;
   disabled: boolean = false;

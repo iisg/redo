@@ -24,6 +24,7 @@ export class MetadataConstraints {
   @map displayStrategy?: string;
   @map doublePrecision?: number;
   @map uniqueInResourceClass?: boolean = false;
+  @map fileUploaderType?: string;
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
