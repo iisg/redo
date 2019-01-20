@@ -6,8 +6,9 @@ import {Metadata} from "../../../../resources-config/metadata/metadata";
 import {MetadataRepository} from "../../../../resources-config/metadata/metadata-repository";
 import {MetadataValue} from "../../../../resources/metadata-value";
 import {propertyKeys, safeJsonParse} from "../../../utils/object-utils";
-import {ContextResourceClass, ResourceClassChangeEvent} from "./../../../../resources/context/context-resource-class";
+import {ContextResourceClass, ResourceClassChangeEvent} from "../../../../resources/context/context-resource-class";
 import {filterableControls} from "../../../../resources-config/metadata/metadata-control";
+import {SystemMetadata} from "../../../../resources-config/metadata/system-metadata";
 
 @autoinject
 export class TopBarSearch {
@@ -16,6 +17,7 @@ export class TopBarSearch {
   metadataValue: MetadataValue = new MetadataValue();
   private searchData: StringMap<SearchData> = {};
   controls = filterableControls;
+  classlessSearchableMetadataIds: number[] = [SystemMetadata.RESOURCE_LABEL.id];
 
   constructor(
     eventAggregator: EventAggregator,
@@ -65,7 +67,7 @@ export class TopBarSearch {
     let contentsFilter = {};
     contentsFilter[this.metadata.id] = this.metadataValue.value;
     const queryParams = this.router.currentInstruction.queryParams;
-    queryParams['resourceClass'] = this.metadata.resourceClass;
+    queryParams['resourceClass'] = this.resourceClass;
     queryParams['contentsFilter'] = JSON.stringify(contentsFilter);
     queryParams['allLevels'] = true;
     this.router.navigateToRoute('resources', queryParams);
