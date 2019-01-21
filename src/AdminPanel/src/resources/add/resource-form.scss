@@ -1,7 +1,5 @@
 @import "../../common/styles";
 
-$resource-kind-chooser-minimum-width: 100px;
-
 resource-form {
   & > span {
     display: block;
@@ -34,24 +32,6 @@ resource-form {
     }
     workflow-place-chooser {
       flex: 1;
-    }
-  }
-
-  .resource-kind-chooser-with-cancel-button {
-    display: flex;
-    align-items: center;
-    padding-top: $default-gap-size / 4;
-    padding-bottom: $default-gap-size / 4;
-    flex-wrap: wrap;
-    & > * {
-      padding: $default-gap-size / 4 $default-gap-size / 2;
-    }
-    resource-kind-chooser {
-      flex: 1;
-      min-width: $resource-kind-chooser-minimum-width;
-    }
-    cancel-button {
-      margin-left: auto;
     }
   }
 

@@ -12,13 +12,22 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
     private function filterOutEmptyMetadataInContents(array $contents): array {
         foreach ($contents as &$values) {
             if (is_array($values)) {
-                $values = $this->filterOutEmptyMetadataInContents($values);
+                $firstKey = key($values);
+                if (is_numeric($firstKey) || in_array($firstKey, ['value', 'submetadata'], true)) {
+                    $values = $this->filterOutEmptyMetadataInContents($values);
+                }
             }
         }
         return array_filter(
             $contents,
             function ($values) {
-                return !is_array($values) || count($values) > 0;
+                if (is_array($values)) {
+                    return count($values) > 0;
+                } elseif (is_string($values)) {
+                    return trim($values) !== '';
+                } else {
+                    return $values !== null;
+                }
             }
         );
     }

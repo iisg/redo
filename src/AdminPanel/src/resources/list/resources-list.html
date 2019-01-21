@@ -4,6 +4,8 @@
     <require from="./resources-list-table"></require>
     <require from="../add/resource-form"></require>
     <require from="../workflow/resource-place-display.html"></require>
+    <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
+    <require from="common/components/buttons/cancel-button.html"></require>
 
     <pagination total-number-of-elements.bind="totalNumberOfResources"
         elements-per-page.bind="resultsPerPage"
@@ -17,11 +19,29 @@
     <div if.bind="addFormOpened"
         class="add-form well fade-inup-outdown au-animate">
         <span>${'Add new resource' | resourceClassTranslation:resourceClass}</span>
-        <resource-form view-model.ref="resourceForm"
-            resource-class.bind="resourceClass"
-            parent.bind="parentResource"
-            submit.call="addNewResource(savedResource)"
-            cancel.call="addFormOpened = !addFormOpened"></resource-form>
+
+        <div class="resource-kind-chooser-with-cancel-button">
+            <resource-kind-chooser
+                hide-clear-button.one-time="true"
+                resource-class.bind="resourceClass"
+                filter.one-time="createResourceKindFilter()"
+                value.bind="newResourceKindThrottled"></resource-kind-chooser>
+            <cancel-button if.bind="!newResourceKindThrottled"
+                class="orange"
+                label="Close"
+                click.delegate="addFormOpened = false"></cancel-button>
+        </div>
+        <template if.bind="newResourceKind">
+            <!-- https://confluence.fslab.agh.edu.pl/pages/viewpage.action?pageId=110461481 -->
+            <template repeat.for="ugly of ['horrible']">
+                <resource-form
+                    resource-kind.bind="newResourceKind"
+                    resource-class.bind="resourceClass"
+                    parent.bind="parentResource"
+                    submit.call="addNewResource(savedResource)"
+                    cancel.call="addFormOpened = !addFormOpened"></resource-form>
+            </template>
+        </template>
     </div>
     <loading-bar if.bind="displayProgressBar"></loading-bar>
     <resources-list-table resources.bind="resources"

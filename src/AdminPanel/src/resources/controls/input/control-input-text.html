@@ -3,6 +3,6 @@
         placeholder.one-time="metadata.placeholder[currentLanguageCode] || description || ''"
         bootstrap-tooltip.bind="description"
         class="form-control"
-        value.bind="metadataValue.value & validate:validationController:validationRules"
+        value.bind="metadataValue.value & validate:validationController:validationRules & signal:'metadata-validators-changed'"
         disabled.bind="disabled">
 </template>

@@ -11,6 +11,7 @@ export class ResourceKindChooser implements ComponentAttached {
   @bindable(oneTime) multiSelect: boolean;
   @bindable resourceClass: string;
   @bindable disabled: boolean;
+  @bindable hideClearButton: boolean = false;
   @bindable filter: (resourceKind: ResourceKind) => boolean = () => true;
   @bindable @booleanAttribute useComputedWidth: boolean;
   resourceKinds: ResourceKind[];
