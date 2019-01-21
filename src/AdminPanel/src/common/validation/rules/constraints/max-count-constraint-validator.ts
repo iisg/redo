@@ -1,6 +1,8 @@
 import {MetadataArrayConstraintValidator} from "./constraint-validator";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
+import {Metadata} from "../../../../resources-config/metadata/metadata";
+import {Resource} from "../../../../resources/resource";
 
 @autoinject
 export class MaxCountConstraintValidator extends MetadataArrayConstraintValidator {
@@ -12,11 +14,16 @@ export class MaxCountConstraintValidator extends MetadataArrayConstraintValidato
     super();
   }
 
-  validate(values: any[], maxCount: number): boolean {
-    return !maxCount || maxCount == -1 || values.length <= maxCount;
+  protected shouldValidate(metadata: Metadata, resource: Resource): boolean {
+    return metadata.constraints.maxCount > 0;
   }
 
-  getErrorMessage(maxCount): string {
-    return this.i18n.tr("metadata_constraints::No more than {{maxCount}} values allowed", {maxCount});
+  validate(values: any[], metadata: Metadata, resource: Resource): boolean {
+    const maxCount = metadata.constraints.maxCount;
+    return !maxCount || maxCount == -1 || !values || values.length <= maxCount;
+  }
+
+  getErrorMessage(metadata: Metadata, resource: Resource): string {
+    return this.i18n.tr("metadata_constraints::No more than {{maxCount}} values allowed", {maxCount: metadata.constraints.maxCount});
   }
 }

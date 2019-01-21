@@ -69,8 +69,11 @@ export class BootstrapValidationRenderer implements ValidationRenderer {
   }
 
   private findValidationMessageContainer(element: Element): Element {
-    return $(element).closest('.validation-message-container, .simple-form, .form-group, \
+    const errorContainer = $(element).closest('.validation-message-container, .simple-form, .form-group, \
       metadata-value-input, resource-metadata-values-form, resource-form-generated')[0]
       || $(element).prev()[0];
+    return errorContainer.nodeName.toLowerCase() == 'resource-metadata-values-form'
+      ? $(errorContainer).find('.validation-message-container')[0] || errorContainer
+      : errorContainer;
   }
 }

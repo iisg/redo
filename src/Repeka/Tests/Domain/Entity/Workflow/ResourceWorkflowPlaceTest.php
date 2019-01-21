@@ -65,9 +65,9 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
         $rk = $this->createMock(ResourceKind::class);
         $rk->method('getMetadataIds')->willReturn([1, 2, 3]);
         $resource1 = $this->createResourceMock(1, $rk, []);
-        $resource2 = $this->createResourceMock(1, $rk, [1 => null]);
-        $resource3 = $this->createResourceMock(1, $rk, [1 => null, 2 => null]);
-        $resource4 = $this->createResourceMock(1, $rk, [1 => null, 2 => null, 3 => null]);
+        $resource2 = $this->createResourceMock(1, $rk, [1 => 'a']);
+        $resource3 = $this->createResourceMock(1, $rk, [1 => 'a', 2 => 'a']);
+        $resource4 = $this->createResourceMock(1, $rk, [1 => 'a', 2 => 'a', 3 => 'a']);
         $this->assertNotEmpty($place->getMissingRequiredMetadataIds($resource1->getContents(), $rk));
         $this->assertNotEmpty($place->getMissingRequiredMetadataIds($resource2->getContents(), $rk));
         $this->assertEmpty($place->getMissingRequiredMetadataIds($resource3->getContents(), $rk));
@@ -80,7 +80,7 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
         $rk = $this->createMock(ResourceKind::class);
         $rk->method('getMetadataIds')->willReturn([1, 2]);
         $this->assertEquals([1, 2], $place->getMissingRequiredMetadataIds($resourceContents, $rk));
-        $resourceContents = $resourceContents->withMergedValues(1, null);
+        $resourceContents = $resourceContents->withMergedValues(1, 'a');
         $this->assertEquals([2], $place->getMissingRequiredMetadataIds($resourceContents, $rk));
     }
 

@@ -17,6 +17,7 @@ export class MetadataValueInput {
   @bindable validationController: ValidationController;
   @bindable description: string;
   @bindable @booleanAttribute skipValidation: boolean = false;
+  @bindable @booleanAttribute required: boolean = false;
   originalMetadata: Metadata;
 
   constructor(private inCurrentLanguage: InCurrentLanguageValueConverter, private metadataRepository: MetadataRepository) {

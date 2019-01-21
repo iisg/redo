@@ -6,6 +6,7 @@
         value.bind="value"
         multiple.bind="multiSelect"
         disabled.bind="disabled"
+        hide-clear-button.bind="hideClearButton"
         use-computed-width.bind="useComputedWidth">
         <template replace-part="option-template">
             ${option.label | inCurrentLanguage}

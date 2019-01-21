@@ -15,6 +15,7 @@ export class ControlStrategy {
   validationRules: any;
   validationController: ValidationController;
   skipValidation: boolean = false;
+  required: boolean = false;
 
   constructor(private singleMetadataValueValidator: SingleMetadataValueValidator) {
   }
@@ -22,7 +23,7 @@ export class ControlStrategy {
   activate(model: Object) {
     $.extend(this, model);
     if (this.metadata) {
-      this.validationRules = this.singleMetadataValueValidator.createRules(this.metadata, this.resource).rules;
+      this.validationRules = this.singleMetadataValueValidator.createRules(this.metadata, this.resource, this.required).rules;
       if (this.metadata.control == MetadataControl.BOOLEAN && !this.metadataValue.value) {
         this.metadataValue.value = false; // forces "undefined" boolean values to be false
       }

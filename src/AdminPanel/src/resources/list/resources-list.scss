@@ -90,3 +90,22 @@ resources-list {
     grid-area: alert;
   }
 }
+
+.resource-kind-chooser-with-cancel-button {
+  $resource-kind-chooser-minimum-width: 100px;
+  display: flex;
+  align-items: center;
+  padding-top: $default-gap-size / 4;
+  padding-bottom: $default-gap-size / 4;
+  flex-wrap: wrap;
+  & > * {
+    padding: $default-gap-size / 4 $default-gap-size / 2;
+  }
+  resource-kind-chooser {
+    flex: 1;
+    min-width: $resource-kind-chooser-minimum-width;
+  }
+  cancel-button {
+    margin-left: auto;
+  }
+}
