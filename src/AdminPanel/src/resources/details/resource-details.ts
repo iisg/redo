@@ -147,18 +147,21 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   showTransitionForm(transition: WorkflowTransition) {
     this.selectedTransition = transition;
-    this.updateUrl({editAction: true, skipValidation: false, triggerNavigation: true});
-    // form is opened after navigation
+    this.isFormOpened = true;
+    this.isFormOpenedForGod = false;
+    this.resourceDetailsTabs.activateTab('details');
   }
 
   showGodForm() {
-    this.updateUrl({editAction: true, skipValidation: true, triggerNavigation: true});
+    this.isFormOpened = true;
+    this.isFormOpenedForGod = true;
+    this.resourceDetailsTabs.activateTab('details');
   }
 
   hideForm() {
     this.selectedTransition = undefined;
-    this.updateUrl({editAction: false, skipValidation: false, triggerNavigation: true});
-    // form is closed after navigation
+    this.isFormOpened = false;
+    this.isFormOpenedForGod = false;
   }
 
   saveEditedResource(updatedResource: Resource,
@@ -169,6 +172,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     $.extend(this.resource, updatedResource);
     return this.applyTransition(updatedResource, transitionId, newResourceKind, places).then(resourceData => {
       this.hideForm();
+      this.resource.kind = newResourceKind;
       return this.resource = resourceData;
     }).catch(() => $.extend(this.resource, originalResource));
   }
@@ -206,33 +210,20 @@ export class ResourceDetails implements RoutableComponentActivate {
     }
   }
 
-  private updateUrl(args: { editAction, skipValidation, triggerNavigation } = {
-    editAction: this.isFormOpened,
-    skipValidation: this.isFormOpenedForGod,
-    triggerNavigation: false
-  }) {
+  private updateUrl() {
     let parameters = {};
     if (this.resourceDetailsTabs.activeTabId == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
       parameters['currentPageNumber'] = this.currentPageNumber;
     }
     parameters['id'] = this.resource.id;
-    if (args.editAction) {
-      parameters['action'] = 'edit';
-      parameters['tab'] = 'details';
-      if (args.skipValidation) {
-        parameters['god'] = true;
-      }
-    } else {
+    if (this.resourceDetailsTabs.activeTabId != 'details') {
       parameters['tab'] = this.resourceDetailsTabs.activeTabId;
-    }
-    if (this.selectedTransition) {
-      parameters['transitionId'] = this.selectedTransition.id;
     }
     if (this.resourceDetailsTabs.activeTabId == 'audit' && this.filters) {
       parameters = this.filters.toParams();
     }
-    this.router.navigateToRoute('resources/details', parameters, {trigger: args.triggerNavigation, replace: true});
+    this.router.navigateToRoute('resources/details', parameters, {trigger: false, replace: true});
   }
 
   private navigateToParentOrList() {

@@ -35,7 +35,6 @@ export class ResourceFormGenerated {
   currentLanguageCode: string;
   lockedMetadataIds: number[];
   requiredMetadataIds: number[];
-  removedValues: AnyMap<any[]> = {};
 
   /*
    contentsValidator is computed from resourceKind and requiredMetadataIdsForTransition - second one is bound later
@@ -103,25 +102,21 @@ export class ResourceFormGenerated {
       if (inArray(clonedMetadata.id, this.requiredMetadataIdsForTransition || [])) {
         clonedMetadata.constraints.minCount = 1;
       }
-      this.contentsValidator[clonedMetadata.id] = this.allMetadataValidator.createRules(clonedMetadata).rules;
+      this.contentsValidator[clonedMetadata.id] = this.allMetadataValidator.createRules(clonedMetadata, this.resource).rules;
     }
     this.signaler.signal('metadata-validators-changed');
-  }, 500);
+  }, 300);
 
   private setResourceContents() {
-    const previousMetadata = Object.keys(this.resource.contents);
-    const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.id);
+    const previousMetadata = Object.keys(this.resource.contents).map(m => +m);
+    const newMetadata = this.resourceKind.metadataList.map(metadata => metadata.id).map(m => +m);
     const toBeRemoved = diff(previousMetadata, newMetadata);
     const toBeAdded = diff(newMetadata, previousMetadata);
     for (const metadataId of toBeRemoved) {
-      this.removedValues[metadataId] = this.resource.contents[metadataId];
       delete this.resource.contents[metadataId];
     }
     for (const metadataId of toBeAdded) {
-      if ((metadataId in this.removedValues) && this.removedValues[metadataId]) {
-        this.resource.contents[metadataId] = this.removedValues[metadataId];
-        delete this.removedValues[metadataId];
-      } else {
+      if (!this.resource.contents[metadataId]) {
         this.resource.contents[metadataId] = [];
       }
     }

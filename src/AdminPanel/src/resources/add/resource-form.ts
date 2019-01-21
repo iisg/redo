@@ -1,6 +1,5 @@
 import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {Modal} from "common/dialog/modal";
@@ -26,6 +25,7 @@ import {HasRoleValueConverter} from "common/authorization/has-role-value-convert
 export class ResourceForm extends ChangeLossPreventerForm {
   @bindable({changeHandler: 'updateResource'}) resourceClass: string;
   @bindable parent: Resource;
+  @bindable resourceKind: ResourceKind;
   @bindable currentlyEditedResource: Resource;
   @bindable skipValidation: boolean;
   @bindable deposit: boolean;
@@ -46,14 +46,12 @@ export class ResourceForm extends ChangeLossPreventerForm {
   disabled: boolean = false;
   validationError: boolean = false;
   places: WorkflowPlace[] = [];
-  resourceKindIdsAllowedByParent: number[];
   resource: Resource;
 
   private validationController: ValidationController;
 
   constructor(private entitySerializer: EntitySerializer,
               private modal: Modal,
-              private router: Router,
               private changeLossPreventer: ChangeLossPreventer,
               private hasRole: HasRoleValueConverter,
               private isReproductor: CurrentUserIsReproductorValueConverter,
@@ -70,11 +68,8 @@ export class ResourceForm extends ChangeLossPreventerForm {
       && this.currentlyEditedResource.kind
       && this.currentlyEditedResource.kind.workflow
       && !this.deposit) {
-      let params = this.router.currentInstruction.queryParams;
       this.places = this.currentlyEditedResource.currentPlaces;
-      this.transition = this.currentlyEditedResource.availableTransitions.filter(item => item.id === params.transitionId)[0];
     }
-    this.setResourceKindsAllowedByParent();
     this.changeLossPreventer.enable(this);
   }
 
@@ -122,13 +117,8 @@ export class ResourceForm extends ChangeLossPreventerForm {
       && !this.skipValidation;
   }
 
-  private setResourceKindsAllowedByParent() {
-    this.resourceKindIdsAllowedByParent = undefined;
-    if (this.parent) {
-      let metadata = this.parent.kind.metadataList.find(v => v.id === SystemMetadata.PARENT.id);
-      let resourceKindsAllowedByParent: any[] = metadata.constraints.resourceKind;
-      this.resourceKindIdsAllowedByParent = resourceKindsAllowedByParent.map(v => v.id || v);
-    }
+  resourceKindChanged() {
+    this.resource.kind = this.resourceKind;
   }
 
   copyParentResourceToChildResource() {
@@ -139,15 +129,6 @@ export class ResourceForm extends ChangeLossPreventerForm {
         }
       });
     }
-  }
-
-  createResourceKindFilter() {
-    return (resourceKind: ResourceKind) => {
-      const isAllowedByParent = !Array.isArray(this.resourceKindIdsAllowedByParent)
-        || inArray(resourceKind.id, this.resourceKindIdsAllowedByParent);
-      const isNotSystemRK = resourceKind.id > 0;
-      return isAllowedByParent && isNotSystemRK;
-    };
   }
 
   private copyContentsAndFilterEmptyValues(contents: NumberMap<MetadataValue[]>): NumberMap<MetadataValue[]> {
@@ -275,6 +256,14 @@ export class ResourceForm extends ChangeLossPreventerForm {
     }).finally(() => {
       this.disabled = false;
       this.cloning = false;
+    });
+  }
+
+  cancelForm() {
+    this.changeLossPreventer.canLeaveView().then(canLeave => {
+      if (canLeave) {
+        this.cancel();
+      }
     });
   }
 }

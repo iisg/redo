@@ -10,9 +10,8 @@
         <collapsible-metadata-group resource-kind-id.bind="resourceKind.id"
             metadata-group-id.bind="metadataGroup.groupId"
             disabled.bind="nonEmptyMetadataGroups.length < 2 || displayRequiredOnly">
-            <template repeat.for="metadata of metadataGroup.metadataList"
-                if.bind="contentsValidator[metadata.id]">
-                <template if.bind="displayMetadataValueInput(metadata)">
+            <template repeat.for="metadata of metadataGroup.metadataList">
+                <template if.bind="displayMetadataValueInput(metadata) && contentsValidator[metadata.id]">
                     <span>
                         ${metadata | metadataLabel}
                         <span class="metadata-constraints-icons">

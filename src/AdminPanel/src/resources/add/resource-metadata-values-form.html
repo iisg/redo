@@ -16,7 +16,6 @@
                     resource.bind="resource"
                     metadata.bind="metadata"
                     skip-validation.bind="skipValidation"
-                    validation-controller.bind="validationController"
                     disabled.bind="disabled"
                     show-by-default.one-time="required && resource.contents[metadata.id].length === 0"
                     tree-query-url.bind="treeQueryUrl"></tree-relationship-selector>
@@ -43,7 +42,8 @@
                         validation-controller.bind="validationController"
                         value.bind="resource.contents[metadata.id][$index]"
                         skip-validation.bind="skipValidation"
-                        disabled.bind="disabled"></resource-metadata-value-input>
+                        disabled.bind="disabled"
+                        required.bind="required"></resource-metadata-value-input>
                     <a if.bind="!disabled && resource.contents[metadata.id].length > 1"
                         class="drag-handle"
                         bootstrap-tooltip.bind="'Drag to change order' | t"
@@ -78,5 +78,10 @@
             </td>
         </tr>
         </tbody>
+        <tfoot>
+        <tr>
+            <td class="validation-message-container"></td>
+        </tr>
+        </tfoot>
     </table>
 </template>

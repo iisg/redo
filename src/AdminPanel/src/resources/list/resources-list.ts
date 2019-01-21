@@ -21,6 +21,8 @@ import {ResourceRepository} from "../resource-repository";
 import {ResourceSort, SortDirection} from "../resource-sort";
 import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproductor";
 import {booleanAttribute} from "common/components/boolean-attribute";
+import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
+import {inArray} from "../../common/utils/array-utils";
 
 @autoinject()
 export class ResourcesList {
@@ -49,6 +51,9 @@ export class ResourcesList {
   private displayAllLevels: boolean = false;
   private sortButtonToggledSubscription: Subscription;
   private resourceFilteredSubscription: Subscription;
+  resourceKindIdsAllowedByParent: number[];
+  newResourceKind: ResourceKind;
+  @observable newResourceKindThrottled: ResourceKind;
 
   constructor(private alert: Alert,
               private i18n: I18N,
@@ -61,6 +66,12 @@ export class ResourcesList {
               private isReproductor: CurrentUserIsReproductorValueConverter) {
   }
 
+  newResourceKindThrottledChanged() {
+    // such replacing of resource kind forces the resoruce-form to be rerendered with if.bind
+    this.newResourceKind = undefined;
+    setTimeout(() => this.newResourceKind = this.newResourceKindThrottled, 100);
+  }
+
   bind() {
     if (this.parentResource) {
       this.resourceClass = this.parentResource.resourceClass;
@@ -68,6 +79,7 @@ export class ResourcesList {
         (event: { instruction: NavigationInstruction }) => {
           this.activate(event.instruction.queryParams);
         });
+      this.setResourceKindsAllowedByParent();
     }
     if (this.resourceKind) {
       this.sortButtonToggledSubscription = this.eventAggregator.subscribe('sortButtonToggled',
@@ -87,6 +99,24 @@ export class ResourcesList {
       this.sortButtonToggledSubscription.dispose();
       this.resourceFilteredSubscription.dispose();
     }
+  }
+
+  private setResourceKindsAllowedByParent() {
+    this.resourceKindIdsAllowedByParent = undefined;
+    if (this.parentResource) {
+      let metadata = this.parentResource.kind.metadataList.find(v => v.id === SystemMetadata.PARENT.id);
+      let resourceKindsAllowedByParent: any[] = metadata.constraints.resourceKind;
+      this.resourceKindIdsAllowedByParent = resourceKindsAllowedByParent.map(v => v.id || v);
+    }
+  }
+
+  createResourceKindFilter() {
+    return (resourceKind: ResourceKind) => {
+      const isAllowedByParent = !Array.isArray(this.resourceKindIdsAllowedByParent)
+        || inArray(resourceKind.id, this.resourceKindIdsAllowedByParent);
+      const isNotSystemRK = resourceKind.id > 0;
+      return isAllowedByParent && isNotSystemRK;
+    };
   }
 
   activate(parameters: any) {

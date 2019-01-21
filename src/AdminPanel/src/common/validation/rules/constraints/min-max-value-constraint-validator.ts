@@ -1,7 +1,8 @@
 import {SingleValueConstraintValidator} from "./constraint-validator";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
-import {MinMaxValue} from "resources-config/metadata/metadata-min-max-value";
+import {Metadata} from "../../../../resources-config/metadata/metadata";
+import {Resource} from "../../../../resources/resource";
 
 @autoinject
 export class MinMaxValueConstraintValidator extends SingleValueConstraintValidator {
@@ -13,12 +14,18 @@ export class MinMaxValueConstraintValidator extends SingleValueConstraintValidat
     super();
   }
 
-  validate(value: number, minMaxValue: MinMaxValue): boolean {
-    return (minMaxValue.min != undefined || minMaxValue.max != undefined) ?
-      (minMaxValue.min == undefined || value >= minMaxValue.min) && (minMaxValue.max == undefined || value <= minMaxValue.max) : true;
+  protected shouldValidate(metadata: Metadata, resource: Resource): boolean {
+    const minMax = metadata.constraints.minMaxValue;
+    return minMax && (minMax.min !== undefined || minMax.max !== undefined);
   }
 
-  getErrorMessage(minMaxValue): string {
+  validate(value: number, metadata: Metadata, resource: Resource): boolean {
+    const minMax = metadata.constraints.minMaxValue;
+    return (minMax.min == undefined || value >= minMax.min) && (minMax.max == undefined || value <= minMax.max);
+  }
+
+  getErrorMessage(metadata: Metadata, resource: Resource): string {
+    const minMaxValue = metadata.constraints.minMaxValue;
     if (minMaxValue.min != undefined && minMaxValue.max == undefined) {
       return this.i18n.tr("metadata_constraints::Value must be at least {{minMaxValue.min}}", {minMaxValue});
     } else if (minMaxValue.min == undefined && minMaxValue.max != undefined) {

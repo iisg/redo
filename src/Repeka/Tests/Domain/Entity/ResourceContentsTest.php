@@ -43,6 +43,30 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(ResourceContents::fromArray([1 => []]), $contents);
     }
 
+    public function testFiltersOutEmptyStrings() {
+        $contents = ResourceContents::fromArray([1 => '']);
+        $filtered = $contents->filterOutEmptyMetadata();
+        $this->assertEquals(ResourceContents::fromArray([]), $filtered);
+    }
+
+    public function testDoesNotFilterOutInternalsOfValues() {
+        $sampleFlexibleDate = [
+            'from' => '2018-09-13T16:39:49+02:00',
+            'to' => '2018-09-13T16:39:49+02:00',
+            'mode' => 'day',
+            'rangeMode' => null,
+        ];
+        $contents = ResourceContents::fromArray([1 => [['value' => $sampleFlexibleDate]]]);
+        $filtered = $contents->filterOutEmptyMetadata();
+        $this->assertEquals($sampleFlexibleDate, $filtered->getValuesWithoutSubmetadata(1)[0]);
+    }
+
+    public function testFiltersOutEmptyStringsWithSubmetadata() {
+        $contents = ResourceContents::fromArray([1 => ['submetadata' => [2 => '']]]);
+        $filtered = $contents->filterOutEmptyMetadata();
+        $this->assertEquals(ResourceContents::fromArray([]), $filtered);
+    }
+
     public function testMapAllValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => 2]);
         $mapped = $contents->mapAllValues(

@@ -15,16 +15,12 @@
         <strong>${'You are editing the resource without validations.' | t}</strong>
         ${'Make any changes wisely.' | t}
     </div>
-    <div if.bind="(!editing || skipValidation) && !deposit"
+    <div if.bind="skipValidation && !deposit"
         class="resource-kind-chooser-with-cancel-button">
         <resource-kind-chooser
+            hide-clear-button.one-time="true"
             resource-class.bind="resourceClass"
-            filter.one-time="createResourceKindFilter()"
             value.bind="resource.kind & validate"></resource-kind-chooser>
-        <cancel-button if.bind="!resource.kind"
-            class="orange"
-            label="Close"
-            click.delegate="cancel()"></cancel-button>
     </div>
     <div if.bind="skipValidation && resource.kind.workflow"
         class="workflow-place-chooser-container">
@@ -77,7 +73,7 @@
                 <cancel-button class.bind="!editing ? 'orange' : ''"
                     label.bind="deposit ? 'Back to list' : !editing ? 'Close' : ''"
                     disabled.bind="resource.pendingRequest || submitting"
-                    click.delegate="cancel()"></cancel-button>
+                    click.delegate="cancelForm()"></cancel-button>
             </div>
         </form>
     </template>

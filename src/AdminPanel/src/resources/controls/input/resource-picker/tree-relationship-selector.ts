@@ -1,6 +1,5 @@
 import {Metadata} from "resources-config/metadata/metadata";
 import {Resource} from "../../../resource";
-import {ValidationController} from "aurelia-validation";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable} from "aurelia-templating";
 
@@ -10,7 +9,6 @@ export class TreeRelationshipSelector {
   @bindable resource: Resource;
   @bindable disabled: boolean = false;
   @bindable skipValidation: boolean = false;
-  @bindable validationController: ValidationController;
   @bindable showByDefault: boolean = false;
   @bindable treeQueryUrl: string;
   loaded: boolean = false;

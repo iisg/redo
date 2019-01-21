@@ -2,6 +2,7 @@ import {Metadata} from "resources-config/metadata/metadata";
 import {autoinject} from "aurelia-dependency-injection";
 import {FluentRuleCustomizer, ValidationRules} from "aurelia-validation";
 import {MetadataConstraintValidators} from "./metadata-constraint-validators";
+import {Resource} from "../../../resources/resource";
 
 @autoinject
 export class AllMetadataValueValidator {
@@ -9,14 +10,13 @@ export class AllMetadataValueValidator {
   constructor(private metadataConstraintValidators: MetadataConstraintValidators) {
   }
 
-  public createRules(metadata: Metadata): FluentRuleCustomizer<any, any> {
-    let rules = ValidationRules.ensure(metadata.id + '').satisfies(v => true);
+  public createRules(metadata: Metadata, resource: Resource): FluentRuleCustomizer<any, any> {
+    let rules = ValidationRules.ensure(metadata.id + '').satisfies(() => true);
     for (const constraintName in metadata.constraints) {
       if (metadata.constraints.hasOwnProperty(constraintName)) {
         const validator = this.metadataConstraintValidators.metadataArrayValidators[constraintName];
         if (validator) {
-          const constraintArgument = metadata.constraints[constraintName];
-          validator.addRule(rules, constraintArgument);
+          validator.addRule(rules, metadata, resource);
         }
       }
     }
