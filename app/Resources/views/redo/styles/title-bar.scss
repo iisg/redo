@@ -1,14 +1,14 @@
-$logo-height: 64px;
-$title-font-size: 18px;
-$pk-logo-height: 48px;
+$logo-height: 70px;
+$options-bar-icon-height: 1em;
+$pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$options-bar-icon-height} - #{$default-gap-size / 2});
 
 .title-bar {
   display: flex;
   flex-shrink: 0; // Required by Internet Explorer.
   align-items: center;
   border-bottom: $default-gap-size / 4 solid $orange;
-  &, & > * {
-    padding: $default-gap-size / 4 $default-gap-size / 2;
+  &, & > :not(.right-side-container) {
+    padding: $default-gap-size / 2;
   }
   .logo-container img {
     height: $logo-height;
@@ -22,10 +22,50 @@ $pk-logo-height: 48px;
       font-size: $title-font-size;
     }
   }
-  .pk-logo-container {
+  .right-side-container {
     margin-left: auto;
-    img {
-      height: $pk-logo-height;
+    .options-bar {
+      display: flex;
+      padding-top: $default-gap-size / 2;
+      & > * {
+        display: flex;
+        flex-wrap: nowrap;
+        & > * {
+          padding: $default-gap-size / 8 $default-gap-size / 2;
+        }
+      }
+      a, button {
+        color: $grey;
+        line-height: 0;
+        transition: color $default-transition-duration;
+        &:hover, &:focus {
+          color: $dark-grey
+        }
+        a {
+          text-decoration: none;
+        }
+      }
+      .page-view-options {
+        a, button:not(:first-child) {
+          border-left: 1px solid $lightish-grey;
+        }
+      }
+      .social-media {
+        padding-left: $default-gap-size * 3 / 4;
+        padding-right: $default-gap-size * 3 / 4;
+        & > * {
+          padding-right: $default-gap-size / 4;
+          padding-left: $default-gap-size / 4;
+        }
+      }
+    }
+    .pk-logo-container {
+      display: flex;
+      padding: $default-gap-size / 2;
+      img {
+        margin-left: auto;
+        height: $pk-logo-height;
+      }
     }
   }
 
@@ -33,6 +73,18 @@ $pk-logo-height: 48px;
     flex-wrap: wrap;
     .title-container {
       order: 1;
+    }
+    .right-side-container {
+      display: contents;
+    }
+    .options-bar {
+      order: -1;
+      width: 100%;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .pk-logo-container {
+      margin-left: auto;
     }
   }
 }
