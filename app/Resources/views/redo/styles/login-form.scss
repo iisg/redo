@@ -1,5 +1,4 @@
 $current-theme-color: $orange;
-$background-color: $light-grey;
 $information-link-elements-color: $grey;
 
 $text-font-family: "Open Sans", sans-serif;
@@ -12,16 +11,10 @@ $text-font-size: 24px;
 $icons-drop-shadow-spread-radius: 5px;
 
 .login-form-main-container {
-  background-color: $background-color;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
+  margin-top: 20px;
   font-family: $text-font-family;
 
   .login-container {
-    background-color: $background-color;
-    margin-right: auto;
-    margin-left: auto;
 
     .login-error-element {
       display: flex;
@@ -43,6 +36,8 @@ $icons-drop-shadow-spread-radius: 5px;
     }
 
     .login-box {
+      margin: 0 auto;
+      max-width: 600px;
       padding: $login-box-padding;
       display: flex;
       flex-wrap: wrap;

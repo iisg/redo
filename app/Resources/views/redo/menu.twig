@@ -69,7 +69,8 @@
                 </div>
             </div>
         {% else %}
-            <a href="/login">
+            <a href="/login"
+                class="{{ urlMatches('/login') ? 'active' : '' }}">
                 {{ icon('user-2') }}
                 <span>Zaloguj</span>
             </a>

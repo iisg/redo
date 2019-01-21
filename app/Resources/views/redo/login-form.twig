@@ -1,8 +1,11 @@
-{% extends "redo/base.twig" %}
+{% extends "redo/layout.twig" %}
 
 {% set page_title = 'Logowanie' %}
 
-{% block layout %}
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+
     <div class="login-form-main-container">
         <div class="login-container">
             {% if error %}
@@ -26,7 +29,7 @@
                     <input type="hidden"
                         name="_csrf_token"
                         value="{{ csrf_token('authenticate') }}">
-                    <h3 class="administration-label">Administracja {{ applicationName }}</h3>
+                    <h3 class="administration-label">Logowanie {{ applicationName }}</h3>
                     <div class="input-box username-input">
                         {{ icon('user-2') }}
                         <input name="_username"
@@ -50,6 +53,7 @@
 
                 </form>
             </div>
+            <!--
             <div class="information-links-box">
                 <a class="information-link-element"
                     tabindex="0">
@@ -62,6 +66,8 @@
                     <span class="information-link-text">kontakt z administratorem</span>
                 </a>
             </div>
+            -->
         </div>
     </div>
+    {% include "redo/footer.twig" %}
 {% endblock %}
