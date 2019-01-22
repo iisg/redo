@@ -66,13 +66,16 @@ System.config({
     "jquery.fancytree": "npm:jquery.fancytree@2.29.1",
     "lodash": "npm:lodash@4.17.10",
     "moment": "npm:moment@2.22.2",
-    "nprogress": "github:rstacruz/nprogress@0.2.0",
+    "nprogress": "github:iisg/nprogress@0.2.2",
     "oribella-aurelia-sortable": "npm:oribella-aurelia-sortable@0.13.0",
     "region-flags": "npm:region-flags@1.1.0",
     "select2": "github:select2/select2@4.0.5",
     "sweetalert2": "npm:sweetalert2@6.11.5",
     "text": "github:systemjs/plugin-text@0.0.9",
     "yamljs": "npm:yamljs@0.3.0",
+    "github:iisg/nprogress@0.2.2": {
+      "css": "github:systemjs/plugin-css@0.1.37"
+    },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
     },
@@ -96,9 +99,6 @@ System.config({
     },
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
-    },
-    "github:rstacruz/nprogress@0.2.0": {
-      "css": "github:systemjs/plugin-css@0.1.36"
     },
     "github:select2/select2@4.0.5": {
       "jquery": "npm:jquery@3.2.1"

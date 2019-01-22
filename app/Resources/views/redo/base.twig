@@ -16,7 +16,7 @@
             href="/jspm_packages/github/twbs/bootstrap@3.3.7/css/bootstrap.min.css">
 
         <link rel="stylesheet"
-            href="/jspm_packages/github/rstacruz/nprogress@0.2.0/nprogress.css">
+            href="/jspm_packages/github/iisg/nprogress@0.2.2/nprogress.css">
 
         <link rel="stylesheet"
             type="text/css"
@@ -31,11 +31,6 @@
             <admin-styles-loader></admin-styles-loader>
             {% block layout %}{% endblock %}
         </div>
-        <script src="/jspm_packages/github/rstacruz/nprogress@0.2.0/nprogress.js"></script>
-        <script>NProgress.configure({showSpinner: false}).start();</script>
-        <script>var module = {};</script>
-        <script src="/jspm_packages/npm/focus-within@3.0.2/index.js"></script>
-        <script>focusWithin(document);</script>
         {% include 'spa-components.twig' %}
     </body>
 </html>

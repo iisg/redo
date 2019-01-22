@@ -3,4 +3,7 @@
     <div class="main-container">
         {% block content %}{% endblock %}
     </div>
+    <script>var module = {}; // declaration for ill-import of focus-within (it uses module.exports without further checks)</script>
+    <script src="/jspm_packages/npm/focus-within@3.0.2/index.js"></script>
+    <script>focusWithin(document);</script>
 {% endblock %}
