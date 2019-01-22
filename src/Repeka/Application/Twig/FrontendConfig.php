@@ -57,10 +57,11 @@ class FrontendConfig extends \Twig_Extension {
     public function getFunctions() {
         return [
             new \Twig_Function('getFrontendConfig', [$this, 'getConfig']),
+            new \Twig_Function('getFrontendBundles', [$this, 'getBundles']),
         ];
     }
 
-    public function getConfig() {
+    public function getConfig(): array {
         $parameters = array_map([$this->container, 'getParameter'], self::PUBLIC_PARAMETERS);
         if ($this->userDataMapping->mappingExists() && $this->getCurrentUser()) {
             $userMappedMetadataIds = $this->getUserMappedMetadataIds();
@@ -75,6 +76,18 @@ class FrontendConfig extends \Twig_Extension {
                 'userIp' => $this->getClientIp(),
             ]
         );
+    }
+
+    public function getBundles(): array {
+        $bundles = glob(\AppKernel::APP_PATH . '/../web/admin/bundles/*');
+        $bundleNames = array_map('basename', $bundles);
+        $bundlesToInclude = array_filter(
+            $bundleNames,
+            function (string $bundleName) {
+                return strpos($bundleName, 'cytoscape') === false;
+            }
+        );
+        return $bundlesToInclude;
     }
 
     private function getUserMappedMetadataIds() {

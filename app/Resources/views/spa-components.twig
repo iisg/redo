@@ -1,9 +1,14 @@
 <script>
   window.FRONTEND_CONFIG = {{ getFrontendConfig() | json_encode | raw }};
 </script>
+<script src="/jspm_packages/github/iisg/nprogress@0.2.2/nprogress.js"></script>
+<script>NProgress.configure({showSpinner: false, delay: 1000}).start();</script>
 <script src="/jspm_packages/npm/bluebird@3.4.1/js/browser/bluebird.min.js"></script>
 <script src="/jspm_packages/system.js"></script>
 <script src="/admin/jspm.config.js"></script>
+{% for bundleName in getFrontendBundles() %}
+    <script src="/admin/bundles/{{ bundleName }}"></script>
+{% endfor %}
 <script>
   SystemJS.import('aurelia-bootstrapper');
 </script>
