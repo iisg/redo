@@ -10,6 +10,8 @@ interface FileSystemDriver {
 
     public function listDirectory(string $path): array;
 
+    public function glob(string $pattern): array;
+
     public function exists(string $path): bool;
 
     public function deleteDirectoryContents(string $path): void;

@@ -2,6 +2,7 @@ repekaOcrAbbyy:
   label: Send metadata to OCR
   audit:
     sent: "Resource files have been sent to the OCR server (metadata kind: {{metadataName}}, files: {{filesCount}})"
+    duplicatePrevented: "Files from {{metadataName}} metadata have not been sent to the OCR server because other task originating from this resource is in progress."
     sendFailure: "Sending resource files to the OCR server failed (metadata kind: {{metadataName}}) - {{message}}"
     resultsMarked: "OCR server claimed completion of the files from metadata ID{{metadataId}}. They will be available withing a few minutes."
     resultsCollectedToMetadata: "Files from OCR server ({{filesCount}}) have been moved to resource files and assigned to metadata {{metadataName}}."
@@ -22,6 +23,10 @@ repekaOcrAbbyy:
       label: Transition after OCR
       description: If you want the resource to be moved after OCR, enter the name of the transition that should be applied
       placeholder: The name of the transition
+    taskDirectoryName:
+      label: Task directory name
+      description: It will be used for naming the resulting files, too
+      placeholder: "{{r|mBarcode}}"
 repekaMetadataValueSetter:
   label: Generate metadata value
   audit:

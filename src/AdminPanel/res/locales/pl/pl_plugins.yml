@@ -2,6 +2,7 @@ repekaOcrAbbyy:
   label: Prześlij medatane do serwera OCR
   audit:
     sent: "Pliki zasobu zostały przesłane do serwera OCR (rodzaj metadanej: {{metadataName}}, pliki: {{filesCount}})"
+    duplicatePrevented: "Pliki z metadanej {{metadataName}} nie zostały przesłane do serwera OCR ze względu na trwające inne zadanie dotyczące tego zasobu."
     sendFailure: "Nie udało się przekazać plików do serwera OCR (rodzaj metadanej: {{metadataName}}) - {{message}})"
     resultsMarked: "Serwer OCR zgłosił zakończenie przetwarzania plików z metadanej ID{{metadataId}}. Rezultat pojawi się w zasobie w ciągu kilku minut."
     resultsCollectedToMetadata: "Pliki ({{filesCount}}) od serwera OCR zostały przeniesione do zasobu i zapisane w metadanej {{metadataName}}."
@@ -26,6 +27,10 @@ repekaOcrAbbyy:
       label: Przejście po OCR
       description: Jeśli po odebraniu rezultatu zasób ma zostać przeniesiony do następnego stanu, podaj nazwę odpowiedniego przejścia wychodzącego ze stanu obecnego
       placeholder: Nazwa przejścia w dowolnym języku
+    taskDirectoryName:
+      label: Nazwa katalogu z zadaniem
+      description: Ta nazwa będzie też zawarta w wynikowych plikach
+      placeholder: "{{r|mBarcode}}"
 repekaMetadataValueSetter:
   label: Wygeneruj wartość metadanej
   audit:

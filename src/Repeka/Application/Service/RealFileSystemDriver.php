@@ -34,6 +34,10 @@ class RealFileSystemDriver implements FileSystemDriver {
         return array_values(array_diff($contents, ['.', '..']));
     }
 
+    public function glob(string $pattern): array {
+        return glob($pattern);
+    }
+
     public function exists(string $path): bool {
         return file_exists($path);
     }
