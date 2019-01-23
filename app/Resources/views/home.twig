@@ -6,28 +6,44 @@
         content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible"
         content="IE=edge">
-    <title>Strona główna - {{ applicationName }}</title>
-    {% include 'spa-components.twig' %}
+    <title>{% if page_title is defined %} {{ page_title }} - {% endif %}{{ applicationName }}</title>
+
+    <link rel="stylesheet"
+        type="text/css"
+        href="/fonts.css">
+
+    <link rel="stylesheet"
+        href="/jspm_packages/github/twbs/bootstrap@3.3.7/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+        href="/jspm_packages/github/iisg/nprogress@0.2.2/nprogress.css">
+
+    <link rel="icon"
+        type="image/x-icon"
+        href="{{ asset('favicon.ico') }}">
 </head>
 <body>
-<div class="vue-container">
+<div aurelia-app="main">
+    <admin-styles-loader></admin-styles-loader>
     <h1>{{ applicationName }}</h1>
-
-    <div v-if="$user">
-        Zalogowany jako ${ $user.username }
-        <a href="/admin"
-            v-if="$user.isAdmin">
-            Panel administracyjny
-        </a>
-        <a href="/logout">
-            Wyloguj
-        </a>
-    </div>
-    <div v-else>
-        <a href="/login">
-            Zaloguj się
-        </a>
+    <div>
+        {% if app.user %}
+            Zalogowany jako {{ app.user.username }}
+            {% if is_granted('ROLE_OPERATOR_SOME_CLASS') %}
+                <a href="/admin">
+                    Panel administracyjny
+                </a>
+            {% endif %}
+            <a href="/logout">
+                Wyloguj
+            </a>
+        {% else %}
+            <a href="/login">
+                Zaloguj się
+            </a>
+        {% endif %}
     </div>
 </div>
+{% include 'spa-components.twig' %}
 </body>
 </html>
