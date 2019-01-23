@@ -281,4 +281,56 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([2], $rc->getValuesWithoutSubmetadata(1));
         $this->assertEquals([4], $rc->getValuesWithoutSubmetadata(2));
     }
+
+    /** @dataProvider fromArrayExamplesForClearDuplicatesTest */
+    public function testClearDuplicatesFromArray(int $metadata, array $primaryValues, $expectedValues) {
+        $resourceContents = ResourceContents::fromArray($primaryValues)->clearDuplicates($metadata);
+        $this->assertEquals(ResourceContents::fromArray($expectedValues)->toArray(), $resourceContents->toArray());
+    }
+
+    /** @SuppressWarnings("PHPMD.ExcessiveMethodLength") */
+    public function fromArrayExamplesForClearDuplicatesTest(): array {
+        $id1 = 1;
+        $id2 = 2;
+        $id3 = 3;
+        return [
+            [$id1, [$id1 => 'aaa'], [$id1 => 'aaa']],
+            [$id1, [$id1 => [['value' => 'aaa'], ['value' => 'aaa']]], [$id1 => [['value' => 'aaa']]]],
+            [
+                $id1,
+                [$id1 => [['value' => 'aaa'], ['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'bbb']]]]]],
+                [$id1 => [['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'bbb']]]]]],
+            ],
+            [
+                $id1,
+                [
+                    $id1 => [
+                        ['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'ccc']]]],
+                        ['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'bbb']]]],
+                    ],
+                ],
+                [$id1 => [['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'ccc'], ['value' => 'bbb']]]]]],
+            ],
+            [
+                $id1,
+                [
+                    $id1 => [
+                        ['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'ccc']]]],
+                        ['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'ccc']]]],
+                    ],
+                ],
+                [$id1 => [['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'ccc']]]]]],
+            ],
+            [
+                $id1,
+                [
+                    $id1 => [
+                        ['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'ccc']]]],
+                        ['value' => 'aaa', 'submetadata' => [$id3 => [['value' => 'bbb']]]],
+                    ],
+                ],
+                [$id1 => [['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'ccc']], $id3 => [['value' => 'bbb']]]]]],
+            ],
+        ];
+    }
 }

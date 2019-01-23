@@ -170,6 +170,67 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
         return new self($contents);
     }
 
+    /**
+     * Remove duplicated metadata values, merging their submetadata if any.
+     *
+     * @param int|Metadata $metadata
+     * @return ResourceContents
+     *
+     * Before:
+     *  1 => [['value' => 'aaa'], ['value' => 'aaa']]
+     *  2 => [
+     *      ['value' => 'aaa', 'submetadata' => [4 => [['value' => 'ccc']]]],
+     *      ['value' => 'aaa', 'submetadata' => [4 => [['value' => 'bbb']]]],
+     *  ],
+     *  3 => [
+     *      ['value' => 'aaa', 'submetadata' => [5 => [['value' => 'ccc']]]],
+     *      ['value' => 'aaa', 'submetadata' => [6 => [['value' => 'bbb']]]],
+     *  ]
+     * After:
+     *  1 => [['value' => 'aaa']]
+     *  2 => [['value' => 'aaa', 'submetadata' => [4 => [['value' => 'ccc'], ['value' => 'bbb']]]]],
+     *  3 => [['value' => 'aaa', 'submetadata' => [5 => [['value' => 'ccc']], 6 => [['value' => 'bbb']]]]]
+     */
+    public function clearDuplicates($metadata): ResourceContents {
+        $metadataId = $metadata instanceof Metadata ? $metadata->getId() : $metadata;
+        $currentValues = $this->contents[$metadataId];
+        $clearedValues = $this->mergeSubmetadataOfDuplicatedValues($currentValues);
+        $newValues = self::fromArray([$metadataId => $clearedValues])->toArray();
+        return new self(array_replace($this->contents, $newValues));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @param array $values
+     * @return array
+     */
+    private function mergeSubmetadataOfDuplicatedValues(array $values): array {
+        $clearedValues = [];
+        foreach ($values as $value) {
+            $exists = false;
+            for ($i = 0; $i < count($clearedValues); $i++) {
+                $adjustedValue = $clearedValues[$i];
+                if ($value['value'] == $adjustedValue['value']) {
+                    $exists = true;
+                    if (isset($value['submetadata']) && !isset($adjustedValue['submetadata'])) {
+                        $clearedValues[$i]['submetadata'] = $value['submetadata'];
+                    } elseif (isset($value['submetadata']) && isset($adjustedValue['submetadata'])) {
+                        foreach ($value['submetadata'] as $metadataId => $submetadataValues) {
+                            $clearedValues[$i]['submetadata'][$metadataId] = $this->mergeSubmetadataOfDuplicatedValues(
+                                array_merge($adjustedValue['submetadata'][$metadataId] ?? [], $submetadataValues)
+                            );
+                        }
+                    }
+                    break;
+                }
+            }
+            if (!$exists) {
+                $clearedValues[] = $value;
+            }
+        }
+        return $clearedValues;
+    }
+
     public function isEmpty() {
         return empty($this->contents);
     }

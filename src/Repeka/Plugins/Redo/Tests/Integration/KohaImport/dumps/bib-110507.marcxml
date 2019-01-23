@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+    xmlns="http://www.loc.gov/MARC21/slim">
+
+  <leader>01096cam a2200265 i 4500</leader>
+  <controlfield tag="005">20161026022200.0</controlfield>
+  <controlfield tag="008">060223s1933    un a   f     |000 0 pol c</controlfield>
+  <datafield tag="024" ind1="8" ind2="0">
+    <subfield code="a">e1aebd0af3a2f7f931e6cf8334ce4509</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">zz2006963444</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">KR U/AM</subfield>
+    <subfield code="c">KR U/AM</subfield>
+    <subfield code="d">KR U/AM</subfield>
+    <subfield code="d">WR 16/wj</subfield>
+    <subfield code="d">WA U/77EBUs</subfield>
+    <subfield code="d">KR 048/RW</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">728.8</subfield>
+    <subfield code="j">Zamki. Pałace. Dwory szlacheckie.</subfield>
+    <subfield code="9">4423</subfield>
+  </datafield>
+  <datafield tag="095" ind1=" " ind2=" ">
+    <subfield code="a">OSIŃSKI K. M.</subfield>
+  </datafield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Osiński, Marian</subfield>
+    <subfield code="d">(1883-1974).</subfield>
+    <subfield code="0">n 2006133877</subfield>
+    <subfield code="9">108162</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Zamek w Żółkwi /</subfield>
+    <subfield code="c">Marjan Osiński.</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Lwów :</subfield>
+    <subfield code="b">nakł. Towarzystwa Opieki nad Zabytkami Sztuki i Kultury,</subfield>
+    <subfield code="c">1933</subfield>
+    <subfield code="e">(Lwów :</subfield>
+    <subfield code="f">Zakł. Graf. Ap. Akc. Książnica-Atlas).</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">140, [4] s., VI k. tabl. (niektóre złoż.) :</subfield>
+    <subfield code="b">il. ;</subfield>
+    <subfield code="c">25 cm.</subfield>
+  </datafield>
+  <datafield tag="504" ind1=" " ind2=" ">
+    <subfield code="a">Bibliogr. s. 138-140.</subfield>
+  </datafield>
+  <datafield tag="510" ind1="4" ind2=" ">
+    <subfield code="a">PB' 1934 (R. 7, z. 1),</subfield>
+    <subfield code="c">poz. 47</subfield>
+  </datafield>
+  <datafield tag="530" ind1=" " ind2=" ">
+    <subfield code="a">Dostępny również w postaci elektronicznej.</subfield>
+  </datafield>
+  <datafield tag="594" ind1=" " ind2=" ">
+    <subfield code="a">Lwowiana.</subfield>
+  </datafield>
+  <datafield tag="596" ind1=" " ind2=" ">
+    <subfield code="a">EDT_3</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">Towarzystwo Opieki nad Zabytkami Sztuki i Kultury.</subfield>
+    <subfield code="4">pbl</subfield>
+    <subfield code="0">n  00713942</subfield>
+    <subfield code="9">108161</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="u">http://www.dbc.wroc.pl/publication/1542</subfield>
+  </datafield>
+  <datafield tag="942" ind1=" " ind2=" ">
+    <subfield code="2">udc</subfield>
+  </datafield>
+  <datafield tag="999" ind1=" " ind2=" ">
+    <subfield code="c">110507</subfield>
+    <subfield code="d">110507</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="2">udc</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">II22122</subfield>
+    <subfield code="7">1</subfield>
+    <subfield code="8">EDT-L</subfield>
+    <subfield code="9">233161</subfield>
+    <subfield code="a">BPK</subfield>
+    <subfield code="b">BPK</subfield>
+    <subfield code="c">BPK-MAG</subfield>
+    <subfield code="d">2014-08-31</subfield>
+    <subfield code="i">II-22122</subfield>
+    <subfield code="o">II-22122</subfield>
+    <subfield code="p">100000231505</subfield>
+    <subfield code="r">2014-08-31</subfield>
+    <subfield code="w">2014-08-31</subfield>
+    <subfield code="y">BK-NDW</subfield>
+  </datafield>
+</record>

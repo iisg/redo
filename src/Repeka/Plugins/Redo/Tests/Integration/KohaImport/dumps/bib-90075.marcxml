@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+    xmlns="http://www.loc.gov/MARC21/slim">
+
+  <leader>01749cam a2200361 i 4500</leader>
+  <controlfield tag="005">20180117012400.0</controlfield>
+  <controlfield tag="008">031129s1930    un a   g     |000 0 pol c</controlfield>
+  <datafield tag="024" ind1="8" ind2="0">
+    <subfield code="a">22adcf72cb525d309ecc408e9a6ea66e</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">zz2003874225</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">GD U/as</subfield>
+    <subfield code="c">GD U/as</subfield>
+    <subfield code="d">GD U/as</subfield>
+    <subfield code="d">GD U/JDs</subfield>
+    <subfield code="d">WA 004/ZW</subfield>
+    <subfield code="d">KR 048/RW</subfield>
+    <subfield code="d">GD U/MJ</subfield>
+  </datafield>
+  <datafield tag="044" ind1=" " ind2=" ">
+    <subfield code="a">un</subfield>
+    <subfield code="a">pl</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">913(73)</subfield>
+    <subfield code="j">Geografia Stanów Zjednoczonych Ameryki Północnej.</subfield>
+    <subfield code="9">4736</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">308</subfield>
+    <subfield code="j">Socjografia. Sytuacja społeczna poszczególnych krajów, narodów i ras (ogólnie). </subfield>
+    <subfield code="9">1986</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">930.85</subfield>
+    <subfield code="j">Historia kultury materialnej. Historia cywilizacji. Kultura materialna.</subfield>
+    <subfield code="9">4886</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="a">94(73)</subfield>
+    <subfield code="j">Historia Stanów Zjednoczonych Ameryki.</subfield>
+    <subfield code="9">4914</subfield>
+  </datafield>
+  <datafield tag="095" ind1=" " ind2=" ">
+    <subfield code="a">DYBOSKI R.</subfield>
+  </datafield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Dyboski, Roman</subfield>
+    <subfield code="d">(1883-1945).</subfield>
+    <subfield code="0">n  97019158</subfield>
+    <subfield code="9">108005</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Stany Zjednoczone Ameryki Północnej :</subfield>
+    <subfield code="b">wrażenia i refleksje /</subfield>
+    <subfield code="c">Roman Dyboski.</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Lwów ;</subfield>
+    <subfield code="a">Warszawa :</subfield>
+    <subfield code="b">Książnica-Atlas,</subfield>
+    <subfield code="c">1930</subfield>
+    <subfield code="e">(Lwów :</subfield>
+    <subfield code="f">Zakłady Graficzne Ski Akc. Książnica-Atlas we Lwowie).</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">330, [2] s., [1] k. tabl. złoż. ;</subfield>
+    <subfield code="c">21 cm.</subfield>
+  </datafield>
+  <datafield tag="336" ind1=" " ind2=" ">
+    <subfield code="a">Tekst</subfield>
+    <subfield code="b">txt</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield tag="337" ind1=" " ind2=" ">
+    <subfield code="a">Bez urządzenia pośredniczącego</subfield>
+    <subfield code="b">n</subfield>
+    <subfield code="2">rdamedia</subfield>
+  </datafield>
+  <datafield tag="338" ind1=" " ind2=" ">
+    <subfield code="a">Wolumin</subfield>
+    <subfield code="b">nc</subfield>
+    <subfield code="2">rdacarrier</subfield>
+  </datafield>
+  <datafield tag="504" ind1=" " ind2=" ">
+    <subfield code="a">Bibliogr. s. [331].</subfield>
+  </datafield>
+  <datafield tag="510" ind1="3" ind2=" ">
+    <subfield code="a">WorldCat online.</subfield>
+  </datafield>
+  <datafield tag="530" ind1=" " ind2=" ">
+    <subfield code="a">Dostępne również w formie elektronicznej.</subfield>
+  </datafield>
+  <datafield tag="561" ind1=" " ind2=" ">
+    <subfield code="3">II-26661</subfield>
+    <subfield code="a">1. [na s. przytyt. odręczna notatka:] Boże Narodzenie 1930 roku- Jurkowi-Halka.</subfield>
+  </datafield>
+  <datafield tag="594" ind1=" " ind2=" ">
+    <subfield code="a">Lwowiana.</subfield>
+  </datafield>
+  <datafield tag="596" ind1=" " ind2=" ">
+    <subfield code="a">EDT_4</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">Książnica-Atlas, Zjednoczone Zakłady Kartograficzne i Wydawnicze Towarzystwa Nauczycieli Szkół Średnich i Wyższych.</subfield>
+    <subfield code="4">pbl</subfield>
+    <subfield code="0">n  94011000</subfield>
+    <subfield code="9">98328</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="1">
+    <subfield code="u">http://www.pbc.gda.pl/dlibra/docmetadata?id=55613</subfield>
+  </datafield>
+  <datafield tag="942" ind1=" " ind2=" ">
+    <subfield code="2">udc</subfield>
+  </datafield>
+  <datafield tag="999" ind1=" " ind2=" ">
+    <subfield code="c">90075</subfield>
+    <subfield code="d">90075</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="2">udc</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">II26661</subfield>
+    <subfield code="7">1</subfield>
+    <subfield code="8">EDT-L</subfield>
+    <subfield code="9">185502</subfield>
+    <subfield code="a">BPK</subfield>
+    <subfield code="b">BPK</subfield>
+    <subfield code="c">BPK-MAG</subfield>
+    <subfield code="d">2014-08-31</subfield>
+    <subfield code="i">II-26661</subfield>
+    <subfield code="o">II-26661</subfield>
+    <subfield code="p">100000231454</subfield>
+    <subfield code="r">2014-08-31</subfield>
+    <subfield code="w">2014-08-31</subfield>
+    <subfield code="y">BK-NDW</subfield>
+  </datafield>
+</record>

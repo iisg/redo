@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Tests\Integration\UseCase\MetadataImport;
+namespace Repeka\Plugins\Redo\Tests\Integration\MetadataImport;
 
 use DateTime;
 use Repeka\Domain\Entity\MetadataDateControl\MetadataDateControlConverterUtil;
@@ -139,6 +139,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             76 => [['value' => '100000228666']],
             117 => [['value' => '100000228666']],
             173 => [['value' => '103684']],
+            125 => [['value' => '5466']] //są też inne w marcxmlu ale nie występują w pg_dumpie więc nie są importowane
         ];
         $importedValues = $this->retrieveImportedValues($filePath, $this->configPath, $importedId);
         $this->assertEquals($expectedImportedValues, $importedValues->toArray());
