@@ -32,5 +32,8 @@
             {% block layout %}{% endblock %}
         </div>
         {% include 'spa-components.twig' %}
+        <script>
+          window.FRONTEND_CONFIG['user_mapped_metadata_ids'] = {{ getUserDataMapping() | json_encode | raw }};
+        </script>
     </body>
 </html>

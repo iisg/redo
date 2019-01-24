@@ -2,13 +2,10 @@
 namespace Repeka\Application\Twig;
 
 use Psr\Container\ContainerInterface;
-use Repeka\Application\Authentication\UserDataMapping;
-use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Resources\FrontendLocaleProvider;
 use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\Metadata\MetadataImport\Mapping\Mapping;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\ConfigurableMetadataConstraint;
@@ -35,21 +32,17 @@ class FrontendConfig extends \Twig_Extension {
     private $frontendLocaleProvider;
     /** @var MetadataConstraintManager */
     private $metadataConstraintManager;
-    /** @var UserDataMapping */
-    private $userDataMapping;
     /** @var ResourceNormalizer */
     private $resourceNormalizer;
 
     public function __construct(
         FrontendLocaleProvider $frontendLocaleProvider,
         MetadataConstraintManager $metadataConstraintManager,
-        UserDataMapping $userDataMapping,
         ContainerInterface $container,
         ResourceNormalizer $resourceNormalizer
     ) {
         $this->frontendLocaleProvider = $frontendLocaleProvider;
         $this->metadataConstraintManager = $metadataConstraintManager;
-        $this->userDataMapping = $userDataMapping;
         $this->container = $container;
         $this->resourceNormalizer = $resourceNormalizer;
     }
@@ -63,15 +56,11 @@ class FrontendConfig extends \Twig_Extension {
 
     public function getConfig(): array {
         $parameters = array_map([$this->container, 'getParameter'], self::PUBLIC_PARAMETERS);
-        if ($this->userDataMapping->mappingExists() && $this->getCurrentUser()) {
-            $userMappedMetadataIds = $this->getUserMappedMetadataIds();
-        }
         return array_merge(
             $parameters,
             [
                 'control_constraints' => $this->getConfigurableMetadataConstraints(),
                 'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
-                'user_mapped_metadata_ids' => $userMappedMetadataIds ?? [],
                 'user' => $this->getCurrentUserData(),
                 'userIp' => $this->getClientIp(),
             ]
@@ -88,19 +77,6 @@ class FrontendConfig extends \Twig_Extension {
             }
         );
         return $bundlesToInclude;
-    }
-
-    private function getUserMappedMetadataIds() {
-        return FirewallMiddleware::bypass(
-            function () {
-                return array_map(
-                    function (Mapping $mapping) {
-                        return $mapping->getMetadata()->getId();
-                    },
-                    $this->userDataMapping->getImportConfig()->getMappings()
-                );
-            }
-        );
     }
 
     private function getConfigurableMetadataConstraints() {

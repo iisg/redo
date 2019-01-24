@@ -9,26 +9,31 @@ services:
     autoconfigure: true
     public: false
 
-  Repeka\Application\Authentication\PKSoapService:
-    - '%pk_auth.wsdl%'
-    - '%pk_auth.options%'
-  Repeka\Application\Authentication\TokenAuthenticator\LocalDatabaseAuthenticator:
-    $localAccountsEnabled: '%pk_auth.local_accounts_enabled%'
-  Repeka\Application\Authentication\PKUserDataUpdater: ~
-  Repeka\Application\Authentication\UserDataMapping:
-    $mappingConfigPath: '%user_data_mapping%'
+  Repeka\Application\Authentication\LocalDatabaseAuthenticator: ~
+
+  Repeka\Application\Authentication\CompositeAuthenticator:
+    $authenticators: !tagged repeka.token_authenticator
 
   Repeka\Application\Command\Cyclic\DispatchCyclicTasksCommand:
     - !tagged repeka.cyclic_command
-
-  Repeka\Application\MetadataImport\KohaXmlResourceDownloader:
-    - '%xml_import.koha%'
 
   Repeka\Domain\Metadata\MetadataImport\Transform\ImportTransformComposite:
     - !tagged repeka.import_transform
 
   Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware:
     - !tagged repeka.command_events_listener
+
+  Repeka\Application\Command\Initialization\InitializeApplicationCommand:
+    - !tagged repeka.initialization_command
+
+  Repeka\Application\Command\Initialization\InitializeSystemLanguagesCommand:
+    tags: [{name: repeka.initialization_command, priority: 500}]
+  Repeka\Application\Command\Initialization\InitializeSystemMetadataCommand:
+    tags: [{name: repeka.initialization_command, priority: 400}]
+  Repeka\Application\Command\Initialization\InitializeSystemResourceKindsCommand:
+    tags: [{name: repeka.initialization_command, priority: 300}]
+  Repeka\Application\Command\GrantUserRolesCommand:
+    tags: [{name: repeka.initialization_command, priority: 200}]
 
   Repeka\Application\Cqrs\RepekaCommandBus:
     -
@@ -88,9 +93,12 @@ services:
       - { name: doctrine.event_listener, event: postLoad }
 
   Repeka\Application\Service\FilesystemResourceFileStorage:
-    arguments:
-      $uploadDirs: '%repeka.upload_dirs%'
+    $uploadDirs: '%repeka.upload_dirs%'
 
+  Repeka\Application\Service\PluginsRoutesLoader:
+    public: true
+    arguments:
+      $routeLoader: '@routing.loader.annotation'
   Repeka\Application\Service\ResourcesEndpointsExposer:
     public: true
     arguments:

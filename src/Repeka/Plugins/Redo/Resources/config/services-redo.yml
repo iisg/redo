@@ -1,0 +1,35 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Repeka\Plugins\Redo\Authentication\PKUserDataUpdater: ~
+  Repeka\Plugins\Redo\Authentication\PKAuthenticationClient:
+    - '%redo.pk_auth.wsdl%'
+    - '%redo.pk_auth.options%'
+
+  Repeka\Plugins\Redo\Authentication\UserDataMapping:
+    $mappingConfigPath: '%redo.user_data_mapping%'
+
+  Repeka\Plugins\Redo\Authentication\PkSoapAuthenticator:
+    arguments:
+      $enabled: '%redo.pk_auth.enabled%'
+    tags:
+      - { name: repeka.token_authenticator, priority: 100 }
+
+  Repeka\Plugins\Redo\Command\:
+    resource: '../../Command'
+
+  Repeka\Plugins\Redo\Command\InitializeUserMetadataCommand:
+    tags: [{name: repeka.initialization_command, priority: 210}]
+
+  Repeka\Plugins\Redo\Controller\:
+    resource: '../../Controller'
+    public: true
+
+  Repeka\Plugins\Redo\Service\KohaXmlResourceDownloader:
+    - '%redo.koha_url%'
+
+  Repeka\Plugins\Redo\Twig\:
+    resource: '../../Twig'

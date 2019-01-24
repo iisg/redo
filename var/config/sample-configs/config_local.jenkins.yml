@@ -27,5 +27,3 @@ repeka:
       label:
         EN: Basic metadata
         PL: Podstawowe metadane
-  xml_import:
-    koha: 'http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode='

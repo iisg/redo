@@ -11,5 +11,9 @@ exposed_endpoints:
   resource: 'Repeka\Application\Service\ResourcesEndpointsExposer:loadRoutes'
   type: service
 
+plugins:
+  resource: 'Repeka\Application\Service\PluginsRoutesLoader:loadRoutes'
+  type: service
+
 logout:
   path: /logout
