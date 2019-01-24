@@ -24,15 +24,20 @@ export class UniqueInResourceClassValidator extends SingleValueConstraintValidat
     if (!metadataValue) {
       return true;
     }
-    return this.backendValidation.getResult(
-      this.validatedConstraintName(),
-      {
-        resourceClass: metadata.resourceClass,
-        metadataId: metadata.id,
-        resourceId: resource.id,
-        metadataValue
-      }
-    );
+    if (Array.isArray(metadataValue)) {
+      const values = metadataValue.map(m => m.value);
+      return (new Set(values)).size === values.length;
+    } else {
+      return this.backendValidation.getResult(
+        this.validatedConstraintName(),
+        {
+          resourceClass: metadata.resourceClass,
+          metadataId: metadata.id,
+          resourceId: resource.id,
+          metadataValue
+        }
+      );
+    }
   }
 
   validatedConstraintName(): string {
