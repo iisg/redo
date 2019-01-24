@@ -21,6 +21,13 @@ class UniqueInResourceClassConstraint extends AbstractMetadataConstraint impleme
         return [MetadataControl::TEXT];
     }
 
+    public function validateAll(Metadata $metadata, array $metadataValues, ResourceEntity $resource = null) {
+        if (count($metadataValues) != count(array_unique($metadataValues))) {
+            throw new DomainException("Metadata {$metadata->getName()} contains duplicated values.");
+        }
+        parent::validateAll($metadata, $metadataValues, $resource);
+    }
+
     public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
         if ($this->mustBeUnique($metadata)) {
             $this->validateIsUnique(
