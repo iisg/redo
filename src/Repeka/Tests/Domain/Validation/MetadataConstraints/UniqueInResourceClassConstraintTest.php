@@ -71,4 +71,9 @@ class UniqueInResourceClassConstraintTest extends \PHPUnit_Framework_TestCase {
             $this->testResource
         );
     }
+
+    public function testFailingBecauseOfDuplicatedValuesInCurrentMetadata() {
+        $this->expectException(DomainException::class);
+        $this->constraint->validateAll($this->uniqueMetadata, ['a', 'a']);
+    }
 }

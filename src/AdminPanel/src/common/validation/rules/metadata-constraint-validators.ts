@@ -11,12 +11,13 @@ export class MetadataConstraintValidators {
   private readonly singleValueValidatorClasses: any[] = [
     RegexConstraintValidator,
     MinMaxValueConstraintValidator,
-    UniqueInResourceClassValidator
+    UniqueInResourceClassValidator,
   ];
 
   private readonly metadataArrayValidatorClasses: any[] = [
     MinCountConstraintValidator,
     MaxCountConstraintValidator,
+    UniqueInResourceClassValidator,
   ];
 
   public readonly singleValueValidators: SingleValueConstraintValidator[];
