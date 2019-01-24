@@ -1,41 +1,91 @@
 $icons-size: 1.5;
+$left-panel-toggle-icon-height: 2em;
+$left-panel-maximum-width: 320px;
 
 .search-results-container {
   display: flex;
   flex-grow: 1;
   flex-shrink: 0; // Required by Chrome and Internet Explorer.
   .left-panel {
-    max-width: 300px;
-    padding: 3 * $default-gap-size / 4;
-    & > :not(icon) {
+    padding: $default-gap-size / 2;
+    border-right: solid $default-gap-size / 8 $orange;
+    max-width: $left-panel-maximum-width;
+    .horizontally-collapsible {
+      &.expanded {
+        @include expanded-horizontally-collapsible();
+      }
+      &:not(.expanded) {
+        @include collapsed-horizontally-collapsible(-$left-panel-maximum-width + 2 * $default-gap-size / 2);
+      }
+    }
+    .title-with-toggle {
+      display: flex;
       padding: $default-gap-size / 4;
-    }
-    & > icon {
-      cursor: pointer;
-      margin: $default-gap-size / 4;
-    }
-    &:not(.collapsed) {
-      & > icon:not(:first-of-type) {
-        display: none;
+      min-width: calc(#{$left-panel-toggle-icon-height} + #{$default-gap-size / 2} + #{$default-gap-size / 4} + #{$default-gap-size / 4});
+      & > .title {
+        flex: 1;
+        padding: $default-gap-size / 4;
+        align-self: center;
+        &.horizontally-collapsible {
+          &.expanded + button > .icon > svg {
+            transform: rotate(180deg);
+          }
+        }
       }
-    }
-    &.collapsed {
-      & > div {
-        display: none;
-      }
-    }
-    & > icon {
-      color: $orange;
-    }
-    .facets {
-      .label-with-checkbox {
-        pointer-events: none;
+      & > button {
+        margin: $default-gap-size / 4;
+        line-height: 0;
+        color: $orange;
+        & > .icon {
+          height: $left-panel-toggle-icon-height;
+          & > svg {
+            transition: transform $collapse-and-expand-animations-duration;
+          }
+        }
       }
     }
     .advanced-filters {
-      margin-top: $default-gap-size;
-      padding-top: $default-gap-size;
-      border-top: $default-gap-size / 8 solid $orange;
+      padding: $default-gap-size / 2 $default-gap-size;
+      &.horizontally-collapsible {
+        max-width: $left-panel-maximum-width - 2 * $default-gap-size / 2;
+      }
+      & > :not(hr) {
+        padding: $default-gap-size / 4;
+      }
+      hr {
+        margin-top: $default-gap-size;
+        margin-bottom: $default-gap-size;
+      }
+      .filter-button-container {
+        display: flex;
+        align-items: center;
+        & > :last-child {
+          margin-left: auto;
+        }
+        & > * {
+          padding: $default-gap-size / 4;
+        }
+        button {
+          padding: $default-gap-size / 4 $default-gap-size;
+          border: 1px solid $light-grey;
+          border-radius: $default-gap-size / 4;
+          font-weight: 600;
+          color: $orange;
+          transition: transitions-with-common-settings(background-color border-color color, $default-transition-duration);
+          &:hover, &:focus {
+            background-color: $orange;
+            border-color: $orange;
+            color: white;
+          }
+        }
+      }
+      .facets {
+        & > * {
+          &, & > :not(a) {
+            padding: $default-gap-size / 8;
+          }
+        }
+      }
       .parent {
         display: flex;
         font-weight: bold;
@@ -50,9 +100,6 @@ $icons-size: 1.5;
             padding: $default-gap-size / 8;
         }
       }
-      .children {
-        padding-left: $default-gap-size / 2;
-      }
     }
   }
   .search-results {
@@ -60,7 +107,6 @@ $icons-size: 1.5;
     margin-bottom: $default-gap-size;
     padding-left: $default-gap-size;
     padding-right: $default-gap-size;
-    border-left: solid $default-gap-size / 8 $orange;
   }
   h1 {
     padding-bottom: $default-gap-size / 4;

@@ -1,64 +1,66 @@
 {% if filterableMetadata.control.value in ['text', 'textarea', 'display-strategy'] %}
-    <div>
-        <h3 class="title">{{ filterableMetadata.label.PL }}</h3>
-        <input type="text"
-            class="form-control"
-            name="metadataFilters[{{ filterableMetadata.id }}]"
-            value="{{ app.request.query.all.metadataFilters[filterableMetadata.id] ?? '' }}">
-    </div>
-{% elseif filterableMetadata.id == -1 %}
-    <h3 class="title">Kolekcje</h3>
-    <div>
-        {% set parentFilters = app.request.query.all.metadataFilters[-1] ?? null %}
-        {% for resource in resources({resourceClasses: searchableResourceClasses, parentId: null}) %}
-            {% set childResources = resources({parentId: resource.id}) %}
-            {% if childResources is not empty %}
-                {% set childResourcesData = [] %}
-                {% for childResource in childResources %}
-                    {% set childResourceData = {
-                        id: childResource.id | json_encode,
-                        label: childResource | metadata('label') | replace({"'": "&#39;"})
-                    } %}
-                    {% set childResourcesData = childResourcesData | merge([childResourceData]) %}
-                {% endfor %}
-            {% endif %}
-
-            <child-resources-group
-                resource-id="{{ resource.id }}"
-                resource-label="{{ resource | mLabel }}"
-                {% if childResources is not empty %}
-                    stringified-child-resources-data="{{ childResourcesData | json_encode }}"
-                {% endif %}
-                name="metadataFilters[-1][]"
-                {% if parentFilters is not null %}
-                    stringified-parent-filters="{{ parentFilters | json_encode }}"
-                {% endif %}></child-resources-group>
-         {% endfor %}
+    <div class="text-property-filter">
+        <span>{{ filterableMetadata.label.PL }}</span>
+        <div>
+            <input type="text"
+                class="form-control"
+                name="metadataFilters[{{ filterableMetadata.id }}]"
+                value="{{ app.request.query.all.metadataFilters[filterableMetadata.id] ?? '' }}">
+        </div>
     </div>
 {% elseif filterableMetadata.control.value in ['relationship'] %}
     {% set filterUsed = app.request.query.all.metadataFilters[filterableMetadata.id] is defined %}
+    {% set variableName = ("property" ~ filterableMetadata.id ~ "Expanded") | replace({"-": "0"}) %}
+    {% set parentMetadata = filterableMetadata.id == -1 %}
     <div class="property-options"
-        .one-time="property{{ filterableMetadata.id }}Expanded = {{ filterUsed ? 'true' : 'false' }}">
-        {% block propertyName %}
+        .one-time="{{ variableName }} = {{ filterUsed ? 'true' : 'false' }}">
+        {% block propertyNameContainer %}
             <button class="property-name-container"
-                class.bind="property{{ filterableMetadata.id }}Expanded ? 'toggled' : ''"
+                class.bind="{{ variableName }} ? 'toggled' : ''"
                 type="button"
-                click.delegate="property{{ filterableMetadata.id }}Expanded = !property{{ filterableMetadata.id }}Expanded">
-                <h4 class="property-name">{{ filterableMetadata.label.PL }}</h4>
+                click.delegate="{{ variableName }} = !{{ variableName }}">
+                <h4 class="property-name">{{ parentMetadata ? 'Kolekcje' : filterableMetadata.label.PL }}</h4>
                 <span>{{ icon('forward') }}</span>
             </button>
         {% endblock %}
         <div class="collapsible">
-            {% set relationshipFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? [] %}
-            {% for resource in resources({resourceKindIds: filterableMetadata.constraints.resourceKind}) %}
-                <label class="label-with-checkbox">
-                    <input type="checkbox"
-                        name="metadataFilters[{{ filterableMetadata.id }}][]"
-                        value="{{ resource.id }}"
-                        {% if resource.id in relationshipFilters %}checked{% endif %}>
-                    <span><span>{{ resource | mLabel }}</span></span>
-                </label>
-            {% endfor %}
+            {% if parentMetadata %}
+                {% set parentFilters = app.request.query.all.metadataFilters[-1] ?? null %}
+                {% for resource in resources({resourceClasses: searchableResourceClasses, parentId: null}) %}
+                    {% set childResources = resources({parentId: resource.id}) %}
+                    {% if childResources is not empty %}
+                        {% set childResourcesData = [] %}
+                        {% for childResource in childResources %}
+                            {% set childResourceData = {
+                                id: childResource.id | json_encode,
+                                label: childResource | metadata('label') | replace({"'": "&#39;"})
+                            } %}
+                            {% set childResourcesData = childResourcesData | merge([childResourceData]) %}
+                        {% endfor %}
+                    {% endif %}
+                    <child-resources-group
+                        resource-id="{{ resource.id }}"
+                        resource-label="{{ resource | mLabel }}"
+                        {% if childResources is not empty %}
+                            stringified-child-resources-data="{{ childResourcesData | json_encode }}"
+                        {% endif %}
+                        name="metadataFilters[-1][]"
+                        {% if parentFilters is not null %}
+                            stringified-parent-filters="{{ parentFilters | json_encode }}"
+                        {% endif %}></child-resources-group>
+                {% endfor %}
+            {% else %}
+                {% set relationshipFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? [] %}
+                {% for resource in resources({resourceKindIds: filterableMetadata.constraints.resourceKind}) %}
+                    <label class="label-with-checkbox">
+                        <input type="checkbox"
+                            name="metadataFilters[{{ filterableMetadata.id }}][]"
+                            value="{{ resource.id }}"
+                            {% if resource.id in relationshipFilters %}checked{% endif %}>
+                        <span><span>{{ resource | mLabel }}</span></span>
+                    </label>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 {% endif %}

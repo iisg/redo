@@ -73,10 +73,12 @@ $advanced-options-column-border-width: $default-gap-size / 8;
     flex-wrap: wrap;
     & > * {
       flex: 1;
-      padding: $default-gap-size / 4
-        $default-gap-size * 3 / 4 + $advanced-options-column-border-width
-        $default-gap-size / 4
-        $default-gap-size * 3 / 4;
+      &:not(.property-options), &.property-options {
+        padding: $default-gap-size / 4
+          $default-gap-size * 3 / 4 + $advanced-options-column-border-width
+          $default-gap-size / 4
+          $default-gap-size * 3 / 4;
+      }
       &:not(:first-child) {
         border-left: $advanced-options-column-border-width solid $orange;
         margin-left: -$advanced-options-column-border-width; // To have the border hidden when column is wrapped.

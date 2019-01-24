@@ -53,23 +53,25 @@
         {% endfor %}
 
         {% if parentMetadata %}
-            <div>
-                {% set filterableMetadata = parentMetadata %}
-                {% include 'redo/search/search-metadata-filter.twig' %}
-            </div>
+            {% set filterableMetadata = parentMetadata %}
+            {% embed 'redo/search/search-metadata-filter.twig' %}
+                {% block propertyNameContainer %}
+                    <h3 class="section-title">Kolekcje</h3>
+                {% endblock %}
+            {% endembed %}
         {% endif %}
         {% if departmentMetadata %}
             <div>
-                <h3 class="title">{{ departmentMetadata.label.PL }}</h3>
+                <h3 class="section-title">{{ departmentMetadata.label.PL }}</h3>
                 {% set filterableMetadata = departmentMetadata %}
                 {% embed 'redo/search/search-metadata-filter.twig' %}
-                    {% block propertyName %}{% endblock %}
+                    {% block propertyNameContainer %}{% endblock %}
                 {% endembed %}
             </div>
         {% endif %}
         {% if configurableProperties is not empty %}
             <div>
-                <h3 class="title">Cechy zasobu</h3>
+                <h3 class="section-title">Cechy zasobu</h3>
                 {% for filterableMetadata in configurableProperties %}
                     {% include 'redo/search/search-metadata-filter.twig' %}
                 {% endfor %}
