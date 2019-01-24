@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel {
@@ -18,9 +19,6 @@ class AppKernel extends Kernel {
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
             new Repeka\Application\RepekaBundle(),
-            new Repeka\Plugins\OcrAbbyy\RepekaOcrAbbyyPluginBundle(),
-            new Repeka\Plugins\MetadataValueSetter\RepekaMetadataValueSetterPluginBundle(),
-            new Repeka\Plugins\MetadataValueRemover\RepekaMetadataValueRemoverPluginBundle(),
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
@@ -29,7 +27,26 @@ class AppKernel extends Kernel {
             $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
             $bundles[] = new Repeka\DeveloperBundle\DeveloperBundle();
         }
+        $bundles = array_merge($bundles, $this->getPluginsBundles());
         return $bundles;
+    }
+
+    private function getPluginsBundles(): array {
+        $finder = new Finder();
+        $finder->files()
+            ->in(self::APP_PATH . '/../src/Repeka/Plugins/*/')
+            ->name('*Bundle.php')
+            ->depth('==0');
+        $pluginBundles = [];
+        foreach ($finder as $pluginBundle) {
+            /** @var \SplFileInfo $pluginBundle */
+            $path = $pluginBundle->getRealPath();
+            $pluginClassName = substr(basename($path), 0, -4); // cut .php
+            $namespace = basename(dirname($path));
+            $fullClassName = 'Repeka\\Plugins\\' . $namespace . '\\' . $pluginClassName;
+            $pluginBundles[] = new $fullClassName();
+        }
+        return $pluginBundles;
     }
 
     public function getRootDir() {
