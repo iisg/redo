@@ -1,5 +1,5 @@
 import {bindable} from "aurelia-templating";
-import {WorkflowTransition, WorkflowPlace} from "../../workflow";
+import {WorkflowPlace, WorkflowTransition} from "../../workflow";
 import {computedFrom} from "aurelia-binding";
 import {inArray} from "../../../common/utils/array-utils";
 

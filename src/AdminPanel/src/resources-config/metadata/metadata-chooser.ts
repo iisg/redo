@@ -47,8 +47,8 @@ export class MetadataChooser extends EntityChooser {
         .get();
       const additionalMetadata = this.additionalMetadataIds.length > 0
         ? this.metadataRepository.getListQuery()
-        .filterByIds(this.additionalMetadataIds)
-        .get()
+          .filterByIds(this.additionalMetadataIds)
+          .get()
         : [];
       Promise.all([additionalMetadata, controlMetadata])
         .then(metadataListList => ([] as Metadata[]).concat(...metadataListList))

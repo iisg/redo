@@ -46,5 +46,6 @@ export class CustomValidationRules {
 
 export interface CustomValidationRule {
   name(): string;
-  validationFunction(): (value: any, object?: any, ...args: any[]) => boolean|Promise<boolean>;
+
+  validationFunction(): (value: any, object?: any, ...args: any[]) => boolean | Promise<boolean>;
 }

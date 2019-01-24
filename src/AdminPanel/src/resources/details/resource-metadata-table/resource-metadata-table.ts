@@ -1,6 +1,6 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {Resource} from "../../resource";
-import {Metadata, GroupMetadataList} from "resources-config/metadata/metadata";
+import {GroupMetadataList, Metadata} from "resources-config/metadata/metadata";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {inArray} from "common/utils/array-utils";
 import {groupMetadata} from "../../../common/utils/metadata-utils";

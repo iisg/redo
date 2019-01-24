@@ -1,18 +1,18 @@
 @import "../common/styles";
 
 .tasks {
-    display: flex;
-    flex-direction: column;
-    & > :not(resources-list-table) {
-        position: sticky;
-        left: 0;
-    }
-    .page-title {
-        padding-top: $default-gap-size;
-    }
-    .page-title, .page-subtitle {
-        padding-bottom: $default-gap-size / 2;
-        padding-left: $default-gap-size;
-        padding-right: $default-gap-size;
-    }
+  display: flex;
+  flex-direction: column;
+  & > :not(resources-list-table) {
+    position: sticky;
+    left: 0;
+  }
+  .page-title {
+    padding-top: $default-gap-size;
+  }
+  .page-title, .page-subtitle {
+    padding-bottom: $default-gap-size / 2;
+    padding-left: $default-gap-size;
+    padding-right: $default-gap-size;
+  }
 }

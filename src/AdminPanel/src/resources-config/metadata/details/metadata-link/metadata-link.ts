@@ -1,6 +1,6 @@
 import {bindable} from "aurelia-templating";
 import {MetadataRepository} from "../../metadata-repository";
-import {forSeconds, cachedResponse} from "../../../../common/repository/cached-response";
+import {cachedResponse, forSeconds} from "../../../../common/repository/cached-response";
 import {Metadata} from "../../metadata";
 import {autoinject} from "aurelia-dependency-injection";
 

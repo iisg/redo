@@ -7,6 +7,7 @@ export class MaxCountConstraintValidator extends MetadataArrayConstraintValidato
   validatedConstraintName(): string {
     return 'maxCount';
   }
+
   constructor(private i18n: I18N) {
     super();
   }

@@ -5,7 +5,7 @@ import {values} from "lodash";
 import {DateMode, FlexibleDateContent, inputDateConfig} from "../../resources/controls/input/flexible-date-input/flexible-date-config";
 import {ChangeEvent} from "../../common/change-event";
 import {isString} from "../../common/utils/object-utils";
-import {DateRangeMode, DateRangeConfig} from "./date-range-config";
+import {DateRangeConfig, DateRangeMode} from "./date-range-config";
 import "eonasdan-bootstrap-datetimepicker";
 import * as moment from "moment";
 

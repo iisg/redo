@@ -1,4 +1,4 @@
-import {ComponentAttached, bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {Workflow} from "workflows/workflow";
 import {WorkflowRepository} from "workflows/workflow-repository";

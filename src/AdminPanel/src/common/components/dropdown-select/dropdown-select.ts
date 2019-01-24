@@ -21,8 +21,8 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable @booleanAttribute useComputedWidth: boolean;
   @bindable @booleanAttribute disabled: boolean;
   @bindable @booleanAttribute clearAfterSelect: boolean;
-  @bindable searchFunction: ({term, page}) => Promise<{results, pagination: {more: boolean, itemsPerPage: number}}>;
-  @bindable formatter: ({item}) => {text: string};
+  @bindable searchFunction: ({term, page}) => Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }>;
+  @bindable formatter: ({item}) => { text: string };
   dropdown: Element;
 
   constructor(private i18n: I18N, private element: Element) {
@@ -69,7 +69,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   private setupDropdown() {
     this.createDropdown().on('select2:select', () => this.onSelectedItem())
-      // Timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049 .
+    // Timeout necessary because event fires before changing value: https://github.com/select2/select2/issues/5049 .
       .on('select2:unselect', () => setTimeout(() => this.onSelectedItem()))
       // Prevents dropdown to appear after clearing a value: https://github.com/select2/select2/issues/3320#issuecomment-350249668 .
       .on('select2:unselecting', (event) => {
@@ -121,7 +121,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
         }
         let results: any[];
         if (valueIsAnArray) {
-          if (typeof(this.value[0]) == 'number' && data.length && data[0].element.model.hasOwnProperty('id')) {
+          if (typeof (this.value[0]) == 'number' && data.length && data[0].element.model.hasOwnProperty('id')) {
             results = data.filter(item => !(this.value as Object[]).includes(item.element.model.id));
           } else {
             results = data.filter(item => !(this.value as Object[]).includes(item.element.model));
@@ -140,12 +140,12 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     };
   }
 
-  private select2DynamicLoadingOptions(): {ajax: Select2AjaxOptions} {
+  private select2DynamicLoadingOptions(): { ajax: Select2AjaxOptions } {
     return {
       ajax: {
         data: (params: any) => ({
-            term: params.term || '',
-            page: params.page || 1
+          term: params.term || '',
+          page: params.page || 1
         }),
         transport: (params: JQueryAjaxSettings,
                     success: (data: any) => undefined, failure: () => undefined): JQueryXHR => {

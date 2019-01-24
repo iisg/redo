@@ -10,73 +10,73 @@
     <table class="transparent"
         ref="valueTable">
         <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allow-drag.call: isDragHandle($event); type-flag.bind: 0">
-            <tr if.bind="metadata.control === 'relationship'">
-                <td>
-                    <tree-relationship-selector containerless
+        <tr if.bind="metadata.control === 'relationship'">
+            <td>
+                <tree-relationship-selector containerless
+                    resource.bind="resource"
+                    metadata.bind="metadata"
+                    skip-validation.bind="skipValidation"
+                    validation-controller.bind="validationController"
+                    disabled.bind="disabled"
+                    show-by-default.one-time="required && resource.contents[metadata.id].length === 0"
+                    tree-query-url.bind="treeQueryUrl"></tree-relationship-selector>
+            </td>
+        </tr>
+        <tr if.bind="metadata.control | in:['file', 'directory']">
+            <td>
+                <resource-file-manager resource.bind="resource"
+                    metadata.bind="metadata"
+                    skip-validation.bind="skipValidation"
+                    if.bind="!disabled && resource.id">
+                    <icon-button icon-name="scan"
+                        tooltip-text-when-enabled.one-time="'Open resource file manager' | t"></icon-button>
+                </resource-file-manager>
+                <em if.bind="!resource.id">${'Save resource to upload its files'|t}</em>
+            </td>
+        </tr>
+        <tr repeat.for="item of resource.contents[metadata.id]"
+            oa-sortable-item="item.bind: item; type-flag.bind: 0">
+            <td>
+                <div>
+                    <resource-metadata-value-input metadata.bind="metadata"
                         resource.bind="resource"
-                        metadata.bind="metadata"
-                        skip-validation.bind="skipValidation"
                         validation-controller.bind="validationController"
-                        disabled.bind="disabled"
-                        show-by-default.one-time="required && resource.contents[metadata.id].length === 0"
-                        tree-query-url.bind="treeQueryUrl"></tree-relationship-selector>
-                </td>
-            </tr>
-            <tr if.bind="metadata.control | in:['file', 'directory']">
-                <td>
-                    <resource-file-manager resource.bind="resource"
-                        metadata.bind="metadata"
+                        value.bind="resource.contents[metadata.id][$index]"
                         skip-validation.bind="skipValidation"
-                        if.bind="!disabled && resource.id">
-                        <icon-button icon-name="scan"
-                            tooltip-text-when-enabled.one-time="'Open resource file manager' | t"></icon-button>
-                    </resource-file-manager>
-                    <em if.bind="!resource.id">${'Save resource to upload its files'|t}</em>
-                </td>
-            </tr>
-            <tr repeat.for="item of resource.contents[metadata.id]"
-                oa-sortable-item="item.bind: item; type-flag.bind: 0">
-                <td>
-                    <div>
-                        <resource-metadata-value-input metadata.bind="metadata"
+                        disabled.bind="disabled"></resource-metadata-value-input>
+                    <a if.bind="!disabled && resource.contents[metadata.id].length > 1"
+                        class="drag-handle"
+                        bootstrap-tooltip.bind="'Drag to change order' | t"
+                        data-placement="left">
+                        <icon name="arrows-2"
+                            size="1.5"></icon>
+                    </a>
+                    <div if.bind="!disabled && !metadataShownWithoutButtons"
+                        class="buttons">
+                        <icon-button icon-name="remove-2"
+                            click.delegate="deleteIndex($index)"
+                            tooltip-text-when-enabled.one-time="'Remove value' | t"
+                            tooltip-text-when-disabled.one-time="'Value is required' | t"
+                            disabled.bind="required && resource.contents[metadata.id].length == 1"
+                            tab-index="-1"></icon-button>
+                        <new-metadata-value-button if.bind="$first && !metadataValuesReadOnly"
+                            metadata.bind="metadata"
                             resource.bind="resource"
-                            validation-controller.bind="validationController"
-                            value.bind="resource.contents[metadata.id][$index]"
                             skip-validation.bind="skipValidation"
-                            disabled.bind="disabled"></resource-metadata-value-input>
-                        <a if.bind="!disabled && resource.contents[metadata.id].length > 1"
-                            class="drag-handle"
-                            bootstrap-tooltip.bind="'Drag to change order' | t"
-                            data-placement="left">
-                            <icon name="arrows-2"
-                                size="1.5"></icon>
-                        </a>
-                        <div if.bind="!disabled && !metadataShownWithoutButtons"
-                            class="buttons">
-                            <icon-button icon-name="remove-2"
-                                click.delegate="deleteIndex($index)"
-                                tooltip-text-when-enabled.one-time="'Remove value' | t"
-                                tooltip-text-when-disabled.one-time="'Value is required' | t"
-                                disabled.bind="required && resource.contents[metadata.id].length == 1"
-                                tab-index="-1"></icon-button>
-                            <new-metadata-value-button if.bind="$first && !metadataValuesReadOnly"
-                                metadata.bind="metadata"
-                                resource.bind="resource"
-                                skip-validation.bind="skipValidation"
-                                click.trigger="addNew()"></new-metadata-value-button>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr if.bind="!resource.contents[metadata.id].length && !metadataValuesReadOnly && !metadataShownWithoutButtons">
-                <td if.bind="!disabled">
-                    <div class="new-metadata-value-button-container">
-                        <new-metadata-value-button metadata.bind="metadata"
-                            resource.bind="resource"
                             click.trigger="addNew()"></new-metadata-value-button>
                     </div>
-                </td>
-            </tr>
+                </div>
+            </td>
+        </tr>
+        <tr if.bind="!resource.contents[metadata.id].length && !metadataValuesReadOnly && !metadataShownWithoutButtons">
+            <td if.bind="!disabled">
+                <div class="new-metadata-value-button-container">
+                    <new-metadata-value-button metadata.bind="metadata"
+                        resource.bind="resource"
+                        click.trigger="addNew()"></new-metadata-value-button>
+                </div>
+            </td>
+        </tr>
         </tbody>
     </table>
 </template>

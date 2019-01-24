@@ -15,7 +15,7 @@ export class MetricsEventListener {
   }
 
   private listenForRouterEvents() {
-    this.eventAggregator.subscribe('router:navigation:processing', (event: {instruction: NavigationInstruction}) => {
+    this.eventAggregator.subscribe('router:navigation:processing', (event: { instruction: NavigationInstruction }) => {
       let viewName = event.instruction.fragment.substr(1).replace(/\//g, '.').replace(/\.$/, '') || "home";
       MetricsCollector.increment(`view.${viewName}`);
     });

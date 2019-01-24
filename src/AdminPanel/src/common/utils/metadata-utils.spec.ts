@@ -57,7 +57,7 @@ describe('metadata-utils', () => {
       const expectedGroups = [
         {groupId: 'group1', metadataList: [metadata1]},
         {groupId: 'group2', metadataList: [metadata2, metadata3]}
-        ];
+      ];
       const result = groupMetadata([metadata1, metadata2, metadata3], ['group1', 'group2']);
       expect(result).toEqual(expectedGroups);
     });

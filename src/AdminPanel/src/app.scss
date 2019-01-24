@@ -387,7 +387,6 @@ body {
   }
 }
 
-
 body > tr[oa-sortable-item] {
   display: none;
 }
@@ -403,8 +402,8 @@ button {
 .simple-form {
   display: grid;
   grid-template-columns: fit-content(40%) auto; // It is solved this way as otherwise, for example, edit button would not stick to the
-                                                // right side while scrolling horizontally when there would be a lot content in the first
-                                                // column and the window would be narrow.
+  // right side while scrolling horizontally when there would be a lot content in the first
+  // column and the window would be narrow.
   grid-column-gap: $simple-form-column-gap-size;
   &:not(.contains-collapsible-metadata-group) {
     grid-row-gap: $simple-form-row-gap-size;
@@ -413,8 +412,8 @@ button {
     margin-top: -$simple-form-row-gap-size / 2;
     margin-bottom: -$simple-form-row-gap-size / 2;
     & > :not(collapsible-metadata-group), & > collapsible-metadata-group > * {
-        margin-top: $simple-form-row-gap-size / 2;
-        margin-bottom: $simple-form-row-gap-size / 2;
+      margin-top: $simple-form-row-gap-size / 2;
+      margin-bottom: $simple-form-row-gap-size / 2;
     }
   }
   &, & > collapsible-metadata-group {

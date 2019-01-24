@@ -1,7 +1,7 @@
 @import "../../../../common/styles";
 
 related-resource-metadata-filter-editor {
-    & > * {
-        @include form-element();
-    }
+  & > * {
+    @include form-element();
+  }
 }

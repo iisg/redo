@@ -1,87 +1,92 @@
 @import "../../common/styles";
 
 resources-list {
-    display: grid;
+  display: grid;
+  // @formatter:off
+  grid-template-areas: "form                                  form                                 "
+                       "top-pagination                        add-button                           "
+                       "loading-bar                           loading-bar                          "
+                       "resources-list-table                  resources-list-table                 "
+                       "alert                                 alert                                "
+                       "bottom-pagination-page-numbers        .                                    "
+                       "bottom-pagination-dropdown-with-label bottom-pagination-dropdown-with-label"
+                       "slot                                  slot                                 ";
+  // @formatter:on
+  grid-template-columns: 1fr auto;
+  grid-template-rows: repeat(7, min-content);
+
+  &.add-form-opened {
+    // @formatter:off
     grid-template-areas: "form                                  form                                 "
-                         "top-pagination                        add-button                           "
+                         "top-pagination                        top-pagination                       "
                          "loading-bar                           loading-bar                          "
                          "resources-list-table                  resources-list-table                 "
                          "alert                                 alert                                "
-                         "bottom-pagination-page-numbers        .                                    "
+                         "bottom-pagination-page-numbers        bottom-pagination-page-numbers       "
                          "bottom-pagination-dropdown-with-label bottom-pagination-dropdown-with-label"
                          "slot                                  slot                                 ";
-    grid-template-columns: 1fr auto;
-    grid-template-rows: repeat(7, min-content);
+    // @formatter:on
+  }
 
-    &.add-form-opened {
-        grid-template-areas: "form                                  form                                 "
-                             "top-pagination                        top-pagination                       "
-                             "loading-bar                           loading-bar                          "
-                             "resources-list-table                  resources-list-table                 "
-                             "alert                                 alert                                "
-                             "bottom-pagination-page-numbers        bottom-pagination-page-numbers       "
-                             "bottom-pagination-dropdown-with-label bottom-pagination-dropdown-with-label"
-                             "slot                                  slot                                 ";
+  & > :not(add-button):not(.add-form):not(resources-list-table) {
+    position: sticky;
+    left: 0;
+  }
+
+  & > .pagination-page-numbers, pagination {
+    min-width: 100%;
+  }
+
+  & > .pagination-page-numbers {
+    grid-area: bottom-pagination-page-numbers;
+  }
+
+  & > .pagination-dropdown-with-label {
+    grid-area: bottom-pagination-dropdown-with-label;
+  }
+
+  & > .pagination-dropdown-with-label + * {
+    grid-area: slot;
+  }
+
+  pagination {
+    grid-area: top-pagination;
+    align-self: center;
+  }
+
+  add-button {
+    position: sticky;
+    grid-area: add-button;
+    left: 100%;
+    width: 0%; // Required in Chrome to stop `add-button` from moving when scrolling horizontally.
+    height: 100%;
+    transform: translateX(-100%);
+    white-space: nowrap;
+    direction: rtl; //
+    & > * { //
+      direction: ltr; //
     }
-
-    & > :not(add-button):not(.add-form):not(resources-list-table) {
-        position: sticky;
-        left: 0;
-    }
-
-    & > .pagination-page-numbers, pagination {
-        min-width: 100%;
-    }
-
-    & > .pagination-page-numbers {
-        grid-area: bottom-pagination-page-numbers;
-    }
-
-    & > .pagination-dropdown-with-label {
-        grid-area: bottom-pagination-dropdown-with-label;
-    }
-
-    & > .pagination-dropdown-with-label + * {
-        grid-area: slot;
-    }
-
-    pagination {
-        grid-area: top-pagination;
-        align-self: center;
-    }
-
-    add-button {
-        position: sticky;
-        grid-area: add-button;
-        left: 100%;
-        width: 0%; // Required in Chrome to stop `add-button` from moving when scrolling horizontally.
+    //
+    & > toggle-button {
+      &, & > div {
         height: 100%;
-        transform: translateX(-100%);
-        white-space: nowrap;
-        direction: rtl; //
-        & > * { //
-            direction: ltr; //
-        } //
-        & > toggle-button {
-            &, & > div {
-                height: 100%;
-            }
-        }
+      }
     }
+  }
 
-    .add-form {
-        grid-area: form;
-    }
+  .add-form {
+    grid-area: form;
+  }
 
-    loading-bar {
-        grid-area: loading-bar;
-    }
+  loading-bar {
+    grid-area: loading-bar;
+  }
 
-    resources-list-table {
-        grid-area: resources-list-table;
-    }
+  resources-list-table {
+    grid-area: resources-list-table;
+  }
 
-    .alert {
-        grid-area: alert;
-    }
+  .alert {
+    grid-area: alert;
+  }
 }

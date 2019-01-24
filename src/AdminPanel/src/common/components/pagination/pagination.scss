@@ -3,35 +3,35 @@
 $page-number-margin-size: $default-gap-size / 4;
 
 .pagination-page-numbers {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+  flex-wrap: wrap;
+  &, a, .ellipsis, .current-page-number {
+    padding-left: $page-number-margin-size;
+    padding-right: $page-number-margin-size;
+  }
+  .with-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
-    flex-wrap: wrap;
-    &, a, .ellipsis, .current-page-number {
-        padding-left: $page-number-margin-size;
-        padding-right: $page-number-margin-size;
-    }
-    .with-ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .different-direction {
-        direction: rtl;
-    }
-    .current-page-number {
-        font-weight: bold;
-    }
-    a {
-        color: $default-text-color;
-    }
+  }
+  .different-direction {
+    direction: rtl;
+  }
+  .current-page-number {
+    font-weight: bold;
+  }
+  a {
+    color: $default-text-color;
+  }
 }
 .pagination-dropdown-with-label {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    &, & > * {
-        padding-left: $page-number-margin-size;
-        padding-right: $page-number-margin-size;
-    }
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  &, & > * {
+    padding-left: $page-number-margin-size;
+    padding-right: $page-number-margin-size;
+  }
 }

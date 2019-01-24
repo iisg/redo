@@ -17,8 +17,7 @@ export class ResourceKindBreadcrumbsProvider implements BreadcrumbsProvider {
     const breadcrumbs: BreadcrumbItem[] = [];
     if (resourceClass) {
       breadcrumbs.push({label: this.resourceClassTranslationValueConverter.toView('New resource kind', resourceClass)});
-    }
-    else {
+    } else {
       const resourceKind = await this.resourceKindRepository.get(navigationInstruction.params.id);
       resourceClass = resourceKind.resourceClass;
       breadcrumbs.push({label: this.inCurrentLanguage.toView(resourceKind.label)});

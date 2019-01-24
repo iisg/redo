@@ -1,6 +1,6 @@
 import {bindable} from "aurelia-templating";
 import {oneTime} from "common/components/binding-mode";
-import {RestrictingMetadataIdMap, RequirementState} from "workflows/workflow";
+import {RequirementState, RestrictingMetadataIdMap} from "workflows/workflow";
 
 export class ReadOnlyExcelCheckbox {
   @bindable(oneTime) value: string;

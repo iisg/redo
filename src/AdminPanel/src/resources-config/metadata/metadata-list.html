@@ -26,73 +26,75 @@
     <div class="table-container"> <!-- For some reason this is required by Chrome to make horizontal scrolling possible. -->
         <table>
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>${'Name' | t}</th>
-                    <th>${'Label' | t}</th>
-                    <th>${'Control' | t}</th>
-                    <th>${'Group' | t}</th>
-                    <th>${'Hint' | t}</th>
-                    <th>${'Description' | t}</th>
-                    <th></th>
-                    <th></th>
-                </tr>
+            <tr>
+                <th>ID</th>
+                <th>${'Name' | t}</th>
+                <th>${'Label' | t}</th>
+                <th>${'Control' | t}</th>
+                <th>${'Group' | t}</th>
+                <th>${'Hint' | t}</th>
+                <th>${'Description' | t}</th>
+                <th></th>
+                <th></th>
+            </tr>
             </thead>
             <tfoot>
-                <tr if.bind="progressBar">
-                    <th colspan="8">
-                        <loading-bar></loading-bar>
-                    </th>
-                </tr>
+            <tr if.bind="progressBar">
+                <th colspan="8">
+                    <loading-bar></loading-bar>
+                </th>
+            </tr>
             </tfoot>
             <tbody oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
-                <tr repeat.for="metadata of metadataList"
-                    oa-sortable-item="item.bind: metadata"
-                    go-to-link-on-row-click>
-                    <td>
-                        <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
+            <tr repeat.for="metadata of metadataList"
+                oa-sortable-item="item.bind: metadata"
+                go-to-link-on-row-click>
+                <td>
+                    <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
                         disabled-link.bind="metadata.pendingRequest">${metadata.id}</a>
-                    </td>
-                    <td>
-                        <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
-                            disabled-link.bind="metadata.pendingRequest">${metadata.name}</a>
-                        <icon name="show"
-                            if.bind="metadata.shownInBrief"></icon>
-                        <icon name="edit"
-                            if.bind="metadata.copyToChildResource"></icon>
-                    </td>
-                    <td>
-                        <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
-                            disabled-link.bind="metadata.pendingRequest">${metadata.label | inCurrentLanguage}</a>
-                    </td>
-                    <td>
-                        ${'controls::' + metadata.control | t}
-                        <icon name="user-3"
-                            if.bind="metadata.canDetermineAssignees"
-                            bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></icon>
-                    </td>
-                    <td>
-                        ${metadata.groupId | metadataGroupLabel}
-                    </td>
-                    <td>
-                        ${metadata.placeholder | inCurrentLanguage}
-                    </td>
-                    <td>
-                        ${metadata.description | inCurrentLanguage}
-                    </td>
-                    <td class="with-buttons-container">
-                        <div if.bind="!parentMetadata && metadata.id > 0">
-                            <a class="drag-handle"
-                                bootstrap-tooltip.bind="'Drag to change order' | t"
-                                disabled-link.bind="metadata.pendingRequest"
-                                data-placement="left">
-                                <icon name="arrows"
-                                    size="1.25"></icon>
-                            </a>
-                        </div>
-                    </td>
-                    <td class="with-throbber"><throbber if.bind="metadata.pendingRequest"></throbber></td>
-                </tr>
+                </td>
+                <td>
+                    <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
+                        disabled-link.bind="metadata.pendingRequest">${metadata.name}</a>
+                    <icon name="show"
+                        if.bind="metadata.shownInBrief"></icon>
+                    <icon name="edit"
+                        if.bind="metadata.copyToChildResource"></icon>
+                </td>
+                <td>
+                    <a route-href="route: metadata/details; params.bind: {id: metadata.id}"
+                        disabled-link.bind="metadata.pendingRequest">${metadata.label | inCurrentLanguage}</a>
+                </td>
+                <td>
+                    ${'controls::' + metadata.control | t}
+                    <icon name="user-3"
+                        if.bind="metadata.canDetermineAssignees"
+                        bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></icon>
+                </td>
+                <td>
+                    ${metadata.groupId | metadataGroupLabel}
+                </td>
+                <td>
+                    ${metadata.placeholder | inCurrentLanguage}
+                </td>
+                <td>
+                    ${metadata.description | inCurrentLanguage}
+                </td>
+                <td class="with-buttons-container">
+                    <div if.bind="!parentMetadata && metadata.id > 0">
+                        <a class="drag-handle"
+                            bootstrap-tooltip.bind="'Drag to change order' | t"
+                            disabled-link.bind="metadata.pendingRequest"
+                            data-placement="left">
+                            <icon name="arrows"
+                                size="1.25"></icon>
+                        </a>
+                    </div>
+                </td>
+                <td class="with-throbber">
+                    <throbber if.bind="metadata.pendingRequest"></throbber>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

@@ -15,7 +15,7 @@ export class EntityChooser extends DropdownSelect {
     } else {
       this.values = this.entities;
     }
-  }
+  };
   private valueUpdated: boolean;
   private notFoundEntity: Entity;
 

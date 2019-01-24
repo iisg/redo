@@ -1,8 +1,6 @@
 import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {BindingEngine} from "aurelia-binding";
-import {Disposable} from "aurelia-binding";
-import {observable} from "aurelia-binding";
+import {BindingEngine, Disposable, observable} from "aurelia-binding";
 
 interface ChildResourceData {
   id: string;

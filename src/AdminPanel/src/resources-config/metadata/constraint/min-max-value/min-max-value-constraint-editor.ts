@@ -35,11 +35,13 @@ export class MinMaxValueConstraintEditor {
     this.checkmin = this.minMaxValue.min != undefined;
     this.checkmax = this.minMaxValue.max != undefined;
 
-    if (this.checkmin || this.valuemin === undefined)
+    if (this.checkmin || this.valuemin === undefined) {
       this.valuemin = this.minMaxValue.min || 0;
+    }
 
-    if (this.checkmax || this.valuemax === undefined)
+    if (this.checkmax || this.valuemax === undefined) {
       this.valuemax = this.minMaxValue.max || 0;
+    }
 
     this.modelIsChangingMinMax = false;
   }

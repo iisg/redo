@@ -13,7 +13,7 @@
     </template>
 
     <template if.bind="selectedDateMode == 'range' && !selectedRangeDateMode">
-        <span >${'Select date mode for range:' | t}</span>
+        <span>${'Select date mode for range:' | t}</span>
         <dropdown-select values.bind="rangeDateModes"
             value.bind="selectedRangeDateMode">
             <template replace-part="option-template">

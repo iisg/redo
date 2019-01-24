@@ -13,7 +13,7 @@ export class TopBarTitle {
     eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
       (event: ResourceClassChangeEvent) => this.updateResourceClass(event));
     eventAggregator.subscribe('router:navigation:success',
-      (event: {instruction: NavigationInstruction}) => this.updateInstruction(event.instruction));
+      (event: { instruction: NavigationInstruction }) => this.updateInstruction(event.instruction));
   }
 
   private updateResourceClass(event: ResourceClassChangeEvent): void {

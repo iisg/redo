@@ -1,5 +1,5 @@
 import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
-import {Metadata, MetadataGroup, GroupMetadataList} from "../../resources-config/metadata/metadata";
+import {GroupMetadataList, Metadata, MetadataGroup} from "../../resources-config/metadata/metadata";
 
 function getMergedMetadata(resourceKinds: ResourceKind[]): Metadata[] {
   let mergedMetadata = [];

@@ -2,7 +2,7 @@ import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {ResourceKind} from "../resource-kind";
 import {ResourceKindRepository} from "../resource-kind-repository";
-import {forSeconds, cachedResponse} from "../../../common/repository/cached-response";
+import {cachedResponse, forSeconds} from "../../../common/repository/cached-response";
 
 @autoinject
 export class ResourceKindLink {

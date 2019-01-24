@@ -5,54 +5,54 @@
 
     <table mouseleave.trigger="highlightedColumnId = undefined">
         <thead>
-            <tr>
-                <th>
-                    <div>
-                        <icon name="filter"
-                            bootstrap-tooltip="${'Filter metadata kinds by selecting the resource kinds' | t}"></icon>
-                        <resource-kind-chooser resource-class.one-time="workflow.resourceClass"
-                            value.bind="filterByResourceKinds"
-                            multi-select="true"></resource-kind-chooser>
-                    </div>
-                </th>
-                <th repeat.for="place of orderedPlaces"
-                    class="${highlightedColumnId == place.id ? 'highlighted' : ''}"
-                    mouseover.delegate="highlightedColumnId = place.id">
-                    ${place.label | inCurrentLanguage & signal:'workflow-places-updated'}
-                </th>
-            </tr>
+        <tr>
+            <th>
+                <div>
+                    <icon name="filter"
+                        bootstrap-tooltip="${'Filter metadata kinds by selecting the resource kinds' | t}"></icon>
+                    <resource-kind-chooser resource-class.one-time="workflow.resourceClass"
+                        value.bind="filterByResourceKinds"
+                        multi-select="true"></resource-kind-chooser>
+                </div>
+            </th>
+            <th repeat.for="place of orderedPlaces"
+                class="${highlightedColumnId == place.id ? 'highlighted' : ''}"
+                mouseover.delegate="highlightedColumnId = place.id">
+                ${place.label | inCurrentLanguage & signal:'workflow-places-updated'}
+            </th>
+        </tr>
         </thead>
         <tbody>
-            <tr repeat.for="metadata of filteredMetadata"
-                class="au-animate fade-inup-outdown">
-                <th class="${highlightedRowId == metadata.id ? 'highlighted' : ''}"
-                    mouseover.delegate="highlightedColumnId = undefined">
-                    ${metadata | metadataLabel}
-                    <icon name="user-3"
-                        if.bind="metadata.canDetermineAssignees"
-                        bootstrap-tooltip.one-time="'This metadata can be used to specify assignees' | t"></icon>
-                </th>
-                <td repeat.for="place of orderedPlaces"
-                    mouseover.delegate="highlightedColumnId = place.id"
-                    class="${highlightedColumnId == place.id ? 'highlighted' : ''}">
-                    <excel-checkbox model.bind="metadata.id"
-                        states.bind="place.restrictingMetadataIds"
-                        assignee-allowed.bind="metadata.canDetermineAssignees"
-                        on-change.call="checkboxChanged(metadata, place)"
-                        disabled.bind="!editable"></excel-checkbox>
-                </td>
-            </tr>
+        <tr repeat.for="metadata of filteredMetadata"
+            class="au-animate fade-inup-outdown">
+            <th class="${highlightedRowId == metadata.id ? 'highlighted' : ''}"
+                mouseover.delegate="highlightedColumnId = undefined">
+                ${metadata | metadataLabel}
+                <icon name="user-3"
+                    if.bind="metadata.canDetermineAssignees"
+                    bootstrap-tooltip.one-time="'This metadata can be used to specify assignees' | t"></icon>
+            </th>
+            <td repeat.for="place of orderedPlaces"
+                mouseover.delegate="highlightedColumnId = place.id"
+                class="${highlightedColumnId == place.id ? 'highlighted' : ''}">
+                <excel-checkbox model.bind="metadata.id"
+                    states.bind="place.restrictingMetadataIds"
+                    assignee-allowed.bind="metadata.canDetermineAssignees"
+                    on-change.call="checkboxChanged(metadata, place)"
+                    disabled.bind="!editable"></excel-checkbox>
+            </td>
+        </tr>
         </tbody>
         <tfoot if.bind="editable">
-            <tr>
-                <td colspan="${orderedPlaces.length + 1}">
-                    <label>
-                        <input type="checkbox"
+        <tr>
+            <td colspan="${orderedPlaces.length + 1}">
+                <label>
+                    <input type="checkbox"
                         checked.bind="autoChangeRowToTheEnd">
-                        <span>${'Automatically set the same value for the states on the right' | t}</span>
-                    </label>
-                </td>
-            </tr>
+                    <span>${'Automatically set the same value for the states on the right' | t}</span>
+                </label>
+            </td>
+        </tr>
         </tfoot>
     </table>
     <loading-bar if.bind="!metadataList"></loading-bar>

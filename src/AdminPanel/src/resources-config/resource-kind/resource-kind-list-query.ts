@@ -1,7 +1,7 @@
 import {DeduplicatingHttpClient} from "../../common/http-client/deduplicating-http-client";
 import {EntitySerializer} from "../../common/dto/entity-serializer";
 import {ResourceKind} from "./resource-kind";
-import {forOneMinute, cachedResponse} from "../../common/repository/cached-response";
+import {cachedResponse, forOneMinute} from "../../common/repository/cached-response";
 import {ResourceSort} from "../../resources/resource-sort";
 
 export class ResourceKindListQuery {

@@ -3,24 +3,24 @@
 $available-sizes: 0.5, 0.75, 1.25, 1.5, 1.75, 2, 2.5, 3;
 
 icon, .icon {
-    display: inline-block;
-    height: 1em;
-    line-height: 0;
-    vertical-align: ($capital-letter-of-the-default-font-height - 1em) / 2; // Using `calc` hasn't worked in Edge.
+  display: inline-block;
+  height: 1em;
+  line-height: 0;
+  vertical-align: ($capital-letter-of-the-default-font-height - 1em) / 2; // Using `calc` hasn't worked in Edge.
 
-    @each $size in $available-sizes {
-        &[size="#{$size}"], &[data-size="#{$size}"] {
-            &, & > svg {
-                height: #{$size}em;
-            }
-            vertical-align: ($capital-letter-of-the-default-font-height - $size * 1em) / 2; // Using `calc` hasn't worked in Edge.
-        }
+  @each $size in $available-sizes {
+    &[size="#{$size}"], &[data-size="#{$size}"] {
+      &, & > svg {
+        height: #{$size}em;
+      }
+      vertical-align: ($capital-letter-of-the-default-font-height - $size * 1em) / 2; // Using `calc` hasn't worked in Edge.
     }
+  }
 
-    & > svg {
-        display: none; // Used to temporarily hide icons on Internet Explorer because it does not support this way of displaying them.
-        display: initial; //
-        height: inherit;
-        fill: currentColor;
-    }
+  & > svg {
+    display: none; // Used to temporarily hide icons on Internet Explorer because it does not support this way of displaying them.
+    display: initial; //
+    height: inherit;
+    fill: currentColor;
+  }
 }

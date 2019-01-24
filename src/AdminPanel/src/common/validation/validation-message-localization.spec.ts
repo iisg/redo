@@ -9,7 +9,8 @@ describe(installValidationMessageLocalization.name, () => {
     const container = {
       get: (service) => {
         switch (service) {
-          case I18N: return {'tr': this.translator};
+          case I18N:
+            return {'tr': this.translator};
         }
         throw new Error(`Unexpected service requested: ${service.name}`);
       }
