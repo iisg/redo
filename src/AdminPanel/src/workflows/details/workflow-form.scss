@@ -1,33 +1,33 @@
 @import "../../common/styles";
 
 .workflow-form-content {
-    height: 100%;
-    .name-with-buttons-and-tabs .buttons {
-        margin-left: auto;
+  height: 100%;
+  .name-with-buttons-and-tabs .buttons {
+    margin-left: auto;
+  }
+  .content {
+    overflow: auto;
+    & > :not(redo-footer) {
+      &:not(:first-child) {
+        padding-top: $default-gap-size / 2;
+      }
+      &:first-child {
+        padding-top: $default-gap-size;
+      }
+      &:not(:nth-last-child(2)) {
+        padding-bottom: $default-gap-size / 2;
+      }
+      &:nth-last-child(2) {
+        padding-bottom: $default-gap-size;
+      }
     }
-    .content {
-        overflow: auto;
-        & > :not(redo-footer) {
-            &:not(:first-child) {
-                padding-top: $default-gap-size / 2;
-            }
-            &:first-child {
-                padding-top: $default-gap-size;
-            }
-            &:not(:nth-last-child(2)) {
-                padding-bottom: $default-gap-size / 2;
-            }
-            &:nth-last-child(2) {
-                padding-bottom: $default-gap-size;
-            }
-        }
-        & > :not(excel) {
-            position: sticky;
-            left: 0;
-            &:not(redo-footer) {
-                padding-left: $default-gap-size;
-                padding-right: $default-gap-size;
-            }
-        }
+    & > :not(excel) {
+      position: sticky;
+      left: 0;
+      &:not(redo-footer) {
+        padding-left: $default-gap-size;
+        padding-right: $default-gap-size;
+      }
     }
+  }
 }

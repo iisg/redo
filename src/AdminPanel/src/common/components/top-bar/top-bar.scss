@@ -133,12 +133,10 @@ top-bar {
       padding-top: $default-padding-or-margin-of-elements / 2;
       padding-bottom: $default-padding-or-margin-of-elements / 2;
       & > :not(.search-bar-with-button), .search-bar-with-button > :not(input) {
-        padding: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements
-          $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
+        padding: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
       }
       .search-bar-with-button > input {
-        margin: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements
-          $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
+        margin: $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements $default-padding-or-margin-of-elements / 2 $default-padding-or-margin-of-elements;
       }
     }
     & > div {

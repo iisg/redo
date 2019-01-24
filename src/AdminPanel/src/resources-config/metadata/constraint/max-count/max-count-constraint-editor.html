@@ -13,9 +13,9 @@
         checked.bind="isUnlimited">
     <div>
         <span>${"At most" | t}</span><input class="form-control"
-            type="number"
-            value.bind="count | integer"
-            disabled.bind="isUnlimited">
+        type="number"
+        value.bind="count | integer"
+        disabled.bind="isUnlimited">
     </div>
     <restore-from-original-button if.bind="hasBase && wasModified"
         class="full-width"

@@ -91,9 +91,9 @@
   }
   span {
     margin: $default-gap-size / 8 - 1px $default-gap-size / 4 $default-gap-size / 8; // Because `line-height` property in Firefox seems to
-                                                                                     // work differently than in Chrome and simple
-                                                                                     // centering does not seem to work as expected - for
-                                                                                     // Open Sans at least.
+    // work differently than in Chrome and simple
+    // centering does not seem to work as expected - for
+    // Open Sans at least.
   }
   span {
     line-height: calc(1em + #{$default-gap-size / 4});
@@ -116,7 +116,7 @@
       color: $light-grey;
     }
     icon {
-        display: block;
+      display: block;
     }
   }
 }

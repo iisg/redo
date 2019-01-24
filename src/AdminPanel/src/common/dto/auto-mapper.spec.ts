@@ -12,6 +12,7 @@ describe(AutoMapper.name, () => {
     @map('Foo') foo: Object;
     @map(CopyMapper) bar: Object;
   }
+
   let mapper: Mapper<any>;
   let registry: TypeRegistry;
 

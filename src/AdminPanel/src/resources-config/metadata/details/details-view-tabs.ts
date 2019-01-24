@@ -51,9 +51,9 @@ export class DetailsViewTabs {
   }
 
   private updateTabs(activeTabId: string) {
-      this.activeTabId = activeTabId;
-      this.tabs.forEach(tab => tab.active = tab.id == activeTabId);
-      this.updateLabels();
+    this.activeTabId = activeTabId;
+    this.tabs.forEach(tab => tab.active = tab.id == activeTabId);
+    this.updateLabels();
   }
 
   public clear(): this {

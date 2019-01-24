@@ -19,12 +19,12 @@ export class MetadataGroupLabelValueConverter implements ToViewValueConverter {
       return this.i18n.tr("Other metadata");
     }
     this.fetchGroups();
-      const group = this.groups && this.groups[groupId];
-      if (group) {
-        return this.inCurrentLanguage.toView(group.label);
-      } else {
-        return `${this.i18n.tr("Unknown group")} (${groupId})`;
-      }
+    const group = this.groups && this.groups[groupId];
+    if (group) {
+      return this.inCurrentLanguage.toView(group.label);
+    } else {
+      return `${this.i18n.tr("Unknown group")} (${groupId})`;
+    }
   }
 
   private fetchGroups() {

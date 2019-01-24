@@ -67,26 +67,26 @@ redo-footer, .redo-footer {
 }
 
 @mixin vertical-align() {
-    & > :last-child {
-      flex-direction: column;
-      align-items: flex-start;
-      width: 100%; // Required by Internet Explorer.
-      margin-left: 0;
+  & > :last-child {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%; // Required by Internet Explorer.
+    margin-left: 0;
+  }
+  .horizontal {
+    display: none;
+  }
+  .vertical {
+    display: block;
+    width: 100%;
+    max-width: $second-group-maximum-logos-width-when-displayed-vertically + 2 * $default-gap-size;
+    &.fe-logo {
+      max-height: $fe-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
     }
-    .horizontal {
-      display: none;
+    &.ue-logo {
+      max-height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
     }
-    .vertical {
-      display: block;
-      width: 100%;
-      max-width: $second-group-maximum-logos-width-when-displayed-vertically + 2 * $default-gap-size;
-      &.fe-logo {
-        max-height: $fe-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
-      }
-      &.ue-logo {
-        max-height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
-      }
-    }
+  }
 }
 
 .repeka-admin-panel {
@@ -111,6 +111,6 @@ redo-footer, .redo-footer {
 .redo-footer {
   @media (max-width: #{$fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
     + $expected-scrollbar-width}) {
-      @include vertical-align();
+    @include vertical-align();
   }
 }

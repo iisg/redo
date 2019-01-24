@@ -11,7 +11,7 @@ export class ResourceKindMetadataChooser extends MetadataChooser {
 
   filter = (metadata: Metadata) => {
     return this.notSystemMetadata(metadata) && this.metadataNotAlreadyInResourceKind(metadata);
-  }
+  };
 
   notSystemMetadata(metadata: Metadata): boolean {
     return metadata.id > 0;

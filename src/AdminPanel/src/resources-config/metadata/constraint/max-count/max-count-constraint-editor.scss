@@ -1,7 +1,7 @@
 @import "../../../../common/styles";
 
 max-count-constraint-editor {
-    & > * {
-        @include form-element();
-    }
+  & > * {
+    @include form-element();
+  }
 }

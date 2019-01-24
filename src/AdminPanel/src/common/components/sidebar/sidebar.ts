@@ -6,21 +6,21 @@ import {I18nParams} from "config/i18n";
 
 @autoinject
 export class Sidebar {
-    title: string;
+  title: string;
 
-    private static readonly COLLAPSED_SIDEBAR_KEY = 'collapsedSidebar';
+  private static readonly COLLAPSED_SIDEBAR_KEY = 'collapsedSidebar';
 
-    @observable collapsed: boolean;
+  @observable collapsed: boolean;
 
-    constructor(i18n: I18N, i18nParams: I18nParams) {
-        this.collapsed = LocalStorage.get(Sidebar.COLLAPSED_SIDEBAR_KEY) || false;
-        this.title = i18n.tr("adminPanelName", {applicationName: i18nParams.applicationName});
+  constructor(i18n: I18N, i18nParams: I18nParams) {
+    this.collapsed = LocalStorage.get(Sidebar.COLLAPSED_SIDEBAR_KEY) || false;
+    this.title = i18n.tr("adminPanelName", {applicationName: i18nParams.applicationName});
+  }
+
+  collapsedChanged(newValue: boolean, oldValue: boolean) {
+    if (oldValue != undefined) {
+      newValue ? LocalStorage.set(Sidebar.COLLAPSED_SIDEBAR_KEY, newValue)
+        : LocalStorage.remove(Sidebar.COLLAPSED_SIDEBAR_KEY);
     }
-
-    collapsedChanged(newValue: boolean, oldValue: boolean) {
-        if (oldValue != undefined) {
-            newValue ? LocalStorage.set(Sidebar.COLLAPSED_SIDEBAR_KEY, newValue)
-                : LocalStorage.remove(Sidebar.COLLAPSED_SIDEBAR_KEY);
-        }
-    }
+  }
 }

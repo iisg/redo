@@ -1,6 +1,6 @@
 import {DateMode, FlexibleDateContent} from "./flexible-date-config";
 import {values} from "lodash";
-import {ComponentAttached, bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {twoWay} from "common/components/binding-mode";
 
 export class FlexibleDateInput implements ComponentAttached {

@@ -1,4 +1,4 @@
-import {ConfiguresRouter, RouterConfiguration, Router} from "aurelia-router";
+import {ConfiguresRouter, Router, RouterConfiguration} from "aurelia-router";
 import {inlineView} from "aurelia-templating";
 
 @inlineView("<template><router-view></router-view></template>")

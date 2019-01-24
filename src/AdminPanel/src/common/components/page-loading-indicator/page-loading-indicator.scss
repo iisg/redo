@@ -5,18 +5,18 @@ $spinner-default-height: 18px;
 $spinner-margin-size: 5px;
 
 page-loading-indicator {
-    pointer-events: none;
+  pointer-events: none;
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: $spinner-margin-size + $spinner-default-height;
+  &.nprogress-custom-parent {
     position: absolute;
-    display: block;
-    width: 100%;
-    height: $spinner-margin-size + $spinner-default-height;
-    &.nprogress-custom-parent {
-        position: absolute;
+  }
+  #nprogress {
+    display: inherit;
+    .bar {
+      background: $color;
     }
-    #nprogress {
-        display: inherit;
-        .bar {
-            background: $color;
-        }
-    }
+  }
 }

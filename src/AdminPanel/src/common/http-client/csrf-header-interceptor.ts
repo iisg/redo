@@ -1,4 +1,4 @@
-import {Interceptor, HttpResponseMessage, RequestMessage} from "aurelia-http-client";
+import {HttpResponseMessage, Interceptor, RequestMessage} from "aurelia-http-client";
 
 export class CsrfHeaderInterceptor implements Interceptor {
   private static readonly TOKEN_HEADER = 'X-CSRF-Token';

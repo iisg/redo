@@ -1,17 +1,17 @@
 throbber {
-    & > svg {
-        stroke: currentColor;
-        @keyframes Rotate {
-            0% {
-                transform: rotate(0);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        animation: linear Rotate 1s infinite;
+  & > svg {
+    stroke: currentColor;
+    @keyframes Rotate {
+      0% {
+        transform: rotate(0);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
-    &.icon > svg {
-        fill: none;
-    }
+    animation: linear Rotate 1s infinite;
+  }
+  &.icon > svg {
+    fill: none;
+  }
 }

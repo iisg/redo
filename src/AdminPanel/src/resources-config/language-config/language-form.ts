@@ -10,7 +10,7 @@ import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-los
 
 @autoinject
 export class LanguageForm extends ChangeLossPreventerForm implements ComponentAttached {
-  @bindable submit: (value: {savedLanguage: Language}) => Promise<any>;
+  @bindable submit: (value: { savedLanguage: Language }) => Promise<any>;
   @bindable cancel: VoidFunction = noop;
   @bindable edit: Language;
 

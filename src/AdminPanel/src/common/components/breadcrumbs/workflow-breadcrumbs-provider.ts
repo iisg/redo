@@ -11,7 +11,7 @@ export class WorkflowBreadcrumbsProvider implements BreadcrumbsProvider {
   constructor(private workflowRepository: WorkflowRepository,
               private i18n: I18N,
               private inCurrentLanguage: InCurrentLanguageValueConverter,
-              private resourceClassTranslationValueConverter: ResourceClassTranslationValueConverter ) {
+              private resourceClassTranslationValueConverter: ResourceClassTranslationValueConverter) {
   }
 
   async getBreadcrumbs(navigationInstruction: NavigationInstruction): Promise<BreadcrumbItem[]> {
@@ -19,8 +19,7 @@ export class WorkflowBreadcrumbsProvider implements BreadcrumbsProvider {
     const breadcrumbs: BreadcrumbItem[] = [];
     if (resourceClass) {
       breadcrumbs.push({label: this.resourceClassTranslationValueConverter.toView('New workflow', resourceClass)});
-    }
-    else {
+    } else {
       const workflow = await this.workflowRepository.get(navigationInstruction.params.id);
       resourceClass = workflow.resourceClass;
       breadcrumbs.push({label: this.inCurrentLanguage.toView(workflow.name)});

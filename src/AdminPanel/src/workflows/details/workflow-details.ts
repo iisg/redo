@@ -3,7 +3,6 @@ import {I18N} from "aurelia-i18n";
 import {NavModel, RoutableComponentActivate, RouteConfig, Router} from "aurelia-router";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
-import {EntitySerializer} from "common/dto/entity-serializer";
 import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
 import {ContextResourceClass} from "resources/context/context-resource-class";
 import {cachedResponseRegistry} from "../../common/repository/cached-response";

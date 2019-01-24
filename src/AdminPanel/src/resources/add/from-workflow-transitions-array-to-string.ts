@@ -4,7 +4,7 @@ import {WorkflowTransition} from "workflows/workflow";
 
 @autoinject
 export class FromWorkflowTransitionsArrayToStringValueConverter implements ToViewValueConverter {
-  constructor (private inCurrentLanguage: InCurrentLanguageValueConverter) {
+  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter) {
   }
 
   toView(workflowTransitions: WorkflowTransition[]): string {

@@ -113,8 +113,7 @@ export class WorkflowGraph {
                 this.isProcessingWorkflowPlaceRemoval = false;
                 if (resources.total === 0) {
                   this.cytoscape.remove(element);
-                }
-                else {
+                } else {
                   const resourceCount = resources.total;
                   this.workflowPlaceDeletionAlert
                     .showWorkflowPlaceDeletionAlert(resourceCount, resources.slice(0, Math.min(3, resourceCount)));

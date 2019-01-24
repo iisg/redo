@@ -3,8 +3,8 @@ import {bindable, inlineView} from "aurelia-templating";
 
 @inlineView('<template bootstrap-tooltip="${translatedTooltipText}">*</template>')
 export class RequiredFieldIndicator {
-    @bindable translatedTooltipText = this.i18n.tr('Value is required');
+  @bindable translatedTooltipText = this.i18n.tr('Value is required');
 
-    constructor(private i18n: I18N) {
-    }
+  constructor(private i18n: I18N) {
+  }
 }

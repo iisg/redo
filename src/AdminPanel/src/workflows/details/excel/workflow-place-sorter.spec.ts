@@ -11,7 +11,7 @@ describe('workflow-place-sorter', () => {
       return {id: `_${from}_`, label: {}, froms: [from], tos};
     });
     const id: number = Math.floor(Math.random() * 10000);
-    return $.extend(new Workflow(), { id, name: {}, enabled: true, places: placeObjects, transitions: transitionObjects});
+    return $.extend(new Workflow(), {id, name: {}, enabled: true, places: placeObjects, transitions: transitionObjects});
   }
 
   let sorter: WorkflowPlaceSorter;

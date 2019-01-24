@@ -1,14 +1,14 @@
 @import "../../../common/styles";
 
 workflow-plugins-configuration {
-    .plugin-name-container {
-        display: flex;
-        & > span {
-            font-size: $subtitle-font-size;
-        }
-        remove-button {
-            justify-self: flex-end;
-            margin-left: $default-gap-size / 2;
-        }
+  .plugin-name-container {
+    display: flex;
+    & > span {
+      font-size: $subtitle-font-size;
     }
+    remove-button {
+      justify-self: flex-end;
+      margin-left: $default-gap-size / 2;
+    }
+  }
 }

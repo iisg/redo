@@ -127,8 +127,7 @@ export class ResourcesList {
     let resultsPerPage: number;
     if (parameters.resourcesPerPage > 0) {
       resultsPerPage = parseInt(parameters.resourcesPerPage);
-    }
-    else {
+    } else {
       resultsPerPage = LocalStorage.get(this.RESULTS_PER_PAGE_KEY);
       if (!resultsPerPage) {
         resultsPerPage = this.RESULTS_PER_PAGE_DEFAULT_VALUE;

@@ -12,7 +12,7 @@ import {noop} from "common/utils/function-utils";
 export function booleanAttribute(prototype: any, propertyName: string) {
   const methodName = propertyName + 'Changed';
   const originalMethod: ChangeHandler<boolean> = prototype[methodName] || noop;
-  prototype[methodName] = function booleanAttributeChanged(newValue: boolean|'', oldValue: boolean) {
+  prototype[methodName] = function booleanAttributeChanged(newValue: boolean | '', oldValue: boolean) {
     // 1. If developer's original change handler doesn't expect any arguments, they may want to call it without them. (see tests)
     //    If that's the case, we don't want to accidentally set value to false.
     // 2. We also want to avoid updating value if developer calls change handler manually with a non-current value.
@@ -24,7 +24,7 @@ export function booleanAttribute(prototype: any, propertyName: string) {
   };
 }
 
-function normalizeToBoolean(value: boolean|''): boolean {
+function normalizeToBoolean(value: boolean | ''): boolean {
   return (value === '') ? true : !!value;
 }
 

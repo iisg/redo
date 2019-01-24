@@ -16,7 +16,7 @@ export class Tasks implements ComponentAttached {
   }
 
   attached() {
-    this.taskFinder.getList().then(async(tasksCollection) => {
+    this.taskFinder.getList().then(async (tasksCollection) => {
       this.tasksCollection = tasksCollection;
       for (let tasks of tasksCollection) {
         this.briefMetadata[tasks.resourceClass] = getMergedBriefMetadata(

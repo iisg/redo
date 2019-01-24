@@ -1,5 +1,5 @@
 import {inlineView} from "aurelia-templating";
-import {ConfiguresRouter, RouterConfiguration, Router} from "aurelia-router";
+import {ConfiguresRouter, Router, RouterConfiguration} from "aurelia-router";
 
 @inlineView("<template><router-view></router-view></template>")
 export class MetadataView implements ConfiguresRouter {

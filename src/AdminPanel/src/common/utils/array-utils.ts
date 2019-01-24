@@ -28,7 +28,7 @@ export function removeValue<T>(array: T[], value: T): void {
 }
 
 // http://stackoverflow.com/a/10865042/878514
-export function flatten<T>(arrayOfArrays: Array<T|T[]>): T[] {
+export function flatten<T>(arrayOfArrays: Array<T | T[]>): T[] {
   return [].concat.apply([], arrayOfArrays);
 }
 

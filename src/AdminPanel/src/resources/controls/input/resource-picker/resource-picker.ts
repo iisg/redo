@@ -1,6 +1,6 @@
 import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
-import {observable, BindingEngine, Disposable} from "aurelia-binding";
+import {BindingEngine, Disposable, observable} from "aurelia-binding";
 import {twoWay} from "common/components/binding-mode";
 import {SystemMetadata} from 'resources-config/metadata/system-metadata';
 import {MetadataValue} from './../../../metadata-value';
@@ -10,7 +10,7 @@ import {Resource} from "resources/resource";
 import {ResourceLabelValueConverter} from "./../../../details/resource-label-value-converter";
 import {deepCopy, isObject} from "../../../../common/utils/object-utils";
 import {LoadSubtreeRequest, TreeItem} from "common/components/tree-view/tree-view";
-import {remove, debounce} from "lodash";
+import {debounce, remove} from "lodash";
 import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
 import {ChangeEvent} from "common/change-event";
@@ -133,7 +133,7 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
 
   private treeify(resources: Resource[], rootId?: number): TreeItem[] {
     const firstLevelItems: TreeItem[] = [];
-    const lookup: {[id: string]: TreeItem} = {};
+    const lookup: { [id: string]: TreeItem } = {};
 
     for (const resource of resources) {
       const parentId = this.getParentId(resource);
@@ -222,7 +222,7 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
     });
   }
 
-  private getParentId(resource: Resource): number|undefined {
+  private getParentId(resource: Resource): number | undefined {
     const parentMetadata = resource.contents[SystemMetadata.PARENT.id];
     return parentMetadata && parentMetadata[0] && parentMetadata[0].value || undefined;
   }

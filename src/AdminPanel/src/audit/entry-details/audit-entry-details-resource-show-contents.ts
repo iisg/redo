@@ -18,6 +18,7 @@ export class AuditEntryDetailsResourceShowContents {
   async attached() {
     this.resource = this.setResource(this.entry.data[this.dataKey].resource);
   }
+
   showResourceContentsDialog() {
     this.modal.open(AuditEntryDetailsResourceContentsModal, {
       resource: this.resource,

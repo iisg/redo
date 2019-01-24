@@ -4,10 +4,10 @@ import {bindable} from "aurelia-templating";
 
 @autoinject
 export class ErrorPage {
-    @bindable title: string;
-    @bindable subtitle: string;
-    @bindable message: string;
+  @bindable title: string;
+  @bindable subtitle: string;
+  @bindable message: string;
 
-    constructor(private router: Router) {
-    }
+  constructor(private router: Router) {
+  }
 }

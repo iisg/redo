@@ -8,6 +8,7 @@ export class RegexConstraintValidator extends SingleValueConstraintValidator {
   validatedConstraintName(): string {
     return 'regex';
   }
+
   constructor(private backendValidation: BackendValidation, private i18n: I18N) {
     super();
   }

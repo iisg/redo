@@ -10,7 +10,7 @@ import {removeValue} from 'common/utils/array-utils';
 @autoinject
 export class TreeView implements ComponentAttached {
   @bindable(twoWay) selectedKeys: string[];
-  @bindable loadSubtree: ((obj: {request: LoadSubtreeRequest}) => Promise<TreeItem>);
+  @bindable loadSubtree: ((obj: { request: LoadSubtreeRequest }) => Promise<TreeItem>);
 
   tree: Element;
   searchValue: string = '';
@@ -77,7 +77,7 @@ export class TreeView implements ComponentAttached {
     };
   }
 
-  searchKeys(rootKey: string|undefined) {
+  searchKeys(rootKey: string | undefined) {
     this.searchPending = true;
     this.lastSearchedValue = this.searchValue;
     const request: LoadSubtreeRequest = {rootKey, pagination: {page: 1}, term: this.lastSearchedValue};
@@ -139,7 +139,7 @@ export class TreeView implements ComponentAttached {
       .then(({placeholderNode, subtree}) => {
         parentNode.removeChild(placeholderNode);
         parentNode.addChildren(subtree.children as Fancytree.NodeData[]);
-    });
+      });
   }
 
   private processItemsRecursive(item: TreeItem & Fancytree.NodeData) {
@@ -225,7 +225,7 @@ export interface TreeItem {
   title: string;
   key: string;
   children?: TreeItem[];
-  childrenPagination?: {page: number, more: boolean};
+  childrenPagination?: { page: number, more: boolean };
   lazy?: boolean;
   expanded?: boolean;
   selectable?: boolean;
@@ -234,6 +234,6 @@ export interface TreeItem {
 
 export interface LoadSubtreeRequest {
   rootKey?: string;
-  pagination: {page: number};
+  pagination: { page: number };
   term?: string;
 }

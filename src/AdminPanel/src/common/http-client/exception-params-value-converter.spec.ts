@@ -48,8 +48,8 @@ describe(ExceptionParamsValueConverter.name, () => {
       {
         name: 'stringifies object',
         params: {
-          object: { abc: 'def' },
-          nestedObject: { abc: { def: 'ghi' } }
+          object: {abc: 'def'},
+          nestedObject: {abc: {def: 'ghi'}}
         },
         expected: {
           object: '{"abc":"def"}',
@@ -59,7 +59,7 @@ describe(ExceptionParamsValueConverter.name, () => {
       {
         name: 'translates label and applies backticks',
         params: {
-          sth: { label: { PL: 'polish', EN: 'english' } }
+          sth: {label: {PL: 'polish', EN: 'english'}}
         },
         expected: {
           sth: '`polish`'
@@ -69,12 +69,12 @@ describe(ExceptionParamsValueConverter.name, () => {
         name: 'translates labels deep in structure',
         params: {
           array: [
-            { label: { PL: 'pl_1', EN: 'en_1' }, },
-            { label: { PL: 'pl_2', EN: 'en_2' }, },
+            {label: {PL: 'pl_1', EN: 'en_1'}},
+            {label: {PL: 'pl_2', EN: 'en_2'}},
           ],
           object: {
-            abc: { label: { PL: 'pl_1', EN: 'en_1' }, },
-            def: { label: { PL: 'pl_2', EN: 'en_2' }, },
+            abc: {label: {PL: 'pl_1', EN: 'en_1'}},
+            def: {label: {PL: 'pl_2', EN: 'en_2'}},
           }
         },
         expected: {
@@ -85,7 +85,7 @@ describe(ExceptionParamsValueConverter.name, () => {
       {
         name: 'does not translate top-level label',
         params: {
-          label: { PL: 'pl', EN: 'en' }
+          label: {PL: 'pl', EN: 'en'}
         },
         expected: {
           label: '{"PL":"pl","EN":"en"}'
@@ -100,8 +100,8 @@ describe(ExceptionParamsValueConverter.name, () => {
 
   it('does not change given object', () => {
     const params = {
-      array: ['abc', {label: { PL: 'pl_1', EN: 'en_1' }}],
-      object: {abc: 'def', ghi: {label: { PL: 'pl_1', EN: 'en_1' }}}
+      array: ['abc', {label: {PL: 'pl_1', EN: 'en_1'}}],
+      object: {abc: 'def', ghi: {label: {PL: 'pl_1', EN: 'en_1'}}}
     };
     const paramsCopy = deepCopy(params);
     converter.toView(params);

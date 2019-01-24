@@ -17,7 +17,7 @@ export class ResourceKindRepository extends ApiRepository<ResourceKind> {
   }
 
   @cachedResponse(forSeconds(30))
-  public get(id: number|string, suppressError?: boolean): Promise<ResourceKind> {
+  public get(id: number | string, suppressError?: boolean): Promise<ResourceKind> {
     return super.get(id, suppressError);
   }
 }

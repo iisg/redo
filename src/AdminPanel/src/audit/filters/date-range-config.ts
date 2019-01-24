@@ -11,7 +11,7 @@ export enum DateRangeMode {
   PREVIOUS_MONTH = 'previous_month',
   PREVIOUS_TWO_MONTHS = 'previous_two_months',
   CURRENT_YEAR = 'current_year',
-  LAST_365_DAYS= 'last_365_days',
+  LAST_365_DAYS = 'last_365_days',
   PREVIOUS_YEAR = 'previous_year',
 }
 

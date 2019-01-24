@@ -7,6 +7,7 @@ export class MinCountConstraintValidator extends MetadataArrayConstraintValidato
   validatedConstraintName(): string {
     return 'minCount';
   }
+
   constructor(private i18n: I18N) {
     super();
   }

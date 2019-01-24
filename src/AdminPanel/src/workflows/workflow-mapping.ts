@@ -1,6 +1,6 @@
 import {MultilingualText} from "resources-config/metadata/metadata";
 import {RequirementState, RestrictingMetadataIdMap} from "./workflow";
-import {numberKeysByValue, deepCopy} from "common/utils/object-utils";
+import {deepCopy, numberKeysByValue} from "common/utils/object-utils";
 import {AdvancedMapper} from "common/dto/mappers";
 
 export class RestrictingMetadataMapper extends AdvancedMapper<RestrictingMetadataIdMap> {

@@ -8,6 +8,7 @@ export class MinMaxValueConstraintValidator extends SingleValueConstraintValidat
   validatedConstraintName(): string {
     return 'minMaxValue';
   }
+
   constructor(private i18n: I18N) {
     super();
   }
@@ -20,11 +21,9 @@ export class MinMaxValueConstraintValidator extends SingleValueConstraintValidat
   getErrorMessage(minMaxValue): string {
     if (minMaxValue.min != undefined && minMaxValue.max == undefined) {
       return this.i18n.tr("metadata_constraints::Value must be at least {{minMaxValue.min}}", {minMaxValue});
-    }
-    else if (minMaxValue.min == undefined && minMaxValue.max != undefined) {
+    } else if (minMaxValue.min == undefined && minMaxValue.max != undefined) {
       return this.i18n.tr("metadata_constraints::Value must be at most {{minMaxValue.max}}", {minMaxValue});
-    }
-    else {
+    } else {
       return this.i18n.tr("metadata_constraints::Value must be between {{minMaxValue.min}} and {{minMaxValue.max}}", {minMaxValue});
     }
   }

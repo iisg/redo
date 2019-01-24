@@ -7,7 +7,7 @@ import {Mapper} from "./mappers";
 
 export interface Class<T> {
   // noinspection JSUnusedLocalSymbols
-  new (...args): T;
+  new(...args): T;
 }
 
 export interface EntityClass<T> extends Class<T> {

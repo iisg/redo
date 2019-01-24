@@ -5,9 +5,9 @@ import {I18nParams} from "config/i18n";
 @inlineView('<template>${applicationName}</template>')
 @autoinject
 export class ApplicationName {
-    applicationName: string;
+  applicationName: string;
 
-    constructor(i18nParams: I18nParams) {
-        this.applicationName = i18nParams.applicationName;
-    }
+  constructor(i18nParams: I18nParams) {
+    this.applicationName = i18nParams.applicationName;
+  }
 }
