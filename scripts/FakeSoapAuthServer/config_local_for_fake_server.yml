@@ -6,4 +6,3 @@ repeka:
       location: http://localhost/
       login: pk
       password: qwerty
-    local_accounts_enabled: true

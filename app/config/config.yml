@@ -17,17 +17,6 @@ repeka:
       en: english
       de: german
 
-  pk_auth:
-    wsdl: ~
-    options:
-      uri: pk_soap
-      location: http://localhost/
-      login: pk
-      password: qwerty
-    local_accounts_enabled: true
-
-  user_data_mapping: '%kernel.root_dir%/../var/config/user_data_mapping.json'
-
   upload_dirs:
     - id: resourceFiles
       label: Pliki zasobu
