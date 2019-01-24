@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Application\Authentication\TokenAuthenticator;
+namespace Repeka\Application\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -11,16 +11,13 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class LocalDatabaseAuthenticator extends TokenAuthenticator {
     /** @var UserPasswordEncoderInterface */
     private $passwordEncoder;
-    /** @var bool */
-    private $localAccountsEnabled;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, bool $localAccountsEnabled) {
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder) {
         $this->passwordEncoder = $passwordEncoder;
-        $this->localAccountsEnabled = $localAccountsEnabled;
     }
 
     public function canAuthenticate(TokenInterface $token): bool {
-        return $this->localAccountsEnabled;
+        return true;
     }
 
     public function authenticate(TokenInterface $token, UserProviderInterface $userProvider): string {

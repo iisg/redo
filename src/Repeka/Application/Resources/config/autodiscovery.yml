@@ -37,9 +37,6 @@ services:
   Repeka\Application\Twig\:
     resource: '../../Twig'
 
-  Repeka\Application\MetadataImport\:
-    resource: '../../MetadataImport'
-
   Repeka\Domain\:
     resource: '../../../Domain'
     exclude: '../../../Domain/Entity'

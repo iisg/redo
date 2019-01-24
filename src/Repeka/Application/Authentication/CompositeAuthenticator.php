@@ -1,8 +1,6 @@
 <?php
 namespace Repeka\Application\Authentication;
 
-use Repeka\Application\Authentication\TokenAuthenticator\ExternalServiceAuthenticator;
-use Repeka\Application\Authentication\TokenAuthenticator\LocalDatabaseAuthenticator;
 use Repeka\Application\Authentication\TokenAuthenticator\TokenAuthenticator;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
@@ -18,20 +16,16 @@ use Symfony\Component\Security\Http\Authentication\SimpleFormAuthenticatorInterf
 /**
  * @see https://symfony.com/doc/current/security/custom_password_authenticator.html#how-it-works
  */
-class PKAuthenticator implements SimpleFormAuthenticatorInterface {
+class CompositeAuthenticator implements SimpleFormAuthenticatorInterface {
     use CommandBusAware;
 
-    /** @var TokenAuthenticator[] */
+    /** @var TokenAuthenticator[]|iterable */
     private $authenticators;
     /** @var UserLoaderInterface */
     private $userLoader;
 
-    public function __construct(
-        ExternalServiceAuthenticator $externalServiceAuthenticator,
-        LocalDatabaseAuthenticator $localDatabaseAuthenticator,
-        UserLoaderInterface $useLoader
-    ) {
-        $this->authenticators = [$externalServiceAuthenticator, $localDatabaseAuthenticator];
+    public function __construct(iterable $authenticators, UserLoaderInterface $useLoader) {
+        $this->authenticators = $authenticators;
         $this->userLoader = $useLoader;
     }
 

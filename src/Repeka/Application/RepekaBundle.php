@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application;
 
+use Repeka\Application\Authentication\TokenAuthenticator;
 use Repeka\Application\Command\Cyclic\CyclicCommand;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
 use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
@@ -12,5 +13,6 @@ class RepekaBundle extends Bundle {
         $container->registerForAutoconfiguration(ResourceWorkflowPlugin::class)->addTag('repeka.workflow_plugin');
         $container->registerForAutoconfiguration(CommandEventsListener::class)->addTag('repeka.command_events_listener');
         $container->registerForAutoconfiguration(CyclicCommand::class)->addTag('repeka.cyclic_command');
+        $container->registerForAutoconfiguration(TokenAuthenticator::class)->addTag('repeka.token_authenticator');
     }
 }

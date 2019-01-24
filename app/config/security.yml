@@ -17,7 +17,7 @@ security:
       anonymous: true
       logout_on_user_change: true
       simple_form:
-        authenticator: Repeka\Application\Authentication\PKAuthenticator
+        authenticator: Repeka\Application\Authentication\CompositeAuthenticator
         login_path: login
         check_path: login
         csrf_token_generator: security.csrf.token_manager

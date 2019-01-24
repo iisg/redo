@@ -3,11 +3,20 @@ namespace Repeka\Application\Command\Initialization;
 
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InitializeApplicationCommand extends ContainerAwareCommand {
+    /** @var iterable|Command[] */
+    private $initializationCommands;
+
+    public function __construct(iterable $initializationCommands) {
+        parent::__construct();
+        $this->initializationCommands = $initializationCommands;
+    }
+
     protected function configure() {
         $this
             ->setName('repeka:initialize')
@@ -29,11 +38,9 @@ class InitializeApplicationCommand extends ContainerAwareCommand {
         }
         FirewallMiddleware::bypass(
             function () use ($output) {
-                $this->getApplication()->run(new StringInput('repeka:initialize:system-languages'), $output);
-                $this->getApplication()->run(new StringInput('repeka:initialize:system-metadata'), $output);
-                $this->getApplication()->run(new StringInput('repeka:initialize:system-resource-kinds'), $output);
-                $this->getApplication()->run(new StringInput('repeka:initialize:user-metadata'), $output);
-                $this->getApplication()->run(new StringInput('repeka:grant-user-roles'), $output);
+                foreach ($this->initializationCommands as $initializationCommand) {
+                    $this->getApplication()->run(new StringInput($initializationCommand->getName()), $output);
+                }
             }
         );
     }

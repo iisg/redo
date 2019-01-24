@@ -1,0 +1,17 @@
+parameters:
+  secret: soo_secret
+  applicationName: repeka
+doctrine:
+  dbal:
+    password: CHANGE_ME_BEFORE_FIRST_LAUNCH
+repeka:
+  application_url: http://repeka.local
+  resource_classes:
+    - name: users
+      icon: user
+      admins:
+        - Username: admin
+  metadata_groups:
+    - id: basic
+      label:
+        PL: Podstawowe metadane

@@ -41,16 +41,6 @@ repeka:
       label:
         EN: Metadata used in CMS
         PL: Metadane używane w CMS
-  pk_auth:
-    wsdl: ~
-    options:
-      uri: pk_soap
-      location: http://localhost/
-      login: pk
-      password: qwerty
-    local_accounts_enabled: true
-  xml_import:
-    koha: 'http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode='
   templating:
     templates_resource_class: cms
     templates:
