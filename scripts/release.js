@@ -113,7 +113,7 @@ function copySingleRequiredFiles() {
   [
     'src/.htaccess',
     'var/.htaccess',
-    'var/config/config_local.yml.sample',
+    'var/config/sample-configs/config_local.redo.yml',
     'var/config/docker.env.sample',
     'var/config/user_data_mapping.json.sample',
     'var/volumes/initialize-directory-structure.sh',
