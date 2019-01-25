@@ -1,23 +1,32 @@
 parameters:
+  applicationName: REDO
   secret: soo_secret
-  applicationName: repeka
 doctrine:
   dbal:
-    password: CHANGE_ME_BEFORE_FIRST_LAUNCH
+    password: THIS_IS_THE_DB_PASSWORD_TO_BE_REPLACED_DURING_BUILD
 repeka:
-  application_url: http://repeka.local
   resource_classes:
     - name: books
       icon: publish-4
       admins:
         - Username: admin
+        - Group member: 82
+        - Group member: 357
+      operators:
+        - Group member: 358
+        - Username: operator.*
     - name: dictionaries
       icon: dictionary
       admins:
         - Username: admin
+        - Group member: 82
+      operators:
+        - Username: operator.*
     - name: users
       icon: user
       admins:
+        - Username: admin
+      operators:
         - Username: admin
     - name: cms
       icon: html
@@ -33,8 +42,10 @@ repeka:
         EN: Metadata used in CMS
         PL: Metadane używane w CMS
   pk_auth:
-    wsdl: http://soap.biblos.pk.edu.pl/soap.php?WSDL
+    wsdl: ~
     options:
+      uri: pk_soap
+      location: http://localhost/
       login: pk
       password: qwerty
     local_accounts_enabled: true
@@ -43,31 +54,33 @@ repeka:
   templating:
     templates_resource_class: cms
     templates:
+      homepage: redo/home/home.twig
       login_form: redo/login-form.twig
-      error_page: redo/error-page.twig
+  #      error_page: redo/error-page.twig
   expose_endpoints:
     /:
       template: redo/home/home.twig
       fts:
-        searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
-        filterable_metadata_ids: [tytul, opis, parent, wydzial, skanista, nadzorujacy]
+        searchable_metadata_ids: [-5, tytul, autor, opis, wydzial, barkod, zasob_plik]
+        filterable_metadata_ids: [parent, tytul, autor, opis, wydzial, barkod]
         searchable_resource_classes: [books]
-        facets: [kindId, skanista]
+        facets: [kindId]
+    /about:
+      metadata: imported_file_template
+      resourceId: 1978
     /resources/{resourceId}:
       template: redo/resource-details/resource-details.twig
+    /static/{resourceId}:
+      metadata: imported_file_template
     /search:
       template: redo/search/search-results-page.twig
       fts:
-        searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
-        filterable_metadata_ids: [tytul, opis, parent, wydzial, skanista, nadzorujacy]
+        searchable_metadata_ids: [-5, tytul, autor, opis, wydzial, barkod, zasob_plik]
+        filterable_metadata_ids: [parent, tytul, autor, opis, wydzial, barkod]
         searchable_resource_classes: [books]
-        facets: [kindId, skanista]
+        facets: [kindId]
     /resources/{resourceId}/bibtex:
       template: bibtex/bibtex.twig
-      headers:
-        Content-Type: 'text/plain'
-    /resources/{resourceId}/endnote:
-      template: endnote/endnote.twig
       headers:
         Content-Type: 'text/plain'
     /resources/{resourceId}/rss:
@@ -77,4 +90,4 @@ repeka:
     /deposit/{phase}:
       template: redo/deposit.twig
       deposit:
-        relationship_resource_kind_ids: [1, 2]
+        relationship_resource_kind_ids: [1, 2, -1, 7, 48]
