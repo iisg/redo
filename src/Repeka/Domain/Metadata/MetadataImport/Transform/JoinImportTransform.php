@@ -2,7 +2,7 @@
 namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 
 class JoinImportTransform extends AbstractImportTransform {
-    public function apply(array $values, array $config, array $dataBeingImported): array {
+    public function apply(array $values, array $config, array $dataBeingImported, string $parentMetadataValue = null): array {
         $glue = $config['glue'] ?? ', ';
         if (count($values) == count(array_filter($values, 'is_string'))) {
             return [implode($glue, $values)];

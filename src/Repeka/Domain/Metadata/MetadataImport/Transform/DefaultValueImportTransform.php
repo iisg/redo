@@ -4,7 +4,7 @@ namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 use Assert\Assertion;
 
 class DefaultValueImportTransform extends AbstractImportTransform {
-    public function apply(array $values, array $config, array $dataBeingImported): array {
+    public function apply(array $values, array $config, array $dataBeingImported, string $parentMetadataValue = null): array {
         Assertion::keyExists($config, 'value');
         $defaultValue = $config['value'];
         $override = $config['override'] ?? false;

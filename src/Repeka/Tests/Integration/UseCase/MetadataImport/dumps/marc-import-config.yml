@@ -72,7 +72,7 @@ mappings:
     - key: '100'
       transforms:
         - name: 'displayStrategy'
-          splitter: '###'
+          separator: '###'
           template: >-
             {% for value in values %}
               {% if value['e'] is not defined or 'Autor' in value['e'] %}
@@ -82,6 +82,7 @@ mappings:
                 {% else %}
                   {{autor|trim('.')}}
                 {% endif%}
+                {{ separator }}
               {% endif %}
             {% endfor %}
         - name: 'trim'
@@ -89,9 +90,19 @@ mappings:
       submetadata:
         147:
           transforms:
-            - name: 'arrayColumn'
-              keys: 'd'
-            - name: 'flatten'
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set autor = value['a'][0] %}
+                  {% if parentMetadataValue in autor %}
+                    {% for dates in value['d']%}
+                      {{ dates }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
             - name: trim
               characters: ' .'
             - name: trim
@@ -99,27 +110,43 @@ mappings:
           submetadata:
             original_value_biographical_dates_author:
               transforms:
-                - name: 'arrayColumn'
-                  keys: 'd'
-                - name: 'flatten'
+                - name: 'displayStrategy'
+                  template: '{{ parentMetadataValue}}'
                 - name: trim
-                  characters: ' .'
-                - name: trim
-                  characters: '()'
         179:
           transforms:
-            - name: 'arrayColumn'
-              keys: '9'
-            - name: 'flatten'
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set autor = value['a'][0] %}
+                  {% if parentMetadataValue in autor %}
+                    {% for singleValue in value['9']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
         180:
           transforms:
-            - name: 'arrayColumn'
-              keys: '0'
-            - name: 'flatten'
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set autor = value['a'][0] %}
+                  {% if parentMetadataValue in autor %}
+                    {% for singleValue in value['0']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
     - key: '700'
       transforms:
         - name: 'displayStrategy'
-          splitter: '###'
+          separator: '###'
           template: >-
             {% for value in values %}
               {% if value['e'] is not defined or 'Autor' in value['e'] %}
@@ -129,6 +156,7 @@ mappings:
                 {% else %}
                   {{autor|trim('.')}}
                 {% endif%}
+                {{ separator }}
               {% endif %}
             {% endfor %}
         - name: 'trim'
@@ -136,9 +164,19 @@ mappings:
       submetadata:
         147:
           transforms:
-            - name: 'arrayColumn'
-              keys: 'd'
-            - name: 'flatten'
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set autor = value['a'][0] %}
+                  {% if parentMetadataValue in autor %}
+                    {% for dates in value['d']%}
+                      {{ dates }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
             - name: trim
               characters: ' .'
             - name: trim
@@ -146,23 +184,39 @@ mappings:
           submetadata:
             original_value_biographical_dates_author:
               transforms:
-                - name: 'arrayColumn'
-                  keys: 'd'
-                - name: 'flatten'
+                - name: 'displayStrategy'
+                  template: '{{ parentMetadataValue}}'
                 - name: trim
-                  characters: ' .'
-                - name: trim
-                  characters: '()'
         179:
           transforms:
-            - name: 'arrayColumn'
-              keys: '9'
-            - name: 'flatten'
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set autor = value['a'][0] %}
+                  {% if parentMetadataValue in autor %}
+                    {% for singleValue in value['9']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
         180:
           transforms:
-            - name: 'arrayColumn'
-              keys: '0'
-            - name: 'flatten'
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set autor = value['a'][0] %}
+                  {% if parentMetadataValue in autor %}
+                    {% for singleValue in value['0']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
   63:
     - key: '100'
       transforms:
@@ -194,26 +248,21 @@ mappings:
         - name: 'trim'
         - name: 'removeEmpty'
       submetadata:
-        176:
+        182:
           transforms:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% set values = values[0] %}
-                {% if values['e'] is defined %}
-                  {% for person in values['e'] %}
-                    {% if person != 'Autor' %}
-                      {{ person }}{{ separator }}
-                    {% endif %}
-                  {% endfor %}
-                {% endif %}
-            - name: 'trim'
-            - name: 'removeEmpty'
-        182:
-          transforms:
-            - name: 'arrayColumn'
-              keys: 'd'
-            - name: 'flatten'
+                {% for value in values %}
+                  {% set coautor = value['a'][0] %}
+                  {% if parentMetadataValue in coautor %}
+                    {% for dates in value['d']%}
+                      {{ dates }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
             - name: trim
               characters: ' .'
             - name: trim
@@ -221,23 +270,54 @@ mappings:
           submetadata:
             original_value_biographical_dates_coauthor:
               transforms:
-                - name: 'arrayColumn'
-                  keys: 'd'
-                - name: 'flatten'
+                - name: 'displayStrategy'
+                  template: '{{ parentMetadataValue}}'
                 - name: trim
-                  characters: ' .'
-                - name: trim
-                  characters: '()'
-        187: #koha id
+        187:
           transforms:
-            - name: 'arrayColumn'
-              keys: '9'
-            - name: 'flatten'
-        188: #nukat id
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set coautor = value['a'][0] %}
+                  {% if parentMetadataValue in coautor %}
+                    {% for singleValue in value['9']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
+        188:
           transforms:
-            - name: 'arrayColumn'
-              keys: '0'
-            - name: 'flatten'
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set coautor = value['a'][0] %}
+                  {% if parentMetadataValue in coautor %}
+                    {% for singleValue in value['0']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
+        176:
+          transforms:
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set coautor = value['a'][0] %}
+                  {% if parentMetadataValue in coautor %}
+                    {% for singleValue in value['e']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
     - key: '110'
       transforms:
         - name: 'arrayColumn'
@@ -260,7 +340,7 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% set values = values[0] %}
+                {% set values = values %}
                 {% if values['e'] is defined %}
                   {% for person in values['e'] %}
                     {{ person }}{{ separator }}
@@ -298,26 +378,21 @@ mappings:
         - name: 'trim'
         - name: 'removeEmpty'
       submetadata:
-        176:
+        182:
           transforms:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% set values = values[0] %}
-                {% if values['e'] is defined %}
-                  {% for person in values['e'] %}
-                    {% if person != 'Autor' %}
-                      {{ person }}{{ separator }}
-                    {% endif %}
-                  {% endfor %}
-                {% endif %}
-            - name: 'trim'
-            - name: 'removeEmpty'
-        182:
-          transforms:
-            - name: 'arrayColumn'
-              keys: 'd'
-            - name: 'flatten'
+                {% for value in values %}
+                  {% set coautor = value['a'][0] %}
+                  {% if parentMetadataValue in coautor  %}
+                    {% for dates in value['d']%}
+                      {{ dates }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
             - name: trim
               characters: ' .'
             - name: trim
@@ -325,23 +400,54 @@ mappings:
           submetadata:
             original_value_biographical_dates_coauthor:
               transforms:
-                - name: 'arrayColumn'
-                  keys: 'd'
-                - name: 'flatten'
+                - name: 'displayStrategy'
+                  template: '{{ parentMetadataValue}}'
                 - name: trim
-                  characters: ' .'
-                - name: trim
-                  characters: '()'
-        187: #koha id
+        187:
           transforms:
-            - name: 'arrayColumn'
-              keys: '9'
-            - name: 'flatten'
-        188: #nukat id
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set coautor = value['a'][0] %}
+                  {% if parentMetadataValue in coautor %}
+                    {% for singleValue in value['9']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
+        188:
           transforms:
-            - name: 'arrayColumn'
-              keys: '0'
-            - name: 'flatten'
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set coautor = value['a'][0] %}
+                  {% if parentMetadataValue in coautor %}
+                    {% for singleValue in value['0']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
+        176:
+          transforms:
+            - name: 'displayStrategy'
+              separator: '###'
+              template: >-
+                {% for value in values %}
+                  {% set coautor = value['a'][0] %}
+                  {% if parentMetadataValue in coautor %}
+                    {% for singleValue in value['e']%}
+                      {{ singleValue }}{{ separator }}
+                    {% endfor %}
+                  {% endif%}
+                {% endfor %}
+            - name: trim
+            - name: removeEmpty
   3:
     key: '245'
     transforms:
@@ -455,13 +561,8 @@ mappings:
     submetadata:
       original_value_publish_date:
         transforms:
-          - name: 'arrayColumn'
-            keys: 'c'
-          - name: 'flatten'
-          - name: trim
-            characters: " .:"
-          - name: trim
-            characters: "()[]"
+          - name: 'displayStrategy'
+            template: '{{ parentMetadataValue }}'
   172:
     key: '260'
     transforms:

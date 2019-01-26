@@ -13,12 +13,13 @@ class DisplayStrategyImportTransform extends AbstractImportTransform {
         $this->displayStrategyEvaluator = $displayStrategyEvaluator;
     }
 
-    public function apply(array $values, array $config, array $dataBeingImported): array {
+    public function apply(array $values, array $config, array $dataBeingImported, string $parentMetadataValue = null): array {
         Assertion::keyExists($config, 'template');
         $template = $config['template'];
         $additionalContext = [
             'values' => $values,
             'data' => $dataBeingImported,
+            'parentMetadataValue' => $parentMetadataValue,
         ];
         if (isset($config['separator'])) {
             $additionalContext['separator'] = $config['separator'];
