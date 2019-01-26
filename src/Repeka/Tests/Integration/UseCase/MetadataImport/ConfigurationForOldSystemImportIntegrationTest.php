@@ -4,6 +4,7 @@ namespace Repeka\Tests\Integration\UseCase\MetadataImport;
 use DateTime;
 use Repeka\Domain\Entity\MetadataDateControl\MetadataDateControlConverterUtil;
 use Repeka\Domain\Entity\MetadataDateControl\MetadataDateControlMode;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -141,7 +142,8 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             117 => [['value' => '100000228666']],
             173 => [['value' => '103684']],
         ];
-        $this->configImportTest($filePath, $this->configPath, $expectedImportedValues, $importedId);
+        $importedValues = $this->retrieveImportedValues($filePath, $this->configPath, $importedId);
+        $this->assertEquals($expectedImportedValues, $importedValues->toArray());
     }
 
     /** @SuppressWarnings("PHPMD.ExcessiveMethodLength") */
@@ -311,15 +313,163 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             117 => [['value' => '100000305812']],
             173 => [['value' => '136095']],
         ];
-        $this->configImportTest($filePath, $this->configPath, $expectedImportedValues, $importedId);
+        $importedValues = $this->retrieveImportedValues($filePath, $this->configPath, $importedId);
+        $this->assertEquals($expectedImportedValues, $importedValues->toArray());
     }
 
-    private function configImportTest($resourcePath, $configPath, array $expectedImportValues, $importedId) {
+    /** @SuppressWarnings("PHPMD.ExcessiveMethodLength") */
+    public function testImportFromMarcXml3() {
+        $filePath = __DIR__ . '/dumps/bib-138470.marcxml';
+        $importedId = 100000305812;
+        $expectedImportedValues = [
+            4 => [
+                [
+                    'value' => 'Ferstel, Heinrich von',
+                    'submetadata' => [
+                        179 => [['value' => '114727']],
+                        180 => [['value' => 'n 2017176774']],
+                        147 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1828', '1883'),
+                                'submetadata' => [301 => [['value' => '1828-1883']]],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'value' => 'Hasenauer, Carl von',
+                    'submetadata' => [
+                        179 => [['value' => '123493']],
+                        180 => [['value' => 'n 2018092138']],
+                        147 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1833', '1894'),
+                                'submetadata' => [301 => [['value' => '1833-1894']]],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'value' => 'Romano von Ringe, Johann Julius',
+                    'submetadata' => [
+                        179 => [['value' => '123494']],
+                        180 => [['value' => 'n 2018295742']],
+                        147 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1818', '1882'),
+                                'submetadata' => [301 => [['value' => '1818-1882']]],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'value' => 'Schmidt, Friedrich von',
+                    'submetadata' => [
+                        179 => [['value' => '123495']],
+                        180 => [['value' => 'n 2018049765']],
+                        147 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1825', '1891'),
+                                'submetadata' => [301 => [['value' => '1825-1891']]],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'value' => 'Schwendenwein von Lonauberg, August',
+                    'submetadata' => [
+                        179 => [['value' => '123496']],
+                        180 => [['value' => 'n 2018049768']],
+                        147 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1817', '1885'),
+                                'submetadata' => [301 => [['value' => '1817-1885']]],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'value' => 'Hansen, Theophil Edvard von',
+                    'submetadata' => [
+                        179 => [['value' => '122458']],
+                        180 => [['value' => 'n 2018174800']],
+                        147 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1813', '1891'),
+                                'submetadata' => [301 => [['value' => '1813-1891']]],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            63 => [
+                [
+                    'value' => 'Lützow, Carl von',
+                    'submetadata' => [
+                        176 => [['value' => 'Redaktor']],
+                        187 => [['value' => '114726']],
+                        188 => [['value' => 'n  02724383']],
+                        182 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1832', '1897'),
+                                'submetadata' => [302 => [['value' => '1832-1897']]],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'value' => 'Tischler, Ludwig',
+                    'submetadata' => [
+                        176 => [['value' => 'Redaktor']],
+                        187 => [['value' => '114712']],
+                        188 => [['value' => 'n 2017198592']],
+                        182 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1840', '1906'),
+                                'submetadata' => [302 => [['value' => '1840-1906']]],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'value' => 'Obermayer, Eduard',
+                    'submetadata' => [
+                        176 => [['value' => 'Ilustrator']],
+                        187 => [['value' => '114713']],
+                        188 => [['value' => 'n 2017240360']],
+                        182 => [
+                            [
+                                'value' => $this->toFlexibleDateArray('1831', '1916'),
+                                'submetadata' => [302 => [['value' => '1831-1916']]],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $importedValues = $this->retrieveImportedValues($filePath, $this->configPath, $importedId);
+        $this->containsMetadataValueValues($importedValues, $expectedImportedValues);
+    }
+
+    private function containsMetadataValueValues(ResourceContents $resourceContents, $expectedValuesArray) {
+        foreach ($expectedValuesArray as $metadataId => $values) {
+            foreach ($values as $value) {
+                $currentValues = array_map(
+                    function ($metadataValue) {
+                        return $metadataValue->toArray();
+                    },
+                    $resourceContents->getValues($metadataId)
+                );
+                $this->assertContains($value, $currentValues);
+            }
+        }
+    }
+
+    private function retrieveImportedValues($resourcePath, $configPath, $importedId): ResourceContents {
         $config = $this->container->get(ImportConfigFactory::class)->fromFile($configPath, $this->testResourceKind);
         $resourceXml = file_get_contents($resourcePath);
         $extractedValues = $this->handleCommandBypassingFirewall(new MarcxmlExtractQuery($resourceXml, $importedId));
-        $importedValues = $this->handleCommandBypassingFirewall(new MetadataImportQuery($extractedValues, $config))
+        return $this->handleCommandBypassingFirewall(new MetadataImportQuery($extractedValues, $config))
             ->getAcceptedValues();
-        $this->assertEquals($expectedImportValues, $importedValues->toArray());
     }
 }

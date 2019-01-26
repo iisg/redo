@@ -64,7 +64,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
                 '',
                 false,
                 false,
-                $this->languageDescriptionMetadata
+                $this->languageMetadata
             )
         );
         $oldIdMetadata = $this->createSimpleMetadata('old_id', MetadataControl::INTEGER(), 'dictionaries');
@@ -122,22 +122,22 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
         $firstMetadataLangSubmetadata = $firstMetadata->getSubmetadata($this->languageMetadata);
         $this->assertCount(1, $firstMetadataLangSubmetadata);
         $this->assertEquals(5, $firstMetadataLangSubmetadata[0]->getValue());
+        $firstMetadataLangIdSubSubmetadata = $firstMetadataLangSubmetadata[0]->getSubmetadata($this->languageIdMetadata);
+        $this->assertCount(1, $firstMetadataLangIdSubSubmetadata);
+        $this->assertEquals(1463, $firstMetadataLangIdSubSubmetadata[0]->getValue());
         $firstMetadataLangDescSubmetadata = $firstMetadata->getSubmetadata($this->languageDescriptionMetadata);
         $this->assertCount(1, $firstMetadataLangDescSubmetadata);
         $this->assertEquals(202, $firstMetadataLangDescSubmetadata[0]->getValue());
-        $firstMetadataLangIdSubSubmetadata = $firstMetadataLangDescSubmetadata[0]->getSubmetadata($this->languageIdMetadata);
-        $this->assertCount(1, $firstMetadataLangIdSubSubmetadata);
-        $this->assertEquals(1463, $firstMetadataLangIdSubSubmetadata[0]->getValue());
         $secondMetadata = $metadataValues[1];
         $secondMetadataLangSubmetadata = $secondMetadata->getSubmetadata($this->languageMetadata);
         $this->assertCount(1, $secondMetadataLangSubmetadata);
         $this->assertEquals(6, $secondMetadataLangSubmetadata[0]->getValue());
+        $secMetadataLangIdSubSubmetadata = $secondMetadataLangSubmetadata[0]->getSubmetadata($this->languageIdMetadata);
+        $this->assertCount(1, $secMetadataLangIdSubSubmetadata);
+        $this->assertEquals(1464, $secMetadataLangIdSubSubmetadata[0]->getValue());
         $secondMetadataLangDescSubmetadata = $secondMetadata->getSubmetadata($this->languageDescriptionMetadata);
         $this->assertCount(1, $secondMetadataLangDescSubmetadata);
         $this->assertEquals(202, $secondMetadataLangDescSubmetadata[0]->getValue());
-        $secMetadataLangIdSubSubmetadata = $secondMetadataLangDescSubmetadata[0]->getSubmetadata($this->languageIdMetadata);
-        $this->assertCount(1, $secMetadataLangIdSubSubmetadata);
-        $this->assertEquals(1464, $secMetadataLangIdSubSubmetadata[0]->getValue());
     }
 
     private function import() {
