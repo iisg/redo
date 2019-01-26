@@ -5,7 +5,7 @@ use Assert\Assertion;
 use Repeka\Domain\Utils\ArrayUtils;
 
 class ArrayColumnImportTransform extends AbstractImportTransform {
-    public function apply(array $values, array $config, array $dataBeingImported): array {
+    public function apply(array $values, array $config, array $dataBeingImported, string $parentMetadataValue = null): array {
         Assertion::keyExists($config, 'keys');
         $keys = explode(',', $config['keys']);
         $necessaryValues = [];

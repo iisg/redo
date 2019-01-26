@@ -2,7 +2,7 @@
 namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 
 class SubstringImportTransform extends AbstractImportTransform {
-    public function apply(array $values, array $config, array $dataBeingImported): array {
+    public function apply(array $values, array $config, array $dataBeingImported, string $parentMetadataValue = null): array {
         $start = $config['start'] ?? 0;
         $length = $config['length'] ?? PHP_INT_MAX;
         return array_map(

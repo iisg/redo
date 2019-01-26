@@ -16,12 +16,12 @@ class ImportTransformCompositeTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testTransforming() {
-        $transformed = $this->transformComposite->apply(['a'], ['name' => 'transformA'], []);
+        $transformed = $this->transformComposite->apply(['a'], ['name' => 'transformA'], [], null);
         $this->assertEquals(['transformedByA'], $transformed);
     }
 
     public function testThrowsOnInvalidTransform() {
         $this->expectException(\InvalidArgumentException::class);
-        $this->transformComposite->apply(['a'], ['name' => 'transformC'], []);
+        $this->transformComposite->apply(['a'], ['name' => 'transformC'], [], null);
     }
 }

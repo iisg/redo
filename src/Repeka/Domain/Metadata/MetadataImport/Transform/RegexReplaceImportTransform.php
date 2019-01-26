@@ -12,7 +12,7 @@ class RegexReplaceImportTransform extends AbstractImportTransform {
         $this->regexNormalizer = $regexNormalizer;
     }
 
-    public function apply(array $values, array $config, array $dataBeingImported): array {
+    public function apply(array $values, array $config, array $dataBeingImported, string $parentMetadataValue = null): array {
         $regex = $config['regex'] ?? null;
         Assertion::notNull($regex, 'regexReplace transform require regex to be configured.');
         $regex = $this->regexNormalizer->normalize($regex);

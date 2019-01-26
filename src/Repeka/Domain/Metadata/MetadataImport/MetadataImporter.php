@@ -23,18 +23,15 @@ class MetadataImporter {
         return $resultBuilder->build();
     }
 
-    public function importMetadataValues($data, array $mappings, ImportResultBuilder $resultBuilder): array {
+    /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
+    public function importMetadataValues($data, array $mappings, ImportResultBuilder $resultBuilder, $parentMetadataValue = null): array {
         $allMetadataValues = [];
         foreach ($mappings as $mapping) {
             /** @var Mapping $mapping */
             if ($mapping->getImportKey()) {
-                if (isset($data[$mapping->getImportKey()])) {
-                    $valuesBasedOnImportKey = $data[$mapping->getImportKey()];
-                } else {
-                    $valuesBasedOnImportKey = [];
-                }
+                $valuesBasedOnImportKey = isset($data[$mapping->getImportKey()]) ? $data[$mapping->getImportKey()] : [];
             } else {
-                $valuesBasedOnImportKey = [$data];
+                $valuesBasedOnImportKey = is_array($data) ? $data : [$data];
             }
             if (!is_array($valuesBasedOnImportKey)) {
                 $valuesBasedOnImportKey = [$valuesBasedOnImportKey];
@@ -43,17 +40,18 @@ class MetadataImporter {
             $metadata = $mapping->getMetadata();
             $transformedValues = $valuesBasedOnImportKey;
             foreach ($mapping->getTransformsConfig() as $transformConfig) {
-                $transformedValues = $this->transforms->apply($transformedValues, $transformConfig, $data);
+                $transformedValues = $this->transforms->apply($transformedValues, $transformConfig, $data, $parentMetadataValue);
             }
-            for ($i = 0; $i < count($transformedValues); $i++) {
-                $transformedValue = $this->prepareMetadataValues($resultBuilder, $metadata, $transformedValues[$i]);
-                if ($transformedValue !== null) {
-                    $metadataValue = ['value' => $transformedValue];
+            foreach ($transformedValues as $transformedValue) {
+                $preparedTransformedValue = $this->prepareMetadataValues($resultBuilder, $metadata, $transformedValue);
+                if ($preparedTransformedValue !== null) {
+                    $metadataValue = ['value' => $preparedTransformedValue];
                     if ($mapping->getSubmetadataMappings()) {
                         $submetadata = $this->importMetadataValues(
-                            $valuesBasedOnImportKey[$i],
+                            $valuesBasedOnImportKey,
                             $mapping->getSubmetadataMappings(),
-                            $resultBuilder
+                            $resultBuilder,
+                            $transformedValue
                         );
                         $metadataValue['submetadata'] = $submetadata;
                     }

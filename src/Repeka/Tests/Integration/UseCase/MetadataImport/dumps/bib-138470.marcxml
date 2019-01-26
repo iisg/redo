@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+    xmlns="http://www.loc.gov/MARC21/slim">
+
+  <leader>02370nam a2200421 ic4500</leader>
+  <controlfield tag="005">20181210012600.0</controlfield>
+  <controlfield tag="008">181019s1876    au a         |000 0 ger c</controlfield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">xx004444371</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">KR 048/AS</subfield>
+    <subfield code="b">pol</subfield>
+    <subfield code="e">rda</subfield>
+    <subfield code="c">KR 048/AS</subfield>
+    <subfield code="d">KR 048/RW</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">4413</subfield>
+    <subfield code="a">728</subfield>
+    <subfield code="j">Budynki mieszkalne.</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">4366</subfield>
+    <subfield code="a">72.04</subfield>
+    <subfield code="j">Detale architektoniczne. Zdobnictwo architektoniczne. Płaskorzeźby. Sztukateria. Mozaiki. Witraże.</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">482</subfield>
+    <subfield code="a">(084.1)</subfield>
+    <subfield code="j">Przedstawienia obrazowe. Ilustracje. Albumy.</subfield>
+  </datafield>
+  <datafield tag="080" ind1=" " ind2=" ">
+    <subfield code="9">110263</subfield>
+    <subfield code="a">(436.1)</subfield>
+    <subfield code="j">Wiedeń.</subfield>
+  </datafield>
+  <datafield tag="245" ind1="0" ind2="0">
+    <subfield code="a">Wiener Neubauten.</subfield>
+    <subfield code="n">Serie A, Bd. 1,</subfield>
+    <subfield code="p">Privat-Bauten /</subfield>
+    <subfield code="c">unter Mitwirkung H. von Ferstel, E. &amp; H. von Förster, Th. von Hansen, Baron K. von Hasenauer, J. von Romano, F. Schmidt, A. von Schwendenwein, G. Semper &amp; C. ; herausgegeben von C. von Lützow und Ludwig Tischler ; gestochen unter Leitung von Ed. Obermayer.</subfield>
+  </datafield>
+  <datafield tag="246" ind1="3" ind2="0">
+    <subfield code="a">Privat-Bauten</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Wien :</subfield>
+    <subfield code="b">Lehmann &amp; Wentzel,</subfield>
+    <subfield code="c">1876.</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">Teka (20 stron, 92 karty tablic) ;</subfield>
+    <subfield code="c">46 cm.</subfield>
+  </datafield>
+  <datafield tag="336" ind1=" " ind2=" ">
+    <subfield code="a">Obraz</subfield>
+    <subfield code="b">sti</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield tag="336" ind1=" " ind2=" ">
+    <subfield code="a">Tekst</subfield>
+    <subfield code="b">txt</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield tag="337" ind1=" " ind2=" ">
+    <subfield code="a">Bez urządzenia pośredniczącego</subfield>
+    <subfield code="b">n</subfield>
+    <subfield code="2">rdamedia</subfield>
+  </datafield>
+  <datafield tag="338" ind1=" " ind2=" ">
+    <subfield code="a">Wolumin</subfield>
+    <subfield code="b">nc</subfield>
+    <subfield code="2">rdacarrier</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Na stronie tytułowej: "96 Tafeln mit erläuterndem Text".</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Druk częściowo dwuszpaltowy.</subfield>
+  </datafield>
+  <datafield tag="561" ind1=" " ind2=" ">
+    <subfield code="3">IV-14204</subfield>
+    <subfield code="a">1. [na s. tyt.i in. pieczątka:] Biblioteka s. k. państ. szkoły przemysłowej w Krakowie.</subfield>
+  </datafield>
+  <datafield tag="596" ind1=" " ind2=" ">
+    <subfield code="a">EDT_4</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Ferstel, Heinrich von</subfield>
+    <subfield code="d">(1828-1883).</subfield>
+    <subfield code="e">Autor</subfield>
+    <subfield code="0">n 2017176774</subfield>
+    <subfield code="9">114727</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Hasenauer, Carl von</subfield>
+    <subfield code="d">(1833-1894).</subfield>
+    <subfield code="e">Autor</subfield>
+    <subfield code="0">n 2018092138</subfield>
+    <subfield code="9">123493</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Romano von Ringe, Johann Julius</subfield>
+    <subfield code="d">(1818-1882).</subfield>
+    <subfield code="e">Autor</subfield>
+    <subfield code="0">n 2018295742</subfield>
+    <subfield code="9">123494</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Schmidt, Friedrich von</subfield>
+    <subfield code="d">(1825-1891).</subfield>
+    <subfield code="e">Autor</subfield>
+    <subfield code="0">n 2018049765</subfield>
+    <subfield code="9">123495</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Schwendenwein von Lonauberg, August</subfield>
+    <subfield code="d">(1817-1885).</subfield>
+    <subfield code="e">Autor</subfield>
+    <subfield code="0">n 2018049768</subfield>
+    <subfield code="9">123496</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Lützow, Carl von</subfield>
+    <subfield code="d">(1832-1897).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n  02724383</subfield>
+    <subfield code="9">114726</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Tischler, Ludwig</subfield>
+    <subfield code="d">(1840-1906).</subfield>
+    <subfield code="e">Redaktor</subfield>
+    <subfield code="0">n 2017198592</subfield>
+    <subfield code="9">114712</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Obermayer, Eduard</subfield>
+    <subfield code="d">(1831-1916).</subfield>
+    <subfield code="e">Ilustrator</subfield>
+    <subfield code="0">n 2017240360</subfield>
+    <subfield code="9">114713</subfield>
+  </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
+    <subfield code="a">Hansen, Theophil Edvard von</subfield>
+    <subfield code="d">(1813-1891).</subfield>
+    <subfield code="e">Autor</subfield>
+    <subfield code="0">n 2018174800</subfield>
+    <subfield code="9">122458</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">E. &amp; H. von Förster (Wiedeń).</subfield>
+    <subfield code="e">Instytucja sprawcza</subfield>
+    <subfield code="0">n 2018206700</subfield>
+    <subfield code="9">123498</subfield>
+  </datafield>
+  <datafield tag="710" ind1="2" ind2=" ">
+    <subfield code="a">G. Semper &amp; c.</subfield>
+    <subfield code="e">Instytucja sprawcza</subfield>
+    <subfield code="0">n 2018206639</subfield>
+    <subfield code="9">123497</subfield>
+  </datafield>
+  <datafield tag="942" ind1=" " ind2=" ">
+    <subfield code="2">udc</subfield>
+  </datafield>
+  <datafield tag="999" ind1=" " ind2=" ">
+    <subfield code="c">138470</subfield>
+    <subfield code="d">138470</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="2">udc</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">IV14204</subfield>
+    <subfield code="7">1</subfield>
+    <subfield code="8">EDT-PIODO</subfield>
+    <subfield code="9">339312</subfield>
+    <subfield code="a">BPK</subfield>
+    <subfield code="b">BPK</subfield>
+    <subfield code="c">BPK-MAG</subfield>
+    <subfield code="d">2018-12-10</subfield>
+    <subfield code="o">IV-14204</subfield>
+    <subfield code="p">100000284292</subfield>
+    <subfield code="r">2018-12-10</subfield>
+    <subfield code="w">2018-12-10</subfield>
+    <subfield code="y">BK-NDW</subfield>
+  </datafield>
+</record>
