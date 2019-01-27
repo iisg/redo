@@ -50,6 +50,7 @@ services:
     - '%elasticsearch.proxy%'
   Repeka\Application\Elasticsearch\ESIndexManager:
     $indexName: '%elasticsearch.index_name%'
+  Repeka\Application\Elasticsearch\PageNumberFinder: ~
   Repeka\Application\Elasticsearch\Mapping\ESMapping: ~
   Repeka\Application\Elasticsearch\Model\ESContentsAdjuster: ~
   Repeka\Application\Elasticsearch\Model\ElasticSearch:

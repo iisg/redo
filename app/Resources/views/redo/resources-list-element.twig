@@ -16,6 +16,9 @@
         {% for fieldName, highlights in searchResult.highlights %}
             {% set metadataId = fieldName | slice(9) | number_format %}
             {% set metadata = metadata(metadataId) %}
+            {% if fieldName matches '%.*value_file.content%' %}
+                {% set highlights = withPageNumbers(resource, resource | m(metadataId), highlights) %}
+            {% endif %}
             {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
             {% set representsWholeValue = highlights | join | replace({'<em>': '', '</em>': '', ' ': ''})
                 == resource | metadata(metadataId) | replace({' ': ''}) %}
@@ -142,7 +145,7 @@
                                             metadataLabelWithHighlights.representsWholeValue %}
                                             <em>({{ 'fragments' | trans }})</em>{% endif %}:</span>
                                     {{ metadataLabelWithHighlights.highlights
-                                        | join(metadataLabelWithHighlights.representsWholeValue ? ' ' : '<br>') | raw }}
+                                    | join(metadataLabelWithHighlights.representsWholeValue ? ' ' : '<br>') | raw }}
                             </div>
                         {% endfor %}
                     {% endif %}

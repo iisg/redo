@@ -58,8 +58,9 @@ class ESContentsAdjuster {
     }
 
     private function readFileContents(ResourceEntity $resource, string $path, ResourceFileStorage $storage): array {
-        $adjustedFile = ['name' => $this->getFilename($path)];
-        if ($this->hasSupportedExtension($path)) {
+        $adjustedFile = ['name' => basename($path)];
+        $contentsIndexedByES = in_array(pathinfo($path, PATHINFO_EXTENSION), FtsConstants::SUPPORTED_FILE_EXTENSIONS);
+        if ($contentsIndexedByES) {
             try {
                 $fileContents = $storage->getFileContents($resource, $path);
                 if (mb_detect_encoding($fileContents, FtsConstants::SUPPORTED_ENCODING_TYPES, true)) {
@@ -69,17 +70,5 @@ class ESContentsAdjuster {
             }
         }
         return $adjustedFile;
-    }
-
-    private function getFilename($path) {
-        return preg_replace('%.*/%', '', $path);
-    }
-
-    private function hasSupportedExtension($path): bool {
-        if (!preg_match('%.+\..+%', $path)) {
-            return false;
-        }
-        $extension = preg_replace('%.*\.%', '', $path);
-        return in_array($extension, FtsConstants::SUPPORTED_FILE_EXTENSIONS);
     }
 }

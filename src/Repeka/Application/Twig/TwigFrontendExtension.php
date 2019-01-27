@@ -3,6 +3,7 @@ namespace Repeka\Application\Twig;
 
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
+use Repeka\Application\Elasticsearch\PageNumberFinder;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -29,18 +30,22 @@ class TwigFrontendExtension extends \Twig_Extension {
     private $paginator;
     /** @var FrontendConfig */
     private $frontendConfig;
+    /** @var PageNumberFinder */
+    private $pageNumberFinder;
 
     public function __construct(
         RequestStack $requestStack,
         ResourceKindRepository $resourceKindRepository,
         Paginator $paginator,
-        FrontendConfig $frontendConfig
+        FrontendConfig $frontendConfig,
+        PageNumberFinder $pageNumberFinder
     ) {
         $request = $requestStack->getCurrentRequest();
         $this->currentUri = $request ? $request->getRequestUri() : null;
         $this->resourceKindRepository = $resourceKindRepository;
         $this->paginator = $paginator;
         $this->frontendConfig = $frontendConfig;
+        $this->pageNumberFinder = $pageNumberFinder;
     }
 
     public function getFunctions() {
@@ -54,6 +59,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('urlMatches', [$this, 'urlMatches']),
             new \Twig_Function('paginate', [$this->paginator, 'paginate']),
             new \Twig_Function('arrayWithoutItem', [$this, 'arrayWithoutItem']),
+            new \Twig_Function('withPageNumbers', [$this, 'matchSearchHitsWithPageNumbers']),
         ];
     }
 
@@ -249,5 +255,24 @@ ICON;
     public function basename(string $value) {
         $parts = preg_split('#[\\\/]#', $value);
         return $parts[count($parts) - 1];
+    }
+
+    public function matchSearchHitsWithPageNumbers(ResourceEntity $resource, $files, array $highlights): array {
+        if (!is_iterable($files)) {
+            $files = [$files];
+        } elseif (!is_array($files)) {
+            $files = iterator_to_array($files);
+        }
+        $searchResults = $this->pageNumberFinder->matchSearchHitsWithPageNumbers($resource, $files, $highlights);
+        if (!empty($searchResults)) {
+            $highlightsWithPageNumbers = [];
+            foreach ($searchResults as $result) {
+                $pageNumber = $result[PageNumberFinder::PAGE_NUMBER];
+                $highlight = $result[PageNumberFinder::HIGHLIGHT];
+                $highlightsWithPageNumbers[] = "<u>str. $pageNumber:</u> $highlight";
+            }
+            return $highlightsWithPageNumbers;
+        }
+        return $highlights;
     }
 }

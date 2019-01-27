@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Application\Upload;
 
+use Repeka\Application\Elasticsearch\PageNumberFinder;
 use Repeka\Application\Twig\FrontendConfig;
 use Repeka\Application\Twig\Paginator;
 use Repeka\Application\Twig\TwigFrontendExtension;
@@ -28,7 +29,8 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
             $this->createMock(RequestStack::class),
             $this->resourceKindRepository,
             $this->paginator,
-            $this->createMock(FrontendConfig::class)
+            $this->createMock(FrontendConfig::class),
+            $this->createMock(PageNumberFinder::class)
         );
     }
 
@@ -109,7 +111,8 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
                 $requestStack,
                 $this->resourceKindRepository,
                 $this->paginator,
-                $this->createMock(FrontendConfig::class)
+                $this->createMock(FrontendConfig::class),
+                $this->createMock(PageNumberFinder::class)
             );
             $this->assertEquals(
                 $expected,
