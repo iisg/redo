@@ -5,14 +5,24 @@
     <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
     <require from="../../workflow/resource-place-display.html"></require>
 
-    <template if.one-time="showResourceKind">
+    <template if.one-time="showResourceId || showResourceKind">
         <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
-            <span>${ 'Resource kind' | t}</span>
-            <a route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id}">
-                <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
-                <span else>#${ resource.kind.id }</span>
-            </a>
-            <hr if.bind="metadataGroups.length || !hidePlaceInformation && resource.kind.workflow">
+            <template if.bind="showResourceId">
+                <span>${ 'Resource id' | t}</span>
+                <span>${ resource.id }</span>
+            </template>
+            <template if.bind="showResourceKind">
+                <span>${ 'Resource kind' | t}</span>
+                <a route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id}">
+                    <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
+                    <span else>#${ resource.kind.id }</span>
+                </a>
+            </template>
+            <template if.bind="!hidePlaceInformation && resource.kind.workflow">
+                <span>${'Place' | t}</span>
+                <resource-place-display resource.bind="resource"></resource-place-display>
+            </template>
+            <hr if.bind="metadataGroups.length">
         </template>
     </template>
 
@@ -30,10 +40,5 @@
             </template>
         </collapsible-metadata-group>
         <hr if.bind="!$last || !hidePlaceInformation && resource.kind.workflow">
-    </template>
-
-    <template if.bind="!hidePlaceInformation && resource.kind.workflow">
-        <span>${'Place' | t}</span>
-        <resource-place-display resource.bind="resource"></resource-place-display>
     </template>
 </template>

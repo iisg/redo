@@ -13,6 +13,7 @@ export class ResourceMetadataTable implements ComponentAttached {
   @bindable metadataList: Metadata[];
   @bindable @booleanAttribute hideEmptyMetadata: boolean = false;
   @bindable @booleanAttribute hidePlaceInformation: boolean = false;
+  @bindable @booleanAttribute showResourceId: boolean = false;
   @bindable @booleanAttribute showResourceKind: boolean = false;
   @bindable @booleanAttribute briefOnly: boolean = false;
   @bindable @booleanAttribute hideMetadataGroups: boolean = false;

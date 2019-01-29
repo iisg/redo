@@ -35,6 +35,7 @@ Workflow: Proces
 Metadata: Metadane
 Metadata_single: Metadana
 Child resources: Podzasoby
+Resource id: Id zasobu
 Resource kind: Rodzaj zasobu
 Select flag: Wybierz flagę
 Code: Kod
