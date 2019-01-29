@@ -42,7 +42,7 @@ mappings:
               {% set codeOrderArray = {'a' : 0, 'y': 0, 'z': 0 } %}
               {% for code in element['order'] %}
                 {% if code in ['a', 'y', 'z'] %}
-                {{element[code][codeOrderArray[code]]}}
+                {{element[code][codeOrderArray[code]] | raw}}
                 {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}{% endif %}
               {% endfor %}
               {{separator}}
@@ -78,9 +78,9 @@ mappings:
               {% if value['e'] is not defined or 'Autor' in value['e'] %}
                 {% set autor = value['a'][0] %}
                 {% if autor matches '/.* [a-zA-Z][.]/' %}
-                  {{autor}}
+                  {{autor | raw}}
                 {% else %}
-                  {{autor|trim('.')}}
+                  {{autor | trim('.') | raw}}
                 {% endif%}
                 {{ separator }}
               {% endif %}
@@ -154,7 +154,7 @@ mappings:
                 {% if autor matches '/.* [a-zA-Z][.]/' %}
                   {{autor}}
                 {% else %}
-                  {{autor|trim('.')}}
+                  {{autor | trim('.') | raw}}
                 {% endif%}
                 {{ separator }}
               {% endif %}
@@ -228,16 +228,16 @@ mappings:
                 {% if codeValues['e'] is defined %}
                   {% set isCoCreator = false %}
                   {% for person in codeValues['e'] %}
-                    {% if person != 'Autor' %}
+                    {% if person != 'Autor' and person != 'Wydawca' %}
                       {% set isCoCreator = true %}
                     {% endif %}
                   {% endfor %}
                   {% if isCoCreator == true %}
                     {% for value in codeValues['a'] %}
                       {% if value matches '/.* [a-zA-Z][.]/' %}
-                        {{value}}
+                        {{value | raw}}
                       {% else %}
-                        {{value|trim('.')}}
+                        {{value | trim('.') | raw}}
                       {% endif%}
                     {% endfor %}
                   {% endif %}
@@ -330,7 +330,7 @@ mappings:
           separator: '###'
           template: >-
             {% for value in values %}
-              [Instytucja sprawcza]: {{value}} {{separator}}
+              [Instytucja sprawcza]: {{value | raw}} {{separator}}
             {% endfor %}
         - name: 'trim'
         - name: 'removeEmpty'
@@ -358,16 +358,16 @@ mappings:
                 {% if codeValues['e'] is defined %}
                   {% set isCoCreator = false %}
                   {% for person in codeValues['e'] %}
-                    {% if person != 'Autor' %}
+                    {% if person != 'Autor' and person != 'Wydawca' %}
                       {% set isCoCreator = true %}
                     {% endif %}
                   {% endfor %}
                   {% if isCoCreator == true %}
                     {% for value in codeValues['a'] %}
                       {% if value matches '/.* [a-zA-Z][.]/' %}
-                        {{value}}
+                        {{value | raw}}
                       {% else %}
-                        {{value|trim('.')}}
+                        {{value | trim('.') | raw}}
                       {% endif%}
                     {% endfor %}
                   {% endif %}
@@ -459,7 +459,7 @@ mappings:
               {% set codeOrderArray = {'a' : 0, 'b': 0, 'n': 0, 'p': 0 } %}
               {% for code in element['order'] %}
                 {% if code in ['a', 'b', 'n', 'p'] %}
-                {{element[code][codeOrderArray[code]]}}
+                {{element[code][codeOrderArray[code]] | raw}}
                 {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}{% endif %}
               {% endfor %}
               {{separator}}
@@ -493,7 +493,7 @@ mappings:
                 {% set codeOrderArray = {'a' : 0, 'b': 0, 'i': 0, 'n': 0, 'p': 0, 'f': 0, 'g': 0, 'i': 0} %}
                 {% for code in element['order'] %}
                   {% if code in ['a', 'b', 'i', 'n', 'p'] %}
-                    {{element[code][codeOrderArray[code]]}}
+                    {{element[code][codeOrderArray[code]] | raw}}
                     {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}
                   {% endif %}
                 {% endfor %}
@@ -519,7 +519,7 @@ mappings:
                 {% set codeOrderArray = {'a' : 0, 'b': 0, 'i': 0, 'n': 0, 'p': 0, 'f': 0, 'g': 0, 'i': 0} %}
                 {% for code in element['order'] %}
                   {% if code in ['a', 'b', 'i', 'n', 'p'] %}
-                    {{element[code][codeOrderArray[code]]}}
+                    {{element[code][codeOrderArray[code]] | raw}}
                     {% set codeOrderArray = codeOrderArray|merge({(code): codeOrderArray[code] + 1}) %}
                   {% endif %}
                 {% endfor %}
@@ -599,7 +599,7 @@ mappings:
           separator: '###'
           template: >-
             {% for value in values %}
-              Dodatek do tytułu: {{value}} {{separator}}
+              Dodatek do tytułu: {{value | raw}} {{separator}}
             {% endfor %}
         - name: 'trim'
         - name: 'removeEmpty'
@@ -618,7 +618,7 @@ mappings:
                   {% else %}
                     {% set codeOrderArray = codeOrderArray|merge({(code): 0}) %}
                   {% endif %}
-                  {{element[code][codeOrderArray[code]]}}
+                  {{element[code][codeOrderArray[code]] | raw}}
                 {% endfor %}
                 {{separator}}
               {% endfor %}
@@ -646,7 +646,7 @@ mappings:
           {% if data['561'] is defined%}
             {% for value in data['561'] %}
               {% if value['a'] is defined and value['3'][0] == compareValue %}
-                {{value['a'][0]}}{{separator}}
+                {{value['a'][0] | raw}}{{separator}}
               {% endif %}
             {% endfor %}
           {% endif %}

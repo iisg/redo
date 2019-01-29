@@ -154,15 +154,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             156 => [['value' => 'xx004361056']],
             63 => [
                 [
-                    'value' => 'Franzius, Georg',
-                    'submetadata' => [
-                        176 => [['value' => 'Redaktor']],
-                        187 => [['value' => '114802']],
-                        188 => [['value' => 'n 2006115366']],
-                    ],
-                ],
-                [
-                    'value' => 'Frühling, August',
+                    'value' => "Frühling, August'",
                     'submetadata' => [
                         176 => [['value' => 'Redaktor']],
                         187 => [['value' => '114801']],
