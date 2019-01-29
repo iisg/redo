@@ -49,7 +49,7 @@
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="children">
-                <resources-list if.bind="resourceDetailsTabs.activeTabId === 'children' && (allowAddChildResource || numberOfChildren || isFiltering)"
+                <resources-list if.bind="resourceDetailsTabs.activeTabId === 'children' && (allowAddChildResource || resource.hasChildren || isFiltering)"
                     parent-resource.bind="resource"
                     allowed-resource-kinds.bind="allowedResourceKindsByParent"
                     has-resources.bind="hasChildren"
