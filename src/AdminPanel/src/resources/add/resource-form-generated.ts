@@ -30,6 +30,7 @@ export class ResourceFormGenerated {
   @bindable skipValidation: boolean = false;
   @bindable displayRequiredOnly: boolean;
   @bindable treeQueryUrl: string;
+  @bindable disabled: boolean = false;
 
   currentLanguageCode: string;
   lockedMetadataIds: number[];
@@ -67,11 +68,6 @@ export class ResourceFormGenerated {
     return metadataGroups.filter(metadataGroup =>
       metadataGroup.metadataList.filter(metadata => this.displayMetadataValueInput(metadata)).length
     );
-  }
-
-  @computedFrom('parent')
-  get disableParent(): boolean {
-    return this.parent !== undefined;
   }
 
   displayMetadataValueInput(metadata: Metadata): boolean {
@@ -151,19 +147,14 @@ export class ResourceFormGenerated {
     this.resourceKindChanged();
   }
 
-  editingDisabledForMetadata(metadata: Metadata): boolean {
-    const isParent = metadata.id == SystemMetadata.PARENT.id;
-    return (isParent && this.disableParent) || this.metadataIsLocked(metadata);
+  metadataIsLocked(metadata: Metadata): boolean {
+    return this.disabled || (!this.skipValidation && inArray(metadata.id, this.lockedMetadataIds));
   }
 
   metadataIsRequired(metadata: Metadata): boolean {
     return !this.skipValidation
       && inArray(metadata.id, this.requiredMetadataIdsForTransition)
       || inArray(metadata.id, this.requiredMetadataIds);
-  }
-
-  metadataIsLocked(metadata: Metadata): boolean {
-    return !this.skipValidation && inArray(metadata.id, this.lockedMetadataIds);
   }
 
   metadataDeterminesAssignee(metadata: Metadata): boolean {
