@@ -31,17 +31,12 @@
                 label="Close"
                 click.delegate="addFormOpened = false"></cancel-button>
         </div>
-        <template if.bind="newResourceKind">
-            <!-- https://confluence.fslab.agh.edu.pl/pages/viewpage.action?pageId=110461481 -->
-            <template repeat.for="ugly of ['horrible']">
-                <resource-form
-                    resource-kind.bind="newResourceKind"
-                    resource-class.bind="resourceClass"
-                    parent.bind="parentResource"
-                    submit.call="addNewResource(savedResource)"
-                    cancel.call="addFormOpened = !addFormOpened"></resource-form>
-            </template>
-        </template>
+        <resource-form if="condition.bind: newResourceKind; cache: false"
+            resource-kind.bind="newResourceKind"
+            resource-class.bind="resourceClass"
+            parent.bind="parentResource"
+            submit.call="addNewResource(savedResource)"
+            cancel.call="addFormOpened = !addFormOpened"></resource-form>
     </div>
     <loading-bar if.bind="displayProgressBar"></loading-bar>
     <resources-list-table resources.bind="resources"

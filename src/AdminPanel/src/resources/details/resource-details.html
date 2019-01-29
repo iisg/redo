@@ -70,34 +70,25 @@
             </aup-tab-pane>
             <aup-tab-pane tab="details">
                 <div if.bind="resourceDetailsTabs.activeTabId === 'details'">
-                    <div if.bind="!isFormOpened">
-                        <!-- https://confluence.fslab.agh.edu.pl/pages/viewpage.action?pageId=110461481 -->
-                        <template repeat.for="ugly of ['horrible']">
-                            <resource-metadata-table resource.bind="resource"
-                                show-resource-id
-                                show-resource-kind></resource-metadata-table>
-                        </template>
+                    <div if="condition.bind: !isFormOpened; cache: false">
+                        <resource-metadata-table resource.bind="resource"
+                            show-resource-id
+                            show-resource-kind></resource-metadata-table>
                         <apply-transition-button
                             icon-name="edit-2"
                             resource.bind="resource"
                             transition.bind="updateTransition"
                             click.delegate="showTransitionForm(updateTransition)"></apply-transition-button>
                     </div>
-                    <template else>
-                        <!-- https://confluence.fslab.agh.edu.pl/pages/viewpage.action?pageId=110461481 -->
-                        <template repeat.for="ugly of ['horrible']">
-                            <resource-form
-                                parent.bind="parentResource"
-                                resource-class.bind="resource.resourceClass"
-                                currently-edited-resource.bind="resource"
-                                skip-validation.bind="isFormOpenedForGod"
-                                submit.call="saveEditedResource(savedResource, transitionId, newResourceKind, places)"
-                                clone.call="cloneResource(editedResource)"
-                                transition.bind="selectedTransition"
-                                cancel.call="hideForm()"></resource-form>
-                        </template>
-                    </template>
-
+                    <resource-form if="condition.bind: isFormOpened; cache: false"
+                        parent.bind="parentResource"
+                        resource-class.bind="resource.resourceClass"
+                        currently-edited-resource.bind="resource"
+                        skip-validation.bind="isFormOpenedForGod"
+                        submit.call="saveEditedResource(savedResource, transitionId, newResourceKind, places)"
+                        clone.call="cloneResource(editedResource)"
+                        transition.bind="selectedTransition"
+                        cancel.call="hideForm()"></resource-form>
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="workflow">

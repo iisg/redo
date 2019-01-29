@@ -21,7 +21,7 @@ export class AllMetadataValueValidator {
       }
     }
     // hack to support integer attributes, see https://github.com/aurelia/validation/issues/474
-    rules.rules.forEach(rules => rules.forEach(rule => rule.property.name = parseInt(rule.property.name) as any as string));
+    rules.rules.forEach(rules => rules.forEach(rule => rule.property.name = parseInt(rule.property.name as string)));
     return rules;
   }
 }
