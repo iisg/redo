@@ -32,7 +32,7 @@
                     <resource-metadata-values-form metadata.bind="metadata"
                         resource.bind="resource"
                         validation-controller.bind="validationController"
-                        disabled.bind="editingDisabledForMetadata(metadata) & signal:'metadata-validators-changed'"
+                        disabled.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
                         values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id] & signal:'metadata-validators-changed'"
                         required.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
                         skip-validation.bind="skipValidation"
