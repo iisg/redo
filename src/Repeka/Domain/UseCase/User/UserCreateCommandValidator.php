@@ -29,7 +29,7 @@ class UserCreateCommandValidator extends CommandAttributesValidator {
                 function ($username) {
                     return $this->userLoader->loadUserByUsername($username) == null;
                 }
-            )
+            )->setTemplate('User already exists')
         )
             ->attribute('userData', $this->resourceContentsCorrectStructureRule);
     }

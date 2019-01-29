@@ -78,7 +78,10 @@ export class ResourceDetails implements RoutableComponentActivate {
     const parentMetadata = this.resource.contents[SystemMetadata.PARENT.id];
     const parentId = parentMetadata && parentMetadata[0] && parentMetadata[0].value;
     if (parentId) {
-      this.parentResource = await this.resourceRepository.get(parentId);
+      try {
+        this.parentResource = await this.resourceRepository.get(parentId, true);
+      } catch (e) {
+      }
     }
     const hasOperatorRole = this.hasRole.toView('OPERATOR', this.resource.resourceClass);
     if (!hasOperatorRole) {

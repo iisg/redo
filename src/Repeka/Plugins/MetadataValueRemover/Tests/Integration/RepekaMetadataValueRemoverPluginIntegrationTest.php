@@ -40,6 +40,25 @@ class RepekaMetadataValueRemoverPluginIntegrationTest extends IntegrationTestCas
         $this->assertNotEquals($oldContent, $newContent);
     }
 
+    public function testRemovingRelatedBook() {
+        $resource = $this->getPhpBookResource();
+        $oldContent = $resource->getContents();
+        $this->usePluginWithResource(
+            $resource,
+            [
+                [
+                    'name' => 'repekaMetadataValueRemover',
+                    'config' => [
+                        'metadataName' => 'powiazanaKsiazka',
+                        'metadataValuePattern' => '1.',
+                    ],
+                ],
+            ]
+        );
+        $newContent = $this->getPhpBookResource()->getContents();
+        $this->assertNotEquals($oldContent, $newContent);
+    }
+
     /**
      * @param $resource ResourceEntity
      * @param $pluginConfiguration

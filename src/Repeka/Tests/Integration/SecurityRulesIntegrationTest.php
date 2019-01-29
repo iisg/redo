@@ -38,21 +38,21 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
     public function testForbiddenResourceCreationWhenNoRoles(ResourceKind $resourceKind) {
         $this->expectException(InsufficientPrivilegesException::class);
         $this->expectExceptionMessage(SystemRole::ADMIN()->roleName('books'));
-        $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
+        $command = new ResourceCreateCommand($this->freshEntity($resourceKind), ResourceContents::empty());
         $this->handleCommandWithUserRoles($command, []);
     }
 
     /** @depends testAllowedTopLevelResourceCreationWhenResourceClassAdmin */
     public function testForbiddenTopLevelResourceCreationWhenOnlyOperator(ResourceKind $resourceKind) {
         $this->expectException(InsufficientPrivilegesException::class);
-        $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
+        $command = new ResourceCreateCommand($this->freshEntity($resourceKind), ResourceContents::empty());
         $this->handleCommandWithUserRoles($command, [SystemRole::OPERATOR()->roleName('books')]);
     }
 
     /** @depends testAllowedTopLevelResourceCreationWhenResourceClassAdmin */
     public function testForbiddenTopLevelResourceCreationWhenAdminOfAnotherClass(ResourceKind $resourceKind) {
         $this->expectException(InsufficientPrivilegesException::class);
-        $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
+        $command = new ResourceCreateCommand($this->freshEntity($resourceKind), ResourceContents::empty());
         $this->handleCommandWithUserRoles($command, [SystemRole::ADMIN()->roleName('unicorns')]);
     }
 

@@ -36,6 +36,6 @@ class DisplayStrategyImportTransform extends AbstractImportTransform {
         if (!is_array($result)) {
             $result = [$result];
         }
-        return $result;
+        return array_values(array_filter(array_map('trim', $result)));
     }
 }

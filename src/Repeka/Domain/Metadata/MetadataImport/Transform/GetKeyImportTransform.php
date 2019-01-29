@@ -9,7 +9,7 @@ class GetKeyImportTransform extends AbstractImportTransform {
         Assertion::allIsArray($values);
         return array_map(
             function ($array) use ($config) {
-                return $array[$config['key']] ?? null;
+                return $array[$config['key']] ?? '';
             },
             $values
         );

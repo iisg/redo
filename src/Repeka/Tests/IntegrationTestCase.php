@@ -104,7 +104,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         }
     }
 
-    private function freshEntity(Identifiable $entity): Identifiable {
+    protected function freshEntity(Identifiable $entity): Identifiable {
         try {
             $entity = $this->getEntityManager()->find(get_class($entity), $entity->getId());
             $this->getEntityManager()->refresh($entity);

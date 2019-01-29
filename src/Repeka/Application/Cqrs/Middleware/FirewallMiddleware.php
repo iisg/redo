@@ -83,9 +83,13 @@ class FirewallMiddleware implements CommandBusMiddleware {
     }
 
     public static function bypass(callable $callback) {
+        $previous = self::$firewallEnabled;
         self::$firewallEnabled = false;
-        $result = $callback();
-        self::$firewallEnabled = true;
+        try {
+            $result = $callback();
+        } finally {
+            self::$firewallEnabled = $previous;
+        }
         return $result;
     }
 }

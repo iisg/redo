@@ -7,14 +7,14 @@ use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\EventListener\UpdateDependentDisplayStrategiesListener;
+use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfig;
 use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
-use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Plugins\Redo\Command\Import\XmlExtractStrategy\PkImportXmlExtractor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -62,20 +62,27 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             ->addArgument('input', InputArgument::REQUIRED)
             ->addArgument('config', InputArgument::OPTIONAL)
             ->addOption('resourceKindId', null, InputOption::VALUE_REQUIRED)
+            ->addOption('resourceKindIdMap', null, InputOption::VALUE_REQUIRED)
+            ->addOption('skipKindIds', null, InputOption::VALUE_REQUIRED)
+            ->addOption('skipExisting', null, InputOption::VALUE_NONE)
             ->addOption('exportFormat', null, InputOption::VALUE_REQUIRED)
             ->addOption('no-report', null, InputOption::VALUE_NONE)
             ->addOption('id-namespace', null, InputOption::VALUE_OPTIONAL)
             ->addOption('unmap-updated', null, InputOption::VALUE_NONE)
             ->addOption('workflow-place', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY)
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED)
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED)
             ->setDescription('Imports resources from given file.');
     }
 
     /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        UpdateDependentDisplayStrategiesListener::$alwaysLeaveDirty = true;
         $stats = [
             'resources' => 0,
             'imported' => 0,
             'updated' => 0,
+            'skippedRks' => 0,
         ];
         $idMapping = self::getIdMapping();
         $mappedResourceIds = PkImportMapRelationsCommand::getAlreadyMappedResourceIds();
@@ -92,11 +99,13 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         $reportCreator = new PkImportHtmlReport($applicationUrl, $xmlFileName);
         try {
             $xml = PkImportFileLoader::load($xmlFileName);
-            $resourceKind = $this->resourceKindRepository->findOne($input->getOption('resourceKindId'));
-            $workflowPlacesIds = $this->findWorkflowPlacesIds($resourceKind, $input->getOption('workflow-place'));
-            $importConfig = $this->importConfigFactory->fromFile($configFileName, $resourceKind);
-            $invalidMetadataKeys = $importConfig->getInvalidMetadataKeys();
-            Assertion::count($invalidMetadataKeys, 0, 'Invalid metadata keys: ' . implode(', ', $invalidMetadataKeys));
+            $skipExisting = $input->getOption('skipExisting');
+            $resourceKindIdsToSkip = array_filter(explode(',', $input->getOption('skipKindIds')));
+            $resourceKindId = $input->getOption('resourceKindId');
+            $resourceKindsMap = $resourceKindId ? '-1:' . $resourceKindId : $input->getOption('resourceKindIdMap');
+            $resourceKindsMap = $this->buildResourceKindsMap($resourceKindsMap);
+            $workflowPlacesIds = []; //$this->findWorkflowPlacesIds($resourceKind, $input->getOption('workflow-place'));
+            $importConfigs = $this->loadImportConfigs($resourceKindsMap, $configFileName);
             $resourceContentsFetcherName = 'Repeka\\Plugins\\Redo\\Command\\Import\\XmlExtractStrategy\\';
             $resourceContentsFetcherName .= $input->getOption('exportFormat') . 'XmlExtractor';
             /** @var PkImportXmlExtractor $resourceContentsFetcher */
@@ -113,13 +122,33 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             $progress = new ProgressBar($output, count($resources));
             $progress->display();
             $stats['resources'] = count($resources);
+            $offset = $input->getOption('offset') ?? 0;
+            $limit = $offset + ($input->getOption('limit') ?? $stats['resources']);
+            $iteration = 0;
             foreach ($resources as $resource) {
                 $progress->advance();
+                $iteration++;
+                if ($iteration < $offset) {
+                    continue;
+                } elseif ($iteration > $limit) {
+                    break;
+                }
                 $resourceData = $resourceContentsFetcher->extractResourceData($resource);
                 Assertion::keyExists($resourceData, 'ID');
+                if ($resourceKindId) {
+                    $resourceData['KIND_ID'] = '-1';
+                }
+                Assertion::keyExists($resourceData, 'KIND_ID');
+                if (in_array($resourceData['KIND_ID'], $resourceKindIdsToSkip)) {
+                    $stats['skippedRks']++;
+                    continue;
+                }
                 if (is_array($resourceData['ID'])) {
                     $resourceData['ID'] = current($resourceData['ID']);
                 }
+                Assertion::keyExists($resourceKindsMap, $resourceData['KIND_ID']);
+                $resourceKind = $resourceKindsMap[$resourceData['KIND_ID']];
+                $importConfig = $importConfigs[$resourceKind->getId()];
                 $terms = array_keys($resourceData);
                 FirewallMiddleware::bypass(
                     function () use (
@@ -133,7 +162,8 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                         &$mappedResourceIds,
                         &$idMapping,
                         &$stats,
-                        $terms
+                        $terms,
+                        $skipExisting
                     ) {
                         $importedResult = $this
                             ->handleCommand(new MetadataImportQuery($resourceData, $importConfig));
@@ -141,6 +171,9 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                         $importedValues = $importedResult->getAcceptedValues();
                         $resourceId = intval(trim($resourceData['ID']));
                         if (isset($idMapping[$idMappingNamespace][$resourceId])) {
+                            if ($skipExisting) {
+                                return;
+                            }
                             $resource = $this->resourceRepository->findOne($idMapping[$idMappingNamespace][$resourceId]);
                             ++$stats[PkImportResourcesCommand::UPDATED];
                             $status = PkImportResourcesCommand::UPDATED;
@@ -180,7 +213,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             file_put_contents(PkImportMapRelationsCommand::MAPPED_RESOURCES_FILE, json_encode($mappedResourceIds));
         }
         (new Table($output))
-            ->setHeaders(['Total resources', 'Successfully imported', 'Successfully updated'])
+            ->setHeaders(['Total resources', 'Successfully imported', 'Successfully updated', 'Skipped by RK'])
             ->addRows([$stats])
             ->render();
         $output->writeln(
@@ -221,8 +254,14 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         return array_unique(array_diff($terms, $importKeys));
     }
 
-    public function updateResource(ResourceEntity $resource, $importedValues, ResourceKind $resourceKind, array $placesIds = []) {
+    public function updateResource(
+        ResourceEntity $resource,
+        ResourceContents $importedValues,
+        ResourceKind $resourceKind,
+        array $placesIds = []
+    ) {
         $newContents = $resource->getContents();
+        $importedValues = $importedValues->filterOutEmptyMetadata();
         foreach ($importedValues as $metadataId => $values) {
             $newContents = $newContents->withReplacedValues($metadataId, $values);
         }
@@ -236,18 +275,40 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         $this->handleCommand($resourceUpdateCommand->build());
     }
 
-    private function findWorkflowPlacesIds(ResourceKind $resourceKind, array $placesLabelsOrIds): array {
-        if ($placesLabelsOrIds) {
-            $places = $resourceKind->getWorkflow()->getPlaces();
-            $places = array_filter(
-                $places,
-                function (ResourceWorkflowPlace $place) use ($placesLabelsOrIds) {
-                    return in_array($place->getId(), $placesLabelsOrIds) || array_intersect($place->getLabel(), $placesLabelsOrIds);
-                }
-            );
-            Assertion::count($places, count($placesLabelsOrIds), 'Some places were not found.');
-            return EntityUtils::mapToIds($places);
+    // private function findWorkflowPlacesIds(ResourceKind $resourceKind, array $placesLabelsOrIds): array {
+    //     if ($placesLabelsOrIds) {
+    //         $places = $resourceKind->getWorkflow()->getPlaces();
+    //         $places = array_filter(
+    //             $places,
+    //             function (ResourceWorkflowPlace $place) use ($placesLabelsOrIds) {
+    //                 return in_array($place->getId(), $placesLabelsOrIds) || array_intersect($place->getLabel(), $placesLabelsOrIds);
+    //             }
+    //         );
+    //         Assertion::count($places, count($placesLabelsOrIds), 'Some places were not found.');
+    //         return EntityUtils::mapToIds($places);
+    //     }
+    //     return [];
+    // }
+    /** @return ResourceKind[] */
+    private function buildResourceKindsMap(string $resourceKindsIdMap): array {
+        $pairs = explode(',', $resourceKindsIdMap);
+        $map = [];
+        foreach ($pairs as $pair) {
+            list($suwKindId, $redoKindId) = explode(':', $pair);
+            $map[$suwKindId] = $this->resourceKindRepository->findOne($redoKindId);
         }
-        return [];
+        return $map;
+    }
+
+    /** @return ImportConfig[] */
+    private function loadImportConfigs(array $resourceKindsMap, string $configFileName): array {
+        $configs = [];
+        foreach ($resourceKindsMap as $resourceKind) {
+            $config = $this->importConfigFactory->fromFile($configFileName, $resourceKind);
+            // $invalidMetadataKeys = $config->getInvalidMetadataKeys();
+            // Assertion::count($invalidMetadataKeys, 0, 'Invalid metadata keys: ' . implode(', ', $invalidMetadataKeys));
+            $configs[$resourceKind->getId()] = $config;
+        }
+        return $configs;
     }
 }
