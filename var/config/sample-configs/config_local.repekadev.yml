@@ -48,13 +48,6 @@ repeka:
       login_form: redo/login-form.twig
   #      error_page: redo/error-page.twig
   expose_endpoints:
-    /:
-      template: redo/home/home.twig
-      fts:
-        searchable_metadata_ids: [-5, tytul, autor, opis, wydzial, barkod, zasob_plik]
-        filterable_metadata_ids: [parent, tytul, autor, opis, wydzial, barkod]
-        searchable_resource_classes: [books]
-        facets: [kindId]
     /about:
       metadata: imported_file_template
       resourceId: 1978
@@ -62,13 +55,6 @@ repeka:
       template: redo/resource-details/resource-details.twig
     /static/{resourceId}:
       metadata: imported_file_template
-    /search:
-      template: redo/search/search-results-page.twig
-      fts:
-        searchable_metadata_ids: [-5, tytul, autor, opis, wydzial, barkod, zasob_plik]
-        filterable_metadata_ids: [parent, tytul, autor, opis, wydzial, barkod]
-        searchable_resource_classes: [books]
-        facets: [kindId]
     /resources/{resourceId}/bibtex:
       template: bibtex/bibtex.twig
       headers:
@@ -81,3 +67,10 @@ repeka:
       template: redo/deposit.twig
       deposit:
         relationship_resource_kind_ids: [1, 2, -1, 7, 48]
+
+redo:
+  fts:
+    searchable_metadata_ids: [-5, tytul, autor, opis, wydzial, barkod, zasob_plik]
+    filterable_metadata_ids: [parent, tytul, autor, opis, wydzial, barkod]
+    searchable_resource_classes: [books]
+    facets: [kindId]
