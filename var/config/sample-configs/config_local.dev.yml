@@ -46,25 +46,11 @@ repeka:
       login_form: redo/login-form.twig
       error_page: redo/error-page.twig
   expose_endpoints:
-    /:
-      template: redo/home/home.twig
-      fts:
-        searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
-        filterable_metadata_ids: [tytul, opis, parent, wydzial, skanista, nadzorujacy]
-        searchable_resource_classes: [books]
-        facets: [kindId, skanista]
     /about:
       resourceId: 18
       metadata: wyrenderowana_tresc_strony
     /resources/{resourceId}:
       template: redo/resource-details/resource-details.twig
-    /search:
-      template: redo/search/search-results-page.twig
-      fts:
-        searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
-        filterable_metadata_ids: [tytul, parent, skanista, nadzorujacy]
-        searchable_resource_classes: [books]
-        facets: [kindId, skanista, nadzorujacy, powiazanaKsiazka]
     /resources/{resourceId}/bibtex:
       template: bibtex/bibtex.twig
       headers:
@@ -85,3 +71,10 @@ m6_statsd:
   servers:
     default:
       address: 'udp://localhost'
+
+redo:
+  fts:
+    searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
+    filterable_metadata_ids: [tytul, opis, parent, wydzial, skanista, nadzorujacy]
+    searchable_resource_classes: [books]
+    facets: [kindId, skanista]

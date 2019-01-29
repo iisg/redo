@@ -24,6 +24,12 @@ class Configuration implements ConfigurationInterface {
                   ->defaultValue('http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode=')
                 ->end()
                 ->scalarNode('user_data_mapping')->defaultValue(\AppKernel::APP_PATH . '/../var/config/user_data_mapping.json')->end()
+                ->arrayNode('fts')->canBeDisabled()->children()
+                    ->arrayNode('searchable_metadata_ids')->prototype('scalar')->defaultValue([])->end()->end()
+                    ->arrayNode('filterable_metadata_ids')->prototype('scalar')->defaultValue([])->end()->end()
+                    ->arrayNode('searchable_resource_classes')->prototype('scalar')->defaultValue([])->end()->end()
+                    ->arrayNode('facets')->prototype('scalar')->defaultValue([])->end()->end()
+                ->end()->end()
             ->end();
         // @formatter:on
         // @codingStandardsIgnoreEnd
