@@ -30,7 +30,7 @@ redo-footer, .redo-footer {
     img {
       height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
       &.horizontal {
-        max-width: $powered-by-redo-logo-maximum-width; // Required by Chrome.
+        max-width: $powered-by-redo-logo-maximum-width; // Required by Chromium.
       }
     }
     .creative-commons-icons-with-description {

@@ -32,16 +32,16 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
 
 @mixin expanded-collapsible() {
     transition:
-        transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom
+        transitions-with-common-settings(height line-height margin-top margin-bottom padding-top padding-bottom
             border-top-width border-bottom-width, $expand-animation-elements-movement-transition-settings),
         transitions-with-common-settings(opacity visibility,
             $expand-animation-opacity-and-visibility-transitions-settings);
     &, :not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
-        line-height: $default-line-height * 1em;;
+        line-height: $default-line-height * 1em;
     }
     :not(.label-with-checkbox > ::before):not(.collapsible):not(.icon):not(icon):not(svg) {
-        transition: transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom border-top-width border-bottom-width,
-            $expand-animation-elements-movement-transition-settings),
+        transition: transitions-with-common-settings(height line-height margin-top margin-bottom padding-top padding-bottom
+            border-top-width border-bottom-width, $expand-animation-elements-movement-transition-settings),
     }
     .label-with-checkbox > ::before {
         transition: transitions-with-common-settings(height border-top-width border-bottom-width vertical-align,
@@ -59,7 +59,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
     opacity: 0 !important;
     visibility: hidden !important;
     transition:
-        transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom
+        transitions-with-common-settings(height line-height margin-top margin-bottom padding-top padding-bottom
             border-top-width border-bottom-width, $collapse-animation-elements-movement-transition-settings),
         transitions-with-common-settings(opacity visibility,
             $collapse-animation-opacity-and-visibility-transitions-settings);
@@ -83,7 +83,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
         line-height: 0;
     }
     :not(.label-with-checkbox > ::before):not(.icon):not(icon):not(svg) {
-        transition: transitions-with-common-settings(line-height margin-top margin-bottom padding-top padding-bottom
+        transition: transitions-with-common-settings(height line-height margin-top margin-bottom padding-top padding-bottom
             border-top-width border-bottom-width, $collapse-animation-elements-movement-transition-settings) !important;
     }
     .label-with-checkbox > ::before {
@@ -117,6 +117,55 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
     }
     &.collapsed {
         @include collapsed-collapsible();
+    }
+}
+
+@mixin expanded-collapsible-with-visible-first-line {
+    & > :first-child {
+        &.text-container, .text-container {
+            line-height: $default-line-height * 1em;
+            color: $default-text-color;
+            transition: line-height $expand-animation-elements-movement-transition-settings,
+                color $expand-animation-opacity-and-visibility-transitions-settings;
+            &::first-line {
+                line-height: $default-line-height;
+                color: $default-text-color;
+            }
+        }
+    }
+    & > :not(:first-child) {
+        @include expanded-collapsible();
+    }
+}
+
+@mixin collapsed-collapsible-with-visible-first-line {
+    & > :first-child {
+        &.text-container, .text-container {
+            line-height: $line-height-to-be-rendered-as-zero;
+            color: transparent;
+            transition: line-height $collapse-animation-elements-movement-transition-settings,
+                color $collapse-animation-opacity-and-visibility-transitions-settings;
+            &::first-line {
+                line-height: $default-line-height;
+                color: $default-text-color;
+            }
+        }
+    }
+    & > :not(:first-child) {
+        @include collapsed-collapsible();
+        margin-top: -$default-line-height * $default-font-size !important;
+        & > * {
+            margin-top: 0 !important;
+        }
+    }
+}
+
+.collapsible-with-first-line-visible {
+    &:not(.collapsed) {
+        @include expanded-collapsible-with-visible-first-line();
+    }
+    &.collapsed {
+        @include collapsed-collapsible-with-visible-first-line();
     }
 }
 

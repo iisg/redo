@@ -48,25 +48,42 @@
                     <hr>
                 {% endif %}
                 {% if results.aggregations is not empty %}
-                    <div class="facets">
-                        {% for aggregationName, aggregation in results.aggregations if aggregation.buckets.0[aggregationName].buckets %}
-                            <div>
-                                <strong>{{ aggregationName == 'kindId' ? 'Typ zasobu' : metadata(aggregationName).label.PL }}</strong>
-                                {% for bucket in aggregation.buckets.0[aggregationName].buckets %}
-                                    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({'phrase': phrase, 'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key, app.request.query.get('facetFilters') ?? []), 'page': 1})) }}">
-                                        <label class="label-with-checkbox">
-                                            <input type="checkbox"
-                                                {% if isFilteringByFacet(aggregationName, bucket.key, app.request.query.get('facetFilters') ?? []) %}
-                                            checked
-                                                {% endif %}>
-                                            <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label.PL : r(bucket.key) | mLabel }} ({{ bucket.doc_count }})</span>
-                                        </label>
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <hr>
+                    {% set aggregations = [] %}
+                    {% for aggregationName, aggregation in results.aggregations if aggregation.buckets.0[aggregationName].buckets %}
+                        {# Objects are wrapped as otherwise `aggragationName` - when it's numeric - would be treated as index of an array
+                            and modified: http://obtao.com/blog/2014/06/use-variable-key-twig-array/. #}
+                        {% set aggregations = aggregations | merge([{(aggregationName): aggregation}]) %}
+                    {% endfor %}
+                    {% if aggregations is not empty %}
+                        <div class="facets">
+                            {% for aggregation in aggregations %}
+                                {% set aggregationName = aggregation | keys | first %}
+                                {% set aggregationData = aggregation | first %}
+                                <div>
+                                    <strong>{{ aggregationName == 'kindId' ? 'Typ zasobu' : metadata(aggregationName).label.PL }}</strong>
+                                    {% for bucket in aggregationData.buckets.0[aggregationName].buckets %}
+                                        <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({
+                                                'phrase': phrase,
+                                                'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key,
+                                                    app.request.query.get('facetFilters') ?? []),
+                                                'page': 1
+                                            })) }}">
+                                            <label class="label-with-checkbox">
+                                                <input type="checkbox"
+                                                    {% if isFilteringByFacet(aggregationName, bucket.key,
+                                                        app.request.query.get('facetFilters') ?? []) %}
+                                                checked
+                                                    {% endif %}>
+                                                <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label.PL
+                                                    : r(bucket.key) | mLabel }} ({{ bucket.doc_count }})</span>
+                                            </label>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <hr>
+                    {% endif %}
                 {% endif %}
                 {% if filterableNonTextMetadataList is not empty %}
                     <div>
@@ -85,30 +102,20 @@
             </form>
         </div>
         <div class="search-results">
-            {% if results|length == 0 %}
+            {% if results | length == 0 %}
                 <h1>Brak wyników.</h1>
             {% else %}
-                <h1>Wyniki wyszukiwania ({{ results.totalHits }})</h1>
-                {% for result in results %}
-                    {% set resource = result.data.contents | ftsContentsToResource %}
-                    <div class="search-result">
-                        <icon name="document"
-                            size="1.5"></icon>
-                        <div class="details">
-                            <h3><a href="/resources/{{ result.id }}">{{ resource | mLabel }} (#{{ result.id }})</a></h3>
-                            <div class="highlights">
-                                {% for fieldName, highlights in result.highlights %}
-                                    {% for highlight in highlights %}
-                                        <p>
-                                            <strong>{{ metadata(fieldName | slice(9) | number_format).label.PL }}:</strong>
-                                            {{ highlight | raw }}
-                                        </p>
-                                    {% endfor %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
+                <h1 class="title"><strong>Wyniki wyszukiwania ({{ results.totalHits }})</strong></h1>
+                {% set resources = [] %}
+                <div>
+                    {% for searchResult in results %}
+                        {% set resource = resource(searchResult.id) %}
+                        {% include "redo/resources-list-element.twig" %}
+                        {% if not loop.last %}
+                            <hr>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             {% endif %}
             {% include 'redo/search/pagination.twig' with {'route_params': {'phrase': phrase}} %}
         </div>

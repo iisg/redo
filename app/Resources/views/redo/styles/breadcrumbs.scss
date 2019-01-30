@@ -1,6 +1,7 @@
 .breadcrumbs {
     display: flex;
     flex-wrap: wrap;
+    flex-shrink: 0; // Required by Chromium.
     padding: $default-gap-size / 2 $default-gap-size / 4;
     background-color: lighten($very-light-grey, $default-value-to-lighten-colors-by / 10);
     color: $grey;

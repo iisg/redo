@@ -1,0 +1,125 @@
+$image-height: 50px;
+$download-options-maximum-width: 300px;
+$collapsible-metadata-list-toggle-width: 1em;
+$collapsible-metadata-list-toggle-height: $default-line-height * 1em;
+
+.resources-list-element {
+  padding: $default-gap-size / 2;
+  display: flex;
+  &:not(:hover) fieldset {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .resource-image {
+    padding: $default-gap-size $default-gap-size / 2;
+    & > * {
+      height: $image-height;
+    }
+  }
+  .details {
+    padding: $default-gap-size / 4;
+    flex-grow: 1;
+    overflow: hidden;
+    .metadata-label {
+      display: inline-block;
+      color: $grey;
+    }
+    .basic-data-with-download-options {
+      display: flex;
+      align-items: flex-start;
+      .basic-data {
+        flex-basis: 0;
+        flex-grow: 1;
+        padding-top: $default-gap-size / 8;
+        padding-left: $default-gap-size / 8;
+        padding-right: $default-gap-size / 8;
+        & > * {
+          padding: $default-gap-size / 8;
+        }
+      }
+      fieldset {
+        margin: $default-gap-size / 8 $default-gap-size / 4;
+        transition: transitions-with-common-settings(opacity visibility, $default-transition-duration);
+        .download-formats {
+          display: flex;
+          justify-content: space-evenly;
+          flex-wrap: wrap;
+          & > * {
+            padding: $default-gap-size / 8 $default-gap-size / 2;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+    .collapsible-metadata {
+      position: relative;
+      min-height: $default-line-height * 1em;
+      padding-bottom: $default-gap-size / 8;
+      padding-left: $default-gap-size / 8;
+      padding-right: $default-gap-size / 8;
+      .metadata-details {
+        padding: $default-gap-size / 8;
+      }
+      .toggle {
+        padding: $default-gap-size / 8;
+        &.toggled svg {
+          transform: rotate(90deg);
+        }
+        svg {
+          transition: transform $collapse-and-expand-animations-duration;
+        }
+      }
+      .collapsible-with-first-line-visible {
+        position: relative;
+        width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
+        &:not(.collapsed) {
+          .text-container.metadata-label {
+            color: $grey;
+            &::first-line {
+              color: $grey;
+            }
+          }
+        }
+        &.collapsed {
+          .text-container.metadata-label {
+            &::first-line {
+              color: $grey;
+            }
+          }
+        }
+        .metadata-details {
+          & > em {
+            font-style: normal;
+            background-color: lighten($orange, $default-value-to-lighten-colors-by);
+          }
+          .metadata-label > em {
+            font-style: normal;
+            color: $lightish-grey;
+          }
+        }
+      }
+      .first-line-with-optional-toggle {
+        position: absolute;
+        top: 0;
+        width: calc(100% - #{2 * $default-gap-size / 8});
+        & > div {
+          height: $default-line-height * 1em;
+          overflow: hidden;
+          & > div {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            height: calc(#{$default-line-height * 1em} + 4 * #{$default-gap-size / 8}
+              + #{$collapsible-metadata-list-toggle-height} + 1px); // `+ 1px` is required by Chromium.
+            & > :not(.toggle) {
+              width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
+              visibility: hidden;
+            }
+          }
+        }
+      }
+    }
+  }
+}
