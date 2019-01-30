@@ -49,19 +49,28 @@ export class DatetimePicker implements ComponentAttached {
   }
 
   listenForDatePickerEvents() {
-    let dateData = new FlexibleDateContent();
+    const dateData = new FlexibleDateContent();
     dateData.mode = this.dateMode;
     $(this.datepicker).on('dp.change', e => {
       if (!this.isLoaded) {
         return;
       }
       const inputDate: moment.Moment = e.date;
-      if (!this.flexible) {
-        this.value = inputDate.format();
+      if (inputDate) {
+        if (!this.flexible) {
+          this.value = inputDate.format();
+        } else {
+          if (inputDate instanceof FlexibleDateContent) {
+            dateData.from = inputDate.from;
+            dateData.to = inputDate.to;
+          } else {
+            dateData.from = inputDate.format();
+            dateData.to = inputDate.format();
+          }
+          this.value = dateData;
+        }
       } else {
-        dateData.from = inputDate.format();
-        dateData.to = inputDate.format();
-        this.value = dateData;
+        this.value = undefined;
       }
       this.element.dispatchEvent(ChangeEvent.newInstance());
     });
@@ -86,7 +95,7 @@ export class DatetimePicker implements ComponentAttached {
       const inputDate = e.date;
       $(this.linkedDatepicker).data("DateTimePicker").minDate(inputDate);
       dateData.from = inputDate ? inputDate.format() : undefined;
-      this.value = dateData;
+      this.value = dateData.from || dateData.to ? dateData : undefined;
       this.element.dispatchEvent(ChangeEvent.newInstance());
     });
     $(this.linkedDatepicker).on('dp.change', e => {
@@ -96,7 +105,7 @@ export class DatetimePicker implements ComponentAttached {
       const inputDate = e.date;
       $(this.datepicker).data('DateTimePicker').maxDate(e.date);
       dateData.to = inputDate ? inputDate.format() : undefined;
-      this.value = dateData;
+      this.value = dateData.from || dateData.to ? dateData : undefined;
       this.element.dispatchEvent(ChangeEvent.newInstance());
     });
   }
