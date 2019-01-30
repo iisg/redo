@@ -2,7 +2,7 @@
 
 .navigation-menu-item {
   display: block;
-  &:hover, &.current:not(.expanded) {
+  &:hover, &:focus, &.current:not(.expanded) {
     & > a {
       color: white;
       background-color: $grey;

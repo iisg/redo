@@ -1,8 +1,9 @@
 .pagination {
-  margin: $default-gap-size / 2 0;
-  width: 100%;
   display: inline-flex;
   justify-content: space-between;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
   ul.pages-list {
     list-style-type: none;
     margin: 0;

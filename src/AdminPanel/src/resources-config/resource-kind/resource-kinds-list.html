@@ -13,7 +13,7 @@
             submit.call="addNewResourceKind(savedResourceKind)"
             cancel.call="toggleEditForm()"></resource-kind-form>
     </div>
-    <div class="table-container"> <!-- For some reason this is required by Chrome to make horizontal scrolling possible. -->
+    <div class="table-container"> <!-- For some reason this is required by Chromium to make horizontal scrolling possible. -->
         <table show.bind="!resourceKinds || resourceKinds.length > 0 || progressBar">
             <thead>
             <tr>

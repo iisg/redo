@@ -41,8 +41,7 @@
         current-page-number.bind="filters.currentPageNumber"
         hide-elements-per-page-dropdown="true"></pagination>
     <loading-bar if.bind="displayProgressBar"></loading-bar>
-    <div class="table-container">
-        <!-- For some reason this wrapper is required by Chrome to make horizontal scrolling possible. -->
+    <div class="table-container"> <!-- For some reason this wrapper is required by Chromium to make horizontal scrolling possible. -->
         <table if.bind="entries.length > 0">
             <thead>
             <tr>
@@ -73,7 +72,8 @@
             <tr repeat.for="entry of entries"
                 class="${entry.successful ? '' : 'failure'}">
                 <td>${entry.createdAt | date:'LLL'}</td>
-                <td if.bind="entry.data.workflowPluginName">${'Plugin'|t}: ${'plugins::' + entry.data.workflowPluginName + '//label' | t}</td>
+                <td if.bind="entry.data.workflowPluginName">${'Plugin'|t}: ${'plugins::' + entry.data.workflowPluginName
+                    + '//label' | t}</td>
                 <td else>${'audit_commands::' + entry.commandName | t}</td>
                 <td>
                     <resource-link if.bind="entry.user"
@@ -81,7 +81,8 @@
                 </td>
                 <td class="audit-entry-details">
                     <compose view-model="./entry-details/audit-entry-details"
-                        view="./entry-details/audit-entry-details-${entry.data.workflowPluginName ? 'resource-workflow-plugin' : entry.commandName | underscoresToHyphens}.html"
+                        view="./entry-details/audit-entry-details-${entry.data.workflowPluginName ? 'resource-workflow-plugin'
+                            : entry.commandName | underscoresToHyphens}.html"
                         model.bind="{entry: entry}"></compose>
                 </td>
                 <td repeat.for="column of filters.customColumns">

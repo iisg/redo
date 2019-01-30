@@ -58,7 +58,7 @@ repeka:
       metadata: wyrenderowana_tresc_strony
     /resources/{resourceId}:
       template: redo/resource-details/resource-details.twig
-    /search/{phrase}:
+    /search:
       template: redo/search/search-results-page.twig
       fts:
         searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]

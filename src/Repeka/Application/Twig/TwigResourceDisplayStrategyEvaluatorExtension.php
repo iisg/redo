@@ -77,11 +77,8 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         if ($metadataId === null) {
             throw new \Twig_Error('Please specify metadata by choosing one of the following syntax: m1, mName, m(1), m("Name")');
         }
-        try {
-            return $this->fetchMetadataByNameOrId($metadataId, $context)->getId();
-        } catch (EntityNotFoundException $e) {
-            return 0;
-        }
+        $metadata = $this->fetchMetadataByNameOrId($metadataId, $context);
+        return $metadata ? $metadata->getId() : 0;
     }
 
     public function fetchMetadataByNameOrId($name, $context = null) {
@@ -95,7 +92,7 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
             if ($context) { // maybe the metadata is classless?
                 return $this->fetchMetadataByNameOrId($name);
             } else {
-                throw $e;
+                return null;
             }
         }
     }
