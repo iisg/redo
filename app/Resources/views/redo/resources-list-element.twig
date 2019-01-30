@@ -1,0 +1,136 @@
+{% set visibleMetadataNames = ['data_wydania'] %}
+{% set collapsedMetadataNames = ['opis', 'abstrakt'] %}
+
+{% set childrenAllowedInResource = resource | childrenAllowed %}
+<div class="resources-list-element">
+    <div class="resource-image">
+        {% if childrenAllowedInResource %}
+            {{ icon('folder') }}
+        {% else %}
+            {{ icon('document') }}
+        {% endif %}
+    </div>
+    <div class="details">
+        <div class="basic-data-with-download-options">
+            <div class="basic-data">
+                <h2><a href="/resources/{{ resource.id }}">{{ resource | metadata('label') }}</a></h2>
+                {% if resource | metadata('autor') is not empty %}
+                    <h4>{{ resource | metadata('autor') }}</h4>
+                {% endif %}
+                <div>
+                    <span class="metadata-label">Typ:</span> {{ resource.kind.label.PL }}
+                </div>
+                {% for visibleMetadataName in visibleMetadataNames %}
+                    {% set metadata = metadata(visibleMetadataName) %}
+                    {% if metadata %}
+                        {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
+                        {% set metadataValue = resource | metadata(visibleMetadataName) %}
+                        {% if metadataValue is not empty %}
+                            <div>
+                                <span class="metadata-label">{{ metadataLabel }}:</span> {{ metadataValue }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if not childrenAllowedInResource %}
+                <fieldset>
+                    <legend align="left"><span class="title"
+                        title="Pobierz zasób">Pobierz zasób</span></legend>
+                    <div class="download-formats">
+                        <h4><a href="/resources/{{ resource.id }}/download/mobi"
+                            title="Pobierz zasób w formacie MOBI - 7KB">MOBI</a></h4>
+                        <h4><a href="/resources/{{ resource.id }}/download/pdf"
+                            title="Pobierz zasób w formacie PDF - 144000KB">PDF</a></h4>
+                    </div>
+                </fieldset>
+            {% endif %}
+        </div>
+
+        {% if searchResult is defined %}
+            {% set metadataWithHighlightsIds = [] %}
+            {% set metadataLabelsWithHighlights = [] %}
+            {% for fieldName, highlights in searchResult.highlights %}
+                {% set metadataId = fieldName | slice(9) | number_format %}
+                {% set metadataWithHighlightsIds = metadataWithHighlightsIds | merge([metadataId]) %}
+                {% set metadata = metadata(metadataId) %}
+                {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
+                {% set metadataLabelsWithHighlights = metadataLabelsWithHighlights | merge([{
+                        label: metadataLabel,
+                        highlights: highlights
+                    }]) %}
+            {% endfor %}
+        {% endif %}
+
+        {% set collapsedMetadataLabelsWithValues = [] %}
+        {% for collapsedMetadataName in collapsedMetadataNames %}
+            {% set metadata = metadata(collapsedMetadataName) %}
+            {% if metadata and (metadataWithHighlightsIds is not defined or metadata.id not in metadataWithHighlightsIds) %}
+                {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
+                {% set metadataValue = resource | metadata(collapsedMetadataName) %}
+                {% if metadataValue is not empty %}
+                    {% set collapsedMetadataLabelsWithValues = collapsedMetadataLabelsWithValues| merge([{
+                            label: metadataLabel,
+                            value: metadataValue
+                        }]) %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if collapsedMetadataLabelsWithValues is not empty or searchResult is defined and metadataLabelsWithHighlights is not empty %}
+            {% set variableName = "resource" ~ resource.id ~ "MetadataListExpanded" %}
+            <div class="collapsible-metadata">
+                <div class="first-line-with-optional-toggle">
+                    <div>
+                        <div>
+                            <div>
+                                {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
+                                    <div class="metadata-details">
+                                        <span class="metadata-label">{{ collapsedMetadataLabelWithValue.label }}:</span> {{ collapsedMetadataLabelWithValue.value }}
+                                    </div>
+                                {% endfor %}
+                                {% if searchResult is defined %}
+                                    {% for metadataLabelWithHighlights in metadataLabelsWithHighlights %}
+                                        <div class="metadata-details">
+                                            <span class="metadata-label">{{ metadataLabelWithHighlights.label }} <em>(fragmenty)</em>:</span>
+                                            {% for highlight in metadataLabelWithHighlights.highlights %}
+                                                {{ highlight | raw }}{% if not loop.last %}<br>{% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <button class="toggle ${ {{ variableName }} ? 'toggled' : '' }"
+                                type="button"
+                                click.delegate="{{ variableName }} = !{{ variableName }}">
+                                <span>{{ icon('forward') }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapsible-with-first-line-visible collapsed"
+                    class.bind="{{ variableName }} ? '' : 'collapsed'"
+                    click.delegate="{{ variableName }} = true">
+                    {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
+                        <div class="metadata-details {{ loop.first ? 'text-container': '' }}">
+                            <span class="metadata-label {{ loop.first ? 'text-container': '' }}">{{ collapsedMetadataLabelWithValue.label }}:</span>
+                            {{ collapsedMetadataLabelWithValue.value }}
+                        </div>
+                    {% endfor %}
+                    {% if searchResult is defined %}
+                        {% for metadataLabelWithHighlights in metadataLabelsWithHighlights %}
+                            <div class="metadata-details
+                                {{ collapsedMetadataLabelsWithValues is empty and loop.first ? 'text-container': '' }}">
+                                <span class="metadata-label {{ collapsedMetadataLabelsWithValues is empty
+                                    and loop.first ? 'text-container': '' }}">{{ metadataLabelWithHighlights.label }} <em>(fragmenty)</em>:</span>
+                                    {% for highlight in metadataLabelWithHighlights.highlights %}
+                                        {{ highlight | raw }}{% if not loop.last %}<br>{% endif %}
+                                    {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

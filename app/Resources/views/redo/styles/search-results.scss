@@ -5,7 +5,8 @@ $left-panel-maximum-width: 320px;
 .search-results-container {
   display: flex;
   flex-grow: 1;
-  flex-shrink: 0; // Required by Chrome and Internet Explorer.
+  flex-shrink: 0; // Required by Chromium and Internet Explorer.
+  flex-wrap: wrap;
   .left-panel {
     padding: $default-gap-size / 2;
     border-right: solid $default-gap-size / 8 $orange;
@@ -85,60 +86,41 @@ $left-panel-maximum-width: 320px;
             padding: $default-gap-size / 8;
           }
         }
+        a > label {
+          pointer-events: none;
+        }
       }
       .parent {
         display: flex;
         font-weight: bold;
         & > :first-child {
-            flex-grow: 1;
-            &:not(:last-child) {
-                margin-right: $default-gap-size / 4;
-            }
+          flex-grow: 1;
+          &:not(:last-child) {
+            margin-right: $default-gap-size / 4;
+          }
         }
         & > :last-child:not(:first-child) {
-            margin-left: auto;
-            padding: $default-gap-size / 8;
+          margin-left: auto;
+          padding: $default-gap-size / 8;
         }
       }
     }
   }
   .search-results {
-    margin-top: $default-gap-size;
-    margin-bottom: $default-gap-size;
-    padding-left: $default-gap-size;
-    padding-right: $default-gap-size;
-  }
-  h1 {
-    padding-bottom: $default-gap-size / 4;
-    border-bottom: solid 1px $default-text-color;
-  }
-  .search-results {
+    display: flex;
+    flex-direction: column;
     flex: 1;
-    .search-result {
-      display: flex;
-      align-items: flex-start;
-      &:not(:last-of-type) {
-        border-bottom: solid 1px $light-grey;
-      }
-      & > :not(icon) {
-        padding: $default-gap-size / 2;
-      }
-      & > icon {
-        font-size: $subtitle-font-size;
-        margin: $default-gap-size / 2;
-      }
-      h3 {
-        line-height: $icons-size;
-      }
-      .details {
-        display: inline-block;
-      }
-      .highlights {
-        em {
-          font-style: normal;
-          background-color: lighten($orange, $default-value-to-lighten-colors-by);
-        }
-      }
+    max-width: 100%;
+    margin-top: $default-gap-size * 3 / 4;
+    margin-bottom: $default-gap-size * 3 / 4;
+    padding-left: $default-gap-size * 5 / 4;
+    padding-right: $default-gap-size * 5 / 4;
+    & > * {
+      padding: $default-gap-size / 4;
+    }
+    .pagination {
+      max-width: 100%;
+      margin-top: auto;
     }
   }
 }

@@ -88,6 +88,6 @@ $advanced-options-column-border-width: $default-gap-size / 8;
 }
 
 :not(.title-with-search-bar) > .search-bar {
-  flex-shrink: 0; // Required by Chrome.
+  flex-shrink: 0; // Required by Chromium.
   padding: $default-gap-size / 2;
 }

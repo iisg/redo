@@ -1,11 +1,16 @@
 $gap-size: $default-gap-size * 2;
 $image-height: 100px;
-$resource-image-with-title-container-with-actions-flex-grow: 10000;
-$resource-image-with-title-container-with-actions-flex-basis: 300px;
+$resource-image-with-title-container-with-actions-flex-basis: 350px;
+$resource-image-with-title-container-with-actions-flex-grow: 10000; // Prevents `download-options` from expanding when not wrapped.
+$download-options-flex-basis: 248px; // Should allow having two columns of four-letter titles.
 $download-options-flex-grow: 1;
 
 .resource-details {
     padding: $gap-size * 3 / 2;
+    & > :not(.top-container) {
+        padding-top: $gap-size / 4;
+        padding-bottom: $gap-size / 4;
+    }
     .top-container {
         display: flex;
         flex-wrap: wrap;
@@ -55,6 +60,7 @@ $download-options-flex-grow: 1;
         .download-options {
             margin-left: auto;
             max-width: 100%;
+            flex-basis: $download-options-flex-basis;
             flex-grow: $download-options-flex-grow;
             & > div {
                 display: flex;
@@ -76,8 +82,6 @@ $download-options-flex-grow: 1;
         }
     }
     .details {
-        padding-top: $gap-size / 4;
-        padding-bottom: $gap-size / 4;
         td {
             &:not(:only-child) {
                 padding: $gap-size / 4 $gap-size / 2;
@@ -92,28 +96,10 @@ $download-options-flex-grow: 1;
             }
         }
     }
-    .child-resources-list {
-        .child-resources-list-item {
-            display: flex;
-            align-items: center;
-            padding: $gap-size / 4;
-            justify-content: space-between;
-            &:not(:hover):not(:focus-within):not([focus-within]) {
-                fieldset {
-                    opacity: 0;
-                    visibility: hidden;
-                }
-            }
-            & > :not(fieldset) {
-                padding: $gap-size / 4;
-            }
-            fieldset {
-                margin: $gap-size / 4;
-                transition: transitions-with-common-settings(visibility opacity, $default-transition-duration);
-            }
-        }
-        hr {
-            margin: $gap-size / 4 $gap-size / 2;
+    .child-resources {
+        & > :not(.name-with-separator) {
+            padding-left: $gap-size / 2;
+            padding-right: $gap-size / 2;
         }
     }
     .name-with-separator {

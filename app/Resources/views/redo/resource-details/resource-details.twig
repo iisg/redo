@@ -81,50 +81,50 @@
             <div>
                 <table>
                     {% for metadataGroupId, metadataList in resource.kind.groupedMetadataList %}
-                    {% set metadataGroup = metadataGroup(metadataGroupId) %}
-                    <tr>
-                        <td colspan="2">
-                            <div class="name-with-separator">
-                                <strong>
-                                    {% if metadataGroup.label is defined %}
-                                        {{ metadataGroup.label['PL'] | default(metadataGroup.label | first) }}
-                                    {% else %}
-                                        Pozostałe informacje
-                                    {% endif %}
-                                </strong>
-                                <hr>
-                            </div>
-                        </td>
-                    </tr>
-                    {% for metadata in metadataList %}
-                    {% set metadataValue = resource | metadata(metadata.id) | first %}
-                    {% if metadataValue
-                        and metadata.name != 'tytul'
-                        and metadata.name != 'label'
-                        and metadata.name != 'parent'
-                        and metadata.control != 'display-strategy'
-                        and metadata.control != 'wysiwyg-editor' %}
-                    <tr>
-                        <td>
-                            {{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}
-                        </td>
-                        <td>
-                            {% if metadata.control == 'file'
-                            or metadata.control == 'directory' %}
-                            {{ metadataValue | basename }}
-                            {% else %}
-                            {{ metadataValue }}
+                        {% set metadataGroup = metadataGroup(metadataGroupId) %}
+                        <tr>
+                            <td colspan="2">
+                                <div class="name-with-separator">
+                                    <strong>
+                                        {% if metadataGroup.label is defined %}
+                                            {{ metadataGroup.label['PL'] | default(metadataGroup.label | first) }}
+                                        {% else %}
+                                            Pozostałe informacje
+                                        {% endif %}
+                                    </strong>
+                                    <hr>
+                                </div>
+                            </td>
+                        </tr>
+                        {% for metadata in metadataList %}
+                            {% set metadataValue = resource | metadata(metadata.id) | first %}
+                            {% if metadataValue
+                                and metadata.name != 'tytul'
+                                and metadata.name != 'label'
+                                and metadata.name != 'parent'
+                                and metadata.control != 'display-strategy'
+                                and metadata.control != 'wysiwyg-editor' %}
+                                <tr>
+                                    <td>
+                                        {{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}
+                                    </td>
+                                    <td>
+                                        {% if metadata.control == 'file'
+                                        or metadata.control == 'directory' %}
+                                            {{ metadataValue | basename }}
+                                        {% else %}
+                                            {{ metadataValue }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             {% endif %}
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
+                        {% endfor %}
                     {% endfor %}
                 </table>
             </div>
         </div>
         {% if childrenAllowed %}
-            <div>
+            <div class="child-resources">
                 {% set page = app.request.query.get('page') | default(1) %}
                 {% set childrenPerPage = 10 %}
                 {% set children = resources({parentId: resource.id, page: page, resultsPerPage: childrenPerPage}) %}
@@ -133,31 +133,9 @@
                     <h3><strong>Elementy kolekcji ({{ children.getTotalCount }})</strong></h3>
                     <hr>
                 </div>
-                <div class="child-resources-list">
-                    {% for childResource in children %}
-                        {% set childrenAllowedInChildResource = childResource | childrenAllowed %}
-                        <div class="child-resources-list-item">
-                            <h3>
-                                {% if childrenAllowedInChildResource %}
-                                    {{ icon('folder', 1.5) }}
-                                {% else %}
-                                    {{ icon('document', 1.5) }}
-                                {% endif %}
-                                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({'resourceId': childResource.id})) }}">{{
-                                    childResource | mLabel }}</a>
-                            </h3>
-                            {% if not childrenAllowedInChildResource %}
-                                <fieldset>
-                                    <legend align="left"><span title="Pobierz zasób">Pobierz zasób</span></legend>
-                                    <div class="download-formats">
-                                        <h4><a href="/resources/{{ childResource.id }}/download/mobi"
-                                            title="Pobierz zasób w formacie MOBI - 7KB">MOBI</a></h4>
-                                        <h4><a href="/resources/{{ childResource.id }}/download/pdf"
-                                            title="Pobierz zasób w formacie PDF - 144000KB">PDF</a></h4>
-                                    </div>
-                                </fieldset>
-                            {% endif %}
-                        </div>
+                <div>
+                    {% for resource in children %}
+                        {% include "redo/resources-list-element.twig" %}
                         {% if not loop.last %}
                             <hr>
                         {% endif %}
@@ -167,8 +145,6 @@
                 resource.id}} %}
             </div>
             {% endif %}
-
-
     </div>
     {% include "redo/footer.twig" %}
 {% endblock %}
