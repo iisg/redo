@@ -129,6 +129,7 @@ function removeUnwantedFiles() {
     'release/app/config/config_dev.yml',
     'release/app/config/config_test.yml',
     'release/app/config/routing_dev.yml',
+    'release/src/Repeka/Plugins/**/Tests',
     'release/**/.gitignore',
     'release/composer.*',
     'release/**/package.json',
