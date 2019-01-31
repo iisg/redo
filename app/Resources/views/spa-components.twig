@@ -2,6 +2,8 @@
   window.FRONTEND_CONFIG = {{ getFrontendConfig() | json_encode | raw }};
 </script>
 <script src="/jspm_packages/github/iisg/nprogress@0.2.2/nprogress.js"></script>
+<link rel="stylesheet"
+    href="/jspm_packages/github/iisg/nprogress@0.2.2/nprogress.css">
 <script>NProgress.configure({showSpinner: false, delay: 1000}).start();</script>
 <script src="/jspm_packages/npm/bluebird@3.4.1/js/browser/bluebird.min.js"></script>
 <script src="/jspm_packages/system.js"></script>

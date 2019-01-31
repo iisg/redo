@@ -1,7 +1,6 @@
 import {bindable, noView} from "aurelia-framework";
-import * as nprogress from "nprogress";
 
-@noView(['nprogress/nprogress.css'])
+@noView
 export class PageLoadingIndicator {
   @bindable loading = false;
 
@@ -11,9 +10,9 @@ export class PageLoadingIndicator {
 
   loadingChanged(newValue: boolean) {
     if (newValue) {
-      nprogress.start();
+      NProgress.start();
     } else {
-      nprogress.done();
+      NProgress.done();
     }
   }
 }
