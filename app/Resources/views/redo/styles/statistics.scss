@@ -12,8 +12,8 @@
         }
     }
     h4 {
-        color: $blue;
-        border-bottom: $default-gap-size / 8 solid $blue;
+        color: $main-theme-color;
+        border-bottom: $default-gap-size / 8 solid $accents-color;
     }
     .list-element {
         display: flex;

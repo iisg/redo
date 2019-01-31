@@ -30,9 +30,6 @@
         & > :last-child {
             margin-left: auto;
         }
-        .form-control {
-            width: initial;
-        }
     }
     .property-options {
         padding: $default-gap-size / 8 $default-gap-size / 4; // It's all because of the issue with `.property-name-container` margins.
@@ -48,7 +45,7 @@
         display: flex;
         margin-top: $default-gap-size / 8; // Setting left and right margins doesn't seem to work well with `width: 100%`.
         margin-bottom: $default-gap-size / 8; //
-        background-color: $light-grey;
+        background-color: $tertiary-background-color;
         width: 100%;
         &, & > * {
             padding: $default-gap-size / 4;

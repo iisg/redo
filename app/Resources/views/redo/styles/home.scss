@@ -3,11 +3,14 @@
   flex-direction: column;
   flex-grow: 1;
   flex-shrink: 0; // Required by Internet Explorer.
-  padding: $default-gap-size / 2;
   .title-with-search-bar {
+    margin-bottom: $default-gap-size / 2;
     padding-top: 3 * $default-gap-size + $default-gap-size / 2;
     padding-bottom: 3 * $default-gap-size + $default-gap-size / 2;
-    margin-bottom: auto;
+    padding-left: $default-gap-size / 2;
+    padding-right: $default-gap-size / 2;
+    border-bottom: $default-panel-bottom-border-width $default-panel-bottom-border-style $darkened-secondary-background-color;
+    background-color: $secondary-background-color;
     & > .title {
       padding: $default-gap-size / 2;
       text-align: center;
@@ -16,5 +19,9 @@
     .advanced-options {
       margin-top: 2 * $default-gap-size;
     }
+  }
+  .statistics {
+    margin-top: auto;
+    padding: $default-gap-size / 2;
   }
 }

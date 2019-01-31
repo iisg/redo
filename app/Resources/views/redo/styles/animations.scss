@@ -160,7 +160,7 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
     }
 }
 
-.collapsible-with-first-line-visible {
+.collapsible-with-visible-first-line {
     &:not(.collapsed) {
         @include expanded-collapsible-with-visible-first-line();
     }

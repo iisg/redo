@@ -10,7 +10,7 @@
                 placeholder="szukaj w zasobach repozytorium">
             <button class="search-button"
                 type="submit">
-                {{ icon("search", "2.5") }}
+                {{ icon("search", "2") }}
             </button>
         </div>
         <div class="metadata-subsets-chooser">
@@ -32,8 +32,9 @@
                 {% endfor %}
             </div>
             <button type="button"
+                class.bind="advancedOptionsExpanded ? 'toggled' : ''"
                 click.delegate="advancedOptionsExpanded = !advancedOptionsExpanded">
-                {{ icon('settings-2', '1.25') }}<span>Więcej kryteriów</span>
+                <span>Wyszukiwanie zaawansowane</span>{{ icon('forward') }}
             </button>
         </div>
     </div>
