@@ -6,6 +6,7 @@ use Elastica\ResultSet;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Application\Twig\Paginator;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\Utils\EntityUtils;
@@ -34,8 +35,11 @@ class RedoFtsSearchController extends Controller {
      * @Route("/")
      * @Template("redo/home/home.twig")
      */
-    public function homeAction(Request $request) {
-        return $this->buildFtsResponseData($request);
+    public function homeAction() {
+        return [
+            'filterableMetadataList' => $this->findFilterableMetadata(),
+            'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],
+        ];
     }
 
     /**
@@ -43,31 +47,26 @@ class RedoFtsSearchController extends Controller {
      * @Template("redo/search/search-results.twig")
      */
     public function searchResourcesAction(Request $request) {
-        $responseData = $this->buildFtsResponseData($request);
+        $phrase = $request->query->get('phrase', '');
+        $filterableMetadata = $this->findFilterableMetadata();
+        $responseData = [
+            'phrase' => $phrase,
+            'filterableMetadataList' => $filterableMetadata,
+            'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],
+        ];
         if ($metadataFilters = array_filter($request->get('metadataFilters', []))) {
-            $filterableMetadataIds = EntityUtils::mapToIds($responseData['filterableMetadataList']);
+            $filterableMetadataIds = EntityUtils::mapToIds($filterableMetadata);
             $metadataFilters = array_intersect_key($metadataFilters, array_combine($filterableMetadataIds, $filterableMetadataIds));
         }
         $page = intval($request->get('page', 1));
         if ($page < 1) {
             $page = 1;
         }
-        $results = $this->fetchSearchResults($request, $metadataFilters, $responseData['phrase'], $page);
+        $results = $this->fetchSearchResults($request, $metadataFilters, $phrase, $page);
         $responseData['results'] = $results;
         $pagination = $this->paginator->paginate($page, $this->resultsPerPage, $results->getTotalHits());
         $responseData['pagination'] = $pagination;
         return $responseData;
-    }
-
-    private function buildFtsResponseData(Request $request): array {
-        $phrase = $request->query->get('phrase', '');
-        $filterableMetadataNamesOrIds = $this->ftsConfig['filterable_metadata_ids'] ?? [];
-        $filterableMetadata = array_map([$this->metadataRepository, 'findByNameOrId'], $filterableMetadataNamesOrIds);
-        return [
-            'phrase' => $phrase,
-            'filterableMetadataList' => $filterableMetadata,
-            'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],
-        ];
     }
 
     private function fetchSearchResults(Request $request, array $metadataFilters, ?string $phrase, int $page): ResultSet {
@@ -95,5 +94,23 @@ class RedoFtsSearchController extends Controller {
         /** @var ResultSet $results */
         $results = $this->handleCommand($query);
         return $results;
+    }
+
+    private function findFilterableMetadata(): array {
+        $filterableMetadataNamesOrIds = $this->ftsConfig['filterable_metadata_ids'] ?? [];
+        $searchableResourceClasses = $this->ftsConfig['searchable_resource_classes'] ?? [];
+        $searchableResourceClasses[] = null;
+        return array_map(
+            function ($nameOrId) use ($searchableResourceClasses) {
+                foreach ($searchableResourceClasses as $resourceClass) {
+                    try {
+                        return $this->metadataRepository->findByNameOrId($nameOrId, $resourceClass);
+                    } catch (EntityNotFoundException $e) {
+                    }
+                }
+                throw new \InvalidArgumentException('Invalid filterable metadata name or id: ' . $nameOrId);
+            },
+            $filterableMetadataNamesOrIds
+        );
     }
 }
