@@ -28,3 +28,9 @@ $available-colors: (
     }
   }
 }
+
+a.toggle-button {
+  &:hover, &:focus, &:active {
+    text-decoration: none;
+  }
+}
