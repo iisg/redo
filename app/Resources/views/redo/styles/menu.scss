@@ -180,7 +180,7 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
   }
 
   @media (max-width: $maximum-screen-width-for-mobile-layout) {
-    & > div {
+    & > .menu-items {
       &.contains-submenu {
         width: 100%;
       }
