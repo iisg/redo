@@ -13,7 +13,7 @@
         <template else>
             <template repeat.for="tasks of tasksCollection">
                 <span if.bind="tasks.myTasks.length > 0"
-                    class="page-subtitle">${'resource_classes::' + tasks.resourceClass + '//resources' | t}</span>
+                    class="page-subtitle">${'resource_classes::' + tasks.resourceClass + '//resources' | t} (${tasks.myTasks.length})</span>
                 <resources-list-table if.bind="tasks.myTasks.length > 0"
                     resources.bind="tasks.myTasks"
                     sortable.bind="false"
@@ -34,7 +34,7 @@
         <template else>
             <template repeat.for="tasks of tasksCollection">
                 <span if.bind="tasks.possibleTasks.length > 0"
-                    class="page-subtitle">${'resource_classes::' + tasks.resourceClass + '//resources' | t}</span>
+                    class="page-subtitle">${'resource_classes::' + tasks.resourceClass + '//resources' | t} (${tasks.possibleTasks.length})</span>
                 <resources-list-table if.bind="tasks.possibleTasks.length > 0"
                     resources.bind="tasks.possibleTasks"
                     sortable.bind="false"
