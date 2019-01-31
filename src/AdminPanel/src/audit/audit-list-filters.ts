@@ -2,6 +2,7 @@ import {observable} from "aurelia-binding";
 import {AuditEntryListQuery} from "./audit-entry-list-query";
 import {safeJsonParse} from "../common/utils/object-utils";
 import {DateRangeConfig} from "./filters/date-range-config";
+import * as moment from "moment";
 
 export class AuditListFilters {
   private static DEFAULT_RESULTS_PER_PAGE: number = 10;
@@ -51,10 +52,10 @@ export class AuditListFilters {
       query = query.filterByResourceId(this.resourceId);
     }
     if (this.dateFrom) {
-      query = query.filterByDateFrom(this.dateFrom);
+      query = query.filterByDateFrom(this.convertDateToUTC(this.dateFrom));
     }
     if (this.dateTo) {
-      query = query.filterByDateTo(this.dateTo);
+      query = query.filterByDateTo(this.convertDateToUTC(this.dateTo));
     }
     return query
       .filterByResourceContents(this.resourceContents)
@@ -118,6 +119,15 @@ export class AuditListFilters {
       this.customColumns = customColumns.map(col => {
         return {displayStrategy: col};
       });
+    }
+  }
+
+  private convertDateToUTC(date: string) {
+    if (date) {
+      const localDate = (moment(date).add(-(moment().utcOffset()), 'm'));
+      return moment.parseZone(localDate).utc().format('YYYY-MM-DDTHH:mm:ss');
+    } else {
+      return "";
     }
   }
 }

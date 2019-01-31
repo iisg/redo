@@ -37,4 +37,5 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     this.params.customColumns = templates;
     return this;
   }
+
 }

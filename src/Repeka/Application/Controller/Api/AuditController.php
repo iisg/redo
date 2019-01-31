@@ -25,12 +25,12 @@ class AuditController extends ApiController {
             $queryBuilder = $queryBuilder->filterByResourceId($resourceId);
         }
         if ($request->query->has('dateFrom')) {
-            Assertion::date($request->get('dateFrom'), 'Y-m-d');
+            Assertion::date($request->get('dateFrom'), 'Y-m-d\TH:i:s');
             $dateFrom = $request->get('dateFrom');
             $queryBuilder->filterByDateFrom($dateFrom);
         }
         if ($request->query->has('dateTo')) {
-            Assertion::date($request->get('dateTo'), 'Y-m-d');
+            Assertion::date($request->get('dateTo'), 'Y-m-d\TH:i:s');
             $dateTo = $request->get('dateTo');
             $queryBuilder->filterByDateTo($dateTo);
         }

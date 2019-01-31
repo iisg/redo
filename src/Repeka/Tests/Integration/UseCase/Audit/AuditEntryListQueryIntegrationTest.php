@@ -9,46 +9,48 @@ use Repeka\Tests\IntegrationTestCase;
 class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
+    private const MOMENT_DATE_FORMAT = 'Y-m-d\TH:i:s';
+
     protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
     }
 
     public function testFilterByDateFrom() {
-        $today = date('Y-m-d');
-        $dateFrom = date('Y-m-d', strtotime('-1 month', strtotime($today)));
+        $today = date(self::MOMENT_DATE_FORMAT);
+        $dateFrom = date(self::MOMENT_DATE_FORMAT, strtotime('-1 month', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateFrom($dateFrom)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(25, $entries);
     }
 
     public function testFilterByDateTo() {
-        $today = date('Y-m-d');
-        $dateTo = date('Y-m-d', strtotime('+1 month', strtotime($today)));
+        $today = date(self::MOMENT_DATE_FORMAT);
+        $dateTo = date(self::MOMENT_DATE_FORMAT, strtotime('+1 month', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateTo($dateTo)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(25, $entries);
     }
 
     public function testFilterByDateFromTo() {
-        $today = date('Y-m-d');
-        $dateFrom = date('Y-m-d', strtotime('-2 week', strtotime($today)));
-        $dateTo = date('Y-m-d', strtotime('+2 week', strtotime($today)));
+        $today = date(self::MOMENT_DATE_FORMAT);
+        $dateFrom = date(self::MOMENT_DATE_FORMAT, strtotime('-2 week', strtotime($today)));
+        $dateTo = date(self::MOMENT_DATE_FORMAT, strtotime('+2 week', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateFrom($dateFrom)->filterByDateTo($dateTo)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(25, $entries);
     }
 
     public function testFilterByFutureDateFrom() {
-        $today = date('Y-m-d');
-        $dateFrom = date('Y-m-d', strtotime('+1 week', strtotime($today)));
+        $today = date(self::MOMENT_DATE_FORMAT);
+        $dateFrom = date(self::MOMENT_DATE_FORMAT, strtotime('+1 week', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateFrom($dateFrom)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(0, $entries);
     }
 
     public function testFilterByPastDateTo() {
-        $today = date('Y-m-d');
-        $dateTo = date('Y-m-d', strtotime('-1 week', strtotime($today)));
+        $today = date(self::MOMENT_DATE_FORMAT);
+        $dateTo = date(self::MOMENT_DATE_FORMAT, strtotime('-1 week', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateTo($dateTo)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(0, $entries);
