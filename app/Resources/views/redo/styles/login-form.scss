@@ -1,4 +1,3 @@
-$current-theme-color: $orange;
 $information-link-elements-color: $grey;
 
 $text-font-family: "Open Sans", sans-serif;
@@ -11,11 +10,11 @@ $text-font-size: 24px;
 $icons-drop-shadow-spread-radius: 5px;
 
 .login-form-main-container {
-  margin-top: 20px;
   font-family: $text-font-family;
+  margin-bottom: $default-gap-size;
+  background-color: $secondary-background-color;
 
   .login-container {
-
     .login-error-element {
       display: flex;
       flex-direction: row-reverse;
@@ -41,21 +40,20 @@ $icons-drop-shadow-spread-radius: 5px;
       padding: $login-box-padding;
       display: flex;
       flex-wrap: wrap;
-      background-color: #4c4c4c;
       .logo-box {
         margin-left: auto;
         margin-right: auto;
         padding: $default-gap-size;
         .logo {
           &:hover, &:focus {
-            filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $current-theme-color);
+            filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $main-theme-color);
           }
           &:focus {
             outline: unset; // `unset` is used to keep it in Internet Explorer.
           }
           .icon {
             height: $logo-height;
-            color: $current-theme-color;
+            color: $main-theme-color;
           }
         }
       }
@@ -77,7 +75,7 @@ $icons-drop-shadow-spread-radius: 5px;
           text-align: center;
           font-size: $text-font-size;
           font-weight: bold;
-          color: $current-theme-color;
+          color: $main-theme-color;
         }
         .username-input {
           margin-right: $username-input-right-margin;
@@ -87,19 +85,15 @@ $icons-drop-shadow-spread-radius: 5px;
           align-items: center;
           .icon {
             height: $icon-height;
-            color: $current-theme-color;
+            color: $main-theme-color;
           }
-          .form-control {
+          input {
             border-radius: 0;
             flex: 1;
-            min-width: 0;
             margin: $default-gap-size / 4 $default-gap-size / 4 + $default-gap-size / 2;
             &:focus {
-              box-shadow: inset 0 1px 1px $current-theme-color, 0 0 8px $current-theme-color;
-              border-color: $current-theme-color;
-            }
-            &:focus {
-              outline: unset;
+              box-shadow: inset 0 1px 1px $main-theme-color, 0 0 8px $main-theme-color;
+              border-color: $main-theme-color;
             }
           }
 
@@ -111,7 +105,7 @@ $icons-drop-shadow-spread-radius: 5px;
               display: block;
             }
             &:hover, &:focus {
-              filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $current-theme-color);
+              filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $main-theme-color);
             }
           }
         }

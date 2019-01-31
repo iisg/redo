@@ -2,17 +2,14 @@
     <div class="menu-items">
         <a class="{{ urlMatches('/#', '/search') ? 'active' : '' }}"
             href="/">
-            {{ icon('search') }}
             <span>Szukaj</span>
         </a>
         <a class="{{ urlMatches('/resources') ? 'active' : '' }}"
             href="/resources">
-            {{ icon('folder') }}
             <span>Przeglądaj</span>
         </a>
         <a class="{{ urlMatches('/for-authors') ? 'active' : '' }}"
             href="/for-authors">
-            {{ icon('edit') }}
             <span>Dla autorów</span>
         </a>
     </div>
@@ -45,25 +42,21 @@
                     {% if resourceKindsToDeposit(app.user, [-4]) | length != 0 %}
                         <a class="isActive() ? 'active' : ''"
                             href="/deposit/resource-kind">
-                            {{ icon('add-resource-3') }}
                             <span>Deponuj</span>
                         </a>
                     {% endif %}
                     {% if resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}, resultsPerPage: 1}) | length == 1 %}
                         <a class="isActive() ? 'active' : ''"
                             href="/deposit/deposit-list">
-                            {{ icon('resources') }}
                             <span>Moje zasoby</span>
                         </a>
                     {% endif %}
                     {% if is_granted('ROLE_OPERATOR_SOME_CLASS') %}
                         <a href="/admin">
-                            {{ icon('created') }}
                             <span>Panel administracyjny</span>
                         </a>
                     {% endif %}
                     <a href="/logout">
-                        {{ icon('logout') }}
                         <span>Wyloguj</span>
                     </a>
                 </div>

@@ -3,7 +3,6 @@
         <span>{{ filterableMetadata.label.PL }}</span>
         <div>
             <input type="text"
-                class="form-control"
                 name="metadataFilters[{{ filterableMetadata.id }}]"
                 value="{{ app.request.query.all.metadataFilters[filterableMetadata.id] ?? '' }}">
         </div>

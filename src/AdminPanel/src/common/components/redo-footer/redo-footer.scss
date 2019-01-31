@@ -25,9 +25,9 @@ redo-footer, .redo-footer {
     margin-right: -$width-of-the-separator;
     & > * {
       margin-right: $width-of-the-separator;
-      padding: $default-gap-size;
     }
     img {
+      padding: $default-gap-size;
       height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
       &.horizontal {
         max-width: $powered-by-redo-logo-maximum-width; // Required by Chromium.
@@ -38,6 +38,9 @@ redo-footer, .redo-footer {
       max-width: $creative-commons-icons-with-description-max-width;
       line-height: 0;
       margin-left: -$width-of-the-separator;
+      margin-top: $default-gap-size / 2;
+      margin-bottom: $default-gap-size / 2;
+      padding: $default-gap-size / 2 $default-gap-size;
       border-left: $width-of-the-separator solid $orange;
       & > span {
         display: block;
@@ -109,6 +112,7 @@ redo-footer, .redo-footer {
 }
 
 .redo-footer {
+  border-top: 1px solid $light-grey;
   @media (max-width: #{$fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
     + $expected-scrollbar-width}) {
     @include vertical-align();

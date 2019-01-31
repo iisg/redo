@@ -3,7 +3,7 @@ $image-height: 200px;
 .deposit {
   .search-bar-container {
     padding: $default-gap-size;
-    border-bottom: $default-gap-size / 4 solid $orange;
+    border-bottom: $default-gap-size / 4 solid $accents-color;
   }
   .deposit-container {
     padding: $default-gap-size / 2;
@@ -19,7 +19,7 @@ $image-height: 200px;
       table {
         width: 100%;
         tr {
-          border-bottom: solid 1px $orange;
+          border-bottom: solid 1px $accents-color;
           &:first-child {
             border-top: none;
           }

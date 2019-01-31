@@ -13,3 +13,13 @@ $checkbox-and-radio-button-width-and-height: $default-gap-size;
 $checkbox-and-radio-button-right-margin: $default-gap-size / 4;
 
 $maximum-screen-width-for-mobile-layout: 420px;
+
+$default-border-width: 1px;
+$default-border-style: solid;
+$default-border: $default-border-width $default-border-style $default-border-color;
+
+$default-input-border-width: 1px;
+$default-input-border-style: solid;
+
+$default-panel-bottom-border-width: 1px;
+$default-panel-bottom-border-style: solid;

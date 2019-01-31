@@ -10,10 +10,35 @@
             {{ icon('document') }}
         {% endif %}
     </div>
+
+    {% if searchResult is defined %}
+        {% set highlightedMetadata = [] %}
+        {% for fieldName, highlights in searchResult.highlights %}
+            {% set metadataId = fieldName | slice(9) | number_format %}
+            {% set metadata = metadata(metadataId) %}
+            {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
+            {% set representsWholeValue = highlights | join | replace({'<em>': '', '</em>': '', ' ': ''})
+                == resource | metadata(metadataId) | replace({' ': ''}) %}
+            {% set highlightedMetadata = highlightedMetadata | merge({(metadata.name): {
+                label: metadataLabel,
+                highlights: highlights,
+                representsWholeValue: representsWholeValue
+            }}) %}
+        {% endfor %}
+    {% endif %}
+
     <div class="details">
         <div class="basic-data-with-download-options">
             <div class="basic-data">
-                <h2><a href="/resources/{{ resource.id }}">{{ resource | metadata('label') }}</a></h2>
+                <h2>
+                    <a href="/resources/{{ resource.id }}">
+                        {% if highlightedMetadata is defined and highlightedMetadata.tytul is defined %}
+                            {{ highlightedMetadata.tytul.highlights[0] | raw }}
+                        {% else %}
+                            {{ resource | metadata('tytul') | default(resource | metadata('label')) }}
+                        {% endif %}
+                    </a>
+                </h2>
                 {% if resource | metadata('autor') is not empty %}
                     <h4>{{ resource | metadata('autor') }}</h4>
                 {% endif %}
@@ -36,48 +61,33 @@
             {% if not childrenAllowedInResource %}
                 <fieldset>
                     <legend align="left"><span class="title"
-                        title="Pobierz zasób">Pobierz zasób</span></legend>
+                            title="Pobierz zasób">Pobierz zasób</span></legend>
                     <div class="download-formats">
                         <h4><a href="/resources/{{ resource.id }}/download/mobi"
-                            title="Pobierz zasób w formacie MOBI - 7KB">MOBI</a></h4>
+                                title="Pobierz zasób w formacie MOBI - 7KB">MOBI</a></h4>
                         <h4><a href="/resources/{{ resource.id }}/download/pdf"
-                            title="Pobierz zasób w formacie PDF - 144000KB">PDF</a></h4>
+                                title="Pobierz zasób w formacie PDF - 144000KB">PDF</a></h4>
                     </div>
                 </fieldset>
             {% endif %}
         </div>
 
-        {% if searchResult is defined %}
-            {% set metadataWithHighlightsIds = [] %}
-            {% set metadataLabelsWithHighlights = [] %}
-            {% for fieldName, highlights in searchResult.highlights %}
-                {% set metadataId = fieldName | slice(9) | number_format %}
-                {% set metadataWithHighlightsIds = metadataWithHighlightsIds | merge([metadataId]) %}
-                {% set metadata = metadata(metadataId) %}
-                {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
-                {% set metadataLabelsWithHighlights = metadataLabelsWithHighlights | merge([{
-                        label: metadataLabel,
-                        highlights: highlights
-                    }]) %}
-            {% endfor %}
-        {% endif %}
-
         {% set collapsedMetadataLabelsWithValues = [] %}
         {% for collapsedMetadataName in collapsedMetadataNames %}
             {% set metadata = metadata(collapsedMetadataName) %}
-            {% if metadata and (metadataWithHighlightsIds is not defined or metadata.id not in metadataWithHighlightsIds) %}
+            {% if metadata and (highlightedMetadata is not defined or highlightedMetadata[metadata.name] is not defined) %}
                 {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
                 {% set metadataValue = resource | metadata(collapsedMetadataName) %}
                 {% if metadataValue is not empty %}
                     {% set collapsedMetadataLabelsWithValues = collapsedMetadataLabelsWithValues| merge([{
-                            label: metadataLabel,
-                            value: metadataValue
-                        }]) %}
+                        label: metadataLabel,
+                        value: metadataValue
+                    }]) %}
                 {% endif %}
             {% endif %}
         {% endfor %}
 
-        {% if collapsedMetadataLabelsWithValues is not empty or searchResult is defined and metadataLabelsWithHighlights is not empty %}
+        {% if collapsedMetadataLabelsWithValues is not empty or searchResult is defined and highlightedMetadata is not empty %}
             {% set variableName = "resource" ~ resource.id ~ "MetadataListExpanded" %}
             <div class="collapsible-metadata">
                 <div class="first-line-with-optional-toggle">
@@ -86,16 +96,19 @@
                             <div>
                                 {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
                                     <div class="metadata-details">
-                                        <span class="metadata-label">{{ collapsedMetadataLabelWithValue.label }}:</span> {{ collapsedMetadataLabelWithValue.value }}
+                                        <span class="metadata-label">{{ collapsedMetadataLabelWithValue.label }}:</span>
+                                        {{ collapsedMetadataLabelWithValue.value }}
                                     </div>
                                 {% endfor %}
                                 {% if searchResult is defined %}
-                                    {% for metadataLabelWithHighlights in metadataLabelsWithHighlights %}
+                                    {% for metadataName, metadataLabelWithHighlights in highlightedMetadata if metadataName != 'tytul' %}
                                         <div class="metadata-details">
-                                            <span class="metadata-label">{{ metadataLabelWithHighlights.label }} <em>(fragmenty)</em>:</span>
-                                            {% for highlight in metadataLabelWithHighlights.highlights %}
-                                                {{ highlight | raw }}{% if not loop.last %}<br>{% endif %}
-                                            {% endfor %}
+                                            <span class="metadata-label">
+                                                {{ metadataLabelWithHighlights.label }}{% if not
+                                                    metadataLabelWithHighlights.representsWholeValue %}
+                                                    <em>(fragmenty)</em>{% endif %}:</span>
+                                            {{ metadataLabelWithHighlights.highlights
+                                                | join(metadataLabelWithHighlights.representsWholeValue ? ' ' : '<br>') | raw }}
                                         </div>
                                     {% endfor %}
                                 {% endif %}
@@ -108,7 +121,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="collapsible-with-first-line-visible collapsed"
+                <div class="collapsible-with-visible-first-line collapsed"
                     class.bind="{{ variableName }} ? '' : 'collapsed'"
                     click.delegate="{{ variableName }} = true">
                     {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
@@ -118,14 +131,16 @@
                         </div>
                     {% endfor %}
                     {% if searchResult is defined %}
-                        {% for metadataLabelWithHighlights in metadataLabelsWithHighlights %}
+                        {% for metadataName, metadataLabelWithHighlights in highlightedMetadata if metadataName != 'tytul' %}
                             <div class="metadata-details
                                 {{ collapsedMetadataLabelsWithValues is empty and loop.first ? 'text-container': '' }}">
                                 <span class="metadata-label {{ collapsedMetadataLabelsWithValues is empty
-                                    and loop.first ? 'text-container': '' }}">{{ metadataLabelWithHighlights.label }} <em>(fragmenty)</em>:</span>
-                                    {% for highlight in metadataLabelWithHighlights.highlights %}
-                                        {{ highlight | raw }}{% if not loop.last %}<br>{% endif %}
-                                    {% endfor %}
+                                    and loop.first ? 'text-container': '' }}">
+                                        {{ metadataLabelWithHighlights.label }}{% if not
+                                            metadataLabelWithHighlights.representsWholeValue %}
+                                            <em>(fragmenty)</em>{% endif %}:</span>
+                                    {{ metadataLabelWithHighlights.highlights
+                                        | join(metadataLabelWithHighlights.representsWholeValue ? ' ' : '<br>') | raw }}
                             </div>
                         {% endfor %}
                     {% endif %}

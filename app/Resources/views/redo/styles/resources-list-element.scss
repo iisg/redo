@@ -24,6 +24,13 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
       display: inline-block;
       color: $grey;
     }
+    .basic-data-with-download-options em, .metadata-details > em {
+      font-style: normal;
+      padding-left: $default-gap-size / 4;
+      padding-right: $default-gap-size / 4;
+      border-radius: $default-gap-size / 4;
+      background-color: $blueish-grey;
+    }
     .basic-data-with-download-options {
       display: flex;
       align-items: flex-start;
@@ -71,10 +78,19 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
           transition: transform $collapse-and-expand-animations-duration;
         }
       }
-      .collapsible-with-first-line-visible {
+      .metadata-details {
+        .metadata-label > em {
+          font-style: normal;
+          color: $lightish-grey;
+        }
+      }
+      .collapsible-with-visible-first-line {
         position: relative;
         width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
         &:not(.collapsed) {
+          .text-container:not(.metadata-label) em {
+            transition: background-color $expand-animation-opacity-and-visibility-transitions-settings;
+          }
           .text-container.metadata-label {
             color: $grey;
             &::first-line {
@@ -83,20 +99,14 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
           }
         }
         &.collapsed {
+          .text-container:not(.metadata-label) em {
+            background-color: transparent;
+            transition: background-color $collapse-animation-opacity-and-visibility-transitions-settings;
+          }
           .text-container.metadata-label {
             &::first-line {
               color: $grey;
             }
-          }
-        }
-        .metadata-details {
-          & > em {
-            font-style: normal;
-            background-color: lighten($orange, $default-value-to-lighten-colors-by);
-          }
-          .metadata-label > em {
-            font-style: normal;
-            color: $lightish-grey;
           }
         }
       }
@@ -105,7 +115,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
         top: 0;
         width: calc(100% - #{2 * $default-gap-size / 8});
         & > div {
-          height: $default-line-height * 1em;
+          height: calc(#{$default-line-height * 1em} + #{$default-gap-size / 8});
           overflow: hidden;
           & > div {
             display: flex;
@@ -115,7 +125,9 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
               + #{$collapsible-metadata-list-toggle-height} + 1px); // `+ 1px` is required by Chromium.
             & > :not(.toggle) {
               width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
-              visibility: hidden;
+              &, .metadata-label {
+                color: transparent;
+              }
             }
           }
         }

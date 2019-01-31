@@ -12,6 +12,7 @@ $fieldset-legend-line-height: 1px; // Some positive value seems required to have
   margin-right: auto;
   font-family: "Open Sans", sans-serif;
   color: $default-text-color;
+  background-color: $primary-background-color;
 }
 
 .banner {
@@ -49,14 +50,19 @@ h6 {
   font-size: $default-font-size - 2px;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+}
+
 hr {
   margin: 0;
-  border-top: 1px solid $light-grey;
+  border-top: $default-border;
 }
 
 a {
   cursor: pointer;
-  color: $blue;
+  color: $main-theme-color;
   transition: color $default-transition-duration;
   &:hover, &:focus, &:active {
     color: $light-blue;
@@ -69,6 +75,25 @@ button {
   padding: 0;
 }
 
+button.default, .default-button {
+  padding: $default-gap-size / 4 $default-gap-size;
+  border: $default-border;
+  border-radius: $default-gap-size / 4;
+  font-weight: 600;
+  transition: transitions-with-common-settings(background-color border-color color, $default-transition-duration);
+  &:not(:disabled):not([disabled]):not(.disabled) {
+    color: $accents-color;
+    &.active, &:hover, &:focus {
+      background-color: $accents-color;
+      border-color: $accents-color;
+      color: white;
+    }
+  }
+  &:disabled, &[disabled], &.disabled {
+    color: $default-border-color;
+  }
+}
+
 label {
   font-weight: normal;
   margin-bottom: 0;
@@ -77,7 +102,7 @@ label {
 fieldset {
   padding: $default-gap-size / 2;
   line-height: 0;
-  border: $fieldset-border-width solid $light-grey;
+  border: $fieldset-border-width solid $default-border-color;
   border-radius: $default-gap-size / 4;
   & > legend {
     width: initial;
@@ -101,6 +126,16 @@ fieldset {
   }
 }
 
+input {
+  border-radius: $default-gap-size / 4;
+  padding: $default-gap-size / 4 $default-gap-size / 2;
+  border: $default-input-border-width $default-border-style $default-border-color;
+  outline: none; // Required by Chromium.
+  &:focus {
+    border-color: $accents-color;
+  }
+}
+
 .label-with-checkbox {
   cursor: pointer;
   display: block;
@@ -113,12 +148,12 @@ fieldset {
       margin-right: $checkbox-and-radio-button-right-margin;
       content: '';
       vertical-align: calc((#{$capital-letter-of-the-default-font-height} - #{$checkbox-and-radio-button-width-and-height}) / 2);
-      border: 1px solid $orange;
+      border: $default-border-width solid $accents-color;
       border-radius: 25%;
     }
     &:checked + ::before {
-      background: $orange;
-      background: radial-gradient($orange 40%, transparent 40%);
+      background: $accents-color;
+      background: radial-gradient($accents-color 40%, transparent 40%);
     }
     & + * > * {
       display: inline-block;
@@ -127,7 +162,6 @@ fieldset {
     }
   }
 }
-
 
 .radio-buttons-group {
   display: inline-block;
@@ -146,12 +180,12 @@ fieldset {
         margin-right: $checkbox-and-radio-button-right-margin;
         content: '';
         vertical-align: calc((#{$capital-letter-of-the-default-font-height} - #{$checkbox-and-radio-button-width-and-height}) / 2);
-        border: 1px solid $orange;
+        border: $default-border-width solid $accents-color;
         border-radius: 50%;
       }
       &:checked + ::before {
-        background: $orange;
-        background: radial-gradient($orange 40%, transparent 40%);
+        background: $accents-color;
+        background: radial-gradient($accents-color 40%, transparent 40%);
       }
     }
   }
@@ -168,10 +202,10 @@ fieldset {
 
 #nprogress {
   div.bar {
-    background: $orange;
+    background: $accents-color;
     height: $default-gap-size / 4;
   }
   div.peg {
-    box-shadow: 0 0 10px $orange, 0 0 5px $orange;
+    box-shadow: 0 0 10px $accents-color, 0 0 5px $accents-color;
   }
 }
