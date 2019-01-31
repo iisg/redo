@@ -9,7 +9,7 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
     use RequireOperatorRole;
 
     /** @var string */
-    private $phrase;
+    private $phrase = '';
     /** @var array */
     private $searchableMetadata = [];
     /** @var array */
@@ -18,6 +18,8 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
     private $metadataFacets = [];
     /** @var bool */
     private $resourceKindFacet = false;
+    /** @var bool */
+    private $onlyTopLevel = false;
     /** @var array */
     private $facetsFilters = [];
     /** @var */
@@ -32,6 +34,7 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
             $this->resourceKindFacet,
             $this->metadataFacets,
             $this->facetsFilters,
+            $this->onlyTopLevel,
             $this->page,
             $this->resultsPerPage
         );
@@ -53,7 +56,7 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
     }
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
-    public function setResourceKindFacet($hasResourceKindFacet = true): self {
+    public function setResourceKindFacet(bool $hasResourceKindFacet = true): self {
         $this->resourceKindFacet = $hasResourceKindFacet;
         return $this;
     }
@@ -70,6 +73,12 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
 
     public function setMetadataFilters(array $metadataFilters): self {
         $this->metadataFilters = $metadataFilters;
+        return $this;
+    }
+
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
+    public function setOnlyTopLevel(bool $onlyTopLevel = true): self {
+        $this->onlyTopLevel = $onlyTopLevel;
         return $this;
     }
 }

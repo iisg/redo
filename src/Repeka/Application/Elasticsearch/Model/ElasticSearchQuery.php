@@ -5,6 +5,7 @@ use Elastica\Aggregation\Filters;
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
@@ -28,6 +29,9 @@ class ElasticSearchQuery {
         }
         if ($this->query->getMetadataFilters()) {
             $boolQuery->addFilter($this->buildMetadataFilters());
+        }
+        if ($this->query->isOnlyTopLevel()) {
+            $boolQuery->addMustNot(new Query\Exists($this->getMetadataPath(SystemMetadata::PARENT()->toMetadata())));
         }
         $finalQuery = new Query($boolQuery);
         $finalQuery->setHighlight(['fields' => [FtsConstants::CONTENTS . '.*' => new \stdClass()]]);

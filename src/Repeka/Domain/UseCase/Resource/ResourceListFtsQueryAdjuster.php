@@ -27,6 +27,7 @@ class ResourceListFtsQueryAdjuster implements CommandAdjuster {
             $query->hasResourceKindFacet(),
             $this->replaceMetadataNamesOrIdsWithMetadata($query->getFacetedMetadata()),
             $this->adjustMetadataFilters($query->getFacetsFilters()),
+            $query->isOnlyTopLevel(),
             $query->getPage(),
             $query->getResultsPerPage()
         );

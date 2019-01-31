@@ -25,6 +25,8 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
     private $facetsFilters = [];
     /** @var bool */
     private $resourceKindFacet;
+    /** @var bool */
+    private $onlyTopLevel;
 
     /**
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
@@ -37,6 +39,7 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
         bool $resourceKindFacet = false,
         array $facetedMetadata = [],
         array $facetsFilters = [],
+        bool $onlyTopLevel = false,
         int $page = 0,
         int $resultsPerPage = 10
     ) {
@@ -48,6 +51,7 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
         $this->resourceKindFacet = $resourceKindFacet;
         $this->facetedMetadata = $facetedMetadata;
         $this->facetsFilters = $facetsFilters;
+        $this->onlyTopLevel = $onlyTopLevel;
     }
 
     public static function builder(): ResourceListFtsQueryBuilder {
@@ -82,6 +86,10 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
 
     public function getFacetsFilters(): array {
         return $this->facetsFilters;
+    }
+
+    public function isOnlyTopLevel(): bool {
+        return $this->onlyTopLevel;
     }
 
     public function getRequiredRole(): ?SystemRole {

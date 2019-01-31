@@ -232,6 +232,18 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCaseWithout
         $this->assertCount(1, $results);
     }
 
+    public function testFindAll() {
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('', [], [], ['books']));
+        $this->assertCount(7, $results);
+    }
+
+    public function testFindOnlyTopLevel() {
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('', [], [], ['books'], false, [], [], true));
+        $this->assertCount(5, $results);
+    }
+
     /**
      * Aggregations are nested twice, because of the filters applied. This method extracts them.
      * @see https://madewithlove.be/faceted-search-using-elasticsearch/
