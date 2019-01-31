@@ -8,15 +8,14 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\PageResult;
-use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Domain\UseCase\TreeResult;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class ResourceRepositoryFindInTreeIntegrationTest extends IntegrationTestCase {
+class ResourceRepositoryFindInTreeIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     use FixtureHelpers;
 
     /** @var EntityRepository|ResourceRepository */
@@ -26,6 +25,8 @@ class ResourceRepositoryFindInTreeIntegrationTest extends IntegrationTestCase {
 
     /** @var Metadata */
     private $nameMetadata;
+
+    private static $createdResources = [];
 
     /** @var ResourceKind[] */
     private $resourceKinds = [];
@@ -54,10 +55,7 @@ class ResourceRepositoryFindInTreeIntegrationTest extends IntegrationTestCase {
     /** @var ResourceEntity[] */
     private $resources = [];
 
-    public function setUp() {
-        parent::setUp();
-        $this->resourceRepository = $this->container->get(ResourceRepository::class);
-        $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
+    protected function initializeDatabaseBeforeTheFirstTest() {
         $this->nameMetadata = $this->createMetadata('named', ['PL' => 'named', 'EN' => 'named'], [], [], 'text');
         $this->resourceKinds['A'] = $this->createResourceKind(
             ['PL' => 'A', 'EN' => 'A'],
@@ -87,13 +85,26 @@ class ResourceRepositoryFindInTreeIntegrationTest extends IntegrationTestCase {
             $this->nameMetadata->getId() => [$name],
         ];
         if ($parentName) {
-            $parentId = $this->resources[$parentName]->getId();
+            $parentId = self::$createdResources[$parentName]->getId();
             $contents[SystemMetadata::PARENT] = $parentId;
         }
         $resourceKind = $this->resourceKinds[$resourceKindName];
         $resource = $this->createResource($resourceKind, $contents);
-        $this->resources[$name] = $resource;
-        return $resource;
+        self::$createdResources[$name] = $resource;
+    }
+
+    /** @before */
+    public function init() {
+        $this->resourceRepository = $this->container->get(ResourceRepository::class);
+        $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
+        $this->nameMetadata = $this->findMetadataByName('named');
+        $this->resourceKinds['A'] = $this->resourceKindRepository->findByQuery(
+            ResourceKindListQuery::builder()->filterByName(['PL' => 'A', 'EN' => 'A'])->build()
+        )[0];
+        $this->resourceKinds['B'] = $this->resourceKindRepository->findByQuery(
+            ResourceKindListQuery::builder()->filterByName(['PL' => 'B', 'EN' => 'B'])->build()
+        )[0];
+        $this->resources = self::$createdResources;
     }
 
     public function testFindsAllResources() {

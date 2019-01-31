@@ -2,13 +2,12 @@
 namespace Repeka\Tests\Integration\Controller\Site;
 
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class ResourcesExposureControllerIntegrationTest extends IntegrationTestCase {
+class ResourcesExposureControllerIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     use FixtureHelpers;
 
-    /** @before */
-    public function init() {
+    protected function initializeDatabaseBeforeTheFirstTest() {
         $this->loadAllFixtures();
     }
 

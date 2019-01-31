@@ -2,18 +2,19 @@
 namespace Repeka\Tests\Integration\FullTextSearch;
 
 use Repeka\Application\Elasticsearch\ESIndexManager;
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class FtsIndexResourcesFromDatabaseCommandIntegrationTest extends IntegrationTestCase {
-
+class FtsIndexResourcesFromDatabaseCommandIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     /** @var EsIndexManager */
     private $esIndexManager;
 
-    public function setUp() {
-        parent::setUp();
+    protected function initializeDatabaseBeforeTheFirstTest() {
         $this->loadAllFixtures();
-        $container = self::createClient()->getContainer();
-        $this->esIndexManager = $container->get(ESIndexManager::class);
+    }
+
+    /** @before */
+    public function init() {
+        $this->esIndexManager = $this->container->get(ESIndexManager::class);
     }
 
     public function testMappingDatabaseToElasticsearchIndexWhenDoesNotExist() {

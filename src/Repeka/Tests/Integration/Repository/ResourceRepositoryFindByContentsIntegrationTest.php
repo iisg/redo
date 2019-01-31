@@ -7,9 +7,9 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCase {
+class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     use FixtureHelpers;
 
     /** @var ResourceEntity */
@@ -17,9 +17,12 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
     /** @var Metadata */
     private $titleMetadata;
 
+    protected function initializeDatabaseBeforeTheFirstTest() {
+        $this->loadAllFixtures();
+    }
+
     /** @before */
     public function init() {
-        $this->loadAllFixtures();
         $this->phpBook = $this->getPhpBookResource();
         $this->titleMetadata = $this->findMetadataByName('Tytuł');
     }

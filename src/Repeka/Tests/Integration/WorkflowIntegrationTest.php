@@ -1,10 +1,15 @@
 <?php
 namespace Repeka\Tests\Integration;
 
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class WorkflowIntegrationTest extends IntegrationTestCase {
+class WorkflowIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     const ENDPOINT = '/api/workflows';
+
+    protected function initializeDatabaseBeforeTheFirstTest() {
+        self::loadFixture(new AdminAccountFixture());
+    }
 
     public function testFetchingWorkflows() {
         $client = self::createAdminClient();
