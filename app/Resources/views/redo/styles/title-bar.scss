@@ -6,7 +6,6 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
   display: flex;
   flex-shrink: 0; // Required by Internet Explorer.
   align-items: center;
-  border-bottom: $default-gap-size / 4 solid $orange;
   &, & > :not(.right-side-container) {
     padding: $default-gap-size / 2;
   }
@@ -47,7 +46,7 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
       }
       .page-view-options {
         a, button:not(:first-child) {
-          border-left: 1px solid $lightish-grey;
+          border-left: $default-border-width $default-border-style $lightish-grey;
         }
       }
       .social-media {

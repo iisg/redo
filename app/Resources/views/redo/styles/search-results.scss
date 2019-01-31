@@ -7,9 +7,11 @@ $left-panel-maximum-width: 320px;
   flex-grow: 1;
   flex-shrink: 0; // Required by Chromium and Internet Explorer.
   flex-wrap: wrap;
+  padding-top: $default-gap-size;
+  padding-bottom: $default-gap-size;
   .left-panel {
     padding: $default-gap-size / 2;
-    border-right: solid $default-gap-size / 8 $orange;
+    border-right: 2 * $default-border-width $default-border-style $default-border-color;
     max-width: $left-panel-maximum-width;
     .horizontally-collapsible {
       &.expanded {
@@ -36,7 +38,6 @@ $left-panel-maximum-width: 320px;
       & > button {
         margin: $default-gap-size / 4;
         line-height: 0;
-        color: $orange;
         & > .icon {
           height: $left-panel-toggle-icon-height;
           & > svg {
@@ -65,19 +66,6 @@ $left-panel-maximum-width: 320px;
         }
         & > * {
           padding: $default-gap-size / 4;
-        }
-        button {
-          padding: $default-gap-size / 4 $default-gap-size;
-          border: 1px solid $light-grey;
-          border-radius: $default-gap-size / 4;
-          font-weight: 600;
-          color: $orange;
-          transition: transitions-with-common-settings(background-color border-color color, $default-transition-duration);
-          &:hover, &:focus {
-            background-color: $orange;
-            border-color: $orange;
-            color: white;
-          }
         }
       }
       .facets {

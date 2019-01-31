@@ -12,6 +12,7 @@
         {% if app.environment == 'dev' %}
             <code>{{ exception.message }}</code>
             <p>{{ exception.params ?? ( exception.previous.params ?? '') | json_encode }}</p>
+            <pre><code>{{ exception.traceAsString }}</code></pre>
         {% endif %}
     </div>
 

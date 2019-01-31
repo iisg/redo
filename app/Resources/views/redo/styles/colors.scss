@@ -1,15 +1,25 @@
-$default-value-to-lighten-colors-by: 20.7;
-
-$orange: #f9aa00;
 $dark-grey: #4d4d4d;
 $grey: #808080;
 $lightish-grey: #b3b3b3;
 $light-grey: #e6e6e6;
 $very-light-grey: #f2f2f2;
-$blue: #0071bc;
-$light-blue: lighten($blue, $default-value-to-lighten-colors-by);
+$blueish-grey: #ecf2f6;
+$dark-blue: #18316a;
+$blue: #2c74ae;
+$lightish-blue: #4c89ba;
+$light-blue: #04acef;
 $red: #bc0000;
 
-$default-background-color: white !default;
-$default-text-color: $dark-grey !default;
-$default-disabled-text-color: $grey !default;
+$main-theme-color: $blue;
+$accents-color: $lightish-blue;
+
+$default-border-color: $light-grey;
+
+$default-text-color: $dark-grey;
+
+$primary-background-color: white;
+$secondary-background-color: $blueish-grey;
+$tertiary-background-color: $light-grey;
+
+$darkened-secondary-background-color: darken($secondary-background-color, 5);
+$darkened-tertiary-background-color: darken($tertiary-background-color, 5);

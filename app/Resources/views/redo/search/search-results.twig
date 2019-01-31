@@ -24,7 +24,7 @@
 
                 <div class="filter-button-container">
                     <div>
-                        <button class="filter-button">Filtruj</button>
+                        <button class="default">Filtruj</button>
                     </div>
                 </div>
                 <hr>
@@ -96,7 +96,7 @@
                 <div class="filter-button-container">
                     <a href={{ path(app.request.attributes.get('_route'), {phrase: app.request.query.get('phrase')}) }}>Wyczyść filtry</a>
                     <div>
-                        <button class="filter-button">Filtruj</button>
+                        <button class="default">Filtruj</button>
                     </div>
                 </div>
             </form>

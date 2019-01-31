@@ -1,8 +1,9 @@
-@import "styles/variables";
 @import "styles/colors";
+@import "styles/variables";
 @import "styles/animations";
 
-@import "styles/buttons";
+@import "styles/base";
+
 @import "styles/title-bar";
 @import "styles/menu";
 @import "styles/breadcrumbs";
@@ -11,7 +12,6 @@
 @import "styles/resources-list-element";
 @import "styles/pagination";
 
-@import "styles/base";
 @import "styles/statistics";
 @import "styles/home";
 @import "styles/search-results";
