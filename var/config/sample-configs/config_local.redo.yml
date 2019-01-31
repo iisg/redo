@@ -1,0 +1,113 @@
+parameters:
+  secret: XXX
+  applicationName: Redo
+doctrine:
+  dbal:
+    password: XXX
+repeka:
+  application_url: XXX
+  # permissions
+  resource_classes:
+    - name: books
+      icon: publish-4
+      admins:
+        - username: ^admin$
+        - username: ^b/020602$
+        - username: ^b/000503$
+        - username: ^./000306$
+        - username: ^fracz$
+        - username: ^kevin$
+      operators:
+        - identyfikator_instytutu: ^PO030000$
+          group_member: ^54$
+    - name: dictionaries
+      icon: dictionary
+      admins:
+        - username: ^admin$
+        - username: ^b/020602$
+        - username: ^b/000503$
+        - username: ^./000306$
+        - username: ^fracz$
+        - username: ^kevin$
+      operators:
+        - identyfikator_instytutu: ^PO030000$
+          group_member: ^61$
+    - name: users
+      icon: user
+      admins:
+        - username: ^admin$
+        - username: ^b/020602$
+        - username: ^b/000503$
+        - username: ^./000306$
+        - username: ^fracz$
+        - username: ^kevin$
+    - name: cms
+      icon: html
+      admins:
+        - username: ^admin$
+        - username: ^b/020602$
+        - username: ^b/000503$
+        - username: ^./000306$
+        - username: ^fracz$
+        - username: ^kevin$
+  metadata_groups:
+    - id: basic
+      label:
+        PL: Dane podstawowe
+    - id: topic
+      label:
+        PL: Tematyka
+    - id: links
+      label:
+        PL: Odnośniki
+    - id: files
+      label:
+        PL: Pliki rekordu
+    - id: access
+      label:
+        PL: Dostęp
+    - id: digitalizing
+      label:
+        PL: Dane dotyczące digitalizacji
+    - id: people
+      label:
+        PL: Osoby związane z zasobem
+  pk_auth:
+    wsdl: http://soap.biblos.pk.edu.pl/soap.php?WSDL
+    options:
+      login: biblos
+      password: CedezjoilfyuvgerwasJegto
+    local_accounts_enabled: true
+  # other existing settings
+  xml_import:
+    koha: 'http://koha.biblos.pk.edu.pl/cgi-bin/koha/opac-export-simple.pl?op=export&format=marcxml&skip_entity_encoding=1&barcode='
+  templating:
+    templates_resource_class: cms
+    templates:
+      homepage: redo/home/home.twig
+      login_form: redo/login-form.twig
+  expose_endpoints:
+    /static/{resourceId}:
+     # metadata: wyrenderowana_tresc
+      template: redo/static-page.twig
+    /resources/{resourceId}:
+      template: redo/resource-details/resource-details.twig
+    /resources/{resourceId}/bibtex:
+      template: bibtex/bibtex.twig
+      headers:
+        Content-Type: 'text/plain'
+    /resources/{resourceId}/rss:
+      template: redo/rss/collection.rss.twig
+      headers:
+        Content-Type: 'application/rss+xml'
+    /search/{phrase}:
+      template: redo/search/search-results-page.twig
+      fts:
+        searchable_metadata_ids: [tytul,autor,barkod]
+        searchable_resource_classes: [books]
+        facets: [skaner,tryb_skanowania]
+        filterable_metadata_ids: [parent,tytul,autor,barkod,rozdzielczosc,sygnatura]
+    /deposit/{phase}:
+      template: redo/deposit.twig
+      deposit:
+        relationship_resource_kind_ids: [48]
