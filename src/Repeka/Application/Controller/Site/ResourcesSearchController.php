@@ -47,16 +47,14 @@ class ResourcesSearchController extends Controller {
             $filterableMetadataIds = EntityUtils::mapToIds($filterableMetadata);
             $metadataFilters = array_intersect_key($metadataFilters, array_combine($filterableMetadataIds, $filterableMetadataIds));
         }
-        if ($phrase || $metadataFilters) {
-            $page = intval($request->get('page', 1));
-            if ($page < 1) {
-                $page = 1;
-            }
-            $results = $this->fetchSearchResults($ftsConfig, $request, $metadataFilters, $phrase, $page);
-            $responseData['results'] = $results;
-            $pagination = $this->paginator->paginate($page, $this->resultsPerPage, $results->getTotalHits());
-            $responseData['pagination'] = $pagination;
+        $page = intval($request->get('page', 1));
+        if ($page < 1) {
+            $page = 1;
         }
+        $results = $this->fetchSearchResults($ftsConfig, $request, $metadataFilters, $phrase, $page);
+        $responseData['results'] = $results;
+        $pagination = $this->paginator->paginate($page, $this->resultsPerPage, $results->getTotalHits());
+        $responseData['pagination'] = $pagination;
         $response = $this->render($template, $responseData);
         $response->headers->add($headers);
         return $response;
@@ -83,6 +81,7 @@ class ResourcesSearchController extends Controller {
             ->setMetadataFacets(array_diff($facets, [FtsConstants::KIND_ID]))
             ->setFacetsFilters($facetsFilters)
             ->setMetadataFilters($metadataFilters)
+            ->setOnlyTopLevel(!$metadataFilters && !$phrase)
             ->setPage($page)
             ->setResultsPerPage($this->resultsPerPage)
             ->build();
