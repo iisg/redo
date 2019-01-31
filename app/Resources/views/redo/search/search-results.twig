@@ -9,19 +9,22 @@
     {% include "redo/search/search-bar.twig" %}
 
     <div class="search-results-container">
-        <div class="left-panel">
+        <div class="left-panel ${leftPanelExpanded ? 'expanded' : ''}"
+            id="left-panel">
             <div class="title-with-toggle">
-                <h3 class="title horizontally-collapsible ${leftPanelExpanded ? 'expanded' : ''}"><strong>Filtry</strong></h3>
-                <button click.delegate="leftPanelExpanded = !leftPanelExpanded"
-                    local-storage-value="key: 'leftPanelExpanded'; value.bind: leftPanelExpanded">
+                <h3 class="title horizontally-collapsible"><strong>Filtry</strong></h3>
+                <button class="horizontally-expand-toggle ${leftPanelExpanded ? '' : 'toggled'}"
+                    click.delegate="leftPanelExpanded = !leftPanelExpanded"
+                    local-storage-value="key: leftPanelExpanded; value.bind: leftPanelExpanded">
                     {{ icon('forward') }}
                 </button>
             </div>
-            <form class="advanced-filters horizontally-collapsible collapsed ${leftPanelExpanded ? 'expanded' : ''}"
+            <form class="advanced-filters horizontally-collapsible collapsed"
                 action=""
                 method="get">
-                <input type="hidden" name="phrase" value="{{ phrase }}">
-
+                <input type="hidden"
+                    name="phrase"
+                    value="{{ phrase }}">
                 <div class="filter-button-container">
                     <div>
                         <button class="default">Filtruj</button>
@@ -63,11 +66,11 @@
                                     <strong>{{ aggregationName == 'kindId' ? 'Typ zasobu' : metadata(aggregationName).label.PL }}</strong>
                                     {% for bucket in aggregationData.buckets.0[aggregationName].buckets %}
                                         <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({
-                                                'phrase': phrase,
-                                                'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key,
-                                                    app.request.query.get('facetFilters') ?? []),
-                                                'page': 1
-                                            })) }}">
+                                            'phrase': phrase,
+                                            'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key,
+                                                app.request.query.get('facetFilters') ?? []),
+                                            'page': 1
+                                        })) }}">
                                             <label class="label-with-checkbox">
                                                 <input type="checkbox"
                                                     {% if isFilteringByFacet(aggregationName, bucket.key,
@@ -101,6 +104,13 @@
                 </div>
             </form>
         </div>
+        <script>
+          if (localStorage && localStorage.getItem && localStorage.getItem('leftPanelExpanded') == 'true') {
+              {# Set the `left-panel` binding to `${X ? ' expanded ' : ''}` so CSS thinks it contains the expanded class when the page loads #}
+            var currentClass = document.getElementById('left-panel').getAttribute('class');
+            document.getElementById('left-panel').setAttribute('class', currentClass.replace("'expanded'", "' expanded '"));
+          }
+        </script>
         <div class="search-results">
             {% if results | length == 0 %}
                 <h1>Brak wyników.</h1>

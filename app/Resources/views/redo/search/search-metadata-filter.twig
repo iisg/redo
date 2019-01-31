@@ -14,7 +14,7 @@
     <div class="property-options"
         .one-time="{{ variableName }} = {{ filterUsed ? 'true' : 'false' }}">
         {% block propertyNameContainer %}
-            <button class="property-name-container"
+            <button class="property-name-container expand-toggle"
                 class.bind="{{ variableName }} ? 'toggled' : ''"
                 type="button"
                 click.delegate="{{ variableName }} = !{{ variableName }}">
