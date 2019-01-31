@@ -35,7 +35,10 @@ class RedoFtsSearchController extends Controller {
      * @Route("/")
      * @Template("redo/home/home.twig")
      */
-    public function homeAction() {
+    public function homeAction(Request $request) {
+        if ($resourceId = $request->get('resourceId')) {
+            return $this->redirect('/resources/' . $resourceId);
+        }
         return [
             'filterableMetadataList' => $this->findFilterableMetadata(),
             'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],

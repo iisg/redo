@@ -44,6 +44,13 @@
                         primary-icon-name="scan"
                         primary-label="Resource files"></toggle-button>
                 </resource-file-manager>
+                <a href.bind="'/?resourceId=' + resource.id"
+                    class="toggle-button grey">
+                    <span>
+                        <icon name="created"></icon>
+                        <span>${ 'Browse on website' | t }</span>
+                    </span>
+                </a>
             </div>
             <aup-tabs tabs.bind="resourceDetailsTabs.tabs"></aup-tabs>
         </div>
