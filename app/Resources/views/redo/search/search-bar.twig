@@ -1,6 +1,6 @@
 <form class="search-bar"
     action="/search">
-    <div class="search-box-with-options">
+    <div class="search-box-with-expand-toggle">
         <div class="input-with-button">
             <input type="text"
                 name="phrase"
@@ -13,30 +13,12 @@
                 {{ icon("search", "2") }}
             </button>
         </div>
-        <div class="metadata-subsets-chooser">
-            <div class="radio-buttons-group">
-                {% for option in [{ids: '', label: 'Wszędzie'}, {ids: 'tytul', label: 'Tytuł'}, {ids: 'opis', label: 'Opis'}] %}
-                    <label>
-                        <input type="radio"
-                            name="metadataSubset"
-                            value="{{ option.ids }}"
-                            {% if app.request.query.has('metadataSubset') %}
-                                {% if option.ids == app.request.query.get('metadataSubset') %}
-                                    checked
-                                {% endif %}
-                            {% elseif option.ids == "" %}
-                                checked
-                            {% endif %}>
-                        <span>{{ option.label }}</span>
-                    </label>
-                {% endfor %}
-            </div>
-            <button type="button"
-                class="expand-toggle ${advancedOptionsExpanded ? 'toggled' : ''}"
-                click.delegate="advancedOptionsExpanded = !advancedOptionsExpanded">
-                <span>Wyszukiwanie zaawansowane</span>{{ icon('forward') }}
-            </button>
-        </div>
+        <button class="expand-toggle ${advancedOptionsExpanded ? 'toggled' : ''}"
+            type="button"
+            click.delegate="advancedOptionsExpanded = !advancedOptionsExpanded">
+            <span>Wyszukiwanie zaawansowane</span>
+            {{ icon('forward') }}
+        </button>
     </div>
     <div class="advanced-options collapsible collapsed"
         class.bind="advancedOptionsExpanded ? '' : 'collapsed'">

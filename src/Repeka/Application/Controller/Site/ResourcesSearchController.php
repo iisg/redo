@@ -68,9 +68,6 @@ class ResourcesSearchController extends Controller {
             (array)$request->get('facetFilters')
         );
         $searchableMetadata = $ftsConfig['searchable_metadata_ids'] ?? [];
-        if ($metadataSubset = $request->get('metadataSubset', '')) {
-            $searchableMetadata = array_intersect($searchableMetadata, explode(',', $metadataSubset));
-        }
         Assertion::notEmpty($searchableMetadata, 'Query must include some metadata');
         $facets = $ftsConfig['facets'] ?? [];
         $query = ResourceListFtsQuery::builder()

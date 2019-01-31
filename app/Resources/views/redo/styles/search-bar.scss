@@ -6,12 +6,14 @@ $advanced-options-column-border-width: 1px;
   flex-direction: column;
   align-items: center;
 
-  .search-box-with-options {
-    align-items: center;
-    padding: $default-gap-size / 2;
+  .search-box-with-expand-toggle {
+    display: flex;
+    flex-direction: column;
+    padding: $default-gap-size * 3 / 8;
     width: $search-bar-width;
     max-width: 100%;
     .input-with-button {
+      padding: $default-gap-size / 8;
       display: flex;
       input {
         flex-grow: 1;
@@ -43,26 +45,12 @@ $advanced-options-column-border-width: 1px;
         color: white;
       }
     }
-    .metadata-subsets-chooser {
-      display: flex;
-      align-items: center;
-      margin-top: $default-gap-size / 4;
-      .radio-buttons-group {
-        label:last-child {
-          margin-right: $default-gap-size / 2;
-        }
-      }
-      button {
-        margin-left: auto;
-        padding-left: $default-gap-size / 4;
-        text-align: right;
-        color: inherit;
-        .icon, span {
-          margin-left: $default-gap-size / 4;
-        }
-        .icon {
-          color: $accents-color;
-        }
+    .expand-toggle {
+      align-self: flex-end;
+      margin: $default-gap-size / 8;
+      text-align: right;
+      .icon {
+        color: $accents-color;
       }
     }
   }
