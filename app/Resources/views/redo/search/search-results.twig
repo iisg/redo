@@ -1,6 +1,6 @@
 {% extends "redo/layout.twig" %}
 
-{% set page_title = phrase ~ ' - wyniki wyszukiwania' %}
+{% set page_title = phrase ? phrase ~ ' - wyniki wyszukiwania' : 'Przeglądaj kolekcje' %}
 
 {% block content %}
     {% include "redo/title-bar.twig" %}

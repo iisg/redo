@@ -1,11 +1,11 @@
 <div class="site-menu">
     <div class="menu-items">
-        <a class="{{ urlMatches('/#', '/search') ? 'active' : '' }}"
+        <a class="{{ urlMatches('/#') ? 'active' : '' }}"
             href="/">
             <span>Szukaj</span>
         </a>
-        <a class="{{ urlMatches('/resources') ? 'active' : '' }}"
-            href="/resources">
+        <a class="{{ urlMatches('/search', '/resources') ? 'active' : '' }}"
+            href="/search">
             <span>Przeglądaj</span>
         </a>
         <a class="{{ urlMatches('/for-authors') ? 'active' : '' }}"
