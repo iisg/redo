@@ -1,18 +1,4 @@
 .advanced-options, .advanced-filters {
-    button {
-        .icon, icon {
-          & > svg {
-              transition: transform $collapse-and-expand-animations-duration $collapse-and-expand-animations-timing-function;
-          }
-        }
-        &.toggled {
-          .icon, icon {
-            & > svg {
-                transform: rotate(90deg);
-            }
-          }
-        }
-    }
     .section-title {
         padding: $default-gap-size / 4;
         color: $grey;

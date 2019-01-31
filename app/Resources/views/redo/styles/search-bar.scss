@@ -57,12 +57,6 @@ $advanced-options-column-border-width: 1px;
         padding-left: $default-gap-size / 4;
         text-align: right;
         color: inherit;
-        &.toggled svg {
-          transform: rotate(90deg);
-        }
-        svg {
-          transition: transform $collapse-and-expand-animations-duration;
-        }
         .icon, span {
           margin-left: $default-gap-size / 4;
         }

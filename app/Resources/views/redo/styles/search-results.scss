@@ -14,12 +14,13 @@ $left-panel-maximum-width: 320px;
     border-right: 2 * $default-border-width $default-border-style $default-border-color;
     max-width: $left-panel-maximum-width;
     .horizontally-collapsible {
-      &.expanded {
-        @include expanded-horizontally-collapsible();
-      }
-      &:not(.expanded) {
-        @include collapsed-horizontally-collapsible(-$left-panel-maximum-width + 2 * $default-gap-size / 2);
-      }
+      width: $left-panel-maximum-width;
+    }
+    &:not(.expanded) .horizontally-collapsible {
+      @include collapsed-horizontally-collapsible(-$left-panel-maximum-width + 2 * $default-gap-size / 2);
+    }
+    &.expanded .horizontally-collapsible {
+      @include expanded-horizontally-collapsible();
     }
     .title-with-toggle {
       display: flex;
@@ -29,20 +30,12 @@ $left-panel-maximum-width: 320px;
         flex: 1;
         padding: $default-gap-size / 4;
         align-self: center;
-        &.horizontally-collapsible {
-          &.expanded + button > .icon > svg {
-            transform: rotate(180deg);
-          }
-        }
       }
       & > button {
         margin: $default-gap-size / 4;
         line-height: 0;
         & > .icon {
           height: $left-panel-toggle-icon-height;
-          & > svg {
-            transition: transform $collapse-and-expand-animations-duration;
-          }
         }
       }
     }

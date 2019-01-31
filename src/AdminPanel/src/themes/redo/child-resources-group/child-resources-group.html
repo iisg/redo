@@ -8,7 +8,7 @@
             <span><span>${resourceLabel}</span></span>
         </label>
         <button if.bind="childResourcesData"
-            class.bind="expanded ? 'toggled' : ''"
+            class="expand-toggle ${expanded ? 'toggled' : ''}"
             type="button"
             click.delegate="expanded = !expanded">
             <icon name="forward"></icon>
