@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration\ResourceWorkflow;
 
+use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\DeveloperBundle\DataFixtures\ORM\MetadataFixture;
 use Repeka\DeveloperBundle\DataFixtures\ORM\ResourceWorkflowsFixture;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -8,16 +9,19 @@ use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulationResource;
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class ResourceWorkflowDriverInjectorIntegrationTest extends IntegrationTestCase {
+class ResourceWorkflowDriverInjectorIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     /** @var ResourceWorkflow $workflow */
     private $workflow;
     private $resourceClass;
 
-    public function setUp() {
-        parent::setUp();
-        self::loadFixture(new MetadataFixture(), new ResourceWorkflowsFixture());
+    protected function initializeDatabaseBeforeTheFirstTest() {
+        self::loadFixture(new AdminAccountFixture(), new MetadataFixture(), new ResourceWorkflowsFixture());
+    }
+
+    /** @before */
+    public function init() {
         $this->workflow = $this->container->get(ResourceWorkflowRepository::class)->findAll()[0];
         $this->resourceClass = 'books';
     }

@@ -3,13 +3,12 @@ namespace Repeka\Tests\Integration\UseCase\MetadataImport;
 
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
+class AuditEntryListQueryIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     use FixtureHelpers;
 
-    /** @before */
-    public function loadFixtures() {
+    protected function initializeDatabaseBeforeTheFirstTest() {
         $this->loadAllFixtures();
     }
 
