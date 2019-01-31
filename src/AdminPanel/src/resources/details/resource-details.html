@@ -45,7 +45,9 @@
                         primary-label="Resource files"></toggle-button>
                 </resource-file-manager>
                 <a href.bind="'/?resourceId=' + resource.id"
-                    class="toggle-button grey">
+                    target="_top"
+                    class="toggle-button grey"
+                    if.one-time="resource.kind.id > 0">
                     <span>
                         <icon name="created"></icon>
                         <span>${ 'Browse on website' | t }</span>
