@@ -8,9 +8,9 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
+class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     use FixtureHelpers;
 
     /** @var ResourceEntity */
@@ -19,16 +19,18 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     /** @var ResourceEntity */
     private $phpAndMySQLBookResource;
 
-    private $title;
+    private $title = 'ala ma psa';
 
-    public function setUp() {
-        parent::setUp();
+    protected function initializeDatabaseBeforeTheFirstTest() {
         $this->loadAllFixtures();
-        $this->title = 'ala ma psa';
         $metadata = $this->findMetadataByName('Tytul');
         $this->createResource($this->getPhpBookResource()->getKind(), [$metadata->getId() => [$this->title]]);
         $this->executeCommand('repeka:evaluate-display-strategies');
         $this->executeCommand('repeka:fts:initialize');
+    }
+
+    /** @before */
+    public function fetchResources() {
         $this->phpBookResource = $this->findResourceByContents(['Tytul' => 'PHP - to można leczyć!']);
         $this->phpAndMySQLBookResource = $this->findResourceByContents(['Tytuł' => 'PHP i MySQL']);
     }

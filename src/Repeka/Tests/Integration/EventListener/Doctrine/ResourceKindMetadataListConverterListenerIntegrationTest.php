@@ -10,16 +10,19 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\ResourceKindIntegrationTest;
-use Repeka\Tests\IntegrationTestCase;
+use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
 
-class ResourceKindMetadataListConverterListenerIntegrationTest extends IntegrationTestCase {
+class ResourceKindMetadataListConverterListenerIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
     /** @var ResourceKindRepository */
     private $metadataRepository;
+
+    protected function initializeDatabaseBeforeTheFirstTest() {
+        $this->loadAllFixtures();
+    }
 
     /** @before */
     public function init() {
         $this->metadataRepository = $this->container->get(ResourceKindRepository::class);
-        $this->loadAllFixtures();
     }
 
     public function testSavingResourceKindWithMetadataList() {
