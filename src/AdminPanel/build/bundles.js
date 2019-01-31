@@ -87,8 +87,6 @@ const bundles = function () {
           "jquery.fancytree/dist/modules/jquery.fancytree.table",
           "lodash",
           "moment",
-          "nprogress",
-          "nprogress/nprogress.css!text",
           "oribella-aurelia-sortable",
           "sweetalert2",
           "text",
