@@ -21,7 +21,6 @@ class FtsResourcesExposedEndpointRoute extends Route {
                 'template' => $template,
                 'ftsConfig' => $ftsConfig,
                 'headers' => $headers,
-                'phrase' => '',
             ],
             [],
             [],

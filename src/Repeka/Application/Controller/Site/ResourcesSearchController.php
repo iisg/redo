@@ -62,7 +62,7 @@ class ResourcesSearchController extends Controller {
         return $response;
     }
 
-    private function fetchSearchResults(array $ftsConfig, Request $request, array $metadataFilters, string $phrase, int $page): ResultSet {
+    private function fetchSearchResults(array $ftsConfig, Request $request, array $metadataFilters, ?string $phrase, int $page): ResultSet {
         $facetsFilters = array_map(
             function ($filter) {
                 return explode(',', $filter);
@@ -76,7 +76,7 @@ class ResourcesSearchController extends Controller {
         Assertion::notEmpty($searchableMetadata, 'Query must include some metadata');
         $facets = $ftsConfig['facets'] ?? [];
         $query = ResourceListFtsQuery::builder()
-            ->setPhrase($phrase)
+            ->setPhrase($phrase ?: '')
             ->setSearchableMetadata($searchableMetadata)
             ->setResourceClasses($ftsConfig['searchable_resource_classes'] ?? [])
             ->setResourceKindFacet(in_array(FtsConstants::KIND_ID, $facets))
