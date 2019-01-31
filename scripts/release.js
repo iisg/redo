@@ -58,6 +58,7 @@ function copyToReleaseDirectory() {
     'src/Repeka/Application',
     'src/Repeka/Domain',
     'src/Repeka/Plugins',
+    'var/config/sample-configs',
     'vendor/',
     'web/',
   ].forEach(function (filename) {
@@ -91,7 +92,6 @@ function createVarDirectoryStructure() {
   [
     'var/backups',
     'var/cache',
-    'var/config',
     'var/import',
     'var/logs',
     'var/sessions',
@@ -113,7 +113,6 @@ function copySingleRequiredFiles() {
   [
     'src/.htaccess',
     'var/.htaccess',
-    'var/config/sample-configs/config_local.redo.yml',
     'var/config/docker.env.sample',
     'var/config/user_data_mapping.json.sample',
     'var/volumes/initialize-directory-structure.sh',
