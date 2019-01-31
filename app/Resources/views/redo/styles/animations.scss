@@ -185,3 +185,21 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
         transitions-with-common-settings(opacity visibility,
             $collapse-animation-opacity-and-visibility-transitions-settings);
 }
+
+.expand-toggle, .horizontally-expand-toggle {
+    svg {
+        transition: transform $collapse-and-expand-animations-duration $collapse-and-expand-animations-timing-function;
+    }
+}
+
+.expand-toggle.toggled  {
+    svg {
+        transform: rotate(90deg);
+    }
+}
+
+.horizontally-expand-toggle.toggled {
+    svg {
+        transform: rotate(180deg);
+    }
+}

@@ -32,7 +32,7 @@
                 {% endfor %}
             </div>
             <button type="button"
-                class.bind="advancedOptionsExpanded ? 'toggled' : ''"
+                class="expand-toggle ${advancedOptionsExpanded ? 'toggled' : ''}"
                 click.delegate="advancedOptionsExpanded = !advancedOptionsExpanded">
                 <span>Wyszukiwanie zaawansowane</span>{{ icon('forward') }}
             </button>

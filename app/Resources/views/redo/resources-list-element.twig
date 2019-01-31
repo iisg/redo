@@ -113,7 +113,7 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
-                            <button class="toggle ${ {{ variableName }} ? 'toggled' : '' }"
+                            <button class="expand-toggle ${ {{ variableName }} ? 'toggled' : '' }"
                                 type="button"
                                 click.delegate="{{ variableName }} = !{{ variableName }}">
                                 <span>{{ icon('forward') }}</span>
