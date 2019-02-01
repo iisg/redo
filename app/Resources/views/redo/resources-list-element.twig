@@ -34,6 +34,7 @@
                     <a href="/resources/{{ resource.id }}">
                         {% if highlightedMetadata is defined and highlightedMetadata.tytul is defined %}
                             {{ highlightedMetadata.tytul.highlights[0] | raw }}
+                            {% set highlightedMetadata = arrayWithoutItem(highlightedMetadata, 'tytul') %}
                         {% else %}
                             {{ resource | metadata('tytul') | default(resource | metadata('label')) }}
                         {% endif %}
@@ -101,7 +102,7 @@
                                     </div>
                                 {% endfor %}
                                 {% if searchResult is defined %}
-                                    {% for metadataName, metadataLabelWithHighlights in highlightedMetadata if metadataName != 'tytul' %}
+                                    {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
                                         <div class="metadata-details">
                                             <span class="metadata-label">
                                                 {{ metadataLabelWithHighlights.label }}{% if not
@@ -126,12 +127,13 @@
                     click.delegate="{{ variableName }} = true">
                     {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
                         <div class="metadata-details {{ loop.first ? 'text-container': '' }}">
-                            <span class="metadata-label {{ loop.first ? 'text-container': '' }}">{{ collapsedMetadataLabelWithValue.label }}:</span>
+                            <span class="metadata-label
+                                {{ loop.first ? 'text-container': '' }}">{{ collapsedMetadataLabelWithValue.label }}:</span>
                             {{ collapsedMetadataLabelWithValue.value }}
                         </div>
                     {% endfor %}
                     {% if searchResult is defined %}
-                        {% for metadataName, metadataLabelWithHighlights in highlightedMetadata if metadataName != 'tytul' %}
+                        {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
                             <div class="metadata-details
                                 {{ collapsedMetadataLabelsWithValues is empty and loop.first ? 'text-container': '' }}">
                                 <span class="metadata-label {{ collapsedMetadataLabelsWithValues is empty

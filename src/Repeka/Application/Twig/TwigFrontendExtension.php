@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * All Twig extensions that are not strictly connected to display strategies, but helps to achieve specific tasks in frontend.
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class TwigFrontendExtension extends \Twig_Extension {
     use CommandBusAware;
@@ -52,6 +53,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('resources', [$this, 'fetchResources']),
             new \Twig_Function('urlMatches', [$this, 'urlMatches']),
             new \Twig_Function('paginate', [$this->paginator, 'paginate']),
+            new \Twig_Function('arrayWithoutItem', [$this, 'arrayWithoutItem']),
         ];
     }
 
@@ -213,6 +215,11 @@ ICON;
             }
         }
         return false;
+    }
+
+    public function arrayWithoutItem(array $array, $key) {
+        unset($array[$key]);
+        return $array;
     }
 
     public function resourceCanHaveChildren(ResourceEntity $resource): bool {
