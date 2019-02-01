@@ -4,6 +4,7 @@ namespace Repeka\Tests\Integration\Repository;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
@@ -205,5 +206,33 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(2, $results);
         $this->assertContains($this->getPhpBookResource()->getId(), EntityUtils::mapToIds($results));
+    }
+
+    public function testFilteringByRelatedResourcesAndContents() {
+        $metadataRepository = $this->container->get(MetadataRepository::class);
+        $recordCreatorMetadata = $metadataRepository->findByName('osoba_tworzaca_rekord');
+        $adminResource = $this->getAdminUser()->getUserData();
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->filterByRelatedResources([$recordCreatorMetadata->getId() => $adminResource->getId()])
+            ->filterByContents([$this->titleMetadata->getId() => 'PHP - to można leczyć!'])
+            ->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(1, $results);
+        $this->assertContains($this->getPhpBookResource()->getId(), EntityUtils::mapToIds($results));
+    }
+
+    public function testFilteringByManyRelatedResources() {
+        $metadataRepository = $this->container->get(MetadataRepository::class);
+        $recordCreatorMetadata = $metadataRepository->findByName('osoba_tworzaca_rekord');
+        $adminResource = $this->getAdminUser()->getUserData();
+        $adminId = $adminResource->getId();
+        $query = ResourceListQuery::builder()
+            ->filterByResourceClass('books')
+            ->filterByRelatedResources([$recordCreatorMetadata->getId() => $adminId])
+            ->filterByRelatedResources([SystemMetadata::REPRODUCTOR => $adminId])
+            ->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(0, $results);
     }
 }

@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.NPathComplexity")
  * @Route("/metadata")
  */
 class MetadataController extends ApiController {
@@ -62,6 +63,14 @@ class MetadataController extends ApiController {
         }
         if ($systemMetadataIds = $request->query->get('systemMetadataIds')) {
             $queryBuilder->addSystemMetadataIds($systemMetadataIds);
+        }
+        if ($requiredKindIds = $request->query->get('requiredKindIds')) {
+            Assertion::isArray($requiredKindIds);
+            $queryBuilder->filterByRequiredKindIds($requiredKindIds);
+        }
+        if ($excludedIds = $request->query->get('excludedIds')) {
+            Assertion::isArray($excludedIds);
+            $queryBuilder->excludeIds($excludedIds);
         }
         $metadataList = $this->handleCommand($queryBuilder->build());
         return $this->createJsonResponse($metadataList);

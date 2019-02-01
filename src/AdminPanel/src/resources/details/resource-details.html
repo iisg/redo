@@ -58,7 +58,8 @@
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="children">
-                <resources-list if.bind="resourceDetailsTabs.activeTabId === 'children' && (allowAddChildResource || resource.hasChildren || isFiltering)"
+                <resources-list if.bind="resourceDetailsTabs.activeTabId === 'children'
+                    && (allowAddChildResource || resource.hasChildren || isFiltering)"
                     parent-resource.bind="resource"
                     allowed-resource-kinds.bind="allowedResourceKindsByParent"
                     has-resources.bind="hasChildren"
@@ -102,6 +103,16 @@
                     <redo-footer></redo-footer>
                 </audit>
             </aup-tab-pane>
+            <aup-tab-pane tab="relationships">
+                <resources-list if.bind="resourceDetailsTabs.activeTabId === 'relationships'"
+                    resource.bind="resource"
+                    results-per-page.from-view="resultsPerPage"
+                    current-page-number.from-view="currentPageNumber"
+                    hide-add-button.bind="true"
+                    relationship-chooser.bind="true">
+                    <redo-footer></redo-footer>
+                </resources-list>
+            </aup-tab-pane>
             <aup-tab-pane tab="users-in-group">
                 <users-in-group if.bind="resourceDetailsTabs.activeTabId === 'users-in-group'"
                     user-group.bind="resource"></users-in-group>
@@ -110,7 +121,8 @@
                 <user-roles if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"
                     user-data.bind="resource"></user-roles>
             </aup-tab-pane>
-            <redo-footer if.bind="resourceDetailsTabs.activeTabId !== 'children' && resourceDetailsTabs.activeTabId !== 'audit'"></redo-footer>
+            <redo-footer if.bind="resourceDetailsTabs.activeTabId !== 'children' && resourceDetailsTabs.activeTabId !== 'audit'
+                && resourceDetailsTabs.activeTabId !== 'relationships'"></redo-footer>
         </aup-tab-content>
     </div>
 </template>

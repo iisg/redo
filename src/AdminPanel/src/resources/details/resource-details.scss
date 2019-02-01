@@ -1,16 +1,13 @@
 @import "../../common/styles";
 
 .resource-details {
-  #children, #audit {
+  #children, #relationships, #audit {
+    height: 100%;
     overflow: hidden;
-    &.active {
-      display: flex;
-    }
-    flex: 1;
-    & > * {
-      overflow: auto;
-      flex: 1;
-    }
+  }
+  #children > resources-list, #relationships > resources-list, #audit > audit {
+    overflow: auto;
+    height: 100%;
   }
   #audit {
     .audit-entry-details {
@@ -21,9 +18,6 @@
   }
   resource-metadata-table {
     padding: $default-gap-size;
-  }
-  resource-form, resources-list {
-    flex: 1;
   }
   resource-workflow, user-roles {
     display: block;

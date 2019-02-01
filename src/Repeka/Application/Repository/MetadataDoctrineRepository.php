@@ -4,10 +4,12 @@ namespace Repeka\Application\Repository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Factory\MetadataListQuerySqlFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 
@@ -86,37 +88,11 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
 
     /** @return Metadata[] */
     public function findByQuery(MetadataListQuery $query): array {
-        $criteria = Criteria::create();
-        if ($query->onlyTopLevel()) {
-            $criteria = $criteria->andWhere(Criteria::expr()->isNull('parentMetadata'));
-        }
-        if ($query->getResourceClasses()) {
-            $criteria = $criteria->andWhere(Criteria::expr()->in('resourceClass', $query->getResourceClasses()));
-        }
-        if ($query->getControls()) {
-            $controlNames = array_map(
-                function (MetadataControl $control) {
-                    return $control->getValue();
-                },
-                $query->getControls()
-            );
-            $criteria = $criteria->andWhere(Criteria::expr()->in('control', $controlNames));
-        }
-        if ($query->getParent()) {
-            $criteria = $criteria->andWhere(Criteria::expr()->eq('parentMetadata', $query->getParent()));
-        }
-        if ($query->getIds()) {
-            $criteria = $criteria->andWhere(Criteria::expr()->in('id', $query->getIds()));
-        }
-        if ($query->getSystemMetadataIds()) {
-            $criteria = $criteria->orWhere(Criteria::expr()->in('id', $query->getSystemMetadataIds()));
-        }
-        if ($query->getNames()) {
-            $names = array_map([Metadata::class, 'normalizeMetadataName'], $query->getNames());
-            $criteria = $criteria->andWhere(Criteria::expr()->in('name', $names));
-        }
-        $criteria->orderBy(['ordinalNumber' => 'ASC']);
-        return $this->matching($criteria)->toArray();
+        $queryFactory = new MetadataListQuerySqlFactory($query);
+        $em = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::Metadata($em);
+        $dbQuery = $em->createNativeQuery($queryFactory->getPageQuery(), $resultSetMapping)->setParameters($queryFactory->getParams());
+        return $dbQuery->getResult();
     }
 
     public function removeResourceKindFromMetadataConstraints(ResourceKind $resourceKind): void {

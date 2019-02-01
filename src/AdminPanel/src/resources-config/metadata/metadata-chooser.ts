@@ -10,7 +10,9 @@ import {Metadata} from "./metadata";
 export class MetadataChooser extends EntityChooser {
   @bindable resourceClass: string | string[];
   @bindable control: string | string[];
+  @bindable requiredKindId: number;
   @bindable additionalMetadataIds: number[] = [];
+  @bindable excludedIds: number | number[] = [];
   private loadingMetadataList = false;
   private reloadMetadataList = false;
 
@@ -43,6 +45,8 @@ export class MetadataChooser extends EntityChooser {
       const controlMetadata = this.metadataRepository.getListQuery()
         .filterByResourceClasses(this.resourceClass)
         .filterByControls(this.control)
+        .filterByRequiredKindIds(this.requiredKindId)
+        .excludeIds(this.excludedIds)
         .onlyTopLevel()
         .get();
       const additionalMetadata = this.additionalMetadataIds.length > 0

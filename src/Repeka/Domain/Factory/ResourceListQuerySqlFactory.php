@@ -32,8 +32,11 @@ class ResourceListQuerySqlFactory {
         $this->filterByParentId();
         $this->filterByWorkflowPlacesIds();
         $this->filterByTopLevel();
+        foreach ($this->query->getRelatedResourcesFilters() as $filter) {
+            $this->filterByContents($filter, $this->wheres);
+        }
         foreach ($this->query->getContentsFilters() as $filter) {
-            $this->filterByContents($filter);
+            $this->filterByContents($filter, $this->whereAlternatives);
         }
         $this->addOrderBy();
         $this->paginate();
@@ -45,7 +48,7 @@ class ResourceListQuerySqlFactory {
 
     public function getPageQuery(): string {
         return $this->getSelectQuery($this->alias . '.*')
-        . sprintf('ORDER BY %s %s', implode(', ', $this->orderBy), $this->limit);
+            . sprintf('ORDER BY %s %s', implode(', ', $this->orderBy), $this->limit);
     }
 
     public function getTotalCountQuery(): string {
@@ -119,7 +122,7 @@ class ResourceListQuerySqlFactory {
     /**
      * Each call to filterByContents adds an alternative to search query.
      */
-    protected function filterByContents(ResourceContents $resourceContents, $contentsPath = 'r.contents'): void {
+    protected function filterByContents(ResourceContents $resourceContents, &$wheres, $contentsPath = 'r.contents'): void {
         $nextFilterId = $this->getUnusedParamId();
         $contentWhere = [];
         $resourceContents->forEachValue(
@@ -144,7 +147,7 @@ class ResourceListQuerySqlFactory {
                 $contentWhere
             );
             $alternative = '(' . implode(') AND (', $alternatives) . ')';
-            $this->whereAlternatives[] = $alternative;
+            $wheres[] = $alternative;
         }
     }
 

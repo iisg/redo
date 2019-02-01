@@ -16,7 +16,7 @@ import {WorkflowPlace, WorkflowTransition} from "../../workflows/workflow";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
-import {ContextResourceClass} from "./../context/context-resource-class";
+import {ContextResourceClass} from "../context/context-resource-class";
 import {ResourceLabelValueConverter} from "./resource-label-value-converter";
 
 @autoinject
@@ -28,6 +28,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   selectedTransition: WorkflowTransition;
   resourceDetailsTabs: DetailsViewTabs;
   numberOfChildren: number;
+  numberOfRelatedResources: number;
   hasChildren: boolean;
   isFiltering: boolean;
   private urlListener: Subscription;
@@ -61,7 +62,13 @@ export class ResourceDetails implements RoutableComponentActivate {
       }
     );
     this.childrenListener = this.eventAggregator.subscribe('resourceChildrenAmount', (resourceChildrenAmount: number) => {
-        this.updateResourceListTab(resourceChildrenAmount);
+      this.numberOfChildren = resourceChildrenAmount;
+      this.resourceDetailsTabs.updateLabels();
+      }
+    );
+    this.childrenListener = this.eventAggregator.subscribe('relatedResourcesAmount', (relatedResourcesAmount: number) => {
+        this.numberOfRelatedResources = relatedResourcesAmount;
+        this.resourceDetailsTabs.updateLabels();
       }
     );
   }
@@ -111,6 +118,11 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.resourceDetailsTabs
       .addTab('details', this.i18n.tr('Metadata'))
       .setDefaultTabId(this.hasChildren ? 'children' : 'details');
+    this.resourceDetailsTabs.addTab(
+      'relationships',
+      () =>
+        `${this.i18n.tr('Relationships')}` +
+        (this.numberOfRelatedResources === undefined ? '' : ` (${this.numberOfRelatedResources})`));
     if (this.resource.kind.workflow) {
       if (this.resource.kind.workflow) {
         this.resourceDetailsTabs.addTab('workflow', this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass));

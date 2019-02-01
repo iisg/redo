@@ -15,6 +15,7 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
     private $onlyTopLevel = false;
     private $ids = [];
     private $workflowPlacesIds = [];
+    private $relatedResources = [];
 
     /** @param ResourceKind[] | int[] $resourceKinds */
     public function filterByResourceKinds(array $resourceKinds): ResourceListQueryBuilder {
@@ -54,6 +55,16 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
+    /**
+     * @param ResourceContents|array $relatedResources
+     */
+    public function filterByRelatedResources($relatedResources): ResourceListQueryBuilder {
+        $this->relatedResources[] = $relatedResources instanceof ResourceContents
+            ? $relatedResources
+            : ResourceContents::fromArray($relatedResources);
+        return $this;
+    }
+
     public function filterByIds(array $ids): ResourceListQueryBuilder {
         $this->ids = $ids;
         return $this;
@@ -77,6 +88,7 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
             $this->sortBy,
             $this->parentId,
             $this->contentAlternatives,
+            $this->relatedResources,
             $this->onlyTopLevel,
             $this->page,
             $this->resultsPerPage,

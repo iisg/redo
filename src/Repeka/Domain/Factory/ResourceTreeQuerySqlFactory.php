@@ -1,9 +1,6 @@
 <?php
 namespace Repeka\Domain\Factory;
 
-use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
 
 class ResourceTreeQuerySqlFactory extends ResourceListQuerySqlFactory {
@@ -22,7 +19,7 @@ class ResourceTreeQuerySqlFactory extends ResourceListQuerySqlFactory {
         $this->froms['r'] = 'resource r';
         $this->filterByResourceClasses();
         $this->filterByResourceKinds();
-        $this->filterByContents($this->query->getContentsFilter());
+        $this->filterByContents($this->query->getContentsFilter(), $this->whereAlternatives);
         $this->filterByRoot();
         $this->filterByDepth();
         $this->paginateLevels();
@@ -33,7 +30,7 @@ class ResourceTreeQuerySqlFactory extends ResourceListQuerySqlFactory {
             $this->rootDescendantsFilter = 'WHERE ancestors.next_ancestor_id IS NULL';
         } else {
             $this->rootDescendantsFilter = 'WHERE ancestors.list [1] = :root';
-            $this->params['root'] =  $this->query->getRootId();
+            $this->params['root'] = $this->query->getRootId();
         }
     }
 

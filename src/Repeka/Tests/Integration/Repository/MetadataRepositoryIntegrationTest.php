@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration\Repository;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
@@ -75,5 +76,43 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $this->resetEntityManager($this->metadataRepository);
         $afterRemovalMetadata = $this->metadataRepository->findByName($name);
         $this->assertNotContains($rkId, $afterRemovalMetadata->getConstraints()['resourceKind']);
+    }
+
+    public function testFilterByRequiredKindIds() {
+        $kindId = 4;
+        $requiredKindIds = [$kindId];
+        $query = MetadataListQuery::builder()->filterByRequiredKindIds($requiredKindIds)->build();
+        $allowedMetadataForResourceKind = $this->metadataRepository->findByQuery($query);
+        $all = $this->metadataRepository->findAll();
+        $allFiltered = array_values(
+            array_filter(
+                $all,
+                function (Metadata $metadata) use ($kindId) {
+                    return !array_key_exists('resourceKind', $metadata->getConstraints()) ||
+                        in_array($kindId, $metadata->getConstraints()['resourceKind']);
+                }
+            )
+        );
+        $allIds = EntityUtils::mapToIds($allowedMetadataForResourceKind);
+        $filteredIds = EntityUtils::mapToIds($allFiltered);
+        sort($allIds);
+        sort($filteredIds);
+        $this->assertEquals($filteredIds, $allIds);
+    }
+
+    public function testAddingSystemMetadataToResult() {
+        //filter by non existing metadata to get 0 results
+        $query = MetadataListQuery::builder()->filterByIds([-1000])->addSystemMetadataIds(
+            [SystemMetadata::USERNAME, SystemMetadata::PARENT, SystemMetadata::GROUP_MEMBER]
+        )->build();
+        $systemMetadataIds = array_map(
+            function ($metadata) {
+                return $metadata->getId();
+            },
+            $this->metadataRepository->findByQuery($query)
+        );
+        $this->assertContains(SystemMetadata::USERNAME, $systemMetadataIds);
+        $this->assertContains(SystemMetadata::PARENT, $systemMetadataIds);
+        $this->assertContains(SystemMetadata::GROUP_MEMBER, $systemMetadataIds);
     }
 }

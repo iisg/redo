@@ -52,6 +52,28 @@ export class MetadataListQuery {
     return this;
   }
 
+  public filterByRequiredKindIds(requiredKindIds: number | number[]): MetadataListQuery {
+    if (!Array.isArray(requiredKindIds)) {
+      requiredKindIds = [requiredKindIds as number];
+    }
+    if (!this.params.requiredKindIds) {
+      this.params.requiredKindIds = [];
+    }
+    (requiredKindIds as number[]).forEach(requiredKindId => this.params.requiredKindIds.push(requiredKindId));
+    return this;
+  }
+
+  public excludeIds(excludedIds: number | number[]): MetadataListQuery {
+    if (!Array.isArray(excludedIds)) {
+      excludedIds = [excludedIds as number];
+    }
+    if (!this.params.excludedIds) {
+      this.params.excludedIds = [];
+    }
+    (excludedIds as number[]).forEach(excludedId => this.params.excludedIds.push(excludedId));
+    return this;
+  }
+
   public onlyTopLevel(): MetadataListQuery {
     this.params.topLevel = true;
     return this;

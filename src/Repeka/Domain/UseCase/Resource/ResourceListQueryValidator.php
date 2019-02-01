@@ -37,6 +37,7 @@ class ResourceListQueryValidator extends CommandAttributesValidator {
             ::attribute('resourceClasses', Validator::arrayType()->each($this->resourceClassExistsRule))
             ->attribute('resourceKinds', Validator::arrayType()->each(Validator::instance(ResourceKind::class)))
             ->attribute('contentsFilters', Validator::arrayType()->each($this->resourceContentsCorrectStructureRule))
+            ->attribute('relatedResources', Validator::arrayType()->each($this->resourceContentsCorrectStructureRule))
             ->attribute('sortBy', $this->resourceMetadataSortCorrectStructureRule);
     }
 }

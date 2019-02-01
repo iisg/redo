@@ -16,6 +16,8 @@ class MetadataListQuery extends AbstractCommand {
     private $resourceClasses;
     private $onlyTopLevel;
     private $controls;
+    private $requiredKindIds;
+    private $excludedIds;
 
     private function __construct() {
     }
@@ -27,7 +29,9 @@ class MetadataListQuery extends AbstractCommand {
         ?Metadata $parent,
         ?array $controls,
         ?bool $onlyTopLevel,
-        ?array $systemMetadataIds
+        ?array $systemMetadataIds,
+        ?array $requiredKindIds,
+        ?array $excludedIds
     ) {
         $query = new self();
         $query->ids = $ids ?: [];
@@ -37,6 +41,8 @@ class MetadataListQuery extends AbstractCommand {
         $query->controls = $controls ?: [];
         $query->onlyTopLevel = !!$onlyTopLevel;
         $query->systemMetadataIds = $systemMetadataIds ?: [];
+        $query->requiredKindIds = $requiredKindIds ?: [];
+        $query->excludedIds = $excludedIds ?: [];
         return $query;
     }
 
@@ -75,5 +81,15 @@ class MetadataListQuery extends AbstractCommand {
     /** @return MetadataControl[] */
     public function getControls(): array {
         return $this->controls;
+    }
+
+    /** @return int[] */
+    public function getRequiredKindIds(): array {
+        return $this->requiredKindIds;
+    }
+
+    /** @return int[] */
+    public function getExcludedIds(): array {
+        return $this->excludedIds;
     }
 }

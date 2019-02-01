@@ -6,6 +6,7 @@
     <require from="../workflow/resource-place-display.html"></require>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
+    <require from="resources-config/metadata/metadata-chooser"></require>
 
     <pagination total-number-of-elements.bind="totalNumberOfResources"
         elements-per-page.bind="resultsPerPage"
@@ -38,6 +39,14 @@
             submit.call="addNewResource(savedResource)"
             cancel.call="addFormOpened = !addFormOpened"></resource-form>
     </div>
+    <metadata-chooser if.bind="relationshipChooser"
+        control.one-time="'relationship'"
+        value.bind="metadata"
+        required-kind-id.bind="resource.kind.id"
+        excluded-ids.one-time="-1"
+        use-computed-width
+        set-first-as-default
+        hide-clear-button></metadata-chooser>
     <loading-bar if.bind="displayProgressBar"></loading-bar>
     <resources-list-table resources.bind="resources"
         column-metadata.bind="briefMetadata"

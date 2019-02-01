@@ -15,6 +15,8 @@ class MetadataListQueryBuilder {
     private $resourceClasses;
     private $onlyTopLevel = false;
     private $controls;
+    private $requiredKindIds = [];
+    private $excludedIds = [];
 
     public function addSystemMetadataIds(array $systemMetadataIds): MetadataListQueryBuilder {
         $this->systemMetadataIds = $systemMetadataIds;
@@ -61,6 +63,16 @@ class MetadataListQueryBuilder {
         return $this;
     }
 
+    public function filterByRequiredKindIds(array $requiredKindIds): MetadataListQueryBuilder {
+        $this->requiredKindIds = $requiredKindIds;
+        return $this;
+    }
+
+    public function excludeIds(array $excludedIds): MetadataListQueryBuilder {
+        $this->excludedIds = $excludedIds;
+        return $this;
+    }
+
     public function onlyTopLevel(): MetadataListQueryBuilder {
         Assertion::null($this->parent, 'Cannot set onlyTopLevel for query filtered by parent.');
         $this->onlyTopLevel = true;
@@ -75,7 +87,9 @@ class MetadataListQueryBuilder {
             $this->parent,
             $this->controls,
             $this->onlyTopLevel,
-            $this->systemMetadataIds
+            $this->systemMetadataIds,
+            $this->requiredKindIds,
+            $this->excludedIds
         );
     }
 }
