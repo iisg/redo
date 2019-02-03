@@ -72,32 +72,28 @@ describe('Resource Tests', function () {
     waitForElement(element(by.cssContainingText('span', 'Rodzaj_do_testowania_automatycznego')));
   });
 
-  it('Try to remove required metadata value', function () {
-    waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
-    var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-    var lastResource = resourcesList.get(0);
-    lastResource.click();
+  it('Try to remove required metadata value', function() {
+	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
+	var lastResource = resourcesList.get(0);
+	lastResource.click();
 
-    waitForElement(element(by.buttonText('Edytuj')));
-    var editButton = element(by.buttonText('Edytuj'));
-    editButton.click();
+	waitForElement(element(by.buttonText('Edytuj')));
+	var editButton = element(by.buttonText('Edytuj'));
+	editButton.click();
 
-    browser.driver.manage().window().setSize(1280, 1024);
-    waitForElement(element(by.className('buttons')));
-    browser.sleep(1000);
-    var buttonsPanels = element.all(by.className('buttons'));
-    var firstValueButtonPanel = buttonsPanels.get(1);
-    var deleteValueButton = firstValueButtonPanel.all(by.className('au-target')).get(0);
-    browser.sleep(500);
-    browser.actions().mouseMove(deleteValueButton).click().perform();
+	browser.driver.manage().window().setSize(1280, 1024);
+	waitForElement(element(by.className('form-control au-target')));
+	var dataFields = element.all(by.className('form-control au-target'));
+	dataFields.get(0).clear();
 
-    waitForElement(element(by.buttonText('Zapisz')));
-    var editButton = element(by.buttonText('Zapisz'));
-    editButton.click();
+	waitForElement(element(by.buttonText('Zapisz')));
+	var editButton = element(by.buttonText('Zapisz'));
+	editButton.click();
 
-    waitForElement(element(by.className('help-block validation-message')));
-    var errorMessage = element(by.className('help-block validation-message'));
-    expect(errorMessage.getText()).toContain('Wartość dla tej metadanej jest wymagana');
+	waitForElement(element(by.className('help-block validation-message')));
+	var errorMessage = element(by.className('help-block validation-message'));
+    expect(errorMessage.getText()).toContain('To pole jest wymagane');
   });
 
   it('Modify metadata value', function () {

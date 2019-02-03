@@ -77,24 +77,24 @@ describe('Metadata Type Tests', function () {
     expect(errorMessage.getText()).toContain('Nazwa wyświetlana musi mieć wartość we wszystkich językach.');
   });
 
-  it('Add metadata type', function () {
-    alertDialog = browser.switchTo().alert();
-    alertDialog.accept();
-    waitForElement(element(by.cssContainingText('span', 'Dodaj')));
-    var addMetadataTypeButton = element(by.cssContainingText('span', 'Dodaj'));
-    addMetadataTypeButton.click();
+  it('Add metadata type', function() {
+	  	// alertDialog = browser.switchTo().alert();
+		// alertDialog.accept();
+		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
+		var addMetadataTypeButton = element(by.cssContainingText('span', 'Dodaj'));
+		addMetadataTypeButton.click();
 
-    var fields = element.all(by.className('form-control au-target'));
-    var addButton = element(by.buttonText('Dodaj'));
-    fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
-    fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
-    fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
-    addButton.click();
-
-    browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');
-    alertDialog1 = browser.switchTo().alert();
-    alertDialog1.accept();
-    waitForElement(element(by.cssContainingText('td', 'Nazwa_Testowanie_Automatyczne')));
+		var fields = element.all(by.className('form-control au-target'));
+		var addButton = element(by.buttonText('Dodaj'));
+		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
+		addButton.click();
+		
+		browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');	
+	    alertDialog1 = browser.switchTo().alert();
+		alertDialog1.accept();		
+		waitForElement(element(by.cssContainingText('td', 'Nazwa_Testowanie_Automatyczne')));
   });
 
   it('Try to add submetadata without name', function () {
