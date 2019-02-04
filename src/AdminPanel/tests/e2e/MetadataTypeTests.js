@@ -78,8 +78,10 @@ describe('Metadata Type Tests', function() {
   });
 
   it('Add metadata type', function() {
-	  	alertDialog = browser.switchTo().alert();
-		alertDialog.accept();
+	    browser.switchTo().alert().then(
+			function (alert) { alert.accept(); },
+			function (err) { }
+		);
 		waitForElement(element(by.cssContainingText('span', 'Dodaj')));
 		var addMetadataTypeButton = element(by.cssContainingText('span', 'Dodaj'));
 		addMetadataTypeButton.click();
