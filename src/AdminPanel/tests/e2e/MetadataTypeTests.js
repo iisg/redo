@@ -94,8 +94,10 @@ describe('Metadata Type Tests', function() {
 		addButton.click();
 		
 		browser.get('https://repekadev.fslab.agh.edu.pl/admin/metadata/books');	
-	    alertDialog1 = browser.switchTo().alert();
-		alertDialog1.accept();		
+	    browser.switchTo().alert().then(
+			function (alert) { alert.accept(); },
+			function (err) { }
+		);		
 		waitForElement(element(by.cssContainingText('td', 'Nazwa_Testowanie_Automatyczne')));
   });
 
