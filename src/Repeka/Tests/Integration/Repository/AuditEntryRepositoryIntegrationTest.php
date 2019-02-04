@@ -8,6 +8,7 @@ use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
+/** @small */
 class AuditEntryRepositoryIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
@@ -16,11 +17,10 @@ class AuditEntryRepositoryIntegrationTest extends IntegrationTestCase {
     /** @var ResourceRepository */
     private $resourceRepository;
 
-    public function setUp() {
-        parent::setUp();
+    public function initializeDatabaseForTests() {
+        $this->loadAllFixtures();
         $this->auditEntryRepository = $this->container->get(AuditEntryRepository::class);
         $this->resourceRepository = $this->container->get(ResourceRepository::class);
-        $this->loadAllFixtures();
     }
 
     public function testGetAllAuditedCommandNames() {

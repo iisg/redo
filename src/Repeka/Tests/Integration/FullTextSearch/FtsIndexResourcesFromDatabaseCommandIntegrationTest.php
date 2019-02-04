@@ -2,13 +2,14 @@
 namespace Repeka\Tests\Integration\FullTextSearch;
 
 use Repeka\Application\Elasticsearch\ESIndexManager;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class FtsIndexResourcesFromDatabaseCommandIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/** @small */
+class FtsIndexResourcesFromDatabaseCommandIntegrationTest extends IntegrationTestCase {
     /** @var EsIndexManager */
     private $esIndexManager;
 
-    protected function initializeDatabaseBeforeTheFirstTest() {
+    protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
     }
 

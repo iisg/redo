@@ -4,25 +4,17 @@ namespace Integration\EventListener\Doctrine;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\ResourceKindIntegrationTest;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class ResourceKindMetadataListConverterListenerIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
-    /** @var ResourceKindRepository */
-    private $metadataRepository;
-
-    protected function initializeDatabaseBeforeTheFirstTest() {
+/** @small */
+class ResourceKindMetadataListConverterListenerIntegrationTest extends IntegrationTestCase {
+    protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
-    }
-
-    /** @before */
-    public function init() {
-        $this->metadataRepository = $this->container->get(ResourceKindRepository::class);
     }
 
     public function testSavingResourceKindWithMetadataList() {

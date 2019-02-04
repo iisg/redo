@@ -8,6 +8,7 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\IntegrationTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
+/** @small */
 class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
     /** @var Metadata */
     private $baseMetadata;
@@ -19,7 +20,7 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
     private $resourceKindMax1;
     private $resourceKindMax3;
 
-    public function setUp() {
+    public function initializeDatabaseForTests() {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('PL', 'PL', 'polski'); //for validate parentMetadata

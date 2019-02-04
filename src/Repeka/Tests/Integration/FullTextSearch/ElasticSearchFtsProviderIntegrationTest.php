@@ -11,9 +11,10 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/** @small */
+class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     /** @var ResourceEntity */
@@ -36,7 +37,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCaseWithout
 
     private $title = 'ala ma psa';
 
-    protected function initializeDatabaseBeforeTheFirstTest() {
+    protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
         $metadata = $this->findMetadataByName('Tytul');
         $this->createResource($this->getPhpBookResource()->getKind(), [$metadata->getId() => [$this->title]]);

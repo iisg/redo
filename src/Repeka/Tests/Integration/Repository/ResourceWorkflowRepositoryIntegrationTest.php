@@ -7,16 +7,16 @@ use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
+/** @small */
 class ResourceWorkflowRepositoryIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     /** @var EntityRepository|ResourceWorkflowRepository */
     private $workflowRepository;
 
-    protected function setUp() {
-        parent::setUp();
-        $this->workflowRepository = $this->container->get(ResourceWorkflowRepository::class);
+    protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
+        $this->workflowRepository = $this->container->get(ResourceWorkflowRepository::class);
     }
 
     public function testFindsByMetadataDependency() {

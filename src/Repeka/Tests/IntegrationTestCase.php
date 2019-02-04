@@ -5,10 +5,13 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use ReflectionClass;
+use ReflectionProperty;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
+use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\Language;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
@@ -34,6 +37,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class IntegrationTestCase extends FunctionalTestCase {
+    private static $dataForTests = [];
+
     /** @var ResettableContainerInterface */
     protected $container;
 
@@ -60,13 +65,40 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
             $this->executeCommand('doctrine:database:drop --force --if-exists');
             $this->executeCommand('doctrine:database:create');
         }
+        self::$dataForTests = array_intersect_key(self::$dataForTests, [static::class => '']);
         $this->clearDatabase();
     }
 
     protected function clearDatabase() {
-        $this->executeCommand('doctrine:schema:drop --force');
-        $this->executeCommand('doctrine:migrations:version --delete --all');
-        $this->executeCommand('repeka:initialize --skip-backup');
+        $initializedAtLeastOnce = isset(self::$dataForTests[static::class]);
+        if (!$initializedAtLeastOnce || (!$this->hasDependencies() && !$this->isSmall())) {
+            $this->executeCommand('doctrine:schema:drop --force');
+            $this->executeCommand('doctrine:migrations:version --delete --all');
+            $this->executeCommand('repeka:initialize --skip-backup');
+            $this->initializeDatabaseForTests();
+            $reflection = new ReflectionClass($this);
+            $vars = $reflection->getProperties(ReflectionProperty::IS_PRIVATE);
+            $testState = [];
+            foreach ($vars as $var) {
+                $var->setAccessible(true);
+                $testState[$var->getName()] = $var->getValue($this);
+            }
+            self::$dataForTests[static::class] = $testState;
+        }
+        if (isset(self::$dataForTests[static::class])) {
+            foreach (self::$dataForTests[static::class] as $fieldName => $value) {
+                EntityUtils::forceSetField($this, $value, $fieldName);
+            }
+        }
+    }
+
+    protected function freshEntity(Identifiable $entity): Identifiable {
+        $entity = $this->getEntityManager()->find(get_class($entity), $entity->getId());
+        $this->getEntityManager()->refresh($entity);
+        return $entity;
+    }
+
+    protected function initializeDatabaseForTests() {
     }
 
     protected function executeCommand(string $command): string {

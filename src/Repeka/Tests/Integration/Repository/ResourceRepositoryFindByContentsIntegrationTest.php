@@ -7,9 +7,10 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/** @small */
+class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     /** @var ResourceEntity */
@@ -17,7 +18,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
     /** @var Metadata */
     private $titleMetadata;
 
-    protected function initializeDatabaseBeforeTheFirstTest() {
+    protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
     }
 

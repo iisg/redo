@@ -3,26 +3,10 @@ namespace Repeka\Tests\Integration;
 
 use Repeka\Domain\Entity\Language;
 use Repeka\Domain\Repository\LanguageRepository;
-use Repeka\Domain\UseCase\Language\LanguageCreateCommand;
 use Repeka\Tests\IntegrationTestCase;
 
 class LanguageIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/languages';
-
-    public function testFetchingLanguages() {
-        $language1 = $this->createLanguage('TEST', 'TE', 'testing');
-        $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT);
-        $this->assertStatusCode(200, $client->getResponse());
-        $responseContent = json_decode($client->getResponse()->getContent(), true);
-        $languageCodes = array_map(
-            function ($language) {
-                return $language['code'];
-            },
-            $responseContent
-        );
-        $this->assertContains($language1->getCode(), $languageCodes);
-    }
 
     public function testCreatingLanguage() {
         $client = self::createAdminClient();
@@ -44,11 +28,27 @@ class LanguageIntegrationTest extends IntegrationTestCase {
         $this->assertEquals('testing', $language->getName());
     }
 
+    /** @depends testCreatingLanguage */
+    public function testFetchingLanguages() {
+        $client = self::createAdminClient();
+        $client->apiRequest('GET', self::ENDPOINT);
+        $this->assertStatusCode(200, $client->getResponse());
+        $responseContent = json_decode($client->getResponse()->getContent(), true);
+        $languageCodes = array_map(
+            function ($language) {
+                return $language['code'];
+            },
+            $responseContent
+        );
+        $this->assertContains('TEST', $languageCodes);
+    }
+
+    /** @depends testCreatingLanguage */
     public function testDeletingLanguage() {
         /** @var Language $language */
-        $language = $this->handleCommandBypassingFirewall(new LanguageCreateCommand('TEST', 'TE', 'Test'));
+        // $language = $this->handleCommandBypassingFirewall(new LanguageCreateCommand('TEST', 'TE', 'Test'));
         $client = self::createAdminClient();
-        $client->apiRequest('DELETE', self::ENDPOINT . '/' . $language->getCode());
+        $client->apiRequest('DELETE', self::ENDPOINT . '/TEST');
         $this->assertStatusCode(204, $client->getResponse());
         /** @var LanguageRepository $languageRepository */
         $languageRepository = $this->container->get(LanguageRepository::class);

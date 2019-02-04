@@ -8,6 +8,7 @@ use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
+/** @small */
 class TwigFrontendExtensionIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
     /** @var TwigResourceDisplayStrategyEvaluator */
@@ -15,9 +16,12 @@ class TwigFrontendExtensionIntegrationTest extends IntegrationTestCase {
     /** @var ResourceEntity */
     private $phpBookResource;
 
-    /** @before */
-    public function before() {
+    protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
+    }
+
+    /** @before */
+    public function loadEntities() {
         $this->evaluator = $this->container->get(ResourceDisplayStrategyEvaluator::class);
         $this->phpBookResource = $this->getPhpBookResource();
     }

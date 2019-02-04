@@ -2,12 +2,13 @@
 namespace Repeka\Tests\Integration;
 
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class WorkflowIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/** @small */
+class WorkflowIntegrationTest extends IntegrationTestCase {
     const ENDPOINT = '/api/workflows';
 
-    protected function initializeDatabaseBeforeTheFirstTest() {
+    protected function initializeDatabaseForTests() {
         self::loadFixture(new AdminAccountFixture());
     }
 

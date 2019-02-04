@@ -13,7 +13,6 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
-use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Tests\IntegrationTestCase;
 
 class ResourceKindIntegrationTest extends IntegrationTestCase {
@@ -31,7 +30,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     /** @var ResourceKind */
     private $resourceKind2;
 
-    public function setUp() {
+    public function initializeDatabaseForTests() {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('PL', 'PL', 'polski'); //for validate parentMetadata
@@ -69,6 +68,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->metadata2 = $this->resourceKind->getMetadataList()[2];
     }
 
+    /** @small */
     public function testFetchingAllResourceKinds() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['allResourceKinds' => true]);
@@ -86,6 +86,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($this->metadata2->getId(), $sortedMetadata[2]->id);
     }
 
+    /** @small */
     public function testFetchingAllResourceKindsOrderByIdAsc() {
         $client = self::createAdminClient();
         $client->apiRequest(
@@ -106,6 +107,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         );
     }
 
+    /** @small */
     public function testFetchingAllResourceKindsOrderByLabelAscInPolish() {
         $client = self::createAdminClient();
         $client->apiRequest(
@@ -126,6 +128,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         );
     }
 
+    /** @small */
     public function testFetchingAllResourceKindsOrderByLabelAscInEnglish() {
         $client = self::createAdminClient();
         $client->apiRequest(
@@ -146,6 +149,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         );
     }
 
+    /** @small */
     public function testFetchingResourceKindsWithResourceClass() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books']]);
@@ -161,6 +165,13 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             : array_reverse($responseItem->metadataList);
         $this->assertEquals($this->metadata1->getId(), $sortedMetadata[3]->id);
         $this->assertEquals($this->metadata2->getId(), $sortedMetadata[2]->id);
+    }
+
+    /** @small */
+    public function testFetchingResourceKindsFailsWhenInvalidResourceClass() {
+        $client = self::createAdminClient();
+        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['resourceClass']]);
+        $this->assertStatusCode(400, $client->getResponse());
     }
 
     public function testCreatingResourceKind() {
@@ -265,7 +276,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         );
         $resource = $this->handleCommandBypassingFirewall(
             new ResourceCreateCommand(
-                $this->resourceKind,
+                $this->freshEntity($this->resourceKind),
                 ResourceContents::fromArray(
                     [
                         $this->metadata1->getId() => ['test1'],
@@ -316,7 +327,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     public function testDeletingUsedResourceKindFails() {
         $this->handleCommandBypassingFirewall(
             new ResourceCreateCommand(
-                $this->resourceKind,
+                $this->freshEntity($this->resourceKind),
                 ResourceContents::fromArray(
                     [
                         $this->metadata1->getId() => ['test1'],
@@ -336,11 +347,5 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->assertTrue($resourceKindRepository->exists($this->resourceKind->getId()));
         $this->assertTrue($metadataRepository->exists($this->metadata1->getId()));
         $this->assertTrue($metadataRepository->exists($this->metadata2->getId()));
-    }
-
-    public function testFetchingResourceKindsFailsWhenInvalidResourceClass() {
-        $client = self::createAdminClient();
-        $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['resourceClass']]);
-        $this->assertStatusCode(400, $client->getResponse());
     }
 }

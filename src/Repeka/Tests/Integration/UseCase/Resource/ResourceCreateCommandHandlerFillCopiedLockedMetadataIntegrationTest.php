@@ -19,11 +19,15 @@ class ResourceCreateCommandHandlerFillCopiedLockedMetadataIntegrationTest extend
     /** @var ResourceEntity */
     private $category;
 
-    /** @before */
-    public function init() {
+    public function initializeDatabaseForTests() {
         $this->loadAllFixtures();
-        $this->category = $this->findResourceByContents([$this->findMetadataByName('nazwa_kategorii')->getId() => 'E-booki']);
+        $this->loadCategory();
         $this->setCategoryReproductor(666);
+    }
+
+    /** @before */
+    public function loadCategory() {
+        $this->category = $this->findResourceByContents([$this->findMetadataByName('nazwa_kategorii')->getId() => 'E-booki']);
     }
 
     private function setCategoryReproductor($reproductorsIds) {
@@ -48,21 +52,25 @@ class ResourceCreateCommandHandlerFillCopiedLockedMetadataIntegrationTest extend
         return $this->handleCommandBypassingFirewall($command);
     }
 
+    /** @small */
     public function testCopyingValueFromParentWhenTheMetadataIsLocked() {
         $resource = $this->addCategorySubresource();
         $this->assertEquals([666], $resource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR));
     }
 
+    /** @small */
     public function testCanSetTheSameValueAsWouldBeCopiedFromParentWhenTheMetadataIsLocked() {
         $resource = $this->addCategorySubresource([SystemMetadata::REPRODUCTOR => 666]);
         $this->assertEquals([666], $resource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR));
     }
 
+    /** @small */
     public function testDifferentValueIsReplacesWithCorrectOne() {
         $resource = $this->addCategorySubresource([SystemMetadata::REPRODUCTOR => 555]);
         $this->assertEquals([666], $resource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR));
     }
 
+    /** @small */
     public function testCanAddIfReproductorIsTheSameAsWouldBeAutoAssigned() {
         $this->setCategoryReproductor($this->getAdminUser()->getUserData()->getId());
         $this->changeReproductorMetadataToAutoAssign();
@@ -73,6 +81,7 @@ class ResourceCreateCommandHandlerFillCopiedLockedMetadataIntegrationTest extend
         );
     }
 
+    /** @small */
     public function testAutoAssignValueIsAssignedAndCopiedFromParent() {
         $firstAdminGroupId = $this->getAdminUser()->getUserGroupsIds()[0];
         $this->setCategoryReproductor($firstAdminGroupId);

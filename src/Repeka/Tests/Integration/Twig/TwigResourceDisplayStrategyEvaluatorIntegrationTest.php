@@ -14,6 +14,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
+/** @small */
 class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
     /** @var TwigResourceDisplayStrategyEvaluator */
@@ -23,9 +24,12 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
     /** @var Metadata */
     private $titleMetadata;
 
-    /** @before */
-    public function before() {
+    protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
+    }
+
+    /** @before */
+    public function loadEntities() {
         $this->evaluator = $this->container->get(ResourceDisplayStrategyEvaluator::class);
         $this->phpBookResource = $this->getPhpBookResource();
         $this->titleMetadata = $this->findMetadataByName('Tytuł');

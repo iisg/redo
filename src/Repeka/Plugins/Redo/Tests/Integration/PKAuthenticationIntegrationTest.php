@@ -5,17 +5,15 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Plugins\Redo\Authentication\PKAuthenticationClient;
 use Repeka\Tests\Integration\Authentication\AuthenticationIntegrationTest;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class PKAuthenticationIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/** @small */
+class PKAuthenticationIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     /** @beforeClass */
     public static function registerTestPKSoapService() {
         PKAuthenticationClient::$defaultSoapService = new TestPKSoapService();
-    }
-
-    protected function initializeDatabaseBeforeTheFirstTest() {
     }
 
     /** @afterClass */

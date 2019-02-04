@@ -7,16 +7,16 @@ use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
+/** @small */
 class UserRepositoryIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     /** @var UserRepository|UserLoaderInterface */
     private $userRepository;
 
-    /** @before */
-    public function init() {
-        $this->userRepository = $this->container->get(UserRepository::class);
+    public function initializeDatabaseForTests() {
         $this->loadAllFixtures();
+        $this->userRepository = $this->container->get(UserRepository::class);
     }
 
     public function testLoadByUsername() {

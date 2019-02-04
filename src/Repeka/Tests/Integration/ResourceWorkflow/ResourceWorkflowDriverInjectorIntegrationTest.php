@@ -9,14 +9,15 @@ use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulationResource;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class ResourceWorkflowDriverInjectorIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/** @small */
+class ResourceWorkflowDriverInjectorIntegrationTest extends IntegrationTestCase {
     /** @var ResourceWorkflow $workflow */
     private $workflow;
     private $resourceClass;
 
-    protected function initializeDatabaseBeforeTheFirstTest() {
+    protected function initializeDatabaseForTests() {
         self::loadFixture(new AdminAccountFixture(), new MetadataFixture(), new ResourceWorkflowsFixture());
     }
 

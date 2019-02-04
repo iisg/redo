@@ -10,15 +10,15 @@ use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
+/** @small */
 class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
     /** @var MetadataRepository */
     private $metadataRepository;
 
-    public function setUp() {
-        parent::setUp();
-        $this->metadataRepository = $this->container->get(MetadataRepository::class);
+    public function initializeDatabaseForTests() {
         $this->loadAllFixtures();
+        $this->metadataRepository = $this->container->get(MetadataRepository::class);
     }
 
     public function testFindAllByResourceClass() {
@@ -56,6 +56,14 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(2, $metadata);
     }
 
+    public function testFindByUntrimmedName() {
+        $this->assertEquals($this->metadataRepository->findByName('Opis'), $this->metadataRepository->findByName('Opis '));
+    }
+
+    public function testFindByNonDiacriticName() {
+        $this->assertEquals($this->metadataRepository->findByName('Tytuł'), $this->metadataRepository->findByName('tytul'));
+    }
+
     public function testRemoveResourceKindFromMetadataConstraints() {
         $name = 'Zobacz też';
         $rkId = 1;
@@ -67,13 +75,5 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $this->resetEntityManager($this->metadataRepository);
         $afterRemovalMetadata = $this->metadataRepository->findByName($name);
         $this->assertNotContains($rkId, $afterRemovalMetadata->getConstraints()['resourceKind']);
-    }
-
-    public function testFindByUntrimmedName() {
-        $this->assertEquals($this->metadataRepository->findByName('Opis'), $this->metadataRepository->findByName('Opis '));
-    }
-
-    public function testFindByNonDiacriticName() {
-        $this->assertEquals($this->metadataRepository->findByName('Tytuł'), $this->metadataRepository->findByName('tytul'));
     }
 }

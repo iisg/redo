@@ -9,6 +9,7 @@ use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
+/** @small */
 class AuthenticationIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
@@ -21,16 +22,8 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());
     }
 
-    public function testAuthSuccessWithUppercaseUsername() {
-        $client = $this->authenticate(strtoupper(AdminAccountFixture::USERNAME), AdminAccountFixture::PASSWORD);
-        /** @var UserEntity $user */
-        $user = $this->getAuthenticatedUser($client);
-        $this->assertNotNull($user);
-        $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());
-    }
-
+    /** @depends testAuthSuccess */
     public function testAuditAuthSuccess() {
-        $this->testAuthSuccess();
         /** @var AuditEntryRepository $auditRepository */
         $auditRepository = $this->container->get(AuditEntryRepository::class);
         $entries = $auditRepository->findAll();
@@ -38,6 +31,14 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(AdminAccountFixture::USERNAME, $entry->getUser()->getUsername());
         $this->assertEquals('user_authenticate', $entry->getCommandName());
         $this->assertTrue($entry->isSuccessful());
+    }
+
+    public function testAuthSuccessWithUppercaseUsername() {
+        $client = $this->authenticate(strtoupper(AdminAccountFixture::USERNAME), AdminAccountFixture::PASSWORD);
+        /** @var UserEntity $user */
+        $user = $this->getAuthenticatedUser($client);
+        $this->assertNotNull($user);
+        $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());
     }
 
     public function testUpdateRolesOnAuthSuccess() {
@@ -58,8 +59,8 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertContains('nieudane', $client->getResponse()->getContent());
     }
 
+    /** @depends testAuthFailure */
     public function testAuditAuthFailure() {
-        $this->testAuthFailure();
         /** @var AuditEntryRepository $auditRepository */
         $auditRepository = $this->container->get(AuditEntryRepository::class);
         $entries = $auditRepository->findAll();

@@ -19,61 +19,57 @@ use Repeka\Tests\IntegrationTestCase;
 class SecurityRulesIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
-    /** @var ResourceKind */
-    private $resourceKind;
-
-    /** @before */
-    public function loadFixtures() {
+    public function initializeDatabaseForTests() {
         $this->loadAllFixtures();
     }
 
-    /** @before */
-    public function createTestResourceKind() {
-        $this->resourceKind = $this->createResourceKind(
-            ['PL' => 'Test', 'EN' => 'Test'],
-            [$this->findMetadataByName('Tytuł')]
-        );
-    }
-
     public function testAllowedTopLevelResourceCreationWhenResourceClassAdmin() {
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
+        $resourceKind = $this->createResourceKind(['PL' => 'Test', 'EN' => 'Test'], [$this->findMetadataByName('Tytuł')]);
+        $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
         $resource = $this->handleCommandWithUserRoles(
             $command,
             [SystemRole::ADMIN()->roleName('books'), SystemRole::OPERATOR()->roleName('books')]
         );
         $this->assertNotNull($resource);
+        return $resourceKind;
     }
 
-    public function testForbiddenResourceCreationWhenNoRoles() {
+    /** @depends testAllowedTopLevelResourceCreationWhenResourceClassAdmin */
+    public function testForbiddenResourceCreationWhenNoRoles(ResourceKind $resourceKind) {
         $this->expectException(InsufficientPrivilegesException::class);
         $this->expectExceptionMessage(SystemRole::ADMIN()->roleName('books'));
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
+        $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
         $this->handleCommandWithUserRoles($command, []);
     }
 
-    public function testForbiddenTopLevelResourceCreationWhenOnlyOperator() {
+    /** @depends testAllowedTopLevelResourceCreationWhenResourceClassAdmin */
+    public function testForbiddenTopLevelResourceCreationWhenOnlyOperator(ResourceKind $resourceKind) {
         $this->expectException(InsufficientPrivilegesException::class);
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
+        $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
         $this->handleCommandWithUserRoles($command, [SystemRole::OPERATOR()->roleName('books')]);
     }
 
-    public function testForbiddenTopLevelResourceCreationWhenAdminOfAnotherClass() {
+    /** @depends testAllowedTopLevelResourceCreationWhenResourceClassAdmin */
+    public function testForbiddenTopLevelResourceCreationWhenAdminOfAnotherClass(ResourceKind $resourceKind) {
         $this->expectException(InsufficientPrivilegesException::class);
-        $command = new ResourceCreateCommand($this->resourceKind, ResourceContents::empty());
+        $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
         $this->handleCommandWithUserRoles($command, [SystemRole::ADMIN()->roleName('unicorns')]);
     }
 
+    /** @depends testAllowedTopLevelResourceCreationWhenResourceClassAdmin */
     public function testAllowedFetchingResourceListForAnyOperator() {
         $command = ResourceListQuery::builder()->build();
         $this->handleCommandWithUserRoles($command, [SystemRole::OPERATOR()->roleName()]);
     }
 
+    /** @small */
     public function testAllowedResourceKindCreationWhenAdminOfResourceClass() {
         $metadataList = [['id' => $this->findMetadataByName('Opis')->getId()]];
         $command = new ResourceKindCreateCommand(['PL' => 'Test', 'EN' => 'Test'], $metadataList);
         $this->handleCommandWithUserRoles($command, [SystemRole::ADMIN()->roleName('books')]);
     }
 
+    /** @small */
     public function testForbiddenResourceKindCreationWhenOperatorOfResourceClass() {
         $this->expectException(InsufficientPrivilegesException::class);
         $metadataList = [['id' => $this->findMetadataByName('Opis')->getId()]];
@@ -81,6 +77,7 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
         $this->handleCommandWithUserRoles($command, [SystemRole::OPERATOR()->roleName('books')]);
     }
 
+    /** @small */
     public function testCannotAddSubresourceIfNoReproductorsSet() {
         $category = $this->findResourceByContents([$this->findMetadataByName('nazwa_kategorii')->getId() => 'E-booki']);
         $category->updateContents($category->getContents()->withReplacedValues(SystemMetadata::REPRODUCTOR, []));

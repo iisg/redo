@@ -11,15 +11,15 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
+/** @small */
 class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
     /** @var EntityRepository|ResourceKindRepository */
     private $resourceKindRepository;
 
-    /** @before */
-    public function before() {
-        $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
+    public function initializeDatabaseForTests() {
         $this->loadAllFixtures();
+        $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
     }
 
     public function testFindAll() {
@@ -59,6 +59,21 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(1, $resourceKindList);
     }
 
+    public function testFindForbiddenBookByName() {
+        $query = ResourceKindListQuery::builder()->filterByResourceClass('books')->filterByName(['PL' => 'Zakazana książka'])->build();
+        $resourceKindList = $this->resourceKindRepository->findByQuery($query);
+        $this->assertCount(1, $resourceKindList);
+    }
+
+    public function testSortingByIdFilteringByResourceClass() {
+        $resourceKindListQuery = ResourceKindListQuery::builder()
+            ->filterByResourceClass('books')
+            ->sortBy([['columnId' => 'id', 'direction' => 'ASC', 'language' => 'PL']])
+            ->build();
+        $resourceKindList = $this->resourceKindRepository->findByQuery($resourceKindListQuery);
+        $this->assertCount(3, $resourceKindList);
+    }
+
     public function testRemoveEveryResourceKindsUsageInOtherResourceKinds() {
         $id = 2;
         $searchedResourceKindId = 3;
@@ -78,20 +93,5 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
                 $this->assertNotContains($id, $metadata->getConstraints()['resourceKind']);
             }
         }
-    }
-
-    public function testFindForbiddenBookByName() {
-        $query = ResourceKindListQuery::builder()->filterByResourceClass('books')->filterByName(['PL' => 'Zakazana książka'])->build();
-        $resourceKindList = $this->resourceKindRepository->findByQuery($query);
-        $this->assertCount(1, $resourceKindList);
-    }
-
-    public function testSortingByIdFilteringByResourceClass() {
-        $resourceKindListQuery = ResourceKindListQuery::builder()
-            ->filterByResourceClass('books')
-            ->sortBy([['columnId' => 'id', 'direction' => 'ASC', 'language' => 'PL']])
-            ->build();
-        $resourceKindList = $this->resourceKindRepository->findByQuery($resourceKindListQuery);
-        $this->assertCount(3, $resourceKindList);
     }
 }

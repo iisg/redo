@@ -59,7 +59,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     /** @var ResourceWorkflowTransition */
     private $transition;
 
-    protected function setUp() {
+    protected function initializeDatabaseForTests() {
         parent::setUp();
         $this->clearDefaultLanguages();
         $this->createLanguage('PL', 'PL', 'polski'); //for validate parentMetadata
@@ -149,6 +149,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         );
     }
 
+    /** @small */
     public function testFetchingResources() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books']]);
@@ -161,6 +162,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
+    /** @small */
     public function testFetchingResourcesOrderByIdAsc() {
         $client = self::createAdminClient();
         $client->apiRequest(
@@ -181,6 +183,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
+    /** @small */
     public function testFetchingResourcesForFirstPageWithTwoByPage() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'page' => 1, 'resultsPerPage' => 2]);
@@ -190,6 +193,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
+    /** @small */
     public function testFetchingTopLevelResources() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'topLevel' => true]);
@@ -199,12 +203,14 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
     }
 
+    /** @small */
     public function testFetchingResourcesFailsWhenInvalidResourceClass() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['resourceClass']]);
         $this->assertStatusCode(400, $client->getResponse());
     }
 
+    /** @small */
     public function testFetchingSingleResource() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::oneEntityEndpoint($this->resource->getId()));
@@ -228,6 +234,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         );
     }
 
+    /** @small */
     public function testFetchingByParentId() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['parentId' => $this->parentResource->getId()]);
@@ -236,6 +243,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals([$this->childResource->getId()], $fetchedIds);
     }
 
+    /** @small */
     public function testFetchingSortedResources() {
         $client = self::createAdminClient();
         $client->apiRequest(
@@ -279,8 +287,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         return $createdId;
     }
 
-    public function testCreatingResourceSavesAuditEntry() {
-        $createdId = $this->testCreatingResource();
+    /** @depends testCreatingResource */
+    public function testCreatingResourceSavesAuditEntry($createdId) {
         $auditEntries = $this->container->get(AuditEntryRepository::class)->findAll();
         $latestAuditEntry = end($auditEntries);
         $this->assertEquals('resource_create', $latestAuditEntry->getCommandName());

@@ -7,13 +7,14 @@ use Repeka\DeveloperBundle\DataFixtures\ORM\ResourceWorkflowsFixture;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/** @small */
+class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
     /** @var ResourceWorkflow $workflow */
     private $workflow;
 
-    protected function initializeDatabaseBeforeTheFirstTest() {
+    protected function initializeDatabaseForTests() {
         self::loadFixture(new AdminAccountFixture(), new MetadataFixture(), new ResourceWorkflowsFixture());
     }
 

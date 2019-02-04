@@ -2,15 +2,13 @@
 namespace Repeka\Tests\Integration\FullTextSearch;
 
 use Repeka\Application\Elasticsearch\ESIndexManager;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class ElasticsearchCreateIndexCommandIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/** @small */
+class ElasticsearchCreateIndexCommandIntegrationTest extends IntegrationTestCase {
 
     /** @var ESIndexManager */
     private $esIndexManager;
-
-    protected function initializeDatabaseBeforeTheFirstTest() {
-    }
 
     /** @before */
     public function init() {

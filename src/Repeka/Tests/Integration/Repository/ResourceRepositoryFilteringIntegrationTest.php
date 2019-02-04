@@ -2,7 +2,6 @@
 namespace Repeka\Tests\Integration\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
@@ -13,12 +12,14 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
-use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
-class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @small
+ */
+class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     /** @var EntityRepository|ResourceRepository */
@@ -28,7 +29,7 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCaseWith
     /** @var Metadata */
     private $titleMetadata;
 
-    protected function initializeDatabaseBeforeTheFirstTest() {
+    protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
     }
 

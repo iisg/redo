@@ -2,10 +2,11 @@
 namespace Repeka\Tests\Integration;
 
 use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
-use Repeka\Tests\IntegrationTestCaseWithoutDroppingDatabase;
+use Repeka\Tests\IntegrationTestCase;
 
-class AuthenticateCommandIntegrationTest extends IntegrationTestCaseWithoutDroppingDatabase {
-    protected function initializeDatabaseBeforeTheFirstTest() {
+/** @small */
+class AuthenticateCommandIntegrationTest extends IntegrationTestCase {
+    protected function initializeDatabaseForTests() {
         self::loadFixture(new AdminAccountFixture());
     }
 
