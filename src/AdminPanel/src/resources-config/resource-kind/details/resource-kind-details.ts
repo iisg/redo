@@ -10,7 +10,6 @@ import {groupMetadata} from "../../../common/utils/metadata-utils";
 import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
 import {GroupMetadataList} from "../../metadata/metadata";
 import {MetadataGroupRepository} from "../../metadata/metadata-group-repository";
-import {Resource} from "../../../resources/resource";
 import {ResourceRepository} from "../../../resources/resource-repository";
 
 @autoinject
@@ -20,8 +19,9 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   editing: boolean = false;
   resourceKindDetailsTabs: DetailsViewTabs;
   metadataGroups: GroupMetadataList[];
+  numberOfResources: number;
   private urlListener: Subscription;
-  resourceList: Resource[];
+  private resourceChildrenListener: Subscription;
 
   constructor(private resourceKindRepository: ResourceKindRepository,
               private router: Router,
@@ -38,18 +38,27 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     this.urlListener = this.eventAggregator.subscribe('router:navigation:success', (event: { instruction: NavigationInstruction }) => {
       this.editing = event.instruction.queryParams.action == 'edit';
     });
+    this.resourceChildrenListener = this.eventAggregator.subscribe('resourceChildrenAmount', (numberOfResources: number) => {
+        this.updateResourceListTab(numberOfResources);
+      }
+    );
   }
 
   unbind() {
     this.resourceKindDetailsTabs.clear();
     this.urlListener.dispose();
+    this.resourceChildrenListener.dispose();
+  }
+
+  updateResourceListTab(numberOfResources: number) {
+    this.numberOfResources = numberOfResources;
+    this.resourceKindDetailsTabs.updateLabels();
   }
 
   async activate(params: any) {
     this.resourceKind = await this.resourceKindRepository.get(params.id);
     const displayedMetadata = this.resourceKind.metadataList.filter(metadata => !!metadata.resourceClass);
     this.metadataGroups = groupMetadata(displayedMetadata, this.metadataGroupRepository.getIds());
-    this.resourceList = await this.resourceRepository.getListQuery().filterByResourceKindIds(this.resourceKind.id).get();
     this.activateTabs(params.tab);
     this.contextResourceClass.setCurrent(this.resourceKind.resourceClass);
   }
@@ -59,7 +68,8 @@ export class ResourceKindDetails implements RoutableComponentActivate {
       .addTab('details', () => `${this.i18n.tr('Metadata')} (${this.resourceKind.metadataList.filter(m => !!m.resourceClass).length})`);
     this.resourceKindDetailsTabs.addTab(
       'resources',
-      () => `${this.i18n.tr('resource_classes::' + this.resourceKind.resourceClass + '//resources')} (${this.resourceList.length})`
+      () => this.i18n.tr('resource_classes::' + this.resourceKind.resourceClass + '//resources')
+        + (this.numberOfResources === undefined ? '' : ` (${this.numberOfResources})`)
     );
     if (this.resourceKind.workflow) {
       this.resourceKindDetailsTabs.addTab('workflow', this.i18n.tr('Workflow'));
