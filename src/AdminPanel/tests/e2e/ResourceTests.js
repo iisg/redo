@@ -24,7 +24,7 @@ describe('Resource Tests', function () {
     browser.sleep(500);
     browser.driver.switchTo().activeElement().sendKeys('Rodzaj_do_testowania_automatycznego');
     browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
-    browser.sleep(500);
+    browser.sleep(2000);
 
     waitForElement(element(by.buttonText('Dodaj')));
     var addRButton = element(by.buttonText('Dodaj'));
