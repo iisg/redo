@@ -3,6 +3,7 @@ namespace Repeka\Tests;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use ReflectionClass;
@@ -92,10 +93,26 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         }
     }
 
-    protected function freshEntity(Identifiable $entity): Identifiable {
-        $entity = $this->getEntityManager()->find(get_class($entity), $entity->getId());
-        $this->getEntityManager()->refresh($entity);
-        return $entity;
+    /** @before */
+    public function refreshAllEntities() {
+        if (isset(self::$dataForTests[static::class])) {
+            foreach (self::$dataForTests[static::class] as $fieldName => $value) {
+                if ($value instanceof Identifiable) {
+                    EntityUtils::forceSetField($this, $this->freshEntity($value), $fieldName);
+                }
+            }
+        }
+    }
+
+    private function freshEntity(Identifiable $entity): Identifiable {
+        try {
+            $entity = $this->getEntityManager()->find(get_class($entity), $entity->getId());
+            $this->getEntityManager()->refresh($entity);
+            return $entity;
+        } catch (MappingException $e) {
+            // we hit Identifiable that is not a persisted entity
+            return $entity;
+        }
     }
 
     protected function initializeDatabaseForTests() {

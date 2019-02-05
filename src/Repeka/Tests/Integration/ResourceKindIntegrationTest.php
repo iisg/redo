@@ -276,7 +276,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         );
         $resource = $this->handleCommandBypassingFirewall(
             new ResourceCreateCommand(
-                $this->freshEntity($this->resourceKind),
+                $this->resourceKind,
                 ResourceContents::fromArray(
                     [
                         $this->metadata1->getId() => ['test1'],
@@ -327,7 +327,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
     public function testDeletingUsedResourceKindFails() {
         $this->handleCommandBypassingFirewall(
             new ResourceCreateCommand(
-                $this->freshEntity($this->resourceKind),
+                $this->resourceKind,
                 ResourceContents::fromArray(
                     [
                         $this->metadata1->getId() => ['test1'],
