@@ -86,6 +86,12 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
     }
 
+    public function testAdjustNoMetadataValueButSubmetadataExists() {
+        $contentsToAdjust = [1 => [['submetadata' => [3 => [['value' => '03-08-2018']]]]]];
+        $contentsAfterAdjust = [1 => [['value_text' => '', 'submetadata' => [3 => [['value_timestamp' => '03-08-2018']]]]]];
+        $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
+    }
+
     public function testAdjustFileContents() {
         $contentsToAdjust = [
             4 => [

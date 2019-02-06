@@ -8,7 +8,7 @@ use Respect\Validation\Validator;
 
 class MinMaxValueConstraint extends AbstractMetadataConstraint implements ConfigurableMetadataConstraint {
     public function getSupportedControls(): array {
-        return [MetadataControl::INTEGER];
+        return [MetadataControl::INTEGER, MetadataControl::DOUBLE];
     }
 
     public function getConstraintName(): string {

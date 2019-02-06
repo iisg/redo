@@ -25,6 +25,7 @@ class ESContentsAdjuster {
     }
 
     public function adjustContents(ResourceEntity $resource, $contents): array {
+        $resourceFileStorage = $this->container->get(ResourceFileStorage::class);
         $adjustedContents = [];
         foreach ($contents as $key => $values) {
             $adjustedMetadata = [];
@@ -38,12 +39,8 @@ class ESContentsAdjuster {
                 $singleMetadata = [];
                 if (!in_array($control, FtsConstants::UNACCEPTABLE_TYPES)) {
                     $singleMetadata['value_' . $control] = $control != MetadataControl::FILE
-                        ? $value['value']
-                        : $this->adjustFile(
-                            $resource,
-                            $value['value'],
-                            $this->container->get(ResourceFileStorage::class)
-                        );
+                        ? $value['value'] ?? ''
+                        : $this->readFileContents($resource, $value['value'], $resourceFileStorage);
                 }
                 if (isset($value['submetadata'])) {
                     $singleMetadata['submetadata'] = $this->adjustContents($resource, $value['submetadata']);
@@ -59,7 +56,7 @@ class ESContentsAdjuster {
         return $adjustedContents;
     }
 
-    public function adjustFile(ResourceEntity $resource, string $path, ResourceFileStorage $storage): array {
+    private function readFileContents(ResourceEntity $resource, string $path, ResourceFileStorage $storage): array {
         $adjustedFile = ['name' => $this->getFilename($path)];
         if ($this->hasSupportedExtension($path)) {
             $fileContents = $storage->getFileContents($resource, $path);
