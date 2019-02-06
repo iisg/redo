@@ -16,7 +16,8 @@ describe('Resource Tests', function () {
     var addResourceButton = element(by.cssContainingText('span', 'Dodaj'));
     addResourceButton.click();
 
-    waitForElement(element(by.className('select2-selection__rendered')));
+    waitForElement(element(by.className('current-page-number')));
+	waitForElement(element(by.className('select2-selection__rendered')));
     var lists = element.all(by.className('select2-selection__rendered'));
     var listToClick = lists.get(1);
     browser.sleep(1000);
@@ -120,7 +121,7 @@ describe('Resource Tests', function () {
     editButton.click();
 
     waitForElement(element(by.className('resource-details')));
-    browser.sleep(1000);
+    browser.sleep(3000);
     var metadataValuesList = element(by.className('resource-details'));
     expect(metadataValuesList.getText()).toContain('NewValue');
   });
