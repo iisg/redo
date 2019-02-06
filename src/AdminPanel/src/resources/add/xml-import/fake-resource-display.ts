@@ -9,7 +9,6 @@ import {MetadataRepository} from "resources-config/metadata/metadata-repository"
 import {I18N} from "aurelia-i18n";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {ResourceKind} from "../../../resources-config/resource-kind/resource-kind";
-import {MetadataControl} from "../../../resources-config/metadata/metadata-control";
 
 @autoinject
 export class FakeResourceDisplay {
@@ -55,7 +54,7 @@ export class FakeResourceDisplay {
       }
       result = this.addNecessaryFakeMetadata(this.metadataList);
     }
-    return this.sanitizeControls(result);
+    return result;
   }
 
   private getUnknownMetadataIds(knownMetadata: Metadata[]): string[] {
@@ -86,15 +85,5 @@ export class FakeResourceDisplay {
   @computedFrom('fakeMetadataList')
   get filteredMetadataList(): Metadata[] {
     return this.fakeMetadataList.filter(metadata => (metadata.id + '') in this.values);
-  }
-
-  private sanitizeControls(metadataList: Metadata[]): Metadata[] {
-    metadataList = metadataList.map(metadata => this.entitySerializer.clone(metadata));
-    for (const metadata of metadataList) {
-      if (!inArray(metadata.control, [MetadataControl.TEXT, MetadataControl.TEXTAREA, MetadataControl.RELATIONSHIP])) {
-        metadata.control = MetadataControl.TEXT;
-      }
-    }
-    return metadataList;
   }
 }
