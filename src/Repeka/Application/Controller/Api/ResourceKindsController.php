@@ -25,6 +25,7 @@ class ResourceKindsController extends ApiController {
         $resourceClasses = $request->query->get('resourceClasses', []);
         $ids = $request->query->get('ids', []);
         $metadataId = $request->query->get('metadataId', 0);
+        $workflowId = $request->query->get('workflowId', 0);
         $sortByIds = $request->query->get('sortByIds', []);
         Assertion::isArray($resourceClasses);
         Assertion::isArray($ids);
@@ -32,6 +33,7 @@ class ResourceKindsController extends ApiController {
         $resourceKindListQueryBuilder = ResourceKindListQuery::builder()
             ->filterByResourceClasses($resourceClasses)
             ->filterByMetadataId($metadataId)
+            ->filterByWorkflowId($workflowId)
             ->sortBy($sortByIds)
             ->filterByIds($ids);
         $resourceKindListQuery = $resourceKindListQueryBuilder->build();

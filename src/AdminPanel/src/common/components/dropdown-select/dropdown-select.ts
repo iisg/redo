@@ -8,6 +8,7 @@ import "select2";
 import {ChangeEvent} from "../../change-event";
 import {changeHandler, twoWay} from "../binding-mode";
 import {booleanAttribute} from "../boolean-attribute";
+import {isEmptyArray} from "../../utils/array-utils";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
@@ -40,12 +41,16 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     if (!this.searchFunction) {
       this.setupDropdownAgain();
     }
-    if (!this.multiple && this.setFirstAsDefault) {
-      if (this.value) {
-        this.value = this.values.find(value => value == this.value);
-      } else {
-        this.value = this.values[0];
-      }
+    if (this.setFirstAsDefault) {
+      this.addDefaultValue();
+    }
+  }
+
+  private addDefaultValue() {
+    if (isEmptyArray(this.value) && this.multiple) {
+      (this.value as Object[]).push(this.values[0]);
+    } else if (this.value === undefined && !this.multiple) {
+      this.value = this.values[0];
     }
   }
 

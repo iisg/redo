@@ -25,6 +25,7 @@ class ResourceKindListQuerySqlFactory {
         $this->filterByResourceClasses();
         $this->filterByMetadataId();
         $this->filterByName();
+        $this->filterByWorkflowId();
         $this->addOrderBy();
     }
 
@@ -74,6 +75,13 @@ class ResourceKindListQuerySqlFactory {
         if ($this->query->getName()) {
             $this->wheres[] = 'jsonb_contains(rk.label, :nameFilters) = TRUE';
             $this->params['nameFilters'] = json_encode($this->query->getName());
+        }
+    }
+
+    private function filterByWorkflowId(): void {
+        if ($this->query->getWorkflowId()) {
+            $this->wheres[] = 'rk.workflow_id = :workflowId';
+            $this->params['workflowId'] = $this->query->getWorkflowId();
         }
     }
 

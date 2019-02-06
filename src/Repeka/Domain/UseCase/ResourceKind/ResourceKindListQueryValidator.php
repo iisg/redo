@@ -31,6 +31,7 @@ class ResourceKindListQueryValidator extends CommandAttributesValidator {
             ::attribute('resourceClasses', Validator::arrayType()->each($this->resourceClassExistsRule))
             ->attribute('ids', Validator::arrayType())
             ->attribute('metadataId', Validator::intVal())
+            ->attribute('workflowId', Validator::intVal())
             ->attribute('sortBy', $this->resourceMetadataSortCorrectStructureRule);
     }
 }

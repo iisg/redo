@@ -21,9 +21,8 @@
                 </th>
             </tr>
             </tfoot>
-            <tbody class="au-stagger">
-            <tr class="au-animate fade-inup-outdown"
-                repeat.for="workflow of workflows"
+            <tbody>
+            <tr repeat.for="workflow of workflows"
                 go-to-link-on-row-click>
                 <td>
                     <a route-href="route: workflows/details; params.bind: {id: workflow.id}"

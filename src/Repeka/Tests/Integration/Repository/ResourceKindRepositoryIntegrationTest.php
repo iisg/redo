@@ -65,6 +65,12 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(1, $resourceKindList);
     }
 
+    public function testFindByWorkflowId() {
+        $query = ResourceKindListQuery::builder()->filterByResourceClass('books')->filterByWorkflowId(1)->build();
+        $resourceKindList = $this->resourceKindRepository->findByQuery($query);
+        $this->assertCount(1, $resourceKindList);
+    }
+
     public function testSortingByIdFilteringByResourceClass() {
         $resourceKindListQuery = ResourceKindListQuery::builder()
             ->filterByResourceClass('books')

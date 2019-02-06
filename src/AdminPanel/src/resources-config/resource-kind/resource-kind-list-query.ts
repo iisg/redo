@@ -39,6 +39,11 @@ export class ResourceKindListQuery {
     return this;
   }
 
+  public filterByWorkflowId(workflowId: number): ResourceKindListQuery {
+    this.params.workflowId = workflowId;
+    return this;
+  }
+
   public sortByMetadataIds(sortBy: ResourceSort[]): ResourceKindListQuery {
     this.params.sortByIds = sortBy;
     return this;

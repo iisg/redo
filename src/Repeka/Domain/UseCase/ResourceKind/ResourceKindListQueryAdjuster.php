@@ -24,6 +24,7 @@ class ResourceKindListQueryAdjuster implements CommandAdjuster {
             $query->getResourceClasses(),
             $query->getMetadataId(),
             $query->getName(),
+            $query->getWorkflowId(),
             $query->getPage(),
             $query->getResultsPerPage(),
             $this->columnSortDataConverter->convertSortByMetadataColumnsToIntegers($query->getSortBy())

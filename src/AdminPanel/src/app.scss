@@ -514,11 +514,6 @@ button {
 
 // Animations.
 // See: http://blog.aurelia.io/2015/07/17/animating-apps-with-aurelia-part-1.
-.au-stagger {
-  -webkit-animation-delay: 30ms;
-  animation-delay: 30ms;
-}
-
 .fade-inup-outdown {
   &.au-enter {
     opacity: 0 !important;

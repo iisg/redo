@@ -28,8 +28,8 @@
                     </th>
                 </tr>
                 </tfoot>
-                <tbody class="au-stagger">
-                <tr class="au-animate fade-inup-outdown ${language.editing ? 'edit-form' : ''}"
+                <tbody>
+                <tr class="${language.editing ? 'edit-form' : ''}"
                     repeat.for="language of languages">
                     <td if.bind="!language.editing">
                         ${language.code}

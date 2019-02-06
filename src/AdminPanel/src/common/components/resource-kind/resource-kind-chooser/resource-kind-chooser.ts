@@ -10,9 +10,12 @@ export class ResourceKindChooser implements ComponentAttached {
   @bindable(twoWay) value: ResourceKind | ResourceKind[];
   @bindable(oneTime) multiSelect: boolean;
   @bindable resourceClass: string;
+  @bindable workflowId: number;
   @bindable disabled: boolean;
   @bindable hideClearButton: boolean = false;
   @bindable filter: (resourceKind: ResourceKind) => boolean = () => true;
+  @bindable(twoWay) resourceKindsLoaded: boolean = false;
+  @bindable @booleanAttribute setFirstAsDefault: boolean;
   @bindable @booleanAttribute useComputedWidth: boolean;
   resourceKinds: ResourceKind[];
 
@@ -24,8 +27,13 @@ export class ResourceKindChooser implements ComponentAttached {
     if (this.resourceClass) {
       query.filterByResourceClasses(this.resourceClass);
     }
-    query.get().then(resourceKinds => {
-      this.resourceKinds = resourceKinds.filter(this.filter);
-    });
+    if (this.workflowId) {
+      query.filterByWorkflowId(this.workflowId);
+    }
+    query.get()
+      .then(resourceKinds => {
+        this.resourceKinds = resourceKinds.filter(this.filter);
+      })
+      .then(() => this.resourceKindsLoaded = true);
   }
 }

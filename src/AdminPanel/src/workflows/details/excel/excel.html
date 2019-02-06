@@ -11,8 +11,11 @@
                     <icon name="filter"
                         bootstrap-tooltip="${'Filter metadata kinds by selecting the resource kinds' | t}"></icon>
                     <resource-kind-chooser resource-class.one-time="workflow.resourceClass"
+                        workflow-id.one-time="workflow.id"
                         value.bind="filterByResourceKinds"
-                        multi-select="true"></resource-kind-chooser>
+                        multi-select="true"
+                        set-first-as-default
+                        resource-kinds-loaded.bind="resourceKindsLoaded"></resource-kind-chooser>
                 </div>
             </th>
             <th repeat.for="place of orderedPlaces"
@@ -22,9 +25,8 @@
             </th>
         </tr>
         </thead>
-        <tbody>
-        <tr repeat.for="metadata of filteredMetadata"
-            class="au-animate fade-inup-outdown">
+        <tbody if.bind="resourceKindsLoaded">
+        <tr repeat.for="metadata of filteredMetadata">
             <th class="${highlightedRowId == metadata.id ? 'highlighted' : ''}"
                 mouseover.delegate="highlightedColumnId = undefined">
                 ${metadata | metadataLabel}
@@ -55,5 +57,5 @@
         </tr>
         </tfoot>
     </table>
-    <loading-bar if.bind="!metadataList"></loading-bar>
+    <loading-bar if.bind="!metadataList || !resourceKindsLoaded"></loading-bar>
 </template>

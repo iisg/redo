@@ -39,9 +39,8 @@
                 </th>
             </tr>
             </tfoot>
-            <tbody class="au-stagger">
+            <tbody>
             <tr repeat.for="resourceKind of resourceKinds"
-                class="au-animate fade-inup-outdown"
                 go-to-link-on-row-click>
                 <td>
                     <a route-href="route: resource-kinds/details; params.bind: {id: resourceKind.id}"

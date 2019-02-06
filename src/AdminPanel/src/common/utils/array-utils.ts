@@ -56,3 +56,7 @@ export function diff<T>(array1: T[], array2: any[]): T[] {
 export function convertToObject<T>(array: T[]): Object {
   return Object.assign({}, ...array);
 }
+
+export function isEmptyArray<T>(value): boolean {
+  return Array.isArray(value) && (value as Array<T>).length === 0;
+}
