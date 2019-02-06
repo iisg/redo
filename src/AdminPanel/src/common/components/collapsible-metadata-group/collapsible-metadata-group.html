@@ -6,8 +6,11 @@
     <button if.bind="!disabled"
         class="section-title"
         click.delegate="toggleMetadataGroupVisibility()">
-        ${metadataGroupId | metadataGroupLabel}
-        <template if.bind="collapsedMetadataGroupsIds && collapsed">...</template>
+        <span>
+            ${metadataGroupId | metadataGroupLabel}
+            <span if.bind="collapsedMetadataGroupsIds"
+                class="ellipsis">…</span>
+        </span>
         <div>
             <icon name="forward"
                 rotation.bind="collapsedMetadataGroupsIds && collapsed ? 0 : 90"></icon>

@@ -21,6 +21,12 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
     &.collapsed {
       .section-title {
         transition: margin-bottom $collapse-animation-elements-movement-transition-settings;
+        .ellipsis {
+          transition: transitions-with-common-settings(font-size,
+            $elements-movement-animation-duration - $additional-opacity-transition-duration $collapse-and-expand-animations-timing-function),
+          transitions-with-common-settings(opacity visibility,
+              $expand-animation-opacity-and-visibility-transitions-settings);
+        }
       }
       .section-title ~ *, collapsible-metadata-group > * {
         transition: transitions-with-common-settings(margin-top margin-bottom min-height line-height,
@@ -69,6 +75,15 @@ $line-height-to-be-rendered-as-zero: 0.0001%; // When `px` is used it seems to b
     &.expanded {
       .section-title {
         transition: margin-bottom $expand-animation-elements-movement-transition-settings;
+        .ellipsis {
+          font-size: 0;
+          opacity: 0;
+          visibility: hidden;
+          transition: transitions-with-common-settings(font-size,
+            $elements-movement-animation-duration - $additional-opacity-transition-duration $basic-opacity-transition-duration + $additional-opacity-transition-duration $collapse-and-expand-animations-timing-function),
+          transitions-with-common-settings(opacity visibility,
+              $collapse-animation-opacity-and-visibility-transitions-settings);
+        }
       }
       .section-title ~ *, collapsible-metadata-group > * {
         transition: transitions-with-common-settings(margin-top margin-bottom min-height line-height,

@@ -1,6 +1,6 @@
 {% set endNoteType = (resource | mEndNoteType) is null ? (resource | mEndNoteType) : 'BOOK' %}
 TY  - {{ endNoteType }}
-AU  - {{ resource | mautor }}
+AU  - {{ resource | metadata('autor') | join ('\nAU  - ') }}
 PY  - {{ resource | mdata_wydania }}
 TI  - {{ resource | mtytul }}
 T2  - {{ resource | mwydawnictwo }}

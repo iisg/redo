@@ -1,0 +1,11 @@
+{% set joinedAuthors = '' %}
+{% for author in resource | metadata('autor') %}
+    {% set names = author | split(',', 2) %}
+    {% set joinedAuthors = joinedAuthors ~ names | first | upper ~ ',' ~ names | slice(1) | first %}
+    {% if not loop.last %}
+        {% set joinedAuthors = joinedAuthors ~ '; ' %}
+    {% endif %}
+{% endfor %}
+{% set publisherWithPublicationDate = resource | mwydawnictwo | merge(resource | mdata_wydania) | join(', ') %}
+{{ joinedAuthors }}. <i>{{ resource | mtytul }}</i>.{{ publisherWithPublicationDate is not empty
+? ' ' ~ publisherWithPublicationDate ~ '.' }}

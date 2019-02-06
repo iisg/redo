@@ -52,13 +52,15 @@ repeka:
     /resources/{resourceId}:
       template: redo/resource-details/resource-details.twig
     /resources/{resourceId}/bibtex:
-      template: bibtex/bibtex.twig
+      template: redo/citation-formats/bibtex.twig
       headers:
         Content-Type: 'text/plain'
     /resources/{resourceId}/endnote:
-      template: endnote/endnote.twig
+      template: redo/citation-formats/endnote.twig
       headers:
         Content-Type: 'text/plain'
+    /resources/{resourceId}/iso-690:
+      template: redo/citation-formats/iso-690.twig
     /resources/{resourceId}/rss:
       template: redo/rss/collection.rss.twig
       headers:

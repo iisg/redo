@@ -72,6 +72,8 @@
                                 title="Pobierz informacje o zasobie w formacie BibTeX">BibTeX</a></h4>
                             <h4><a href="/resources/{{ resource.id }}/endnote"
                                 title="Pobierz informacje o zasobie w formacie EndNote">EndNote</a></h4>
+                            <h4><a href="/resources/{{ resource.id }}/iso-690"
+                                    title="Pobierz informacje o zasobie w formacie ISO 690">ISO 690</a></h4>
                         </div>
                     </fieldset>
                 </div>
@@ -96,25 +98,27 @@
                                 </div>
                             </td>
                         </tr>
-                        {% for metadata in metadataList %}
-                            {% set metadataValue = resource | metadata(metadata.id) | first %}
-                            {% if metadataValue
-                                and metadata.name != 'tytul'
-                                and metadata.name != 'label'
-                                and metadata.name != 'parent'
-                                and metadata.control != 'display-strategy'
-                                and metadata.control != 'wysiwyg-editor' %}
+                        {% for metadata in metadataList if metadata.id > 0
+                            and metadata.control != 'display-strategy'
+                            and metadata.control != 'wysiwyg-editor' %}
+                            {% if metadata.control == 'file' or metadata.control == 'directory' %}
+                                {% set metadataJoinedValues = '' %}
+                                {% for metadataValue in resource | metadata(metadata.id) %}
+                                    {% set metadataJoinedValues = metadataJoinedValues ~ metadataValue | basename %}
+                                    {% if not loop.last %}
+                                        {% set metadataJoinedValues = metadataJoinedValues ~ '<br>' %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {% set metadataJoinedValues = resource | metadata(metadata.id) | join('<br>') %}
+                            {% endif %}
+                            {% if metadataJoinedValues %}
                                 <tr>
                                     <td>
                                         {{ metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) }}
                                     </td>
                                     <td>
-                                        {% if metadata.control == 'file'
-                                        or metadata.control == 'directory' %}
-                                            {{ metadataValue | basename }}
-                                        {% else %}
-                                            {{ metadataValue }}
-                                        {% endif %}
+                                        {{ metadataJoinedValues | raw }}
                                     </td>
                                 </tr>
                             {% endif %}

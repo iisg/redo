@@ -3,12 +3,10 @@
 {{ bibtexType }}{{ '{' }}{{ bibtexKey }}
     title = {{ resource | mtytul | bibtexEscape | raw }},
     year = {{ "1996" | bibtexEscape | raw }},
-{% for metadata in resource.kind.metadataList %}{% set metadataValue = resource | metadata(metadata.id) | first %}
-{% if metadataValue
-        and metadata.name != 'label'
-        and metadata.name != 'parent'
-        and metadata.control != 'display-strategy'
-        and metadata.control != 'wysiwyg-editor' %}
+{% for metadata in resource.kind.metadataList if metadata.id > 0
+    and metadata.control != 'display-strategy'
+    and metadata.control != 'wysiwyg-editor' %}{% set metadataValue = resource | metadata(metadata.id) | join(' and ') %}
+    {% if metadataValue %}
     {{ metadata.label['EN'] | default(metadata.label | first) | default(metadata.name) | replace({" ": ''}) }} = {{ metadataValue | bibtexEscape | raw }},
 {% endif %}
 {% endfor %}

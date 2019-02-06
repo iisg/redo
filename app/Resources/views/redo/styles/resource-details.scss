@@ -82,16 +82,19 @@ $download-options-flex-grow: 1;
         }
     }
     .details {
+      tr {
+        vertical-align: top;
         td {
-            &:not(:only-child) {
-                padding: $gap-size / 4 $gap-size / 2;
-                &:first-child {
-                    white-space: nowrap;
-                    text-align: right;
-                    color: $grey;
-                }
-                &:last-child {
-                    width: 100%;
+          &:not(:only-child) {
+            padding: $gap-size / 4 $gap-size / 2;
+            &:first-child {
+              white-space: nowrap;
+              text-align: right;
+              color: $grey;
+            }
+            &:last-child {
+              width: 100%;
+            }
                 }
             }
         }
