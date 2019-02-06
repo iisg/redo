@@ -108,7 +108,7 @@ mappings:
             - name: trim
               characters: '()'
           submetadata:
-            original_value_biographical_dates_author:
+            199:
               transforms:
                 - name: 'displayStrategy'
                   template: '{{ parentMetadataValue}}'
@@ -182,7 +182,7 @@ mappings:
             - name: trim
               characters: '()'
           submetadata:
-            original_value_biographical_dates_author:
+            199:
               transforms:
                 - name: 'displayStrategy'
                   template: '{{ parentMetadataValue}}'
@@ -268,7 +268,7 @@ mappings:
             - name: trim
               characters: '()'
           submetadata:
-            original_value_biographical_dates_coauthor:
+            200:
               transforms:
                 - name: 'displayStrategy'
                   template: '{{ parentMetadataValue}}'
@@ -398,7 +398,7 @@ mappings:
             - name: trim
               characters: '()'
           submetadata:
-            original_value_biographical_dates_coauthor:
+            200:
               transforms:
                 - name: 'displayStrategy'
                   template: '{{ parentMetadataValue}}'
@@ -559,7 +559,7 @@ mappings:
       - name: trim
         characters: "()[]"
     submetadata:
-      original_value_publish_date:
+      201:
         transforms:
           - name: 'displayStrategy'
             template: '{{ parentMetadataValue }}'

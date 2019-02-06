@@ -72,7 +72,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         147 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1815', '1880'),
-                                'submetadata' => [301 => [['value' => '1815-1880']]],
+                                'submetadata' => [199 => [['value' => '1815-1880']]],
                             ],
                         ],
                         179 => [['value' => '113281']],
@@ -85,7 +85,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         147 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1831', '1901'),
-                                'submetadata' => [301 => [['value' => '1831-1901']]],
+                                'submetadata' => [199 => [['value' => '1831-1901']]],
                             ],
                         ],
                         179 => [['value' => '100004']],
@@ -127,7 +127,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         MetadataDateControlMode::YEAR,
                         null
                     )->toArray(),
-                    'submetadata' => [303 => [['value' => '1877']]],
+                    'submetadata' => [201 => [['value' => '1877']]],
                 ],
             ],
             172 => [['value' => 'Warszawa']],
@@ -169,7 +169,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1847', '1910'),
-                                'submetadata' => [302 => [['value' => '1847-1910']]],
+                                'submetadata' => [200 => [['value' => '1847-1910']]],
                             ],
                         ],
                     ],
@@ -183,7 +183,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1840', '1901'),
-                                'submetadata' => [302 => [['value' => '1840-1901']]],
+                                'submetadata' => [200 => [['value' => '1840-1901']]],
                             ],
                         ],
                     ],
@@ -197,7 +197,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1827', '1894'),
-                                'submetadata' => [302 => [['value' => '1827-1894']]],
+                                'submetadata' => [200 => [['value' => '1827-1894']]],
                             ],
                         ],
                     ],
@@ -211,7 +211,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1840', '1917'),
-                                'submetadata' => [302 => [['value' => '1840-1917']]],
+                                'submetadata' => [200 => [['value' => '1840-1917']]],
                             ],
                         ],
                     ],
@@ -225,7 +225,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1825', '1891'),
-                                'submetadata' => [302 => [['value' => '1825-1891']]],
+                                'submetadata' => [200 => [['value' => '1825-1891']]],
                             ],
                         ],
                     ],
@@ -239,7 +239,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1835', '1894'),
-                                'submetadata' => [302 => [['value' => '1835-1894']]],
+                                'submetadata' => [200 => [['value' => '1835-1894']]],
                             ],
                         ],
                     ],
@@ -253,7 +253,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1842', '1913'),
-                                'submetadata' => [302 => [['value' => '1842-1913']]],
+                                'submetadata' => [200 => [['value' => '1842-1913']]],
                             ],
                         ],
                     ],
@@ -267,7 +267,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1832', '1903'),
-                                'submetadata' => [302 => [['value' => '1832-1903']]],
+                                'submetadata' => [200 => [['value' => '1832-1903']]],
                             ],
                         ],
                     ],
@@ -281,7 +281,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1828', '1917'),
-                                'submetadata' => [302 => [['value' => '1828-1917']]],
+                                'submetadata' => [200 => [['value' => '1828-1917']]],
                             ],
                         ],
                     ],
@@ -298,7 +298,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         MetadataDateControlMode::YEAR,
                         null
                     )->toArray(),
-                    'submetadata' => [303 => [['value' => '1879']]],
+                    'submetadata' => [201 => [['value' => '1879']]],
                 ],
             ],
             136 => [['value' => 'XVI, 1158 stron, [1] karta tablic złożona']],
@@ -329,7 +329,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         147 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1828', '1883'),
-                                'submetadata' => [301 => [['value' => '1828-1883']]],
+                                'submetadata' => [199 => [['value' => '1828-1883']]],
                             ],
                         ],
                     ],
@@ -342,7 +342,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         147 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1833', '1894'),
-                                'submetadata' => [301 => [['value' => '1833-1894']]],
+                                'submetadata' => [199 => [['value' => '1833-1894']]],
                             ],
                         ],
                     ],
@@ -355,7 +355,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         147 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1818', '1882'),
-                                'submetadata' => [301 => [['value' => '1818-1882']]],
+                                'submetadata' => [199 => [['value' => '1818-1882']]],
                             ],
                         ],
                     ],
@@ -368,7 +368,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         147 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1825', '1891'),
-                                'submetadata' => [301 => [['value' => '1825-1891']]],
+                                'submetadata' => [199 => [['value' => '1825-1891']]],
                             ],
                         ],
                     ],
@@ -381,7 +381,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         147 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1817', '1885'),
-                                'submetadata' => [301 => [['value' => '1817-1885']]],
+                                'submetadata' => [199 => [['value' => '1817-1885']]],
                             ],
                         ],
                     ],
@@ -394,7 +394,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         147 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1813', '1891'),
-                                'submetadata' => [301 => [['value' => '1813-1891']]],
+                                'submetadata' => [199 => [['value' => '1813-1891']]],
                             ],
                         ],
                     ],
@@ -410,7 +410,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1832', '1897'),
-                                'submetadata' => [302 => [['value' => '1832-1897']]],
+                                'submetadata' => [200 => [['value' => '1832-1897']]],
                             ],
                         ],
                     ],
@@ -424,7 +424,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1840', '1906'),
-                                'submetadata' => [302 => [['value' => '1840-1906']]],
+                                'submetadata' => [200 => [['value' => '1840-1906']]],
                             ],
                         ],
                     ],
@@ -438,7 +438,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                         182 => [
                             [
                                 'value' => $this->toFlexibleDateArray('1831', '1916'),
-                                'submetadata' => [302 => [['value' => '1831-1916']]],
+                                'submetadata' => [200 => [['value' => '1831-1916']]],
                             ],
                         ],
                     ],
