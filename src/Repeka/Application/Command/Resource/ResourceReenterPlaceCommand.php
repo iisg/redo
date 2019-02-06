@@ -7,6 +7,7 @@ use Repeka\Application\Repository\Transactional;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\EventListener\UpdateDependentDisplayStrategiesListener;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
@@ -40,24 +41,23 @@ class ResourceReenterPlaceCommand extends Command {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
+        UpdateDependentDisplayStrategiesListener::$alwaysLeaveDirty = true;
         $parentId = $input->getOption('parentId');
         Assertion::numeric($parentId);
         /** @var ResourceEntity[] $resources */
-        $query = ResourceListQuery::builder()->filterByParentId($parentId)->build();
+        $offset = $input->getOption('offset') ?? 0;
+        $limit = $input->getOption('limit') ?? 100;
+        $query = ResourceListQuery::builder()
+            ->filterByParentId($parentId)
+            ->sortBy([['columnId' => 'id', 'direction' => 'ASC']])
+            ->setPage(intval($offset / $limit) + 1)
+            ->setResultsPerPage($limit)
+            ->build();
         $resources = $this->resourceRepository->findByQuery($query);
         $progress = new ProgressBar($output, count($resources));
         $progress->display();
-        $offset = $input->getOption('offset') ?? 0;
-        $limit = $offset + ($input->getOption('limit') ?? count($resources));
-        $iteration = 0;
         foreach ($resources as $resource) {
             $progress->advance();
-            $iteration++;
-            if ($iteration < $offset) {
-                continue;
-            } elseif ($iteration > $limit) {
-                break;
-            }
             if ($resource->hasWorkflow()) {
                 FirewallMiddleware::bypass(
                     function () use ($resource) {
