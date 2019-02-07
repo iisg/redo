@@ -14,6 +14,7 @@ import {SystemMetadata} from "../metadata/system-metadata";
 import {ResourceKind} from "./resource-kind";
 import {SystemResourceKinds} from "./system-resource-kinds";
 import {FrontendConfig} from "../../config/FrontendConfig";
+import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class ResourceKindForm extends ChangeLossPreventerForm implements ComponentAttached, ComponentDetached {
@@ -36,10 +37,14 @@ export class ResourceKindForm extends ChangeLossPreventerForm implements Compone
               private signaler: BindingSignaler,
               private metadataRepository: MetadataRepository,
               private entitySerializer: EntitySerializer,
-              private changeLossPreventer: ChangeLossPreventer) {
+              private changeLossPreventer: ChangeLossPreventer,
+              private eventAggregator: EventAggregator) {
     super();
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer);
+    this.eventAggregator.subscribe('metadataChanged', () => {
+      this.dirty = true;
+    });
   }
 
   attached() {

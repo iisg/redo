@@ -1,6 +1,6 @@
 <template>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
-    <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
 
     <resource-kind-chooser if.bind="!disabled || metadata.constraints.resourceKind.length"
         value.bind="metadata.constraints.resourceKind"
