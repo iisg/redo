@@ -34,6 +34,9 @@ class KohaImportCommandIntegrationTest extends DatabaseMigrationTestCase {
         $this->getEntityManager()->getConnection()->exec(
             file_get_contents(__DIR__ . '/../MetadataImport/dumps/only_language_resources_pgdump.sql')
         );
+        $this->getEntityManager()->getConnection()->exec(
+            file_get_contents(__DIR__.'/../MetadataImport/dumps/only_language_resources_fix_metadata.sql')
+        );
         $this->barcode1 = 100000231505;
         $this->barcode2 = 100000231454;
         $this->barcodeMetadataId = 76;
@@ -219,7 +222,6 @@ class KohaImportCommandIntegrationTest extends DatabaseMigrationTestCase {
 
     private function containsMetadataValueValues(ResourceContents $resourceContents, $expectedValuesArray) {
         $resourceContentsArray = $resourceContents->toArray();
-        unset($resourceContentsArray[171]); // szablon
         unset($resourceContentsArray[-5]); //etykieta
         $this->assertEquals($expectedValuesArray, $resourceContentsArray);
     }

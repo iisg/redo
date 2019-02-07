@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\UseCase\Resource;
 
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
@@ -25,7 +26,12 @@ class ResourceGodUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
         $this->resourceKind2 = $this->createResourceKindMock(2, 'book', [$realMetadata]);
         $resourceKindRepository = $this->createRepositoryStub(ResourceKindRepository::class, [$this->resourceKind2]);
         $metadataRepository = $this->createRepositoryStub(MetadataRepository::class);
-        $this->adjuster = new ResourceGodUpdateCommandAdjuster($resourceKindRepository, $metadataRepository);
+        $metadataValueAdjusterComposite = new MetadataValueAdjusterComposite([]);
+        $this->adjuster = new ResourceGodUpdateCommandAdjuster(
+            $resourceKindRepository,
+            $metadataRepository,
+            $metadataValueAdjusterComposite
+        );
     }
 
     public function testConvertResourceKindIdsToResourceKinds() {
