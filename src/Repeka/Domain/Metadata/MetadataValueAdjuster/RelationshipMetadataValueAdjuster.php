@@ -17,6 +17,6 @@ class RelationshipMetadataValueAdjuster implements MetadataValueAdjuster {
     private function replaceRelationshipResourceWithId($value) {
         return $value instanceof ResourceEntity
             ? $value->getId()
-            : $value;
+            : intval($value);
     }
 }

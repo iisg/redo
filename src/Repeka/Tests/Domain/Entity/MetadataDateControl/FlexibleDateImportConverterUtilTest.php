@@ -124,6 +124,15 @@ class FlexibleDateImportConverterUtilTest extends \PHPUnit_Framework_TestCase {
                     MetadataDateControlMode::YEAR
                 )->toArray(),
             ],
+            [
+                '2018-12-23',
+                MetadataDateControlConverterUtil::convertDateToFlexibleDate(
+                    DateTime::createFromFormat('Y-m-d', '2018-12-23')->format(DateTime::ATOM),
+                    null,
+                    MetadataDateControlMode::DAY,
+                    null
+                )->toArray(),
+            ],
         ];
     }
 }

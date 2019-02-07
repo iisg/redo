@@ -15,6 +15,7 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
+use Repeka\Domain\Workflow\ResourceWorkflowPluginEventDispatcher;
 use Repeka\Plugins\Redo\Command\Import\XmlExtractStrategy\PkImportXmlExtractor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -78,6 +79,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
     /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
     protected function execute(InputInterface $input, OutputInterface $output) {
         UpdateDependentDisplayStrategiesListener::$alwaysLeaveDirty = true;
+        ResourceWorkflowPluginEventDispatcher::$dispatchPluginEvents = false;
         $stats = [
             'resources' => 0,
             'imported' => 0,

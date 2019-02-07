@@ -7,6 +7,7 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
+use Repeka\Domain\EventListener\UpdateDependentDisplayStrategiesListener;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -15,6 +16,7 @@ use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\EntityUtils;
+use Repeka\Domain\Workflow\ResourceWorkflowPluginEventDispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
@@ -26,6 +28,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @SuppressWarnings("PHPMD.CyclomaticComplexity")
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings("PHPMD.NPathComplexity")
  */
 class PkImportMapRelationsCommand extends Command {
     use CommandBusAware;
@@ -48,13 +51,19 @@ class PkImportMapRelationsCommand extends Command {
             ->setName('redo:pk-import:map-relations')
             ->setDescription('Map relations of imported files.')
             ->addOption('idNamespace', 'i', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY)
-            ->addOption('skip', 's', InputOption::VALUE_OPTIONAL);
+            ->addOption('skip', 's', InputOption::VALUE_REQUIRED)
+            ->addOption('ignoreProblems', null, InputOption::VALUE_REQUIRED, '', '')
+            ->addOption('customMap', 'c', InputOption::VALUE_REQUIRED);
     }
 
     /** @inheritdoc */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        ResourceWorkflowPluginEventDispatcher::$dispatchPluginEvents = false;
+        UpdateDependentDisplayStrategiesListener::$alwaysLeaveDirty = true;
         $idMapping = PkImportResourcesCommand::getIdMapping();
         $idNamespaces = $this->loadIdNamespaces($input);
+        $customMaps = $this->loadCustomMaps($input);
+        $problemsLog = [];
         if (!$idMapping) {
             $output->writeln('<error>You need to import some resources first.');
         } else {
@@ -69,6 +78,7 @@ class PkImportMapRelationsCommand extends Command {
             ];
             $metadataWithoutNamespace = [];
             $missingMetadataIds = [];
+            $missingMetadataValues = [];
             if (count($idsToQuery)) {
                 $query = ResourceListQuery::builder()->filterByIds($idsToQuery)->build();
                 $resources = $this->resourceRepository->findByQuery($query);
@@ -82,9 +92,11 @@ class PkImportMapRelationsCommand extends Command {
                 $skippedMetadataIds = EntityUtils::mapToIds(
                     array_map([$this, 'findMetadataByIdOrName'], array_filter(explode(',', $input->getOption('skip'))))
                 );
+                $ignoreProblemsInMetadataIds = array_filter(explode(',', $input->getOption('ignoreProblems')));
                 $relationshipMetadataIds = array_diff($relationshipMetadataIds, $skippedMetadataIds);
                 try {
                     foreach ($resources as $resource) {
+                        // echo PHP_EOL . $resource->getId() . PHP_EOL;
                         $progress->advance();
                         $mappedEverything = true;
                         $mappedContents = $resource->getContents()->mapAllValues(
@@ -92,13 +104,17 @@ class PkImportMapRelationsCommand extends Command {
                                 MetadataValue $value,
                                 int $metadataId
                             ) use (
+                                $customMaps,
                                 $idMapping,
                                 $idNamespaces,
                                 $resource,
                                 $relationshipMetadataIds,
+                                $ignoreProblemsInMetadataIds,
                                 &$metadataWithoutNamespace,
                                 &$missingMetadataIds,
-                                &$mappedEverything
+                                &$missingMetadataValues,
+                                &$mappedEverything,
+                                &$problemsLog
                             ) {
                                 if (in_array($metadataId, $relationshipMetadataIds)) {
                                     $namespace = $idNamespaces[$metadataId] ?? null;
@@ -110,8 +126,20 @@ class PkImportMapRelationsCommand extends Command {
                                     } else {
                                         if (isset($idMapping[$namespace][$value->getValue()])) {
                                             return $value->withNewValue($idMapping[$namespace][$value->getValue()]);
+                                        } elseif ($namespace == 'resource' && isset($customMaps[$value->getValue()])) {
+                                            return $value->withNewValue($customMaps[$value->getValue()]);
                                         } else {
                                             $missingMetadataIds[] = $metadataId;
+                                            $missingMetadataValues[$metadataId][] = $value->getValue();
+                                            $problemsLog[] = [
+                                                $resource->getId(), // redo id
+                                                $metadataId, // metadata id
+                                                $resource->getContents()->getValuesWithoutSubmetadata(192)[0] ?? 'xx', // suwid
+                                                $value->getValue(), // value
+                                            ];
+                                            if (in_array($metadataId, $ignoreProblemsInMetadataIds)) {
+                                                return null;
+                                            }
                                         }
                                     }
                                     $mappedEverything = false;
@@ -146,7 +174,7 @@ class PkImportMapRelationsCommand extends Command {
                     // $output->writeln('<error>' . $e->getMessage() . '</error>');
                 }
             }
-            file_put_contents(self::MAPPED_RESOURCES_FILE, json_encode($mappedResourceIds));
+            file_put_contents(self::MAPPED_RESOURCES_FILE, json_encode(array_values($mappedResourceIds)));
             (new Table($output))
                 ->setHeaders(
                     ['Total resources', 'Successfully mapped', 'Ignored (no relationship metadata)', 'Ignored (missing relationships)']
@@ -164,6 +192,30 @@ class PkImportMapRelationsCommand extends Command {
                     '<error>The following metadata have been missing (referenced resources not found in the imported data):</error> '
                     . implode(', ', array_unique($missingMetadataIds))
                 );
+            }
+            $missingMetadataValues = array_map('array_values', array_map('array_unique', $missingMetadataValues));
+            $missingMetadataValues = array_map(
+                function ($metadataId, $missing) {
+                    return $metadataId . ': ' . implode(', ', $missing);
+                },
+                array_keys($missingMetadataValues),
+                $missingMetadataValues
+            );
+            $output->writeln(implode(PHP_EOL, $missingMetadataValues));
+            if ($problemsLog) {
+                $path = \AppKernel::VAR_PATH . '/import/relations-mapping-problems-' . date('Ymd-His') . '.csv';
+                $contents = 'REDO ID,METADATA ID,SUW ID,NIEZNALEZIONY ID' . PHP_EOL;
+                $contents .= implode(
+                    PHP_EOL,
+                    array_map(
+                        function ($a) {
+                            return implode(',', $a);
+                        },
+                        $problemsLog
+                    )
+                );
+                file_put_contents($path, $contents);
+                $output->writeln('Problems log has been saved to ' . realpath($path));
             }
         }
     }
@@ -183,6 +235,16 @@ class PkImportMapRelationsCommand extends Command {
             }
         }
         return $idNamespaces;
+    }
+
+    private function loadCustomMaps(InputInterface $input): array {
+        $pairs = array_values(array_filter(explode(',', $input->getOption('customMap') ?? '')));
+        $map = [];
+        foreach ($pairs as $pair) {
+            list($suwResourceId, $redoResourceId) = explode(':', $pair);
+            $map[intval($suwResourceId)] = intval($redoResourceId);
+        }
+        return $map;
     }
 
     public function findMetadataByIdOrName($metadataIdOrName): Metadata {

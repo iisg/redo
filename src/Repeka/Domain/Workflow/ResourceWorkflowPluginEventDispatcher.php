@@ -9,6 +9,8 @@ use Repeka\Domain\Cqrs\Event\CqrsCommandEvent;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 
 class ResourceWorkflowPluginEventDispatcher extends CommandEventsListener {
+    public static $dispatchPluginEvents = true;
+
     /** @var ResourceWorkflowPlugins */
     private $resourceWorkflowPlugins;
 
@@ -17,18 +19,21 @@ class ResourceWorkflowPluginEventDispatcher extends CommandEventsListener {
     }
 
     public function onBeforeCommandHandling(BeforeCommandHandlingEvent $event): void {
-        $this->getPlugins($event, 'beforeEnterPlace');
+        $this->executePlugins($event, 'beforeEnterPlace');
     }
 
     public function onCommandHandled(CommandHandledEvent $event): void {
-        $this->getPlugins($event, 'afterEnterPlace');
+        $this->executePlugins($event, 'afterEnterPlace');
     }
 
     public function onCommandError(CommandErrorEvent $event): void {
-        $this->getPlugins($event, 'failedEnterPlace');
+        $this->executePlugins($event, 'failedEnterPlace');
     }
 
-    private function getPlugins(CqrsCommandEvent $event, string $methodName) {
+    private function executePlugins(CqrsCommandEvent $event, string $methodName): void {
+        if (!self::$dispatchPluginEvents) {
+            return;
+        }
         /** @var ResourceTransitionCommand $command */
         $command = $event->getCommand();
         $resource = $command->getResource();
@@ -37,8 +42,6 @@ class ResourceWorkflowPluginEventDispatcher extends CommandEventsListener {
             foreach ($configs as $pluginConfig) {
                 $this->resourceWorkflowPlugins->getPlugin($pluginConfig)->{$methodName}($event, $pluginConfig);
             }
-        } else {
-            return [];
         }
     }
 }

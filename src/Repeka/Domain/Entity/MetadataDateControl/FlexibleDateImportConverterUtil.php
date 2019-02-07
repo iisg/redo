@@ -3,20 +3,27 @@ namespace Repeka\Domain\Entity\MetadataDateControl;
 
 use DateTime;
 
-class FlexibleDateImportConverterUtil {
+final class FlexibleDateImportConverterUtil {
 
     public static function importInputToFlexibleDateConverter(string $value): ?array {
-        if (preg_match('/^.*-.*$/', $value)) { // examples:  '1888-1999'; '1444- '  //'/^([0-9]*| )-([0-9]*| )$/'
+        if (preg_match('/^\d{4}-\d{2|-\d{2}$/', $value)) {
+            return MetadataDateControlConverterUtil::convertDateToFlexibleDate(
+                DateTime::createFromFormat('Y-m-d', $value)->format(DateTime::ATOM),
+                null,
+                MetadataDateControlMode::DAY,
+                null
+            )->toArray();
+        } elseif (preg_match('/^.*-.*$/', $value)) { // examples:  '1888-1999'; '1444- '  //'/^([0-9]*| )-([0-9]*| )$/'
             $values = explode('-', $value);
-            $fromArray = FlexibleDateImportConverterUtil::convertDate($values[0]);
-            $toArray = FlexibleDateImportConverterUtil::convertDate($values[1]);
+            $fromArray = self::convertDate($values[0]);
+            $toArray = self::convertDate($values[1]);
             if (is_array($fromArray) && is_array($toArray)) {
-                return FlexibleDateImportConverterUtil::rangeFlexibleDate($fromArray, $toArray);
+                return self::rangeFlexibleDate($fromArray, $toArray);
             }
         } else {
-            $dateArray = FlexibleDateImportConverterUtil::convertDate($value);
+            $dateArray = self::convertDate($value);
             if (is_array($dateArray)) {
-                return FlexibleDateImportConverterUtil::yearFlexibleDate($dateArray);
+                return self::yearFlexibleDate($dateArray);
             }
         }
         return null;
@@ -29,13 +36,13 @@ class FlexibleDateImportConverterUtil {
         } elseif (preg_match('/^ *$/', $value)) {
             return [null];
         } elseif (preg_match('/^dr\. [0-9]+$/', $value)) { //dr. 1923
-            return FlexibleDateImportConverterUtil::convertDate(preg_replace('/dr\. /', '', $value));
+            return self::convertDate(preg_replace('/dr\. /', '', $value));
         } elseif (preg_match('/^ca [0-9]+$/', $value)) { // ca. 1900
-            return FlexibleDateImportConverterUtil::convertDate(preg_replace('/ca /', '', $value));
+            return self::convertDate(preg_replace('/ca /', '', $value));
         } elseif (preg_match('/^cop. [0-9]+$/', $value)) { // cop. 1939
-            return FlexibleDateImportConverterUtil::convertDate(preg_replace('/cop\. /', '', $value));
+            return self::convertDate(preg_replace('/cop\. /', '', $value));
         } elseif (preg_match('/^[0-9]+\.\.$/', $value)) { // 19..
-            return FlexibleDateImportConverterUtil::convertDate(preg_replace('/\.\./', '00', $value));
+            return self::convertDate(preg_replace('/\.\./', '00', $value));
         } elseif (preg_match('/^\?$/', $value)) { // ?
             return [null];
         } elseif (preg_match('/^post [0-9]+$/', $value)) { //post 1921
