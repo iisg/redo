@@ -7,6 +7,7 @@
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="resources-config/metadata/metadata-chooser"></require>
+    <require from="common/components/loading-bar/loading-cover"></require>
 
     <pagination total-number-of-elements.bind="totalNumberOfResources"
         elements-per-page.bind="resultsPerPage"
@@ -47,12 +48,14 @@
         use-computed-width
         set-first-as-default
         hide-clear-button></metadata-chooser>
-    <loading-bar if.bind="displayProgressBar"></loading-bar>
-    <resources-list-table resources.bind="resources"
-        column-metadata.bind="briefMetadata"
-        resource-class.bind="resourceClass"
-        sort-by.bind="sortBy"
-        contents-filter.bind="contentsFilter"></resources-list-table>
+    <loading-cover loading.bind="displayProgressBar"
+        class="resource-list-table-placeholder">
+        <resources-list-table resources.bind="resources"
+            column-metadata.bind="briefMetadata"
+            resource-class.bind="resourceClass"
+            sort-by.bind="sortBy"
+            contents-filter.bind="contentsFilter"></resources-list-table>
+    </loading-cover>
     <div class="alert alert-info"
         if.bind="resources.length === 0 && !displayProgressBar">
         <icon name="information"></icon>

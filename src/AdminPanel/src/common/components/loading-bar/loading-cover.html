@@ -1,0 +1,10 @@
+<template>
+    <div class.bind="'loading-cover' + (isLoading ? ' is-loading' : '')">
+        <div class="loading">
+            <throbber></throbber>
+        </div>
+        <div class="loading-content clearfix">
+            <slot></slot>
+        </div>
+    </div>
+</template>
