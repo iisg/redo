@@ -12,6 +12,10 @@ describe('Resource Tests', function() {
   });
 
   it('Try to add without required metadata value', function() {
+	browser.switchTo().alert().then(
+		function (alert) { alert.accept(); },
+		function (err) { }
+	);
 	waitForElement(element(by.cssContainingText('span', 'Dodaj')));
 	var addResourceButton = element(by.cssContainingText('span', 'Dodaj'));
 	addResourceButton.click();
