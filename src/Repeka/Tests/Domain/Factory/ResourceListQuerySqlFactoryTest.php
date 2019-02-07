@@ -10,7 +10,7 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $sql = (new ResourceListQuerySqlFactory($query))->getPageQuery();
         $this->assertContains('SELECT r.* FROM', $sql);
         $this->assertContains('ORDER BY', $sql);
-        $this->assertNotContains('LIMIT', $sql);
+        $this->assertNotContains('LIMIT 10 ', $sql);
     }
 
     public function testEmptyCountQuery() {

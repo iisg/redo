@@ -8,9 +8,9 @@ export class Pagination {
   @bindable(twoWay) elementsPerPage = 10;
   @bindable(twoWay) currentPageNumber = 1;
   @bindable baseNumberOfPageNumbers = 7;
-  @bindable elementsPerPageDropdownOptions = [10, 100, 1000];
   @bindable @booleanAttribute hideElementsPerPageDropdown: boolean;
   @observable selectedElementsPerPageDropdownOption = this.elementsPerPage;
+  elementsPerPageDropdownOptions = [10, 20, 50, 100, 500];
   maximumAdditionalPageNumbers = 0;
   numberOfAdditionalPageNumbersBeforeCurrentPageNumber = 0;
   numberOfAdditionalPageNumbersAfterCurrentPageNumber = 0;

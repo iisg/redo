@@ -4,12 +4,16 @@ namespace Repeka\Domain\UseCase\Audit;
 use Assert\Assertion;
 
 abstract class AbstractListQueryBuilder {
-    protected $page = 0;
-    protected $resultsPerPage = 10;
+    private const REASONABLE_DEFAULT_QUERY_LIMIT = 1003;
+    protected $page = 1;
+    protected $resultsPerPage = self::REASONABLE_DEFAULT_QUERY_LIMIT;
 
     public function setPage(int $page): self {
         Assertion::greaterOrEqualThan($page, 1, 'The first page is 1.');
         $this->page = $page;
+        if ($this->resultsPerPage === self::REASONABLE_DEFAULT_QUERY_LIMIT) {
+            $this->resultsPerPage = 10;
+        }
         return $this;
     }
 

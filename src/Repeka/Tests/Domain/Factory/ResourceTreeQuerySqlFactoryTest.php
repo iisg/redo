@@ -12,7 +12,8 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('SELECT r.*', $sql);
         $this->assertContains('WHERE ancestors.next_ancestor_id IS NULL', $sql);
         $this->assertContains('[1 : 10000]', $sql);
-        $this->assertContains('node_info.depth = 1 OR node_info.depth >= 2', $sql);
+        $this->assertContains('node_info.depth = 1', $sql);
+        $this->assertContains('OR node_info.depth >= 2', $sql);
     }
 
     public function testTreeQueryWithRoot() {
@@ -24,7 +25,8 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasEntry('root', '123', $factory->getParams());
         $this->assertContains('WHERE ancestors.list [1] = :root', $sql);
         $this->assertContains('[2 : 10000]', $sql);
-        $this->assertContains('node_info.depth = 1 OR node_info.depth >= 2', $sql);
+        $this->assertContains('node_info.depth = 1', $sql);
+        $this->assertContains('OR node_info.depth >= 2', $sql);
     }
 
     public function testTreeQueryWithDepth() {
@@ -35,7 +37,8 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $sql = $factory->getTreeQuery();
         $this->assertContains('WHERE ancestors.next_ancestor_id IS NULL', $sql);
         $this->assertContains('[1 : 40]', $sql);
-        $this->assertContains('node_info.depth = 1 OR node_info.depth >= 2', $sql);
+        $this->assertContains('node_info.depth = 1', $sql);
+        $this->assertContains('OR node_info.depth >= 2', $sql);
     }
 
     public function testTreeQueryWithDepthAndRoot() {
@@ -48,7 +51,8 @@ class ResourceTreeQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasEntry('root', '123', $factory->getParams());
         $this->assertContains('WHERE ancestors.list [1] = :root', $sql);
         $this->assertContains('[2 : 41]', $sql);
-        $this->assertContains('node_info.depth = 1 OR node_info.depth >= 2', $sql);
+        $this->assertContains('node_info.depth = 1', $sql);
+        $this->assertContains('OR node_info.depth >= 2', $sql);
     }
 
     public function testTreeQueryWithSiblingsAndPagination() {

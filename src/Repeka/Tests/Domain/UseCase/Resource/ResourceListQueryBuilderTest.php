@@ -75,10 +75,6 @@ class ResourceListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(ResourceListQuery::builder()->setPage(1)->setResultsPerPage(10)->build()->paginate());
     }
 
-    public function testPaginationReturnFalseIfPageSet() {
-        $this->assertFalse(ResourceListQuery::builder()->build()->paginate());
-    }
-
     public function testFilteringByResourceContents() {
         $contents = [1 => 'test'];
         $query = ResourceListQuery::builder()->filterByContents([1 => 'test'])->build();
