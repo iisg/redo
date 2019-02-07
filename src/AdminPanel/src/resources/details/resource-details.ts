@@ -134,8 +134,6 @@ export class ResourceDetails implements RoutableComponentActivate {
         if (this.hasRole.toView('ADMIN', 'users')) {
           this.resourceDetailsTabs.addTab('user-roles', this.i18n.tr('Roles'));
         }
-      } else {
-        this.resourceDetailsTabs.addTab('users-in-group', this.i18n.tr('Users'));
       }
     }
     if (this.hasRole.toView('ADMIN', this.resource.resourceClass)) {

@@ -8,7 +8,6 @@
     <require from="common/components/buttons/edit-button.html"></require>
     <require from="common/components/buttons/manage-button.html"></require>
     <require from="common/components/redo-footer/redo-footer.html"></require>
-    <require from="users/details/users-in-group"></require>
     <require from="users/details/user-roles"></require>
     <require from="../../audit/audit"></require>
     <require from="resources/controls/input/file-manager/resource-file-manager"></require>
@@ -112,10 +111,6 @@
                     relationship-chooser.bind="true">
                     <redo-footer></redo-footer>
                 </resources-list>
-            </aup-tab-pane>
-            <aup-tab-pane tab="users-in-group">
-                <users-in-group if.bind="resourceDetailsTabs.activeTabId === 'users-in-group'"
-                    user-group.bind="resource"></users-in-group>
             </aup-tab-pane>
             <aup-tab-pane tab="user-roles">
                 <user-roles if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"
