@@ -80,10 +80,10 @@ describe('Transition Tests', function() {
 
   it('Try to make a transition without a proper designated person', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.buttonText('Edytuj')));
@@ -118,10 +118,10 @@ describe('Transition Tests', function() {
 	expect(element(by.buttonText('Edytuj')).isPresent()).toBe(true);
 
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.cssContainingText('span', 'Usuń')));
@@ -139,10 +139,10 @@ describe('Transition Tests', function() {
 
   it('Try to make a transition without required metadata', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.buttonText('Edytuj')));
@@ -190,10 +190,10 @@ describe('Transition Tests', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	alertDialog = browser.switchTo().alert();
 	alertDialog.accept();
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.cssContainingText('span', 'Usuń')));
@@ -211,10 +211,10 @@ describe('Transition Tests', function() {
 
    it('Automatic ascription of a designated person', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.buttonText('Edytuj')));
@@ -255,10 +255,10 @@ describe('Transition Tests', function() {
 	expect(metadataValuesList.getText()).toContain('(admin)');
 
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.cssContainingText('span', 'Usuń')));
@@ -276,10 +276,10 @@ describe('Transition Tests', function() {
   
   it('Sucessful transition', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.buttonText('Edytuj')));
@@ -320,10 +320,10 @@ describe('Transition Tests', function() {
 	expect(metadataValuesList.getText()).toContain('KONIEC');
 
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
+	waitForElement(element(by.className('current-page-number')));
 	browser.sleep(1000);
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.cssContainingText('span', 'Usuń')));

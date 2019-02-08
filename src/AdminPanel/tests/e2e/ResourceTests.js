@@ -78,10 +78,9 @@ describe('Resource Tests', function() {
   });
 
   it('Try to remove required metadata value', function() {
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
 	waitForElement(element(by.className('current-page-number')));
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.buttonText('Edytuj')));
@@ -106,10 +105,9 @@ describe('Resource Tests', function() {
 	alertDialog = browser.switchTo().alert();
 	alertDialog.accept();
 
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
 	waitForElement(element(by.className('current-page-number')));
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.buttonText('Edytuj')));
@@ -133,10 +131,9 @@ describe('Resource Tests', function() {
   });
 
   it('Remove optional metadata value', function() {
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
 	waitForElement(element(by.className('current-page-number')));
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.buttonText('Edytuj')));
@@ -161,9 +158,9 @@ describe('Resource Tests', function() {
   });
 
   it('Delete resource', function() {
-	waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
-	var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	var lastResource = resourcesList.get(0);
+	waitForElement(element(by.className('current-page-number')));
+	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	var lastResource = resources.get(0);
 	lastResource.click();
 
 	waitForElement(element(by.cssContainingText('span', 'Usuń')));
