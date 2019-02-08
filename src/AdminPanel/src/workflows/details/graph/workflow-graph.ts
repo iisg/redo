@@ -276,8 +276,7 @@ export class WorkflowGraph {
 
   public getTransitions(): Array<WorkflowTransition> {
     let allTransitions: WorkflowTransition[] = this.cytoscape.edges().map(this.edgeToTransition);
-    allTransitions = this.mergeTransitionsByLabel(allTransitions, 'froms');
-    return this.mergeTransitionsByLabel(allTransitions, 'tos');
+    return this.mergeTransitionsByLabel(allTransitions, 'froms');
   }
 
   private edgeToTransition(edge): WorkflowTransition {

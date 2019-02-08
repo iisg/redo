@@ -94,18 +94,6 @@ describe(WorkflowGraph.name, () => {
       expect(transitions.length).toBe(3);
     });
 
-    it("handles multiple sources", () => {
-      cytoscape.edges['and'].returnValue([
-        edge('A', 'A', 'B'),
-        edge('A', 'C', 'B'),
-      ]);
-      let transitions = graph.getTransitions();
-      expect(transitions.length).toBe(1);
-      expect(transitions[0].label).toEqual('A');
-      expect(transitions[0].froms).toEqual(['A', 'C']);
-      expect(transitions[0].tos).toEqual(['B']);
-    });
-
     // http://symfony-workflow-demo.herokuapp.com/article
     it("handles example journalist workflow", () => {
       cytoscape.edges['and'].returnValue([
@@ -117,13 +105,14 @@ describe(WorkflowGraph.name, () => {
         edge('publish', 'approved_by_spellchecker', 'published'),
       ]);
       let transitions = graph.getTransitions();
-      expect(transitions.length).toBe(4);
+      expect(transitions.length).toBe(5);
       expect(transitions[0].label).toEqual('request_review');
       expect(transitions[0].froms).toEqual(['draft']);
       expect(transitions[0].tos).toEqual(['wait_for_journalist', 'wait_for_spellchecker']);
       expect(transitions[1].tos).toEqual(['approved_by_journalist']);
       expect(transitions[2].tos).toEqual(['approved_by_spellchecker']);
-      expect(transitions[3].froms).toEqual(['approved_by_journalist', 'approved_by_spellchecker']);
+      expect(transitions[3].froms).toEqual(['approved_by_journalist']);
+      expect(transitions[4].froms).toEqual(['approved_by_spellchecker']);
     });
   });
 
