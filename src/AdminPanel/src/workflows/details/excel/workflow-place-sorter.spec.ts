@@ -40,7 +40,7 @@ describe('workflow-place-sorter', () => {
     );
     const result = sorter.getOrderedPlaces(workflow);
     const resultIds = result.map(place => place.id);
-    expect(resultIds).toEqual(['a', 'b', 'e', 'c', 'd', 'f', 'g']);
+    expect(resultIds).toEqual(['a', 'e', 'f', 'g', 'b', 'd', 'c']);
   });
 
   it('includes loose nodes', () => {

@@ -7,7 +7,7 @@ export class WorkflowPlaceSorter {
       return [];
     }
     const nodeMap = this.getGraphNodeMap(workflow);
-    const orderedNodes: GraphNode[] = this.iterativeBfs(nodeMap[workflow.places[0].id], nodeMap);
+    const orderedNodes: GraphNode[] = this.iterativeDfs(nodeMap[workflow.places[0].id], nodeMap);
     const orderedNodesWithLoose = this.addLooseNodes(orderedNodes, nodeMap);
     return orderedNodesWithLoose.map(node => node.place);
   }
@@ -25,22 +25,18 @@ export class WorkflowPlaceSorter {
     return nodeMap;
   }
 
-  private iterativeBfs(node: GraphNode, allNodes: StringMap<GraphNode>): GraphNode[] {
-    let previousIteration = [];
-    let currentIteration = [node];
-    while (previousIteration.length < currentIteration.length) {
-      previousIteration = currentIteration;
-      currentIteration = this.addSuccessors(previousIteration, allNodes);
+  private iterativeDfs(node: GraphNode, allNodes: StringMap<GraphNode>): GraphNode[] {
+    let sortedNodes: GraphNode[] = [];
+    let nodeStack: GraphNode[] = [node];
+    while (nodeStack.length != 0) {
+      let currentNode = nodeStack.pop();
+      if (sortedNodes.indexOf(currentNode) == -1) {
+        let successorNodes = currentNode.possibleTransitions.map(id => allNodes[id]);
+        sortedNodes.push(currentNode);
+        nodeStack.push.apply(nodeStack, successorNodes);
+      }
     }
-    return currentIteration;
-  }
-
-  private addSuccessors(nodes: GraphNode[], allNodes: StringMap<GraphNode>): GraphNode[] {
-    const successors: GraphNode[] = nodes
-      .map(node => node.possibleTransitions)              // get all successor arrays
-      .reduce((array1, array2) => array1.concat(array2))  // concat into one array
-      .map(id => allNodes[id]);                           // get actual nodes for IDs
-    return unique(nodes.concat(successors));
+    return sortedNodes;
   }
 
   private addLooseNodes(nodes: GraphNode[], allNodesMap: StringMap<GraphNode>) {
