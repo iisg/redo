@@ -30,7 +30,7 @@ class PkImportLanguagesIntegrationTest extends AbstractPkImportIntegrationTest {
         $isoMetadata = $this->createSimpleMetadata('iso_code', MetadataControl::TEXT(), 'dictionaries');
         $oldIdMetadata = $this->createSimpleMetadata('old_id', MetadataControl::INTEGER(), 'dictionaries');
         $this->languageRk = $this->handleCommandBypassingFirewall(
-            new ResourceKindCreateCommand(['PL' => 'Język', 'EN' => 'Language'], [$nameMetadata, $isoMetadata, $oldIdMetadata])
+            new ResourceKindCreateCommand('language', ['PL' => 'Język', 'EN' => 'Language'], [$nameMetadata, $isoMetadata, $oldIdMetadata])
         );
     }
 

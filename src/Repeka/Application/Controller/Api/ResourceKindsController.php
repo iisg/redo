@@ -57,6 +57,7 @@ class ResourceKindsController extends ApiController {
     public function postAction(Request $request) {
         $data = $request->request->all();
         $command = new ResourceKindCreateCommand(
+            $data['name'] ?? '',
             $data['label'] ?? [],
             $data['metadataList'] ?? [],
             $data['workflowId'] ?? null

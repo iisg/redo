@@ -78,15 +78,11 @@ class ResourcesTwigLoader implements \Twig_LoaderInterface {
         return false;
     }
 
-    private function getFirstAvailableLanguageCode(): string {
-        return $this->languageRepository->getAvailableLanguageCodes()[0];
-    }
-
     public function getTemplateResourceKind(string $name): ?ResourceKind {
         if ($templateMetadata = $this->getTemplateMetadata()) {
             $query = ResourceKindListQuery::builder()
                 ->filterByResourceClass($templateMetadata->getResourceClass())
-                ->filterByName([$this->getFirstAvailableLanguageCode() => $name])
+                ->filterByNames([$name])
                 ->setPage(1)
                 ->setResultsPerPage(1)
                 ->build();

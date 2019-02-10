@@ -10,12 +10,22 @@
     <require from="resources-config/metadata/constraint/resource-kind/resource-kind-constraint-editor"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
+    <require from="common/components/required-field-indicator/required-field-indicator"></require>
 
     <form submit.delegate="validateAndSubmit()"
         class="with-sticky-buttons"
         change.delegate="dirty = true">
         <div class="content simple-form">
-            <span>${'Name' | t}</span>
+            <span>${'Name' | t}
+                <required-field-indicator></required-field-indicator>
+            </span>
+            <div class="validation-message-container">
+                <input type="text"
+                    value.bind="resourceKind.name & validate"
+                    class="form-control"
+                    disabled.bind="editing">
+            </div>
+            <span>${'Label' | t}</span>
             <multilingual-editor value.bind="resourceKind.label & validate"></multilingual-editor>
             <span>${'Add metadata kind' | resourceClassTranslation:resourceClass}</span>
             <div class="validation-message-container">

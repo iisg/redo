@@ -21,7 +21,8 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
         /** @var ResourceKind $resourceKind */
         $resourceKind = $this->handleCommandBypassingFirewall(
             new ResourceKindCreateCommand(
-                ['PL' => 'Nowy', 'EN' => 'New'],
+                'default',
+                ['PL' => 'Default', 'EN' => 'Default'],
                 [$this->handleCommandBypassingFirewall(new MetadataGetQuery(2))]
             )
         );
@@ -38,7 +39,8 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
         /** @var ResourceKind $resourceKind */
         $resourceKind = $this->handleCommandBypassingFirewall(
             new ResourceKindCreateCommand(
-                ['PL' => 'Nowy', 'EN' => 'New'],
+                'rk with overrides',
+                ['PL' => 'rk z overrideami', 'EN' => 'rk with overrides'],
                 [['id' => 2, 'label' => ['PL' => 'Nowa labelka w rodzaju']]]
             )
         );
@@ -58,7 +60,8 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
         /** @var ResourceKind $resourceKind */
         $resourceKind = $this->handleCommandBypassingFirewall(
             new ResourceKindCreateCommand(
-                ['PL' => 'Nowy', 'EN' => 'New'],
+                'rk with MK list',
+                ['PL' => 'rk z listą metadanych', 'EN' => 'rk with metadata list'],
                 [$this->handleCommandBypassingFirewall(new MetadataGetQuery(2))]
             )
         );
@@ -86,7 +89,8 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
         /** @var ResourceKind $resourceKind */
         $resourceKind = $this->handleCommandBypassingFirewall(
             new ResourceKindCreateCommand(
-                ['PL' => 'Nowy', 'EN' => 'New'],
+                'rk ordered',
+                ['PL' => 'zmiana kolejności', 'EN' => 'ordering change'],
                 [['id' => 2], ['id' => SystemMetadata::PARENT], ['id' => 1]]
             )
         );
@@ -107,6 +111,7 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
         /** @var ResourceKind $resourceKindA */
         $resourceKindA = $this->handleCommandBypassingFirewall(
             new ResourceKindCreateCommand(
+                'A',
                 ['PL' => 'A', 'EN' => 'A'],
                 [['id' => 2, 'label' => ['PL' => 'Label A']]]
             )
@@ -114,6 +119,7 @@ class ResourceKindMetadataListConverterListenerIntegrationTest extends Integrati
         /** @var ResourceKind $resourceKindB */
         $resourceKindB = $this->handleCommandBypassingFirewall(
             new ResourceKindCreateCommand(
+                'B',
                 ['PL' => 'B', 'EN' => 'B'],
                 [['id' => 2, 'label' => ['PL' => 'Label B']]]
             )

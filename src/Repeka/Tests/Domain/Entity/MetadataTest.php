@@ -340,16 +340,4 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $metadata = $metadata->withOverrides(['constraints' => ['resourceKind' => [3]]]);
         $this->assertFalse($metadata->canDetermineAssignees($resourceKindRepository));
     }
-
-    public function testNormalizingName() {
-        $this->assertEquals('opis', Metadata::normalizeMetadataName('opis'));
-        $this->assertEquals('opis', Metadata::normalizeMetadataName('   opis '));
-        $this->assertEquals('opis', Metadata::normalizeMetadataName('Opis'));
-        $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis szerszy'));
-        $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opisSzerszy'));
-        $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis-szerszy'));
-        $this->assertEquals('opis_szerszy', Metadata::normalizeMetadataName('opis.szerszy'));
-        $this->assertEquals('opis_dluzszy', Metadata::normalizeMetadataName('opis Dłuższy'));
-        $this->assertEquals('zolw_pchle_2_popchnal_3', Metadata::normalizeMetadataName('ŻÓŁW PChłę 2%& * popchnął%3'));
-    }
 }

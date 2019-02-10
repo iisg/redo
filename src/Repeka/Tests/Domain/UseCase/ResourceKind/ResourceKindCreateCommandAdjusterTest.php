@@ -52,27 +52,27 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
     }
 
     public function testRemovesInvalidLanguages() {
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka', 'EN' => 'Labelka'], []);
+        $command = new ResourceKindCreateCommand('', ['PL' => 'Labelka', 'EN' => 'Labelka'], []);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertEquals(['PL' => 'Labelka'], $adjustedCommand->getLabel());
     }
 
     public function testLeavesWorkflow() {
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $command = new ResourceKindCreateCommand([], [], $workflow);
+        $command = new ResourceKindCreateCommand('', [], [], $workflow);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertEquals($workflow, $adjustedCommand->getWorkflow());
     }
 
     public function testTransformsWorkflowIdToWorkflow() {
-        $command = new ResourceKindCreateCommand([], [], 1);
+        $command = new ResourceKindCreateCommand('', [], [], 1);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertInstanceOf(ResourceWorkflow::class, $adjustedCommand->getWorkflow());
     }
 
     public function testOneMetadataInstanceInArray() {
         $metadata = $this->createMetadataMock();
-        $command = new ResourceKindCreateCommand([], [$metadata]);
+        $command = new ResourceKindCreateCommand('', [], [$metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertContains($metadata, $adjustedCommand->getMetadataList());
     }
@@ -80,7 +80,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
     public function testMaintainingMetadataOrder() {
         $metadata1 = $this->createMetadataMock();
         $metadata2 = $this->createMetadataMock(2);
-        $command = new ResourceKindCreateCommand([], [$metadata1, $metadata2]);
+        $command = new ResourceKindCreateCommand('', [], [$metadata1, $metadata2]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertEquals($metadata1, $adjustedCommand->getMetadataList()[0]);
         $this->assertEquals($metadata2, $adjustedCommand->getMetadataList()[1]);
@@ -88,14 +88,14 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testDeduplicatesMetadata() {
         $metadata = $this->createMetadataMock();
-        $command = new ResourceKindCreateCommand([], [$metadata, $metadata, $metadata]);
+        $command = new ResourceKindCreateCommand('', [], [$metadata, $metadata, $metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(4, $adjustedCommand->getMetadataList());
     }
 
     public function testAddingParentMetadataIfMissing() {
         $metadata = $this->createMetadataMock();
-        $command = new ResourceKindCreateCommand([], [$metadata]);
+        $command = new ResourceKindCreateCommand('', [], [$metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(4, $adjustedCommand->getMetadataList());
         $ids = EntityUtils::mapToIds($adjustedCommand->getMetadataList());
@@ -104,7 +104,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testAddingReproductorMetadataIfMissing() {
         $metadata = $this->createMetadataMock();
-        $command = new ResourceKindCreateCommand([], [$metadata]);
+        $command = new ResourceKindCreateCommand('', [], [$metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(4, $adjustedCommand->getMetadataList());
         $ids = EntityUtils::mapToIds($adjustedCommand->getMetadataList());
@@ -114,6 +114,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
     public function testCannotOverwriteReproductorMetadata() {
         $metadata = $this->createMetadataMock();
         $command = new ResourceKindCreateCommand(
+            '',
             [],
             [$metadata, ['id' => SystemMetadata::REPRODUCTOR, 'constraints' => ['resourceKind' => [1, 2]]]]
         );
@@ -124,7 +125,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testAddingResourceLabelMetadataIfMissing() {
         $metadata = $this->createMetadataMock();
-        $command = new ResourceKindCreateCommand([], [$metadata]);
+        $command = new ResourceKindCreateCommand('', [], [$metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(4, $adjustedCommand->getMetadataList());
         $ids = EntityUtils::mapToIds($adjustedCommand->getMetadataList());
@@ -133,7 +134,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testNotAddingParentMetadataIfExplicitlyAdded() {
         $metadata = $this->createMetadataMock();
-        $command = new ResourceKindCreateCommand([], [SystemMetadata::PARENT()->toMetadata(), $metadata]);
+        $command = new ResourceKindCreateCommand('', [], [SystemMetadata::PARENT()->toMetadata(), $metadata]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(4, $adjustedCommand->getMetadataList());
         $ids = EntityUtils::mapToIds($adjustedCommand->getMetadataList());
@@ -141,26 +142,26 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
     }
 
     public function testAddingMetadataFromArray() {
-        $command = new ResourceKindCreateCommand([], [['id' => 55]]);
+        $command = new ResourceKindCreateCommand('', [], [['id' => 55]]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(4, $adjustedCommand->getMetadataList());
         $this->assertEquals(55, $adjustedCommand->getMetadataList()[0]->getId());
     }
 
     public function testMixingRealAndArrayMetadata() {
-        $command = new ResourceKindCreateCommand([], [['id' => 55], $this->createMetadataMock()]);
+        $command = new ResourceKindCreateCommand('', [], [['id' => 55], $this->createMetadataMock()]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(5, $adjustedCommand->getMetadataList());
     }
 
     public function test404IfNonExistingMetadata() {
         $this->expectException(EntityNotFoundException::class);
-        $command = new ResourceKindCreateCommand([], [['id' => 56]]);
+        $command = new ResourceKindCreateCommand('', [], [['id' => 56]]);
         $this->adjuster->adjustCommand($command);
     }
 
     public function testAddingMetadataWithOverrides() {
-        $command = new ResourceKindCreateCommand([], [['id' => 11, 'label' => ['PL' => 'Nadpisana']]]);
+        $command = new ResourceKindCreateCommand('', [], [['id' => 11, 'label' => ['PL' => 'Nadpisana']]]);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(4, $adjustedCommand->getMetadataList());
         $this->assertEquals(11, $adjustedCommand->getMetadataList()[0]->getId());
@@ -168,7 +169,11 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
     }
 
     public function testAddingMetadataWithOverriddenConstraints() {
-        $command = new ResourceKindCreateCommand([], [['id' => 11, 'label' => ['PL' => 'Nadpisana'], 'constraints' => ['maxCount' => 1]]]);
+        $command = new ResourceKindCreateCommand(
+            '',
+            [],
+            [['id' => 11, 'label' => ['PL' => 'Nadpisana'], 'constraints' => ['maxCount' => 1]]]
+        );
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertCount(4, $adjustedCommand->getMetadataList());
         $this->assertEquals(11, $adjustedCommand->getMetadataList()[0]->getId());
@@ -178,6 +183,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testStrippingOutUnsupportedConstraints() {
         $command = new ResourceKindCreateCommand(
+            '',
             [],
             [['id' => 11, 'label' => ['PL' => 'Nadpisana'], 'constraints' => ['maxCount' => 1, 'unicornCount' => 43]]]
         );

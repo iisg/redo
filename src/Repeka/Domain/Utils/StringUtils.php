@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Domain\Utils;
 
+use Cocur\Slugify\Slugify;
+
 final class StringUtils {
     private function __construct() {
     }
@@ -16,5 +18,10 @@ final class StringUtils {
             }
         );
         return preg_replace('#/+#', '/', join('/', $nonEmptyPaths));
+    }
+
+    public static function normalizeEntityName(string $name): string {
+        $unCamelCased = preg_replace('#([a-z])([A-Z])#', '$1 $2', $name);
+        return (new Slugify(['separator' => '_']))->slugify($unCamelCased);
     }
 }

@@ -70,16 +70,19 @@ trait StubsTrait {
      * @param string $resourceClass
      * @param Metadata[] $metadataList
      * @param ResourceWorkflow|null $workflow
+     * @param string $name
      * @return ResourceKind|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function createResourceKindMock(
         int $id = 1,
         $resourceClass = 'books',
         array $metadataList = [],
-        ResourceWorkflow $workflow = null
+        ResourceWorkflow $workflow = null,
+        string $name = ''
     ): ResourceKind {
         $resourceKind = $this->createMock(ResourceKind::class);
         $resourceKind->method('getId')->willReturn($id);
+        $resourceKind->method('getName')->willReturn($name);
         $resourceKind->method('getResourceClass')->willReturn($resourceClass);
         $resourceKind->method('getMetadataList')->willReturn($metadataList);
         $resourceKind->method('getWorkflow')->willReturn($workflow);

@@ -105,8 +105,8 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         try {
             $xml = PkImportFileLoader::load($xmlFileName);
             $skipExisting = $input->getOption('skipExisting');
-            $resourceKindId = $input->getOption('resourceKindId');
-            $resourceKindsMap = $resourceKindId ? '-1:' . $resourceKindId : $input->getOption('resourceKindIdMap');
+            $resourceKindNameOrId = $input->getOption('resourceKindId');
+            $resourceKindsMap = $resourceKindNameOrId ? '-1:' . $resourceKindNameOrId : $input->getOption('resourceKindIdMap');
             $resourceKindsMap = $this->buildResourceKindsMap($resourceKindsMap);
             $workflowPlacesIds = []; //$this->findWorkflowPlacesIds($resourceKind, $input->getOption('workflow-place'));
             $importConfigs = $this->loadImportConfigs($resourceKindsMap, $configFileName);
@@ -143,7 +143,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                 }
                 $resourceData = $resourceContentsFetcher->extractResourceData($resource);
                 Assertion::keyExists($resourceData, 'ID');
-                if ($resourceKindId) {
+                if ($resourceKindNameOrId) {
                     $resourceData['KIND_ID'] = '-1';
                 }
                 Assertion::keyExists($resourceData, 'KIND_ID');
@@ -322,8 +322,8 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         $pairs = explode(',', $resourceKindsIdMap);
         $map = [];
         foreach ($pairs as $pair) {
-            list($suwKindId, $redoKindId) = explode(':', $pair);
-            $map[$suwKindId] = $this->resourceKindRepository->findOne($redoKindId);
+            list($suwKindId, $redoKindNameOrId) = explode(':', $pair);
+            $map[$suwKindId] = $this->resourceKindRepository->findByNameOrId($redoKindNameOrId);
         }
         return $map;
     }

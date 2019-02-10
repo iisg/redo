@@ -13,6 +13,7 @@ use Repeka\Domain\Factory\ResourceKindListQuerySqlFactory;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class ResourceKindDoctrineRepository extends EntityRepository implements ResourceKindRepository {
     public function save(ResourceKind $resourceKind): ResourceKind {
         $this->getEntityManager()->persist($resourceKind);
@@ -37,6 +38,23 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
             throw new EntityNotFoundException($this, $id);
         }
         return $resourceKind;
+    }
+
+    public function findByName(string $name): ResourceKind {
+        $query = ResourceKindListQuery::builder()->filterByNames([$name])->build();
+        $result = $this->findByQuery($query);
+        if (empty($result)) {
+            throw new EntityNotFoundException($this, $name);
+        }
+        return $result[0];
+    }
+
+    public function findByNameOrId($nameOrId): ResourceKind {
+        if (is_numeric($nameOrId)) {
+            return $this->findOne($nameOrId);
+        } else {
+            return $this->findByName($nameOrId);
+        }
     }
 
     public function exists(int $id): bool {
@@ -72,6 +90,14 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
         $resultSetMapping = ResultSetMappings::resourceKind($em);
         $dbQuery = $em->createNativeQuery($queryFactory->getQuery(), $resultSetMapping)->setParameters($queryFactory->getParams());
         return $dbQuery->getResult();
+    }
+
+    public function countByQuery(ResourceKindListQuery $query): int {
+        $queryFactory = new ResourceKindListQuerySqlFactory($query);
+        $em = $this->getEntityManager();
+        $total = $em->createNativeQuery($queryFactory->getTotalCountQuery(), ResultSetMappings::scalar());
+        $total->setParameters($queryFactory->getParams());
+        return (int)$total->getSingleScalarResult();
     }
 
     public function removeEveryResourceKindsUsageInOtherResourceKinds(ResourceKind $resourceKind): void {

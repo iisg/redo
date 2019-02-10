@@ -1,15 +1,14 @@
 <?php
 namespace Repeka\Domain\Factory;
 
-use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\Utils\StringUtils;
 
 class MetadataListQuerySqlFactory {
     /** @var MetadataListQuery */
     protected $query;
-
-    protected $froms = [];
+    protected $from = 'metadata m';
     protected $wheres = ['1=1'];
     protected $orWheres = [];
     protected $params = [];
@@ -23,7 +22,6 @@ class MetadataListQuerySqlFactory {
     }
 
     private function build() {
-        $this->froms['m'] = 'metadata m';
         $this->excludeIds();
         $this->filterByIds();
         $this->filterByNames();
@@ -102,7 +100,7 @@ class MetadataListQuerySqlFactory {
     private function filterByNames(): void {
         if ($this->query->getNames()) {
             $this->wheres[] = "name IN(:metadataNames)";
-            $this->params['metadataNames'] = array_map([Metadata::class, 'normalizeMetadataName'], $this->query->getNames());
+            $this->params['metadataNames'] = array_map([StringUtils::class, 'normalizeEntityName'], $this->query->getNames());
         }
     }
 
@@ -138,12 +136,12 @@ class MetadataListQuerySqlFactory {
         return sprintf(
             'SELECT %s FROM %s WHERE %s ',
             $what,
-            implode(', ', $this->froms),
+            $this->from,
             implode(' OR ', $wheres)
         );
     }
 
     public function getTotalCountQuery(): string {
-        return $this->getSelectQuery('COUNT(id)') . 'GROUP BY id';
+        return $this->getSelectQuery('COUNT(id)');
     }
 }

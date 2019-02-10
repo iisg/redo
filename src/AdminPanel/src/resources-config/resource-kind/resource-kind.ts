@@ -11,6 +11,7 @@ export class ResourceKind extends Entity {
   static NAME = 'ResourceKind';
 
   @map id: number;
+  @map name: string = '';
   @map label: MultilingualText = {};
   @map('Metadata[]') metadataList: Metadata[] = [];
   @map('WorkflowId') workflow: Workflow;
@@ -28,6 +29,7 @@ export class ResourceKind extends Entity {
 
 export function registerResourceKindValidationRules() {
   ValidationRules
+    .ensure('name').displayName('Name').required()
     .ensure('label').displayName("Label").satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
     .ensure('metadataList').displayName('Metadata')
     .satisfies((metadataList: Metadata[]) => metadataList.filter(m => !!m.resourceClass).length > 0)

@@ -22,6 +22,6 @@ class ResourceMetadataSortCorrectStructureRule extends AbstractRule {
     }
 
     public function isCorrectSortIdKey(string $sortId): bool {
-        return is_numeric($sortId) || in_array($sortId, ['id', 'kindId', 'label']);
+        return is_numeric($sortId) || in_array($sortId, ['id', 'kindId', 'label', 'name']);
     }
 }

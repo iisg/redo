@@ -21,7 +21,7 @@ class PkImportSimulationIntegrationTest extends AbstractPkImportIntegrationTest 
         $isoMetadata = $this->createSimpleMetadata('iso_code', MetadataControl::TEXT(), 'dictionaries');
         $oldIdMetadata = $this->createSimpleMetadata('old_id', MetadataControl::INTEGER(), 'dictionaries');
         $this->languageRk = $this->handleCommandBypassingFirewall(
-            new ResourceKindCreateCommand(['PL' => 'Język', 'EN' => 'Language'], [$nameMetadata, $isoMetadata, $oldIdMetadata])
+            new ResourceKindCreateCommand('language', ['PL' => 'Język', 'EN' => 'Language'], [$nameMetadata, $isoMetadata, $oldIdMetadata])
         );
         $bookTitleMetadata = $this->createSimpleMetadata('tytul', MetadataControl::TEXT(), 'books');
         $this->createMetadata(
@@ -47,7 +47,7 @@ class PkImportSimulationIntegrationTest extends AbstractPkImportIntegrationTest 
             $bookTitleMetadata
         );
         $this->bookRk = $this->handleCommandBypassingFirewall(
-            new ResourceKindCreateCommand(['PL' => 'Książka', 'EN' => 'Book'], [$bookTitleMetadata, $seeAlsoMetadata])
+            new ResourceKindCreateCommand('book', ['PL' => 'Książka', 'EN' => 'Book'], [$bookTitleMetadata, $seeAlsoMetadata])
         );
         $this->clearImportHistory();
         $this->importFile('index-jezyki', $this->languageRk);

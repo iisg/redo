@@ -2,6 +2,7 @@
 namespace Repeka\Migrations;
 
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Utils\StringUtils;
 
 /**
  * Unify metadata names.
@@ -11,7 +12,7 @@ class Version20180618111703 extends RepekaMigration {
         $metadataList = $this->fetchAll('SELECT id, resource_class, "name" FROM metadata WHERE "name" IS NOT NULL');
         $occupiedNames = [];
         foreach ($metadataList as $metadata) {
-            $unifiedName = Metadata::normalizeMetadataName($metadata['name']);
+            $unifiedName = StringUtils::normalizeEntityName($metadata['name']);
             $resourceClass = $metadata['resource_class'];
             if (!isset($occupiedNames[$resourceClass])) {
                 $occupiedNames[$resourceClass] = [];

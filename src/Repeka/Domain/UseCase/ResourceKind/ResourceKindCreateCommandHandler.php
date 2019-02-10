@@ -14,6 +14,7 @@ class ResourceKindCreateCommandHandler {
 
     public function handle(ResourceKindCreateCommand $command): ResourceKind {
         $resourceKind = new ResourceKind(
+            $command->getName(),
             $command->getLabel(),
             $command->getMetadataList(),
             $command->getWorkflow()

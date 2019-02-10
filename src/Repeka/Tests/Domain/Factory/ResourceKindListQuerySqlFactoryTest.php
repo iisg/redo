@@ -8,7 +8,8 @@ class ResourceKindListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testEmptyCountQuery() {
         $query = ResourceKindListQuery::builder()->build();
         $sql = (new ResourceKindListQuerySqlFactory($query))->getTotalCountQuery();
-        $this->assertContains('SELECT COUNT(id) FROM', $sql);
+        $this->assertContains('SELECT COUNT(*) FROM', $sql);
+        $this->assertContains('GROUP BY rk.id', $sql);
         $this->assertNotContains('ORDER BY', $sql);
         $this->assertNotContains('LIMIT', $sql);
     }
@@ -29,10 +30,10 @@ class ResourceKindListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testFilterByName() {
-        $query = ResourceKindListQuery::builder()->filterByName(['PL' => 'Unicorn'])->build();
+        $query = ResourceKindListQuery::builder()->filterByNames(['unicorn'])->build();
         $factory = new ResourceKindListQuerySqlFactory($query);
-        $this->assertArrayHasKey('nameFilters', $factory->getParams());
-        $this->assertEquals('{"PL":"Unicorn"}', $factory->getParams()['nameFilters']);
+        $this->assertArrayHasKey('names', $factory->getParams());
+        $this->assertEquals(['unicorn'], $factory->getParams()['names']);
     }
 
     public function testFilterByResourceClasses() {

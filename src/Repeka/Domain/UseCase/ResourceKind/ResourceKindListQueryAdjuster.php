@@ -23,7 +23,7 @@ class ResourceKindListQueryAdjuster implements CommandAdjuster {
             $query->getIds(),
             $query->getResourceClasses(),
             $query->getMetadataId(),
-            $query->getName(),
+            $query->getNames(),
             $query->getWorkflowId(),
             $query->getPage(),
             $query->getResultsPerPage(),

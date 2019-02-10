@@ -74,6 +74,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
         $oldIdMetadata = $this->createSimpleMetadata('old_id', MetadataControl::INTEGER(), 'dictionaries');
         $this->classificationRk = $this->handleCommandBypassingFirewall(
             new ResourceKindCreateCommand(
+                'classification',
                 ['PL' => 'Klasyfikacja', 'EN' => 'Classification'],
                 [$this->nameMetadata, $oldIdMetadata, $this->languageMetadata]
             )

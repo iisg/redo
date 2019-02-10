@@ -114,10 +114,12 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $sampleResourceWorkflowDriverFactory = new SampleResourceWorkflowDriverFactory($this->createMock(ResourceWorkflowDriver::class));
         $workflow = $sampleResourceWorkflowDriverFactory->setForWorkflow($workflow);
         $this->resourceKind = $this->createResourceKind(
+            'Default RK',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->metadata1, $this->metadata2, $this->metadata5]
         );
         $this->resourceKindWithWorkflow = $this->createResourceKind(
+            'Default RK with workflow',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata3, $this->metadata4],
             $workflow
@@ -553,6 +555,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testEditingResourceKindFails() {
         $newResourceKind = $this->createResourceKind(
+            'Replacement resource kind',
             ['PL' => 'Replacement resource kind', 'EN' => 'Replacement resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata2]
         );
@@ -632,6 +635,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             []
         );
         $resourceKindWithWorkflow = $this->createResourceKind(
+            'Resource kind',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->metadata1],
             $workflow

@@ -4,9 +4,11 @@ namespace Repeka\Domain\Entity;
 use Assert\Assertion;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\EntityUtils;
+use Repeka\Domain\Utils\StringUtils;
 
 class ResourceKind implements Identifiable, HasResourceClass {
     private $id;
+    private $name;
     private $label;
     private $metadataList;
     private $metadataOverrides;
@@ -18,26 +20,33 @@ class ResourceKind implements Identifiable, HasResourceClass {
      * @param string[] $label
      * @param Metadata[] $metadataList
      */
-    public function __construct(array $label, array $metadataList, ResourceWorkflow $workflow = null) {
+    public function __construct(string $name, array $label, array $metadataList, ResourceWorkflow $workflow = null) {
         $this->setMetadataList($metadataList);
-        $this->detectResourceClass();
+        $this->resourceClass = self::detectResourceClass($this->metadataList);
+        Assertion::notEmpty($this->resourceClass, 'Could not detect resource class from system metadata only.');
+        $this->name = $name;
         $this->label = $label;
         $this->workflow = $workflow;
     }
 
-    private function detectResourceClass() {
-        $nonSystemMetadata = array_filter(
-            $this->metadataList,
-            function (Metadata $metadata) {
-                return !!$metadata->getResourceClass();
+    public static function detectResourceClass(array $metadataList): string {
+        foreach ($metadataList as $metadata) {
+            if ($metadata instanceof HasResourceClass) {
+                $resourceClass = $metadata->getResourceClass();
+                if ($resourceClass) {
+                    return $resourceClass;
+                }
             }
-        );
-        Assertion::greaterOrEqualThan(count($nonSystemMetadata), 1, 'Could not detect resource class from system metadata only.');
-        $this->resourceClass = current($nonSystemMetadata)->getResourceClass();
+        }
+        return '';
     }
 
     public function getId() {
         return $this->id;
+    }
+
+    public function getName(): string {
+        return $this->name;
     }
 
     public function getLabel(): array {
@@ -81,7 +90,7 @@ class ResourceKind implements Identifiable, HasResourceClass {
     }
 
     public function getMetadataByName(string $name): Metadata {
-        $name = Metadata::normalizeMetadataName($name);
+        $name = StringUtils::normalizeEntityName($name);
         foreach ($this->getMetadataList() as $metadata) {
             if ($metadata->getName() === $name) {
                 return $metadata;

@@ -38,6 +38,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $parentMetadata = $this->handleCommand(new MetadataGetQuery(-1));
         $bookRK = $this->handleCommand(
             new ResourceKindCreateCommand(
+                'book',
                 [
                     'PL' => 'Książka',
                     'EN' => 'Book',
@@ -73,6 +74,7 @@ class ResourceKindsFixture extends RepekaFixture {
         );
         $forbiddenBookRK = $this->handleCommand(
             new ResourceKindCreateCommand(
+                'forbidden_book',
                 [
                     'PL' => 'Zakazana książka',
                     'EN' => 'Forbidden book',
@@ -89,6 +91,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $nameId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME)->getId();
         $this->handleCommand(
             new ResourceKindCreateCommand(
+                'category',
                 [
                     'PL' => 'Kategoria',
                     'EN' => 'Category',
@@ -114,6 +117,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $abbrevMetadata = $this->metadata(MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_ABBREV);
         $this->handleCommand(
             new ResourceKindCreateCommand(
+                'department',
                 [
                     'PL' => 'Wydział',
                     'EN' => 'Department',
@@ -129,6 +133,7 @@ class ResourceKindsFixture extends RepekaFixture {
         );
         $this->handleCommand(
             new ResourceKindCreateCommand(
+                'university',
                 ['PL' => 'Uczelnia', 'EN' => 'University'],
                 [
                     $this->resourceLabelMetadata("{{r|m{$nameMetadata->getId()}}} ({{r|m{$abbrevMetadata->getId()}}})"),
@@ -140,6 +145,7 @@ class ResourceKindsFixture extends RepekaFixture {
         );
         $this->handleCommand(
             new ResourceKindCreateCommand(
+                'publishing_house',
                 ['PL' => 'Wydawnictwo', 'EN' => 'Publishing house'],
                 [
                     $this->resourceLabelMetadata("{{r|m{$nameMetadata->getId()}}}"),
@@ -154,6 +160,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $nameMetadata = SystemMetadata::USERNAME()->toMetadata();
         $this->handleCommand(
             new ResourceKindCreateCommand(
+                'user_group',
                 ['PL' => 'Grupa użytkowników', 'EN' => 'User group'],
                 [
                     $this->resourceLabelMetadata("{{r|m{$nameMetadata->getName()}}} (ID: {{r.id}})"),
@@ -172,6 +179,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_TITLE)->getId();
         $this->handleCommand(
             new ResourceKindCreateCommand(
+                'static_page',
                 [
                     'PL' => 'Strona statyczna',
                     'EN' => 'Static page',

@@ -240,8 +240,13 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         );
     }
 
-    protected function createResourceKind(array $label, array $metadataList, ResourceWorkflow $workflow = null): ResourceKind {
-        return $this->handleCommandBypassingFirewall(new ResourceKindCreateCommand($label, $metadataList, $workflow));
+    protected function createResourceKind(
+        string $name,
+        array $label,
+        array $metadataList,
+        ResourceWorkflow $workflow = null
+    ): ResourceKind {
+        return $this->handleCommandBypassingFirewall(new ResourceKindCreateCommand($name, $label, $metadataList, $workflow));
     }
 
     protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {

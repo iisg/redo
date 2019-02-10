@@ -22,9 +22,10 @@ class ResourceKindCreateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreatingResourceKind() {
         $metadataList = [$this->createMetadataMock()];
-        $command = new ResourceKindCreateCommand(['PL' => 'Labelka'], $metadataList);
+        $command = new ResourceKindCreateCommand('rk_name', ['PL' => 'Labelka'], $metadataList);
         $this->resourceKindRespository->expects($this->once())->method('save')->willReturnArgument(0);
         $created = $this->handler->handle($command);
+        $this->assertEquals('rk_name', $created->getName());
         $this->assertEquals(['PL' => 'Labelka'], $created->getLabel());
         $this->assertEquals($metadataList, $created->getMetadataList());
     }

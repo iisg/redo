@@ -24,7 +24,7 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
     }
 
     public function testAllowedTopLevelResourceCreationWhenResourceClassAdmin() {
-        $resourceKind = $this->createResourceKind(['PL' => 'Test', 'EN' => 'Test'], [$this->findMetadataByName('Tytuł')]);
+        $resourceKind = $this->createResourceKind('Test', ['PL' => 'Test', 'EN' => 'Test'], [$this->findMetadataByName('Tytuł')]);
         $command = new ResourceCreateCommand($resourceKind, ResourceContents::empty());
         $resource = $this->handleCommandWithUserRoles(
             $command,
@@ -65,7 +65,7 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
     /** @small */
     public function testAllowedResourceKindCreationWhenAdminOfResourceClass() {
         $metadataList = [['id' => $this->findMetadataByName('Opis')->getId()]];
-        $command = new ResourceKindCreateCommand(['PL' => 'Test', 'EN' => 'Test'], $metadataList);
+        $command = new ResourceKindCreateCommand('Opis RK', ['PL' => 'Opis RK', 'EN' => 'Description RK'], $metadataList);
         $this->handleCommandWithUserRoles($command, [SystemRole::ADMIN()->roleName('books')]);
     }
 
@@ -73,7 +73,7 @@ class SecurityRulesIntegrationTest extends IntegrationTestCase {
     public function testForbiddenResourceKindCreationWhenOperatorOfResourceClass() {
         $this->expectException(InsufficientPrivilegesException::class);
         $metadataList = [['id' => $this->findMetadataByName('Opis')->getId()]];
-        $command = new ResourceKindCreateCommand(['PL' => 'Test', 'EN' => 'Test'], $metadataList);
+        $command = new ResourceKindCreateCommand('Test', ['PL' => 'Test', 'EN' => 'Test'], $metadataList);
         $this->handleCommandWithUserRoles($command, [SystemRole::OPERATOR()->roleName('books')]);
     }
 

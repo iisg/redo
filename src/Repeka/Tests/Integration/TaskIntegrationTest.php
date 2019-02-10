@@ -62,6 +62,7 @@ class TaskIntegrationTest extends IntegrationTestCase {
         $sampleResourceWorkflowDriverFactory = new SampleResourceWorkflowDriverFactory($this->createMock(ResourceWorkflowDriver::class));
         $workflow = $sampleResourceWorkflowDriverFactory->setForWorkflow($workflow);
         $this->resourceKind = $this->createResourceKind(
+            'Resource kind',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata2],
             $workflow

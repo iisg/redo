@@ -58,10 +58,12 @@ class ResourceRepositoryFindInTreeIntegrationTest extends IntegrationTestCase {
         $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
         $this->nameMetadata = $this->createMetadata('named', ['PL' => 'named', 'EN' => 'named'], [], [], 'text');
         $this->resourceKinds['A'] = $this->createResourceKind(
+            'A',
             ['PL' => 'A', 'EN' => 'A'],
             [SystemMetadata::PARENT()->toMetadata(), $this->nameMetadata]
         );
         $this->resourceKinds['B'] = $this->createResourceKind(
+            'B',
             ['PL' => 'B', 'EN' => 'B'],
             [SystemMetadata::PARENT()->toMetadata(), $this->nameMetadata]
         );

@@ -65,6 +65,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
             MetadataControl::DATE_RANGE
         );
         $timeResourceKind = $this->createResourceKind(
+            'timeKind',
             ['PL' => 'timeKind', 'EN' => 'timeKind'],
             [$this->timestampMetadata, $this->flexibleDateMetadata, $this->rangeDateMetadata]
         );

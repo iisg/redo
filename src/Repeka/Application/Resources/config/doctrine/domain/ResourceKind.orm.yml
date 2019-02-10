@@ -13,6 +13,10 @@ Repeka\Domain\Entity\ResourceKind:
         name: workflow_id
         referencedColumnName: id
   fields:
+    name:
+      type: string
+      length: 255
+      nullable: false
     label:
       type: jsonb
     resourceClass:

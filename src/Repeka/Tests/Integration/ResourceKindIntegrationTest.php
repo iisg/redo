@@ -60,10 +60,15 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             'dictionaries'
         );
         $this->resourceKind = $this->createResourceKind(
+            'TestName',
             ['PL' => 'Test', 'EN' => 'An awesome Test'],
             [$parentMetadata, $baseMetadata1, $baseMetadata2]
         );
-        $this->resourceKind2 = $this->createResourceKind(['PL' => 'Test', 'EN' => 'Test'], [$parentMetadata, $baseDictionaryMetadata]);
+        $this->resourceKind2 = $this->createResourceKind(
+            'TestName2',
+            ['PL' => 'Test', 'EN' => 'Test'],
+            [$parentMetadata, $baseDictionaryMetadata]
+        );
         $this->metadata1 = $this->resourceKind->getMetadataList()[1];
         $this->metadata2 = $this->resourceKind->getMetadataList()[2];
     }
@@ -77,6 +82,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $this->assertCount(3, $responseContent);
         $responseItem = $responseContent[1];
         $this->assertEquals($this->resourceKind->getId(), $responseItem->id);
+        $this->assertEquals($this->resourceKind->getName(), $responseItem->name);
         $this->assertEquals($this->resourceKind->getLabel(), self::objectToArray($responseItem->label));
         $this->assertCount(self::AUTO_CREATED_METADATA_COUNT + 2, $responseItem->metadataList);
         $sortedMetadata = ($responseItem->metadataList[0]->id == $this->metadata1->getId())
@@ -190,6 +196,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             'POST',
             self::ENDPOINT,
             [
+                'name' => 'created',
                 'label' => ['PL' => 'created', 'EN' => 'created'],
                 'metadataList' => [
                     ['id' => $metadata->getId(), 'label' => ['PL' => 'created overridden', 'EN' => 'created overridden']],

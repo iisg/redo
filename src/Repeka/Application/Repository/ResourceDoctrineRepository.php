@@ -58,8 +58,7 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
         $pageContents = $dbQuery->getResult();
         $total = $em->createNativeQuery($queryFactory->getTotalCountQuery(), ResultSetMappings::scalar())
             ->setParameters($queryFactory->getParams());
-        $total = count($total->getScalarResult());
-        return new PageResult($pageContents, $total, $query->getPage());
+        return new PageResult($pageContents, (int)$total->getSingleScalarResult(), $query->getPage());
     }
 
     public function findByTreeQuery(ResourceTreeQuery $query): TreeResult {

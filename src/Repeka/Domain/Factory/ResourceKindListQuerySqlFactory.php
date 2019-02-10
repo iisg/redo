@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Factory;
 
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
+use Repeka\Domain\Utils\StringUtils;
 
 class ResourceKindListQuerySqlFactory {
     /** @var ResourceKindListQuery */
@@ -24,7 +25,7 @@ class ResourceKindListQuerySqlFactory {
         $this->filterByIds();
         $this->filterByResourceClasses();
         $this->filterByMetadataId();
-        $this->filterByName();
+        $this->filterByNames();
         $this->filterByWorkflowId();
         $this->addOrderBy();
     }
@@ -38,7 +39,8 @@ class ResourceKindListQuerySqlFactory {
     }
 
     public function getTotalCountQuery(): string {
-        return $this->getSelectQuery('COUNT(id)') . 'GROUP BY id';
+        $alias = $this->alias;
+        return 'SELECT COUNT(*) FROM (' . $this->getSelectQuery("$alias.id") . "GROUP BY $alias.id) total";
     }
 
     private function getSelectQuery(string $what) {
@@ -71,10 +73,10 @@ class ResourceKindListQuerySqlFactory {
         }
     }
 
-    private function filterByName(): void {
-        if ($this->query->getName()) {
-            $this->wheres[] = 'jsonb_contains(rk.label, :nameFilters) = TRUE';
-            $this->params['nameFilters'] = json_encode($this->query->getName());
+    private function filterByNames(): void {
+        if ($this->query->getNames()) {
+            $this->wheres[] = 'rk.name IN (:names)';
+            $this->params['names'] = array_map([StringUtils::class, 'normalizeEntityName'], $this->query->getNames());
         }
     }
 
@@ -91,8 +93,8 @@ class ResourceKindListQuerySqlFactory {
             $sortBy = $columnSort['columnId'];
             $direction = $columnSort['direction'];
             $language = $columnSort['language'];
-            if ($sortBy == 'id') {
-                $this->orderBy[] = "rk.id " . $direction;
+            if ($sortBy === 'id' || $sortBy === 'name') {
+                $this->orderBy[] = "rk.$sortBy " . $direction;
             } elseif ($sortBy == 'label') {
                 $this->orderBy[] = "rk.label->'$language' $direction";
             }

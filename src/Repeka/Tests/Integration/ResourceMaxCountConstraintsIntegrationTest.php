@@ -48,6 +48,7 @@ class ResourceMaxCountConstraintsIntegrationTest extends IntegrationTestCase {
 
     private function getCountConstrainedResourceKind(int $max): ResourceKind {
         return $this->createResourceKind(
+            'Resource kind ' . $max,
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [
                 $this->parentMetadata,

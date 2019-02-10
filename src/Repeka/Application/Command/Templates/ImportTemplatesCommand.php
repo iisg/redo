@@ -53,7 +53,11 @@ class ImportTemplatesCommand extends AbstractTemplateCommand {
                     $existingResourceKind->getWorkflow()
                 );
             } else {
-                $command = new ResourceKindCreateCommand($this->createLabelInEveryLanguage($templateName), [$templateMetadata]);
+                $command = new ResourceKindCreateCommand(
+                    $templateName,
+                    $this->createLabelInEveryLanguage($templateName),
+                    [$templateMetadata]
+                );
             }
             $this->handleCommandBypassingFirewall($command);
             $progress->advance();

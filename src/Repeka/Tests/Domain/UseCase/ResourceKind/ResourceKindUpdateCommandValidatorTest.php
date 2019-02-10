@@ -8,8 +8,11 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Exception\RespectValidationFailedException;
+use Repeka\Domain\Repository\LanguageRepository;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommandValidator;
 use Repeka\Domain\Utils\EntityUtils;
@@ -25,24 +28,33 @@ use Respect\Validation\Validator;
 class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
-    /** @var ResourceKindUpdateCommandValidator */
+    /** @var ResourceKindCreateCommandValidator */
     private $validator;
+    /** @var ResourceKind|\PHPUnit_Framework_MockObject_MockObject */
+    private $resourceKind;
     /** @var Metadata */
     private $relationshipMetadata;
+    /** @var  LanguageRepository|\PHPUnit_Framework_MockObject_MockObject */
+    private $languageRepository;
     /** @var MetadataUpdateCommandValidator|\PHPUnit_Framework_MockObject_MockObject */
     private $metadataUpdateCommandValidator;
     /** @var ChildResourceKindsAreOfSameResourceClassRule|\PHPUnit_Framework_MockObject_MockObject */
     private $childResourceKindsAreOfSameResourceClassRule;
     /** @var NotBlankInAllLanguagesRule|\PHPUnit_Framework_MockObject_MockObject */
     private $notBlankInAllLanguagesRule;
+    /** @var ResourceKindRepository|\PHPUnit_Framework_MockObject_MockObject */
+    private $resourceKindRepository;
 
     protected function setUp() {
+        $this->languageRepository = $this->createMock(LanguageRepository::class);
+        $this->languageRepository->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
+        $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
+        $this->resourceKindRepository->method('countByQuery')->willReturn(0);
         $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
         $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $this->notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
-        $this->childResourceKindsAreOfSameResourceClassRule = $this->createRuleMock(
-            ChildResourceKindsAreOfSameResourceClassRule::class,
-            true
+        $this->childResourceKindsAreOfSameResourceClassRule = new ChildResourceKindsAreOfSameResourceClassRule(
+            $this->resourceKindRepository
         );
         $this->relationshipMetadata = Metadata::create(
             '',
@@ -55,18 +67,20 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         );
         EntityUtils::forceSetId($this->relationshipMetadata, 2);
         $this->metadataUpdateCommandValidator = $this->createMock(MetadataUpdateCommandValidator::class);
+        $this->resourceKind = $this->createMock(ResourceKind::class);
+        $this->resourceKind->method('getName')->willReturn('testName');
         $this->validator = new ResourceKindUpdateCommandValidator(
-            $this->notBlankInAllLanguagesRule,
+            new NotBlankInAllLanguagesRule($this->languageRepository),
             new ContainsParentMetadataRule(),
             $this->metadataUpdateCommandValidator,
-            $this->childResourceKindsAreOfSameResourceClassRule
+            new ChildResourceKindsAreOfSameResourceClassRule($this->resourceKindRepository)
         );
     }
 
     public function testValid() {
         $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $command = new ResourceKindUpdateCommand(
-            $this->createMock(ResourceKind::class),
+            $this->resourceKind,
             ['PL' => 'Labelka'],
             [
                 $this->createMetadataMock(SystemMetadata::PARENT),
@@ -106,7 +120,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testValidIfWorkflowIsNull() {
-        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $this->createMockEntity(ResourceWorkflow::class, 1));
+        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $this->createMockEntity(ResourceWorkflow::class, 1), 'test');
         $command = new ResourceKindUpdateCommand(
             $rkWithWorkflow,
             ['PL' => 'Labelka'],
@@ -121,7 +135,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidIfWorkflowTheSame() {
         $workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
-        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow);
+        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow, 'test');
         $command = new ResourceKindUpdateCommand(
             $rkWithWorkflow,
             ['PL' => 'Labelka'],
@@ -138,7 +152,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     public function testInvalidIfTryingToChangeWorkflow() {
         $this->expectException(InvalidCommandException::class);
         $workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
-        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow);
+        $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow, 'test');
         $command = new ResourceKindUpdateCommand(
             $rkWithWorkflow,
             ['PL' => 'Labelka'],
@@ -147,8 +161,114 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createMetadataMock(),
                 $this->relationshipMetadata,
             ],
-            [],
             $this->createMockEntity(ResourceWorkflow::class, 2)
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testFailWhenNoLabel() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $this->expectException(InvalidCommandException::class);
+        $rkWithoutWorkflow = $this->createResourceKindMock(1, 'books', [], null, 'test');
+        $command = new ResourceKindUpdateCommand(
+            $rkWithoutWorkflow,
+            [],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(),
+            ]
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testFailWhenNoMetadata() {
+        $this->expectException(InvalidCommandException::class);
+        $command = new ResourceKindUpdateCommand($this->createMock(ResourceKind::class), ['PL' => 'Labelka'], []);
+        $this->validator->validate($command);
+    }
+
+    public function testFailWhenOnlyParentMetadata() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $rkWithoutWorkflow = $this->createResourceKindMock(1, 'books', [], null, 'test');
+        $this->expectException(InvalidCommandException::class);
+        $command = new ResourceKindUpdateCommand(
+            $rkWithoutWorkflow,
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(SystemMetadata::PARENT),
+            ]
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testFailWhenNoParentMetadata() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $this->expectException(InvalidCommandException::class);
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(),
+                $this->createMetadataMock(),
+            ]
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testFailWhenDifferentResourceClassesOfMetadata() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $this->expectException(InvalidCommandException::class);
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(1),
+                $this->createMetadataMock(1, 1, null, [], 'unicorns'),
+            ]
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testIgnoringSystemMetadataResourceClass() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                SystemMetadata::PARENT()->toMetadata(),
+                SystemMetadata::REPRODUCTOR()->toMetadata(),
+                $this->createMetadataMock(),
+            ]
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testFailsWhenChildrenHaveDifferentResourceClasses() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $this->expectException(InvalidCommandException::class);
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT, null, null, ['resourceKind' => [1, 2]]),
+                $this->createMetadataMock(0, null, null, [], 'books'),
+            ]
+        );
+        $this->validator->validate($command);
+    }
+
+    public function testFailsWhenNotOverrideMetadataValidator() {
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysInvalid());
+        $this->expectException(RespectValidationFailedException::class);
+        $command = new ResourceKindUpdateCommand(
+            $this->createMock(ResourceKind::class),
+            ['PL' => 'Labelka'],
+            [
+                $this->createMetadataMock(SystemMetadata::PARENT),
+                $this->createMetadataMock(1),
+            ]
         );
         $this->validator->validate($command);
     }

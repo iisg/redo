@@ -20,7 +20,8 @@ unclosedStringLiteral: "Unclosed quote in mapping '{{mappingKey}}': {{literal}}"
 invalidMapping: Mapping '{{key}}' has invalid definition
 invalidSelector: "Mapping '{{mappingKey}}' has invalid selector: {{selector}}"
 invalidTransform: "Invalid transform definition '{{name}}' with parameters: {{params}}"
-metadataNameIsNotUnique: Metada kind with that name already exists
+metadataNameIsNotUnique: Metadata kind with that name already exists
+resourceKindNameIsNotUnique: Resource kind with that name already exists
 insufficientPermissions: You do not have permissions required to perform this action
 invalidRegex: Invalid declaration of regular expression.
 invalidConstraintArguments: "contains invalid constraint arguments: '{{constraintError}}'"

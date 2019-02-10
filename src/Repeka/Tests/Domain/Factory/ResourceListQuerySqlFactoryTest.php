@@ -16,7 +16,8 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testEmptyCountQuery() {
         $query = ResourceListQuery::builder()->build();
         $sql = (new ResourceListQuerySqlFactory($query))->getTotalCountQuery();
-        $this->assertContains('SELECT COUNT(id) FROM', $sql);
+        $this->assertContains('SELECT COUNT(*) FROM', $sql);
+        $this->assertContains('GROUP BY r.id', $sql);
         $this->assertNotContains('ORDER BY', $sql);
         $this->assertNotContains('LIMIT', $sql);
     }

@@ -40,6 +40,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             $metadata[] = $this->metadataRepository->findOne($id);
         }
         $this->testResourceKind = $this->createResourceKind(
+            'testResourceKind',
             ['PL' => 'testResourceKind', 'GB' => 'testResourceKind'],
             $metadata
         );

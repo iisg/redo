@@ -22,7 +22,7 @@ class ResourceTreeQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
     protected function setUp() {
         $realMetadata = Metadata::create('books', MetadataControl::RELATIONSHIP(), 'name', ['PL' => 'A']);
         EntityUtils::forceSetId($realMetadata, 11);
-        $realResourceKind = new ResourceKind([], [$realMetadata]);
+        $realResourceKind = new ResourceKind('', [], [$realMetadata]);
         EntityUtils::forceSetId($realResourceKind, 11);
         $this->resourceKind = $this->createResourceKindMock(1, 'book', [$realMetadata]);
         $this->resourceKind2 = $this->createResourceKindMock(2, 'book', [$realMetadata]);

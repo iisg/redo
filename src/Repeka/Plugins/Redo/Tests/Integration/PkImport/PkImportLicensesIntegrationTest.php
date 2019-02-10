@@ -18,7 +18,11 @@ class PkImportLicensesIntegrationTest extends AbstractPkImportIntegrationTest {
         $unifiedNameMetadata = $this->createSimpleMetadata('unified_name', MetadataControl::TEXT(), 'dictionaries');
         $oldIdMetadata = $this->createSimpleMetadata('old_id', MetadataControl::INTEGER(), 'dictionaries');
         $this->licenseRk = $this->handleCommandBypassingFirewall(
-            new ResourceKindCreateCommand(['PL' => 'Licencja', 'EN' => 'License'], [$nameMetadata, $unifiedNameMetadata, $oldIdMetadata])
+            new ResourceKindCreateCommand(
+                'license',
+                ['PL' => 'Licencja', 'EN' => 'License'],
+                [$nameMetadata, $unifiedNameMetadata, $oldIdMetadata]
+            )
         );
     }
 

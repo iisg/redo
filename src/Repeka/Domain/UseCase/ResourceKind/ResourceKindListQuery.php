@@ -13,7 +13,8 @@ class ResourceKindListQuery extends AbstractListQuery implements AdjustableComma
     /** @var string[] */
     private $resourceClasses;
     private $metadataId;
-    private $name;
+    /** @var string[] */
+    private $names;
     private $workflowId;
     /** @var array */
     private $sortBy;
@@ -26,7 +27,7 @@ class ResourceKindListQuery extends AbstractListQuery implements AdjustableComma
         array $ids,
         array $resourceClasses,
         int $metadataId,
-        array $name,
+        array $names,
         int $workflowId,
         int $page,
         int $resultsPerPage,
@@ -36,7 +37,7 @@ class ResourceKindListQuery extends AbstractListQuery implements AdjustableComma
         $query->ids = $ids;
         $query->resourceClasses = $resourceClasses;
         $query->metadataId = $metadataId;
-        $query->name = $name;
+        $query->names = $names;
         $query->workflowId = $workflowId;
         $query->sortBy = $sortBy;
         return $query;
@@ -56,8 +57,9 @@ class ResourceKindListQuery extends AbstractListQuery implements AdjustableComma
         return $this->metadataId;
     }
 
-    public function getName(): array {
-        return $this->name;
+    /** @return string[] */
+    public function getNames(): array {
+        return $this->names;
     }
 
     public function getWorkflowId(): int {

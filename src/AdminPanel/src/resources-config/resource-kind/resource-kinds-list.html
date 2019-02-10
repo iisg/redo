@@ -26,6 +26,12 @@
                 <th>
                     ${'Name' | t}
                     <sort-button if.bind="sortable"
+                        column-id="name"
+                        sort-by.bind="sortBy"></sort-button>
+                </th>
+                <th>
+                    ${'Label' | t}
+                    <sort-button if.bind="sortable"
                         column-id="label"
                         sort-by.bind="sortBy"></sort-button>
                 </th>
@@ -46,6 +52,12 @@
                     <a route-href="route: resource-kinds/details; params.bind: {id: resourceKind.id}"
                         disabled-link.bind="resourceKind.pendingRequest">
                         ${resourceKind.id}
+                    </a>
+                </td>
+                <td>
+                    <a route-href="route: resource-kinds/details; params.bind: {id: resourceKind.id}"
+                        disabled-link.bind="resourceKind.pendingRequest">
+                        ${resourceKind.name}
                     </a>
                 </td>
                 <td>

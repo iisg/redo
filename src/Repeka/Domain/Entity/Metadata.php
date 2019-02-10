@@ -2,9 +2,9 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
-use Cocur\Slugify\Slugify;
 use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\Utils\StringUtils;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -59,7 +59,7 @@ class Metadata implements Identifiable, HasResourceClass {
         $metadata = new self();
         $metadata->resourceClass = $resourceClass;
         $metadata->control = $control->getValue();  // $control must be a string internally because it's so when read from DB
-        $metadata->name = self::normalizeMetadataName($name);
+        $metadata->name = StringUtils::normalizeEntityName($name);
         $metadata->ordinalNumber = -1;
         $metadata->displayStrategy = $displayStrategy;
         $metadata->update(
@@ -284,10 +284,5 @@ class Metadata implements Identifiable, HasResourceClass {
             }
         }
         return false;
-    }
-
-    public static function normalizeMetadataName(string $name): string {
-        $unCamelCased = preg_replace('#([a-z])([A-Z])#', '$1 $2', $name);
-        return (new Slugify(['separator' => '_']))->slugify($unCamelCased);
     }
 }

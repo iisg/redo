@@ -15,10 +15,14 @@ interface ResourceKindRepository {
     /** @return ResourceKind[] */
     public function findAllSystemResourceKinds(): array;
 
-    /**
-     * @throws EntityNotFoundException if the entity could not be found
-     */
+    /** @throws EntityNotFoundException if the entity could not be found */
     public function findOne(int $id): ResourceKind;
+
+    /** @throws EntityNotFoundException if the entity could not be found */
+    public function findByName(string $name): ResourceKind;
+
+    /** @throws EntityNotFoundException if the entity could not be found */
+    public function findByNameOrId($nameOrId): ResourceKind;
 
     public function save(ResourceKind $resourceKind): ResourceKind;
 
@@ -32,6 +36,8 @@ interface ResourceKindRepository {
 
     /** @return ResourceKind[] */
     public function findByQuery(ResourceKindListQuery $query): array;
+
+    public function countByQuery(ResourceKindListQuery $query): int;
 
     public function removeEveryResourceKindsUsageInOtherResourceKinds(ResourceKind $resourceKind): void;
 }

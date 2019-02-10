@@ -52,7 +52,10 @@ class ResourceListQuerySqlFactory {
     }
 
     public function getTotalCountQuery(): string {
-        return $this->getSelectQuery('COUNT(id)') . 'GROUP BY id';
+        // GROUP BY id clause is needed because of use of cross join (multiple FROM tables).
+        // Each resource might return multiple rows, so simple SELECT COUNT(*) is not correct.
+        $alias = $this->alias;
+        return 'SELECT COUNT(*) FROM (' . $this->getSelectQuery("$alias.id") . " GROUP BY $alias.id) total";
     }
 
     /**

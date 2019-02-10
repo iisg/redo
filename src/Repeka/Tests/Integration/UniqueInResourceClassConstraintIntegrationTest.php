@@ -26,7 +26,7 @@ class UniqueInResourceClassConstraintIntegrationTest extends IntegrationTestCase
             ['uniqueInResourceClass' => true]
         );
         $this->resource = $this->createResource(
-            $this->createResourceKind(['PL' => 'test', 'EN' => 'test'], [$this->metadata]),
+            $this->createResourceKind('test', ['PL' => 'test', 'EN' => 'test'], [$this->metadata]),
             [$this->metadata->getId() => $this->repeatedValue]
         );
     }

@@ -4,6 +4,7 @@ namespace Repeka\Tests\Integration;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Utils\StringUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -92,7 +93,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
         $metadata = $metadataRepository->findOne($response->id);
         $this->assertEquals($metadataArray['control'], $metadata->getControl()->getValue());
-        $this->assertEquals(Metadata::normalizeMetadataName($metadataArray['name']), $metadata->getName());
+        $this->assertEquals(StringUtils::normalizeEntityName($metadataArray['name']), $metadata->getName());
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
@@ -120,7 +121,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
         $metadata = $metadataRepository->findOne($response->id);
         $this->assertEquals($metadataArray['control'], $metadata->getControl()->getValue());
-        $this->assertEquals(Metadata::normalizeMetadataName($metadataArray['name']), $metadata->getName());
+        $this->assertEquals(StringUtils::normalizeEntityName($metadataArray['name']), $metadata->getName());
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
@@ -250,7 +251,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
         $metadata = $metadataRepository->findOne($response->id);
         $this->assertEquals($metadataArray['control'], $metadata->getControl());
-        $this->assertEquals(Metadata::normalizeMetadataName($metadataArray['name']), $metadata->getName());
+        $this->assertEquals(StringUtils::normalizeEntityName($metadataArray['name']), $metadata->getName());
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
@@ -260,7 +261,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->createLanguage('EN', 'EN', 'Test English');
         $this->createLanguage('PL', 'PL', 'Test Polish');
         $metadata = $this->createMetadata('test', ['PL' => 'test', 'EN' => 'test placeholder']);
-        $this->createResourceKind(['PL' => 'testRK', 'EN' => 'testRK'], [$metadata]);
+        $this->createResourceKind('testRK', ['PL' => 'testRK', 'EN' => 'testRK'], [$metadata]);
         $client = self::createAdminClient();
         $client->apiRequest('DELETE', self::ENDPOINT . '/' . $metadata->getId());
         $this->assertStatusCode(400, $client->getResponse());
@@ -285,7 +286,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $metadataRepository = self::createClient()->getContainer()->get(MetadataRepository::class);
         $metadata = $metadataRepository->findOne($response->id);
         $this->assertEquals($metadataArray['control'], $metadata->getControl()->getValue());
-        $this->assertEquals(Metadata::normalizeMetadataName($metadataArray['name']), $metadata->getName());
+        $this->assertEquals(StringUtils::normalizeEntityName($metadataArray['name']), $metadata->getName());
         $this->assertEquals($metadataArray['label'], $metadata->getLabel());
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());

@@ -9,6 +9,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
+use Repeka\Domain\Utils\StringUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
 
@@ -40,6 +41,7 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
      */
     public function adjustCommand(Command $command): Command {
         return new ResourceKindCreateCommand(
+            StringUtils::normalizeEntityName($command->getName()),
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getLabel()),
             $this->fetchMetadataIfRequired($command->getMetadataList()),
             $this->findWorkflow($command->getWorkflow())

@@ -18,7 +18,7 @@ class AuditEntryDoctrineRepository extends EntityRepository implements AuditEntr
         $pageContents = $dbQuery->getResult();
         $total = $em->createNativeQuery($queryFactory->getTotalCountQuery(), ResultSetMappings::scalar())
             ->setParameters($queryFactory->getParams());
-        $total = count($total->getScalarResult());
+        $total = (int)$total->getSingleScalarResult();
         return new PageResult($pageContents, $total, $query->getPage());
     }
 

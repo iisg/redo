@@ -59,8 +59,12 @@ class ResourceKindRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertCount(1, $resourceKindList);
     }
 
+    public function testFindByUnslugifiedName() {
+        $this->assertEquals($this->resourceKindRepository->findByName('bóók '), $this->resourceKindRepository->findByName('book'));
+    }
+
     public function testFindForbiddenBookByName() {
-        $query = ResourceKindListQuery::builder()->filterByResourceClass('books')->filterByName(['PL' => 'Zakazana książka'])->build();
+        $query = ResourceKindListQuery::builder()->filterByNames(['forbidden_book'])->build();
         $resourceKindList = $this->resourceKindRepository->findByQuery($query);
         $this->assertCount(1, $resourceKindList);
     }

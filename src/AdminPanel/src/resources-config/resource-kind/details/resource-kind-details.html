@@ -26,6 +26,13 @@
                     <div if.bind="!editing"
                         class="with-sticky-button">
                         <div class="content simple-form contains-collapsible-metadata-group">
+                            <span>ID</span>
+                            <span class="value">${resourceKind.id}</span>
+                            <span>${'Name' | t}</span>
+                            <span class="value">${resourceKind.name}</span>
+                            <span>${'Label' | t}</span>
+                            <span class="value">${resourceKind.label | inCurrentLanguage}</span>
+                            <hr>
                             <template repeat.for="metadataGroup of metadataGroups">
                                 <collapsible-metadata-group resource-kind-id.bind="resourceKind.id"
                                     metadata-group-id.bind="metadataGroup.groupId">

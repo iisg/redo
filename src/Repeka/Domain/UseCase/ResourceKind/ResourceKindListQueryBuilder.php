@@ -7,7 +7,7 @@ class ResourceKindListQueryBuilder extends AbstractListQueryBuilder {
     private $resourceClasses = [];
     private $ids = [];
     private $metadataId = 0;
-    private $name = [];
+    private $names = [];
     private $workflowId = 0;
     private $sortBy = [];
 
@@ -30,8 +30,8 @@ class ResourceKindListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
-    public function filterByName(array $name): self {
-        $this->name = $name;
+    public function filterByNames(array $names): self {
+        $this->names = $names;
         return $this;
     }
 
@@ -50,7 +50,7 @@ class ResourceKindListQueryBuilder extends AbstractListQueryBuilder {
             $this->ids,
             $this->resourceClasses,
             $this->metadataId,
-            $this->name,
+            $this->names,
             $this->workflowId,
             $this->page,
             $this->resultsPerPage,

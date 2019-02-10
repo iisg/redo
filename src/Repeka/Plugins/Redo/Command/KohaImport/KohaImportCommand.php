@@ -81,8 +81,8 @@ class KohaImportCommand extends ContainerAwareCommand {
         $config = $input->getOption('config') ?? __DIR__ . '/../../Tests/Integration/MetadataImport/dumps/marc-import-config.yml';
         $barcodeMetadata = $this->metadataRepository->findByNameOrId($input->getOption('barcodeMetadataId') ?? 'barkod');
         $builder = new ResourceListQueryBuilder();
-        if ($resourceKindId = $input->getOption('resourceKindId')) {
-            $resourceKind = $this->resourceKindRepository->findOne($resourceKindId);
+        if ($resourceKindNameOrId = $input->getOption('resourceKindId')) {
+            $resourceKind = $this->resourceKindRepository->findByNameOrId($resourceKindNameOrId);
             $builder = $builder->filterByResourceKind($resourceKind);
         }
         if ($parentId = $input->getOption('parentId')) {
