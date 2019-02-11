@@ -237,7 +237,7 @@ export class ResourcesList {
           }
           if (this.relationshipChooser) {
             this.eventAggregator.publish('relatedResourcesAmount', this.totalNumberOfResources);
-          } else if (this.parentResource) {
+          } else {
             this.eventAggregator.publish('resourceChildrenAmount', this.totalNumberOfResources);
           }
         }

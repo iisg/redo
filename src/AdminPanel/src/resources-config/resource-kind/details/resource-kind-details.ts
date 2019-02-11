@@ -10,7 +10,6 @@ import {groupMetadata} from "../../../common/utils/metadata-utils";
 import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
 import {GroupMetadataList} from "../../metadata/metadata";
 import {MetadataGroupRepository} from "../../metadata/metadata-group-repository";
-import {ResourceRepository} from "../../../resources/resource-repository";
 
 @autoinject
 export class ResourceKindDetails implements RoutableComponentActivate {
@@ -29,8 +28,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
               private i18n: I18N,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private contextResourceClass: ContextResourceClass,
-              private metadataGroupRepository: MetadataGroupRepository,
-              private resourceRepository: ResourceRepository) {
+              private metadataGroupRepository: MetadataGroupRepository) {
     this.resourceKindDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
@@ -69,7 +67,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     this.resourceKindDetailsTabs.addTab(
       'resources',
       () => this.i18n.tr('resource_classes::' + this.resourceKind.resourceClass + '//resources')
-        + (this.numberOfResources === undefined ? '' : ` (${this.numberOfResources})`)
+      + (this.numberOfResources === undefined ? '' : ` (${this.numberOfResources})`)
     );
     if (this.resourceKind.workflow) {
       this.resourceKindDetailsTabs.addTab('workflow', this.i18n.tr('Workflow'));
