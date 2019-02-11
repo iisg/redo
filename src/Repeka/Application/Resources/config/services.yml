@@ -32,8 +32,6 @@ services:
     tags: [{name: repeka.initialization_command, priority: 400}]
   Repeka\Application\Command\Initialization\InitializeSystemResourceKindsCommand:
     tags: [{name: repeka.initialization_command, priority: 300}]
-  Repeka\Application\Command\GrantUserRolesCommand:
-    tags: [{name: repeka.initialization_command, priority: 200}]
 
   Repeka\Application\Cqrs\RepekaCommandBus:
     -
