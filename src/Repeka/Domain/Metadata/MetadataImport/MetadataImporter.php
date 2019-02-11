@@ -69,6 +69,8 @@ class MetadataImporter {
         switch ($metadata->getControl()->getValue()) {
             case MetadataControl::TEXT:
             case MetadataControl::TEXTAREA:
+            case MetadataControl::FILE:
+            case MetadataControl::DIRECTORY:
                 return $value;
             case MetadataControl::INTEGER:
             case MetadataControl::RELATIONSHIP:
