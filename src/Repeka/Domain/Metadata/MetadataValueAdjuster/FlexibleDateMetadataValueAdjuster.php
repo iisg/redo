@@ -19,8 +19,8 @@ class FlexibleDateMetadataValueAdjuster implements MetadataValueAdjuster {
      * @param FlexibleDate | array $value
      * @return array
      */
-    private function convertDateControlMetadataValuesToFlexibleDate($value): array {
-        if (!($value instanceof FlexibleDate)) {
+    private function convertDateControlMetadataValuesToFlexibleDate($value): ?array {
+        if (is_array($value)) {
             $rangeMode = array_key_exists('rangeMode', $value) ? $value['rangeMode'] : null;
             $value = new FlexibleDate(
                 $value['from'] ?? null,
@@ -28,6 +28,9 @@ class FlexibleDateMetadataValueAdjuster implements MetadataValueAdjuster {
                 $value['mode'] ?? null,
                 $rangeMode
             );
+        }
+        if (!($value instanceof FlexibleDate)) {
+            return null;
         }
         return MetadataDateControlConverterUtil::convertDateToFlexibleDate(
             $value->getFrom(),
