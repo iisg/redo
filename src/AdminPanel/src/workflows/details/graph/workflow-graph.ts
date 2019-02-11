@@ -2,7 +2,7 @@ import * as cytoscape from "cytoscape";
 import * as contextMenus from "cytoscape-context-menus";
 import * as edgeHandles from "cytoscape-edgehandles";
 import * as autopanOnDrag from "cytoscape-autopan-on-drag";
-import {MultilingualText} from 'resources-config/metadata/metadata';
+import {MultilingualText} from "resources-config/metadata/metadata";
 import {workflowGraphDefaultStylesheet} from "./workflow-graph-stylesheet";
 import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
 import {generateId} from "common/utils/string-utils";
@@ -271,7 +271,7 @@ export class WorkflowGraph {
   }
 
   private getLabelId(label: MultilingualText): string {
-    return mapToArray(label, (language, label) => language + '-' + label).join('_');
+    return label ? mapToArray(label, (language, label) => language + '-' + label).join('_') : '';
   }
 
   public getTransitions(): Array<WorkflowTransition> {

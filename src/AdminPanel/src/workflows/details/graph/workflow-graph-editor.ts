@@ -1,5 +1,5 @@
 import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
-import {bindable, ComponentUnbind} from "aurelia-templating";
+import {bindable, ComponentUnbind, ComponentAttached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {WorkflowRepository} from "../../workflow-repository";
 import {WorkflowGraph} from "./workflow-graph";
@@ -12,7 +12,7 @@ import {ChangeEvent} from "../../../common/change-event";
 import {debounce} from "lodash";
 
 @autoinject
-export class WorkflowGraphEditor implements ComponentUnbind {
+export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
   @bindable(twoWay) workflow: Workflow;
 
   selectedElement: WorkflowPlace | WorkflowTransition;
@@ -21,8 +21,10 @@ export class WorkflowGraphEditor implements ComponentUnbind {
   graph: WorkflowGraph;
   currentSimulationPlaces: Array<string>;
   fetchingTransitions = false;
+  simulationAllowed = false;
 
   private placesSubscription: Disposable;
+  private transitionsSubscription: Disposable;
 
   constructor(private workflowRepository: WorkflowRepository,
               private signaler: BindingSignaler,
@@ -31,17 +33,28 @@ export class WorkflowGraphEditor implements ComponentUnbind {
               private graphManager: WorkflowGraphManager) {
   }
 
+  attached(): void {
+    this.workflowElemChanged();
+  }
+
   private observeWorkflowPlaces(): void {
     this.disposeWorkflowPlacesSubscription();
     this.placesSubscription = this.bindingEngine
       .propertyObserver(this.workflow, 'places')
       .subscribe(() => this.workflowPlacesChanged());
+    this.transitionsSubscription = this.bindingEngine
+      .propertyObserver(this.workflow, 'transitions')
+      .subscribe(() => this.workflowElemChanged());
   }
 
   private disposeWorkflowPlacesSubscription(): void {
     if (this.placesSubscription !== undefined) {
       this.placesSubscription.dispose();
       this.placesSubscription = undefined;
+    }
+    if (this.transitionsSubscription !== undefined) {
+      this.transitionsSubscription.dispose();
+      this.transitionsSubscription = undefined;
     }
   }
 
@@ -50,8 +63,13 @@ export class WorkflowGraphEditor implements ComponentUnbind {
   }
 
   workflowPlacesChanged(): void {
+    this.workflowElemChanged();
     this.graphManager.forEach(graph => graph.recalculateGraphPosition());
     this.dispatchChangedEvent(this.workflow);
+  }
+
+  workflowElemChanged(): void {
+    this.simulationAllowed = !!this.workflow.transitions.length;
   }
 
   dispatchChangedEvent = debounce((value) => this.element.dispatchEvent(ChangeEvent.newInstance(value)), 10);
@@ -66,7 +84,10 @@ export class WorkflowGraphEditor implements ComponentUnbind {
       this.updateWorkflowPlacesBasedOnGraph();
       this.selectedElement = this.findMatchingPlace(place);
     });
-    this.graph.onTransitionSelect(transition => this.selectedElement = transition);
+    this.graph.onTransitionSelect(transition => {
+      this.updateWorkflowTransitionsBasedOnGraph();
+      this.selectedElement = transition;
+    });
     this.graph.onDeselect(() => this.selectedElement = undefined);
     this.graph.onPlacesChangedByUser = () => this.updateWorkflowBasedOnGraph();
     this.element.dispatchEvent(WorkflowGraphEditorReady.newInstance(this));
@@ -91,6 +112,11 @@ export class WorkflowGraphEditor implements ComponentUnbind {
     const places: WorkflowPlace[] = this.graph.getPlaces();
     this.copyPlaceRequirementArrays(this.workflow.places, places);
     this.workflow.places = places;
+  }
+
+  private updateWorkflowTransitionsBasedOnGraph() {
+    const transitions: WorkflowTransition[] = this.graph.getTransitions();
+    this.workflow.transitions = transitions;
   }
 
   private copyPlaceRequirementArrays(sources: WorkflowPlace[], targets: WorkflowPlace[]): void {

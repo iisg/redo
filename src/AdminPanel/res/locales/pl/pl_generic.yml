@@ -73,8 +73,8 @@ End simulation: zakończ symulację
 Transition: Przejście
 Place: Stan
 Choose the next transition: Wybierz kolejne przejście
-Use the context menu (right-click to open it) to add an element, select any element on the diagram to edit it or: Użyj menu kontekstowego (dostępnego po kliknięciu prawym przyciskiem myszy) aby dodać element, zaznacz dowolny element na grafie by go edytować lub
-start the simulation: rozpocznij symulację
+Use the context menu (right-click to open it) to add an element, select any element on the diagram to edit it: Użyj menu kontekstowego (dostępnego po kliknięciu prawym przyciskiem myszy) aby dodać element, zaznacz dowolny element na grafie by go edytować
+Start the simulation.: Rozpocznij symulację.
 Thumbnail: Miniatura
 Add submetadata kind: Dodaj rodzaj podmetadanych
 Submetadata kinds: Rodzaje podmetadanych

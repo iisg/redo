@@ -14,8 +14,9 @@
                 <template if.bind="!selectedElement">
                     <span>
                         ${'Use the context menu (right-click to open it) to add an element,
-                        select any element on the diagram to edit it or' | t}
-                        <a click.delegate="toggleSimulation()">${'start the simulation' | t}</a>.
+                        select any element on the diagram to edit it' | t}.
+                        <a if.bind="simulationAllowed"
+                            click.delegate="toggleSimulation()">${'Start the simulation.' | t}</a>
                     </span>
                 </template>
                 <template else>
