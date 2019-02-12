@@ -6,6 +6,7 @@ use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Exception\NotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Service\ResourceFileStorage;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -59,9 +60,12 @@ class ESContentsAdjuster {
     private function readFileContents(ResourceEntity $resource, string $path, ResourceFileStorage $storage): array {
         $adjustedFile = ['name' => $this->getFilename($path)];
         if ($this->hasSupportedExtension($path)) {
-            $fileContents = $storage->getFileContents($resource, $path);
-            if (mb_detect_encoding($fileContents, FtsConstants::SUPPORTED_ENCODING_TYPES, true)) {
-                $adjustedFile['content'] = $fileContents;
+            try {
+                $fileContents = $storage->getFileContents($resource, $path);
+                if (mb_detect_encoding($fileContents, FtsConstants::SUPPORTED_ENCODING_TYPES, true)) {
+                    $adjustedFile['content'] = $fileContents;
+                }
+            } catch (NotFoundException $e) {
             }
         }
         return $adjustedFile;
