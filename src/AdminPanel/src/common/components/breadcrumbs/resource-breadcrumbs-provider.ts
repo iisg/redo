@@ -30,6 +30,7 @@ export class ResourceBreadcrumbsProvider implements BreadcrumbsProvider {
   protected resourceBreadcrumb(resource: Resource): BreadcrumbItem {
     return {
       label: this.resourceLabel.toView(resource),
+      labelHtml: true,
       route: 'resources/details',
       params: {id: resource.id},
       replace: true

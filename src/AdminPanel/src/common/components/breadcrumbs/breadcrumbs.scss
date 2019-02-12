@@ -5,7 +5,7 @@ breadcrumbs {
   & > div {
     overflow: hidden;
     text-overflow: ellipsis;
-    & > span > span {
+    & .last-item > span {
       white-space: nowrap;
     }
     .semitransparent {

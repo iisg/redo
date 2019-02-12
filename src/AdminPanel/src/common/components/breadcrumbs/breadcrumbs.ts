@@ -40,6 +40,7 @@ export interface BreadcrumbsProvider {
 
 export class BreadcrumbItem {
   label: string;
+  labelHtml?: boolean = false;
   route?: string;
   params?: StringMap<any>;
   replace?: boolean;

@@ -18,6 +18,7 @@ import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ContextResourceClass} from "../context/context-resource-class";
 import {ResourceLabelValueConverter} from "./resource-label-value-converter";
+import {unescape} from "lodash";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -96,7 +97,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     } else {
       this.hasChildren = this.resource.hasChildren;
       this.contextResourceClass.setCurrent(this.resource.resourceClass);
-      const title = this.resourceLabel.toView(this.resource);
+      const title = unescape(this.resourceLabel.toView(this.resource));
       routeConfiguration.navModel.setTitle(title);
       this.activateTabs(parameters.tab);
     }

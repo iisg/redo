@@ -3,11 +3,22 @@
         class="au-animate anim-height-inout-36 ${loading ? 'semitransparent' : ''}">
         <span repeat.for="breadcrumb of breadcrumbs">
             <span if.bind="!$last && breadcrumb.route">
-                <a route-href="route.bind: breadcrumb.route;
+                <a if.bind="breadcrumb.labelHtml"
+                    route-href="route.bind: breadcrumb.route;
+                    params.bind: breadcrumb.params;
+                    replace.bind: breadcrumb.replace"
+                    innerhtml.bind="breadcrumb.label"></a>
+                <a else
+                    route-href="route.bind: breadcrumb.route;
                     params.bind: breadcrumb.params;
                     replace.bind: breadcrumb.replace">${breadcrumb.label}</a>
             </span>
-            <span else>${breadcrumb.label}</span>
+            <span else
+                class="last-item">
+                <span if.bind="breadcrumb.labelHtml"
+                    innerhtml.bind="breadcrumb.label"></span>
+                <span else>${breadcrumb.label}</span>
+            </span>
             <span if.bind="!$last">&gt;</span>
         </span>
     </div>

@@ -17,7 +17,8 @@
     <div else
         class="resource-details au-animate fade-inup-outup">
         <div class="name-with-buttons-and-tabs">
-            <span class="page-title">${resource | resourceLabel}</span>
+            <span class="page-title"
+                innerhtml.bind="resource | resourceLabel"></span>
             <throbber if.bind="resource.pendingRequest"></throbber>
             <div class="buttons">
                 <template if.bind="!isFormOpened">
