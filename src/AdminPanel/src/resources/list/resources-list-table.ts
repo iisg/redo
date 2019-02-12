@@ -12,6 +12,7 @@ import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 export class ResourcesListTable {
   @bindable resources: Resource[];
   @bindable columnMetadata: Metadata[];
+  @bindable disabledMetadata: Metadata;
   @bindable resourceClass: string;
   @bindable(oneTime) extraColumnNames: string[] = [];
   @bindable(oneTime) extraColumnViews: string[] = [];

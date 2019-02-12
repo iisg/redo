@@ -22,8 +22,6 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
     private $onlyTopLevel;
     /** @var ResourceContents[] */
     private $contentsFilters;
-    /** @var ResourceContents[] */
-    private $relatedResources;
     /** @var array */
     private $sortBy;
     /** @var array */
@@ -44,7 +42,6 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
         array $sortBy,
         int $parentId,
         array $contentsFilters,
-        array $relatedResources,
         bool $onlyTopLevel,
         int $page,
         int $resultsPerPage,
@@ -57,7 +54,6 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
         $query->sortBy = $sortBy;
         $query->parentId = $parentId;
         $query->contentsFilters = $contentsFilters;
-        $query->relatedResources = $relatedResources;
         $query->onlyTopLevel = $onlyTopLevel;
         $query->workflowPlacesIds = $workflowPlacesIds;
         return $query;
@@ -97,10 +93,5 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
     /** @return ResourceContents[] */
     public function getContentsFilters(): array {
         return $this->contentsFilters;
-    }
-
-    /** @return ResourceContents[] */
-    public function getRelatedResourcesFilters(): array {
-        return $this->relatedResources;
     }
 }

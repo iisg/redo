@@ -5,7 +5,7 @@
     height: 100%;
     overflow: hidden;
   }
-  #children > resources-list, #relationships > resources-list, #audit > audit {
+  #children > resources-list, #relationships > div, #audit > audit {
     overflow: auto;
     height: 100%;
   }
@@ -31,6 +31,15 @@
       padding-left: $default-gap-size;
       padding-right: $default-gap-size;
     }
+  }
+
+  #relationships > div > entity-chooser {
+    padding: $default-gap-size;
+    height: 10%;
+  }
+  #relationships > div > resources-list {
+    overflow: auto;
+    height: 90%;
   }
 }
 

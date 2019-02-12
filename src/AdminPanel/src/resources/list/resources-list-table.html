@@ -29,6 +29,7 @@
                     sort-by.bind="sortBy"></sort-button>
                 <resource-list-metadata-filter if.bind="isFilterableMetadata(metadata) && filterable"
                     metadata-id.bind="metadata.id"
+                    disabled.bind="disabledMetadata.id == metadata.id"
                     initial-value.bind="contentsFilter[metadata.id]"></resource-list-metadata-filter>
             </th>
             <th>

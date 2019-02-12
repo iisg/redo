@@ -48,7 +48,6 @@ class ResourcesController extends ApiController {
         $sortByIds = $request->query->get('sortByIds', []);
         $workflowPlacesIds = $request->query->get('workflowPlacesIds', []);
         $contentsFilter = $request->get('contentsFilter', []);
-        $relatedResources = $request->get('relatedResources', []);
         $parentId = $request->query->get('parentId', 0);
         $topLevel = $request->query->get('topLevel', false);
         Assertion::isArray($resourceClasses);
@@ -59,7 +58,6 @@ class ResourcesController extends ApiController {
             ->filterByResourceClasses($resourceClasses)
             ->filterByResourceKinds($resourceKindIds)
             ->filterByContents(is_array($contentsFilter) ? $contentsFilter : [])
-            ->filterByRelatedResources(is_array($relatedResources) ? $relatedResources : [])
             ->sortBy($sortByIds)
             ->filterByParentId($parentId)
             ->filterByWorkflowPlacesIds($workflowPlacesIds);

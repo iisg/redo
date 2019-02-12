@@ -13,6 +13,7 @@
     <require from="resources/controls/input/file-manager/resource-file-manager"></require>
     <require from="common/components/buttons/toggle-button"></require>
     <require from="./resource-display-strategy-playground"></require>
+    <require from="common/components/entity-chooser/entity-chooser"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
     <div else
@@ -118,14 +119,20 @@
                 </audit>
             </aup-tab-pane>
             <aup-tab-pane tab="relationships">
-                <resources-list if.bind="resourceDetailsTabs.activeTabId === 'relationships'"
-                    resource.bind="resource"
-                    results-per-page.from-view="resultsPerPage"
-                    current-page-number.from-view="currentPageNumber"
-                    hide-add-button.bind="true"
-                    relationship-chooser.bind="true">
-                    <redo-footer></redo-footer>
-                </resources-list>
+                <div if.bind="resourceDetailsTabs.activeTabId === 'relationships'">
+                    <entity-chooser entities.bind="metadataList"
+                        value.bind="metadata"
+                        hide-clear-button
+                        use-computed-width></entity-chooser>
+                    <resources-list
+                        current-page-number.from-view="currentPageNumber"
+                        hide-add-button.bind="true"
+                        resource.bind="resource"
+                        metadata.bind="metadata"
+                        results-per-page.from-view="resultsPerPage">
+                        <redo-footer></redo-footer>
+                    </resources-list>
+                </div>
             </aup-tab-pane>
             <aup-tab-pane tab="user-roles">
                 <user-roles if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"

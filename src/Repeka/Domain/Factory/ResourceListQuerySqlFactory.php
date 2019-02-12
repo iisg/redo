@@ -32,11 +32,8 @@ class ResourceListQuerySqlFactory {
         $this->filterByParentId();
         $this->filterByWorkflowPlacesIds();
         $this->filterByTopLevel();
-        foreach ($this->query->getRelatedResourcesFilters() as $filter) {
-            $this->filterByContents($filter, $this->wheres);
-        }
         foreach ($this->query->getContentsFilters() as $filter) {
-            $this->filterByContents($filter, $this->whereAlternatives);
+            $this->filterByContents($filter);
         }
         $this->addOrderBy();
         $this->paginate();
@@ -125,7 +122,11 @@ class ResourceListQuerySqlFactory {
     /**
      * Each call to filterByContents adds an alternative to search query.
      */
-    protected function filterByContents(ResourceContents $resourceContents, &$wheres, $contentsPath = 'r.contents'): void {
+    protected function filterByContents(
+        ResourceContents $resourceContents,
+        $glueBetweenSameMetadataFilters = ' AND ',
+        $contentsPath = 'r.contents'
+    ): void {
         $nextFilterId = $this->getUnusedParamId();
         $contentWhere = [];
         $resourceContents->forEachValue(
@@ -143,14 +144,14 @@ class ResourceListQuerySqlFactory {
             }
         );
         if ($contentWhere) {
-            $alternatives = array_map(
-                function (array $whereClauses) {
-                    return implode(' OR ', $whereClauses);
+            $gluedClauses = array_map(
+                function (array $whereClauses) use ($glueBetweenSameMetadataFilters) {
+                    return implode($glueBetweenSameMetadataFilters, $whereClauses);
                 },
                 $contentWhere
             );
-            $alternative = '(' . implode(') AND (', $alternatives) . ')';
-            $wheres[] = $alternative;
+            $joinedClause = '(' . implode(') AND (', $gluedClauses) . ')';
+            $this->whereAlternatives[] = $joinedClause;
         }
     }
 

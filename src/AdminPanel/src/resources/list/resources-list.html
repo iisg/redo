@@ -6,7 +6,6 @@
     <require from="../workflow/resource-place-display.html"></require>
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
-    <require from="resources-config/metadata/metadata-chooser"></require>
     <require from="common/components/loading-bar/loading-cover"></require>
 
     <pagination total-number-of-elements.bind="totalNumberOfResources"
@@ -18,7 +17,7 @@
         toggled.two-way="addFormOpened"
         disabled.bind="addingResourcesDisabled"
         disability-reason.bind="disabilityReason"></add-button>
-    <div if.bind="addFormOpened"
+    <div if.bind="!hideAddButton && addFormOpened"
         class="add-form well fade-inup-outdown au-animate">
         <span>${'Add new resource' | resourceClassTranslation:resourceClass}</span>
 
@@ -40,19 +39,12 @@
             submit.call="addNewResource(savedResource)"
             cancel.call="addFormOpened = !addFormOpened"></resource-form>
     </div>
-    <metadata-chooser if.bind="relationshipChooser"
-        control.one-time="'relationship'"
-        value.bind="metadata"
-        required-kind-id.bind="resource.kind.id"
-        excluded-ids.one-time="-1"
-        use-computed-width
-        set-first-as-default
-        hide-clear-button></metadata-chooser>
     <loading-cover loading.bind="displayProgressBar"
         class="resource-list-table-placeholder">
         <resources-list-table resources.bind="resources"
             column-metadata.bind="briefMetadata"
             resource-class.bind="resourceClass"
+            disabled-metadata.bind="metadata"
             sort-by.bind="sortBy"
             contents-filter.bind="contentsFilter"
             places-filter.bind="placesFilter"

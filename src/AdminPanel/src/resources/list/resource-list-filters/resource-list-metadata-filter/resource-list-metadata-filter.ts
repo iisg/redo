@@ -7,6 +7,7 @@ import {bindable} from "aurelia-templating";
 export class ResourceListMetadataFilter extends ResourceListFilters {
   @bindable metadataId: number;
   @bindable initialValue: string;
+  @bindable disabled: boolean;
   value: string;
   inputBoxSize = 1;
 
@@ -34,14 +35,16 @@ export class ResourceListMetadataFilter extends ResourceListFilters {
   }
 
   toggleInputBoxVisibility() {
-    if (this.inputBoxVisible) {
-      if (this.value) {
-        this.value = undefined;
-        this.publishValueIfItChanged();
+    if (!this.disabled) {
+      if (this.inputBoxVisible) {
+        if (this.value) {
+          this.value = undefined;
+          this.publishValueIfItChanged();
+        }
+        this.removeFocusFromInputBoxAndHideIt();
+      } else {
+        this.showInputBoxAndSetFocusOnIt();
       }
-      this.removeFocusFromInputBoxAndHideIt();
-    } else {
-      this.showInputBoxAndSetFocusOnIt();
     }
   }
 

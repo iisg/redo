@@ -1,4 +1,4 @@
-import {computedFrom} from "aurelia-binding";
+import {computedFrom, observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {I18N} from "aurelia-i18n";
@@ -19,9 +19,15 @@ import {ResourceRepository} from "../resource-repository";
 import {ContextResourceClass} from "../context/context-resource-class";
 import {ResourceLabelValueConverter} from "./resource-label-value-converter";
 import {unescape} from "lodash";
+import {Metadata} from "../../resources-config/metadata/metadata";
+import {safeJsonParse} from "../../common/utils/object-utils";
+import {MetadataRepository} from "../../resources-config/metadata/metadata-repository";
+import {MetadataControl} from "../../resources-config/metadata/metadata-control";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
+
+  @observable metadata: Metadata;
   resource: Resource;
   parentResource: Resource;
   isFormOpened = false;
@@ -29,7 +35,6 @@ export class ResourceDetails implements RoutableComponentActivate {
   selectedTransition: WorkflowTransition;
   resourceDetailsTabs: DetailsViewTabs;
   numberOfChildren: number;
-  numberOfRelatedResources: number;
   hasChildren: boolean;
   isFiltering: boolean;
   private urlListener: Subscription;
@@ -40,8 +45,10 @@ export class ResourceDetails implements RoutableComponentActivate {
   currentPageNumber: number;
 
   filters: AuditListFilters;
+  metadataList: Metadata[];
 
   constructor(private resourceRepository: ResourceRepository,
+              private metadataRepository: MetadataRepository,
               private resourceLabel: ResourceLabelValueConverter,
               private resourceClassTranslation: ResourceClassTranslationValueConverter,
               private router: Router,
@@ -65,13 +72,8 @@ export class ResourceDetails implements RoutableComponentActivate {
       }
     );
     this.childrenListener = this.eventAggregator.subscribe('resourceChildrenAmount', (resourceChildrenAmount: number) => {
-        this.numberOfChildren = resourceChildrenAmount;
-        this.resourceDetailsTabs.updateLabels();
-      }
-    );
-    this.childrenListener = this.eventAggregator.subscribe('relatedResourcesAmount', (relatedResourcesAmount: number) => {
-        this.numberOfRelatedResources = relatedResourcesAmount;
-        this.resourceDetailsTabs.updateLabels();
+      this.numberOfChildren = resourceChildrenAmount;
+      this.resourceDetailsTabs.updateLabels();
       }
     );
     this.resourceFormOpenedListener = this.eventAggregator.subscribe('resourceFormOpened', (disabled: boolean) => {
@@ -106,13 +108,22 @@ export class ResourceDetails implements RoutableComponentActivate {
       this.contextResourceClass.setCurrent(this.resource.resourceClass);
       const title = unescape(this.resourceLabel.toView(this.resource));
       routeConfiguration.navModel.setTitle(title);
+      const contentsFilter = safeJsonParse(parameters['contentsFilter']) || {};
+      this.metadataList = await this.metadataRepository.getListQuery()
+        .filterByRequiredKindIds(this.resource.kind.id)
+        .filterByControls(MetadataControl.RELATIONSHIP)
+        .excludeIds(SystemMetadata.PARENT.id)
+        .get();
+      if (this.metadataList && this.metadataList.length) {
+        if (contentsFilter) {
+          const key = Object.keys(contentsFilter).find(key => +contentsFilter[key] === this.resource.id);
+          this.metadata = key ? this.metadataList.find(metadata => metadata.id == +key) : this.metadataList[0];
+        } else {
+          this.metadata = this.metadataList[0];
+        }
+      }
       this.activateTabs(parameters.tab);
     }
-  }
-
-  updateResourceListTab(numberOfChildren: number) {
-    this.numberOfChildren = numberOfChildren;
-    this.resourceDetailsTabs.updateLabels();
   }
 
   activateTabs(activeTabId) {
@@ -126,11 +137,12 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.resourceDetailsTabs
       .addTab('details', this.i18n.tr('Metadata'))
       .setDefaultTabId(this.hasChildren ? 'children' : 'details');
-    this.resourceDetailsTabs.addTab(
-      'relationships',
-      () =>
-      `${this.i18n.tr('Relationships')}` +
-      (this.numberOfRelatedResources === undefined ? '' : ` (${this.numberOfRelatedResources})`));
+    if (this.metadataList.length) {
+      this.resourceDetailsTabs.addTab(
+        'relationships',
+        () =>
+          `${this.i18n.tr('Relationships')} (${this.metadataList.length})`);
+    }
     if (this.resource.kind.workflow) {
       if (this.resource.kind.workflow) {
         this.resourceDetailsTabs.addTab('workflow', this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass));

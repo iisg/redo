@@ -33,10 +33,6 @@ resources-list {
     left: 0;
   }
 
-  & > metadata-chooser {
-    padding: $default-gap-size;
-  }
-
   & > .pagination-page-numbers, pagination {
     min-width: 100%;
   }

@@ -40,7 +40,6 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
             $this->columnSortDataConverter->convertSortByMetadataColumnsToIntegers($query->getSortBy()),
             $query->getParentId(),
             $this->mapMetadataNamesToIdsInContentFilter($query->getContentsFilters()),
-            $this->mapMetadataNamesToIdsInContentFilter($query->getRelatedResourcesFilters()),
             $query->onlyTopLevel(),
             $query->getPage(),
             $query->getResultsPerPage(),

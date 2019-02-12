@@ -1,5 +1,6 @@
 <template>
-    <button mousedown.delegate="toggleInputBoxVisibility()">
+    <button if.bind="!disabled"
+        mousedown.delegate="toggleInputBoxVisibility()">
         <icon name="filter"></icon>
     </button>
     <form if.bind="inputBoxVisible"
@@ -10,8 +11,10 @@
             size.bind="inputBoxSize"
             value.bind="value"
             focus.bind="inputBoxFocused"
-            blur.trigger="onInputBoxBlurred()">
-        <button mousedown.delegate="publishValue()">
+            blur.trigger="onInputBoxBlurred()"
+            disabled.bind="disabled">
+        <button if.bind="!disabled"
+            mousedown.delegate="publishValue()">
             <icon name="search"></icon>
         </button>
     </form>

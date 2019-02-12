@@ -51,11 +51,6 @@ export class ResourceListQuery extends AbstractListQuery<Resource> {
     return this;
   }
 
-  public filterByRelationship(relatedResources: NumberMap<string>) {
-    this.params.relatedResources = relatedResources;
-    return this;
-  }
-
   public onlyTopLevel(): ResourceListQuery {
     this.params.topLevel = true;
     return this;
