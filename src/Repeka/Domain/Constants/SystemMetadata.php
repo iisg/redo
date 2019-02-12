@@ -41,6 +41,7 @@ class SystemMetadata extends Enum {
                 [],
                 [],
                 Metadata::DEFAULT_GROUP,
+                null,
                 true
             );
         } elseif ($value == self::GROUP_MEMBER) {
@@ -60,19 +61,21 @@ class SystemMetadata extends Enum {
                 [],
                 [],
                 Metadata::DEFAULT_GROUP,
+                null,
                 false,
                 true
             );
         } elseif ($value == self::RESOURCE_LABEL) {
             $metadata = Metadata::create(
                 '',
-                MetadataControl::DISPLAY_STRATEGY(),
+                MetadataControl::TEXT(),
                 'label',
                 ['EN' => 'Label', 'PL' => 'Etykieta'],
                 [],
                 [],
-                ['displayStrategy' => '#{{ r.id }}'],
+                [],
                 Metadata::DEFAULT_GROUP,
+                '#{{ r.id }}',
                 true
             );
         }

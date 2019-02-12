@@ -46,7 +46,7 @@ class InitializeSystemResourceKindsCommand extends TransactionalCommand {
             $usernameMetadata = SystemMetadata::USERNAME()->toMetadata();
             $groupMemberMetadata = SystemMetadata::GROUP_MEMBER()->toMetadata();
             $resourceLabelMetadata = SystemMetadata::RESOURCE_LABEL()->toMetadata()->withOverrides(
-                ['constraints' => ['displayStrategy' => '{{r|m' . $usernameMetadata->getName() . '}}']]
+                ['displayStrategy' => '{{r|m' . $usernameMetadata->getName() . '}}']
             );
             $resourceKind = new ResourceKind([], [$usernameMetadata]);
             EntityUtils::forceSetId($resourceKind, $systemResourceKind->getValue());

@@ -8,7 +8,7 @@ use Repeka\Domain\Entity\MetadataControl;
 
 class TextElasticSearchQueryCreator implements ElasticSearchQueryCreator {
     public function supports(MetadataControl $control): bool {
-        return in_array($control->getValue(), [MetadataControl::DISPLAY_STRATEGY, MetadataControl::TEXT, MetadataControl::TEXTAREA]);
+        return in_array($control->getValue(), [MetadataControl::TEXT, MetadataControl::TEXTAREA]);
     }
 
     public function createSearchQuery($filter, Metadata $metadata) {

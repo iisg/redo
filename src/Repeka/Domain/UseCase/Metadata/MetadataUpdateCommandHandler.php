@@ -22,6 +22,7 @@ class MetadataUpdateCommandHandler {
             $command->getNewDescription(),
             $command->getNewConstraints(),
             $command->getNewGroupId(),
+            $command->getNewDisplayStrategy(),
             $command->getNewShownInBrief(),
             $command->getNewCopyToChildResource()
         );

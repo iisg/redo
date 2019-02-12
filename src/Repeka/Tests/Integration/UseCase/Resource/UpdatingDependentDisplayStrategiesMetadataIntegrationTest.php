@@ -175,8 +175,9 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->scannerUsernameMetadata->getLabel(),
                 $this->scannerUsernameMetadata->getDescription(),
                 $this->scannerUsernameMetadata->getPlaceholder(),
-                ['displayStrategy' => '{{ random(10) }}'],
+                [],
                 'basic',
+                '{{ random(10) }}',
                 false,
                 false
             )
@@ -195,6 +196,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->scannerUsernameMetadata->getPlaceholder(),
                 $this->scannerUsernameMetadata->getConstraints(),
                 'basic',
+                $this->scannerUsernameMetadata->getDisplayStrategy(),
                 false,
                 false
             )
@@ -214,8 +216,9 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->scannerUsernameMetadata->getLabel(),
                 $this->scannerUsernameMetadata->getDescription(),
                 $this->scannerUsernameMetadata->getPlaceholder(),
-                ['displayStrategy' => '{{ random(10) }}'],
+                [],
                 'basic',
+                '{{ random(10) }}',
                 false,
                 false
             )
@@ -231,7 +234,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
             function (Metadata $metadata) use ($template, $metadataToChange) {
                 $override = array_merge(['id' => $metadata->getId()], $metadata->getOverrides());
                 if ($metadata->getId() == $metadataToChange->getId()) {
-                    $override['constraints'] = ['displayStrategy' => $template];
+                    $override['displayStrategy'] = $template;
                 }
                 return $override;
             },

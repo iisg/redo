@@ -49,7 +49,7 @@ class ResourcesTwigLoader implements \Twig_LoaderInterface {
     }
 
     public function getTemplateContent(ResourceKind $templateResourceKind): ?string {
-        return $templateResourceKind->getMetadataByName(self::TEMPLATE_METADATA_KIND_NAME)->getConstraints()['displayStrategy'] ?? null;
+        return $templateResourceKind->getMetadataByName(self::TEMPLATE_METADATA_KIND_NAME)->getDisplayStrategy() ?? null;
     }
 
     public function getSourceContext($name) {

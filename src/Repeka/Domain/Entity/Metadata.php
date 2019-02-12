@@ -6,8 +6,10 @@ use Cocur\Slugify\Slugify;
 use Repeka\Domain\Constants\SystemResourceClass;
 use Repeka\Domain\Repository\ResourceKindRepository;
 
-/** @SuppressWarnings(PHPMD.TooManyPublicMethods)
- *  @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Metadata implements Identifiable, HasResourceClass {
     private $id;
@@ -27,6 +29,7 @@ class Metadata implements Identifiable, HasResourceClass {
     private $groupId;
     private $shownInBrief = false;
     private $copyToChildResource = false;
+    private $displayStrategy = null;
     private $resourceClass;
     private $overrides = [];
 
@@ -35,7 +38,8 @@ class Metadata implements Identifiable, HasResourceClass {
     private function __construct() {
     }
 
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+    /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public static function create(
@@ -47,6 +51,7 @@ class Metadata implements Identifiable, HasResourceClass {
         array $description = [],
         array $constraints = [],
         string $groupId = Metadata::DEFAULT_GROUP,
+        ?string $displayStrategy = null,
         bool $shownInBrief = false,
         bool $copyToChildResource = false
     ): Metadata {
@@ -56,7 +61,17 @@ class Metadata implements Identifiable, HasResourceClass {
         $metadata->control = $control->getValue();  // $control must be a string internally because it's so when read from DB
         $metadata->name = self::normalizeMetadataName($name);
         $metadata->ordinalNumber = -1;
-        $metadata->update($label, $placeholder, $description, $constraints, $groupId, $shownInBrief, $copyToChildResource);
+        $metadata->displayStrategy = $displayStrategy;
+        $metadata->update(
+            $label,
+            $placeholder,
+            $description,
+            $constraints,
+            $groupId,
+            $displayStrategy,
+            $shownInBrief,
+            $copyToChildResource
+        );
         return $metadata;
     }
 
@@ -67,6 +82,7 @@ class Metadata implements Identifiable, HasResourceClass {
         $metadata->resourceClass = $base->resourceClass;
         $metadata->control = $base->control;
         $metadata->parentMetadata = $parent;
+        $metadata->displayStrategy = $base->displayStrategy;
         $metadata->shownInBrief = $base->shownInBrief;
         $metadata->copyToChildResource = $base->copyToChildResource;
         return $metadata;
@@ -140,6 +156,14 @@ class Metadata implements Identifiable, HasResourceClass {
         return is_bool($this->overrides['shownInBrief'] ?? null) ? $this->overrides['shownInBrief'] : $this->shownInBrief;
     }
 
+    public function getDisplayStrategy(): ?string {
+        return is_string($this->overrides['displayStrategy'] ?? null) ? $this->overrides['displayStrategy'] : $this->displayStrategy;
+    }
+
+    public function isDynamic(): bool {
+        return is_string($this->getDisplayStrategy());
+    }
+
     public function isCopiedToChildResource(): bool {
         return is_bool($this->overrides['copyToChildResource'] ?? null)
             ? $this->overrides['copyToChildResource']
@@ -161,6 +185,7 @@ class Metadata implements Identifiable, HasResourceClass {
         array $newDescription,
         array $newConstraints,
         string $newGroupId,
+        ?string $displayStrategy,
         bool $shownInBrief,
         bool $copyToChildResource
     ) {
@@ -172,6 +197,12 @@ class Metadata implements Identifiable, HasResourceClass {
         $this->groupId = $newGroupId ?? Metadata::DEFAULT_GROUP;
         $this->shownInBrief = $shownInBrief;
         $this->copyToChildResource = $copyToChildResource;
+        if ($this->isDynamic()) {
+            Assertion::string($displayStrategy, 'Display strategy is required for dynamic metadata.');
+            $this->displayStrategy = trim($displayStrategy);
+        } else {
+            Assertion::null($displayStrategy, 'Cannot set display strategy for non-dynamic metadata.');
+        }
     }
 
     public function withOverrides(array $overrides): Metadata {
@@ -180,7 +211,8 @@ class Metadata implements Identifiable, HasResourceClass {
             'description' => $this->removeValuesOverridingToTheSameThing($overrides['description'] ?? [], $this->description),
             'placeholder' => $this->removeValuesOverridingToTheSameThing($overrides['placeholder'] ?? [], $this->placeholder),
             'constraints' => $this->removeValuesOverridingToTheSameThing($overrides['constraints'] ?? [], $this->constraints),
-            'groupId' => $this->getOverrideIfDifferentThanActualValue($overrides, 'groupId', $this->groupId),
+            'groupId' => $this->getIfDifferentThanActualValue($overrides, 'groupId', $this->groupId),
+            'displayStrategy' => trim($this->getIfDifferentThanActualValue($overrides, 'displayStrategy', $this->displayStrategy)) ?: null,
             'shownInBrief' => $this->isSetOverride($overrides, 'shownInBrief'),
             'copyToChildResource' => $this->isSetOverride($overrides, 'copyToChildResource'),
         ];
@@ -190,6 +222,9 @@ class Metadata implements Identifiable, HasResourceClass {
                 return !is_null($override) && !is_array($override) || !empty($override);
             }
         );
+        if (isset($overrides['displayStrategy'])) {
+            Assertion::true($this->isDynamic(), 'Cannot override displayStrategy for non-dynamic metadata.');
+        }
         $metadata = clone $this;
         $metadata->overrides = $overrides;
         return $metadata;
@@ -209,8 +244,8 @@ class Metadata implements Identifiable, HasResourceClass {
         return $filtered;
     }
 
-    private function getOverrideIfDifferentThanActualValue($overrides, $overrideKey, $actualValue) {
-        if (isset($overrides[$overrideKey]) && $actualValue !== $overrides[$overrideKey]) {
+    private function getIfDifferentThanActualValue($overrides, $overrideKey, ?string $actualValue) {
+        if (isset($overrides[$overrideKey]) && $actualValue !== trim($overrides[$overrideKey])) {
             return $overrides[$overrideKey];
         }
         return null;

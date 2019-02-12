@@ -31,6 +31,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
     /** @before */
     public function before() {
         $this->getEntityManager()->getConnection()->exec(file_get_contents(__DIR__ . '/dumps/only_language_resources_pgdump.sql'));
+        $this->executeCommand('doctrine:migrations:migrate');
         $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
         $this->metadataRepository = $this->container->get(MetadataRepository::class);
         $metadata = [];

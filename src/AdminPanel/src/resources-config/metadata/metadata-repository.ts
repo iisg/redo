@@ -39,6 +39,7 @@ export class MetadataRepository extends ApiRepository<Metadata> {
       placeholder: updatedMetadata.placeholder,
       constraints: updatedMetadata.constraints,
       groupId: updatedMetadata.groupId,
+      displayStrategy: updatedMetadata.displayStrategy,
       shownInBrief: updatedMetadata.shownInBrief,
       copyToChildResource: updatedMetadata.copyToChildResource
     });

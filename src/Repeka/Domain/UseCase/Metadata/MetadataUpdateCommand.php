@@ -12,6 +12,7 @@ class MetadataUpdateCommand extends ResourceClassAwareCommand implements Adjusta
     private $newPlaceholder;
     private $newConstraints;
     private $newGroupId;
+    private $newDisplayStrategy;
     private $newShownInBrief;
     private $newCopyToChildResource;
 
@@ -22,6 +23,7 @@ class MetadataUpdateCommand extends ResourceClassAwareCommand implements Adjusta
         array $newPlaceholder,
         array $newConstraints,
         string $newGroupId,
+        ?string $newDisplayStrategy,
         bool $newShownInBrief,
         bool $newCopyToChildResource
     ) {
@@ -32,6 +34,7 @@ class MetadataUpdateCommand extends ResourceClassAwareCommand implements Adjusta
         $this->newPlaceholder = $newPlaceholder;
         $this->newConstraints = $newConstraints;
         $this->newGroupId = $newGroupId;
+        $this->newDisplayStrategy = $newDisplayStrategy;
         $this->newShownInBrief = $newShownInBrief;
         $this->newCopyToChildResource = $newCopyToChildResource;
     }
@@ -69,6 +72,10 @@ class MetadataUpdateCommand extends ResourceClassAwareCommand implements Adjusta
         return $this->newGroupId;
     }
 
+    public function getNewDisplayStrategy(): ?string {
+        return $this->newDisplayStrategy;
+    }
+
     public static function fromArray($metadataOrId, array $data): MetadataUpdateCommand {
         return new MetadataUpdateCommand(
             $metadataOrId,
@@ -77,6 +84,7 @@ class MetadataUpdateCommand extends ResourceClassAwareCommand implements Adjusta
             $data['placeholder'] ?? [],
             $data['constraints'] ?? [],
             $data['groupId'] ?? Metadata::DEFAULT_GROUP,
+            $data['displayStrategy'] ?? null,
             $data['shownInBrief'] ?? false,
             $data['copyToChildResource'] ?? false
         );

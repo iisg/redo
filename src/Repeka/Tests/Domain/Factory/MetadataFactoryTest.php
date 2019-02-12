@@ -20,9 +20,9 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->textareaMetadataCreateCmd =
-            new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea', 'books', [], 'group', false);
+            new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'textarea', 'books', [], 'group', null, false);
         $this->relationshipMetadataCreateCmd =
-            new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship', 'books', [], 'PR', false);
+            new MetadataCreateCommand('nazwa', ['PL' => 'Labelka'], [], [], 'relationship', 'books', [], 'PR', null, false);
         $this->factory = new MetadataFactory();
         $this->newChildMetadata = [
             'name' => 'nazwa',

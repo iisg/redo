@@ -7,14 +7,15 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
-use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
 use Repeka\Domain\Validation\Rules\MetadataGroupExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
+use Repeka\Domain\Validation\Rules\ResourceDisplayStrategySyntaxValidRule;
 use Repeka\Tests\Traits\StubsTrait;
 use Respect\Validation\Exceptions\ValidationException;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
@@ -38,11 +39,11 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->validator = new MetadataCreateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepositoryStub),
             new IsValidControlRule(['text', 'textarea']),
-            $this->createMock(ConstraintSetMatchesControlRule::class),
             $this->constraintArgumentsAreValidRule,
             $this->containsResourceClassRule,
-            new MetadataGroupExistsRule([['id'=>'group0'], ['id'=>'group1']]),
-            $this->metadataRepository
+            new MetadataGroupExistsRule([['id' => 'group0'], ['id' => 'group1']]),
+            $this->metadataRepository,
+            $this->createMock(ResourceDisplayStrategySyntaxValidRule::class)
         );
     }
 

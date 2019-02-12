@@ -19,7 +19,7 @@
         <link>{{ url }}</link>
         <description>Kolekcja REDO</description>
         {% for child in children %}<item>
-            <title>{{ child | mLabel | xmlEscape }}</title>
+            <title>{{ child | mLabel | raw | xmlEscape }}</title>
             <link>{{ url }}/resources/{{ child.id }}</link>
             <description>{{ child | metadata('opis') | xmlEscape }}</description>
             <guid>{{ url }}/resources/{{  child.id }}</guid>

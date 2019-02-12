@@ -102,6 +102,18 @@ class ResourceKind implements Identifiable, HasResourceClass {
         );
     }
 
+    /** @return Metadata[] */
+    public function getDynamicMetadata(): array {
+        return array_values(
+            array_filter(
+                $this->getMetadataList(),
+                function (Metadata $metadata) {
+                    return $metadata->isDynamic();
+                }
+            )
+        );
+    }
+
     public function update(array $newLabel) {
         $this->label = array_filter($newLabel, 'trim');
     }

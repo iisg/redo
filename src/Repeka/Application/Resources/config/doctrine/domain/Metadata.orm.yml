@@ -47,6 +47,10 @@ Repeka\Domain\Entity\Metadata:
       length: 64
       nullable: true
       column: group_id
+    displayStrategy:
+      type: text
+      nullable: true
+      column: display_strategy
     shownInBrief:
       type: boolean
       column: shown_in_brief

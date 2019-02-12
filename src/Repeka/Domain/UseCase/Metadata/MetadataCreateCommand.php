@@ -14,6 +14,7 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
     private $controlName;
     private $constraints;
     private $groupId;
+    private $displayStrategy;
     private $shownInBrief;
     private $copyToChildResource;
     private $parent;
@@ -28,6 +29,7 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
         string $resourceClass,
         array $constraints = [],
         string $groupId = Metadata::DEFAULT_GROUP,
+        ?string $displayStrategy = null,
         bool $shownInBrief = false,
         bool $copyToChildResource = false,
         ?Metadata $parent = null
@@ -40,6 +42,7 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
         $this->controlName = $controlName;
         $this->constraints = $constraints;
         $this->groupId = $groupId;
+        $this->displayStrategy = $displayStrategy;
         $this->shownInBrief = $shownInBrief;
         $this->copyToChildResource = $copyToChildResource;
         $this->parent = $parent;
@@ -73,6 +76,10 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
         return $this->groupId;
     }
 
+    public function getDisplayStrategy(): ?string {
+        return $this->displayStrategy;
+    }
+
     public function isShownInBrief(): bool {
         return $this->shownInBrief;
     }
@@ -95,6 +102,7 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
             $data['resourceClass'] ?? '',
             $data['constraints'] ?? [],
             $data['groupId'] ?? Metadata::DEFAULT_GROUP,
+            $data['displayStrategy'] ?? null ?: null,
             $data['shownInBrief'] ?? false,
             $data['copyToChildResource'] ?? false,
             $data['parent'] ?? null

@@ -11,7 +11,6 @@ export enum MetadataControl {
   RELATIONSHIP = 'relationship',
   FILE = 'file',
   DIRECTORY = 'directory',
-  DISPLAY_STRATEGY = 'display-strategy',
   SYSTEM_LANGUAGE = 'system-language'
 }
 
@@ -20,6 +19,5 @@ export const filterableControls = [
   MetadataControl.TEXTAREA,
   MetadataControl.INTEGER,
   MetadataControl.RELATIONSHIP,
-  MetadataControl.DISPLAY_STRATEGY,
   MetadataControl.SYSTEM_LANGUAGE
 ];

@@ -434,10 +434,10 @@ class MetadataFixture extends RepekaFixture {
                         'PL' => 'Username skanisty',
                         'EN' => 'Scanner username',
                     ],
-                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'control' => MetadataControl::TEXT(),
                     'shownInBrief' => false,
                     'resourceClass' => 'books',
-                    'constraints' => ['displayStrategy' => '{{ r | mSkanista | mUsername }}'],
+                    'displayStrategy' => '{{ r | mSkanista | mUsername }}',
                 ]
             ),
             self::REFERENCE_METADATA_SCANNER_USERNAME
@@ -450,10 +450,10 @@ class MetadataFixture extends RepekaFixture {
                         'PL' => 'Username nadzorującego',
                         'EN' => 'Supervisor username',
                     ],
-                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'control' => MetadataControl::TEXT(),
                     'shownInBrief' => false,
                     'resourceClass' => 'books',
-                    'constraints' => ['displayStrategy' => '{{ r | mNadzorujacy | mUsername }}'],
+                    'displayStrategy' => '{{ r | mNadzorujacy | mUsername }}',
                 ]
             ),
             self::REFERENCE_METADATA_SUPERVISOR_USERNAME
@@ -529,7 +529,7 @@ class MetadataFixture extends RepekaFixture {
                         'PL' => 'Szablon CMS',
                         'EN' => 'CMS Template',
                     ],
-                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'control' => MetadataControl::TEXT(),
                     'shownInBrief' => false,
                     'resourceClass' => 'cms',
                 ]
@@ -586,10 +586,10 @@ TEMPLATE
                         'PL' => 'Wyrenderowana treść strony',
                         'EN' => 'Rendered page content',
                     ],
-                    'control' => MetadataControl::DISPLAY_STRATEGY(),
+                    'control' => MetadataControl::TEXT(),
                     'shownInBrief' => false,
                     'resourceClass' => 'cms',
-                    'constraints' => ['displayStrategy' => $staticPageContent],
+                    'displayStrategy' => $staticPageContent,
                 ]
             ),
             self::REFERENCE_METADATA_CMS_RENDERED_CONTENT

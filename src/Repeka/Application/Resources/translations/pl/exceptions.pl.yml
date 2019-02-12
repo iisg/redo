@@ -6,6 +6,7 @@ noSuchResourceFile: Plik {{filename}} nie istnieje w zasobie {{resourceId}}
 cannotApplyTransition: Przejście '{{transitionId}}' nie może zostać wykonane w procesie {{workflowId}}
 noSuchTransition: Przejście '{{transitionId}}' nie istnieje w procesie {{workflowId}}
 transitionLabelsNotMatching: Przejścia {{transitionLabels}} połączone ze stanem {{placeLabel}} mają taką samą nazwę w {{matchingLanguages}}, ale różną w {{differentLanguages}}
+invalidResourceDisplayStrategy: "Strategia wyświetlania jest niepoprawna. Błąd: {{message}}"
 resourceCannotEnterPlace: "Zasób #{{resourceId}} nie może znajdować się w tym stanie"
 entityNotFound: Nie znaleziono {{entityName}} {{query}}
 invalidCommand: Dane przesłane do serwera są nieprawidłowe
@@ -40,6 +41,8 @@ violationFields:
   constraints: Ograniczenia
   group: Grupa
   newGroup: Nowa grupa
+  displayStrategy: Strategia wyświetlania
+  newDisplayStrategy: Strategia wyświetlania
 resource has children: zasób ma podzasoby.
 resources of this kind exist: istnieją zasoby tego rodzaju.
 workflow is assigned to one of resource kinds: proces jest przypisany do jednego z rodzajów zasobów

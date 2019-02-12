@@ -29,8 +29,12 @@ class ResourceEvaluateDisplayStrategiesCommandHandlerTest extends \PHPUnit_Frame
         $this->displayStrategyMetadata = $this->createMetadataMock(
             10,
             null,
-            MetadataControl::DISPLAY_STRATEGY(),
-            ['displayStrategy' => 'AAA']
+            MetadataControl::TEXT(),
+            [],
+            'books',
+            [],
+            '',
+            'AAA'
         );
     }
 

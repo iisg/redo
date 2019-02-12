@@ -4,7 +4,6 @@ namespace Repeka\Domain\EventListener;
 use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
 use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
@@ -25,8 +24,8 @@ class MarkDisplayStrategiesDirtyOnResourceKindUpdateListener extends CommandEven
 
     private function getDisplayStrategiesMap(ResourceKind $resourceKind) {
         $map = [];
-        foreach ($resourceKind->getMetadataByControl(MetadataControl::DISPLAY_STRATEGY()) as $displayStrategyMetadata) {
-            $map[$displayStrategyMetadata->getId()] = $displayStrategyMetadata->getConstraints()['displayStrategy'];
+        foreach ($resourceKind->getDynamicMetadata() as $dynamicMetadata) {
+            $map[$dynamicMetadata->getId()] = $dynamicMetadata->getDisplayStrategy();
         }
         return $map;
     }

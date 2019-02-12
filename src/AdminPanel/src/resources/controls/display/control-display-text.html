@@ -1,3 +1,5 @@
 <template>
-    ${metadataValue.value}
+    <span if.one-time="metadata.isDynamic"
+        innerhtml.bind="metadataValue.value | sanitizeHTML"></span>
+    <span else>${metadataValue.value}</span>
 </template>

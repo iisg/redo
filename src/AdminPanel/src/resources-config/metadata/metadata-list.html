@@ -68,8 +68,11 @@
                 <td>
                     ${'controls::' + metadata.control | t}
                     <icon name="user-3"
-                        if.bind="metadata.canDetermineAssignees"
-                        bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | t"></icon>
+                        if.one-time="metadata.canDetermineAssignees"
+                        bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | resourceClassTranslation:metadata.resourceClass"></icon>
+                    <icon name="add-workflow"
+                        if.one-time="metadata.isDynamic"
+                        bootstrap-tooltip.bind="'Dynamic metadata' | t"></icon>
                 </td>
                 <td>
                     ${metadata.groupId | metadataGroupLabel}

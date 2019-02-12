@@ -37,6 +37,7 @@ class KohaImportCommandIntegrationTest extends DatabaseMigrationTestCase {
         $this->getEntityManager()->getConnection()->exec(
             file_get_contents(__DIR__.'/../MetadataImport/dumps/only_language_resources_fix_metadata.sql')
         );
+        $this->executeCommand('doctrine:migrations:migrate');
         $this->barcode1 = 100000231505;
         $this->barcode2 = 100000231454;
         $this->barcodeMetadataId = 76;

@@ -96,6 +96,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 $reproductor->getPlaceholder(),
                 ['resourceKind' => [SystemResourceKind::USER]],
                 $reproductor->getGroupId(),
+                $reproductor->getDisplayStrategy(),
                 $reproductor->isShownInBrief(),
                 $reproductor->isCopiedToChildResource()
             )

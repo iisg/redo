@@ -61,6 +61,7 @@ class ClearUnknownGroupsCommand extends ContainerAwareCommand {
                         $metadata->getPlaceholder(),
                         $metadata->getConstraints(),
                         Metadata::DEFAULT_GROUP,
+                        $metadata->getDisplayStrategy(),
                         $metadata->isShownInBrief(),
                         $metadata->isCopiedToChildResource()
                     )

@@ -44,7 +44,8 @@ trait StubsTrait {
         array $constraints = [],
         string $resourceClass = 'books',
         array $overrides = [],
-        string $name = ''
+        string $name = '',
+        string $displayStrategy = null
     ): Metadata {
         if ($control == null) {
             $control = MetadataControl::TEXTAREA();
@@ -56,6 +57,8 @@ trait StubsTrait {
         $metadata->method('getControl')->willReturn($control);
         $metadata->method('getConstraints')->willReturn($constraints);
         $metadata->method('getResourceClass')->willReturn($resourceClass);
+        $metadata->method('getDisplayStrategy')->willReturn($displayStrategy);
+        $metadata->method('isDynamic')->willReturn($displayStrategy != null);
         $metadata->method('withOverrides')->willReturn($metadata);
         $metadata->method('getOverrides')->willReturn($overrides);
         $metadata->method('getName')->willReturn($name ?: 'metadata' . $id);
@@ -98,6 +101,18 @@ trait StubsTrait {
                         $metadataList,
                         function (Metadata $metadata) use ($control) {
                             return $control->equals($metadata->getControl());
+                        }
+                    )
+                );
+            }
+        );
+        $resourceKind->method('getDynamicMetadata')->willReturnCallback(
+            function () use ($metadataList) {
+                return array_values(
+                    array_filter(
+                        $metadataList,
+                        function (Metadata $metadata) {
+                            return $metadata->isDynamic();
                         }
                     )
                 );

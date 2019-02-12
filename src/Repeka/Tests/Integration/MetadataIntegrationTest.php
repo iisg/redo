@@ -37,6 +37,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                     'parentId' => $metadata1->getParentId(),
                     'constraints' => [],
                     'groupId' => Metadata::DEFAULT_GROUP,
+                    'displayStrategy' => null,
                     'shownInBrief' => false,
                     'copyToChildResource' => false,
                     'resourceClass' => $metadata1->getResourceClass(),
@@ -53,6 +54,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                     'parentId' => $metadata2->getParentId(),
                     'constraints' => [],
                     'groupId' => Metadata::DEFAULT_GROUP,
+                    'displayStrategy' => null,
                     'shownInBrief' => false,
                     'copyToChildResource' => false,
                     'resourceClass' => $metadata2->getResourceClass(),
@@ -268,13 +270,13 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->createLanguage('TEST', 'TE', 'Test language');
         $client = self::createAdminClient();
         $metadataArray = [
-            'control' => MetadataControl::DISPLAY_STRATEGY,
+            'control' => MetadataControl::TEXT,
             'name' => 'Test metadata',
             'label' => ['TEST' => 'User-friendly label'],
             'description' => ['TEST' => 'test description'],
             'placeholder' => ['TEST' => 'test placeholder'],
             'resourceClass' => 'books',
-            'constraints' => ['displayStrategy' => 'Unicorn {{r | mTitle }}'],
+            'displayStrategy' => 'Unicorn {{r | mTitle }}',
         ];
         $client->apiRequest('POST', self::ENDPOINT, $metadataArray);
         $this->assertStatusCode(201, $client->getResponse());
@@ -288,7 +290,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($metadataArray['description'], $metadata->getDescription());
         $this->assertEquals($metadataArray['placeholder'], $metadata->getPlaceholder());
         $this->assertEquals($metadataArray['resourceClass'], $metadata->getResourceClass());
-        $this->assertEquals($metadataArray['constraints'], $metadata->getConstraints());
+        $this->assertEquals($metadataArray['displayStrategy'], $metadata->getDisplayStrategy());
     }
 
     public function testMetadataNameMustBeUniqueInWholeSystem() {

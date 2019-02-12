@@ -15,7 +15,6 @@ import {BindingSignaler} from "aurelia-templating-resources";
 import {MetadataValue} from "../metadata-value";
 import {WorkflowPlace} from "./../../workflows/workflow";
 import {debounce} from "lodash";
-import {MetadataControl} from "../../resources-config/metadata/metadata-control";
 import {groupMetadata} from "../../common/utils/metadata-utils";
 import {MetadataGroupRepository} from "../../resources-config/metadata/metadata-group-repository";
 
@@ -58,7 +57,7 @@ export class ResourceFormGenerated {
       const metadataList = this.skipValidation
         ? this.resourceKind.metadataList
         : this.resourceKind.metadataList.filter(v => v.id != SystemMetadata.PARENT.id);
-      return metadataList.filter(m => m.control != MetadataControl.DISPLAY_STRATEGY);
+      return metadataList.filter(m => !m.isDynamic);
     }
   }
 

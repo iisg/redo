@@ -33,6 +33,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
                 'dictionaries',
                 [],
                 '',
+                null,
                 false,
                 false,
                 $this->nameMetadata
@@ -48,6 +49,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
                 'dictionaries',
                 [],
                 '',
+                null,
                 false,
                 false,
                 $this->nameMetadata
@@ -63,6 +65,7 @@ class PkImportClassificationsIntegrationTest extends AbstractPkImportIntegration
                 'dictionaries',
                 [],
                 '',
+                null,
                 false,
                 false,
                 $this->languageDescriptionMetadata

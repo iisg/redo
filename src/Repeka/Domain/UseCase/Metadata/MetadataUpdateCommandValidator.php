@@ -4,32 +4,32 @@ namespace Repeka\Domain\UseCase\Metadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
-use Repeka\Domain\Validation\Rules\ConstraintSetMatchesControlRule;
 use Repeka\Domain\Validation\Rules\MetadataGroupExistsRule;
+use Repeka\Domain\Validation\Rules\ResourceDisplayStrategySyntaxValidRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
 class MetadataUpdateCommandValidator extends CommandAttributesValidator {
-    /** @var ConstraintSetMatchesControlRule */
-    private $constraintSetMatchesControlRule;
     /** @var ConstraintArgumentsAreValidRule */
     private $constraintArgumentsAreValidRule;
     /** @var ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule */
     private $rkConstraintIsUserIfNecessaryRule;
     /** @var MetadataGroupExistsRule */
     private $metadataGroupExistsRule;
+    /** @var ResourceDisplayStrategySyntaxValidRule */
+    private $displayStrategySyntaxValidRule;
 
     public function __construct(
-        ConstraintSetMatchesControlRule $constraintSetMatchesControlRule,
         ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
         ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule $rkConstraintIsUserIfNecessaryRule,
-        MetadataGroupExistsRule $metadataGroupExistsRule
+        MetadataGroupExistsRule $metadataGroupExistsRule,
+        ResourceDisplayStrategySyntaxValidRule $displayStrategySyntaxValidRule
     ) {
-        $this->constraintSetMatchesControlRule = $constraintSetMatchesControlRule;
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
         $this->rkConstraintIsUserIfNecessaryRule = $rkConstraintIsUserIfNecessaryRule;
         $this->metadataGroupExistsRule = $metadataGroupExistsRule;
+        $this->displayStrategySyntaxValidRule = $displayStrategySyntaxValidRule;
     }
 
     /** @param MetadataUpdateCommand $command */
@@ -40,9 +40,9 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
             ->attribute('newDescription', Validator::arrayType())
             ->attribute('newShownInBrief', Validator::boolType())
             ->attribute('newCopyToChildResource', Validator::boolType())
-            ->attribute('newConstraints', $this->constraintSetMatchesControlRule->forMetadata($command->getMetadata()))
             ->attribute('newConstraints', $this->constraintArgumentsAreValidRule)
             ->attribute('newConstraints', $this->rkConstraintIsUserIfNecessaryRule->forMetadata($command->getMetadata()))
-            ->attribute('newGroupId', $this->metadataGroupExistsRule);
+            ->attribute('newGroupId', $this->metadataGroupExistsRule)
+            ->attribute('newDisplayStrategy', $this->displayStrategySyntaxValidRule);
     }
 }

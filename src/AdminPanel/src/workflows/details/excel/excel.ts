@@ -13,7 +13,6 @@ import {debounce, flatten} from "lodash";
 import {inArray} from "../../../common/utils/array-utils";
 import {ChangeEvent} from "../../../common/change-event";
 import {SystemMetadata} from "../../../resources-config/metadata/system-metadata";
-import {MetadataControl} from "../../../resources-config/metadata/metadata-control";
 
 @autoinject
 export class Excel implements ComponentAttached {
@@ -23,7 +22,6 @@ export class Excel implements ComponentAttached {
   metadataList: Metadata[];
   autoChangeRowToTheEnd: boolean = true;
   filterByResourceKinds: ResourceKind[] = [];
-  resourceKindsLoaded = false;
 
   constructor(private metadataRepository: MetadataRepository,
               private workflowPlaceSorter: WorkflowPlaceSorter,
@@ -36,7 +34,7 @@ export class Excel implements ComponentAttached {
       .addSystemMetadataIds(SystemMetadata.REPRODUCTOR.id)
       .onlyTopLevel()
       .get()
-      .then(metadataList => metadataList.filter(m => m.control != MetadataControl.DISPLAY_STRATEGY))
+      .then(metadataList => metadataList.filter(m => !m.isDynamic))
       .then(metadataList => this.metadataList = metadataList);
   }
 

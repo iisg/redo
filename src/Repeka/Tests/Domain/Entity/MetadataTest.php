@@ -47,10 +47,11 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
             ['PL' => 'AA'],
             [],
             'oldGroup',
+            null,
             false,
             false
         );
-        $metadata->update(['PL' => 'AA1', 'EN' => 'BB'], ['PL' => 'BB'], ['EN' => 'BB'], ['regex' => [null]], 'newGroup', true, true);
+        $metadata->update(['PL' => 'AA1', 'EN' => 'BB'], ['PL' => 'BB'], ['EN' => 'BB'], ['regex' => [null]], 'newGroup', null, true, true);
         $this->assertEquals(['PL' => 'AA1', 'EN' => 'BB'], $metadata->getLabel());
         $this->assertEquals(['PL' => 'BB'], $metadata->getPlaceholder());
         $this->assertEquals(['EN' => 'BB'], $metadata->getDescription());
@@ -58,6 +59,42 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('newGroup', $metadata->getGroupId());
         $this->assertTrue($metadata->isShownInBrief());
         $this->assertTrue($metadata->isCopiedToChildResource());
+    }
+
+    public function testUpdatingDisplayStrategy() {
+        $metadata = Metadata::create(
+            'books',
+            MetadataControl::TEXT(),
+            'Prop',
+            ['PL' => 'AA'],
+            ['PL' => 'AA'],
+            ['PL' => 'AA'],
+            [],
+            'oldGroup',
+            'aa'
+        );
+        $metadata->update(['PL' => 'AA'], [], [], [], 'newGroup', 'bb', true, true);
+        $this->assertEquals('bb', $metadata->getDisplayStrategy());
+        $metadata->update(['PL' => 'AA'], [], [], [], 'newGroup', '   bb   ', true, true);
+        $this->assertEquals('bb', $metadata->getDisplayStrategy());
+        $this->expectException(\InvalidArgumentException::class);
+        $metadata->update(['PL' => 'AA'], [], [], [], 'newGroup', null, true, true);
+    }
+
+    public function testUpdatingDisplayStrategyOfNonDynamicMetadata() {
+        $metadata = Metadata::create(
+            'books',
+            MetadataControl::TEXT(),
+            'Prop',
+            ['PL' => 'AA'],
+            ['PL' => 'AA'],
+            ['PL' => 'AA'],
+            [],
+            'oldGroup',
+            null
+        );
+        $this->expectException(\InvalidArgumentException::class);
+        $metadata->update(['PL' => 'AA'], [], [], [], 'newGroup', 'bb', true, true);
     }
 
     public function testOverridingLabel() {
@@ -81,7 +118,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testChangedMetadataLabelIsLessImportantThanOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', ['PL' => 'AA']);
         $metadata = $metadata->withOverrides(['label' => ['PL' => 'BB']]);
-        $metadata->update(['PL' => 'CC'], [], [], [], '', true, true);
+        $metadata->update(['PL' => 'CC'], [], [], [], '', null, true, true);
         $this->assertEquals(['PL' => 'BB'], $metadata->getLabel());
     }
 
@@ -118,7 +155,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testChangedGroupIsLessImportantThanOverride() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], 'oldGroup');
         $metadata = $metadata->withOverrides(['groupId' => 'overridenGroup']);
-        $metadata->update(['PL' => 'CC'], [], [], [], 'updatedGroup', true, true);
+        $metadata->update(['PL' => 'CC'], [], [], [], 'updatedGroup', null, true, true);
         $this->assertEquals('overridenGroup', $metadata->getGroupId());
     }
 
@@ -137,52 +174,85 @@ class MetadataTest extends \PHPUnit_Framework_TestCase {
     public function testGroupIdOverrideWithSameValueAsExistingIsRemoved() {
         $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], 'oldGroup');
         $metadata = $metadata->withOverrides(['groupId' => 'oldGroup']);
-        $metadata->update(['PL' => 'CC'], [], [], [], 'updatedGroup', true, true);
+        $metadata->update(['PL' => 'CC'], [], [], [], 'updatedGroup', null, true, true);
         $this->assertEquals('updatedGroup', $metadata->getGroupId());
     }
 
     public function testOverridingShownInBrief() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', true, true);
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', null, true, true);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides(['shownInBrief' => false]);
         $this->assertFalse($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides(['shownInBrief' => true]);
         $this->assertTrue($metadata->isShownInBrief());
-        $metadata->update([], [], [], [], '', false, false, null);
+        $metadata->update([], [], [], [], '', null, false, false, null);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides(['shownInBrief' => null]);
         $this->assertFalse($metadata->isShownInBrief());
-        $metadata->update([], [], [], [], '', true, false, null);
+        $metadata->update([], [], [], [], '', null, true, false, null);
         $this->assertTrue($metadata->isShownInBrief());
         $metadata = $metadata->withOverrides([]);
         $this->assertTrue($metadata->isShownInBrief());
     }
 
     public function testOverriddenShownInBriefIsNotPresentInOverrides() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', true, true);
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', null, true, true);
         $metadata = $metadata->withOverrides(['shownInBrief' => true]);
         $this->assertArrayNotHasKey('shownInBrief', $metadata->getOverrides());
     }
 
     public function testOverridingCopyToChildResource() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', true, true);
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', null, true, true);
         $this->assertTrue($metadata->isCopiedToChildResource());
         $metadata = $metadata->withOverrides(['copyToChildResource' => false]);
         $this->assertFalse($metadata->isCopiedToChildResource());
         $metadata = $metadata->withOverrides(['copyToChildResource' => true]);
         $this->assertTrue($metadata->isCopiedToChildResource());
-        $metadata->update([], [], [], [], '', false, false, null);
+        $metadata->update([], [], [], [], '', null, false, false);
         $this->assertTrue($metadata->isCopiedToChildResource());
         $metadata = $metadata->withOverrides(['copyToChildResource' => null]);
         $this->assertFalse($metadata->isCopiedToChildResource());
-        $metadata->update([], [], [], [], '', true, true, null);
+        $metadata->update([], [], [], [], '', null, true, true);
         $this->assertTrue($metadata->isCopiedToChildResource());
         $metadata = $metadata->withOverrides([]);
         $this->assertTrue($metadata->isCopiedToChildResource());
     }
 
+    public function testOverridingDisplayStrategyForNonDynamicMetadata() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', null, true, true);
+        $this->assertFalse($metadata->isDynamic());
+        $this->assertNull($metadata->getDisplayStrategy());
+        $metadata = $metadata->withOverrides(['displayStrategy' => null]);
+        $this->assertFalse($metadata->isDynamic());
+        $metadata = $metadata->withOverrides(['displayStrategy' => '']);
+        $this->assertFalse($metadata->isDynamic());
+        $this->expectException(\InvalidArgumentException::class);
+        $metadata->withOverrides(['displayStrategy' => 'something']);
+    }
+
+    public function testOverridingDisplayStrategyForDynamicMetadata() {
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', 'dynamic', true, true);
+        $this->assertTrue($metadata->isDynamic());
+        $this->assertEquals('dynamic', $metadata->getDisplayStrategy());
+        $metadata = $metadata->withOverrides(['displayStrategy' => 'other']);
+        $this->assertEquals('other', $metadata->getDisplayStrategy());
+        $metadata = $metadata->withOverrides(['displayStrategy' => null]);
+        $this->assertTrue($metadata->isDynamic());
+        $this->assertEquals('dynamic', $metadata->getDisplayStrategy());
+        $metadata = $metadata->withOverrides(['displayStrategy' => '']);
+        $this->assertTrue($metadata->isDynamic());
+        $this->assertEquals('dynamic', $metadata->getDisplayStrategy());
+        $metadata = $metadata->withOverrides(['displayStrategy' => '  ']);
+        $this->assertTrue($metadata->isDynamic());
+        $this->assertEquals('dynamic', $metadata->getDisplayStrategy());
+        $metadata = $metadata->withOverrides(['displayStrategy' => 'dynamic']);
+        $this->assertEmpty($metadata->getOverrides());
+        $metadata = $metadata->withOverrides(['displayStrategy' => '   dynamic   ']);
+        $this->assertEmpty($metadata->getOverrides());
+    }
+
     public function testOverriddenCopyToChildResourceIsNotPresentInOverrides() {
-        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', true, true);
+        $metadata = Metadata::create('books', MetadataControl::TEXT(), 'Prop', [], [], [], [], '', null, true, true);
         $metadata = $metadata->withOverrides(['copyToChildResource' => true]);
         $this->assertArrayNotHasKey('copyToChildResource', $metadata->getOverrides());
     }

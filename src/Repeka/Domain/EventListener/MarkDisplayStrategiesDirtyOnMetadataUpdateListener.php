@@ -5,7 +5,6 @@ use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
 use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
 use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -27,8 +26,8 @@ class MarkDisplayStrategiesDirtyOnMetadataUpdateListener extends CommandEventsLi
         /** @var MetadataUpdateCommand $command */
         $command = $event->getCommand();
         $metadata = $command->getMetadata();
-        if ($metadata->getControl() == MetadataControl::DISPLAY_STRATEGY()) {
-            $event->setDataForHandledEvent(self::class, $metadata->getConstraints()['displayStrategy']);
+        if ($metadata->isDynamic()) {
+            $event->setDataForHandledEvent(self::class, $metadata->getDisplayStrategy());
         }
     }
 
@@ -37,7 +36,7 @@ class MarkDisplayStrategiesDirtyOnMetadataUpdateListener extends CommandEventsLi
         if ($displayStrategyBefore) {
             /** @var Metadata $metadata */
             $metadata = $event->getResult();
-            $displayStrategyAfter = $metadata->getConstraints()['displayStrategy'];
+            $displayStrategyAfter = $metadata->getDisplayStrategy();
             if ($displayStrategyBefore != $displayStrategyAfter) {
                 $resourceKindsQuery = ResourceKindListQuery::builder()
                     ->filterByMetadataId($metadata->getId())
@@ -47,8 +46,8 @@ class MarkDisplayStrategiesDirtyOnMetadataUpdateListener extends CommandEventsLi
                     $resourceKinds,
                     function (ResourceKind $resourceKind) use ($metadata) {
                         $rkMetadata = $resourceKind->getMetadataById($metadata->getId());
-                        $overriddenConstraints = $rkMetadata->getOverrides()['constraints'] ?? [];
-                        return !isset($overriddenConstraints['displayStrategy']) || !$overriddenConstraints['displayStrategy'];
+                        $overriddenDisplayStrategy = $rkMetadata->getOverrides()['displayStrategy'] ?? null;
+                        return !$overriddenDisplayStrategy;
                     }
                 );
                 $this->resourceRepository->markDisplayStrategiesDirty($resourceKindsWithoutOverrides);

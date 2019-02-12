@@ -34,7 +34,7 @@ class ImportTemplatesCommand extends AbstractTemplateCommand {
             }
             $existingResourceKind = $this->loader->getTemplateResourceKind($templateName);
             $templateContents = $this->getTemplateFromFile($templateName);
-            $templateMetadata = $templateMetadataKind->withOverrides(['constraints' => ['displayStrategy' => $templateContents]]);
+            $templateMetadata = $templateMetadataKind->withOverrides(['displayStrategy' => $templateContents]);
             if ($existingResourceKind) {
                 $metadataList = array_map(
                     function (Metadata $metadata) use ($templateMetadata) {

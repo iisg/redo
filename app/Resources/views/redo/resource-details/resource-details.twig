@@ -118,6 +118,8 @@
                                                 {% else %}
                                                     {{ relatedResource|mLabel|raw }}
                                                 {% endif %}
+                                            {% elseif metadata.dynamic %}
+                                                {{ metadataValue|raw }}
                                             {% else %}
                                                 {{ metadataValue }}
                                             {% endif %}

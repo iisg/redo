@@ -30,10 +30,10 @@ export class SystemMetadata {
   });
   static readonly RESOURCE_LABEL: Metadata = $.extend(new Metadata(), {
     id: -5,
-    control: MetadataControl.DISPLAY_STRATEGY,
+    control: MetadataControl.TEXT,
     baseId: -5,
     shownInBrief: true,
     copyToChildResource: false,
-    constraints: new MetadataConstraints({displayStrategy: '#{{ r.id }}'}),
+    displayStrategy: '#{{ r.id }}',
   });
 }

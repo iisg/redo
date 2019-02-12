@@ -232,6 +232,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
                 $resourceClass,
                 $constraints,
                 $groupId,
+                null,
                 false,
                 false,
                 $parent

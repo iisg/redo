@@ -1,8 +1,8 @@
 <resource>
     <id>{{ r.id }}</id>
     <kind_id>{{ r.kind.id }}</kind_id>
-    {% for metadata in r.kind.metadataList if metadata.control != 'display-strategy' %}
-    <{{ metadata.name | inCurrentLanguage }}>
+    {% for metadata in r.kind.metadataList if not metadata.dynamic %}
+    <{{ metadata.name }}>
     {% for value in r|m(metadata.id) %}
         <value>{{ value }}</value>
     {% endfor %}

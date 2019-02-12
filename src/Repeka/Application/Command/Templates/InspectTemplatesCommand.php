@@ -35,7 +35,7 @@ class InspectTemplatesCommand extends AbstractTemplateCommand {
                 if ($templateRk) {
                     $storedTemplate = $this->loader->getTemplateContent($templateRk);
                     $fileTemplate = $this->getTemplateFromFile($templateName);
-                    $equal = $storedTemplate == $fileTemplate ? '<info>YES</info>' : '<error>NO</error>';
+                    $equal = $storedTemplate == trim($fileTemplate) ? '<info>YES</info>' : '<error>NO</error>';
                 }
                 $row[] = $templateRk ? 'YES' : 'NO';
                 $row[] = $equal;

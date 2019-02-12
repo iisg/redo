@@ -21,7 +21,6 @@ export class MetadataConstraints {
   @map regex?: string;
   @map relatedResourceMetadataFilter?: NumberMap<string> = {};
   @map(MinMaxConstraintMapper) minMaxValue?: MinMaxValue = new MinMaxValue();
-  @map displayStrategy?: string;
   @map doublePrecision?: number;
   @map uniqueInResourceClass?: boolean = false;
   @map fileUploaderType?: string;
@@ -94,10 +93,15 @@ export class Metadata extends Entity {
   @map baseId: number;
   @map constraints: MetadataConstraints = new MetadataConstraints();
   @map groupId: string;
+  @map displayStrategy: string;
   @map shownInBrief: boolean;
   @map copyToChildResource: boolean;
   @map resourceClass: string;
   @map canDetermineAssignees: boolean;
+
+  get isDynamic(): boolean {
+    return !!this.displayStrategy;
+  }
 
   async clearInheritedValues(metadataRepository: MetadataRepository, originalMetadata: Metadata = undefined): Promise<Metadata> {
     if (!originalMetadata) {

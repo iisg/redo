@@ -16,4 +16,8 @@
     <span class="value">${metadata.placeholder | inCurrentLanguage}</span>
     <span>${'Description' | t}</span>
     <span class="value">${metadata.description | inCurrentLanguage}</span>
+    <span>${'Dynamic metadata' | t}</span>
+    <span class="value">${(metadata.isDynamic ? 'yes' : 'no') | t}</span>
+    <span>${'Determines assignees' | t}</span>
+    <span class="value">${(metadata.canDetermineAssignees ? 'yes' : 'no') | t}</span>
 </template>

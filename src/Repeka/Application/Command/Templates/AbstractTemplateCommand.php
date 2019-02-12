@@ -6,11 +6,13 @@ use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Twig\ResourcesTwigLoader;
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 abstract class AbstractTemplateCommand extends \Symfony\Component\Console\Command\Command {
     use CommandBusAware;
 
@@ -61,8 +63,11 @@ abstract class AbstractTemplateCommand extends \Symfony\Component\Console\Comman
                     $this->createLabelInEveryLanguage(ResourcesTwigLoader::TEMPLATE_METADATA_KIND_NAME),
                     [],
                     [],
-                    MetadataControl::DISPLAY_STRATEGY,
-                    $templatesResourceClass
+                    MetadataControl::TEXTAREA,
+                    $templatesResourceClass,
+                    [],
+                    Metadata::DEFAULT_GROUP,
+                    ''
                 )
             );
         }

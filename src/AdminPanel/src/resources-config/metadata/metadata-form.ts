@@ -20,6 +20,7 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   controls: string[] = values(MetadataControl);
   submitting: boolean = false;
   metadata: Metadata = new Metadata();
+  shouldBeDynamic: false;
 
   validationController: ValidationController;
   private restoredPreviousTemplateValue = false;
@@ -70,6 +71,9 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   }
 
   validateAndSubmit() {
+    if (!this.metadata.id && !this.shouldBeDynamic) {
+      this.metadata.displayStrategy = undefined;
+    }
     this.submitting = true;
     this.validationController.validate().then(result => {
       if (result.valid) {

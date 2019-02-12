@@ -37,7 +37,7 @@
                 {% set filterableTextMetadataList = [] %}
                 {% set filterableNonTextMetadataList = [] %}
                 {% for filterableMetadata in filterableMetadataList %}
-                    {% if filterableMetadata.control.value in ['text', 'textarea', 'display-strategy'] %}
+                    {% if filterableMetadata.control.value in ['text', 'textarea'] %}
                         {% set filterableTextMetadataList = filterableTextMetadataList | merge([filterableMetadata]) %}
                     {% else %}
                         {% set filterableNonTextMetadataList = filterableNonTextMetadataList | merge([filterableMetadata]) %}

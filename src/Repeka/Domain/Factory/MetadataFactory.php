@@ -18,6 +18,7 @@ class MetadataFactory {
             $command->getDescription(),
             $command->getConstraints(),
             $command->getGroupId(),
+            $command->getDisplayStrategy(),
             $command->isShownInBrief(),
             $command->isCopiedToChildResource()
         );
@@ -35,6 +36,7 @@ class MetadataFactory {
             $newChildMetadata['description'] ?? [],
             $newChildMetadata['constraints'] ?? [],
             $newChildMetadata['groupId'] ?? '',
+            $newChildMetadata['displayStrategy'] ?? $base->getDisplayStrategy(),
             $newChildMetadata['shownInBrief'] ?? $base->isShownInBrief(),
             $newChildMetadata['copyToChildResource'] ?? $base->isCopiedToChildResource(),
             $newChildMetadata['config'] ?? null

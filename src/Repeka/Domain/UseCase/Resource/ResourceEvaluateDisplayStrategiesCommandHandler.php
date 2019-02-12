@@ -2,7 +2,6 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
@@ -29,7 +28,7 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
      */
     public function handle(ResourceEvaluateDisplayStrategiesCommand $command): ResourceEntity {
         $resource = $command->getResource();
-        $displayStrategyMetadata = $resource->getKind()->getMetadataByControl(MetadataControl::DISPLAY_STRATEGY());
+        $displayStrategyMetadata = $resource->getKind()->getDynamicMetadata();
         if ($command->getMetadataIds()) {
             $displayStrategyMetadata = EntityUtils::filterByIds($command->getMetadataIds(), $displayStrategyMetadata);
         }
@@ -37,7 +36,7 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
         $changed = false;
         foreach ($displayStrategyMetadata as $metadata) {
             $usedMetadataCollector = new ResourceDisplayStrategyUsedMetadataCollector();
-            $value = $this->evaluator->render($resource, $metadata->getConstraints()['displayStrategy'], $usedMetadataCollector);
+            $value = $this->evaluator->render($resource, $metadata->getDisplayStrategy(), $usedMetadataCollector);
             if (!trim($value) && $metadata->getId() == SystemMetadata::RESOURCE_LABEL) {
                 $value = $this->evaluator->render($resource, '#{{r.id}}');
             }

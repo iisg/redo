@@ -163,7 +163,7 @@ class ResourceKindsFixture extends RepekaFixture {
     }
 
     private function resourceLabelMetadata(string $displayStrategy): Metadata {
-        return SystemMetadata::RESOURCE_LABEL()->toMetadata()->withOverrides(['constraints' => ['displayStrategy' => $displayStrategy]]);
+        return SystemMetadata::RESOURCE_LABEL()->toMetadata()->withOverrides(['displayStrategy' => $displayStrategy]);
     }
 
     private function addCmsResourceKinds() {

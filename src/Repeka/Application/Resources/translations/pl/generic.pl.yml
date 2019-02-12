@@ -219,3 +219,10 @@ Resource files: Pliki zasobu
 Open resource file manager: Otwórz pliki zasobu
 "files: {{files}}, directories: {{directories}}": "pliki: {{files}}, podkatalogi: {{directories}}"
 Browse on website: Zobacz na stronie
+Values of this metadata should be generated instead of given from user: Wartości tej metadanej powinny być generowane zamiast wprowadzane przez użytkownika
+This setting cannot be changed after metadata creation.: To ustawienie nie może być zmienione po stworzeniu rodzaju metadanej.
+Dynamic metadata: Dynamiczna metadana
+Display strategy: Strategia wyświetlania
+yes: tak
+no: nie
+Determines assignees: Używana do określania zadań użytkowników

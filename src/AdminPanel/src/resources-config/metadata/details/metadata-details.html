@@ -14,7 +14,15 @@
         class="metadata-details au-animate fade-inup-outup">
 
         <div class="name-with-buttons-and-tabs">
-            <span class="page-title">${metadata.name} #${metadata.id}</span>
+            <span class="page-title">
+                ${metadata.name} #${metadata.id}
+                <icon name="user-3"
+                    if.one-time="metadata.canDetermineAssignees"
+                    bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | resourceClassTranslation:metadata.resourceClass"></icon>
+                <icon name="add-workflow"
+                    if.one-time="metadata.isDynamic"
+                    bootstrap-tooltip.bind="'Dynamic metadata' | t"></icon>
+            </span>
             <throbber if.bind="metadata.pendingRequest"></throbber>
             <remove-button if.bind="!editing && metadata.id > 0"
                 disabled.bind="metadata.pendingRequest"
@@ -52,6 +60,10 @@
             <aup-tab-pane tab="configuration">
                 <div if.bind="metadataDetailsTabs.activeTabId === 'configuration'"
                     class="simple-form">
+                    <template if.bind="metadata.isDynamic">
+                        <span>${'Display strategy'|t}</span>
+                        <span class="value white-space-pre-wrap">${metadata.displayStrategy}</span>
+                    </template>
                     <template repeat.for="constraintName of constraintNames">
                         <span>${'metadata_constraints::labels//' + constraintName | t}</span>
                         <metadata-constraint name.bind="constraintName"

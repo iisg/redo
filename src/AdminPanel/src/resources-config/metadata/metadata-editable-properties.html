@@ -3,6 +3,7 @@
     <require from="./constraint/metadata-constraint-form"></require>
     <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
     <require from="./metadata-group-select"></require>
+    <require from="resources/controls/input/autosize"></require>
 
     <div class="key">
         <span>
@@ -55,8 +56,46 @@
     <span>${'Description' | t}</span>
     <multilingual-editor value.bind="metadata.description & validateManually:validationControllerForCurrentScope"
         placeholder.bind="originalMetadata.description"></multilingual-editor>
-    <metadata-constraint-form containerless
+
+    <template if.one-time="metadata.isDynamic || !metadata.id">
+        <div class="key">
+            ${'Dynamic metadata'|t}
+        </div>
+        <div class="resource-form-group-right">
+            <div>
+                <div class="checkbox"
+                    if.bind="!metadata.id">
+                    <label>
+                        <input type="checkbox"
+                            checked.bind="shouldBeDynamic">
+                        ${'Values of this metadata should be generated instead of given from user' | t}
+                    </label>
+                </div>
+
+                <template if.bind="metadata.isDynamic || shouldBeDynamic">
+                    <p class="text-danger"
+                        if.bind="shouldBeDynamic">
+                        ${'This setting cannot be changed after metadata creation.'|t}
+                    </p>
+
+                    <div class="form-group">
+                        <label>${'Display strategy' | t}</label>
+                        <textarea value.bind="metadata.displayStrategy"
+                            autosize
+                            class="form-control"></textarea>
+                    </div>
+
+                    <restore-from-original-button if.bind="originalMetadata && originalMetadata.displayStrategy != metadata.displayStrategy"
+                        click.delegate="metadata.displayStrategy = originalMetadata.displayStrategy"></restore-from-original-button>
+                </template>
+            </div>
+        </div>
+    </template>
+
+    <metadata-constraint-form if.bind="!metadata.isDynamic && !shouldBeDynamic"
+        containerless
         metadata.bind="metadata"
         original-metadata.bind="originalMetadata"
         validation-controller.bind="validationController"></metadata-constraint-form>
+
 </template>
