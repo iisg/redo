@@ -3,4 +3,5 @@ version: '2'
 services:
   repeka:
     volumes:
-      - /mnt/REDO/Abbyy/XML_Workflows:/mnt/REDO/Abbyy/XML_Workflows
+      - /mnt:/mnt
+      - /var/REDO:/var/REDO
