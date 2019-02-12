@@ -45,6 +45,7 @@ class Configuration implements ConfigurationInterface {
                     ->scalarNode('id')->isRequired()->end()
                     ->scalarNode('label')->isRequired()->end()
                     ->scalarNode('path')->isRequired()->end()
+                    ->scalarNode('condition')->defaultValue(null)->end()
                     ->scalarNode('canBeUsedInResources')->defaultValue(true)->end()
                 ->end()->end()->end()
                 ->arrayNode('templating')->children()

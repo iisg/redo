@@ -18,7 +18,7 @@ class FileSystemResourceFileStorageTest extends \PHPUnit_Framework_TestCase {
         $displayStrategyEvaluator->method('render')->willReturnArgument(1);
         $this->storage = new FileSystemResourceFileStorage(
             [
-                ['id' => 'here', 'path' => __DIR__, 'label' => 'This directory'],
+                ['id' => 'here', 'path' => __DIR__, 'label' => 'This directory', 'condition' => null],
             ],
             $displayStrategyEvaluator,
             $this->createMock(FileSystemDriver::class)

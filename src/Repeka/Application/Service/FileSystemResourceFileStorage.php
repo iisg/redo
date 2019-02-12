@@ -50,13 +50,21 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
             $this->uploadDirs
         );
         foreach ($uploadDirs as &$uploadDir) {
-            if (!file_exists($uploadDir['path'])) {
-                try {
-                    $this->fileSystemDriver->mkdirRecursive($uploadDir['path']);
-                } catch (\Exception $e) {
+            if ($uploadDir['condition']) {
+                $conditionMet = trim($this->displayStrategyEvaluator->render($resource, $uploadDir['condition']));
+                if (!$conditionMet) {
+                    $uploadDir['path'] = null;
                 }
             }
-            $uploadDir['path'] = realpath($uploadDir['path']);
+            if ($uploadDir['path']) {
+                if (!file_exists($uploadDir['path'])) {
+                    try {
+                        $this->fileSystemDriver->mkdirRecursive($uploadDir['path']);
+                    } catch (\Exception $e) {
+                    }
+                }
+                $uploadDir['path'] = realpath($uploadDir['path']);
+            }
         }
         return array_values(
             array_filter(
