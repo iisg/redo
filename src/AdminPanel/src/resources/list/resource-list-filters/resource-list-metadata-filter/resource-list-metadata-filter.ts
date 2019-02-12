@@ -1,17 +1,17 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
+import {ResourceListFilters} from "../resource-list-filters";
 import {bindable} from "aurelia-templating";
 
 @autoinject
-export class ResourceListMetadataFilter {
+export class ResourceListMetadataFilter extends ResourceListFilters {
   @bindable metadataId: number;
   @bindable initialValue: string;
   value: string;
-  inputBoxVisible: boolean;
-  inputBoxFocused: boolean;
   inputBoxSize = 1;
 
   constructor(private eventAggregator: EventAggregator) {
+    super();
   }
 
   bind() {
@@ -39,7 +39,7 @@ export class ResourceListMetadataFilter {
         this.value = undefined;
         this.publishValueIfItChanged();
       }
-      this.takeFocusOutOfInputBoxAndHideIt();
+      this.removeFocusFromInputBoxAndHideIt();
     } else {
       this.showInputBoxAndSetFocusOnIt();
     }
@@ -47,7 +47,7 @@ export class ResourceListMetadataFilter {
 
   onInputBoxBlurred() {
     if (!this.value && this.inputBoxVisible) {
-      this.takeFocusOutOfInputBoxAndHideIt();
+      this.removeFocusFromInputBoxAndHideIt();
     }
     this.publishValueIfItChanged();
   }
@@ -64,15 +64,5 @@ export class ResourceListMetadataFilter {
     if (this.value || undefined != this.initialValue) {
       this.publishValue();
     }
-  }
-
-  private showInputBoxAndSetFocusOnIt() {
-    this.inputBoxVisible = true;
-    this.inputBoxFocused = true;
-  }
-
-  private takeFocusOutOfInputBoxAndHideIt() {
-    this.inputBoxFocused = false;
-    this.inputBoxVisible = false;
   }
 }

@@ -28,7 +28,7 @@ resources-list {
     // @formatter:on
   }
 
-  & > :not(add-button):not(.add-form):not(resources-list-table) {
+  & > :not(add-button):not(.add-form):not(resources-list-table):not(loading-cover) {
     position: sticky;
     left: 0;
   }

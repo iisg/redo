@@ -6,6 +6,7 @@ import {oneTime, twoWay} from "../../common/components/binding-mode";
 import {ResourceSort} from "../resource-sort";
 import {inArray} from "../../common/utils/array-utils";
 import {filterableControls} from "../../resources-config/metadata/metadata-control";
+import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 
 @autoinject
 export class ResourcesListTable {
@@ -15,9 +16,11 @@ export class ResourcesListTable {
   @bindable(oneTime) extraColumnNames: string[] = [];
   @bindable(oneTime) extraColumnViews: string[] = [];
   @bindable(twoWay) contentsFilter: NumberMap<string>;
+  @bindable placesFilter: string[];
   @bindable sortBy: ResourceSort[];
   @bindable sortable: boolean = true;
   @bindable filterable: boolean = true;
+  @bindable resourceKinds: ResourceKind[];
 
   isFilterableMetadata(metadata: Metadata) {
     return inArray(metadata.control, filterableControls);

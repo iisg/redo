@@ -14,7 +14,6 @@ import {inArray} from "../../../common/utils/array-utils";
 import {ChangeEvent} from "../../../common/change-event";
 import {SystemMetadata} from "../../../resources-config/metadata/system-metadata";
 import {MetadataControl} from "../../../resources-config/metadata/metadata-control";
-import {ResourceKindRepository} from "../../../resources-config/resource-kind/resource-kind-repository";
 
 @autoinject
 export class Excel implements ComponentAttached {
@@ -27,7 +26,6 @@ export class Excel implements ComponentAttached {
   resourceKindsLoaded = false;
 
   constructor(private metadataRepository: MetadataRepository,
-              private resourceKindRepository: ResourceKindRepository,
               private workflowPlaceSorter: WorkflowPlaceSorter,
               private element: Element) {
   }

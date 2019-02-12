@@ -1,0 +1,15 @@
+<template>
+    <require from="common/components/workflow/workflow-place-chooser/workflow-place-chooser"></require>
+
+    <button mousedown.delegate="toggleInputBoxVisibility()">
+        <icon name="filter"></icon>
+    </button>
+    <form if.bind="inputBoxVisible"
+        submit.delegate="publishValue()">
+        <workflow-place-chooser workflow-places.bind="placesList"
+            value.bind="places"></workflow-place-chooser>
+        <button mousedown.delegate="publishValue()">
+            <icon name="search"></icon>
+        </button>
+    </form>
+</template>

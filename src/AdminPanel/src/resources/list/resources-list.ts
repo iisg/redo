@@ -47,11 +47,13 @@ export class ResourcesList {
   @observable resources: PageResult<Resource>;
   @observable newResourceKindThrottled: ResourceKind;
   contentsFilter: NumberMap<string>;
+  placesFilter: string[];
   relatedResources: NumberMap<string>;
   sortBy: ResourceSort[];
   totalNumberOfResources: number;
   addFormOpened: boolean;
   briefMetadata: Metadata[];
+  resourceKinds: ResourceKind[] = [];
   displayProgressBar: boolean;
   activated: boolean;
   newResourceKind: ResourceKind;
@@ -60,6 +62,7 @@ export class ResourcesList {
   private displayAllLevels: boolean = false;
   private sortButtonToggleEventSubscription: Subscription;
   private metadataFilterValueChangeEventSubscription: Subscription;
+  private placesFilterValueChangeEventSubscription: Subscription;
   private resourceKindIdsAllowedByParent: number[];
   private sortByKey: string;
 
@@ -99,6 +102,11 @@ export class ResourcesList {
       (metadataIdWithValue) => {
         this.metadataFilterValueChanged(metadataIdWithValue);
       });
+    this.placesFilterValueChangeEventSubscription = this.eventAggregator.subscribe('placeFilterValueChanged',
+      (placesIds) => {
+        this.placeFilterValueChanged(placesIds);
+      }
+    );
     if (this.resourceKind) {
       this.activate(this.router.currentInstruction.queryParams);
     }
@@ -107,6 +115,7 @@ export class ResourcesList {
   unbind() {
     this.sortButtonToggleEventSubscription.dispose();
     this.metadataFilterValueChangeEventSubscription.dispose();
+    this.placesFilterValueChangeEventSubscription.dispose();
   }
 
   private setResourceKindsAllowedByParent() {
@@ -143,6 +152,15 @@ export class ResourcesList {
     this.fetchResources();
   }
 
+  private placeFilterValueChanged(placesIds: string[]) {
+    if (!this.placesFilter) {
+      this.placesFilter = [];
+    }
+    this.placesFilter = placesIds;
+    this.updateURL(true);
+    this.fetchResources();
+  }
+
   activate(parameters: any) {
     this.prepareBeforeFetchingResources(parameters.resourceClass || this.getResourceClassFromResource());
     this.sortByKey = this.SORT_BY_KEY_PREFIX + this.resourceClass;
@@ -152,6 +170,7 @@ export class ResourcesList {
     const currentPageNumberChanged = this.obtainCurrentPageNumber(parameters);
     this.currentPageNumberChangedOnActivate = this.activated && currentPageNumberChanged;
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']);
+    this.placesFilter = safeJsonParse(parameters['placesFilter']);
     let sortBy = safeJsonParse(parameters['sortBy']);
     this.sortBy = sortBy ? sortBy : this.getSorting();
     this.displayAllLevels = !!parameters['allLevels'] || !!this.resourceKind;
@@ -237,6 +256,9 @@ export class ResourcesList {
         query = query.filterByContents(this.contentsFilter)
           .suppressError();
       }
+      if (this.placesFilter && this.placesFilter.length) {
+        query = query.filterByWorkflowPlacesIds(this.placesFilter);
+      }
       query = query.sortByMetadataIds(this.sortBy)
         .setResultsPerPage(this.resultsPerPage)
         .setCurrentPageNumber(this.currentPageNumber);
@@ -285,6 +307,9 @@ export class ResourcesList {
       ? query.filterByIds(this.allowedResourceKinds as number[])
       : query.filterByResourceClasses(this.resourceClass);
     query.get().then(resourceKinds => {
+      // this.resourceKinds should stay the same instance. Reassigning causes no detection of list changes in resource-list-places-filter
+      this.resourceKinds.splice(0, this.resourceKinds.length);
+      this.resourceKinds.push(...resourceKinds);
       this.briefMetadata = getMergedBriefMetadata(resourceKinds);
     });
   }
@@ -347,6 +372,9 @@ export class ResourcesList {
     }
     if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value != undefined)) {
       parameters['contentsFilter'] = JSON.stringify(this.contentsFilter);
+    }
+    if (this.placesFilter && this.placesFilter.length) {
+      parameters['placesFilter'] = JSON.stringify(this.placesFilter);
     }
     parameters['sortBy'] = JSON.stringify(this.sortBy);
     if (!queryParameters['tab'] || queryParameters['tab'] == 'children') {

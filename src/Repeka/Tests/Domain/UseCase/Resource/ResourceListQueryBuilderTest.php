@@ -48,6 +48,14 @@ class ResourceListQueryBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([$kind1, $kind2], $query->getResourceKinds());
     }
 
+    public function testWorkflowPlacesIdsFilter() {
+        $markings = ["placeId", "placeId-2"];
+        $query = ResourceListQuery::builder()
+            ->filterByWorkflowPlacesIds($markings)
+            ->build();
+        $this->assertEquals($markings, $query->getWorkflowPlacesIds());
+    }
+
     public function testSettingParentId() {
         $parentId = 1;
         $query = ResourceListQuery::builder()->filterByParentId($parentId)->build();

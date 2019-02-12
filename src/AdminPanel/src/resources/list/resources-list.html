@@ -54,7 +54,9 @@
             column-metadata.bind="briefMetadata"
             resource-class.bind="resourceClass"
             sort-by.bind="sortBy"
-            contents-filter.bind="contentsFilter"></resources-list-table>
+            contents-filter.bind="contentsFilter"
+            places-filter.bind="placesFilter"
+            resource-kinds.bind="resourceKinds"></resources-list-table>
     </loading-cover>
     <div class="alert alert-info"
         if.bind="resources.length === 0 && !displayProgressBar">

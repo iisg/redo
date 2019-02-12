@@ -3,7 +3,8 @@
     <require from="resources/workflow/resource-place-display.html"></require>
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="common/components/buttons/sort-button"></require>
-    <require from="./resource-list-metadata-filter/resource-list-metadata-filter"></require>
+    <require from="./resource-list-filters/resource-list-metadata-filter/resource-list-metadata-filter"></require>
+    <require from="./resource-list-filters/resource-list-place-filter/resource-list-place-filter"></require>
     <require from="./display-strategies-dirty-icon.html"></require>
 
     <table>
@@ -30,7 +31,12 @@
                     metadata-id.bind="metadata.id"
                     initial-value.bind="contentsFilter[metadata.id]"></resource-list-metadata-filter>
             </th>
-            <th>${'Place' | t}</th>
+            <th>
+                ${'Place' | t}
+                <resource-list-place-filter if.bind="resourceKinds.length"
+                    initial-value.bind="placesFilter"
+                    resource-kinds.bind="resourceKinds"></resource-list-place-filter>
+            </th>
             <th repeat.for="name of extraColumnNames">${name | t}</th>
             <th></th>
         </tr>
