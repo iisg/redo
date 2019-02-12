@@ -12,6 +12,5 @@ export class ResourceSort {
 
 export enum SortDirection {
   ASC = 'ASC',
-  DESC = 'DESC',
-  NONE = '',
+  DESC = 'DESC'
 }

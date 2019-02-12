@@ -4,31 +4,33 @@ import {EventAggregator, Subscription} from "aurelia-event-aggregator";
 import {I18N} from "aurelia-i18n";
 import {NavigationInstruction, Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
-import {LocalStorage} from "common/utils/local-storage";
-import {getQueryParameters} from "common/utils/url-utils";
 import {HasRoleValueConverter} from "common/authorization/has-role-value-converter";
+import {booleanAttribute} from "common/components/boolean-attribute";
 import {DisabilityReason} from "common/components/buttons/toggle-button";
 import {Alert} from "common/dialog/alert";
+import {LocalStorage} from "common/utils/local-storage";
 import {getMergedBriefMetadata} from "common/utils/metadata-utils";
 import {propertyKeys, safeJsonParse} from "common/utils/object-utils";
+import {getQueryParameters} from "common/utils/url-utils";
 import {Metadata} from "resources-config/metadata/metadata";
+import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
+import {inArray} from "../../common/utils/array-utils";
+import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
 import {ContextResourceClass} from "../context/context-resource-class";
 import {PageResult} from "../page-result";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ResourceSort, SortDirection} from "../resource-sort";
 import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproductor";
-import {booleanAttribute} from "common/components/boolean-attribute";
-import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
-import {inArray} from "../../common/utils/array-utils";
-import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 
 @autoinject()
 export class ResourcesList {
   private readonly RESULTS_PER_PAGE_KEY = 'resourcesListElementsPerPage';
   private readonly RESULTS_PER_PAGE_DEFAULT_VALUE = 10;
+  private readonly SORT_BY_KEY_PREFIX = 'sorting-';
+  private readonly DEFAULT_SORTING = [new ResourceSort('id', SortDirection.DESC, this.i18n.getLocale().toUpperCase())];
 
   @bindable parentResource: Resource = undefined;
   @bindable resource: Resource = undefined;
@@ -43,6 +45,7 @@ export class ResourcesList {
   @bindable @booleanAttribute hideAddButton = false;
   @bindable @booleanAttribute relationshipChooser = false;
   @observable resources: PageResult<Resource>;
+  @observable newResourceKindThrottled: ResourceKind;
   contentsFilter: NumberMap<string>;
   relatedResources: NumberMap<string>;
   sortBy: ResourceSort[];
@@ -51,14 +54,14 @@ export class ResourcesList {
   briefMetadata: Metadata[];
   displayProgressBar: boolean;
   activated: boolean;
+  newResourceKind: ResourceKind;
   private resultsPerPageValueChangedOnActivate: boolean;
   private currentPageNumberChangedOnActivate: boolean;
   private displayAllLevels: boolean = false;
-  private sortButtonToggledSubscription: Subscription;
-  private resourceFilteredSubscription: Subscription;
-  resourceKindIdsAllowedByParent: number[];
-  newResourceKind: ResourceKind;
-  @observable newResourceKindThrottled: ResourceKind;
+  private sortButtonToggleEventSubscription: Subscription;
+  private metadataFilterValueChangeEventSubscription: Subscription;
+  private resourceKindIdsAllowedByParent: number[];
+  private sortByKey: string;
 
   constructor(private alert: Alert,
               private i18n: I18N,
@@ -73,7 +76,7 @@ export class ResourcesList {
   }
 
   newResourceKindThrottledChanged() {
-    // such replacing of resource kind forces the resoruce-form to be rerendered with if.bind
+    // Replacing resource kind forces the `resource-form` to be rerendered with `if.bind`.
     this.newResourceKind = undefined;
     setTimeout(() => this.newResourceKind = this.newResourceKindThrottled, 100);
   }
@@ -87,24 +90,23 @@ export class ResourcesList {
         });
       this.setResourceKindsAllowedByParent();
     }
+    this.sortByKey = this.SORT_BY_KEY_PREFIX + this.resourceClass;
+    this.sortButtonToggleEventSubscription = this.eventAggregator.subscribe('sortButtonToggled',
+      (resourceSort: ResourceSort) => {
+        this.sortButtonToggled(resourceSort);
+      });
+    this.metadataFilterValueChangeEventSubscription = this.eventAggregator.subscribe('metadataFilterValueChanged',
+      (metadataIdWithValue) => {
+        this.metadataFilterValueChanged(metadataIdWithValue);
+      });
     if (this.resourceKind) {
-      this.sortButtonToggledSubscription = this.eventAggregator.subscribe('sortButtonToggled',
-        (parameters: any) => {
-          this.activate(parameters);
-        });
-      this.resourceFilteredSubscription = this.eventAggregator.subscribe('resourceFiltered',
-        (parameters: any) => {
-          this.activate(parameters);
-        });
       this.activate(this.router.currentInstruction.queryParams);
     }
   }
 
   unbind() {
-    if (this.resourceKind) {
-      this.sortButtonToggledSubscription.dispose();
-      this.resourceFilteredSubscription.dispose();
-    }
+    this.sortButtonToggleEventSubscription.dispose();
+    this.metadataFilterValueChangeEventSubscription.dispose();
   }
 
   private setResourceKindsAllowedByParent() {
@@ -120,22 +122,38 @@ export class ResourcesList {
     return (resourceKind: ResourceKind) => {
       const isAllowedByParent = !Array.isArray(this.resourceKindIdsAllowedByParent)
         || inArray(resourceKind.id, this.resourceKindIdsAllowedByParent);
-      const isNotSystemRK = resourceKind.id > 0;
-      return isAllowedByParent && isNotSystemRK;
+      const isNotSystemResourceKind = resourceKind.id > 0;
+      return isAllowedByParent && isNotSystemResourceKind;
     };
+  }
+
+  private sortButtonToggled(resourceSort: ResourceSort) {
+    this.sortBy = resourceSort ? [resourceSort] : this.DEFAULT_SORTING;
+    this.updateURL(true);
+    this.fetchResources();
+    LocalStorage.set(this.sortByKey, this.sortBy);
+  }
+
+  private metadataFilterValueChanged(metadataIdWithValue) {
+    if (!this.contentsFilter) {
+      this.contentsFilter = {};
+    }
+    this.contentsFilter[metadataIdWithValue.metadataId] = metadataIdWithValue.value;
+    this.updateURL(true);
+    this.fetchResources();
   }
 
   activate(parameters: any) {
     this.prepareBeforeFetchingResources(parameters.resourceClass || this.getResourceClassFromResource());
+    this.sortByKey = this.SORT_BY_KEY_PREFIX + this.resourceClass;
     this.contextResourceClass.setCurrent(this.resourceClass);
     const resultsPerPageChanged = this.obtainResultsPerPageValue(parameters);
     this.resultsPerPageValueChangedOnActivate = this.activated && resultsPerPageChanged;
     const currentPageNumberChanged = this.obtainCurrentPageNumber(parameters);
     this.currentPageNumberChangedOnActivate = this.activated && currentPageNumberChanged;
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']);
-    this.sortBy = safeJsonParse(parameters['sortBy']);
-    this.sortBy = this.sortBy ? this.sortBy : this.getSorting();
-    LocalStorage.set(`sorting-${this.resourceClass}`, this.sortBy);
+    let sortBy = safeJsonParse(parameters['sortBy']);
+    this.sortBy = sortBy ? sortBy : this.getSorting();
     this.displayAllLevels = !!parameters['allLevels'] || !!this.resourceKind;
     if (this.relationshipChooser && (this.relatedResources = safeJsonParse(parameters['relatedResources']))) {
       this.fetchMetadataForMetadataChooser(this.relatedResources);
@@ -145,8 +163,8 @@ export class ResourcesList {
   }
 
   private finishActivation() {
-    this.fetchResources();
     this.updateURL(true);
+    this.fetchResources();
     this.activated = true;
   }
 
@@ -195,11 +213,12 @@ export class ResourcesList {
   }
 
   fetchResources() {
-    this.displayProgressBar = true;
+    let contentsFilter = this.contentsFilter;
     let resourceClass = this.resourceClass;
     let resultsPerPage = this.resultsPerPage;
     let query = this.resourceRepository.getListQuery();
     if (!this.relationshipChooser || (this.relationshipChooser && this.metadata)) {
+      this.displayProgressBar = true;
       if (this.relationshipChooser && this.relatedResources) {
         query.filterByRelationship(this.relatedResources)
           .suppressError();
@@ -214,7 +233,7 @@ export class ResourcesList {
       if (this.resourceKind) {
         query = query.filterByResourceKindIds(this.resourceKind.id);
       }
-      if (this.contentsFilter) {
+      if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value != undefined)) {
         query = query.filterByContents(this.contentsFilter)
           .suppressError();
       }
@@ -222,9 +241,9 @@ export class ResourcesList {
         .setResultsPerPage(this.resultsPerPage)
         .setCurrentPageNumber(this.currentPageNumber);
       query.get().then(resources => {
-        if (resourceClass === this.resourceClass) {
+        if (resourceClass == this.resourceClass && contentsFilter == this.contentsFilter) {
           this.totalNumberOfResources = resources.total;
-          if (resources.page === this.currentPageNumber && resultsPerPage === this.resultsPerPage) {
+          if (resources.page == this.currentPageNumber && resultsPerPage == this.resultsPerPage) {
             if (!resources.length && resources.page !== 1) {
               this.currentPageNumber = 1;
             } else {
@@ -249,7 +268,6 @@ export class ResourcesList {
         this.alert.show({type: 'error'}, title, text);
       });
     } else {
-      this.displayProgressBar = false;
       this.resources = new PageResult<Resource>();
     }
   }
@@ -269,6 +287,10 @@ export class ResourcesList {
     query.get().then(resourceKinds => {
       this.briefMetadata = getMergedBriefMetadata(resourceKinds);
     });
+  }
+
+  resourceClassChanged() {
+    this.sortByKey = this.SORT_BY_KEY_PREFIX + this.resourceClass;
   }
 
   resourcesChanged(newResources: Resource[]) {
@@ -323,7 +345,9 @@ export class ResourcesList {
       route = 'resources';
       parameters['resourceClass'] = this.resourceClass;
     }
-    parameters['contentsFilter'] = JSON.stringify(this.contentsFilter);
+    if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value != undefined)) {
+      parameters['contentsFilter'] = JSON.stringify(this.contentsFilter);
+    }
     parameters['sortBy'] = JSON.stringify(this.sortBy);
     if (!queryParameters['tab'] || queryParameters['tab'] == 'children') {
       parameters['resourcesPerPage'] = this.resultsPerPage;
@@ -365,17 +389,9 @@ export class ResourcesList {
   }
 
   getResourceClassFromResource(): string {
-    return (this.parentResource && this.parentResource.resourceClass) ||
-      (this.resource && this.resource.resourceClass) ||
-      this.resourceClass;
-  }
-
-  private getSortingFromLocalStorage() {
-    try {
-      return safeJsonParse(localStorage.getItem(`sorting-${this.resourceClass}`));
-    } catch (e) {
-      return this.sortBy;
-    }
+    return (this.parentResource && this.parentResource.resourceClass)
+      || (this.resource && this.resource.resourceClass)
+      || this.resourceClass;
   }
 
   hasResource() {
@@ -383,9 +399,8 @@ export class ResourcesList {
   }
 
   private getSorting(): ResourceSort[] {
-    const cachedSorting = this.getSortingFromLocalStorage();
-    const language = this.i18n.getLocale().toUpperCase();
-    return cachedSorting ? cachedSorting : [new ResourceSort('id', SortDirection.DESC, language)];
+    const cachedSorting = LocalStorage.get(this.sortByKey);
+    return cachedSorting ? cachedSorting : this.DEFAULT_SORTING;
   }
 
   private fetchMetadataForMetadataChooser(relatedResources: any) {

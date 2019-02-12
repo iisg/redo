@@ -1,53 +1,43 @@
-import {observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {Router} from "aurelia-router";
-import {bindable} from "aurelia-templating";
-import {pickBy} from "lodash";
-import {twoWay} from "common/components/binding-mode";
-import {Metadata} from "resources-config/metadata/metadata";
-import {getQueryParameters} from "common/utils/url-utils";
 import {EventAggregator} from "aurelia-event-aggregator";
+import {bindable} from "aurelia-templating";
 
 @autoinject
 export class ResourceListMetadataFilter {
-  @bindable metadata: Metadata;
-  @bindable(twoWay) contentsFilter: NumberMap<string>;
-  @observable metadataValue: any;
-  previousMetadataValue: any;
+  @bindable metadataId: number;
+  @bindable initialValue: string;
+  value: string;
   inputBoxVisible: boolean;
   inputBoxFocused: boolean;
   inputBoxSize = 1;
 
-  constructor(private eventAggregator: EventAggregator, private router: Router) {
+  constructor(private eventAggregator: EventAggregator) {
   }
 
-  attached() {
-    if (!this.contentsFilter) {
-      this.contentsFilter = {};
-    } else {
-      this.contentsFilterChanged();
+  bind() {
+    if (this.initialValue) {
+      this.value = this.initialValue;
+      this.inputBoxSize = this.initialValue && this.initialValue.length || 1;
+      this.inputBoxVisible = true;
     }
   }
 
-  contentsFilterChanged() {
-    this.previousMetadataValue = this.metadataValue;
-    this.metadataValue = this.contentsFilter ? this.contentsFilter[this.metadata.id] : undefined;
-    if (this.metadataValue != this.previousMetadataValue) {
-      this.inputBoxVisible = !!this.metadataValue;
-      this.previousMetadataValue = this.metadataValue;
+  initialValueChanged() {
+    this.value = this.initialValue;
+    if (!this.value && !this.inputBoxFocused) {
+      this.inputBoxVisible = false;
     }
-  }
-
-  metadataValueChanged() {
-    this.contentsFilter[this.metadata.id] = this.metadataValue;
-    this.inputBoxSize = this.metadataValue && this.metadataValue.length || 1;
+    this.inputBoxSize = this.value && this.value.length || 1;
+    if (this.value) {
+      this.inputBoxVisible = true;
+    }
   }
 
   toggleInputBoxVisibility() {
     if (this.inputBoxVisible) {
-      if (this.metadataValue) {
-        this.metadataValue = undefined;
-        this.fetchFilteredResourcesIfMetadataValueChanged();
+      if (this.value) {
+        this.value = undefined;
+        this.publishValueIfItChanged();
       }
       this.takeFocusOutOfInputBoxAndHideIt();
     } else {
@@ -56,26 +46,23 @@ export class ResourceListMetadataFilter {
   }
 
   onInputBoxBlurred() {
-    if (this.inputBoxVisible && !this.metadataValue) {
+    if (!this.value && this.inputBoxVisible) {
       this.takeFocusOutOfInputBoxAndHideIt();
     }
-    this.fetchFilteredResourcesIfMetadataValueChanged();
+    this.publishValueIfItChanged();
   }
 
-  fetchFilteredResources() {
-    this.previousMetadataValue = this.metadataValue || undefined;
-    this.contentsFilter[this.metadata.id] = this.metadataValue;
-    const currentInstruction = this.router.currentInstruction;
-    let parameters = Object.assign(currentInstruction.params, getQueryParameters());
-    const notEmptyFilters = pickBy(this.contentsFilter, v => v && v.trim());
-    parameters['contentsFilter'] = JSON.stringify(notEmptyFilters);
-    this.router.navigateToRoute(currentInstruction.config.name, parameters, {replace: true});
-    this.eventAggregator.publish('resourceFiltered', parameters);
+  publishValue() {
+    this.initialValue = this.value || undefined;
+    this.eventAggregator.publish('metadataFilterValueChanged', {
+      metadataId: this.metadataId,
+      value: this.value || undefined
+    });
   }
 
-  private fetchFilteredResourcesIfMetadataValueChanged() {
-    if ((this.metadataValue || undefined) != this.previousMetadataValue) {
-      this.fetchFilteredResources();
+  private publishValueIfItChanged() {
+    if (this.value || undefined != this.initialValue) {
+      this.publishValue();
     }
   }
 

@@ -92,7 +92,7 @@ $icons-drop-shadow-spread-radius: 5px;
             flex: 1;
             margin: $default-gap-size / 4 $default-gap-size / 4 + $default-gap-size / 2;
             &:focus {
-              box-shadow: inset 0 1px 1px $main-theme-color, 0 0 8px $main-theme-color;
+              box-shadow: inset 0 0 0 $main-theme-color, 0 0 8px $main-theme-color;
               border-color: $main-theme-color;
             }
           }

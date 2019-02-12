@@ -14,6 +14,8 @@ import {ResourceKindRepository} from "./resource-kind-repository";
 
 @autoinject
 export class ResourceKindsList {
+  private readonly DEFAULT_SORTING: ResourceSort[];
+
   @bindable @booleanAttribute hideAddButton = false;
   @bindable resourceClass: string;
   @bindable sortable = true;
@@ -28,15 +30,16 @@ export class ResourceKindsList {
               private contextResourceClass: ContextResourceClass,
               private router: Router,
               private eventAggregator: EventAggregator,
-              private i18n: I18N) {
+              i18n: I18N) {
+    this.DEFAULT_SORTING = [new ResourceSort('id', SortDirection.DESC, i18n.getLocale().toUpperCase())];
   }
 
   bind() {
+    this.sortButtonToggledSubscription = this.eventAggregator.subscribe('sortButtonToggled',
+      (resourceSort: ResourceSort) => {
+        this.sortButtonToggled(resourceSort);
+      });
     if (this.metadata) {
-      this.sortButtonToggledSubscription = this.eventAggregator.subscribe('sortButtonToggled',
-        (parameters: any) => {
-          this.activate(parameters);
-        });
       this.activate(this.router.currentInstruction.queryParams);
     }
   }
@@ -44,15 +47,13 @@ export class ResourceKindsList {
   activate(parameters: any) {
     this.resourceClass = parameters.resourceClass || (this.metadata && this.metadata.resourceClass) || this.resourceClass;
     this.contextResourceClass.setCurrent(this.resourceClass);
-    this.sortBy = safeJsonParse(parameters['sortBy']);
-    const language = this.i18n.getLocale().toUpperCase();
-    this.sortBy = this.sortBy ? this.sortBy : [new ResourceSort('id', SortDirection.DESC, language)];
+    let sortBy = safeJsonParse(parameters['sortBy']);
+    this.sortBy = sortBy ? sortBy : this.DEFAULT_SORTING;
     if (this.resourceKinds && !this.metadata) {
       this.resourceKinds = [];
     }
-    this.progressBar = true;
-    this.fetchResourceKinds();
     this.updateURL(true);
+    this.fetchResourceKinds();
   }
 
   unbind() {
@@ -61,7 +62,14 @@ export class ResourceKindsList {
     }
   }
 
+  sortButtonToggled(resourceSort: ResourceSort) {
+    this.sortBy = resourceSort ? [resourceSort] : this.DEFAULT_SORTING;
+    this.updateURL(true);
+    this.fetchResourceKinds();
+  }
+
   fetchResourceKinds() {
+    this.progressBar = true;
     let query = this.resourceKindRepository.getListQuery()
       .filterByResourceClasses(this.resourceClass)
       .sortByMetadataIds(this.sortBy);

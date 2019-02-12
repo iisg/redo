@@ -1,22 +1,17 @@
 @import "../../../common/styles";
 
 $input-box-minimum-width: 100px;
-$input-box-maximum-width: 200px;
+$search-button-icon-width: 1em;
 
 resource-list-metadata-filter {
   white-space: nowrap;
-  icon {
-    cursor: pointer;
-    &.orange {
-      color: $orange;
-    }
-  }
+  display: inline-flex; // Otherwise the search button icon may be not fully visible or not visible at all for longer phrases.
   form {
-    display: inline-block;
+    padding-left: $expected-space-between-inline-block-elements-width;
     .form-control {
       display: inline;
       min-width: $input-box-minimum-width;
-      max-width: $input-box-maximum-width;
+      max-width: calc(100% - #{$search-button-icon-width} - #{$expected-space-between-inline-block-elements-width});
     }
   }
 }

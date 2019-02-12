@@ -27,8 +27,8 @@
                     column-id.bind="metadata.id"
                     sort-by.bind="sortBy"></sort-button>
                 <resource-list-metadata-filter if.bind="isFilterableMetadata(metadata) && filterable"
-                    metadata.bind="metadata"
-                    contents-filter.bind="contentsFilter"></resource-list-metadata-filter>
+                    metadata-id.bind="metadata.id"
+                    initial-value.bind="contentsFilter[metadata.id]"></resource-list-metadata-filter>
             </th>
             <th>${'Place' | t}</th>
             <th repeat.for="name of extraColumnNames">${name | t}</th>

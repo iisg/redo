@@ -1,13 +1,9 @@
 <template>
-    <icon if.bind="sortDirection === 'ASC'"
-        name="up-4"
-        size="0.75"
-        click.delegate="updateURL()"></icon>
-    <icon if.bind="sortDirection === 'DESC'"
-        name="down-4"
-        size="0.75"
-        click.delegate="updateURL()"></icon>
-    <icon if.bind="!sortDirection"
-        name="arrows-3"
-        click.delegate="updateURL()"></icon>
+    <button click.delegate="toggle()">
+        <icon if.bind="!resourceSort"
+            name="arrows-3"></icon>
+        <icon else
+            name.bind="resourceSort.direction === 'ASC' ? 'up-4' : 'down-4'"
+            size="0.75"></icon>
+    </button>
 </template>
