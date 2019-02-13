@@ -1,5 +1,5 @@
 import {bindable, ComponentAttached} from "aurelia-templating";
-import {DateMode, FlexibleDateContent, inputDateConfig} from "../flexible-date-input/flexible-date-config";
+import {ATOM_DATEFORMAT, DateMode, FlexibleDateContent, inputDateConfig} from "../flexible-date-input/flexible-date-config";
 import {computedFrom} from "aurelia-binding";
 import "eonasdan-bootstrap-datetimepicker";
 import {twoWay} from "common/components/binding-mode";
@@ -15,8 +15,10 @@ export class DatetimePicker implements ComponentAttached {
   @bindable(twoWay) value: FlexibleDateContent | string;
   @bindable disabled: boolean = false;
   @bindable flexible: boolean = false;
+  @bindable onlyRange;
   datepicker: Element;
-  linkedDatepicker: Element;
+  fromDatepicker: Element;
+  toDatepicker: Element;
   private isLoaded = false;
 
   constructor(private element: Element) {
@@ -26,44 +28,62 @@ export class DatetimePicker implements ComponentAttached {
     if (!this.flexible) {
       this.dateMode = DateMode.DATE_TIME;
     }
+
     /**
      * setTimeout due to aurelia lifecycle. Before rendering html there are no ref elements here,
      * so we cannot create datetimepickers. setTimeout delegates creating ones to next lifecycle.
      */
     setTimeout(() => {
       this.createDateTimePickers();
-      this.valueChanged();
+      this.updateDateTimePickerValues();
       this.isLoaded = true;
     });
   }
 
-  rangeDateModeChanged(newDateMode: DateMode, oldDateMode: DateMode) {
-    if (newDateMode && this.datepicker && this.linkedDatepicker) {
-      $(this.datepicker).data('DateTimePicker').options(inputDateConfig[newDateMode].options);
-      $(this.linkedDatepicker).data('DateTimePicker').options(inputDateConfig[newDateMode].options);
-      if (this.flexible) {
-        let dateData = this.createCurrentFlexibleDateValue();
-        dateData.rangeMode = newDateMode;
-        this.value = dateData;
-      }
+  dateModeChanged(newValue, oldValue) {
+    if (oldValue) {
+      this.updateDateTimePickers();
     }
   }
 
+  rangeDateModeChanged(newValue, oldValue) {
+    if (this.rangeDateMode && oldValue) {
+      this.updateDateTimePickers();
+    }
+  }
+
+  updateDateTimePickers() {
+    this.changeDateTimePickersFormat();
+    this.updateDateTimePickerValues();
+  }
+
   private createDateTimePickers() {
-    if (this.isRange) {
-      $(this.datepicker).datetimepicker(inputDateConfig[this.rangeDateMode].options);
-      $(this.linkedDatepicker).datetimepicker(inputDateConfig[this.rangeDateMode].options);
+    const dateMode = this.rangeDateMode || this.dateMode || DateMode.YEAR;
+    if (this.flexible) {
+      $(this.fromDatepicker).datetimepicker(inputDateConfig[dateMode].options);
+      $(this.toDatepicker).datetimepicker(inputDateConfig[dateMode].options);
       this.listenForDateRangePickerEvents();
-    } else {
-      $(this.datepicker).datetimepicker(inputDateConfig[this.dateMode].options);
+    }
+    if (!this.onlyRange) {
+      $(this.datepicker).datetimepicker(inputDateConfig[dateMode].options);
       this.listenForDatePickerEvents();
     }
   }
 
+  private changeDateTimePickersFormat() {
+    if (this.isRange && this.flexible) {
+      $(this.fromDatepicker).data('DateTimePicker').options(inputDateConfig[this.rangeDateMode].options);
+      $(this.toDatepicker).data('DateTimePicker').options(inputDateConfig[this.rangeDateMode].options);
+    } else if (!this.onlyRange) {
+      $(this.datepicker).data('DateTimePicker').options(inputDateConfig[this.dateMode].options);
+    }
+    this.value = this.createCurrentFlexibleDateValue();
+  }
+
   listenForDatePickerEvents() {
-    const dateData = new FlexibleDateContent();
-    dateData.mode = this.dateMode;
-    $(this.datepicker).on('dp.change', e => {
+    $(this.datepicker).datetimepicker().on('dp.change', e => {
+      const dateData = new FlexibleDateContent();
+      dateData.mode = this.dateMode;
       if (!this.isLoaded) {
         return;
       }
@@ -90,29 +110,30 @@ export class DatetimePicker implements ComponentAttached {
 
   listenForDateRangePickerEvents() {
     let dateData = this.createCurrentFlexibleDateValue();
+    const rangeDateMode = this.rangeDateMode || this.dateMode || DateMode.YEAR;
     if (dateData.from) {
-      $(this.linkedDatepicker).data("DateTimePicker").minDate(moment(dateData.from).format(inputDateConfig[this.rangeDateMode].format));
+      $(this.toDatepicker).data("DateTimePicker").minDate(moment(dateData.from).format(inputDateConfig[rangeDateMode].format));
     }
     if (dateData.to) {
-      $(this.datepicker).data('DateTimePicker').maxDate(moment(dateData.to).format(inputDateConfig[this.rangeDateMode].format));
+      $(this.fromDatepicker).data('DateTimePicker').maxDate(moment(dateData.to).format(inputDateConfig[rangeDateMode].format));
     }
-    $(this.datepicker).on('dp.change', e => {
+    $(this.fromDatepicker).on('dp.change', e => {
       if (!this.isLoaded) {
         return;
       }
       const inputDate = e.date;
-      $(this.linkedDatepicker).data("DateTimePicker").minDate(inputDate);
+      $(this.toDatepicker).data("DateTimePicker").minDate(inputDate);
       let dateData = this.createCurrentFlexibleDateValue();
       dateData.from = inputDate ? inputDate.format() : undefined;
       this.value = dateData.from || dateData.to ? dateData : undefined;
       this.element.dispatchEvent(ChangeEvent.newInstance());
     });
-    $(this.linkedDatepicker).on('dp.change', e => {
+    $(this.toDatepicker).on('dp.change', e => {
       if (!this.isLoaded) {
         return;
       }
       const inputDate = e.date;
-      $(this.datepicker).data('DateTimePicker').maxDate(e.date);
+      $(this.fromDatepicker).data('DateTimePicker').maxDate(e.date);
       let dateData = this.createCurrentFlexibleDateValue();
       dateData.to = inputDate ? inputDate.format() : undefined;
       this.value = dateData.from || dateData.to ? dateData : undefined;
@@ -120,8 +141,8 @@ export class DatetimePicker implements ComponentAttached {
     });
   }
 
-  valueChanged() {
-    if (!this.datepicker || !this.value) {
+  updateDateTimePickerValues() {
+    if (!this.value) {
       return;
     }
     let to, from;
@@ -131,17 +152,17 @@ export class DatetimePicker implements ComponentAttached {
     } else {
       to = from = this.value as string;
     }
-    if (this.isRange) {
+    if (this.isRange && this.flexible) {
       if (from) {
-        from = moment(from).format(inputDateConfig[this.rangeDateMode].format);
-        $(this.datepicker).data('DateTimePicker').date(from);
+        from = moment(from, ATOM_DATEFORMAT).toDate();
+        $(this.fromDatepicker).data('DateTimePicker').date(from);
       }
       if (to) {
-        to = moment(to).format(inputDateConfig[this.rangeDateMode].format);
-        $(this.linkedDatepicker).data('DateTimePicker').date(to);
+        to = moment(to, ATOM_DATEFORMAT).toDate();
+        $(this.toDatepicker).data('DateTimePicker').date(to);
       }
-    } else if (from) {
-      from = moment(from).format(inputDateConfig[this.dateMode].format);
+    } else if (from && !this.onlyRange) {
+      from = moment(from, ATOM_DATEFORMAT).toDate();
       $(this.datepicker).data('DateTimePicker').date(from);
     }
   }

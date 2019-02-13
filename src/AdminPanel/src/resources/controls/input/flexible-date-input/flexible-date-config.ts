@@ -8,6 +8,8 @@ export enum DateMode {
   RANGE = 'range'
 }
 
+export const ATOM_DATEFORMAT = 'YYYY-MM-DDThh:mm:ss';
+
 export const inputDateConfig = {
   [DateMode.YEAR]: {
     options: {

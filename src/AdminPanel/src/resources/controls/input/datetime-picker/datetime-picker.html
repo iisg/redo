@@ -1,31 +1,49 @@
 <template>
     <require from="eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"></require>
-
-    <div ref="datepicker"
-        class="input-group date ${isRange ? '' : 'datepicker-input'}"
-        data-target-input="nearest">
-        <input type="text"
-            class="form-control datetimepicker-input"
-            disabled.bind="disabled"
-            data-target.bind="datepicker"
-            data-toggle="datetimepicker">
-        <span class="input-group-addon"
-            data-target.bind="datepicker"
-            data-toggle="datetimepicker">
-            <span class="glyphicon glyphicon-calendar"></span>
-        </span>
+    <div class="rangeDatetimePicker"
+        if.bind="flexible"
+        show.bind="isRange">
+        <div class="input-group date"
+            data-target-input="nearest"
+            ref="fromDatepicker">
+            <input class="form-control datetimepicker-input"
+                data-target.bind="fromDatepicker"
+                data-toggle="datetimepicker"
+                disabled.bind="disabled"
+                type="text">
+            <span class="input-group-addon"
+                data-target.bind="fromDatepicker"
+                data-toggle="datetimepicker">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <span>&nbsp;&mdash;&nbsp;</span>
+        <div class="input-group"
+            data-target-input="nearest"
+            ref="toDatepicker">
+            <input class="form-control datetimepicker-input"
+                data-target.bind="toDatepicker"
+                disabled.bind="disabled"
+                type="text">
+            <span class="input-group-addon"
+                data-target.bind="toDatepicker"
+                data-toggle="datetimepicker">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
     </div>
-    <span if.bind="isRange">&nbsp;&mdash;&nbsp;</span>
-    <div ref="linkedDatepicker"
-        if.bind="isRange"
-        class="input-group date ${isRange ? '' : 'datepicker-input'}"
-        data-target-input="nearest">
-        <input type="text"
-            class="form-control datetimepicker-input"
+    <div class="input-group date datepicker-input"
+        data-target-input="nearest"
+        if.bind="!onlyRange"
+        ref="datepicker"
+        show.bind="!isRange">
+        <input class="form-control datetimepicker-input"
+            data-target.bind="datepicker"
+            data-toggle="datetimepicker"
             disabled.bind="disabled"
-            data-target.bind="linkedDatepicker">
+            type="text">
         <span class="input-group-addon"
-            data-target.bind="linkedDatepicker"
+            data-target.bind="datepicker"
             data-toggle="datetimepicker">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>

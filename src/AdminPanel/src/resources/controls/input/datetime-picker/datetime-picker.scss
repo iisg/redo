@@ -1,7 +1,11 @@
 datetime-picker {
   width: 100%;
-  display: inline-flex;
-  align-items: center;
+  .rangeDatetimePicker {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+  }
+
   .datepicker-input {
     width: 100%;
   }
