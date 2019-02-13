@@ -68,6 +68,13 @@ $advanced-options-column-border-width: 1px;
       }
     }
   }
+
+  .phrase-translation {
+    font-size: smaller;
+    .phrases {
+      font-weight: bold;
+    }
+  }
 }
 
 :not(.title-with-search-bar) > .search-bar {

@@ -62,6 +62,9 @@ services:
       - '%test.client.parameters%'
       - '@test.client.history'
       - '@test.client.cookiejar'
+  Repeka\Plugins\Redo\EventListener\PhraseTranslator:
+    class: Repeka\Plugins\Redo\Tests\Integration\TestPhraseTranslator
+    public: true 
 
 redo:
   pk_auth:

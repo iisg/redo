@@ -24,7 +24,7 @@ class ResourceListFtsQueryAdjuster implements CommandAdjuster {
      */
     public function adjustCommand(Command $query): Command {
         return new ResourceListFtsQuery(
-            $query->getPhrase(),
+            $query->getPhrases(),
             $this->replaceMetadataNamesOrIdsWithMetadata($query->getSearchableMetadata()),
             $this->adjustMetadataFilters($query->getMetadataFilters()),
             $query->getResourceClasses(),

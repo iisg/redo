@@ -8,7 +8,7 @@ class ElasticSearchTextQueryCreatorTest extends \PHPUnit_Framework_TestCase {
     /** @dataProvider fromArrayExamples */
     public function testSimpleSearchQueryPhraseAdjuster(string $phrase, $expectedAdjustedPhrase) {
         $elasticSearchTextQueryCreator = new ElasticSearchTextQueryCreator();
-        $metadataFilters = $elasticSearchTextQueryCreator->createTextQuery([], $phrase, ['ma', 'i', 'a', 'nie']);
+        $metadataFilters = $elasticSearchTextQueryCreator->createTextQuery([], [$phrase], ['ma', 'i', 'a', 'nie']);
         $this->assertEquals(
             $expectedAdjustedPhrase,
             $metadataFilters[1]->getParams()['query']

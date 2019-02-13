@@ -17,11 +17,10 @@ class TextElasticSearchQueryCreator implements ElasticSearchQueryCreator {
         $metadataFilter = new Query\BoolQuery();
         $path = ElasticSearchQuery::getMetadataPath($metadata);
         $elasticSearchTextQueryCreator = new ElasticSearchTextQueryCreator();
-        foreach ($filter as $phrase) {
-            $metadataFilter->addShould(
-                $elasticSearchTextQueryCreator->createTextQuery([$path], $phrase, $elasticSearchContext->getStopWords())
-            );
-        }
+
+        $metadataFilter->addShould(
+            $elasticSearchTextQueryCreator->createTextQuery([$path], $filter, $elasticSearchContext->getStopWords())
+        );
         return $metadataFilter;
     }
 }

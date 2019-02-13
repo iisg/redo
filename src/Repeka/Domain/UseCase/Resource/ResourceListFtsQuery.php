@@ -11,8 +11,8 @@ use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 class ResourceListFtsQuery extends AbstractListQuery implements AdjustableCommand {
     use RequireNoRoles;
 
-    /** @var string */
-    private $phrase;
+    /** @var string[] */
+    private $phrases;
     /** @var array */
     private $searchableMetadata = [];
     /** @var array */
@@ -29,10 +29,11 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
     private $onlyTopLevel;
 
     /**
+     * @param string|string[] $phrase
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     public function __construct(
-        string $phrase,
+        $phrase,
         array $searchableMetadata,
         array $metadataFilters = [],
         array $resourceClasses = [],
@@ -44,7 +45,8 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
         int $resultsPerPage = 10
     ) {
         parent::__construct($page, $resultsPerPage);
-        $this->phrase = $phrase;
+        $phrases = is_array($phrase) ? $phrase : [$phrase];
+        $this->phrases = array_filter($phrases);
         $this->searchableMetadata = $searchableMetadata;
         $this->metadataFilters = $metadataFilters;
         $this->resourceClasses = $resourceClasses;
@@ -58,8 +60,9 @@ class ResourceListFtsQuery extends AbstractListQuery implements AdjustableComman
         return new ResourceListFtsQueryBuilder();
     }
 
-    public function getPhrase(): string {
-        return $this->phrase;
+    /** @return string[] */
+    public function getPhrases(): array {
+        return $this->phrases;
     }
 
     /** @return Metadata[] */

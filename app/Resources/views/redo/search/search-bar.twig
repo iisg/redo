@@ -77,5 +77,10 @@
                 </div>
             {% endif %}
         </div>
+    {% elseif phraseTranslation %}
+        <span class="phrase-translation">
+            {{ 'phrase was automatically translated, searching also' | trans }} :
+            <span class="phrases">{{ translatedPhrases }}</span>
+        </span>
     {% endif %}
 </form>

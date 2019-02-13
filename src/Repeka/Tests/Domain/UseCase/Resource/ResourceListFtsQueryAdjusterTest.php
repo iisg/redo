@@ -37,7 +37,7 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
 
     public function testConvertsSearchableMetadataNamesToIds() {
         $query = ResourceListFtsQuery::builder()
-            ->setPhrase('Unicorn')
+            ->addPhrase('Unicorn')
             ->setSearchableMetadata(['tytul', 'opis'])
             ->build();
         $adjusted = $this->adjuster->adjustCommand($query);
@@ -46,7 +46,7 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
 
     public function testConvertsSearchableMetadataNamesToIdsWhenMixedWithIds() {
         $query = ResourceListFtsQuery::builder()
-            ->setPhrase('Unicorn')
+            ->addPhrase('Unicorn')
             ->setSearchableMetadata(['tytul', 2])
             ->build();
         $adjusted = $this->adjuster->adjustCommand($query);
@@ -56,7 +56,7 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
     public function testFailsWhenSearchableMetadataNotFound() {
         $this->expectException(EntityNotFoundException::class);
         $query = ResourceListFtsQuery::builder()
-            ->setPhrase('Unicorn')
+            ->addPhrase('Unicorn')
             ->setSearchableMetadata(['tytul', 'unicorn'])
             ->build();
         $this->adjuster->adjustCommand($query);
@@ -64,7 +64,7 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
 
     public function testConvertsFacetedMetadata() {
         $query = ResourceListFtsQuery::builder()
-            ->setPhrase('Unicorn')
+            ->addPhrase('Unicorn')
             ->setMetadataFacets(['tytul', 'opis'])
             ->build();
         $adjusted = $this->adjuster->adjustCommand($query);
@@ -73,7 +73,7 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
 
     public function testConvertsFacetFilters() {
         $query = ResourceListFtsQuery::builder()
-            ->setPhrase('Unicorn')
+            ->addPhrase('Unicorn')
             ->setFacetsFilters(['tytul' => 'aaa'])
             ->build();
         $adjusted = $this->adjuster->adjustCommand($query);
@@ -84,7 +84,7 @@ class ResourceListFtsQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
 
     public function testLeavesKindIdFacetFilters() {
         $query = ResourceListFtsQuery::builder()
-            ->setPhrase('Unicorn')
+            ->addPhrase('Unicorn')
             ->setFacetsFilters(['tytul' => 'aaa', 'kindId' => 'bbb'])
             ->build();
         $adjusted = $this->adjuster->adjustCommand($query);

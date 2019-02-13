@@ -209,7 +209,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
             ResourceListFtsQuery::builder()
-                ->setPhrase('PHP')
+                ->addPhrase('PHP')
                 ->setSearchableMetadata([SystemMetadata::RESOURCE_LABEL])
                 ->setPage(1)
                 ->setResultsPerPage(1)
@@ -225,7 +225,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
             ResourceListFtsQuery::builder()
-                ->setPhrase('PHP')
+                ->addPhrase('PHP')
                 ->setSearchableMetadata([SystemMetadata::RESOURCE_LABEL])
                 ->setPage(2)
                 ->setResultsPerPage(1)

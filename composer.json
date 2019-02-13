@@ -48,13 +48,13 @@
     "ruflin/elastica": "^6.0",
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "3.0.22",
+    "stichoza/google-translate-php": "^4.0",
     "studio-42/elfinder": "^2.1",
     "swiftmailer/swiftmailer": "^6.0",
     "symfony/monolog-bundle": "^3.2",
     "symfony/process": "^3.4",
     "symfony/serializer": "^3.4",
-    "symfony/symfony": "^3.4",
-    "symfony/translation": "^3.4"
+    "symfony/symfony": "^3.4"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^3.0",

@@ -5,16 +5,18 @@ use Elastica\Query;
 
 class ElasticSearchTextQueryCreator {
 
-    public function createTextQuery(array $fields, string $phrase, array $stopWords): array {
+    public function createTextQuery(array $fields, array $phrases, array $stopWords): array {
         $metadataFilters = [];
-        $metadataFilter = $this->createSimpleQueryString($fields, $phrase);
-        $metadataFilter->setParam('boost', 100);
-        $metadataFilters[] = $metadataFilter;
-        $phrase = $this->simpleSearchQueryPhraseAdjuster(
-            $phrase,
-            $stopWords
-        );
-        $metadataFilters[] = $this->createSimpleQueryString($fields, $phrase);
+        foreach ($phrases as $phrase) {
+            $metadataFilter = $this->createSimpleQueryString($fields, $phrase);
+            $metadataFilter->setParam('boost', 100);
+            $metadataFilters[] = $metadataFilter;
+            $phrase = $this->simpleSearchQueryPhraseAdjuster(
+                $phrase,
+                $stopWords
+            );
+            $metadataFilters[] = $this->createSimpleQueryString($fields, $phrase);
+        }
         return $metadataFilters;
     }
 

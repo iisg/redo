@@ -39,7 +39,7 @@ class ElasticSearchQuery {
         if ($executor) {
             $boolQuery->addFilter($this->buildVisibilityFilterQuery($executor));
         }
-        if ($this->query->getPhrase()) {
+        if ($this->query->getPhrases()) {
             $boolQuery->addMust($this->atLeastOneMetadataShouldMatchThePhrase());
         }
         if ($this->query->getResourceClasses()) {
@@ -80,10 +80,10 @@ class ElasticSearchQuery {
             $paths[] = $path;
         }
         if (!empty($paths)) {
-            $elasticSearchTextQueryCreator = new ElasticSearchTextQueryCreator();
+            $elasticSearchTextQueryCreator  = new ElasticSearchTextQueryCreator();
             $metadataFilters = $elasticSearchTextQueryCreator->createTextQuery(
                 $paths,
-                $this->query->getPhrase(),
+                $this->query->getPhrases(),
                 $this->elasticSearchContext->getStopWords()
             );
         }
@@ -153,11 +153,11 @@ class ElasticSearchQuery {
         }
         $facetAggregations = [];
         foreach ($facetedFields as $facetedMetadata) {
-            $aggregationName = $facetedMetadata == FtsConstants::KIND_ID ? FtsConstants::KIND_ID : $facetedMetadata->getId();
+            $aggregationName      = $facetedMetadata == FtsConstants::KIND_ID ? FtsConstants::KIND_ID : $facetedMetadata->getId();
             $aggregationFieldPath = $facetedMetadata == FtsConstants::KIND_ID
-                ? FtsConstants::KIND_ID
-                : $this->getMetadataPath($facetedMetadata);
-            $facetAggregation = new Filters($aggregationName);
+            ? FtsConstants::KIND_ID
+            : $this->getMetadataPath($facetedMetadata);
+            $facetAggregation    = new Filters($aggregationName);
             $filtersForThisFacet = array_diff_key($facetFilters, [$aggregationName => '']);
             foreach ($filtersForThisFacet as $filter) {
                 $facetAggregation->addFilter($filter);

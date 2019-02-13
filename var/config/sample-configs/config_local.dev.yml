@@ -109,6 +109,7 @@ redo:
     filterable_metadata_ids: [tytul, opis, parent_path, wydzial, skanista, nadzorujacy]
     searchable_resource_classes: [books]
     facets: [kindId, skanista]
+    phrase_translation: false
   captcha:
     public_key: 6LepBqQUAAAAAL6-5hTmjGGawPjeR7UEx8YUcaSg
     private_key: 6LepBqQUAAAAADU-EQhUQ6EIj1q59f7Q-1cjJSNq

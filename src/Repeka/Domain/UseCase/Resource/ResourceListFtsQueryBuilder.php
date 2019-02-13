@@ -8,8 +8,8 @@ use Repeka\Domain\UseCase\Audit\AbstractListQueryBuilder;
 class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
     use RequireOperatorRole;
 
-    /** @var string */
-    private $phrase = '';
+    /** @var array */
+    private $phrases = [];
     /** @var array */
     private $searchableMetadata = [];
     /** @var array */
@@ -27,7 +27,7 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
 
     public function build(): ResourceListFtsQuery {
         return new ResourceListFtsQuery(
-            $this->phrase,
+            $this->phrases,
             $this->searchableMetadata,
             $this->metadataFilters,
             $this->resourceClasses,
@@ -40,8 +40,8 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
         );
     }
 
-    public function setPhrase(string $phrase): self {
-        $this->phrase = $phrase;
+    public function addPhrase(string $phrase): self {
+        $this->phrases[] = $phrase;
         return $this;
     }
 

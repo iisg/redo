@@ -13,6 +13,7 @@ use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
+use Repeka\Plugins\Redo\Service\RedoFtsSearchPhraseTranslator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,17 +31,21 @@ class RedoFtsSearchController extends Controller {
     /** @var array */
     private $ftsConfig;
     private $endpointUsageLogRepository;
+    /** @var RedoFtsSearchPhraseTranslator */
+    private $redoFtsSearchPhraseTranslator;
 
     public function __construct(
         array $ftsConfig,
         MetadataRepository $metadataRepository,
         Paginator $paginator,
-        EndpointUsageLogRepository $endpointUsageLogRepository
+        EndpointUsageLogRepository $endpointUsageLogRepository,
+        RedoFtsSearchPhraseTranslator $redoFtsSearchPhraseTranslator
     ) {
         $this->ftsConfig = $ftsConfig;
         $this->metadataRepository = $metadataRepository;
         $this->paginator = $paginator;
         $this->endpointUsageLogRepository = $endpointUsageLogRepository;
+        $this->redoFtsSearchPhraseTranslator = $redoFtsSearchPhraseTranslator;
     }
 
     /**
@@ -72,10 +77,15 @@ class RedoFtsSearchController extends Controller {
     public function searchResourcesAction(Request $request) {
         $phrase = $request->query->get('phrase', '');
         $filterableMetadata = $this->findFilterableMetadata();
+        $translatedPhrases = $translations = $this->ftsConfig['phrase_translation'] ?? false
+                ? $this->redoFtsSearchPhraseTranslator->translatePhrase($phrase)
+                : [];
         $responseData = [
             'phrase' => $phrase,
             'filterableMetadataList' => $filterableMetadata,
             'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],
+            'phraseTranslation' => $translations,
+            'translatedPhrases' => implode(", ", $translatedPhrases),
         ];
         if ($metadataFilters = array_filter($request->get('metadataFilters', []))) {
             $filterableMetadataIds = EntityUtils::mapToIds($filterableMetadata);
@@ -108,7 +118,7 @@ class RedoFtsSearchController extends Controller {
         }
         $metadataFilters = $this->adjustDateMetadataFilters($metadataFilters);
         $query = ResourceListFtsQuery::builder()
-            ->setPhrase($phrase ?: '')
+            ->addPhrase($phrase ?: '')
             ->setSearchableMetadata($searchableMetadata)
             ->setResourceClasses($this->ftsConfig['searchable_resource_classes'] ?? [])
             ->setResourceKindFacet(in_array(FtsConstants::KIND_ID, $facets))

@@ -42,3 +42,9 @@ services:
 
   Repeka\Plugins\Redo\Security\Voters\FileVoters\:
     resource: '../../Security/Voters/FileVoters'
+
+  Repeka\Plugins\Redo\EventListener\:
+    resource: '../../EventListener'
+
+  Repeka\Plugins\Redo\EventListener\ResourceListFtsQueryListener:
+    $ftsConfig: '%redo.fts_config%'
