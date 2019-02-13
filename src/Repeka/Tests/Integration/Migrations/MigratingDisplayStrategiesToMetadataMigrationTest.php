@@ -12,7 +12,7 @@ class MigratingDisplayStrategiesToMetadataMigrationTest extends DatabaseMigratio
 
     /** @before */
     public function prepare() {
-        $this->loadDumpV10();
+        $this->loadDumpV0_10();
         $this->migrate();
     }
 

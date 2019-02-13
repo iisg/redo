@@ -15,7 +15,7 @@ class InvertingUserGroupMemberMigrationsTest extends DatabaseMigrationTestCase {
 
     /** @before */
     public function prepare() {
-        $this->loadDumpV7();
+        $this->loadDumpV0_7();
         $this->migrate();
     }
 

@@ -12,7 +12,7 @@ class MultipleResourceWorkflowPluginConfigurationMigrationTest extends DatabaseM
 
     /** @before */
     public function prepare() {
-        $this->loadDumpV9();
+        $this->loadDumpV0_9();
         $this->migrate();
     }
 

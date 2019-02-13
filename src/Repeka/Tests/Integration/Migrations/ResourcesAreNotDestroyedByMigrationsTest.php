@@ -8,7 +8,7 @@ class ResourcesAreNotDestroyedByMigrationsTest extends DatabaseMigrationTestCase
 
     /** @before */
     public function prepare() {
-        $this->loadDumpV5();
+        $this->loadDumpV0_5();
         $this->migrate();
     }
 

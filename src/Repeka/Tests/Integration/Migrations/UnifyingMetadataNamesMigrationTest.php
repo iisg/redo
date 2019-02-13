@@ -18,7 +18,7 @@ class UnifyingMetadataNamesMigrationTest extends DatabaseMigrationTestCase {
 
     /** @before */
     public function prepare() {
-        $this->loadDumpV8();
+        $this->loadDumpV0_8();
         // added when introduced metadata groups
         $this->getEntityManager()->getConnection()->exec('ALTER TABLE "metadata" ADD "group_id" VARCHAR(64) DEFAULT NULL');
         $this->metadataRepository = $this->container->get(MetadataRepository::class);
