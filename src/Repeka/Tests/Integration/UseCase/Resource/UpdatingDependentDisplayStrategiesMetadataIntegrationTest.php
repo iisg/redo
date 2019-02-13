@@ -5,6 +5,8 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
@@ -14,6 +16,7 @@ use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
@@ -226,6 +229,19 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
         $this->getEntityManager()->refresh($this->phpBook);
         $this->assertFalse($this->phpBook->isDisplayStrategiesDirty());
         $this->assertEquals('UNICORN', $this->phpBook->getValues($this->scannerUsernameMetadata)[0]->getValue());
+    }
+
+    public function testGeneratingElasticDate() {
+        $m = $this->findMetadataByName('dataWydania');
+        $displayStrategy = '{"from": "{{\'\'now\'\'|date(\'\'Y\'\')}}-10-30"}';
+        $this->getEntityManager()->getConnection()->exec("UPDATE metadata SET display_strategy='$displayStrategy' WHERE id={$m->getId()}");
+        $this->resetEntityManager(MetadataRepository::class, ResourceRepository::class);
+        $this->phpBook = $this->getEntityManager()->find(ResourceEntity::class, $this->phpBook->getId());
+        $this->handleCommandBypassingFirewall(new ResourceEvaluateDisplayStrategiesCommand($this->phpBook, [$m->getId()]));
+        $this->getEntityManager()->refresh($this->phpBook);
+        $date = $this->phpBook->getValues($m);
+        $this->assertCount(1, $date);
+        $this->assertContains('30.10.' . date('Y'), (string)$date[0]);
     }
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */

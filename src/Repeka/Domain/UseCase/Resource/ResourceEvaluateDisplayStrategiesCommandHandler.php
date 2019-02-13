@@ -2,7 +2,9 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
@@ -17,15 +19,19 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
     private $evaluator;
     /** @var ResourceRepository */
     private $resourceRepository;
+    /** @var MetadataValueAdjusterComposite */
+    private $metadataValueAdjuster;
 
-    public function __construct(ResourceDisplayStrategyEvaluator $evaluator, ResourceRepository $resourceRepository) {
+    public function __construct(
+        ResourceDisplayStrategyEvaluator $evaluator,
+        ResourceRepository $resourceRepository,
+        MetadataValueAdjusterComposite $metadataValueAdjuster
+    ) {
         $this->evaluator = $evaluator;
         $this->resourceRepository = $resourceRepository;
+        $this->metadataValueAdjuster = $metadataValueAdjuster;
     }
 
-    /**
-     * @return ResourceEntity[]
-     */
     public function handle(ResourceEvaluateDisplayStrategiesCommand $command): ResourceEntity {
         $resource = $command->getResource();
         $displayStrategyMetadata = $resource->getKind()->getDynamicMetadata();
@@ -36,13 +42,22 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
         $changed = false;
         foreach ($displayStrategyMetadata as $metadata) {
             $usedMetadataCollector = new ResourceDisplayStrategyUsedMetadataCollector();
-            $value = $this->evaluator->render($resource, $metadata->getDisplayStrategy(), $usedMetadataCollector);
-            if (!trim($value) && $metadata->getId() == SystemMetadata::RESOURCE_LABEL) {
-                $value = $this->evaluator->render($resource, '#{{r.id}}');
+            $values = $this->evaluator->renderToMetadataValues($resource, $metadata->getDisplayStrategy(), $usedMetadataCollector);
+            if (!$values && $metadata->getId() == SystemMetadata::RESOURCE_LABEL) {
+                $values = $this->evaluator->renderToMetadataValues($resource, '#{{r.id}}');
             }
-            if ($contents->getValuesWithoutSubmetadata($metadata) != [$value]) {
+            if ($contents->getValues($metadata) != $values) {
                 $changed = true;
-                $contents = $contents->withReplacedValues($metadata, $value);
+                $contents = $contents->withReplacedValues($metadata, $values);
+                $contents = $contents->mapAllValues(
+                    function (MetadataValue $value, int $metadataId) use ($metadata) {
+                        if ($metadataId == $metadata->getId()) {
+                            return $this->metadataValueAdjuster->adjustMetadataValue($value, $metadata->getControl());
+                        } else {
+                            return $value;
+                        }
+                    }
+                );
             }
             if ($changed || $resource->isDisplayStrategiesDirty()) {
                 $resource->updateDisplayStrategyDependencies($metadata->getId(), $usedMetadataCollector);

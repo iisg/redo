@@ -23,13 +23,13 @@ class FlexibleDate {
     /**
      * @param string | null $from
      * @param string | null $to
-     * @param string | MetadataDateControlMode $mode
+     * @param string | MetadataDateControlMode | null $mode
      * @param string | MetadataDateControlMode $rangeMode
      */
     public function __construct($from, $to, $mode, $rangeMode = null) {
         $this->from = $from;
         $this->to = $to;
-        $this->mode = $mode;
+        $this->mode = $mode ?? MetadataDateControlMode::DATE_TIME;
         $this->rangeMode = $rangeMode;
         if ($mode == MetadataDateControlMode::RANGE) {
             Assertion::notNull($rangeMode);

@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Application\Twig;
 
+use Repeka\Domain\Entity\MetadataValue;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\InvalidResourceDisplayStrategyException;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
@@ -60,5 +62,33 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
             // one kitten just died :-(
             return $e->getMessage();
         }
+    }
+
+    /** @return MetadataValue[] */
+    public function renderToMetadataValues(
+        $resourceEntity,
+        string $template,
+        ResourceDisplayStrategyUsedMetadataCollector $usedMetadataCollector = null,
+        array $additionalContext = []
+    ): array {
+        $values = trim($this->render($resourceEntity, $template, $usedMetadataCollector, $additionalContext));
+        if ($values && ($values{0} == '{' || $values{0} == '[')) {
+            $values = preg_replace('#,\s*([\]}])#', '$1', $values); // allow extra commas in JSON
+            $json = json_decode($values, true);
+            if (is_array($json)) {
+                if ($values{0} == '{') {
+                    if (!array_key_exists('value', $json)) {
+                        $json = ['value' => $json];
+                    }
+                    $json = [$json];
+                }
+                $contents = ResourceContents::fromArray([1 => $json]);
+                $values = $contents->getValues(1);
+            }
+        }
+        if (!is_array($values)) {
+            $values = [new MetadataValue($values)];
+        }
+        return ResourceContents::fromArray([1 => $values])->filterOutEmptyMetadata()->getValues(1);
     }
 }
