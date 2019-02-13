@@ -1,3 +1,20 @@
+repekaPdfGenerator:
+  label: Generate PDF file
+  audit:
+    generatingPDFToNonFileMetadataControl: "PDF has been not generated because it can not be stored in non-file metadata"
+  options:
+    targetMetadataName:
+      label: The name of target metadata
+      description: The name of target metadata
+      placeholder: metadataName
+    pdfOutputFileName:
+      label: Result PDF file name
+      description: Result PDF file name
+      placeholder: Provide result PDF file name
+    pdfPresentationStrategy:
+      label: Presentation strategy
+      description: What should be included in generated PDF file
+      placeholder: "{{r|mTitle}}"
 repekaOcrAbbyy:
   label: Send metadata to OCR
   audit:

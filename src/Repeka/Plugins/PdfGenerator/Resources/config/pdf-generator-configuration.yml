@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Repeka\Plugins\PdfGenerator\Model\RepekaPdfGeneratorResourceWorkflowPlugin:
+    $targetResourceDirectoryId: '%repeka_plugin_pdf_generator.target_resource_directory_id%'
+    $wkHtmlToPdfPath: '%repeka_plugin_pdf_generator.wk_html_to_pdf_path%'

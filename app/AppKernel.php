@@ -19,6 +19,7 @@ class AppKernel extends Kernel {
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
             new Repeka\Application\RepekaBundle(),
+            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
