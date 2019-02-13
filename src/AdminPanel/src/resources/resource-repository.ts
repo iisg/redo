@@ -50,4 +50,13 @@ export class ResourceRepository extends ApiRepository<Resource> {
       .then(response => this.responseToEntities(response))
       .catch(() => []);
   }
+
+  public evaluateDisplayStrategy(id: number, template: string): Promise<string> {
+    const request = this.httpClient.createRequest(this.oneEntityEndpoint(id) + '/evaluate-display-strategy').asPatch();
+    request.withContent({template});
+    request.withHeader(suppressErrorHeader.name, suppressErrorHeader.value);
+    return request.send()
+      .then(response => response.content.result)
+      .catch(() => 'ERROR');
+  }
 }

@@ -32,7 +32,7 @@
             disabled.bind="hideMetadataGroups">
             <template repeat.for="metadata of metadataGroup.metadataList">
                 <template if.bind="checkMetadataBrief ? metadata.shownInBrief : true">
-                    <span>${metadata | metadataLabel}</span>
+                    <span bootstrap-tooltip.one-time="metadata.name + ' (ID: ' + metadata.id + ')'">${metadata | metadataLabel}</span>
                     <resource-metadata-values resource.one-time="resource"
                         metadata.one-time="metadata"
                         check-metadata-brief.bind="checkMetadataBrief"></resource-metadata-values>

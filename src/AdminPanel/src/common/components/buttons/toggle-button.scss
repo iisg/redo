@@ -16,7 +16,8 @@ $available-colors: (
   blue: $blue,
   orange: $orange,
   red: $red,
-  grey: $grey
+  grey: $grey,
+  white: white
 );
 
 @each $color-name, $color in $available-colors {
@@ -30,5 +31,11 @@ $available-colors: (
     .#{$color-name} toggle-button.#{$second-color-name} {
       @include toggle-button-colors($color);
     }
+  }
+}
+
+.toggle-button.white {
+  &, & > * {
+    color: $blue !important;
   }
 }

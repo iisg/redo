@@ -6,6 +6,7 @@ use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceCloneCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
@@ -30,6 +31,13 @@ use Symfony\Component\HttpFoundation\Response;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ResourcesController extends ApiController {
+    /** @var ResourceDisplayStrategyEvaluator */
+    private $displayStrategyEvaluator;
+
+    public function __construct(ResourceDisplayStrategyEvaluator $evaluator) {
+        $this->displayStrategyEvaluator = $evaluator;
+    }
+
     /**
      * @Route
      * @Method("GET")
@@ -125,6 +133,18 @@ class ResourcesController extends ApiController {
     public function getHierarchy(ResourceEntity $resource) {
         $path = $this->handleCommand(new ResourceTopLevelPathQuery($resource, SystemMetadata::PARENT));
         return $this->createJsonResponse($path);
+    }
+
+    /**
+     * @Route("/{id}/evaluate-display-strategy")
+     * @Method("PATCH")
+     */
+    public function evaluateDisplayStrategy(string $id, Request $request) {
+        $resource = $this->handleCommand(new ResourceQuery(intval($id)));
+        $data = $request->request->all();
+        Assertion::keyExists($data, 'template');
+        $result = $this->displayStrategyEvaluator->render($resource, $data['template']);
+        return $this->createJsonResponse(['result' => $result]);
     }
 
     /**

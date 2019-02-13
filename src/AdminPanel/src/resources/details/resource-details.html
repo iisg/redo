@@ -12,6 +12,7 @@
     <require from="../../audit/audit"></require>
     <require from="resources/controls/input/file-manager/resource-file-manager"></require>
     <require from="common/components/buttons/toggle-button"></require>
+    <require from="./resource-display-strategy-playground"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
     <div else
@@ -75,12 +76,24 @@
                             resource.bind="resource"
                             show-resource-id
                             show-resource-kind></resource-metadata-table>
-                        <apply-transition-button
-                            class="sticky-button"
-                            icon-name="edit-2"
-                            resource.bind="resource"
-                            transition.bind="updateTransition"
-                            click.delegate="showTransitionForm(updateTransition)"></apply-transition-button>
+                        <div class="sticky-button">
+                            <div class="form-group">
+                                <apply-transition-button class="pull-right"
+                                    icon-name="edit-2"
+                                    resource.bind="resource"
+                                    transition.bind="updateTransition"
+                                    click.delegate="showTransitionForm(updateTransition)"></apply-transition-button>
+                                <div class="toggle-button white pull-right"
+                                    bootstrap-tooltip.bind="'Display strategy playground' | t"
+                                    if.one-time="'ADMIN' | hasRole:resource.resourceClass">
+                                    <a click.delegate="showDisplayStrategyPlayground = !showDisplayStrategyPlayground">
+                                        <icon name="add-workflow"></icon>
+                                    </a>
+                                </div>
+                            </div>
+                            <resource-display-strategy-playground if.bind="showDisplayStrategyPlayground"
+                                resource.bind="resource"></resource-display-strategy-playground>
+                        </div>
                     </div>
                     <resource-form if="condition.bind: isFormOpened; cache: false"
                         parent.bind="parentResource"

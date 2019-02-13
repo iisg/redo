@@ -226,3 +226,5 @@ Display strategy: Strategia wyświetlania
 yes: tak
 no: nie
 Determines assignees: Używana do określania zadań użytkowników
+Display strategy playground: Tester strategii wyświetlania
+Enter a display strategy template you want to evaluate in context of the current resoruce: Wpisz szablon strategii wyświetlania by wyrenderować ją w kontekście obecnego zasobu
