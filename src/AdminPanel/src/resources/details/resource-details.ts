@@ -34,6 +34,7 @@ export class ResourceDetails implements RoutableComponentActivate {
   isFiltering: boolean;
   private urlListener: Subscription;
   private childrenListener: Subscription;
+  private resourceFormOpenedListener: Subscription;
 
   resultsPerPage: number;
   currentPageNumber: number;
@@ -60,11 +61,12 @@ export class ResourceDetails implements RoutableComponentActivate {
         this.isFormOpened = event.instruction.queryParams.action == 'edit';
         this.isFormOpenedForGod = !!event.instruction.queryParams['god']
           && this.hasRole.toView('ADMIN', this.resource.resourceClass);
+        this.resourceDetailsTabs.setDisabled(this.isFormOpened || this.isFormOpenedForGod);
       }
     );
     this.childrenListener = this.eventAggregator.subscribe('resourceChildrenAmount', (resourceChildrenAmount: number) => {
-      this.numberOfChildren = resourceChildrenAmount;
-      this.resourceDetailsTabs.updateLabels();
+        this.numberOfChildren = resourceChildrenAmount;
+        this.resourceDetailsTabs.updateLabels();
       }
     );
     this.childrenListener = this.eventAggregator.subscribe('relatedResourcesAmount', (relatedResourcesAmount: number) => {
@@ -72,11 +74,16 @@ export class ResourceDetails implements RoutableComponentActivate {
         this.resourceDetailsTabs.updateLabels();
       }
     );
+    this.resourceFormOpenedListener = this.eventAggregator.subscribe('resourceFormOpened', (disabled: boolean) => {
+        this.resourceDetailsTabs.setDisabled(disabled);
+      }
+    );
   }
 
   unbind() {
     this.urlListener.dispose();
     this.childrenListener.dispose();
+    this.resourceFormOpenedListener.dispose();
     this.resourceDetailsTabs.clear();
   }
 
@@ -122,8 +129,8 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.resourceDetailsTabs.addTab(
       'relationships',
       () =>
-        `${this.i18n.tr('Relationships')}` +
-        (this.numberOfRelatedResources === undefined ? '' : ` (${this.numberOfRelatedResources})`));
+      `${this.i18n.tr('Relationships')}` +
+      (this.numberOfRelatedResources === undefined ? '' : ` (${this.numberOfRelatedResources})`));
     if (this.resource.kind.workflow) {
       if (this.resource.kind.workflow) {
         this.resourceDetailsTabs.addTab('workflow', this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass));
@@ -164,18 +171,21 @@ export class ResourceDetails implements RoutableComponentActivate {
     this.isFormOpened = true;
     this.isFormOpenedForGod = false;
     this.resourceDetailsTabs.activateTab('details');
+    this.resourceDetailsTabs.setDisabled(true);
   }
 
   showGodForm() {
     this.isFormOpened = true;
     this.isFormOpenedForGod = true;
     this.resourceDetailsTabs.activateTab('details');
+    this.resourceDetailsTabs.setDisabled(true);
   }
 
   hideForm() {
     this.selectedTransition = undefined;
     this.isFormOpened = false;
     this.isFormOpenedForGod = false;
+    this.resourceDetailsTabs.setDisabled(false);
   }
 
   saveEditedResource(updatedResource: Resource,

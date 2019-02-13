@@ -14,7 +14,7 @@ export class DetailsViewTabs {
   public addTab(id: string, label: string | (() => string)): this {
     this.tabIds.push(id);
     const labelFactory = (typeof label === 'function' ? label : () => label) as () => string;
-    this.tabs.push({id, labelFactory, label: labelFactory(), active: false});
+    this.tabs.push({id, labelFactory, label: labelFactory(), active: false, disabled: false});
     if (!this.defaultTabId) {
       this.setDefaultTabId(id);
     }
@@ -71,6 +71,10 @@ export class DetailsViewTabs {
   public updateLabels(): void {
     this.tabs.forEach(tab => tab.label = tab.labelFactory());
   }
+
+  public setDisabled(disabled: boolean): void {
+    this.tabs.forEach(tab => tab.disabled = disabled);
+  }
 }
 
 interface DetailsViewTab {
@@ -78,4 +82,5 @@ interface DetailsViewTab {
   label: string;
   labelFactory: () => string;
   active: boolean;
+  disabled: boolean;
 }

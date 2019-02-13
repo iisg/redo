@@ -6,7 +6,7 @@ import {NavigationInstruction, RoutableComponentActivate, RouteConfig, Router} f
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {getQueryParameters} from "common/utils/url-utils";
 import {ContextResourceClass} from "resources/context/context-resource-class";
-import {DeleteEntityConfirmation} from "../../../common/dialog/delete-entity-confirmation";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {ResourceKind} from "../../resource-kind/resource-kind";
 import {ResourceKindRepository} from "../../resource-kind/resource-kind-repository";
 import {Metadata} from "../metadata";
@@ -20,8 +20,9 @@ export class MetadataDetails implements RoutableComponentActivate {
   editing: boolean = false;
   metadataDetailsTabs: DetailsViewTabs;
   numberOfChildren: number;
-  private urlListener: Subscription;
   resourceKindList: ResourceKind[];
+  private urlListener: Subscription;
+  private submetadataFormOpenedListener: Subscription;
 
   constructor(private metadataRepository: MetadataRepository,
               private resourceKindRepository: ResourceKindRepository,
@@ -36,11 +37,19 @@ export class MetadataDetails implements RoutableComponentActivate {
 
   bind() {
     this.urlListener = this.eventAggregator.subscribe('router:navigation:success',
-      (event: { instruction: NavigationInstruction }) => this.editing = event.instruction.queryParams.action == 'edit');
+      (event: { instruction: NavigationInstruction }) => {
+        this.editing = event.instruction.queryParams.action == 'edit';
+        this.metadataDetailsTabs.setDisabled(this.editing);
+      });
+    this.submetadataFormOpenedListener = this.eventAggregator.subscribe('submetadataFormOpened', (disabled: boolean) => {
+        this.metadataDetailsTabs.setDisabled(disabled);
+      }
+    );
   }
 
   unbind() {
     this.urlListener.dispose();
+    this.submetadataFormOpenedListener.dispose();
     this.metadataDetailsTabs.clear();
   }
 
@@ -97,6 +106,7 @@ export class MetadataDetails implements RoutableComponentActivate {
   toggleEditForm() {
     this.editing = !this.editing;
     this.updateUrl();
+    this.metadataDetailsTabs.setDisabled(this.editing);
   }
 
   private updateUrl() {
@@ -121,6 +131,7 @@ export class MetadataDetails implements RoutableComponentActivate {
       .then(() => {
         this.editing = false;
         this.updateUrl();
+        this.metadataDetailsTabs.setDisabled(this.editing);
       })
       .catch(() => this.entitySerializer.hydrateClone(originalMetadata, metadata))
       .finally(() => metadata.pendingRequest = false);

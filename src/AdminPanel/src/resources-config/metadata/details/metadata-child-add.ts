@@ -1,11 +1,12 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable, ComponentAttached} from "aurelia-templating";
+import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import {MetadataForm} from "resources-config/metadata/metadata-form";
 import {Metadata} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
+import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
-export class MetadataChildAdd implements ComponentAttached {
+export class MetadataChildAdd implements ComponentAttached, ComponentDetached {
   @bindable parentMetadata: Metadata;
   @bindable resourceClass: string;
   @bindable saved: (value: { savedMetadata: Metadata }) => any;
@@ -17,7 +18,7 @@ export class MetadataChildAdd implements ComponentAttached {
   addingNewSubmetadataKind: boolean;
   private notSelected: (metadata: Metadata) => boolean;
 
-  constructor(private metadataRepository: MetadataRepository) {
+  constructor(private metadataRepository: MetadataRepository, private eventAggregator: EventAggregator) {
   }
 
   attached() {
@@ -34,6 +35,11 @@ export class MetadataChildAdd implements ComponentAttached {
         return this.parentMetadataChildren.map(m => m.baseId).indexOf(metadata.id) === -1;
       };
     });
+    this.eventAggregator.publish('submetadataFormOpened', true);
+  }
+
+  detached() {
+    this.eventAggregator.publish('submetadataFormOpened', false);
   }
 
   toggleAddingNewSubmetadataKind() {
@@ -47,11 +53,19 @@ export class MetadataChildAdd implements ComponentAttached {
   addChildMetadata(parentId: number, baseId: number, newChildMetadata: Metadata): Promise<Metadata> {
     return this.metadataRepository.saveChild(parentId, newChildMetadata, baseId)
       .then(metadata => this.saved({savedMetadata: metadata}))
-      .then(() => this.baseMetadata = undefined);
+      .then((metadata) => {
+        this.baseMetadata = undefined;
+        this.eventAggregator.publish('submetadataFormOpened', false);
+        return metadata;
+      });
   }
 
   createChildMetadata(parentId: number, newChildMetadata: Metadata): Promise<Metadata> {
     return this.metadataRepository.saveChild(parentId, newChildMetadata)
-      .then(metadata => this.saved({savedMetadata: metadata}));
+      .then(metadata => {
+        this.saved({savedMetadata: metadata});
+        this.eventAggregator.publish('submetadataFormOpened', false);
+        return metadata;
+      });
   }
 }

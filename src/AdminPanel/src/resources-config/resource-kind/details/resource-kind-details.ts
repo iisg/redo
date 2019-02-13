@@ -35,6 +35,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   bind() {
     this.urlListener = this.eventAggregator.subscribe('router:navigation:success', (event: { instruction: NavigationInstruction }) => {
       this.editing = event.instruction.queryParams.action == 'edit';
+      this.resourceKindDetailsTabs.setDisabled(this.editing);
     });
     this.resourceChildrenListener = this.eventAggregator.subscribe('resourceChildrenAmount', (numberOfResources: number) => {
         this.updateResourceListTab(numberOfResources);
@@ -77,10 +78,12 @@ export class ResourceKindDetails implements RoutableComponentActivate {
 
   showEditForm() {
     this.updateUrl({editAction: true, triggerNavigation: true});
+    this.resourceKindDetailsTabs.setDisabled(true);
   }
 
   hideEditForm() {
     this.updateUrl({editAction: false, triggerNavigation: true});
+    this.resourceKindDetailsTabs.setDisabled(false);
   }
 
   saveEditedResourceKind(resourceKind: ResourceKind, changedResourceKind: ResourceKind): Promise<any> {

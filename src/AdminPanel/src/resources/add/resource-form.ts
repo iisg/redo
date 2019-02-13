@@ -1,6 +1,6 @@
 import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {Modal} from "common/dialog/modal";
 import {EntitySerializer} from "common/dto/entity-serializer";
@@ -20,9 +20,10 @@ import {ImportResult} from "./xml-import/xml-import-client";
 import {CurrentUserIsReproductorValueConverter} from "../list/current-user-is-reproductor";
 import {DisabilityReason} from "common/components/buttons/toggle-button";
 import {HasRoleValueConverter} from "common/authorization/has-role-value-converter";
+import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
-export class ResourceForm extends ChangeLossPreventerForm {
+export class ResourceForm extends ChangeLossPreventerForm implements ComponentAttached, ComponentDetached {
   @bindable({changeHandler: 'updateResource'}) resourceClass: string;
   @bindable parent: Resource;
   @bindable resourceKind: ResourceKind;
@@ -56,6 +57,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
               private changeLossPreventer: ChangeLossPreventer,
               private hasRole: HasRoleValueConverter,
               private isReproductor: CurrentUserIsReproductorValueConverter,
+              private eventAggregator: EventAggregator,
               validationControllerFactory: ValidationControllerFactory) {
     super();
     this.validationController = validationControllerFactory.createForCurrentScope();
@@ -72,6 +74,11 @@ export class ResourceForm extends ChangeLossPreventerForm {
       this.places = this.currentlyEditedResource.currentPlaces;
     }
     this.changeLossPreventer.enable(this);
+    this.eventAggregator.publish('resourceFormOpened', true);
+  }
+
+  detached() {
+    this.eventAggregator.publish('resourceFormOpened', false);
   }
 
   @computedFrom('transition', 'resource.kind.workflow', 'resource.currentPlaces')
@@ -190,6 +197,7 @@ export class ResourceForm extends ChangeLossPreventerForm {
       }).finally(() => {
         this.submitting = false;
         this.disabled = false;
+        this.eventAggregator.publish('resourceFormOpened', false);
       });
     }
   }
