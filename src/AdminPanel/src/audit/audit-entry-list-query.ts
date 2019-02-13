@@ -33,6 +33,11 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     return this;
   }
 
+  public filterByUsers(users: string[]): this {
+    this.params.users = users;
+    return this;
+  }
+
   public addCustomColumns(templates: string[]): this {
     this.params.customColumns = templates;
     return this;

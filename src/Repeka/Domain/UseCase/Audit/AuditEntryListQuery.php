@@ -8,6 +8,7 @@ use Repeka\Domain\Entity\ResourceContents;
 class AuditEntryListQuery extends AbstractListQuery implements NonValidatedCommand, AdjustableCommand {
     /** @var array */
     private $commandNames;
+    private $users;
     /** @var string */
     private $dateFrom;
     private $dateTo;
@@ -19,6 +20,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         array $commandNames,
         string $dateFrom,
         string $dateTo,
+        array $users,
         ResourceContents $resourceContentsFilter,
         int $page,
         int $resultsPerPage,
@@ -28,6 +30,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         $this->commandNames = $commandNames;
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
+        $this->users = $users;
         $this->resourceContentsFilter = $resourceContentsFilter;
         $this->resourceId = $resourceId;
     }
@@ -46,6 +49,10 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
 
     public function getDateTo(): string {
         return $this->dateTo;
+    }
+
+    public function getUsers(): array {
+        return $this->users;
     }
 
     public function getResourceContentsFilter(): ResourceContents {

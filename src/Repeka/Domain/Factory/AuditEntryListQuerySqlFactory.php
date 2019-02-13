@@ -24,6 +24,7 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
             $this->whereAlternatives,
             "ae.data->'after'->'resource'->'contents'"
         );
+        $this->filterByUsers();
         $this->filterByResourceId();
         $this->orderBy[] = 'ae.created_at DESC, id DESC';
         $this->paginate();
@@ -44,6 +45,13 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
         if ($this->query->getDateTo()) {
             $this->wheres[] = 'ae.created_at < :dateTo::timestamp at time zone \'utc\'';
             $this->params['dateTo'] = $this->query->getDateTo();
+        }
+    }
+
+    private function filterByUsers() {
+        if ($this->query->getUsers()) {
+            $this->wheres[] = 'ae.user_id IN(:users)';
+            $this->params['users'] = $this->query->getUsers();
         }
     }
 

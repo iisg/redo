@@ -34,6 +34,11 @@ class AuditController extends ApiController {
             $dateTo = $request->get('dateTo');
             $queryBuilder->filterByDateTo($dateTo);
         }
+
+        $users = $request->get('users', []);
+        Assertion::isArray($users);
+        $queryBuilder->filterByUsers($users);
+
         Assertion::isArray($commandNames);
         $queryBuilder->filterByCommandNames($commandNames)
             ->filterByResourceContents(is_array($contentsFilter) ? $contentsFilter : []);

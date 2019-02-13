@@ -1,17 +1,16 @@
-import {AuditEntryRepository} from "../audit-entry-repository";
 import {autoinject} from "aurelia-dependency-injection";
-import {twoWay} from "../../common/components/binding-mode";
-import {bindable} from "aurelia-templating";
 import {I18N} from "aurelia-i18n";
+import {bindable} from "aurelia-templating";
+import {twoWay} from "../../common/components/binding-mode";
+import {AuditEntryRepository} from "../audit-entry-repository";
 
 const PLUGIN_ENTRY_PREFIX = 'resource_workflow_plugin-';
 
 @autoinject
 export class AuditCommandNameChooser {
-  private availableCommandNames: string[];
-
   @bindable(twoWay) commandNames;
   @bindable resourceId: number;
+  availableCommandNames: string[];
 
   constructor(private auditEntryRepository: AuditEntryRepository, private i18n: I18N) {
   }

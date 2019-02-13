@@ -34,6 +34,7 @@ class AuditEntryListQueryAdjuster implements CommandAdjuster {
             $command->getCommandNames(),
             $this->adjustDateFrom($command->getDateFrom()),
             $this->adjustDateTo($command->getDateTo()),
+            $command->getUsers(),
             $command->getResourceContentsFilter()->withMetadataNamesMappedToIds($this->metadataRepository),
             $command->getPage(),
             $command->getResultsPerPage(),

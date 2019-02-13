@@ -7,6 +7,7 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
     private $commandNames = [];
     private $dateFrom = "";
     private $dateTo = "";
+    private $users = [];
     private $resourceContents = [];
     private $resourceId = 0;
 
@@ -15,6 +16,7 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
             $this->commandNames,
             $this->dateFrom,
             $this->dateTo,
+            $this->users,
             $this->resourceContents instanceof ResourceContents
                 ? $this->resourceContents
                 : ResourceContents::fromArray($this->resourceContents),
@@ -36,6 +38,11 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
 
     public function filterByDateTo($dateTo): self {
         $this->dateTo = $dateTo;
+        return $this;
+    }
+
+    public function filterByUsers(array $users): self {
+        $this->users = $users;
         return $this;
     }
 

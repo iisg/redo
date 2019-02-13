@@ -7,17 +7,20 @@
     <require from="./filters/audit-command-name-chooser"></require>
     <require from="./filters/resource-contents-yaml-filter"></require>
     <require from="./filters/date-range-picker"></require>
+    <require from="./filters/audit-user-chooser"></require>
     <require from="./underscores-to-hyphens"></require>
 
     <span class="page-subtitle">${'Filters' | t}</span>
     <div class="form-with-buttons">
         <div class="form-content simple-form">
-            <span>${'Operation' | t}</span>
-            <audit-command-name-chooser command-names.bind="filters.commandNames"
-                resource-id.bind="resourceId"></audit-command-name-chooser>
             <span>${'Date' | t}</span>
             <date-range-picker date-from.bind="filters.dateFrom"
                 date-to.bind="filters.dateTo"></date-range-picker>
+            <span>${'Operation' | t}</span>
+            <audit-command-name-chooser command-names.bind="filters.commandNames"
+                resource-id.bind="resourceId"></audit-command-name-chooser>
+            <span>${'User' | t}</span>
+            <audit-user-chooser selected-users-ids.bind="filters.users"></audit-user-chooser>
             <span>${'Resource contents' | t}</span>
             <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
         </div>
