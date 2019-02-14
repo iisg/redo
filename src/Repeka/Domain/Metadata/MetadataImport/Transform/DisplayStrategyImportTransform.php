@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 
 use Assert\Assertion;
+use Repeka\Domain\Metadata\MetadataImport\MetadataImportContext;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 
 class DisplayStrategyImportTransform extends AbstractImportTransform {
@@ -13,13 +14,13 @@ class DisplayStrategyImportTransform extends AbstractImportTransform {
         $this->displayStrategyEvaluator = $displayStrategyEvaluator;
     }
 
-    public function apply(array $values, array $config, array $dataBeingImported, string $parentMetadataValue = null): array {
+    public function apply(array $values, array $config, array $dataBeingImported, ?MetadataImportContext $context = null): array {
         Assertion::keyExists($config, 'template');
         $template = $config['template'];
         $additionalContext = [
             'values' => $values,
             'data' => $dataBeingImported,
-            'parentMetadataValue' => $parentMetadataValue,
+            'context' => $context,
         ];
         if (isset($config['separator'])) {
             $additionalContext['separator'] = $config['separator'];

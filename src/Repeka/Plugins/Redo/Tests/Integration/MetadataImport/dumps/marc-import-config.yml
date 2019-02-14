@@ -93,9 +93,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set autor = value['a'][0] %}
-                  {% if parentMetadataValue in autor %}
+                  {% if context.parentMetadataValue in autor %}
                     {% for dates in value['d']%}
                       {{ dates }}{{ separator }}
                     {% endfor %}
@@ -111,16 +111,16 @@ mappings:
             199:
               transforms:
                 - name: 'displayStrategy'
-                  template: '{{ parentMetadataValue}}'
+                  template: '{{context.parentMetadataValue}}'
                 - name: trim
         179:
           transforms:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set autor = value['a'][0] %}
-                  {% if parentMetadataValue in autor %}
+                  {% if context.parentMetadataValue in autor %}
                     {% for singleValue in value['9']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -133,9 +133,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set autor = value['a'][0] %}
-                  {% if parentMetadataValue in autor %}
+                  {% if context.parentMetadataValue in autor %}
                     {% for singleValue in value['0']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -167,9 +167,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set autor = value['a'][0] %}
-                  {% if parentMetadataValue in autor %}
+                  {% if context.parentMetadataValue in autor %}
                     {% for dates in value['d']%}
                       {{ dates }}{{ separator }}
                     {% endfor %}
@@ -185,16 +185,16 @@ mappings:
             199:
               transforms:
                 - name: 'displayStrategy'
-                  template: '{{ parentMetadataValue}}'
+                  template: '{{ context.parentMetadataValue}}'
                 - name: trim
         179:
           transforms:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set autor = value['a'][0] %}
-                  {% if parentMetadataValue in autor %}
+                  {% if context.parentMetadataValue in autor %}
                     {% for singleValue in value['9']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -207,9 +207,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set autor = value['a'][0] %}
-                  {% if parentMetadataValue in autor %}
+                  {% if context.parentMetadataValue in autor %}
                     {% for singleValue in value['0']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -253,9 +253,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set coautor = value['a'][0] %}
-                  {% if parentMetadataValue in coautor %}
+                  {% if context.parentMetadataValue in coautor %}
                     {% for dates in value['d']%}
                       {{ dates }}{{ separator }}
                     {% endfor %}
@@ -271,16 +271,16 @@ mappings:
             200:
               transforms:
                 - name: 'displayStrategy'
-                  template: '{{ parentMetadataValue}}'
+                  template: '{{ context.parentMetadataValue}}'
                 - name: trim
         187:
           transforms:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set coautor = value['a'][0] %}
-                  {% if parentMetadataValue in coautor %}
+                  {% if context.parentMetadataValue in coautor %}
                     {% for singleValue in value['9']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -293,9 +293,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set coautor = value['a'][0] %}
-                  {% if parentMetadataValue in coautor %}
+                  {% if context.parentMetadataValue in coautor %}
                     {% for singleValue in value['0']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -308,9 +308,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set coautor = value['a'][0] %}
-                  {% if parentMetadataValue in coautor %}
+                  {% if context.parentMetadataValue in coautor %}
                     {% for singleValue in value['e']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -383,9 +383,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set coautor = value['a'][0] %}
-                  {% if parentMetadataValue in coautor  %}
+                  {% if context.parentMetadataValue in coautor  %}
                     {% for dates in value['d']%}
                       {{ dates }}{{ separator }}
                     {% endfor %}
@@ -401,16 +401,16 @@ mappings:
             200:
               transforms:
                 - name: 'displayStrategy'
-                  template: '{{ parentMetadataValue}}'
+                  template: '{{ context.parentMetadataValue}}'
                 - name: trim
         187:
           transforms:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set coautor = value['a'][0] %}
-                  {% if parentMetadataValue in coautor %}
+                  {% if context.parentMetadataValue in coautor %}
                     {% for singleValue in value['9']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -423,9 +423,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set coautor = value['a'][0] %}
-                  {% if parentMetadataValue in coautor %}
+                  {% if context.parentMetadataValue in coautor %}
                     {% for singleValue in value['0']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -438,9 +438,9 @@ mappings:
             - name: 'displayStrategy'
               separator: '###'
               template: >-
-                {% for value in values %}
+                {% for value in context.valuesBasedOnImportKey %}
                   {% set coautor = value['a'][0] %}
-                  {% if parentMetadataValue in coautor %}
+                  {% if context.parentMetadataValue in coautor %}
                     {% for singleValue in value['e']%}
                       {{ singleValue }}{{ separator }}
                     {% endfor %}
@@ -562,7 +562,7 @@ mappings:
       201:
         transforms:
           - name: 'displayStrategy'
-            template: '{{ parentMetadataValue }}'
+            template: '{{ context.parentMetadataValue }}'
   172:
     key: '260'
     transforms:

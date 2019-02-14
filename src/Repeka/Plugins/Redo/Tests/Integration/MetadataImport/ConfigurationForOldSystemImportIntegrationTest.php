@@ -14,6 +14,7 @@ use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Tests\Integration\Migrations\DatabaseMigrationTestCase;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 
+/** @small */
 class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTestCase {
     use FixtureHelpers;
 
@@ -444,14 +445,15 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
 
     private function containsMetadataValueValues(ResourceContents $resourceContents, $expectedValuesArray) {
         foreach ($expectedValuesArray as $metadataId => $values) {
+            $currentValues = array_map(
+                function ($metadataValue) {
+                    return $metadataValue->toArray();
+                },
+                $resourceContents->getValues($metadataId)
+            );
+            $index = 0;
             foreach ($values as $value) {
-                $currentValues = array_map(
-                    function ($metadataValue) {
-                        return $metadataValue->toArray();
-                    },
-                    $resourceContents->getValues($metadataId)
-                );
-                $this->assertContains($value, $currentValues);
+                $this->assertEquals($value, $currentValues[$index++]);
             }
         }
     }

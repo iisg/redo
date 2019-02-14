@@ -15,8 +15,8 @@
         "language": {
           "transforms": [
             {
-              "name": "displayStrategy",
-              "template": "{% for value in values %}{% if value['VALUE_TEXT'] is defined and parentMetadataValue in value['VALUE_TEXT']%}{{value['INDEX_ITEM_ID']}}{% endif %}{% endfor %}"
+              "name": "getKey",
+              "key": "INDEX_ITEM_ID"
             }
           ]
         }

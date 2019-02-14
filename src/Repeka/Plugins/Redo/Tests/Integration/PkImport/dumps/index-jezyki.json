@@ -10,7 +10,21 @@
         {
           "name": "trim"
         }
-      ]
+      ],
+      "submetadata": {
+        "jezykNazwy": {
+          "transforms": [
+            {
+              "name": "getKey",
+              "key": "INDEX_ITEM_ID"
+            },
+            {
+              "name": "displayStrategy",
+              "template": "{% set languages = {5: 'PL', 6: 'EN'} %}{{languages[values[0]]}}"
+            }
+          ]
+        }
+      }
     },
     "iso_code": {
       "key": "ISO_VALUE"

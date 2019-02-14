@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 
 use Assert\Assertion;
+use Repeka\Domain\Metadata\MetadataImport\MetadataImportContext;
 use Repeka\Domain\Service\RegexNormalizer;
 
 class RegexReplaceImportTransform extends AbstractImportTransform {
@@ -12,7 +13,7 @@ class RegexReplaceImportTransform extends AbstractImportTransform {
         $this->regexNormalizer = $regexNormalizer;
     }
 
-    public function apply(array $values, array $config, array $dataBeingImported, string $parentMetadataValue = null): array {
+    public function apply(array $values, array $config, array $dataBeingImported, ?MetadataImportContext $context = null): array {
         $regex = $config['regex'] ?? null;
         Assertion::notNull($regex, 'regexReplace transform require regex to be configured.');
         $regex = $this->regexNormalizer->normalize($regex);

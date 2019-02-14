@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Metadata\MetadataImport\Transform;
 
 use Assert\Assertion;
+use Repeka\Domain\Metadata\MetadataImport\MetadataImportContext;
 
 class ImportTransformComposite {
     /** @var ImportTransform[] */
@@ -14,9 +15,9 @@ class ImportTransformComposite {
         }
     }
 
-    public function apply(array $values, array $config, $data, $parentMetadataValue): array {
+    public function apply(array $values, array $config, $data, ?MetadataImportContext $context = null): array {
         $name = $config['name'];
         Assertion::keyExists($this->transforms, $name, "Invalid transform name: $name");
-        return $this->transforms[$name]->apply($values, $config, $data, $parentMetadataValue);
+        return $this->transforms[$name]->apply($values, $config, $data, $context);
     }
 }

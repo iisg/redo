@@ -15,28 +15,28 @@
         "language": {
           "transforms": [
             {
-              "name": "displayStrategy",
-              "template": "{% for value in values %}{% if value['VALUE_TEXT'] is defined and parentMetadataValue in value['VALUE_TEXT']%}{{value['INDEX_ITEM_ID']}}{% endif %}{% endfor %}"
+              "name": "getKey",
+              "key": "INDEX_ITEM_ID"
+            }
+          ]
+        },
+        "language_description": {
+          "transforms": [
+            {
+              "name": "getKey",
+              "key": "DESCRIBED_INDEX_ITEM_ID"
             }
           ],
           "submetadata": {
             "language_id": {
               "transforms": [
                 {
-                  "name": "displayStrategy",
-                  "template": "{% for value in values %}{% if value['INDEX_ITEM_ID'] is defined and parentMetadataValue in value['INDEX_ITEM_ID']%}{{value['ID']}}{% endif %}{% endfor %}"
+                  "name": "getKey",
+                  "key": "ID"
                 }
               ]
             }
           }
-        },
-        "language_description": {
-          "transforms": [
-            {
-              "name": "displayStrategy",
-              "template": "{% for value in values %}{% if value['VALUE_TEXT'] is defined and parentMetadataValue in value['VALUE_TEXT']%}{{value['DESCRIBED_INDEX_ITEM_ID']}}{% endif %}{% endfor %}"
-            }
-          ]
         }
       }
     },
