@@ -9,8 +9,6 @@ use Repeka\Domain\Cqrs\Event\CqrsCommandEvent;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 
 class ResourceWorkflowPluginEventDispatcher extends CommandEventsListener {
-    public static $dispatchPluginEvents = true;
-
     /** @var ResourceWorkflowPlugins */
     private $resourceWorkflowPlugins;
 
@@ -31,9 +29,6 @@ class ResourceWorkflowPluginEventDispatcher extends CommandEventsListener {
     }
 
     private function executePlugins(CqrsCommandEvent $event, string $methodName): void {
-        if (!self::$dispatchPluginEvents) {
-            return;
-        }
         /** @var ResourceTransitionCommand $command */
         $command = $event->getCommand();
         $resource = $command->getResource();

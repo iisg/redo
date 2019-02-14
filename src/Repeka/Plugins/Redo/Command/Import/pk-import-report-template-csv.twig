@@ -1,0 +1,4 @@
+SUW ID,REDO ID,REDO LINK,STATUS
+{% for resource in resources %}
+{{ resource.oldId }},{{ resource.id }},{% if resource.id %}{{ application_url }}/admin/resources/details/{{ resource.id }}{% endif %},{{ resource.status | upper }}
+{% endfor %}

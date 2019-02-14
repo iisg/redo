@@ -6,11 +6,11 @@ use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 
+/** @small */
 class PkImportImportCommandIntegrationTest extends AbstractPkImportIntegrationTest {
     use FixtureHelpers;
 
-    /** @before */
-    public function init(): void {
+    public function initializeDatabaseForTests(): void {
         $this->loadAllFixtures();
         $oldIdMetadata = $this->createSimpleMetadata('old_id', MetadataControl::INTEGER(), 'books');
         $rk = $this->getPhpBookResource()->getKind();
@@ -31,9 +31,9 @@ class PkImportImportCommandIntegrationTest extends AbstractPkImportIntegrationTe
         $this->assertEquals($countBefore + 2, $countAfter);
     }
 
+    /** @depends testImportsResources */
     public function testImportTwiceDoesNotDuplicateResources() {
         $countBefore = $this->getResourceRepository()->count([]);
-        $this->import();
         $this->import();
         $countAfter = $this->getResourceRepository()->count([]);
         $this->assertEquals($countBefore + 2, $countAfter);

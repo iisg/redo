@@ -6,14 +6,14 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 
+/** @small */
 class PkImportLicensesIntegrationTest extends AbstractPkImportIntegrationTest {
     use FixtureHelpers;
 
     /** @var ResourceKind */
     private $licenseRk;
 
-    /** @before */
-    public function init(): void {
+    public function initializeDatabaseForTests(): void {
         $nameMetadata = $this->createSimpleMetadata('nazwa', MetadataControl::TEXT(), 'dictionaries');
         $unifiedNameMetadata = $this->createSimpleMetadata('unified_name', MetadataControl::TEXT(), 'dictionaries');
         $oldIdMetadata = $this->createSimpleMetadata('old_id', MetadataControl::INTEGER(), 'dictionaries');

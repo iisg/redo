@@ -9,6 +9,8 @@ use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
 use Repeka\Domain\Cqrs\Event\CqrsCommandEvent;
 
 class DispatchCommandEventsMiddleware implements CommandBusMiddleware {
+    public static $dispatchEvents = true;
+
     /** @var iterable|CommandEventsListener[] */
     private $commandEventsListeners;
 
@@ -32,8 +34,10 @@ class DispatchCommandEventsMiddleware implements CommandBusMiddleware {
     }
 
     private function dispatch(CqrsCommandEvent $event) {
-        foreach ($this->commandEventsListeners as $listener) {
-            $listener->handleCommandEvent($event);
+        if (self::$dispatchEvents) {
+            foreach ($this->commandEventsListeners as $listener) {
+                $listener->handleCommandEvent($event);
+            }
         }
     }
 }

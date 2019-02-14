@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Plugins\MetadataValueSetter\Tests\Integration;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
@@ -78,6 +79,24 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
         );
         $newContent = $this->getPhpBookResource()->getContents();
         $this->assertNotEquals($oldContent, $newContent);
+    }
+
+    public function testSettingParentAsInteger() {
+        $resource = $this->getPhpBookResource();
+        $this->usePluginWithResource(
+            $resource,
+            [
+                [
+                    'name' => 'repekaMetadataValueSetter',
+                    'config' => [
+                        'metadataName' => 'parent',
+                        'metadataValue' => '1',
+                    ],
+                ],
+            ]
+        );
+        $newContent = $this->getPhpBookResource()->getContents();
+        $this->assertSame([1], $newContent->getValuesWithoutSubmetadata(SystemMetadata::PARENT));
     }
 
     public function testMetadataValueSetterWithMultipleConfigs() {

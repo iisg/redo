@@ -7,6 +7,7 @@ use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 
+/** @small */
 class PkImportSimulationIntegrationTest extends AbstractPkImportIntegrationTest {
     use FixtureHelpers;
 
@@ -15,8 +16,7 @@ class PkImportSimulationIntegrationTest extends AbstractPkImportIntegrationTest 
     /** @var ResourceKind */
     private $bookRk;
 
-    /** @before */
-    public function init(): void {
+    public function initializeDatabaseForTests(): void {
         $nameMetadata = $this->createSimpleMetadata('nazwa', MetadataControl::TEXT(), 'dictionaries');
         $isoMetadata = $this->createSimpleMetadata('iso_code', MetadataControl::TEXT(), 'dictionaries');
         $oldIdMetadata = $this->createSimpleMetadata('old_id', MetadataControl::INTEGER(), 'dictionaries');

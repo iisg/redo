@@ -3,6 +3,7 @@ namespace Repeka\Plugins\Redo\Command\Import;
 
 use Assert\Assertion;
 use Repeka\Application\Cqrs\CommandBusAware;
+use Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -15,7 +16,6 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
-use Repeka\Domain\Workflow\ResourceWorkflowPluginEventDispatcher;
 use Repeka\Plugins\Redo\Command\Import\XmlExtractStrategy\PkImportXmlExtractor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -64,12 +64,12 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             ->addArgument('config', InputArgument::OPTIONAL)
             ->addOption('resourceKindId', null, InputOption::VALUE_REQUIRED)
             ->addOption('resourceKindIdMap', null, InputOption::VALUE_REQUIRED)
-            ->addOption('skipKindIds', null, InputOption::VALUE_REQUIRED)
             ->addOption('skipExisting', null, InputOption::VALUE_NONE)
             ->addOption('exportFormat', null, InputOption::VALUE_REQUIRED)
             ->addOption('no-report', null, InputOption::VALUE_NONE)
             ->addOption('id-namespace', null, InputOption::VALUE_OPTIONAL)
             ->addOption('unmap-updated', null, InputOption::VALUE_NONE)
+            ->addOption('delete-hidden', null, InputOption::VALUE_NONE)
             ->addOption('workflow-place', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY)
             ->addOption('offset', null, InputOption::VALUE_REQUIRED)
             ->addOption('limit', null, InputOption::VALUE_REQUIRED)
@@ -78,13 +78,16 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
 
     /** @SuppressWarnings(PHPMD.CyclomaticComplexity) */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        ini_set('memory_limit', '768M');
+        date_default_timezone_set('Europe/Warsaw');
         UpdateDependentDisplayStrategiesListener::$alwaysLeaveDirty = true;
-        ResourceWorkflowPluginEventDispatcher::$dispatchPluginEvents = false;
+        DispatchCommandEventsMiddleware::$dispatchEvents = false;
         $stats = [
             'resources' => 0,
             'imported' => 0,
             'updated' => 0,
-            'skippedRks' => 0,
+            'skippedHidden' => 0,
+            'skippedExisting' => 0,
         ];
         $idMapping = self::getIdMapping();
         $mappedResourceIds = PkImportMapRelationsCommand::getAlreadyMappedResourceIds();
@@ -102,7 +105,6 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
         try {
             $xml = PkImportFileLoader::load($xmlFileName);
             $skipExisting = $input->getOption('skipExisting');
-            $resourceKindIdsToSkip = array_filter(explode(',', $input->getOption('skipKindIds')));
             $resourceKindId = $input->getOption('resourceKindId');
             $resourceKindsMap = $resourceKindId ? '-1:' . $resourceKindId : $input->getOption('resourceKindIdMap');
             $resourceKindsMap = $this->buildResourceKindsMap($resourceKindsMap);
@@ -120,19 +122,23 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             if (!isset($idMapping[$idMappingNamespace])) {
                 $idMapping[$idMappingNamespace] = [];
             }
-            $output->writeln('Importing resources');
             $progress = new ProgressBar($output, count($resources));
-            $progress->display();
             $stats['resources'] = count($resources);
             $offset = $input->getOption('offset') ?? 0;
             $limit = $offset + ($input->getOption('limit') ?? $stats['resources']);
-            $iteration = 0;
+            $iteration = -1;
+            if ($offset > count($resources)) {
+                $output->writeln('<comment>No more resources.</comment>');
+                return 1;
+            }
+            $output->writeln("Importing resources $offset..$limit");
+            $progress->display();
             foreach ($resources as $resource) {
                 $progress->advance();
                 $iteration++;
                 if ($iteration < $offset) {
                     continue;
-                } elseif ($iteration > $limit) {
+                } elseif ($iteration >= $limit) {
                     break;
                 }
                 $resourceData = $resourceContentsFetcher->extractResourceData($resource);
@@ -141,12 +147,22 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                     $resourceData['KIND_ID'] = '-1';
                 }
                 Assertion::keyExists($resourceData, 'KIND_ID');
-                if (in_array($resourceData['KIND_ID'], $resourceKindIdsToSkip)) {
-                    $stats['skippedRks']++;
-                    continue;
-                }
                 if (is_array($resourceData['ID'])) {
                     $resourceData['ID'] = current($resourceData['ID']);
+                }
+                if (isset($resourceData['VISIBLE']) && !$resourceData['VISIBLE']) {
+                    $stats['skippedHidden']++;
+                    $resourceId = intval(trim($resourceData['ID']));
+                    $existingResourceId = $idMapping[$idMappingNamespace][$resourceId] ?? null;
+                    $status = 'INGNORED_HIDDEN';
+                    if ($existingResourceId && $input->getOption('delete-hidden')) {
+                        $resource = $this->resourceRepository->findOne($idMapping[$idMappingNamespace][$resourceId]);
+                        $this->resourceRepository->delete($resource);
+                        $status = 'DELETED_HIDDEN';
+                        unset($idMapping[$idMappingNamespace][$resourceId]);
+                    }
+                    $reportCreator->addResourceImportStatus($resourceData['ID'], $existingResourceId, $status, [], []);
+                    continue;
                 }
                 Assertion::keyExists($resourceKindsMap, $resourceData['KIND_ID']);
                 $resourceKind = $resourceKindsMap[$resourceData['KIND_ID']];
@@ -174,6 +190,14 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                         $resourceId = intval(trim($resourceData['ID']));
                         if (isset($idMapping[$idMappingNamespace][$resourceId])) {
                             if ($skipExisting) {
+                                $stats['skippedExisting']++;
+                                $reportCreator->addResourceImportStatus(
+                                    $resourceData['ID'],
+                                    $idMapping[$idMappingNamespace][$resourceId],
+                                    'INGNORED_EXISTING',
+                                    [],
+                                    []
+                                );
                                 return;
                             }
                             $resource = $this->resourceRepository->findOne($idMapping[$idMappingNamespace][$resourceId]);
@@ -215,7 +239,9 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             file_put_contents(PkImportMapRelationsCommand::MAPPED_RESOURCES_FILE, json_encode($mappedResourceIds));
         }
         (new Table($output))
-            ->setHeaders(['Total resources', 'Successfully imported', 'Successfully updated', 'Skipped by RK'])
+            ->setHeaders(
+                ['Total resources', 'Successfully imported', 'Successfully updated', 'Skipped hidden', 'Skipped existing']
+            )
             ->addRows([$stats])
             ->render();
         $output->writeln(

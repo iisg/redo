@@ -17,6 +17,14 @@ class PkResourcesDumpXmlExtractor implements PkImportXmlExtractor {
             foreach (current($metadata->attributes()) as $attr => $value) {
                 $metadataData[$attr] = $value;
             }
+            $children = [];
+            foreach ($metadata->children() as $childName => $childValue) {
+                $children[$childName] = [];
+                foreach (current($childValue->attributes()) as $attr => $value) {
+                    $children[$childName][$attr] = $value;
+                }
+            }
+            $metadataData = array_merge($children, $metadataData);
             $resourceData[$termId][] = $metadataData;
         }
         return $resourceData;

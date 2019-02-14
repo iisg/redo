@@ -54,7 +54,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
      * PHPUnit listener will call this before each test.
      * It's better than setUp() because we don't have to remember to call this when overriding setUp().
      */
-    public function prepareIntegrationTest() {
+    final public function prepareIntegrationTest() {
         $this->container = self::createClient()->getContainer();
         $kernel = $this->container->get('kernel');
         $this->application = new Application($kernel);

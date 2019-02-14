@@ -88,4 +88,17 @@ class DispatchCommandEventsMiddlewareTest extends \PHPUnit_Framework_TestCase {
         );
         $this->assertEquals('unicorn', $this->listener->handled[0]->getDataFromBeforeEvent(SampleCommandEventsListener::class));
     }
+
+    public function testNotDispatchingIfDisabled() {
+        DispatchCommandEventsMiddleware::$dispatchEvents = false;
+        $this->middleware->handle(
+            new ResourceQuery(1),
+            function () {
+            }
+        );
+        $this->assertCount(0, $this->listener->before);
+        $this->assertCount(0, $this->listener->handled);
+        $this->assertCount(0, $this->listener->error);
+        DispatchCommandEventsMiddleware::$dispatchEvents = true;
+    }
 }

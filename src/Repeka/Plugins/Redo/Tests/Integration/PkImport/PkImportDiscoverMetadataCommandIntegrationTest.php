@@ -3,6 +3,7 @@ namespace Repeka\Plugins\Redo\Tests\Integration\PkImport;
 
 use Repeka\Tests\IntegrationTestCase;
 
+/** @small */
 class PkImportDiscoverMetadataCommandIntegrationTest extends IntegrationTestCase {
     public function testImportUnreadableFile() {
         $filePath = addcslashes(__DIR__ . '/BLABLA.xml', '\\');

@@ -6,9 +6,11 @@ use Twig_Loader_Filesystem;
 
 class PkImportHtmlReport {
     private const TEMPLATE_FILE = './pk-import-report-template.twig';
+    private const TEMPLATE_FILE_CSV = './pk-import-report-template-csv.twig';
     private const TIME_FORMAT = 'Y-m-d_H-i-s';
 
     private $outputFileName;
+    private $outputFileNameCsv;
     private $dataArray = ['resources' => []];
 
     public function __construct(string $applicationUrl, string $xmlFileName) {
@@ -21,14 +23,26 @@ class PkImportHtmlReport {
             $this->dataArray['file'],
             $this->dataArray['date']
         );
+        $this->outputFileNameCsv = sprintf(
+            '%s/import/report-%s_%s.csv',
+            \AppKernel::VAR_PATH,
+            $this->dataArray['file'],
+            $this->dataArray['date']
+        );
     }
 
     public function writeReport() {
         $loader = new Twig_Loader_Filesystem(__DIR__);
         $twig = new Twig_Environment($loader);
-        if (!file_exists($this->outputFileName)) {
-            $fileData = $twig->render(PkImportHtmlReport::TEMPLATE_FILE, $this->dataArray);
-            file_put_contents($this->outputFileName, $fileData);
+        if ($this->dataArray['resources']) {
+            if (!file_exists($this->outputFileName)) {
+                $fileData = $twig->render(PkImportHtmlReport::TEMPLATE_FILE, $this->dataArray);
+                file_put_contents($this->outputFileName, $fileData);
+            }
+            if (!file_exists($this->outputFileNameCsv)) {
+                $fileData = $twig->render(PkImportHtmlReport::TEMPLATE_FILE_CSV, $this->dataArray);
+                file_put_contents($this->outputFileNameCsv, $fileData);
+            }
         }
     }
 

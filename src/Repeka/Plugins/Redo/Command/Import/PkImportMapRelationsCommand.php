@@ -2,6 +2,7 @@
 namespace Repeka\Plugins\Redo\Command\Import;
 
 use Repeka\Application\Cqrs\CommandBusAware;
+use Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
@@ -16,7 +17,6 @@ use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\EntityUtils;
-use Repeka\Domain\Workflow\ResourceWorkflowPluginEventDispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
@@ -58,7 +58,8 @@ class PkImportMapRelationsCommand extends Command {
 
     /** @inheritdoc */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        ResourceWorkflowPluginEventDispatcher::$dispatchPluginEvents = false;
+        ini_set('memory_limit', '768M');
+        DispatchCommandEventsMiddleware::$dispatchEvents = false;
         UpdateDependentDisplayStrategiesListener::$alwaysLeaveDirty = true;
         $idMapping = PkImportResourcesCommand::getIdMapping();
         $idNamespaces = $this->loadIdNamespaces($input);
@@ -80,7 +81,7 @@ class PkImportMapRelationsCommand extends Command {
             $missingMetadataIds = [];
             $missingMetadataValues = [];
             if (count($idsToQuery)) {
-                $query = ResourceListQuery::builder()->filterByIds($idsToQuery)->build();
+                $query = ResourceListQuery::builder()->filterByIds($idsToQuery)->setResultsPerPage(2000)->build();
                 $resources = $this->resourceRepository->findByQuery($query);
                 $progress = new ProgressBar($output, count($resources));
                 $progress->display();
@@ -134,7 +135,9 @@ class PkImportMapRelationsCommand extends Command {
                                             $problemsLog[] = [
                                                 $resource->getId(), // redo id
                                                 $metadataId, // metadata id
-                                                $resource->getContents()->getValuesWithoutSubmetadata(192)[0] ?? 'xx', // suwid
+                                                $resource->getContents()->getValuesWithoutSubmetadata(192)[0]
+                                                ?? $resource->getContents()->getValuesWithoutSubmetadata(197)[0]
+                                                ?? 'xx', // suwid
                                                 $value->getValue(), // value
                                             ];
                                             if (in_array($metadataId, $ignoreProblemsInMetadataIds)) {

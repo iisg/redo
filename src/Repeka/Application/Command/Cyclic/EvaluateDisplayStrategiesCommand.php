@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Command\Cyclic;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
@@ -18,10 +19,13 @@ class EvaluateDisplayStrategiesCommand extends Command implements CyclicCommand 
 
     /** @var ResourceRepository|EntityRepository */
     private $resourceRepository;
+    /** @var EntityManagerInterface */
+    private $entityManager;
 
-    public function __construct(ResourceRepository $resourceRepository) {
+    public function __construct(ResourceRepository $resourceRepository, EntityManagerInterface $entityManager) {
         parent::__construct();
         $this->resourceRepository = $resourceRepository;
+        $this->entityManager = $entityManager;
     }
 
     protected function configure() {
@@ -30,11 +34,19 @@ class EvaluateDisplayStrategiesCommand extends Command implements CyclicCommand 
             ->setDescription('Updates every display strategy metadata in every resource.')
             ->addOption('batch', 'b', InputOption::VALUE_REQUIRED, null, 100)
             ->addOption('all', 'a', InputOption::VALUE_NONE)
+            ->addOption('set-dirty', 'd', InputOption::VALUE_NONE)
             ->addOption('resourceIds', 'r', InputOption::VALUE_REQUIRED);
     }
 
     /** @inheritdoc */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        if ($input->getOption('set-dirty')) {
+            $condition = $input->getOption('resourceIds') ?: '1=1';
+            $query = 'UPDATE resource SET display_strategies_dirty = true WHERE ' . $condition;
+            $affected = $this->entityManager->getConnection()->exec($query);
+            $output->writeln("<comment>$affected resources set dirty.</comment>");
+            return;
+        }
         ini_set('memory_limit', '768M');
         if ($input->getOption('all')) {
             $resources = $this->resourceRepository->findAll();

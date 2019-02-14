@@ -33,8 +33,12 @@
         <tr>
             <td>{{ resource.oldId }}</td>
             <td>{{ resource.id }}</td>
-            <td><a href="{{ application_url }}/admin/resources/details/{{ resource.id }}"
-                    target='_blank'>{{ application_url }}/admin/resources/details/{{ resource.id }}</a></td>
+            <td>
+                {% if resource.id %}
+                    <a href="{{ application_url }}/admin/resources/details/{{ resource.id }}"
+                        target='_blank'>{{ application_url }}/admin/resources/details/{{ resource.id }}</a>
+                {% endif %}
+            </td>
             <td>{{ resource.status | upper }}</td>
             <td>
                 {% if resource.unfitTypeValues %}
