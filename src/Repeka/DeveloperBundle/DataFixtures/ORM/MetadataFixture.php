@@ -33,10 +33,12 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_SCANNER_USERNAME = 'metadata-scanner-username';
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
     const REFERENCE_METADATA_SUPERVISOR_USERNAME = 'metadata-supervisor-username';
+    const REFERENCE_METADATA_TOP_PARENT_PATH = 'metadata-top-parent-path';
     const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
     const REFERENCE_METADATA_URL = 'metadata-url';
     const REFERENCE_METADATA_URL_LABEL = 'metadata-url-label';
+    const REFERENCE_METADATA_URL_LINK = 'metadata-url-link';
     const REFERENCE_METADATA_CREATOR = 'metadata-creator';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
@@ -457,6 +459,54 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_SUPERVISOR_USERNAME
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'parentPath',
+                    'label' => [
+                        'PL' => 'Ścieżka do top parenta',
+                        'EN' => 'Top parent path',
+                    ],
+                    'control' => MetadataControl::RELATIONSHIP(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'displayStrategy' => <<<TEMPLATE
+{% set ancestor = resource | metadata('parent') | first %}
+[
+{% for i in 0..9 if ancestor %}
+    {{ ancestor.value }},
+    {% set ancestor = ancestor | metadata('parent') | first %}
+{% endfor %}
+]
+TEMPLATE
+                    ,
+                ]
+            ),
+            self::REFERENCE_METADATA_TOP_PARENT_PATH
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'urlWithLink',
+                    'label' => [
+                        'PL' => 'URL Link',
+                        'EN' => 'URL Lint',
+                    ],
+                    'control' => MetadataControl::TEXT(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'displayStrategy' => <<<TEMPLATE
+[
+    {% for url in r|mUrl %}
+        "<a href=\"{{url}}\">{{url|subUrlLabel}}</a>",
+    {% endfor %}
+]
+TEMPLATE
+                    ,
+                ]
+            ),
+            self::REFERENCE_METADATA_URL_LINK
         );
         $this->handleCommand(
             new MetadataUpdateOrderCommand(

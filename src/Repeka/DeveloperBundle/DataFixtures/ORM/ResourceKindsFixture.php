@@ -63,7 +63,9 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_CREATOR),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_REAL_SCANNER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SCANNER_USERNAME),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_TOP_PARENT_PATH),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_URL_LINK),
                 ],
                 $workflow
             ),

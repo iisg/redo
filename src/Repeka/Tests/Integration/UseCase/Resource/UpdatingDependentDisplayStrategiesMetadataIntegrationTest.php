@@ -27,8 +27,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
     /** @var Metadata */
     private $scannerUsernameMetadata;
 
-    /** @before */
-    public function init() {
+    public function initializeDatabaseForTests() {
         $this->loadAllFixtures();
         $this->phpBook = $this->getPhpBookResource();
         $this->scannerData = $this->findResourceByContents([SystemMetadata::USERNAME => 'skaner']);
@@ -242,6 +241,14 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
         $date = $this->phpBook->getValues($m);
         $this->assertCount(1, $date);
         $this->assertContains('30.10.' . date('Y'), (string)$date[0]);
+    }
+
+    /** @small */
+    public function testParentPathDynamicMetadataContainsIntegersNotStrings() {
+        $webpackBook = $this->findResourceByContents(['tytul' => 'webpacka']);
+        $topParent = $webpackBook->getValues($this->findMetadataByName('parentPath'));
+        $this->assertCount(1, $topParent);
+        $this->assertTrue(is_int($topParent[0]->getValue()));
     }
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
