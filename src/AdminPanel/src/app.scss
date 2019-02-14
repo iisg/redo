@@ -192,6 +192,11 @@ body {
 
   .drag-handle {
     cursor: n-resize;
+    color: $blue;
+    @include transition(color $default-transition-duration);
+    &:hover, &:focus {
+      color: $light-blue;
+    }
   }
 
   table {
@@ -240,6 +245,7 @@ body {
       }
       td.with-buttons-container {
         padding: 0;
+        vertical-align: middle;
         & > div {
           display: flex;
           justify-content: flex-end;
@@ -254,9 +260,6 @@ body {
             &[disabled] {
               color: $grey;
             }
-          }
-          & > a {
-            color: inherit;
           }
         }
       }

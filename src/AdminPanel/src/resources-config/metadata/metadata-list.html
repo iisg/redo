@@ -82,13 +82,13 @@
                 </td>
                 <td class="with-buttons-container">
                     <div if.bind="!parentMetadata && metadata.id > 0">
-                        <a class="drag-handle"
+                        <button class="drag-handle"
                             bootstrap-tooltip.bind="'Drag to change order' | t"
                             disabled-link.bind="metadata.pendingRequest"
                             data-placement="left">
-                            <icon name="arrows"
-                                size="1.25"></icon>
-                        </a>
+                            <icon name="arrows-2"
+                                size="1.5"></icon>
+                        </button>
                     </div>
                 </td>
                 <td class="with-throbber">

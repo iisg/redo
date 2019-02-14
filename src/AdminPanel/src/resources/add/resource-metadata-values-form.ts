@@ -1,13 +1,13 @@
-import {bindable} from "aurelia-templating";
-import {Metadata} from "resources-config/metadata/metadata";
-import {Resource} from "../resource";
-import {autoinject} from "aurelia-dependency-injection";
-import {booleanAttribute} from "common/components/boolean-attribute";
-import {ValidationController} from "aurelia-validation";
-import {MetadataValue} from "../metadata-value";
-import {changeHandler} from "../../common/components/binding-mode";
-import {ChangeEvent} from "../../common/change-event";
 import {computedFrom} from "aurelia-binding";
+import {autoinject} from "aurelia-dependency-injection";
+import {bindable} from "aurelia-templating";
+import {ValidationController} from "aurelia-validation";
+import {booleanAttribute} from "common/components/boolean-attribute";
+import {Metadata} from "resources-config/metadata/metadata";
+import {ChangeEvent} from "../../common/change-event";
+import {changeHandler} from "../../common/components/binding-mode";
+import {MetadataValue} from "../metadata-value";
+import {Resource} from "../resource";
 
 @autoinject
 export class ResourceMetadataValuesForm {
@@ -35,7 +35,7 @@ export class ResourceMetadataValuesForm {
     if (this.resource && this.metadata) {
       this.ensureResourceHasMetadataContents();
       const length = this.resource.contents[this.metadata.id].length;
-      if (this.required && !length && !this.metadataValuesReadOnly) {
+      if (this.required && !length && !this.addingValuesIsDisabled) {
         this.addNew();
       }
     }
@@ -70,12 +70,23 @@ export class ResourceMetadataValuesForm {
   }
 
   @computedFrom("metadata.control")
-  get metadataValuesReadOnly(): boolean {
+  get addingValuesIsDisabled(): boolean {
     return ['relationship', 'file', 'directory'].indexOf(this.metadata.control) !== -1;
   }
 
   @computedFrom("required", "metadata.constraints")
   get metadataShownWithoutButtons(): boolean {
     return this.required && this.metadata.constraints.maxCount === 1;
+  }
+
+  @computedFrom('metadata.constraints.maxCount', 'values.length')
+  get itIsPossibleToAddMoreValues() {
+    const noValuesLimit = !this.metadata.constraints.maxCount || this.metadata.constraints.maxCount === -1;
+    return this.skipValidation || noValuesLimit || this.values.length < this.metadata.constraints.maxCount;
+  }
+
+  @computedFrom('resource.contents', 'metadata.id')
+  get values() {
+    return this.resource.contents[this.metadata.id];
   }
 }

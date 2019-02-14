@@ -1,12 +1,12 @@
 @import "../../common/styles";
 
-$icons-width: 1.5em;
+$icon-width: 1.5em;
 $gap-size: $default-gap-size / 2;
 $resource-metadata-value-input-with-buttons-minimum-width: 200px;
 
 resource-form-generated {
   &, & > collapsible-metadata-group {
-    & > span, & > resource-metadata-values-form, .input-container > *, .new-metadata-value-button-container, .drag-handle, .buttons {
+    & > span, & > resource-metadata-values-form, .input-container > *, .new-metadata-value-button-container, .drag-handle-with-buttons {
       @include form-element();
     }
     .metadata-constraints-icons > * {
@@ -32,22 +32,18 @@ resource-form-generated {
           }
           & > resource-metadata-value-input, & > .metadata-row {
             flex: 1;
-            margin-right: $gap-size / 2;
             & > resource-form-generated {
               margin-top: $gap-size / 2;
               margin-left: $gap-size;
             }
           }
-          & > a {
-            line-height: 0;
-            margin-left: $gap-size / 2;
-            margin-right: $gap-size / 2;
-            @include transition(color $default-transition-duration);
-          }
-          & > div {
-            width: calc(2 * #{$icons-width} + #{$gap-size});
-            justify-content: space-between;
-            margin-left: $gap-size / 2;
+          & > .drag-handle-with-buttons {
+            & > * {
+              margin-left: $gap-size;
+            }
+            &.wide-for-three-items {
+              width: calc(3 * #{$icon-width} + 3 * #{$gap-size});
+            }
           }
         }
         td > new-metadata-value-button, td > icon-button {
