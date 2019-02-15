@@ -6,7 +6,7 @@ use Repeka\Domain\Utils\ImmutableIteratorAggregate;
 
 class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerializable {
     public function filterOutEmptyMetadata(): ResourceContents {
-        return new self($this->filterOutEmptyMetadataInContents($this->contents));
+        return self::fromArray($this->filterOutEmptyMetadataInContents($this->contents));
     }
 
     private function filterOutEmptyMetadataInContents(array $contents): array {
@@ -271,6 +271,9 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
         $normalized = array_map(
             function ($metadataEntry) use ($valueProducer) {
                 if (is_array($metadataEntry)) {
+                    if (isset($metadataEntry['value']) || isset($metadataEntry['submetadata'])) {
+                        $metadataEntry = [$metadataEntry];
+                    }
                     return array_map(
                         function ($metadataValue) use ($valueProducer) {
                             if (is_array($metadataValue)) {

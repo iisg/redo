@@ -30,6 +30,12 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(ResourceContents::fromArray([1 => [['value' => 1, 'submetadata' => [13 => 1]]]]), $filtered);
     }
 
+    public function testLeavesEmptyMetadataWithSubmetadata() {
+        $contents = ResourceContents::fromArray([1 => [['value' => '', 'submetadata' => [13 => 1]]]]);
+        $filtered = $contents->filterOutEmptyMetadata();
+        $this->assertEquals(ResourceContents::fromArray([1 => [['submetadata' => [13 => 1]]]]), $filtered);
+    }
+
     public function testDoesNotLeaveEmptySubmetadataArray() {
         $contents = ResourceContents::fromArray([1 => [['value' => 1, 'submetadata' => [14 => []]]]]);
         $filtered = $contents->filterOutEmptyMetadata();
@@ -178,6 +184,12 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(ResourceContents::fromArray([1 => 1, 2 => 2]), $contents);
     }
 
+    public function testAddOneValueWithSubmetadata() {
+        $contents = ResourceContents::fromArray([1 => 1]);
+        $contents = $contents->withMergedValues(1, ['submetadata' => [2 => 3]]);
+        $this->assertEquals(ResourceContents::fromArray([1 => [1, ['submetadata' => [2 => 3]]]]), $contents);
+    }
+
     public function testGetValues() {
         $contents = ResourceContents::fromArray([1 => 1, 2 => [['value' => 2], ['value' => 4]]]);
         $this->assertEquals([new MetadataValue(2), new MetadataValue(4)], $contents->getValues(2));
@@ -255,6 +267,7 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
         return [
             [[], []],
             [[1 => [['value' => 'abc']]], [1 => [['value' => 'abc']]]],
+            [[1 => ['value' => 'abc']], [1 => [['value' => 'abc']]]],
             [[1 => 'a'], [1 => [['value' => 'a']]]],
             [[1 => ['a']], [1 => [['value' => 'a']]]],
             [['a'], [[['value' => 'a']]]],
@@ -263,6 +276,7 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
             [[1 => [['value' => 'a', 'someKey' => 'b']]], [1 => [['value' => 'a']]]],
             [[1 => [['value' => 'a', 'submetadata' => [1 => 'a']]]], [1 => [['value' => 'a', 'submetadata' => [1 => [['value' => 'a']]]]]]],
             [[1 => [['submetadata' => [1 => 'a']]]], [1 => [['value' => null, 'submetadata' => [1 => [['value' => 'a']]]]]]],
+            [[1 => ['submetadata' => [1 => 'a']]], [1 => [['value' => null, 'submetadata' => [1 => [['value' => 'a']]]]]]],
             [[1 => [new MetadataValue(2)]], [1 => [['value' => 2]]]],
             [
                 [1 => [['value' => 'a', 'submetadata' => [1 => [new MetadataValue('a')]]]]],
