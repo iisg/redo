@@ -97,8 +97,8 @@ function onAureliaStarted(aurelia: Aurelia): void {
   if (adminPanel) {
     aurelia.container.get(MetricsEventListener).register();
     aurelia.container.get(CustomValidationRules).register();
-    aurelia.container.get(GuiLanguage).apply();
   }
+  aurelia.container.get(GuiLanguage).apply();
 }
 
 function preloadEntityTypes() {
