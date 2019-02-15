@@ -9,7 +9,7 @@
     </div>
 {% elseif filterableMetadata.control.value in ['flexible-date','timestamp', 'date-range'] %}
     <div class="form-group">
-        <label>{{ filterableMetadata.label.PL }}</label>
+        <label>{{ filterableMetadata.label | inCurrentLanguage }}</label>
 
         {% set from =  app.request.query.all.metadataFilters[filterableMetadata.id]['from'] ?? "" %}
         {% set to = app.request.query.all.metadataFilters[filterableMetadata.id]['to'] ?? "" %}

@@ -19,7 +19,7 @@
             {% if fieldName matches '%.*value_file.content%' %}
                 {% set highlights = withPageNumbers(resource, resource | m(metadataId), highlights) %}
             {% endif %}
-            {% set metadataLabel = metadata.label['PL'] | default(metadata.label | first) | default(metadata.name) %}
+            {% set metadataLabel = metadata.label | inCurrentLanguage %}
             {% set representsWholeValue = highlights | join | replace({'<em>': '', '</em>': '', ' ': ''})
                 == resource | metadata(metadataId) | replace({' ': ''}) %}
             {% set highlightedMetadata = highlightedMetadata | merge({(metadata.name): {
@@ -52,7 +52,7 @@
                 {% for visibleMetadataName in visibleMetadataNames %}
                     {% set metadata = metadata(visibleMetadataName) %}
                     {% if metadata %}
-                        {% set metadataLabel = metadata.label | inCurrentLanguage | default(metadata.label | first) | default(metadata.name) %}
+                        {% set metadataLabel = metadata.label | inCurrentLanguage %}
                         {% set metadataValue = resource | metadata(visibleMetadataName) %}
                         {% if metadataValue is not empty %}
                             <div>
@@ -80,7 +80,7 @@
         {% for collapsedMetadataName in collapsedMetadataNames %}
             {% set metadata = metadata(collapsedMetadataName) %}
             {% if metadata and (highlightedMetadata is not defined or highlightedMetadata[metadata.name] is not defined) %}
-                {% set metadataLabel = metadata.label | inCurrentLanguage | default(metadata.label | first) | default(metadata.name) %}
+                {% set metadataLabel = metadata.label | inCurrentLanguage %}
                 {% set metadataValue = resource | metadata(collapsedMetadataName) %}
                 {% if metadataValue is not empty %}
                     {% set collapsedMetadataLabelsWithValues = collapsedMetadataLabelsWithValues| merge([{

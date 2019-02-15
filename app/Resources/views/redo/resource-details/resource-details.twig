@@ -101,11 +101,11 @@
                         {% for metadata in metadataList if metadata.id > 0
                             and metadata.control != 'display-strategy'
                             and metadata.control != 'wysiwyg-editor' %}
-                            {% set metadataValues = resource | metadata(metadata.id) %}
+                            {% set metadataValues = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) %}
                             {% if metadataValues|length %}
                                 <tr>
                                     <td>
-                                        {{ metadata.label | inCurrentLanguage | default(metadata.label | first) | default(metadata.name) }}
+                                        {{ metadata.label | inCurrentLanguage }}
                                     </td>
                                     <td>
                                         {% for metadataValue in metadataValues %}
