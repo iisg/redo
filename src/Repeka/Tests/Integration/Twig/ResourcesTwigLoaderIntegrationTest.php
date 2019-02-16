@@ -21,9 +21,9 @@ class ResourcesTwigLoaderIntegrationTest extends IntegrationTestCase {
     /** @before */
     public function before() {
         $this->loadAllFixtures();
-        $pageTitleMetadata = $this->findMetadataByName('Tytuł strony', 'cms');
+        $pageTitleMetadata = $this->findMetadataByName('Tytuł strony');
         $this->aboutPage = $this->findResourceByContents([$pageTitleMetadata->getId() => 'O projekcie']);
-        $this->renderedMetadata = $this->findMetadataByName('Wyrenderowana treść strony', 'cms');
+        $this->renderedMetadata = $this->findMetadataByName('Wyrenderowana treść strony');
         $this->loader = $this->container->get(ResourcesTwigLoader::class);
     }
 

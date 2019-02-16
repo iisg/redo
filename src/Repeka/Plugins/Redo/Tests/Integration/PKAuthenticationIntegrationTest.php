@@ -28,7 +28,7 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals('b/123456', $user->getUsername());
-        $nameMetadata = $this->findMetadataByName('Imię', $user->getUserData()->getResourceClass());
+        $nameMetadata = $this->findMetadataByName('Imię');
         $this->assertEquals(['Piotr'], $user->getUserData()->getValues($nameMetadata));
     }
 
@@ -44,9 +44,9 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
         $this->assertEquals('b/012345', $user->getUsername());
-        $nameMetadata = $this->findMetadataByName('Imię', $user->getUserData()->getResourceClass());
+        $nameMetadata = $this->findMetadataByName('Imię');
         $this->assertEquals(['Halina'], $user->getUserData()->getValues($nameMetadata));
-        $emailMetadata = $this->findMetadataByName('Email', $user->getUserData()->getResourceClass());
+        $emailMetadata = $this->findMetadataByName('Email');
         $this->assertEquals(['halinka@repeka.pl'], $user->getUserData()->getValues($emailMetadata));
     }
 

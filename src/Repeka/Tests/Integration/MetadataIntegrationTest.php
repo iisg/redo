@@ -290,4 +290,54 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         $this->assertEquals($metadataArray['resourceClass'], $metadata->getResourceClass());
         $this->assertEquals($metadataArray['constraints'], $metadata->getConstraints());
     }
+
+    public function testMetadataNameMustBeUniqueInWholeSystem() {
+        $duplicatedName = 'not_unique';
+        $this->createLanguage('EN', 'EN', 'Test English');
+        $this->createMetadata($duplicatedName, ['EN' => 'Duplicate book'], [], [], MetadataControl::TEXT, 'books');
+        $client = self::createAdminClient();
+        $newBooksMetadata = [
+            'control' => 'text',
+            'name' => $duplicatedName,
+            'label' => ['EN' => 'Some nice label'],
+            'description' => ['EN' => 'Some nice description'],
+            'placeholder' => [],
+            'resourceClass' => 'books',
+            'constraints' => [],
+            'groupId' => 'basic',
+        ];
+        $newDictionaryMetadata = [
+            'control' => 'text',
+            'name' => $duplicatedName,
+            'label' => ['EN' => 'Some nice label'],
+            'description' => ['EN' => 'Some nice description'],
+            'placeholder' => [],
+            'resourceClass' => 'dictionaries',
+            'constraints' => [],
+            'groupId' => 'basic',
+        ];
+        $client->apiRequest('POST', self::ENDPOINT, $newBooksMetadata);
+        $this->assertStatusCode(400, $client->getResponse());
+        $client->apiRequest('POST', self::ENDPOINT, $newDictionaryMetadata);
+        $this->assertStatusCode(400, $client->getResponse());
+    }
+
+    public function testMetadataNameMustBeUniqueAfterNormalization() {
+        $duplicatedName = 'not_unique';
+        $this->createLanguage('EN', 'EN', 'Test English');
+        $this->createMetadata($duplicatedName, ['EN' => 'Duplicate book'], [], [], MetadataControl::TEXT, 'users');
+        $client = self::createAdminClient();
+        $newMetadata = [
+            'control' => 'text',
+            'name' => 'notUnique',
+            'label' => ['EN' => 'Some nice label'],
+            'description' => ['EN' => 'Some nice description'],
+            'placeholder' => [],
+            'resourceClass' => 'books',
+            'constraints' => [],
+            'groupId' => 'basic',
+        ];
+        $client->apiRequest('POST', self::ENDPOINT, $newMetadata);
+        $this->assertStatusCode(400, $client->getResponse());
+    }
 }

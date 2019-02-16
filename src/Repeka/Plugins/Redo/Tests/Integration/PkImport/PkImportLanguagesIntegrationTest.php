@@ -50,8 +50,8 @@ class PkImportLanguagesIntegrationTest extends AbstractPkImportIntegrationTest {
 
     public function testImportsLabelsInBothLanguagesAndAssignsCorrectLanguage() {
         $this->import();
-        $nameMetadata = $this->findMetadataByName('nazwa', 'dictionaries');
-        $nameLanguageMetadata = $this->findMetadataByName('jezykNazwy', 'dictionaries');
+        $nameMetadata = $this->findMetadataByName('nazwa');
+        $nameLanguageMetadata = $this->findMetadataByName('jezykNazwy');
         $polishLanguage = $this->findResourceByContents(['nazwa' => 'polish']);
         $names = $polishLanguage->getValues($nameMetadata);
         $this->assertCount(2, $names);

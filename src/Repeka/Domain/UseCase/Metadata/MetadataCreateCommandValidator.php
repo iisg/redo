@@ -59,7 +59,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute(
                 'name',
                 Validator::notBlank()
-                    ->callback($this->metadataNameIsUniqueInResourceClass($command))
+                    ->callback([$this, 'metadataNameIsUnique'])
                     ->setTemplate('metadataNameIsNotUnique')
             )
             ->attribute(
@@ -78,11 +78,9 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('groupId', $this->metadataGroupExistsRule);
     }
 
-    public function metadataNameIsUniqueInResourceClass(MetadataCreateCommand $command) {
-        return function (string $name) use ($command) {
-            $query = MetadataListQuery::builder()->filterByResourceClass($command->getResourceClass())->filterByName($name)->build();
-            $result = $this->metadataRepository->findByQuery($query);
-            return count($result) === 0;
-        };
+    public function metadataNameIsUnique(string $name) {
+        $query = MetadataListQuery::builder()->filterByName($name)->build();
+        $result = $this->metadataRepository->findByQuery($query);
+        return empty($result);
     }
 }

@@ -41,7 +41,7 @@ class ResourcesTwigLoader implements \Twig_LoaderInterface {
     public function getTemplateMetadata(): ?Metadata {
         if ($this->templatesResourceClass) {
             try {
-                return $this->metadataRepository->findByName(self::TEMPLATE_METADATA_KIND_NAME, $this->templatesResourceClass);
+                return $this->metadataRepository->findByName(self::TEMPLATE_METADATA_KIND_NAME);
             } catch (\Exception $e) {
             }
         }

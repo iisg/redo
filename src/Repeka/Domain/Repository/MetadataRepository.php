@@ -18,10 +18,10 @@ interface MetadataRepository {
     public function findOne(int $id): Metadata;
 
     /** @throws EntityNotFoundException if the entity could not be found */
-    public function findByName(string $name, ?string $resourceClass = null): Metadata;
+    public function findByName(string $name): Metadata;
 
     /** @throws EntityNotFoundException if the entity could not be found */
-    public function findByNameOrId($nameOrId, ?string $resourceClass = null): Metadata;
+    public function findByNameOrId($nameOrId): Metadata;
 
     public function exists(int $id): bool;
 

@@ -29,11 +29,8 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $metadata;
     }
 
-    public function findByName(string $name, ?string $resourceClass = null): Metadata {
-        $query = MetadataListQuery::builder()->filterByNames([$name]);
-        if ($resourceClass) {
-            $query = $query->filterByResourceClass($resourceClass);
-        }
+    public function findByName(string $name): Metadata {
+        $query = MetadataListQuery::builder()->filterByName($name);
         $result = $this->findByQuery($query->build());
         if (!$result) {
             throw new EntityNotFoundException($this, $name);
@@ -41,11 +38,11 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
         return $result[0];
     }
 
-    public function findByNameOrId($nameOrId, ?string $resourceClass = null): Metadata {
+    public function findByNameOrId($nameOrId): Metadata {
         if (is_numeric($nameOrId)) {
             return $this->findOne($nameOrId);
         } else {
-            return $this->findByName($nameOrId, $resourceClass);
+            return $this->findByName($nameOrId);
         }
     }
 

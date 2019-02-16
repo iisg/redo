@@ -32,8 +32,8 @@ trait FixtureHelpers {
         return $this->handleCommandBypassingFirewall(new UserQuery(AdminAccountFixture::ADMIN_USER_ID));
     }
 
-    protected function findMetadataByName(string $name, string $resourceClass = 'books'): Metadata {
-        return $this->container->get(MetadataRepository::class)->findByName($name, $resourceClass);
+    protected function findMetadataByName(string $name): Metadata {
+        return $this->container->get(MetadataRepository::class)->findByName($name);
     }
 
     protected function getResourceRepository(): ResourceRepository {
