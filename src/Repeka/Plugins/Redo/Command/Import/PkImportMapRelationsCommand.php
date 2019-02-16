@@ -53,6 +53,7 @@ class PkImportMapRelationsCommand extends Command {
             ->addOption('idNamespace', 'i', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY)
             ->addOption('skip', 's', InputOption::VALUE_REQUIRED)
             ->addOption('ignoreProblems', null, InputOption::VALUE_REQUIRED, '', '')
+            ->addOption('fixProblems', null, InputOption::VALUE_REQUIRED, '', '')
             ->addOption('customMap', 'c', InputOption::VALUE_REQUIRED);
     }
 
@@ -64,6 +65,7 @@ class PkImportMapRelationsCommand extends Command {
         $idMapping = PkImportResourcesCommand::getIdMapping();
         $idNamespaces = $this->loadIdNamespaces($input);
         $customMaps = $this->loadCustomMaps($input);
+        $fixProblems = $this->loadFixProblems($input);
         $problemsLog = [];
         if (!$idMapping) {
             $output->writeln('<error>You need to import some resources first.');
@@ -111,6 +113,7 @@ class PkImportMapRelationsCommand extends Command {
                                 $resource,
                                 $relationshipMetadataIds,
                                 $ignoreProblemsInMetadataIds,
+                                $fixProblems,
                                 &$metadataWithoutNamespace,
                                 &$missingMetadataIds,
                                 &$missingMetadataValues,
@@ -140,6 +143,9 @@ class PkImportMapRelationsCommand extends Command {
                                                 ?? 'xx', // suwid
                                                 $value->getValue(), // value
                                             ];
+                                            if (isset($fixProblems[$metadataId])) {
+                                                return $value->withNewValue($fixProblems[$metadataId]);
+                                            }
                                             if (in_array($metadataId, $ignoreProblemsInMetadataIds)) {
                                                 return null;
                                             }
@@ -256,5 +262,15 @@ class PkImportMapRelationsCommand extends Command {
         } catch (EntityNotFoundException $e) {
             throw new \RuntimeException('Unknown metadata: ' . $metadataIdOrName, 0, $e);
         }
+    }
+
+    private function loadFixProblems(InputInterface $input) {
+        $pairs = array_values(array_filter(explode(',', $input->getOption('fixProblems') ?? '')));
+        $map = [];
+        foreach ($pairs as $pair) {
+            list($suwResourceId, $redoResourceId) = explode(':', $pair);
+            $map[intval($suwResourceId)] = intval($redoResourceId);
+        }
+        return $map;
     }
 }

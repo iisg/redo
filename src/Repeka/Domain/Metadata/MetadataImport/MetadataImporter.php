@@ -55,7 +55,7 @@ class MetadataImporter {
                             $valuesBasedOnImportKey[$i] ?? null,
                             $mapping->getSubmetadataMappings(),
                             $resultBuilder,
-                            new MetadataImportContext($transformedValues[$i], $valuesBasedOnImportKey)
+                            new MetadataImportContext($transformedValues[$i] ?? [], $valuesBasedOnImportKey)
                         );
                         $metadataValue['submetadata'] = $submetadata;
                     }
