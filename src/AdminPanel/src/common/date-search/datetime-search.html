@@ -2,7 +2,7 @@
     <require from="common/components/dropdown-select/dropdown-select"></require>
     <require from="resources/controls/input/datetime-picker/datetime-picker"></require>
 
-    <div>
+    <div if.bind="!fixedRangeMode">
         <button class="btn btn-xs default-button"
             click.delegate="changeMode()">
             <icon name="workflow-2"></icon>

@@ -1,9 +1,8 @@
 datetime-picker {
   width: 100%;
+  display: inline-flex;
+  align-items: center;
   .datepicker-input {
     width: 100%;
-  }
-  .datepicker-input-range {
-    width: 50%;
   }
 }

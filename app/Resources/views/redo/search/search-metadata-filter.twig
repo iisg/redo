@@ -21,6 +21,7 @@
         } %}
 
         <datetime-search filterable-metadata-id.one-time="{{ filterableMetadata.id }}"
+            fixed-range-mode="{{ 'year' }}"
             stringified-value="{{ dateSearchValue | json_encode }}"></datetime-search>
     </div>
 {% elseif filterableMetadata.control.value in ['relationship'] %}

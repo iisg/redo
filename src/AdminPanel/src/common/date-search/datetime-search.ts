@@ -1,15 +1,16 @@
 import {DateMode, FlexibleDateContent} from "resources/controls/input/flexible-date-input/flexible-date-config";
 import {values} from "lodash";
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentBind} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 
-export class DatetimeSearch {
+export class DatetimeSearch implements ComponentBind {
   @bindable stringifiedValue: string;
   @bindable disabled: boolean;
   @bindable filterableMetadataId: string;
+  @bindable fixedRangeMode: DateMode;
   value: FlexibleDateContent = new FlexibleDateContent();
   selectedDateMode: DateMode = DateMode.RANGE;
-  rangeDateModes: string[] = values(DateMode).filter(v => v != DateMode.RANGE);
+  rangeDateModes: DateMode[] = values(DateMode).filter(v => v != DateMode.RANGE);
   selectedRangeDateMode: DateMode = DateMode.YEAR;
   modePlace: number = 0;
 
@@ -25,7 +26,7 @@ export class DatetimeSearch {
     dateData.to = dateFilterObject['to'];
     dateData.rangeMode = dateFilterObject['rangeMode'];
     dateData.mode = DateMode.RANGE;
-    this.selectedRangeDateMode = dateData.rangeMode;
+    this.selectedRangeDateMode = this.fixedRangeMode ? this.fixedRangeMode : dateData.rangeMode;
     const modeChoice = this.rangeDateModes.indexOf(dateData.rangeMode);
     this.modePlace = modeChoice != -1 ? modeChoice : 0;
     this.value = dateData;

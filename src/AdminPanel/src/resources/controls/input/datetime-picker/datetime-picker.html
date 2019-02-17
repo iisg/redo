@@ -2,7 +2,7 @@
     <require from="eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"></require>
 
     <div ref="datepicker"
-        class="input-group date ${isRange ? 'datepicker-input-range' : 'datepicker-input'}"
+        class="input-group date ${isRange ? '' : 'datepicker-input'}"
         data-target-input="nearest">
         <input type="text"
             class="form-control datetimepicker-input"
@@ -15,9 +15,10 @@
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
     </div>
+    <span if.bind="isRange">&nbsp;&mdash;&nbsp;</span>
     <div ref="linkedDatepicker"
         if.bind="isRange"
-        class="input-group date ${isRange ? 'datepicker-input-range' : 'datepicker-input'}"
+        class="input-group date ${isRange ? '' : 'datepicker-input'}"
         data-target-input="nearest">
         <input type="text"
             class="form-control datetimepicker-input"
