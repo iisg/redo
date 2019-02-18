@@ -23,7 +23,7 @@ export class InCurrentLanguageValueConverter implements ToViewValueConverter {
       }
     }
 
-    const anyLanguage = Object.keys(value)[0];
+    const anyLanguage = value ? Object.keys(value)[0] : undefined;
     return (anyLanguage === undefined) ? '' : value[anyLanguage];
   }
 

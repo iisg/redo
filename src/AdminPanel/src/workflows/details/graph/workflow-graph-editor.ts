@@ -69,7 +69,7 @@ export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
   }
 
   workflowElemChanged(): void {
-    this.simulationAllowed = !!this.workflow.transitions.length;
+    this.simulationAllowed = !!this.workflow.places.length;
   }
 
   dispatchChangedEvent = debounce((value) => this.element.dispatchEvent(ChangeEvent.newInstance(value)), 10);
@@ -85,7 +85,6 @@ export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
       this.selectedElement = this.findMatchingPlace(place);
     });
     this.graph.onTransitionSelect(transition => {
-      this.updateWorkflowTransitionsBasedOnGraph();
       this.selectedElement = transition;
     });
     this.graph.onDeselect(() => this.selectedElement = undefined);
@@ -112,11 +111,6 @@ export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
     const places: WorkflowPlace[] = this.graph.getPlaces();
     this.copyPlaceRequirementArrays(this.workflow.places, places);
     this.workflow.places = places;
-  }
-
-  private updateWorkflowTransitionsBasedOnGraph() {
-    const transitions: WorkflowTransition[] = this.graph.getTransitions();
-    this.workflow.transitions = transitions;
   }
 
   private copyPlaceRequirementArrays(sources: WorkflowPlace[], targets: WorkflowPlace[]): void {
