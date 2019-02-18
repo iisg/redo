@@ -8,11 +8,11 @@ import {WorkflowPlaceSorter} from "./workflow-place-sorter";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {twoWay} from "common/components/binding-mode";
 import {deepCopy} from "common/utils/object-utils";
-import {ResourceKind} from "../../../resources-config/resource-kind/resource-kind";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {debounce, flatten} from "lodash";
-import {inArray} from "../../../common/utils/array-utils";
-import {ChangeEvent} from "../../../common/change-event";
-import {SystemMetadata} from "../../../resources-config/metadata/system-metadata";
+import {inArray} from "common/utils/array-utils";
+import {ChangeEvent} from "common/events/change-event";
+import {SystemMetadata} from "resources-config/metadata/system-metadata";
 
 @autoinject
 export class Excel implements ComponentAttached {
@@ -22,6 +22,8 @@ export class Excel implements ComponentAttached {
   metadataList: Metadata[];
   autoChangeRowToTheEnd: boolean = true;
   filterByResourceKinds: ResourceKind[] = [];
+  resourceKindsLoaded = false;
+  resourceKindsEmptyList = false;
 
   constructor(private metadataRepository: MetadataRepository,
               private workflowPlaceSorter: WorkflowPlaceSorter,
@@ -38,6 +40,11 @@ export class Excel implements ComponentAttached {
       .then(metadataList => this.metadataList = metadataList);
   }
 
+  onResourceKindsLoaded({detail: resourceKinds}) {
+    this.resourceKindsLoaded = true;
+    this.resourceKindsEmptyList = resourceKinds.length === 0;
+  }
+
   @computedFrom('workflow.places')
   get orderedPlaces(): WorkflowPlace[] {
     return this.workflowPlaceSorter.getOrderedPlaces(this.workflow);
@@ -45,7 +52,7 @@ export class Excel implements ComponentAttached {
 
   @computedFrom('metadataList', 'filterByResourceKinds', 'filterByResourceKinds.length')
   get filteredMetadata(): Metadata[] {
-    if (this.filterByResourceKinds && this.filterByResourceKinds.length) {
+    if (this.filterByResourceKinds && this.filterByResourceKinds.length && !this.resourceKindsEmptyList) {
       const metadataIds = flatten(this.filterByResourceKinds.map(rk => rk.metadataList)).map(m => m.id);
       return this.metadataList.filter(metadata => inArray(metadata.id, metadataIds));
     } else {

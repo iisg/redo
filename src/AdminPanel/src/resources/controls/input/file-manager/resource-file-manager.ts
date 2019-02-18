@@ -3,7 +3,7 @@ import {Resource} from "../../../resource";
 import {Metadata} from "../../../../resources-config/metadata/metadata";
 import {autoinject} from "aurelia-dependency-injection";
 import {MetadataValue} from "../../../metadata-value";
-import {ChangeEvent} from "../../../../common/change-event";
+import {ChangeEvent} from "../../../../common/events/change-event";
 
 @autoinject
 export class ResourceFileManager {

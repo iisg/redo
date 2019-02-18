@@ -4,7 +4,7 @@ import {bindable} from "aurelia-templating";
 import {ValidationController} from "aurelia-validation";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {Metadata} from "resources-config/metadata/metadata";
-import {ChangeEvent} from "../../common/change-event";
+import {ChangeEvent} from "../../common/events/change-event";
 import {changeHandler} from "../../common/components/binding-mode";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";

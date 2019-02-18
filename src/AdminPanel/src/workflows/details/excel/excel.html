@@ -15,7 +15,7 @@
                         value.bind="filterByResourceKinds"
                         multi-select="true"
                         set-first-as-default
-                        resource-kinds-loaded.bind="resourceKindsLoaded"></resource-kind-chooser>
+                        load.delegate="onResourceKindsLoaded($event)"></resource-kind-chooser>
                 </div>
             </th>
             <th repeat.for="place of orderedPlaces"

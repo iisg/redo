@@ -4,6 +4,7 @@ import {booleanAttribute} from "common/components/boolean-attribute";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {oneTime, twoWay} from "../../binding-mode";
+import {LoadEvent} from "../../../events/load-event";
 
 @autoinject
 export class ResourceKindChooser implements ComponentAttached {
@@ -14,12 +15,11 @@ export class ResourceKindChooser implements ComponentAttached {
   @bindable disabled: boolean;
   @bindable hideClearButton: boolean = false;
   @bindable filter: (resourceKind: ResourceKind) => boolean = () => true;
-  @bindable(twoWay) resourceKindsLoaded: boolean = false;
   @bindable @booleanAttribute setFirstAsDefault: boolean;
   @bindable @booleanAttribute useComputedWidth: boolean;
   resourceKinds: ResourceKind[];
 
-  constructor(private resourceKindRepository: ResourceKindRepository) {
+  constructor(private resourceKindRepository: ResourceKindRepository, private element: Element) {
   }
 
   attached() {
@@ -34,6 +34,6 @@ export class ResourceKindChooser implements ComponentAttached {
       .then(resourceKinds => {
         this.resourceKinds = resourceKinds.filter(this.filter);
       })
-      .then(() => this.resourceKindsLoaded = true);
+      .finally(() => this.element.dispatchEvent(LoadEvent.newInstance(this.resourceKinds)));
   }
 }

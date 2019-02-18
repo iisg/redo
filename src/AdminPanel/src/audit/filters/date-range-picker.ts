@@ -3,7 +3,7 @@ import {changeHandler, twoWay} from "../../common/components/binding-mode";
 import {bindable} from "aurelia-templating";
 import {values} from "lodash";
 import {DateMode, FlexibleDateContent, inputDateConfig} from "../../resources/controls/input/flexible-date-input/flexible-date-config";
-import {ChangeEvent} from "../../common/change-event";
+import {ChangeEvent} from "../../common/events/change-event";
 import {isString} from "../../common/utils/object-utils";
 import {DateRangeConfig, DateRangeMode} from "./date-range-config";
 import "eonasdan-bootstrap-datetimepicker";

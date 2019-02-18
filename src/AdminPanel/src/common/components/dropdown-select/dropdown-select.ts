@@ -5,7 +5,7 @@ import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating
 import * as $ from "jquery";
 import {debounce} from "lodash";
 import "select2";
-import {ChangeEvent} from "../../change-event";
+import {ChangeEvent} from "../../events/change-event";
 import {changeHandler, twoWay} from "../binding-mode";
 import {booleanAttribute} from "../boolean-attribute";
 import {isEmptyArray} from "../../utils/array-utils";

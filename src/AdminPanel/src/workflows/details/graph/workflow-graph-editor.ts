@@ -1,5 +1,5 @@
 import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
-import {bindable, ComponentUnbind, ComponentAttached} from "aurelia-templating";
+import {bindable, ComponentAttached, ComponentUnbind} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {WorkflowRepository} from "../../workflow-repository";
 import {WorkflowGraph} from "./workflow-graph";
@@ -8,7 +8,7 @@ import {twoWay} from "common/components/binding-mode";
 import {WorkflowGraphEditorReady, WorkflowGraphReady} from "./workflow-graph-events";
 import {BindingEngine, Disposable} from "aurelia-binding";
 import {WorkflowGraphManager} from "./workflow-graph-manager";
-import {ChangeEvent} from "../../../common/change-event";
+import {ChangeEvent} from "../../../common/events/change-event";
 import {debounce} from "lodash";
 
 @autoinject

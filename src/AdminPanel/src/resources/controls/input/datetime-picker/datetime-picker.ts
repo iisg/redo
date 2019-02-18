@@ -5,7 +5,7 @@ import "eonasdan-bootstrap-datetimepicker";
 import {twoWay} from "common/components/binding-mode";
 import {isString} from "common/utils/object-utils";
 import * as moment from "moment";
-import {ChangeEvent} from "common/change-event";
+import {ChangeEvent} from "common/events/change-event";
 import {autoinject} from "aurelia-dependency-injection";
 
 @autoinject

@@ -13,7 +13,7 @@ import {LoadSubtreeRequest, TreeItem} from "common/components/tree-view/tree-vie
 import {debounce, remove} from "lodash";
 import {Alert} from "common/dialog/alert";
 import {I18N} from "aurelia-i18n";
-import {ChangeEvent} from "common/change-event";
+import {ChangeEvent} from "common/events/change-event";
 
 @autoinject
 export class ResourcePicker implements ComponentAttached, ComponentDetached {
