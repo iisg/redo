@@ -3,11 +3,11 @@ import {autoinject} from "aurelia-dependency-injection";
 import {BindingEngine, Disposable, observable} from "aurelia-binding";
 import {twoWay} from "common/components/binding-mode";
 import {SystemMetadata} from 'resources-config/metadata/system-metadata';
-import {MetadataValue} from './../../../metadata-value';
-import {ResourceTreeQuery} from './../../../resource-tree-query';
+import {MetadataValue} from '../../../metadata-value';
+import {ResourceTreeQuery} from '../../../resource-tree-query';
 import {ResourceRepository} from "resources/resource-repository";
 import {Resource} from "resources/resource";
-import {ResourceLabelValueConverter} from "./../../../details/resource-label-value-converter";
+import {ResourceLabelValueConverter} from "../../../details/resource-label-value-converter";
 import {deepCopy, isObject} from "../../../../common/utils/object-utils";
 import {LoadSubtreeRequest, TreeItem} from "common/components/tree-view/tree-view";
 import {debounce, remove} from "lodash";
@@ -16,7 +16,7 @@ import {I18N} from "aurelia-i18n";
 import {ChangeEvent} from "common/events/change-event";
 
 @autoinject
-export class ResourcePicker implements ComponentAttached, ComponentDetached {
+export class TreeResourcePicker implements ComponentAttached, ComponentDetached {
   @bindable(twoWay) resourceIds: MetadataValue[];
   @bindable resourceKindIds: number[] = [];
   @bindable contentsFilter: NumberMap<string> = {};

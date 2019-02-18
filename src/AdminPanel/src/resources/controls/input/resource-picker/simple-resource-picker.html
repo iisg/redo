@@ -1,0 +1,6 @@
+<template>
+    <template if.bind="ready">
+        <compose view="./${multipleChoice ? 'multiple' : 'single'}-choice-resource-picker.html"></compose>
+    </template>
+    <throbber else></throbber>
+</template>

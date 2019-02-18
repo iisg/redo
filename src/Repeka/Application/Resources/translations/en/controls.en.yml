@@ -23,3 +23,7 @@ flexible-date-modes:
 file-uploader-types:
   simple: Basic file selection
   file_manager: Resource file manager
+
+relationship-selector-types:
+  simple: Simple selector
+  tree: Tree selector

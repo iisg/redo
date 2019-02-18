@@ -1,17 +1,17 @@
-import {bindable, ComponentAttached} from "aurelia-templating";
+import {bindable, ComponentBind} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {twoWay} from "common/components/binding-mode";
 import {values} from "lodash";
 
-export class FileUploaderTypeEditor implements ComponentAttached {
+export class RelationshipSelectorTypeEditor implements ComponentBind {
   @bindable(twoWay) value: string;
   @bindable originalValue: string;
   @bindable hasBase: boolean;
-  values: string[] = values(FileUploaderType);
+  types: string[] = values(RelationshipSelectorType);
 
-  attached() {
+  bind() {
     if (!this.value) {
-      this.value = FileUploaderType.SIMPLE;
+      this.value = RelationshipSelectorType.SIMPLE;
     }
   }
 
@@ -25,7 +25,7 @@ export class FileUploaderTypeEditor implements ComponentAttached {
   }
 }
 
-export enum FileUploaderType {
+export enum RelationshipSelectorType {
   SIMPLE = 'simple',
-  FILE_MANAGER = 'file_manager',
+  TREE = 'tree',
 }

@@ -4,7 +4,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {bindable} from "aurelia-templating";
 
 @autoinject
-export class TreeRelationshipSelector {
+export class ResourceRelationshipSelector {
   @bindable metadata: Metadata;
   @bindable resource: Resource;
   @bindable disabled: boolean = false;
@@ -21,7 +21,7 @@ export class TreeRelationshipSelector {
     }
   }
 
-  showTree() {
+  showSelector() {
     this.loaded = true;
     this.shown = true;
   }

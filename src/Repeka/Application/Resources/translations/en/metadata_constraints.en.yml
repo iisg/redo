@@ -8,3 +8,4 @@ labels:
   doublePrecision: Double precision for display purposes
   uniqueInResourceClass: Unique in resource class
   fileUploaderType: File uploader type
+  relationshipSelectorType: Relationship selector type

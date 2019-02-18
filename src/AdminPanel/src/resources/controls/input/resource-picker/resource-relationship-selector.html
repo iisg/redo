@@ -1,6 +1,6 @@
 <template>
-    <require from="./resource-picker"></require>
-    <require from="resources/controls/input/resource-picker/resource-picker"></require>
+    <require from="resources/controls/input/resource-picker/tree-resource-picker"></require>
+    <require from="resources/controls/input/resource-picker/simple-resource-picker"></require>
     <require from="common/value-converters/to-array-value-converter"></require>
     <require from="resources/details/resource-link"></require>
     <require from="common/components/buttons/icon-button"></require>
@@ -8,14 +8,22 @@
     <div if.bind="loaded"
         show.bind="shown">
         <div class="metadata-row">
-            <resource-picker if.bind="skipValidation || metadata.constraints.resourceKind.length"
-                resource-ids.bind="resource.contents[metadata.id]"
-                resource-kind-ids.bind="skipValidation ? [] : metadata.constraints.resourceKind"
-                contents-filter.bind="skipValidation ? undefined : metadata.constraints.relatedResourceMetadataFilter"
-                resource-class.bind="!skipValidation && metadata.id == -1 ? resource.resourceClass : undefined"
-                disabled.bind="disabled || metadata.constraints.resourceKind.length === 0 && !skipValidation"
-                tree-query-url.bind="treeQueryUrl"></resource-picker>
-
+            <span if.bind="skipValidation || metadata.constraints.resourceKind.length">
+                <tree-resource-picker if.bind="metadata.constraints.relationshipSelectorType == 'tree' || skipValidation"
+                    resource-ids.bind="resource.contents[metadata.id]"
+                    resource-kind-ids.bind="skipValidation ? [] : metadata.constraints.resourceKind"
+                    contents-filter.bind="skipValidation ? undefined : metadata.constraints.relatedResourceMetadataFilter"
+                    resource-class.bind="!skipValidation && metadata.id == -1 ? resource.resourceClass : undefined"
+                    disabled.bind="disabled || metadata.constraints.resourceKind.length === 0 && !skipValidation"
+                    tree-query-url.bind="treeQueryUrl"></tree-resource-picker>
+                <simple-resource-picker else
+                    resource-ids.bind="resource.contents[metadata.id]"
+                    resource-kind-ids.bind="skipValidation ? [] : metadata.constraints.resourceKind"
+                    contents-filter.bind="skipValidation ? undefined : metadata.constraints.relatedResourceMetadataFilter"
+                    resource-class.bind="!skipValidation && metadata.id == -1 ? resource.resourceClass : undefined"
+                    disabled.bind="disabled || metadata.constraints.resourceKind.length === 0 && !skipValidation"
+                    multiple-choice.bind="metadata.constraints.maxCount !== 1"></simple-resource-picker>
+            </span>
             <span else>
                 ${'To select resources choose allowed resource kinds in metadata settings.' | t}
                 <a route-href="route: metadata/details; params.bind: {id: metadata.id, action: 'edit'}"
@@ -58,7 +66,7 @@
     </div>
     <template if.bind="!shown && !disabled">
         <icon-button icon-name="add-2"
-            click.trigger="showTree()"
+            click.trigger="showSelector()"
             tooltip-text-when-enabled.one-time="'Select values' | t"
             tab-index="-1"></icon-button>
     </template>

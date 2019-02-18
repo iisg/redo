@@ -1,0 +1,7 @@
+<template>
+    <require from="../relationship-selector-type/relationship-selector-type-editor"></require>
+
+    <relationship-selector-type-editor value.bind="metadata.constraints.relationshipSelectorType"
+        original-value.bind="originalMetadata.constraints.relationshipSelectorType"
+        has-base.bind="!!originalMetadata"></relationship-selector-type-editor>
+</template>

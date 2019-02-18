@@ -1,0 +1,12 @@
+<template>
+    <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
+
+    <label repeat.for="type of types">
+        <input type="radio"
+            model.bind="type"
+            checked.bind="value">
+        ${'controls::relationship-selector-types//' + type | t }
+    </label>
+    <restore-from-original-button if.bind="hasBase && wasModified"
+        click.delegate="resetToOriginalValues()"></restore-from-original-button>
+</template>

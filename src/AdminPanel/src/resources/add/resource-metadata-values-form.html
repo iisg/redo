@@ -2,7 +2,7 @@
     <require from="./resource-metadata-value-input"></require>
     <require from="./new-metadata-value-button.html"></require>
     <require from="common/components/buttons/icon-button"></require>
-    <require from="resources/controls/input/resource-picker/tree-relationship-selector"></require>
+    <require from="resources/controls/input/resource-picker/resource-relationship-selector"></require>
     <require from="resources/controls/input/file-manager/file-upload"></require>
     <require from="resources/controls/input/file-manager/resource-file-manager"></require>
     <require from="common/value-converters/in-value-converter"></require>
@@ -12,13 +12,13 @@
         <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allow-drag.call: isDragHandle($event); type-flag.bind: 0">
         <tr if.bind="metadata.control === 'relationship'">
             <td>
-                <tree-relationship-selector containerless
+                <resource-relationship-selector containerless
                     resource.bind="resource"
                     metadata.bind="metadata"
                     skip-validation.bind="skipValidation"
                     disabled.bind="disabled"
                     show-by-default.one-time="required && resource.contents[metadata.id].length === 0"
-                    tree-query-url.bind="treeQueryUrl"></tree-relationship-selector>
+                    tree-query-url.bind="treeQueryUrl"></resource-relationship-selector>
             </td>
         </tr>
         <tr if.bind="metadata.control === 'file'">

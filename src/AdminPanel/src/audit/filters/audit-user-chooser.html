@@ -1,6 +1,6 @@
 <template class="audit-user-chooser">
     <require from="common/components/dropdown-select/dropdown-select"></require>
-    <require from="resources/controls/input/resource-picker/resource-picker"></require>
+    <require from="resources/controls/input/resource-picker/tree-resource-picker"></require>
 
     <div>
         <button class="toggle-button"
@@ -10,10 +10,10 @@
         </button>
     </div>
 
-    <resource-picker if.bind="showTree"
+    <tree-resource-picker if.bind="showTree"
         resource-kind-ids.one-time="[-1]"
         resource-ids.bind="userIdsMetadata"
-        resource-class="users"></resource-picker>
+        resource-class="users"></tree-resource-picker>
 
     <div class="audit-user-chooser-selected-users">
         <span class="label label-primary"

@@ -1,0 +1,24 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+
+    <div class="dropdown-container"
+        if.bind="useDropdown">
+        <dropdown-select if.bind="useDropdown"
+            values.bind="resources"
+            value.bind="selectedResources"
+            multiple.bind="multipleChoice"
+            disabled.bind="!resources">
+            <template replace-part="option-template">
+                ${option | resourceLabel | inCurrentLanguage}
+            </template>
+        </dropdown-select>
+    </div>
+    <label else
+        repeat.for="resource of resources">
+        <input type="checkbox"
+            change.delegate="selectedResourcesChanged()"
+            model.bind="resource"
+            checked.bind="selectedResources">
+        ${resource | resourceLabel | inCurrentLanguage}
+    </label>
+</template>
