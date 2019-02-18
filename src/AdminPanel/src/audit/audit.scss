@@ -8,12 +8,12 @@ audit {
     padding-right: $default-gap-size / 2;
   }
   .page-subtitle {
-    padding-top: $default-gap-size;
-    padding-left: $default-gap-size;
-    padding-right: $default-gap-size;
+    padding: $default-gap-size $default-gap-size $default-gap-size / 2;
   }
-  .form-with-buttons {
-    flex-shrink: 0;
+  .with-sticky-button {
+    flex-shrink: 0; // Required by Chromium.
+    padding-left: $default-gap-size / 2;
+    padding-right: $default-gap-size / 2;
     .simple-form {
       & > * {
         @include form-element();

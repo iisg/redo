@@ -5,10 +5,10 @@
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
 
-    <form class="form-with-buttons"
+    <form class="with-sticky-buttons"
         submit.delegate="validateAndSubmit()"
         change.delegate="dirty = true">
-        <div class="form-content simple-form">
+        <div class="content simple-form">
             <span>${'Name' | t}
                 <required-field-indicator></required-field-indicator>
             </span>
@@ -33,7 +33,7 @@
             <compose containerless
                 view="./metadata-editable-properties.html"></compose>
         </div>
-        <div class="form-buttons">
+        <div class="sticky-buttons">
             <submit-button editing.bind="!!currentlyEditedMetadata"
                 submitting.bind="submitting"></submit-button>
             <cancel-button disabled.bind="metadata.pendingRequest || submitting"

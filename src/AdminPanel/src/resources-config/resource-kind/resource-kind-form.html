@@ -12,9 +12,9 @@
     <require from="common/components/buttons/submit-button.html"></require>
 
     <form submit.delegate="validateAndSubmit()"
-        class="form-with-buttons"
+        class="with-sticky-buttons"
         change.delegate="dirty = true">
-        <div class="form-content simple-form">
+        <div class="content simple-form">
             <span>${'Name' | t}</span>
             <multilingual-editor value.bind="resourceKind.label & validate"></multilingual-editor>
             <span>${'Add metadata kind' | resourceClassTranslation:resourceClass}</span>
@@ -87,7 +87,7 @@
             <resource-kind-constraint-editor metadata.bind="resourceChildConstraintMetadata"
                 resource-class.bind="resourceClass"></resource-kind-constraint-editor>
         </div>
-        <div class="form-buttons">
+        <div class="sticky-buttons">
             <submit-button editing.bind="editing"
                 submitting.bind="submitting"></submit-button>
             <cancel-button class="${!editing ? 'orange' : ''}"

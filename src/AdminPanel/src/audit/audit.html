@@ -11,8 +11,8 @@
     <require from="./underscores-to-hyphens"></require>
 
     <span class="page-subtitle">${'Filters' | t}</span>
-    <div class="form-with-buttons">
-        <div class="form-content simple-form">
+    <div class="with-sticky-button">
+        <div class="content simple-form">
             <span>${'Date' | t}</span>
             <date-range-picker date-from.bind="filters.dateFrom"
                 date-to.bind="filters.dateTo"></date-range-picker>
@@ -24,11 +24,10 @@
             <span>${'Resource contents' | t}</span>
             <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
         </div>
-        <div class="form-buttons">
-            <toggle-button primary-icon-name="filter-2"
-                primary-label="Filter_verb"
-                click.delegate="onFiltersChanged()"></toggle-button>
-        </div>
+        <toggle-button class="sticky-button"
+            primary-icon-name="filter-2"
+            primary-label="Filter_verb"
+            click.delegate="onFiltersChanged()"></toggle-button>
     </div>
     <div if.bind="error"
         class="alert alert-danger">

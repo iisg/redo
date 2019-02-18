@@ -1,11 +1,15 @@
 @import "../../styles";
 
-toggle-button, .toggle-button:not(button) {
+toggle-button, .toggle-button:not(button):not(a) {
   @include toggle-button();
 }
 
-button.toggle-button {
+button.toggle-button, a.toggle-button {
   @include toggle-button($button-wrapper: false);
+}
+
+a.toggle-button {
+  text-decoration: none;
 }
 
 $available-colors: (
@@ -16,21 +20,15 @@ $available-colors: (
 );
 
 @each $color-name, $color in $available-colors {
-  .#{$color-name} toggle-button, toggle-button.#{$color-name}, .toggle-button.#{$color-name}:not(button) {
+  .#{$color-name} toggle-button, toggle-button.#{$color-name}, .toggle-button.#{$color-name}:not(button):not(a) {
     @include toggle-button-colors($color);
   }
-  button.toggle-button.#{$color-name} {
+  button.toggle-button.#{$color-name}, a.toggle-button.#{$color-name} {
     @include toggle-button-colors($color, $button-wrapper: false);
   }
   @each $second-color-name, $second-color in $available-colors {
     .#{$color-name} toggle-button.#{$second-color-name} {
       @include toggle-button-colors($color);
     }
-  }
-}
-
-a.toggle-button {
-  &:hover, &:focus, &:active {
-    text-decoration: none;
   }
 }

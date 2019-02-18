@@ -23,8 +23,9 @@
         <aup-tab-content>
             <aup-tab-pane tab="details">
                 <div if.bind="resourceKindDetailsTabs.activeTabId === 'details'">
-                    <div if.bind="!editing">
-                        <div class="simple-form contains-collapsible-metadata-group">
+                    <div if.bind="!editing"
+                        class="with-sticky-button">
+                        <div class="content simple-form contains-collapsible-metadata-group">
                             <template repeat.for="metadataGroup of metadataGroups">
                                 <collapsible-metadata-group resource-kind-id.bind="resourceKind.id"
                                     metadata-group-id.bind="metadataGroup.groupId">
@@ -42,7 +43,8 @@
                                 <hr if.bind="!$last">
                             </template>
                         </div>
-                        <edit-button toggled.bind="editing"
+                        <edit-button class="sticky-button"
+                            toggled.bind="editing"
                             disabled.bind="resourceKind.pendingRequest"
                             click.delegate="showEditForm()"></edit-button>
                     </div>

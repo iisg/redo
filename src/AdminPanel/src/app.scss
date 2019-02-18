@@ -4,6 +4,7 @@
 $admin-content-z-index-when-sidebar-is-collapsed: 0;
 $floating-form-and-sticky-table-header-z-index: $admin-content-z-index-when-sidebar-is-collapsed + 1;
 $top-bar-z-index: $floating-form-and-sticky-table-header-z-index + 1;
+$sticky-button-z-index: $top-bar-z-index;
 $collapsed-sidebar-elements-z-index-on-hover: $top-bar-z-index + 1;
 
 $admin-content-left-border-width: $default-gap-size / 4;
@@ -121,7 +122,7 @@ body {
   metadata-list, resource-kinds-list, workflows-list, .languages-list, audit {
     display: flex;
     flex-direction: column;
-    & > :not(table):not(.table-container):not(.add-form):not(.form-with-buttons) {
+    & > :not(table):not(.table-container):not(.add-form):not(.with-sticky-buttons) {
       position: sticky;
       left: 0;
     }
@@ -136,6 +137,12 @@ body {
   resources-list, metadata-list, resource-kinds-list {
     & > .add-form {
       flex-shrink: 0;
+    }
+  }
+
+  metadata-list, resource-kinds-list {
+    & > add-button {
+      padding: $default-gap-size / 2;
     }
   }
 
@@ -440,7 +447,7 @@ button {
   &:not(:last-child) > .validation-message {
     margin-bottom: $default-gap-size / 2;
   }
-  input[type=text], dropdown-select, metadata-chooser {
+  input[type=text]:not(.datetimepicker-input), dropdown-select, metadata-chooser {
     min-width: $simple-form-text-input-box-minimum-width;
   }
   input[type=number] {
@@ -481,22 +488,25 @@ button {
   }
 }
 
-.form-with-buttons {
+.with-sticky-buttons, .with-sticky-button {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.with-sticky-buttons {
   padding-top: $default-gap-size / 4;
   padding-bottom: $default-gap-size / 4;
-  align-items: flex-start;
-  & > .form-content {
+  & > .content {
     flex: 1;
     padding: $default-gap-size / 4 $default-gap-size / 2;
   }
-  & > .form-buttons {
+  & > .sticky-buttons {
     position: sticky;
     display: flex;
     flex-direction: column;
     flex: 0;
-    top: $default-gap-size / 2;
+    top: $default-gap-size * 3 / 4;
     margin-left: auto;
     padding-left: $default-gap-size / 4;
     padding-right: $default-gap-size / 4;
@@ -512,6 +522,23 @@ button {
     button, toggle-button > div {
       text-align: left;
     }
+  }
+}
+
+.with-sticky-button {
+  flex-direction: row-reverse;
+  & > .content {
+    flex: 1;
+    max-width: 100%;
+    padding: $default-gap-size / 2;
+  }
+  & > .sticky-button {
+    z-index: $sticky-button-z-index; // To prevent `collapsible-metadata-group` button from being displayed on top of this one.
+    position: sticky;
+    order: -1;
+    top: $default-gap-size;
+    right: $default-gap-size; // It works in Firefox, but not in Chromium.
+    margin: $default-gap-size / 2;
   }
 }
 

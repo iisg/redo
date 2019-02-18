@@ -28,7 +28,7 @@ resources-list {
     // @formatter:on
   }
 
-  & > :not(add-button):not(.add-form):not(resources-list-table):not(loading-cover) {
+  & > :not(add-button):not(.add-form):not(loading-cover) {
     position: sticky;
     left: 0;
   }
@@ -55,23 +55,26 @@ resources-list {
 
   pagination {
     grid-area: top-pagination;
-    align-self: center;
+    align-self: end;
   }
 
   add-button {
     position: sticky;
     grid-area: add-button;
     left: 100%;
-    width: 0%; // Required in Chrome to stop `add-button` from moving when scrolling horizontally.
+    width: 0%; // Required in Chromium to stop `add-button` from moving when scrolling horizontally.
     height: 100%;
+    padding-top: $default-gap-size / 2;
+    padding-bottom: $default-gap-size / 2;
     transform: translateX(-100%);
     white-space: nowrap;
     direction: rtl; //
     & > * { //
       direction: ltr; //
-    }
-    //
+    } //
     & > toggle-button {
+      margin-right: $default-gap-size / 2; // Both setting `padding-right` for `add-button` in Chromium
+                                           // and `margin-right` for it in Firefox has seemed not to work well.
       &, & > div {
         height: 100%;
       }

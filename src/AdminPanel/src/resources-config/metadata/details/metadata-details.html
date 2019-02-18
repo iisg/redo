@@ -32,9 +32,12 @@
             <aup-tab-pane tab="details">
                 <div if.bind="metadataDetailsTabs.activeTabId === 'details'"
                     class="${editing ? 'with-opened-edit-form' : ''}">
-                    <div if.bind="!editing">
-                        <metadata-details-list metadata.bind="metadata"></metadata-details-list>
-                        <edit-button toggled.bind="editing"
+                    <div if.bind="!editing"
+                        class="with-sticky-button">
+                        <metadata-details-list class="content"
+                            metadata.bind="metadata"></metadata-details-list>
+                        <edit-button class="sticky-button"
+                            toggled.bind="editing"
                             disabled.bind="metadata.pendingRequest"
                             click.delegate="toggleEditForm()"></edit-button>
                     </div>

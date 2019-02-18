@@ -40,9 +40,9 @@
             click.delegate="openImportDialog()"></toggle-button>
         <span if.bind="validationError"
             class="error-label">${'Some metadata constraints have not been met. Fix the form errors and try again.' | t}</span>
-        <form class="form-with-buttons"
+        <form class="with-sticky-buttons"
             submit.delegate="validateAndSubmit()">
-            <resource-form-generated class="form-content"
+            <resource-form-generated class="content"
                 change.delegate="dirty = true"
                 resource-kind.bind="resource.kind"
                 resource.bind="resource"
@@ -55,7 +55,7 @@
                 tree-query-url.bind="treeQueryUrl"
                 force-simple-file-upload.bind="forceSimpleFileUpload"
                 display-required-only.bind="!!deposit"></resource-form-generated>
-            <div class="form-buttons">
+            <div class="sticky-buttons">
                 <transition-button if.bind="editing && transition && transition.id !== 'update'"
                     transition.bind="transition"
                     places.bind="currentlyEditedResource.kind.workflow.places"
