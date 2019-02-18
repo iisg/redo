@@ -273,7 +273,7 @@ export class ResourcesList {
               this.resources = resources;
               this.addFormOpened = this.addFormOpened
                 ? this.addFormOpened
-                : (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter;
+                : (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter && !this.relationshipChooser;
             }
           }
           if (this.relationshipChooser) {
