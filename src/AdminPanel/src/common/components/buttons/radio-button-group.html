@@ -1,0 +1,13 @@
+<template>
+    <label repeat.for="value of values">
+        <input name.one-time="radioButtonName"
+            type="radio"
+            model.one-time="value"
+            checked.bind="checked"
+            disabled.bind="disabled">
+        <span>
+            <template replaceable
+                part="radio-label"></template>
+        </span>
+    </label>
+</template>

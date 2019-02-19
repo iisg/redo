@@ -1,0 +1,19 @@
+@import "../../styles";
+
+$new-metadata-value-button-width: 1.5em;
+
+radio-button-group {
+  input[type=radio] {
+    width: $new-metadata-value-button-width;
+  }
+  label {
+    display: inline-flex;
+    align-items: center;
+    &:not(:first-child) {
+      margin-left: $default-gap-size;
+    }
+    & > span {
+      padding-left: $default-gap-size / 4;
+    }
+  }
+}

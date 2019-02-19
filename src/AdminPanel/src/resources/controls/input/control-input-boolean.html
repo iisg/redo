@@ -1,8 +1,14 @@
 <template>
-    <label>
-        <input type="checkbox"
-            bootstrap-tooltip.bind="description"
-            checked.bind="metadataValue.value & validate:validationController:validationRules"
-            disabled.bind="disabled">
-    </label>
+    <require from="common/components/buttons/radio-button-group"></require>
+
+    <radio-button-group if.bind="!disabled"
+        values.bind="[true, false]"
+        checked.bind="metadataValue.value & validate:validationController:validationRules">
+        <template replace-part="radio-label">
+            ${'bool//' + !!value | t}
+        </template>
+    </radio-button-group>
+    <template else>
+        ${'bool//' + !!metadataValue.value | t}
+    </template>
 </template>
