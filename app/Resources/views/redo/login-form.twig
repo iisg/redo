@@ -6,7 +6,8 @@
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}
 
-    <div class="login-form-main-container">
+    <div class="login-form-main-container"
+        role="main">
         <div class="login-container">
             {% if error %}
                 <div class="login-error-element alert alert-dismissible alert-danger">
@@ -20,7 +21,9 @@
             <div class="login-box">
                 <div class="logo-box">
                     <a class="logo"
-                        href="/">
+                        href="/"
+                        title="{{ 'Main page' | trans }}"
+                        aria-label="{{ 'Main page' | trans }}">
                         {{ icon('redo-logo', '1', '0 0 59.093 94.335') }}
                     </a>
                 </div>
@@ -36,16 +39,19 @@
                         <input name="_username"
                             type="text"
                             id="username"
-                            value="{{ last_username }}">
+                            value="{{ last_username }}"
+                            title="{{ 'Login' | trans }}">
                     </div>
                     <div class="input-box">
                         {{ icon('key') }}
                         <input name="_password"
                             type="password"
-                            id="password">
+                            id="password"
+                            title="{{ 'Password' | trans }}">
                         <button class="submit-button"
                             type="submit"
-                            name="{{ 'Sign in' | trans }}">
+                            name="{{ 'Sign in' | trans }}"
+                            title="{{ 'Sign in' | trans }}">
                             {{ icon('accept-2') }}
                         </button>
                     </div>

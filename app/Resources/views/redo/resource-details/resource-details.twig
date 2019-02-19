@@ -25,7 +25,8 @@
             href="{{ referer }}">{{ icon('undo-3') }}{{ 'Back to search results' | trans }}</a>
     {% endif %}
 
-    <div class="resource-details">
+    <div class="resource-details"
+        role="main">
         <div class="top-container">
             <div class="resource-image-with-title-container-with-actions">
                 {% include 'redo/resource-image-placeholder.twig' %}
@@ -53,28 +54,42 @@
                 <div class="download-options">
                     <span class="download-options-icon">{{ icon('download', 1.5) }}</span>
                     <fieldset>
-                        <legend align="left"><span title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span>
+                        <legend align="left" id="download-legend"><span title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span>
                         </legend>
                         <div class="download-formats">
                             <h4><a href="/download/mobi"
-                                    title="{{ 'Download resource in MOBI format' | trans }} - 7KB">MOBI</a></h4>
+                                    title="{{ 'Download resource in MOBI format' | trans }} - 7KB"
+                                    aria-labelledby="download-legend download-mobi">
+                                    <span id="download-mobi">MOBI</span>
+                                </a></h4>
                             <h4><a href="/download/pdf"
-                                    title="{{ 'Download resource in PDF format' | trans }} - 144000KB">PDF</a></h4>
+                                    title="{{ 'Download resource in PDF format' | trans }} - 144000KB"
+                                    aria-labelledby="download-legend download-pdf">
+                                    <span id="download-pdf">PDF</span>
+                                </a></h4>
                         </div>
                     </fieldset>
                 </div>
                 <div class="download-options">
                     <span class="download-options-icon">{{ icon('examination', 1.5) }}</span>
                     <fieldset>
-                        <legend align="left"><span title="{{ 'Cite resource' | trans }}">{{ 'Cite resource' | trans }}</span></legend>
+                        <legend align="left" id="cite-legend"><span title="{{ 'Cite resource' | trans }}">{{ 'Cite resource' | trans }}</span></legend>
                         <div class="download-formats in-one-line">
                             <h4><a href="/resources/{{ resource.id }}/bibtex"
-                                    title="{{ 'Download resource data in BibTeX format' | trans }}">BibTeX</a></h4>
+                                    title="{{ 'Download resource data in BibTeX format' | trans }}"
+                                    aria-labelledby="cite-legend cite-bibtex">
+                                    <span id="cite-bibtex">BibTeX</span>
+                                </a></h4>
                             <h4><a href="/resources/{{ resource.id }}/endnote"
-                                    title="{{ 'Download resource data in EndNote format' | trans }}">EndNote</a></h4>
+                                    title="{{ 'Download resource data in EndNote format' | trans }}"
+                                    aria-labelledby="cite-legend cite-endnote">
+                                    <span id="cite-endnote">EndNote</span>
+                                </a></h4>
                             <h4><a href="/resources/{{ resource.id }}/iso-690"
-                                    title="{{ 'Download resource data in ISO 690 format'
-                                    | trans }}">{{ icon('double-quote-sign', 1.25) }}</a></h4>
+                                    title="{{ 'Download resource data in ISO 690 format' | trans }}"
+                                    aria-labelledby="cite-legend cite-iso690">
+                                    <span id="cite-iso690">{{ icon('double-quote-sign', 1.25) }}</span>
+                                </a></h4>
                         </div>
                     </fieldset>
                 </div>

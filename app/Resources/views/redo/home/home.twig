@@ -5,7 +5,8 @@
 {% block content %}
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}
-    <div class="home-page-content">
+    <div class="home-page-content"
+        role="main">
         <div class="title-with-search-bar">
             <h1 class="title"><strong>{{ 'Search in repository resources' | trans }}</strong></h1>
             {% include "redo/search/search-bar.twig" %}

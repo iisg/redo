@@ -13,11 +13,13 @@
             class.bind="leftPanelExpanded ? 'expanded' : ''"
             id="left-panel">
             <div class="title-with-toggle">
-                <h3 class="title horizontally-collapsible"><strong>{{ 'Filters' | trans }}</strong></h3>
+                <h3 class="title horizontally-collapsible" id="filtersHeading"><strong>{{ 'Filters' | trans }}</strong></h3>
                 <button class="horizontally-expand-toggle"
                     class.bind="leftPanelExpanded ? 'toggled' : ''"
                     click.delegate="leftPanelExpanded = !leftPanelExpanded"
-                    local-storage-value="key: leftPanelExpanded; value.bind: leftPanelExpanded">
+                    local-storage-value="key: leftPanelExpanded; value.bind: leftPanelExpanded"
+                    title.bind="leftPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'"
+                    aria-label.bind="leftPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'">
                     {{ icon('forward') }}
                 </button>
             </div>
@@ -110,7 +112,8 @@
             leftPanel.getElementsByClassName('horizontally-expand-toggle')[0].classList.add('toggled');
           }
         </script>
-        <div class="search-results">
+        <div class="search-results"
+            role="main">
             {% if results | length == 0 %}
                 <h1>{{ 'No results' | trans }}.</h1>
             {% else %}

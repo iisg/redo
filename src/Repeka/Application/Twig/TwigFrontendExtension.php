@@ -126,7 +126,7 @@ class TwigFrontendExtension extends \Twig_Extension {
 
     public function icon(string $name, string $size = '1', string $viewBox = '0 0 1 1'): \Twig_Markup {
         $iconTemplate = <<<ICON
-<span class="icon" size="$size">
+<span class="icon" size="$size" role="presentation">
     <svg viewBox="$viewBox">
         <use xlink:href="/files/icons.svg#$name"></use>
     </svg>

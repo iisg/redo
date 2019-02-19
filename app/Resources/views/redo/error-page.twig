@@ -6,7 +6,8 @@
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}
 
-    <div class="form-group">
+    <div class="form-group"
+        role="main">
         <h1>{{ 'Error' | trans }}</h1>
         <p>{{ responseStatus == 404 ? 'The page you requested does not exist' | trans : 'The page you requested caused application error' | trans }}</p>
         {% if app.environment == 'dev' %}

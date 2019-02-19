@@ -1,12 +1,12 @@
 {% if filterableMetadata.control.value in ['text', 'textarea'] %}
-    <div class="text-property-filter">
+    <label class="text-property-filter">
         <span>{{ filterableMetadata.label | inCurrentLanguage }}</span>
         <div>
             <input type="text"
                 name="metadataFilters[{{ filterableMetadata.id }}]"
                 value="{{ app.request.query.all.metadataFilters[filterableMetadata.id] ?? '' }}">
         </div>
-    </div>
+    </label>
 {% elseif filterableMetadata.control.value in ['flexible-date','timestamp', 'date-range'] %}
     <div class="form-group">
         <label>{{ filterableMetadata.label | inCurrentLanguage }}</label>
@@ -34,7 +34,8 @@
             <button class="property-name-container expand-toggle"
                 class.bind="{{ variableName }} ? 'toggled' : ''"
                 type="button"
-                click.delegate="{{ variableName }} = !{{ variableName }}">
+                click.delegate="{{ variableName }} = !{{ variableName }}"
+                aria-expanded.bind="{{ variableName }}">
                 <h4 class="property-name">{{ parentMetadata ? 'Collections' | trans : filterableMetadata.label | inCurrentLanguage }}</h4>
                 <span>{{ icon('forward') }}</span>
             </button>

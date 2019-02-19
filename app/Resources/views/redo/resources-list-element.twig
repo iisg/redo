@@ -114,7 +114,9 @@
                             </div>
                             <button class="expand-toggle ${ {{ variableName }} ? 'toggled' : '' }"
                                 type="button"
-                                click.delegate="{{ variableName }} = !{{ variableName }}">
+                                click.delegate="{{ variableName }} = !{{ variableName }}"
+                                title.bind="{{ variableName }} ? '{{ 'Show less' | trans }}' : '{{ 'Show more' | trans }}'"
+                                aria-label.bind="{{ variableName }} ? '{{ 'Show less' | trans }}' : '{{ 'Show more' | trans }}'">
                                 <span>{{ icon('forward') }}</span>
                             </button>
                         </div>

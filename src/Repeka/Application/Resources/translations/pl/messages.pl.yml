@@ -12,6 +12,9 @@ search_small_placeholder: szukaj w zasobach
 search_results_page_title: wyniki wyszukiwania
 Browse collections: Przeglądaj kolekcje
 
+search_button: Szukaj
+User menu: Menu użytkownika
+
 Error: Błąd
 The page you requested does not exist: Strona, na którą trafiłeś nie istnieje
 The page you requested caused application error: Strona, na którą trafiłeś spowodowała błąd aplikacji
@@ -46,6 +49,25 @@ Filters: Filtry
 Clear filters: Wyczyść filtry
 Type: Typ
 fragments: fragmenty
+
+Go to main page of Repozytorium Politechniki Krakowskiej: Przejdź do strony głównej Repozytorium Politechniki Krakowskiej
+Main page of Repozytorium Politechniki Krakowskiej: Strona główna Repozytorium Politechniki Krakowskiej
+Show filters: Pokaż filtry
+Hide filters: Ukryj filtry
+Show more: Pokaż więcej
+Show less: Pokaż mniej
+Expand: Rozwiń
+Collapse: Zwiń
+Politechnika Krakowska: Politechnika Krakowska
+Main page: Strona główna
+Login: Login
+Password: Hasło
+Twitter: Twitter
+Facebook: Facebook
+Change font size: Zmień rozmiar czcionki
+language_pl: Język polski
+language_en: Język angielski
+language_de: Język niemiecki
 
 Deposit - resource kind: Deponuj - typ zasobu
 Deposit - collection: Deponuj - kolekcja

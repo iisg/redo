@@ -1,30 +1,38 @@
-<div class="site-menu">
+<div class="site-menu"
+    role="menu">
     <div class="menu-items">
         <a class="{{ urlMatches('/#') ? 'active' : '' }}"
-            href="/">
+            href="/"
+            role="menuitem">
             <span>{{ 'Search' | trans }}</span>
         </a>
         <a class="{{ urlMatches('/search', '/resources') ? 'active' : '' }}"
-            href="/search">
+            href="/search"
+            role="menuitem">
             <span>{{ 'Browse' | trans }}</span>
         </a>
         <a class="{{ urlMatches('/for-authors') ? 'active' : '' }}"
-            href="/for-authors">
+            href="/for-authors"
+            role="menuitem">
             <span>{{ 'For authors' | trans }}</span>
         </a>
     </div>
     {% if app.request.requestUri != '/'
         and not (app.request.requestUri starts with '/search') %}
         <form class="top-search-bar right-aligned"
-            action="/search">
+            action="/search"
+            role="search">
             <input type="text"
                 name="phrase"
                 {% if app.request.query.has('phrase') %}
                     value="{{ app.request.query.get('phrase') }}"
                 {% endif %}
-                placeholder="{{ 'search_small_placeholder' | trans }}">
+                placeholder="{{ 'search_small_placeholder' | trans }}"
+                aria-label="{{ 'search_small_placeholder' | trans}}">
             <button class="search-button"
-                type="submit">
+                type="submit"
+                name="{{ 'search_button' | trans }}"
+                title="{{ 'search_button' | trans }}">
                 {{ icon("search") }}
             </button>
         </form>
@@ -33,37 +41,46 @@
         {% if app.user %}
             <div class="button-with-submenu with-submenu-on-the-left">
                 <button class="{{ urlMatches('/user') ? 'active' : '' }}"
-                    data-toggle="dropdown">
+                    data-toggle="dropdown"
+                    role="menuitem"
+                    aria-haspopup="listbox"
+                    title="{{ 'User menu' | trans }}"
+                    aria-label="{{ 'User menu' | trans }}">
                     {{ icon('user-2') }}
                     <span>{{ app.user.username }}</span>
                     {{ icon('down-4', 0.75) }}
                 </button>
-                <div>
+                <div role="listbox">
                     {% if resourceKindsToDeposit(app.user, [-4]) | length != 0 %}
                         <a class="isActive() ? 'active' : ''"
-                            href="/deposit/resource-kind">
+                            href="/deposit/resource-kind"
+                            role="option">
                             <span>{{ 'Deposit' | trans }}</span>
                         </a>
                     {% endif %}
                     {% if resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}, resultsPerPage: 1}) | length == 1 %}
                         <a class="isActive() ? 'active' : ''"
-                            href="/deposit/deposit-list">
+                            href="/deposit/deposit-list"
+                            role="option">
                             <span>{{ 'My resources' | trans }}</span>
                         </a>
                     {% endif %}
                     {% if is_granted('ROLE_OPERATOR_SOME_CLASS') %}
-                        <a href="/admin">
+                        <a href="/admin"
+                            role="option">
                             <span>{{ 'Admin panel' | trans}}</span>
                         </a>
                     {% endif %}
-                    <a href="/logout">
+                    <a href="/logout"
+                        role="option">
                         <span>{{ 'Sign out' | trans }}</span>
                     </a>
                 </div>
             </div>
         {% else %}
             <a href="/login"
-                class="{{ urlMatches('/login') ? 'active' : '' }}">
+                class="{{ urlMatches('/login') ? 'active' : '' }}"
+                role="menuitem">
                 {{ icon('user-2') }}
                 <span>{{ 'Sign in' | trans }}</span>
             </a>

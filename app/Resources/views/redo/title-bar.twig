@@ -1,7 +1,9 @@
 <div class="title-bar">
     <a class="logo-container"
         href="/">
-        <img src="/files/images/rpk-logo.svg">
+        <img src="/files/images/rpk-logo.svg"
+            title="{{ 'Main page of Repozytorium Politechniki Krakowskiej' | trans }}"
+            aria-label="{{ 'Go to main page of Repozytorium Politechniki Krakowskiej' | trans }}">
     </a>
     <div class="title-container">
         <span>REPOZYTORIUM</span>
@@ -10,23 +12,29 @@
     <div class="right-side-container">
         <div class="options-bar">
             <div class="social-media">
-                <a>{{ icon('twitter') }}</a>
-                <a>{{ icon('facebook') }}</a>
+                <a title="{{ 'Twitter' | trans }}">{{ icon('twitter') }}</a>
+                <a title="{{ 'Facebook' | trans }}">{{ icon('facebook') }}</a>
             </div>
             <div class="page-view-options">
-                <button>{{ icon('font') }}</button>
-                <button>{{ icon('rss') }}</button>
+                <button title="{{ 'Change font size' | trans }}">{{ icon('font') }}</button>
+                <button title="{{ 'RSS feed' | trans }}">{{ icon('rss') }}</button>
                 <div class="button-with-submenu languages">
                     {% set currentLocale = app.request.getLocale() %}
-                    <button data-toggle="dropdown">
+                    <button data-toggle="dropdown"
+                        aria-haspopup="menu"
+                        title="{{ ('language_' ~ currentLocale) | trans }}"
+                        aria-label="{{ ('language_' ~ currentLocale) | trans }}">
                         <span>
                             {{ currentLocale | upper }}
                         </span>
-                    </button>
-                    <div>
+                </button>
+                    <div role="menu">
                         {% for language in [{locale:'pl', name: 'Polski'}, {locale:'en', name: 'English'}, {locale:'de', name: 'Deutsch'}] %}
                             {% if language.locale != currentLocale %}
-                                <language-option language.bind="'{{ language.locale }}'">
+                                <language-option
+                                    language.bind="'{{ language.locale }}'"
+                                    role="menuitem"
+                                    aria-label="{{ ('language_' ~ language.locale) | trans }}">
                                     {{ language.name }}
                                 </language-option>
                             {% endif %}
@@ -36,7 +44,9 @@
             </div>
         </div>
         <div class="pk-logo-container">
-            <img src="/files/images/pk-logo.svg">
+            <img src="/files/images/pk-logo.svg"
+                alt="{{ 'Politechnika Krakowska' | trans }}"
+                aria-label="{{ 'Politechnika Krakowska' | trans }}">
         </div>
     </div>
 </div>
