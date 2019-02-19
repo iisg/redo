@@ -11,11 +11,14 @@ class ESIndexManager {
     private $indexName;
     /** @var \Elastica\Index */
     private $index;
+    /** @var string[] */
+    private $stopWords;
 
-    public function __construct(ESClient $client, ESMapping $esMapping, string $indexName) {
+    public function __construct(ESClient $client, ESMapping $esMapping, string $indexName, array $stopWords) {
         $this->indexName = $indexName;
         $this->esMapping = $esMapping;
         $this->index = $client->getIndex($this->indexName);
+        $this->stopWords = $stopWords;
     }
 
     public function create(int $numberOfShards = 1, int $numberOfReplicas = 0) {
@@ -28,15 +31,21 @@ class ESIndexManager {
                 'number_of_replicas' => $numberOfReplicas,
                 'index.mapping.ignore_malformed' => true,
                 'analysis' => [
+                    'filter' => [
+                        'pl_stop' => [
+                            "type" => "stop",
+                            "stopwords" => $this->stopWords
+                        ],
+                    ],
                     'analyzer' => [
                         'underscore_analyzer' => [
                             "type" => "custom",
                             "tokenizer" => "underscore_tokenizer",
-                            "filter" => ["standard", "lowercase", "morfologik_stem"],
+                            "filter" => ["standard", "lowercase", "morfologik_stem", "pl_stop"],
                         ],
                         'default' => [
                             "tokenizer" => "standard",
-                            "filter" => ["standard", "lowercase", "morfologik_stem"],
+                            "filter" => ["standard", "lowercase", "morfologik_stem", "pl_stop"],
                         ],
                     ],
                     "tokenizer" => [

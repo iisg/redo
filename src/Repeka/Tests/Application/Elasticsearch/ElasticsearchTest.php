@@ -8,6 +8,7 @@ use Repeka\Application\Elasticsearch\Mapping\ESMapping;
 abstract class ElasticsearchTest extends \PHPUnit_Framework_TestCase {
     const TEST_MAPPING = ['TEST_MAPPING'];
     const INDEX_NAME = 'TEST_INDEX';
+    const STOP_WORDS = ['i', 'to', 'dla'];
 
     /** @var ESMapping */
     protected $mappingMock;

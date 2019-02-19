@@ -143,13 +143,17 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     }
 
     public function testSearchOnlyInGivenResourceClasses() {
-        $resultsAll = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('i', [SystemMetadata::RESOURCE_LABEL]));
-        $resultsInBooks = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('i', [SystemMetadata::RESOURCE_LABEL], [], ['books'])
+        $resultsAll = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('php', [SystemMetadata::RESOURCE_LABEL]));
+        $resultsInDictionaries = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('php', [SystemMetadata::RESOURCE_LABEL], [], ['dictionaries'])
         );
-        $this->assertLessThan(count($resultsAll), count($resultsInBooks));
-        $ids = EntityUtils::mapToIds($resultsInBooks);
-        $this->assertContains($this->phpAndMySQLBookResource->getId(), $ids);
+        $this->assertLessThan(count($resultsAll), count($resultsInDictionaries));
+    }
+
+    public function testSearchStopWords() {
+        /** @var Result[] $results */
+        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('i', [SystemMetadata::RESOURCE_LABEL]));
+        $this->assertEmpty($results);
     }
 
     public function testSearchWithPagination() {

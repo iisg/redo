@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface {
                         ->integerNode('number_of_shards')->min(1)->defaultValue(1)->end()
                         ->integerNode('number_of_replicas')->min(0)->defaultValue(0)->end()
                         ->arrayNode('analyzers')->useAttributeAsKey('name')->prototype('scalar')->end()->end()
+                        ->arrayNode('stop_words')->useAttributeAsKey('name')->prototype('scalar')->end()->end()
                         ->scalarNode('host')->defaultValue('elasticsearch')->cannotBeEmpty()->end()
                         ->integerNode('port')->defaultValue(9200)->end()
                         ->scalarNode('proxy')->defaultValue(null)->end()

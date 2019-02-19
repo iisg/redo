@@ -3,6 +3,7 @@ imports:
   - { resource: metrics.yml }
   - { resource: config_build.yml}
   - { resource: postgres_json_functions.yml }
+  - { resource: pl_stopwords.yml }
 
 repeka:
   default_ui_language: pl

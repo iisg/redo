@@ -49,7 +49,9 @@ services:
     - '%elasticsearch.port%'
     - '%elasticsearch.proxy%'
   Repeka\Application\Elasticsearch\ESIndexManager:
-    $indexName: '%elasticsearch.index_name%'
+    arguments:
+      $indexName: '%elasticsearch.index_name%'
+      $stopWords: '%elasticsearch.stop_words%'
   Repeka\Application\Elasticsearch\PageNumberFinder: ~
   Repeka\Application\Elasticsearch\Mapping\ESMapping: ~
   Repeka\Application\Elasticsearch\Model\ESContentsAdjuster: ~

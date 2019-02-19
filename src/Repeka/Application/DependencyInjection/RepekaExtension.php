@@ -20,6 +20,7 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('elasticsearch.number_of_shards', $mergedConfig['elasticsearch']['number_of_shards']);
         $container->setParameter('elasticsearch.number_of_replicas', $mergedConfig['elasticsearch']['number_of_replicas']);
         $container->setParameter('elasticsearch.analyzers', $mergedConfig['elasticsearch']['analyzers']);
+        $container->setParameter('elasticsearch.stop_words', $mergedConfig['elasticsearch']['stop_words']);
         $container->setParameter('elasticsearch.host', $mergedConfig['elasticsearch']['host']);
         $container->setParameter('elasticsearch.port', $mergedConfig['elasticsearch']['port']);
         $container->setParameter('elasticsearch.proxy', $mergedConfig['elasticsearch']['proxy']);
