@@ -63,16 +63,14 @@ repeka:
       template: redo/rss/collection.rss.twig
       headers:
         Content-Type: 'application/rss+xml'
-    /deposit/{phase}:
-      template: redo/deposit.twig
-      deposit:
-        relationship_resource_kind_ids: [1, 2, -1, 7]
 m6_statsd:
   servers:
     default:
       address: 'udp://localhost'
 
 redo:
+  deposit:
+    relationship_resource_kind_ids: [1, 2, -1, 7]
   fts:
     searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
     filterable_metadata_ids: [tytul, opis, parent, wydzial, skanista, nadzorujacy]

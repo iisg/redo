@@ -60,9 +60,6 @@ class Configuration implements ConfigurationInterface {
                     ->scalarNode('endpointUsageTrackingKey')->defaultValue(null)->end()
                     ->integerNode('resourceId')->defaultValue(null)->end()
                     ->arrayNode('headers')->normalizeKeys(false)->defaultValue([])->prototype('scalar')->end()->end()
-                    ->arrayNode('deposit')->children()
-                        ->arrayNode('relationship_resource_kind_ids')->prototype('scalar')->end()->end()
-                    ->end()->end()
                 ->end()->end()->end()
             ->end();
         // @formatter:on
