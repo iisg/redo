@@ -1,0 +1,19 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Repeka\Plugins\EmailSender\Model\:
+    resource: '../../Model'
+
+  Repeka\Plugins\EmailSender\Model\SmtpEmailSender:
+    $smtpHost: '%repeka_plugin_email_sender.smtp_address%'
+    $smtpPort: '%repeka_plugin_email_sender.smtp_port%'
+    $smtpUsername: '%repeka_plugin_email_sender.smtp_username%'
+    $smtpPassword: '%repeka_plugin_email_sender.smtp_password%'
+    $smtpEncryption: '%repeka_plugin_email_sender.smtp_encryption%'
+    $fromEmail: '%repeka_plugin_email_sender.from_email%'
+    $fromName: '%repeka_plugin_email_sender.from_name%'
+
+  Repeka\Plugins\EmailSender\Model\EmailSender: '@Repeka\Plugins\EmailSender\Model\SmtpEmailSender'

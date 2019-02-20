@@ -2,16 +2,11 @@
 namespace Repeka\Plugins\MetadataValueSetter\Tests\Integration;
 
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemTransition;
-use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
-use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Plugins\MetadataValueSetter\Model\RepekaMetadataValueSetterResourceWorkflowPlugin;
+use Repeka\Tests\Integration\ResourceWorkflow\ResourceWorkflowPluginIntegrationTest;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCase;
 
-class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase {
+class RepekaMetadataValueSetterPluginIntegrationTest extends ResourceWorkflowPluginIntegrationTest {
     use FixtureHelpers;
 
     /** @var RepekaMetadataValueSetterResourceWorkflowPlugin */
@@ -21,45 +16,6 @@ class RepekaMetadataValueSetterPluginIntegrationTest extends IntegrationTestCase
     public function init() {
         $this->loadAllFixtures();
         $this->listener = $this->container->get(RepekaMetadataValueSetterResourceWorkflowPlugin::class);
-    }
-
-    /**
-     * @param $resource ResourceEntity
-     * @param $pluginConfiguration
-     */
-    protected function usePluginWithResource($resource, $pluginConfiguration) {
-        $workflow = $resource->getWorkflow();
-        $places = array_map(
-            function (ResourceWorkflowPlace $place) use ($pluginConfiguration) {
-                return ResourceWorkflowPlace::fromArray(
-                    array_merge(
-                        $place->toArray(),
-                        [
-                            'pluginsConfig' => $pluginConfiguration,
-                        ]
-                    )
-                );
-            },
-            $workflow->getPlaces()
-        );
-        $this->handleCommandBypassingFirewall(
-            new ResourceWorkflowUpdateCommand(
-                $workflow,
-                $workflow->getName(),
-                $places,
-                $workflow->getTransitions(),
-                $workflow->getDiagram(),
-                $workflow->getThumbnail()
-            )
-        );
-        $this->handleCommandBypassingFirewall(
-            new ResourceTransitionCommand(
-                $resource,
-                $resource->getContents(),
-                SystemTransition::UPDATE()->toTransition($resource->getKind(), $resource),
-                $this->getAdminUser()
-            )
-        );
     }
 
     public function testMetadataValueSetter() {

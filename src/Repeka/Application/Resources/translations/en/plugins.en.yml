@@ -84,3 +84,22 @@ workflowPlaceTagger:
       label: Tag value
       placeholder: ~
       description: ~
+repekaEmailSender:
+  label: 'Send e-mail'
+  options:
+    email:
+      label: 'Recipients'
+      placeholder: 'xxx@xxx.xxx , xxx@xxx.xxx , ...' 
+      description: ''
+    subject:
+      label: 'Message subject'
+      placeholder: ''
+      description: ''
+    message:
+      label: 'Message content'
+      placeholder: ''
+      description: ''
+    audit:
+      failure: 'A mesaage form "send mail" plugin: {{message}}'
+      bad_email: 'Incorrect email address'
+      not_sent: 'Sending an email failed'

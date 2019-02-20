@@ -88,3 +88,22 @@ workflowPlaceTagger:
       label: Wartość tagu
       placeholder: ~
       description: ~
+repekaEmailSender:
+  label: 'Wyślij e-mail'
+  options:
+    email:
+      label: 'Adresy email odbiorców'
+      placeholder: 'xxx@xxx.xxx , xxx@xxx.xxx , ...' 
+      description: ''
+    subject:
+      label: 'Temat wiadomości'
+      placeholder: ''
+      description: ''
+    message:
+      label: 'Treść wiadomości'
+      placeholder: ''
+      description: ''
+    audit:
+      failure: 'Wiadomośc od wtyczki do wysyłania e-mailów: {{message}}'
+      bad_email: 'Niepoprawny adres e-mail'
+      not_sent: 'Wysłanie maila nie powiodło się'

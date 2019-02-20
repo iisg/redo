@@ -1,15 +1,11 @@
 <?php
 namespace Repeka\Plugins\MetadataValueRemover\Tests\Integration;
 
-use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
-use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Plugins\MetadataValueRemover\Model\RepekaMetadataValueRemoverResourceWorkflowPlugin;
+use Repeka\Tests\Integration\ResourceWorkflow\ResourceWorkflowPluginIntegrationTest;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
-use Repeka\Tests\IntegrationTestCase;
 
-class RepekaMetadataValueRemoverPluginIntegrationTest extends IntegrationTestCase {
+class RepekaMetadataValueRemoverPluginIntegrationTest extends ResourceWorkflowPluginIntegrationTest {
     use FixtureHelpers;
 
     /** @var RepekaMetadataValueRemoverResourceWorkflowPlugin */
@@ -57,41 +53,6 @@ class RepekaMetadataValueRemoverPluginIntegrationTest extends IntegrationTestCas
         );
         $newContent = $this->getPhpBookResource()->getContents();
         $this->assertNotEquals($oldContent, $newContent);
-    }
-
-    /**
-     * @param $resource ResourceEntity
-     * @param $pluginConfiguration
-     */
-    protected function usePluginWithResource($resource, $pluginConfiguration) {
-        $transitions = $resource->getWorkflow()->getTransitions($resource);
-        $workflow = $resource->getWorkflow();
-        $places = array_map(
-            function (ResourceWorkflowPlace $place) use ($pluginConfiguration) {
-                return ResourceWorkflowPlace::fromArray(
-                    array_merge(
-                        $place->toArray(),
-                        [
-                            'pluginsConfig' => $pluginConfiguration,
-                        ]
-                    )
-                );
-            },
-            $workflow->getPlaces()
-        );
-        $this->handleCommandBypassingFirewall(
-            new ResourceWorkflowUpdateCommand(
-                $workflow,
-                $workflow->getName(),
-                $places,
-                $workflow->getTransitions(),
-                $workflow->getDiagram(),
-                $workflow->getThumbnail()
-            )
-        );
-        $this->handleCommandBypassingFirewall(
-            new ResourceTransitionCommand($resource, $resource->getContents(), $transitions[0]->getId(), $this->getAdminUser())
-        );
     }
 
     public function testMetadataValueRemoverWithMultipleConfigs() {

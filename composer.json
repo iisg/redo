@@ -48,6 +48,7 @@
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "3.0.22",
     "studio-42/elfinder": "^2.1",
+    "swiftmailer/swiftmailer": "^6.0",
     "symfony/monolog-bundle": "^3.1",
     "symfony/process": "^3.4",
     "symfony/serializer": "^3.4",
