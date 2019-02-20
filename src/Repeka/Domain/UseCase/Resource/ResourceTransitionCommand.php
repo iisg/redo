@@ -3,7 +3,7 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\AuditedCommand;
-use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -11,7 +11,7 @@ use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 
 class ResourceTransitionCommand extends ResourceClassAwareCommand implements AuditedCommand, AdjustableCommand {
-    use RequireOperatorRole;
+    use RequireNoRoles;
 
     /** @var ResourceEntity */
     private $resource;

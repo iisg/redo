@@ -35,7 +35,6 @@ class MetadataController extends ApiController {
     /**
      * @Route
      * @Method("GET")
-     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getListAction(Request $request) {
         $queryBuilder = MetadataListQuery::builder();
@@ -75,16 +74,23 @@ class MetadataController extends ApiController {
             $queryBuilder->excludeIds($excludedIds);
         }
         $metadataList = $this->handleCommand($queryBuilder->build());
+        $metadataList = array_values(
+            array_filter(
+                $metadataList,
+                function (Metadata $metadata) {
+                    return $this->isGranted(['VIEW'], $metadata);
+                }
+            )
+        );
         return $this->createJsonResponse($metadataList);
     }
 
     /**
-     * @Route("/{id}")
+     * @Route("/{metadata}")
      * @Method("GET")
-     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
+     * @Security("is_granted('VIEW', metadata)")
      */
-    public function getAction(string $id) {
-        $metadata = $this->handleCommand(new MetadataGetQuery(intval($id)));
+    public function getAction(Metadata $metadata) {
         return $this->createJsonResponse($metadata);
     }
 

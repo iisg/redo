@@ -5,12 +5,14 @@ use Assert\Assertion;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemTransition;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Service\ResourceDisplayStrategyDependencyMap;
 use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
 use Repeka\Domain\Utils\EntityUtils;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 // ResourceEntity because Resource is reserved word in PHP7: http://php.net/manual/en/reserved.other-reserved-words.php
 class ResourceEntity implements Identifiable, HasResourceClass {
@@ -90,6 +92,11 @@ class ResourceEntity implements Identifiable, HasResourceClass {
         } else {
             return $this->getWorkflow()->apply($this, $transitionId);
         }
+    }
+
+    /** @return ResourceWorkflowPlace[] */
+    public function getCurrentPlaces(): array {
+        return $this->getWorkflow()->getPlaces($this);
     }
 
     public function updateDisplayStrategyDependencies(int $metadataId, ResourceDisplayStrategyUsedMetadataCollector $collector) {

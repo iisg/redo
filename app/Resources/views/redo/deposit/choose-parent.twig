@@ -1,0 +1,40 @@
+{% extends "redo/deposit/deposit-layout.twig" %}
+{% set page_title = 'Deposit - collection' | trans %}
+{% block depositContent %}
+    <h1 class="deposit-page-header">{{ 'Resource add wizard' | trans }}</h1>
+    {% include 'redo/deposit/deposit-breadcrumb.twig' %}
+
+    <div class="deposit-brief-info">
+        <p>
+            {{ 'Selected resource kind' | trans }}: <span class="deposit-selected-value">{{ resourceKind.label | inCurrentLanguage }}</span>
+            <a href="{{ path('deposit') }}">{{ 'change' | trans }}</a>
+        </p>
+    </div>
+
+    {% if possibleCollections | length == 0 %}
+        {{ 'No collections available to add resource' | trans }}
+    {% else %}
+        <form action=""
+            class="deposit-form"
+            method="post">
+            <div class="deposit-form-header clearfix">
+                {{ 'Choose the collection to put the resource in' | trans }}:
+                <button type="submit"
+                    class="pull-right btn btn-primary">
+                    {{ 'Next' | trans }} &gt;
+                </button>
+            </div>
+            {% for collection in possibleCollections %}
+                <div class="checkbox">
+                    <label>
+                        <input type="radio"
+                            name="parentId"
+                            value="{{ collection.id }}"
+                            required>
+                        {{ collection | metadata('label') }}
+                    </label>
+                </div>
+            {% endfor %}
+        </form>
+    {% endif %}
+{% endblock %}

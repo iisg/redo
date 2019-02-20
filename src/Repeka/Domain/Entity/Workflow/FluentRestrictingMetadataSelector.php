@@ -59,8 +59,15 @@ class FluentRestrictingMetadataSelector {
         return $this;
     }
 
-    /** @return int[] */
-    public function get(): array {
-        return array_values(array_unique($this->selectedIds));
+    /**
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @return int[]
+     */
+    public function get($onlyUnique = true): array {
+        if ($onlyUnique) {
+            return array_values(array_unique($this->selectedIds));
+        } else {
+            return array_values($this->selectedIds);
+        }
     }
 }

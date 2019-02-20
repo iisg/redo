@@ -31,6 +31,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\DependencyInjection\ResettableContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
@@ -72,7 +73,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
 
     protected function clearDatabase() {
         $initializedAtLeastOnce = isset(self::$dataForTests[static::class]);
-        if (!$initializedAtLeastOnce || (!$this->hasDependencies() && !$this->isSmall())) {
+        if (!$initializedAtLeastOnce || $this->isLarge() || (!$this->hasDependencies() && !$this->isSmall())) {
             $this->executeCommand('doctrine:schema:drop --force');
             $this->executeCommand('doctrine:migrations:version --delete --all');
             $this->executeCommand('repeka:initialize --skip-backup');
@@ -266,9 +267,10 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         );
     }
 
-    protected function simulateAuthentication(User $user) {
+    protected function simulateAuthentication(User $user): TokenInterface {
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->container->get('security.token_storage')->setToken($token);
+        return $token;
     }
 
     /**

@@ -3,6 +3,8 @@ namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
+use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Repository\MetadataRepository;
 
 class MetadataValueAdjusterComposite implements MetadataValueAdjuster {
     private $controlAdjustersMap = [];
@@ -10,10 +12,13 @@ class MetadataValueAdjusterComposite implements MetadataValueAdjuster {
     private $adjusters;
     /** @var DefaultMetadataValueAdjuster */
     private $defaultMetadataValueAdjuster;
+    /** @var MetadataRepository */
+    private $metadataRepository;
 
     /** @param MetadataValueAdjuster[] $adjusters */
-    public function __construct(iterable $adjusters) {
+    public function __construct(iterable $adjusters, MetadataRepository $metadataRepository) {
         $this->adjusters = $adjusters;
+        $this->metadataRepository = $metadataRepository;
     }
 
     private function buildAdjustersMap() {
@@ -31,6 +36,15 @@ class MetadataValueAdjusterComposite implements MetadataValueAdjuster {
 
     public function supports(string $control): bool {
         return false;
+    }
+
+    public function adjustAllValuesInContents(ResourceContents $contents): ResourceContents {
+        return $contents->mapAllValues(
+            function (MetadataValue $value, int $metadataId) {
+                $metadata = $this->metadataRepository->findOne($metadataId);
+                return $this->adjustMetadataValue($value, $metadata->getControl());
+            }
+        );
     }
 
     public function adjustMetadataValue(MetadataValue $value, MetadataControl $control): MetadataValue {

@@ -3,6 +3,7 @@ namespace Repeka\Application\Twig;
 
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -88,8 +89,20 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         }
     }
 
+    /**
+     * @param array $twigContext
+     * @param ResourceEntity|ResourceContents|array $contents if array, it must be supported by ResourceContents::fromArray
+     *                                                        or has such array in the 'contents' key (e.g. serialized resource)
+     * @param int|null $metadataId
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @throws \Twig_Error
+     */
     public function getMetadataValues(array $twigContext, $contents, $metadataId = null) {
         $metadataId = $this->fetchMetadataId($metadataId);
+        if (is_array($contents) && isset($contents['contents']) && is_array($contents['contents'])) {
+            $contents = ResourceContents::fromArray($contents['contents']);
+        }
         $iterableGiven = is_iterable($contents) && !$contents instanceof ResourceContents;
         if (!$iterableGiven) {
             $contents = [$contents];

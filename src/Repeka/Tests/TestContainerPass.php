@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class TestContainerPass implements CompilerPassInterface {
     private static $publicInTests = [
         \Doctrine\ORM\EntityManagerInterface::class,
+        \Repeka\Application\Security\SecurityOracle::class,
         \Repeka\Application\Twig\ResourcesTwigLoader::class,
         \Repeka\Domain\Cqrs\CommandBus::class,
         \Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory::class,
@@ -25,6 +26,7 @@ class TestContainerPass implements CompilerPassInterface {
         \Repeka\Domain\Repository\ResourceWorkflowRepository::class,
         \Repeka\Domain\Repository\UserRepository::class,
         \Repeka\Domain\Service\FileSystemDriver::class,
+        \Repeka\Domain\Service\ReproductorPermissionHelper::class,
         \Repeka\Domain\Service\ResourceDisplayStrategyEvaluator::class,
         \Repeka\Domain\Service\ResourceFileStorage::class,
         \Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule::class,

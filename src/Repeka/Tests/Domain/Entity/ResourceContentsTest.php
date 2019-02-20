@@ -283,6 +283,10 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
                 [1 => [['value' => 'a', 'submetadata' => [1 => [new MetadataValue('a')]]]]],
                 [1 => [['value' => 'a', 'submetadata' => [1 => [['value' => 'a']]]]]],
             ],
+            [
+                ["12" => [["submetadata" => ["33" => []], "extraKey" => [], "value" => "A"]]],
+                [12 => [['value' => 'A', 'submetadata' => [33 => []]]]],
+            ],
         ];
     }
 

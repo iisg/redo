@@ -5,7 +5,7 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\ResourceContentsAdjuster;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
@@ -27,8 +27,8 @@ class ResourceEvaluateDisplayStrategiesCommandHandlerTest extends \PHPUnit_Frame
         $this->resourceRepository = $this->createMock(ResourceRepository::class);
         $this->evaluator = $this->createMock(ResourceDisplayStrategyEvaluator::class);
         $this->evaluator->method('renderToMetadataValues')->with($this->anything(), 'AAA')->willReturn([new MetadataValue('BBB')]);
-        $adjuster = $this->createMock(MetadataValueAdjusterComposite::class);
-        $adjuster->method('adjustMetadataValue')->willReturnArgument(0);
+        $adjuster = $this->createMock(ResourceContentsAdjuster::class);
+        $adjuster->method('adjust')->willReturnArgument(0);
         $this->handler = new ResourceEvaluateDisplayStrategiesCommandHandler($this->evaluator, $this->resourceRepository, $adjuster);
         $this->displayStrategyMetadata = $this->createMetadataMock(
             10,

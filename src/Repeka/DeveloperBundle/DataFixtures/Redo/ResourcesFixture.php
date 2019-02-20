@@ -11,7 +11,6 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
-use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 
 /**
@@ -24,6 +23,7 @@ class ResourcesFixture extends RepekaFixture {
     const REFERENCE_USER_GROUP_SCANNERS = 'resource-user-group-scanners';
     const REFERENCE_USER_GROUP_SIGNED = 'resource-user-group-signed';
     const REFERENCE_RESOURCE_CATEGORY_EBOOKS = 'resource-category-ebooks';
+    const REFERENCE_BOOK_1 = 'resource-book-1';
 
     /**
      * @inheritdoc
@@ -192,7 +192,8 @@ class ResourcesFixture extends RepekaFixture {
                     ]
                 ),
                 $userAdmin
-            )
+            ),
+            self::REFERENCE_BOOK_1
         );
         $urlLabelMetadataId = $this->getReference(MetadataFixture::REFERENCE_METADATA_URL_LABEL)->getId();
         $this->handleCommand(
@@ -206,6 +207,7 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [1337],
                         MetadataFixture::REFERENCE_METADATA_SEE_ALSO => [$book1],
                         MetadataFixture::REFERENCE_METADATA_RELATED_BOOK => [$book1],
+                        MetadataFixture::REFERENCE_METADATA_CREATOR => [$userAdmin->getUserData()],
                         MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
                         MetadataFixture::REFERENCE_METADATA_SUPERVISOR => [$userBudynek->getUserData()],
                         MetadataFixture::REFERENCE_METADATA_HARD_COVER => [true],
@@ -338,7 +340,6 @@ class ResourcesFixture extends RepekaFixture {
                 $userAdmin
             )
         );
-        $this->makeTransition([$book1], [$userAdmin, $userScanner]);
     }
 
     private function contents(array $data): ResourceContents {
@@ -348,15 +349,6 @@ class ResourcesFixture extends RepekaFixture {
             $contents[$metadataId] = $values;
         }
         return ResourceContents::fromArray($contents);
-    }
-
-    private function makeTransition(array $books, array $executors) {
-        $this->handleCommand(
-            new ResourceTransitionCommand($books[0], $books[0]->getContents(), 'e7d756ed-d6b3-4f2f-9517-679311e88b17', $executors[0])
-        );
-        $this->handleCommand(
-            new ResourceTransitionCommand($books[0], $books[0]->getContents(), 'd3f73249-d10f-4d4b-8b63-be60b4c02081', $executors[1])
-        );
     }
 
     private function addUserGroups() {

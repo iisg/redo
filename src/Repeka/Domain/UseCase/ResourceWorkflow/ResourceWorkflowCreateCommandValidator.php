@@ -57,7 +57,7 @@ class ResourceWorkflowCreateCommandValidator extends CommandAttributesValidator 
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute('name', $this->notBlankInAllLanguagesRule)
-            ->attribute('places', $this->workflowPlacesDefinitionIsValidRule)
+            ->attribute('places', $this->workflowPlacesDefinitionIsValidRule)->setTemplate('Invalid places definition')
             ->attribute('places', $this->noAssigneeMetadataInFirstPlaceRule)
             ->attribute('transitions', $this->workflowTransitionsDefinitionIsValidRule)
             ->attribute('resourceClass', $this->resourceClassExistsRule)

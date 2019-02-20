@@ -67,7 +67,7 @@
                         required.bind="required"></resource-metadata-value-input>
                     <div if.bind="!disabled"
                         class="drag-handle-with-buttons ${(!required || resource.contents[metadata.id].length > 1)
-                            && !addingValuesIsDisabled && itIsPossibleToAddMoreValues ? 'wide-for-three-items': ''}">
+                            && !controlCanShowEmptyField && itIsPossibleToAddMoreValues ? 'wide-for-three-items': ''}">
                         <button if.bind="resource.contents[metadata.id].length > 1"
                             class="drag-handle"
                             type="button"
@@ -76,18 +76,19 @@
                             <icon name="arrows-2"
                                 size="1.5"></icon>
                         </button>
-                        <icon-button if.bind="!required || resource.contents[metadata.id].length > 1"
+                        <icon-button if.bind="resource.contents[metadata.id].length > 1 || controlCanShowEmptyField"
+                            class="remove-metadata-value-button"
                             icon-name="remove-2"
                             tooltip-text-when-enabled.one-time="'Remove value' | t"
                             click.delegate="deleteIndex($index)"
                             tab-index="-1"></icon-button>
-                        <new-metadata-value-button if.bind="$first && !addingValuesIsDisabled && itIsPossibleToAddMoreValues"
+                        <new-metadata-value-button if.bind="$first && !controlCanShowEmptyField && itIsPossibleToAddMoreValues"
                             click.trigger="addNew()"></new-metadata-value-button>
                     </div>
                 </div>
             </td>
         </tr>
-        <tr if.bind="!disabled && !resource.contents[metadata.id].length && !addingValuesIsDisabled">
+        <tr if.bind="!disabled && !resource.contents[metadata.id].length && !controlCanShowEmptyField">
             <td>
                 <div class="new-metadata-value-button-container">
                     <new-metadata-value-button click.trigger="addNew()"></new-metadata-value-button>

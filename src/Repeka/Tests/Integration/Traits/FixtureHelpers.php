@@ -8,12 +8,15 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
 
@@ -87,5 +90,26 @@ trait FixtureHelpers {
 
     protected function getResourceKindRepository(): ResourceKindRepository {
         return $this->container->get(ResourceKindRepository::class);
+    }
+
+    protected function unlockAllMetadata(ResourceWorkflow $workflow): void {
+        $placesWithNoLockedMetadata = array_map(
+            function (ResourceWorkflowPlace $place) {
+                $array = $place->toArray();
+                $array['lockedMetadataIds'] = [];
+                return $array;
+            },
+            $workflow->getPlaces()
+        );
+        $this->handleCommandBypassingFirewall(
+            new ResourceWorkflowUpdateCommand(
+                $workflow,
+                $workflow->getName(),
+                $placesWithNoLockedMetadata,
+                $workflow->getTransitions(),
+                $workflow->getDiagram(),
+                $workflow->getThumbnail()
+            )
+        );
     }
 }

@@ -1,0 +1,32 @@
+{% extends "redo/deposit/deposit-layout.twig" %}
+{% set page_title = 'Deposit - resource kind' | trans %}
+{% block depositContent %}
+    <h1 class="deposit-page-header">{{ 'Resource add wizard' | trans }}</h1>
+    {% include 'redo/deposit/deposit-breadcrumb.twig' %}
+    {% if resourceKinds | length == 0 %}
+        {{ 'No kinds available to add resource' | trans }}.
+    {% else %}
+        <form action=""
+            method="post"
+            class="deposit-form">
+            <div class="deposit-form-header clearfix">
+                {{ 'Choose the resource kind you want to create from the list below' | trans }}
+                <button type="submit"
+                    class="pull-right btn btn-primary">
+                    {{ 'Next' | trans }} &gt;
+                </button>
+            </div>
+            {% for resourceKind in resourceKinds %}
+                <div class="checkbox">
+                    <label>
+                        <input type="radio"
+                            name="resourceKindId"
+                            value="{{ resourceKind.id }}"
+                            required>
+                        {{ resourceKind.label | inCurrentLanguage }}
+                    </label>
+                </div>
+            {% endfor %}
+        </form>
+    {% endif %}
+{% endblock %}

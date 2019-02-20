@@ -124,6 +124,14 @@ class Metadata implements Identifiable, HasResourceClass {
         return !$this->parentMetadata;
     }
 
+    public function getTopParent(): Metadata {
+        $parent = $this;
+        while (!$parent->isTopLevel()) {
+            $parent = $parent->getParent();
+        }
+        return $parent;
+    }
+
     public function getParentId() {
         return $this->isTopLevel() ? null : $this->parentMetadata->getId();
     }

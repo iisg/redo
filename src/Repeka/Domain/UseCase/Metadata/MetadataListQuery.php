@@ -2,12 +2,12 @@
 namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
-use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 
 class MetadataListQuery extends AbstractCommand {
-    use RequireOperatorRole;
+    use RequireNoRoles;
 
     private $systemMetadataIds;
     private $ids;

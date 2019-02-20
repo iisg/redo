@@ -8,7 +8,6 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowDeleteCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowListAllQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowListQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowPluginsQuery;
-use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
@@ -53,12 +52,11 @@ class ResourceWorkflowsController extends ApiController {
     }
 
     /**
-     * @Route("/{id}")
+     * @Route("/{workflow}")
      * @Method("GET")
-     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
+     * @Security("is_granted('VIEW', workflow)")
      */
-    public function getAction(string $id) {
-        $workflow = $this->handleCommand(new ResourceWorkflowQuery(intval($id)));
+    public function getAction(ResourceWorkflow $workflow) {
         return $this->createJsonResponse($workflow);
     }
 

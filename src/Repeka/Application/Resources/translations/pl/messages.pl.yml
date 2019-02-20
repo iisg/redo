@@ -73,9 +73,6 @@ language_de: Język niemiecki
 Deposit - resource kind: Deponuj - typ zasobu
 Deposit - collection: Deponuj - kolekcja
 Deposit - add: Deponuj - dodaj
-Resource depositing - select resource kind: Deponowanie zasobu - wybór typu zasobu
-Resource depositing - select collection: Deponowanie zasobu - wybór kolekcji
-Resource depositing - resource data: Deponowanie zasobu - dane zasobu
 No resources: Brak zasobów
 Parent resource: Zasób nadrzędny
 Resource state: Stan zasobu
@@ -112,3 +109,20 @@ I understand: Rozumiem
 Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.: Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.
 You are not allowed to view this resource: Nie masz uprawnień by zobaczyć ten zasób
 Resource does not exist: Zasób nie istnieje
+
+Choose the resource kind you want to create from the list below: Wybierz z poniższej listy jakiego typu zasób chcesz zdeponować
+Resource add wizard: Deponowanie zasobu
+Next: Dalej
+Selected resource kind: Wybrany typ zasobu
+change: zmień
+Choose the collection to put the resource in: Wybierz kolekcję, w której zdeponowany zasób będzie umieszczony
+Selected collection: Wybrana kolekcja
+Finish later: Dokończ później
+Deposit now: Zdeponuj
+Deposit later: Zdeponuj poźniej
+Resource data: Dane dotyczące zasobu
+Congratulations! Your resource has been added.: Gratulacje! Twój zasób został zdeponowany.
+Go to my resources list: Przejdź do listy moich zasobów
+deposited: zdeponowany
+continue depositing: kontynuuj deponowanie
+State: Stan

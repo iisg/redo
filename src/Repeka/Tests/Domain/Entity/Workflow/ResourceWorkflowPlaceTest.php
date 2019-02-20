@@ -99,4 +99,17 @@ class ResourceWorkflowPlaceTest extends \PHPUnit_Framework_TestCase {
         $resourceContents = ResourceContents::fromArray([1 => []]);
         $this->assertEquals([1], $place->getMissingRequiredMetadataIds($resourceContents, $rk));
     }
+
+    public function testFromArrayDeduplicatesMetadataRestrictions() {
+        $place = ResourceWorkflowPlace::fromArray(
+            [
+                'id' => 'B',
+                'label' => ['PL' => 'AA'],
+                'requiredMetadataIds' => [1, 2, 3, 3, 2, 1, 1],
+            ]
+        );
+        $this->assertEquals('B', $place->getId());
+        $this->assertEquals(['PL' => 'AA'], $place->getLabel());
+        $this->assertEquals([1, 2, 3], $place->restrictingMetadataIds()->all()->get());
+    }
 }

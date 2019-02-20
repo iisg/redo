@@ -1,0 +1,69 @@
+<form action=""
+    method="post"
+    class="deposit-form">
+    <div class="deposit-form-header clearfix">
+        <div class="pull-right text-right">
+            <div class="form-group">
+                <button type="submit"
+                    class="btn btn-primary">
+                    {{ 'Deposit now' | trans }} &gt;
+                </button>
+            </div>
+            <a href="{{ path('myResources') }}">{{ 'Deposit later' | trans }}</a>
+        </div>
+        <h4 class="pull-left no-margin-top">{{ transition.label | inCurrentLanguage }}</h4>
+    </div>
+    <div class="deposit-form-content">
+        <div class="deposit-brief-info no-margin-bottom">
+            <p>
+                {{ 'Selected resource kind' | trans }}:
+                <span class="deposit-selected-value">{{ resourceKind.label | inCurrentLanguage }}</span>
+            </p>
+            <p>
+                {{ 'Selected collection' | trans }}:
+                <span class="deposit-selected-value">{{ resource | mParent | mLabel | raw }}</span>
+            </p>
+        </div>
+        <hr>
+        <p>
+            {{ 'Resource data' | trans }}
+            <a href="{{ path('depositTransition', {resource: resource.id, transition: depositPath.transitions[0].id}) }}">{{ 'change' | trans }}</a>
+        </p>
+        <div class="deposit-metadata-summary">
+            <dl>
+                {% for metadata in resource.kind.metadataList if metadata.id > 0
+                    and not metadata.dynamic
+                    and metadata.control != 'display-strategy'
+                    and metadata.control != 'wysiwyg-editor' %}
+                    {% set metadataValues = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) %}
+                    {% if metadataValues | length %}
+                        <dt>
+                            {{ metadata.label | inCurrentLanguage }}:
+                        </dt>
+                        <dd>
+                            {% for metadataValue in metadataValues %}
+                                {% if metadata.control == 'file' or metadata.control == 'directory' %}
+                                    {{ metadataValue | basename }}
+                                {% elseif metadata.control == 'relationship' %}
+                                    {% set relatedResource = resource(metadataValue) %}
+                                    {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
+                                        <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
+                                    {% elseif canViewTeaser(relatedResource) %}
+                                        {{ relatedResource | mLabel | raw }}
+                                    {% endif %}
+                                {% elseif metadata.dynamic %}
+                                    {{ metadataValue | raw }}
+                                {% else %}
+                                    {{ metadataValue }}
+                                {% endif %}
+                                {% if not loop.last %}
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </dd>
+                    {% endif %}
+                {% endfor %}
+            </dl>
+        </div>
+    </div>
+</form>

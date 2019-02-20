@@ -16,6 +16,5 @@ class RedoExtension extends ConfigurableExtension {
         $container->setParameter('redo.koha_url', $mergedConfig['koha_url']);
         $container->setParameter('redo.user_data_mapping', $mergedConfig['user_data_mapping']);
         $container->setParameter('redo.fts_config', $mergedConfig['fts']);
-        $container->setParameter('redo.deposit_config', $mergedConfig['deposit']);
     }
 }

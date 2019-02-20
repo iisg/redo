@@ -34,7 +34,7 @@ export class ResourceKindIdMapper extends AdvancedMapper<ResourceKind> {
   fromBackendProperty(key: string, dto: Object, resource: Object): Promise<ResourceKind> {
     const dtoKey = key + 'Id';
     const resourceKindId = dto[dtoKey];
-    return this.resourceKindRepository.get(resourceKindId);
+    return this.resourceKindRepository.get(resourceKindId, true).catch(() => undefined);
   }
 
   toBackendProperty(key: string, resource: Resource, dto: Object): void {

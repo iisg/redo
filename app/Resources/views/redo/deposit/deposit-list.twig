@@ -1,54 +1,41 @@
-{% set addedResources = resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}}) %}
-{% if addedResources | length == 0 %}
-    {{ 'No resources' | trans }}.
-{% else %}
-    <div class="deposit-resources">
-        <table>
-            <tr>
-                <th>{{ 'Resource' | trans({}, 'generic') }}</th>
-                <th>{{ 'Parent resource' | trans }}</th>
-                <th>{{ 'Resource state' | trans }}</th>
-                <th>{{ 'Allowed operations' | trans }}</th>
-            </tr>
-            {% for deposit in addedResources %}
+{% extends "redo/deposit/deposit-layout.twig" %}
+{% set page_title = 'My resources' | trans %}
+{% block depositContent %}
+    <h1>{{ 'My resources' | trans }}</h1>
+    {% if addedResources | length == 0 %}
+        {{ 'No resources' | trans }}.
+    {% else %}
+        <div class="deposit-resources">
+            <table class="table table-striped">
                 <tr>
-                    <td>
-                        <a href="/resources/{{ deposit.id }}">{{ deposit | metadata('label') }}</a>
-                    </td>
-                    <td>
-                        {% set parentResourceId = deposit | m(-1) | first %}
-                        {% if parentResourceId %}
-                            <a href="/resources/{{ deposit.id }}">{{ r(parentResourceId) | metadata('label') }}</a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% for place in  deposit.kind.workflow.places %}
-                            {% if place.id in deposit.marking | keys %}
-                                <span>{{ place.label | inCurrentLanguage }}</span>
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% set availableTransitions = availableTransitions(app.user, deposit) %}
-                        {% if availableTransitions.update is not defined %}
-                            <div class="deposit-operations">
-                                <a href="{{ path(app.request.attributes.get('_route'), {'phase': 'form', 'parentResourceId': (deposit | m(-1) | first | trim), 'resourceKindId': deposit.kind.id , 'edit': deposit.id, transitionId: 'update'}) }}">
-                                    {{ icon('edit', 1.5) }} {{ 'Edit' | trans }}
-                                </a>
-                            </div>
-                        {% endif %}
-                        {% for transition in availableTransitions %}
-                            {% if transition.id != 'update' %}
-                                <div class="deposit-operations">
-                                    <a href="{{ path(app.request.attributes.get('_route'), {'phase': 'form', 'parentResourceId': (deposit | m(-1) | first | trim), 'resourceKindId': deposit.kind.id , 'edit': deposit.id, 'transitionId': transition.id }) }}">
-                                        {{ icon('workflow', 1.5) }} {{ transition.label | inCurrentLanguage }}
-                                    </a>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </td>
+                    <th>{{ 'Resource' | trans({}, 'generic') }}</th>
+                    <th>{{ 'Collection' | trans }}</th>
+                    <th>{{ 'State' | trans }}</th>
                 </tr>
-            {% endfor %}
-        </table>
-    </div>
-{% endif %}
+                {% for resource in addedResources %}
+                    <tr>
+                        <td>
+                            <a href="/resources/{{ resource.id }}">{{ resource | metadata('label') | raw }}</a>
+                        </td>
+                        <td>
+                            {% set parentResourceId = resource | m(-1) | first %}
+                            {% if parentResourceId %}
+                                <a href="/resources/{{ parentResourceId }}">{{ r(parentResourceId) | metadata('label') }}</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set depositPath = getWorkflowPlaceTaggedPath('deposit', resource) %}
+                            {% if depositPath.contains(resource.currentPlaces[0].id) and depositPath.lastPlace.id != resource.currentPlaces[0].id %}
+                                <a href="{{ path('depositTransition', {resource: resource.id, transition: depositPath.getNext(resource.currentPlaces[0].id).id}) }}">
+                                    {{ 'continue depositing' | trans }}
+                                </a>
+                            {% else %}
+                                {{ 'deposited' | trans }} &#10004;
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

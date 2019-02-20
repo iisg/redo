@@ -3,6 +3,7 @@ namespace Repeka\Application\Security;
 
 use Repeka\Application\Security\Voters\ResourceMetadataPermissionVoter;
 use Repeka\Application\Service\CurrentUserAware;
+use Repeka\Domain\Entity\Identifiable;
 use Repeka\Domain\Entity\ResourceEntity;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -19,9 +20,17 @@ class SecurityOracle {
 
     public function hasMetadataPermission(ResourceEntity $resource, $metadata, ?TokenInterface $userToken = null): bool {
         $permissionName = ResourceMetadataPermissionVoter::createMetadataPermissionName($metadata);
+        return $this->hasPermission($resource, $permissionName, $userToken);
+    }
+
+    public function hasViewPermission(Identifiable $entity, ?TokenInterface $userToken = null) {
+        return $this->hasPermission($entity, 'VIEW', $userToken);
+    }
+
+    private function hasPermission(Identifiable $entity, string $permissionName, ?TokenInterface $userToken = null): bool {
         if (!$userToken) {
             $userToken = $this->getCurrentUserToken();
         }
-        return $this->accessDecisionManager->decide($userToken, [$permissionName], $resource);
+        return $this->accessDecisionManager->decide($userToken, [$permissionName], $entity);
     }
 }

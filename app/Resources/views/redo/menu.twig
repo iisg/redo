@@ -28,7 +28,7 @@
                     value="{{ app.request.query.get('phrase') }}"
                 {% endif %}
                 placeholder="{{ 'search_small_placeholder' | trans }}"
-                aria-label="{{ 'search_small_placeholder' | trans}}">
+                aria-label="{{ 'search_small_placeholder' | trans }}">
             <button class="search-button"
                 type="submit"
                 name="{{ 'search_button' | trans }}"
@@ -51,16 +51,16 @@
                     {{ icon('down-4', 0.75) }}
                 </button>
                 <div role="listbox">
-                    {% if resourceKindsToDeposit(app.user, [-4]) | length != 0 %}
+                    {% if canDepositAnyResource() %}
                         <a class="isActive() ? 'active' : ''"
-                            href="/deposit/resource-kind"
+                            href="{{ path('deposit') }}"
                             role="option">
                             <span>{{ 'Deposit' | trans }}</span>
                         </a>
                     {% endif %}
                     {% if resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}, resultsPerPage: 1}) | length == 1 %}
                         <a class="isActive() ? 'active' : ''"
-                            href="/deposit/deposit-list"
+                            href="{{ path('myResources') }}"
                             role="option">
                             <span>{{ 'My resources' | trans }}</span>
                         </a>
@@ -68,7 +68,7 @@
                     {% if is_granted('ROLE_OPERATOR_SOME_CLASS') %}
                         <a href="/admin"
                             role="option">
-                            <span>{{ 'Admin panel' | trans}}</span>
+                            <span>{{ 'Admin panel' | trans }}</span>
                         </a>
                     {% endif %}
                     <a href="/logout"

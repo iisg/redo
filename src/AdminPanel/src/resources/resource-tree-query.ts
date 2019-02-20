@@ -3,7 +3,6 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
 import {cachedResponse, forSeconds} from "../common/repository/cached-response";
 import {TreeResult} from 'resources/tree-result';
-import {HttpClient} from "aurelia-http-client";
 
 export class ResourceTreeQuery {
   private params: any = {};
@@ -68,15 +67,13 @@ export class ResourceTreeQuery {
     return this;
   }
 
-  public get(treeQueryUrl?: string): Promise<TreeResult<Resource>> {
-    return this.makeRequest(treeQueryUrl, this.params);
+  public get(): Promise<TreeResult<Resource>> {
+    return this.makeRequest(this.params);
   }
 
   @cachedResponse(forSeconds(10))
-  private makeRequest(treeQueryUrl: string, params): Promise<TreeResult<Resource>> {
-    const endpoint = treeQueryUrl ? treeQueryUrl : this.endpoint;
-    const http = treeQueryUrl ? new HttpClient() : this.httpClient;
-    return http.createRequest(endpoint)
+  private makeRequest(params): Promise<TreeResult<Resource>> {
+    return this.httpClient.createRequest(this.endpoint)
       .asGet()
       .withParams(params)
       .send()

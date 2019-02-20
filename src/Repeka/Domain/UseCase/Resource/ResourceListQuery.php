@@ -5,6 +5,7 @@ use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\User;
 use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
 /** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
@@ -48,7 +49,8 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
         int $page,
         int $resultsPerPage,
         array $workflowPlacesIds,
-        int $permissionMetadataId
+        int $permissionMetadataId,
+        ?User $executor = null
     ): ResourceListQuery {
         $query = new self($page, $resultsPerPage);
         $query->ids = $ids;
@@ -60,6 +62,7 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
         $query->onlyTopLevel = $onlyTopLevel;
         $query->workflowPlacesIds = $workflowPlacesIds;
         $query->permissionMetadataId = $permissionMetadataId;
+        $query->executor = $executor;
         return $query;
     }
 

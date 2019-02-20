@@ -68,6 +68,18 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
         );
     }
 
+    /** @return ResourceWorkflowPlacePluginConfiguration[] */
+    public function getPluginConfigs(string $pluginClassName): array {
+        return array_values(
+            array_filter(
+                $this->getPluginsConfig(),
+                function (ResourceWorkflowPlacePluginConfiguration $config) use ($pluginClassName) {
+                    return $config->isForPlugin($pluginClassName);
+                }
+            )
+        );
+    }
+
     public function toArray(): array {
         return [
             'label' => $this->getLabel(),
@@ -84,10 +96,10 @@ class ResourceWorkflowPlace implements Identifiable, Labeled {
         return new self(
             $data['label'] ?? [],
             $data['id'] ?? null,
-            $data['requiredMetadataIds'] ?? [],
-            $data['lockedMetadataIds'] ?? [],
-            $data['assigneeMetadataIds'] ?? [],
-            $data['autoAssignMetadataIds'] ?? [],
+            array_values(array_unique($data['requiredMetadataIds'] ?? [])),
+            array_values(array_unique($data['lockedMetadataIds'] ?? [])),
+            array_values(array_unique($data['assigneeMetadataIds'] ?? [])),
+            array_values(array_unique($data['autoAssignMetadataIds'] ?? [])),
             $data['pluginsConfig'] ?? []
         );
     }

@@ -4,7 +4,7 @@ import {Resource} from "resources/resource";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {Metadata, GroupMetadataList} from "resources-config/metadata/metadata";
+import {GroupMetadataList, Metadata} from "resources-config/metadata/metadata";
 import {diff, inArray} from "common/utils/array-utils";
 import {RequirementState} from "workflows/workflow";
 import {computedFrom} from "aurelia-binding";
@@ -28,7 +28,6 @@ export class ResourceFormGenerated {
   @bindable targetPlaces: WorkflowPlace[];
   @bindable skipValidation: boolean = false;
   @bindable displayRequiredOnly: boolean;
-  @bindable treeQueryUrl: string;
   @bindable forceSimpleFileUpload: boolean = false;
   @bindable disabled: boolean = false;
 
@@ -72,7 +71,7 @@ export class ResourceFormGenerated {
   displayMetadataValueInput(metadata: Metadata): boolean {
     return !this.resourceKind.workflow
       || !this.displayRequiredOnly
-      || (this.displayRequiredOnly && this.metadataIsRequired(metadata));
+      || (this.displayRequiredOnly && !this.metadataIsLocked(metadata));
   }
 
   resourceChanged() {

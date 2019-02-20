@@ -35,7 +35,6 @@
                         values-validation.bind="resource.contents[metadata.id] & validate:contentsValidator[metadata.id] & signal:'metadata-validators-changed'"
                         required.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
                         skip-validation.bind="skipValidation"
-                        tree-query-url.bind="treeQueryUrl"
                         force-simple-file-upload.bind="forceSimpleFileUpload"></resource-metadata-values-form>
                 </template>
             </template>

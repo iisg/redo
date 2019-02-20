@@ -41,6 +41,7 @@
                 click.delegate="addFormOpened = false"></cancel-button>
         </div>
         <resource-form if="condition.bind: newResourceKind; cache: false"
+            class="form-with-sticky-buttons"
             resource-kind.bind="newResourceKind"
             resource-class.bind="resourceClass"
             parent.bind="parentResource"

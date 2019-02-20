@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Workflow;
 
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 
 interface ResourceWorkflowDriver {
     /** @return string[] */
@@ -13,4 +14,7 @@ interface ResourceWorkflowDriver {
     public function apply(ResourceEntity $resource, string $transitionId): ResourceEntity;
 
     public function setCurrentPlaces(ResourceEntity $resourceEntity, array $places): ResourceEntity;
+
+    /** @return string[] */
+    public function getTransitionsFromPlace(ResourceWorkflowPlace $place): array;
 }

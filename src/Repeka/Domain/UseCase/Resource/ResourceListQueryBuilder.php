@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\Resource;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\User;
 use Repeka\Domain\UseCase\Audit\AbstractListQueryBuilder;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
@@ -17,6 +18,7 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
     private $ids = [];
     private $workflowPlacesIds = [];
     private $permissionMetadataId = SystemMetadata::VISIBILITY;
+    private $executor;
 
     /** @param ResourceKind[] | int[] $resourceKinds */
     public function filterByResourceKinds(array $resourceKinds): self {
@@ -76,6 +78,11 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
+    public function setExecutor(User $user): self {
+        $this->executor = $user;
+        return $this;
+    }
+
     public function build(): ResourceListQuery {
         return ResourceListQuery::withParams(
             $this->ids,
@@ -88,7 +95,8 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
             $this->page,
             $this->resultsPerPage,
             $this->workflowPlacesIds,
-            $this->permissionMetadataId
+            $this->permissionMetadataId,
+            $this->executor
         );
     }
 }

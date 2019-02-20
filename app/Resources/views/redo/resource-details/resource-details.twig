@@ -28,6 +28,11 @@
             href="{{ referer }}">{{ icon('undo-3') }}{{ 'Search results' | trans }}</a>
     {% endif %}
 
+    {% if app.flashes('deposit') %}
+        <h1 class="deposit-success-flash">{{ 'Congratulations! Your resource has been added.' | trans }}</h1>
+        <a href="{{ path('myResources') }}">&laquo; {{ 'Go to my resources list' | trans }}</a>
+    {% endif %}
+
     <div class="resource-details"
         role="main">
         <div class="top-container">

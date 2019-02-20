@@ -26,10 +26,8 @@ class ResourceMetadataPermissionVoter extends Voter {
     }
 
     /**
-     * @param string $attribute
+     * @inheritdoc
      * @param ResourceEntity $resource
-     * @param TokenInterface $token
-     * @return bool
      */
     public function voteOnAttribute($attribute, $resource, TokenInterface $token) {
         $user = $token->getUser();

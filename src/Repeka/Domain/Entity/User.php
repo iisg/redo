@@ -14,6 +14,10 @@ abstract class User implements Identifiable {
         return $this->userData;
     }
 
+    public function getUserResourceId(): int {
+        return $this->userData->getId();
+    }
+
     public function setUserData(ResourceEntity $userData) {
         $this->userData = $userData;
     }

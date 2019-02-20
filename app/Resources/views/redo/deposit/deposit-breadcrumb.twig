@@ -1,0 +1,35 @@
+<ol class="deposit-breadcrumb {{ resourceKind is defined ? 'resource-kind-choosen' : 'resource-kind-not-chosen' }}">
+    <li class="{{ resourceKind is defined ? 'past' : 'active' }}">
+        <div class="deposit-breadcrumb-mark">{{ resourceKind is defined ? '&#10004;'|raw : '1' }}</div>
+        {% if resourceKind is defined and resource is not defined %}
+            <a href="{{ path('deposit') }}"
+                class="arrow">{{ 'Resource kind' | trans }}</a>
+        {% else %}
+            <span class="arrow">{{ 'Resource kind' | trans }}</span>
+        {% endif %}
+    </li>
+    <li class="{% if resourceKind is defined and resource is not defined %}active{% endif %} {{ resource is defined ? 'past' : '' }}">
+        <div class="deposit-breadcrumb-mark">{{ resource is defined ? '&#10004;'|raw : '2' }}</div>
+        <span class="arrow">{{ 'Collection' | trans }}</span>
+    </li>
+    {% if depositPath is defined %}
+        {% for place in depositPath.places %}
+            {% if loop.index0 > 0 %}
+                <li {% if resource is defined and transition is defined %}class="{{ transition.toIds[0] == place.id ? 'active' : '' }} {{ not depositPath.isBefore(resource.currentPlaces[0].id, place.id) ? 'past' : '' }}"{% endif %}>
+                    {% if transition is defined and depositPath.isBefore(place.id, transition.id) %}
+                        <div class="deposit-breadcrumb-mark">&#10004;</div>
+                        <a class="arrow"
+                            href="{{ path('depositTransition', {resource: resource.id, transition: depositPath.transitions[loop.index0 - 1].id}) }}">
+                            {{ place.label | inCurrentLanguage }}
+                        </a>
+                    {% else %}
+                        <div class="deposit-breadcrumb-mark">{{ loop.index0 + 2 }}</div>
+                        <span class="arrow">{{ place.label | inCurrentLanguage }}</span>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <li class="last-full-width"><span class="arrow"></span></li>
+    {% endif %}
+</ol>

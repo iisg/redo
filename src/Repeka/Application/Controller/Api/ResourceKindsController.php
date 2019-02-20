@@ -6,7 +6,6 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindDeleteCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
-use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -44,12 +43,11 @@ class ResourceKindsController extends ApiController {
     }
 
     /**
-     * @Route("/{id}")
+     * @Route("/{resourceKind}")
      * @Method("GET")
-     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
+     * @Security("is_granted('VIEW', resourceKind)")
      */
-    public function getAction(string $id) {
-        $resourceKind = $this->handleCommand(new ResourceKindQuery(intval($id)));
+    public function getAction(ResourceKind $resourceKind) {
         return $this->createJsonResponse($resourceKind);
     }
 

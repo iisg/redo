@@ -73,3 +73,14 @@ repekaMetadataValueRemover:
       label: Value pattern
       placeholder: .*
       description: "Declare regular expression. If value matches given pattern it will be deleted. To delete any value, enter: \".*\"."
+workflowPlaceTagger:
+  label: Tag this place
+  options:
+    tagName:
+      label: Tag name
+      placeholder: ~
+      description: ~
+    tagValue:
+      label: Tag value
+      placeholder: ~
+      description: ~

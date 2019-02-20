@@ -81,6 +81,7 @@ class TwigResourceDisplayStrategyEvaluatorIntegrationTest extends IntegrationTes
             ["{{ r|m('Nadzorujący')|r|m('Username') }}", "budynek"], // can handle many values?
             ["{{ r|m('Nadzorujący')|m('Username') }}", "budynek"], // can skip resource fetching?
             ["{{ r|m(1) }}", "Potop, Powódź", RC::fromArray([1 => ['Potop', 'Powódź']])], // can render directly from resource contents?
+            ["{{ r|m(1) }}", "Potop, Powódź", ['contents' => [1 => ['Potop', 'Powódź']]]], // can render directly from normalized resource?
             ["{% for title in r|m1 %}{{ loop.index }}. {{ title }}{%endfor%}", "1. Potop2. Powódź", RC::fromArray([1 => ['Potop', 'Powódź']])], // loop.index
             ["{{ r|m(1)|m('Username') }}", "admin, budynek, tester", RC::fromArray([1 => [1, 2, 3]])], // many associations
             ["{{ r|m$tId }}", "PHP - to można leczyć!"], // dynamic filter

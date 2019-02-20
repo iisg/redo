@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Validation\Rules;
 
+use Assert\Assertion;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Respect\Validation\Rules\AbstractRule;
@@ -37,22 +38,31 @@ class WorkflowPlacesDefinitionIsValidRule extends AbstractRule {
                         ),
                         false
                     )
-                )->callback([$this, 'noCommonValuesBetweenRequirements'])
+                )
             )
-        )->validate($input);
+        )->each(Validator::callback([$this, 'noCommonValuesBetweenRequirements']))->validate($input);
     }
 
     public function noCommonValuesBetweenRequirements($place): bool {
         $merged = ($place instanceof ResourceWorkflowPlace)
-            ? array_merge($place->restrictingMetadataIds()->all()->get())
+            ? array_merge($place->restrictingMetadataIds()->all()->get(false))
             : array_merge(
                 $place['requiredMetadataIds'] ?? [],
                 $place['lockedMetadataIds'] ?? [],
                 $place['assigneeMetadataIds'] ?? [],
                 $place['autoAssignMetadataIds'] ?? []
             );
-        $allCount = count($merged);
-        $uniqueCount = count(array_unique($merged));
-        return $allCount == $uniqueCount;
+        $counts = array_count_values($merged);
+        $duplicates = array_filter(
+            $counts,
+            function ($count) {
+                return $count > 1;
+            }
+        );
+        Assertion::noContent(
+            $duplicates,
+            'These metadata appear in multiple resource place constraints: ' . implode(', ', array_keys($duplicates))
+        );
+        return true;
     }
 }

@@ -131,6 +131,10 @@ class ResourceKind implements Identifiable, HasResourceClass {
         return $this->workflow;
     }
 
+    public function hasWorkflow(): bool {
+        return !!$this->workflow;
+    }
+
     public function setWorkflow(ResourceWorkflow $workflow) {
         $this->workflow = $workflow;
     }

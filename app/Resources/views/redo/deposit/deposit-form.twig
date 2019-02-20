@@ -1,9 +1,42 @@
-{% set editedResourceId = app.request.get('edit') ?? '' %}
-{% set transitionId = app.request.get('transitionId') ?? '' %}
-<div class="deposit-form">
-    <deposit-form parent-id="{{ parentResource ? parentResource.id : null}}"
-        resource-class="{{ parentResource ? parentResource.resourceClass : '' }}"
-        resource-kind-id="{{ resourceKind.id }}"
-        edited-resource-id="{{ editedResourceId }}"
-        transition-id="{{ transitionId }}"></deposit-form>
-</div>
+{% extends "redo/deposit/deposit-layout.twig" %}
+{% set page_title = 'Deposit - add' | trans %}
+{% block depositContent %}
+    <h1 class="deposit-page-header">{{ 'Resource add wizard' | trans }}</h1>
+    {% include 'redo/deposit/deposit-breadcrumb.twig' %}
+
+    {% if depositPath.lastTransition.id != transition.id %}
+        <div class="deposit-brief-info">
+            <p>
+                {{ 'Selected resource kind' | trans }}:
+                <span class="deposit-selected-value">{{ resourceKind.label | inCurrentLanguage }}</span>
+            </p>
+            <p>
+                {{ 'Selected collection' | trans }}: <span class="deposit-selected-value">{{ resource | mParent | mLabel | raw }}</span>
+            </p>
+        </div>
+        <div class="deposit-form">
+            <deposit-form
+                resource-id="{{ resource.id }}"
+                transition-id="{{ transition.id }}">
+                <div slot="above-form"></div>
+                <div slot="above-form-fields">
+                    <div class="deposit-form-header clearfix">
+                        <div class="pull-right text-right">
+                            <div class="form-group">
+                                <button type="submit"
+                                    class="btn btn-primary">
+                                    {{ 'Next' | trans }} &gt;
+                                </button>
+                            </div>
+                            <a href="{{ path('myResources') }}">{{ 'Finish later' | trans }}</a>
+                        </div>
+                        <h4 class="pull-left no-margin-top">{{ transition.label | inCurrentLanguage }}</h4>
+                    </div>
+                </div>
+                <div slot="below-form-fields"></div>
+            </deposit-form>
+        </div>
+    {% else %}
+        {% include 'redo/deposit/deposit-summary.twig' %}
+    {% endif %}
+{% endblock %}

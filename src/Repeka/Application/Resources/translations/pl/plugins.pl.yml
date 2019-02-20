@@ -77,3 +77,14 @@ repekaMetadataValueRemover:
       label: Wzór wartości do usuwania
       placeholder: .*
       description: "Podaj wyrażenie regularne. Jeżeli wartość dopasuje się do wzoru zostanie usunięty, w przeciwnym wypadku nie. Aby usunać dowolną wartość, podaj: \".*\"."
+workflowPlaceTagger:
+  label: Otaguj ten stan
+  options:
+    tagName:
+      label: Nazwa tagu
+      placeholder: ~
+      description: ~
+    tagValue:
+      label: Wartość tagu
+      placeholder: ~
+      description: ~

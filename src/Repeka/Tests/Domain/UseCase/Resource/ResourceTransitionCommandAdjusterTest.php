@@ -6,8 +6,7 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
-use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
-use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\ResourceContentsAdjuster;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommandAdjuster;
 use Repeka\Domain\Utils\EntityUtils;
@@ -28,9 +27,7 @@ class ResourceTransitionCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
         $this->transition = $this->createWorkflowTransitionMock([], [], [], 't1');
         $workflow->method('getTransition')->willReturn($this->transition);
         $this->resourceKind = $this->createResourceKindMock(1, 'book', [$realMetadata], $workflow);
-        $metadataRepository = $this->createRepositoryStub(MetadataRepository::class, [$realMetadata]);
-        $metadataValueAdjusterComposite = new MetadataValueAdjusterComposite([]);
-        $this->adjuster = new ResourceTransitionCommandAdjuster($metadataRepository, $metadataValueAdjusterComposite);
+        $this->adjuster = new ResourceTransitionCommandAdjuster($this->createMock(ResourceContentsAdjuster::class));
     }
 
     public function testConvertTransitionIdToTransition() {

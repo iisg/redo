@@ -87,4 +87,13 @@ final class ArrayUtils {
     public static function rangeAscending($start, $endInclusive): array {
         return $start <= $endInclusive ? range($start, $endInclusive) : [];
     }
+
+    public static function filterOutValue(array $array, $valueToFilterOut): array {
+        return array_filter(
+            $array,
+            function ($value) use ($valueToFilterOut) {
+                return $value != $valueToFilterOut;
+            }
+        );
+    }
 }

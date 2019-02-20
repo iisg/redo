@@ -41,7 +41,6 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
     editedResource: Resource
   }) => Promise<any>;
   @bindable cancel: () => void;
-  @bindable treeQueryUrl: string;
   @bindable forceSimpleFileUpload: boolean = false;
   submitting: boolean = false;
   cloning: boolean = false;
@@ -165,16 +164,6 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
     }
   }
 
-  private allRequiredMetadataFilled(resource: Resource): boolean {
-    const missedMetadata = [];
-    this.requiredMetadataIds.forEach(metadataId => {
-      if (!resource.contents[metadataId].length) {
-        missedMetadata.push(metadataId);
-      }
-    });
-    return !missedMetadata.length;
-  }
-
   validateAndSubmit() {
     const transitionId = this.transition && this.transition.id;
     this.submitting = true;
@@ -187,7 +176,7 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
         .then(() => this.editing || (this.resource = new Resource)).finally(() => this.submitting = false);
     } else {
       this.validationController.validate().then(result => {
-        if (result.valid && this.allRequiredMetadataFilled(this.resource)) {
+        if (result.valid) {
           this.changeLossPreventer.disable();
           return this.submit({savedResource: this.resource, transitionId})
             .then(() => this.editing || (this.resource = new Resource));

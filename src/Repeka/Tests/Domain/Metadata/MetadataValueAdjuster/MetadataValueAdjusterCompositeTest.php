@@ -3,6 +3,7 @@ namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
+use Repeka\Domain\Repository\MetadataRepository;
 
 class MetadataValueAdjusterCompositeTest extends \PHPUnit_Framework_TestCase {
     /** @var MetadataValueAdjuster */
@@ -12,7 +13,10 @@ class MetadataValueAdjusterCompositeTest extends \PHPUnit_Framework_TestCase {
         $adjusterA = $this->createMock(MetadataValueAdjuster::class);
         $adjusterA->method('supports')->willReturn(true);
         $adjusterA->method('adjustMetadataValue')->willReturn(new MetadataValue('adjustedByA'));
-        $this->metadataValueAdjusterComposite = new MetadataValueAdjusterComposite([$adjusterA]);
+        $this->metadataValueAdjusterComposite = new MetadataValueAdjusterComposite(
+            [$adjusterA],
+            $this->createMock(MetadataRepository::class)
+        );
     }
 
     public function testAdjusting() {

@@ -43,6 +43,12 @@ class ResourceWorkflow implements Identifiable, HasResourceClass {
         }
     }
 
+    public function getPlace(string $id): ResourceWorkflowPlace {
+        $places = EntityUtils::filterByIds([$id], $this->getPlacesAsObjects());
+        Assertion::count($places, 1, "Place $id does not exist in this workflow.");
+        return $places[0];
+    }
+
     public function getInitialPlace(): ResourceWorkflowPlace {
         return $this->getPlaces()[0];
     }
@@ -140,5 +146,11 @@ class ResourceWorkflow implements Identifiable, HasResourceClass {
             }
         }
         throw new NoSuchTransitionException($transitionId, $this);
+    }
+
+    /** @return ResourceWorkflowTransition[] */
+    public function getTransitionsFromPlace(ResourceWorkflowPlace $place): array {
+        $availableTransitionIds = $this->getWorkflowDriver()->getTransitionsFromPlace($place);
+        return EntityUtils::filterByIds($availableTransitionIds, $this->getTransitionsAsObjects());
     }
 }

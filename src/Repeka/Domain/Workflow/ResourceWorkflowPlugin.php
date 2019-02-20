@@ -22,7 +22,7 @@ abstract class ResourceWorkflowPlugin {
 
     public static function getNameFromClassName(string $className) {
         $successful = preg_match('#\\\\([a-z]+?)(ResourceWorkflowPlugin)?$#i', $className, $matches);
-        Assertion::true(!!$successful);
+        Assertion::true(!!$successful, 'Invalid plugin class name: ' . $className);
         return lcfirst($matches[1]);
     }
 

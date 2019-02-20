@@ -33,6 +33,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
         $this->scannerData = $this->findResourceByContents([SystemMetadata::USERNAME => 'skaner']);
         $this->handleCommandBypassingFirewall(new ResourceEvaluateDisplayStrategiesCommand($this->phpBook));
         $this->scannerUsernameMetadata = $this->findMetadataByName('nazwaSkanisty');
+        $this->unlockAllMetadata($this->phpBook->getWorkflow());
     }
 
     private function changeScannerUsernameToNewScanner(): void {

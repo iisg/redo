@@ -77,6 +77,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
                             try {
                                 return $this->metadataValueAdjuster->adjustMetadataValue($value, $metadata->getControl());
                             } catch (\Exception $e) {
+                                // we accept malformed values for filters, e.g. date: 2019-.*
                                 return $value;
                             }
                         }

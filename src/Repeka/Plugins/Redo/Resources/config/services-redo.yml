@@ -28,11 +28,11 @@ services:
     resource: '../../Controller'
     public: true
 
-  Repeka\Plugins\Redo\Controller\RedoDepositController:
-    $depositConfig: '%redo.deposit_config%'
-
   Repeka\Plugins\Redo\Controller\RedoFtsSearchController:
     $ftsConfig: '%redo.fts_config%'
+
+  Repeka\Plugins\Redo\Service\:
+    resource: '../../Service'
 
   Repeka\Plugins\Redo\Service\KohaXmlResourceDownloader:
     - '%redo.koha_url%'

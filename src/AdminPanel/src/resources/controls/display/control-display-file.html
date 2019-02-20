@@ -3,8 +3,10 @@
     <require from="./resource-file-url"></require>
     <require from="resources/controls/input/file-manager/resource-file-properties"></require>
 
-    <a href.bind="metadataValue.value | resourceFileUrl:resource"
-        target="_top">${metadataValue.value | basename}</a>
-    <resource-file-properties path.bind="metadataValue.value"
-        resource.bind="resource"></resource-file-properties>
+    <div class="control-display-file">
+        <a href.bind="metadataValue.value | resourceFileUrl:resource"
+            target="_top">${metadataValue.value | basename}</a>
+        <resource-file-properties path.bind="metadataValue.value"
+            resource.bind="resource"></resource-file-properties>
+    </div>
 </template>

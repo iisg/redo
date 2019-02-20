@@ -509,13 +509,13 @@ button {
   }
 }
 
-.with-sticky-buttons, .with-sticky-button {
+.with-sticky-buttons, .with-sticky-button, .form-with-sticky-buttons form {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
 }
 
-.with-sticky-buttons {
+.with-sticky-buttons, .form-with-sticky-buttons form {
   padding-top: $default-gap-size / 4;
   padding-bottom: $default-gap-size / 4;
   & > .content {

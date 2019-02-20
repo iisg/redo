@@ -110,7 +110,7 @@ class MetadataFixture extends RepekaFixture {
                     'placeholder' => [],
                     'control' => 'textarea',
                     'resourceClass' => 'books',
-                    'constraints' => $this->constraints(3),
+                    'constraints' => $this->constraints(1),
                 ]
             ),
             self::REFERENCE_METADATA_DESCRIPTION

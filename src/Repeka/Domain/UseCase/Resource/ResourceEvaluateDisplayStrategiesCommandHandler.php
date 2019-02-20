@@ -2,9 +2,8 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\ResourceContentsAdjuster;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
@@ -19,17 +18,17 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
     private $evaluator;
     /** @var ResourceRepository */
     private $resourceRepository;
-    /** @var MetadataValueAdjusterComposite */
-    private $metadataValueAdjuster;
+    /** @var ResourceContentsAdjuster */
+    private $resourceContentsAdjuster;
 
     public function __construct(
         ResourceDisplayStrategyEvaluator $evaluator,
         ResourceRepository $resourceRepository,
-        MetadataValueAdjusterComposite $metadataValueAdjuster
+        ResourceContentsAdjuster $resourceContentsAdjuster
     ) {
         $this->evaluator = $evaluator;
         $this->resourceRepository = $resourceRepository;
-        $this->metadataValueAdjuster = $metadataValueAdjuster;
+        $this->resourceContentsAdjuster = $resourceContentsAdjuster;
     }
 
     public function handle(ResourceEvaluateDisplayStrategiesCommand $command): ResourceEntity {
@@ -48,16 +47,7 @@ class ResourceEvaluateDisplayStrategiesCommandHandler {
             }
             if ($contents->getValues($metadata) != $values) {
                 $changed = true;
-                $contents = $contents->withReplacedValues($metadata, $values);
-                $contents = $contents->mapAllValues(
-                    function (MetadataValue $value, int $metadataId) use ($metadata) {
-                        if ($metadataId == $metadata->getId()) {
-                            return $this->metadataValueAdjuster->adjustMetadataValue($value, $metadata->getControl());
-                        } else {
-                            return $value;
-                        }
-                    }
-                );
+                $contents = $this->resourceContentsAdjuster->adjust($contents->withReplacedValues($metadata, $values));
             }
             if ($changed || $resource->isDisplayStrategiesDirty()) {
                 $resource->updateDisplayStrategyDependencies($metadata->getId(), $usedMetadataCollector);

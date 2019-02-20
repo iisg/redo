@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Tests\Integration;
+namespace Repeka\Tests\Integration\Security;
 
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemRole;

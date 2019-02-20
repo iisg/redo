@@ -8,16 +8,16 @@ import {ChangeEvent} from "../../common/events/change-event";
 import {changeHandler} from "../../common/components/binding-mode";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
+import {debounce} from "lodash";
 
 @autoinject
 export class ResourceMetadataValuesForm {
   @bindable(changeHandler('resourceDataChanged')) metadata: Metadata;
   @bindable(changeHandler('resourceDataChanged')) resource: Resource;
-  @bindable @booleanAttribute disabled: boolean = false;
+  @bindable(changeHandler('resourceDataChanged')) @booleanAttribute disabled: boolean = false;
   @bindable @booleanAttribute required: boolean = false;
   @bindable skipValidation: boolean = false;
   @bindable validationController: ValidationController;
-  @bindable treeQueryUrl: string;
   @bindable forceSimpleFileUpload: boolean = false;
 
   valueTable: Element;
@@ -26,20 +26,18 @@ export class ResourceMetadataValuesForm {
   }
 
   resourceDataChanged() {
-    if (this.resource && this.metadata) {
-      this.ensureResourceHasMetadataContents();
-    }
+    this.addEmptyMetadataField();
   }
 
-  requiredChanged() {
+  private addEmptyMetadataField = debounce(() => {
     if (this.resource && this.metadata) {
       this.ensureResourceHasMetadataContents();
       const length = this.resource.contents[this.metadata.id].length;
-      if (this.required && !length && !this.addingValuesIsDisabled) {
+      if (!length && !this.controlCanShowEmptyField && !this.disabled) {
         this.addNew();
       }
     }
-  }
+  });
 
   private ensureResourceHasMetadataContents() {
     const contents = this.resource.contents;
@@ -70,7 +68,7 @@ export class ResourceMetadataValuesForm {
   }
 
   @computedFrom("metadata.control")
-  get addingValuesIsDisabled(): boolean {
+  get controlCanShowEmptyField(): boolean {
     return ['relationship', 'file', 'directory'].indexOf(this.metadata.control) !== -1;
   }
 

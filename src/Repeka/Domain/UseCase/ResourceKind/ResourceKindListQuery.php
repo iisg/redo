@@ -2,11 +2,11 @@
 namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Cqrs\AdjustableCommand;
-use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
 class ResourceKindListQuery extends AbstractListQuery implements AdjustableCommand {
-    use RequireOperatorRole;
+    use RequireNoRoles;
 
     /** @var int[] */
     private $ids;

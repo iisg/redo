@@ -22,8 +22,6 @@ export class TreeResourcePicker implements ComponentAttached, ComponentDetached 
   @bindable contentsFilter: NumberMap<string> = {};
   @bindable resourceClass: string;
   @bindable disabled: boolean = false;
-  @bindable treeQueryUrl: string;
-
   @observable selectedKeys: string[] = [];
 
   private selectedKeysSubscription: Disposable;
@@ -93,7 +91,7 @@ export class TreeResourcePicker implements ComponentAttached, ComponentDetached 
     const contentsFilter = isObject(this.contentsFilter) ? deepCopy(this.contentsFilter) : {};
     const resultsPerPage = rootId && this.SIBLINGS || this.TOP_LEVEL_RESULTS;
     const query = this.createQuery(rootId, request.pagination.page, request.term, contentsFilter, resultsPerPage);
-    return query.get(this.treeQueryUrl)
+    return query.get()
       .then(tree => {
         const items = this.treeify(tree.tree, rootId).sort((a, b) => +a.key - +b.key);
         const rootItem: TreeItem = {

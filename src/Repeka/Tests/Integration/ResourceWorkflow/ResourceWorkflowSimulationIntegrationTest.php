@@ -1,9 +1,6 @@
 <?php
 namespace Repeka\Tests\Integration\ResourceWorkflow;
 
-use Repeka\DeveloperBundle\DataFixtures\Redo\AdminAccountFixture;
-use Repeka\DeveloperBundle\DataFixtures\Redo\MetadataFixture;
-use Repeka\DeveloperBundle\DataFixtures\Redo\ResourceWorkflowsFixture;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowSimulateCommand;
@@ -15,11 +12,7 @@ class ResourceWorkflowSimulationIntegrationTest extends IntegrationTestCase {
     private $workflow;
 
     protected function initializeDatabaseForTests() {
-        self::loadFixture(new AdminAccountFixture(), new MetadataFixture(), new ResourceWorkflowsFixture());
-    }
-
-    /** @before */
-    public function init() {
+        $this->loadAllFixtures();
         $this->workflow = $this->container->get(ResourceWorkflowRepository::class)->findAll()[0];
     }
 

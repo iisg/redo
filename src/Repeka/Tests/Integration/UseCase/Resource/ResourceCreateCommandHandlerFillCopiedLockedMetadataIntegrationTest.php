@@ -10,6 +10,7 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
+use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -102,6 +103,10 @@ class ResourceCreateCommandHandlerFillCopiedLockedMetadataIntegrationTest extend
     private function changeReproductorMetadataToAutoAssign(): void {
         $workflow = $this->getPhpBookResource()->getWorkflow();
         $initialPlaceArray = $workflow->getInitialPlace()->toArray();
+        $initialPlaceArray['lockedMetadataIds'] = ArrayUtils::filterOutValue(
+            $initialPlaceArray['lockedMetadataIds'],
+            SystemMetadata::REPRODUCTOR
+        );
         $initialPlaceArray['autoAssignMetadataIds'][] = SystemMetadata::REPRODUCTOR;
         $initialPlace = ResourceWorkflowPlace::fromArray($initialPlaceArray);
         $places = $workflow->getPlaces();

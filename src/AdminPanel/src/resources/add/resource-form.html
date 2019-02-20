@@ -9,52 +9,53 @@
     <require from="common/components/buttons/submit-button.html"></require>
     <require from="common/components/buttons/make-copy-button.html"></require>
 
-    <div class="alert alert-warning"
-        if.bind="skipValidation">
-        <icon name="listen"></icon>
-        <strong>${'You are editing the resource without validations.' | t}</strong>
-        ${'Make any changes wisely.' | t}
-    </div>
-    <div if.bind="skipValidation && !deposit"
-        class="resource-kind-chooser-with-cancel-button">
-        <resource-kind-chooser
-            hide-clear-button.one-time="true"
-            resource-class.bind="resourceClass"
-            value.bind="resource.kind & validate"></resource-kind-chooser>
-    </div>
-    <div if.bind="skipValidation && resource.kind.workflow"
-        class="workflow-place-chooser-container">
-        <p>${'Places in workflow' | t}:</p>
-        <workflow-place-chooser workflow-places.bind="resource.kind.workflow.places"
-            value.bind="places"></workflow-place-chooser>
-    </div>
-    <workflow-froms-tos-display if.bind="showRequiredMetadataAndWorkflowInfo"
-        transition.bind="transition"
-        places.bind="resource.kind.workflow.places"
-        resource-class.bind="resourceClass"></workflow-froms-tos-display>
-
-    <template if.bind="resource.kind">
+    <slot name="above-form">
+        <div class="alert alert-warning"
+            if.bind="skipValidation">
+            <icon name="listen"></icon>
+            <strong>${'You are editing the resource without validations.' | t}</strong>
+            ${'Make any changes wisely.' | t}
+        </div>
+        <div if.bind="skipValidation && !deposit"
+            class="resource-kind-chooser-with-cancel-button">
+            <resource-kind-chooser
+                hide-clear-button.one-time="true"
+                resource-class.bind="resourceClass"
+                value.bind="resource.kind & validate"></resource-kind-chooser>
+        </div>
+        <div if.bind="skipValidation && resource.kind.workflow"
+            class="workflow-place-chooser-container">
+            <p>${'Places in workflow' | t}:</p>
+            <workflow-place-chooser workflow-places.bind="resource.kind.workflow.places"
+                value.bind="places"></workflow-place-chooser>
+        </div>
+        <workflow-froms-tos-display if.bind="showRequiredMetadataAndWorkflowInfo"
+            transition.bind="transition"
+            places.bind="resource.kind.workflow.places"
+            resource-class.bind="resourceClass"></workflow-froms-tos-display>
         <toggle-button if.bind="!deposit"
             primary-icon-name="koha"
             primary-label="Import data from KOHA"
             click.delegate="openImportDialog()"></toggle-button>
+    </slot>
+    <form submit.delegate="validateAndSubmit()">
+        <slot name="above-form-fields"></slot>
         <span if.bind="validationError"
             class="error-label">${'Some metadata constraints have not been met. Fix the form errors and try again.' | t}</span>
-        <form class="with-sticky-buttons"
-            submit.delegate="validateAndSubmit()">
-            <resource-form-generated class="content contains-collapsible-metadata-group"
-                change.delegate="dirty = true"
-                resource-kind.bind="resource.kind"
-                resource.bind="resource"
-                parent.bind="parent"
-                skip-validation.bind="skipValidation"
-                validation-controller.bind="validationController"
-                contents-validation.bind="resource.contents & validate"
-                target-places.bind="targetPlaces"
-                required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"
-                tree-query-url.bind="treeQueryUrl"
-                force-simple-file-upload.bind="forceSimpleFileUpload"
-                display-required-only.bind="!!deposit"></resource-form-generated>
+        <resource-form-generated if.bind="resource.kind"
+            class="content top-level-form contains-collapsible-metadata-group"
+            change.delegate="dirty = true"
+            resource-kind.bind="resource.kind"
+            resource.bind="resource"
+            parent.bind="parent"
+            skip-validation.bind="skipValidation"
+            validation-controller.bind="validationController"
+            contents-validation.bind="resource.contents & validate"
+            target-places.bind="targetPlaces"
+            required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"
+            force-simple-file-upload.bind="forceSimpleFileUpload"
+            display-required-only.bind="!!deposit"></resource-form-generated>
+        <slot name="below-form-fields">
             <div class="sticky-buttons">
                 <transition-button if.bind="editing && transition && transition.id !== 'update'"
                     transition.bind="transition"
@@ -64,18 +65,18 @@
                     editing.bind="editing"
                     disabled.bind="disabled"
                     submitting.bind="submitting">
-                    ${(!editing ? deposit ? 'Create' : 'Add' : 'Save') | t}
+                    ${(!editing ? 'Add' : 'Save') | t}
                 </submit-button>
-                <make-copy-button if.bind="!transition && editing && !skipValidation && !deposit"
+                <make-copy-button if.bind="!transition && editing && !skipValidation"
                     submitting.bind="cloning"
                     disabled.bind="cloningResourceDisabled"
                     disability-reason.bind="disabilityReason"
                     click.delegate="cloneResource()"></make-copy-button>
                 <cancel-button class.bind="!editing ? 'orange' : ''"
-                    label.bind="deposit ? 'Back to list' : !editing ? 'Close' : ''"
+                    label.bind="!editing ? 'Close' : ''"
                     disabled.bind="resource.pendingRequest || submitting"
                     click.delegate="cancelForm()"></cancel-button>
             </div>
-        </form>
-    </template>
+        </slot>
+    </form>
 </template>

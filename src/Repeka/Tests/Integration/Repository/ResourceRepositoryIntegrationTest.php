@@ -34,6 +34,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->loadAllFixtures();
         $this->titleMetadata = $this->findMetadataByName('Tytuł');
         $this->scannerMetadata = $this->findMetadataByName('Skanista');
+        $this->unlockAllMetadata($this->getPhpBookResource()->getWorkflow());
     }
 
     public function testFindByWorkflowPlaceWhenResourceHasManyWorkflowPlaces() {

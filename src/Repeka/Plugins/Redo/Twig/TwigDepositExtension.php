@@ -1,7 +1,8 @@
 <?php
-namespace Repeka\Application\Twig;
+namespace Repeka\Plugins\Redo\Twig;
 
 use Repeka\Application\Serialization\ResourceNormalizer;
+use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -11,6 +12,7 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Service\ReproductorPermissionHelper;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
@@ -18,8 +20,11 @@ use Repeka\Domain\Workflow\TransitionPossibilityCheckResult;
 
 /**
  * All Twig extensions that helps to retrieve deposit data in frontend.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TwigDepositExtension extends \Twig_Extension {
+    use CurrentUserAware;
+
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
     /** @var ResourceRepository */
@@ -28,25 +33,33 @@ class TwigDepositExtension extends \Twig_Extension {
     private $resourceNormalizer;
     /** @var MetadataRepository */
     private $metadataRepository;
+    /** @var ReproductorPermissionHelper */
+    private $reproductorPermissionHelper;
 
     public function __construct(
         ResourceKindRepository $resourceKindRepository,
         ResourceRepository $resourceRepository,
         MetadataRepository $metadataRepository,
-        ResourceNormalizer $resourceNormalizer
+        ResourceNormalizer $resourceNormalizer,
+        ReproductorPermissionHelper $reproductorPermissionHelper
     ) {
         $this->resourceKindRepository = $resourceKindRepository;
         $this->resourceRepository = $resourceRepository;
         $this->resourceNormalizer = $resourceNormalizer;
         $this->metadataRepository = $metadataRepository;
+        $this->reproductorPermissionHelper = $reproductorPermissionHelper;
     }
 
     public function getFunctions() {
         return [
-            new \Twig_Function('resourceKindsToDeposit', [$this, 'depositableResourceKinds']),
+            new \Twig_Function('canDepositAnyResource', [$this, 'canDepositAnyResource']),
             new \Twig_Function('resourcesToDeposit', [$this, 'allowedResourcesForResourceKind']),
             new \Twig_Function('availableTransitions', [$this, 'getAvailableTransitions']),
         ];
+    }
+
+    public function canDepositAnyResource() {
+        return count($this->reproductorPermissionHelper->getCollectionsWhereUserIsReproductor($this->getCurrentUserOrThrow())) > 0;
     }
 
     /**
@@ -64,11 +77,13 @@ class TwigDepositExtension extends \Twig_Extension {
         $resourceKindListQuery = ResourceKindListQuery::builder()
             ->filterByIds(array_unique($resourceKindIds))
             ->build();
-        return array_filter(
-            $this->resourceKindRepository->findByQuery($resourceKindListQuery),
-            function (ResourceKind $resourceKind) {
-                return !!$resourceKind->getWorkflow();
-            }
+        return array_values(
+            array_filter(
+                $this->resourceKindRepository->findByQuery($resourceKindListQuery),
+                function (ResourceKind $resourceKind) {
+                    return !!$resourceKind->getWorkflow();
+                }
+            )
         );
     }
 

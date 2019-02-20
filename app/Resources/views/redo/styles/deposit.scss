@@ -1,55 +1,202 @@
+@import "colors";
+
 $image-height: 200px;
 
 .deposit {
-  .search-bar-container {
-    padding: $default-gap-size;
-    border-bottom: $default-gap-size / 4 solid $accents-color;
+  margin-bottom: 20px;
+  .deposit-page-header {
+    text-align: center;
+    margin: 30px 0;
   }
-  .deposit-container {
-    padding: $default-gap-size / 2;
-    h1 {
+
+  .deposit-form {
+    margin: 0 30px;
+    background: #f9f9f9;
+    padding-bottom: 1px;
+    table {
+      width: 100%;
+    }
+    .simple-form {
+      padding: 10px;
+    }
+    .top-level-form {
+      padding: 20px 30px;
+    }
+    .control-display-file {
+      background: #dce8ef;
+      padding: 10px;
+      width: 100%;
+      a {
+        font-weight: bold;
+      }
+    }
+    .deposit-form-content {
+      padding: 0 20px;
+      hr {
+        margin: 15px 0;
+      }
+    }
+  }
+
+  .deposit-form-header {
+    background: #efefef;
+    font-weight: bold;
+    padding: 20px;
+    button.btn-primary {
+      background-color: #283f74;
+      padding: 5px 25px;
+    }
+  }
+
+  .deposit-brief-info {
+    color: $grey;
+    margin: 20px 30px;
+    .deposit-selected-value {
+      color: $dark-grey;
       font-weight: bold;
+    }
+  }
+
+  .deposit-breadcrumb {
+    // source: https://codepen.io/firatcftc/pen/sHlnK
+    $color: #a1a1a1;
+    $bg-color: #e8eff4;
+    $height: 62px;
+    list-style: none;
+    display: flex;
+    padding: 0;
+    font-size: 16px;
+
+    .deposit-breadcrumb-mark {
+      $width: 23px;
+      position: absolute;
+      top: -$width/2;
+      left: 50%;
+      margin-left: -$width/2 - 15px;
+      border-radius: 50%;
+      background: #283f74;
+      z-index: 4;
+      width: $width;
+      height: $width;
+      font-weight: bold;
+      color: white;
       text-align: center;
+      display: none;
     }
-    .deposit-resource-kind {
-      font-weight: bold;
-    }
-    .deposit-resources {
-      padding: 20px 20px 0 20px;
-      table {
-        width: 100%;
-        tr {
-          border-bottom: solid 1px $accents-color;
-          &:first-child {
-            border-top: none;
+    li {
+      position: relative;
+      .arrow {
+        color: $color;
+        display: block;
+        background: $bg-color;
+        text-decoration: none;
+        position: relative;
+        height: $height;
+        line-height: $height;
+        padding: 0 10px;
+        text-align: center;
+        margin-right: 23px;
+      }
+      &:first-child {
+        .arrow {
+          padding-left: 15px;
+          &:before {
+            border: none;
           }
-          &:last-child {
-            border-bottom: none;
+        }
+      }
+      .arrow {
+        &:before,
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0;
+          border: 0 solid $bg-color;
+          border-width: $height/2 $height/4;
+          width: 0;
+          height: 0;
+        }
+        &:before {
+          left: -20px;
+          border-left-color: transparent;
+        }
+        &:after {
+          left: 100%;
+          border-color: transparent;
+          border-left-color: $bg-color;
+        }
+      }
+      &.active {
+        .deposit-breadcrumb-mark {
+          display: block;
+        }
+        .arrow {
+          $active-color: #bcd1e0;
+          font-weight: bold;
+          color: #283F74;
+          background-color: $active-color;
+          &:before {
+            border-color: $active-color;
+            border-left-color: transparent;
           }
-          td {
-            padding: 3px 3px 3px 0;
-            vertical-align: top;
-            max-width: 300px;
-            .deposit-operations {
-              padding: 3px;
-            }
+          &:after {
+            border-left-color: $active-color;
+          }
+        }
+      }
+      &.past {
+        .deposit-breadcrumb-mark {
+          display: block;
+          background-color: #6ab737;
+        }
+      }
+      a.arrow:hover {
+        $hover-color: darken($bg-color, 10%);
+        background-color: $hover-color;
+        &:before {
+          border-color: $hover-color;
+          border-left-color: transparent;
+        }
+        &:after {
+          border-left-color: $hover-color;
+        }
+      }
+      &:last-child {
+        .arrow {
+          margin-right: 0;
+          &:after {
+            border: none;
           }
         }
       }
     }
-    .deposit-form {
-      a {
-        text-decoration: none;
-        color: inherit;
-        cursor: inherit;
-      }
-      button {
-        border: none;
-        outline: none;
-      }
-      table {
-        width: 100%;
+    &.resource-kind-choosen li {
+      flex-grow: 1;
+    }
+    &.resource-kind-not-chosen li {
+      flex-grow: 1;
+      &:last-child {
+        flex-grow: 3;
       }
     }
   }
+
+  .deposit-metadata-summary {
+    dt {
+      float: left;
+      margin-right: 10px;
+      font-weight: normal;
+    }
+    dd {
+      font-weight: bold;
+    }
+    dt, dd {
+      line-height: 1.6em;
+    }
+  }
+}
+
+.deposit-success-flash {
+  text-align: center;
+  color: #6AB737;
 }
