@@ -1,0 +1,22 @@
+<template>
+    <require from="common/dialog/modal.html"></require>
+    <require from="./workflow-plugin-configuration-option-input"></require>
+
+    <modal class="workflow-plugin-configuration-dialog full-width"
+        controller.bind="dialogController">
+        <span slot="title">${'plugins::' + workflowPlacePluginConfiguration.name + '//label' | t & oneTime}</span>
+        <div class="simple-form">
+            <template repeat.for="option of workflowPlugin.configurationOptions">
+                <span>
+                    ${'plugins::' + workflowPlacePluginConfiguration.name + '//options//' + option.name + '//label' | t & oneTime}
+                    <span class="help-block">${'plugins::' + workflowPlacePluginConfiguration.name + '//options//'
+                        + option.name + '//description' | t & oneTime}</span>
+                </span>
+                <workflow-plugin-configuration-option-input option.bind="option"
+                    value.bind="workflowPlacePluginConfiguration.config[option.name]"
+                    description.one-time="'plugins::' + workflowPlacePluginConfiguration.name + '//options//' + option.name
+                        + '//placeholder' | t:{interpolation:{prefix:'${{'}}"></workflow-plugin-configuration-option-input>
+            </template>
+        </div>
+    </modal>
+</template>

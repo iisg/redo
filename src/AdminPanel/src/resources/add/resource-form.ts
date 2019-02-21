@@ -15,7 +15,7 @@ import {RequirementState, WorkflowPlace, WorkflowTransition} from "../../workflo
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
-import {ImportDialog} from "./xml-import/import-dialog";
+import {ImportDialog, ImportDialogModel} from "./xml-import/import-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
 import {CurrentUserIsReproductorValueConverter} from "../list/current-user-is-reproductor";
 import {DisabilityReason} from "common/components/buttons/toggle-button";
@@ -211,7 +211,7 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
   }
 
   openImportDialog() {
-    this.modal.open(ImportDialog, {resourceKind: this.resource.kind}).then((importResult: ImportResult) => {
+    this.modal.open(ImportDialog, {resourceKind: this.resource.kind} as ImportDialogModel).then((importResult: ImportResult) => {
       const model: ImportConfirmationDialogModel = {
         metadataList: this.resource.kind.metadataList,
         importResult,

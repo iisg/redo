@@ -28,7 +28,7 @@ resources-list {
     // @formatter:on
   }
 
-  & > :not(add-button):not(.add-form):not(loading-cover) {
+  & > .pagination-page-numbers, & > .pagination-dropdown-with-label, pagination, .alert, redo-footer {
     position: sticky;
     left: 0;
   }
@@ -85,7 +85,7 @@ resources-list {
     grid-area: loading-bar;
   }
 
-  .resource-list-table-placeholder {
+  .resource-list-table-container {
     grid-area: resources-list-table;
   }
 

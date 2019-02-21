@@ -1,8 +1,10 @@
-import {Workflow, WorkflowPlacePluginConfiguration} from "../../workflow";
-import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
+import {bindable} from "aurelia-templating";
+import {Modal} from "common/dialog/modal";
+import {Workflow, WorkflowPlacePluginConfiguration} from "../../workflow";
 import {WorkflowRepository} from "../../workflow-repository";
 import {WorkflowPlugin} from "./workflow-plugin";
+import {WorkflowPluginConfigurationDialog, WorkflowPluginConfigurationDialogModel} from "./workflow-plugin-configuration-dialog";
 
 @autoinject
 export class WorkflowPluginsConfiguration {
@@ -11,7 +13,7 @@ export class WorkflowPluginsConfiguration {
 
   private availableWorkflowPlugins: StringMap<WorkflowPlugin>;
 
-  constructor(private workflowRepository: WorkflowRepository) {
+  constructor(private workflowRepository: WorkflowRepository, private modal: Modal) {
   }
 
   async workflowChanged() {
@@ -31,5 +33,12 @@ export class WorkflowPluginsConfiguration {
 
   removePluginConfig(config: WorkflowPlacePluginConfiguration) {
     this.pluginsConfig.splice(this.pluginsConfig.indexOf(config), 1);
+  }
+
+  openPluginConfigurationDialog(workflowPlacePluginConfiguration: WorkflowPlacePluginConfiguration, workflowPlugin: WorkflowPlugin) {
+    this.modal.open(WorkflowPluginConfigurationDialog, {
+      workflowPlacePluginConfiguration: workflowPlacePluginConfiguration,
+      workflowPlugin: workflowPlugin
+    } as WorkflowPluginConfigurationDialogModel);
   }
 }

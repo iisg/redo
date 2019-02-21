@@ -13,19 +13,19 @@ repekaOcrAbbyy:
   options:
     metadataToOcr:
       label: Source metadata kind
-      description: Value of this metadata will be sent to the OCR server
+      description: Value of this metadata will be sent to the OCR server.
       placeholder: Name or id
     metadataForResult:
       label: Target metadata kind
-      description: Metadata kind to store the OCR result in
+      description: Metadata kind to store the OCR result in.
       placeholder: Name or id
     transitionAfterOcr:
       label: Transition after OCR
-      description: If you want the resource to be moved after OCR, enter the name of the transition that should be applied
+      description: If you want the resource to be moved after OCR, enter the name of the transition that should be applied.
       placeholder: The name of the transition
     taskDirectoryName:
       label: Task directory name
-      description: It will be used for naming the resulting files, too
+      description: It will be used for naming the resulting files, too.
       placeholder: "{{r|mBarcode}}"
 repekaMetadataValueSetter:
   label: Generate metadata value
@@ -42,11 +42,11 @@ repekaMetadataValueSetter:
     metadataValue:
       label: Value
       placeholder: "{{\"now\"|date(\"Y-m-d\")}}"
-      description: Value or resource display strategy
+      description: Value or resource display strategy.
     setOnlyWhenEmpty:
       label: Only if metadata does not have any value
       placeholder: ~
-      description: Regardless of this option, if generated metadata value already exists in resource, it will not be added again
+      description: Regardless of this option, if generated metadata value already exists in resource, it will not be added again.
 repekaMetadataValueRemover:
   label: Remove metadata value
   options:
@@ -56,5 +56,5 @@ repekaMetadataValueRemover:
       description: ~
     metadataValuePattern:
       label: Value pattern
-      placeholder: E.g. .*
-      description: "Declare regular expression. If value matches given pattern it will be deleted. To delete any value, enter: .*"
+      placeholder: .*
+      description: "Declare regular expression. If value matches given pattern it will be deleted. To delete any value, enter: \".*\"."

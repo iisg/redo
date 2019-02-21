@@ -29,12 +29,7 @@ workflow-graph-editor {
       &:not(.inactive) {
         flex-basis: $well-basic-width;
         &, & > span, & > :not(form):not(toggle-button) {
-          padding-top: $default-gap-size / 4;
-          padding-bottom: $default-gap-size / 4;
-        }
-        & > toggle-button {
-          margin-top: $default-gap-size / 4;
-          margin-bottom: $default-gap-size / 4;
+          padding: $default-gap-size / 4;
         }
         & > span {
           display: block;
@@ -42,26 +37,34 @@ workflow-graph-editor {
             font-size: $title-font-size;
           }
         }
-        .simple-form {
-          grid-column-gap: $default-gap-size / 2;
-          grid-row-gap: $default-gap-size / 4;
-        }
-        .information-with-buttons {
-          &, & > * {
-            padding-top: $default-gap-size / 8;
-            padding-bottom: $default-gap-size / 8;
+        &.element-properties {
+          .simple-form {
+            grid-column-gap: $default-gap-size / 2;
+            grid-row-gap: $default-gap-size / 4;
           }
         }
-        .toggle-button, toggle-button {
-          width: 100%;
-          justify-content: center;
-        }
-        .generated-transition-name {
-          font-weight: normal;
-          font-style: italic;
-        }
-        & > toggle-button {
-          @include toggle-button-colors($orange);
+        &.simulation-options {
+          & > toggle-button {
+            margin-top: $default-gap-size / 4;
+            margin-bottom: $default-gap-size / 4;
+          }
+          .information-with-buttons {
+            &, & > * {
+              padding-top: $default-gap-size / 8;
+              padding-bottom: $default-gap-size / 8;
+            }
+          }
+          .toggle-button, toggle-button {
+            width: 100%;
+            justify-content: center;
+          }
+          .generated-transition-name {
+            font-weight: normal;
+            font-style: italic;
+          }
+          & > toggle-button {
+            @include toggle-button-colors($orange);
+          }
         }
       }
     }

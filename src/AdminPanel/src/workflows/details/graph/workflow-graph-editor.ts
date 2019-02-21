@@ -1,15 +1,15 @@
-import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
-import {bindable, ComponentAttached, ComponentUnbind} from "aurelia-templating";
+import {BindingEngine, Disposable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {WorkflowRepository} from "../../workflow-repository";
-import {WorkflowGraph} from "./workflow-graph";
+import {bindable, ComponentAttached, ComponentUnbind} from "aurelia-templating";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {twoWay} from "common/components/binding-mode";
-import {WorkflowGraphEditorReady, WorkflowGraphReady} from "./workflow-graph-events";
-import {BindingEngine, Disposable} from "aurelia-binding";
-import {WorkflowGraphManager} from "./workflow-graph-manager";
-import {ChangeEvent} from "../../../common/events/change-event";
 import {debounce} from "lodash";
+import {ChangeEvent} from "../../../common/events/change-event";
+import {Workflow, WorkflowPlace, WorkflowTransition} from "../../workflow";
+import {WorkflowRepository} from "../../workflow-repository";
+import {WorkflowGraph} from "./workflow-graph";
+import {WorkflowGraphEditorReady, WorkflowGraphReady} from "./workflow-graph-events";
+import {WorkflowGraphManager} from "./workflow-graph-manager";
 
 @autoinject
 export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
@@ -34,7 +34,7 @@ export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
   }
 
   attached(): void {
-    this.workflowElemChanged();
+    this.workflowElementChanged();
   }
 
   private observeWorkflowPlaces(): void {
@@ -44,7 +44,7 @@ export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
       .subscribe(() => this.workflowPlacesChanged());
     this.transitionsSubscription = this.bindingEngine
       .propertyObserver(this.workflow, 'transitions')
-      .subscribe(() => this.workflowElemChanged());
+      .subscribe(() => this.workflowElementChanged());
   }
 
   private disposeWorkflowPlacesSubscription(): void {
@@ -63,12 +63,12 @@ export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
   }
 
   workflowPlacesChanged(): void {
-    this.workflowElemChanged();
+    this.workflowElementChanged();
     this.graphManager.forEach(graph => graph.recalculateGraphPosition());
     this.dispatchChangedEvent(this.workflow);
   }
 
-  workflowElemChanged(): void {
+  workflowElementChanged(): void {
     this.simulationAllowed = !!this.workflow.places.length;
   }
 

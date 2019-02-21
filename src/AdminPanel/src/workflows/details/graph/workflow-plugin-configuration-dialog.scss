@@ -1,0 +1,16 @@
+@import "../../../common/styles";
+
+.workflow-plugin-configuration-dialog {
+    .simple-form > span, .input-container > * {
+        @include form-element();
+    }
+    .simple-form > span {
+        flex-wrap: wrap;
+        .help-block:not(:empty) {
+            width: 100%;
+        }
+        .help-block:empty {
+            display: none;
+        }
+    }
+}

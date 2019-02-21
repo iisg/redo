@@ -1,0 +1,17 @@
+<template>
+    <require from="common/dialog/modal.html"></require>
+    <require from="common/value-converters/date-value-converter"></require>
+    <require from="resources/details/resource-metadata-table/resource-metadata-table"></require>
+
+    <modal controller.bind="dialogController">
+        <span slot="title">
+            ${"Resource #{{id}} state, as of" | t:{id: resource.id} }
+            ${ entry.createdAt | date:'LLL' }
+        </span>
+        <resource-metadata-table if.bind="resource"
+            resource.bind="resource"
+            hide-place-information
+            show-resource-kind></resource-metadata-table>
+        <throbber else></throbber>
+    </modal>
+</template>

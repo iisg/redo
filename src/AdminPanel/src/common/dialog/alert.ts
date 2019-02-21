@@ -1,4 +1,4 @@
-import {inject, Lazy} from "aurelia-dependency-injection";
+import {autoinject, lazy} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {TemplatingEngine} from "aurelia-templating";
 import swal, {SweetAlertOptions} from "sweetalert2";
@@ -8,7 +8,7 @@ export type AlertType = 'error' | 'info' | 'question' | 'success' | 'warning';
 
 export type ButtonClass = '' | 'blue' | 'orange' | 'red';
 
-const alertTypeToButtonClass: StringMap<ButtonClass> = { // AlertType => ButtonClass
+const buttonClassByAlertType: StringMap<ButtonClass> = { // AlertType => ButtonClass
   'error': 'red',
   'info': '',
   'question': '',
@@ -16,12 +16,11 @@ const alertTypeToButtonClass: StringMap<ButtonClass> = { // AlertType => ButtonC
   'warning': 'orange',
 };
 
-@inject(I18N, Lazy.of(TemplatingEngine)) // FIXME waiting for @autoinject fix: https://github.com/aurelia/dependency-injection/issues/153
-// @autoinject
+@autoinject
 export class Alert {
   private readonly AURELIALIZABLE_CLASS = 'alert-aurelializable';
 
-  constructor(private i18n: I18N, private templatingEngine: () => TemplatingEngine) {
+  constructor(private i18n: I18N, @lazy(TemplatingEngine) private templatingEngine: () => TemplatingEngine) {
     // TemplatingEngine cannot be injected before aurelia.start() is called in main.ts.
     // Alert is used in interceptors which are set up sooner, though, so we will lazy-load it later.
     const sweetAlertDefaults: SweetAlertOptions = {
@@ -43,18 +42,18 @@ export class Alert {
     };
 
     if (options.confirmButtonClass === undefined) {
-      options.confirmButtonClass = alertTypeToButtonClass[options.type];
+      options.confirmButtonClass = buttonClassByAlertType[options.type];
     }
     if (options.cancelButtonClass === undefined) {
       options.cancelButtonClass = '';
     }
 
-    const commonCssClass = 'toggle-button';
+    const commonButtonClass = 'toggle-button';
     let overrides: SweetAlertOptions = {
       titleText: title,
       html: html,
-      confirmButtonClass: `${commonCssClass} ${options.confirmButtonClass}`,
-      cancelButtonClass: `${commonCssClass} ${options.cancelButtonClass}`,
+      confirmButtonClass: `${commonButtonClass} ${options.confirmButtonClass}`,
+      cancelButtonClass: `${commonButtonClass} ${options.cancelButtonClass}`,
     } as SweetAlertOptions;
     if (options.showCancelButton === undefined) {
       overrides.showCancelButton = (options.type == 'question');

@@ -13,7 +13,7 @@ $simple-form-text-input-box-minimum-width: 100px;
 $simple-form-number-input-box-minimum-width: 75px;
 
 $list-group-item-background-color: white;
-$well-background-color: #f5f5f5;
+$well-background-color: $very-light-grey;
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -146,6 +146,67 @@ body {
     }
   }
 
+  .add-form {
+    align-self: flex-start;
+    flex-shrink: 0;
+    min-width: 100%;
+    & > span {
+      display: block;
+      padding: $default-gap-size / 2;
+      @extend .page-title;
+    }
+    resource-kind-form {
+      .list-group-item {
+        background-color: $well-background-color;
+      }
+      .well {
+        background-color: $list-group-item-background-color;
+      }
+    }
+  }
+
+  .well {
+    padding: $default-gap-size / 2;
+    margin-bottom: 0;
+    &:not(.list-group-item):not(.floating-form) {
+      border-radius: 0;
+    }
+    &.list-group-item {
+      &:not(:first-child) {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+      &:not(:last-child) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    &.floating-form {
+      z-index: $floating-form-and-sticky-table-header-z-index;
+      position: absolute;
+      right: 0;
+      border-top-right-radius: 0;
+    }
+  }
+
+  .alert {
+    margin-bottom: 0;
+    padding: $default-gap-size;
+    border: none;
+    border-radius: 0;
+    &.alert-info {
+      background-color: $light-blue;
+      color: white;
+    }
+    &.alert-warning {
+      background-color: darken($orange, 10%);
+      border-color: $orange;
+      color: white;
+    }
+  }
+}
+
+.repeka-admin-panel, ux-dialog-container, .swal2-container {
   .page-title {
     display: block;
     font-size: $title-font-size;
@@ -155,6 +216,31 @@ body {
   .page-subtitle {
     display: block;
     font-size: $subtitle-font-size;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+  }
+  h1, h2, h3, h4, h5, h6, p {
+    margin-bottom: 0;
+  }
+  h1 {
+    font-size: $title-font-size;
+  }
+  h2 {
+    font-size: $subtitle-font-size + 1px;
+  }
+  h3 {
+    font-size: $subtitle-font-size;
+  }
+  h4 {
+    font-size: $default-font-size + 1px;
+  }
+  h5 {
+    font-size: $default-font-size - 1px;
+  }
+  h6 {
+    font-size: $default-font-size - 2px;
   }
 
   a {
@@ -174,11 +260,6 @@ body {
     margin-bottom: 0;
   }
 
-  h1, h2, h3, p {
-    margin-top: $default-gap-size / 2;
-    margin-bottom: $default-gap-size / 2;
-  }
-
   label {
     margin-bottom: 0;
     font-weight: normal;
@@ -188,13 +269,14 @@ body {
     white-space: pre-wrap;
   }
 
-  .has-error .help-block {
-    display: block;
-  }
-
   .help-block {
     margin-top: 0;
     margin-bottom: 0;
+    color: $grey;
+  }
+
+  .validation-message {
+    color: $red;
   }
 
   .drag-handle {
@@ -307,55 +389,8 @@ body {
     resize: vertical;
   }
 
-  .validation-message {
-    color: $red;
-  }
-
   .form-control:not([type=date]) {
     height: initial;
-  }
-
-  .add-form {
-    align-self: flex-start;
-    flex-shrink: 0;
-    min-width: 100%;
-    & > span {
-      display: block;
-      padding: $default-gap-size / 2;
-      @extend .page-title;
-    }
-    resource-kind-form {
-      .list-group-item {
-        background-color: $well-background-color;
-      }
-      .well {
-        background-color: $list-group-item-background-color;
-      }
-    }
-  }
-
-  .well {
-    padding: $default-gap-size / 2;
-    margin-bottom: 0;
-    &:not(.list-group-item):not(.floating-form) {
-      border-radius: 0;
-    }
-    &.list-group-item {
-      &:not(:first-child) {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-      }
-      &:not(:last-child) {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-      }
-    }
-    &.floating-form {
-      z-index: $floating-form-and-sticky-table-header-z-index;
-      position: absolute;
-      right: 0;
-      border-top-right-radius: 0;
-    }
   }
 
   .list-group-item {
@@ -366,34 +401,6 @@ body {
     margin-bottom: 0;
     padding-top: $default-gap-size / 2;
     padding-bottom: $default-gap-size / 2;
-  }
-
-  .no-padding {
-    padding: 0 !important;
-  }
-
-  .alert {
-    margin-bottom: 0;
-    padding: $default-gap-size;
-    border: none;
-    border-radius: 0;
-    &.alert-info {
-      background-color: $light-blue;
-      color: white;
-    }
-    &.alert-warning {
-      background-color: darken($orange, 10%);
-      border-color: $orange;
-      color: white;
-    }
-  }
-
-  .diagram-cover {
-    z-index: 999 !important; // Fix UI elements like menus displaying over graphs, but not interacting with mouse.
-  }
-
-  ux-dialog-overlay {
-    background-color: rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -410,7 +417,7 @@ button {
 
 .simple-form {
   display: grid;
-  grid-template-columns: fit-content(40%) auto; // It is solved this way as otherwise, for example, edit button would not stick to the
+  grid-template-columns: fit-content(calc(100% / 3)) auto; // It is solved this way as otherwise, for example, edit button would not stick to the
   // right side while scrolling horizontally when there would be a lot content in the first
   // column and the window would be narrow.
   grid-column-gap: $simple-form-column-gap-size;
@@ -428,6 +435,9 @@ button {
   &, & > collapsible-metadata-group {
     & > span:not(.value):not(.validation-message), & > button, & > .key {
       font-weight: bold;
+      .help-block {
+        font-weight: normal;
+      }
     }
     & > span, & > .key {
       icon {
@@ -465,18 +475,18 @@ button {
 
 .narrow-form {
   & > span {
-    padding-top: $default-gap-size / 4;
-    padding-bottom: $default-gap-size / 4;
+    padding: $default-gap-size / 4;
     font-size: $subtitle-font-size;
     font-weight: bold;
   }
   & > div {
     &, & > * {
-      padding-top: $default-gap-size / 8;
-      padding-bottom: $default-gap-size / 8;
+      padding: $default-gap-size / 8;
+    }
+    & > :not(.simple-form) {
+      display: block;
     }
     & > span {
-      display: block;
       &:not(.value):not(.additional-information) {
         font-weight: bold;
       }
@@ -536,6 +546,10 @@ button {
     right: $default-gap-size; // It works in Firefox, but not in Chromium.
     margin: $default-gap-size / 2;
   }
+}
+
+.swal2-container.swal2-fade {
+  transition: background-color $default-transition-duration;
 }
 
 // Animations.

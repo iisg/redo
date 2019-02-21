@@ -5,6 +5,7 @@ $dark-grey: #4d4d4d;
 $grey: #808080;
 $lightish-grey: #b3b3b3;
 $light-grey: #e6e6e6;
+$very-light-grey: #f5f5f5;
 $blue: #0071bc;
 $light-blue: lighten($blue, $default-value-to-lighten-colors-by);
 $red: #bc0000;
@@ -12,3 +13,5 @@ $red: #bc0000;
 $default-background-color: white !default;
 $default-text-color: $dark-grey !default;
 $default-disabled-text-color: $grey !default;
+
+$dialog-backdrop-color: rgba(0, 0, 0, 0.4);

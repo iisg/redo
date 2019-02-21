@@ -1,0 +1,19 @@
+<template bindable="controller"
+    class="modal-content">
+    <div class="modal-header">
+        <button class="close-button"
+            type="button"
+            click.delegate="controller.cancel()"
+            bootstrap-tooltip="${'Close' | t}">
+            <icon name="x"
+                size="0.75"></icon>
+        </button>
+        <span class="modal-title">
+            <slot name="title"></slot>
+        </span>
+    </div>
+    <div class="modal-body">
+        <slot></slot>
+    </div>
+    <div class="modal-footer"><slot name="footer-content"></slot></div>
+</template>

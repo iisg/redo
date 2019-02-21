@@ -1,14 +1,19 @@
 @import "../../../common/styles";
 
 workflow-plugins-configuration {
-  .plugin-name-container {
-    display: flex;
-    & > span {
-      font-size: $subtitle-font-size;
+  .plugin-name {
+    display: block;
+    font-size: $subtitle-font-size;
+    padding: $default-gap-size / 4;
+  }
+  .plugins-list-element-options {
+    float: right;
+    padding: $default-gap-size / 4;
+    [primary-icon-name="arrows-3"] svg {
+      transform: rotate(45deg);
     }
-    remove-button {
-      justify-self: flex-end;
-      margin-left: $default-gap-size / 2;
-    }
+  }
+  .selected-plugins .list-group-item {
+    padding: $default-gap-size / 4;
   }
 }

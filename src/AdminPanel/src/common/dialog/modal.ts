@@ -7,6 +7,9 @@ export class Modal {
   }
 
   open(viewModel: Object, model?: any): Promise<any> {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     // noinspection TypeScriptUnresolvedFunction
     return this.dialog.open({viewModel, model}).whenClosed(
       response => response.wasCancelled ? Promise.reject('cancelled') : Promise.resolve(response.output)

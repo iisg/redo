@@ -24,6 +24,12 @@
     }
     .swal2-content {
       font-size: $subtitle-font-size;
+      .alert-aurelializable {
+        font-size: $default-font-size;
+        & > :not(.list-title):not(:last-child) {
+          padding-bottom: $default-gap-size / 2;
+        }
+      }
     }
     .swal2-buttonswrapper {
       margin-top: 0;

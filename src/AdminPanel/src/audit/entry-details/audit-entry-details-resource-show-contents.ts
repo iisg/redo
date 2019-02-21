@@ -1,10 +1,11 @@
-import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
+import {bindable} from "aurelia-templating";
 import {Modal} from "common/dialog/modal";
+import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
 import {Resource} from "../../resources/resource";
 import {AuditEntry} from "../audit-entry";
-import {AuditEntryDetailsResourceContentsModal} from "./audit-entry-details-resource-contents-modal";
-import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
+import {AuditEntryDetailsResourceContentsDialog, AuditEntryDetailsResourceContentsDialogModel}
+  from "./audit-entry-details-resource-contents-dialog";
 
 @autoinject
 export class AuditEntryDetailsResourceShowContents {
@@ -20,10 +21,10 @@ export class AuditEntryDetailsResourceShowContents {
   }
 
   showResourceContentsDialog() {
-    this.modal.open(AuditEntryDetailsResourceContentsModal, {
+    this.modal.open(AuditEntryDetailsResourceContentsDialog, {
       resource: this.resource,
       entry: this.entry
-    });
+    } as AuditEntryDetailsResourceContentsDialogModel);
   }
 
   private setResource(resourceData): Resource {

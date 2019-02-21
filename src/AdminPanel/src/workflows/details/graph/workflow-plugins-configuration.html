@@ -2,6 +2,7 @@
     <require from="./workflow-plugin-configuration-option-input"></require>
     <require from="common/value-converters/object-to-array-value-converter"></require>
     <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="common/components/buttons/toggle-button"></require>
     <require from="common/components/buttons/remove-button.html"></require>
 
     <div>
@@ -14,13 +15,19 @@
                 ${'plugins::' + option.value.name + '//label' | t & oneTime}
             </template>
         </dropdown-select>
-        <div>
+        <div class="selected-plugins">
             <div class="list-group-item"
                 repeat.for="config of pluginsConfig">
-                <div class="plugin-name-container">
-                    <span>${'plugins::' + config.name + '//label' | t & oneTime}</span>
-                    <remove-button click.delegate="removePluginConfig(config)"
-                        show-tooltips-instead-of-labels="true"></remove-button>
+                <div>
+                    <div class="plugins-list-element-options">
+                        <toggle-button primary-icon-name="arrows-3"
+                            primary-label="Open in a dialog window"
+                            show-tooltips-instead-of-labels="true"
+                            click.delegate="openPluginConfigurationDialog(config, availableWorkflowPlugins[config.name])"></toggle-button>
+                        <remove-button click.delegate="removePluginConfig(config)"
+                            show-tooltips-instead-of-labels="true"></remove-button>
+                    </div>
+                    <span class="plugin-name">${'plugins::' + config.name + '//label' | t & oneTime}</span>
                 </div>
                 <div class="narrow-form">
                     <div repeat.for="option of availableWorkflowPlugins[config.name].configurationOptions">

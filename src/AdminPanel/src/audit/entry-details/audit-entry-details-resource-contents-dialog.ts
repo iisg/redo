@@ -1,22 +1,22 @@
-import {Resource} from "../../resources/resource";
-import {AuditEntry} from "../audit-entry";
-import {DialogController} from "aurelia-dialog";
 import {autoinject} from "aurelia-dependency-injection";
+import {DialogComponentActivate, DialogController} from "aurelia-dialog";
+import {keys, pullAll, toInteger} from "lodash";
 import {MetadataRepository} from "../../resources-config/metadata/metadata-repository";
 import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
-import {keys, pullAll, toInteger} from "lodash";
+import {Resource} from "../../resources/resource";
+import {AuditEntry} from "../audit-entry";
 
 @autoinject
-export class AuditEntryDetailsResourceContentsModal {
+export class AuditEntryDetailsResourceContentsDialog implements DialogComponentActivate<AuditEntryDetailsResourceContentsDialogModel> {
   resource: Resource;
   entry: AuditEntry;
 
-  constructor(private dialogController: DialogController,
+  constructor(public dialogController: DialogController,
               private metadataRepository: MetadataRepository,
               private resourceKindRepository: ResourceKindRepository) {
   }
 
-  async activate(model) {
+  async activate(model: AuditEntryDetailsResourceContentsDialogModel) {
     if (!model.resource.kind.metadataList.length) {
       const metadataIdsFromContents = keys(model.resource.contents).map(toInteger);
       try {
@@ -33,4 +33,9 @@ export class AuditEntryDetailsResourceContentsModal {
     this.resource = model.resource;
     this.entry = model.entry;
   }
+}
+
+export interface AuditEntryDetailsResourceContentsDialogModel {
+  resource: Resource;
+  entry: AuditEntry;
 }

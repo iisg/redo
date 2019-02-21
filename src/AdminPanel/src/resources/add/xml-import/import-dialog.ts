@@ -1,6 +1,6 @@
 import {observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {DialogController} from "aurelia-dialog";
+import {DialogComponentActivate, DialogController} from "aurelia-dialog";
 import {HttpResponseMessage} from "aurelia-http-client";
 import {GlobalExceptionInterceptor} from "common/http-client/global-exception-interceptor";
 import {LocalStorage} from "common/utils/local-storage";
@@ -8,7 +8,7 @@ import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {XmlImportClient} from "./xml-import-client";
 
 @autoinject
-export class ImportDialog {
+export class ImportDialog implements DialogComponentActivate<ImportDialogModel> {
   resourceKind: ResourceKind;
 
   importConfig: XmlImportConfig;
@@ -101,7 +101,7 @@ export class SingleFileListValueConverter implements FromViewValueConverter {
   }
 }
 
-interface ImportDialogModel {
+export interface ImportDialogModel {
   resourceKind: ResourceKind;
 }
 

@@ -3,6 +3,8 @@
 $new-metadata-value-button-width: 1.5em;
 
 radio-button-group {
+  display: block;
+  line-height: 0;
   input[type=radio] {
     width: $new-metadata-value-button-width;
   }

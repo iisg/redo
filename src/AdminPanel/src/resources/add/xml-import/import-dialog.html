@@ -1,66 +1,57 @@
 <template>
-    <div class="modal-content width-400"
-        id="import-dialog">
-        <form submit.delegate="downloadResource()">
-            <div class="modal-header">
-                <button type="button"
-                    class="close"
-                    click.delegate="dialogController.cancel()">
-                    <span>&times;</span>
-                </button>
-                <h3 class="modal-title">${"Import data from KOHA" | t}</h3>
-            </div>
+    <require from="common/dialog/modal.html"></require>
 
-            <div class="modal-body">
-                <div class="form-group label-static ${configFileError || serverError ? 'has-error' : ''}">
-                    <label for="importConfigFile">
-                        ${"Configuration file" | t}
-                    </label>
-                    <input type="file"
-                        id="importConfigFile"
-                        files.bind="configFile | singleFileList"
-                        focus.bind="importFileIsFocused"
-                        keydown.trigger="handleEscPressed($event)"
-                        accept="application/json, .yml, .yaml">
-                    <input type="text"
-                        class="form-control"
-                        value.bind="configFile ? '' : importConfig.fileName"
-                        readonly>
-                    <span class="help-block"
-                        if.bind="configFileError">
-                        ${"File is not a valid import configuration" | t}
-                    </span>
-                    <span class="help-block"
-                        if.bind="serverError"
-                        innerhtml.bind="serverError">
-                    </span>
-                </div>
-                <div class="form-group label-static"
-                    if.bind="importConfig !== undefined">
-                    <label for="barcodeInput">
-                        ${"Resource code" | t}
-                    </label>
-                    <input type="number"
-                        placeholder.bind="'Digits only' | t"
-                        id="barcodeInput"
-                        class="form-control"
-                        value.bind="resourceId"
-                        attach-focus="true">
-                    <span class="help-block"
-                        if.bind="notFoundError">
-                        ${"Resource doesn't exist" | t}
-                    </span>
-                </div>
+    <form submit.delegate="downloadResource()">
+        <modal class="narrow"
+            controller.bind="dialogController">
+            <span slot="title">${"Import data from KOHA" | t}</span>
+            <div class="form-group label-static ${configFileError || serverError ? 'has-error' : ''}">
+                <label for="importConfigFile">
+                    ${"Configuration file" | t}
+                </label>
+                <input type="file"
+                    id="importConfigFile"
+                    files.bind="configFile | singleFileList"
+                    focus.bind="importFileIsFocused"
+                    keydown.trigger="handleEscPressed($event)"
+                    accept="application/json, .yml, .yaml">
+                <input type="text"
+                    class="form-control"
+                    value.bind="configFile ? '' : importConfig.fileName"
+                    readonly>
+                <span if.bind="configFileError"
+                    class="validation-message">
+                    ${"File is not a valid import configuration" | t}
+                </span>
+                <span if.bind="serverError"
+                    class="validation-message"
+                    innerhtml.bind="serverError">
+                </span>
             </div>
-
-            <div class="modal-footer">
+            <div class="form-group label-static"
+                if.bind="importConfig !== undefined">
+                <label for="barcodeInput">
+                    ${"Resource code" | t}
+                </label>
+                <input type="number"
+                    placeholder.bind="'Digits only' | t"
+                    id="barcodeInput"
+                    class="form-control"
+                    value.bind="resourceId"
+                    attach-focus="true">
+                <span if.bind="notFoundError"
+                    class="validation-message">
+                    ${"Resource doesn't exist" | t}
+                </span>
+            </div>
+            <div slot="footer-content">
                 <throbber if.bind="importPending"></throbber>
-                <button type="submit"
-                    class="btn btn-primary"
+                <button class="toggle-button"
+                    type="submit"
                     disabled.bind="importPending || resourceId.length === 0">
                     ${"Import" | t}
                 </button>
             </div>
-        </form>
-    </div>
+        </modal>
+    </form>
 </template>

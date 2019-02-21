@@ -9,7 +9,7 @@
             editable.bind="!simulating"
             current.bind="currentSimulationPlaces"
             workflow-graph-ready.delegate="onGraphBuilt($event)"></workflow-graph-display>
-        <div class="well ${!simulating && !selectedElement ? 'inactive' : ''}">
+        <div class="well ${simulating ? 'simulation-options' : selectedElement ? 'element-properties' : 'inactive'}">
             <template if.bind="!simulating">
                 <template if.bind="!selectedElement">
                     <span>

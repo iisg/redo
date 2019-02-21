@@ -13,11 +13,11 @@ repekaOcrAbbyy:
   options:
     metadataToOcr:
       label: Źródłowy rodzaj metadanej
-      description: Wartość tej metadanej w zasobie zostanie wysłana do serwera OCR
+      description: Wartość tej metadanej w zasobie zostanie wysłana do serwera OCR.
       placeholder: Nazwa lub id
     metadataForResult:
       label: Docelowy rodzaj metadanej
-      description: "Podaj tu pary wyrażenieRegularne: metadana. Wszystkie pliki wynikowe, których nazwy będą pasować do podanych wyrażeń reuglarnych zostaną przypisane odpowiednim metadanym w zasobie."
+      description: "Podaj tu pary \"wyrażenieRegularne: metadana\". Wszystkie pliki wynikowe, których nazwy będą pasować do podanych wyrażeń regularnych zostaną przypisane odpowiednim metadanym w zasobie."
       placeholder: "\\.pdf$: ocredPdfs\\n.+: allOcredFiles"
     ocrWorkflow:
       label: Ścieżka pracy OCR
@@ -25,11 +25,11 @@ repekaOcrAbbyy:
       placeholder: "{{r|mSciezkaOcr|mKatalog}}"
     transitionAfterOcr:
       label: Przejście po OCR
-      description: Jeśli po odebraniu rezultatu zasób ma zostać przeniesiony do następnego stanu, podaj nazwę odpowiedniego przejścia wychodzącego ze stanu obecnego
+      description: Jeśli po odebraniu rezultatu zasób ma zostać przeniesiony do następnego stanu, podaj nazwę odpowiedniego przejścia wychodzącego ze stanu obecnego.
       placeholder: Nazwa przejścia w dowolnym języku
     taskDirectoryName:
       label: Nazwa katalogu z zadaniem
-      description: Ta nazwa będzie też zawarta w wynikowych plikach
+      description: Ta nazwa będzie też zawarta w wynikowych plikach.
       placeholder: "{{r|mBarcode}}"
 repekaMetadataValueSetter:
   label: Wygeneruj wartość metadanej
@@ -46,11 +46,11 @@ repekaMetadataValueSetter:
     metadataValue:
       label: Wartość
       placeholder: "{{\"now\"|date(\"Y-m-d\")}}"
-      description: Możesz podać wartość lub użyć strategii wyświetlania zasobu
+      description: Możesz podać wartość lub użyć strategii wyświetlania zasobu.
     setOnlyWhenEmpty:
       label: Tylko jeśli metadana nie ma wartości
       placeholder: ~
-      description: Niezależnie od wybranej opcji, jeżeli wygenerowana wartość metadanej już istnieje w zasobie, to nie zostanie dodana ponownie
+      description: Niezależnie od wybranej opcji, jeżeli wygenerowana wartość metadanej już istnieje w zasobie, to nie zostanie dodana ponownie.
 repekaMetadataValueRemover:
   label: Usuń wartość metadanej
   options:
@@ -60,5 +60,5 @@ repekaMetadataValueRemover:
       description: ~
     metadataValuePattern:
       label: Wzór wartości do usuwania
-      placeholder: Np. .*
-      description: "Podaj wyrażenie regularne. Jeżeli wartość dopasuje się do wzoru zostanie usunięty, w przeciwnym wypadku nie. Aby usunać dowolną wartość, podaj: .*"
+      placeholder: .*
+      description: "Podaj wyrażenie regularne. Jeżeli wartość dopasuje się do wzoru zostanie usunięty, w przeciwnym wypadku nie. Aby usunać dowolną wartość, podaj: \".*\"."

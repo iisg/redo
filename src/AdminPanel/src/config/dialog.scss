@@ -1,17 +1,68 @@
+@import "../common/styles";
+
+$narrow-modal-width: 400px;
+$regular-modal-width: 600px;
+$wide-modal-width: 900px;
+
 ux-dialog-container {
-  .modal-content {
-    max-width: 90vw;
-
-    &.width-400 {
-      width: 400px;
-    }
-
-    &.width-600 {
-      width: 600px;
-    }
-
-    &.width-900 {
-      width: 900px;
+  & > div {
+    padding: $default-gap-size;
+    & > div {
+      min-width: 0;
+      max-width: 100%;
     }
   }
+  .modal-content {
+    display: block;
+    width: $regular-modal-width;
+    max-width: 100%;
+    &.narrow {
+      width: $narrow-modal-width;
+    }
+    &.wide {
+      width: $wide-modal-width;
+    }
+    &.full-width {
+      width: 100vw;
+    }
+    .modal-header, .modal-footer {
+      border-color: $light-grey;
+    }
+    .modal-header {
+      padding: 0;
+      .modal-title {
+        display: block;
+        padding: $default-gap-size;
+        font-size: $title-font-size;
+      }
+      .close-button {
+        float: right;
+        margin: $default-gap-size;
+        line-height: 0;
+        transition: color $default-transition-duration;
+        &:not(:hover):not(:focus) {
+          color: $lightish-grey;
+        }
+      }
+    }
+    .modal-body, .modal-footer {
+      &, & > :not(button) {
+        padding: $default-gap-size / 2;
+      }
+      & > :not(.simple-form):not(button) {
+        display: block;
+      }
+      & > button {
+        margin: $default-gap-size / 2;
+      }
+    }
+    .modal-footer:empty {
+      display: none;
+    }
+  }
+}
+
+ux-dialog-overlay {
+  transition: opacity $default-transition-duration;
+  background-color: $dialog-backdrop-color;
 }

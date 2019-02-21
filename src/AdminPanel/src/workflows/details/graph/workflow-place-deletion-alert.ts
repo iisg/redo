@@ -1,7 +1,7 @@
+import {autoinject} from "aurelia-dependency-injection";
+import {I18N} from "aurelia-i18n";
 import {Alert, AlertOptions} from "../../../common/dialog/alert";
 import {Resource} from "../../../resources/resource";
-import {I18N} from "aurelia-i18n";
-import {autoinject} from "aurelia-dependency-injection";
 
 @autoinject
 export class WorkflowPlaceDeletionAlert {
@@ -16,9 +16,9 @@ export class WorkflowPlaceDeletionAlert {
 
   public showWorkflowPlaceDeletionAlert(numberOfResources: number, exampleResources: Resource[]) {
     const title = this.i18n.tr(this.titleLabel);
-    const mainDescription = `<h3>${this.i18n.tr(this.mainDescriptionLabel)}</h3>`;
+    const mainDescription = `<h3>${this.i18n.tr(this.mainDescriptionLabel)}.</h3>`;
     const amountDescription = this.getAmountDescription(numberOfResources);
-    const exampleLabelDescription = `<h4>${this.i18n.tr(this.exampleDescriptionLabel)}</h4>`;
+    const exampleLabelDescription = `<p class="list-title">${this.i18n.tr(this.exampleDescriptionLabel)}</p>`;
 
     const resourceLinks: string = this.getResourceLinksHtml(exampleResources.length);
     const alertOptions: AlertOptions = this.getAlertOptions(exampleResources);
@@ -33,7 +33,7 @@ export class WorkflowPlaceDeletionAlert {
   }
 
   private getAmountDescription(numberOfResources: number): string {
-    return `<h4>${this.i18n.tr(this.amountDescriptionLabel)}<strong>${numberOfResources}</strong></h4>`;
+    return `<p>${this.i18n.tr(this.amountDescriptionLabel)} <strong>${numberOfResources}</strong>.</p>`;
   }
 
   private getAlertOptions(exampleResources: Resource[]): AlertOptions {

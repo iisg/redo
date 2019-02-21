@@ -1,47 +1,30 @@
 <template>
+    <require from="common/dialog/modal.html"></require>
     <require from="./fake-resource-display"></require>
 
-    <div class="modal-content width-600">
-        <div class="modal-header">
-            <button type="button"
-                class="close"
-                click.delegate="dialogController.cancel()">
-                <span>&times;</span>
-            </button>
-            <h3 class="modal-title">
-                ${"Import successful" | t}
-            </h3>
+    <modal controller.bind="dialogController">
+        <span slot="title">${"Import successful" | t}</span>
+        <span>${"Values that are already present will be omitted." | t}</span>
+        <fake-resource-display resource-kind.bind="resourceKind"
+            values.bind="importResult.acceptedValues"
+            metadata-list.bind="metadataList"></fake-resource-display>
+        <div if.bind="importResult.unfitTypeValues.length">
+            <span>${"Ignored values unsuitable for their metadata controls:" | t}</span>
+            <fake-resource-display values.bind="importResult.unfitTypeValues"
+                metadata-list.bind="metadataList"
+                omit-missing></fake-resource-display>
         </div>
-
-        <div class="modal-body">
-            <div class="form-group">
-                <p>${"Values that are already present will be omitted." | t}</p>
-                <fake-resource-display resource-kind.bind="resourceKind"
-                    values.bind="importResult.acceptedValues"
-                    metadata-list.bind="metadataList"></fake-resource-display>
-            </div>
-            <div class="form-group"
-                if.bind="importResult.unfitTypeValues.length">
-                <p>${"Ignored values unsuitable for their metadata controls:" | t}</p>
-                <fake-resource-display values.bind="importResult.unfitTypeValues"
-                    metadata-list.bind="metadataList"
-                    omit-missing></fake-resource-display>
-            </div>
-            <div class="form-group"
-                if.bind="importResult.invalidMetadataKeys.length">
-                <p>${"Ignored values that have no matching metadata in this resource kind:" | t}</p>
-                <ul>
-                    <li repeat.for="metadataKey of importResult.invalidMetadataKeys">${metadataKey}</li>
-                </ul>
-            </div>
+        <div if.bind="importResult.invalidMetadataKeys.length">
+            <span>${"Ignored values that have no matching metadata in this resource kind:" | t}</span>
+            <ul>
+                <li repeat.for="metadataKey of importResult.invalidMetadataKeys">${metadataKey}</li>
+            </ul>
         </div>
-
-        <div class="modal-footer">
-            <button type="submit"
-                class="btn btn-primary"
-                click.delegate="confirm()">
-                ${"Import" | t}
-            </button>
-        </div>
-    </div>
+        <button slot="footer-content"
+            class="toggle-button"
+            type="submit"
+            click.delegate="confirm()">
+            ${"Import" | t}
+        </button>
+    </modal>
 </template>
