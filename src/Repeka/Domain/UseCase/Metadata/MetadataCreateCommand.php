@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\Metadata;
 use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 
 /** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class MetadataCreateCommand extends ResourceClassAwareCommand implements AdjustableCommand {
@@ -98,7 +99,7 @@ class MetadataCreateCommand extends ResourceClassAwareCommand implements Adjusta
             $data['label'] ?? [],
             $data['description'] ?? [],
             $data['placeholder'] ?? [],
-            $data['control'] ?? 'text',
+            $data['control'] ?? MetadataControl::TEXT,
             $data['resourceClass'] ?? '',
             $data['constraints'] ?? [],
             $data['groupId'] ?? Metadata::DEFAULT_GROUP,

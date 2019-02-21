@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\UseCase\ResourceWorkflow;
 
+use Repeka\Domain\Factory\ResourceWorkflowDriverFactory;
 use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommandHandler;
@@ -19,7 +20,10 @@ class ResourceWorkflowCreateCommandHandlerTest extends \PHPUnit_Framework_TestCa
         $this->command = new ResourceWorkflowCreateCommand(['EN' => 'New workflow'], [[]], [[]], 'books', 'diagram', 'thumb');
         $this->workflowRepository = $this->createMock(ResourceWorkflowRepository::class);
         $this->workflowRepository->expects($this->once())->method('save')->willReturnArgument(0);
-        $this->handler = new ResourceWorkflowCreateCommandHandler($this->workflowRepository);
+        $this->handler = new ResourceWorkflowCreateCommandHandler(
+            $this->workflowRepository,
+            $this->createMock(ResourceWorkflowDriverFactory::class)
+        );
     }
 
     public function testCreatingResource() {

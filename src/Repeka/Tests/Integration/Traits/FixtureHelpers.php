@@ -10,6 +10,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
@@ -26,7 +27,8 @@ trait FixtureHelpers {
     }
 
     private function findResourceByContents(array $contents): ResourceEntity {
-        $filters = ResourceContents::fromArray($contents)->withMetadataNamesMappedToIds($this->container->get(MetadataRepository::class));
+        $metadataRepository = $this->container->get(MetadataRepository::class);
+        $filters = ResourceContents::fromArray($contents)->withMetadataNamesMappedToIds($metadataRepository);
         $query = ResourceListQuery::builder()->filterByContents($filters)->build();
         return $this->getResourceRepository()->findByQuery($query)[0];
     }
@@ -81,5 +83,9 @@ trait FixtureHelpers {
             $visibilityMetadata->isCopiedToChildResource()
         );
         $this->handleCommandBypassingFirewall($query);
+    }
+
+    protected function getResourceKindRepository(): ResourceKindRepository {
+        return $this->container->get(ResourceKindRepository::class);
     }
 }
