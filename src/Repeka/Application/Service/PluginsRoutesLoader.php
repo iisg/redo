@@ -8,8 +8,11 @@ use Symfony\Component\Routing\RouteCollection;
 class PluginsRoutesLoader {
     /** @var AnnotatedRouteControllerLoader */
     private $routeLoader;
+    /** @var string */
+    private $possibleThemePluginName;
 
-    public function __construct(AnnotatedRouteControllerLoader $routeLoader) {
+    public function __construct(string $theme, AnnotatedRouteControllerLoader $routeLoader) {
+        $this->possibleThemePluginName = ucfirst($theme);
         $this->routeLoader = $routeLoader;
     }
 
@@ -33,6 +36,9 @@ class PluginsRoutesLoader {
             $fullClassName = 'Repeka\\Plugins\\' . $namespace . '\\Controller\\' . $controllerClassName;
             $classNames[] = $fullClassName;
         }
+        if ($this->possibleThemePluginName) {
+            $this->loadThemeControllersFirstToAvoidRouteCollision($classNames);
+        }
         return $classNames;
     }
 
@@ -48,5 +54,14 @@ class PluginsRoutesLoader {
             $finder = [];
         }
         return $finder;
+    }
+
+    private function loadThemeControllersFirstToAvoidRouteCollision(array &$classNames) {
+        usort(
+            $classNames,
+            function ($controllerClassName) {
+                return strpos($controllerClassName, "Plugins\\$this->possibleThemePluginName\\") ? -1 : 1;
+            }
+        );
     }
 }

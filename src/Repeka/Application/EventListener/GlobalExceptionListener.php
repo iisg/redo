@@ -4,6 +4,7 @@ namespace Repeka\Application\EventListener;
 use Psr\Log\LoggerInterface;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Exception\DomainException;
+use Repeka\Domain\Utils\StringUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class GlobalExceptionListener {
 
     public function __construct(
         $isDebug,
-        string $errorPageTwigTemplate,
+        string $theme,
         TokenStorageInterface $tokenStorage,
         SessionInterface $session,
         LoggerInterface $logger,
@@ -52,7 +53,7 @@ class GlobalExceptionListener {
         $this->session = $session;
         $this->logger = $logger;
         $this->twig = $twig;
-        $this->errorPageTwigTemplate = $errorPageTwigTemplate;
+        $this->errorPageTwigTemplate = StringUtils::joinPaths($theme, 'error-page.twig');
     }
 
     public function onException(GetResponseForExceptionEvent $event) {

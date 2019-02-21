@@ -50,7 +50,7 @@ abstract class AbstractTemplateCommand extends \Symfony\Component\Console\Comman
         $templatesResourceClass = $this->loader->getTemplatesResourceClass();
         Assertion::notNull(
             $templatesResourceClass,
-            'You must set repeka.templates.templates_resource_class option to use this feature.'
+            'You must set repeka.templating.templates_resource_class option to use this feature.'
         );
         Assertion::true(
             $this->classExistsRule->validate($templatesResourceClass),

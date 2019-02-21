@@ -1,5 +1,7 @@
 <?php
-namespace Repeka\Application\Service;
+namespace Repeka\Tests\Application\Service;
+
+use Repeka\Application\Service\PhpRegexNormalizer;
 
 class PhpRegexNormalizerTest extends \PHPUnit_Framework_TestCase {
     private function normalizeAndMatch(string $regex, array $positive, array $negative = []) {

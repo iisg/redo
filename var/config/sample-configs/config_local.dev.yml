@@ -42,9 +42,7 @@ repeka:
     host: localhost
   templating:
     templates_resource_class: cms
-    templates:
-      login_form: redo/login-form.twig
-      error_page: redo/error-page.twig
+    theme: redo
   expose_endpoints:
     /about:
       resourceId: 18

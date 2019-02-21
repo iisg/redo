@@ -28,8 +28,9 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('repeka.upload_dirs', $mergedConfig['upload_dirs']);
         $container->setParameter('repeka.version', $mergedConfig['version']);
         $container->setParameter('repeka.exposed_endpoints', $mergedConfig['expose_endpoints']);
+        $container->setParameter('repeka.templates_resource_class', $mergedConfig['templating']['templates_resource_class']);
+        $container->setParameter('repeka.theme', $mergedConfig['templating']['theme']);
         $this->retrieveResourceClassesParameters($mergedConfig, $container);
-        $this->retrieveTemplatingParameters($mergedConfig, $container);
     }
 
     private function loadYmlConfigFile(string $name, ContainerBuilder $container) {
@@ -66,17 +67,5 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('repeka.resource_classes', $resourceClassesNames);
         $container->setParameter('repeka.resource_classes_icons', $resourceClassesIcons);
         $container->setParameter('repeka.resource_classes_config', $resourceClassesConfig);
-    }
-
-    private function retrieveTemplatingParameters(array $mergedConfig, ContainerBuilder $container) {
-        $templating = $mergedConfig['templating'] ?? [];
-        $container->setParameter('repeka.templates_resource_class', $templating['templates_resource_class'] ?? null);
-        $templates = ['login_form' => 'login-form.twig', 'homepage' => 'home.twig', 'error_page' => 'error-page.twig'];
-        foreach ($templates as $templateName => $defaultTemplateView) {
-            $container->setParameter(
-                'repeka.templates.' . $templateName,
-                ($templating['templates'] ?? [])[$templateName] ?? $defaultTemplateView
-            );
-        }
     }
 }

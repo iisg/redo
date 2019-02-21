@@ -78,7 +78,7 @@ services:
   Repeka\Application\EventListener\GlobalExceptionListener:
     arguments:
       $isDebug: '%kernel.debug%'
-      $errorPageTwigTemplate: '%repeka.templates.error_page%'
+      $theme: '%repeka.theme%'
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onException, priority: 1000 }
       - { name: monolog.logger, channel: exception_listener }
@@ -105,6 +105,7 @@ services:
   Repeka\Application\Service\PluginsRoutesLoader:
     public: true
     arguments:
+      $theme: '%repeka.theme%'
       $routeLoader: '@routing.loader.annotation'
   Repeka\Application\Service\ResourcesEndpointsExposer:
     public: true
