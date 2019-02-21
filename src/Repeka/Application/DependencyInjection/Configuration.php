@@ -13,7 +13,6 @@ class Configuration implements ConfigurationInterface {
         // @formatter:off because indentation makes config structure way clearer
         $rootNode
             ->children()
-                ->scalarNode('application_url')->end()
                 ->scalarNode('default_ui_language')->defaultValue('en')->end()
                 ->arrayNode('fallback_ui_languages')->scalarPrototype()->end()->end()
                 ->scalarNode('version')->defaultValue('X.X.X')->end()

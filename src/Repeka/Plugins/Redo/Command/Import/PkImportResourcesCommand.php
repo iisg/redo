@@ -100,7 +100,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                 $configFileName = substr($xmlFileName, 0, -4) . '.json';
             }
         }
-        $applicationUrl = $this->getContainer()->getParameter('repeka.application_url');
+        $applicationUrl = $this->getContainer()->getParameter('applicationUrl');
         $reportCreator = new PkImportHtmlReport($applicationUrl, $xmlFileName);
         try {
             $xml = PkImportFileLoader::load($xmlFileName);

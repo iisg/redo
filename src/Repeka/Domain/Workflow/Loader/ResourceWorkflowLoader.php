@@ -3,6 +3,7 @@ namespace Repeka\Domain\Workflow\Loader;
 
 use Assert\Assertion;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
@@ -13,12 +14,15 @@ use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowListQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
+use Repeka\Domain\Utils\EntityUtils;
+use Repeka\Domain\Utils\StringUtils;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class ResourceWorkflowLoader {
@@ -58,18 +62,21 @@ class ResourceWorkflowLoader {
         $metadataList = $places = $transitions = [];
         foreach ($workflowConfiguration['metadata'] as $metadataConfig) {
             Assertion::keyExists($metadataConfig, 'name');
-            $metadataList[$metadataConfig['name']] = $this->createOrUpdateMetadata($resourceClass, $metadataConfig);
+            $metadataList[StringUtils::normalizeEntityName($metadataConfig['name'])] =
+                $this->createOrUpdateMetadata($resourceClass, $metadataConfig);
+        }
+        $query = MetadataListQuery::builder()
+            ->filterByResourceClass($resourceClass)
+            ->addSystemMetadataIds([SystemMetadata::REPRODUCTOR, SystemMetadata::TEASER_VISIBILITY, SystemMetadata::VISIBILITY])
+            ->build();
+        $allMetadata = $this->metadataRepository->findByQuery($query);
+        foreach ($allMetadata as $existingMetadata) {
+            if (!isset($metadataList[$existingMetadata->getName()])) {
+                $metadataList[$existingMetadata->getName()] = $existingMetadata;
+            }
         }
         foreach ($workflowConfiguration['places'] as $placeDefinition) {
-            $placeConfig = array_merge(
-                [
-                    'requiredMetadataIds' => $this->metadataNamesToIds($placeDefinition['requiredMetadata'] ?? [], $metadataList),
-                    'lockedMetadataIds' => $this->metadataNamesToIds($placeDefinition['lockedMetadata'] ?? [], $metadataList),
-                    'assigneeMetadataIds' => $this->metadataNamesToIds($placeDefinition['assigneeMetadata'] ?? [], $metadataList),
-                    'autoAssignMetadataIds' => $this->metadataNamesToIds($placeDefinition['autoAssignMetadata'] ?? [], $metadataList),
-                ],
-                $placeDefinition
-            );
+            $placeConfig = array_merge($this->buildPlaceMetadataRequirements($placeDefinition, $metadataList), $placeDefinition);
             $places[] = ResourceWorkflowPlace::fromArray($placeConfig);
         }
         foreach ($workflowConfiguration['transitions'] as $transitionDefinition) {
@@ -82,20 +89,15 @@ class ResourceWorkflowLoader {
     private function createOrUpdateMetadata(string $resourceClass, array $metadataConfig): Metadata {
         try {
             $metadata = $this->metadataRepository->findByName($metadataConfig['name']);
-            return $this->commandBus->handle(MetadataUpdateCommand::fromArray($metadata, $metadataConfig));
+            if (SystemMetadata::isValid($metadata->getId())) {
+                return $metadata->withOverrides($metadataConfig);
+            } else {
+                return $this->commandBus->handle(MetadataUpdateCommand::fromArray($metadata, $metadataConfig));
+            }
         } catch (EntityNotFoundException $exception) {
             $metadataConfig['resourceClass'] = $resourceClass;
             return $this->commandBus->handle(MetadataCreateCommand::fromArray($metadataConfig));
         }
-    }
-
-    private function metadataNamesToIds(array $metadataNames, array $metadataList): array {
-        return array_map(
-            function ($metadataName) use ($metadataList) {
-                return $metadataList[$metadataName]->getId();
-            },
-            $metadataNames
-        );
     }
 
     private function createOrUpdateWorkflow(string $resourceClass, array $label, array $places, array $transitions): ResourceWorkflow {
@@ -143,5 +145,29 @@ class ResourceWorkflowLoader {
             $command = new ResourceKindCreateCommand($config['name'], $config['label'], $metadataList, $workflow);
         }
         return $this->commandBus->handle($command);
+    }
+
+    private function buildPlaceMetadataRequirements(array $placeDefinition, array $metadataList): array {
+        if (isset($metadataList['label'])) {
+            unset($metadataList['label']);
+        }
+        $mapByName = function (string $name) use (&$metadataList) {
+            $key = StringUtils::normalizeEntityName($name);
+            Assertion::keyExists($metadataList, $key);
+            $metadata = $metadataList[$key];
+            unset($metadataList[$key]);
+            return $metadata;
+        };
+        array_map($mapByName, $placeDefinition['optionalMetadata'] ?? []);
+        $requirements = [
+            'requiredMetadataIds' => EntityUtils::mapToIds(array_map($mapByName, $placeDefinition['requiredMetadata'] ?? [])),
+            'assigneeMetadataIds' => EntityUtils::mapToIds(array_map($mapByName, $placeDefinition['assigneeMetadata'] ?? [])),
+            'autoAssignMetadataIds' => EntityUtils::mapToIds(array_map($mapByName, $placeDefinition['autoAssignMetadata'] ?? [])),
+            'lockedMetadataIds' => EntityUtils::mapToIds(array_map($mapByName, $placeDefinition['lockedMetadata'] ?? [])),
+        ];
+        if ($metadataList) {
+            $requirements['lockedMetadataIds'] = array_merge($requirements['lockedMetadataIds'], EntityUtils::mapToIds($metadataList));
+        }
+        return $requirements;
     }
 }

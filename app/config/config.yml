@@ -100,6 +100,7 @@ framework:
 
 parameters:
   applicationName: Repeka
+  applicationUrl: http://repeka.local
   locale: pl
   secret: some_secret
   container.autowiring.strict_mode: true
@@ -107,5 +108,6 @@ parameters:
 twig:
   globals:
     applicationName: "%applicationName%"
+    applicationUrl: '%applicationUrl%'
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"

@@ -2,7 +2,6 @@ doctrine:
   dbal:
     password: THIS_IS_THE_DB_PASSWORD_TO_BE_REPLACED_DURING_BUILD
 repeka:
-  application_url: http://repeka.local
   resource_classes:
     - name: books
       icon: publish-4
@@ -28,3 +27,5 @@ repeka:
       label:
         EN: Basic metadata
         PL: Podstawowe metadane
+  templating:
+    theme: redo

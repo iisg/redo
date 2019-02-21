@@ -77,6 +77,10 @@ trait FixtureHelpers {
         return $this->container->get(ResourceRepository::class);
     }
 
+    protected function getMetadataRepository(): MetadataRepository {
+        return $this->container->get(MetadataRepository::class);
+    }
+
     private function addSupportForResourceKindToMetadata(int $metadataId, int $resourceKindId) {
         $metadataRepository = $this->container->get(MetadataRepository::class);
         $visibilityMetadata = $metadataRepository->findOne($metadataId);

@@ -11,7 +11,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class RepekaExtension extends ConfigurableExtension {
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container) {
         $this->loadYmlConfigFile('services', $container);
-        $container->setParameter('repeka.application_url', $mergedConfig['application_url']);
         $container->setParameter('repeka.default_ui_language', $mergedConfig['default_ui_language']);
         $container->setParameter('repeka.fallback_ui_languages', $mergedConfig['fallback_ui_languages']);
         $container->setParameter('repeka.max_nesting_depth', $mergedConfig['metadata_nesting_depth']);

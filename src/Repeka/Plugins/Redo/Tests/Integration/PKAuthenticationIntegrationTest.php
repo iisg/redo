@@ -11,6 +11,10 @@ use Repeka\Tests\IntegrationTestCase;
 class PKAuthenticationIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
+    protected function initializeDatabaseForTests() {
+        $this->loadAllFixtures();
+    }
+
     /** @beforeClass */
     public static function registerTestPKSoapService() {
         PKAuthenticationClient::$defaultSoapService = new TestPKSoapService();
@@ -23,7 +27,7 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
 
     public function testAuthSuccessWithHashedPassword() {
         $client = AuthenticationIntegrationTest::authenticate('b/123456', 'piotr');
-        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+        $this->assertNotContains('error-message', $client->getResponse()->getContent());
         /** @var UserEntity $user */
         $user = AuthenticationIntegrationTest::getAuthenticatedUser($client);
         $this->assertNotNull($user);
@@ -34,7 +38,7 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
 
     public function testUnsupportedUsernameAuthFailure() {
         $client = AuthenticationIntegrationTest::authenticate('a/123456', 'piotr');
-        $this->assertContains('nieudane', $client->getResponse()->getContent());
+        $this->assertContains('error-message', $client->getResponse()->getContent());
         $this->assertNull(AuthenticationIntegrationTest::getAuthenticatedUser($client));
     }
 

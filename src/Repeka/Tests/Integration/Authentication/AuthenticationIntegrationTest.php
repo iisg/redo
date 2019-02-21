@@ -13,9 +13,13 @@ use Symfony\Bundle\FrameworkBundle\Client;
 class AuthenticationIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
+    protected function initializeDatabaseForTests() {
+        $this->loadAllFixtures();
+    }
+
     public function testAuthSuccess() {
         $client = $this->authenticate(AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD);
-        $this->assertNotContains('nieudane', $client->getResponse()->getContent());
+        $this->assertNotContains('failure', $client->getResponse()->getContent());
         /** @var UserEntity $user */
         $user = $this->getAuthenticatedUser($client);
         $this->assertNotNull($user);
@@ -56,7 +60,7 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $client = $this->authenticate(AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD . '1');
         $user = $this->getAuthenticatedUser($client);
         $this->assertNull($user);
-        $this->assertContains('nieudane', $client->getResponse()->getContent());
+        $this->assertContains('error-message', $client->getResponse()->getContent());
     }
 
     /** @depends testAuthFailure */
@@ -74,7 +78,7 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
     public static function authenticate(string $username, string $password): Client {
         $client = self::createClient();
         $crawler = $client->request('GET', '/login');
-        $buttonCrawlerNode = $crawler->selectButton('Zaloguj');
+        $buttonCrawlerNode = $crawler->selectButton('login-btn');
         $form = $buttonCrawlerNode->form();
         $data = ['_username' => $username, '_password' => $password];
         $client->submit($form, $data);
