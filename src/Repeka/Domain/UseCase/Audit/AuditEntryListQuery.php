@@ -9,6 +9,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
     /** @var array */
     private $commandNames;
     private $users;
+    private $resourceKinds;
     /** @var string */
     private $dateFrom;
     private $dateTo;
@@ -21,6 +22,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         string $dateFrom,
         string $dateTo,
         array $users,
+        array $resourceKinds,
         ResourceContents $resourceContentsFilter,
         int $page,
         int $resultsPerPage,
@@ -31,6 +33,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
         $this->users = $users;
+        $this->resourceKinds = $resourceKinds;
         $this->resourceContentsFilter = $resourceContentsFilter;
         $this->resourceId = $resourceId;
     }
@@ -55,6 +58,9 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         return $this->users;
     }
 
+    public function getResourceKinds(): array {
+        return $this->resourceKinds;
+    }
     public function getResourceContentsFilter(): ResourceContents {
         return $this->resourceContentsFilter;
     }

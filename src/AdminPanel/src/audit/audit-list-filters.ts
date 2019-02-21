@@ -13,6 +13,7 @@ export class AuditListFilters {
   dateFrom: string;
   dateTo: string;
   users: string[] = [];
+  resourceKinds: string[] = [];
   resourceContents: NumberMap<string>;
   customColumns: { displayStrategy: string }[] = [];
   resourceId: number;
@@ -37,6 +38,9 @@ export class AuditListFilters {
     }
     if (this.users.length) {
       params['users'] = this.users.join(',');
+    }
+    if (this.resourceKinds.length) {
+      params['resourceKinds'] = this.resourceKinds.join(',');
     }
     if (this.customColumns.length) {
       params['customColumns'] = JSON.stringify(this.customColumns.map(col => col.displayStrategy));
@@ -65,6 +69,7 @@ export class AuditListFilters {
       .filterByResourceContents(this.resourceContents)
       .filterByCommandNames(this.commandNames)
       .filterByUsers(this.users)
+      .filterByResourceKinds(this.resourceKinds)
       .addCustomColumns(this.customColumns.map(({displayStrategy}) => displayStrategy))
       .setCurrentPageNumber(this.currentPageNumber)
       .setResultsPerPage(this.resultsPerPage);
@@ -79,10 +84,10 @@ export class AuditListFilters {
     filters.dateTo = DateRangeConfig.isDateValid(params['dateTo']) ? params['dateTo'] : "";
     filters.dateTo = filters.fixDateTo(filters.dateFrom, filters.dateTo);
     filters.users = (params['users'] || '').split(',').filter(user => !!user.trim());
+    filters.resourceKinds = (params['resourceKinds'] || '').split(',').filter(resourceKind => !!resourceKind.trim());
     filters.resourceContents = safeJsonParse(params['resourceContents']);
     filters.setCustomColumns(params['customColumns']);
     filters.resourceId = +params['id'];
-
     return filters;
   }
 

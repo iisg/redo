@@ -38,6 +38,11 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     return this;
   }
 
+  public filterByResourceKinds(resourceKinds: string[]): this {
+    this.params.resourceKinds = resourceKinds;
+    return this;
+  }
+
   public addCustomColumns(templates: string[]): this {
     this.params.customColumns = templates;
     return this;

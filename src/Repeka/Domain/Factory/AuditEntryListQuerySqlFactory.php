@@ -23,6 +23,7 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
             "ae.data->'after'->'resource'->'contents'"
         );
         $this->filterByUsers();
+        $this->filterByAuditResourceKinds();
         $this->filterByResourceId();
         $this->orderBy[] = 'ae.created_at DESC, id DESC';
         $this->paginate();
@@ -50,6 +51,17 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
         if ($this->query->getUsers()) {
             $this->wheres[] = 'ae.user_id IN(:users)';
             $this->params['users'] = $this->query->getUsers();
+        }
+    }
+
+    private function filterByAuditResourceKinds() {
+        if ($this->query->getResourceKinds()) {
+            $tempWhereAlternatives = [];
+            $tempWhereAlternatives[] = "ae.data->'before'->'resource'->'kindId' IN(:resourceKinds)";
+            $tempWhereAlternatives[] = "ae.data->'after'->'resource'->'kindId' IN(:resourceKinds)";
+            $tempWhereAlternatives[] = "ae.data->'resource'->'kindId' IN(:resourceKinds)";
+            $this->wheres[] = '(' . implode(' OR ', $tempWhereAlternatives) . ')';
+            $this->params['resourceKinds'] = $this->query->getResourceKinds();
         }
     }
 

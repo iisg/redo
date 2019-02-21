@@ -6,7 +6,7 @@ $multiple-selection-clear-button-width: 12px;
 $border-width: 1px;
 
 dropdown-select, entity-chooser, metadata-chooser, resource-kind-metadata-chooser,
-audit-command-name-chooser, audit-user-chooser, resource-kind-chooser, flags-select, workflow-place-chooser, workflow-chooser {
+audit-command-name-chooser, audit-user-chooser, audit-resource-kind-chooser, resource-kind-chooser, flags-select, workflow-place-chooser, workflow-chooser {
   display: flex;
   align-items: center;
   overflow: hidden;

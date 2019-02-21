@@ -1,0 +1,11 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <dropdown-select containerless
+        values.bind="resourceKindsIds"
+        value.bind="selectedResourceKindsIds"
+        multiple>
+        <template replace-part="option-template">
+            ${resourceKindLabel(option)}
+        </template>
+    </dropdown-select>
+</template>
