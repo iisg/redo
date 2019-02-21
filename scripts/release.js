@@ -15,7 +15,7 @@ const preprocess = require('preprocess');
 project.printAsciiLogoAndVersion();
 
 const releaseFilename = process.env.RELEASE_FILENAME || 'repeka-' + version.text + '-' + version.full.hash + '.tar.gz';
-const pluginsList = process.env.INCLUDE_PLUGINS || undefined;
+const extensionsList = process.env.INCLUDE_EXTENSIONS || undefined;
 
 console.log('');
 
@@ -82,7 +82,7 @@ function copyToReleaseDirectory() {
       createVarDirectoryStructure();
       copySingleRequiredFiles();
       removeUnwantedFiles();
-      removeUnwantedPlugins();
+      removeUnwantedExtensions();
       preprocessSources();
       spinner.succeed('Application files copied.');
       convertToUnixLineEndings();
@@ -138,20 +138,23 @@ function removeUnwantedFiles() {
   ]);
 }
 
-function removeUnwantedPlugins() {
-  if (pluginsList) {
-    const pluginNames = pluginsList.split(',').map(p => p.trim()).filter(p => p);
+function removeUnwantedExtensions() {
+  if (extensionsList) {
+    const extensionsNames = extensionsList.split(',').map(p => p.trim()).filter(p => p);
     const directoriesToRemove = [
       'release/app/Resources/views/**',
       '!release/app/Resources/views',
       '!release/app/Resources/views/*.twig',
       'release/src/Repeka/Plugins/**',
       '!release/src/Repeka/Plugins',
+      'release/docker/docker-compose.*.yml',
+      '!release/docker/docker-compose.persistent.yml',
     ];
-    for (let pluginName of pluginNames) {
-      directoriesToRemove.push(`!release/app/Resources/views/${pluginName.toLowerCase()}/**`);
-      const pluginNameCapitalizedFirst = pluginName.charAt(0).toUpperCase() + pluginName.slice(1);
-      directoriesToRemove.push(`!release/src/Repeka/Plugins/${pluginNameCapitalizedFirst}/**`);
+    for (let extensionName of extensionsNames) {
+      directoriesToRemove.push(`!release/app/Resources/views/${extensionName.toLowerCase()}/**`);
+      directoriesToRemove.push(`!release/docker/docker-compose.${extensionName.toLowerCase()}.yml`);
+      const extensionNameCapitalizedFirst = extensionName.charAt(0).toUpperCase() + extensionName.slice(1);
+      directoriesToRemove.push(`!release/src/Repeka/Plugins/${extensionNameCapitalizedFirst}/**`);
     }
     del.sync(directoriesToRemove);
   }

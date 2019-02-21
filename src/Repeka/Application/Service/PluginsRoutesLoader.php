@@ -23,13 +23,9 @@ class PluginsRoutesLoader {
     }
 
     private function getPluginsControllersClassNames(): array {
-        $finder = new Finder();
-        $finder->files()
-            ->in(\AppKernel::APP_PATH . '/../src/Repeka/Plugins/*/Controller/')
-            ->name('*Controller.php')
-            ->depth('==0');
+        $pluginControllers = $this->getPluginControllers();
         $classNames = [];
-        foreach ($finder as $pluginController) {
+        foreach ($pluginControllers as $pluginController) {
             /** @var \SplFileInfo $pluginController */
             $path = $pluginController->getRealPath();
             $controllerClassName = substr(basename($path), 0, -4); // cut .php
@@ -38,5 +34,19 @@ class PluginsRoutesLoader {
             $classNames[] = $fullClassName;
         }
         return $classNames;
+    }
+
+    /** @return array|Finder */
+    private function getPluginControllers() {
+        try {
+            $finder = new Finder();
+            $finder->files()
+                ->in(\AppKernel::APP_PATH . '/../src/Repeka/Plugins/*/Controller/')
+                ->name('*Controller.php')
+                ->depth('==0');
+        } catch (\InvalidArgumentException $e) {
+            $finder = [];
+        }
+        return $finder;
     }
 }
