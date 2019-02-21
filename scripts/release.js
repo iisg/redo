@@ -15,6 +15,7 @@ const preprocess = require('preprocess');
 project.printAsciiLogoAndVersion();
 
 const releaseFilename = process.env.RELEASE_FILENAME || 'repeka-' + version.text + '-' + version.full.hash + '.tar.gz';
+const pluginsList = process.env.INCLUDE_PLUGINS || undefined;
 
 console.log('');
 
@@ -81,6 +82,7 @@ function copyToReleaseDirectory() {
       createVarDirectoryStructure();
       copySingleRequiredFiles();
       removeUnwantedFiles();
+      removeUnwantedPlugins();
       preprocessSources();
       spinner.succeed('Application files copied.');
       convertToUnixLineEndings();
@@ -134,6 +136,25 @@ function removeUnwantedFiles() {
     'release/**/package.json',
     'release/web/admin/dist',
   ]);
+}
+
+function removeUnwantedPlugins() {
+  if (pluginsList) {
+    const pluginNames = pluginsList.split(',').map(p => p.trim()).filter(p => p);
+    const directoriesToRemove = [
+      'release/app/Resources/views/**',
+      '!release/app/Resources/views',
+      '!release/app/Resources/views/*.twig',
+      'release/src/Repeka/Plugins/**',
+      '!release/src/Repeka/Plugins',
+    ];
+    for (let pluginName of pluginNames) {
+      directoriesToRemove.push(`!release/app/Resources/views/${pluginName.toLowerCase()}/**`);
+      const pluginNameCapitalizedFirst = pluginName.charAt(0).toUpperCase() + pluginName.slice(1);
+      directoriesToRemove.push(`!release/src/Repeka/Plugins/${pluginNameCapitalizedFirst}/**`);
+    }
+    del.sync(directoriesToRemove);
+  }
 }
 
 function preprocessSources() {
