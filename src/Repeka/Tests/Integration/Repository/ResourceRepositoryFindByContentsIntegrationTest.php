@@ -101,7 +101,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
             ]
         )->build();
         $results = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(0, $results);
+        $this->assertCount(3, $results);
     }
 
     public function testFindsWithAdditionalResourceClassFilter() {
@@ -204,5 +204,17 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(2, $results);
         $this->assertContains($this->getPhpBookResource()->getId(), EntityUtils::mapToIds($results));
+    }
+
+    public function testFindByReproductor() {
+        $admin = $this->getAdminUser();
+        $category = $this->findResourceByContents([$this->findMetadataByName('Nazwa kategorii')->getId() => 'E-booki']);
+        $this->assertNotEmpty(
+            array_intersect($admin->getUserGroupsIds(), $category->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR))
+        );
+        $query = ResourceListQuery::builder()->filterByContents([SystemMetadata::REPRODUCTOR => $admin->getUserGroupsIds()])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertNotEmpty($results);
+        $this->assertContains($category->getId(), EntityUtils::mapToIds($results));
     }
 }

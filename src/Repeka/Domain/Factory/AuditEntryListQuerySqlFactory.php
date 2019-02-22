@@ -16,12 +16,10 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
         $this->filterByDate();
         $this->filterByContents(
             $this->query->getResourceContentsFilter(),
-            ' OR ',
             "ae.data->'before'->'resource'->'contents'"
         );
         $this->filterByContents(
             $this->query->getResourceContentsFilter(),
-            ' OR ',
             "ae.data->'after'->'resource'->'contents'"
         );
         $this->filterByUsers();

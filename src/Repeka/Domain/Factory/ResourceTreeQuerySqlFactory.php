@@ -19,7 +19,7 @@ class ResourceTreeQuerySqlFactory extends ResourceListQuerySqlFactory {
         $this->froms['r'] = 'resource r';
         $this->filterByResourceClasses();
         $this->filterByResourceKinds();
-        $this->filterByContents($this->query->getContentsFilter(), ' OR ');
+        $this->filterByContents($this->query->getContentsFilter());
         $this->filterByRoot();
         $this->filterByDepth();
         $this->paginateLevels();

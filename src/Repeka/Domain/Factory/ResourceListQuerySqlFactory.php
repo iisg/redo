@@ -124,7 +124,6 @@ class ResourceListQuerySqlFactory {
      */
     protected function filterByContents(
         ResourceContents $resourceContents,
-        $glueBetweenSameMetadataFilters = ' AND ',
         $contentsPath = 'r.contents'
     ): void {
         $nextFilterId = $this->getUnusedParamId();
@@ -144,14 +143,14 @@ class ResourceListQuerySqlFactory {
             }
         );
         if ($contentWhere) {
-            $gluedClauses = array_map(
-                function (array $whereClauses) use ($glueBetweenSameMetadataFilters) {
-                    return implode($glueBetweenSameMetadataFilters, $whereClauses);
+            $alternatives = array_map(
+                function (array $whereClauses) {
+                    return implode(' OR ', $whereClauses);
                 },
                 $contentWhere
             );
-            $joinedClause = '(' . implode(') AND (', $gluedClauses) . ')';
-            $this->whereAlternatives[] = $joinedClause;
+            $alternative = '(' . implode(') AND (', $alternatives) . ')';
+            $this->whereAlternatives[] = $alternative;
         }
     }
 
