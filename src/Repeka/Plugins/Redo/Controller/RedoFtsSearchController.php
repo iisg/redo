@@ -73,12 +73,7 @@ class RedoFtsSearchController extends Controller {
     }
 
     private function fetchSearchResults(Request $request, array $metadataFilters, ?string $phrase, int $page): ResultSet {
-        $facetsFilters = array_map(
-            function ($filter) {
-                return explode(',', $filter);
-            },
-            (array)$request->get('facetFilters')
-        );
+        $facetsFilters = $request->get('facetFilters', []);
         $searchableMetadata = $this->ftsConfig['searchable_metadata_ids'] ?? [];
         Assertion::notEmpty($searchableMetadata, 'Query must include some metadata');
         $facets = $this->ftsConfig['facets'] ?? [];

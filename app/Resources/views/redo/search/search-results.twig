@@ -68,14 +68,10 @@
                                     <strong>{{ aggregationName == 'kindId' ? 'Resource kind' | trans
                                         : metadata(aggregationName).label | inCurrentLanguage }}</strong>
                                     {% for bucket in aggregationData.buckets.0[aggregationName].buckets %}
-                                        <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({
-                                            'phrase': phrase,
-                                            'facetFilters': ftsFacetFilterParam(aggregationName, bucket.key,
-                                                app.request.query.get('facetFilters') ?? []),
-                                            'page': 1
-                                        })) }}">
                                             <label class="label-with-checkbox">
                                                 <input type="checkbox"
+                                                    name="facetFilters[{{ aggregationName }}][]"
+                                                    value="{{ bucket.key }}"
                                                     {% if isFilteringByFacet(aggregationName, bucket.key,
                                                         app.request.query.get('facetFilters') ?? []) %}
                                                 checked
@@ -83,7 +79,6 @@
                                                 <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label | inCurrentLanguage
                                                     : r(bucket.key) | mLabel }} ({{ bucket.doc_count }})</span>
                                             </label>
-                                        </a>
                                     {% endfor %}
                                 </div>
                             {% endfor %}

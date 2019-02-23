@@ -52,7 +52,6 @@ class TwigFrontendExtension extends \Twig_Extension {
         return [
             new \Twig_Function('resourceKind', [$this, 'fetchResourceKind']),
             new \Twig_Function('metadataGroup', [$this, 'getMetadataGroup']),
-            new \Twig_Function('ftsFacetFilterParam', [$this, 'ftsFacetFilterParam']),
             new \Twig_Function('isFilteringByFacet', [$this, 'isFilteringByFacet']),
             new \Twig_Function('icon', [$this, 'icon']),
             new \Twig_Function('resources', [$this, 'fetchResources']),
@@ -122,19 +121,6 @@ class TwigFrontendExtension extends \Twig_Extension {
         return $this->frontendConfig->getConfig()['metadata_groups'];
     }
 
-    public function ftsFacetFilterParam(string $aggregationName, $filterValue, array $currentFilters): array {
-        $currentFilterValues = $this->getCurrentFacetFilters($aggregationName, $currentFilters);
-        if (in_array($filterValue, $currentFilterValues)) {
-            $currentFilterValues = array_diff($currentFilterValues, [$filterValue]);
-        } else {
-            $currentFilterValues[] = $filterValue;
-        }
-        sort($currentFilterValues);
-        $filterValue = implode(',', $currentFilterValues);
-        $currentFilters[$aggregationName] = $filterValue;
-        return array_filter($currentFilters);
-    }
-
     public function isFilteringByFacet(string $aggregationName, $filterValue, array $currentFilters): bool {
         return in_array($filterValue, $this->getCurrentFacetFilters($aggregationName, $currentFilters));
     }
@@ -152,8 +138,7 @@ ICON;
 
     private function getCurrentFacetFilters(string $aggregationName, array $currentFilters): array {
         if (isset($currentFilters[$aggregationName])) {
-            $currentFilterValues = explode(',', $currentFilters[$aggregationName]);
-            return array_filter(array_filter($currentFilterValues, 'trim'), 'is_numeric');
+            return array_filter(array_filter($currentFilters[$aggregationName], 'trim'), 'is_numeric');
         } else {
             return [];
         }
