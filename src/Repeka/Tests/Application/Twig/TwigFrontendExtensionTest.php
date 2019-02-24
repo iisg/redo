@@ -19,18 +19,20 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     private $extension;
     /** @var Paginator|\PHPUnit_Framework_MockObject_MockObject */
     private $paginator;
+    /** @var PageNumberFinder|\PHPUnit_Framework_MockObject_MockObject */
+    private $pageNumberFinder;
 
     /** @before */
     public function init() {
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
         $this->paginator = $this->createMock(Paginator::class);
-        $this->frontendConfig = $this->createMock(FrontendConfig::class);
+        $this->pageNumberFinder = $this->createMock(PageNumberFinder::class);
         $this->extension = new TwigFrontendExtension(
             $this->createMock(RequestStack::class),
             $this->resourceKindRepository,
             $this->paginator,
             $this->createMock(FrontendConfig::class),
-            $this->createMock(PageNumberFinder::class)
+            $this->pageNumberFinder
         );
     }
 
@@ -109,5 +111,34 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
             'file.gif',
             $this->extension->basename('common/file.gif')
         );
+    }
+
+    public function testMatchingSearchHitsWithPageNumbers() {
+        $this->pageNumberFinder->method('matchSearchHitsWithPageNumbers')->willReturn(
+            [
+                [
+                    PageNumberFinder::PAGE_NUMBER => 29,
+                    PageNumberFinder::HIGHLIGHT =>
+                        "Some <em>highlighted</em> stuff",
+                ],
+                [
+                    PageNumberFinder::PAGE_NUMBER => 57,
+                    PageNumberFinder::HIGHLIGHT =>
+                        "<em>Highlights</em> and some more <em>highlights</em> after",
+                ],
+                [
+                    PageNumberFinder::PAGE_NUMBER => 101,
+                    PageNumberFinder::HIGHLIGHT =>
+                        "Here we have <em>highlights</em> and some more <em>highlights</em> to <em>highlight</em> this test",
+                ],
+            ]
+        );
+        $expectedResult = [
+            "<u>str. 29:</u> <em>highlighted</em>",
+            "<u>str. 57:</u> <em>Highlights</em> and some more <em>highlights</em>",
+            "<u>str. 101:</u> <em>highlights</em> and some more <em>highlights</em> to <em>highlight</em>",
+        ];
+        $resource = $this->createResourceMock(1, $this->createResourceKindMock());
+        $this->assertEquals($expectedResult, $this->extension->matchSearchHitsWithPageNumbers($resource, [], []));
     }
 }

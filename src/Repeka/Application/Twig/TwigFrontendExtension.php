@@ -253,11 +253,19 @@ ICON;
             $highlightsWithPageNumbers = [];
             foreach ($searchResults as $result) {
                 $pageNumber = $result[PageNumberFinder::PAGE_NUMBER];
-                $highlight = $result[PageNumberFinder::HIGHLIGHT];
+                $highlight = $this->retrieveHighlightedPhrase($result[PageNumberFinder::HIGHLIGHT]);
                 $highlightsWithPageNumbers[] = "<u>str. $pageNumber:</u> $highlight";
             }
             return $highlightsWithPageNumbers;
         }
         return $highlights;
+    }
+
+    private function retrieveHighlightedPhrase(string $searchHit): string {
+        $start = strpos($searchHit, "<em>");
+        $end = strrpos($searchHit, "</em>");
+        return $start !== false && $end !== false
+            ? substr($searchHit, $start, $end - $start + strlen("</em>"))
+            : $searchHit;
     }
 }
