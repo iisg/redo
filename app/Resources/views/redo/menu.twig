@@ -22,7 +22,7 @@
                 {% if app.request.query.has('phrase') %}
                     value="{{ app.request.query.get('phrase') }}"
                 {% endif %}
-                placeholder={{ "search_small_placeholder" | trans }}>
+                placeholder="{{ 'search_small_placeholder' | trans }}">
             <button class="search-button"
                 type="submit">
                 {{ icon("search") }}
