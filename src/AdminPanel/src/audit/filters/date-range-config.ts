@@ -11,10 +11,22 @@ export enum DateRangeMode {
   LAST_30_DAYS = 'last_30_days',
   PREVIOUS_MONTH = 'previous_month',
   PREVIOUS_TWO_MONTHS = 'previous_two_months',
+  PREVIOUS_THREE_MONTHS = 'previous_three_months',
+  PREVIOUS_SIX_MONTHS = 'previous_six_months',
   CURRENT_YEAR = 'current_year',
   LAST_365_DAYS = 'last_365_days',
   PREVIOUS_YEAR = 'previous_year',
 }
+
+export const statisticsRangeMode = [
+  DateRangeMode.CURRENT_YEAR,
+  DateRangeMode.CURRENT_MONTH,
+  DateRangeMode.PREVIOUS_MONTH,
+  DateRangeMode.PREVIOUS_TWO_MONTHS,
+  DateRangeMode.PREVIOUS_THREE_MONTHS,
+  DateRangeMode.PREVIOUS_SIX_MONTHS,
+  DateRangeMode.PREVIOUS_YEAR,
+];
 
 export class DateRangeConfig {
   mode: DateRangeMode;
@@ -88,6 +100,20 @@ export class DateRangeConfig {
         previousmonth = moment().add(-1, 'months');
         let previous2months = moment().add(-2, 'months');
         this.dateFrom = this.formatDate(moment(previous2months).startOf('month').toDate());
+        this.dateTo = this.formatDate(moment(previousmonth).endOf('month').toDate());
+        break;
+
+      case DateRangeMode.PREVIOUS_THREE_MONTHS:
+        previousmonth = moment().add(-1, 'months');
+        let previous3months = moment().add(-3, 'months');
+        this.dateFrom = this.formatDate(moment(previous3months).startOf('month').toDate());
+        this.dateTo = this.formatDate(moment(previousmonth).endOf('month').toDate());
+        break;
+
+      case DateRangeMode.PREVIOUS_SIX_MONTHS:
+        previousmonth = moment().add(-1, 'months');
+        let previous6months = moment().add(-6, 'months');
+        this.dateFrom = this.formatDate(moment(previous6months).startOf('month').toDate());
         this.dateTo = this.formatDate(moment(previousmonth).endOf('month').toDate());
         break;
 

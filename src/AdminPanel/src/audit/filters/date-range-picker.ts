@@ -1,5 +1,5 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import "eonasdan-bootstrap-datetimepicker";
 import {values} from "lodash";
 import * as moment from "moment";
@@ -16,7 +16,7 @@ enum DateRangePart {
 }
 
 @autoinject
-export class DateRangePicker {
+export class DateRangePicker implements ComponentAttached {
   private dateMode: DateMode;
   private rangeDateMode: DateMode;
   private isLoaded = false;

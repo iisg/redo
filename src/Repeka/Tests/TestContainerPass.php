@@ -19,6 +19,7 @@ class TestContainerPass implements CompilerPassInterface {
         \Repeka\Domain\Cqrs\CommandBus::class,
         \Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory::class,
         \Repeka\Domain\Repository\AuditEntryRepository::class,
+        \Repeka\Domain\Repository\EndpointUsageLogRepository::class,
         \Repeka\Domain\Repository\LanguageRepository::class,
         \Repeka\Domain\Repository\MetadataRepository::class,
         \Repeka\Domain\Repository\ResourceKindRepository::class,

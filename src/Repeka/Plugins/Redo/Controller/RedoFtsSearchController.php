@@ -7,7 +7,9 @@ use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Application\Twig\Paginator;
 use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Repository\EndpointUsageLogRepository;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
@@ -16,20 +18,29 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class RedoFtsSearchController extends Controller {
     use CommandBusAware;
 
     /** @var MetadataRepository */
     private $metadataRepository;
+
     private $paginator;
     private $resultsPerPage = 10;
     /** @var array */
     private $ftsConfig;
+    private $endpointUsageLogRepository;
 
-    public function __construct(array $ftsConfig, MetadataRepository $metadataRepository, Paginator $paginator) {
+    public function __construct(
+        array $ftsConfig,
+        MetadataRepository $metadataRepository,
+        Paginator $paginator,
+        EndpointUsageLogRepository $endpointUsageLogRepository
+    ) {
         $this->ftsConfig = $ftsConfig;
         $this->metadataRepository = $metadataRepository;
         $this->paginator = $paginator;
+        $this->endpointUsageLogRepository = $endpointUsageLogRepository;
     }
 
     /**
@@ -47,6 +58,7 @@ class RedoFtsSearchController extends Controller {
                 return $this->redirect('/resources/' . $resources[0]->getId());
             }
         }
+        $this->handleCommand(new EndpointUsageLogCreateCommand($request, 'home'));
         return [
             'filterableMetadataList' => $this->findFilterableMetadata(),
             'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],

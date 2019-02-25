@@ -1,6 +1,7 @@
 Repeka\Domain\Entity\EndpointUsageLogEntry:
   type: entity
   table: endpoint_usage_log
+  repositoryClass: Repeka\Application\Repository\EndpointUsageLogDoctrineRepository
   id:
     id:
       type: integer
@@ -11,10 +12,11 @@ Repeka\Domain\Entity\EndpointUsageLogEntry:
       joinColumn:
         name: resource_id
         referencedColumnName: id
+        nullable: true
   fields:
     url:
       type: string
-    clientIP:
+    clientIp:
       type: string
       column: client_ip
     usageDateTime:

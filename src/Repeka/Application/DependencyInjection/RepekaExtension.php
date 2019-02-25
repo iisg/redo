@@ -27,6 +27,7 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('repeka.upload_dirs', $mergedConfig['upload_dirs']);
         $container->setParameter('repeka.version', $mergedConfig['version']);
         $container->setParameter('repeka.audit', $mergedConfig['audit']);
+        $container->setParameter('repeka.statistics', $mergedConfig['statistics']);
         $container->setParameter('repeka.exposed_endpoints', $mergedConfig['expose_endpoints']);
         $container->setParameter('repeka.templates_resource_class', $mergedConfig['templating']['templates_resource_class']);
         $container->setParameter('repeka.theme', $mergedConfig['templating']['theme']);

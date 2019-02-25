@@ -14,6 +14,7 @@ Import data from Excel: Importuj dane z Excela
 Name: Nazwa
 Label: Nazwa wyświetlana
 Audit: Audyt
+Statistics: Statystyki
 Relationships: Relacje
 Control: Kontrolka
 Group: Grupa
@@ -184,6 +185,12 @@ View change in contents: Pokaż zmianę w zawartości
 Date: Data
 Operation: Operacja
 Filters: Filtry
+Period of time: Okres czasu
+Show: Pokaż
+Number of resources in system: Liczba zasobów w systemie
+Number of open resources: Liczba zasobów w wolnym dostępie
+IP address: Adres IP
+Group sum: Suma grupy
 Pending resources in this state: Oczekujące zasoby w stanie
 First remove all resources from this state to delete state: Najpierw usuń wszystkie zasoby z tego stanu aby usunąć stan
 Number of Resources in this state:: Liczba zasobów w tym stanie:

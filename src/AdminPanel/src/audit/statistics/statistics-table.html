@@ -1,0 +1,29 @@
+<template>
+    <require from="common/value-converters/statistics-usage-key-value-converter"></require>
+
+    <div class="statistic-group">
+        <div class="statistic-group-title">
+            <span>${statistics.usageKey | statisticsUsageKey}</span>
+        </div>
+        <div class="statistic-group-table">
+            <table>
+                <thead>
+                <tr>
+                    <th></th>
+                    <th repeat.for="entry of statistics.statisticsEntries">
+                        ${dateToMonth(entry.statMonth)}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>${'Group sum' | t}</td>
+                    <td repeat.for="entry of statistics.statisticsEntries">
+                        ${entry.monthlySum}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

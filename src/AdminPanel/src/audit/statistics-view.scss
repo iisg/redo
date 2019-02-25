@@ -1,0 +1,31 @@
+@import "../common/styles";
+
+statistics-view {
+  & > :not(.page-subtitle):not(.statistics-container):not(redo-footer) {
+    padding-left: $default-gap-size / 2;
+    padding-right: $default-gap-size / 2;
+  }
+  .page-subtitle {
+    padding: $default-gap-size $default-gap-size $default-gap-size / 2;
+  }
+  .with-sticky-button {
+    flex-shrink: 0; // Required by Chromium.
+    padding-left: $default-gap-size / 2;
+    padding-right: $default-gap-size / 2;
+    .simple-form {
+      & > * {
+        @include form-element();
+      }
+    }
+  }
+  .statistics-container {
+    .statistics-content {
+      .resources-statistics {
+        padding: $default-gap-size;
+      }
+      .statistics-table {
+        padding-bottom: $default-gap-size;
+      }
+    }
+  }
+}

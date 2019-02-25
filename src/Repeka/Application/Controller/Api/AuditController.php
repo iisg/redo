@@ -2,17 +2,23 @@
 namespace Repeka\Application\Controller\Api;
 
 use Assert\Assertion;
+use http\QueryString;
 use Repeka\Domain\UseCase\Audit\AuditedCommandNamesQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
+use Repeka\Domain\UseCase\EndpointUsageLog\StatisticsQuery;
+use Repeka\Domain\UseCase\EndpointUsageLog\StatisticsQueryBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Route("/audit")
+ */
 class AuditController extends ApiController {
     /**
-     * @Route("/audit")
+     * @Route
      * @Method("GET")
      * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
@@ -66,7 +72,7 @@ class AuditController extends ApiController {
     }
 
     /**
-     * @Route("/audit-commands")
+     * @Route("/commands")
      * @Method("GET")
      * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
@@ -74,5 +80,26 @@ class AuditController extends ApiController {
         $onlyResource = $request->query->get('onlyResource', false);
         $commandNames = $this->handleCommand(new AuditedCommandNamesQuery($onlyResource));
         return $this->createJsonResponse($commandNames);
+    }
+
+    /**
+     * @Route("/statistics")
+     * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
+     */
+    public function getStatisticsAction(Request $request) {
+        $queryBuilder = StatisticsQuery::builder();
+        if ($request->query->has('dateFrom')) {
+            Assertion::date($request->get('dateFrom'), 'Y-m-d\TH:i:s');
+            $dateFrom = $request->get('dateFrom');
+            $queryBuilder->filterByDateFrom($dateFrom);
+        }
+        if ($request->query->has('dateTo')) {
+            Assertion::date($request->get('dateTo'), 'Y-m-d\TH:i:s');
+            $dateTo = $request->get('dateTo');
+            $queryBuilder->filterByDateTo($dateTo);
+        }
+        $tasks = $this->handleCommand($queryBuilder->build());
+        return $this->createJsonResponse($tasks);
     }
 }

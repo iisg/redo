@@ -21,6 +21,9 @@ interface ResourceRepository {
 
     public function delete(ResourceEntity $resource): void;
 
+    /** @return int */
+    public function count(array $criteria);
+
     public function countByResourceKind(ResourceKind $resourceKind): int;
 
     /** @return ResourceEntity[] */

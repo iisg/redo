@@ -12,6 +12,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Metadata\MetadataValueAdjuster\ResourceContentsAdjuster;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\ReproductorPermissionHelper;
+use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
@@ -168,6 +169,7 @@ class RedoDepositController extends Controller {
                 /** @var ResourceEntity $resource */
                 $resource = $this->handleCommand($command);
                 if ($isLastTransition) {
+                    $this->handleCommand(new EndpointUsageLogCreateCommand($request, 'deposit'));
                     $this->addFlash('deposit', 'success');
                     return $this->redirect('/resources/' . $resource->getId());
                 } else {

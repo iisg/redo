@@ -11,7 +11,7 @@
     <loading-bar if.bind="!resourceKind"></loading-bar>
 
     <div else
-        class="resource-kind-details">
+        class="view-with-tabs resource-kind-details">
         <div class="name-with-buttons-and-tabs">
             <span class="page-title">${resourceKind.label | inCurrentLanguage}</span>
             <throbber if.bind="resourceKind.pendingRequest"></throbber>

@@ -7,14 +7,14 @@ class EndpointUsageLogEntry implements Identifiable {
 
     private $id;
     private $url;
-    private $clientIP;
+    private $clientIp;
     private $usageDateTime;
     private $usageKey;
     private $resource;
 
-    public function __construct(Request $request, ResourceEntity $resource, string $usageKey) {
+    public function __construct(Request $request, string $usageKey, ?ResourceEntity $resource = null) {
         $this->url = $request->getUri();
-        $this->clientIP = $request->getClientIp();
+        $this->clientIp = $request->getClientIp();
         $this->usageDateTime = new \DateTimeImmutable();
         $this->usageKey = $usageKey;
         $this->resource = $resource;
@@ -22,5 +22,25 @@ class EndpointUsageLogEntry implements Identifiable {
 
     public function getId() {
         return $this->id;
+    }
+
+    public function getUrl(): string {
+        return $this->url;
+    }
+
+    public function getClientIp(): ?string {
+        return $this->clientIp;
+    }
+
+    public function getUsageDateTime(): \DateTimeImmutable {
+        return $this->usageDateTime;
+    }
+
+    public function getUsageKey(): string {
+        return $this->usageKey;
+    }
+
+    public function getResource(): ?ResourceEntity {
+        return $this->resource;
     }
 }

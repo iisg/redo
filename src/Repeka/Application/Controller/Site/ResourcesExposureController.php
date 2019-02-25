@@ -1,20 +1,20 @@
 <?php
 namespace Repeka\Application\Controller\Site;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Repeka\Application\Cqrs\CommandBusAware;
-use Repeka\Domain\Entity\EndpointUsageLogEntry;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Repository\EndpointUsageLogRepository;
+use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResourcesExposureController extends Controller {
     use CommandBusAware;
-    private $entityManager;
+    private $endpointUsageLogRepository;
 
-    public function __construct(EntityManagerInterface $entityManager) {
-        $this->entityManager = $entityManager;
+    public function __construct(EndpointUsageLogRepository $endpointUsageLogRepository) {
+        $this->endpointUsageLogRepository = $endpointUsageLogRepository;
     }
 
     public function exposeResourceMetadataAction(
@@ -66,9 +66,7 @@ class ResourcesExposureController extends Controller {
 
     private function trackUsage($endpointUsageTrackingKey, $request, $resource) {
         if ($endpointUsageTrackingKey) {
-            $endpointUsageLogEntry = new EndpointUsageLogEntry($request, $resource, $endpointUsageTrackingKey);
-            $this->entityManager->persist($endpointUsageLogEntry);
-            $this->entityManager->flush();
+            $this->handleCommand(new EndpointUsageLogCreateCommand($request, $endpointUsageTrackingKey, $resource));
         }
     }
 }

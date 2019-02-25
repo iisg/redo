@@ -56,17 +56,17 @@ body {
       overflow: hidden;
       & > * {
         height: 100%;
-        &:not(.resource-details):not(.metadata-details):not(.resource-kind-details) {
+        &:not(.resource-details):not(.metadata-details):not(.resource-kind-details):not(.audit-page) {
           overflow: auto;
         }
-        &:not(audit):not(.about-the-application) > redo-footer {
+        &:not(.about-the-application) > redo-footer {
           padding-top: $default-gap-size;
         }
       }
     }
   }
 
-  .metadata-details, .resource-kind-details, .resource-details, .workflow-form {
+  .view-with-tabs {
     display: flex;
     flex-direction: column;
     .name-with-buttons-and-tabs {
@@ -122,7 +122,7 @@ body {
     }
   }
 
-  metadata-list, resource-kinds-list, workflows-list, .languages-list, audit {
+  metadata-list, resource-kinds-list, workflows-list, .languages-list, audit, statistics-view {
     display: flex;
     flex-direction: column;
     & > :not(table):not(.table-container):not(.add-form):not(.with-sticky-buttons) {

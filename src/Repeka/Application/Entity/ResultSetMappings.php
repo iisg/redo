@@ -5,9 +5,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Repeka\Domain\Entity\AuditEntry;
+use Repeka\Domain\Entity\EndpointUsageLogEntry;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Entity\StatisticEntry;
 
 class ResultSetMappings {
     public static function resourceEntity(EntityManagerInterface $em, string $alias = 'w'): ResultSetMapping {
@@ -43,6 +45,12 @@ class ResultSetMappings {
     public static function auditEntry(EntityManagerInterface $em, string $alias = 'ae') {
         $rsm = new ResultSetMappingBuilder($em);
         $rsm->addRootEntityFromClassMetadata(AuditEntry::class, $alias);
+        return $rsm;
+    }
+
+    public static function statisticEntry(EntityManagerInterface $em, string $alias = 's') {
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata(EndpointUsageLogEntry::class, $alias);
         return $rsm;
     }
 }

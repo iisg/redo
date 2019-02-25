@@ -9,7 +9,6 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\ConfigurableMetadataConstraint;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -30,6 +29,7 @@ class FrontendConfig extends \Twig_Extension {
         'static_permissions' => 'repeka.static_permissions',
         'metadata_groups' => 'repeka.metadata_groups',
         'audit' => 'repeka.audit',
+        'statistics' => 'repeka.statistics',
     ];
 
     /** @var FrontendLocaleProvider */

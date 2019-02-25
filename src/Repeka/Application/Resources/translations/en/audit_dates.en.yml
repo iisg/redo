@@ -9,6 +9,8 @@ date-range-config:
   last_30_days: last 30 days
   previous_month: previous month
   previous_two_months: previous two months
+  previous_three_months: previous three months
+  previous_six_months: previous six months
   current_year: current year
   last_365_days: previous 365 days
   previous_year: previous year

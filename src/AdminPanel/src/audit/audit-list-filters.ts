@@ -54,8 +54,8 @@ export class AuditListFilters {
     }
     if (this.resourceId) {
       params['id'] = this.resourceId;
-      params['tab'] = 'audit';
     }
+    params['tab'] = 'audit';
     return params;
   }
 

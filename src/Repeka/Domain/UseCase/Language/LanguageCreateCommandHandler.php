@@ -5,9 +5,7 @@ use Repeka\Domain\Entity\Language;
 use Repeka\Domain\Repository\LanguageRepository;
 
 class LanguageCreateCommandHandler {
-    /**
-     * @var LanguageRepository
-     */
+    /** @var LanguageRepository */
     private $languageRepository;
 
     public function __construct(LanguageRepository $languageRepository) {

@@ -4,6 +4,7 @@ services:
   Repeka\Domain\Factory\ResourceWorkflowDriverFactory: '@Repeka\Application\Factory\SymfonyResourceWorkflowDriverFactory'
   Repeka\Domain\Factory\UserFactory: '@Repeka\Application\Factory\UserEntityFactory'
   Repeka\Domain\Repository\AuditEntryRepository: '@Repeka\Application\Repository\AuditEntryDoctrineRepository'
+  Repeka\Domain\Repository\EndpointUsageLogRepository: '@Repeka\Application\Repository\EndpointUsageLogRepository'
   Repeka\Domain\Repository\LanguageRepository: '@Repeka\Application\Repository\LanguageDoctrineRepository'
   Repeka\Domain\Repository\MetadataRepository: '@Repeka\Application\Repository\MetadataDoctrineRepository'
   Repeka\Domain\Repository\RepositoryProvider: '@Repeka\Application\Repository\ContainerAwareRepositoryProvider'

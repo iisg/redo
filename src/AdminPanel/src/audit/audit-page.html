@@ -1,8 +1,26 @@
 <template>
     <require from="./audit"></require>
+    <require from="./statistics-view"></require>
     <require from="common/components/redo-footer/redo-footer.html"></require>
 
-    <audit view-model.ref="audit">
-        <redo-footer></redo-footer>
-    </audit>
+    <div class="view-with-tabs audit-page au-animate fade-inup-outup">
+        <div class="name-with-buttons-and-tabs">
+            <span class="page-title">
+                ${ auditTabs.activeTabId === 'audit' ? 'Audit' : 'Statistics' | t }
+            </span>
+            <aup-tabs tabs.bind="auditTabs.tabs"></aup-tabs>
+        </div>
+        <aup-tab-content>
+            <aup-tab-pane tab="audit">
+                <audit view-model.ref="audit">
+                    <redo-footer></redo-footer>
+                </audit>
+            </aup-tab-pane>
+            <aup-tab-pane tab="statistics">
+                <statistics-view>
+                    <redo-footer></redo-footer>
+                </statistics-view>
+            </aup-tab-pane>
+        </aup-tab-content>
+    </div>
 </template>

@@ -1,0 +1,13 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+
+    <dropdown-select containerless
+        values.bind="availableDateOptions"
+        value.bind="dateOption"
+        set-first-as-default
+        hide-clear-button>
+        <template replace-part="option-template">
+            ${'audit_dates::date-range-config//' + option | t }
+        </template>
+    </dropdown-select>
+</template>

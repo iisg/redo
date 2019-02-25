@@ -1,0 +1,11 @@
+@import "../common/styles";
+
+.audit-page {
+  #audit, #statistics {
+    height: 100%;
+  }
+  #statistics > statistics-view, #audit > audit {
+    overflow: auto;
+    height: 100%;
+  }
+}

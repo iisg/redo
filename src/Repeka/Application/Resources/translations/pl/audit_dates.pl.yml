@@ -9,6 +9,8 @@ date-range-config:
   last_30_days: ostatnie 30 dni
   previous_month: poprzedni miesiąc
   previous_two_months: poprzednie dwa miesiące
+  previous_three_months: poprzednie trzy miesiące
+  previous_six_months: ostatnie pół roku
   current_year: aktualny rok
   last_365_days: ostatnie 365 dni
   previous_year: poprzedni rok

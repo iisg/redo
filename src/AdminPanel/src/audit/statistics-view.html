@@ -1,0 +1,47 @@
+<template>
+    <require from="common/components/buttons/toggle-button"></require>
+    <require from="./statistics/statistics-period-chooser"></require>
+    <require from="./statistics/statistics-table"></require>
+    <require from="./statistics/ip-statistics-table"></require>
+    <require from="common/components/loading-bar/loading-cover"></require>
+
+    <span class="page-subtitle">${'Period of time' | t}</span>
+
+    <div class="with-sticky-button">
+        <div class="content simple-form">
+            <span>${'Date' | t}</span>
+            <statistics-period-chooser date-from.bind="dateFrom"
+                date-to.bind="dateTo"></statistics-period-chooser>
+        </div>
+        <toggle-button class="sticky-button"
+            primary-icon-name="filter-2"
+            primary-label="Show"
+            click.delegate="onDateChange()"></toggle-button>
+    </div>
+    <loading-cover loading.bind="displayProgressBar"
+        class="statistics-container">
+        <div if.bind="statisticsCollection"
+            class="statistics-content">
+            <div class="resources-statistics simple-form">
+                <span>${ 'Number of resources in system' | t }</span>
+                <span class="value">${statisticsCollection.resourcesCount}</span>
+                <span>${ 'Number of open resources' | t }</span>
+                <span class="value">${statisticsCollection.openResourcesCount}</span>
+            </div>
+            <template repeat.for="statistics of statisticsCollection.statistics">
+                <div class="statistics-table">
+                    <statistics-table if.bind="statistics.usageKey !== 'ips'"
+                        statistics.bind="statistics"></statistics-table>
+                    <ip-statistics-table else
+                        statistics.bind="statistics"></ip-statistics-table>
+                </div>
+            </template>
+        </div>
+    </loading-cover>
+    <div if.bind="statisticsCollection.statistics.length === 0 && !displayProgressBar"
+        class="alert alert-info">
+        <icon name="information"></icon>
+        ${'No entry matches given filters.' | t}
+    </div>
+    <slot></slot>
+</template>
