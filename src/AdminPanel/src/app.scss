@@ -15,6 +15,8 @@ $simple-form-number-input-box-minimum-width: 75px;
 $list-group-item-background-color: white;
 $well-background-color: $very-light-grey;
 
+$maximum-column-number: 999;
+
 body {
   font-family: 'Open Sans', sans-serif;
   color: $default-text-color;
@@ -417,10 +419,21 @@ button {
 
 .simple-form {
   display: grid;
-  grid-template-columns: fit-content(calc(100% / 3)) auto; // It is solved this way as otherwise, for example, edit button would not stick to the
-  // right side while scrolling horizontally when there would be a lot content in the first
-  // column and the window would be narrow.
-  grid-column-gap: $simple-form-column-gap-size;
+
+  &:not(.multiple-columns) {
+    grid-template-columns: fit-content(calc(100% / 3)) auto; // It is solved this way as otherwise, for example, edit button would not stick to the
+    // right side while scrolling horizontally when there would be a lot content in the first
+    // column and the window would be narrow.
+    grid-column-gap: $simple-form-column-gap-size;
+  }
+  &.multiple-columns {
+    grid-template-columns: fit-content(calc(100% / 3)) repeat($maximum-column-number, auto);
+    & > :not(collapsible-metadata-group), & > collapsible-metadata-group > * {
+      margin-left: $simple-form-column-gap-size / 2;
+      margin-right: $simple-form-column-gap-size / 2;
+    }
+  }
+
   &:not(.contains-collapsible-metadata-group) {
     grid-row-gap: $simple-form-row-gap-size;
   }
@@ -435,6 +448,7 @@ button {
   &, & > collapsible-metadata-group {
     & > span:not(.value):not(.validation-message), & > button, & > .key {
       font-weight: bold;
+      grid-column-start: 1;
       .help-block {
         font-weight: normal;
       }
@@ -445,7 +459,7 @@ button {
       }
     }
     & > .full-width, & > .section-title, & > .validation-message, & > hr {
-      grid-column: 1/3;
+      grid-column: 1/-1;
     }
     & > hr {
       width: 100%;

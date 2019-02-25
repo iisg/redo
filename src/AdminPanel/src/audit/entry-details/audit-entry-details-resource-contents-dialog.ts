@@ -8,8 +8,12 @@ import {AuditEntry} from "../audit-entry";
 
 @autoinject
 export class AuditEntryDetailsResourceContentsDialog implements DialogComponentActivate<AuditEntryDetailsResourceContentsDialogModel> {
-  resource: Resource;
   entry: AuditEntry;
+  beforeChangeResource: Resource;
+  afterChangeResource: Resource;
+  resources: Resource[] = [];
+  resourceLabels: string[] = [];
+  private isLoaded: boolean;
 
   constructor(public dialogController: DialogController,
               private metadataRepository: MetadataRepository,
@@ -17,25 +21,41 @@ export class AuditEntryDetailsResourceContentsDialog implements DialogComponentA
   }
 
   async activate(model: AuditEntryDetailsResourceContentsDialogModel) {
-    if (!model.resource.kind.metadataList.length) {
-      const metadataIdsFromContents = keys(model.resource.contents).map(toInteger);
+    this.isLoaded = false;
+    if (model.beforeChangeResource) {
+      this.beforeChangeResource = await this.prepareResource(model.beforeChangeResource);
+      this.resources.push(this.beforeChangeResource);
+      this.resourceLabels.push('Before');
+    }
+    if (model.afterChangeResource) {
+      this.afterChangeResource = await this.prepareResource(model.afterChangeResource);
+      this.resources.push(this.afterChangeResource);
+      this.resourceLabels.push('After');
+    }
+    this.entry = model.entry;
+    this.isLoaded = true;
+  }
+
+  private async prepareResource(resource: Resource): Promise<Resource> {
+    if (!resource.kind.metadataList.length) {
+      const metadataIdsFromContents = keys(resource.contents).map(toInteger);
       try {
-        model.resource.kind = await this.resourceKindRepository.get(model.resource.kind.id, true);
-        const metadataIdsFromRK = model.resource.kind.metadataList.map(m => m.id);
+        resource.kind = await this.resourceKindRepository.get(resource.kind.id, true);
+        const metadataIdsFromRK = resource.kind.metadataList.map(m => m.id);
         pullAll(metadataIdsFromContents, metadataIdsFromRK);
       } catch (e) {
       }
       if (metadataIdsFromContents.length) {
         const metadataListBasedOnContents = await this.metadataRepository.getListQuery().filterByIds(metadataIdsFromContents).get();
-        model.resource.kind.metadataList = model.resource.kind.metadataList.concat(metadataListBasedOnContents);
+        resource.kind.metadataList = resource.kind.metadataList.concat(metadataListBasedOnContents);
       }
     }
-    this.resource = model.resource;
-    this.entry = model.entry;
+    return resource;
   }
 }
 
 export interface AuditEntryDetailsResourceContentsDialogModel {
-  resource: Resource;
+  beforeChangeResource: Resource;
+  afterChangeResource: Resource;
   entry: AuditEntry;
 }

@@ -1,11 +1,9 @@
 <template>
     <require from="resources/details/resource-link"></require>
-    <require from="./audit-entry-details-resource-show-contents"></require>
     <resource-link id.bind="entry.data.after.resource.id || entry.data.before.resource.id"></resource-link>
-    <audit-entry-details-resource-show-contents if.bind="entry.data.before"
-        entry.bind="entry"
-        data-key="before"></audit-entry-details-resource-show-contents>
-    <audit-entry-details-resource-show-contents if.bind="entry.data.after"
-        entry.bind="entry"
-        data-key="after"></audit-entry-details-resource-show-contents>
+    <a
+        click.delegate="showResourceContentsDialog()">
+        <icon name="examination-3"></icon>
+        ${ 'View change in contents' | t }
+    </a>
 </template>

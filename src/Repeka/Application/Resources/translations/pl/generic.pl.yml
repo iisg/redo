@@ -177,8 +177,10 @@ Metadata kind: Rodzaj metadanej
 Firstly, specify required resource kind.: Najpierw określ wymagany rodzaj zasobu.
 Results per page: Wyników na stronie
 "Resource #{{id}} state, as of": "Stan zasobu #{{id}} na dzień"
-View contents before operation: Pokaż zawartość przed operacją
-View contents after operation: Pokaż zawartość po operacji
+State: Stan
+Before: Przed
+After: Po
+View change in contents: Pokaż zmianę w zawartości
 Date: Data
 Operation: Operacja
 Filters: Filtry

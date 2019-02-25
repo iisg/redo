@@ -5,13 +5,25 @@
 
     <modal controller.bind="dialogController">
         <span slot="title">
-            ${"Resource #{{id}} state, as of" | t:{id: resource.id} }
+            ${"Resource #{{id}} state, as of" | t:{id: resources[0].id} }
             ${ entry.createdAt | date:'LLL' }
         </span>
-        <resource-metadata-table if.bind="resource"
-            resource.bind="resource"
-            hide-place-information
-            show-resource-kind></resource-metadata-table>
-        <throbber else></throbber>
+
+        <throbber if.bind="!isLoaded"></throbber>
+        <div else>
+            <resource-metadata-table
+                class="multiple-columns"
+                hide-place-information
+                hide-empty-metadata
+                hide-unchanged-metadata
+                show-resource-id.one-time="false"
+                resources.bind="resources"
+                show-resource-kind>
+                <span>${'State' | t}</span>
+                <span class="value page-subtitle"
+                    repeat.for="resourceLabel of resourceLabels">${resourceLabel | t}</span>
+                <hr>
+            </resource-metadata-table>
+        </div>
     </modal>
 </template>

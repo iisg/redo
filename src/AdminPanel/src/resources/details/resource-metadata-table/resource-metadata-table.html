@@ -5,21 +5,25 @@
     <require from="resources-config/metadata/metadata-group-label-value-converter"></require>
     <require from="../../workflow/resource-place-display.html"></require>
 
+    <slot></slot>
     <template if.one-time="showResourceId || showResourceKind">
         <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
             <template if.bind="showResourceId">
                 <span>${ 'Resource id' | t}</span>
-                <span>${ resource.id }</span>
+                <span class="value"
+                    repeat.for="resource of resources">${ resource.id }</span>
             </template>
             <template if.bind="showResourceKind">
                 <span>${ 'Resource kind' | t}</span>
-                <a route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id}">
+                <a repeat.for="resource of resources"
+                    route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id}">
                     <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
                     <span else>#${ resource.kind.id }</span>
                 </a>
             </template>
             <template if.bind="!hidePlaceInformation && resource.kind.workflow">
-                <span>${'Place' | t}</span>
+                <span class="value"
+                    repeat.for="resource of resources">${'Place' | t}</span>
                 <resource-place-display resource.bind="resource"></resource-place-display>
             </template>
             <hr if.bind="metadataGroups.length && !hideMetadataGroups">
@@ -27,15 +31,16 @@
     </template>
 
     <template repeat.for="metadataGroup of metadataGroups">
-        <collapsible-metadata-group resource-kind-id.bind="resource.kind.id"
+        <collapsible-metadata-group disabled.bind="hideMetadataGroups"
             metadata-group-id.bind="metadataGroup.groupId"
-            disabled.bind="hideMetadataGroups">
+            resource-kind-id.bind="resource.kind.id">
             <template repeat.for="metadata of metadataGroup.metadataList">
                 <template if.bind="checkMetadataBrief ? metadata.shownInBrief : true">
                     <span bootstrap-tooltip.one-time="metadata.name + ' (ID: ' + metadata.id + ')'">${metadata | metadataLabel}</span>
-                    <resource-metadata-values resource.one-time="resource"
+                    <resource-metadata-values repeat.for="resource of resources"
+                        check-metadata-brief.bind="checkMetadataBrief"
                         metadata.one-time="metadata"
-                        check-metadata-brief.bind="checkMetadataBrief"></resource-metadata-values>
+                        resource.one-time="resource"></resource-metadata-values>
                 </template>
             </template>
         </collapsible-metadata-group>
