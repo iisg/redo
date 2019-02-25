@@ -20,7 +20,9 @@ export class SimpleFileUpload {
   }
 
   onFileSelected() {
-    this.sendFile(this.selectedFiles[0]);
+    if (this.selectedFiles && this.selectedFiles.length) {
+      this.sendFile(this.selectedFiles[0]);
+    }
   }
 
   private sendFile(file: File) {
