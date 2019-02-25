@@ -2,7 +2,7 @@
     <require from="resources/controls/input/system-language-picker/system-language-picker"></require>
 
     <system-language-picker
-        value.bind="metadataValue.value"
+        value.bind="metadataValue.value & validate:validationController:validationRules"
         disabled.bind="disabled">
     </system-language-picker>
 </template>
