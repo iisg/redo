@@ -160,6 +160,7 @@ export class ResourcesList {
   }
 
   activate(parameters: any) {
+    this.newResourceKind = undefined;
     this.prepareBeforeFetchingResources(parameters.resourceClass || this.getResourceClass());
     this.sortByKey = this.SORT_BY_KEY_PREFIX + this.resourceClass;
     this.contextResourceClass.setCurrent(this.resourceClass);
