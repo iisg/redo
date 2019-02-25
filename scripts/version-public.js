@@ -1,8 +1,10 @@
 var fs = require('fs');
 var version = require('./version');
-var structure =
-  '# Config generated automatically by running npm run build\n\n' +
-  'repeka:\n' +
-  '  version: ';
+var contents =
+  `# Config generated automatically by running npm run build
 
-fs.writeFile('app/config/config_build.yml', structure + version.text);
+repeka:
+  version: '${version.text}'
+  version_full: '${version.full}'
+`;
+fs.writeFileSync('app/config/config_build.yml', contents);

@@ -17,6 +17,7 @@ class Configuration implements ConfigurationInterface {
                 ->scalarNode('default_ui_language')->defaultValue('en')->end()
                 ->arrayNode('fallback_ui_languages')->scalarPrototype()->end()->end()
                 ->scalarNode('version')->defaultValue('X.X.X')->end()
+                ->scalarNode('version_full')->defaultValue('X')->end()
                 ->arrayNode('static_permissions')->prototype('scalar')->end()->end()
                 ->integerNode('metadata_nesting_depth')->min(1)->end()
                 ->arrayNode('elasticsearch')
