@@ -24,6 +24,11 @@ class Version20190210155945 extends RepekaMigration {
             $this->addSql("UPDATE resource_kind SET name = :name WHERE id = :id", $resourceKind);
         }
         $this->addSql("ALTER TABLE resource_kind ALTER COLUMN name SET NOT NULL");
+        foreach ($namesCount as $name => $count) {
+            if ($count > 1) {
+                $this->write('Duplicated resource kind name: ' . $name . " ($count)");
+            }
+        }
     }
 
     private function labelToName(string $label): string {
