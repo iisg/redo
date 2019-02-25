@@ -11,7 +11,7 @@
             skip-validation.bind="skipValidation"
             validation-controller.bind="validationController"></metadata-value-input>
     </div>
-    <resource-form-generated if.bind="submetadataResource.kind.metadataList.length"
+    <resource-form-generated if="condition.bind: submetadataResource.kind.metadataList.length; cache: false"
         resource-kind.bind="submetadataResource.kind"
         resource.bind="submetadataResource"
         disabled.bind="disabled"

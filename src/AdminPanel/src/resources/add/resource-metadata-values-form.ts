@@ -44,7 +44,7 @@ export class ResourceMetadataValuesForm {
   private ensureResourceHasMetadataContents() {
     const contents = this.resource.contents;
     const id = this.metadata.id;
-    if (!contents.hasOwnProperty(id)) {
+    if (!contents[id]) {
       contents[id] = [];
     }
   }

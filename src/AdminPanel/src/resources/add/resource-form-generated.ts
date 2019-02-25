@@ -75,7 +75,15 @@ export class ResourceFormGenerated {
       || (this.displayRequiredOnly && this.metadataIsRequired(metadata));
   }
 
+  resourceChanged() {
+    this.prepareResourceContentsAndValidators();
+  }
+
   resourceKindChanged() {
+    this.prepareResourceContentsAndValidators();
+  }
+
+  private prepareResourceContentsAndValidators = debounce(() => {
     if (!this.resource || !this.resource.contents) {
       return;
     }
@@ -86,7 +94,7 @@ export class ResourceFormGenerated {
       this.resource.contents = {};
     }
     this.setParent();
-  }
+  }, 100);
 
   requiredMetadataIdsForTransitionChanged() {
     this.buildMetadataValidators();
@@ -135,10 +143,6 @@ export class ResourceFormGenerated {
       .concat(assigneeMetadataIds);
     this.lockedMetadataIds = WorkflowPlace.getPlacesRequirementState(this.targetPlaces, RequirementState.LOCKED)
       .concat(assigneeMetadataIds).concat(autoAssignMetadataIds);
-    this.resourceKindChanged();
-  }
-
-  resourceChanged() {
     this.resourceKindChanged();
   }
 
