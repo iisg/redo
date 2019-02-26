@@ -1,0 +1,3 @@
+page_progress_indicator: Page %current_page% of %total_pages%
+page_name: Page %current_page%
+view_page: View page %any_page%

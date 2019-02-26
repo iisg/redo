@@ -2,6 +2,7 @@
 {% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name, cmsConfig('display_metadata_DEFAULT')) %}
 {% set page_title = resource | metadata('label') %}
 {% set childrenAllowed = resource | childrenAllowed %}
+{% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
 
 {% block content %}
     {% include "redo/title-bar.twig" %}
@@ -95,6 +96,18 @@
                         </div>
                     </fieldset>
                 </div>
+                {% if hasBrowsableContents %}
+                <div class="download-options">
+                    <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
+                    <fieldset>
+                        <div class="download-formats in-one-line">
+                            <h4><a href="/resources/{{ resource.id }}/browse">
+                                    {{ 'Browse' | trans }}
+                                </a></h4>
+                        </div>
+                    </fieldset>
+                </div>
+                {% endif %}
             </div>
         </div>
         <div class="details-container">

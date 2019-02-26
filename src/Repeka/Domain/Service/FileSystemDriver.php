@@ -8,7 +8,7 @@ interface FileSystemDriver {
 
     public function copy(string $source, string $destination): void;
 
-    public function listDirectory(string $path): array;
+    public function listDirectory(string $path, int $sort = SCANDIR_SORT_ASCENDING): array;
 
     public function glob(string $pattern): array;
 
@@ -17,4 +17,6 @@ interface FileSystemDriver {
     public function deleteDirectoryContents(string $path): void;
 
     public function delete(string $path): void;
+
+    public function getImageDimensions(string $path): array;
 }

@@ -22,6 +22,7 @@
     "php": ">=7.1",
     "ext-curl": "*",
     "ext-dom": "*",
+    "ext-exif": "*",
     "ext-fileinfo": "*",
     "ext-json": "*",
     "ext-mbstring": "*",

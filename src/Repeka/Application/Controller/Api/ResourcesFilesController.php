@@ -147,6 +147,7 @@ class ResourcesFilesController extends ApiController {
      * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function fileAction(ResourceEntity $resource, string $filepath) {
+        $this->denyAccessUnlessGranted('FILE_DOWNLOAD', ['resource' => $resource, 'filepath' => $filepath]);
         $filepath = $this->resourceFileStorage->getFileSystemPath($resource, $filepath);
         if (file_exists($filepath)) {
             return new BinaryFileResponse($filepath);

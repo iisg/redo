@@ -25,13 +25,16 @@
         type="text/css"
         href="/themes/redo.css">
 
-    <link rel="icon"
-        type="image/x-icon"
-        href="{{ asset('favicon.ico') }}">
-</head>
-<body>
-<div aurelia-app="main">
-    {% block layout %}{% endblock %}
+        <link rel="icon"
+            type="image/x-icon"
+            href="{{ asset('favicon.ico') }}">
+
+        {% block head %}{% endblock %}
+
+    </head>
+    <body>
+        <div aurelia-app="main">
+            {% block layout %}{% endblock %}
 </div>
 {% include 'spa-components.twig' %}
 <script>

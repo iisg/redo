@@ -90,6 +90,8 @@ repeka:
       template: redo/rss/collection.rss.twig
       headers:
         Content-Type: 'application/rss+xml'
+    /resources/{resourceId}/browse:
+      template: redo/resource-details/image-reader.twig
 m6_statsd:
   servers:
     default:

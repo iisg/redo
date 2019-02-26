@@ -17,5 +17,6 @@ interface ResourceFileStorage {
 
     public function getFileContents(ResourceEntity $resource, string $path): string;
 
+    /** @return string[] */
     public function getDirectoryContents(ResourceEntity $resource, string $path): array;
 }

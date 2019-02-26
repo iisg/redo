@@ -1,0 +1,17 @@
+.BookReader {
+    width: 100%;
+    height: 70%;
+    min-height: 300px;
+    overflow: hidden;
+}
+.BookReader:not(.fullscreenActive) {
+    background: none;
+}
+/* Hide top toolbar */
+.BRtoolbar {
+    display: none;
+}
+/* Hide bottom toolbar toggle button */
+.BRnavCntlBtm {
+    display: none;
+}

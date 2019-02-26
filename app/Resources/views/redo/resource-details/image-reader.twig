@@ -1,0 +1,53 @@
+{% extends resource.resourceClass == 'books' and canView(resource) ? 'redo/layout.twig' : 'empty.twig' %}
+
+{% set page_title = resource | metadata('label') %}
+{% set childrenAllowed = resource | childrenAllowed %}
+
+{% set imageData = resource | metadataImageFiles('pliki_strona_po_stronie') %}
+
+{% set filesUrl = '/api/resources/' ~ resource.id ~ '/file/' %}
+{% set resourceUrl = '/resources/' ~ resource.id %}
+
+{% set libraryPath = '/jspm_packages/github/internetarchive/bookreader%404.2.0/BookReader/' %}
+
+{% block head %}
+    <script src="{{ libraryPath }}jquery-1.10.1.js"></script>
+    <script src="{{ libraryPath }}jquery-ui-1.12.0.min.js"></script>
+    <script src="{{ libraryPath }}jquery.browser.min.js"></script>
+    <script src="{{ libraryPath }}dragscrollable-br.js"></script>
+    <script src="{{ libraryPath }}jquery.colorbox-min.js"></script>
+
+    <script src="{{ libraryPath }}BookReader.js"></script>
+    <script src="{{ libraryPath }}plugins/plugin.url.js"></script>
+
+    <link rel="stylesheet"
+        href="{{ libraryPath }}BookReader.css">
+{% endblock %}
+
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+
+    <a href="{{ resourceUrl | raw }}"
+        class="link-to-the-previous-page">{{ 'Back to resource' | trans }}</a>
+    <div class="title-container">
+        <h1>{{ resource | metadata('label') | raw }}</h1>
+    </div>
+    {% if imageData is empty %}
+        {{ 'No scans' | trans }}
+    {% else %}
+        <div id="BookReader">
+            <noscript>
+                <p>
+                    The BookReader requires JavaScript to be enabled. Please check that your browser supports JavaScript and that it is enabled in the browser settings.
+                </p>
+            </noscript>
+        </div>
+        <script>
+            {% include "redo/resource-details/image-reader.js.twig" %}
+            setCustomPrototypeMethods();
+            instantiateBookReader('#BookReader');
+        </script>
+    {% endif %}
+    {% include "redo/footer.twig" %}
+{% endblock %}

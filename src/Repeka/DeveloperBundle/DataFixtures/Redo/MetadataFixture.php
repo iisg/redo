@@ -247,10 +247,10 @@ class MetadataFixture extends RepekaFixture {
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
                 [
-                    'name' => 'Obrazki',
+                    'name' => 'pliki_strona_po_stronie',
                     'label' => [
-                        'PL' => 'Obrazki',
-                        'EN' => 'Pictures',
+                        'PL' => 'Pliki strona po stronie',
+                        'EN' => 'Files for page by bage browsing',
                     ],
                     'description' => [],
                     'placeholder' => [],

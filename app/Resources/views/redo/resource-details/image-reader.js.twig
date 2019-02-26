@@ -1,0 +1,134 @@
+
+function setCustomPrototypeMethods() {
+// disable fancy tooltips; not working because of conflict between jQuery versions
+  BookReader.prototype.setupTooltips = function () {
+  };
+
+// copy-pasted from https://github.com/internetarchive/bookreader/blob/87a0cbd219412da3d31e0e4fd51f8bd8397f1663/BookReader/BookReader.js#L4325
+// to be able to translate strings and add aria-labels
+  BookReader.prototype.initUIStrings = function () {
+    var titles = {
+      '.zoom_in': '{{ 'Zoom in' | trans({}, 'bookreader') }}',
+      '.zoom_out': '{{ 'Zoom out' | trans({}, 'bookreader') }}',
+      '.onepg': '{{ 'One-page view' | trans({}, 'bookreader') }}',
+      '.twopg': '{{ 'Two-page view' | trans({}, 'bookreader') }}',
+      '.thumb': '{{ 'Thumbnail view' | trans({}, 'bookreader') }}',
+      '.print': '{{ 'Print this page' | trans({}, 'bookreader') }}',
+      '.embed': '{{ 'Embed BookReader' | trans({}, 'bookreader') }}',
+      '.link': '{{ 'Link to this book (and page)' | trans({}, 'bookreader') }}',
+      '.bookmark': '{{ 'Bookmark this page' | trans({}, 'bookreader') }}',
+      '.read': '{{ 'Read this book aloud' | trans({}, 'bookreader') }}',
+      '.share': '{{ 'Share this book' | trans({}, 'bookreader') }}',
+      '.info': '{{ 'About this book' | trans({}, 'bookreader') }}',
+      '.full': '{{ 'Toggle fullscreen' | trans({}, 'bookreader') }}',
+      '.book_left': '{{ 'Flip left' | trans({}, 'bookreader') }}',
+      '.book_right': '{{ 'Flip right' | trans({}, 'bookreader') }}',
+      '.book_up': '{{ 'Page up' | trans({}, 'bookreader') }}',
+      '.book_down': '{{ 'Page down' | trans({}, 'bookreader') }}',
+      '.play': '{{ 'Play' | trans({}, 'bookreader') }}',
+      '.pause': '{{ 'Pause' | trans({}, 'bookreader') }}',
+      '.BRdn': '{{ 'Show/hide nav bar' | trans({}, 'bookreader') }}', // Would have to keep updating on state change to have just "Hide nav bar"
+      '.BRup': '{{ 'Show/hide nav bar' | trans({}, 'bookreader') }}',
+      '.book_top': '{{ 'First page' | trans({}, 'bookreader') }}',
+      '.book_bottom': '{{ 'Last page' | trans({}, 'bookreader') }}'
+    };
+    if ('rl' === this.pageProgression) {
+      titles['.book_leftmost'] = '{{ 'Last page' | trans({}, 'bookreader') }}';
+      titles['.book_rightmost'] = '{{ 'First page' | trans({}, 'bookreader') }}';
+    } else { // LTR
+      titles['.book_leftmost'] = '{{ 'First page' | trans({}, 'bookreader') }}';
+      titles['.book_rightmost'] = '{{ 'Last page' | trans({}, 'bookreader') }}';
+    }
+
+    for (var icon in titles) {
+      if (titles.hasOwnProperty(icon)) {
+        this.$(icon)
+          .prop('title', titles[icon])
+          .prop('aria-label', titles[icon])
+      }
+    }
+  };
+
+// Set page number on edges to %123% for later i18n
+  BookReader.prototype.getPageName = function (index) {
+    var pageNum = this.getPageNum(index);
+    return '%' + pageNum + '%';
+  };
+
+// Replaces 'View %123%' with i18n-ed 'View page 123'
+  var i18nTwoPagePopup = function () {
+    $('.BRtwoPagePopUp').each(function () {
+      var $this = $(this);
+      var text = $this.text();
+      var pageNumber = /%(.*)%/.exec(text)[1];
+      $this.text('{{ 'view_page' | trans({}, 'bookreader') }}'.replace('%any_page%', pageNumber));
+    });
+  };
+
+  (function (prepareTwoPagePopUp) {
+    BookReader.prototype.prepareTwoPagePopUp = function () {
+      // our mousemove handlers must be called after default ones from BookReader
+      // to replace 'View %123%'
+      var result = prepareTwoPagePopUp.call(this);
+      $('.BRleafEdgeR, .BRleafEdgeL').on('mousemove', i18nTwoPagePopup);
+      return result;
+    }
+  })(BookReader.prototype.prepareTwoPagePopUp);
+
+// change "Page X of Y" in BookReader footer
+  BookReader.prototype.getNavPageNumHtml = function (index, numLeafs, pageNum, pageType, maxPageNum) {
+    return '{{ 'page_progress_indicator' | trans({}, 'bookreader') }}'
+      .replace('%current_page%', pageNum)
+      .replace('%total_pages%', maxPageNum);
+  };
+}
+
+// adapted from https://github.com/internetarchive/bookreader/blob/87a0cbd219412da3d31e0e4fd51f8bd8397f1663/BookReaderDemo/BookReaderJSAdvanced.js
+function instantiateBookReader(selector, extraOptions) {
+  selector = selector || '#BookReader';
+  extraOptions = extraOptions || {};
+  var images = {{ imageData | json_encode | raw }};
+  var pathToFilePrefix = '{{ filesUrl | raw }}';
+  var options = {
+    getNumLeafs: function () {
+      return images.length;
+    },
+    flipSpeed: 'fast ',
+    getPageWidth: function (index) {
+      // BookReader can call with index NaN or -1
+      if (isNaN(index) || index < 0 || index >= images.length) {
+        return null;
+      }
+      return images[index]['w'];
+    },
+    getPageHeight: function (index) {
+      if (isNaN(index) || index < 0 || index >= images.length) {
+        return null;
+      }
+      return images[index]['h'];
+    },
+    getPageURI: function (index, reduce, rotate) {
+      if (isNaN(index) || index < 0 || index > images.length) {
+        return null;
+      }
+      return pathToFilePrefix + images[index]['path'];
+    },
+    getPageSide: function (index) {
+      if (index % 2 === 0) {
+        return 'R';
+      } else {
+        return 'L';
+      }
+    },
+    enableMobileNav: true,
+    getPageNum: function (index) {
+      return index + 1;
+    },
+    imagesBaseURL: '{{ libraryPath }}images/',
+    ui: 'full',
+    el: selector
+  };
+  Object.assign(options, extraOptions);
+  var br = new BookReader(options);
+  br.init();
+}

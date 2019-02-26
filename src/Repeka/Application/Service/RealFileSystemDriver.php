@@ -25,11 +25,11 @@ class RealFileSystemDriver implements FileSystemDriver {
         Assertion::true($copied, "Could not copy file $source to $destination");
     }
 
-    public function listDirectory(string $path): array {
+    public function listDirectory(string $path, int $sort = SCANDIR_SORT_ASCENDING): array {
         if (!file_exists($path) || !is_dir($path)) {
             return [];
         }
-        $contents = scandir($path);
+        $contents = scandir($path, $sort);
         Assertion::isArray($contents, 'Could not read the directory ' . $path);
         return array_values(array_diff($contents, ['.', '..']));
     }
@@ -58,5 +58,16 @@ class RealFileSystemDriver implements FileSystemDriver {
         foreach ($files as $file) {
             $this->delete($file->getRealPath());
         }
+    }
+
+    public function getImageDimensions(string $path): array {
+        $exif = @exif_read_data($path, 'COMPUTED');
+        if ($exif !== false) {
+            $width = $exif['COMPUTED']['Width'];
+            $height = $exif['COMPUTED']['Height'];
+        } else {
+            [$width, $height,] = getimagesize($path);
+        }
+        return ['width' => $width, 'height' => $height];
     }
 }

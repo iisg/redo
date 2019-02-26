@@ -86,6 +86,7 @@ Resource kind: Typ zasobu
 Select collection: Wybierz kolekcję
 No collections available to add resource: Brak kolekcji, w których możesz dodać zasób
 Back to search results: Wróć do wyników wyszukiwania
+Back to resource: Wróć do zasobu
 Report an issue with the resource: Zgłoś problem z zasobem
 Share on Twitter: Udostępnij na Twitterze
 Share on Facebook: Udostępnij na Facebooku
@@ -97,6 +98,8 @@ Download resource data in BibTeX format: Pobierz informacje o zasobie w formacie
 Download resource data in EndNote format: Pobierz informacje o zasobie w formacie EndNote
 Download resource data in ISO 690 format: Pobierz informacje o zasobie w formacie ISO 690
 Cite resource: Cytuj zasób
+No scans: Brak skanów
+
 Add to favorites: Dodaj do ulubionych
 Resource RSS channel: Kanał RSS zasobu
 
