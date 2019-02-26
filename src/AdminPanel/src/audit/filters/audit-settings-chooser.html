@@ -1,0 +1,12 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+
+    <dropdown-select containerless
+        hide-clear-button
+        values.bind="urlNames"
+        value.bind="selectedUrl">
+        <template replace-part="option-template">
+            ${urlName(option)}
+        </template>
+    </dropdown-select>
+</template>

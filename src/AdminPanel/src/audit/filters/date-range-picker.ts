@@ -1,13 +1,14 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {changeHandler, twoWay} from "../../common/components/binding-mode";
 import {bindable} from "aurelia-templating";
-import {values} from "lodash";
-import {DateMode, FlexibleDateContent, inputDateConfig} from "../../resources/controls/input/flexible-date-input/flexible-date-config";
-import {ChangeEvent} from "../../common/events/change-event";
-import {isString} from "../../common/utils/object-utils";
-import {DateRangeConfig, DateRangeMode} from "./date-range-config";
 import "eonasdan-bootstrap-datetimepicker";
+import {values} from "lodash";
 import * as moment from "moment";
+import {ChangeEvent} from "../../common/events/change-event";
+import {changeHandler, twoWay} from "../../common/components/binding-mode";
+import {isString} from "../../common/utils/object-utils";
+import {DateMode, FlexibleDateContent, inputDateConfig} from "../../resources/controls/input/flexible-date-input/flexible-date-config";
+import {DateRangeConfig, DateRangeMode} from "./date-range-config";
+import {EventAggregator} from "aurelia-event-aggregator";
 
 enum DateRangePart {
   FROM = 'from',
@@ -20,6 +21,7 @@ export class DateRangePicker {
   private rangeDateMode: DateMode;
   private isLoaded = false;
   private optionIsChanging = false;
+
   availableDateOptions: string[] = values(DateRangeMode);
   value: FlexibleDateContent;
   datepicker: Element;
@@ -29,7 +31,8 @@ export class DateRangePicker {
   @bindable(twoWay) dateFrom: string;
   @bindable(twoWay) dateTo: string;
 
-  constructor(private element: Element) {
+  constructor(private element: Element,
+              private eventAggregator: EventAggregator) {
   }
 
   attached() {
@@ -45,11 +48,18 @@ export class DateRangePicker {
       this.valueChanged();
       this.isLoaded = true;
     });
-  }
+
+    this.eventAggregator.subscribe('auditSettingsChanged', () => {
+      this.auditSettingsChanged();
+    });
+
+}
 
   private createDateTimePickers() {
-    $(this.datepicker).datetimepicker(inputDateConfig[this.rangeDateMode].options);
-    $(this.linkedDatepicker).datetimepicker(inputDateConfig[this.rangeDateMode].options);
+    const options = inputDateConfig[this.rangeDateMode].options;
+    $(this.datepicker).datetimepicker(options);
+    $(this.linkedDatepicker).datetimepicker(options);
+
     if (this.value) {
       if (DateRangeConfig.isDateValid(this.value.from)) {
         $(this.linkedDatepicker).data("DateTimePicker").minDate(moment(this.value.from));
@@ -138,7 +148,7 @@ export class DateRangePicker {
   }
 
   updateDateOption(): void {
-    if (this.dateOption) {
+    if (this.dateOption && !this.optionIsChanging) {
       this.optionIsChanging = true;
       let dateFrom: string = undefined;
       let dateTo: string = undefined;
@@ -152,4 +162,24 @@ export class DateRangePicker {
       this.optionIsChanging = false;
     }
   }
+
+  auditSettingsChanged(): void {
+    if (!this.optionIsChanging) {
+      this.optionIsChanging = true;
+      this.dateOption = undefined;
+      let dateFrom: string = this.dateFrom;
+      let dateTo: string = this.dateTo;
+      $(this.linkedDatepicker).data("DateTimePicker").minDate(false);
+      $(this.datepicker).data('DateTimePicker').maxDate(false);
+      if (!dateFrom) {
+        $(this.datepicker).data('DateTimePicker').clear();
+      }
+      if (!dateTo) {
+        $(this.linkedDatepicker).data('DateTimePicker').clear();
+      }
+      this.setDateRange(dateFrom, dateTo);
+      this.optionIsChanging = false;
+    }
+  }
+
 }

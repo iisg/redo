@@ -4,6 +4,7 @@
     <require from="common/components/pagination/pagination"></require>
     <require from="common/components/buttons/toggle-button"></require>
     <require from="common/components/buttons/remove-button.html"></require>
+    <require from="./filters/audit-settings-chooser"></require>
     <require from="./filters/audit-command-name-chooser"></require>
     <require from="./filters/resource-contents-yaml-filter"></require>
     <require from="./filters/date-range-picker"></require>
@@ -15,6 +16,10 @@
     <span class="page-subtitle">${'Filters' | t}</span>
     <div class="with-sticky-button">
         <div class="content simple-form">
+            <span if.bind="auditSettings.length">${'Saved settings' | t}</span>
+            <audit-settings-chooser if.bind="auditSettings.length"
+                filters.bind="filters"
+                audit-settings.bind="auditSettings"></audit-settings-chooser>
             <span>${'Date' | t}</span>
             <date-range-picker date-from.bind="filters.dateFrom"
                 date-to.bind="filters.dateTo"></date-range-picker>

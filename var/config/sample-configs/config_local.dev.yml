@@ -43,6 +43,32 @@ repeka:
   templating:
     templates_resource_class: cms
     theme: redo
+  audit:
+    - id: no_filters
+      url:
+      label:
+        EN: No filters
+        PL: Brak filtrów
+    - id: example_users_year_2019
+      url: commandNames=user_authenticate&dateFrom=2019-01-01
+      label:
+        EN: Users that logon from year 2019
+        PL: Użytkownicy logujący się od roku 2019
+    - id: created_year_2018
+      url: dateFrom=2018-01-01&dateTo=2018-12-31&resourceContents={"tytuł":"Python"}&users=1038%2C1040
+      label:
+        EN: Books titled 'Python' in year 2018
+        PL: Książki o tytule 'Python' w roku 2018
+    - id: january_2019
+      url: commandNames=resource_create&dateFrom=2019-01-01&dateTo=2019-01-31&resourceKinds=-1
+      label:
+        EN: Users created in January 2019
+        PL: Użytkownicy stworzeni w styczniu 2019
+    - id: all_2019
+      url: customColumns=["{{r|mTytul}}"]&resultsPerPage=500
+      label:
+        EN: All audit entries with pagination and title
+        PL: Wszystkie wpisy audytu z paginacją i tytułem
   expose_endpoints:
     /about:
       resourceId: 18

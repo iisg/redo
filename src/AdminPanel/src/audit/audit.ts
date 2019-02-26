@@ -6,6 +6,8 @@ import {PageResult} from "../resources/page-result";
 import {AuditEntry} from "./audit-entry";
 import {AuditEntryRepository} from "./audit-entry-repository";
 import {AuditListFilters} from "./audit-list-filters";
+import {AuditSettingsRepository} from "./filters/audit-settings-repository";
+import {AuditSettings} from "./filters/audit-settings";
 import {debounce} from "lodash";
 
 @autoinject
@@ -16,8 +18,12 @@ export class Audit implements RoutableComponentActivate {
   private error: '';
   @bindable resourceId: number;
   activated: boolean = false;
+  @bindable auditSettings: AuditSettings[] = [];
 
-  constructor(private auditEntryRepository: AuditEntryRepository, private router: Router, private eventAggregator: EventAggregator) {
+  constructor(private auditEntryRepository: AuditEntryRepository,
+              private auditSettingsRepository: AuditSettingsRepository,
+              private router: Router,
+              private eventAggregator: EventAggregator) {
   }
 
   bind() {
@@ -27,6 +33,7 @@ export class Audit implements RoutableComponentActivate {
           this.activate(event.instruction.queryParams);
         });
     }
+    this.auditSettings = this.auditSettingsRepository.getList();
   }
 
   activate(params: any) {

@@ -13,6 +13,9 @@ export class ResourceContentsYamlFilter {
     if (this.value && !this.yamlValue) {
       this.yamlValue = stringifyYaml(this.value || {});
     }
+    else if (!this.value && this.yamlValue) {
+      this.yamlValue = "";
+    }
   }
 
   yamlValueChanged() {

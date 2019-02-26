@@ -5,7 +5,7 @@ import {DateRangeConfig} from "./filters/date-range-config";
 import * as moment from "moment";
 
 export class AuditListFilters {
-  private static DEFAULT_RESULTS_PER_PAGE: number = 10;
+  static DEFAULT_RESULTS_PER_PAGE: number = 10;
 
   @observable resultsPerPage: number = 10;
   @observable currentPageNumber: number = 1;
