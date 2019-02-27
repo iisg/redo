@@ -8,6 +8,14 @@
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/loading-bar/loading-cover"></require>
 
+    <div if.bind="!metadata && !resourceKind && !parentResource"
+        class="resources-list-title">
+        <span if.bind="displayAllLevels"
+            class="page-title">${'Search results' | t}</span>
+        <span else
+            class="page-title">${'Top level resources' | resourceClassTranslation:resourceClass}</span>
+    </div>
+
     <pagination total-number-of-elements.bind="totalNumberOfResources"
         elements-per-page.bind="resultsPerPage"
         current-page-number.bind="currentPageNumber"

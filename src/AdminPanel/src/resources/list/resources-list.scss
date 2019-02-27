@@ -1,6 +1,11 @@
 @import "../../common/styles";
 
 resources-list {
+  .resources-list-title {
+    padding-top: $default-gap-size / 2;
+    padding-left: $default-gap-size / 2;
+  }
+
   display: grid;
   // @formatter:off
   grid-template-areas: "form                                  form                                 "
