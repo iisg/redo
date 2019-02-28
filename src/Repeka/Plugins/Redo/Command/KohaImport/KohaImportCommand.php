@@ -94,6 +94,7 @@ class KohaImportCommand extends ContainerAwareCommand {
         $resources = $this->resourceRepository->findByQuery($query);
         $output->writeln(sprintf("%d resources to import", $resources->count()));
         $progressBar = new ProgressBar($output, $resources->count());
+        $importConfig = $this->importConfigFactory->fromFile($config, $resourceKind);
         foreach ($resources as $resource) {
             $barcode = $resource->getContents()->getValuesWithoutSubmetadata($barcodeMetadata);
             if (!empty($barcode)) {
@@ -103,7 +104,6 @@ class KohaImportCommand extends ContainerAwareCommand {
                     $stats[$cannotImportFromBarcode]++;
                     $resourceIdStats[$cannotImportFromBarcode][] = $resource->getId();
                 } else {
-                    $importConfig = $this->importConfigFactory->fromFile($config, $resource->getKind());
                     FirewallMiddleware::bypass(
                         function () use (
                             $input,

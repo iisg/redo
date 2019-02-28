@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\Entity;
 
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -237,7 +238,7 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
 
     public function testWithMetadataNamesMappedToIds() {
         $metadataRepository = $this->createMock(MetadataRepository::class);
-        $metadataRepository->method('findByName')
+        $metadataRepository->method('findByNameOrId')
             ->willReturnOnConsecutiveCalls($this->createMetadataMock(1), $this->createMetadataMock(2));
         $contents = ResourceContents::fromArray(['Tytuł' => 'AA', 'Opis' => 'BB']);
         $contents = $contents->withMetadataNamesMappedToIds($metadataRepository);
@@ -246,7 +247,7 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
 
     public function testWithMetadataNamesMappedToIdsForSubmetadata() {
         $metadataRepository = $this->createMock(MetadataRepository::class);
-        $metadataRepository->method('findByName')
+        $metadataRepository->method('findByNameOrId')
             ->willReturnOnConsecutiveCalls($this->createMetadataMock(2), $this->createMetadataMock(1));
         $contents = ResourceContents::fromArray(['Tytuł' => [['value' => 'AA', 'submetadata' => ['Opis' => 'BB']]]]);
         $contents = $contents->withMetadataNamesMappedToIds($metadataRepository);
@@ -346,5 +347,59 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
                 [$id1 => [['value' => 'aaa', 'submetadata' => [$id2 => [['value' => 'ccc']], $id3 => [['value' => 'bbb']]]]]],
             ],
         ];
+    }
+
+    public function testMappingToIdsFiltersOutNotExistingMetadata() {
+        $metadataRepository = $this->prepareMetadataRepository([1, 2, 3]);
+        $contents = ResourceContents::fromArray(
+            [
+                1 => [['value' => 'AA']],
+                2 => [['value' => 'BB']],
+                4 => [['value' => 'DD']],
+                3 => [['value' => 'CC']],
+                5 => [['value' => 'EE']],
+            ]
+        );
+        $contents = $contents->withMetadataNamesMappedToIds($metadataRepository);
+        $this->assertEquals(
+            ResourceContents::fromArray([1 => [['value' => 'AA']], 2 => [['value' => 'BB']], 3 => [['value' => 'CC']]]),
+            $contents
+        );
+    }
+
+    public function testMappingToIdsFiltersOutNotExistingSubmetadata() {
+        $metadataRepository = $this->prepareMetadataRepository([1, 2, 3]);
+        $contents = ResourceContents::fromArray(
+            [
+                1 => [['value' => 'AA', 'submetadata' => [4 => 'DD']]],
+                2 => [['value' => 'BB', 'submetadata' => [5 => 'EE']]],
+                6 => [['value' => 'FF', 'submetadata' => [3 => 'CC']]],
+            ]
+        );
+        $contents = $contents->withMetadataNamesMappedToIds($metadataRepository);
+        $this->assertEquals(
+            ResourceContents::fromArray(
+                [
+                    1 => [['value' => 'AA']],
+                    2 => [['value' => 'BB']],
+                ]
+            ),
+            $contents
+        );
+    }
+
+    /**
+     * @param int[] $existingMetadataIds
+     * @return MetadataRepository
+     */
+    private function prepareMetadataRepository(array $existingMetadataIds): \PHPUnit_Framework_MockObject_MockObject {
+        $metadataList = array_map(
+            function ($value) {
+                return $this->createMetadataMock($value);
+            },
+            $existingMetadataIds
+        );
+        $metadataRepository = $this->createMetadataRepositoryStub($metadataList);
+        return $metadataRepository;
     }
 }

@@ -193,6 +193,16 @@ trait StubsTrait {
                 throw new EntityNotFoundException('Metadata', $name);
             }
         );
+        $repository->method('findByNameOrId')->willReturnCallback(
+            function (string $nameOrId) use ($metadataList) {
+                foreach ($metadataList as $metadata) {
+                    if ($metadata->getName() === $nameOrId || $metadata->getId() == $nameOrId || $metadata->getId() == intval($nameOrId)) {
+                        return $metadata;
+                    }
+                }
+                throw new EntityNotFoundException('Metadata', $nameOrId);
+            }
+        );
         return $repository;
     }
 

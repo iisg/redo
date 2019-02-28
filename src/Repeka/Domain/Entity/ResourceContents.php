@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Entity;
 
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Utils\ImmutableIteratorAggregate;
 
@@ -245,18 +246,22 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
         foreach ($contents as $metadataIdOrName => &$values) {
             foreach ($values as &$metadataValue) {
                 if (isset($metadataValue['submetadata'])) {
-                    $metadataValue['submetadata'] = $this->withMetadataNamesMappedToIdsRecursive(
+                    $submetadataValue = $this->withMetadataNamesMappedToIdsRecursive(
                         $metadataRepository,
                         $metadataValue['submetadata']
                     );
+                    if (empty($submetadataValue)) {
+                        unset($metadataValue['submetadata']);
+                    } else {
+                        $metadataValue['submetadata'] = $submetadataValue;
+                    }
                 }
             }
-            if (!is_int($metadataIdOrName)) {
-                $metadata = $metadataRepository->findByName($metadataIdOrName);
+            try {
+                $metadata = $metadataRepository->findByNameOrId($metadataIdOrName);
                 $mappedContents[$metadata->getId()] = $values;
                 unset($contents[$metadataIdOrName]);
-            } else {
-                $mappedContents[$metadataIdOrName] = $values;
+            } catch (EntityNotFoundException $e) {
             }
         }
         return $mappedContents;
