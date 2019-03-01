@@ -1,12 +1,11 @@
 import {ResourceListFilters} from "../resource-list-filters";
 import {WorkflowPlace} from "../../../../workflows/workflow";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
-import {bindable, ComponentBind} from "aurelia-templating";
+import {bindable, ComponentBind, ComponentDetached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {inArray, diff} from "common/utils/array-utils";
-import {observable, BindingEngine, Disposable} from "aurelia-binding";
-import {ComponentDetached} from "aurelia-templating";
+import {diff, inArray} from "common/utils/array-utils";
+import {BindingEngine, Disposable, observable} from "aurelia-binding";
 
 @autoinject
 export class ResourceListPlaceFilter extends ResourceListFilters implements ComponentBind, ComponentDetached {
@@ -54,14 +53,14 @@ export class ResourceListPlaceFilter extends ResourceListFilters implements Comp
   }
 
   private getPlacesByPlaceIds(values: string[]): WorkflowPlace[] {
-    const places = this.workflowPlaces();
-    return places.filter(place => inArray(place.id, values));
+    return this.placesList.filter(place => inArray(place.id, values));
   }
 
   workflowPlaces() {
-    let places = [];
-    this.resourceKinds.forEach(resourceKind => resourceKind.workflow && places.push(...resourceKind.workflow.places));
-    return places;
+    return this.resourceKinds
+      .filter(rk => !!rk.workflow)
+      .map(rk => rk.workflow.places.map(place => Object.assign({}, place, {workflow: rk.workflow})))
+      .reduce((allPlaces, singleWorkflowPlaces) => allPlaces.concat(singleWorkflowPlaces), []);
   }
 
   toggleInputBoxVisibility() {

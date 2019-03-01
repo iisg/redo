@@ -7,6 +7,10 @@
         multiple>
         <template replace-part="option-template">
             ${option.label | inCurrentLanguage}
+            <div if.bind="option.workflow"
+                class="small hidden-in-selection">
+                ${ option.workflow.name | inCurrentLanguage }
+            </div>
         </template>
     </dropdown-select>
 </template>

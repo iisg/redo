@@ -88,6 +88,9 @@ audit-command-name-chooser, audit-user-chooser, audit-resource-kind-chooser, res
         color: $dark-grey;
       }
     }
+    .selection .hidden-in-selection {
+      display: none;
+    }
   }
   throbber {
     margin-left: $default-gap-size / 2;
