@@ -100,7 +100,7 @@ export class Metadata extends Entity {
   @map canDetermineAssignees: boolean;
 
   get isDynamic(): boolean {
-    return !!this.displayStrategy;
+    return this.displayStrategy !== undefined;
   }
 
   async clearInheritedValues(metadataRepository: MetadataRepository, originalMetadata: Metadata = undefined): Promise<Metadata> {
@@ -125,5 +125,6 @@ export function registerMetadataValidationRules() {
     .ensure('label').displayName('Label').satisfiesRule(RequiredInAllLanguagesValidationRule.NAME)
     .ensure('control').displayName('Control').required()
     .ensure('name').displayName('Name').required()
+    .ensure('displayStrategy').required().when((m: Metadata) => m.isDynamic)
     .on(Metadata);
 }

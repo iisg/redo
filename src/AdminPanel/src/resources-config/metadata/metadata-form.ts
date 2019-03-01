@@ -1,7 +1,7 @@
 import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
-import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
+import {ValidationController, ValidationControllerFactory, ValidationRules} from "aurelia-validation";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {values} from "lodash";
@@ -20,7 +20,7 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   controls: string[] = values(MetadataControl);
   submitting: boolean = false;
   metadata: Metadata = new Metadata();
-  shouldBeDynamic: false;
+  shouldBeDynamic = false;
 
   validationController: ValidationController;
   private restoredPreviousTemplateValue = false;
@@ -68,6 +68,10 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   private resetValues() {
     this.changeLossPreventer.enable(this);
     this.metadata = this.template ? this.entitySerializer.clone(this.template) : new Metadata();
+    if (this.metadata.id) {
+      this.shouldBeDynamic = this.metadata.isDynamic;
+    }
+    ValidationRules.ensure('displayStrategy').required().when(() => this.shouldBeDynamic).on(this.metadata);
   }
 
   validateAndSubmit() {

@@ -72,15 +72,15 @@
                     </label>
                 </div>
 
-                <template if.bind="metadata.isDynamic || shouldBeDynamic">
+                <template if.bind="(metadata.id && metadata.isDynamic) || shouldBeDynamic">
                     <p class="text-danger"
-                        if.bind="shouldBeDynamic">
+                        if.bind="shouldBeDynamic && !metadata.id">
                         ${'This setting cannot be changed after metadata creation.'|t}
                     </p>
 
                     <div class="form-group">
                         <label>${'Display strategy' | t}</label>
-                        <textarea value.bind="metadata.displayStrategy"
+                        <textarea value.bind="metadata.displayStrategy & validate"
                             autosize
                             class="form-control"></textarea>
                     </div>
@@ -92,10 +92,9 @@
         </div>
     </template>
 
-    <metadata-constraint-form if.bind="!metadata.isDynamic && !shouldBeDynamic"
+    <metadata-constraint-form if.bind="!(metadata.id && metadata.isDynamic) && !shouldBeDynamic"
         containerless
         metadata.bind="metadata"
         original-metadata.bind="originalMetadata"
         validation-controller.bind="validationController"></metadata-constraint-form>
-
 </template>
