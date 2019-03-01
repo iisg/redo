@@ -115,7 +115,7 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
       }
     }
   }
-  & > .top-search-bar {
+  .top-search-bar {
     display: flex;
     padding: $default-gap-size * 5 / 8 $default-gap-size / 2;
     & > * {

@@ -50,6 +50,7 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
         }
       }
       .social-media {
+        align-items: center;
         padding-left: $default-gap-size * 3 / 4;
         padding-right: $default-gap-size * 3 / 4;
         & > * {

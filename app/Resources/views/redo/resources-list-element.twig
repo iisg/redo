@@ -1,15 +1,10 @@
 {% set visibleMetadataNames = ['data_wydania'] %}
 {% set collapsedMetadataNames = ['opis', 'abstrakt'] %}
 
-{% set childrenAllowedInResource = resource | childrenAllowed %}
+{% set childrenAllowed = resource | childrenAllowed %}
+
 <div class="resources-list-element">
-    <div class="resource-image">
-        {% if childrenAllowedInResource %}
-            {{ icon('folder') }}
-        {% else %}
-            {{ icon('document') }}
-        {% endif %}
-    </div>
+    {% include 'redo/resource-image-placeholder.twig' %}
 
     {% if searchResult is defined %}
         {% set highlightedMetadata = [] %}
@@ -62,7 +57,7 @@
                     {% endif %}
                 {% endfor %}
             </div>
-            {% if not childrenAllowedInResource %}
+            {% if not childrenAllowed %}
                 <fieldset>
                     <legend align="left"><span class="title"
                             title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span></legend>

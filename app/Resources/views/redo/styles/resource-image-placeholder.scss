@@ -1,0 +1,13 @@
+.resource-image-placeholder {
+    line-height: 0;
+    &.horizontal .icon {
+        height: auto;
+        svg {
+            width: inherit;
+            height: auto;
+        }
+    }
+    .icon {
+        color: $grey;
+    }
+}

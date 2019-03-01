@@ -1,4 +1,4 @@
-$image-height: 50px;
+$image-width-or-height: 50px;
 $download-options-maximum-width: 300px;
 $collapsible-metadata-list-toggle-width: 1em;
 $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
@@ -10,10 +10,13 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
     opacity: 0;
     visibility: hidden;
   }
-  .resource-image {
+  .resource-image-placeholder {
     padding: $default-gap-size $default-gap-size / 2;
-    & > * {
-      height: $image-height;
+    &:not(.horizontal) .icon {
+      height: $image-width-or-height;
+    }
+    &.horizontal .icon {
+      width: $image-width-or-height;
     }
   }
   .details {
@@ -126,6 +129,14 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
           }
         }
       }
+    }
+  }
+
+  @media (max-width: $maximum-screen-width-for-mobile-layout) {
+    .basic-data-with-download-options {
+        fieldset {
+            display: none;
+        }
     }
   }
 }

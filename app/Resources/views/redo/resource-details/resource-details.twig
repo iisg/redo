@@ -29,9 +29,7 @@
     <div class="resource-details">
         <div class="top-container">
             <div class="resource-image-with-title-container-with-actions">
-                <div class="resource-image">
-                    {{ icon('book-2', 1, "0 0 6.382 8.467") }}
-                </div>
+                {% include 'redo/resource-image-placeholder.twig' %}
                 <div class="title-container-with-actions">
                     <div class="title-container">
                         <h1>{{ resource | metadata('label') | raw }}</h1>
@@ -43,10 +41,12 @@
                             <a href="/resources/{{ resource.id }}/rss"
                                 title="{{ 'Resource RSS channel' | trans }}">{{ icon('rss', 1.75) }}</a>
                         {% endif %}
-                        <button title="{{ 'Report an issue with the resource' | trans}}">{{ icon('mail', 2 ) }}</button>
-                        <button title="{{ 'Share on Twitter' | trans }}">{{ icon('twitter', 2) }}</button>
-                        <button title="{{ 'Share on Facebook' | trans }}">{{ icon('facebook', 2) }}</button>
-                        <button title="{{ 'Share on Google+' | trans }}">{{ icon('google+', 2) }}</button>
+                        <button title="{{ 'Report an issue with the resource' | trans }}">{{ icon('mail', 2 ) }}</button>
+                        <div class="share-buttons">
+                            <button title="{{ 'Share on Twitter' | trans }}">{{ icon('twitter', 2) }}</button>
+                            <button title="{{ 'Share on Facebook' | trans }}">{{ icon('facebook', 2) }}</button>
+                            <button title="{{ 'Share on Google+' | trans }}">{{ icon('google+', 2) }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,61 +79,53 @@
                 </div>
             </div>
         </div>
-        <div class="details">
-            <div>
-                <table>
-                    {% for metadataGroupId, metadataList in resource.kind.groupedMetadataList %}
-                        {% set metadataGroup = metadataGroup(metadataGroupId) %}
-                        <tr>
-                            <td colspan="2">
-                                <div class="name-with-separator">
-                                    <strong>
-                                        {% if metadataGroup.label is defined %}
-                                            {{ metadataGroup.label | inCurrentLanguage }}
+        <div class="details-container">
+            {% for metadataGroupId, metadataList in resource.kind.groupedMetadataList %}
+                {% set metadataGroup = metadataGroup(metadataGroupId) %}
+                <div class="title-with-separator">
+                    <strong>
+                        {% if metadataGroup.label is defined %}
+                            {{ metadataGroup.label | inCurrentLanguage }}
+                        {% else %}
+                            {{ 'Additional information' | trans }}
+                        {% endif %}
+                    </strong>
+                    <hr>
+                </div>
+                <dl>
+                    {% for metadata in metadataList if metadata.id > 0
+                        and metadata.control != 'display-strategy'
+                        and metadata.control != 'wysiwyg-editor' %}
+                        {% set metadataValues = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) %}
+                        {% if metadataValues | length %}
+                            <dt>
+                                {{ metadata.label | inCurrentLanguage }}
+                            </dt>
+                            <dd>
+                                {% for metadataValue in metadataValues %}
+                                    {% if metadata.control == 'file' or metadata.control == 'directory' %}
+                                        {{ metadataValue | basename }}
+                                    {% elseif metadata.control == 'relationship' %}
+                                        {% set relatedResource = resource(metadataValue) %}
+                                        {% if relatedResource.resourceClass == 'books' %}
+                                            <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
                                         {% else %}
-                                            {{ 'Additional information' | trans }}
+                                            {{ relatedResource | mLabel | raw }}
                                         {% endif %}
-                                    </strong>
-                                    <hr>
-                                </div>
-                            </td>
-                        </tr>
-                        {% for metadata in metadataList if metadata.id > 0
-                            and metadata.control != 'display-strategy'
-                            and metadata.control != 'wysiwyg-editor' %}
-                            {% set metadataValues = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) %}
-                            {% if metadataValues|length %}
-                                <tr>
-                                    <td>
-                                        {{ metadata.label | inCurrentLanguage }}
-                                    </td>
-                                    <td>
-                                        {% for metadataValue in metadataValues %}
-                                            {% if metadata.control == 'file' or metadata.control == 'directory' %}
-                                                {{ metadataValue | basename }}
-                                            {% elseif metadata.control == 'relationship' %}
-                                                {% set relatedResource = resource(metadataValue) %}
-                                                {% if relatedResource.resourceClass == 'books' %}
-                                                    <a href="/resources/{{ relatedResource.id }}">{{ relatedResource|mLabel|raw }}</a>
-                                                {% else %}
-                                                    {{ relatedResource|mLabel|raw }}
-                                                {% endif %}
-                                            {% elseif metadata.dynamic %}
-                                                {{ metadataValue|raw }}
-                                            {% else %}
-                                                {{ metadataValue }}
-                                            {% endif %}
-                                            {% if not loop.last %}
-                                                <br>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
+                                    {% elseif metadata.dynamic %}
+                                        {{ metadataValue | raw }}
+                                    {% else %}
+                                        {{ metadataValue }}
+                                    {% endif %}
+                                    {% if not loop.last %}
+                                        <br>
+                                    {% endif %}
+                                {% endfor %}
+                            </dd>
+                        {% endif %}
                     {% endfor %}
-                </table>
-            </div>
+                </dl>
+            {% endfor %}
         </div>
         {% if childrenAllowed %}
             <div class="child-resources">
@@ -141,11 +133,11 @@
                 {% set childrenPerPage = 10 %}
                 {% set children = resources({parentId: resource.id, page: page, resultsPerPage: childrenPerPage}) %}
                 {% set pagination = paginate(page, childrenPerPage, children.getTotalCount) %}
-                <div class="name-with-separator">
+                <div class="title-with-separator">
                     <h3><strong>{{ 'Collection items' | trans }} ({{ children.getTotalCount }})</strong></h3>
                     <hr>
                 </div>
-                <div>
+                <div class="resources-list">
                     {% for resource in children %}
                         {% include "redo/resources-list-element.twig" %}
                         {% if not loop.last %}
