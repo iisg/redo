@@ -9,6 +9,7 @@ use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Assignment\TaskListQuery;
 use Repeka\Domain\UseCase\Assignment\TaskListQueryHandler;
 use Repeka\Domain\UseCase\Assignment\TasksCollection;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Workflow\TransitionAssigneeChecker;
 use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Repeka\Tests\Traits\StubsTrait;
@@ -102,5 +103,25 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn([$this->resource]);
         $result = $this->handler->handle(new TaskListQuery($this->user));
         $this->assertEquals([new TasksCollection('books', [$this->resource])], $result);
+    }
+
+    public function testTasksAreSortedById() {
+        $resourceKind = $this->createResourceKindMock(1, 'books', [], $this->workflow);
+        $resources = [];
+        for ($i = 1; $i < 10; $i++) {
+            $resources[] = $this->createResourceMock($i, $resourceKind);
+        }
+        $this->workflow->method('getTransitions')->willReturn([$this->createWorkflowTransitionMock()]);
+        $this->transitionAssigneeChecker->method('getUserIdsAssignedToTransition')
+            ->willReturnOnConsecutiveCalls([101], [100], [101], [100], [101], [100], [101], [100], [101]);
+        $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
+        $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn($resources);
+        $expectedMyTasksIds = [2, 4, 6, 8];
+        $expectedPossibleTasksIds = [1, 3, 5, 7, 9];
+        /** @var TasksCollection $result */
+        $result = $this->handler->handle(new TaskListQuery($this->user))[0] ?? null;
+        $this->assertNotNull($result);
+        $this->assertEquals($expectedMyTasksIds, EntityUtils::mapToIds($result->getMyTasks()));
+        $this->assertEquals($expectedPossibleTasksIds, EntityUtils::mapToIds($result->getPossibleTasks()));
     }
 }

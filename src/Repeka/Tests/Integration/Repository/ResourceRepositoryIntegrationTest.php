@@ -4,10 +4,13 @@ namespace Repeka\Tests\Integration\Repository;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\User\UserListQuery;
+use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -21,6 +24,8 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     private $userRepository;
     /** @var Metadata */
     private $titleMetadata;
+    /** @var Metadata */
+    private $scannerMetadata;
 
     public function setUp() {
         parent::setUp();
@@ -28,6 +33,7 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $this->userRepository = $this->container->get(UserRepository::class);
         $this->loadAllFixtures();
         $this->titleMetadata = $this->findMetadataByName('Tytuł');
+        $this->scannerMetadata = $this->findMetadataByName('Skanista');
     }
 
     public function testFindByWorkflowPlaceWhenResourceHasManyWorkflowPlaces() {
@@ -63,14 +69,26 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(0, $resultsBeforeAssigning);
         $book = $this->getPhpBookResource();
-        $scannerMetadata = $this->findMetadataByName('Skanista');
-        $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $user->getUserData()->getId());
-        $book->updateContents($bookContents);
-        $this->resourceRepository->save($book);
-        $this->getEntityManager()->flush();
+        $this->assignUserAsScanner($book, $user);
         $resultsAfterAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(1, $resultsAfterAssigning);
         $this->assertEquals($book->getId(), reset($resultsAfterAssigning)->getId());
+    }
+
+    public function testFindAssignedToReturnsTasksSortedById() {
+        $user = $this->getBudynekUser();
+        $bookResourceKind = $this->container->get(ResourceKindRepository::class)->findByName('book');
+        $query = ResourceListQuery::builder()->filterByResourceKind($bookResourceKind)->build();
+        $books = $this->resourceRepository->findByQuery($query)->getResults();
+        foreach ($books as $book) {
+            $this->assignUserAsScanner($book, $user);
+        }
+        $books[] = $this->createResource($bookResourceKind, [$this->scannerMetadata->getId() => [$user->getUserGroupsIds()[0]]]);
+        $books[] = $this->createResource($bookResourceKind, [$this->scannerMetadata->getId() => [$user->getUserGroupsIds()[0]]]);
+        $tasksIds = EntityUtils::mapToIds($this->resourceRepository->findAssignedTo($user));
+        $booksIds = EntityUtils::mapToIds($books);
+        sort($booksIds);
+        $this->assertEquals($booksIds, $tasksIds);
     }
 
     public function testFindsResourcesAssignedToUserByAutoAssignMetadata() {
@@ -123,5 +141,12 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
             }
         }
         $this->fail("User not found");
+    }
+
+    private function assignUserAsScanner(ResourceEntity $resource, UserEntity $user) {
+        $contents = $resource->getContents()->withReplacedValues($this->scannerMetadata->getId(), $user->getUserData()->getId());
+        $resource->updateContents($contents);
+        $this->resourceRepository->save($resource);
+        $this->getEntityManager()->flush();
     }
 }

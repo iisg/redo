@@ -190,7 +190,7 @@ FROM (
                    ) AS resources_with_places
             ) AS resources_with_assignee_metadata_ids
      ) AS resources_with_assignees
-WHERE assignee_id IN(:userIds)
+WHERE assignee_id IN(:userIds) ORDER BY resources_with_assignees.id
 SQL
             ,
             $resultSetMapping
