@@ -1,0 +1,21 @@
+.audit-user-chooser {
+  align-items: flex-start !important;
+  > * {
+    padding: 0 10px;
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+  &-selected-users {
+    .label {
+      margin: 3px;
+      &, & * {
+        color: white !important;
+      }
+      .remove-x {
+        margin-left: 3px;
+        font-size: .8em;
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
     }
 
     private function build() {
-        $this->froms[] = 'audit ae';
+        $this->froms[] = 'audit ae LEFT JOIN "user" u ON ae.user_id = u.id';
         $this->filterByCommandNames();
         $this->filterByDate();
         $this->filterByContents(
@@ -49,7 +49,7 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
 
     private function filterByUsers() {
         if ($this->query->getUsers()) {
-            $this->wheres[] = 'ae.user_id IN(:users)';
+            $this->wheres[] = 'u.user_data_id IN(:users)';
             $this->params['users'] = $this->query->getUsers();
         }
     }

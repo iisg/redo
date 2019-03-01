@@ -1,21 +1,10 @@
 <template>
-    <span if.bind="loading">
-        <throbber></throbber>
-        ${'Resource' | t} #${id}&hellip;
-    </span>
-    <template else>
-        <template if.bind="resource !== undefined">
-            <span if.bind="!currentUserIsOperator"
-                innerhtml.bind="resource | resourceLabel"></span>
-            <a else
-                route-href="route: resources/details; params.bind: {id: resource.id}; replace: true"
-                innerhtml.bind="resource | resourceLabel"></a>
-        </template>
-        <span else
-            class="text-warning"
-            title.bind="'Resource doesn\'t exist' | t">
-            <icon name="remove-5"></icon>
-            ${'Resource' | t} #${id}
-        </span>
-    </template>
+    <resource-label if.bind="!resource || !currentUserIsOperator"
+        resource.bind="resource"
+        id.bind="id"
+        load.trigger="resource = $event.detail"></resource-label>
+    <a else
+        route-href="route: resources/details; params.bind: {id: resource.id}; replace: true">
+        <resource-label resource.bind="resource"></resource-label>
+    </a>
 </template>

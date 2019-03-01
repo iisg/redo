@@ -72,7 +72,12 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
     this.disposeResourceListSubscription();
     this.resourceListSubscription = this.bindingEngine
       .collectionObserver(this.resourceIds)
-      .subscribe(changes => this.resourceIdsModified(changes));
+      .subscribe(() => this.resourceIdsModified());
+  }
+
+  resourceIdsChanged() {
+    this.subscribeResourceIds();
+    this.resourceIdsModified();
   }
 
   private disposeResourceListSubscription() {
@@ -179,7 +184,7 @@ export class ResourcePicker implements ComponentAttached, ComponentDetached {
     });
   }
 
-  resourceIdsModified(changes) {
+  resourceIdsModified() {
     if (this.selectedKeys.length !== this.resourceIds.length) {
       this.updateKeysToValues();
     }

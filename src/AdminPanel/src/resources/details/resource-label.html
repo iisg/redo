@@ -1,0 +1,17 @@
+<template>
+    <span if.bind="loading">
+        <throbber></throbber>
+        ${'Resource' | t} #${id}&hellip;
+    </span>
+    <template else>
+        <template if.bind="resource !== undefined">
+            <span innerhtml.bind="resource | resourceLabel"></span>
+        </template>
+        <span else
+            class="text-warning"
+            title.bind="'Resource doesn\'t exist' | t">
+            <icon name="remove-5"></icon>
+            ${'Resource' | t} #${id}
+        </span>
+    </template>
+</template>

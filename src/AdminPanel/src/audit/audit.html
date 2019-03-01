@@ -10,6 +10,7 @@
     <require from="./filters/audit-user-chooser"></require>
     <require from="./filters/audit-resource-kind-chooser"></require>
     <require from="./underscores-to-hyphens"></require>
+    <require from="common/components/loading-bar/loading-cover"></require>
 
     <span class="page-subtitle">${'Filters' | t}</span>
     <div class="with-sticky-button">
@@ -45,8 +46,8 @@
         elements-per-page.bind="filters.resultsPerPage"
         current-page-number.bind="filters.currentPageNumber"
         hide-elements-per-page-dropdown="true"></pagination>
-    <loading-bar if.bind="displayProgressBar"></loading-bar>
-    <div class="table-container"> <!-- For some reason this wrapper is required by Chromium to make horizontal scrolling possible. -->
+    <loading-cover loading.bind="displayProgressBar"
+        class="table-container">
         <table if.bind="entries.length > 0">
             <thead>
             <tr>
@@ -78,7 +79,8 @@
                 class="${entry.successful ? '' : 'failure'}">
                 <td>${entry.createdAt | date:'LLL'}</td>
                 <td if.bind="entry.data.workflowPluginName">${'Plugin'|t}: ${'plugins::' + entry.data.workflowPluginName
-                    + '//label' | t}</td>
+                    + '//label' | t}
+                </td>
                 <td else>${'audit_commands::' + entry.commandName | t}</td>
                 <td>
                     <resource-link if.bind="entry.user"
@@ -97,7 +99,7 @@
             </tr>
             </tbody>
         </table>
-    </div>
+    </loading-cover>
     <div if.bind="entries.length === 0 && !displayProgressBar && !error"
         class="alert alert-info">
         <icon name="information"></icon>

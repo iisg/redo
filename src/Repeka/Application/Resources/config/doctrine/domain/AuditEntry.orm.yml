@@ -28,3 +28,5 @@ Repeka\Domain\Entity\AuditEntry:
   indexes:
     audit_entry_type_idx:
       columns: [commandName]
+    audit_entry_created_at_idx:
+      columns: [created_at]

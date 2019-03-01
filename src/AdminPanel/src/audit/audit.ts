@@ -6,12 +6,13 @@ import {PageResult} from "../resources/page-result";
 import {AuditEntry} from "./audit-entry";
 import {AuditEntryRepository} from "./audit-entry-repository";
 import {AuditListFilters} from "./audit-list-filters";
+import {debounce} from "lodash";
 
 @autoinject
 export class Audit implements RoutableComponentActivate {
   private entries: PageResult<AuditEntry>;
   private displayProgressBar = false;
-  @bindable filters: AuditListFilters;
+  @bindable filters: AuditListFilters = new AuditListFilters();
   private error: '';
   @bindable resourceId: number;
   activated: boolean = false;
@@ -44,7 +45,7 @@ export class Audit implements RoutableComponentActivate {
     }
   }
 
-  fetchEntries() {
+  fetchEntries = debounce(() => {
     this.displayProgressBar = true;
     this.error = '';
     this.filters
@@ -57,7 +58,7 @@ export class Audit implements RoutableComponentActivate {
         throw this.error = e;
       })
       .finally(() => this.displayProgressBar = false);
-  }
+  }, 50);
 
   onFiltersChanged() {
     this.filters.currentPageNumber = 1;

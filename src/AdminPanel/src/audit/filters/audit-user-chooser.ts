@@ -1,36 +1,42 @@
-import {computedFrom} from "aurelia-binding";
+import {BindingEngine, Disposable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
-import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
 import {twoWay} from "../../common/components/binding-mode";
-import {ResourceLabelValueConverter} from "../../resources/details/resource-label-value-converter";
-import {UserRepository} from "../../users/user-repository";
+import {MetadataValue} from "../../resources/metadata-value";
 
 @autoinject
 export class AuditUserChooser {
-  @bindable(twoWay) selectedUsersIds: string[];
-  private usersLabelsByIds: StringMap<string>;
+  @bindable(twoWay) selectedUsersIds: number[];
+  userIdsMetadata: MetadataValue[] = [];
+  private userIdsSubscription: Disposable;
 
-  constructor(private userRepository: UserRepository,
-              private resourceLabelValueConverter: ResourceLabelValueConverter,
-              private i18n: I18N) {
+  constructor(private bindingEngine: BindingEngine) {
   }
 
-  async attached() {
-    await this.userRepository.getList().then(values => {
-      let usersLabelsByIds = {};
-      values.forEach(value => usersLabelsByIds[value.id] = this.resourceLabelValueConverter.toView(value.userData));
-      this.usersLabelsByIds = usersLabelsByIds;
-    });
+  attached() {
+    this.synchronizeIds();
   }
 
-  userLabel(userId: string) {
-    return this.usersLabelsByIds[userId] || this.i18n.tr('User') + " " + userId;
+  removeUserFilter(id) {
+    this.selectedUsersIds = this.selectedUsersIds.filter(userId => userId != id);
+    this.synchronizeIds();
   }
 
-  @computedFrom('usersLabelsByIds')
-  get usersIds(): string[] {
-    return this.usersLabelsByIds && Object.keys(this.usersLabelsByIds);
+  private synchronizeIds() {
+    this.userIdsMetadata = this.selectedUsersIds.map(id => new MetadataValue(id));
+    this.watchUserIdsChanges();
   }
 
+  private watchUserIdsChanges() {
+    if (this.userIdsSubscription) {
+      this.userIdsSubscription.dispose();
+    }
+    this.userIdsSubscription = this.bindingEngine
+      .collectionObserver(this.userIdsMetadata)
+      .subscribe(() => this.selectedUsersIds = this.userIdsMetadata.map(v => v.value));
+  }
+
+  detached() {
+    this.userIdsSubscription.dispose();
+  }
 }

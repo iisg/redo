@@ -4,10 +4,9 @@ namespace Repeka\Tests\Application\Elasticsearch;
 use Repeka\Application\Elasticsearch\PageNumberFinder;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Service\ResourceFileStorage;
-use Repeka\Tests\IntegrationTestCase;
 use Repeka\Tests\Traits\StubsTrait;
 
-class PageNumberFinderTest extends IntegrationTestCase {
+class PageNumberFinderTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
     /** @var ResourceFileStorage */

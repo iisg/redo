@@ -1,12 +1,29 @@
-<template>
+<template class="audit-user-chooser">
     <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="resources/controls/input/resource-picker/resource-picker"></require>
 
-    <dropdown-select containerless
-        values.bind="usersIds"
-        value.bind="selectedUsersIds"
-        multiple>
-        <template replace-part="option-template">
-            ${userLabel(option)}
-        </template>
-    </dropdown-select>
+    <div>
+        <button class="toggle-button"
+            click.delegate="showTree = !showTree"
+            class.bind="showTree ? 'blue' : 'white'">
+            <icon name="search"></icon>
+        </button>
+    </div>
+
+    <resource-picker if.bind="showTree"
+        resource-kind-ids.one-time="[-1]"
+        resource-ids.bind="userIdsMetadata"
+        resource-class="users"></resource-picker>
+
+    <div class="audit-user-chooser-selected-users">
+        <span class="label label-primary"
+            repeat.for="id of selectedUsersIds">
+            <resource-label id.bind="id"></resource-label>
+            <a click.delegate="removeUserFilter(id)">
+                <icon name="x"
+                    class="remove-x"></icon>
+            </a>
+        </span>
+    </div>
+
 </template>

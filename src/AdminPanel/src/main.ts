@@ -49,6 +49,7 @@ export function configure(aurelia: Aurelia) {
         'resources-config/multilingual-field/multilingual-editor',
         'resources-config/multilingual-field/in-current-language',
         'common/http-client/invalid-command-message.html', // Used in alerts by GlobalExceptionInterceptor.
+        'resources/details/resource-label',
         'resources/details/resource-link',
         'resources/details/resource-label-value-converter',
         'common/value-converters/resource-class-translation-value-converter'
