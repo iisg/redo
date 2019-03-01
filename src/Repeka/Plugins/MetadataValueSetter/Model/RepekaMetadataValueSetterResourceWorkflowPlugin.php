@@ -51,9 +51,8 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
             $auditData = ['metadataId' => $metadata->getId(), 'metadataName' => $metadata->getName(), 'value' => $value];
             if ($value !== '' && !$sameValueExists && !$blockSettingNonEmpty) {
                 $newResourceContents = $newResourceContents->withMergedValues($metadata, $value);
-            } else {
-                $skipReason = $sameValueExists ? 'sameValueExists' : ($blockSettingNonEmpty ? 'nonEmpty' : 'emptyValue');
-                $this->newAuditEntry($event, $skipReason, $auditData, false);
+            } elseif ($value === '') {
+                $this->newAuditEntry($event, 'emptyValue', $auditData, false);
             }
         } catch (\InvalidArgumentException $e) {
             $entryData = ['message' => $e->getMessage()];

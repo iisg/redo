@@ -30,8 +30,6 @@ repekaOcrAbbyy:
 repekaMetadataValueSetter:
   label: Generate metadata value
   audit:
-    sameValueExists: Value {{value}} has not been inserted into {{metadataName}} because the same value already existed there
-    nonEmpty: Value {{value}} has not been inserted into {{metadataName}} because this metadata already contained some values
     emptyValue: Empty values has not been inserted into {{metadataName}}
     failure: Error when generating value of metadata {{metadataName}} - {{message}}
   options:
