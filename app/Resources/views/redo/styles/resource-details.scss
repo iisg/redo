@@ -58,19 +58,19 @@ $download-options-flex-grow: 1;
                 }
             }
         }
-        .download-options {
+        .download-options-container {
             margin-left: auto;
             max-width: 100%;
             flex-basis: $download-options-flex-basis;
             flex-grow: $download-options-flex-grow;
-            & > div {
+            .download-options {
                 display: flex;
                 align-items: center;
                 padding: $gap-size / 4;
                 & > * {
                     margin: $gap-size / 4;
                 }
-                .icon {
+                .download-options-icon {
                     color: $grey;
                 }
                 fieldset {
@@ -78,6 +78,19 @@ $download-options-flex-grow: 1;
                     & > legend {
                         margin-top: calc(-1em / 2);
                     }
+                }
+            }
+            .download-formats {
+                display: flex;
+                justify-content: space-evenly;
+                &:not(.in-one-line) {
+                    flex-wrap: wrap;
+                }
+                & > * {
+                    padding: $gap-size / 8 $gap-size / 2;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
                 }
             }
         }
@@ -119,17 +132,6 @@ $download-options-flex-grow: 1;
         hr {
             flex: 1;
             margin-left: $gap-size / 2;
-        }
-    }
-    .download-formats {
-        display: flex;
-        justify-content: space-evenly;
-        flex-wrap: wrap;
-        & > * {
-            padding: $gap-size / 8 $gap-size / 2;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
         }
     }
 
