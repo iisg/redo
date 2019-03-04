@@ -16,9 +16,13 @@ export class ResourceDisplayStrategyPlayground {
   }
 
   evaluate = debounce(() => {
-    this.evaluating = true;
-    this.resourceRepository.evaluateDisplayStrategy(this.resource.id, this.template)
-      .then(result => this.result = result)
-      .finally(() => this.evaluating = false);
+    if (this.template) {
+      this.evaluating = true;
+      this.resourceRepository.evaluateDisplayStrategy(this.resource.id, this.template)
+        .then(result => this.result = result)
+        .finally(() => this.evaluating = false);
+    } else {
+      this.result = '';
+    }
   }, 500);
 }
