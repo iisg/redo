@@ -40,7 +40,14 @@
             <aup-tab-pane tab="details">
                 <div if.bind="metadataDetailsTabs.activeTabId === 'details'"
                     class="${editing ? 'with-opened-edit-form' : ''}">
-                    <div if.bind="!editing"
+                    <metadata-form if="condition.bind: editing; cache: false"
+                        currently-edited-metadata.bind="metadata"
+                        resource-class.bind="resourceClass"
+                        template.bind="metadata"
+                        submit.call="saveEditedMetadata(metadata, editedMetadata)"
+                        cancel.call="toggleEditForm()"
+                        hide-metadata-group-chooser.bind="metadata.parentId"></metadata-form>
+                    <div else
                         class="with-sticky-button">
                         <metadata-details-list class="content"
                             metadata.bind="metadata"></metadata-details-list>
@@ -49,12 +56,6 @@
                             disabled.bind="metadata.pendingRequest"
                             click.delegate="toggleEditForm()"></edit-button>
                     </div>
-                    <metadata-form else
-                        currently-edited-metadata.bind="metadata"
-                        resource-class.bind="resourceClass"
-                        template.bind="metadata"
-                        submit.call="saveEditedMetadata(metadata, editedMetadata)"
-                        cancel.call="toggleEditForm()"></metadata-form>
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="configuration">

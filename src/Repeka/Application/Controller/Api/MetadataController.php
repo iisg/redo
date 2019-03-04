@@ -122,6 +122,7 @@ class MetadataController extends ApiController {
             $command = new MetadataChildWithBaseCreateCommand($parent, $baseMetadata, $newChildMetadata);
         } else {
             $newChildMetadata['parent'] = $parent;
+            $newChildMetadata['groupId'] = $parent->getGroupId();
             $command = MetadataCreateCommand::fromArray($newChildMetadata);
         }
         $metadata = $this->handleCommand($command);

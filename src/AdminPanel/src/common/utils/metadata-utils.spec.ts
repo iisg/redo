@@ -43,10 +43,11 @@ describe('metadata-utils', () => {
     });
   });
   describe(groupMetadata.name, () => {
-    function metadataMock(id: number, groupId: string): Metadata {
+    function metadataMock(id: number, groupId: string, parentId: number = undefined): Metadata {
       const metadata = new Metadata();
       metadata.id = id;
       metadata.groupId = groupId;
+      metadata.parentId = parentId;
       return metadata;
     }
 
@@ -55,8 +56,8 @@ describe('metadata-utils', () => {
       const metadata2 = metadataMock(1, 'group2');
       const metadata3 = metadataMock(2, 'group2');
       const expectedGroups = [
-        {groupId: 'group1', metadataList: [metadata1]},
-        {groupId: 'group2', metadataList: [metadata2, metadata3]}
+        {groupId: 'group1', metadataList: [metadata1], childMetadata: false},
+        {groupId: 'group2', metadataList: [metadata2, metadata3], childMetadata: false}
       ];
       const result = groupMetadata([metadata1, metadata2, metadata3], ['group1', 'group2']);
       expect(result).toEqual(expectedGroups);
@@ -72,11 +73,25 @@ describe('metadata-utils', () => {
       const metadata3 = metadataMock(2, 'ccc');
       const groupIds = ['aaa', 'ccc', 'bbb'];
       const expectedGroups = [
-        {groupId: 'aaa', metadataList: [metadata2]},
-        {groupId: 'ccc', metadataList: [metadata3]},
-        {groupId: 'bbb', metadataList: [metadata1]}
+        {groupId: 'aaa', metadataList: [metadata2], childMetadata: false},
+        {groupId: 'ccc', metadataList: [metadata3], childMetadata: false},
+        {groupId: 'bbb', metadataList: [metadata1], childMetadata: false}
       ];
       const result = groupMetadata([metadata1, metadata2, metadata3], groupIds);
+      expect(result).toEqual(expectedGroups);
+    });
+
+    it('sets "childMetadata" to true when child metadata exists', () => {
+      const metadata1 = metadataMock(0, 'group1', 3);
+      const metadata2 = metadataMock(1, 'group2');
+      const metadata3 = metadataMock(2, 'group2');
+      const metadata4 = metadataMock(2, 'group1');
+      const groupIds = ['group1', 'group2'];
+      const expectedGroups = [
+        {groupId: 'group1', metadataList: [metadata1, metadata4], childMetadata: true},
+        {groupId: 'group2', metadataList: [metadata2, metadata3], childMetadata: false}
+      ];
+      const result = groupMetadata([metadata1, metadata2, metadata3, metadata4], groupIds);
       expect(result).toEqual(expectedGroups);
     });
   });

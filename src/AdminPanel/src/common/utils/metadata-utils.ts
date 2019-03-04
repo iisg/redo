@@ -32,15 +32,18 @@ export function getIndexOfMetadataInArray(metadataList: Metadata[], metadata: Me
 }
 
 export function groupMetadata(metadataList: Metadata[], groupIds: string[]): GroupMetadataList[] {
-  const orderedGroups = groupIds.map(id => ({groupId: id, metadataList: []}));
+  const orderedGroups = groupIds.map(id => ({groupId: id, metadataList: [], childMetadata: false}));
   const lookup = orderedGroups.reduce((obj, group) => ({...obj, [group.groupId]: group}), {});
   if (!lookup.hasOwnProperty(MetadataGroup.defaultGroupId)) {
-    const defaultGroup = {groupId: MetadataGroup.defaultGroupId, metadataList: []};
+    const defaultGroup = {groupId: MetadataGroup.defaultGroupId, metadataList: [], childMetadata: false};
     orderedGroups.push(defaultGroup);
     lookup[defaultGroup.groupId] = defaultGroup;
   }
   metadataList.forEach(metadata => {
     lookup[metadata.groupId].metadataList.push(metadata);
+    if (metadata.parentId) {
+      lookup[metadata.groupId].childMetadata = true;
+    }
   });
   return orderedGroups.filter(group => group.metadataList.length > 0);
 }

@@ -31,7 +31,7 @@
                 <th>${'Name' | t}</th>
                 <th>${'Label' | t}</th>
                 <th>${'Control' | t}</th>
-                <th>${'Group' | t}</th>
+                <th if.bind="!parentMetadata">${'Group' | t}</th>
                 <th>${'Hint' | t}</th>
                 <th>${'Description' | t}</th>
                 <th></th>
@@ -74,7 +74,7 @@
                         if.one-time="metadata.isDynamic"
                         bootstrap-tooltip.bind="'Dynamic metadata' | t"></icon>
                 </td>
-                <td>
+                <td if.bind="!parentMetadata">
                     ${metadata.groupId | metadataGroupLabel}
                 </td>
                 <td>

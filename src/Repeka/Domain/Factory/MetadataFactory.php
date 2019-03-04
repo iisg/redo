@@ -35,7 +35,7 @@ class MetadataFactory {
             $newChildMetadata['placeholder'] ?? [],
             $newChildMetadata['description'] ?? [],
             $newChildMetadata['constraints'] ?? [],
-            $newChildMetadata['groupId'] ?? '',
+            $parent->getGroupId(),
             $newChildMetadata['displayStrategy'] ?? $base->getDisplayStrategy(),
             $newChildMetadata['shownInBrief'] ?? $base->isShownInBrief(),
             $newChildMetadata['copyToChildResource'] ?? $base->isCopiedToChildResource(),

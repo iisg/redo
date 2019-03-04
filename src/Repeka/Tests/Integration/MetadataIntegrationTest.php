@@ -112,7 +112,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
             'description' => ['TEST' => 'test description'],
             'placeholder' => ['TEST' => 'test placeholder'],
             'constraints' => [],
-            'groupId' => 'basic',
+            'groupId' => 'DEFAULT_GROUP',
         ];
         $client->apiRequest('POST', $this->oneEntityEndpoint($parent) . '/metadata', ['newChildMetadata' => $metadataArray]);
         $this->assertStatusCode(201, $client->getResponse());

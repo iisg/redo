@@ -15,10 +15,10 @@ resource-form-generated {
     resource-metadata-values-form {
       & > table {
         tr:not(:first-child) > td > div {
-          margin-top: $gap-size / 4;
+          margin-top: $gap-size / 2;
         }
         tr:not(:last-child) > td > div {
-          margin-bottom: $gap-size / 4;
+          margin-bottom: $gap-size / 2;
         }
         td > div {
           display: flex;
@@ -33,7 +33,7 @@ resource-form-generated {
           & > resource-metadata-value-input, & > .metadata-row {
             flex: 1;
             & > resource-form-generated {
-              margin-top: $gap-size / 2;
+              margin-top: $gap-size;
               margin-left: $gap-size;
             }
           }

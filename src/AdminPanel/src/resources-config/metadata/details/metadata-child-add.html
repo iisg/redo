@@ -29,13 +29,15 @@
             resource-class.bind="resourceClass"
             template.two-way="baseMetadata"
             submit.call="addChildMetadata(parentMetadata.id, baseMetadata.id, editedMetadata)"
-            cancel.call="cancel()"></metadata-form>
+            cancel.call="cancel()"
+            hide-metadata-group-chooser.bind="true"></metadata-form>
 
     </div>
     <div else>
         <metadata-form view-model.ref="metadataForm"
             resource-class.bind="resourceClass"
             submit.call="createChildMetadata(parentMetadata.id, editedMetadata)"
-            cancel.call="cancel()"></metadata-form>
+            cancel.call="cancel()"
+            hide-metadata-group-chooser.bind="true"></metadata-form>
     </div>
 </template>

@@ -77,6 +77,7 @@ export const metadataConstraintDefaults: MetadataConstraints = {
 export interface GroupMetadataList {
   groupId: string;
   metadataList: Metadata[];
+  childMetadata: boolean;
 }
 
 @mappedWith(MetadataMapper)

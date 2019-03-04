@@ -4,7 +4,7 @@ import {Resource} from "resources/resource";
 import {I18N} from "aurelia-i18n";
 import {autoinject} from "aurelia-dependency-injection";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {Metadata} from "resources-config/metadata/metadata";
+import {Metadata, GroupMetadataList} from "resources-config/metadata/metadata";
 import {diff, inArray} from "common/utils/array-utils";
 import {RequirementState} from "workflows/workflow";
 import {computedFrom} from "aurelia-binding";
@@ -62,7 +62,7 @@ export class ResourceFormGenerated {
   }
 
   @computedFrom('metadataList')
-  get nonEmptyMetadataGroups() {
+  get nonEmptyMetadataGroups(): GroupMetadataList[] {
     const metadataGroups = groupMetadata(this.metadataList, this.metadataGroupRepository.getIds());
     return metadataGroups.filter(metadataGroup =>
       metadataGroup.metadataList.filter(metadata => this.displayMetadataValueInput(metadata)).length

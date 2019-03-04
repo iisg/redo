@@ -1,4 +1,4 @@
-<template class="simple-form contains-collapsible-metadata-group">
+<template class="simple-form">
     <require from="./resource-metadata-values-form"></require>
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="./from-workflow-transitions-array-to-string"></require>
@@ -9,7 +9,7 @@
     <template repeat.for="metadataGroup of nonEmptyMetadataGroups">
         <collapsible-metadata-group resource-kind-id.bind="resourceKind.id"
             metadata-group-id.bind="metadataGroup.groupId"
-            disabled.bind="nonEmptyMetadataGroups.length < 2 || displayRequiredOnly">
+            disabled.bind="nonEmptyMetadataGroups.length < 2 || displayRequiredOnly || metadataGroup.childMetadata">
             <template repeat.for="metadata of metadataGroup.metadataList">
                 <template if.bind="displayMetadataValueInput(metadata) && contentsValidator[metadata.id]">
                     <span>
@@ -40,6 +40,6 @@
                 </template>
             </template>
         </collapsible-metadata-group>
-        <hr if.bind="!$last">
+        <hr if.bind="!$last && !metadataGroup.childMetadata">
     </template>
 </template>

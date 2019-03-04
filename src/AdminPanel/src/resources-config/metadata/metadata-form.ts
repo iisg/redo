@@ -2,11 +2,11 @@ import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {ValidationController, ValidationControllerFactory, ValidationRules} from "aurelia-validation";
+import {ChangeLossPreventer} from "common/change-loss-preventer/change-loss-preventer";
 import {EntitySerializer} from "common/dto/entity-serializer";
+import {ChangeLossPreventerForm} from "common/form/change-loss-preventer-form";
 import {BootstrapValidationRenderer} from "common/validation/bootstrap-validation-renderer";
 import {values} from "lodash";
-import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
-import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
 import {Metadata} from "./metadata";
 import {MetadataControl} from "./metadata-control";
 
@@ -17,10 +17,11 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
   @bindable template: Metadata;
   @bindable currentlyEditedMetadata: Metadata;
   @bindable resourceClass: string;
+  @bindable hideMetadataGroupChooser: boolean = false;
   controls: string[] = values(MetadataControl);
   submitting: boolean = false;
   metadata: Metadata = new Metadata();
-  shouldBeDynamic = false;
+  shouldBeDynamic: boolean = false;
 
   validationController: ValidationController;
   private restoredPreviousTemplateValue = false;

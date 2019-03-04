@@ -22,7 +22,7 @@
                 <span>${'Place' | t}</span>
                 <resource-place-display resource.bind="resource"></resource-place-display>
             </template>
-            <hr if.bind="metadataGroups.length">
+            <hr if.bind="metadataGroups.length && !hideMetadataGroups">
         </template>
     </template>
 
@@ -39,6 +39,6 @@
                 </template>
             </template>
         </collapsible-metadata-group>
-        <hr if.bind="!$last">
+        <hr if.bind="!$last && !hideMetadataGroups">
     </template>
 </template>
