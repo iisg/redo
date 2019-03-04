@@ -78,9 +78,19 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
 
     public function getFileContents(ResourceEntity $resource, string $path): string {
         $fullPath = $this->getFileSystemPath($resource, $path);
-        if (file_exists($fullPath)) {
+        if (is_file($fullPath)) {
             return file_get_contents($fullPath);
         }
         throw new NotFoundException("File $fullPath does not exist");
+    }
+
+    public function getDirectoryContents(ResourceEntity $resource, string $path): array {
+        $fullPath = $this->getFileSystemPath($resource, $path);
+        return array_map(
+            function ($filename) use ($path) {
+                return $path . '/' . $filename;
+            },
+            $this->fileSystemDriver->listDirectory($fullPath)
+        );
     }
 }

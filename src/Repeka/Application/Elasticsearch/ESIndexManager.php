@@ -34,24 +34,13 @@ class ESIndexManager {
                     'filter' => [
                         'pl_stop' => [
                             "type" => "stop",
-                            "stopwords" => $this->stopWords
+                            "stopwords" => $this->stopWords,
                         ],
                     ],
                     'analyzer' => [
-                        'underscore_analyzer' => [
-                            "type" => "custom",
-                            "tokenizer" => "underscore_tokenizer",
-                            "filter" => ["standard", "lowercase", "morfologik_stem", "pl_stop"],
-                        ],
                         'default' => [
                             "tokenizer" => "standard",
                             "filter" => ["standard", "lowercase", "morfologik_stem", "pl_stop"],
-                        ],
-                    ],
-                    "tokenizer" => [
-                        "underscore_tokenizer" => [
-                            "type" => "pattern",
-                            "pattern" => "_|\.|-",
                         ],
                     ],
                 ],

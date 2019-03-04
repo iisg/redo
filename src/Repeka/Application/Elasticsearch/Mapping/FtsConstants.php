@@ -29,8 +29,6 @@ final class FtsConstants {
     ];
 
     const NUMERIC_DETECTION_PARAM = 'numeric_detection';
-    const NAME = 'name';
-    const CONTENT = 'content';
 
     private function __construct() {
     }

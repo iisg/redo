@@ -11,8 +11,8 @@
         {% for fieldName, highlights in searchResult.highlights %}
             {% set metadataId = fieldName | slice(9) | number_format %}
             {% set metadata = metadata(metadataId) %}
-            {% if fieldName matches '%.*value_file.content%' %}
-                {% set highlights = withPageNumbers(resource, resource | m(metadataId), highlights) %}
+            {% if fieldName matches '%.*value_(directory|file)%' %}
+                {% set highlights = withPageNumbers(resource, metadata.control, resource | m(metadataId), highlights) %}
             {% endif %}
             {% set metadataLabel = metadata.label | inCurrentLanguage %}
             {% set representsWholeValue = highlights | join | replace({'<em>': '', '</em>': '', ' ': ''})

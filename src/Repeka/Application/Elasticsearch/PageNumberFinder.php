@@ -2,6 +2,7 @@
 namespace Repeka\Application\Elasticsearch;
 
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Service\ResourceFileStorage;
 
@@ -17,11 +18,14 @@ class PageNumberFinder {
         $this->fileStorage = $fileStorage;
     }
 
-    public function matchSearchHitsWithPageNumbers(ResourceEntity $resource, array $files, array $highlights): array {
+    public function matchSearchHitsWithPageNumbers(ResourceEntity $resource, string $control, array $paths, array $highlights): array {
+        if ($control == MetadataControl::DIRECTORY) {
+            $paths = $this->getFilesFromDirectory($resource, $paths);
+        }
         $highlights = $this->chooseFragmentWithHit($highlights);
         $hits = $this->clearHighlight($highlights);
         $results = [];
-        foreach ($this->onlySupportedFileFormats($files) as $file) {
+        foreach ($this->onlySupportedFileFormats($paths) as $file) {
             $pages = explode("\f", $this->fileStorage->getFileContents($resource, $file));
             $results = array_merge(
                 $results,
@@ -32,6 +36,15 @@ class PageNumberFinder {
             }
         }
         return [];
+    }
+
+    private function getFilesFromDirectory(ResourceEntity $resource, array $paths) {
+        $allMetadataFiles = [];
+        foreach ($paths as $path) {
+            $files = $this->fileStorage->getDirectoryContents($resource, $path);
+            $allMetadataFiles = array_merge($allMetadataFiles, $files);
+        }
+        return $allMetadataFiles;
     }
 
     private function findPageNumbersInSingleFile(

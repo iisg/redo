@@ -2,6 +2,8 @@
 namespace Repeka\Tests\Application\Elasticsearch;
 
 use Repeka\Application\Elasticsearch\PageNumberFinder;
+use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Service\ResourceFileStorage;
 use Repeka\Tests\Traits\StubsTrait;
@@ -24,7 +26,7 @@ class PageNumberFinderTest extends \PHPUnit_Framework_TestCase {
         'no-page-breaks.txt' =>
             "The best thing about a boolean is even if you are wrong,\n you are only off by a bit\n",
         'too-many-page-breaks.txt' =>
-            "Page breaks tend to break things\n\f\n\fSo let's write more of those\n\f"
+            "Page breaks tend to break things\n\f\n\fSo let's write more of those\n\f",
     ];
 
     public function setUp() {
@@ -41,6 +43,7 @@ class PageNumberFinderTest extends \PHPUnit_Framework_TestCase {
         ];
         $result = $this->pageNumberFinder->matchSearchHitsWithPageNumbers(
             $this->createMock(ResourceEntity::class),
+            MetadataControl::FILE,
             ['simple-test.txt'],
             $highlights
         );
@@ -68,6 +71,7 @@ class PageNumberFinderTest extends \PHPUnit_Framework_TestCase {
         ];
         $result = $this->pageNumberFinder->matchSearchHitsWithPageNumbers(
             $resource,
+            MetadataControl::FILE,
             [$path1, $path2],
             $highlights
         );
@@ -80,6 +84,7 @@ class PageNumberFinderTest extends \PHPUnit_Framework_TestCase {
         $expectedResult = [[PageNumberFinder::PAGE_NUMBER => 1, PageNumberFinder::HIGHLIGHT => "very <em>first</em> page\n"]];
         $result = $this->pageNumberFinder->matchSearchHitsWithPageNumbers(
             $this->createMock(ResourceEntity::class),
+            MetadataControl::FILE,
             ['page-break.txt'],
             $highlights
         );
@@ -92,6 +97,7 @@ class PageNumberFinderTest extends \PHPUnit_Framework_TestCase {
         $expectedResult = [[PageNumberFinder::PAGE_NUMBER => 2, PageNumberFinder::HIGHLIGHT => "<em>And</em> here we have"]];
         $result = $this->pageNumberFinder->matchSearchHitsWithPageNumbers(
             $this->createMock(ResourceEntity::class),
+            MetadataControl::FILE,
             ['page-break.txt'],
             $highlights
         );
@@ -107,6 +113,7 @@ class PageNumberFinderTest extends \PHPUnit_Framework_TestCase {
         ];
         $result = $this->pageNumberFinder->matchSearchHitsWithPageNumbers(
             $this->createMock(ResourceEntity::class),
+            MetadataControl::FILE,
             ['no-page-breaks.txt'],
             $highlights
         );
@@ -121,9 +128,39 @@ class PageNumberFinderTest extends \PHPUnit_Framework_TestCase {
         ];
         $result = $this->pageNumberFinder->matchSearchHitsWithPageNumbers(
             $this->createMock(ResourceEntity::class),
+            MetadataControl::FILE,
             ['too-many-page-breaks.txt'],
             $highlights
         );
         $this->assertEquals($expectedResult, $result);
+    }
+
+    public function testFindingPageNumbersInDirectoryContents() {
+        $this->fileStorage->method('getDirectoryContents')->willReturn(['subdir', 'file.php', 'file1.txt', 'file2.txt']);
+        $this->fileStorage->method('getFileContents')->willReturnOnConsecutiveCalls(
+            "Some content on the first page\n\fAnd on second page\n\fAnd on the third\n\f",
+            "Some content on the first page from second file\n\fsome page\n\fother stuff\n\f"
+        );
+        $highlights = [
+            "<em>Some</em> content on the first page\n\fAnd",
+            "<em>Some</em> content on the first page from second file\n\f<em>some</em> page",
+        ];
+        $adjustedHighlights = $this->pageNumberFinder->matchSearchHitsWithPageNumbers(
+            $this->createResourceMock(1),
+            MetadataControl::DIRECTORY,
+            [__DIR__],
+            $highlights
+        );
+        $expectedResult = [
+            [
+                PageNumberFinder::PAGE_NUMBER => 1,
+                PageNumberFinder::HIGHLIGHT => "<em>Some</em> content on the first page\n",
+            ],
+            [
+                PageNumberFinder::PAGE_NUMBER => 1,
+                PageNumberFinder::HIGHLIGHT => "<em>Some</em> content on the first page from second file\n",
+            ],
+        ];
+        $this->assertEquals($expectedResult, $adjustedHighlights);
     }
 }

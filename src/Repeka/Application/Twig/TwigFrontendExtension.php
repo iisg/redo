@@ -239,13 +239,13 @@ ICON;
         return $parts[count($parts) - 1];
     }
 
-    public function matchSearchHitsWithPageNumbers(ResourceEntity $resource, $files, array $highlights): array {
-        if (!is_iterable($files)) {
-            $files = [$files];
-        } elseif (!is_array($files)) {
-            $files = iterator_to_array($files);
+    public function matchSearchHitsWithPageNumbers(ResourceEntity $resource, string $control, $paths, array $highlights): array {
+        if (!is_iterable($paths)) {
+            $paths = [$paths];
+        } elseif (!is_array($paths)) {
+            $paths = iterator_to_array($paths);
         }
-        $searchResults = $this->pageNumberFinder->matchSearchHitsWithPageNumbers($resource, $files, $highlights);
+        $searchResults = $this->pageNumberFinder->matchSearchHitsWithPageNumbers($resource, $control, $paths, $highlights);
         if (!empty($searchResults)) {
             $highlightsWithPageNumbers = [];
             foreach ($searchResults as $result) {

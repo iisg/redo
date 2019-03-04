@@ -8,6 +8,7 @@ use Repeka\Application\Elasticsearch\Model\ElasticSearch;
 use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite;
 use Repeka\Application\Elasticsearch\Model\ESContentsAdjuster;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Service\ResourceFileStorage;
 use Repeka\Tests\Application\Elasticsearch\ElasticsearchTest;
 use Repeka\Tests\Traits\StubsTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,7 +49,9 @@ class ESResourceTest extends ElasticsearchTest {
             ]
         );
         $elasticSearchQueryCreatorComposite = $this->createMock(ElasticSearchQueryCreatorComposite::class);
-        $esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $this->createMock(ContainerInterface::class));
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturn($this->createMock(ResourceFileStorage::class));
+        $esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $container);
         $this->indexMock->method('getType')->with(FtsConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
         $res = new ElasticSearch($this->clientMock, $esContentsAdjuster, self::INDEX_NAME, $elasticSearchQueryCreatorComposite);
         $res->insertDocument($resource);

@@ -5,6 +5,7 @@ use Repeka\Application\Elasticsearch\PageNumberFinder;
 use Repeka\Application\Twig\FrontendConfig;
 use Repeka\Application\Twig\Paginator;
 use Repeka\Application\Twig\TwigFrontendExtension;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Tests\Traits\StubsTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -144,7 +145,7 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
             "<u>str. 101:</u> <em>highlights</em> and some more <em>highlights</em> to <em>highlight</em>",
         ];
         $resource = $this->createResourceMock(1, $this->createResourceKindMock());
-        $this->assertEquals($expectedResult, $this->extension->matchSearchHitsWithPageNumbers($resource, [], []));
+        $this->assertEquals($expectedResult, $this->extension->matchSearchHitsWithPageNumbers($resource, MetadataControl::FILE, [], []));
     }
 
     public function testFilteringDisplayedMetadata() {

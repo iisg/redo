@@ -24,12 +24,14 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
                 $this->createMetadataMock(2, null, MetadataControl::INTEGER(), [], 'books', [], 'INTEGER'),
                 $this->createMetadataMock(3, null, MetadataControl::TIMESTAMP(), [], 'books', [], 'TIMESTAMP'),
                 $this->createMetadataMock(4, null, MetadataControl::FILE(), [], 'books', [], 'FILE'),
+                $this->createMetadataMock(5, null, MetadataControl::DIRECTORY(), [], 'books', [], 'DIR'),
             ]
         );
         $this->resource = $this->createResourceMock(1);
         $container = $this->createMock(ContainerInterface::class);
         $resourceFileStorage = $this->createMock(ResourceFileStorage::class);
         $resourceFileStorage->method('getFileContents')->willReturn('mocked content');
+        $resourceFileStorage->method('getDirectoryContents')->willReturn(['file.txt', __DIR__, 'file2.txt', 'file.pdf']);
         $container->method('get')->willReturn($resourceFileStorage);
         $this->esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $container);
     }
@@ -103,12 +105,29 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
         ];
         $contentsAfterAdjust = [
             4 => [
-                ['value_file' => [FtsConstants::NAME => 'file.unsupported']],
-                ['value_file' => [FtsConstants::NAME => 'a']],
-                ['value_file' => [FtsConstants::NAME => 'file.txt', FtsConstants::CONTENT => 'mocked content']],
-                ['value_file' => [FtsConstants::NAME => 'file.txt', FtsConstants::CONTENT => 'mocked content']],
+                ['value_file' => ''],
+                ['value_file' => ''],
+                ['value_file' => 'mocked content'],
+                ['value_file' => 'mocked content'],
             ],
         ];
         $this->assertEquals($contentsAfterAdjust, $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust));
+    }
+
+    public function testAdjustDirectoryContents() {
+        $contentsToAdjust = [
+            5 => [['value' => 'directory']],
+        ];
+        $adjustedDirectory = $this->esContentsAdjuster->adjustContents($this->resource, $contentsToAdjust);
+        $this->assertNotNull($adjustedDirectory);
+        $this->assertCount(1, $adjustedDirectory);
+        $this->assertArrayHasKey(5, $adjustedDirectory);
+        $directoryMetadataValues = $adjustedDirectory[5];
+        $this->assertCount(1, $directoryMetadataValues);
+        $this->assertArrayHasKey('value_directory', $directoryMetadataValues[0]);
+        $contents = $directoryMetadataValues[0]['value_directory'];
+        $this->assertCount(2, $contents);
+        $this->assertEquals('mocked content', $contents[0]);
+        $this->assertEquals('mocked content', $contents[1]);
     }
 }

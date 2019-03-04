@@ -14,4 +14,6 @@ interface ResourceFileStorage {
     public function uploadDirsForResource(ResourceEntity $resource): array;
 
     public function getFileContents(ResourceEntity $resource, string $path): string;
+
+    public function getDirectoryContents(ResourceEntity $resource, string $path): array;
 }

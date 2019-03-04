@@ -9,7 +9,6 @@ use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSear
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) it really has to use all of these Elastica helpers... */
@@ -72,17 +71,8 @@ class ElasticSearchQuery {
         $metadataQuery = new Query\BoolQuery();
         foreach ($this->query->getSearchableMetadata() as $metadata) {
             $path = $this->getMetadataPath($metadata);
-            if ($metadata->getControl() == MetadataControl::FILE) {
-                $namePath = $path . '.' . FtsConstants::NAME;
-                $contentPath = $path . '.' . FtsConstants::CONTENT;
-                $metadataFilters[] = new Query\Match($namePath, $this->query->getPhrase());
-                $metadataFilters[] = new Query\Match($contentPath, $this->query->getPhrase());
-                $metadataFilters[] = new Query\Fuzzy($namePath, $this->query->getPhrase());
-                $metadataFilters[] = new Query\Fuzzy($contentPath, $this->query->getPhrase());
-            } else {
-                $metadataFilters[] = new Query\Fuzzy($path, $this->query->getPhrase());
-                $metadataFilters[] = new Query\Match($path, $this->query->getPhrase());
-            }
+            $metadataFilters[] = new Query\Fuzzy($path, $this->query->getPhrase());
+            $metadataFilters[] = new Query\Match($path, $this->query->getPhrase());
         }
         $metadataQuery->addShould($metadataFilters);
         return $metadataQuery;
