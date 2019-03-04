@@ -558,7 +558,7 @@ class ResourcesFixture extends RepekaFixture {
                     ]
                 )->withReplacedValues(
                     SystemMetadata::USERNAME,
-                    'Wszyscy'
+                    'Niezalogowani'
                 )
             )
         );

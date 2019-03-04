@@ -94,7 +94,7 @@ class SystemMetadata extends Enum {
                 '',
                 MetadataControl::RELATIONSHIP(),
                 'Teaser Visibility',
-                ['EN' => 'Visibility in relationship', 'PL' => 'Widoczność w relacjach']
+                ['EN' => 'Teaser visibility', 'PL' => 'Widoczność etykiety']
             );
         }
         /** @noinspection PhpUndefinedVariableInspection */
