@@ -217,4 +217,23 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $this->assertNotEmpty($results);
         $this->assertContains($category->getId(), EntityUtils::mapToIds($results));
     }
+
+    public function testFindByParentAsStringSearchesForExactValue() {
+        $query = ResourceListQuery::builder()->filterByContents([SystemMetadata::PARENT => '1'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertEmpty($results); // the '1' query should not match resources that have parent 16 etc
+    }
+
+    public function testFindByParentAsIntSearchesForExactValue() {
+        $query = ResourceListQuery::builder()->filterByContents([SystemMetadata::PARENT => 1])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertEmpty($results); // the 1 query should not match resources that have parent 16 etc
+    }
+
+    public function testFindingByParent() {
+        $ebooks = $this->findResourceByContents(['nazwaKategorii' => 'E-booki']);
+        $query = ResourceListQuery::builder()->filterByContents([SystemMetadata::PARENT => "{$ebooks->getId()}"])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(2, $results);
+    }
 }

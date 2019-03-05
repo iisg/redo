@@ -4,6 +4,7 @@ namespace Repeka\Tests\Domain\UseCase\Resource;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\ColumnSortDataConverter;
@@ -41,7 +42,8 @@ class ResourceListQueryAdjusterTest extends \PHPUnit_Framework_TestCase {
         $this->adjuster = new ResourceListQueryAdjuster(
             $this->createRepositoryStub(MetadataRepository::class),
             $resourceKindRepository,
-            $this->columnSortDataConverter
+            $this->columnSortDataConverter,
+            $this->createMock(MetadataValueAdjusterComposite::class)
         );
     }
 

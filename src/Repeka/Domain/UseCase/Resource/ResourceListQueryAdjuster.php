@@ -3,8 +3,10 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\ColumnSortDataConverter;
@@ -17,15 +19,19 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
     private $resourceKindRepository;
     /** @var ColumnSortDataConverter */
     private $columnSortDataConverter;
+    /** @var MetadataValueAdjusterComposite */
+    private $metadataValueAdjuster;
 
     public function __construct(
         MetadataRepository $metadataRepository,
         ResourceKindRepository $resourceKindRepository,
-        ColumnSortDataConverter $columnSortDataConverter
+        ColumnSortDataConverter $columnSortDataConverter,
+        MetadataValueAdjusterComposite $metadataValueAdjuster
     ) {
         $this->metadataRepository = $metadataRepository;
         $this->resourceKindRepository = $resourceKindRepository;
         $this->columnSortDataConverter = $columnSortDataConverter;
+        $this->metadataValueAdjuster = $metadataValueAdjuster;
     }
 
     /**
@@ -39,7 +45,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
             $this->convertResourceKindIdsToResourceKinds($query->getResourceKinds()),
             $this->columnSortDataConverter->convertSortByMetadataColumnsToIntegers($query->getSortBy()),
             $query->getParentId(),
-            $this->mapMetadataNamesToIdsInContentFilter($query->getContentsFilters()),
+            $this->adjustContents($query->getContentsFilters()),
             $query->onlyTopLevel(),
             $query->getPage(),
             $query->getResultsPerPage(),
@@ -60,10 +66,17 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
         );
     }
 
-    private function mapMetadataNamesToIdsInContentFilter(array $contentsFilters) {
+    private function adjustContents(array $contentsFilters) {
         return array_map(
             function (ResourceContents $contentsFilter) {
-                return $contentsFilter->withMetadataNamesMappedToIds($this->metadataRepository);
+                return $contentsFilter
+                    ->withMetadataNamesMappedToIds($this->metadataRepository)
+                    ->mapAllValues(
+                        function (MetadataValue $value, int $metadataId) {
+                            $metadata = $this->metadataRepository->findOne($metadataId);
+                            return $this->metadataValueAdjuster->adjustMetadataValue($value, $metadata->getControl());
+                        }
+                    );
             },
             $contentsFilters
         );
