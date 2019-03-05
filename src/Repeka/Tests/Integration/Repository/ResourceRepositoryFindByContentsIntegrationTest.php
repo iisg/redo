@@ -236,4 +236,10 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(2, $results);
     }
+
+    public function testFindingByDateRegex() {
+        $query = ResourceListQuery::builder()->filterByContents(['data_utworzenia_rekordu' => '2.+'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(4, $results);
+    }
 }

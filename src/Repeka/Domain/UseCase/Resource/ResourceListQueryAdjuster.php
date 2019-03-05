@@ -74,7 +74,11 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
                     ->mapAllValues(
                         function (MetadataValue $value, int $metadataId) {
                             $metadata = $this->metadataRepository->findOne($metadataId);
-                            return $this->metadataValueAdjuster->adjustMetadataValue($value, $metadata->getControl());
+                            try {
+                                return $this->metadataValueAdjuster->adjustMetadataValue($value, $metadata->getControl());
+                            } catch (\Exception $e) {
+                                return $value;
+                            }
                         }
                     );
             },
