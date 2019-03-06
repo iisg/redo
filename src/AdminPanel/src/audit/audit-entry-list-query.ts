@@ -43,6 +43,11 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     return this;
   }
 
+  public filterByTransitions(transitions: string[]): this {
+    this.params.transitions = transitions;
+    return this;
+  }
+
   public addCustomColumns(templates: string[]): this {
     this.params.customColumns = templates;
     return this;

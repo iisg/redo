@@ -28,8 +28,8 @@ class ResourceWorkflowListQueryValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->validator->isValid($command));
     }
 
-    public function testInvalidWhenBlankResourceClass() {
+    public function testValidWhenBlankResourceClass() {
         $command = new ResourceWorkflowListQuery('');
-        $this->assertFalse($this->validator->isValid($command));
+        $this->assertTrue($this->validator->isValid($command));
     }
 }

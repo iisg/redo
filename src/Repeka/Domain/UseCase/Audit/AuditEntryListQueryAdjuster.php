@@ -29,6 +29,13 @@ class AuditEntryListQueryAdjuster implements CommandAdjuster {
         return $this->isDate($dateTo) ? date(self::MOMENT_DATE_FORMAT, strtotime('+1 day', strtotime($dateTo))) : "";
     }
 
+    public function addQuotes(array $transitions): array {
+        array_walk($transitions, function (&$x) {
+            $x = "\"$x\"";
+        });
+        return $transitions;
+    }
+
     /** @param AuditEntryListQuery $command */
     public function adjustCommand(Command $command): Command {
         $adjustedQuery = new AuditEntryListQuery(
@@ -37,6 +44,7 @@ class AuditEntryListQueryAdjuster implements CommandAdjuster {
             $this->adjustDateTo($command->getDateTo()),
             $command->getUsers(),
             $command->getResourceKinds(),
+            $this->addQuotes($command->getTransitions()),
             $command->getResourceContentsFilter()->withMetadataNamesMappedToIds($this->metadataRepository),
             $command->getPage(),
             $command->getResultsPerPage(),

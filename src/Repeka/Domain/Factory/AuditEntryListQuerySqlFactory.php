@@ -25,6 +25,7 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
         );
         $this->filterByUsers();
         $this->filterByAuditResourceKinds();
+        $this->filterByTransitions();
         $this->filterByResourceId();
         $this->orderBy[] = 'ae.created_at DESC, id DESC';
         $this->paginate();
@@ -63,6 +64,13 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
             $tempWhereAlternatives[] = "ae.data->'resource'->'kindId' IN(:resourceKinds)";
             $this->wheres[] = '(' . implode(' OR ', $tempWhereAlternatives) . ')';
             $this->params['resourceKinds'] = $this->query->getResourceKinds();
+        }
+    }
+
+    private function filterByTransitions() {
+        if ($this->query->getTransitions()) {
+            $this->wheres[] = "ae.data->'transitionId' IN (:transitions)";
+            $this->params['transitions'] = $this->query->getTransitions();
         }
     }
 

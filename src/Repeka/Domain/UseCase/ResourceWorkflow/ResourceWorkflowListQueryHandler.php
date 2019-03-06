@@ -15,6 +15,8 @@ class ResourceWorkflowListQueryHandler {
     /** @return ResourceWorkflow[] */
     public function handle(ResourceWorkflowListQuery $query): array {
         $resourceClass = $query->getResourceClass();
-        return $this->workflowRepository->findAllByResourceClass($resourceClass);
+        return $resourceClass
+            ? $this->workflowRepository->findAllByResourceClass($resourceClass)
+            : $this->workflowRepository->findAll();
     }
 }

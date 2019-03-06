@@ -43,6 +43,10 @@ class AuditController extends ApiController {
         Assertion::isArray($resourceKinds);
         $queryBuilder->filterByResourceKinds($resourceKinds);
 
+        $transitions = $request->get('transitions', []);
+        Assertion::isArray($transitions);
+        $queryBuilder->filterByTransitions($transitions);
+
         Assertion::isArray($commandNames);
         $queryBuilder->filterByCommandNames($commandNames)
             ->filterByResourceContents(is_array($contentsFilter) ? $contentsFilter : []);

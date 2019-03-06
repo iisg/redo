@@ -14,6 +14,7 @@ export class AuditListFilters {
   dateTo: string;
   users: string[] = [];
   resourceKinds: string[] = [];
+  transitions: string[] = [];
   resourceContents: NumberMap<string>;
   customColumns: { displayStrategy: string }[] = [];
   resourceId: number;
@@ -41,6 +42,9 @@ export class AuditListFilters {
     }
     if (this.resourceKinds.length) {
       params['resourceKinds'] = this.resourceKinds.join(',');
+    }
+    if (this.transitions.length) {
+      params['transitions'] = this.transitions.join(',');
     }
     if (this.customColumns.length) {
       params['customColumns'] = JSON.stringify(this.customColumns.map(col => col.displayStrategy));
@@ -70,6 +74,7 @@ export class AuditListFilters {
       .filterByCommandNames(this.commandNames)
       .filterByUsers(this.users)
       .filterByResourceKinds(this.resourceKinds)
+      .filterByTransitions(this.transitions)
       .addCustomColumns(this.customColumns.map(({displayStrategy}) => displayStrategy))
       .setCurrentPageNumber(this.currentPageNumber)
       .setResultsPerPage(this.resultsPerPage);
@@ -85,6 +90,7 @@ export class AuditListFilters {
     filters.dateTo = filters.fixDateTo(filters.dateFrom, filters.dateTo);
     filters.users = (params['users'] || '').split(',').filter(user => !!user.trim());
     filters.resourceKinds = (params['resourceKinds'] || '').split(',').filter(resourceKind => !!resourceKind.trim());
+    filters.transitions = (params['transitions'] || '').split(',').filter(transition => !!transition.trim());
     filters.resourceContents = safeJsonParse(params['resourceContents']);
     filters.setCustomColumns(params['customColumns']);
     filters.resourceId = +params['id'];

@@ -5,12 +5,14 @@ use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
 use Repeka\Domain\Entity\ResourceContents;
 
+/** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class AuditEntryListQuery extends AbstractListQuery implements NonValidatedCommand, AdjustableCommand {
 
     /** @var array */
     private $commandNames;
     private $users;
     private $resourceKinds;
+    private $transitions;
     /** @var string */
     private $dateFrom;
     private $dateTo;
@@ -24,6 +26,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         string $dateTo,
         array $users,
         array $resourceKinds,
+        array $transitions,
         ResourceContents $resourceContentsFilter,
         int $page,
         int $resultsPerPage,
@@ -35,6 +38,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         $this->dateTo = $dateTo;
         $this->users = $users;
         $this->resourceKinds = $resourceKinds;
+        $this->transitions = $transitions;
         $this->resourceContentsFilter = $resourceContentsFilter;
         $this->resourceId = $resourceId;
     }
@@ -62,6 +66,11 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
     public function getResourceKinds(): array {
         return $this->resourceKinds;
     }
+
+    public function getTransitions(): array {
+        return $this->transitions;
+    }
+
     public function getResourceContentsFilter(): ResourceContents {
         return $this->resourceContentsFilter;
     }

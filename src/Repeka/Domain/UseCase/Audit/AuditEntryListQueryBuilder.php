@@ -9,6 +9,7 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
     private $dateTo = "";
     private $users = [];
     private $resourceKinds = [];
+    private $transitions = [];
     private $resourceContents = [];
     private $resourceId = 0;
 
@@ -19,6 +20,7 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
             $this->dateTo,
             $this->users,
             $this->resourceKinds,
+            $this->transitions,
             $this->resourceContents instanceof ResourceContents
                 ? $this->resourceContents
                 : ResourceContents::fromArray($this->resourceContents),
@@ -53,6 +55,10 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
+    public function filterByTransitions(array $transitions): self {
+        $this->transitions = $transitions;
+        return $this;
+    }
     /** @param ResourceContents|array $resourceContents */
     public function filterByResourceContents($resourceContents): self {
         $this->resourceContents = $resourceContents;

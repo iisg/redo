@@ -10,6 +10,7 @@
     <require from="./filters/date-range-picker"></require>
     <require from="./filters/audit-user-chooser"></require>
     <require from="./filters/audit-resource-kind-chooser"></require>
+    <require from="./filters/audit-transition-chooser"></require>
     <require from="./underscores-to-hyphens"></require>
     <require from="common/components/loading-bar/loading-cover"></require>
 
@@ -30,6 +31,8 @@
             <audit-user-chooser selected-users-ids.bind="filters.users"></audit-user-chooser>
             <span>${'Resource kind' | t}</span>
             <audit-resource-kind-chooser selected-resource-kinds-ids.bind="filters.resourceKinds"></audit-resource-kind-chooser>
+            <span>${'Transition' | t}</span>
+            <audit-transition-chooser selected-transitions-ids.bind="filters.transitions"></audit-transition-chooser>
             <span>${'Resource contents' | t}</span>
             <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
         </div>

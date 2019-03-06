@@ -22,7 +22,7 @@ class ResourceWorkflowListQueryValidator extends CommandAttributesValidator {
      */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('resourceClass', $this->resourceClassExistsRule)
+            ::attribute('resourceClass', Validator::optional($this->resourceClassExistsRule))
             ->setName('Resource class is not defined');
     }
 }
