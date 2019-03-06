@@ -154,6 +154,8 @@ export class DateRangePicker {
       let dateTo: string = undefined;
       $(this.datepicker).data('DateTimePicker').maxDate(false);
       $(this.linkedDatepicker).data("DateTimePicker").minDate(false);
+      $(this.datepicker).data('DateTimePicker').clear();
+      $(this.linkedDatepicker).data("DateTimePicker").clear();
       this.setDateRange(dateFrom, dateTo);
       let dateConfig = new DateRangeConfig(this.dateOption);
       dateFrom = dateConfig.dateFrom;

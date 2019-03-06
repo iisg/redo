@@ -1,4 +1,5 @@
 date-range-config:
+  no_date: no date
   today: today
   yesterday: yesterday
   current_week: current week

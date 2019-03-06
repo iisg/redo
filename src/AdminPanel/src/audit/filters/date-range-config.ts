@@ -1,6 +1,7 @@
 import * as moment from "moment";
 
 export enum DateRangeMode {
+  NO_DATE = 'no_date',
   TODAY = 'today',
   YESTERDAY = 'yesterday',
   CURRENT_WEEK = 'current_week',
@@ -36,6 +37,11 @@ export class DateRangeConfig {
   setDates(): void {
     let today = this.formatDate(moment());
     switch (this.mode) {
+      case DateRangeMode.NO_DATE:
+        this.dateFrom = undefined;
+        this.dateTo = undefined;
+        break;
+
       case DateRangeMode.TODAY:
         this.dateFrom = today;
         this.dateTo = today;
