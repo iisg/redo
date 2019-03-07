@@ -9,33 +9,26 @@ $filters-panel-width: 340px;
   flex-wrap: wrap;
   padding-top: $default-gap-size;
   padding-bottom: $default-gap-size;
-  .filters-panel[collapsible].horizontally {
-    padding: $default-gap-size / 2 !important;
-    border-right: 2 * $default-border-width $default-border-style $default-border-color;
+  .filters-panel[collapsible].horizontally-on-regular-screens {
+    margin-left: $default-gap-size;
+    margin-right: $default-gap-size;
+    padding-top: $default-gap-size / 2 !important;
+    padding-bottom: $default-gap-size / 2 !important;
+    border-bottom: $default-border-width $default-border-style $default-border-color;
     min-width: calc(#{$filters-panel-toggle-icon-height} + 4 * #{$default-gap-size / 4} + 2 * #{$default-gap-size / 2});
-    &:not(.collapsed) {
-      width: $filters-panel-width;
+    min-height: calc(#{$filters-panel-toggle-icon-height} + 4 * #{$default-gap-size / 4} + 2 * #{$default-gap-size / 2});
+    @media (max-width: $maximum-screen-width-for-mobile-layout) {
+      width: 100% !important;
     }
     &.collapsed, &.collapsing {
       opacity: 1;
       visibility: visible;
-      .title-with-toggle .title, .advanced-filters {
-        opacity: 0;
-        visibility: hidden;
-      }
-      .title-with-toggle {
-        .title {
-          padding-right: 0;
-        }
-        .toggle {
-          padding-left: 0;
-        }
-      }
     }
     .title-with-toggle {
       display: flex;
       width: 100%;
       overflow: hidden;
+      text-align: left;
       &, .title, .toggle {
         padding: $default-gap-size / 4;
       }
@@ -43,13 +36,9 @@ $filters-panel-width: 340px;
         flex: 1;
         align-self: center;
         overflow: hidden;
-        transition-property: opacity, visibility, padding-right;
-        transition-duration: $collapse-and-expand-animations-duration;
-        text-align: left;
       }
       .toggle {
         line-height: 0;
-        transition: padding-left $collapse-and-expand-animations-duration;
         .icon {
           height: $filters-panel-toggle-icon-height;
         }
@@ -57,7 +46,7 @@ $filters-panel-width: 340px;
     }
     .advanced-filters {
       padding: $default-gap-size / 2 $default-gap-size;
-      width: $filters-panel-width - 2 * $default-gap-size / 2;
+      width: 100%;
       transition-property: opacity, visibility;
       transition-duration: $collapse-and-expand-animations-duration;
       & > :not(hr) {
@@ -118,6 +107,44 @@ $filters-panel-width: 340px;
     .pagination {
       max-width: 100%;
       margin-top: auto;
+    }
+  }
+
+  @media (min-width: $minimum-screen-width-for-regular-layout) {
+    .filters-panel[collapsible].horizontally-on-regular-screens {
+      margin-left: 0;
+      margin-right: 0;
+      border-bottom: none;
+      border-right: 2 * $default-border-width $default-border-style $default-border-color;
+      padding-left: $default-gap-size / 2 !important;
+      padding-right: $default-gap-size / 2 !important;
+      &.collapsed, &.collapsing {
+        .title-with-toggle .title, .advanced-filters {
+          opacity: 0;
+          visibility: hidden;
+        }
+        .title-with-toggle {
+          .title {
+            padding-right: 0;
+          }
+          .toggle {
+            padding-left: 0;
+          }
+        }
+      }
+      .title-with-toggle {
+        .title {
+          transition-property: opacity, visibility, padding-right;
+          transition-duration: $collapse-and-expand-animations-duration;
+          text-align: left;
+        }
+        .toggle {
+          transition: padding-left $collapse-and-expand-animations-duration;
+        }
+      }
+      .advanced-filters {
+        width: $filters-panel-width - 2 * $default-gap-size / 2 - 2 * $default-border-width;
+      }
     }
   }
 }

@@ -1,21 +1,40 @@
 @import "../styles";
 
+$vertically-collapsible-transition-properties: height, margin-top, margin-bottom, padding-top, padding-bottom, opacity, visibility;
+$horizontally-collapsible-transition-properties: width, margin-left, margin-right, padding-left, padding-right, opacity, visibility;
+
 .collapsing, .collapsed {
     &:not(.collapsible-with-visible-first-line) {
         opacity: 0;
         visibility: hidden;
     }
-    &:not(.horizontally) {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
+    &:not(.horizontally-on-regular-screens) {
+        &:not(.horizontally) {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        &.horizontally {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
     }
-    &.horizontally {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+    &.horizontally-on-regular-screens {
+        @media (max-width: $maximum-screen-width-for-mobile-layout) {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        @media (min-width: $minimum-screen-width-for-regular-layout) {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
     }
 }
 
@@ -24,11 +43,19 @@
 }
 
 .collapsed {
-    &:not(.horizontally) {
+    &:not(.horizontally):not(.horizontally-on-regular-screens) {
         height: 0;
     }
     &.horizontally {
         width: 0;
+    }
+    &.horizontally-on-regular-screens {
+        @media (max-width: $maximum-screen-width-for-mobile-layout) {
+            height: 0;
+        }
+        @media (min-width: $minimum-screen-width-for-regular-layout) {
+            width: 0;
+        }
     }
 }
 
@@ -37,15 +64,26 @@
 }
 
 [collapsible] {
-    &:not(.horizontally) {
-        width: auto !important;
-        transition-property: height, opacity, visibility, margin-top, margin-bottom, padding-top, padding-bottom;
-        transition-duration: $collapse-and-expand-animations-duration;
+    transition-duration: $collapse-and-expand-animations-duration;
+    &:not(.horizontally-on-regular-screens) {
+        &:not(.horizontally) {
+            width: auto !important;
+            transition-property: $vertically-collapsible-transition-properties;
+        }
+        &.horizontally {
+            height: auto !important;
+            transition-property: $horizontally-collapsible-transition-properties;
+        }
     }
-    &.horizontally {
-        height: auto !important;
-        transition-property: width, opacity, visibility, margin-left, margin-right, padding-left, padding-right;
-        transition-duration: $collapse-and-expand-animations-duration;
+    &.horizontally-on-regular-screens {
+        @media (max-width: $maximum-screen-width-for-mobile-layout) {
+            width: auto !important;
+            transition-property: $vertically-collapsible-transition-properties;
+        }
+        @media (min-width: $minimum-screen-width-for-regular-layout) {
+            height: auto !important;
+            transition-property: $horizontally-collapsible-transition-properties;
+        }
     }
 }
 
@@ -73,6 +111,14 @@
 .expand-toggle.toggled  {
     svg {
         transform: rotate(90deg);
+    }
+}
+
+.horizontally-expand-toggle-on-regular-screens.toggled {
+    @media (min-width: $minimum-screen-width-for-regular-layout) {
+        svg {
+            transform: rotate(180deg);
+        }
     }
 }
 

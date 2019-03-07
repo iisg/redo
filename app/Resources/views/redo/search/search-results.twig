@@ -9,14 +9,14 @@
     {% include "redo/search/search-bar.twig" %}
 
     <div class="search-results-container">
-        <div class="filters-panel horizontally collapsed"
+        <div class="filters-panel horizontally-on-regular-screens collapsed"
             id="filters-panel"
             local-storage-value="key: filtersPanelExpanded; value.bind: filtersPanelExpanded"
             collapsible="collapsed.bind: !filtersPanelExpanded; width.bind: 340">
             <button class="title-with-toggle"
                 click.delegate="filtersPanelExpanded = !filtersPanelExpanded">
                 <h3 id="filtersHeading" class="title"><strong>{{ 'Filters' | trans }}</strong></h3>
-                <div class="toggle horizontally-expand-toggle"
+                <div class="toggle expand-toggle horizontally-expand-toggle-on-regular-screens"
                     class.bind="filtersPanelExpanded ? 'toggled' : ''"
                     title.bind="filtersPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'"
                     aria-label.bind="filtersPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'">
@@ -113,7 +113,7 @@
                 filtersPanel.classList.add('expanding');
                 filtersPanel.classList.remove('collapsed');
                 filtersPanel.classList.add('expanded');
-                document.getElementsByClassName('horizontally-expand-toggle')[0].classList.add('toggled');
+                document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
             }
           }
         </script>

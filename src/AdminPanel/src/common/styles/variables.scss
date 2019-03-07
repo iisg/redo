@@ -24,3 +24,6 @@ $simple-form-row-gap-size: $default-gap-size / 2;
 $default-input-box-height: 34px;
 
 $collapse-and-expand-animations-duration: 0.4s;
+
+$maximum-screen-width-for-mobile-layout: 420px;
+$minimum-screen-width-for-regular-layout: $maximum-screen-width-for-mobile-layout + 1px;
