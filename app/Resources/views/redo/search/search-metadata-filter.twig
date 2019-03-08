@@ -40,7 +40,8 @@
                 <span>{{ icon('forward') }}</span>
             </button>
         {% endblock %}
-        <div class="collapsible">
+        <div class="{{ filterUsed ? 'expanded' : 'collapsed' }}"
+            collapsible="collapsed.bind: !{{ variableName }}">
             {% if parentMetadata %}
                 {% set parentFilters = app.request.query.all.metadataFilters[-1] ?? null %}
                 {% for resource in resources({resourceClasses: searchableResourceClasses, parentId: null}) %}

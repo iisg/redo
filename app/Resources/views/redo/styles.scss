@@ -1,6 +1,5 @@
 @import "styles/colors";
 @import "styles/variables";
-@import "styles/animations";
 
 @import "styles/base";
 
@@ -21,5 +20,6 @@
 
 @import "styles/login-form";
 
+@import "../../../../src/AdminPanel/src/common/custom-attributes/collapsed-custom-attribute";
 @import "../../../../src/AdminPanel/src/common/components/icon/icon";
 @import "../../../../src/AdminPanel/src/common/components/redo-footer/redo-footer";

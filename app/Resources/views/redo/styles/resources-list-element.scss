@@ -49,7 +49,8 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
       }
       fieldset {
         margin: $default-gap-size / 8 $default-gap-size / 4;
-        transition: transitions-with-common-settings(opacity visibility, $default-transition-duration);
+        transition-duration: opacity, visibility;
+        transition-duration: $default-transition-duration;
         .download-formats {
           display: flex;
           justify-content: space-evenly;
@@ -83,11 +84,8 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
       }
       .collapsible-with-visible-first-line {
         position: relative;
-        width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
-        &:not(.collapsed) {
-          .text-container:not(.metadata-label) em {
-            transition: background-color $expand-animation-opacity-and-visibility-transitions-settings;
-          }
+        max-width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
+        &.expanding, &.expanded {
           .text-container.metadata-label {
             color: $grey;
             &::first-line {
@@ -95,16 +93,21 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
             }
           }
         }
-        &.collapsed {
+        &.expanding .text-container:not(.metadata-label) em {
+          transition: background-color $collapse-and-expand-animations-duration;
+        }
+        &.collapsing, &.collapsed {
           .text-container:not(.metadata-label) em {
             background-color: transparent;
-            transition: background-color $collapse-animation-opacity-and-visibility-transitions-settings;
           }
           .text-container.metadata-label {
             &::first-line {
               color: $grey;
             }
           }
+        }
+        &.collapsing .text-container:not(.metadata-label) em {
+          transition: background-color $collapse-and-expand-animations-duration;
         }
       }
       .first-line-with-optional-toggle {
@@ -122,9 +125,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
               + #{$collapsible-metadata-list-toggle-height} + 1px); // `+ 1px` is required by Chromium.
             & > :not(.expand-toggle) {
               width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
-              &, .metadata-label {
-                color: transparent;
-              }
+              visibility: hidden;
             }
           }
         }

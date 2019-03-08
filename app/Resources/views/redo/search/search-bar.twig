@@ -28,8 +28,8 @@
         {% endif %}
     </div>
     {% if results is not defined %}
-        <div class="advanced-options collapsible collapsed"
-            class.bind="advancedOptionsExpanded ? '' : 'collapsed'"
+        <div class="advanced-options collapsed"
+            collapsible="collapsed.bind: !advancedOptionsExpanded"
             role="listbox"
             aria-expanded.bind="advancedOptionsExpanded">
             {% set parentMetadata = null %}

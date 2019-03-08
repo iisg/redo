@@ -123,8 +123,8 @@
                     </div>
                 </div>
                 <div class="collapsible-with-visible-first-line collapsed"
-                    class.bind="{{ variableName }} ? '' : 'collapsed'"
-                    click.delegate="{{ variableName }} = true">
+                    click.delegate="{{ variableName }} = true"
+                    collapsible="collapsed.bind: !{{ variableName }}">
                     {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
                         <div class="metadata-details {{ loop.first ? 'text-container': '' }}">
                             <span class="metadata-label

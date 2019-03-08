@@ -63,6 +63,7 @@ export function configure(aurelia: Aurelia) {
       .plugin('aurelia-dialog', dialogConfigurator)
       .globalResources([
         'common/custom-attributes/local-storage-value-custom-attribute',
+        'common/custom-attributes/collapsible-custom-attribute',
         'common/authorization/has-role-value-converter',
         'common/bootstrap/bootstrap-tooltip',
         'common/components/redo-footer/redo-footer.html',

@@ -1,0 +1,83 @@
+@import "../styles";
+
+.collapsing, .collapsed {
+    &:not(.collapsible-with-visible-first-line) {
+        opacity: 0;
+        visibility: hidden;
+    }
+    &:not(.horizontally) {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    &.horizontally {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+.collapsing, .expanding, .collapsed {
+    overflow: hidden;
+}
+
+.collapsed {
+    &:not(.horizontally) {
+        height: 0;
+    }
+    &.horizontally {
+        width: 0;
+    }
+}
+
+.expanded, .expanding {
+    opacity: 1;
+}
+
+[collapsible] {
+    &:not(.horizontally) {
+        width: auto !important;
+        transition-property: height, opacity, visibility, margin-top, margin-bottom, padding-top, padding-bottom;
+        transition-duration: $collapse-and-expand-animations-duration;
+    }
+    &.horizontally {
+        height: auto !important;
+        transition-property: width, opacity, visibility, margin-left, margin-right, padding-left, padding-right;
+        transition-duration: $collapse-and-expand-animations-duration;
+    }
+}
+
+[collapsible].collapsible-with-visible-first-line {
+    min-height: $default-line-height * 1em;
+    transition-property: height, color;
+    transition-duration: $collapse-and-expand-animations-duration;
+    .text-container::first-line {
+        color: $default-text-color;
+    }
+    &.collapsed, &.collapsing {
+        color: transparent;
+    }
+    &.expanded, &.expanding {
+        color: $default-text-color;
+    }
+}
+
+.expand-toggle, .horizontally-expand-toggle {
+    svg {
+        transition: transform $collapse-and-expand-animations-duration;
+    }
+}
+
+.expand-toggle.toggled  {
+    svg {
+        transform: rotate(90deg);
+    }
+}
+
+.horizontally-expand-toggle.toggled {
+    svg {
+        transform: rotate(180deg);
+    }
+}

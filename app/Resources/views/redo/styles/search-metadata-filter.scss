@@ -18,7 +18,9 @@
         }
     }
     .property-options {
-        padding: $default-gap-size / 8 $default-gap-size / 4; // It's all because of the issue with `.property-name-container` margins.
+        padding-top: 2 * $default-gap-size / 8; // It's all because of the issue with `.property-name-container` margins.
+        padding-left: $default-gap-size / 4; //
+        padding-right: $default-gap-size / 4; //
         & > :not(.property-name-container):only-child .label-with-checkbox {
             padding-top: $default-gap-size / 8;
             padding-bottom: $default-gap-size / 8;
@@ -30,7 +32,7 @@
     .property-name-container {
         display: flex;
         margin-top: $default-gap-size / 8; // Setting left and right margins doesn't seem to work well with `width: 100%`.
-        margin-bottom: $default-gap-size / 8; //
+        margin-bottom: 2 * $default-gap-size / 8; //
         background-color: $tertiary-background-color;
         width: 100%;
         &, & > * {
@@ -41,7 +43,9 @@
         }
     }
     .property-name-container + div {
-        padding: $default-gap-size / 8;
+        padding-bottom: 2 * $default-gap-size / 8;
+        padding-left: $default-gap-size / 8;
+        padding-right: $default-gap-size / 8;
     }
     .parent {
         display: flex;
@@ -60,15 +64,7 @@
         padding: $default-gap-size / 8;
     }
     .children {
-      margin-left: $checkbox-and-radio-button-width-and-height + $checkbox-and-radio-button-right-margin;
-    }
-    .collapsible {
-        flex-direction: column;
-    }
-    .property-name-container:not(.toggled) + div {
-        @include collapsed-collapsible();
-    }
-    .property-name-container.toggled + div {
-        @include expanded-collapsible();
+        max-width: calc(100% - #{$checkbox-and-radio-button-width-and-height} - #{$checkbox-and-radio-button-right-margin});
+        margin-left: $checkbox-and-radio-button-width-and-height + $checkbox-and-radio-button-right-margin;
     }
 }

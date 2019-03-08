@@ -1,6 +1,6 @@
 $icons-size: 1.5;
-$left-panel-toggle-icon-height: 2em;
-$left-panel-maximum-width: 320px;
+$filters-panel-toggle-icon-height: 2em;
+$filters-panel-width: 340px;
 
 .search-results-container {
   display: flex;
@@ -9,41 +9,57 @@ $left-panel-maximum-width: 320px;
   flex-wrap: wrap;
   padding-top: $default-gap-size;
   padding-bottom: $default-gap-size;
-  .left-panel {
-    padding: $default-gap-size / 2;
+  .filters-panel[collapsible].horizontally {
+    padding: $default-gap-size / 2 !important;
     border-right: 2 * $default-border-width $default-border-style $default-border-color;
-    max-width: $left-panel-maximum-width;
-    .horizontally-collapsible {
-      width: $left-panel-maximum-width;
+    min-width: calc(#{$filters-panel-toggle-icon-height} + 4 * #{$default-gap-size / 4} + 2 * #{$default-gap-size / 2});
+    &:not(.collapsed) {
+      width: $filters-panel-width;
     }
-    &:not(.expanded) .horizontally-collapsible {
-      @include collapsed-horizontally-collapsible(-$left-panel-maximum-width + 2 * $default-gap-size / 2);
-    }
-    &.expanded .horizontally-collapsible {
-      @include expanded-horizontally-collapsible();
+    &.collapsed, &.collapsing {
+      opacity: 1;
+      visibility: visible;
+      .title-with-toggle .title, .advanced-filters {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .title-with-toggle {
+        .title {
+          padding-right: 0;
+        }
+        .toggle {
+          padding-left: 0;
+        }
+      }
     }
     .title-with-toggle {
       display: flex;
-      padding: $default-gap-size / 4;
-      min-width: calc(#{$left-panel-toggle-icon-height} + #{$default-gap-size / 2} + #{$default-gap-size / 4} + #{$default-gap-size / 4});
-      & > .title {
-        flex: 1;
+      width: 100%;
+      overflow: hidden;
+      &, .title, .toggle {
         padding: $default-gap-size / 4;
-        align-self: center;
       }
-      & > button {
-        margin: $default-gap-size / 4;
+      .title {
+        flex: 1;
+        align-self: center;
+        overflow: hidden;
+        transition-property: opacity, visibility, padding-right;
+        transition-duration: $collapse-and-expand-animations-duration;
+        text-align: left;
+      }
+      .toggle {
         line-height: 0;
-        & > .icon {
-          height: $left-panel-toggle-icon-height;
+        transition: padding-left $collapse-and-expand-animations-duration;
+        .icon {
+          height: $filters-panel-toggle-icon-height;
         }
       }
     }
     .advanced-filters {
       padding: $default-gap-size / 2 $default-gap-size;
-      &.horizontally-collapsible {
-        max-width: $left-panel-maximum-width - 2 * $default-gap-size / 2;
-      }
+      width: $filters-panel-width - 2 * $default-gap-size / 2;
+      transition-property: opacity, visibility;
+      transition-duration: $collapse-and-expand-animations-duration;
       & > :not(hr) {
         padding: $default-gap-size / 4;
       }

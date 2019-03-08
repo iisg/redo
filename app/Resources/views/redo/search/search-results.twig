@@ -9,21 +9,22 @@
     {% include "redo/search/search-bar.twig" %}
 
     <div class="search-results-container">
-        <div class="left-panel"
-            class.bind="leftPanelExpanded ? 'expanded' : ''"
-            id="left-panel">
-            <div class="title-with-toggle">
-                <h3 class="title horizontally-collapsible" id="filtersHeading"><strong>{{ 'Filters' | trans }}</strong></h3>
-                <button class="horizontally-expand-toggle"
-                    class.bind="leftPanelExpanded ? 'toggled' : ''"
-                    click.delegate="leftPanelExpanded = !leftPanelExpanded"
-                    local-storage-value="key: leftPanelExpanded; value.bind: leftPanelExpanded"
-                    title.bind="leftPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'"
-                    aria-label.bind="leftPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'">
+        <div class="filters-panel horizontally collapsed"
+            id="filters-panel"
+            local-storage-value="key: filtersPanelExpanded; value.bind: filtersPanelExpanded"
+            collapsible="collapsed.bind: !filtersPanelExpanded; width.bind: 340">
+            <button class="title-with-toggle"
+                click.delegate="filtersPanelExpanded = !filtersPanelExpanded">
+                <h3 id="filtersHeading" class="title"><strong>{{ 'Filters' | trans }}</strong></h3>
+                <div class="toggle horizontally-expand-toggle"
+                    class.bind="filtersPanelExpanded ? 'toggled' : ''"
+                    title.bind="filtersPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'"
+                    aria-label.bind="filtersPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'">
                     {{ icon('forward') }}
-                </button>
-            </div>
-            <form class="advanced-filters horizontally-collapsible collapsed"
+                </div>
+            </button>
+            <form id="advanced-filters"
+                class="advanced-filters"
                 action=""
                 method="get">
                 <input type="hidden"
@@ -105,11 +106,15 @@
             </form>
         </div>
         <script>
-          if (localStorage && localStorage.getItem && localStorage.getItem('leftPanelExpanded') == 'true') {
-            {# Adds 'expanded' and 'toggled' classes to 'left-panel' and 'horizontally-expand-toggle' before Aueria loads. #}
-            var leftPanel = document.getElementById('left-panel');
-            leftPanel.classList.add('expanded');
-            leftPanel.getElementsByClassName('horizontally-expand-toggle')[0].classList.add('toggled');
+          if (localStorage && localStorage.getItem) {
+            {# Adds 'expanded' and 'toggled' classes to 'filters-panel' and 'horizontally-expand-toggle' before Aueria loads. #}
+            var filtersPanel = document.getElementById('filters-panel');
+            if (localStorage.getItem('filtersPanelExpanded') == 'true') {
+                filtersPanel.classList.add('expanding');
+                filtersPanel.classList.remove('collapsed');
+                filtersPanel.classList.add('expanded');
+                document.getElementsByClassName('horizontally-expand-toggle')[0].classList.add('toggled');
+            }
           }
         </script>
         <div class="search-results"

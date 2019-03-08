@@ -81,7 +81,8 @@ button.default, .default-button {
   border: $default-border;
   border-radius: $default-gap-size / 4;
   font-weight: 600;
-  transition: transitions-with-common-settings(background-color border-color color, $default-transition-duration);
+  transition-property: background-color, border-color, color;
+  transition-duration: $default-transition-duration;
   &:not(:disabled):not([disabled]):not(.disabled) {
     color: $accents-color;
     &.active, &:hover, &:focus {
