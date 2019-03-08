@@ -82,7 +82,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
           color: $lightish-grey;
         }
       }
-      .collapsible-with-visible-first-line {
+      .with-visible-first-line {
         position: relative;
         max-width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
         &.expanding, &.expanded {

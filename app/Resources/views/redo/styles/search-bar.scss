@@ -57,6 +57,7 @@ $advanced-options-column-border-width: 1px;
 
   .advanced-options {
     display: flex;
+    align-self: stretch;
     margin: $default-gap-size / 2
       $default-gap-size / 2 - $advanced-options-column-border-width
       $default-gap-size / 2

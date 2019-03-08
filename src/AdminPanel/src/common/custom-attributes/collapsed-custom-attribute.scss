@@ -3,102 +3,110 @@
 $vertically-collapsible-transition-properties: height, margin-top, margin-bottom, padding-top, padding-bottom, opacity, visibility;
 $horizontally-collapsible-transition-properties: width, margin-left, margin-right, padding-left, padding-right, opacity, visibility;
 
-.collapsing, .collapsed {
-    &:not(.collapsible-with-visible-first-line) {
-        opacity: 0;
-        visibility: hidden;
-    }
-    &:not(.horizontally-on-regular-screens) {
-        &:not(.horizontally) {
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-        }
-        &.horizontally {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-        }
-    }
-    &.horizontally-on-regular-screens {
-        @media (max-width: $maximum-screen-width-for-mobile-layout) {
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-        }
-        @media (min-width: $minimum-screen-width-for-regular-layout) {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-        }
-    }
-}
-
-.collapsing, .expanding, .collapsed {
-    overflow: hidden;
-}
-
-.collapsed {
-    &:not(.horizontally):not(.horizontally-on-regular-screens) {
-        height: 0;
-    }
-    &.horizontally {
-        width: 0;
-    }
-    &.horizontally-on-regular-screens {
-        @media (max-width: $maximum-screen-width-for-mobile-layout) {
-            height: 0;
-        }
-        @media (min-width: $minimum-screen-width-for-regular-layout) {
-            width: 0;
-        }
-    }
-}
-
-.expanded, .expanding {
-    opacity: 1;
-}
-
 [collapsible] {
     transition-duration: $collapse-and-expand-animations-duration;
     &:not(.horizontally-on-regular-screens) {
         &:not(.horizontally) {
             width: auto !important;
-            transition-property: $vertically-collapsible-transition-properties;
+            &:not(.with-visible-first-line) {
+                transition-property: $vertically-collapsible-transition-properties;
+            }
         }
         &.horizontally {
             height: auto !important;
-            transition-property: $horizontally-collapsible-transition-properties;
+            &:not(.with-visible-first-line) {
+                transition-property: $horizontally-collapsible-transition-properties;
+            }
         }
     }
     &.horizontally-on-regular-screens {
         @media (max-width: $maximum-screen-width-for-mobile-layout) {
             width: auto !important;
-            transition-property: $vertically-collapsible-transition-properties;
+            &:not(.with-visible-first-line) {
+                transition-property: $vertically-collapsible-transition-properties;
+            }
         }
         @media (min-width: $minimum-screen-width-for-regular-layout) {
             height: auto !important;
-            transition-property: $horizontally-collapsible-transition-properties;
+            &:not(.with-visible-first-line) {
+                transition-property: $horizontally-collapsible-transition-properties;
+            }
         }
     }
-}
 
-[collapsible].collapsible-with-visible-first-line {
-    min-height: $default-line-height * 1em;
-    transition-property: height, color;
-    transition-duration: $collapse-and-expand-animations-duration;
-    .text-container::first-line {
-        color: $default-text-color;
+    &.collapsing, &.collapsed {
+        &:not(.with-visible-first-line) {
+            opacity: 0;
+            visibility: hidden;
+            &:not(.horizontally-on-regular-screens) {
+                &:not(.horizontally) {
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                }
+                &.horizontally {
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                }
+            }
+            &.horizontally-on-regular-screens {
+                @media (max-width: $maximum-screen-width-for-mobile-layout) {
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                }
+                @media (min-width: $minimum-screen-width-for-regular-layout) {
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                }
+            }
+        }
     }
-    &.collapsed, &.collapsing {
-        color: transparent;
+
+    &.collapsing, &.expanding, &.collapsed {
+        overflow: hidden;
     }
+
+    &.collapsed {
+        &:not(.horizontally):not(.horizontally-on-regular-screens) {
+            height: 0;
+        }
+        &.horizontally {
+            width: 0;
+        }
+        &.horizontally-on-regular-screens {
+            @media (max-width: $maximum-screen-width-for-mobile-layout) {
+                height: 0;
+            }
+            @media (min-width: $minimum-screen-width-for-regular-layout) {
+                width: 0;
+            }
+        }
+    }
+
     &.expanded, &.expanding {
-        color: $default-text-color;
+        opacity: 1;
+    }
+
+    &.with-visible-first-line {
+        min-height: $default-line-height * 1em;
+        transition-property: height, color;
+        transition-duration: $collapse-and-expand-animations-duration;
+        .text-container::first-line {
+            color: $default-text-color;
+        }
+        &.collapsed, &.collapsing {
+            color: transparent;
+        }
+        &.expanded, &.expanding {
+            color: $default-text-color;
+        }
     }
 }
 
