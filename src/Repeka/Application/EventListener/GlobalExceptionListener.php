@@ -4,6 +4,7 @@ namespace Repeka\Application\EventListener;
 use Psr\Log\LoggerInterface;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Exception\DomainException;
+use Repeka\Domain\Exception\NotFoundException;
 use Repeka\Domain\Utils\StringUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,6 +68,7 @@ class GlobalExceptionListener {
             $responseStatus = $exception instanceof DomainException ? $exception->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
             $responseStatus = $exception instanceof HttpException ? $exception->getStatusCode() : $responseStatus;
             $responseStatus = $exception instanceof AccessDeniedException ? Response::HTTP_FORBIDDEN : $responseStatus;
+            $responseStatus = $exception instanceof NotFoundException ? Response::HTTP_NOT_FOUND : $responseStatus;
             try {
                 $responseContent = $this->twig->render(
                     $this->errorPageTwigTemplate,
