@@ -96,7 +96,7 @@
             </div>
         </div>
         <div class="details-container">
-            {% for metadataGroupId, metadataList in resource.kind.groupedMetadataList %}
+            {% for metadataGroupId, metadataList in resource.kind.groupedMetadataList | displayable %}
                 {% set metadataGroup = metadataGroup(metadataGroupId) %}
                 <div class="title-with-separator">
                     <strong>

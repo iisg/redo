@@ -70,6 +70,8 @@ repeka:
       label:
         EN: All audit entries with pagination and title
         PL: Wszystkie wpisy audytu z paginacją i tytułem
+  resource_details:
+    metadata_to_display: [1, 2, 13, 15, 19, 9, url, obrazki, okladka, 4, 16, url_with_link]
   expose_endpoints:
     /about:
       resourceId: 19

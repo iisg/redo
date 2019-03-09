@@ -69,6 +69,9 @@ class Configuration implements ConfigurationInterface {
                     ->integerNode('resourceId')->defaultValue(null)->end()
                     ->arrayNode('headers')->normalizeKeys(false)->defaultValue([])->prototype('scalar')->end()->end()
                 ->end()->end()->end()
+                ->arrayNode('resource_details')->addDefaultsIfNotSet()->children()
+                    ->arrayNode('metadata_to_display')->prototype('scalar')->defaultValue([])->end()->end()
+                ->end()->end()
             ->end();
         // @formatter:on
         // @codingStandardsIgnoreEnd

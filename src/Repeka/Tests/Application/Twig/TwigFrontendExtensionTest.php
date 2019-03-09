@@ -22,17 +22,20 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     private $paginator;
     /** @var PageNumberFinder|\PHPUnit_Framework_MockObject_MockObject */
     private $pageNumberFinder;
+    /** @var FrontendConfig|\PHPUnit_Framework_MockObject_MockObject */
+    private $frontendConfig;
 
     /** @before */
     public function init() {
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
         $this->paginator = $this->createMock(Paginator::class);
         $this->pageNumberFinder = $this->createMock(PageNumberFinder::class);
+        $this->frontendConfig = $this->createMock(FrontendConfig::class);
         $this->extension = new TwigFrontendExtension(
             $this->createMock(RequestStack::class),
             $this->resourceKindRepository,
             $this->paginator,
-            $this->createMock(FrontendConfig::class),
+            $this->frontendConfig,
             $this->pageNumberFinder
         );
     }
@@ -142,5 +145,32 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
         ];
         $resource = $this->createResourceMock(1, $this->createResourceKindMock());
         $this->assertEquals($expectedResult, $this->extension->matchSearchHitsWithPageNumbers($resource, [], []));
+    }
+
+    public function testFilteringDisplayedMetadata() {
+        $this->frontendConfig->method('getConfig')->willReturn(['metadata_to_display' => [1, 2, 'obrazki']]);
+        $groupedMetadataList = [
+            'basic' => [$this->createMetadataMock(1), $this->createMetadataMock(2), $this->createMetadataMock(456)],
+            'cms' => [$this->createMetadataMock(3, null, null, [], 'books', [], 'obrazki'), $this->createMetadataMock(678)],
+        ];
+        $expectedResult = [
+            'basic' => [$this->createMetadataMock(1), $this->createMetadataMock(2)],
+            'cms' => [$this->createMetadataMock(3, null, null, [], 'books', [], 'obrazki')],
+        ];
+        $filteredMetadata = $this->extension->filterMetadataToDisplay($groupedMetadataList);
+        $this->assertEquals($expectedResult, $filteredMetadata);
+    }
+
+    public function testFilteringDisplayedMetadataRemovesEmptyGroups() {
+        $this->frontendConfig->method('getConfig')->willReturn(['metadata_to_display' => [1, 2]]);
+        $groupedMetadataList = [
+            'basic' => [$this->createMetadataMock(1), $this->createMetadataMock(2), $this->createMetadataMock(456)],
+            'cms' => [$this->createMetadataMock(678)],
+        ];
+        $expectedResult = [
+            'basic' => [$this->createMetadataMock(1), $this->createMetadataMock(2)],
+        ];
+        $filteredMetadata = $this->extension->filterMetadataToDisplay($groupedMetadataList);
+        $this->assertEquals($expectedResult, $filteredMetadata);
     }
 }

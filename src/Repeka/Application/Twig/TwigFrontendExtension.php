@@ -4,6 +4,7 @@ namespace Repeka\Application\Twig;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Elasticsearch\PageNumberFinder;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceKindRepository;
@@ -70,6 +71,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Filter('childrenAllowed', [$this, 'resourceCanHaveChildren']),
             new \Twig_Filter('wrap', [$this, 'wrap']),
             new \Twig_Filter('basename', [$this, 'basename']),
+            new \Twig_Filter('displayable', [$this, 'filterMetadataToDisplay']),
         ];
     }
 
@@ -262,5 +264,26 @@ ICON;
         return $start !== false && $end !== false
             ? substr($searchHit, $start, $end - $start + strlen("</em>"))
             : $searchHit;
+    }
+
+    public function filterMetadataToDisplay(array $groupedMetadataList) {
+        $metadataToDisplay = $this->frontendConfig->getConfig()['metadata_to_display'];
+        $filteredMetadata = [];
+        foreach ($groupedMetadataList as $groupId => $metadataList) {
+            $metadataList = $this->intersectionByNameOrId($metadataList, $metadataToDisplay);
+            if (!empty($metadataList)) {
+                $filteredMetadata[$groupId] = $metadataList;
+            }
+        }
+        return $filteredMetadata;
+    }
+
+    private function intersectionByNameOrId(array $metadataList, array $namesOrIds) {
+        return array_filter(
+            $metadataList,
+            function (Metadata $metadata) use ($namesOrIds) {
+                return in_array($metadata->getId(), $namesOrIds) || in_array($metadata->getName(), $namesOrIds);
+            }
+        );
     }
 }
