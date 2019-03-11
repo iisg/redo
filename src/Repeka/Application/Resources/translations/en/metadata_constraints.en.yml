@@ -9,3 +9,4 @@ labels:
   uniqueInResourceClass: Unique in resource class
   fileUploaderType: File uploader type
   relationshipSelectorType: Relationship selector type
+  validPesel: Value should be a valid pesel number

@@ -7,6 +7,7 @@
 "Value must be at least {{minMaxValue.min}}": "Wartość nie może być mniejsza niż {{minMaxValue.min}}"
 Tree must be closed after selecting: Po wybraniu wartości należy zamknąć drzewo
 Metadata with given value already exists: Metadana o podanej wartości już istnieje
+Invalid pesel number: Niepoprawny numer pesel
 
 labels:
   maxCount: Maksymalna liczba wartości
@@ -19,3 +20,4 @@ labels:
   uniqueInResourceClass: Unikatowość w klasie zasobów
   fileUploaderType: Wgrywanie plików za pomocą
   relationshipSelectorType: Sposób wyboru relacji
+  validPesel: Wartość powinna być poprawnym numerem pesel

@@ -1,0 +1,7 @@
+<template>
+    <require from="../valid-pesel/valid-pesel-editor"></require>
+
+    <valid-pesel-editor valid-pesel.bind="metadata.constraints.validPesel"
+        original-valid-pesel.bind="originalMetadata.constraints.validPesel"
+        has-base.bind="!!originalMetadata"></valid-pesel-editor>
+</template>

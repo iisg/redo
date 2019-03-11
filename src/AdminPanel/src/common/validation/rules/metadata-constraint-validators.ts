@@ -5,6 +5,7 @@ import {autoinject, Container} from "aurelia-dependency-injection";
 import {MinCountConstraintValidator} from "./constraints/min-count-constraint-validator";
 import {MinMaxValueConstraintValidator} from "./constraints/min-max-value-constraint-validator";
 import {UniqueInResourceClassValidator} from "./constraints/unique-in-resource-class-validator";
+import {ValidPeselConstraintValidator} from "./constraints/valid-pesel-constraint-validator";
 
 @autoinject
 export class MetadataConstraintValidators {
@@ -12,6 +13,7 @@ export class MetadataConstraintValidators {
     RegexConstraintValidator,
     MinMaxValueConstraintValidator,
     UniqueInResourceClassValidator,
+    ValidPeselConstraintValidator,
   ];
 
   private readonly metadataArrayValidatorClasses: any[] = [

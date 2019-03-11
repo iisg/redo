@@ -25,6 +25,7 @@ export class MetadataConstraints {
   @map uniqueInResourceClass?: boolean = false;
   @map fileUploaderType?: string;
   @map relationshipSelectorType?: string;
+  @map validPesel?: boolean = false;
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
