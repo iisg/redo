@@ -67,10 +67,10 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
                     throw new \Twig_Error('Given resource ID is not valid.');
                 }
             } catch (EntityNotFoundException $e) {
-                $resources[] = ResourceContents::empty();
+                continue;
             }
         }
-        return $iterableGiven ? $resources : $resources[0];
+        return $iterableGiven || empty($resources) ? $resources : $resources[0];
     }
 
     public function fetchMetadataId($metadataId, $context = null) {
