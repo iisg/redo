@@ -2,7 +2,7 @@
 namespace Repeka\Tests\Integration\Authentication;
 
 use Repeka\Application\Entity\UserEntity;
-use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
+use Repeka\DeveloperBundle\DataFixtures\Redo\AdminAccountFixture;
 use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Repository\AuditEntryRepository;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;

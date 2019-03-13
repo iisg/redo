@@ -3,7 +3,7 @@ namespace Repeka\Tests\Integration\Traits;
 
 use Psr\Container\ContainerInterface;
 use Repeka\Application\Entity\UserEntity;
-use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
+use Repeka\DeveloperBundle\DataFixtures\Redo\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;

@@ -27,7 +27,7 @@
     "clean:backend:logs": "rm -fr var/logs/*.log",
     "clean:backend:sessions": "rm -fr var/sessions/prod && rm -fr var/sessions/dev",
     "db:create": "php bin/console doctrine:database:create --if-not-exists --no-interaction",
-    "db:fixture": "npm run -s clean:backend:cache && php bin/console doctrine:database:drop -e dev --force --if-exists && sleep 2 && php bin/console repeka:initialize --skip-backup -e dev && php bin/console doctrine:fixtures:load -e dev -n --append && php bin/console repeka:evaluate-display-strategies -a && npm run -s init:fts",
+    "db:fixture": "npm run -s clean:backend:cache && php bin/console doctrine:database:drop -e dev --force --if-exists && sleep 2 && php bin/console repeka:initialize --skip-backup -e dev && php bin/console repeka:dev:load-fixtures -e dev && php bin/console repeka:evaluate-display-strategies -a && npm run -s init:fts",
     "db:migrate": "npm run -s clean:backend && npm run -s db:create && php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration",
     "db:diff": "php bin/console doctrine:migrations:diff -e dev",
     "dist": "node scripts/repeka.js && node scripts/version-public.js && node scripts/assert-prod.js && (npm run dist:backend && npm run dist:admin) && php bin/console repeka:statsd:deploy",

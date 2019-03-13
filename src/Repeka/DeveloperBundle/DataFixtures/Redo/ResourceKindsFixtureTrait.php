@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\DeveloperBundle\DataFixtures\ORM;
+namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Repeka\Domain\Entity\Metadata;
 

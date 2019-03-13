@@ -9,8 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use ReflectionClass;
 use ReflectionProperty;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
-use Repeka\Application\Entity\UserEntity;
-use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
+use Repeka\DeveloperBundle\DataFixtures\Redo\AdminAccountFixture;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Identifiable;
@@ -176,8 +175,8 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $executor->execute($loader->getFixtures(), true);
     }
 
-    protected function loadAllFixtures(): void {
-        $this->executeCommand('doctrine:fixtures:load --append');
+    protected function loadAllFixtures($group = 'redo'): void {
+        $this->executeCommand('doctrine:fixtures:load --append --group=' . $group);
     }
 
     protected function persistAndFlush($entities) {

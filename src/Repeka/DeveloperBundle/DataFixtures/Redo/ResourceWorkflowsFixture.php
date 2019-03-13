@@ -1,8 +1,9 @@
 <?php
 // @codingStandardsIgnoreFile
-namespace Repeka\DeveloperBundle\DataFixtures\ORM;
+namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
 

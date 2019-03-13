@@ -1,9 +1,10 @@
 <?php
 // @codingStandardsIgnoreFile
-namespace Repeka\DeveloperBundle\DataFixtures\ORM;
+namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\Application\Entity\UserEntity;
+use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -11,8 +12,6 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
-use Repeka\Domain\Repository\ResourceKindRepository;
-use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 

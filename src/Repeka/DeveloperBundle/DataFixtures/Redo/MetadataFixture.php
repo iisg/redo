@@ -1,7 +1,8 @@
 <?php
-namespace Repeka\DeveloperBundle\DataFixtures\ORM;
+namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;

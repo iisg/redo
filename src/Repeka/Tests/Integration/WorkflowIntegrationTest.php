@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Tests\Integration;
 
-use Repeka\DeveloperBundle\DataFixtures\ORM\AdminAccountFixture;
+use Repeka\DeveloperBundle\DataFixtures\Redo\AdminAccountFixture;
 use Repeka\Tests\IntegrationTestCase;
 
 /** @small */

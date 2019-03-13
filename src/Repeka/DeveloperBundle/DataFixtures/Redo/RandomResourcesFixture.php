@@ -1,9 +1,10 @@
 <?php
-namespace Repeka\DeveloperBundle\DataFixtures\ORM;
+namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
 use Repeka\Application\Entity\UserEntity;
+use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;

@@ -1,8 +1,9 @@
 <?php
-namespace Repeka\DeveloperBundle\DataFixtures\ORM;
+namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\User\UserCreateCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;

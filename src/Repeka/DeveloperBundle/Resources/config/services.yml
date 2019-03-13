@@ -4,9 +4,13 @@ services:
     autoconfigure: true
     public: false
 
-  Repeka\DeveloperBundle\DataFixtures\:
-    resource: '../../DataFixtures'
-    tags: [doctrine.fixture.orm]
+  Repeka\DeveloperBundle\DataFixtures\Cmi\:
+    resource: '../../DataFixtures/Cmi'
+    tags: [{name: doctrine.fixture.orm, group: cmi}]
+
+  Repeka\DeveloperBundle\DataFixtures\Redo\:
+    resource: '../../DataFixtures/Redo'
+    tags: [{name: doctrine.fixture.orm, group: redo}]
 
   Repeka\DeveloperBundle\Command\:
     resource: '../../Command'
