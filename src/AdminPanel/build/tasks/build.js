@@ -55,10 +55,10 @@ gulp.task('build-css', () => {
     .pipe(plumber({errorHandler: notify.onError('SCSS: <%= error.message %>')}))
     .pipe(sourcemaps.init())
     .pipe(sass())
-    .pipe(concat('style.css'))
+    .pipe(concat('repeka.css'))
     .pipe(minifyCSS())
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.output));
+    .pipe(gulp.dest(paths.webRoot));
 });
 
 gulp.task('build-themes-css', (cb) => {
