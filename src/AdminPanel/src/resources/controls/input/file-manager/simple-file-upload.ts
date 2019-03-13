@@ -1,25 +1,25 @@
-import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {HttpClient, HttpResponseMessage} from "aurelia-http-client";
-import {Resource} from "resources/resource";
-import {Metadata} from "resources-config/metadata/metadata";
+import {bindable} from "aurelia-templating";
 import {suppressError as suppressErrorHeader} from "common/http-client/headers";
-import {times, random} from 'lodash';
+import {random, times} from 'lodash';
+import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataValue} from "resources/metadata-value";
+import {Resource} from "resources/resource";
 
 @autoinject
 export class SimpleFileUpload {
+  @bindable inputValue: String;
   @bindable resource: Resource;
   @bindable metadata: Metadata;
   @bindable skipValidation: boolean;
-
   selectedFiles: FileList;
   uploading: boolean = false;
 
   constructor(private httpClient: HttpClient) {
   }
 
-  onFileSelected() {
+  fileSelected() {
     if (this.selectedFiles && this.selectedFiles.length) {
       this.sendFile(this.selectedFiles[0]);
     }
@@ -44,7 +44,10 @@ export class SimpleFileUpload {
         const url = response.added[0].url.substr('file/'.length);
         this.resource.contents[this.metadata.id].push(new MetadataValue(url));
       })
-      .finally(() => this.uploading = false);
+      .finally(() => {
+        this.inputValue = undefined;
+        this.uploading = false;
+      });
   }
 
   private static fileUploadEndpoint(resourceId: number) {

@@ -1,7 +1,8 @@
 <template>
     <input type="file"
         files.bind="selectedFiles"
-        change.delegate="onFileSelected()"
+        value.bind="inputValue"
+        change.delegate="fileSelected()"
         disabled.bind="disabled || uploading">
     <throbber if.bind="uploading"></throbber>
 </template>
