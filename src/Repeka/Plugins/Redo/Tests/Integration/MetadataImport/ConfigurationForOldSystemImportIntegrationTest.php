@@ -328,6 +328,14 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                                 'value' => $this->toFlexibleDateArray('1828', '1883'),
                                 'submetadata' => [199 => [['value' => '1828-1883']]],
                             ],
+                            [
+                                'value' => $this->toFlexibleDateArray('1828', '1884'),
+                                'submetadata' => [199 => [['value' => '1828-1884']]],
+                            ],
+                            [
+                                'value' => $this->toFlexibleDateArray('1828', '1885'),
+                                'submetadata' => [199 => [['value' => '1828-1885']]],
+                            ],
                         ],
                     ],
                 ],

@@ -44,7 +44,7 @@ class MetadataImporter {
             $metadata = $mapping->getMetadata();
             $transformedValues = $valuesBasedOnImportKey;
             foreach ($mapping->getTransformsConfig() as $transformConfig) {
-                $transformedValues = $this->transforms->apply($transformedValues, $transformConfig, $data, $context);
+                $transformedValues = $this->transforms->apply($transformedValues, $transformConfig, $data ?? [], $context);
             }
             for ($i = 0; $i < count($transformedValues); $i++) {
                 $transformedValue = $this->prepareMetadataValues($resultBuilder, $metadata, $transformedValues[$i]);

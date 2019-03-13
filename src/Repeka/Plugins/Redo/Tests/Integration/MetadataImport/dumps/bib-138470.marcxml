@@ -96,6 +96,20 @@
     <subfield code="9">114727</subfield>
   </datafield>
   <datafield tag="700" ind1="1" ind2=" ">
+      <subfield code="a">Ferstel, Heinrich von</subfield>
+      <subfield code="d">(1828-1884).</subfield>
+      <subfield code="e">Autor</subfield>
+      <subfield code="0">n 2017176774</subfield>
+      <subfield code="9">114727</subfield>
+    </datafield>
+    <datafield tag="700" ind1="1" ind2=" ">
+        <subfield code="a">Ferstel, Heinrich von</subfield>
+        <subfield code="d">(1828-1885).</subfield>
+        <subfield code="e">Autor</subfield>
+        <subfield code="0">n 2017176774</subfield>
+        <subfield code="9">114727</subfield>
+      </datafield>
+  <datafield tag="700" ind1="1" ind2=" ">
     <subfield code="a">Hasenauer, Carl von</subfield>
     <subfield code="d">(1833-1894).</subfield>
     <subfield code="e">Autor</subfield>
