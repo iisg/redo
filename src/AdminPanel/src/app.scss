@@ -1,5 +1,6 @@
 @import "common/styles";
 @import "../jspm_packages/npm/compass-mixins@0.12.10/lib/animation/animate/fading";
+@import '../jspm_packages/npm/sweetalert2@6.11.5/dist/sweetalert2.css';
 
 $admin-content-z-index-when-sidebar-is-collapsed: 0;
 $floating-form-and-sticky-table-header-z-index: $admin-content-z-index-when-sidebar-is-collapsed + 1;

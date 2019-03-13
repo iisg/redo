@@ -66,7 +66,7 @@ gulp.task('build-themes-css', (cb) => {
   const buildStyles = () => {
     if (availableThemes.length) {
       const template = availableThemes.pop();
-      gulp.src(path.join(paths.themes, template, 'styles.scss'))
+      gulp.src(path.join(paths.themes, template, '*.scss'))
         .pipe(plumber({errorHandler: notify.onError('SCSS: <%= error.message %>')}))
         .pipe(sourcemaps.init())
         .pipe(sass())

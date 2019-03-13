@@ -74,7 +74,6 @@ export function configure(aurelia: Aurelia) {
         'common/http-client/invalid-command-message.html',
         'resources/details/resource-label-value-converter',
         'resources-config/multilingual-field/in-current-language',
-        'themes/admin-styles-loader',
         'themes/redo/child-resources-group/child-resources-group',
         'themes/redo/deposit-form/deposit-form',
         'themes/redo/language-option/language-option',
@@ -101,6 +100,7 @@ function onAureliaStarted(aurelia: Aurelia): void {
     aurelia.container.get(CustomValidationRules).register();
   }
   aurelia.container.get(GuiLanguage).apply();
+  window['NProgress'].done();
 }
 
 function preloadEntityTypes() {

@@ -5,7 +5,6 @@ const bundles = function () {
       "admin/bundles/app": {
         "includes": [
           "[**/*.js]",
-          "**/*.css!text",
         ],
         "options": {
           "inject": true,
