@@ -100,6 +100,6 @@ redo:
     relationship_resource_kind_ids: [1, 2, -1, 7]
   fts:
     searchable_metadata_ids: [-5, tytul, opis, url, urlLabel]
-    filterable_metadata_ids: [tytul, opis, parent, wydzial, skanista, nadzorujacy]
+    filterable_metadata_ids: [tytul, opis, parent_path, wydzial, skanista, nadzorujacy]
     searchable_resource_classes: [books]
     facets: [kindId, skanista]

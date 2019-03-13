@@ -27,7 +27,7 @@
 {% elseif filterableMetadata.control.value in ['relationship'] %}
     {% set filterUsed = app.request.query.all.metadataFilters[filterableMetadata.id] is defined %}
     {% set variableName = ("property" ~ filterableMetadata.id ~ "Expanded") | replace({"-": "0"}) %}
-    {% set parentMetadata = filterableMetadata.id == -1 %}
+    {% set parentPathMetadata = filterableMetadata.name == "parent_path" %}
     <div class="property-options"
         .one-time="{{ variableName }} = {{ filterUsed ? 'true' : 'false' }}">
         {% block propertyNameContainer %}
@@ -36,14 +36,14 @@
                 type="button"
                 click.delegate="{{ variableName }} = !{{ variableName }}"
                 aria-expanded.bind="{{ variableName }}">
-                <h4 class="property-name">{{ parentMetadata ? 'Collections' | trans : filterableMetadata.label | inCurrentLanguage }}</h4>
+                <h4 class="property-name">{{ parentPathMetadata ? 'Collections' | trans : filterableMetadata.label | inCurrentLanguage }}</h4>
                 <span>{{ icon('forward') }}</span>
             </button>
         {% endblock %}
         <div class="{{ filterUsed ? 'expanded' : 'collapsed' }}"
             collapsible="collapsed.bind: !{{ variableName }}">
-            {% if parentMetadata %}
-                {% set parentFilters = app.request.query.all.metadataFilters[-1] ?? null %}
+            {% if parentPathMetadata %}
+                {% set parentFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? null %}
                 {% for resource in resources({resourceClasses: searchableResourceClasses, parentId: null}) %}
                     {% set childResources = resources({parentId: resource.id}) %}
                     {% if childResources is not empty %}
@@ -62,9 +62,9 @@
                         {% if childResources is not empty %}
                             stringified-child-resources-data="{{ childResourcesData | json_encode }}"
                         {% endif %}
-                        name="metadataFilters[-1][]"
+                        name="metadataFilters[{{ filterableMetadata.id }}][]"
                         {% if parentFilters is not null %}
-                            stringified-parent-filters="{{ parentFilters | json_encode }}"
+                        stringified-parent-filters="{{ parentFilters | json_encode }}"
                         {% endif %}></child-resources-group>
                 {% endfor %}
             {% else %}
