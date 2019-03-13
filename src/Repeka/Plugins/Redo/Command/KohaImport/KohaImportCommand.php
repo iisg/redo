@@ -104,6 +104,7 @@ class KohaImportCommand extends ContainerAwareCommand {
                     $stats[$cannotImportFromBarcode]++;
                     $resourceIdStats[$cannotImportFromBarcode][] = $resource->getId();
                 } else {
+                    $output->writeln(sprintf("Loading barcode %s ...", $barcode));
                     FirewallMiddleware::bypass(
                         function () use (
                             $input,
@@ -121,6 +122,7 @@ class KohaImportCommand extends ContainerAwareCommand {
                             $stats[$imported]++;
                         }
                     );
+                    $output->writeln(sprintf("Finished loading barcode %s ", $barcode));
                 }
             } else {
                 $stats['noBarcode']++;
@@ -144,9 +146,11 @@ class KohaImportCommand extends ContainerAwareCommand {
         foreach ($importedValues->getAcceptedValues() as $metadataId => $valuesFromKoha) {
             $newContents = $newContents->withMergedValues($metadataId, $valuesFromKoha)->clearDuplicates($metadataId);
         }
-        $resourceUpdateCommand = ResourceGodUpdateCommand::builder()
-            ->setResource($resource)
-            ->setNewContents($newContents);
-        $this->handleCommand($resourceUpdateCommand->build());
+        if ($resource->getContents()->toArray() != $newContents->toArray()) {
+            $resourceUpdateCommand = ResourceGodUpdateCommand::builder()
+                ->setResource($resource)
+                ->setNewContents($newContents);
+            $this->handleCommand($resourceUpdateCommand->build());
+        }
     }
 }
