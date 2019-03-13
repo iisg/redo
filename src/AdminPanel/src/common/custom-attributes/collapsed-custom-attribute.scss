@@ -1,107 +1,100 @@
 @import "../styles";
 
-$vertically-collapsible-transition-properties: height, margin-top, margin-bottom, padding-top, padding-bottom, opacity, visibility;
-$horizontally-collapsible-transition-properties: width, margin-left, margin-right, padding-left, padding-right, opacity, visibility;
+@mixin without-left-and-right-margins-and-paddings {
+    &:not(.with-margins-and-paddings-when-collapsed) {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+@mixin without-top-and-bottom-margins-and-paddings {
+    &:not(.with-margins-and-paddings-when-collapsed) {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+}
+
+@mixin collapsing($classes-suffix: null) {
+    &.collapsing-vertically#{$classes-suffix} {
+        height: 0;
+        @include without-top-and-bottom-margins-and-paddings;
+        &:not(.collapsing-horizontally#{$classes-suffix}) {
+            width: auto !important;
+        }
+    }
+    &.collapsing-horizontally#{$classes-suffix} {
+        width: 0;
+        @include without-left-and-right-margins-and-paddings;
+        &:not(.collapsing-vertically#{$classes-suffix}) {
+            height: auto !important;
+        }
+    }
+}
+
+@mixin expanded() {
+    width: auto !important;
+    height: auto !important;
+    opacity: 1;
+    visibility: visible;
+}
 
 [collapsible] {
+    transition-property: width, height, margin, padding, opacity, visibility;
     transition-duration: $collapse-and-expand-animations-duration;
-    &:not(.horizontally-on-regular-screens) {
-        &:not(.horizontally) {
-            width: auto !important;
-            &:not(.with-visible-first-line) {
-                transition-property: $vertically-collapsible-transition-properties;
-            }
-        }
-        &.horizontally {
-            height: auto !important;
-            &:not(.with-visible-first-line) {
-                transition-property: $horizontally-collapsible-transition-properties;
-            }
-        }
-    }
-    &.horizontally-on-regular-screens {
-        @media (max-width: $maximum-screen-width-for-mobile-layout) {
-            width: auto !important;
-            &:not(.with-visible-first-line) {
-                transition-property: $vertically-collapsible-transition-properties;
-            }
-        }
-        @media (min-width: $minimum-screen-width-for-regular-layout) {
-            height: auto !important;
-            &:not(.with-visible-first-line) {
-                transition-property: $horizontally-collapsible-transition-properties;
-            }
-        }
-    }
 
     &.collapsing, &.collapsed {
-        &:not(.with-visible-first-line) {
+        &:not(.with-visible-content-when-collapsed):not(.with-visible-first-line) {
             opacity: 0;
             visibility: hidden;
-            &:not(.horizontally-on-regular-screens) {
-                &:not(.horizontally) {
-                    padding-top: 0 !important;
-                    padding-bottom: 0 !important;
-                    margin-top: 0 !important;
-                    margin-bottom: 0 !important;
+        }
+        &:not(.collapsing-vertically-on-narrow-screens):not(.collapsing-horizontally-on-narrow-screens) {
+            &:not(.collapsing-vertically-on-regular-screens):not(.collapsing-horizontally-on-regular-screens) {
+                &:not(.collapsing-vertically):not(.collapsing-horizontally) {
+                    width: auto !important;
+                    height: 0;
+                    @include without-top-and-bottom-margins-and-paddings();
                 }
-                &.horizontally {
-                    padding-left: 0 !important;
-                    padding-right: 0 !important;
-                    margin-left: 0 !important;
-                    margin-right: 0 !important;
+                @include collapsing();
+            }
+        }
+        @media (max-width: $maximum-screen-width-for-mobile-layout) {
+            &:not(.collapsing-vertically-on-narrow-screens):not(.collapsing-horizontally-on-narrow-screens) {
+                &.collapsing-vertically-on-regular-screens, &.collapsing-horizontally-on-regular-screens {
+                    @include expanded();
                 }
             }
-            &.horizontally-on-regular-screens {
-                @media (max-width: $maximum-screen-width-for-mobile-layout) {
-                    padding-top: 0 !important;
-                    padding-bottom: 0 !important;
-                    margin-top: 0 !important;
-                    margin-bottom: 0 !important;
-                }
-                @media (min-width: $minimum-screen-width-for-regular-layout) {
-                    padding-left: 0 !important;
-                    padding-right: 0 !important;
-                    margin-left: 0 !important;
-                    margin-right: 0 !important;
+            @include collapsing('-on-narrow-screens');
+        }
+        @media (min-width: $minimum-screen-width-for-regular-layout) {
+            &:not(.collapsing-vertically-on-regular-screens):not(.collapsing-horizontally-on-regular-screens) {
+                &.collapsing-vertically-on-narrow-screens, &.collapsing-horizontally-on-narrow-screens {
+                    @include expanded();
                 }
             }
+            @include collapsing('-on-regular-screens');
         }
     }
 
     &.collapsing, &.expanding, &.collapsed {
-        overflow: hidden;
-    }
-
-    &.collapsed {
-        &:not(.horizontally):not(.horizontally-on-regular-screens) {
-            height: 0;
+        &:not(.with-visible-first-line){
+            overflow: hidden;
         }
-        &.horizontally {
-            width: 0;
-        }
-        &.horizontally-on-regular-screens {
-            @media (max-width: $maximum-screen-width-for-mobile-layout) {
-                height: 0;
-            }
-            @media (min-width: $minimum-screen-width-for-regular-layout) {
-                width: 0;
-            }
-        }
-    }
-
-    &.expanded, &.expanding {
-        opacity: 1;
     }
 
     &.with-visible-first-line {
         min-height: $default-line-height * 1em;
         transition-property: height, color;
-        transition-duration: $collapse-and-expand-animations-duration;
+        overflow: visible;
         .text-container::first-line {
             color: $default-text-color;
         }
         &.collapsed, &.collapsing {
+            width: auto !important;
+            height: 0;
             color: transparent;
         }
         &.expanded, &.expanding {

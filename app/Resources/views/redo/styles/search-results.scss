@@ -9,20 +9,22 @@ $filters-panel-width: 340px;
   flex-wrap: wrap;
   padding-top: $default-gap-size;
   padding-bottom: $default-gap-size;
-  .filters-panel[collapsible].horizontally-on-regular-screens {
+  .filters-panel {
     margin-left: $default-gap-size;
     margin-right: $default-gap-size;
-    padding-top: $default-gap-size / 2 !important;
-    padding-bottom: $default-gap-size / 2 !important;
+    padding-top: $default-gap-size / 2;
+    padding-bottom: $default-gap-size / 2;
     border-bottom: $default-border-width $default-border-style $default-border-color;
-    min-width: calc(#{$filters-panel-toggle-icon-height} + 4 * #{$default-gap-size / 4} + 2 * #{$default-gap-size / 2});
+    min-width: calc(100% - 2 * #{$default-gap-size});
     min-height: calc(#{$filters-panel-toggle-icon-height} + 4 * #{$default-gap-size / 4} + 2 * #{$default-gap-size / 2});
-    @media (max-width: $maximum-screen-width-for-mobile-layout) {
-      width: 100% !important;
-    }
     &.collapsed, &.collapsing {
-      opacity: 1;
-      visibility: visible;
+      .advanced-filters {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+    &.expanding, &.expanded {
+      width: $filters-panel-width !important;
     }
     .title-with-toggle {
       display: flex;
@@ -111,20 +113,19 @@ $filters-panel-width: 340px;
   }
 
   @media (min-width: $minimum-screen-width-for-regular-layout) {
-    .filters-panel[collapsible].horizontally-on-regular-screens {
+    .filters-panel {
+      min-width: calc(#{$filters-panel-toggle-icon-height} + 4 * #{$default-gap-size / 4} + 2 * #{$default-gap-size / 2});
       margin-left: 0;
       margin-right: 0;
       border-bottom: none;
       border-right: 2 * $default-border-width $default-border-style $default-border-color;
-      padding-left: $default-gap-size / 2 !important;
-      padding-right: $default-gap-size / 2 !important;
+      padding-left: $default-gap-size / 2;
+      padding-right: $default-gap-size / 2;
       &.collapsed, &.collapsing {
-        .title-with-toggle .title, .advanced-filters {
-          opacity: 0;
-          visibility: hidden;
-        }
         .title-with-toggle {
           .title {
+            opacity: 0;
+            visibility: hidden;
             padding-right: 0;
           }
           .toggle {

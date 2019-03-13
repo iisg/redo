@@ -70,10 +70,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
       padding-bottom: $default-gap-size / 8;
       padding-left: $default-gap-size / 8;
       padding-right: $default-gap-size / 8;
-      .metadata-details {
-        padding: $default-gap-size / 8;
-      }
-      .toggle {
+      .metadata-details, .expand-toggle {
         padding: $default-gap-size / 8;
       }
       .metadata-details {
@@ -93,11 +90,8 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
             }
           }
         }
-        &.expanding .text-container:not(.metadata-label) em {
-          transition: background-color $collapse-and-expand-animations-duration;
-        }
         &.collapsing, &.collapsed {
-          .text-container:not(.metadata-label) em {
+          .metadata-details > em {
             background-color: transparent;
           }
           .text-container.metadata-label {
@@ -106,7 +100,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
             }
           }
         }
-        &.collapsing .text-container:not(.metadata-label) em {
+        .metadata-details > em  {
           transition: background-color $collapse-and-expand-animations-duration;
         }
       }

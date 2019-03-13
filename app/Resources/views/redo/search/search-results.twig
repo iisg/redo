@@ -9,10 +9,11 @@
     {% include "redo/search/search-bar.twig" %}
 
     <div class="search-results-container">
-        <div class="filters-panel horizontally-on-regular-screens collapsed"
+        <div class="filters-panel collapsing-vertically-on-narrow-screens collapsing-horizontally-on-regular-screens
+            with-margins-and-paddings-when-collapsed with-visible-content-when-collapsed collapsed"
             id="filters-panel"
             local-storage-value="key: filtersPanelExpanded; value.bind: filtersPanelExpanded"
-            collapsible="collapsed.bind: !filtersPanelExpanded; width.bind: 340">
+            collapsible="collapsed.bind: !filtersPanelExpanded">
             <button class="title-with-toggle"
                 click.delegate="filtersPanelExpanded = !filtersPanelExpanded">
                 <h3 id="filtersHeading" class="title"><strong>{{ 'Filters' | trans }}</strong></h3>

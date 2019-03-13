@@ -3,10 +3,10 @@ import {bindable} from "aurelia-templating";
 
 @autoinject
 export class CollapsibleCustomAttribute {
+  private readonly TRANSITION_END_EVENT_NAMES = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd';
+
   private element: HTMLElement;
   @bindable collapsed: boolean;
-  @bindable width: number;
-  @bindable height: number;
   private $element: JQuery;
   private firstChange = true;
 
@@ -45,10 +45,9 @@ export class CollapsibleCustomAttribute {
   }
 
   private watchForTransitionsEnding() {
-    let eventReceived = false;
-    $(this.element).one('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', event => {
-      if (event.target == this.element && !eventReceived) {
-        eventReceived = true;
+    this.$element.on(this.TRANSITION_END_EVENT_NAMES, event => {
+      this.$element.off(this.TRANSITION_END_EVENT_NAMES);
+      if (event.currentTarget == this.element) {
         this.updateClassesAndProperties();
       }
     });
@@ -58,8 +57,7 @@ export class CollapsibleCustomAttribute {
     if (this.collapsed) {
       this.element.classList.add('collapsed');
       this.element.classList.remove('collapsing');
-    }
-    else {
+    } else {
       this.element.classList.add('expanded');
       this.element.classList.remove('expanding');
       this.element.style.width = '';
@@ -68,28 +66,20 @@ export class CollapsibleCustomAttribute {
   }
 
   private collapse() {
-    this.width = this.targetWidth;
-    this.element.style.width = this.width + 'px';
-    this.height = this.targetHeight;
-    this.element.style.height = this.height + 'px';
+    this.element.style.width = this.targetWidth + 'px';
+    this.element.style.height = this.targetHeight + 'px';
     setTimeout(() => {
-      this.element.style.width = '0';
-      this.element.style.height = '0';
       this.element.classList.add('collapsing');
       this.element.classList.remove('expanded');
       this.element.classList.remove('expanding');
+      this.element.style.width = '0';
+      this.element.style.height = '0';
     }, 10);
   }
 
   private expand() {
-    if (!this.width) {
-      this.width = this.targetWidth;
-    }
-    if (!this.height) {
-      this.height = this.targetHeight;
-    }
-    this.element.style.width = this.width + 'px';
-    this.element.style.height = this.height + 'px';
+    this.element.style.width = this.targetWidth + 'px';
+    this.element.style.height = this.targetHeight + 'px';
     this.element.classList.add('expanding');
     this.element.classList.remove('collapsed');
     this.element.classList.remove('collapsing');
