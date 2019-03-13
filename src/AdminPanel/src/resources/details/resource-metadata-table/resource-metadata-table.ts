@@ -54,10 +54,13 @@ export class ResourceMetadataTable implements ComponentAttached {
     this.metadataGroups = groupMetadata(this.metadataList, this.metadataGroupRepository.getIds());
   }
 
-  attached(): void {
+  resourceChanged() {
     if (this.resource) {
       this.resources = [this.resource];
     }
+  }
+
+  attached(): void {
     if (!this.metadataList) {
       this.metadataList = this.buildMetadataList(this.resources);
     }
