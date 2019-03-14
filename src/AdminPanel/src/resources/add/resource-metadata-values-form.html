@@ -3,6 +3,7 @@
     <require from="./new-metadata-value-button.html"></require>
     <require from="common/components/buttons/icon-button"></require>
     <require from="resources/controls/input/resource-picker/resource-relationship-selector"></require>
+    <require from="resources/controls/input/resource-picker/simple-relationship-selector"></require>
     <require from="resources/controls/input/file-manager/file-upload"></require>
     <require from="resources/controls/input/file-manager/resource-file-manager"></require>
     <require from="common/value-converters/in-value-converter"></require>
@@ -12,13 +13,23 @@
         <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allow-drag.call: isDragHandle($event); type-flag.bind: 0">
         <tr if.bind="metadata.control === 'relationship'">
             <td>
-                <resource-relationship-selector containerless
+                <resource-relationship-selector if.bind="metadata.constraints.relationshipSelectorType == 'tree'"
+                    containerless
                     resource.bind="resource"
                     metadata.bind="metadata"
                     skip-validation.bind="skipValidation"
                     disabled.bind="disabled"
                     show-by-default.one-time="required && resource.contents[metadata.id].length === 0"
                     tree-query-url.bind="treeQueryUrl"></resource-relationship-selector>
+                <simple-relationship-selector else
+                    if.bind="!disabled"
+                    containerless
+                    resource-ids.bind="resource.contents[metadata.id]"
+                    resource-kind-ids.bind="skipValidation ? [] : metadata.constraints.resourceKind"
+                    contents-filter.bind="skipValidation ? undefined : metadata.constraints.relatedResourceMetadataFilter"
+                    resource-class.bind="!skipValidation && metadata.id == -1 ? resource.resourceClass : undefined"
+                    disabled.bind="disabled || metadata.constraints.resourceKind.length === 0 && !skipValidation"
+                    multiple-choice.bind="metadata.constraints.maxCount !== 1"></simple-relationship-selector>
             </td>
         </tr>
         <tr if.bind="metadata.control === 'file'">
@@ -45,7 +56,7 @@
         </tr>
         <tr repeat.for="item of resource.contents[metadata.id]"
             oa-sortable-item="item.bind: item; type-flag.bind: 0">
-            <td>
+            <td if.bind="metadata.control != 'relationship' || metadata.constraints.relationshipSelectorType == 'tree'">
                 <div>
                     <resource-metadata-value-input metadata.bind="metadata"
                         resource.bind="resource"

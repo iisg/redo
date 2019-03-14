@@ -15,6 +15,7 @@ export class ResourceRelationshipSelector {
   shown: boolean = false;
 
   attached() {
+    let selectorType = this.metadata.constraints.relationshipSelectorType;
     if (this.showByDefault) {
       this.loaded = true;
       this.shown = true;

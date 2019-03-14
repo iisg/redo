@@ -1,14 +1,14 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating";
+import {bindable, ComponentAttached} from "aurelia-templating";
 import {ResourceRepository} from "../../../resource-repository";
 import {twoWay} from "../../../../common/components/binding-mode";
 import {MetadataValue} from "../../../metadata-value";
-import {BindingEngine, Disposable} from "aurelia-binding";
+import {BindingEngine} from "aurelia-binding";
 import {ResourceLabelValueConverter} from "../../../details/resource-label-value-converter";
 import {Resource} from "../../../resource";
 
 @autoinject
-export class SimpleResourcePicker implements ComponentAttached, ComponentDetached {
+export class SimpleRelationshipSelector implements ComponentAttached {
   @bindable(twoWay) resourceIds: MetadataValue[];
   @bindable(twoWay) selectedResources: Resource[] = [];
   @bindable(twoWay) selectedResource: Resource = undefined;
@@ -21,7 +21,6 @@ export class SimpleResourcePicker implements ComponentAttached, ComponentDetache
   ready: boolean = false;
   useDropdown: boolean = false;
 
-  private resourceIdsSubscription: Disposable;
   private readonly SWITCH_TO_DROPDOWN: number = 8;
 
   constructor(private resourceRepository: ResourceRepository,
@@ -31,10 +30,6 @@ export class SimpleResourcePicker implements ComponentAttached, ComponentDetache
 
   attached() {
     this.loadResources();
-  }
-
-  detached(): void {
-    this.disposeResourceIdsSubscription();
   }
 
   selectedResourcesChanged() {
@@ -54,26 +49,10 @@ export class SimpleResourcePicker implements ComponentAttached, ComponentDetache
     newValues.forEach(resource => this.resourceIds.push(new MetadataValue(resource.id)));
   }
 
-  private observeResourceIds() {
-    this.disposeResourceIdsSubscription();
-    this.resourceIdsSubscription = this.bindingEngine.collectionObserver(this.resourceIds).subscribe(() => {
-      this.updateSelectedResources();
-    });
-  }
-
-  private disposeResourceIdsSubscription() {
-    if (this.resourceIdsSubscription !== undefined) {
-      this.resourceIdsSubscription.dispose();
-      this.resourceIdsSubscription = undefined;
-    }
-  }
-
-  private updateSelectedResources() {
-    if (!this.multipleChoice) {
-      this.selectedResource = this.resourceIds.length
-        ? this.resources.find(resource => resource.id == this.resourceIds[0].value)
-        : undefined;
-    } else if (this.selectedResources.length !== this.resourceIds.length) {
+  private initializeSelectedResources() {
+    if (!this.multipleChoice && this.resourceIds.length) {
+      this.selectedResource = this.resources.find(resource => resource.id == this.resourceIds[0].value);
+    } else {
       let idValues = this.resourceIds.map(metadataValue => metadataValue.value);
       this.selectedResources = this.resources.filter(resource => idValues.includes(resource.id));
     }
@@ -92,9 +71,7 @@ export class SimpleResourcePicker implements ComponentAttached, ComponentDetache
     }
     query.get().then(resources => {
       this.resources = resources;
-      this.updateSelectedResources();
-    }).then(() => {
-      this.observeResourceIds();
+      this.initializeSelectedResources();
       this.useDropdown = this.resources.length > this.SWITCH_TO_DROPDOWN;
       this.ready = true;
     });
