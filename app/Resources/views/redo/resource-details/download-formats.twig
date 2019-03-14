@@ -1,0 +1,41 @@
+{% set pdfFilePath = resource | metadata('plik_pdf_podstawowy') | first %}
+{% set epubFilePath = resource | metadata('plik_epub') | first %}
+
+{% if pdfFilePath is not empty or epubFilePath is not empty %}
+    {% set downloadFormats = [
+        {
+            url: '/api/resources/' ~ resource.id ~ '/file/' ~ pdfFilePath,
+            name: 'PDF',
+            title: 'Download resource in PDF format' | trans,
+            fileAvailable: pdfFilePath is not empty
+        },
+        {
+            url: '/api/resources/' ~ resource.id ~ '/file/' ~ epubFilePath,
+            name: 'EPUB',
+            title: 'Download resource in EPUB format' | trans,
+            fileAvailable: epubFilePath is not empty
+        }
+    ] %}
+    <div class="download-options">
+        <span class="download-options-icon">{{ icon('download', 1.5) }}</span>
+        <fieldset>
+            <legend align="left">
+                <span>{{ 'Download resource' | trans }}</span>
+            </legend>
+            <div class="download-formats">
+                {% for format in downloadFormats %}
+                    {% if format.fileAvailable %}
+                        <h4>
+                            <a href="{{ format.url }}"
+                                download
+                                title="{{ format.title }}"
+                                aria-label="{{ format.title }}">
+                                {{ format.name }}
+                            </a>
+                        </h4>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </fieldset>
+    </div>
+{% endif %}

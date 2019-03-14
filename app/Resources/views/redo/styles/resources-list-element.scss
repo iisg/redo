@@ -133,6 +133,10 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
     }
   }
 
+  .download-options-icon {
+    display:none;
+  }
+
   @media (max-width: $maximum-screen-width-for-mobile-layout) {
     .basic-data-with-download-options {
         fieldset {

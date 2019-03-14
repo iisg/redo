@@ -55,26 +55,7 @@
                 </div>
             </div>
             <div class="download-options-container">
-                <div class="download-options">
-                    <span class="download-options-icon">{{ icon('download', 1.5) }}</span>
-                    <fieldset>
-                        <legend align="left"
-                            id="download-legend"><span title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span>
-                        </legend>
-                        <div class="download-formats">
-                            <h4><a href="/download/mobi"
-                                    title="{{ 'Download resource in MOBI format' | trans }} - 7KB"
-                                    aria-labelledby="download-legend download-mobi">
-                                    <span id="download-mobi">MOBI</span>
-                                </a></h4>
-                            <h4><a href="/download/pdf"
-                                    title="{{ 'Download resource in PDF format' | trans }} - 144000KB"
-                                    aria-labelledby="download-legend download-pdf">
-                                    <span id="download-pdf">PDF</span>
-                                </a></h4>
-                        </div>
-                    </fieldset>
-                </div>
+                {% include 'redo/resource-details/download-formats.twig' %}
                 <div class="download-options">
                     <span class="download-options-icon">{{ icon('examination', 1.5) }}</span>
                     <fieldset>

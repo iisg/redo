@@ -2,6 +2,7 @@
 namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Assert\Assertion;
+use Repeka\Domain\Constants\FileUploaderType;
 
 trait MetadataFixtureTrait {
     protected function constraints(int $maxCount) {
@@ -24,6 +25,14 @@ trait MetadataFixtureTrait {
             $constraints = $this->constraints($maxCount);
         }
         $constraints['resourceKind'] = $resourceKind;
+        return $constraints;
+    }
+
+    protected function fileConstraint($maxCount, FileUploaderType $uploader) {
+        if (isset($maxCount)) {
+            $constraints = $this->constraints($maxCount);
+        }
+        $constraints['fileUploaderType'] = $uploader->getValue();
         return $constraints;
     }
 }

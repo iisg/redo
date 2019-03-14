@@ -3,6 +3,7 @@ namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
+use Repeka\Domain\Constants\FileUploaderType;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
@@ -28,6 +29,10 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_SEE_ALSO = 'metadata-see-also';
     const REFERENCE_METADATA_FILE = 'metadata-file';
     const REFERENCE_METADATA_DIRECTORY = 'metadata-directory';
+    const REFERENCE_METADATA_FILE_PDF = 'metadata-file-pdf';
+    const REFERENCE_METADATA_FILE_EPUB = 'metadata-file-epub';
+    const REFERENCE_METADATA_FILE_MOBI = 'metadata-file-mobi';
+    const REFERENCE_METADATA_FILE_TXT = 'metadata-file-txt';
     const REFERENCE_METADATA_CATEGORY_NAME = 'metadata-category-name';
     const REFERENCE_METADATA_ASSIGNED_SCANNER = 'metadata-assigned-scanner';
     const REFERENCE_METADATA_REAL_SCANNER = 'metadata-real-scanner';
@@ -259,6 +264,74 @@ class MetadataFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_METADATA_DIRECTORY
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'plik_pdf_podstawowy',
+                    'label' => [
+                        'PL' => 'Podstawowy plik PDF',
+                        'EN' => 'Basic PDF file',
+                    ],
+                    'description' => [],
+                    'placeholder' => [],
+                    'control' => 'file',
+                    'resourceClass' => 'books',
+                    'constraints' => $this->fileConstraint(1, FileUploaderType::FILE_MANAGER()),
+                ]
+            ),
+            self::REFERENCE_METADATA_FILE_PDF
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'plik_epub',
+                    'label' => [
+                        'PL' => 'Plik EPUB',
+                        'EN' => 'EPUB file',
+                    ],
+                    'description' => [],
+                    'placeholder' => [],
+                    'control' => 'file',
+                    'resourceClass' => 'books',
+                    'constraints' => $this->fileConstraint(1, FileUploaderType::FILE_MANAGER()),
+                ]
+            ),
+            self::REFERENCE_METADATA_FILE_EPUB
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'plik_mobi',
+                    'label' => [
+                        'PL' => 'Plik MOBI',
+                        'EN' => 'MOBI file',
+                    ],
+                    'description' => [],
+                    'placeholder' => [],
+                    'control' => 'file',
+                    'resourceClass' => 'books',
+                    'constraints' => $this->fileConstraint(1, FileUploaderType::FILE_MANAGER()),
+                ]
+            ),
+            self::REFERENCE_METADATA_FILE_MOBI
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'plik_txt',
+                    'label' => [
+                        'PL' => 'Plik tekstowy',
+                        'EN' => 'Text file',
+                    ],
+                    'description' => [],
+                    'placeholder' => [],
+                    'control' => 'file',
+                    'resourceClass' => 'books',
+                    'constraints' => $this->fileConstraint(null, FileUploaderType::FILE_MANAGER()),
+                ]
+            ),
+            self::REFERENCE_METADATA_FILE_TXT
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(

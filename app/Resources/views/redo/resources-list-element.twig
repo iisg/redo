@@ -60,16 +60,7 @@
                 {% endfor %}
             </div>
             {% if not childrenAllowed %}
-                <fieldset>
-                    <legend align="left"><span class="title"
-                            title="{{ 'Download resource' | trans }}">{{ 'Download resource' | trans }}</span></legend>
-                    <div class="download-formats">
-                        <h4><a href="/resources/{{ resource.id }}/download/mobi"
-                                title="{{ 'Download resource in MOBI format' | trans }} - 7KB">MOBI</a></h4>
-                        <h4><a href="/resources/{{ resource.id }}/download/pdf"
-                                title="{{ 'Download resource in PDF format' | trans }} - 144000KB">PDF</a></h4>
-                    </div>
-                </fieldset>
+                {% include 'redo/resource-details/download-formats.twig' %}
             {% endif %}
         </div>
 
