@@ -25,7 +25,6 @@ class RepekaExtension extends ConfigurableExtension {
         $container->setParameter('elasticsearch.port', $mergedConfig['elasticsearch']['port']);
         $container->setParameter('elasticsearch.proxy', $mergedConfig['elasticsearch']['proxy']);
         $container->setParameter('repeka.metadata_groups', $mergedConfig['metadata_groups']);
-        $container->setParameter('repeka.metadata_to_display', $mergedConfig['resource_details']['metadata_to_display']);
         $container->setParameter('repeka.upload_dirs', $mergedConfig['upload_dirs']);
         $container->setParameter('repeka.version', $mergedConfig['version']);
         $container->setParameter('repeka.audit', $mergedConfig['audit']);

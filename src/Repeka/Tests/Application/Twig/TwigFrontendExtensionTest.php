@@ -148,7 +148,7 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testFilteringDisplayedMetadata() {
-        $this->frontendConfig->method('getConfig')->willReturn(['metadata_to_display' => [1, 2, 'obrazki']]);
+        $metadataToDisplay = [1, 2, 'obrazki'];
         $groupedMetadataList = [
             'basic' => [$this->createMetadataMock(1), $this->createMetadataMock(2), $this->createMetadataMock(456)],
             'cms' => [$this->createMetadataMock(3, null, null, [], 'books', [], 'obrazki'), $this->createMetadataMock(678)],
@@ -157,12 +157,12 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
             'basic' => [$this->createMetadataMock(1), $this->createMetadataMock(2)],
             'cms' => [$this->createMetadataMock(3, null, null, [], 'books', [], 'obrazki')],
         ];
-        $filteredMetadata = $this->extension->filterMetadataToDisplay($groupedMetadataList);
+        $filteredMetadata = $this->extension->filterMetadataToDisplay($groupedMetadataList, $metadataToDisplay);
         $this->assertEquals($expectedResult, $filteredMetadata);
     }
 
     public function testFilteringDisplayedMetadataRemovesEmptyGroups() {
-        $this->frontendConfig->method('getConfig')->willReturn(['metadata_to_display' => [1, 2]]);
+        $metadataToDisplay = [1, 2];
         $groupedMetadataList = [
             'basic' => [$this->createMetadataMock(1), $this->createMetadataMock(2), $this->createMetadataMock(456)],
             'cms' => [$this->createMetadataMock(678)],
@@ -170,7 +170,7 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
         $expectedResult = [
             'basic' => [$this->createMetadataMock(1), $this->createMetadataMock(2)],
         ];
-        $filteredMetadata = $this->extension->filterMetadataToDisplay($groupedMetadataList);
+        $filteredMetadata = $this->extension->filterMetadataToDisplay($groupedMetadataList, $metadataToDisplay);
         $this->assertEquals($expectedResult, $filteredMetadata);
     }
 }

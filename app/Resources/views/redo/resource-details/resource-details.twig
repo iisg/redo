@@ -1,5 +1,5 @@
 {% extends resource.resourceClass == 'books' and canView(resource) ? 'redo/layout.twig' : 'empty.twig' %}
-
+{% set metadataToDisplay = [1, 2, 13, 15, 19, 9, 'url', 'obrazki', 'okladka', 4, 16, 'url_with_link'] %}
 {% set page_title = resource | metadata('label') %}
 {% set childrenAllowed = resource | childrenAllowed %}
 
@@ -98,7 +98,7 @@
             </div>
         </div>
         <div class="details-container">
-            {% for metadataGroupId, metadataList in resource.kind.groupedMetadataList | displayable %}
+            {% for metadataGroupId, metadataList in filteredToDisplay(resource.kind.groupedMetadataList, metadataToDisplay) %}
                 {% set metadataGroup = metadataGroup(metadataGroupId) %}
                 <div class="title-with-separator">
                     <strong>
