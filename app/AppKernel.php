@@ -1,5 +1,6 @@
 <?php
 
+use Repeka\Application\DependencyInjection\WithBundleDependencies;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -19,7 +20,6 @@ class AppKernel extends Kernel {
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new M6Web\Bundle\StatsdBundle\M6WebStatsdBundle(),
             new Repeka\Application\RepekaBundle(),
-            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
         ];
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
@@ -45,7 +45,11 @@ class AppKernel extends Kernel {
             $pluginClassName = substr(basename($path), 0, -4); // cut .php
             $namespace = basename(dirname($path));
             $fullClassName = 'Repeka\\Plugins\\' . $namespace . '\\' . $pluginClassName;
-            $pluginBundles[] = new $fullClassName();
+            $bundle = new $fullClassName();
+            $pluginBundles[] = $bundle;
+            if ($bundle instanceof WithBundleDependencies) {
+                $pluginBundles = array_merge($pluginBundles, $bundle->getDependentBundles());
+            }
         }
         return $pluginBundles;
     }
