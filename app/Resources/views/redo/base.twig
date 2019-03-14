@@ -6,6 +6,16 @@
         content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible"
         content="IE=edge">
+    <meta property="og:type"
+        content="website"/>
+    <meta property="og:url"
+        content="{{ share_url ?? '' }}"/>
+    <meta property="og:title"
+        content="{{ page_title ?? '' }}">
+    <meta property="og:image"
+        content="{{ share_img ?? '' }}">
+    <meta property="og:description"
+        content="{{ share_description ?? '' }}">
     <title>{% if page_title is defined %} {{ page_title }} - {% endif %}{{ applicationName }}</title>
 
     <link rel="stylesheet"
@@ -25,16 +35,16 @@
         type="text/css"
         href="/themes/redo.css">
 
-        <link rel="icon"
-            type="image/x-icon"
-            href="{{ asset('favicon.ico') }}">
+    <link rel="icon"
+        type="image/x-icon"
+        href="{{ asset('favicon.ico') }}">
 
-        {% block head %}{% endblock %}
+    {% block head %}{% endblock %}
 
-    </head>
-    <body>
-        <div aurelia-app="main">
-            {% block layout %}{% endblock %}
+</head>
+<body>
+<div aurelia-app="main">
+    {% block layout %}{% endblock %}
 </div>
 {% include 'spa-components.twig' %}
 <script>

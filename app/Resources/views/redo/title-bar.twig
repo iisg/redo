@@ -12,8 +12,10 @@
     <div class="right-side-container">
         <div class="options-bar">
             <div class="social-media">
-                <a title="{{ 'Twitter' | trans }}">{{ icon('twitter') }}</a>
-                <a title="{{ 'Facebook' | trans }}">{{ icon('facebook') }}</a>
+                <a href="https://www.facebook.com/bpk.biblioteka/"
+                    target="_blank"
+                    title="{{ 'Facebook' | trans }}"
+                    aria-label="{{ 'Facebook' | trans }}">{{ icon('facebook') }}</a>
             </div>
             <div class="page-view-options">
                 <button title="{{ 'Change font size' | trans }}">{{ icon('font') }}</button>
@@ -27,7 +29,7 @@
                         <span>
                             {{ currentLocale | upper }}
                         </span>
-                </button>
+                    </button>
                     <div role="menu">
                         {% for language in [{locale:'pl', name: 'Polski'}, {locale:'en', name: 'English'}, {locale:'de', name: 'Deutsch'}] %}
                             {% if language.locale != currentLocale %}

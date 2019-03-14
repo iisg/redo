@@ -1,6 +1,8 @@
 {% extends resource.resourceClass == 'books' and canView(resource) ? 'redo/layout.twig' : 'empty.twig' %}
 {% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name, cmsConfig('display_metadata_DEFAULT')) %}
+{% set share_url = app.request.uri %}
 {% set page_title = resource | metadata('label') %}
+{% set share_description = resource | metadata('opis') | first %}
 {% set childrenAllowed = resource | childrenAllowed %}
 {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
 
@@ -44,9 +46,10 @@
                         {% endif %}
                         <button title="{{ 'Report an issue with the resource' | trans }}">{{ icon('mail', 2 ) }}</button>
                         <div class="share-buttons">
-                            <button title="{{ 'Share on Twitter' | trans }}">{{ icon('twitter', 2) }}</button>
-                            <button title="{{ 'Share on Facebook' | trans }}">{{ icon('facebook', 2) }}</button>
-                            <button title="{{ 'Share on Google+' | trans }}">{{ icon('google+', 2) }}</button>
+                            <a href="https://www.facebook.com/sharer/sharer.php?sdk=joey&u={{ app.request.uri }}&display=popup&ref=plugin&src=share_button"
+                                title="{{ 'Share on Facebook' | trans }}"
+                                aria-label="{{ 'Share on Facebook' | trans }}"
+                                onclick="return !window.open(this.href, 'Facebook', 'width=640,height=580')">{{ icon('facebook', 2) }}</a>
                         </div>
                     </div>
                 </div>
