@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("/resources")
  */
 class ResourcesFilesController extends ApiController {
+    public static $fileManagerConnectorClassName = elFinderConnector::class;
+
     /** @var ResourceDisplayStrategyEvaluator */
     private $displayStrategyEvaluator;
     /** @var MetadataRepository */
@@ -64,7 +66,7 @@ class ResourcesFilesController extends ApiController {
         $godMode = $request->get('god');
         $readOnly = false;
         if ($godMode) {
-            $this->denyAccessUnlessGranted(SystemRole::ADMIN()->roleName(), $resource);
+            $this->denyAccessUnlessGranted(SystemRole::ADMIN(), $resource);
         } else {
             $readOnly = $resource->hasWorkflow();
             if ($readOnly) {
@@ -72,7 +74,7 @@ class ResourcesFilesController extends ApiController {
                 $blockedTransitions = $this->resourceNormalizer->getBlockedTransitions($resource, $this->getUser());
                 $readOnly = count($availableTransitions) + 1 == count($blockedTransitions); // +1 - add EDIT transition
             } else {
-                $this->denyAccessUnlessGranted(SystemRole::OPERATOR()->roleName(), $resource);
+                $this->denyAccessUnlessGranted(SystemRole::OPERATOR(), $resource);
             }
         }
         $uploadDirs = $this->resourceFileStorage->uploadDirsForResource($resource);
@@ -110,8 +112,10 @@ class ResourcesFilesController extends ApiController {
             $uploadDirs
         );
         $opts = ['debug' => false, 'roots' => $roots];
-        $connector = new elFinderConnector(new elFinder($opts));
+        $fileManagerConnectorClassName = self::$fileManagerConnectorClassName; // line for the linter
+        $connector = new $fileManagerConnectorClassName(new elFinder($opts));
         $connector->run();
+        return $this->createJsonResponse(null);
     }
 
     /**
