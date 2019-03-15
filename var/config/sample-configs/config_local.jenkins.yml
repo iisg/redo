@@ -22,10 +22,17 @@ repeka:
         - Imię: Józef
       operators:
         - Username: admin
+    - name: grants
+      icon: user
+      admins:
+        - Username: admin
   metadata_groups:
     - id: basic
       label:
         EN: Basic metadata
         PL: Podstawowe metadane
+    - id: statements
+      label:
+        PL: Oświadczenia prawne
   templating:
     theme: redo

@@ -105,7 +105,7 @@ services:
     tags:
       - { name: security.voter, priority: 100 }
 
-  Repeka\Application\Service\FilesystemResourceFileStorage:
+  Repeka\Application\Service\FileSystemResourceFileStorage:
     $uploadDirs: '%repeka.upload_dirs%'
 
   Repeka\Application\Service\PluginsRoutesLoader:
@@ -138,6 +138,8 @@ services:
 
   Repeka\Domain\Workflow\ResourceWorkflowPlugins:
     - !tagged repeka.workflow_plugin
+
+  Repeka\Domain\Workflow\Loader\ResourcesSchemaLoader: ~
 
   Monolog\Formatter\LineFormatter: [~, ~, true]
   Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener:
