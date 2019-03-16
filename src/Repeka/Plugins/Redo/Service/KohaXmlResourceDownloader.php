@@ -15,7 +15,11 @@ class KohaXmlResourceDownloader {
         if ($result === false) {
             return null;
         } else {
-            return $result;
+            return mb_convert_encoding(
+                $result,
+                'UTF-8',
+                mb_detect_encoding($result, 'UTF-8, ISO-8859-1', true)
+            );
         }
     }
 
