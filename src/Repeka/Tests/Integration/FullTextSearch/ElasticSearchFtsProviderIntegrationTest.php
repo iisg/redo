@@ -24,6 +24,9 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     private $phpAndMySQLBookResource;
 
     /** @var ResourceEntity */
+    private $pythonBookResource;
+
+    /** @var ResourceEntity */
     private $timeResource;
 
     /** @var Metadata */
@@ -101,6 +104,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     /** @before */
     public function fetchData() {
         $this->phpBookResource = $this->findResourceByContents(['Tytul' => 'PHP - to można leczyć!']);
+        $this->pythonBookResource = $this->findResourceByContents(['Tytul' => 'Python dla opornych']);
         $this->phpAndMySQLBookResource = $this->findResourceByContents(['Tytuł' => 'PHP i MySQL']);
         $metadataRepository = $this->container->get(MetadataRepository::class);
         $this->timestampMetadata = $metadataRepository->findByName('timestamp_example');
@@ -114,6 +118,17 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $ids = EntityUtils::mapToIds($results);
         $this->assertContains($this->phpBookResource->getId(), $ids);
         $this->assertContains($this->phpAndMySQLBookResource->getId(), $ids);
+    }
+
+    public function testSearchByAdvancedPhrase() {
+        /** @var Result[] $results */
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('(PAP~1 | oporny) + -MySQL', [SystemMetadata::RESOURCE_LABEL])
+        );
+        $ids = EntityUtils::mapToIds($results);
+        $this->assertEquals(2, sizeof($ids));
+        $this->assertContains($this->phpBookResource->getId(), $ids);
+        $this->assertContains($this->pythonBookResource->getId(), $ids);
     }
 
     public function testHighlightingPhpPhrase() {

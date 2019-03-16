@@ -13,11 +13,12 @@ class TextElasticSearchQueryCreator implements ElasticSearchQueryCreator {
 
     public function createSearchQuery($filter, Metadata $metadata) {
         $metadataFilter = new Query\BoolQuery();
+        $path = ElasticSearchQuery::getMetadataPath($metadata);
         foreach ($filter as $phrase) {
             $metadataFilter->addShould(
                 [
-                    new Query\Fuzzy(ElasticSearchQuery::getMetadataPath($metadata), $phrase),
-                    new Query\Match(ElasticSearchQuery::getMetadataPath($metadata), $phrase),
+                    new Query\SimpleQueryString($phrase, [$path]),
+                    new Query\Fuzzy($path, $phrase),
                 ]
             );
         }
