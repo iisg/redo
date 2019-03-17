@@ -24,9 +24,13 @@ export class TreeView implements ComponentAttached {
   }
 
   attached() {
-    this.fancytree = this.createTree();
-    this.subscribeSelectedKeys();
-    this.initialized = true;
+    if (!this.initialized) {
+      this.fancytree = this.createTree();
+      this.subscribeSelectedKeys();
+      this.initialized = true;
+    } else {
+      this.selectedKeysChanged(this.selectedKeys.slice());
+    }
   }
 
   detached() {
