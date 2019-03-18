@@ -1,0 +1,13 @@
+{% set resourceImageURL = resource | metadata('okladka') | first %}
+
+<div class="resource-image {{ resourceImageURL ? '' : childrenAllowed ? 'horizontal placeholder' : 'placeholder' }}">
+    {% if resourceImageURL %}
+        <img src="/api/resources/{{ resource.id }}/file/{{ resourceImageURL }}">
+    {% else %}
+        {% if childrenAllowed %}
+            {{ icon('folder', 1, '0 0 36.63 28.073') }}
+        {% else %}
+            {{ icon('document', 1, '0 0 24.443 30.037') }}
+        {% endif %}
+    {% endif %}
+</div>

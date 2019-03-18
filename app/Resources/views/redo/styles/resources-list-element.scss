@@ -10,13 +10,19 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
     opacity: 0;
     visibility: hidden;
   }
-  .resource-image-placeholder {
-    padding: $default-gap-size $default-gap-size / 2;
+  .resource-image {
+    padding: $default-gap-size * 3 / 4 $default-gap-size / 2;
     &:not(.horizontal) .icon {
       height: $image-width-or-height;
     }
     &.horizontal .icon {
       width: $image-width-or-height;
+    }
+    img {
+      width: $image-width-or-height;
+    }
+    svg {
+      min-width: $image-width-or-height;
     }
   }
   .details {
@@ -66,7 +72,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
     }
     .collapsible-metadata {
       position: relative;
-      min-height: $default-line-height * 1em;
+      min-height: calc(#{$default-line-height} * 1em + 3 * #{$default-gap-size / 8});
       padding-bottom: $default-gap-size / 8;
       padding-left: $default-gap-size / 8;
       padding-right: $default-gap-size / 8;

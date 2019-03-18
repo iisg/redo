@@ -4,8 +4,10 @@
 {% set childrenAllowed = resource | childrenAllowed %}
 
 <div class="resources-list-element">
-    {% include 'redo/resource-image-placeholder.twig' %}
 
+    <a href="/resources/{{ resource.id }}">
+        {% include 'redo/resource-image.twig' %}
+    </a>
     {% if searchResult is defined %}
         {% set highlightedMetadata = [] %}
         {% for fieldName, highlights in searchResult.highlights %}

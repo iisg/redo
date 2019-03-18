@@ -6,6 +6,7 @@ $download-options-flex-basis: 248px; // Should allow having two columns of four-
 $download-options-flex-grow: 1;
 
 .resource-details {
+    flex-shrink: 0; // Required by Internet Explorer.
     padding: $gap-size * 3 / 4;
     .top-container {
         display: flex;
@@ -16,13 +17,13 @@ $download-options-flex-grow: 1;
             flex-grow: $resource-image-with-title-container-with-actions-flex-grow;
             flex-basis: $resource-image-with-title-container-with-actions-flex-basis;
             flex-wrap: wrap;
-            .resource-image-placeholder {
+            .resource-image {
                 width: 100%;
                 padding: $gap-size / 2;
                 &:not(.horizontal) .icon {
                     height: $image-width-or-height;
                 }
-                &.horizontal .icon {
+                &.horizontal .icon, img {
                     width: $image-width-or-height;
                 }
             }
@@ -139,7 +140,7 @@ $download-options-flex-grow: 1;
         padding: $gap-size * 3 / 2;
         .top-container {
             .resource-image-with-title-container-with-actions {
-                .resource-image-placeholder {
+                .resource-image {
                     width: auto;
                 }
             }
