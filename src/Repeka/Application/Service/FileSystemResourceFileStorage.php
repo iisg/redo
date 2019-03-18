@@ -7,6 +7,7 @@ use Repeka\Domain\Exception\NotFoundException;
 use Repeka\Domain\Service\FileSystemDriver;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Service\ResourceFileStorage;
+use Repeka\Domain\Utils\StringUtils;
 use Symfony\Component\HttpFoundation\Response;
 
 class FileSystemResourceFileStorage implements ResourceFileStorage {
@@ -27,15 +28,25 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
         $this->fileSystemDriver = $fileSystemDriver;
     }
 
-    public function getFileSystemPath(ResourceEntity $resource, string $path): string {
+    public function getFileSystemPath(ResourceEntity $resource, string $resourcePath): string {
         $uploadDirs = $this->uploadDirsForResource($resource);
-        preg_match('#/?(.+?)/(.+)#', $path, $matches);
+        preg_match('#/?(.+?)/(.+)#', $resourcePath, $matches);
         if ($matches) {
             list(, $uploadDirId, $filepath) = $matches;
             foreach ($uploadDirs as $uploadDir) {
                 if ($uploadDir['id'] == $uploadDirId) {
                     return $uploadDir['path'] . '/' . $filepath;
                 }
+            }
+        }
+        throw new DomainException('invalidFileSpec', Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function getResourcePath(ResourceEntity $resource, string $fileSystemPath): string {
+        $uploadDirs = $this->uploadDirsForResource($resource);
+        foreach ($uploadDirs as $uploadDir) {
+            if (strpos($fileSystemPath, $uploadDir['path']) === 0) {
+                return StringUtils::joinPaths($uploadDir['id'], substr($fileSystemPath, strlen($uploadDir['path'])));
             }
         }
         throw new DomainException('invalidFileSpec', Response::HTTP_INTERNAL_SERVER_ERROR);
