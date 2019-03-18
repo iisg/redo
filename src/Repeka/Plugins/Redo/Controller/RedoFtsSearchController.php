@@ -9,6 +9,7 @@ use Repeka\Application\Twig\Paginator;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,6 +39,13 @@ class RedoFtsSearchController extends Controller {
     public function homeAction(Request $request) {
         if ($resourceId = $request->get('resourceId')) {
             return $this->redirect('/resources/' . $resourceId);
+        }
+        if ($suwId = $request->get('suwId')) {
+            $query = ResourceListQuery::builder()->filterByContents(['suw_id' => $suwId])->build();
+            $resources = $this->handleCommand($query);
+            if (count($resources)) {
+                return $this->redirect('/resources/' . $resources[0]->getId());
+            }
         }
         return [
             'filterableMetadataList' => $this->findFilterableMetadata(),
