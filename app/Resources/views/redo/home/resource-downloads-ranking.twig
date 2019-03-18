@@ -1,0 +1,23 @@
+{% set contentsFiltersValues =  {resource_downloads: '.+'} %}
+{% if collectionFilterId is defined %}
+    {% set contentsFiltersValues = contentsFiltersValues|merge({'parent_path': collectionFilterId}) %}
+{% endif %}
+{% set rankingResources = resources({
+    page: 1,
+    resultsPerPage: 5,
+    resourceClass: 'books',
+    contentsFilter: (contentsFiltersValues),
+    sortBy: {columnId: m('resource_downloads'), direction: 'DESC', language: 'PL'}
+}) %}
+{% if rankingResources is not empty %}
+    <div>
+        <h4>{{ 'Most downloads' | trans | upper }}</h4>
+        {% for resource in rankingResources.results %}
+            <a class="list-element"
+                href="/resources/{{ resource.id }}">
+                <span>{{ resource | mLabel }}</span>
+                <span class="icon-container">{{ resource | metadata('resource_downloads') | first }}</span>
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}

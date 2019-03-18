@@ -19,8 +19,7 @@
     display: flex;
     justify-content: space-between;
   }
-  a {
-    color: $primary-text-color;
+  a.list-element {
     span {
       overflow: hidden;
       white-space: nowrap;
@@ -32,6 +31,10 @@
         transform: rotate(180deg);
       }
     }
+  }
+
+  a {
+    color: $primary-text-color;
   }
 
   @media (max-width: $maximum-screen-width-for-mobile-layout) {

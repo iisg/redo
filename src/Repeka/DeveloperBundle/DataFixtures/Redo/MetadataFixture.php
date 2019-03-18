@@ -46,6 +46,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_URL_LABEL = 'metadata-url-label';
     const REFERENCE_METADATA_URL_LINK = 'metadata-url-link';
     const REFERENCE_METADATA_CREATOR = 'metadata-creator';
+    const REFERENCE_METADATA_RESOURCE_DOWNLOADS = 'metadata-resource-downloads';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -588,6 +589,22 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_URL_LINK
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'resourceDownloads',
+                    'label' => [
+                        'PL' => 'Liczba pobrań zasobu',
+                        'EN' => 'Number of downloads of resource',
+                    ],
+                    'control' => MetadataControl::INTEGER(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'constraints' => $this->constraints(1)
+                ]
+            ),
+            self::REFERENCE_METADATA_RESOURCE_DOWNLOADS
         );
         $this->handleCommand(
             new MetadataUpdateOrderCommand(

@@ -197,7 +197,7 @@ class ResourceListQuerySqlFactory {
             } elseif ($sortId == 'kindId') {
                 $this->orderBy[] = "r.kind_id " . $direction;
             } else {
-                $this->orderBy[] = $this->jsonbArrayElements("(r.contents->'$sortId')") . "->>'value' $direction";
+                $this->orderBy[] = $this->jsonbArrayElements("(r.contents->'$sortId')") . "->'value' $direction";
             }
         }
         if (empty($this->orderBy)) {

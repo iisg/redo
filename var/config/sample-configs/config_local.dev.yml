@@ -110,6 +110,10 @@ repeka:
       label:
         EN: Number of browsed resources
         PL: Liczba przeglądniętych zasobow
+    - usageKey: resourceDownload
+        label:
+          EN: Number of resource downloads
+          PL: Liczba wszystkich pobrań zasobów
   expose_endpoints:
     /about:
       resourceId: 19
@@ -149,6 +153,8 @@ redo:
     filterable_metadata_ids: [tytul, opis, parent_path, wydzial, skanista, nadzorujacy]
     searchable_resource_classes: [books]
     facets: [kindId, skanista]
+  download:
+    resource_download_metadata: resource_downloads
 
 # Downlad wkhtmltopdf archive for your OS from https://github.com/wkhtmltopdf/wkhtmltopdf/releases/latest
 # and extract it to var directory in the project root; ensure the path below is ok

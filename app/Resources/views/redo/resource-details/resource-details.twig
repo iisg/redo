@@ -41,7 +41,11 @@
                 <div class="title-container-with-actions">
                     <div class="title-container">
                         <h1 class="no-margin-top">{{ resource | metadata('label') | raw }}</h1>
-                        Typ: {{ resource.kind.label | inCurrentLanguage }}
+                        <div>{{ 'Type' | trans }}: {{ resource.kind.label | inCurrentLanguage }}</div>
+                        {% set numberOfDownloads =  resource | metadata('resource_downloads') | first %}
+                        {% if numberOfDownloads %}
+                            <div>{{ 'Number of downloads' | trans }}: {{ numberOfDownloads }}</div>
+                        {% endif %}
                     </div>
                     <div class="actions">
                         {#<button title="{{ 'Add to favorites' | trans }}">{{ icon('bookmark', 2) }}</button>#}
@@ -126,6 +130,10 @@
             </dl>
         </div>
         {% if childrenAllowed %}
+            <div class="statistics">
+                {% set collectionFilterId = resource.id %}
+                {% include 'redo/home/resource-downloads-ranking.twig' %}
+            </div>
             <div class="child-resources">
                 {% set page = app.request.query.get('page') | default(1) %}
                 {% set childrenPerPage = 10 %}

@@ -5,13 +5,13 @@
 {% if browsingAvailable or pdfFilePath or mobiFilePath %}
     {% set downloadFormats = [
         {
-            url: '/api/resources/' ~ resource.id ~ '/file/' ~ pdfFilePath,
+            url: '/redo/resources/' ~ resource.id ~ '/file/' ~ pdfFilePath,
             name: 'PDF',
             title: 'Download resource in PDF format' | trans,
             fileAvailable: pdfFilePath is not empty
         },
         {
-            url: '/api/resources/' ~ resource.id ~ '/file/' ~ mobiFilePath,
+            url: '/redo/resources/' ~ resource.id ~ '/file/' ~ mobiFilePath,
             name: 'EPUB',
             title: 'Download resource in EPUB format' | trans,
             fileAvailable: mobiFilePath is not empty
