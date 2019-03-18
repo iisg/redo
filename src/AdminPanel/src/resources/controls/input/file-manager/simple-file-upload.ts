@@ -19,14 +19,21 @@ export class SimpleFileUpload {
   constructor(private httpClient: HttpClient) {
   }
 
-  fileSelected() {
+  uploadFiles() {
     if (this.selectedFiles && this.selectedFiles.length) {
-      this.sendFile(this.selectedFiles[0]);
+      let promises = [];
+      this.uploading = true;
+      for (let index = 0; index < this.selectedFiles.length; index++) {
+        promises.push(this.uploadFile(this.selectedFiles[index]));
+      }
+      Promise.all(promises).finally(() => {
+        this.inputValue = undefined;
+        this.uploading = false;
+      });
     }
   }
 
-  private sendFile(file: File) {
-    this.uploading = true;
+  private uploadFile(file: File): Promise<void> {
     const formData = new FormData();
     const reqId = times(20, () => random(35).toString(36)).join('');
     formData.append('reqid', reqId);
@@ -34,7 +41,7 @@ export class SimpleFileUpload {
     formData.append('cmd', 'upload');
     formData.append('target', 'lresourceFiles_Lw');
     formData.append('overwrite', '0');
-    this.httpClient.createRequest(SimpleFileUpload.fileUploadEndpoint(this.resource.id))
+    return this.httpClient.createRequest(SimpleFileUpload.fileUploadEndpoint(this.resource.id))
       .asPost()
       .withContent(formData)
       .withHeader(suppressErrorHeader.name, suppressErrorHeader.value)
@@ -43,10 +50,6 @@ export class SimpleFileUpload {
         const response = JSON.parse(message.response);
         const url = response.added[0].url.substr('file/'.length);
         this.resource.contents[this.metadata.id].push(new MetadataValue(url));
-      })
-      .finally(() => {
-        this.inputValue = undefined;
-        this.uploading = false;
       });
   }
 

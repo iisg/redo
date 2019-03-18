@@ -2,7 +2,8 @@
     <input type="file"
         files.bind="selectedFiles"
         value.bind="inputValue"
-        change.delegate="fileSelected()"
-        disabled.bind="disabled || uploading">
+        change.delegate="uploadFiles()"
+        disabled.bind="disabled || uploading"
+        multiple.bind="metadata.constraints.maxCount != 1">
     <throbber if.bind="uploading"></throbber>
 </template>
