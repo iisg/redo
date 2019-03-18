@@ -5,8 +5,8 @@ use Psr\Container\ContainerInterface;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Exception\EntityNotFoundException;
-use Repeka\Domain\Exception\NotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Service\ResourceFileStorage;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -25,6 +25,9 @@ class ESContentsAdjuster {
         $this->container = $container;
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     */
     public function adjustContents(ResourceEntity $resource, $contents): array {
         $resourceFileStorage = $this->container->get(ResourceFileStorage::class);
         $adjustedContents = [];
@@ -93,7 +96,7 @@ class ESContentsAdjuster {
                 if (mb_detect_encoding($fileContents, FtsConstants::SUPPORTED_ENCODING_TYPES, true)) {
                     return $fileContents;
                 }
-            } catch (NotFoundException $e) {
+            } catch (DomainException $e) {
             }
         }
         return '';

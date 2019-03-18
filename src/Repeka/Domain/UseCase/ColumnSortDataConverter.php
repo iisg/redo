@@ -6,7 +6,7 @@ class ColumnSortDataConverter {
         return array_map(
             function ($sortBy) {
                 $sortId = is_numeric($sortBy['columnId']) ? intval($sortBy['columnId']) : $sortBy['columnId'];
-                return ['columnId' => $sortId, 'direction' => $sortBy['direction'], 'language' => $sortBy['language']];
+                return ['columnId' => $sortId, 'direction' => $sortBy['direction'], 'language' => $sortBy['language'] ?? ''];
             },
             $sortByIds
         );
