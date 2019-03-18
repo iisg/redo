@@ -275,6 +275,6 @@ SQL
             $resultSetMapping
         );
         $query->setParameter('parentId', '[{"value":' . $resource->getId() . '}]');
-        return $query->getSingleScalarResult();
+        return $query->useResultCache(true, 60)->getSingleScalarResult();
     }
 }

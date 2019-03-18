@@ -177,6 +177,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
 
     protected function loadAllFixtures($group = 'redo'): void {
         $this->executeCommand('doctrine:fixtures:load --append --group=' . $group);
+        $this->executeCommand('doctrine:cache:clear-result');
     }
 
     protected function persistAndFlush($entities) {

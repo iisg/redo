@@ -52,21 +52,21 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
     public function testFilterByContents() {
         $query = ResourceListQuery::builder()->filterByContents([1 => 'PHP'])->build();
         $factory = new ResourceListQuerySqlFactory($query);
-        $this->assertContains('mFilter0', $factory->getPageQuery());
+        $this->assertContains('filter0', $factory->getPageQuery());
         $this->assertContains("r.contents->'1'", $factory->getPageQuery());
         $this->assertContains("~*", $factory->getPageQuery());
-        $this->assertArrayHasKey('mFilter0', $factory->getParams());
-        $this->assertEquals('PHP', $factory->getParams()['mFilter0']);
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertEquals('PHP', $factory->getParams()['filter0']);
     }
 
     public function testFilterByNumber() {
         $query = ResourceListQuery::builder()->filterByContents([1 => 40])->build();
         $factory = new ResourceListQuerySqlFactory($query);
-        $this->assertContains('mFilter0', $factory->getPageQuery());
-        $this->assertContains("r.contents->'1'", $factory->getPageQuery());
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains("r.contents->'1' @> :filter0", $factory->getPageQuery());
         $this->assertNotContains("~*", $factory->getPageQuery());
-        $this->assertArrayHasKey('mFilter0', $factory->getParams());
-        $this->assertEquals(40, $factory->getParams()['mFilter0']);
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertEquals('[{"value":40}]', $factory->getParams()['filter0']);
     }
 
     public function testFilterByAlternativeContents() {
@@ -77,14 +77,31 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $factory = new ResourceListQuerySqlFactory($query);
         $this->assertContains('m0', $factory->getPageQuery());
         $this->assertContains('m0', $factory->getPageQuery());
-        $this->assertContains('mFilter0', $factory->getPageQuery());
-        $this->assertContains('mFilter1', $factory->getPageQuery());
-        $this->assertArrayHasKey('mFilter0', $factory->getParams());
-        $this->assertArrayHasKey('mFilter1', $factory->getParams());
-        $this->assertEquals('PHP', $factory->getParams()['mFilter0']);
-        $this->assertEquals('alternative', $factory->getParams()['mFilter1']);
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains('filter1', $factory->getPageQuery());
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertArrayHasKey('filter1', $factory->getParams());
+        $this->assertEquals('PHP', $factory->getParams()['filter0']);
+        $this->assertEquals('alternative', $factory->getParams()['filter1']);
         $this->assertContains("r.contents->'5'", $factory->getPageQuery());
         $this->assertContains("r.contents->'6'", $factory->getPageQuery());
+        $this->assertContains(' OR ', $factory->getPageQuery());
+    }
+
+    public function testFilterByAlternativeMetadataValues() {
+        $query = ResourceListQuery::builder()
+            ->filterByContents([5 => ['PHP', 'Python']])
+            ->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertContains('m0', $factory->getPageQuery());
+        $this->assertNotContains('m1', $factory->getPageQuery());
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains('filter1', $factory->getPageQuery());
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertArrayHasKey('filter1', $factory->getParams());
+        $this->assertEquals('PHP', $factory->getParams()['filter0']);
+        $this->assertEquals('Python', $factory->getParams()['filter1']);
+        $this->assertContains("r.contents->'5'", $factory->getPageQuery());
         $this->assertContains(' OR ', $factory->getPageQuery());
     }
 

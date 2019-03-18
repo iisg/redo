@@ -14,7 +14,8 @@ class ResourceListQuerySqlFactory {
     protected $query;
 
     protected $froms = [];
-    protected $wheres = ['1=1'];
+    private $fromsMetadataMap = [];
+    protected $wheres = [];
     protected $whereAlternatives = [];
     protected $params = [];
     protected $orderBy = [];
@@ -47,8 +48,9 @@ class ResourceListQuerySqlFactory {
     }
 
     public function getPageQuery(): string {
-        return $this->getSelectQuery($this->alias . '.*')
+        $q = $this->getSelectQuery($this->alias . '.*')
             . sprintf('ORDER BY %s %s', implode(', ', $this->orderBy), $this->limit);
+        return $q;
     }
 
     public function getTotalCountQuery(): string {
@@ -71,10 +73,10 @@ class ResourceListQuerySqlFactory {
             $wheres[] = '(' . implode(' OR ', $this->whereAlternatives) . ')';
         }
         return sprintf(
-            'SELECT %s FROM %s WHERE %s ',
+            'SELECT %s FROM %s %s ',
             $what,
             implode(', ', $this->froms),
-            implode(' AND ', $wheres)
+            $wheres ? 'WHERE ' . implode(' AND ', $wheres) : ''
         );
     }
 
@@ -149,14 +151,26 @@ class ResourceListQuerySqlFactory {
         $contentWhere = [];
         $resourceContents->forEachValue(
             function (MetadataValue $value, int $metadataId) use ($contentsPath, &$contentWhere, &$nextFilterId, &$metadataInFrom) {
-                $this->froms["m$nextFilterId"] = $this->jsonbArrayElements("$contentsPath->'$metadataId'") . " m$nextFilterId";
-                $paramName = "mFilter$nextFilterId";
-                if (is_int($value->getValue())) {
-                    $whereClause = "m$nextFilterId->>'value' = :$paramName";
+                $paramName = 'filter' . $nextFilterId;
+                $value = $value->getValue();
+                if (is_int($value)) {
+                    $value = json_encode([['value' => $value]]);
+                    $whereClause = "$contentsPath->'$metadataId' @> :$paramName";
+                } elseif ($value == '.+') {
+                    $whereClause = "$contentsPath->>'$metadataId' IS NOT NULL";
+                    $paramName = null;
                 } else {
-                    $whereClause = "m$nextFilterId->>'value' ~* :$paramName";
+                    $metadataFrom = $this->fromsMetadataMap[$contentsPath . $metadataId] ?? null;
+                    if (!$metadataFrom) {
+                        $metadataFrom = "m$nextFilterId";
+                        $this->froms[$metadataFrom] = $this->jsonbArrayElements("$contentsPath->'$metadataId'") . " m$nextFilterId";
+                        $this->fromsMetadataMap[$contentsPath . $metadataId] = $metadataFrom;
+                    }
+                    $whereClause = "$metadataFrom->>'value' ~* :$paramName";
                 }
-                $this->params[$paramName] = $value->getValue();
+                if ($paramName) {
+                    $this->params[$paramName] = $value;
+                }
                 $contentWhere[$metadataId][] = $whereClause;
                 $nextFilterId++;
             }

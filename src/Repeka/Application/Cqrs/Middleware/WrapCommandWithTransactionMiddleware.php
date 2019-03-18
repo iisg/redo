@@ -19,6 +19,9 @@ class WrapCommandWithTransactionMiddleware implements CommandBusMiddleware {
     }
 
     public function handle(Command $command, callable $next) {
+        if (preg_match('#Query$#', $command->getCommandClassName())) {
+            return $next($command);
+        }
         /** @var EntityManager $entityManager */
         $entityManager = $this->managerRegistry->getManager();
         $entityManager->getConnection()->beginTransaction();

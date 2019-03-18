@@ -7,9 +7,7 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Utils\EntityUtils;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * @method static SystemResource UNAUTHENTICATED_USER()
@@ -22,7 +20,7 @@ class SystemResource extends Enum {
         $value = $this->getValue();
         $resource = null;
         if ($value == self::UNAUTHENTICATED_USER) {
-            $resource = new ResourceEntity($resourceKind, ResourceContents::empty());
+            $resource = new ResourceEntity($resourceKind, ResourceContents::fromArray([SystemMetadata::USERNAME => '$$UNAUTHENTICATED$$']));
         }
         /** @noinspection PhpUndefinedVariableInspection */
         Assertion::notNull($resource, "Not implemented: resource for value $value");

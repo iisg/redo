@@ -6,12 +6,12 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Factory\MetadataListQuerySqlFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
+use Repeka\Domain\Utils\StringUtils;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class MetadataDoctrineRepository extends EntityRepository implements MetadataRepository {
@@ -30,12 +30,14 @@ class MetadataDoctrineRepository extends EntityRepository implements MetadataRep
     }
 
     public function findByName(string $name): Metadata {
+        $name = StringUtils::normalizeEntityName($name);
         $query = MetadataListQuery::builder()->filterByName($name);
         $result = $this->findByQuery($query->build());
         if (!$result) {
             throw new EntityNotFoundException($this, $name);
         }
-        return $result[0];
+        $metadata = $result[0];
+        return $metadata;
     }
 
     public function findByNameOrId($nameOrId): Metadata {

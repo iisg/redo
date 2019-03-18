@@ -38,8 +38,8 @@ class KohaImportCommandIntegrationTest extends DatabaseMigrationTestCase {
             file_get_contents(__DIR__ . '/../MetadataImport/dumps/only_language_resources_fix_metadata.sql')
         );
         $this->executeCommand('doctrine:migrations:migrate');
-        $this->barcode1 = 100000231505;
-        $this->barcode2 = 100000231454;
+        $this->barcode1 = '100000231505';
+        $this->barcode2 = '100000231454';
         $this->barcodeMetadataId = 76;
         $this->resourceKindId = 1;
         $this->configPath = addcslashes(__DIR__ . '/../MetadataImport/dumps/marc-import-config.yml', '\\');

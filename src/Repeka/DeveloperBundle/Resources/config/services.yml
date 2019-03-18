@@ -12,5 +12,9 @@ services:
     resource: '../../DataFixtures/Redo'
     tags: [{name: doctrine.fixture.orm, group: redo}]
 
+  Repeka\DeveloperBundle\Authentication\AnyPasswordAuthenticator:
+    tags:
+      - { name: repeka.token_authenticator, priority: 1000 }
+
   Repeka\DeveloperBundle\Command\:
     resource: '../../Command'
