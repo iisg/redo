@@ -120,10 +120,18 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $this->assertContains($this->phpAndMySQLBookResource->getId(), $ids);
     }
 
+    public function testSearchByPhpAndMysqlPhrase() {
+        /** @var Result[] $results */
+        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('php mysql', [SystemMetadata::RESOURCE_LABEL]));
+        $ids = EntityUtils::mapToIds($results);
+        $this->assertCount(1, $ids);
+        $this->assertContains($this->phpAndMySQLBookResource->getId(), $ids);
+    }
+
     public function testSearchByAdvancedPhrase() {
         /** @var Result[] $results */
         $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('(PAP~1 | oporny) + -MySQL', [SystemMetadata::RESOURCE_LABEL])
+            new ResourceListFtsQuery('(PAP~1 | oporny) -MySQL', [SystemMetadata::RESOURCE_LABEL])
         );
         $ids = EntityUtils::mapToIds($results);
         $this->assertEquals(2, sizeof($ids));
@@ -223,7 +231,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $phpIMysqlId = $this->findResourceByContents(['tytul' => 'PHP i MySQL'])->getId();
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('php python', ['tytul'], [], [], true, ['powiazanaKsiazka'])
+            new ResourceListFtsQuery('php | python', ['tytul'], [], [], true, ['powiazanaKsiazka'])
         );
         $kindIdAggregations = $this->extractAggregation($results, 'kindId');
         $this->assertEquals([['key' => 1, 'doc_count' => 2], ['key' => 2, 'doc_count' => 1]], $kindIdAggregations);
@@ -236,7 +244,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $phpIMysqlId = $this->findResourceByContents(['tytul' => 'PHP i MySQL'])->getId();
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('php python', ['tytul'], [], [], true, ['powiazanaKsiazka'], ['powiazanaKsiazka' => [$phpIMysqlId]])
+            new ResourceListFtsQuery('php | python', ['tytul'], [], [], true, ['powiazanaKsiazka'], ['powiazanaKsiazka' => [$phpIMysqlId]])
         );
         $this->assertCount(1, $results);
         $kindIdAggregations = $this->extractAggregation($results, 'kindId');
@@ -249,7 +257,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $powiazanaKsiazka = $this->findMetadataByName('powiazanaKsiazka');
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
-            new ResourceListFtsQuery('php python', ['tytul'], [], [], true, ['powiazanaKsiazka'], ['kindId' => [2]])
+            new ResourceListFtsQuery('php | python', ['tytul'], [], [], true, ['powiazanaKsiazka'], ['kindId' => [2]])
         );
         $this->assertCount(1, $results);
         $kindIdAggregations = $this->extractAggregation($results, 'kindId');
@@ -263,7 +271,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(
             new ResourceListFtsQuery(
-                'php python',
+                'php | python',
                 ['tytul'],
                 [],
                 [],

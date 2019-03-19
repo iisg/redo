@@ -71,7 +71,9 @@ class ElasticSearchQuery {
         $metadataQuery = new Query\BoolQuery();
         foreach ($this->query->getSearchableMetadata() as $metadata) {
             $path = $this->getMetadataPath($metadata);
-            $metadataFilters[] = new Query\SimpleQueryString($this->query->getPhrase(), [$path]);
+            $simpleQueryString = new Query\SimpleQueryString($this->query->getPhrase(), [$path]);
+            $simpleQueryString->setDefaultOperator('AND');
+            $metadataFilters[] = $simpleQueryString;
             $metadataFilters[] = new Query\Fuzzy($path, $this->query->getPhrase());
         }
         $metadataQuery->addShould($metadataFilters);
