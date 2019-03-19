@@ -2,6 +2,7 @@
 namespace Repeka\Application\Twig;
 
 use Repeka\Application\Cqrs\CommandBusAware;
+use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Elasticsearch\PageNumberFinder;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
@@ -60,6 +61,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('arrayWithoutItem', [$this, 'arrayWithoutItem']),
             new \Twig_Function('withPageNumbers', [$this, 'matchSearchHitsWithPageNumbers']),
             new \Twig_Function('filteredToDisplay', [$this, 'filterMetadataToDisplay']),
+            new \Twig_Function('cmsConfig', [$this, 'getCmsConfig']),
         ];
     }
 
@@ -181,6 +183,32 @@ ICON;
             $builder->sortBy([$filters['sortBy']]);
         }
         return $this->handleCommand($builder->build());
+    }
+
+    public function getCmsConfig(
+        string $configKey,
+        $defaultValue = [],
+        string $configKeyMetadata = 'cmsConfigId',
+        string $configValueMetadata = 'cmsConfigValue'
+    ): array {
+        $query = ResourceListQuery::builder()
+            ->filterByContents([$configKeyMetadata => $configKey])
+            ->setPage(1)
+            ->setResultsPerPage(1)
+            ->build();
+        $resources = FirewallMiddleware::bypass(
+            function () use ($query) {
+                return $this->handleCommand($query);
+            }
+        );
+        if (count($resources)) {
+            /** @var ResourceEntity $resource */
+            $resource = $resources[0];
+            $metadata = $resource->getKind()->getMetadataByIdOrName($configValueMetadata);
+            return $resource->getContents()->getValuesWithoutSubmetadata($metadata);
+        } else {
+            return is_array($defaultValue) ? $defaultValue : [$defaultValue];
+        }
     }
 
     public function bibtexEscape($value) {

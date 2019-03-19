@@ -567,6 +567,7 @@ class ResourcesFixture extends RepekaFixture {
 
     private function addCmsPages() {
         $cmsPageRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE);
+        $cmsConfigRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CMS_CONFIG);
         $pageContent = '<h1>Nasz projekt jest super</h1> <repeka-version></repeka-version>';
         $this->handleCommand(
             new ResourceCreateCommand(
@@ -585,6 +586,41 @@ class ResourcesFixture extends RepekaFixture {
                             $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
                             SystemResource::UNAUTHENTICATED_USER,
                         ],
+                    ]
+                )
+            )
+        );
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $cmsConfigRk,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_ID => 'display_metadata_book',
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_VALUE => [
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getName(),
+                        ],
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONTENT =>
+                            'Metadane, które wyświetlą się na stronie szczegółów zasobu rodzaju "book"',
+                    ]
+                )
+            )
+        );
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $cmsConfigRk,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_ID => 'display_metadata_DEFAULT',
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_VALUE => [
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE)->getName(),
+                        ],
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONTENT =>
+                            'Metadane, które wyświetlą się na stronie szczegółów zasobu '
+                            . 'rodzajów nieposiadających własnej konfiguracji',
                     ]
                 )
             )

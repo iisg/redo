@@ -45,6 +45,8 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
     const REFERENCE_METADATA_CMS_RENDERED_CONTENT = 'metadata-cms-rendered-content';
+    const REFERENCE_METADATA_CMS_CONFIG_ID = 'metadata-cms-config-id';
+    const REFERENCE_METADATA_CMS_CONFIG_VALUE = 'metadata-cms-config-value';
 
     const REFERENCE_METADATA_DEPARTMENTS_NAME = 'metadata-departments-name';
     const REFERENCE_METADATA_DEPARTMENTS_ABBREV = 'metadata-departments-abbrev';
@@ -617,6 +619,35 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_CMS_CONTENT
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'cmsConfigId',
+                    'label' => [
+                        'PL' => 'Klucz konfiguracji CMS',
+                        'EN' => 'CMS Configuration id',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'resourceClass' => 'cms',
+                    'constraints' => ['maxCount' => 1, 'uniqueInResourceClass' => true],
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_CONFIG_ID
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'cmsConfigValue',
+                    'label' => [
+                        'PL' => 'Wartość konfiguracji CMS',
+                        'EN' => 'CMS Configuration value',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'resourceClass' => 'cms',
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_CONFIG_VALUE
         );
         $staticPageContent = trim(
             <<<TEMPLATE

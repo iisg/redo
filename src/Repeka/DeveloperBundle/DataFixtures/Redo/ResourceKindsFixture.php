@@ -21,6 +21,7 @@ class ResourceKindsFixture extends RepekaFixture {
     const REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE = 'resource-kind-publishing-house';
     const REFERENCE_RESOURCE_KIND_USER_GROUP = 'resource-kind-user-group';
     const REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE = 'resource-kind-cms-static-page';
+    const REFERENCE_RESOURCE_KIND_CMS_CONFIG = 'resource-kind-cms-config';
 
     /**
      * @inheritdoc
@@ -178,6 +179,7 @@ class ResourceKindsFixture extends RepekaFixture {
 
     private function addCmsResourceKinds() {
         $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_TITLE)->getId();
+        $configIdMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_ID)->getId();
         $this->handleCommand(
             new ResourceKindCreateCommand(
                 'static_page',
@@ -193,6 +195,22 @@ class ResourceKindsFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE
+        );
+        $this->handleCommand(
+            new ResourceKindCreateCommand(
+                'cms_config',
+                [
+                    'PL' => 'Konfiguracja CMS',
+                    'EN' => 'CMS Configuration',
+                ],
+                [
+                    $this->resourceLabelMetadata('{{r|m' . $configIdMetadataId . '}}'),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_ID),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_VALUE),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_CONTENT),
+                ]
+            ),
+            self::REFERENCE_RESOURCE_KIND_CMS_CONFIG
         );
     }
 }

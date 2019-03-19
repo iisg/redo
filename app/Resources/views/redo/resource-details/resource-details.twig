@@ -1,5 +1,5 @@
 {% extends resource.resourceClass == 'books' and canView(resource) ? 'redo/layout.twig' : 'empty.twig' %}
-{% set metadataToDisplay = [1, 2, 13, 15, 19, 9, 'url', 'obrazki', 'okladka', 4, 16, 'url_with_link'] %}
+{% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name, cmsConfig('display_metadata_DEFAULT')) %}
 {% set page_title = resource | metadata('label') %}
 {% set childrenAllowed = resource | childrenAllowed %}
 
@@ -98,58 +98,44 @@
             </div>
         </div>
         <div class="details-container">
-            {% for metadataGroupId, metadataList in filteredToDisplay(resource.kind.groupedMetadataList, metadataToDisplay) %}
-                {% set metadataGroup = metadataGroup(metadataGroupId) %}
-                <div class="title-with-separator">
-                    <strong>
-                        {% if metadataGroup.label is defined %}
-                            {{ metadataGroup.label | inCurrentLanguage }}
-                        {% else %}
-                            {{ 'Additional information' | trans }}
-                        {% endif %}
-                    </strong>
-                    <hr>
-                </div>
-                <dl>
-                    {% for metadata in metadataList if metadata.id > 0
-                        and metadata.control != 'display-strategy'
-                        and metadata.control != 'wysiwyg-editor' %}
-                        {% set metadataValues = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) %}
-                        {% if metadataValues | length %}
-                            <dt>
-                                {{ metadata.label | inCurrentLanguage }}
-                            </dt>
-                            <dd>
-                                {% for metadataValue in metadataValues %}
-                                    {% if metadata.control == 'file' or metadata.control == 'directory' %}
-                                        {{ metadataValue | basename }}
-                                    {% elseif metadata.control == 'relationship' %}
-                                        {% set relatedResource = resource(metadataValue) %}
-                                        {% if relatedResource is not empty %}
-                                            {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
-                                                <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
-                                            {% elseif canViewTeaser(relatedResource) %}
-                                                {{ relatedResource | mLabel | raw }}
-                                            {% else %}
-                                                {{ 'You are not allowed to view this resource' | trans }}
-                                            {% endif %}
+            <dl>
+                {% for metadataName in metadataToDisplay %}
+                    {% set metadata = metadata(metadataName) %}
+                    {% set metadataValues = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) %}
+                    {% if metadataValues | length %}
+                        <dt>
+                            {{ metadata.label | inCurrentLanguage }}
+                        </dt>
+                        <dd>
+                            {% for metadataValue in metadataValues %}
+                                {% if metadata.control == 'file' or metadata.control == 'directory' %}
+                                    {{ metadataValue | basename }}
+                                {% elseif metadata.control == 'relationship' %}
+                                    {% set relatedResource = resource(metadataValue) %}
+                                    {% if relatedResource is not empty %}
+                                        {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
+                                            <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
+                                        {% elseif canViewTeaser(relatedResource) %}
+                                            {{ relatedResource | mLabel | raw }}
                                         {% else %}
-                                            {{ 'Resource does not exist' | trans }}
+                                            {{ 'You are not allowed to view this resource' | trans }}
                                         {% endif %}
-                                    {% elseif metadata.dynamic %}
-                                        {{ metadataValue | raw }}
                                     {% else %}
-                                        {{ metadataValue }}
+                                        {{ 'Resource does not exist' | trans }}
                                     {% endif %}
-                                    {% if not loop.last %}
-                                        <br>
-                                    {% endif %}
-                                {% endfor %}
-                            </dd>
-                        {% endif %}
-                    {% endfor %}
-                </dl>
-            {% endfor %}
+                                {% elseif metadata.dynamic %}
+                                    {{ metadataValue | raw }}
+                                {% else %}
+                                    {{ metadataValue }}
+                                {% endif %}
+                                {% if not loop.last %}
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </dd>
+                    {% endif %}
+                {% endfor %}
+            </dl>
         </div>
         {% if childrenAllowed %}
             <div class="child-resources">

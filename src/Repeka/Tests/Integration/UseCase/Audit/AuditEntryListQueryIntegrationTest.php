@@ -10,6 +10,7 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     private const MOMENT_DATE_FORMAT = 'Y-m-d\TH:i:s';
+    private const NUMBER_OF_FIXTURE_AUDIT_ENTRIES = 31;
 
     protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
@@ -20,7 +21,7 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
         $dateFrom = date(self::MOMENT_DATE_FORMAT, strtotime('-1 month', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateFrom($dateFrom)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(29, $entries);
+        $this->assertCount(self::NUMBER_OF_FIXTURE_AUDIT_ENTRIES, $entries);
     }
 
     public function testFilterByDateTo() {
@@ -28,7 +29,7 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
         $dateTo = date(self::MOMENT_DATE_FORMAT, strtotime('+1 month', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateTo($dateTo)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(29, $entries);
+        $this->assertCount(self::NUMBER_OF_FIXTURE_AUDIT_ENTRIES, $entries);
     }
 
     public function testFilterByDateFromTo() {
@@ -37,7 +38,7 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
         $dateTo = date(self::MOMENT_DATE_FORMAT, strtotime('+2 week', strtotime($today)));
         $query = AuditEntryListQuery::builder()->filterByDateFrom($dateFrom)->filterByDateTo($dateTo)->build();
         $entries = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(29, $entries);
+        $this->assertCount(self::NUMBER_OF_FIXTURE_AUDIT_ENTRIES, $entries);
     }
 
     public function testFilterByFutureDateFrom() {
