@@ -1,17 +1,12 @@
 <template>
-    <require from="common/components/restore-from-original-button/restore-from-original-button.html"></require>
-    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
 
-    <dropdown-select value.bind="value"
-        values.one-time="values"
-        set-first-as-default
-        hide-search-box
-        hide-clear-button>
-        <template replace-part="option-template">
-            ${'controls::file-uploader-types//' + option | t }
-        </template>
-    </dropdown-select>
+    <label repeat.for="type of values">
+        <input type="radio"
+            model.bind="type"
+            checked.bind="value">
+        ${'controls::file-uploader-types//' + type | t }
+    </label>
     <restore-from-original-button if.bind="hasBase && wasModified"
         click.delegate="resetToOriginalValues()"></restore-from-original-button>
 </template>
-F
