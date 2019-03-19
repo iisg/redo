@@ -14,6 +14,7 @@ use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\Resource\ResourceListQueryBuilder;
 use Repeka\Domain\UseCase\Resource\ResourceTopLevelPathQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
@@ -43,6 +44,23 @@ class ResourcesController extends ApiController {
      * @Method("GET")
      */
     public function getListAction(Request $request) {
+        $resourceListQuery = $this->getResourceListQuery($request)->build();
+        /** @var PageResult $resources */
+        $resources = $this->handleCommand($resourceListQuery);
+        return $this->createPageResponse($resources);
+    }
+
+    /**
+     * @Route("/teasers")
+     * @Method("GET")
+     */
+    public function getTeasersAction(Request $request) {
+        $query = $this->getResourceListQuery($request)->setPermissionMetadataId(SystemMetadata::TEASER_VISIBILITY)->build();
+        $resources = $this->handleCommand($query);
+        return $this->createPageResponse($resources, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
+    }
+
+    private function getResourceListQuery(Request $request): ResourceListQueryBuilder {
         $resourceClasses = $request->get('resourceClasses', []);
         $resourceKindIds = $request->get('resourceKinds', []);
         $sortByIds = $request->query->get('sortByIds', []);
@@ -50,6 +68,7 @@ class ResourcesController extends ApiController {
         $contentsFilter = $request->get('contentsFilter', []);
         $parentId = $request->query->get('parentId', 0);
         $topLevel = $request->query->get('topLevel', false);
+        $ids = array_values(array_filter(array_map('trim', explode(',', $request->query->get('ids', '')))));
         Assertion::isArray($resourceClasses);
         Assertion::isArray($resourceKindIds);
         Assertion::isArray($sortByIds);
@@ -60,6 +79,7 @@ class ResourcesController extends ApiController {
             ->filterByContents(is_array($contentsFilter) ? $contentsFilter : [])
             ->sortBy($sortByIds)
             ->filterByParentId($parentId)
+            ->filterByIds($ids)
             ->filterByWorkflowPlacesIds($workflowPlacesIds);
         if ($topLevel) {
             $resourceListQueryBuilder->onlyTopLevel();
@@ -69,24 +89,7 @@ class ResourcesController extends ApiController {
             $resultsPerPage = $request->query->get('resultsPerPage', 10);
             $resourceListQueryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
         }
-        $resourceListQuery = $resourceListQueryBuilder->build();
-        /** @var PageResult $resources */
-        $resources = $this->handleCommand($resourceListQuery);
-        return $this->createPageResponse($resources);
-    }
-
-    /**
-     * @Route("/teasers/{ids}")
-     * @Method("GET")
-     */
-    public function getTeasersAction(string $ids) {
-        $ids = array_values(array_filter(array_map('trim', explode(',', $ids))));
-        if (!$ids) {
-            throw $this->createNotFoundException();
-        }
-        $query = ResourceListQuery::builder()->filterByIds($ids)->setPermissionMetadataId(SystemMetadata::TEASER_VISIBILITY)->build();
-        $resources = $this->handleCommand($query);
-        return $this->createJsonResponse($resources, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
+        return $resourceListQueryBuilder;
     }
 
     /**

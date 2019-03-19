@@ -22,6 +22,10 @@ export class ResourceRepository extends ApiRepository<Resource> {
     return new ResourceListQuery(this.httpClient, this.endpoint, this.entitySerializer);
   }
 
+  public getTeaserListQuery(): ResourceListQuery {
+    return new ResourceListQuery(this.httpClient, this.endpoint + '/teasers', this.entitySerializer);
+  }
+
   public getTreeQuery(): ResourceTreeQuery {
     return new ResourceTreeQuery(this.httpClient, `${this.endpoint}/tree`, this.entitySerializer);
   }
@@ -36,7 +40,7 @@ export class ResourceRepository extends ApiRepository<Resource> {
 
   private fetchTeasers = debouncePromise(() => {
     if (this.resourceIdsToQueryForTeaser.length) {
-      const endpoint = 'teasers/' + this.resourceIdsToQueryForTeaser.join(',');
+      const endpoint = 'teasers?ids=' + this.resourceIdsToQueryForTeaser.join(',');
       const request = this.httpClient.createRequest(this.oneEntityEndpoint(endpoint))
         .asGet()
         .withHeader(suppressErrorHeader.name, suppressErrorHeader.value);

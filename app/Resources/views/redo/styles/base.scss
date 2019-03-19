@@ -3,6 +3,10 @@ $fieldset-border-width: 1px;
 $fieldset-legend-line-height: 1px; // Some positive value seems required to have the fieldset border hidden.
 $submenu-z-index: 1;
 
+html {
+  overflow-y: scroll;
+}
+
 .main-container {
   display: flex;
   flex-direction: column;
@@ -167,12 +171,12 @@ input {
 }
 
 .link-to-the-previous-page {
-    align-self: flex-start;
-    padding: $default-gap-size / 2 $default-gap-size / 4;
-    .icon {
-        margin-left: $default-gap-size / 4;
-        margin-right: $default-gap-size / 4;
-    }
+  align-self: flex-start;
+  padding: $default-gap-size / 2 $default-gap-size / 4;
+  .icon {
+    margin-left: $default-gap-size / 4;
+    margin-right: $default-gap-size / 4;
+  }
 }
 
 #nprogress {

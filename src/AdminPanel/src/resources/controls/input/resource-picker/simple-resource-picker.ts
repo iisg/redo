@@ -80,7 +80,7 @@ export class SimpleResourcePicker implements ComponentAttached, ComponentDetache
   }
 
   private loadResources() {
-    const query = this.resourceRepository.getListQuery();
+    const query = this.resourceRepository.getTeaserListQuery();
     if (this.resourceClass) {
       query.filterByResourceClasses(this.resourceClass);
     }
