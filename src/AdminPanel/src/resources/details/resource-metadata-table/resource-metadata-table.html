@@ -7,27 +7,32 @@
 
     <slot></slot>
     <template if.one-time="showResourceId || showResourceKind">
-        <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
-            <template if.bind="showResourceId">
-                <span>${ 'Resource id' | t}</span>
-                <span class="value"
-                    repeat.for="resource of resources">${ resource.id }</span>
-            </template>
-            <template if.bind="showResourceKind">
-                <span>${ 'Resource kind' | t}</span>
+        <template if.bind="showResourceId">
+            <span>${ 'Resource id' | t}</span>
+            <span class="value"
+                repeat.for="resource of resources">${ resource.id }</span>
+        </template>
+        <template if.bind="showResourceKind">
+            <span>${ 'Resource kind' | t}</span>
+            <template if.one-time="'ADMIN' | hasRole:resource.resourceClass">
                 <a repeat.for="resource of resources"
                     route-href="route: resource-kinds/details; params.bind: {id: resource.kind.id}">
                     <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
                     <span else>#${ resource.kind.id }</span>
                 </a>
             </template>
-            <template if.bind="!hidePlaceInformation && resource.kind.workflow">
-                <span class="value"
-                    repeat.for="resource of resources">${'Place' | t}</span>
-                <resource-place-display resource.bind="resource"></resource-place-display>
+            <template else>
+                <span repeat.for="resource of resources">
+                    <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
+                    <span else>#${ resource.kind.id }</span>
+                </span>
             </template>
-            <hr if.bind="metadataGroups.length && !hideMetadataGroups">
         </template>
+        <template if.bind="!hidePlaceInformation && resource.kind.workflow">
+            <span repeat.for="resource of resources">${'Place' | t}</span>
+            <resource-place-display resource.bind="resource"></resource-place-display>
+        </template>
+        <hr if.bind="metadataGroups.length && !hideMetadataGroups">
     </template>
 
     <template repeat.for="metadataGroup of metadataGroups">
