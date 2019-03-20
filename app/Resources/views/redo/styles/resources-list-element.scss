@@ -35,8 +35,6 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
     }
     .basic-data-with-download-options em, .metadata-details > em {
       font-style: normal;
-      padding-left: $default-gap-size / 4;
-      padding-right: $default-gap-size / 4;
       border-radius: $default-gap-size / 4;
       background-color: $blueish-grey;
     }
@@ -47,10 +45,9 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
         flex-basis: 0;
         flex-grow: 1;
         padding-top: $default-gap-size / 8;
-        padding-left: $default-gap-size / 8;
         padding-right: $default-gap-size / 8;
         & > * {
-          padding: $default-gap-size / 8;
+          padding: 2px 0;
         }
       }
       fieldset {

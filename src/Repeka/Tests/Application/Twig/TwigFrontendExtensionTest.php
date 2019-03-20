@@ -156,9 +156,9 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
             ]
         );
         $expectedResult = [
-            "<u>str. 29:</u> <em>highlighted</em>",
-            "<u>str. 57:</u> <em>Highlights</em> and some more <em>highlights</em>",
-            "<u>str. 101:</u> <em>highlights</em> and some more <em>highlights</em> to <em>highlight</em>",
+            ['highlight' => '<em>highlighted</em>', 'pageNumber' => 29],
+            ['highlight' => '<em>Highlights</em> and some more <em>highlights</em>', 'pageNumber' => 57],
+            ['highlight' => '<em>highlights</em> and some more <em>highlights</em> to <em>highlight</em>', 'pageNumber' => 101],
         ];
         $resource = $this->createResourceMock(1, $this->createResourceKindMock());
         $this->assertEquals($expectedResult, $this->extension->matchSearchHitsWithPageNumbers($resource, MetadataControl::FILE, [], []));

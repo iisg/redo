@@ -17,7 +17,6 @@ use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Utils\PrintableArray;
-use Repeka\Domain\Utils\StringUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -299,11 +298,12 @@ ICON;
             foreach ($searchResults as $result) {
                 $pageNumber = $result[PageNumberFinder::PAGE_NUMBER];
                 $highlight = $this->retrieveHighlightedPhrase($result[PageNumberFinder::HIGHLIGHT]);
-                $highlightsWithPageNumbers[] = "<u>str. $pageNumber:</u> $highlight";
+                $highlightsWithPageNumbers[] = ['highlight' => $highlight, 'pageNumber' => $pageNumber];
             }
             return $highlightsWithPageNumbers;
+        } else {
+            return [];
         }
-        return $highlights;
     }
 
     private function retrieveHighlightedPhrase(string $searchHit): string {

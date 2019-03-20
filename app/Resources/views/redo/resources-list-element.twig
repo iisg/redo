@@ -4,7 +4,6 @@
 {% set childrenAllowed = resource | childrenAllowed %}
 
 <div class="resources-list-element">
-
     <a href="/resources/{{ resource.id }}">
         {% include 'redo/resource-image.twig' %}
     </a>
@@ -13,16 +12,12 @@
         {% for fieldName, highlights in searchResult.highlights %}
             {% set metadataId = fieldName | slice(9) | number_format %}
             {% set metadata = metadata(metadataId) %}
-            {% if fieldName matches '%.*value_(directory|file)%' %}
-                {% set highlights = withPageNumbers(resource, metadata.control, resource | m(metadataId), highlights) %}
-            {% endif %}
             {% set metadataLabel = metadata.label | inCurrentLanguage %}
-            {% set representsWholeValue = highlights | join | replace({'<em>': '', '</em>': '', ' ': ''})
-                == resource | metadata(metadataId) | replace({' ': ''}) %}
             {% set highlightedMetadata = highlightedMetadata | merge({(metadata.name): {
+                id: metadata.id,
                 label: metadataLabel,
-                highlights: highlights,
-                representsWholeValue: representsWholeValue
+                control: metadata.control,
+                highlights: highlights
             }}) %}
         {% endfor %}
     {% endif %}
@@ -80,67 +75,39 @@
         {% endfor %}
 
         {% if collapsedMetadataLabelsWithValues is not empty or searchResult is defined and highlightedMetadata is not empty %}
-            {% set variableName = "resource" ~ resource.id ~ "MetadataListExpanded" %}
-            <div class="collapsible-metadata">
-                <div class="first-line-with-optional-toggle">
-                    <div>
-                        <div>
-                            <div>
-                                {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
-                                    <div class="metadata-details">
-                                        <span class="metadata-label">{{ collapsedMetadataLabelWithValue.label }}:</span>
-                                        {{ collapsedMetadataLabelWithValue.value }}
-                                    </div>
-                                {% endfor %}
-                                {% if searchResult is defined %}
-                                    {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
-                                        <div class="metadata-details">
-                                            <span class="metadata-label">
-                                                {{ metadataLabelWithHighlights.label }}{% if not
-                                                    metadataLabelWithHighlights.representsWholeValue %}
-                                                    <em>({{ 'fragments' | trans }})</em>{% endif %}:</span>
-                                            {{ metadataLabelWithHighlights.highlights
-                                                | join(metadataLabelWithHighlights.representsWholeValue ? ' ' : '<br>') | raw }}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                            <button class="expand-toggle ${ {{ variableName }} ? 'toggled' : '' }"
-                                type="button"
-                                click.delegate="{{ variableName }} = !{{ variableName }}"
-                                title.bind="{{ variableName }} ? '{{ 'Show less' | trans }}' : '{{ 'Show more' | trans }}'"
-                                aria-label.bind="{{ variableName }} ? '{{ 'Show less' | trans }}' : '{{ 'Show more' | trans }}'">
-                                <span>{{ icon('forward') }}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="with-visible-first-line collapsed"
-                    click.delegate="{{ variableName }} = true"
-                    collapsible="collapsed.bind: !{{ variableName }}">
-                    {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
-                        <div class="metadata-details {{ loop.first ? 'text-container': '' }}">
-                            <span class="metadata-label
-                                {{ loop.first ? 'text-container': '' }}">{{ collapsedMetadataLabelWithValue.label }}:</span>
-                            {{ collapsedMetadataLabelWithValue.value }}
+        {% set variableName = "resource" ~ resource.id ~ "MetadataListExpanded" %}
+        {% if searchResult is defined and highlightedMetadata is not empty %}
+            {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
+                {% if metadataLabelWithHighlights.control == 'file' or metadataLabelWithHighlights.control == 'directory' %}
+                    {% set highlights = withPageNumbers(resource, metadataLabelWithHighlights.control, resource | m(metadataLabelWithHighlights.id), metadataLabelWithHighlights.highlights) %}
+                    {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
+                    {% for highlight in highlights %}
+                        <div class="metadata-details">
+                            <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
+                            {{ highlight.highlight | raw }}
+                            {% if hasBrowsableContents %}
+                                <a href="/resources/{{ resource.id }}/browse#page/{{ highlight.pageNumber }}">&raquo;</a>
+                            {% endif %}
                         </div>
                     {% endfor %}
-                    {% if searchResult is defined %}
-                        {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
-                            <div class="metadata-details
-                                {{ collapsedMetadataLabelsWithValues is empty and loop.first ? 'text-container': '' }}">
-                                <span class="metadata-label {{ collapsedMetadataLabelsWithValues is empty
-                                    and loop.first ? 'text-container': '' }}">
-                                        {{ metadataLabelWithHighlights.label }}{% if not
-                                            metadataLabelWithHighlights.representsWholeValue %}
-                                            <em>({{ 'fragments' | trans }})</em>{% endif %}:</span>
-                                    {{ metadataLabelWithHighlights.highlights
-                                    | join(metadataLabelWithHighlights.representsWholeValue ? ' ' : '<br>') | raw }}
-                            </div>
+                {% else %}
+                    <div class="metadata-details">
+                        <span class="metadata-label">{{ metadataLabelWithHighlights.label }}</span>
+                        {% for highlight in metadataLabelWithHighlights.highlights %}
+                            {{ highlight }}
                         {% endfor %}
-                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
+                <div class="metadata-details {{ loop.first ? 'text-container': '' }}">
+                    <span class="metadata-label
+                                {{ loop.first ? 'text-container': '' }}">{{ collapsedMetadataLabelWithValue.label }}:</span>
+                    {{ collapsedMetadataLabelWithValue.value }}
                 </div>
-            </div>
+            {% endfor %}
         {% endif %}
     </div>
+    {% endif %}
 </div>
