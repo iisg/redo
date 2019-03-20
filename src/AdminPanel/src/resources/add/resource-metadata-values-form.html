@@ -55,7 +55,7 @@
         </tr>
         <tr repeat.for="item of resource.contents[metadata.id]"
             oa-sortable-item="item.bind: item; type-flag.bind: 0">
-            <td if.bind="metadata.control != 'relationship' || metadata.constraints.relationshipSelectorType == 'tree'">
+            <td if.one-time="metadata.control != 'relationship' || skipValidation || metadata.constraints.relationshipSelectorType == 'tree'">
                 <div>
                     <resource-metadata-value-input metadata.bind="metadata"
                         resource.bind="resource"

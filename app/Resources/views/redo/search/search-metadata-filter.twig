@@ -67,7 +67,7 @@
                         stringified-parent-filters="{{ parentFilters | json_encode }}"
                         {% endif %}></child-resources-group>
                 {% endfor %}
-            {% else %}
+            {% elseif filterableMetadata.constraints.resourceKind is defined %}
                 {% set relationshipFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? [] %}
                 {% for resource in resources({resourceKindIds: filterableMetadata.constraints.resourceKind}) %}
                     <label class="label-with-checkbox">
