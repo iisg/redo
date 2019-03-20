@@ -1,25 +1,36 @@
 @import "../../common/styles";
 
-.workflow-form-content {
-  height: 100%;
+.workflow-form {
   .name-with-buttons-and-tabs .buttons {
     margin-left: auto;
   }
   .content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     overflow: auto;
     & > :not(redo-footer) {
-      &:not(:first-child) {
-        padding-top: $default-gap-size / 2;
-      }
-      &:first-child {
-        padding-top: $default-gap-size;
-      }
-      &:not(:nth-last-child(2)) {
+      &:not(.alert) {
         padding-bottom: $default-gap-size / 2;
+        &:first-child {
+          padding-top: $default-gap-size;
+        }
+        &:not(:first-child) {
+          padding-top: $default-gap-size / 2;
+        }
       }
-      &:nth-last-child(2) {
-        padding-bottom: $default-gap-size;
+      &.alert {
+        margin-bottom: $default-gap-size / 2;
+        &:first-child {
+          margin-top: $default-gap-size;
+        }
+        &:not(:first-child) {
+          margin-top: $default-gap-size / 2;
+        }
       }
+    }
+    & > redo-footer {
+      padding-top: $default-gap-size / 2;
     }
     & > :not(excel) {
       position: sticky;
@@ -28,6 +39,9 @@
         padding-left: $default-gap-size;
         padding-right: $default-gap-size;
       }
+    }
+    & > workflow-graph-display {
+      flex-shrink: 0; // Required by Chromium.
     }
   }
 }

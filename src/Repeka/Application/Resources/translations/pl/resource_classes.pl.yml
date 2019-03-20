@@ -23,6 +23,9 @@ books:
   Metadata value required: Wartość metadanej jest wymagana
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
+  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
+  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
+  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
   Edit resource before transition: Edycja zasobu przed przejściem
   Added resource will be in following place: Dodany zasób znajdzie się w stanie
@@ -53,6 +56,9 @@ dictionaries:
   Metadata value required: Wartość metadanej jest wymagana
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
+  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
+  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
+  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
   Edit resource before transition: Edycja słownika przed przejściem
   Added resource will be in following place: Dodany słownik znajdzie się w stanie
@@ -87,6 +93,9 @@ users:
   Metadata value required: Wartość metadanej jest wymagana
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
+  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
+  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
+  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
   Edit resource before transition: Edycja użytkownika przed przejściem
   Added resource will be in following place: Dodany użytkownika znajdzie się w stanie
@@ -118,6 +127,9 @@ cms:
   Metadata value required: Wartość metadanej jest wymagana
   This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
   New workflow: Nowy proces
+  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
+  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
+  Assign the workflow to any resource kind to edit the table: Przypisz proces do dowolnego rodzaju zasobu aby edytować tabelę
   This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
   Edit resource before transition: Edycja szablonu przed przejściem
   Added resource will be in following place: Dodany szablon znajdzie się w stanie

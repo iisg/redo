@@ -75,6 +75,7 @@ export class WorkflowGraphEditor implements ComponentAttached, ComponentUnbind {
   dispatchChangedEvent = debounce((value) => this.element.dispatchEvent(ChangeEvent.newInstance(value)), 10);
 
   unbind(): void {
+    this.selectedElement = undefined;
     this.disposeWorkflowPlacesSubscription();
   }
 

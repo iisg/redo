@@ -6,9 +6,9 @@ import * as $ from "jquery";
 import {debounce} from "lodash";
 import "select2";
 import {ChangeEvent} from "../../events/change-event";
+import {isEmptyArray} from "../../utils/array-utils";
 import {changeHandler, twoWay} from "../binding-mode";
 import {booleanAttribute} from "../boolean-attribute";
-import {isEmptyArray} from "../../utils/array-utils";
 
 @autoinject
 export class DropdownSelect implements ComponentAttached, ComponentDetached {
@@ -31,6 +31,9 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
 
   attached() {
     this.setupDropdown();
+    if (this.values && this.setFirstAsDefault) {
+      this.addDefaultValue();
+    }
   }
 
   detached() {
@@ -47,9 +50,13 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   }
 
   private addDefaultValue() {
-    if (isEmptyArray(this.value) && this.multiple) {
-      (this.value as Object[]).push(this.values[0]);
-    } else if (this.value === undefined && !this.multiple) {
+    if (this.multiple) {
+      if (!this.value) {
+        this.value = [this.values[0]];
+      } else if (isEmptyArray(this.value)) {
+        (this.value as Object[]).push(this.values[0]);
+      }
+    } else if (this.value === undefined) {
       this.value = this.values[0];
     }
   }

@@ -9,7 +9,7 @@ excel {
         & > div {
           display: flex;
           align-items: center;
-          resource-kind-chooser {
+          dropdown-select {
             flex: 1;
             margin-left: $default-gap-size / 4;
             ul {

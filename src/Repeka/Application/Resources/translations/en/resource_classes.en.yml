@@ -24,6 +24,9 @@ books:
   Metadata value required: Metadata value required
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
+  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
+  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
+  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit resource before transition
   Added resource will be in following place: Added resource will be in following place
@@ -53,6 +56,9 @@ dictionaries:
   Metadata value required: Metadata value required
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
+  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
+  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
+  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit dictionary before transition
   Added resource will be in following place: Added dictionary will be in following place
@@ -84,6 +90,9 @@ users:
   Metadata value required: Metadata value required
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
+  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
+  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
+  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit user before transition
   Added resource will be in following place: Added user will be in following place
@@ -114,6 +123,9 @@ cms:
   Metadata value required: Metadata value required
   This metadata can be used to specify assignees: This metadata can be used to specify assignees
   New workflow: New workflow
+  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
+  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
+  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
   This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit template before transition
   Added resource will be in following place: Added template will be in following place

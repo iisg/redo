@@ -1,51 +1,76 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {DOM} from "aurelia-framework";
-import {Router} from "aurelia-router";
-import {bindable} from "aurelia-templating";
+import {I18N} from "aurelia-i18n";
+import {NavModel, RouteConfig, Router} from "aurelia-router";
+import {BindingSignaler} from "aurelia-templating-resources";
 import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
-import {booleanAttribute} from "common/components/boolean-attribute";
+import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
+import {cloneDeep} from "lodash";
+import {InCurrentLanguageValueConverter} from "resources-config/multilingual-field/in-current-language";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
+import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
+import {ContextResourceClass} from "resources/context/context-resource-class";
+import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
+import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
 import {BootstrapValidationRenderer} from "../../common/validation/bootstrap-validation-renderer";
 import {Workflow} from "../workflow";
+import {WorkflowRepository} from "../workflow-repository";
 import {WorkflowGraphEditor} from "./graph/workflow-graph-editor";
 import {WorkflowGraphEditorReady} from "./graph/workflow-graph-events";
 import {WorkflowGraphManager} from "./graph/workflow-graph-manager";
-import {WorkflowRepository} from "../workflow-repository";
-import {ChangeLossPreventerForm} from "../../common/form/change-loss-preventer-form";
-import {ChangeLossPreventer} from "../../common/change-loss-preventer/change-loss-preventer";
 
 @autoinject
 export class WorkflowForm extends ChangeLossPreventerForm {
-  @bindable workflow: Workflow = new Workflow();
-  @bindable viewing: boolean;
-  @bindable onCancel = () => {
-    this.router.navigateToRoute('workflows', {resourceClass: this.workflow.resourceClass});
-  };
-  @bindable @booleanAttribute editing: boolean;
-  private controller: ValidationController;
+  readonly UPDATE_SIGNAL = 'workflow-updated';
+
+  viewing: boolean;
+  workflow: Workflow;
+  editing: boolean;
+  resourceKinds: ResourceKind[];
+  dirty: boolean;
+  private originalWorkflow: Workflow;
   private editor: WorkflowGraphEditor;
+  private controller: ValidationController;
+  private navigationModel: NavModel;
 
   constructor(validationControllerFactory: ValidationControllerFactory,
               private router: Router,
-              private element: Element,
+              private contextResourceClass: ContextResourceClass,
               private workflowRepository: WorkflowRepository,
+              private resourceKindRepository: ResourceKindRepository,
               private graphManager: WorkflowGraphManager,
+              private deleteEntityConfirmation: DeleteEntityConfirmation,
+              private i18n: I18N,
+              private signaler: BindingSignaler,
+              private inCurrentLanguage: InCurrentLanguageValueConverter,
               private changeLossPreventer: ChangeLossPreventer) {
     super();
     this.controller = validationControllerFactory.createForCurrentScope();
     this.controller.addRenderer(new BootstrapValidationRenderer());
   }
 
-  viewingChanged() {
-    if (!this.viewing) {
+  async activate(params: any, routeConfig: RouteConfig) {
+    if (params.id) {
+      this.viewing = true;
+      this.editing = true;
+      this.resourceKindRepository.getListQuery()
+        .filterByWorkflowId(params.id)
+        .get()
+        .then(resourceKinds => this.resourceKinds = resourceKinds);
+      let workflow = await this.workflowRepository.get(params.id);
+      this.workflow = workflow;
+      this.contextResourceClass.setCurrent(this.workflow.resourceClass);
+      this.navigationModel = routeConfig.navModel;
+      this.updateWindowTitle();
+      this.originalWorkflow = cloneDeep(this.workflow);
+    } else {
       this.changeLossPreventer.enable(this);
+      this.workflow = new Workflow();
+      this.workflow.resourceClass = params.resourceClass;
     }
   }
 
-  activate(params: any) {
-    if (this.viewing === undefined) {
-      this.changeLossPreventer.enable(this);
-    }
-    this.workflow.resourceClass = params.resourceClass;
+  private updateWindowTitle() {
+    this.navigationModel.setTitle(this.inCurrentLanguage.toView(this.workflow.name) + ' - ' + this.i18n.tr('Workflows'));
   }
 
   updateGraphPosition(): void {
@@ -56,13 +81,21 @@ export class WorkflowForm extends ChangeLossPreventerForm {
     this.editor = event.detail.editor;
   }
 
-  onSubmit() {
+  toggleEditForm() {
+    if (this.viewing) {
+      this.changeLossPreventer.enable(this);
+    } else {
+      this.changeLossPreventer.disable();
+    }
+    this.viewing = !this.viewing;
+  }
+
+  submit() {
     this.editor.updateWorkflowBasedOnGraph(true);
     this.controller.validate().then(result => {
       if (result.valid) {
-        this.changeLossPreventer.disable();
         if (this.editing) {
-          this.element.dispatchEvent(SubmitEvent.newInstance());
+          this.update();
         } else {
           this.addWorkflow();
         }
@@ -70,10 +103,24 @@ export class WorkflowForm extends ChangeLossPreventerForm {
     });
   }
 
+  private update(): Promise<any> {
+    this.workflow.pendingRequest = true;
+    return this.workflowRepository
+      .update(this.workflow)
+      .then(() => {
+        this.viewing = !this.viewing;
+        this.signaler.signal(this.UPDATE_SIGNAL);
+        this.originalWorkflow = cloneDeep(this.workflow);
+        this.originalWorkflow.pendingRequest = false;
+      })
+      .finally(() => this.workflow.pendingRequest = false);
+  }
+
   private async addWorkflow() {
     this.workflow.pendingRequest = true;
     try {
       const savedWorkflow = await this.workflowRepository.post(this.workflow);
+      this.changeLossPreventer.disable();
       this.router.navigateToRoute('workflows/details', {id: savedWorkflow.id});
     } finally {
       this.workflow.pendingRequest = false;
@@ -84,17 +131,31 @@ export class WorkflowForm extends ChangeLossPreventerForm {
     this.editor.updateWorkflowBasedOnGraph(true);
     this.controller.validate().then(result => {
       if (result.valid) {
-        this.changeLossPreventer.disable();
         this.addWorkflow();
       }
     });
   }
-}
 
-class SubmitEvent {
-  bubbles = true;
+  cancel() {
+    this.changeLossPreventer.canLeaveView().then(canLeaveView => {
+      if (canLeaveView) {
+        if (this.editing) {
+          if (this.dirty) {
+            this.workflow = cloneDeep(this.originalWorkflow);
+          }
+          this.viewing = !this.viewing;
+        } else {
+          this.router.navigateToRoute('workflows', {resourceClass: this.workflow.resourceClass});
+        }
+      }
+    });
+  }
 
-  static newInstance(): Event {
-    return DOM.createCustomEvent('submit', new SubmitEvent());
+  deleteWorkflow(): Promise<any> {
+    return this.deleteEntityConfirmation.confirm('workflow', this.workflow.id)
+      .then(() => this.workflow.pendingRequest = true)
+      .then(() => this.workflowRepository.remove(this.workflow))
+      .then(() => this.router.navigateToRoute('workflows', {resourceClass: this.workflow.resourceClass}))
+      .finally(() => this.workflow.pendingRequest = false);
   }
 }

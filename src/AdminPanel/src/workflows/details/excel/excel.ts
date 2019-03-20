@@ -1,48 +1,49 @@
-import {bindable, ComponentAttached} from "aurelia-templating";
 import {computedFrom, observable} from "aurelia-binding";
-import {RestrictingMetadataIdMap, Workflow, WorkflowPlace} from "../../workflow";
-import {Metadata} from "resources-config/metadata/metadata";
-import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 import {autoinject} from "aurelia-dependency-injection";
-import {WorkflowPlaceSorter} from "./workflow-place-sorter";
-import {booleanAttribute} from "common/components/boolean-attribute";
+import {bindable} from "aurelia-templating";
 import {twoWay} from "common/components/binding-mode";
-import {deepCopy} from "common/utils/object-utils";
-import {ResourceKind} from "resources-config/resource-kind/resource-kind";
-import {debounce, flatten} from "lodash";
-import {inArray} from "common/utils/array-utils";
+import {booleanAttribute} from "common/components/boolean-attribute";
 import {ChangeEvent} from "common/events/change-event";
+import {inArray} from "common/utils/array-utils";
+import {deepCopy} from "common/utils/object-utils";
+import {debounce, flatten} from "lodash";
+import {Metadata} from "resources-config/metadata/metadata";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
+import {RestrictingMetadataIdMap, Workflow, WorkflowPlace} from "../../workflow";
+import {WorkflowPlaceSorter} from "./workflow-place-sorter";
 
 @autoinject
-export class Excel implements ComponentAttached {
+export class Excel {
+  private readonly DISPLAYED_SYSTEM_METADATA_IDS = [SystemMetadata.REPRODUCTOR.id, SystemMetadata.VISIBILITY.id,
+    SystemMetadata.TEASER_VISIBILITY.id];
+
   @bindable(twoWay) workflow: Workflow;
+  @bindable resourceKinds: ResourceKind[];
   @bindable @booleanAttribute editable: boolean = false;
   @observable highlightedColumnId: number;
   metadataList: Metadata[];
   autoChangeRowToTheEnd: boolean = true;
-  filterByResourceKinds: ResourceKind[] = [];
-  resourceKindsLoaded = false;
+  selectedResourceKinds: ResourceKind[];
   resourceKindsEmptyList = false;
 
-  constructor(private metadataRepository: MetadataRepository,
-              private workflowPlaceSorter: WorkflowPlaceSorter,
+  constructor(private workflowPlaceSorter: WorkflowPlaceSorter,
               private element: Element) {
   }
 
-  attached() {
-    this.metadataRepository.getListQuery()
-      .filterByResourceClasses(this.workflow.resourceClass)
-      .addSystemMetadataIds([SystemMetadata.REPRODUCTOR.id, SystemMetadata.VISIBILITY.id, SystemMetadata.TEASER_VISIBILITY.id])
-      .onlyTopLevel()
-      .get()
-      .then(metadataList => metadataList.filter(m => !m.isDynamic))
-      .then(metadataList => this.metadataList = metadataList);
+  bind() {
+    if (this.resourceKinds) {
+      this.resourceKindsChanged();
+    }
   }
 
-  onResourceKindsLoaded({detail: resourceKinds}) {
-    this.resourceKindsLoaded = true;
-    this.resourceKindsEmptyList = resourceKinds.length === 0;
+  resourceKindsChanged() {
+    const metadataById: Map<number, Metadata> = new Map();
+    this.resourceKinds.forEach(resourceKind =>
+      resourceKind.metadataList.filter(metadata => !metadata.isDynamic
+        && (metadata.id > 0 || this.DISPLAYED_SYSTEM_METADATA_IDS.includes(metadata.id)))
+        .forEach(metadata => metadataById.set(metadata.id, metadata)));
+    this.metadataList = Array.from(metadataById.values());
   }
 
   @computedFrom('workflow.places')
@@ -50,10 +51,10 @@ export class Excel implements ComponentAttached {
     return this.workflowPlaceSorter.getOrderedPlaces(this.workflow);
   }
 
-  @computedFrom('metadataList', 'filterByResourceKinds', 'filterByResourceKinds.length')
+  @computedFrom('metadataList', 'selectedResourceKinds', 'selectedResourceKinds.length')
   get filteredMetadata(): Metadata[] {
-    if (this.filterByResourceKinds && this.filterByResourceKinds.length && !this.resourceKindsEmptyList) {
-      const metadataIds = flatten(this.filterByResourceKinds.map(rk => rk.metadataList)).map(m => m.id);
+    if (this.resourceKinds.length && this.selectedResourceKinds && this.selectedResourceKinds.length) {
+      const metadataIds = flatten(this.selectedResourceKinds.map(resourceKind => resourceKind.metadataList)).map(metadata => metadata.id);
       return this.metadataList.filter(metadata => inArray(metadata.id, metadataIds));
     } else {
       return this.metadataList;

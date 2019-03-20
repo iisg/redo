@@ -4,7 +4,6 @@ import {booleanAttribute} from "common/components/boolean-attribute";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {oneTime, twoWay} from "../../binding-mode";
-import {LoadEvent} from "../../../events/load-event";
 
 @autoinject
 export class ResourceKindChooser implements ComponentAttached {
@@ -19,7 +18,7 @@ export class ResourceKindChooser implements ComponentAttached {
   @bindable @booleanAttribute useComputedWidth: boolean;
   resourceKinds: ResourceKind[];
 
-  constructor(private resourceKindRepository: ResourceKindRepository, private element: Element) {
+  constructor(private resourceKindRepository: ResourceKindRepository) {
   }
 
   attached() {
@@ -30,10 +29,6 @@ export class ResourceKindChooser implements ComponentAttached {
     if (this.workflowId) {
       query.filterByWorkflowId(this.workflowId);
     }
-    query.get()
-      .then(resourceKinds => {
-        this.resourceKinds = resourceKinds.filter(this.filter);
-      })
-      .finally(() => this.element.dispatchEvent(LoadEvent.newInstance(this.resourceKinds)));
+    query.get().then(resourceKinds => this.resourceKinds = resourceKinds.filter(this.filter));
   }
 }

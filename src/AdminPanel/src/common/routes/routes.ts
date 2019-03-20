@@ -38,7 +38,7 @@ export const routes: AbstractRoute[] = new RouteGroup('admin', '', '', '', [
     new BaseRoute(':resourceClass', 'workflows-list-page')
       .withMenuItem(NavRole.PER_RESOURCE_CLASS_SECONDARY, 'workflow')
       .requireRole('ADMIN'),
-    new Route('details/:id', 'details', 'details/workflow-details')
+    new Route('details/:id', 'details', 'details/workflow-form')
       .withBreadcrumbsProvider('workflow')
       .requireRole('ADMIN')
       .setActivationStrategy('replace'),

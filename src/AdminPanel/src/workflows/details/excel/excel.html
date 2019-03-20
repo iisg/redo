@@ -1,7 +1,7 @@
 <template>
     <require from="resources-config/metadata/metadata-label"></require>
     <require from="./excel-checkbox/excel-checkbox"></require>
-    <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
 
     <table mouseleave.trigger="highlightedColumnId = undefined">
         <thead>
@@ -10,12 +10,14 @@
                 <div>
                     <icon name="filter"
                         bootstrap-tooltip="${'Filter metadata kinds by selecting the resource kinds' | t}"></icon>
-                    <resource-kind-chooser resource-class.one-time="workflow.resourceClass"
-                        workflow-id.one-time="workflow.id"
-                        value.bind="filterByResourceKinds"
-                        multi-select="true"
-                        set-first-as-default
-                        load.delegate="onResourceKindsLoaded($event)"></resource-kind-chooser>
+                    <dropdown-select values.bind="resourceKinds"
+                        value.bind="selectedResourceKinds"
+                        multiple
+                        set-first-as-default>
+                        <template replace-part="option-template">
+                            ${option.label | inCurrentLanguage}
+                        </template>
+                    </dropdown-select>
                 </div>
             </th>
             <th repeat.for="place of orderedPlaces"
@@ -25,7 +27,7 @@
             </th>
         </tr>
         </thead>
-        <tbody if.bind="resourceKindsLoaded">
+        <tbody if.bind="resourceKinds">
         <tr repeat.for="metadata of filteredMetadata">
             <th class="${highlightedRowId == metadata.id ? 'highlighted' : ''}"
                 mouseover.delegate="highlightedColumnId = undefined">
@@ -57,5 +59,4 @@
         </tr>
         </tfoot>
     </table>
-    <loading-bar if.bind="!metadataList || !resourceKindsLoaded"></loading-bar>
 </template>
