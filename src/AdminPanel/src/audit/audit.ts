@@ -42,7 +42,7 @@ export class Audit implements RoutableComponentActivate {
     }
     this.filters = AuditListFilters.fromParams(params);
     this.filters.onChange = () => this.onAnyChange();
-    this.fetchEntries();
+    this.onAnyChange();
     this.activated = true;
   }
 
