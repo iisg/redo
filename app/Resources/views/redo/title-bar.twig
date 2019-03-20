@@ -11,15 +11,14 @@
     </div>
     <div class="right-side-container">
         <div class="options-bar">
-            <div class="social-media">
+            {#<div class="social-media"></div>#}
+            <div class="page-view-options">
                 <a href="https://www.facebook.com/bpk.biblioteka/"
                     target="_blank"
                     title="{{ 'Facebook' | trans }}"
                     aria-label="{{ 'Facebook' | trans }}">{{ icon('facebook') }}</a>
-            </div>
-            <div class="page-view-options">
-                <button title="{{ 'Change font size' | trans }}">{{ icon('font') }}</button>
-                <button title="{{ 'RSS feed' | trans }}">{{ icon('rss') }}</button>
+                {#<button title="{{ 'Change font size' | trans }}">{{ icon('font') }}</button>#}
+                {#<button title="{{ 'RSS feed' | trans }}">{{ icon('rss') }}</button>#}
                 <div class="button-with-submenu languages">
                     {% set currentLocale = app.request.getLocale() %}
                     <button data-toggle="dropdown"
