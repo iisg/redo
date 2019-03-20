@@ -97,16 +97,16 @@
                     </fieldset>
                 </div>
                 {% if hasBrowsableContents %}
-                <div class="download-options">
-                    <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
-                    <fieldset>
-                        <div class="download-formats in-one-line">
-                            <h4><a href="/resources/{{ resource.id }}/browse">
-                                    {{ 'Browse' | trans }}
-                                </a></h4>
-                        </div>
-                    </fieldset>
-                </div>
+                    <div class="download-options">
+                        <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
+                        <fieldset>
+                            <div class="download-formats in-one-line">
+                                <h4><a href="/resources/{{ resource.id }}/browse">
+                                        {{ 'Browse' | trans }}
+                                    </a></h4>
+                            </div>
+                        </fieldset>
+                    </div>
                 {% endif %}
             </div>
         </div>
@@ -114,38 +114,42 @@
             <dl>
                 {% for metadataName in metadataToDisplay %}
                     {% set metadata = metadata(metadataName) %}
-                    {% set metadataValues = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) %}
-                    {% if metadataValues | length %}
-                        <dt>
-                            {{ metadata.label | inCurrentLanguage }}
-                        </dt>
-                        <dd>
-                            {% for metadataValue in metadataValues %}
-                                {% if metadata.control == 'file' or metadata.control == 'directory' %}
-                                    {{ metadataValue | basename }}
-                                {% elseif metadata.control == 'relationship' %}
-                                    {% set relatedResource = resource(metadataValue) %}
-                                    {% if relatedResource is not empty %}
-                                        {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
-                                            <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
-                                        {% elseif canViewTeaser(relatedResource) %}
-                                            {{ relatedResource | mLabel | raw }}
+                    {% if metadata %}
+                        {% set metadataValues = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) %}
+                        {% if metadataValues | length %}
+                            <dt>
+                                {{ metadata.label | inCurrentLanguage }}
+                            </dt>
+                            <dd>
+                                {% for metadataValue in metadataValues %}
+                                    {% if metadata.control == 'file' or metadata.control == 'directory' %}
+                                        {{ metadataValue | basename }}
+                                    {% elseif metadata.control == 'relationship' %}
+                                        {% set relatedResource = resource(metadataValue) %}
+                                        {% if relatedResource is not empty %}
+                                            {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
+                                                <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
+                                            {% elseif canViewTeaser(relatedResource) %}
+                                                {{ relatedResource | mLabel | raw }}
+                                            {% else %}
+                                                {{ 'You are not allowed to view this resource' | trans }}
+                                            {% endif %}
                                         {% else %}
-                                            {{ 'You are not allowed to view this resource' | trans }}
+                                            {{ 'Resource does not exist' | trans }}
                                         {% endif %}
+                                    {% elseif metadata.dynamic %}
+                                        {{ metadataValue | raw }}
                                     {% else %}
-                                        {{ 'Resource does not exist' | trans }}
+                                        {{ metadataValue }}
                                     {% endif %}
-                                {% elseif metadata.dynamic %}
-                                    {{ metadataValue | raw }}
-                                {% else %}
-                                    {{ metadataValue }}
-                                {% endif %}
-                                {% if not loop.last %}
-                                    <br>
-                                {% endif %}
-                            {% endfor %}
-                        </dd>
+                                    {% if not loop.last %}
+                                        <br>
+                                    {% endif %}
+                                {% endfor %}
+                            </dd>
+                        {% endif %}
+                    {% else %}
+                        <!-- unknown metadata: {{ metadataName }} -->
                     {% endif %}
                 {% endfor %}
             </dl>

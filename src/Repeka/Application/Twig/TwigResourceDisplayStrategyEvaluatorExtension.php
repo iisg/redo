@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\Twig;
 
-use Repeka\Domain\Entity\HasResourceClass;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\EntityNotFoundException;
@@ -73,32 +72,24 @@ class TwigResourceDisplayStrategyEvaluatorExtension extends \Twig_Extension {
         return $iterableGiven || empty($resources) ? $resources : $resources[0];
     }
 
-    public function fetchMetadataId($metadataId, $context = null) {
+    public function fetchMetadataId($metadataId) {
         if ($metadataId === null) {
             throw new \Twig_Error('Please specify metadata by choosing one of the following syntax: m1, mName, m(1), m("Name")');
         }
-        $metadata = $this->fetchMetadataByNameOrId($metadataId, $context);
+        $metadata = $this->fetchMetadataByNameOrId($metadataId);
         return $metadata ? $metadata->getId() : 0;
     }
 
-    public function fetchMetadataByNameOrId($name, $context = null) {
+    public function fetchMetadataByNameOrId($name) {
         try {
-            $resourceClass = null;
-            if ($context instanceof HasResourceClass) {
-                $resourceClass = $context->getResourceClass();
-            }
-            return $this->metadataRepository->findByNameOrId($name, $resourceClass);
+            return $this->metadataRepository->findByNameOrId($name);
         } catch (EntityNotFoundException $e) {
-            if ($context) { // maybe the metadata is classless?
-                return $this->fetchMetadataByNameOrId($name);
-            } else {
-                return null;
-            }
+            return null;
         }
     }
 
     public function getMetadataValues(array $twigContext, $contents, $metadataId = null) {
-        $metadataId = $this->fetchMetadataId($metadataId, $contents);
+        $metadataId = $this->fetchMetadataId($metadataId);
         $iterableGiven = is_iterable($contents) && !$contents instanceof ResourceContents;
         if (!$iterableGiven) {
             $contents = [$contents];
