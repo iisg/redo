@@ -11,92 +11,99 @@ transition-chooser, audit-settings-chooser, flags-select, workflow-place-chooser
   display: flex;
   align-items: center;
   overflow: hidden;
-  .select2-container {
-    flex: 1;
-    overflow: hidden;
-    &.select2-container--focus {
-      .select2-selection {
-        border-color: $grey;
-      }
-    }
-    &.select2-container--open {
-      .select2-selection--single {
-        .select2-selection__arrow {
-          b {
-            border-bottom-color: $grey;
-          }
-        }
-      }
-    }
-    .select2-selection__clear {
-      font-size: $clear-button-font-size;
-    }
-    .select2-selection--single {
-      min-height: $default-input-box-height;
-      height: auto;
-      .select2-selection__rendered {
-        line-height: $default-input-box-height - 2 * $border-width;
-        padding-right: $single-selection-arrow-container-width;
-        &, .select2-selection__placeholder {
-          color: $dark-grey;
-        }
-        .select2-selection__clear {
-          margin-left: $default-gap-size / 2;
-          margin-right: 0;
-        }
-      }
-      .select2-selection__arrow {
-        width: $single-selection-arrow-container-width;
-        min-height: inherit;
-        b {
-          border-top-color: $grey;
-        }
-      }
-    }
-    .select2-selection--multiple {
-      min-height: $default-input-box-height;
-      &, & > .select2-selection__rendered {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      & > .select2-selection__rendered {
-        align-items: center;
-        padding-top: $default-gap-size / 8;
-        padding-bottom: $default-gap-size / 8;
-        padding-left: $default-gap-size / 4;
-        padding-right: 2 * $default-gap-size / 4 + $multiple-selection-clear-button-width + $default-gap-size / 4;
-        & > * {
-          margin: $default-gap-size / 8 $default-gap-size / 4;
-        }
-        .select2-selection__clear {
-          position: absolute;
-          right: $default-gap-size / 4;
-          line-height: $multiple-selection-clear-button-width;
-        }
-        .select2-search {
-          flex: 1;
-          input {
-            width: 100% !important;
-            margin-top: 0;
-          }
-        }
-      }
-    }
-    .select2-selection__clear, .select2-selection--multiple .select2-selection__choice__remove {
-      color: $grey;
-      @include transition(color $default-transition-duration);
-      &:hover {
-        color: $dark-grey;
-      }
-    }
-    .selection .hidden-in-selection {
-      display: none;
+}
+
+.select2.select2-container {
+  flex: 1;
+  overflow: hidden;
+  &.select2-container--focus {
+    .select2-selection {
+      border-color: $grey;
     }
   }
-  throbber {
-    margin-left: $default-gap-size / 2;
-    &.icon {
-      display: inherit;
+  &.select2-container--open {
+    .select2-selection--single {
+      .select2-selection__arrow {
+        b {
+          border-bottom-color: $grey;
+        }
+      }
     }
+  }
+  .select2-selection__clear {
+    font-size: $clear-button-font-size;
+  }
+  .select2-selection--single {
+    min-height: $default-input-box-height;
+    height: auto;
+    .select2-selection__rendered {
+      line-height: $default-input-box-height - 2 * $border-width;
+      padding-right: $single-selection-arrow-container-width;
+      &, .select2-selection__placeholder {
+        color: $dark-grey;
+      }
+      .select2-selection__clear {
+        margin-left: $default-gap-size / 2;
+        margin-right: 0;
+      }
+    }
+    .select2-selection__arrow {
+      width: $single-selection-arrow-container-width;
+      min-height: inherit;
+      b {
+        border-top-color: $grey;
+      }
+    }
+  }
+  .select2-selection--multiple {
+    min-height: $default-input-box-height;
+    &, & > .select2-selection__rendered {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    & > .select2-selection__rendered {
+      align-items: center;
+      padding-top: $default-gap-size / 8;
+      padding-bottom: $default-gap-size / 8;
+      padding-left: $default-gap-size / 4;
+      padding-right: 2 * $default-gap-size / 4 + $multiple-selection-clear-button-width + $default-gap-size / 4;
+      & > * {
+        margin-left: $default-gap-size / 4;
+        margin-right: $default-gap-size / 4;
+      }
+      & > :not(.select2-selection__clear) { // Distinction required in Chromium.
+        margin-top: $default-gap-size / 8;
+        margin-bottom: $default-gap-size / 8;
+      }
+      .select2-selection__clear {
+        position: absolute;
+        right: $default-gap-size / 4;
+        margin-top: 0;
+        line-height: $multiple-selection-clear-button-width;
+      }
+      .select2-search {
+        flex: 1;
+        input {
+          width: 100% !important;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+  .select2-selection__clear, .select2-selection--multiple .select2-selection__choice__remove {
+    color: $grey;
+    @include transition(color $default-transition-duration);
+    &:hover {
+      color: $dark-grey;
+    }
+  }
+  .selection .hidden-in-selection {
+    display: none;
+  }
+}
+throbber {
+  margin-left: $default-gap-size / 2;
+  &.icon {
+    display: inherit;
   }
 }
