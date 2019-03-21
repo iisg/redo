@@ -32,12 +32,12 @@
             collapsible="collapsed.bind: !advancedOptionsExpanded"
             role="listbox"
             aria-expanded.bind="advancedOptionsExpanded">
-            {% set parentMetadata = null %}
+            {% set parentPathMetadata = null %}
             {% set departmentMetadata = null %}
             {% set configurableProperties = [] %}
             {% for filterableMetadata in filterableMetadataList %}
-                {% if filterableMetadata.id == -1 %}
-                    {% set parentMetadata = filterableMetadata %}
+                {% if filterableMetadata.name == "parent_path" %}
+                    {% set parentPathMetadata = filterableMetadata %}
                 {% elseif filterableMetadata.name == "wydzial" %}
                     {% set departmentMetadata = filterableMetadata %}
                 {% elseif filterableMetadata.control.value not in ['text', 'textarea', 'display-strategy'] %}
@@ -45,8 +45,8 @@
                 {% endif %}
             {% endfor %}
 
-            {% if parentMetadata %}
-                {% set filterableMetadata = parentMetadata %}
+            {% if parentPathMetadata %}
+                {% set filterableMetadata = parentPathMetadata %}
                 {% embed 'redo/search/search-metadata-filter.twig' %}
                     {% block propertyNameContainer %}
                         <h3 class="section-title">{{ 'Collections' | trans }}</h3>
