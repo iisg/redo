@@ -39,12 +39,12 @@
                         Typ: {{ resource.kind.label | inCurrentLanguage }}
                     </div>
                     <div class="actions">
-                        <button title="{{ 'Add to favorites' | trans }}">{{ icon('bookmark', 2) }}</button>
+                        {#<button title="{{ 'Add to favorites' | trans }}">{{ icon('bookmark', 2) }}</button>#}
                         {% if childrenAllowed %}
                             <a href="/resources/{{ resource.id }}/rss"
                                 title="{{ 'Resource RSS channel' | trans }}">{{ icon('rss', 1.75) }}</a>
                         {% endif %}
-                        <button title="{{ 'Report an issue with the resource' | trans }}">{{ icon('mail', 2 ) }}</button>
+                        {#<button title="{{ 'Report an issue with the resource' | trans }}">{{ icon('mail', 2 ) }}</button>#}
                         <div class="share-buttons">
                             <a href="https://www.facebook.com/sharer/sharer.php?sdk=joey&u={{ app.request.uri }}&display=popup&ref=plugin&src=share_button"
                                 title="{{ 'Share on Facebook' | trans }}"
@@ -106,26 +106,7 @@
                             </dt>
                             <dd>
                                 {% for metadataValue in metadataValues %}
-                                    {% if metadata.control == 'file' or metadata.control == 'directory' %}
-                                        {{ metadataValue | basename }}
-                                    {% elseif metadata.control == 'relationship' %}
-                                        {% set relatedResource = resource(metadataValue) %}
-                                        {% if relatedResource is not empty %}
-                                            {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
-                                                <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
-                                            {% elseif canViewTeaser(relatedResource) %}
-                                                {{ relatedResource | mLabel | raw }}
-                                            {% else %}
-                                                {{ 'You are not allowed to view this resource' | trans }}
-                                            {% endif %}
-                                        {% else %}
-                                            {{ 'Resource does not exist' | trans }}
-                                        {% endif %}
-                                    {% elseif metadata.dynamic %}
-                                        {{ metadataValue | raw }}
-                                    {% else %}
-                                        {{ metadataValue }}
-                                    {% endif %}
+                                    {% include 'redo/resource-details/metadata-display.twig' %}
                                     {% if not loop.last %}
                                         <br>
                                     {% endif %}

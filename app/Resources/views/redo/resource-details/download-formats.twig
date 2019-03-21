@@ -1,7 +1,7 @@
 {% set pdfFilePath = resource | metadata('plik_pdf_podstawowy') | first %}
-{% set epubFilePath = resource | metadata('plik_epub') | first %}
+{% set mobiFilePath = resource | metadata('plik_mobi') | first %}
 
-{% if pdfFilePath is not empty or epubFilePath is not empty %}
+{% if pdfFilePath is not empty or mobiFilePath is not empty %}
     {% set downloadFormats = [
         {
             url: '/api/resources/' ~ resource.id ~ '/file/' ~ pdfFilePath,
@@ -10,10 +10,10 @@
             fileAvailable: pdfFilePath is not empty
         },
         {
-            url: '/api/resources/' ~ resource.id ~ '/file/' ~ epubFilePath,
+            url: '/api/resources/' ~ resource.id ~ '/file/' ~ mobiFilePath,
             name: 'EPUB',
             title: 'Download resource in EPUB format' | trans,
-            fileAvailable: epubFilePath is not empty
+            fileAvailable: mobiFilePath is not empty
         }
     ] %}
     <div class="download-options">

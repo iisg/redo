@@ -1,6 +1,5 @@
-{% set visibleMetadataNames = ['data_wydania'] %}
-{% set collapsedMetadataNames = ['opis', 'abstrakt'] %}
-
+{% set metadataToDisplayAlways = ['data_wydania'] %}
+{% set metadataToTisplayWhenNoSearchResults = ['opis', 'abstrakt'] %}
 {% set childrenAllowed = resource | childrenAllowed %}
 
 <div class="resources-list-element">
@@ -22,6 +21,10 @@
         {% endfor %}
     {% endif %}
 
+    {% if searchResult is not defined or highlightedMetadata is empty %}
+        {% set metadataToDisplayAlways = metadataToDisplayAlways | merge(metadataToTisplayWhenNoSearchResults) %}
+    {% endif %}
+
     <div class="details">
         <div class="basic-data-with-download-options">
             <div class="basic-data">
@@ -41,14 +44,15 @@
                 <div>
                     <span class="metadata-label">{{ 'Type'| trans }}:</span> {{ resource.kind.label | inCurrentLanguage }}
                 </div>
-                {% for visibleMetadataName in visibleMetadataNames %}
+                {% for visibleMetadataName in metadataToDisplayAlways %}
                     {% set metadata = metadata(visibleMetadataName) %}
                     {% if metadata %}
                         {% set metadataLabel = metadata.label | inCurrentLanguage %}
-                        {% set metadataValue = resource | metadata(visibleMetadataName) %}
-                        {% if metadataValue is not empty %}
+                        {% set metadataValue = resource | metadata(visibleMetadataName) | first %}
+                        {% if metadataValue %}
                             <div>
-                                <span class="metadata-label">{{ metadataLabel }}:</span> {{ metadataValue }}
+                                <span class="metadata-label">{{ metadataLabel }}:</span>
+                                {% include 'redo/resource-details/metadata-display.twig' %}
                             </div>
                         {% endif %}
                     {% endif %}
@@ -59,55 +63,29 @@
             {% endif %}
         </div>
 
-        {% set collapsedMetadataLabelsWithValues = [] %}
-        {% for collapsedMetadataName in collapsedMetadataNames %}
-            {% set metadata = metadata(collapsedMetadataName) %}
-            {% if metadata and (highlightedMetadata is not defined or highlightedMetadata[metadata.name] is not defined) %}
-                {% set metadataLabel = metadata.label | inCurrentLanguage %}
-                {% set metadataValue = resource | metadata(collapsedMetadataName) %}
-                {% if metadataValue is not empty %}
-                    {% set collapsedMetadataLabelsWithValues = collapsedMetadataLabelsWithValues| merge([{
-                        label: metadataLabel,
-                        value: metadataValue
-                    }]) %}
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-
-        {% if collapsedMetadataLabelsWithValues is not empty or searchResult is defined and highlightedMetadata is not empty %}
-            {% set variableName = "resource" ~ resource.id ~ "MetadataListExpanded" %}
-            {% if searchResult is defined and highlightedMetadata is not empty %}
-                {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
-                    {% if metadataLabelWithHighlights.control == 'file' or metadataLabelWithHighlights.control == 'directory' %}
-                        {% set highlights = withPageNumbers(resource, metadataLabelWithHighlights.control, resource | m(metadataLabelWithHighlights.id), metadataLabelWithHighlights.highlights) %}
-                        {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
-                        {% for highlight in highlights %}
-                            <div class="metadata-details">
-                                <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
-                                {{ highlight.highlight | raw }}
-                                {% if hasBrowsableContents %}
-                                    <a href="/resources/{{ resource.id }}/browse#page/{{ highlight.pageNumber }}">&raquo;</a>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    {% else %}
+        {% if searchResult is defined and highlightedMetadata is not empty %}
+            {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
+                {% if metadataLabelWithHighlights.control == 'file' or metadataLabelWithHighlights.control == 'directory' %}
+                    {% set highlights = withPageNumbers(resource, metadataLabelWithHighlights.control, resource | m(metadataLabelWithHighlights.id), metadataLabelWithHighlights.highlights) %}
+                    {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
+                    {% for highlight in highlights %}
                         <div class="metadata-details">
-                            <span class="metadata-label">{{ metadataLabelWithHighlights.label }}</span>
-                            {% for highlight in metadataLabelWithHighlights.highlights %}
-                                {{ highlight }}
-                            {% endfor %}
+                            <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
+                            {{ highlight.highlight | raw }}
+                            {% if hasBrowsableContents %}
+                                <a href="/resources/{{ resource.id }}/browse#page/{{ highlight.pageNumber }}">&raquo;</a>
+                            {% endif %}
                         </div>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                {% for collapsedMetadataLabelWithValue in collapsedMetadataLabelsWithValues %}
-                    <div class="metadata-details {{ loop.first ? 'text-container': '' }}">
-                        <span class="metadata-label
-                                    {{ loop.first ? 'text-container': '' }}">{{ collapsedMetadataLabelWithValue.label }}:</span>
-                        {{ collapsedMetadataLabelWithValue.value }}
+                    {% endfor %}
+                {% else %}
+                    <div class="metadata-details">
+                        <span class="metadata-label">{{ metadataLabelWithHighlights.label }}</span>
+                        {% for highlight in metadataLabelWithHighlights.highlights %}
+                            {{ highlight | raw }}
+                        {% endfor %}
                     </div>
-                {% endfor %}
-            {% endif %}
+                {% endif %}
+            {% endfor %}
         {% endif %}
     </div>
 </div>

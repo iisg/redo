@@ -1,0 +1,22 @@
+{% if metadata.control == 'directory' %}
+    {{ metadataValue | basename }}
+{% elseif metadata.control == 'file' %}
+    <a href="/api/resources/{{ resource.id }}/file/{{ metadataValue }}">{{ metadataValue | basename }}</a>
+{% elseif metadata.control == 'relationship' %}
+    {% set relatedResource = resource(metadataValue) %}
+    {% if relatedResource is not empty %}
+        {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
+            <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
+        {% elseif canViewTeaser(relatedResource) %}
+            {{ relatedResource | mLabel | raw }}
+        {% else %}
+            {{ 'You are not allowed to view this resource' | trans }}
+        {% endif %}
+    {% else %}
+        {{ 'Resource does not exist' | trans }}
+    {% endif %}
+{% elseif metadata.dynamic %}
+    {{ metadataValue | raw }}
+{% else %}
+    {{ metadataValue }}
+{% endif %}
