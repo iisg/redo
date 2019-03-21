@@ -363,10 +363,9 @@ ICON;
     /** @throws \Twig_Error */
     public function metadataImageFiles(ResourceEntity $resource, string $metadata) {
         $filenames = $this->metadataFiles($resource, $metadata, ['jpg', 'png', 'jpeg']);
+        $dimensions = $this->getDimensionsForAllImages($resource, $filenames);
         $arr = array_map(
-            function ($filename) use ($resource) {
-                $systemPath = $this->resourceFileStorage->getFileSystemPath($resource, $filename);
-                $dimensions = $this->fileSystemDriver->getImageDimensions($systemPath);
+            function ($filename) use ($dimensions, $resource) {
                 return [
                     'path' => $filename,
                     'w' => $dimensions['width'],
@@ -376,6 +375,18 @@ ICON;
             $filenames
         );
         return $arr;
+    }
+
+    /**
+     * We pretend to know all pages dimensions by reading only the 3rd page. This has been changed
+     * after facing too much I/O in production when reading real image dimensions of all images.
+     *
+     * @see https://gerrit.fslab.agh.edu.pl/#/c/repeka/+/9330/
+     */
+    private function getDimensionsForAllImages(ResourceEntity $resource, array $filenames) {
+        $filename = $filenames[2] ?? $filenames[0];
+        $path = $this->resourceFileStorage->getFileSystemPath($resource, $filename);
+        return $this->fileSystemDriver->getImageDimensions($path);
     }
 
     private function mapDirectoriesToTheirFiles(ResourceEntity $resource, array $directoryNames) {
