@@ -35,7 +35,7 @@
                 {% include 'redo/resource-image.twig' %}
                 <div class="title-container-with-actions">
                     <div class="title-container">
-                        <h1>{{ resource | metadata('label') | raw }}</h1>
+                        <h1 class="no-margin-top">{{ resource | metadata('label') | raw }}</h1>
                         Typ: {{ resource.kind.label | inCurrentLanguage }}
                     </div>
                     <div class="actions">
@@ -62,21 +62,21 @@
                         <legend align="left"
                             id="cite-legend"><span title="{{ 'Cite resource' | trans }}">{{ 'Cite resource' | trans }}</span></legend>
                         <div class="download-formats in-one-line">
-                            <h4><a href="/resources/{{ resource.id }}/bibtex"
-                                    title="{{ 'Download resource data in BibTeX format' | trans }}"
-                                    aria-labelledby="cite-legend cite-bibtex">
-                                    <span id="cite-bibtex">BibTeX</span>
-                                </a></h4>
-                            <h4><a href="/resources/{{ resource.id }}/endnote"
-                                    title="{{ 'Download resource data in EndNote format' | trans }}"
-                                    aria-labelledby="cite-legend cite-endnote">
-                                    <span id="cite-endnote">EndNote</span>
-                                </a></h4>
-                            <h4><a href="/resources/{{ resource.id }}/iso-690"
-                                    title="{{ 'Download resource data in ISO 690 format' | trans }}"
-                                    aria-labelledby="cite-legend cite-iso690">
-                                    <span id="cite-iso690">{{ icon('double-quote-sign', 1.25) }}</span>
-                                </a></h4>
+                            <a href="/resources/{{ resource.id }}/bibtex"
+                                title="{{ 'Download resource data in BibTeX format' | trans }}"
+                                aria-labelledby="cite-legend cite-bibtex">
+                                <span id="cite-bibtex">BibTeX</span>
+                            </a>
+                            <a href="/resources/{{ resource.id }}/endnote"
+                                title="{{ 'Download resource data in EndNote format' | trans }}"
+                                aria-labelledby="cite-legend cite-endnote">
+                                <span id="cite-endnote">EndNote</span>
+                            </a>
+                            <a href="/resources/{{ resource.id }}/iso-690"
+                                title="{{ 'Download resource data in ISO 690 format' | trans }}"
+                                aria-labelledby="cite-legend cite-iso690">
+                                <span id="cite-iso690">{{ icon('double-quote-sign', 1.25) }}</span>
+                            </a>
                         </div>
                     </fieldset>
                 </div>
@@ -85,9 +85,9 @@
                         <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
                         <fieldset>
                             <div class="download-formats in-one-line">
-                                <h4><a href="/resources/{{ resource.id }}/browse">
-                                        {{ 'Browse' | trans }}
-                                    </a></h4>
+                                <a href="/resources/{{ resource.id }}/browse">
+                                    {{ 'Browse' | trans }}
+                                </a>
                             </div>
                         </fieldset>
                     </div>

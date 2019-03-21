@@ -32,29 +32,31 @@ html {
   justify-content: center;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
-}
-h1, h2, h3, h4, h5, h6, p {
-  margin-bottom: 0;
-}
 h1 {
   font-size: $title-font-size;
 }
 h2 {
-  font-size: $subtitle-font-size + 1px;
+  font-size: $subtitle-font-size + 2px;
 }
 h3 {
   font-size: $subtitle-font-size;
 }
 h4 {
-  font-size: $default-font-size + 1px;
+  font-size: $subtitle-font-size - 2px;
 }
 h5 {
-  font-size: $default-font-size - 1px;
+  font-size: $subtitle-font-size - 2px;
 }
 h6 {
-  font-size: $default-font-size - 2px;
+  font-size: $subtitle-font-size - 2px;
+}
+
+.no-margin-top {
+  margin-top: 0 !important;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0 !important;
 }
 
 ul {
@@ -109,7 +111,6 @@ label {
 
 fieldset {
   padding: $default-gap-size / 2;
-  line-height: 0;
   border: $fieldset-border-width solid $default-border-color;
   border-radius: $default-gap-size / 4;
   & > legend {

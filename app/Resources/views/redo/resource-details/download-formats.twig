@@ -25,14 +25,12 @@
             <div class="download-formats">
                 {% for format in downloadFormats %}
                     {% if format.fileAvailable %}
-                        <h4>
-                            <a href="{{ format.url }}"
-                                download
-                                title="{{ format.title }}"
-                                aria-label="{{ format.title }}">
-                                {{ format.name }}
-                            </a>
-                        </h4>
+                        <a href="{{ format.url }}"
+                            download
+                            title="{{ format.title }}"
+                            aria-label="{{ format.title }}">
+                            {{ format.name }}
+                        </a>
                     {% endif %}
                 {% endfor %}
             </div>

@@ -16,7 +16,8 @@
             collapsible="collapsed.bind: !filtersPanelExpanded">
             <button class="title-with-toggle"
                 click.delegate="filtersPanelExpanded = !filtersPanelExpanded">
-                <h3 id="filtersHeading" class="title"><strong>{{ 'Filters' | trans }}</strong></h3>
+                <h3 id="filtersHeading"
+                    class="title no-margin-top"><strong>{{ 'Filters' | trans }}</strong></h3>
                 <div class="toggle expand-toggle horizontally-expand-toggle-on-regular-screens"
                     class.bind="filtersPanelExpanded ? 'toggled' : ''"
                     title.bind="filtersPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'"
@@ -72,17 +73,17 @@
                                     <strong>{{ aggregationName == 'kindId' ? 'Resource kind' | trans
                                         : metadata(aggregationName).label | inCurrentLanguage }}</strong>
                                     {% for bucket in aggregationData.buckets.0[aggregationName].buckets %}
-                                            <label class="label-with-checkbox">
-                                                <input type="checkbox"
-                                                    name="facetFilters[{{ aggregationName }}][]"
-                                                    value="{{ bucket.key }}"
-                                                    {% if isFilteringByFacet(aggregationName, bucket.key,
-                                                        app.request.query.get('facetFilters') ?? []) %}
-                                                checked
-                                                    {% endif %}>
-                                                <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label | inCurrentLanguage
-                                                    : r(bucket.key) | mLabel }} ({{ bucket.doc_count }})</span>
-                                            </label>
+                                        <label class="label-with-checkbox">
+                                            <input type="checkbox"
+                                                name="facetFilters[{{ aggregationName }}][]"
+                                                value="{{ bucket.key }}"
+                                                {% if isFilteringByFacet(aggregationName, bucket.key,
+                                                    app.request.query.get('facetFilters') ?? []) %}
+                                            checked
+                                                {% endif %}>
+                                            <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label | inCurrentLanguage
+                                                : r(bucket.key) | mLabel }} ({{ bucket.doc_count }})</span>
+                                        </label>
                                     {% endfor %}
                                 </div>
                             {% endfor %}
@@ -109,21 +110,21 @@
         <script>
             {# Adds 'expanded' and 'toggled' classes to 'filters-panel' and 'horizontally-expand-toggle' if needed, before Aueria loads. #}
             if (localStorage && localStorage.getItem) {
-                var filtersPanel = document.getElementById('filters-panel');
-                if (localStorage.getItem('filtersPanelExpanded') == 'true') {
-                    filtersPanel.classList.add('expanding');
-                    filtersPanel.classList.remove('collapsed');
-                    filtersPanel.classList.add('expanded');
-                    document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
-                }
+              var filtersPanel = document.getElementById('filters-panel');
+              if (localStorage.getItem('filtersPanelExpanded') == 'true') {
+                filtersPanel.classList.add('expanding');
+                filtersPanel.classList.remove('collapsed');
+                filtersPanel.classList.add('expanded');
+                document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
+              }
             }
         </script>
         <div class="search-results"
             role="main">
             {% if results | length == 0 %}
-                <h1>{{ 'No results' | trans }}.</h1>
+                <h1 class="no-margin-top">{{ 'No results' | trans }}.</h1>
             {% else %}
-                <h1 class="title"><strong>{{ 'Search results' | trans }} ({{ results.totalHits }})</strong></h1>
+                <h1 class="title no-margin-top">{{ 'Search results' | trans }} ({{ results.totalHits }})</h1>
                 {% set resources = [] %}
                 <div>
                     {% for searchResult in results %}

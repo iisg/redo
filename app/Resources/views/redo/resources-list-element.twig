@@ -28,7 +28,7 @@
     <div class="details">
         <div class="basic-data-with-download-options">
             <div class="basic-data">
-                <h2>
+                <h3 class="no-margin-top no-margin-bottom">
                     <a href="/resources/{{ resource.id }}">
                         {% if highlightedMetadata is defined and highlightedMetadata.tytul is defined %}
                             {{ highlightedMetadata.tytul.highlights[0] | raw }}
@@ -37,9 +37,9 @@
                             {{ resource | metadata('tytul') | default(resource | metadata('label')) }}
                         {% endif %}
                     </a>
-                </h2>
+                </h3>
                 {% if resource | metadata('autor') is not empty %}
-                    <h4>{{ resource | metadata('autor') }}</h4>
+                    <h4 class="no-margin-top no-margin-bottom">{{ resource | metadata('autor') }}</h4>
                 {% endif %}
                 <div>
                     <span class="metadata-label">{{ 'Type'| trans }}:</span> {{ resource.kind.label | inCurrentLanguage }}
