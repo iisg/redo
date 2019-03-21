@@ -103,7 +103,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
             }
           }
         }
-        .metadata-details > em  {
+        .metadata-details > em {
           transition: background-color $collapse-and-expand-animations-duration;
         }
       }
@@ -119,7 +119,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
             flex-direction: column;
             flex-wrap: wrap;
             height: calc(#{$default-line-height * 1em} + 4 * #{$default-gap-size / 8}
-              + #{$collapsible-metadata-list-toggle-height} + 1px); // `+ 1px` is required by Chromium.
+            + #{$collapsible-metadata-list-toggle-height} + 1px); // `+ 1px` is required by Chromium.
             & > :not(.expand-toggle) {
               width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
               visibility: hidden;
@@ -131,14 +131,14 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
   }
 
   .download-options-icon {
-    display:none;
+    display: none;
   }
 
   @media (max-width: $maximum-screen-width-for-mobile-layout) {
     .basic-data-with-download-options {
-        fieldset {
-            display: none;
-        }
+      fieldset {
+        display: none;
+      }
     }
   }
 }

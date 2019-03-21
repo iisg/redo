@@ -1,12 +1,12 @@
 .breadcrumbs {
-    display: flex;
-    flex-wrap: wrap;
-    flex-shrink: 0; // Required by Chromium.
-    padding: $default-gap-size / 2 $default-gap-size / 4;
-    background-color: $quaternary-background-color;
-    color: $secondary-text-color;
-    a, span {
-        padding-left: $default-gap-size / 4;
-        padding-right: $default-gap-size / 4;
-    }
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0; // Required by Chromium.
+  padding: $default-gap-size / 2 $default-gap-size / 4;
+  background-color: $quaternary-background-color;
+  color: $secondary-text-color;
+  a, span {
+    padding-left: $default-gap-size / 4;
+    padding-right: $default-gap-size / 4;
+  }
 }

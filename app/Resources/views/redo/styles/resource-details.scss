@@ -6,168 +6,168 @@ $download-options-flex-basis: 248px; // Should allow having two columns of four-
 $download-options-flex-grow: 1;
 
 .resource-details {
-    flex-shrink: 0; // Required by Internet Explorer.
-    padding: $gap-size * 3 / 4;
-    .top-container {
+  flex-shrink: 0; // Required by Internet Explorer.
+  padding: $gap-size * 3 / 4;
+  .top-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    .resource-image-with-title-container-with-actions {
+      display: flex;
+      flex-grow: $resource-image-with-title-container-with-actions-flex-grow;
+      flex-basis: $resource-image-with-title-container-with-actions-flex-basis;
+      flex-wrap: wrap;
+      .resource-image {
+        width: 100%;
+        padding: $gap-size / 2;
+        &:not(.horizontal) .icon {
+          height: $image-width-or-height;
+        }
+        &.horizontal .icon, img {
+          width: $image-width-or-height;
+        }
+      }
+      .title-container-with-actions {
         display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        .resource-image-with-title-container-with-actions {
+        flex-direction: column;
+        flex-basis: 0;
+        flex-grow: 1;
+        padding: $gap-size / 4;
+        .title-container {
+          padding: $gap-size / 4;
+        }
+        .actions {
+          display: flex;
+          margin-top: auto;
+          margin-bottom: auto;
+          padding-top: $gap-size / 4;
+          padding-bottom: $gap-size / 4;
+          flex-wrap: wrap;
+          align-items: center;
+          .share-buttons {
             display: flex;
-            flex-grow: $resource-image-with-title-container-with-actions-flex-grow;
-            flex-basis: $resource-image-with-title-container-with-actions-flex-basis;
             flex-wrap: wrap;
-            .resource-image {
-                width: 100%;
-                padding: $gap-size / 2;
-                &:not(.horizontal) .icon {
-                    height: $image-width-or-height;
-                }
-                &.horizontal .icon, img {
-                    width: $image-width-or-height;
-                }
+          }
+          button, a {
+            margin: $gap-size / 4;
+            color: $secondary-text-color;
+            transition: color $default-transition-duration;
+            &:hover {
+              color: $primary-text-color;
             }
-            .title-container-with-actions {
-                display: flex;
-                flex-direction: column;
-                flex-basis: 0;
-                flex-grow: 1;
-                padding: $gap-size / 4;
-                .title-container {
-                    padding: $gap-size / 4;
-                }
-                .actions {
-                    display: flex;
-                    margin-top: auto;
-                    margin-bottom: auto;
-                    padding-top: $gap-size / 4;
-                    padding-bottom: $gap-size / 4;
-                    flex-wrap: wrap;
-                    align-items: center;
-                    .share-buttons {
-                        display: flex;
-                        flex-wrap: wrap;
-                    }
-                    button, a {
-                        margin: $gap-size / 4;
-                        color: $secondary-text-color;
-                        transition: color $default-transition-duration;
-                        &:hover {
-                            color: $primary-text-color;
-                        }
-                    }
-                }
-            }
+          }
         }
-        .download-options-container {
-            margin-left: auto;
-            max-width: 100%;
-            flex-basis: $download-options-flex-basis;
-            flex-grow: $download-options-flex-grow;
-            .download-options {
-                display: flex;
-                align-items: center;
-                padding: $gap-size / 4;
-                & > * {
-                    margin: $gap-size / 4;
-                }
-                .download-options-icon {
-                    color: $secondary-text-color;
-                }
-                fieldset {
-                    flex: 1;
-                    & > legend {
-                        margin-top: calc(-1em / 2);
-                    }
-                }
-            }
-            .download-formats {
-                display: flex;
-                justify-content: space-evenly;
-                &:not(.in-one-line) {
-                    flex-wrap: wrap;
-                }
-                & > * {
-                    padding: $gap-size / 8 $gap-size / 2;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                }
-            }
-        }
+      }
     }
-    .details-container {
-        padding-top: $gap-size / 4;
-        padding-bottom: $gap-size / 4;
-        dl {
-            margin-bottom: 0;
-            dt {
-                padding-top: $gap-size / 4;
-                padding-left: $gap-size / 2;
-                padding-right: $gap-size / 2;
-                padding-bottom: 0;
-                text-align: left;
-                color: $secondary-text-color;
-                font-weight: normal;
-            }
-            dd {
-                margin-left: $gap-size / 4;
-                padding-bottom: $gap-size / 4;
-                padding-left: $gap-size / 2;
-                padding-right: $gap-size / 2;
-            }
-        }
-    }
-    .child-resources {
-        padding-top: $gap-size / 2;
-        padding-bottom: $gap-size / 4;
-        .resources-list {
-            padding-left: $gap-size / 2;
-            padding-right: $gap-size / 2;
-        }
-    }
-    .title-with-separator {
+    .download-options-container {
+      margin-left: auto;
+      max-width: 100%;
+      flex-basis: $download-options-flex-basis;
+      flex-grow: $download-options-flex-grow;
+      .download-options {
         display: flex;
         align-items: center;
-        padding: $gap-size / 4 $gap-size / 2;
-        hr {
-            flex: 1;
-            margin-left: $gap-size / 2;
+        padding: $gap-size / 4;
+        & > * {
+          margin: $gap-size / 4;
         }
+        .download-options-icon {
+          color: $secondary-text-color;
+        }
+        fieldset {
+          flex: 1;
+          & > legend {
+            margin-top: calc(-1em / 2);
+          }
+        }
+      }
+      .download-formats {
+        display: flex;
+        justify-content: space-evenly;
+        &:not(.in-one-line) {
+          flex-wrap: wrap;
+        }
+        & > * {
+          padding: $gap-size / 8 $gap-size / 2;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
     }
+  }
+  .details-container {
+    padding-top: $gap-size / 4;
+    padding-bottom: $gap-size / 4;
+    dl {
+      margin-bottom: 0;
+      dt {
+        padding-top: $gap-size / 4;
+        padding-left: $gap-size / 2;
+        padding-right: $gap-size / 2;
+        padding-bottom: 0;
+        text-align: left;
+        color: $secondary-text-color;
+        font-weight: normal;
+      }
+      dd {
+        margin-left: $gap-size / 4;
+        padding-bottom: $gap-size / 4;
+        padding-left: $gap-size / 2;
+        padding-right: $gap-size / 2;
+      }
+    }
+  }
+  .child-resources {
+    padding-top: $gap-size / 2;
+    padding-bottom: $gap-size / 4;
+    .resources-list {
+      padding-left: $gap-size / 2;
+      padding-right: $gap-size / 2;
+    }
+  }
+  .title-with-separator {
+    display: flex;
+    align-items: center;
+    padding: $gap-size / 4 $gap-size / 2;
+    hr {
+      flex: 1;
+      margin-left: $gap-size / 2;
+    }
+  }
 
-    @media (min-width: $minimum-screen-width-for-regular-layout) {
-        padding: $gap-size * 3 / 2;
-        .top-container {
-            .resource-image-with-title-container-with-actions {
-                .resource-image {
-                    width: auto;
-                }
-            }
+  @media (min-width: $minimum-screen-width-for-regular-layout) {
+    padding: $gap-size * 3 / 2;
+    .top-container {
+      .resource-image-with-title-container-with-actions {
+        .resource-image {
+          width: auto;
         }
-        .details-container {
-            @supports (display: contents) {
-                display: grid;
-                grid-template-columns: auto 1fr;
-                .title-with-separator {
-                    grid-column: 1 / 3;
-                }
-                dl {
-                    display: contents;
-                    dt, dd {
-                        padding: $gap-size / 4 $gap-size / 2;
-                    }
-                    dt {
-                        text-align: right;
-                    }
-                    dd {
-                        margin-left: 0;
-                    }
-                }
-            }
-        }
-        .child-resources {
-            padding-top: $gap-size * 5 / 4;
-        }
+      }
     }
+    .details-container {
+      @supports (display: contents) {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        .title-with-separator {
+          grid-column: 1 / 3;
+        }
+        dl {
+          display: contents;
+          dt, dd {
+            padding: $gap-size / 4 $gap-size / 2;
+          }
+          dt {
+            text-align: right;
+          }
+          dd {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+    .child-resources {
+      padding-top: $gap-size * 5 / 4;
+    }
+  }
 }

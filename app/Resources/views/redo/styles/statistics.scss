@@ -1,41 +1,41 @@
 .statistics {
-    display: flex;
-    flex-wrap: wrap;
-    & > div {
-        flex: 1;
-        overflow: hidden;
-        &, .list-element > * {
-            padding: $default-gap-size / 4;
-        }
-        h4 {
-            margin: $default-gap-size / 4;
-        }
+  display: flex;
+  flex-wrap: wrap;
+  & > div {
+    flex: 1;
+    overflow: hidden;
+    &, .list-element > * {
+      padding: $default-gap-size / 4;
     }
     h4 {
-        color: $main-theme-color;
-        border-bottom: $default-gap-size / 8 solid $accents-color;
+      margin: $default-gap-size / 4;
     }
-    .list-element {
-        display: flex;
-        justify-content: space-between;
+  }
+  h4 {
+    color: $main-theme-color;
+    border-bottom: $default-gap-size / 8 solid $accents-color;
+  }
+  .list-element {
+    display: flex;
+    justify-content: space-between;
+  }
+  a {
+    color: $primary-text-color;
+    span {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
-    a {
-        color: $primary-text-color;
-        span {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        .icon-container {
-            flex-shrink: 0;
-        }
+    .icon-container {
+      flex-shrink: 0;
     }
+  }
 
-    @media (max-width: $maximum-screen-width-for-mobile-layout) {
-        flex-wrap: wrap;
-        & > div {
-            max-width: 100%;
-            overflow: initial;
-        }
+  @media (max-width: $maximum-screen-width-for-mobile-layout) {
+    flex-wrap: wrap;
+    & > div {
+      max-width: 100%;
+      overflow: initial;
     }
+  }
 }
