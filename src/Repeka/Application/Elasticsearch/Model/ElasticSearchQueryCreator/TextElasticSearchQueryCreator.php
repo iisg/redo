@@ -15,12 +15,10 @@ class TextElasticSearchQueryCreator implements ElasticSearchQueryCreator {
         $metadataFilter = new Query\BoolQuery();
         $path = ElasticSearchQuery::getMetadataPath($metadata);
         foreach ($filter as $phrase) {
-            $simpleQueryString = new Query\SimpleQueryString($phrase, [$path]);
-            $simpleQueryString->setDefaultOperator('AND');
             $metadataFilter->addShould(
                 [
-                    $simpleQueryString,
-                    new Query\Fuzzy($path, $phrase),
+                    ElasticSearchQuery::createSimpleQueryString([$path], $phrase),
+                    ElasticSearchQuery::createMultiMatchQuery([$path], $phrase),
                 ]
             );
         }

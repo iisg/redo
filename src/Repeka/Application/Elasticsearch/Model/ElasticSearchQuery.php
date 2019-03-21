@@ -69,12 +69,13 @@ class ElasticSearchQuery {
     private function atLeastOneMetadataShouldMatchThePhrase(): Query\AbstractQuery {
         $metadataFilters = [];
         $metadataQuery = new Query\BoolQuery();
+        $paths = [];
         foreach ($this->query->getSearchableMetadata() as $metadata) {
-            $path = $this->getMetadataPath($metadata);
-            $simpleQueryString = new Query\SimpleQueryString($this->query->getPhrase(), [$path]);
-            $simpleQueryString->setDefaultOperator('AND');
-            $metadataFilters[] = $simpleQueryString;
-            $metadataFilters[] = new Query\Fuzzy($path, $this->query->getPhrase());
+            $paths[] = $this->getMetadataPath($metadata);
+        }
+        if (!empty($paths)) {
+            $metadataFilters[] = ElasticSearchQuery::createMultiMatchQuery($paths, $this->query->getPhrase());
+            $metadataFilters[] = ElasticSearchQuery::createSimpleQueryString($paths, $this->query->getPhrase());
         }
         $metadataQuery->addShould($metadataFilters);
         return $metadataQuery;
@@ -174,5 +175,21 @@ class ElasticSearchQuery {
             $metadataFilters->addMust($metadataFilter);
         }
         return $metadataFilters;
+    }
+
+    public static function createMultiMatchQuery(array $fields, string $query): Query\MultiMatch {
+        $multiMatch = new Query\MultiMatch();
+        $multiMatch->setFields($fields);
+        $multiMatch->setQuery($query);
+        $multiMatch->setOperator(Query\MultiMatch::OPERATOR_AND);
+        $multiMatch->setFuzziness(Query\MultiMatch::FUZZINESS_AUTO);
+        return $multiMatch;
+    }
+
+    public static function createSimpleQueryString(array $fields, string $query): Query\SimpleQueryString {
+        $simpleQueryString = new Query\SimpleQueryString($query, $fields);
+        $simpleQueryString->setDefaultOperator(Query\SimpleQueryString::OPERATOR_AND);
+        $simpleQueryString->setParam('boost', 100);
+        return $simpleQueryString;
     }
 }

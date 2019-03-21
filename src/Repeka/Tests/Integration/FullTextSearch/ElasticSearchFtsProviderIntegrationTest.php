@@ -17,6 +17,21 @@ use Repeka\Tests\IntegrationTestCase;
 class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
+    /** @var Metadata */
+    private $titleMetadata;
+
+    /** @var Metadata */
+    private $opisMetadata;
+
+    /** @var Metadata */
+    private $flexibleDateMetadata;
+
+    /** @var Metadata */
+    private $timestampMetadata;
+
+    /** @var Metadata */
+    private $rangeDateMetadata;
+
     /** @var ResourceEntity */
     private $phpBookResource;
 
@@ -29,21 +44,22 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     /** @var ResourceEntity */
     private $timeResource;
 
-    /** @var Metadata */
-    private $flexibleDateMetadata;
+    /** @var ResourceEntity */
+    private $alaResource;
 
-    /** @var Metadata */
-    private $timestampMetadata;
-
-    /** @var Metadata */
-    private $rangeDateMetadata;
+    /** @var ResourceEntity */
+    private $pseudoAlaResource;
 
     private $title = 'ala ma psa';
 
     protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
-        $metadata = $this->findMetadataByName('Tytul');
-        $this->createResource($this->getPhpBookResource()->getKind(), [$metadata->getId() => [$this->title]]);
+        $this->titleMetadata = $this->findMetadataByName('Tytul');
+        $this->opisMetadata = $this->findMetadataByName('opis');
+        $this->alaResource = $this->createResource(
+            $this->getPhpBookResource()->getKind(),
+            [$this->titleMetadata->getId() => [$this->title]]
+        );
         $this->executeCommand('repeka:evaluate-display-strategies');
         $this->executeCommand('repeka:fts:initialize');
         $this->timestampMetadata = $this->createMetadata(
@@ -99,6 +115,13 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
                 ],
             ]
         );
+        $this->pseudoAlaResource = $this->createResource(
+            $this->getPhpBookResource()->getKind(),
+            [
+                $this->titleMetadata->getId() => ['ola ela ara'],
+                $this->opisMetadata->getId() => ['aba ila ata'],
+            ]
+        );
     }
 
     /** @before */
@@ -120,12 +143,14 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         $this->assertContains($this->phpAndMySQLBookResource->getId(), $ids);
     }
 
-    public function testSearchByPhpAndMysqlPhrase() {
+    public function testSearchByPhpAndPoradnikPhrase() {
         /** @var Result[] $results */
-        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('php mysql', [SystemMetadata::RESOURCE_LABEL]));
+        $results = $this->handleCommandBypassingFirewall(
+            new ResourceListFtsQuery('php poradnik', [SystemMetadata::RESOURCE_LABEL, $this->opisMetadata])
+        );
         $ids = EntityUtils::mapToIds($results);
         $this->assertCount(1, $ids);
-        $this->assertContains($this->phpAndMySQLBookResource->getId(), $ids);
+        $this->assertContains($this->phpBookResource->getId(), $ids);
     }
 
     public function testSearchByAdvancedPhrase() {
@@ -335,13 +360,13 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     public function testFindAll() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('', [], [], ['books']));
-        $this->assertCount(8, $results);
+        $this->assertCount(9, $results);
     }
 
     public function testFindOnlyTopLevel() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('', [], [], ['books'], false, [], [], true));
-        $this->assertCount(6, $results);
+        $this->assertCount(7, $results);
     }
 
     public function testFilteringByTimestamp() {
@@ -433,6 +458,14 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
             );
             $this->assertCount($expectedCount, $results);
         }
+    }
+
+    public function testBoostToSimpleQueryString() {
+        /** @var ResultSet $results */
+        $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('ala', [$this->titleMetadata, $this->opisMetadata]));
+        $this->assertCount(2, $results);
+        $this->assertEquals($this->alaResource->getId(), intval($results[0]->getId()));
+        $this->assertEquals($this->pseudoAlaResource->getId(), intval($results[1]->getId()));
     }
 
     /**
