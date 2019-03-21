@@ -1,0 +1,12 @@
+.high-contrast {
+    @import "styles/high-contrast-colors";
+    @import "styles/variables";
+
+    background-color: $primary-background-color;
+
+    @import "styles/base";
+
+    @import "styles/components";
+
+    @import "styles/high-contrast-deposit-form";
+}

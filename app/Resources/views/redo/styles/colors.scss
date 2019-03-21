@@ -12,14 +12,18 @@ $red: #bc0000;
 
 $main-theme-color: $blue;
 $accents-color: $lightish-blue;
+$secondary-accents-color: $light-blue;
 
 $default-border-color: $light-grey;
 
-$default-text-color: $dark-grey;
+$primary-text-color: $dark-grey;
+$secondary-text-color: $grey;
+$tertiary-text-color: $lightish-grey;
 
 $primary-background-color: white;
 $secondary-background-color: $blueish-grey;
 $tertiary-background-color: $light-grey;
+$quaternary-background-color: $very-light-grey;
 
 $darkened-secondary-background-color: darken($secondary-background-color, 5);
 $darkened-tertiary-background-color: darken($tertiary-background-color, 5);

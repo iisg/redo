@@ -42,7 +42,7 @@ $advanced-options-column-border-width: 1px;
         border-top-right-radius: $default-gap-size / 4;
         border-bottom-right-radius: $default-gap-size / 4;
         background-color: $main-theme-color;
-        color: white;
+        color: $primary-background-color;
       }
     }
     .expand-toggle {

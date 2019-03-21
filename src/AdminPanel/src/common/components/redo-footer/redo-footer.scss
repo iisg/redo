@@ -17,7 +17,7 @@ redo-footer, .redo-footer {
   flex-wrap: wrap;
   margin-top: auto;
   overflow: hidden;
-  & > :first-child {
+  .first-group {
     display: flex;
     flex-grow: 1;
     flex-wrap: wrap;
@@ -26,43 +26,43 @@ redo-footer, .redo-footer {
     & > * {
       margin-right: $width-of-the-separator;
     }
-    img {
-      padding: $default-gap-size;
-      height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
-      &.horizontal {
-        max-width: $powered-by-redo-logo-maximum-width; // Required by Chromium.
-      }
-    }
-    .creative-commons-icons-with-description {
-      display: inline-block;
-      max-width: $creative-commons-icons-with-description-max-width;
-      line-height: 0;
-      margin-left: -$width-of-the-separator;
-      margin-top: $default-gap-size / 2;
-      margin-bottom: $default-gap-size / 2;
-      padding: $default-gap-size / 2 $default-gap-size;
-      border-left: $width-of-the-separator solid $orange;
-      & > span {
-        display: block;
-        line-height: normal;
-        font-size: $creative-commons-icons-description-font-size;
-        color: $grey;
-      }
-      .icon {
-        margin-bottom: $default-gap-size / 4;
-      }
+  }
+  .powered-by-redo-image {
+    padding: $default-gap-size;
+    height: $ue-logo-image-height-to-keep-correct-proportions-between-logos + 2 * $default-gap-size;
+    &.horizontal {
+      max-width: $powered-by-redo-logo-maximum-width; // Required by Chromium.
     }
   }
-  & > :last-child {
+  .creative-commons-icons-with-description {
+    display: inline-block;
+    max-width: $creative-commons-icons-with-description-max-width;
+    line-height: 0;
+    margin-left: -$width-of-the-separator;
+    margin-top: $default-gap-size / 2;
+    margin-bottom: $default-gap-size / 2;
+    padding: $default-gap-size / 2 $default-gap-size;
+    border-left: $width-of-the-separator solid $orange;
+    & > span {
+      display: block;
+      line-height: normal;
+      font-size: $creative-commons-icons-description-font-size;
+      color: $grey;
+    }
+    .icon {
+      margin-bottom: $default-gap-size / 4;
+    }
+  }
+  .second-group {
     display: flex;
     margin-left: auto;
     & > * {
       padding: $default-gap-size;
     }
-    .fe-and-edt-and-ue-logos {
-      height: $fe-and-edt-and-ue-logos-height-to-keep-correct-gap-size + 2 * $default-gap-size;
-      max-width: $fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size;
-    }
+  }
+  .fe-and-edt-and-ue-logos {
+    height: $fe-and-edt-and-ue-logos-height-to-keep-correct-gap-size + 2 * $default-gap-size;
+    max-width: $fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size;
   }
   .vertical {
     display: none;
@@ -113,8 +113,22 @@ redo-footer, .redo-footer {
 
 .redo-footer {
   border-top: 1px solid $light-grey;
+  .for-high-contrast-mode {
+    display: none;
+  }
   @media (max-width: #{$fe-and-edt-and-ue-logos-maximum-width-to-keep-correct-gap-size + 2 * $default-gap-size
     + $expected-scrollbar-width}) {
     @include vertical-align();
+  }
+}
+
+.high-contrast {
+  .redo-footer {
+    .for-regular-colors-mode {
+      display: none;
+    }
+    .for-high-contrast-mode {
+      display: block;
+    }
   }
 }

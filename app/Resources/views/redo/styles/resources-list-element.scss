@@ -31,12 +31,12 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
     overflow: hidden;
     .metadata-label {
       display: inline-block;
-      color: $grey;
+      color: $secondary-text-color;
     }
     .basic-data-with-download-options em, .metadata-details > em {
       font-style: normal;
       border-radius: $default-gap-size / 4;
-      background-color: $blueish-grey;
+      background-color: $secondary-background-color;
     }
     .basic-data-with-download-options {
       display: flex;
@@ -79,7 +79,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
       .metadata-details {
         .metadata-label > em {
           font-style: normal;
-          color: $lightish-grey;
+          color: $tertiary-text-color;
         }
       }
       .with-visible-first-line {
@@ -87,9 +87,9 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
         max-width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
         &.expanding, &.expanded {
           .text-container.metadata-label {
-            color: $grey;
+            color: $secondary-text-color;
             &::first-line {
-              color: $grey;
+              color: $secondary-text-color;
             }
           }
         }
@@ -99,7 +99,7 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
           }
           .text-container.metadata-label {
             &::first-line {
-              color: $grey;
+              color: $secondary-text-color;
             }
           }
         }

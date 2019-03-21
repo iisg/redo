@@ -1,0 +1,17 @@
+$main-theme-color: yellow;
+$accents-color: yellow;
+$secondary-accents-color: white;
+
+$default-border-color: white;
+
+$primary-text-color: yellow;
+$secondary-text-color: white;
+$tertiary-text-color: #808080;
+
+$primary-background-color: black;
+$secondary-background-color: #2b2a29;
+$tertiary-background-color: #343331;
+$quaternary-background-color: $tertiary-background-color;
+
+$darkened-secondary-background-color: darken($secondary-background-color, 5);
+$darkened-tertiary-background-color: darken($tertiary-background-color, 5);

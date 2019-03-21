@@ -1,7 +1,7 @@
 .advanced-options, .advanced-filters {
     .section-title {
         padding: $default-gap-size / 4;
-        color: $grey;
+        color: $secondary-text-color;
     }
     .section-title + div:not(.property-options) {
         padding: $default-gap-size / 8;

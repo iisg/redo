@@ -1,0 +1,22 @@
+@import "styles/cookies-information";
+@import "menu";
+@import "breadcrumbs";
+@import "resource-image";
+@import "search-bar";
+@import "search-metadata-filter";
+@import "resources-list-element";
+@import "pagination";
+@import "title-bar";
+
+@import "statistics";
+@import "home";
+@import "search-results";
+@import "resource-details";
+@import "image-reader";
+@import "deposit";
+
+@import "login-form";
+
+@import "../../../../../src/AdminPanel/src/common/custom-attributes/collapsed-custom-attribute";
+@import "../../../../../src/AdminPanel/src/common/components/icon/icon";
+@import "../../../../../src/AdminPanel/src/common/components/redo-footer/redo-footer";

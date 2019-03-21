@@ -41,14 +41,20 @@
 
     {% block head %}{% endblock %}
 
-</head>
-<body>
-<div aurelia-app="main">
-    {% block layout %}{% endblock %}
-</div>
-{% include 'spa-components.twig' %}
-<script>
-  window.FRONTEND_CONFIG['user_mapped_metadata_ids'] = {{ getUserDataMapping() | json_encode | raw }};
-</script>
+    </head>
+    <body class.bind="highContrast ? 'high-contrast' : ''">
+        <div aurelia-app="main">
+            {% block layout %}{% endblock %}
+    </div>
+    {% include 'spa-components.twig' %}
+    <script>
+        window.FRONTEND_CONFIG['user_mapped_metadata_ids'] = {{ getUserDataMapping() | json_encode | raw }};
+    </script>
+    <script>
+        {# Adds 'high-contrast' class to 'body' if needed, before Aueria loads. #}
+        if (localStorage && localStorage.getItem && localStorage.getItem('highContrast') == 'true') {
+            document.getElementsByTagName('body')[0].classList.add('high-contrast');
+        }
+    </script>
 </body>
 </html>

@@ -3,10 +3,12 @@
 const changed = require('gulp-changed');
 const concat = require('gulp-concat');
 const convert = require('gulp-convert');
+const gulpif = require('gulp-if');
 const gulp = require('gulp');
 const fs = require('fs');
 const htmlmin = require('gulp-htmlmin');
 const minifyCSS = require('gulp-clean-css');
+const postcss = require('gulp-postcss');
 const minifyJSON = require('gulp-jsonminify');
 const notify = require('gulp-notify');
 const path = require('path');
@@ -61,7 +63,7 @@ gulp.task('build-css', () => {
     .pipe(gulp.dest(paths.webRoot));
 });
 
-gulp.task('build-themes-css', (cb) => {
+gulp.task('build-themes-css', (callback) => {
   const availableThemes = fs.readdirSync(paths.themes);
   const buildStyles = () => {
     if (availableThemes.length) {
@@ -70,13 +72,14 @@ gulp.task('build-themes-css', (cb) => {
         .pipe(plumber({errorHandler: notify.onError('SCSS: <%= error.message %>')}))
         .pipe(sourcemaps.init())
         .pipe(sass())
+        .pipe(gulpif(file => file.path.endsWith("high-contrast-styles.css"), postcss([require('postcss-colors-only')])))
         .pipe(concat(template + `.css`))
         .pipe(minifyCSS())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.webRoot + '/themes'))
-        .on('end', buildStyles)
+        .on('end', buildStyles);
     } else {
-      cb();
+      callback();
     }
   };
   buildStyles();

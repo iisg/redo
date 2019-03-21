@@ -107,16 +107,16 @@
             </form>
         </div>
         <script>
-          if (localStorage && localStorage.getItem) {
-            {# Adds 'expanded' and 'toggled' classes to 'filters-panel' and 'horizontally-expand-toggle' before Aueria loads. #}
-            var filtersPanel = document.getElementById('filters-panel');
-            if (localStorage.getItem('filtersPanelExpanded') == 'true') {
-                filtersPanel.classList.add('expanding');
-                filtersPanel.classList.remove('collapsed');
-                filtersPanel.classList.add('expanded');
-                document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
+            {# Adds 'expanded' and 'toggled' classes to 'filters-panel' and 'horizontally-expand-toggle' if needed, before Aueria loads. #}
+            if (localStorage && localStorage.getItem) {
+                var filtersPanel = document.getElementById('filters-panel');
+                if (localStorage.getItem('filtersPanelExpanded') == 'true') {
+                    filtersPanel.classList.add('expanding');
+                    filtersPanel.classList.remove('collapsed');
+                    filtersPanel.classList.add('expanded');
+                    document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
+                }
             }
-          }
         </script>
         <div class="search-results"
             role="main">

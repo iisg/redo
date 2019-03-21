@@ -6,6 +6,7 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
   display: flex;
   flex-shrink: 0; // Required by Internet Explorer.
   align-items: center;
+  background-color: $primary-background-color;
   &, & > :not(.right-side-container) {
     padding: $default-gap-size / 2;
   }
@@ -15,7 +16,7 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
   .title-container {
     display: inline-block; // For browsers with worst or none Flexbox support.
     vertical-align: top; //
-    color: $grey;
+    color: $secondary-text-color;
     span {
       display: block;
       font-size: $title-font-size;
@@ -34,11 +35,11 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
         }
       }
       a, button {
-        color: $grey;
+        color: $secondary-text-color;
         line-height: 0;
         transition: color $default-transition-duration;
         &:hover, &:focus {
-          color: $dark-grey
+          color: $primary-text-color;
         }
         a {
           text-decoration: none;
@@ -46,10 +47,10 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
       }
       .page-view-options {
         & > *:not(:first-child) {
-          border-left: $default-border-width $default-border-style $lightish-grey;
+          border-left: $default-border-width $default-border-style $tertiary-text-color;
         }
       }
-      .social-media {
+      .social-media-buttons {
         align-items: center;
         padding-left: $default-gap-size * 3 / 4;
         padding-right: $default-gap-size * 3 / 4;
@@ -64,13 +65,13 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
           right: 0;
           padding: $default-gap-size / 2;
           text-align: right;
-          background-color: $very-light-grey;
+          background-color: $quaternary-background-color;
           a {
             padding: $default-gap-size / 2;
             margin-top: $default-gap-size / 4;
-            color: $dark-grey;
+            color: $primary-text-color;
             &:hover, &:focus {
-              color: black;
+              color: $primary-text-color;
             }
             &:not(:last-child) {
               margin-bottom: $default-gap-size;
