@@ -35,7 +35,7 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
             list(, $uploadDirId, $filepath) = $matches;
             foreach ($uploadDirs as $uploadDir) {
                 if ($uploadDir['id'] == $uploadDirId) {
-                    return $uploadDir['path'] . '/' . $filepath;
+                    return StringUtils::joinPaths($uploadDir['path'], $filepath);
                 }
             }
         }
@@ -74,7 +74,7 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
                     } catch (\Exception $e) {
                     }
                 }
-                $uploadDir['path'] = realpath($uploadDir['path']);
+                $uploadDir['path'] = StringUtils::unixSlashes(realpath($uploadDir['path']));
             }
         }
         return array_values(
@@ -99,7 +99,7 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
         $fullPath = $this->getFileSystemPath($resource, $path);
         return array_map(
             function ($filename) use ($path) {
-                return $path . '/' . $filename;
+                return StringUtils::joinPaths($path, $filename);
             },
             $this->fileSystemDriver->listDirectory($fullPath)
         );

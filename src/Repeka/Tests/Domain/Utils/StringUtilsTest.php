@@ -18,8 +18,26 @@ class StringUtilsTest extends \PHPUnit_Framework_TestCase {
             [['abc', 'def'], 'abc/def'],
             [['abc', '/def'], 'abc/def'],
             [['/abc', 'def'], '/abc/def'],
+            [['/abc', 'def/'], '/abc/def/'],
+            [['/abc\\efg', 'def'], '/abc/efg/def'],
             [['', 'foo.jpg'], 'foo.jpg'],
             [['dir', '0', 'foo.jpg'], 'dir/0/foo.jpg'],
+        ];
+    }
+
+    /** @dataProvider unixSlashesExamples */
+    public function testUnixSlashes($path, $expected) {
+        $this->assertEquals($expected, StringUtils::unixSlashes($path));
+    }
+
+    public function unixSlashesExamples() {
+        return [
+            ['', ''],
+            ['a', 'a'],
+            ['a/b/c', 'a/b/c'],
+            ['a\\b/c', 'a/b/c'],
+            ['a\\b\\c', 'a/b/c'],
+            [null, null],
         ];
     }
 
@@ -40,7 +58,7 @@ class StringUtilsTest extends \PHPUnit_Framework_TestCase {
             ['opis Dłuższy', 'opis_dluzszy',],
             ['ŻÓŁW PChłę 2& * popchnął%3', 'zolw_pchle_2_popchnal_3',],
             ['emo👍🏊🏽‍♀️ji]', 'emo_ji'],
-            ['100', '100']
+            ['100', '100'],
         ];
     }
 }

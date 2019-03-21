@@ -10,14 +10,21 @@ final class StringUtils {
     /**
      * @see https://stackoverflow.com/a/15575293/878514
      */
-    public static function joinPaths(...$paths): string {
+    public static function joinPaths(string...$paths): string {
         $nonEmptyPaths = array_filter(
             $paths,
             function ($s) {
                 return $s !== '';
             }
         );
-        return preg_replace('#/+#', '/', join('/', $nonEmptyPaths));
+        return self::unixSlashes(preg_replace('#/+#', '/', join('/', $nonEmptyPaths)));
+    }
+
+    public static function unixSlashes(?string $path): ?string {
+        if (!$path) {
+            return $path;
+        }
+        return str_replace('\\', '/', $path);
     }
 
     public static function normalizeEntityName(string $name): string {

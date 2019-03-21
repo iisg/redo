@@ -3,6 +3,7 @@ namespace Repeka\Application\Service;
 
 use Assert\Assertion;
 use Repeka\Domain\Service\FileSystemDriver;
+use Repeka\Domain\Utils\StringUtils;
 
 class RealFileSystemDriver implements FileSystemDriver {
     public function mkdirRecursive(string $path): void {
@@ -35,7 +36,7 @@ class RealFileSystemDriver implements FileSystemDriver {
     }
 
     public function glob(string $pattern): array {
-        return glob($pattern);
+        return array_map(StringUtils::class . '::unixSlashes', glob(StringUtils::unixSlashes($pattern), GLOB_MARK | GLOB_BRACE));
     }
 
     public function exists(string $path): bool {

@@ -5,6 +5,7 @@ use Assert\Assertion;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Repository\Transactional;
 use Repeka\Domain\Cqrs\CommandBus;
+use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\EventListener\UpdateDependentDisplayStrategiesListener;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -75,6 +76,7 @@ class ResourceAssignFilesCommand extends Command {
         $paths = array_map([$yaml, 'parse'], $paths);
         $offset = $input->getOption('offset') ?? 0;
         $limit = $input->getOption('limit') ?? 100;
+        $filter = ResourceContents::fromArray($filter)->withMetadataNamesMappedToIds($this->metadataRepository);
         $query = ResourceListQuery::builder()
             ->filterByContents($filter)
             ->sortBy([['columnId' => 'id', 'direction' => 'ASC']])
@@ -101,7 +103,7 @@ class ResourceAssignFilesCommand extends Command {
                 if ($matchingFiles = $this->fileSystemDriver->glob($resourcePath)) {
                     $matchingFiles = array_map(
                         function ($path) use ($resource) {
-                            return $this->resourceFileStorage->getResourcePath($resource, $path);
+                            return rtrim($this->resourceFileStorage->getResourcePath($resource, $path), '/');
                         },
                         $matchingFiles
                     );
@@ -127,7 +129,7 @@ class ResourceAssignFilesCommand extends Command {
         }
         $progress->finish();
         if ($dryRun) {
-            $output->writeln("\nThis files would be assigned:");
+            $output->writeln($dryRunSummary ? "\nThis files would be assigned:" : "\nNo files would be assigned.");
             foreach ($dryRunSummary as $resourceId => $files) {
                 $output->writeln($resourceId);
                 foreach ($files as $metadataName => $filesToAdd) {
