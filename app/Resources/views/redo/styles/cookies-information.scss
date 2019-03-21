@@ -1,0 +1,24 @@
+.cookies-information {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: $main-container-maximum-width;
+    padding: $default-gap-size / 2;
+    border: $default-border;
+    background-color: $primary-background-color;
+    &:not(.visible) {
+        display: none;
+    }
+    .icon-with-information {
+        display: inline-flex;
+    }
+    .icon, button {
+        margin: $default-gap-size / 2;
+    }
+    .information {
+        padding: $default-gap-size / 2;
+    }
+    .right-aligned {
+        float: right;
+    }
+}

@@ -1,0 +1,11 @@
+<div if.bind="!acceptedCookiesInformation"
+    class="cookies-information"
+    class.bind="acceptedCookiesInformation ? '' : 'visible'">
+    <div class="icon-with-information">
+        {{ icon('cookie', 2.5) }}
+        <span class="information">{{ 'privacy_policy_information'
+            | trans({'{{privacyPolicy}}': "<a href='/about/privacy-policy'>" ~ ('privacy policy' | trans) ~ "</a>"}) | raw }}</span>
+    </div>
+    <button class="default right-aligned"
+        click.delegate="acceptedCookiesInformation = true">{{ 'I understand' | trans }}</button>
+</div>

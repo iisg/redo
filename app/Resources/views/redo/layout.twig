@@ -1,7 +1,9 @@
 {% extends "redo/base.twig" %}
 {% block layout %}
-    <div class="main-container">
+    <div class="main-container"
+        local-storage-value="key: acceptedCookiesInformation; value.bind: acceptedCookiesInformation">
         {% block content %}{% endblock %}
+        {% include "redo/cookies-information.twig" %}
     </div>
     <script>var module = {}; // declaration for ill-import of focus-within (it uses module.exports without further checks)</script>
     <script src="/jspm_packages/npm/focus-within@3.0.2/index.js"></script>

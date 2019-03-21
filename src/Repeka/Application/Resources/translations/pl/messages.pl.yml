@@ -20,13 +20,15 @@ The page you requested does not exist: Strona, na którą trafiłeś nie istniej
 The page you requested caused application error: Strona, na którą trafiłeś spowodowała błąd aplikacji
 Signing in failed: Logowanie nieudane
 
-Sign out: Wyloguj
+sign_in_title: Logowanie
 Sign in: Zaloguj
-next_page: Następna
-previous_page: Poprzednia
 Remind password: Przypomnij hasło
 Contact administrator: Kontakt z administratorem
-sign_in_title: Logowanie
+Sign out: Wyloguj
+
+page: strona
+next_page: Następna
+previous_page: Poprzednia
 
 Recently added: Ostatnio dodane
 Statistics: Statystyki
@@ -102,7 +104,10 @@ No scans: Brak skanów
 Add to favorites: Dodaj do ulubionych
 Resource RSS channel: Kanał RSS zasobu
 
+privacy_policy_information: Na stronie wykorzystywane są pliki cookie, bądź podobne rozwiązania. Aby poznać szczegóły zapoznaj się z {{privacyPolicy}}.
+privacy policy: polityką prywatności
+I understand: Rozumiem
+
 Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.: Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.
 You are not allowed to view this resource: Nie masz uprawnień by zobaczyć ten zasób
 Resource does not exist: Zasób nie istnieje
-page: strona
