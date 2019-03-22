@@ -89,6 +89,7 @@ class ResourceAssignFilesCommand extends Command {
             $metadataName = StringUtils::normalizeEntityName(key($pathSpec));
             $metadataList[$metadataName] = $this->metadataRepository->findByName($metadataName);
         }
+        $output->writeln("Total resources to possibly update: {$resources->getTotalCount()}");
         $progress = new ProgressBar($output, count($resources));
         $progress->display();
         $dryRun = $input->getOption('dry-run');
@@ -108,9 +109,8 @@ class ResourceAssignFilesCommand extends Command {
                         $matchingFiles
                     );
                     $metadata = $metadataList[$metadataName];
-                    if ($dryRun) {
-                        $dryRunSummary[$resource->getId()][$metadataName] = $matchingFiles;
-                    } else {
+                    $dryRunSummary[$resource->getId()][$metadataName] = $matchingFiles;
+                    if (!$dryRun) {
                         $contents = $contents->withMergedValues($metadata, $matchingFiles)->clearDuplicates($metadataList[$metadataName]);
                     }
                 }
@@ -128,14 +128,16 @@ class ResourceAssignFilesCommand extends Command {
             }
         }
         $progress->finish();
+        $output->writeln($dryRunSummary ? "\nAssigned files:" : "\nNo files assigned.");
         if ($dryRun) {
-            $output->writeln($dryRunSummary ? "\nThis files would be assigned:" : "\nNo files would be assigned.");
-            foreach ($dryRunSummary as $resourceId => $files) {
-                $output->writeln($resourceId);
-                foreach ($files as $metadataName => $filesToAdd) {
-                    $output->writeln('  ' . $metadataName . ': ' . implode(', ', $filesToAdd));
-                }
+            $output->writeln('(NO CHANGES HAS BEEN MADE - DRY RUN)');
+        }
+        foreach ($dryRunSummary as $resourceId => $files) {
+            $output->write($resourceId . ' (');
+            foreach ($files as $metadataName => $filesToAdd) {
+                $output->write($metadataName . ': ' . implode(', ', $filesToAdd) . '; ');
             }
+            $output->writeln(')');
         }
     }
 }
