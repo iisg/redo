@@ -39,7 +39,7 @@
                     </a>
                 </h3>
                 {% if resource | metadata('autor') is not empty %}
-                    <h4 class="no-margin-top no-margin-bottom">{{ resource | metadata('autor') }}</h4>
+                    <h5 class="no-margin-top no-margin-bottom">{{ resource | metadata('autor') }}</h5>
                 {% endif %}
                 <div>
                     <span class="metadata-label">{{ 'Type'| trans }}:</span> {{ resource.kind.label | inCurrentLanguage }}

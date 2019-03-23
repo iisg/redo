@@ -35,7 +35,7 @@ class ResourceUpdateFtsIndexListener extends CommandEventsListener {
     }
 
     private function isProductiveCommand($command): bool {
-        return ($command instanceof ResourceTransitionCommand && $command->getTransition()->getLabel() !== [SystemTransition::DELETE])
+        return ($command instanceof ResourceTransitionCommand && $command->getTransition()->getId() !== SystemTransition::DELETE)
             || $command instanceof ResourceEvaluateDisplayStrategiesCommand
             || $command instanceof ResourceGodUpdateCommand;
     }

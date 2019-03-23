@@ -64,7 +64,7 @@ class EvaluateDisplayStrategiesCommand extends Command implements CyclicCommand 
         FirewallMiddleware::bypass(
             function () use ($resources, $output) {
                 $progressBar = new ProgressBar($output, count($resources));
-                $output->writeln('Evaluating all display strategies...');
+                $output->writeln('Evaluating display strategies...');
                 $progressBar->start();
                 $changed = 0;
                 foreach ($resources as $resource) {
