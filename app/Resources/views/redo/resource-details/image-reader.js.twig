@@ -1,4 +1,3 @@
-
 function setCustomPrototypeMethods() {
 // disable fancy tooltips; not working because of conflict between jQuery versions
   BookReader.prototype.setupTooltips = function () {
@@ -83,6 +82,14 @@ function setCustomPrototypeMethods() {
   };
 }
 
+function preventFullScreenExit() {
+  BookReader.prototype.exitFullScreen = function () {
+    if (!this.isFullscreen()) {
+      this.enterFullscreen();
+    }
+  };
+}
+
 // adapted from https://github.com/internetarchive/bookreader/blob/87a0cbd219412da3d31e0e4fd51f8bd8397f1663/BookReaderDemo/BookReaderJSAdvanced.js
 function instantiateBookReader(selector, extraOptions) {
   selector = selector || '#BookReader';
@@ -93,7 +100,7 @@ function instantiateBookReader(selector, extraOptions) {
     getNumLeafs: function () {
       return images.length;
     },
-    flipSpeed: 'fast ',
+    flipSpeed: 'fast',
     getPageWidth: function (index) {
       // BookReader can call with index NaN or -1
       if (isNaN(index) || index < 0 || index >= images.length) {
@@ -121,6 +128,8 @@ function instantiateBookReader(selector, extraOptions) {
       }
     },
     enableMobileNav: true,
+    // remove 'mode/2up' from url to prevent displaying two-page view on mobile devices
+    urlTrackedParams: ['page', 'search', 'region', 'highlight'],
     getPageNum: function (index) {
       return index + 1;
     },
@@ -131,4 +140,5 @@ function instantiateBookReader(selector, extraOptions) {
   Object.assign(options, extraOptions);
   var br = new BookReader(options);
   br.init();
+  return br;
 }

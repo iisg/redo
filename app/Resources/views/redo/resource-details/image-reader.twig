@@ -25,9 +25,6 @@
 {% endblock %}
 
 {% block content %}
-    {% include "redo/title-bar.twig" %}
-    {% include "redo/menu.twig" %}
-
     <a href="{{ resourceUrl | raw }}"
         class="link-to-the-previous-page">{{ 'Back to resource' | trans }}</a>
     <div class="title-container">
@@ -46,7 +43,14 @@
         <script>
             {% include "redo/resource-details/image-reader.js.twig" %}
             setCustomPrototypeMethods();
-            instantiateBookReader('#BookReader');
+            preventFullScreenExit();
+            var extraOptions = {
+              bookUrl: '{{ app.request.headers.get('referer') | default(resourceUrl) }}',
+              bookUrlText: '{{ resource | metadata('label') }}<br>← {{ 'Go back' | trans({}, 'bookreader') }}',
+              bookUrlTitle: '{{ 'Go back' | trans({}, 'bookreader') }}',
+            };
+            bookreader = instantiateBookReader('#BookReader', extraOptions);
+            bookreader.enterFullscreen();
         </script>
     {% endif %}
     {% include "redo/footer.twig" %}
