@@ -125,10 +125,14 @@ locked_female: wartość metadanej nie może zostać zmieniona
 specifies assignee: wartość metadanej określa użytkownika przypisanego do zadania
 specifies auto assignee: wartość metadanej określa użytkownika przypisanego do zadania; jeżeli nie jest ustawiona, zostanie automatycznie wybrany użytkownik, który umieści zasób w danym stanie
 only for relationships with users: opcja dostępna tylko dla relacji z użytkownikami
-Your current tasks: Twoje bieżące zadania
-Other tasks you can do: Inne zadania, które możesz wykonać
-No current tasks!: Brak bieżących zadań!
-No tasks.: Brak zadań.
+tasks:
+  header:
+    own: Twoje bieżące zadania
+    possible: Inne zadania, które możesz wykonać
+  empty:
+    own: Brak bieżących zadań!
+    possible: Brak zadań.
+    all: Brak zadań!
 Possible actions: Możliwe czynności
 Fix: Napraw
 You cannot revoke system roles from yourself.: Nie możesz odebrać sobie roli systemowej.

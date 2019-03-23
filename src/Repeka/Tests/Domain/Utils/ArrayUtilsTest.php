@@ -98,4 +98,28 @@ class ArrayUtilsTest extends \PHPUnit_Framework_TestCase {
     public function testFlattenCrazyArray() {
         $this->assertEquals([1, 2, 3, 4, 5], ArrayUtils::flatten([[[[1]], 2], [3, [4, [5]]]]));
     }
+
+    public function testKeyPathExists() {
+        $this->assertTrue(ArrayUtils::keyPathExists(['key1', 'key2'], ['key1' => ['key2' => 'value']]));
+    }
+
+    public function testKeyPathExistsNoKeys() {
+        $this->assertTrue(ArrayUtils::keyPathExists([], ['key' => 'value']));
+    }
+
+    public function testKeyPathExistsNoArray() {
+        $this->assertFalse(ArrayUtils::keyPathExists(['key'], []));
+    }
+
+    public function testKeyPathExistsLongerKeyPath() {
+        $this->assertFalse(ArrayUtils::keyPathExists(['key1', 'key2', 'key3'], ['key1' => ['key2' => 'value']]));
+    }
+
+    public function testKeyPathExistsFlatSearchArray() {
+        $this->assertFalse(ArrayUtils::keyPathExists(['key1', 'key2'], ['key1' => 'value1', 'key2' => 'value']));
+    }
+
+    public function testKeyPathExistsCorrectOrder() {
+        $this->assertFalse(ArrayUtils::keyPathExists(['key1', 'key2'], ['key2' => ['key1' => 'value']]));
+    }
 }

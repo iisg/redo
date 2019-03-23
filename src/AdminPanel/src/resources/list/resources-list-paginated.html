@@ -1,0 +1,41 @@
+<template class="${addFormOpened ? 'add-form-opened' : ''}">
+    <require from="common/components/buttons/add-button.html"></require>
+    <require from="common/components/pagination/pagination"></require>
+    <require from="./resources-list-table"></require>
+    <require from="../workflow/resource-place-display.html"></require>
+    <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
+    <require from="common/components/buttons/cancel-button.html"></require>
+    <require from="common/components/loading-bar/loading-cover"></require>
+
+    <pagination if.bind="!hideTopPagination"
+        total-number-of-elements.bind="resources.total"
+        elements-per-page.bind="filters.resultsPerPage"
+        current-page-number.bind="filters.currentPage"
+        hide-elements-per-page-dropdown="true"
+        event-target.bind="eventTarget"></pagination>
+    <loading-cover loading.bind="displayProgressBar"
+        class="resource-list-table-container">
+        <resources-list-table resources.bind="resources"
+            filters.bind="filters"
+            event-target.bind="eventTarget"
+            resource-kinds.bind="resourceKinds"
+            column-metadata.bind="columnMetadata"
+            extra-column-names.one-time="extraColumnNames"
+            extra-column-views.one-time="extraColumnViews"
+            resource-class.bind="resourceClass"
+            sort-by.bind="filters.sortBy"
+            contents-filter.bind="filters.contents"
+            places-filter.bind="filters.places"></resources-list-table>
+    </loading-cover>
+    <div class="alert alert-info"
+        if.bind="resources.length === 0 && !displayProgressBar">
+        <icon name="information"></icon>
+        ${'No resources.' | resourceClassTranslation:resourceClass}
+    </div>
+    <pagination containerless
+        total-number-of-elements.bind="resources.total"
+        elements-per-page.bind="filters.resultsPerPage"
+        current-page-number.bind="filters.currentPage"
+        event-target.bind="eventTarget"></pagination>
+    <slot></slot>
+</template>

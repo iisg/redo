@@ -89,15 +89,18 @@ class TaskIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(200, $response);
         $responseContent = json_decode($response->getContent(), true);
         $this->assertCount(1, $responseContent);
-        $this->assertArrayHasKey('myTasks', $responseContent[0]);
-        $this->assertArrayHasKey('possibleTasks', $responseContent[0]);
+        $this->assertArrayHasKey('resourceClass', $responseContent[0]);
+        $this->assertArrayHasKey('taskStatus', $responseContent[0]);
+        $this->assertArrayHasKey('tasks', $responseContent[0]);
         $this->assertEquals('books', $responseContent[0]['resourceClass']);
-        $this->assertCount(1, $responseContent[0]['myTasks']);
-        $this->assertCount(0, $responseContent[0]['possibleTasks']);
-        $this->assertEquals($this->resource->getId(), $responseContent[0]['myTasks'][0]['id']);
+        $this->assertEquals('own', $responseContent[0]['taskStatus']);
+        $this->assertCount(1, $responseContent[0]['tasks']['results']);
+        $this->assertEquals($this->resource->getId(), $responseContent[0]['tasks']['results'][0]['id']);
+        $this->assertEquals(1, $responseContent[0]['tasks']['totalCount']);
+        $this->assertEquals(1, $responseContent[0]['tasks']['pageNumber']);
     }
 
-    public function testFetchingTasksReturnsOnlyPossibleTasks() {
+    public function testFetchingTasksReturnsPossibleTasks() {
         $adminId = $this->getAdminUser()->getUserData()->getId();
         $groupResource = $this->createResource(
             $this->resourceKind,
@@ -111,13 +114,18 @@ class TaskIntegrationTest extends IntegrationTestCase {
         $response = $client->getResponse();
         $this->assertStatusCode(200, $response);
         $responseContent = json_decode($response->getContent(), true);
-        $this->assertCount(1, $responseContent);
-        $this->assertArrayHasKey('myTasks', $responseContent[0]);
-        $this->assertArrayHasKey('possibleTasks', $responseContent[0]);
+        $this->assertCount(2, $responseContent);
+        $this->assertArrayHasKey('resourceClass', $responseContent[0]);
+        $this->assertArrayHasKey('taskStatus', $responseContent[0]);
+        $this->assertArrayHasKey('tasks', $responseContent[0]);
+        $this->assertArrayHasKey('resourceClass', $responseContent[1]);
+        $this->assertArrayHasKey('taskStatus', $responseContent[1]);
+        $this->assertArrayHasKey('tasks', $responseContent[1]);
         $this->assertEquals('books', $responseContent[0]['resourceClass']);
-        $this->assertCount(1, $responseContent[0]['myTasks']);
-        $this->assertCount(1, $responseContent[0]['possibleTasks']);
-        $this->assertEquals($this->resource->getId(), $responseContent[0]['myTasks'][0]['id']);
-        $this->assertEquals($groupResource->getId(), $responseContent[0]['possibleTasks'][0]['id']);
+        $this->assertEquals('books', $responseContent[1]['resourceClass']);
+        $this->assertCount(1, $responseContent[0]['tasks']['results']);
+        $this->assertCount(1, $responseContent[1]['tasks']['results']);
+        $this->assertEquals($this->resource->getId(), $responseContent[0]['tasks']['results'][0]['id']);
+        $this->assertEquals($groupResource->getId(), $responseContent[1]['tasks']['results'][0]['id']);
     }
 }

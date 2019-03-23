@@ -4,13 +4,14 @@ import {I18N} from "aurelia-i18n";
 import {Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
 import {ContextResourceClass} from "resources/context/context-resource-class";
-import {booleanAttribute} from "../../common/components/boolean-attribute";
-import {safeJsonParse} from "../../common/utils/object-utils";
-import {getQueryParameters} from "../../common/utils/url-utils";
-import {ResourceSort, SortDirection} from "../../resources/resource-sort";
+import {booleanAttribute} from "common/components/boolean-attribute";
+import {safeJsonParse} from "common/utils/object-utils";
+import {getQueryParameters} from "common/utils/url-utils";
+import {ResourceSort, SortDirection} from "resources/resource-sort";
 import {Metadata} from "../metadata/metadata";
 import {ResourceKind} from "./resource-kind";
 import {ResourceKindRepository} from "./resource-kind-repository";
+import {FilterChangedEvent} from "resources/list/resources-list-filters";
 
 @autoinject
 export class ResourceKindsList {
@@ -36,8 +37,8 @@ export class ResourceKindsList {
 
   bind() {
     this.sortButtonToggledSubscription = this.eventAggregator.subscribe('sortButtonToggled',
-      (resourceSort: ResourceSort) => {
-        this.sortButtonToggled(resourceSort);
+      ({value}: FilterChangedEvent<ResourceSort>) => {
+        this.sortButtonToggled(value);
       });
     if (this.metadata) {
       this.activate(this.router.currentInstruction.queryParams);

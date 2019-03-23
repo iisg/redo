@@ -1,51 +1,43 @@
 <template>
-    <require from="resources/list/resources-list-table"></require>
+    <require from="resources/list/resources-list-paginated"></require>
     <require from="./possible-actions.html"></require>
     <require from="common/components/redo-footer/redo-footer.html"></require>
 
     <div class="tasks">
-        <span class="page-title">${"Your current tasks" | t}</span>
-        <div if.bind="tasksCollection && !myTasksExists"
+        <div if.bind="!fetching && !resourceClasses.length"
             class="alert alert-success">
             <icon name="accept-2"></icon>
-            ${"No current tasks!" | t}
+            <strong>${'tasks//empty//all' | t}</strong>
         </div>
-        <template else>
-            <template repeat.for="tasks of tasksCollection">
-                <span if.bind="tasks.myTasks.length > 0"
-                    class="page-subtitle">${'resource_classes::' + tasks.resourceClass + '//resources' | t} (${tasks.myTasks.length})</span>
-                <resources-list-table if.bind="tasks.myTasks.length > 0"
-                    resources.bind="tasks.myTasks"
-                    sortable.bind="false"
-                    filterable.bind="false"
-                    column-metadata.bind="briefMetadata[tasks.resourceClass]"
+        <template repeat.for="resourceClass of resourceClasses">
+            <span class="page-title">${'resource_classes::' + resourceClass + '//resources' | t} (${tasksDoubleMap[resourceClass]['own'].resources.total || 0})</span>
+            <div repeat.for="taskStatus of ['own', 'possible']"
+                class="tasks-collection">
+                <span class="page-subtitle">${'tasks//header//' + taskStatus | t}</span>
+                <div if.bind="!tasksDoubleMap[resourceClass][taskStatus]"
+                    class="alert alert-success">
+                    <icon name="accept-2"></icon>
+                    <strong>${'tasks//empty//' + taskStatus | t}</strong>
+                </div>
+                <resources-list-paginated else
+                    resources.bind="tasksDoubleMap[resourceClass][taskStatus].resources"
+                    filters.bind="tasksDoubleMap[resourceClass][taskStatus].filters"
+                    event-target.one-time="[resourceClass, taskStatus]"
+                    local-storage-prefix.one-time="resourceClass + '-' + taskStatus"
+                    filters-changed.call="filtersChanged(target, filters)"
+                    display-progress-bar.bind="fetching || tasksDoubleMap[resourceClass][taskStatus].fetching"
+                    resource-class.bind="resourceClass"
+                    resource-kinds.bind="resourceKindsByClass[resourceClass]"
+                    column-metadata.bind="briefMetadata[resourceClass]"
                     extra-column-names.one-time="['Possible actions']"
-                    extra-column-views.one-time="['tasks/possible-actions.html']">
-                </resources-list-table>
-            </template>
+                    extra-column-views.one-time="['tasks/possible-actions.html']"
+                    hide-top-pagination.one-time="true"></resources-list-paginated>
+            </div>
         </template>
-        <loading-bar if.bind="tasksCollection === undefined"></loading-bar>
-        <span class="page-title">${"Other tasks you can do" | t}</span>
-        <div if.bind="tasksCollection && !possibleTasksExists"
-            class="alert alert-success">
-            <icon name="accept-2"></icon>
-            ${"No current tasks!" | t}
-        </div>
-        <template else>
-            <template repeat.for="tasks of tasksCollection">
-                <span if.bind="tasks.possibleTasks.length > 0"
-                    class="page-subtitle">${'resource_classes::' + tasks.resourceClass + '//resources' | t} (${tasks.possibleTasks.length})</span>
-                <resources-list-table if.bind="tasks.possibleTasks.length > 0"
-                    resources.bind="tasks.possibleTasks"
-                    sortable.bind="false"
-                    filterable.bind="false"
-                    column-metadata.bind="briefMetadata[tasks.resourceClass]"
-                    extra-column-names.one-time="['Possible actions']"
-                    extra-column-views.one-time="['tasks/possible-actions.html']">
-                </resources-list-table>
-            </template>
+        <template if.bind="fetching">
+            <span class="page-title">${'Loading' | t}</span>
+            <loading-bar></loading-bar>
         </template>
-        <loading-bar if.bind="tasksCollection === undefined"></loading-bar>
         <redo-footer></redo-footer>
     </div>
 </template>

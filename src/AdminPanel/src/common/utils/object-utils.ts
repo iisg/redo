@@ -82,3 +82,23 @@ export function safeJsonParse(value: string): any {
 export function mapToArray<T, U>(obj: AnyMap<T>, mapper: (key: string | number, value: T) => U): U[] {
   return Object.keys(obj).map(key => mapper(key, obj[key]));
 }
+
+export function traverseDoubleMap<T>(doubleMap: StringMap<StringMap<T>>, traverser: ((firstKey: string, secondKey: string, t: T) => void)) {
+  for (const firstKey in doubleMap) {
+    if (doubleMap.hasOwnProperty(firstKey) && isObject(doubleMap[firstKey])) {
+      for (const secondKey in doubleMap[firstKey]) {
+        if (doubleMap[firstKey].hasOwnProperty(secondKey)) {
+          traverser(firstKey, secondKey, doubleMap[firstKey][secondKey]);
+        }
+      }
+    }
+  }
+}
+
+export function updateDoubleMapValue<T>(doubleMap: StringMap<StringMap<T>>, firstKey: string, secondKey: string, update: ((t: T) => T))
+  : StringMap<StringMap<T>> {
+  doubleMap = doubleMap || {};
+  doubleMap[firstKey] = doubleMap[firstKey] || {};
+  doubleMap[firstKey][secondKey] = update(doubleMap[firstKey][secondKey]);
+  return doubleMap;
+}

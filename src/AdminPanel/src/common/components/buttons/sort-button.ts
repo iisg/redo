@@ -2,12 +2,14 @@ import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
-import {ResourceSort, SortDirection} from "../../../resources/resource-sort";
+import {ResourceSort, SortDirection} from "resources/resource-sort";
+import {FilterChangedEvent} from "resources/list/resources-list-filters";
 
 @autoinject
 export class SortButton {
   @bindable columnId: number | string;
   @bindable sortBy: ResourceSort[];
+  @bindable eventTarget: string;
   resourceSort: ResourceSort;
 
   constructor(private eventAggregator: EventAggregator, private i18n: I18N) {
@@ -31,6 +33,9 @@ export class SortButton {
     } else {
       this.resourceSort = new ResourceSort(this.columnId, SortDirection.ASC, this.i18n.getLocale().toUpperCase());
     }
-    this.eventAggregator.publish('sortButtonToggled', this.resourceSort);
+    this.eventAggregator.publish('sortButtonToggled', {
+      value: this.resourceSort,
+      target: this.eventTarget
+    } as FilterChangedEvent<ResourceSort>);
   }
 }

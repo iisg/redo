@@ -45,7 +45,7 @@ class ResourcesController extends ApiController {
      * @Method("GET")
      */
     public function getListAction(Request $request) {
-        $resourceListQuery = $this->getResourceListQuery($request)->build();
+        $resourceListQuery = $this->getResourceListQueryBuilder($request)->build();
         /** @var PageResult $resources */
         $resources = $this->handleCommand($resourceListQuery);
         return $this->createPageResponse($resources);
@@ -56,12 +56,12 @@ class ResourcesController extends ApiController {
      * @Method("GET")
      */
     public function getTeasersAction(Request $request) {
-        $query = $this->getResourceListQuery($request)->setPermissionMetadataId(SystemMetadata::TEASER_VISIBILITY)->build();
+        $query = $this->getResourceListQueryBuilder($request)->setPermissionMetadataId(SystemMetadata::TEASER_VISIBILITY)->build();
         $resources = $this->handleCommand($query);
         return $this->createPageResponse($resources, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
     }
 
-    private function getResourceListQuery(Request $request): ResourceListQueryBuilder {
+    private function getResourceListQueryBuilder(Request $request): ResourceListQueryBuilder {
         $resourceClasses = $request->get('resourceClasses', []);
         $resourceKindIds = $request->get('resourceKinds', []);
         $sortByIds = $request->query->get('sortByIds', []);

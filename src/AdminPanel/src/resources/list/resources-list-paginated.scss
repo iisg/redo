@@ -1,0 +1,60 @@
+@import "../../common/styles";
+
+resources-list-paginated {
+  .resources-list-title {
+    padding-top: $default-gap-size / 2;
+    padding-left: $default-gap-size / 2;
+  }
+
+  display: grid;
+  // @formatter:off
+  grid-template-areas: "form                                  form                                 "
+                       "top-pagination                        add-button                           "
+                       "loading-bar                           loading-bar                          "
+                       "resources-list-table                  resources-list-table                 "
+                       "alert                                 alert                                "
+                       "bottom-pagination-page-numbers        .                                    "
+                       "bottom-pagination-dropdown-with-label bottom-pagination-dropdown-with-label"
+                       "slot                                  slot                                 ";
+  // @formatter:on
+  grid-template-columns: 1fr auto;
+  grid-template-rows: repeat(7, min-content);
+
+  & > .pagination-page-numbers, & > .pagination-dropdown-with-label, pagination, .alert, redo-footer {
+    position: sticky;
+    left: 0;
+  }
+
+  & > .pagination-page-numbers, pagination {
+    min-width: 100%;
+  }
+
+  & > .pagination-page-numbers {
+    grid-area: bottom-pagination-page-numbers;
+  }
+
+  & > .pagination-dropdown-with-label {
+    grid-area: bottom-pagination-dropdown-with-label;
+  }
+
+  & > .pagination-dropdown-with-label + * {
+    grid-area: slot;
+  }
+
+  pagination {
+    grid-area: top-pagination;
+    align-self: end;
+  }
+
+  loading-bar {
+    grid-area: loading-bar;
+  }
+
+  .resource-list-table-container {
+    grid-area: resources-list-table;
+  }
+
+  .alert {
+    grid-area: alert;
+  }
+}

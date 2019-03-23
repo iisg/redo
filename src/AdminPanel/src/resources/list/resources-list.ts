@@ -16,14 +16,17 @@ import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
-import {inArray} from "../../common/utils/array-utils";
-import {SystemMetadata} from "../../resources-config/metadata/system-metadata";
+import {inArray} from "common/utils/array-utils";
+import {SystemMetadata} from "resources-config/metadata/system-metadata";
 import {ContextResourceClass} from "../context/context-resource-class";
 import {PageResult} from "../page-result";
 import {Resource} from "../resource";
 import {ResourceRepository} from "../resource-repository";
 import {ResourceSort, SortDirection} from "../resource-sort";
 import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproductor";
+import {FilterChangedEvent} from "resources/list/resources-list-filters";
+import {MetadataFilterChange} from "resources/list/resource-list-filters/resource-list-metadata-filter/resource-list-metadata-filter";
+import {PlacesFilterChange} from "resources/list/resource-list-filters/resource-list-place-filter/resource-list-place-filter";
 
 @autoinject()
 export class ResourcesList {
@@ -94,16 +97,16 @@ export class ResourcesList {
     }
     this.sortByKey = this.SORT_BY_KEY_PREFIX + this.resourceClass;
     this.sortButtonToggleEventSubscription = this.eventAggregator.subscribe('sortButtonToggled',
-      (resourceSort: ResourceSort) => {
-        this.sortButtonToggled(resourceSort);
+      ({value}: FilterChangedEvent<ResourceSort>) => {
+        this.sortButtonToggled(value);
       });
     this.metadataFilterValueChangeEventSubscription = this.eventAggregator.subscribe('metadataFilterValueChanged',
-      (metadataIdWithValue) => {
-        this.metadataFilterValueChanged(metadataIdWithValue);
+      ({value}: FilterChangedEvent<MetadataFilterChange>) => {
+        this.metadataFilterValueChanged(value);
       });
     this.placesFilterValueChangeEventSubscription = this.eventAggregator.subscribe('placeFilterValueChanged',
-      (placesIds) => {
-        this.placeFilterValueChanged(placesIds);
+      ({value}: FilterChangedEvent<PlacesFilterChange>) => {
+        this.placeFilterValueChanged(value);
       }
     );
     if (this.resourceKind) {

@@ -96,4 +96,18 @@ final class ArrayUtils {
             }
         );
     }
+
+    /**
+     * Returns true if $search is nested array that contains corresponding key on each level,
+     * eg. keyPathExists(['a', 'b', 'c'], ['a' => ['b' => ['c' => null]]] returns true
+     */
+    public static function keyPathExists(array $keys, array $search): bool {
+        foreach ($keys as $key) {
+            if (!is_array($search) || !array_key_exists($key, $search)) {
+                return false;
+            }
+            $search = $search[$key];
+        }
+        return true;
+    }
 }

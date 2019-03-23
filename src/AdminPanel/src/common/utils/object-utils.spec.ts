@@ -7,6 +7,8 @@ import {
   mapValuesShallow,
   numberKeysByValue,
   safeJsonParse,
+  traverseDoubleMap,
+  updateDoubleMapValue,
   zip
 } from "./object-utils";
 
@@ -165,6 +167,35 @@ describe('object-utils', () => {
       expect(isObject('AA')).toEqual(false);
       expect(isObject(undefined)).toEqual(false);
       expect(isObject(false)).toEqual(false);
+    });
+  });
+
+  describe(traverseDoubleMap.name, () => {
+    it('traverses all keys', () => {
+      const visited = [];
+      const traverser = (firstKey, secondKey, value) => visited.push([firstKey, secondKey, value]);
+      const map = {'a': {'aa': 10, 'ab': 20}, 'x': 'y'};
+      traverseDoubleMap(map, traverser);
+      expect(visited).toEqual([['a', 'aa', 10], ['a', 'ab', 20]]);
+    });
+  });
+
+  describe(updateDoubleMapValue.name, () => {
+    const updater = (value) => value + '123';
+    it('updates existing value', () => {
+      expect(updateDoubleMapValue({'a': {'b': 'abc'}}, 'a', 'b', updater)).toEqual({'a': {'b': 'abc123'}});
+    });
+
+    it('inserts non existing keys', () => {
+      expect(updateDoubleMapValue({'a': {}}, 'a', 'b', updater)).toEqual({'a': {'b': 'undefined123'}});
+      expect(updateDoubleMapValue({}, 'a', 'b', updater)).toEqual({'a': {'b': 'undefined123'}});
+      expect(updateDoubleMapValue(undefined, 'a', 'b', updater)).toEqual({'a': {'b': 'undefined123'}});
+    });
+
+    it('changes map in place', () => {
+      const map = {'a': {}};
+      updateDoubleMapValue(map, 'a', 'b', updater);
+      expect(map).toEqual({'a': {'b': 'undefined123'}});
     });
   });
 });

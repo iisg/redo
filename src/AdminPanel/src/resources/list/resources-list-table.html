@@ -12,31 +12,33 @@
         <tr>
             <th>
                 ${'ID' | t}
-                <sort-button if.bind="sortable"
-                    column-id.bind="'id'"
-                    sort-by.bind="sortBy"></sort-button>
+                <sort-button column-id.bind="'id'"
+                    sort-by.bind="sortBy"
+                    event-target.bind="eventTarget"></sort-button>
             </th>
             <th>
                 ${'Resource kind' | t}
-                <sort-button if.bind="sortable"
-                    column-id.bind="'kindId'"
-                    sort-by.bind="sortBy"></sort-button>
+                <sort-button column-id.bind="'kindId'"
+                    sort-by.bind="sortBy"
+                    event-target.bind="eventTarget"></sort-button>
             </th>
             <th repeat.for="metadata of columnMetadata">
                 ${metadata | metadataLabel}
-                <sort-button if.bind="sortable"
-                    column-id.bind="metadata.id"
-                    sort-by.bind="sortBy"></sort-button>
-                <resource-list-metadata-filter if.bind="isFilterableMetadata(metadata) && filterable"
+                <sort-button column-id.bind="metadata.id"
+                    sort-by.bind="sortBy"
+                    event-target.bind="eventTarget"></sort-button>
+                <resource-list-metadata-filter if.bind="isFilterableMetadata(metadata)"
                     metadata-id.bind="metadata.id"
                     disabled.bind="disabledMetadata.id == metadata.id"
-                    initial-value.bind="contentsFilter[metadata.id]"></resource-list-metadata-filter>
+                    initial-value.bind="contentsFilter[metadata.id]"
+                    event-target.bind="eventTarget"></resource-list-metadata-filter>
             </th>
             <th>
                 ${'Place' | t}
                 <resource-list-place-filter if.bind="resourceKinds.length"
                     initial-value.bind="placesFilter"
-                    resource-kinds.bind="resourceKinds"></resource-list-place-filter>
+                    resource-kinds.bind="resourceKinds"
+                    event-target.bind="eventTarget"></resource-list-place-filter>
             </th>
             <th repeat.for="name of extraColumnNames">${name | t}</th>
             <th></th>

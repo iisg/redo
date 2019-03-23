@@ -2,12 +2,17 @@ import {computedFrom, observable} from "aurelia-binding";
 import {bindable} from "aurelia-templating";
 import {twoWay} from "common/components/binding-mode";
 import {booleanAttribute} from "common/components/boolean-attribute";
+import {EventAggregator} from "aurelia-event-aggregator";
+import {FilterChangedEvent} from "resources/list/resources-list-filters";
+import {autoinject} from "aurelia-dependency-injection";
 
+@autoinject()
 export class Pagination {
   @bindable totalNumberOfElements: number;
   @bindable(twoWay) elementsPerPage = 10;
   @bindable(twoWay) currentPageNumber = 1;
   @bindable baseNumberOfPageNumbers = 7;
+  @bindable eventTarget;
   @bindable @booleanAttribute hideElementsPerPageDropdown: boolean;
   @observable selectedElementsPerPageDropdownOption = this.elementsPerPage;
   elementsPerPageDropdownOptions = [10, 20, 50, 100, 500];
@@ -15,6 +20,9 @@ export class Pagination {
   numberOfAdditionalPageNumbersBeforeCurrentPageNumber = 0;
   numberOfAdditionalPageNumbersAfterCurrentPageNumber = 0;
   numberOfPages = 1;
+
+  constructor(private eventAggregator: EventAggregator) {
+  }
 
   @computedFrom('currentPageNumber', 'elementsPerPage', 'numberOfAdditionalPageNumbersAfterCurrentPageNumber')
   get additionalPageNumbersBeforeCurrentPageNumber() {
@@ -54,6 +62,10 @@ export class Pagination {
 
   currentPageNumberChanged() {
     this.calculateMaximumAdditionalPageNumbers();
+    this.eventAggregator.publish('currentPageNumberChanged', {
+      value: this.currentPageNumber,
+      target: this.eventTarget
+    } as FilterChangedEvent<number>);
   }
 
   calculateMaximumAdditionalPageNumbers() {
@@ -71,6 +83,10 @@ export class Pagination {
       let currentPageNumber = this.currentPageNumber;
       this.elementsPerPage = newValue;
       this.currentPageNumber = Math.floor((currentPageNumber - 1) * previousValue / newValue) + 1;
+      this.eventAggregator.publish('elementsPerPageChanged', {
+        value: this.elementsPerPage,
+        target: this.eventTarget
+      } as FilterChangedEvent<number>);
     }
   }
 

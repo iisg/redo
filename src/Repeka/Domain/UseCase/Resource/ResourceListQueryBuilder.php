@@ -20,6 +20,22 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
     private $permissionMetadataId = SystemMetadata::VISIBILITY;
     private $executor;
 
+    public static function fromQuery(ResourceListQuery $query): ResourceListQueryBuilder {
+        $builder = new self();
+        $builder->ids = $query->getIds();
+        $builder->resourceKinds = $query->getResourceKinds();
+        $builder->resourceClasses = $query->getResourceClasses();
+        $builder->parentId = $query->getParentId();
+        $builder->onlyTopLevel = $query->onlyTopLevel();
+        $builder->contentAlternatives = $query->getContentsFilters();
+        $builder->sortBy = $query->getSortBy();
+        $builder->workflowPlacesIds = $query->getWorkflowPlacesIds();
+        $builder->permissionMetadataId = $query->getPermissionMetadataId();
+        $builder->resultsPerPage = $query->getResultsPerPage();
+        $builder->page = $query->getPage();
+        return $builder;
+    }
+
     /** @param ResourceKind[] | int[] $resourceKinds */
     public function filterByResourceKinds(array $resourceKinds): self {
         $this->resourceKinds = array_values(array_merge($this->resourceKinds, $resourceKinds));

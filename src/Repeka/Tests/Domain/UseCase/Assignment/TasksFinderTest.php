@@ -6,21 +6,19 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\Assignment\TaskListQuery;
-use Repeka\Domain\UseCase\Assignment\TaskListQueryHandler;
-use Repeka\Domain\UseCase\Assignment\TasksCollection;
+use Repeka\Domain\UseCase\Assignment\TaskCollection;
+use Repeka\Domain\UseCase\Assignment\TasksFinder;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Workflow\TransitionAssigneeChecker;
-use Repeka\Domain\Workflow\TransitionPossibilityChecker;
 use Repeka\Tests\Traits\StubsTrait;
 
-class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
+class TasksFinderTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
     /** @var PHPUnit_Framework_MockObject_MockObject|ResourceRepository */
     private $resourceRepository;
-    /** @var TaskListQueryHandler */
-    private $handler;
-    /** @var TransitionPossibilityChecker|PHPUnit_Framework_MockObject_MockObject */
+    /** @var TasksFinder */
+    private $finder;
+    /** @var TransitionAssigneeChecker|PHPUnit_Framework_MockObject_MockObject */
     private $transitionAssigneeChecker;
     /** @var ResourceWorkflow|PHPUnit_Framework_MockObject_MockObject */
     private $workflow;
@@ -32,7 +30,7 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->resourceRepository = $this->createMock(ResourceRepository::class);
         $this->transitionAssigneeChecker = $this->createMock(TransitionAssigneeChecker::class);
-        $this->handler = new TaskListQueryHandler($this->resourceRepository, $this->transitionAssigneeChecker);
+        $this->finder = new TasksFinder($this->resourceRepository, $this->transitionAssigneeChecker);
         $this->workflow = $this->createMock(ResourceWorkflow::class);
         $this->resource = $this->createResourceMock(1, $this->createResourceKindMock(1, 'books', [], $this->workflow));
         $this->user = $this->createMock(User::class);
@@ -44,15 +42,15 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->transitionAssigneeChecker->method('getUserIdsAssignedToTransition')->willReturn([100]);
         $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn([$this->resource]);
-        $result = $this->handler->handle(new TaskListQuery($this->user));
-        $this->assertEquals([new TasksCollection('books', [$this->resource])], $result);
+        $result = $this->finder->getAllTasks($this->user);
+        $this->assertEquals(['books' => ['own' => [$this->resource]]], $result);
     }
 
     public function testGettingTasksWhenNoOneAssigned() {
         $this->workflow->method('getTransitions')->willReturn([$this->createWorkflowTransitionMock()]);
         $this->transitionAssigneeChecker->method('getUserIdsAssignedToTransition')->willReturn([]);
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn([$this->resource]);
-        $result = $this->handler->handle(new TaskListQuery($this->user));
+        $result = $this->finder->getAllTasks($this->user);
         $this->assertEmpty($result);
     }
 
@@ -61,7 +59,7 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->transitionAssigneeChecker->method('getUserIdsAssignedToTransition')->willReturn([101]);
         $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(false);
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn([$this->resource]);
-        $result = $this->handler->handle(new TaskListQuery($this->user));
+        $result = $this->finder->getAllTasks($this->user);
         $this->assertEmpty($result);
     }
 
@@ -72,8 +70,8 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->transitionAssigneeChecker->method('getUserIdsAssignedToTransition')->willReturnOnConsecutiveCalls([], [100]);
         $this->transitionAssigneeChecker->method('canApplyTransition')->willReturnOnConsecutiveCalls(true);
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn([$this->resource]);
-        $result = $this->handler->handle(new TaskListQuery($this->user));
-        $this->assertEquals([new TasksCollection('books', [$this->resource])], $result);
+        $result = $this->finder->getAllTasks($this->user);
+        $this->assertEquals(['books' => ['own'=> [$this->resource]]], $result);
     }
 
     public function testTaskIsPossibleWhenSomebodyElseIsAssignedToo() {
@@ -81,8 +79,8 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->transitionAssigneeChecker->method('getUserIdsAssignedToTransition')->willReturn([100, 101]);
         $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn([$this->resource]);
-        $result = $this->handler->handle(new TaskListQuery($this->user));
-        $this->assertEquals([new TasksCollection('books', [], [$this->resource])], $result);
+        $result = $this->finder->getAllTasks($this->user);
+        $this->assertEquals(['books' => ['possible' =>  [$this->resource]]], $result);
     }
 
     public function testTaskIsPossibleWhenUserIdIsNotExpliciteUsed() {
@@ -90,8 +88,8 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->transitionAssigneeChecker->method('getUserIdsAssignedToTransition')->willReturn([101]);
         $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn([$this->resource]);
-        $result = $this->handler->handle(new TaskListQuery($this->user));
-        $this->assertEquals([new TasksCollection('books', [], [$this->resource])], $result);
+        $result = $this->finder->getAllTasks($this->user);
+        $this->assertEquals(['books' => ['possible' => [$this->resource]]], $result);
     }
 
     public function testTaskIsMineWhenAtLeastOneTransitionSaysSo() {
@@ -101,8 +99,8 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->transitionAssigneeChecker->method('getUserIdsAssignedToTransition')->willReturnOnConsecutiveCalls([101], [100]);
         $this->transitionAssigneeChecker->method('canApplyTransition')->willReturnOnConsecutiveCalls(true, true);
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn([$this->resource]);
-        $result = $this->handler->handle(new TaskListQuery($this->user));
-        $this->assertEquals([new TasksCollection('books', [$this->resource])], $result);
+        $result = $this->finder->getAllTasks($this->user);
+        $this->assertEquals(['books' => ['own' => [$this->resource]]], $result);
     }
 
     public function testTasksAreSortedById() {
@@ -116,12 +114,12 @@ class TaskListQueryHandlerTest extends \PHPUnit_Framework_TestCase {
             ->willReturnOnConsecutiveCalls([101], [100], [101], [100], [101], [100], [101], [100], [101]);
         $this->transitionAssigneeChecker->method('canApplyTransition')->willReturn(true);
         $this->resourceRepository->expects($this->once())->method('findAssignedTo')->with($this->user)->willReturn($resources);
-        $expectedMyTasksIds = [2, 4, 6, 8];
+        $expectedOwnTasksIds = [2, 4, 6, 8];
         $expectedPossibleTasksIds = [1, 3, 5, 7, 9];
-        /** @var TasksCollection $result */
-        $result = $this->handler->handle(new TaskListQuery($this->user))[0] ?? null;
+        /** @var TaskCollection $result */
+        $result = $this->finder->getAllTasks($this->user)['books'] ?? null;
         $this->assertNotNull($result);
-        $this->assertEquals($expectedMyTasksIds, EntityUtils::mapToIds($result->getMyTasks()));
-        $this->assertEquals($expectedPossibleTasksIds, EntityUtils::mapToIds($result->getPossibleTasks()));
+        $this->assertEquals($expectedOwnTasksIds, EntityUtils::mapToIds($result['own']));
+        $this->assertEquals($expectedPossibleTasksIds, EntityUtils::mapToIds($result['possible']));
     }
 }

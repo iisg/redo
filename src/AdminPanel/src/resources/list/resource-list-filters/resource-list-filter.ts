@@ -1,4 +1,4 @@
-export abstract class ResourceListFilters {
+export abstract class ResourceListFilter {
   inputBoxVisible: boolean;
   inputBoxFocused: boolean;
 

@@ -60,4 +60,8 @@ export class ResourceListQuery extends AbstractListQuery<Resource> {
     this.params.topLevel = true;
     return this;
   }
+
+  public getParams(): any {
+    return this.params;
+  }
 }

@@ -38,6 +38,10 @@ class ResourceListQuery extends AbstractListQuery implements AdjustableCommand {
         return new ResourceListQueryBuilder();
     }
 
+    public function extend(): ResourceListQueryBuilder {
+        return ResourceListQueryBuilder::fromQuery($this);
+    }
+
     public static function withParams(
         array $ids,
         array $resourceClasses,

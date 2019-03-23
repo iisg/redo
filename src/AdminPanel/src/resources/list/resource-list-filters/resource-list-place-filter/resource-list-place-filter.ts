@@ -1,16 +1,18 @@
-import {ResourceListFilters} from "../resource-list-filters";
-import {WorkflowPlace} from "../../../../workflows/workflow";
+import {ResourceListFilter} from "../resource-list-filter";
+import {WorkflowPlace} from "workflows/workflow";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {bindable, ComponentBind, ComponentDetached} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {diff, inArray} from "common/utils/array-utils";
 import {BindingEngine, Disposable, observable} from "aurelia-binding";
+import {FilterChangedEvent} from "../../resources-list-filters";
 
 @autoinject
-export class ResourceListPlaceFilter extends ResourceListFilters implements ComponentBind, ComponentDetached {
+export class ResourceListPlaceFilter extends ResourceListFilter implements ComponentBind, ComponentDetached {
   @bindable resourceKinds: ResourceKind[];
   @bindable initialValue: string[];
+  @bindable eventTarget: string;
   @observable places: WorkflowPlace[] = [];
 
   placesList: WorkflowPlace[] = [];
@@ -84,6 +86,11 @@ export class ResourceListPlaceFilter extends ResourceListFilters implements Comp
   publishValue() {
     const filterValues = this.places.map(place => place.id);
     this.initialValue = filterValues;
-    this.eventAggregator.publish('placeFilterValueChanged', filterValues);
+    this.eventAggregator.publish('placeFilterValueChanged', {
+      value: filterValues,
+      target: this.eventTarget
+    } as FilterChangedEvent<PlacesFilterChange>);
   }
 }
+
+export type PlacesFilterChange = string[];

@@ -1,10 +1,12 @@
 <?php
 namespace Repeka\Domain\UseCase\Assignment;
 
+use Repeka\Domain\Constants\TaskStatus;
+use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Workflow\TransitionAssigneeChecker;
 
-class TaskListQueryHandler {
+class TasksFinder {
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var TransitionAssigneeChecker */
@@ -15,8 +17,8 @@ class TaskListQueryHandler {
         $this->transitionAssigneeChecker = $transitionAssigneeChecker;
     }
 
-    public function handle(TaskListQuery $command) {
-        $resources = $this->resourceRepository->findAssignedTo($command->getUser());
+    public function getAllTasks(User $user) {
+        $resources = $this->resourceRepository->findAssignedTo($user);
         $groupedResources = [];
         foreach ($resources as $resource) {
             $transitions = $resource->getWorkflow()->getTransitions($resource);
@@ -24,9 +26,9 @@ class TaskListQueryHandler {
             foreach ($transitions as $transition) {
                 $assignedUserIds = $this->transitionAssigneeChecker->getUserIdsAssignedToTransition($resource, $transition);
                 if (count($assignedUserIds) > 0) {
-                    if ($this->transitionAssigneeChecker->canApplyTransition($resource, $transition, $command->getUser())) {
-                        $myOrPossible = $assignedUserIds == [$command->getUser()->getUserData()->getId()] ? 'my' : 'possible';
-                        if ($taskStatus != 'my') {
+                    if ($this->transitionAssigneeChecker->canApplyTransition($resource, $transition, $user)) {
+                        $myOrPossible = $assignedUserIds == [$user->getUserData()->getId()] ? TaskStatus::OWN : TaskStatus::POSSIBLE;
+                        if ($taskStatus != TaskStatus::OWN) {
                             $taskStatus = $myOrPossible;
                         }
                     }
@@ -36,14 +38,6 @@ class TaskListQueryHandler {
                 $groupedResources[$resource->getResourceClass()][$taskStatus][] = $resource;
             }
         }
-        return array_values(
-            array_map(
-                function (array $resources, string $resourceClass) {
-                    return new TasksCollection($resourceClass, $resources['my'] ?? [], $resources['possible'] ?? []);
-                },
-                $groupedResources,
-                array_keys($groupedResources)
-            )
-        );
+        return $groupedResources;
     }
 }
