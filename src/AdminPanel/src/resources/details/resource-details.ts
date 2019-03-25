@@ -72,7 +72,7 @@ export class ResourceDetails implements RoutableComponentActivate {
       }
     );
     this.childrenListener = this.eventAggregator.subscribe('resourceChildrenAmount', (resourceChildrenAmount: number) => {
-        this.numberOfChildren = resourceChildrenAmount;
+        this.numberOfChildren = this.hasChildren ? resourceChildrenAmount : 0;
         this.resourceDetailsTabs.updateLabels();
       }
     );

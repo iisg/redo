@@ -10,7 +10,7 @@ import {DisabilityReason} from "common/components/buttons/toggle-button";
 import {Alert} from "common/dialog/alert";
 import {LocalStorage} from "common/utils/local-storage";
 import {getMergedBriefMetadata} from "common/utils/metadata-utils";
-import {propertyKeys, safeJsonParse} from "common/utils/object-utils";
+import {safeJsonParse} from "common/utils/object-utils";
 import {getQueryParameters} from "common/utils/url-utils";
 import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
@@ -267,7 +267,9 @@ export class ResourcesList {
               : (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter;
           }
         }
-        this.eventAggregator.publish('resourceChildrenAmount', this.totalNumberOfResources);
+        if (this.parentResource) {
+          this.eventAggregator.publish('resourceChildrenAmount', this.totalNumberOfResources);
+        }
       }
     }).catch(error => {
       this.displayProgressBar = false;
