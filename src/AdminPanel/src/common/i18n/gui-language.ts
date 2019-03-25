@@ -17,7 +17,7 @@ export class GuiLanguage {
 
   apply(): void {
     const supportedLanguages = this.i18nParams.supportedUiLanguages;
-    const initialLanguage = AureliaCookie.get(this.COOKIE_NAME) || this.i18nParams.defaultUiLanguage;
+    const initialLanguage = this.i18nParams.currentUiLanguage;
     if (supportedLanguages.indexOf(initialLanguage) != -1) {
       this.setLanguage(initialLanguage);
     } else {

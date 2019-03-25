@@ -64,4 +64,8 @@ export class I18nParams {
   get defaultUiLanguage(): string {
     return FrontendConfig.get('default_ui_language');
   }
+
+  get currentUiLanguage(): string {
+    return FrontendConfig.get('current_ui_language');
+  }
 }

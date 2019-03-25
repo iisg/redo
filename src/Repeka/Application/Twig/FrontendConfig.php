@@ -9,7 +9,9 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\ConfigurableMetadataConstraint;
+use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -34,6 +36,8 @@ class FrontendConfig extends \Twig_Extension {
     private $frontendLocaleProvider;
     /** @var MetadataConstraintManager */
     private $metadataConstraintManager;
+    /** @var string */
+    private $locale;
     /** @var ResourceNormalizer */
     private $resourceNormalizer;
 
@@ -41,11 +45,13 @@ class FrontendConfig extends \Twig_Extension {
         FrontendLocaleProvider $frontendLocaleProvider,
         MetadataConstraintManager $metadataConstraintManager,
         ContainerInterface $container,
+        RequestStack $requestStack,
         ResourceNormalizer $resourceNormalizer
     ) {
         $this->frontendLocaleProvider = $frontendLocaleProvider;
         $this->metadataConstraintManager = $metadataConstraintManager;
         $this->container = $container;
+        $this->locale = $requestStack->getCurrentRequest() ? $requestStack->getCurrentRequest()->getLocale() : '';
         $this->resourceNormalizer = $resourceNormalizer;
     }
 
@@ -63,6 +69,7 @@ class FrontendConfig extends \Twig_Extension {
             [
                 'control_constraints' => $this->getConfigurableMetadataConstraints(),
                 'supported_ui_languages' => $this->frontendLocaleProvider->getLocales(),
+                'current_ui_language' => $this->locale,
                 'user' => $this->getCurrentUserData(),
                 'userIp' => $this->getClientIp(),
             ]
