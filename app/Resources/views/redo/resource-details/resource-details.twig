@@ -25,7 +25,7 @@
     {% set referer = app.request.headers.get('referer') %}
     {% if referer starts with app.request.schemeAndHttpHost ~ '/search' %}
         <a class="link-to-the-previous-page"
-            href="{{ referer }}">{{ icon('undo-3') }}{{ 'Back to search results' | trans }}</a>
+            href="{{ referer }}">{{ icon('undo-3') }}{{ 'Search results' | trans }}</a>
     {% endif %}
 
     <div class="resource-details"
@@ -55,13 +55,13 @@
                 </div>
             </div>
             <div class="download-options-container">
-                {% include 'redo/resource-details/download-formats.twig' %}
+                {% include 'redo/resource-details/available-formats.twig' %}
                 <div class="download-options">
                     <span class="download-options-icon">{{ icon('examination', 1.5) }}</span>
                     <fieldset>
                         <legend align="left"
                             id="cite-legend"><span title="{{ 'Cite resource' | trans }}">{{ 'Cite resource' | trans }}</span></legend>
-                        <div class="download-formats in-one-line">
+                        <div class="formats in-one-line">
                             <a href="/resources/{{ resource.id }}/bibtex"
                                 title="{{ 'Download resource data in BibTeX format' | trans }}"
                                 aria-labelledby="cite-legend cite-bibtex">
@@ -84,8 +84,9 @@
                     <div class="download-options">
                         <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
                         <fieldset>
-                            <div class="download-formats in-one-line">
-                                <a href="/resources/{{ resource.id }}/browse">
+                            <div class="formats in-one-line">
+                                <a href="/resources/{{ resource.id }}/browse"
+                                    title="{{ 'Browse resource' | trans }}">
                                     {{ 'Browse' | trans }}
                                 </a>
                             </div>

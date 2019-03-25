@@ -133,6 +133,23 @@ fieldset {
       overflow: hidden;
     }
   }
+  .formats {
+    display: flex;
+    justify-content: space-evenly;
+    &:not(.in-one-line) {
+        flex-wrap: wrap;
+    }
+    &.in-column {
+      flex-direction: column;
+      align-items: center;
+    }
+    & > * {
+      padding: $default-gap-size / 8 $default-gap-size / 2;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
 }
 
 input {

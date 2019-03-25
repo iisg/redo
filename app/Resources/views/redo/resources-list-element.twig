@@ -25,67 +25,74 @@
         {% set metadataToDisplayAlways = metadataToDisplayAlways | merge(metadataToTisplayWhenNoSearchResults) %}
     {% endif %}
 
-    <div class="details">
-        <div class="basic-data-with-download-options">
-            <div class="basic-data">
-                <h3 class="no-margin-top no-margin-bottom">
-                    <a href="/resources/{{ resource.id }}">
-                        {% if highlightedMetadata is defined and highlightedMetadata.tytul is defined %}
-                            {{ highlightedMetadata.tytul.highlights[0] | raw }}
-                            {% set highlightedMetadata = arrayWithoutItem(highlightedMetadata, 'tytul') %}
-                        {% else %}
-                            {{ resource | metadata('tytul') | default(resource | metadata('label')) }}
-                        {% endif %}
-                    </a>
-                </h3>
-                {% if resource | metadata('autor') is not empty %}
-                    <h5 class="no-margin-top no-margin-bottom">{{ resource | metadata('autor') }}</h5>
-                {% endif %}
-                <div>
-                    <span class="metadata-label">{{ 'Type'| trans }}:</span> {{ resource.kind.label | inCurrentLanguage }}
-                </div>
-                {% for visibleMetadataName in metadataToDisplayAlways %}
-                    {% set metadata = metadata(visibleMetadataName) %}
-                    {% if metadata %}
-                        {% set metadataLabel = metadata.label | inCurrentLanguage %}
-                        {% set metadataValue = resource | metadata(visibleMetadataName) | first %}
-                        {% if metadataValue %}
-                            <div>
-                                <span class="metadata-label">{{ metadataLabel }}:</span>
-                                {% include 'redo/resource-details/metadata-display.twig' %}
-                            </div>
-                        {% endif %}
+    <div class="details-with-download-options">
+        {% if not childrenAllowed %}
+            {% include 'redo/resource-details/available-formats.twig' with {
+                    'browsingAvailable': resource | metadata('pliki_strona_po_stronie') is not empty,
+                    'hideGroupName': true
+                }
+            %}
+        {% endif %}
+        <div class="details">
+            <h3 class="resource-name no-margin-top no-margin-bottom">
+                <a href="/resources/{{ resource.id }}">
+                    {% if highlightedMetadata is defined and highlightedMetadata.tytul is defined %}
+                        {{ highlightedMetadata.tytul.highlights[0] | raw }}
+                        {% set highlightedMetadata = arrayWithoutItem(highlightedMetadata, 'tytul') %}
+                    {% else %}
+                        {{ resource | metadata('tytul') | default(resource | metadata('label')) }}
                     {% endif %}
-                {% endfor %}
-            </div>
-            {% if not childrenAllowed %}
-                {% include 'redo/resource-details/download-formats.twig' %}
+                </a>
+            </h3>
+            {% if resource | metadata('autor') is not empty %}
+                <h5 class="no-margin-top no-margin-bottom">{{ resource | metadata('autor') }}</h5>
             {% endif %}
-        </div>
-
-        {% if searchResult is defined and highlightedMetadata is not empty %}
-            {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
-                {% if metadataLabelWithHighlights.control == 'file' or metadataLabelWithHighlights.control == 'directory' %}
-                    {% set highlights = withPageNumbers(resource, metadataLabelWithHighlights.control, resource | m(metadataLabelWithHighlights.id), metadataLabelWithHighlights.highlights) %}
-                    {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
-                    {% for highlight in highlights %}
-                        <div class="metadata-details">
-                            <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
-                            {{ highlight.highlight | raw }}
-                            {% if hasBrowsableContents %}
-                                <a href="/resources/{{ resource.id }}/browse#page/{{ highlight.pageNumber }}">&raquo;</a>
-                            {% endif %}
+            <div>
+                <span class="metadata-label">{{ 'Type'| trans }}:</span> {{ resource.kind.label | inCurrentLanguage }}
+            </div>
+            {% for visibleMetadataName in metadataToDisplayAlways %}
+                {% set metadata = metadata(visibleMetadataName) %}
+                {% if metadata %}
+                    {% set metadataLabel = metadata.label | inCurrentLanguage %}
+                    {% set metadataValue = resource | metadata(visibleMetadataName) | first %}
+                    {% if metadataValue %}
+                        <div>
+                            <span class="metadata-label">{{ metadataLabel }}:</span>
+                            {% include 'redo/resource-details/metadata-display.twig' %}
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="metadata-details">
-                        <span class="metadata-label">{{ metadataLabelWithHighlights.label }}</span>
-                        {% for highlight in metadataLabelWithHighlights.highlights %}
-                            {{ highlight | raw }}
-                        {% endfor %}
-                    </div>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
-        {% endif %}
+
+            {% if searchResult is defined and highlightedMetadata is not empty %}
+                {% for metadataName, metadataLabelWithHighlights in highlightedMetadata %}
+                    {% if metadataLabelWithHighlights.control == 'file' or metadataLabelWithHighlights.control == 'directory' %}
+                        {% set highlights = withPageNumbers(resource, metadataLabelWithHighlights.control, resource | m(metadataLabelWithHighlights.id), metadataLabelWithHighlights.highlights) %}
+                        {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
+                        {% for highlight in highlights %}
+                            {% if hasBrowsableContents %}
+                                <a class="metadata-details"
+                                    href="{{ '/resources/' ~ resource.id ~ '/browse#page/' ~ highlight.pageNumber }}">
+                                    <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
+                                    {{ highlight.highlight | raw }}
+                                </a>
+                            {% else %}
+                                <div class="metadata-details">
+                                    <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
+                                    {{ highlight.highlight | raw }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="metadata-details">
+                            <span class="metadata-label">{{ metadataLabelWithHighlights.label }}</span>
+                            {% for highlight in metadataLabelWithHighlights.highlights %}
+                                {{ highlight | raw }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 </div>

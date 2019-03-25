@@ -1,9 +1,9 @@
-{% extends resource.resourceClass == 'books' and canView(resource) ? 'redo/layout.twig' : 'empty.twig' %}
+{% set imageData = resource | metadataImageFiles('pliki_strona_po_stronie') %}
+{% set canBrowse = resource.resourceClass == 'books' and canView(resource) and imageData is not empty %}
+{% extends canBrowse ? 'redo/layout.twig' : 'empty.twig' %}
 
 {% set page_title = resource | metadata('label') %}
 {% set childrenAllowed = resource | childrenAllowed %}
-
-{% set imageData = resource | metadataImageFiles('pliki_strona_po_stronie') %}
 
 {% set filesUrl = '/api/resources/' ~ resource.id ~ '/file/' %}
 {% set resourceUrl = '/resources/' ~ resource.id %}
@@ -16,34 +16,20 @@
     <script src="{{ libraryPath }}jquery.browser.min.js"></script>
     <script src="{{ libraryPath }}dragscrollable-br.js"></script>
     <script src="{{ libraryPath }}jquery.colorbox-min.js"></script>
-
     <script src="{{ libraryPath }}BookReader.js"></script>
     <script src="{{ libraryPath }}plugins/plugin.url.js"></script>
-
     <link rel="stylesheet"
         href="{{ libraryPath }}BookReader.css">
 {% endblock %}
 
 {% block content %}
-    <a href="{{ resourceUrl | raw }}"
-        class="link-to-the-previous-page">{{ 'Back to resource' | trans }}</a>
-    <div class="title-container">
-        <h1>{{ resource | metadata('label') | raw }}</h1>
-    </div>
-    {% if imageData is empty %}
-        {{ 'No scans' | trans }}
-    {% else %}
-        <div id="BookReader">
-            <noscript>
-                <p>
-                    The BookReader requires JavaScript to be enabled. Please check that your browser supports JavaScript and that it is enabled in the browser settings.
-                </p>
-            </noscript>
-        </div>
+    {% if canBrowse %}
+        <div id="BookReader"></div>
         <script>
             {% include "redo/resource-details/image-reader.js.twig" %}
             setCustomPrototypeMethods();
             preventFullScreenExit();
+            {% set referer = app.request.headers.get('referer') %}
             var extraOptions = {
               bookUrl: '{{ app.request.headers.get('referer') | default(resourceUrl) }}',
               bookUrlText: '{{ resource | metadata('label') }}<br>← {{ 'Go back' | trans({}, 'bookreader') }}',
@@ -53,5 +39,4 @@
             bookreader.enterFullscreen();
         </script>
     {% endif %}
-    {% include "redo/footer.twig" %}
 {% endblock %}

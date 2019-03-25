@@ -1,12 +1,14 @@
+$minimum-width-on-regular-screens: 300px;
 $image-width-or-height: 50px;
 $download-options-maximum-width: 300px;
 $collapsible-metadata-list-toggle-width: 1em;
 $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
 
 .resources-list-element {
-  padding: $default-gap-size / 2;
   display: flex;
-  &:not(:hover) fieldset {
+  min-width: $minimum-width-on-regular-screens;
+  padding: $default-gap-size / 2;
+  &:not(:hover) .download-options {
     opacity: 0;
     visibility: hidden;
   }
@@ -25,105 +27,102 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
       min-width: $image-width-or-height;
     }
   }
-  .details {
-    padding: $default-gap-size / 4;
+  .details-with-download-options {
     flex-grow: 1;
     overflow: hidden;
-    .metadata-label {
-      display: inline-block;
-      color: $secondary-text-color;
-    }
-    .basic-data-with-download-options em, .metadata-details > em {
-      font-style: normal;
-      border-radius: $default-gap-size / 4;
-      background-color: $secondary-background-color;
-    }
-    .basic-data-with-download-options {
-      display: flex;
-      align-items: flex-start;
-      .basic-data {
-        flex-basis: 0;
-        flex-grow: 1;
-        padding-top: $default-gap-size / 8;
-        padding-right: $default-gap-size / 8;
-        & > * {
-          padding: 2px 0;
-        }
-      }
-      fieldset {
-        margin: $default-gap-size / 8 $default-gap-size / 4;
-        transition-duration: opacity, visibility;
-        transition-duration: $default-transition-duration;
-        .download-formats {
-          display: flex;
-          justify-content: space-evenly;
-          flex-wrap: wrap;
-          & > * {
-            padding: $default-gap-size / 8 $default-gap-size / 2;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-          }
-        }
-      }
-    }
-    .collapsible-metadata {
-      position: relative;
-      min-height: calc(#{$default-line-height} * 1em + 3 * #{$default-gap-size / 8});
+  }
+  .details {
+    padding: $default-gap-size * 3 / 8 $default-gap-size / 2;
+    & > * {
+      padding-top: $default-gap-size / 8;
       padding-bottom: $default-gap-size / 8;
-      padding-left: $default-gap-size / 8;
-      padding-right: $default-gap-size / 8;
-      .metadata-details, .expand-toggle {
-        padding: $default-gap-size / 8;
+    }
+  }
+  .resource-name {
+    display: flex;
+  }
+
+  .download-options {
+    float: right;
+    padding: $default-gap-size / 2 $default-gap-size / 2 $default-gap-size / 2 $default-gap-size;
+    transition-property: opacity, visibility;
+    transition-duration: $default-transition-duration;
+    fieldset {
+      padding: $default-gap-size / 4;
+    }
+  }
+
+  a.metadata-details {
+    display: block;
+  }
+
+  .metadata-label {
+    color: $secondary-text-color;
+  }
+  .details em {
+    font-style: normal;
+    border-radius: $default-gap-size / 4;
+    padding-left: $default-gap-size / 8;
+    padding-right: $default-gap-size / 8;
+    background-color: $secondary-background-color;
+  }
+
+  .collapsible-metadata {
+    position: relative;
+    min-height: calc(#{$default-line-height} * 1em + 3 * #{$default-gap-size / 8});
+    padding-bottom: $default-gap-size / 8;
+    padding-left: $default-gap-size / 8;
+    padding-right: $default-gap-size / 8;
+    .metadata-details, .expand-toggle {
+      padding: $default-gap-size / 8;
+    }
+    .metadata-details {
+      .metadata-label > em {
+        font-style: normal;
+        color: $tertiary-text-color;
       }
-      .metadata-details {
-        .metadata-label > em {
-          font-style: normal;
-          color: $tertiary-text-color;
-        }
-      }
-      .with-visible-first-line {
-        position: relative;
-        max-width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
-        &.expanding, &.expanded {
-          .text-container.metadata-label {
+    }
+    .with-visible-first-line {
+      position: relative;
+      max-width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
+      &.expanding, &.expanded {
+        .text-container.metadata-label {
+          color: $secondary-text-color;
+          &::first-line {
             color: $secondary-text-color;
-            &::first-line {
-              color: $secondary-text-color;
-            }
           }
-        }
-        &.collapsing, &.collapsed {
-          .metadata-details > em {
-            background-color: transparent;
-          }
-          .text-container.metadata-label {
-            &::first-line {
-              color: $secondary-text-color;
-            }
-          }
-        }
-        .metadata-details > em {
-          transition: background-color $collapse-and-expand-animations-duration;
         }
       }
-      .first-line-with-optional-toggle {
-        position: absolute;
-        top: 0;
-        width: calc(100% - #{2 * $default-gap-size / 8});
+      &.collapsing, &.collapsed {
+        .metadata-details > em {
+          background-color: transparent;
+        }
+        .text-container.metadata-label {
+          &::first-line {
+            color: $secondary-text-color;
+          }
+        }
+      }
+      .metadata-details > em {
+        transition: background-color $collapse-and-expand-animations-duration;
+      }
+    }
+    .first-line-with-optional-toggle {
+      position: absolute;
+      top: 0;
+      width: calc(100% - #{2 * $default-gap-size / 8});
+      & > div {
+        height: calc(#{$default-line-height * 1em} + #{$default-gap-size / 8});
+        overflow: hidden;
         & > div {
-          height: calc(#{$default-line-height * 1em} + #{$default-gap-size / 8});
-          overflow: hidden;
-          & > div {
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            height: calc(#{$default-line-height * 1em} + 4 * #{$default-gap-size / 8}
-            + #{$collapsible-metadata-list-toggle-height} + 1px); // `+ 1px` is required by Chromium.
-            & > :not(.expand-toggle) {
-              width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
-              visibility: hidden;
-            }
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          height: calc(#{$default-line-height * 1em} + 4 * #{$default-gap-size / 8}
+          + #{$collapsible-metadata-list-toggle-height} + 1px); // `+ 1px` is required by Chromium.
+          & > :not(.expand-toggle) {
+            width: calc(100% - 2 * #{$default-gap-size / 8} - #{$collapsible-metadata-list-toggle-width});
+            visibility: hidden;
           }
         }
       }
@@ -135,10 +134,9 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
   }
 
   @media (max-width: $maximum-screen-width-for-mobile-layout) {
-    .basic-data-with-download-options {
-      fieldset {
-        display: none;
-      }
+    min-width: auto;
+    .download-options {
+      display: none;
     }
   }
 }

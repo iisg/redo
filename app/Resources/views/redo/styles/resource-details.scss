@@ -81,18 +81,11 @@ $download-options-flex-grow: 1;
           }
         }
       }
-      .download-formats {
-        display: flex;
-        justify-content: space-evenly;
-        font-size: 16px;
+      .formats {
         align-items: stretch;
-        &:not(.in-one-line) {
-          flex-wrap: wrap;
-        }
-        > a {
+        font-size: $default-font-size + 2px;
+        & > * {
           padding: $gap-size / 8 $gap-size / 2;
-          white-space: nowrap;
-          text-overflow: ellipsis;
         }
       }
     }

@@ -1,7 +1,8 @@
+{% set browsingAvailable = browsingAvailable is defined and browsingAvailable %}
 {% set pdfFilePath = resource | metadata('plik_pdf_podstawowy') | first %}
 {% set mobiFilePath = resource | metadata('plik_mobi') | first %}
 
-{% if pdfFilePath is not empty or mobiFilePath is not empty %}
+{% if browsingAvailable or pdfFilePath or mobiFilePath %}
     {% set downloadFormats = [
         {
             url: '/api/resources/' ~ resource.id ~ '/file/' ~ pdfFilePath,
@@ -19,10 +20,18 @@
     <div class="download-options">
         <span class="download-options-icon">{{ icon('download', 1.5) }}</span>
         <fieldset>
-            <legend align="left">
-                <span>{{ 'Download resource' | trans }}</span>
-            </legend>
-            <div class="download-formats">
+            {% if hideGroupName is not defined or not hideGroupName %}
+                <legend align="left">
+                    <span>{{ 'Download resource' | trans }}</span>
+                </legend>
+            {% endif %}
+            <div class="formats {{ browsingAvailable ? 'in-column' }} ">
+                {% if browsingAvailable %}
+                    <a href="/resources/{{ resource.id }}/browse"
+                        title="{{ 'Browse resource' | trans }}">
+                        {{ 'Browse' | trans }}
+                    </a>
+                {% endif %}
                 {% for format in downloadFormats %}
                     {% if format.fileAvailable %}
                         <a href="{{ format.url }}"

@@ -384,9 +384,13 @@ ICON;
      * @see https://gerrit.fslab.agh.edu.pl/#/c/repeka/+/9330/
      */
     private function getDimensionsForAllImages(ResourceEntity $resource, array $filenames) {
-        $filename = $filenames[2] ?? $filenames[0];
-        $path = $this->resourceFileStorage->getFileSystemPath($resource, $filename);
-        return $this->fileSystemDriver->getImageDimensions($path);
+        $filename = $filenames[2] ?? $filenames[0] ?? null;
+        if ($filename) {
+            $path = $this->resourceFileStorage->getFileSystemPath($resource, $filename);
+            return $this->fileSystemDriver->getImageDimensions($path);
+        } else {
+            return ['width' => 0, 'height' => 0];
+        }
     }
 
     private function mapDirectoriesToTheirFiles(ResourceEntity $resource, array $directoryNames) {
