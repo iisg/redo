@@ -4,6 +4,8 @@ import {bindable, customElement} from "aurelia-templating";
 import {EntityChooser} from "common/components/entity-chooser/entity-chooser";
 import {MetadataRepository} from "./metadata-repository";
 import {Metadata} from "./metadata";
+import {InCurrentLanguageValueConverter} from "../multilingual-field/in-current-language";
+import {SystemMetadata} from "./system-metadata";
 
 @customElement('metadata-chooser')
 @autoinject
@@ -16,7 +18,10 @@ export class MetadataChooser extends EntityChooser {
   private loadingMetadataList = false;
   private reloadMetadataList = false;
 
-  constructor(private metadataRepository: MetadataRepository, i18n: I18N, element: Element) {
+  constructor(private metadataRepository: MetadataRepository,
+              private inCurrentLanguage: InCurrentLanguageValueConverter,
+              i18n: I18N,
+              element: Element) {
     super(i18n, element);
   }
 
@@ -55,7 +60,7 @@ export class MetadataChooser extends EntityChooser {
           .get()
         : [];
       Promise.all([additionalMetadata, controlMetadata])
-        .then(metadataListList => ([] as Metadata[]).concat(...metadataListList))
+        .then(metadataListList => this.sortMetadata(([] as Metadata[]).concat(...metadataListList)))
         .then(metadataList => {
           this.loadingMetadataList = false;
           if (this.reloadMetadataList) {
@@ -67,6 +72,27 @@ export class MetadataChooser extends EntityChooser {
         })
         .finally(() => this.loadingMetadataList = false);
     }
+  }
+
+  private sortMetadata(metadata: Metadata[]): Metadata[] {
+    const resourceLabel = metadata.find(m => m.id === SystemMetadata.RESOURCE_LABEL.id);
+    const sorted = metadata
+      .filter(m => m.id != SystemMetadata.RESOURCE_LABEL.id)
+      .sort((m1, m2) => {
+        const m1Label = this.inCurrentLanguage.toView(m1.label).toLowerCase();
+        const m2Label = this.inCurrentLanguage.toView(m2.label).toLowerCase();
+        if (m1Label > m2Label) {
+          return 1;
+        }
+        if (m1Label < m2Label) {
+          return -1;
+        }
+        return 0;
+      });
+    if (resourceLabel) {
+      sorted.unshift(resourceLabel);
+    }
+    return sorted;
   }
 
   get isFetchingOptions() {
