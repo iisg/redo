@@ -51,6 +51,11 @@ export class ResourceListQuery extends AbstractListQuery<Resource> {
     return this;
   }
 
+  public filterByIds(idsFilter: string | number[]): ResourceListQuery {
+    this.params.ids = Array.isArray(idsFilter) ? idsFilter.join(',') : idsFilter.trim();
+    return this;
+  }
+
   public onlyTopLevel(): ResourceListQuery {
     this.params.topLevel = true;
     return this;

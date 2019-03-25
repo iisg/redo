@@ -6,6 +6,7 @@ import {MetadataRepository} from "./metadata-repository";
 import {Metadata} from "./metadata";
 import {InCurrentLanguageValueConverter} from "../multilingual-field/in-current-language";
 import {SystemMetadata} from "./system-metadata";
+import {I18nParams} from "../../config/i18n";
 
 @customElement('metadata-chooser')
 @autoinject
@@ -14,12 +15,14 @@ export class MetadataChooser extends EntityChooser {
   @bindable control: string | string[];
   @bindable requiredKindId: number;
   @bindable additionalMetadataIds: number[] = [];
+  @bindable includeIdInList: boolean = false;
   @bindable excludedIds: number | number[] = [];
   private loadingMetadataList = false;
   private reloadMetadataList = false;
 
   constructor(private metadataRepository: MetadataRepository,
               private inCurrentLanguage: InCurrentLanguageValueConverter,
+              private i18nParams: I18nParams,
               i18n: I18N,
               element: Element) {
     super(i18n, element);
@@ -89,10 +92,19 @@ export class MetadataChooser extends EntityChooser {
         }
         return 0;
       });
+    if (this.includeIdInList) {
+      sorted.unshift(this.buildFakeIdMetadata());
+    }
     if (resourceLabel) {
       sorted.unshift(resourceLabel);
     }
     return sorted;
+  }
+
+  private buildFakeIdMetadata(): Metadata {
+    const label = {};
+    this.i18nParams.supportedUiLanguages.forEach(language => label[language.toUpperCase()] = 'ID');
+    return {name: 'ID', label} as Metadata;
   }
 
   get isFetchingOptions() {

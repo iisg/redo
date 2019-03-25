@@ -46,6 +46,7 @@ export class ResourcesList {
   @observable resources: PageResult<Resource>;
   @observable newResourceKindThrottled: ResourceKind;
   contentsFilter: NumberMap<string>;
+  idsFilter: string;
   placesFilter: string[];
   sortBy: ResourceSort[];
   totalNumberOfResources: number;
@@ -169,6 +170,7 @@ export class ResourcesList {
     const currentPageNumberChanged = this.obtainCurrentPageNumber(parameters);
     this.currentPageNumberChangedOnActivate = this.activated && currentPageNumberChanged;
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']) || {};
+    this.idsFilter = parameters['ids'];
     this.placesFilter = safeJsonParse(parameters['placesFilter']);
     let sortBy = safeJsonParse(parameters['sortBy']);
     this.sortBy = sortBy ? sortBy : this.getSorting();
@@ -247,6 +249,9 @@ export class ResourcesList {
       query = query.filterByContents(this.contentsFilter)
         .suppressError();
     }
+    if (this.idsFilter) {
+      query = query.filterByIds(this.idsFilter);
+    }
     if (this.placesFilter && this.placesFilter.length) {
       query = query.filterByWorkflowPlacesIds(this.placesFilter);
     }
@@ -254,7 +259,10 @@ export class ResourcesList {
       .setResultsPerPage(this.resultsPerPage)
       .setCurrentPageNumber(this.currentPageNumber);
     query.get().then(resources => {
-      if (resourceClass == this.resourceClass && contentsFilter == this.contentsFilter) {
+      if (resources.total === 1 && this.idsFilter) {
+        const id = resources[0].id;
+        this.router.navigateToRoute('resources/details', {id}, {trigger: true, replace: false});
+      } else if (resourceClass == this.resourceClass && contentsFilter == this.contentsFilter) {
         this.totalNumberOfResources = resources.total;
         if (resources.page == this.currentPageNumber && resultsPerPage == this.resultsPerPage) {
           if (!resources.length && resources.page !== 1) {
@@ -357,6 +365,9 @@ export class ResourcesList {
     }
     if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value != undefined)) {
       parameters['contentsFilter'] = JSON.stringify(this.contentsFilter);
+    }
+    if (this.idsFilter) {
+      parameters['ids'] = this.idsFilter;
     }
     if (this.placesFilter && this.placesFilter.length) {
       parameters['placesFilter'] = JSON.stringify(this.placesFilter);
