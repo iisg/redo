@@ -14,6 +14,7 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Rules\EntityExistsRule;
@@ -201,6 +202,25 @@ trait StubsTrait {
                     }
                 }
                 throw new EntityNotFoundException('Metadata', $nameOrId);
+            }
+        );
+        return $repository;
+    }
+
+    /**
+     * @param Resource[] $resourceList
+     * @return ResourceRepository
+     */
+    protected function createResourceRepositoryStub(array $resourceList = []): \PHPUnit_Framework_MockObject_MockObject {
+        $repository = $this->createRepositoryStub(ResourceRepository::class, $resourceList);
+        $repository->method('findOne')->willReturnCallback(
+            function (string $id) use ($resourceList) {
+                foreach ($resourceList as $resource) {
+                    if ($resource->getId() == $id) {
+                        return $resource;
+                    }
+                }
+                throw new EntityNotFoundException('Resource', $id);
             }
         );
         return $repository;

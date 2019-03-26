@@ -4,6 +4,7 @@ namespace Repeka\Tests\Integration\Traits;
 use Psr\Container\ContainerInterface;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\Redo\AdminAccountFixture;
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
@@ -19,6 +20,7 @@ use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\UseCase\User\UserListQuery;
 use Repeka\Domain\UseCase\User\UserQuery;
+use Repeka\Domain\Utils\EntityUtils;
 
 /**
  * @property ContainerInterface $container
@@ -61,6 +63,14 @@ trait FixtureHelpers {
             }
         }
         $this->fail("User not found");
+    }
+
+    private function getUnauthenticatedUser(): UserEntity {
+        $unauthenticatedUserData = $this->getResourceRepository()->findOne(-1);
+        $unauthenticatedUser = new UserEntity();
+        $unauthenticatedUser->setUserData($unauthenticatedUserData);
+        EntityUtils::forceSetId($unauthenticatedUser, SystemResource::UNAUTHENTICATED_USER);
+        return $unauthenticatedUser;
     }
 
     protected function getResourceRepository(): ResourceRepository {

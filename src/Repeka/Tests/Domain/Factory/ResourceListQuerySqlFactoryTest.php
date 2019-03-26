@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Domain\Factory;
 
+use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Factory\ResourceListQuerySqlFactory;
@@ -114,7 +115,10 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
 
     public function testFilterByVisibility() {
         $query = ResourceListQuery::builder()->build();
-        EntityUtils::forceSetField($query, SystemResource::UNAUTHENTICATED_USER()->toUser(), 'executor');
+        $unauthenticatedUser = $this->createMock(UserEntity::class);
+        $unauthenticatedUser->method('getId')->willReturn(-1);
+        $unauthenticatedUser->method('getGroupIdsWithUserId')->willReturn([-1]);
+        EntityUtils::forceSetField($query, $unauthenticatedUser, 'executor');
         $factory = new ResourceListQuerySqlFactory($query);
         $this->assertArrayHasKey('allowedViewers', $factory->getParams());
         $this->assertEquals($factory->getParams()['allowedViewers'][0], SystemResource::UNAUTHENTICATED_USER);

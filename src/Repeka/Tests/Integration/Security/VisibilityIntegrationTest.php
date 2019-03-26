@@ -139,7 +139,8 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
             ->setResultsPerPage(5)
             ->setSearchableMetadata([$this->titleMetadata->getId()])
             ->build();
-        $resources = $this->handleCommandAs(SystemResource::UNAUTHENTICATED_USER()->toUser(), $query);
+        $unauthenticatedUser = $this->getUnauthenticatedUser();
+        $resources = $this->handleCommandAs($unauthenticatedUser, $query);
         $ids = EntityUtils::mapToIds($resources);
         $this->assertCount(1, $resources);
         $this->assertContains($this->resourceVisibleForEverybody->getId(), $ids);

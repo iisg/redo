@@ -3,10 +3,10 @@ namespace Repeka\Application\Security\Voters;
 
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\Utils\StringUtils;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -16,9 +16,15 @@ class ResourceMetadataPermissionVoter extends Voter {
 
     /** @var MetadataRepository */
     private $metadataRepository;
+    /** @var UnauthenticatedUserPermissionHelper */
+    private $unauthenticatedUserPermissionHelper;
 
-    public function __construct(MetadataRepository $metadataRepository) {
+    public function __construct(
+        MetadataRepository $metadataRepository,
+        UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper
+    ) {
         $this->metadataRepository = $metadataRepository;
+        $this->unauthenticatedUserPermissionHelper = $unauthenticatedUserPermissionHelper;
     }
 
     protected function supports($attribute, $subject) {
@@ -32,7 +38,7 @@ class ResourceMetadataPermissionVoter extends Voter {
     public function voteOnAttribute($attribute, $resource, TokenInterface $token) {
         $user = $token->getUser();
         if (!$user || !($user instanceof UserEntity)) {
-            $user = SystemResource::UNAUTHENTICATED_USER()->toUser();
+            $user = $this->unauthenticatedUserPermissionHelper->getUnauthenticatedUser();
         }
         $metadataName = self::getMetadataNameFromPermission($attribute);
         $metadata = $this->getSystemMetadata($metadataName);

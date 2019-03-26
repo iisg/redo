@@ -1,10 +1,10 @@
 <?php
 namespace Repeka\Application\Security\Voters;
 
-use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Service\ReproductorPermissionHelper;
+use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -12,9 +12,15 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 class ResourceKindViewVoter extends Voter {
     /** @var ReproductorPermissionHelper */
     private $reproductorPermissionHelper;
+    /** @var UnauthenticatedUserPermissionHelper */
+    private $unauthenticatedUserPermissionHelper;
 
-    public function __construct(ReproductorPermissionHelper $reproductorPermissionHelper) {
+    public function __construct(
+        ReproductorPermissionHelper $reproductorPermissionHelper,
+        UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper
+    ) {
         $this->reproductorPermissionHelper = $reproductorPermissionHelper;
+        $this->unauthenticatedUserPermissionHelper = $unauthenticatedUserPermissionHelper;
     }
 
     protected function supports($attribute, $subject) {
@@ -28,7 +34,7 @@ class ResourceKindViewVoter extends Voter {
     public function voteOnAttribute($attribute, $resourceKind, TokenInterface $token) {
         $user = $token->getUser();
         if (!$user || !($user instanceof User)) {
-            $user = SystemResource::UNAUTHENTICATED_USER()->toUser();
+            $user = $this->unauthenticatedUserPermissionHelper->getUnauthenticatedUser();
         }
         $allowedRkIds = EntityUtils::mapToIds($this->reproductorPermissionHelper->getResourceKindsWhichResourcesUserCanCreate($user));
         return in_array($resourceKind->getId(), $allowedRkIds);

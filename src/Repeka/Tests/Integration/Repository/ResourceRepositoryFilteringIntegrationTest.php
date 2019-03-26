@@ -48,7 +48,8 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
 
     public function testResourcesFilteredByVisibilityWhenExecutorIsSet() {
         $query = ResourceListQuery::builder()->build();
-        EntityUtils::forceSetField($query, SystemResource::UNAUTHENTICATED_USER()->toUser(), 'executor');
+        $unauthenticatedUser = $this->getUnauthenticatedUser();
+        EntityUtils::forceSetField($query, $unauthenticatedUser, 'executor');
         $resourcesIds = EntityUtils::mapToIds($this->resourceRepository->findByQuery($query)->getResults());
         $this->assertCount(6, $resourcesIds);
         $this->assertNotContains(1, $resourcesIds);

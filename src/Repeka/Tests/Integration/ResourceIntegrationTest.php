@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Integration;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\Metadata;
@@ -43,6 +44,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     private $resourceKind;
     /** @var ResourceKind */
     private $resourceKindWithWorkflow;
+    /** @var ResourceKind */
+    private $userGroup;
     /** @var  Metadata */
     private $parentMetadata;
     /** @var ResourceEntity */
@@ -53,6 +56,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     private $parentResource;
     /** @var ResourceEntity */
     private $childResource;
+    /** @var ResourceEntity */
+    private $resourceVisibleByGroup;
+    /** @var ResourceEntity */
+    private $allUsersGroup;
     /** @var  ResourceWorkflowPlace */
     private $workflowPlace1;
     /** @var  ResourceWorkflowPlace */
@@ -148,6 +155,40 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 SystemMetadata::TEASER_VISIBILITY => [1],
             ]
         );
+        $this->createUserGroup();
+    }
+
+    private function createUserGroup() {
+        $groupNameMetadata = $this->createMetadata(
+            'Group Name',
+            ['PL' => 'Group Name', 'EN' => 'Group Name'],
+            [],
+            [],
+            'text',
+            'users'
+        );
+        $this->userGroup = $this->createResourceKind(
+            'User group',
+            ['PL' => 'User group', 'EN' => 'User group'],
+            [$groupNameMetadata],
+            null
+        );
+        $this->allUsersGroup = $this->createResource(
+            $this->userGroup,
+            [
+                SystemMetadata::VISIBILITY => [1],
+                SystemMetadata::TEASER_VISIBILITY => [1],
+            ]
+        );
+        $this->addSupportForResourceKindToMetadata(SystemMetadata::VISIBILITY, $this->userGroup->getId());
+        $this->addSupportForResourceKindToMetadata(SystemMetadata::TEASER_VISIBILITY, $this->userGroup->getId());
+        $this->addSupportForResourceKindToMetadata(SystemMetadata::GROUP_MEMBER, $this->userGroup->getId());
+        $this->resourceVisibleByGroup = $this->createResource(
+            $this->resourceKind,
+            [
+                SystemMetadata::VISIBILITY => [$this->allUsersGroup->getId()]
+            ]
+        );
     }
 
     /** @small */
@@ -157,10 +198,16 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
         $this->assertEquals(
-            [$this->childResource->getId(), $this->resourceWithWorkflow->getId(), $this->parentResource->getId(), $this->resource->getId()],
+            [
+                $this->resourceVisibleByGroup->getId(),
+                $this->childResource->getId(),
+                $this->resourceWithWorkflow->getId(),
+                $this->parentResource->getId(),
+                $this->resource->getId()
+            ],
             $fetchedIds
         );
-        $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals(5, $client->getResponse()->headers->get('pk_total'));
     }
 
     /** @small */
@@ -178,10 +225,16 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
         $this->assertEquals(
-            [$this->resource->getId(), $this->parentResource->getId(), $this->resourceWithWorkflow->getId(), $this->childResource->getId()],
+            [
+                $this->resource->getId(),
+                $this->parentResource->getId(),
+                $this->resourceWithWorkflow->getId(),
+                $this->childResource->getId(),
+                $this->resourceVisibleByGroup->getId()
+            ],
             $fetchedIds
         );
-        $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals(5, $client->getResponse()->headers->get('pk_total'));
     }
 
     /** @small */
@@ -190,8 +243,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'page' => 1, 'resultsPerPage' => 2]);
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
-        $this->assertEquals([$this->childResource->getId(), $this->resourceWithWorkflow->getId()], $fetchedIds);
-        $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals([$this->resourceVisibleByGroup->getId(), $this->childResource->getId()], $fetchedIds);
+        $this->assertEquals(5, $client->getResponse()->headers->get('pk_total'));
     }
 
     /** @small */
@@ -200,8 +253,16 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('GET', self::ENDPOINT, [], ['resourceClasses' => ['books'], 'topLevel' => true]);
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
-        $this->assertEquals([$this->resourceWithWorkflow->getId(), $this->parentResource->getId(), $this->resource->getId()], $fetchedIds);
-        $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals(
+            [
+                $this->resourceVisibleByGroup->getId(),
+                $this->resourceWithWorkflow->getId(),
+                $this->parentResource->getId(),
+                $this->resource->getId()
+            ],
+            $fetchedIds
+        );
+        $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
     /** @small */
@@ -239,6 +300,22 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         );
     }
 
+    public function testFetchingSingleResourceByUnauthenticatedUser() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'PUT',
+            self::oneEntityEndpoint(SystemResource::UNAUTHENTICATED_USER),
+            [
+                'id' => SystemResource::UNAUTHENTICATED_USER,
+                'kindId' => $this->userGroup->getId(),
+                'contents' => [SystemMetadata::GROUP_MEMBER => [$this->allUsersGroup->getId()]],
+            ]
+        );
+        $client = self::createClient();
+        $client->apiRequest('GET', self::oneEntityEndpoint($this->resourceVisibleByGroup->getId()));
+        $this->assertStatusCode(200, $client->getResponse());
+    }
+
     public function testFetchingByParentId() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', self::ENDPOINT, [], ['parentId' => $this->parentResource->getId()]);
@@ -263,10 +340,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
-        $expectedOrder = [$this->parentResource->getId(), $this->resource->getId()];
+        $expectedOrder = [$this->resourceVisibleByGroup->getId(), $this->parentResource->getId()];
         $actualOrder = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
         $this->assertEquals($expectedOrder, $actualOrder);
-        $this->assertEquals(3, $client->getResponse()->headers->get('pk_total'));
+        $this->assertEquals(4, $client->getResponse()->headers->get('pk_total'));
     }
 
     public function testCreatingResource(): int {

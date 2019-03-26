@@ -4,6 +4,7 @@ namespace Repeka\Application\Security\Voters;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Service\ReproductorPermissionHelper;
+use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -12,8 +13,12 @@ class ResourceWorkflowViewVoter extends ResourceKindViewVoter {
     /** @var CommandBus */
     private $commandBus;
 
-    public function __construct(CommandBus $commandBus, ReproductorPermissionHelper $reproductorPermissionHelper) {
-        parent::__construct($reproductorPermissionHelper);
+    public function __construct(
+        CommandBus $commandBus,
+        ReproductorPermissionHelper $reproductorPermissionHelper,
+        UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper
+    ) {
+        parent::__construct($reproductorPermissionHelper, $unauthenticatedUserPermissionHelper);
         $this->commandBus = $commandBus;
     }
 

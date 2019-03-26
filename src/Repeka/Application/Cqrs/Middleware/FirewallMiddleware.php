@@ -2,12 +2,12 @@
 namespace Repeka\Application\Cqrs\Middleware;
 
 use Repeka\Application\Service\CurrentUserAware;
-use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandFirewall;
 use Repeka\Domain\Cqrs\FirewalledCommand;
 use Repeka\Domain\Entity\HasResourceClass;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
+use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\Utils\EntityUtils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,9 +18,12 @@ class FirewallMiddleware implements CommandBusMiddleware {
 
     /** @var ContainerInterface */
     private $container;
+    /** @var UnauthenticatedUserPermissionHelper */
+    private $unauthenticatedUserPermissionHelper;
 
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container, UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper) {
         $this->container = $container;
+        $this->unauthenticatedUserPermissionHelper = $unauthenticatedUserPermissionHelper;
     }
 
     public function handle(Command $command, callable $next) {
@@ -69,7 +72,7 @@ class FirewallMiddleware implements CommandBusMiddleware {
         if (!$command->getExecutor()) {
             $executor = $this->getCurrentUser();
             if (!$executor) {
-                $executor = SystemResource::UNAUTHENTICATED_USER()->toUser();
+                $executor = $this->unauthenticatedUserPermissionHelper->getUnauthenticatedUser();
             }
             EntityUtils::forceSetField($command, $executor, 'executor');
         }

@@ -8,6 +8,7 @@ use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Tests\Traits\StubsTrait;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -28,7 +29,11 @@ class ResourceMetadataPermissionVoterTest extends \PHPUnit_Framework_TestCase {
     public function setUp() {
         $this->resourceKind = $this->createResourceKindMock();
         $metadataRepository = $this->createMetadataRepositoryStub([$this->createMetadataMock(1, null, null, [], 'books', [], 'unicorn')]);
-        $this->voter = new ResourceMetadataPermissionVoter($metadataRepository);
+        $mockedUser = $this->createMock(UserEntity::class);
+        $mockedUser->method('getGroupIdsWithUserId')->willReturn([-1]);
+        $unauthenticatedUserPermissionHelper = $this->createMock(UnauthenticatedUserPermissionHelper::class);
+        $unauthenticatedUserPermissionHelper->method('getUnauthenticatedUser')->willReturn($mockedUser);
+        $this->voter = new ResourceMetadataPermissionVoter($metadataRepository, $unauthenticatedUserPermissionHelper);
         $this->user = new UserEntity();
         $userData = $this->createResourceMock(
             1024,

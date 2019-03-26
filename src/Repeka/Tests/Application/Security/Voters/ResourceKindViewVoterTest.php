@@ -5,6 +5,7 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\Security\Voters\ResourceKindViewVoter;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Service\ReproductorPermissionHelper;
+use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Tests\Traits\StubsTrait;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -31,7 +32,11 @@ class ResourceKindViewVoterTest extends \PHPUnit_Framework_TestCase {
                 $this->createResourceKindMock(2),
             ]
         );
-        $this->voter = new ResourceKindViewVoter($helper);
+        $mockedUser = $this->createMock(UserEntity::class);
+        $mockedUser->method('getGroupIdsWithUserId')->willReturn([-1]);
+        $unauthenticatedUserPermissionHelper = $this->createMock(UnauthenticatedUserPermissionHelper::class);
+        $unauthenticatedUserPermissionHelper->method('getUnauthenticatedUser')->willReturn($mockedUser);
+        $this->voter = new ResourceKindViewVoter($helper, $unauthenticatedUserPermissionHelper);
         $this->user = new UserEntity();
         $this->userToken = $this->createMock(TokenInterface::class);
         $this->userToken->method('getUser')->willReturn($this->user);

@@ -3,7 +3,6 @@ namespace Repeka\Domain\Constants;
 
 use Assert\Assertion;
 use MyCLabs\Enum\Enum;
-use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
@@ -26,13 +25,5 @@ class SystemResource extends Enum {
         Assertion::notNull($resource, "Not implemented: resource for value $value");
         EntityUtils::forceSetId($resource, $value);
         return $resource;
-    }
-
-    public function toUser() {
-        $unauthenticatedUser = new UserEntity();
-        $userResourceKind = SystemResourceKind::USER()->toResourceKind();
-        $unauthenticatedUser->setUserData($this->toResource($userResourceKind));
-        EntityUtils::forceSetId($unauthenticatedUser, SystemResource::UNAUTHENTICATED_USER);
-        return $unauthenticatedUser;
     }
 }

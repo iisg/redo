@@ -8,6 +8,7 @@ use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
+use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -26,7 +27,11 @@ class FirewallMiddlewareTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->middleware = new FirewallMiddleware($this->container);
+        $mockedUser = $this->createMock(UserEntity::class);
+        $mockedUser->method('getGroupIdsWithUserId')->willReturn([-1]);
+        $unauthenticatedUserPermissionHelper = $this->createMock(UnauthenticatedUserPermissionHelper::class);
+        $unauthenticatedUserPermissionHelper->method('getUnauthenticatedUser')->willReturn($mockedUser);
+        $this->middleware = new FirewallMiddleware($this->container, $unauthenticatedUserPermissionHelper);
         $this->noopCallback = function () {
         };
     }
