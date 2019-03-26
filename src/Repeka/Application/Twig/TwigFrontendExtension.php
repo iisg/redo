@@ -130,8 +130,8 @@ class TwigFrontendExtension extends \Twig_Extension {
         );
     }
 
-    public function fetchResourceKind($id) {
-        return $this->resourceKindRepository->findOne($id);
+    public function fetchResourceKind($nameOrId) {
+        return $this->resourceKindRepository->findByNameOrId($nameOrId);
     }
 
     public function getMetadataGroup($metadataGroupId): array {
@@ -170,7 +170,7 @@ ICON;
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    public function fetchResources(array $filters): iterable {
+    public function fetchResources(array $filters, $permissionMetadataNameOrId = null): iterable {
         $builder = ResourceListQuery::builder();
         if (array_key_exists('parentId', $filters)) {
             if ($filters['parentId']) {
@@ -200,6 +200,10 @@ ICON;
         }
         if (isset($filters['sortBy']) && is_array($filters['sortBy'])) {
             $builder->sortBy([$filters['sortBy']]);
+        }
+        if ($permissionMetadataNameOrId) {
+            $metadata = $this->metadataRepository->findByNameOrId($permissionMetadataNameOrId);
+            $builder->setPermissionMetadataId($metadata->getId());
         }
         return $this->handleCommand($builder->build());
     }

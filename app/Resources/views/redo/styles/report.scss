@@ -1,0 +1,26 @@
+@import "colors";
+
+$image-height: 200px;
+
+.report {
+  margin-bottom: 20px;
+  .report-page-header {
+    text-align: center;
+    margin: 30px 0;
+  }
+
+  .report-form-container {
+    margin: 0 30px;
+    padding-bottom: 1px;
+    .report-form-content {
+      background: $secondary-background-color;
+      font-weight: bold;
+      padding: 20px;
+      button.btn-primary {
+        width: 100%;
+        background-color: #283f74;
+        padding: 5px 25px;
+      }
+    }
+  }
+}

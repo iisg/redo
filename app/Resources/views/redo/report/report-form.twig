@@ -1,0 +1,50 @@
+{% extends "redo/report/report-layout.twig" %}
+{% set page_title = 'Report remark' | trans %}
+{% block reportContent %}
+    {% if app.flashes('report') %}
+        <h1 class="deposit-success-flash">{{ 'Congratulations! Your remark has been reported.' | trans }}</h1>
+    {% endif %}
+
+    <h1 class="report-page-header">{{ 'Report remark' | trans }}</h1>
+
+    {% set parentResourceForReport = resources({contentsFilter: {tytul_strony: 'Uwagi'}, resultsPerPage: 1}, -7)[0] %}
+
+    <div class="report-form-container">
+        <form action=""
+            class="report-form"
+            method="post">
+            <div class="report-form-header clearfix">
+                <div class="report-form-content">
+                    <input type="hidden"
+                        name="parentId"
+                        value="{{ parentResourceForReport.id }}">
+                    <div class="form-group">
+                        <span>{{ 'Email address' | trans }}</span>
+                        <input type="email"
+                            class="form-control"
+                            name="email_address"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <span>{{ 'Remark title' | trans }}</span>
+                        <input type="text"
+                            class="form-control"
+                            name="remark_title"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <span>{{ 'Remark content' | trans }}</span>
+                        <textarea class="form-control"
+                            name="remark_content"
+                            rows="4"
+                            required></textarea>
+                    </div>
+                    <button type="submit"
+                        class="btn btn-primary">
+                        {{ 'Report' | trans }} &gt;
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

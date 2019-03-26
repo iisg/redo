@@ -25,15 +25,19 @@ class ReproductorPermissionHelperIntegrationTest extends IntegrationTestCase {
     private $testerUser;
     /** @var ResourceEntity */
     private $ebooks;
+    /** @var ResourceEntity */
+    private $remark;
 
     protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
         $this->helper = $this->container->get(ReproductorPermissionHelper::class);
         $this->testerUser = $this->getUserByName('tester');
         $this->ebooks = $this->findResourceByContents(['Nazwa kategorii' => 'E-booki']);
+        $this->remark = $this->findResourceByContents(['Tytuł strony' => 'Uwagi']);
     }
 
     public function testNoCollectionIfReproductorNowhere() {
+        $this->markTestSkipped('Test is no longer valid as exists resource (remarks) which unauthorized can add subresources to');
         $this->assertEmpty($this->helper->getCollectionsWhereUserIsReproductor($this->testerUser));
         $this->assertEmpty($this->helper->getResourceKindsWhichResourcesUserCanCreate($this->testerUser));
     }
@@ -45,10 +49,10 @@ class ReproductorPermissionHelperIntegrationTest extends IntegrationTestCase {
         );
         $this->handleCommandBypassingFirewall(new ResourceUpdateContentsCommand($this->ebooks, $contents));
         $collections = $this->helper->getCollectionsWhereUserIsReproductor($this->testerUser);
-        $this->assertCount(1, $collections);
-        $this->assertEquals([$this->ebooks->getId()], EntityUtils::mapToIds($collections));
+        $this->assertCount(2, $collections);
+        $this->assertEquals([$this->remark->getId(), $this->ebooks->getId()], EntityUtils::mapToIds($collections));
         $resourceKinds = $this->helper->getResourceKindsWhichResourcesUserCanCreate($this->testerUser);
-        $this->assertCount(2, $resourceKinds);
+        $this->assertCount(3, $resourceKinds);
         return $resourceKinds;
     }
 
@@ -68,7 +72,7 @@ class ReproductorPermissionHelperIntegrationTest extends IntegrationTestCase {
      * @param ResourceKind[] $resourceKinds
      */
     public function testFilteringCollectionsByResourceKind(array $resourceKinds) {
-        $collectionsWithAllowedRk = $this->helper->getCollectionsWhereUserIsReproductor($this->testerUser, $resourceKinds[0]);
+        $collectionsWithAllowedRk = $this->helper->getCollectionsWhereUserIsReproductor($this->testerUser, $resourceKinds[1]);
         $this->assertEquals([$this->ebooks->getId()], EntityUtils::mapToIds($collectionsWithAllowedRk));
         $collectionsWithoutAllowedRk = $this->helper->getCollectionsWhereUserIsReproductor($this->testerUser, $this->ebooks->getKind());
         $this->assertEmpty($collectionsWithoutAllowedRk);
@@ -95,10 +99,11 @@ class ReproductorPermissionHelperIntegrationTest extends IntegrationTestCase {
         $this->handleCommandBypassingFirewall(new ResourceKindUpdateCommand($ebooksKind, $ebooksKind->getLabel(), $metadataList));
         $this->resetEntityManager(ResourceKindRepository::class, ResourceRepository::class);
         $collections = $this->helper->getCollectionsWhereUserIsReproductor($this->testerUser);
-        $this->assertCount(1, $collections);
-        $this->assertEquals([$this->ebooks->getId()], EntityUtils::mapToIds($collections));
+        $this->assertCount(2, $collections);
+        $this->assertEquals([$this->remark->getId(), $this->ebooks->getId()], EntityUtils::mapToIds($collections));
         $resourceKinds = $this->helper->getResourceKindsWhichResourcesUserCanCreate($this->testerUser);
-        $this->assertCount(1, $resourceKinds);
-        $this->assertEquals([$bookKind->getId()], EntityUtils::mapToIds($resourceKinds));
+        $this->assertCount(2, $resourceKinds);
+        $reportedRemarkRK = $this->getResourceKindRepository()->findByName('zgloszona_uwaga');
+        $this->assertEquals([$reportedRemarkRK->getId(), $bookKind->getId()], EntityUtils::mapToIds($resourceKinds));
     }
 }

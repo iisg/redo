@@ -16,6 +16,13 @@
             role="menuitem">
             <span>{{ 'For authors' | trans }}</span>
         </a>
+        {% if app.user %}
+        <a class="{{ urlMatches('/report') ? 'active' : '' }}"
+            href="{{ path('report') }}"
+            role="menuitem">
+            <span>{{ 'Report remark' | trans }}</span>
+        </a>
+        {% endif %}
     </div>
     {% if app.request.requestUri != '/'
         and not (app.request.requestUri starts with '/search') %}

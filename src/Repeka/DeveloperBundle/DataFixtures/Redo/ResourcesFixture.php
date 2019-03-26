@@ -36,6 +36,7 @@ class ResourcesFixture extends RepekaFixture {
         $this->addDictionaries();
         $this->addBooks();
         $this->addCmsPages();
+        $this->addCmsReportRemark();
     }
 
     private function addDictionaries() {
@@ -613,6 +614,30 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_CMS_CONTENT =>
                             'Metadane, które wyświetlą się na stronie szczegółów zasobu '
                             . 'rodzajów nieposiadających własnej konfiguracji',
+                    ]
+                )
+            )
+        );
+    }
+
+    private function addCmsReportRemark() {
+        $cmsRemarkRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CMS_REMARKS);
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $cmsRemarkRk,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_CMS_TITLE => ['Uwagi'],
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                        ],
+                        SystemMetadata::REPRODUCTOR => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                        ],
                     ]
                 )
             )

@@ -1,0 +1,12 @@
+{% extends "redo/layout.twig" %}
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+    <div class="report"
+        role="main">
+        <div class="report-container">
+            {% block reportContent %}{% endblock %}
+        </div>
+    </div>
+    {% include "redo/footer.twig" %}
+{% endblock %}

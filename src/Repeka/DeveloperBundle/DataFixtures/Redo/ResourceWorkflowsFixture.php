@@ -11,11 +11,13 @@ class ResourceWorkflowsFixture extends RepekaFixture {
 
     const BOOK_WORKFLOW = 'bookWorkflow';
     const USER_WORKFLOW = 'userWorkflow';
+    const REMARK_WORKFLOW = 'remarkWorkflow';
 
     /** @inheritdoc */
     public function load(ObjectManager $manager) {
         $this->addBookWorkflow();
         $this->addUserWorkflow();
+        $this->addRemarkWorkflow();
     }
 
     private function addBookWorkflow() {
@@ -54,5 +56,20 @@ JSON
             ),
             self::USER_WORKFLOW
         );
+    }
+
+    private function addRemarkWorkflow() {
+        $places = json_decode(
+            <<<JSON
+            [ {"id": "2ln8ff5a6", "label": {"EN": "Reported remark", "PL": "Zgłoszona uwaga"}, "pluginsConfig": []}, {"id": "y0ay2nfa5", "label": {"EN": "Served", "PL": "Obsłużona"}, "pluginsConfig": []}, {"id": "sdskdr3xx", "label": {"EN": "Taken to serivce", "PL": "Przyjęta do obsługi"}, "pluginsConfig": [{"name": "repekaMetadataValueSetter", "config": {"metadataName": "Report manager", "metadataValue": "1", "setOnlyWhenEmpty": true}}]}]
+JSON
+            ,
+            true
+        );
+        $name = [
+            'PL' => 'Zgłaszanie uwag',
+            'EN' => 'Report remark',
+        ];
+        $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, [], 'cms', '', ''), self::REMARK_WORKFLOW);
     }
 }

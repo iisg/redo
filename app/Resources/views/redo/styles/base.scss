@@ -172,7 +172,7 @@ fieldset {
   }
 }
 
-input {
+input, textarea {
   min-width: 0;
   padding: $default-gap-size / 4 $default-gap-size / 2;
   border: $default-input-border-width $default-border-style $default-border-color;

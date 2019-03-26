@@ -22,6 +22,8 @@ class ResourceKindsFixture extends RepekaFixture {
     const REFERENCE_RESOURCE_KIND_USER_GROUP = 'resource-kind-user-group';
     const REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE = 'resource-kind-cms-static-page';
     const REFERENCE_RESOURCE_KIND_CMS_CONFIG = 'resource-kind-cms-config';
+    const REFERENCE_RESOURCE_KIND_CMS_REMARKS = 'resource-kind-cms-remarks';
+    const REFERENCE_RESOURCE_KIND_CMS_REPORTED_REMARKS = 'resource-kind-cms-reported-remarks';
 
     /**
      * @inheritdoc
@@ -184,6 +186,10 @@ class ResourceKindsFixture extends RepekaFixture {
     private function addCmsResourceKinds() {
         $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_TITLE)->getId();
         $configIdMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_ID)->getId();
+        $remarkTitleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_TITLE)->getId();
+        $remarkWorkflow = $this->handleCommand(
+            new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::REMARK_WORKFLOW)->getId())
+        );
         $this->handleCommand(
             new ResourceKindCreateCommand(
                 'static_page',
@@ -215,6 +221,39 @@ class ResourceKindsFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_CMS_CONFIG
+        );
+        $this->handleCommand(
+            new ResourceKindCreateCommand(
+                'uwagi',
+                [
+                    'PL' => 'Uwagi',
+                    'EN' => 'Remarks',
+                ],
+                [
+                    $this->resourceLabelMetadata('{{r|m' . $titleMetadataId . '}}'),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_TITLE),
+                ]
+            ),
+            self::REFERENCE_RESOURCE_KIND_CMS_REMARKS
+        );
+        $this->handleCommand(
+            new ResourceKindCreateCommand(
+                'zgloszona_uwaga',
+                [
+                    'PL' => 'Zgłoszona uwaga',
+                    'EN' => 'Reported remark',
+                ],
+                [
+                    $this->resourceLabelMetadata('{{r|m' . $remarkTitleMetadataId . '}}'),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_EMAIL_ADDRESS),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_TITLE),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_CONTENT),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_MANAGER),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_CREATION_DATE),
+                ],
+                $remarkWorkflow
+            ),
+            self::REFERENCE_RESOURCE_KIND_CMS_REPORTED_REMARKS
         );
     }
 }

@@ -52,6 +52,11 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_CMS_RENDERED_CONTENT = 'metadata-cms-rendered-content';
     const REFERENCE_METADATA_CMS_CONFIG_ID = 'metadata-cms-config-id';
     const REFERENCE_METADATA_CMS_CONFIG_VALUE = 'metadata-cms-config-value';
+    const REFERENCE_METADATA_CMS_REMARK_TITLE = 'metadata-cms-remark-title';
+    const REFERENCE_METADATA_CMS_REMARK_CONTENT = 'metadata-cms-remark-content';
+    const REFERENCE_METADATA_CMS_EMAIL_ADDRESS = 'metadata-cms-email-address';
+    const REFERENCE_METADATA_CMS_REMARK_MANAGER = 'metadata-cms-remark-manager';
+    const REFERENCE_METADATA_CMS_REMARK_CREATION_DATE = 'metadata-cms-remark-creation-date';
 
     const REFERENCE_METADATA_DEPARTMENTS_NAME = 'metadata-departments-name';
     const REFERENCE_METADATA_DEPARTMENTS_ABBREV = 'metadata-departments-abbrev';
@@ -379,7 +384,7 @@ class MetadataFixture extends RepekaFixture {
                     'placeholder' => [],
                     'control' => 'relationship',
                     'resourceClass' => 'books',
-                    'constraints' => $this->relationshipConstraints(1, [-1]),
+                    'constraints' => $this->relationshipConstraints(1, [SystemResourceKind::USER]),
                 ]
             ),
             self::REFERENCE_METADATA_REAL_SCANNER
@@ -748,6 +753,81 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_CMS_RENDERED_CONTENT
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Remark title',
+                    'label' => [
+                        'PL' => 'Tytuł uwagi',
+                        'EN' => 'Remark title',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'resourceClass' => 'cms',
+                    'constraints' => ['maxCount' => 1],
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_REMARK_TITLE
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Email address',
+                    'label' => [
+                        'PL' => 'Adres email',
+                        'EN' => 'Email address',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'resourceClass' => 'cms',
+                    'constraints' => ['maxCount' => 1],
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_EMAIL_ADDRESS
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Remark content',
+                    'label' => [
+                        'PL' => 'Treść uwagi',
+                        'EN' => 'Remark content',
+                    ],
+                    'control' => MetadataControl::TEXTAREA,
+                    'resourceClass' => 'cms',
+                    'constraints' => ['maxCount' => 1],
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_REMARK_CONTENT
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Report manager',
+                    'label' => [
+                        'PL' => 'Obsługujący uwagę',
+                        'EN' => 'Report manager',
+                    ],
+                    'control' => MetadataControl::RELATIONSHIP,
+                    'resourceClass' => 'cms',
+                    'constraints' => $this->relationshipConstraints(1, [SystemResourceKind::USER]),
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_REMARK_MANAGER
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Report date',
+                    'label' => [
+                        'PL' => 'Data zgłoszenia',
+                        'EN' => 'Report date',
+                    ],
+                    'control' => MetadataControl::TIMESTAMP,
+                    'resourceClass' => 'cms',
+                    'constraints' => $this->relationshipConstraints(1),
+                ]
+            ),
+            self::REFERENCE_METADATA_CMS_REMARK_CREATION_DATE
         );
     }
 }
