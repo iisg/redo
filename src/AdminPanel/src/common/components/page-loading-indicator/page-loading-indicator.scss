@@ -1,6 +1,8 @@
 @import "../../../common/styles";
 
-$color: $blue;
+$color: $orange;
+$progress-bar-height: $default-gap-size / 4;
+$default-progress-bar-box-shadow-with-changed-color: 0 0 10px $color, 0 0 5px $color;
 $spinner-default-height: 18px;
 $spinner-margin-size: 5px;
 
@@ -16,7 +18,11 @@ page-loading-indicator {
   #nprogress {
     display: inherit;
     .bar {
+      height: $progress-bar-height;
       background: $color;
+    }
+    .peg {
+      box-shadow: $default-progress-bar-box-shadow-with-changed-color;
     }
   }
 }
