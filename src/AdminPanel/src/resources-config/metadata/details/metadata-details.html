@@ -17,7 +17,7 @@
             <span class="page-title">
                 ${metadata.name} #${metadata.id}
                 <icon name="user-3"
-                    if.one-time="metadata.canDetermineAssignees"
+                    if.bind="metadata.canDetermineAssignees"
                     bootstrap-tooltip.bind="'This metadata can be used to specify assignees' | resourceClassTranslation:metadata.resourceClass"></icon>
                 <icon name="add-workflow"
                     if.one-time="metadata.isDynamic"

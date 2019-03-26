@@ -128,7 +128,8 @@ export class MetadataDetails implements RoutableComponentActivate {
     this.entitySerializer.hydrateClone(changedMetadata, metadata);
     metadata.pendingRequest = true;
     return this.metadataRepository.update(changedMetadata)
-      .then(() => {
+      .then(updatedMetadata => {
+        this.metadata = updatedMetadata;
         this.editing = false;
         this.updateUrl();
         this.metadataDetailsTabs.setDisabled(this.editing);
