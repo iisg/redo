@@ -44,7 +44,7 @@
     "myclabs/php-enum": "^1.5",
     "qandidate/symfony-json-request-transformer": "^1.2.2",
     "respect/validation": "dev-master#b83f55e3e97d7103b6eb2eea69e7c4bf66750a0b",
-    "ruflin/elastica": "^6.0",
+    "ruflin/elastica": "^6.1",
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "3.0.22",
     "studio-42/elfinder": "^2.1",

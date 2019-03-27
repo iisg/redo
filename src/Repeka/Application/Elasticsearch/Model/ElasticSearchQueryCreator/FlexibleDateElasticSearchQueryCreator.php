@@ -3,6 +3,7 @@ namespace Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator;
 
 use Elastica\Query;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
+use Repeka\Application\Elasticsearch\Model\ElasticSearchContext;
 use Repeka\Application\Elasticsearch\Model\ElasticSearchQuery;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
@@ -12,7 +13,7 @@ class FlexibleDateElasticSearchQueryCreator implements ElasticSearchQueryCreator
         return in_array($control->getValue(), [MetadataControl::FLEXIBLE_DATE, MetadataControl::DATE_RANGE]);
     }
 
-    public function createSearchQuery($filter, Metadata $metadata) {
+    public function createSearchQuery($filter, Metadata $metadata, ElasticSearchContext $elasticSearchContext) {
         $metadataFilter = new Query\BoolQuery();
         $musts = [];
         if (isset($filter['gte'])) {

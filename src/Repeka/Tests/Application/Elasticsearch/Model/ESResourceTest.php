@@ -5,6 +5,7 @@ use Elastica\Document;
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Application\Elasticsearch\Model\ElasticSearch;
+use Repeka\Application\Elasticsearch\Model\ElasticSearchContext;
 use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite;
 use Repeka\Application\Elasticsearch\Model\ESContentsAdjuster;
 use Repeka\Domain\Entity\MetadataControl;
@@ -24,7 +25,9 @@ class ESResourceTest extends ElasticsearchTest {
         $resourceKind = $this->createResourceKindMock(2);
         $resource = $this->createResourceMock(1, $resourceKind, ['3' => ['value' => 'aaa']]);
         $typeMock = $this->createMock(Type::class);
+        $elasticSearchContext = $this->createMock(ElasticSearchContext::class);
         $typeMock->expects($this->once())->method('getIndex')->willReturn($this->indexMock);
+        $elasticSearchContext->expects($this->once())->method('getIndexName')->willReturn(ElasticSearchTest::INDEX_NAME);
         $this->indexMock->expects($this->once())->method('refresh');
         $typeMock->expects($this->once())->method('addDocument')->with(
             $this->callback(
@@ -53,7 +56,12 @@ class ESResourceTest extends ElasticsearchTest {
         $container->method('get')->willReturn($this->createMock(ResourceFileStorage::class));
         $esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $container);
         $this->indexMock->method('getType')->with(FtsConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
-        $res = new ElasticSearch($this->clientMock, $esContentsAdjuster, self::INDEX_NAME, $elasticSearchQueryCreatorComposite);
+        $res = new ElasticSearch(
+            $this->clientMock,
+            $esContentsAdjuster,
+            $elasticSearchContext,
+            $elasticSearchQueryCreatorComposite
+        );
         $res->insertDocument($resource);
     }
 }

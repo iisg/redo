@@ -40,7 +40,7 @@ class ESIndexManager {
                     'analyzer' => [
                         'default' => [
                             "tokenizer" => "standard",
-                            "filter" => ["standard", "lowercase", "morfologik_stem", "pl_stop"],
+                            "filter" => ["standard", "lowercase", "pl_stop", "morfologik_stem"],
                         ],
                     ],
                 ],

@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator;
 
+use Repeka\Application\Elasticsearch\Model\ElasticSearchContext;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 
@@ -33,12 +34,12 @@ class ElasticSearchQueryCreatorComposite implements ElasticSearchQueryCreator {
         }
     }
 
-    public function createSearchQuery($filter, Metadata $metadata) {
+    public function createSearchQuery($filter, Metadata $metadata, ElasticSearchContext $elasticSearchContext) {
         if (!$this->controlCreatorsMap) {
             $this->buildCreatorsMap();
         }
         /** @var ElasticSearchQueryCreator $elasticSearchQueryCreator */
         $elasticSearchQueryCreator = $this->controlCreatorsMap[$metadata->getControl()->getValue()];
-        return $elasticSearchQueryCreator->createSearchQuery($filter, $metadata);
+        return $elasticSearchQueryCreator->createSearchQuery($filter, $metadata, $elasticSearchContext);
     }
 }

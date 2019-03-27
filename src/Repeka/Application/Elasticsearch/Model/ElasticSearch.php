@@ -8,6 +8,7 @@ use Elastica\Search;
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\ESClient;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
+use Repeka\Application\Elasticsearch\Model\ElasticSearchContext;
 use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceFtsProvider;
@@ -30,17 +31,21 @@ class ElasticSearch implements ResourceFtsProvider {
     /** @var ElasticSearchQueryCreatorComposite */
     private $elasticSearchQueryCreatorComposite;
 
+    /** @var ElasticSearchContext */
+    private $elasticSearchContext;
+
     public function __construct(
         ESClient $client,
         ESContentsAdjuster $esContentsAdjuster,
-        string $indexName,
+        ElasticSearchContext $elasticSearchContext,
         ElasticSearchQueryCreatorComposite $elasticSearchQueryCreatorComposite
     ) {
         $this->client = $client;
         $this->esContentsAdjuster = $esContentsAdjuster;
-        $this->index = $this->client->getIndex($indexName);
+        $this->index = $this->client->getIndex($elasticSearchContext->getIndexName());
         $this->type = $this->index->getType(FtsConstants::ES_DOCUMENT_TYPE);
         $this->elasticSearchQueryCreatorComposite = $elasticSearchQueryCreatorComposite;
+        $this->elasticSearchContext = $elasticSearchContext;
     }
 
     private function createDocument(ResourceEntity $resource): Document {
@@ -76,7 +81,7 @@ class ElasticSearch implements ResourceFtsProvider {
 
     /** @return ResultSet */
     public function search(ResourceListFtsQuery $query) {
-        $esQuery = new ElasticSearchQuery($query, $this->elasticSearchQueryCreatorComposite);
+        $esQuery = new ElasticSearchQuery($query, $this->elasticSearchQueryCreatorComposite, $this->elasticSearchContext);
         $search = new Search($this->client);
         $search->addIndex($this->index->getName());
         $search->addType(FtsConstants::ES_DOCUMENT_TYPE);

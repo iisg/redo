@@ -20,12 +20,17 @@ class ElasticSearchQuery {
     /** @var ElasticSearchQueryCreatorComposite */
     private $elasticSearchQueryCreatorComposite;
 
+    /** @var ElasticSearchContext */
+    private $elasticSearchContext;
+
     public function __construct(
         ResourceListFtsQuery $query,
-        ElasticSearchQueryCreatorComposite $elasticSearchQueryCreatorComposite
+        ElasticSearchQueryCreatorComposite $elasticSearchQueryCreatorComposite,
+        ElasticSearchContext $elasticSearchContext
     ) {
         $this->query = $query;
         $this->elasticSearchQueryCreatorComposite = $elasticSearchQueryCreatorComposite;
+        $this->elasticSearchContext = $elasticSearchContext;
     }
 
     public function getQuery(): Query {
@@ -71,11 +76,16 @@ class ElasticSearchQuery {
         $metadataQuery = new Query\BoolQuery();
         $paths = [];
         foreach ($this->query->getSearchableMetadata() as $metadata) {
-            $paths[] = $this->getMetadataPath($metadata);
+            $path = $this->getMetadataPath($metadata);
+            $paths[] = $path;
         }
         if (!empty($paths)) {
-            $metadataFilters[] = ElasticSearchQuery::createMultiMatchQuery($paths, $this->query->getPhrase());
-            $metadataFilters[] = ElasticSearchQuery::createSimpleQueryString($paths, $this->query->getPhrase());
+            $elasticSearchTextQueryCreator = new ElasticSearchTextQueryCreator();
+            $metadataFilters = $elasticSearchTextQueryCreator->createTextQuery(
+                $paths,
+                $this->query->getPhrase(),
+                $this->elasticSearchContext->getStopWords()
+            );
         }
         $metadataQuery->addShould($metadataFilters);
         return $metadataQuery;
@@ -171,25 +181,15 @@ class ElasticSearchQuery {
             if (!is_array($filter)) {
                 $filter = [$filter];
             }
-            $metadataFilter = $this->elasticSearchQueryCreatorComposite->createSearchQuery($filter, $metadata);
+            $metadataFilter = $this->elasticSearchQueryCreatorComposite->createSearchQuery($filter, $metadata, $this->elasticSearchContext);
             $metadataFilters->addMust($metadataFilter);
         }
         return $metadataFilters;
     }
 
-    public static function createMultiMatchQuery(array $fields, string $query): Query\MultiMatch {
-        $multiMatch = new Query\MultiMatch();
-        $multiMatch->setFields($fields);
-        $multiMatch->setQuery($query);
-        $multiMatch->setOperator(Query\MultiMatch::OPERATOR_AND);
-        $multiMatch->setFuzziness(Query\MultiMatch::FUZZINESS_AUTO);
-        return $multiMatch;
-    }
-
     public static function createSimpleQueryString(array $fields, string $query): Query\SimpleQueryString {
         $simpleQueryString = new Query\SimpleQueryString($query, $fields);
         $simpleQueryString->setDefaultOperator(Query\SimpleQueryString::OPERATOR_AND);
-        $simpleQueryString->setParam('boost', 100);
         return $simpleQueryString;
     }
 }

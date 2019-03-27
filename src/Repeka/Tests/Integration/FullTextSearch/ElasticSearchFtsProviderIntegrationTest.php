@@ -216,7 +216,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
                 ->build()
         );
         $this->assertCount(1, $results);
-        $this->assertEquals(2, $results->getTotalHits());
+        $this->assertEquals(3, $results->getTotalHits()); // catches also resource "pair programming"
         $ids = EntityUtils::mapToIds($results);
         $this->assertContains($this->phpAndMySQLBookResource->getId(), $ids);
     }
@@ -232,7 +232,7 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
                 ->build()
         );
         $this->assertCount(1, $results);
-        $this->assertEquals(2, $results->getTotalHits());
+        $this->assertEquals(3, $results->getTotalHits()); // catches also resource "pair programming"
         $ids = EntityUtils::mapToIds($results);
         $this->assertContains($this->phpBookResource->getId(), $ids);
     }
@@ -460,10 +460,10 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
         }
     }
 
-    public function testBoostToSimpleQueryString() {
+    public function testBoostToExactPhraseSimpleQueryString() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('ala', [$this->titleMetadata, $this->opisMetadata]));
-        $this->assertCount(2, $results);
+        $this->assertCount(3, $results); // catches also resource "pair programming"
         $this->assertEquals($this->alaResource->getId(), intval($results[0]->getId()));
         $this->assertEquals($this->pseudoAlaResource->getId(), intval($results[1]->getId()));
     }

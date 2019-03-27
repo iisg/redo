@@ -57,10 +57,16 @@ services:
   Repeka\Application\Elasticsearch\PageNumberFinder: ~
   Repeka\Application\Elasticsearch\Mapping\ESMapping: ~
   Repeka\Application\Elasticsearch\Model\ESContentsAdjuster: ~
-  Repeka\Application\Elasticsearch\Model\ElasticSearch:
-    shared: false
+  Repeka\Application\Elasticsearch\Model\ElasticSearchContext:
     arguments:
       $indexName: '%elasticsearch.index_name%'
+      $stopWords: '%elasticsearch.stop_words%'
+  Repeka\Application\Elasticsearch\Model\ElasticSearchQueryPhraseAdjuster:
+    properties:
+      stopWords: '%elasticsearch.stop_words%'
+
+  Repeka\Application\Elasticsearch\Model\ElasticSearch:
+    shared: false
 
   Repeka\Application\Entity\EntityIdGeneratorHelper: ~
 
