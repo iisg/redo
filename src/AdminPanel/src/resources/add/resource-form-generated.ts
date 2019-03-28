@@ -13,7 +13,7 @@ import {ValidationController} from "aurelia-validation";
 import {EntitySerializer} from "../../common/dto/entity-serializer";
 import {BindingSignaler} from "aurelia-templating-resources";
 import {MetadataValue} from "../metadata-value";
-import {WorkflowPlace} from "./../../workflows/workflow";
+import {WorkflowPlace} from "../../workflows/workflow";
 import {debounce} from "lodash";
 import {groupMetadata} from "../../common/utils/metadata-utils";
 import {MetadataGroupRepository} from "../../resources-config/metadata/metadata-group-repository";
@@ -71,7 +71,7 @@ export class ResourceFormGenerated {
   displayMetadataValueInput(metadata: Metadata): boolean {
     return !this.resourceKind.workflow
       || !this.displayRequiredOnly
-      || (this.displayRequiredOnly && !this.metadataIsLocked(metadata));
+      || (this.displayRequiredOnly && this.metadataIsRequired(metadata) && !this.metadataIsLocked(metadata));
   }
 
   resourceChanged() {

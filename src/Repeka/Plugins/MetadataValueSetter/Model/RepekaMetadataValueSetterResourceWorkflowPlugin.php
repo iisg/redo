@@ -29,6 +29,7 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
         $metadataName = $config->getConfigValue('metadataName');
         $metadataValue = $config->getConfigValue('metadataValue');
         $setOnlyWhenEmpty = $config->getConfigValue('setOnlyWhenEmpty');
+        $overridePreviousValues = $config->getConfigValue('overridePreviousValues');
         if (!$metadataName || !$metadataValue) {
             return;
         }
@@ -50,7 +51,9 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
             $blockSettingNonEmpty = $setOnlyWhenEmpty && $anyValueExists;
             $auditData = ['metadataId' => $metadata->getId(), 'metadataName' => $metadata->getName(), 'value' => $value];
             if ($value !== '' && !$sameValueExists && !$blockSettingNonEmpty) {
-                $newResourceContents = $newResourceContents->withMergedValues($metadata, $value);
+                $newResourceContents = $overridePreviousValues
+                    ? $newResourceContents->withReplacedValues($metadata, $value)
+                    : $newResourceContents->withMergedValues($metadata, $value);
             } elseif ($value === '') {
                 $this->newAuditEntry($event, 'emptyValue', $auditData, false);
             }
@@ -75,6 +78,7 @@ class RepekaMetadataValueSetterResourceWorkflowPlugin extends ResourceWorkflowPl
             new ResourceWorkflowPluginConfigurationOption('metadataName', MetadataControl::TEXT()),
             new ResourceWorkflowPluginConfigurationOption('metadataValue', MetadataControl::TEXTAREA()),
             new ResourceWorkflowPluginConfigurationOption('setOnlyWhenEmpty', MetadataControl::BOOLEAN()),
+            new ResourceWorkflowPluginConfigurationOption('overridePreviousValues', MetadataControl::BOOLEAN()),
         ];
     }
 }
