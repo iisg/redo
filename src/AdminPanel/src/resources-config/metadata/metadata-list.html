@@ -45,7 +45,8 @@
                 </th>
             </tr>
             </tfoot>
-            <tbody oa-sortable="items.bind: metadataList; allow-drag.call: isDragHandle($event); on-stop.call: onOrderChanged();">
+            <tbody oa-sortable="items.bind: metadataList; allowed-drag-selector: .drag-handle; scroll: metadata-list;
+                on-stop.call: onOrderChanged(); axis: y">
             <tr repeat.for="metadata of metadataList"
                 oa-sortable-item="item.bind: metadata"
                 go-to-link-on-row-click>

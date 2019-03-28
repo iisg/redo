@@ -70,12 +70,14 @@ body {
     display: flex;
     flex-direction: column;
     .name-with-buttons-and-tabs {
+      z-index: $top-bar-z-index;
       display: flex;
       flex-shrink: 0;
       align-items: center;
       flex-wrap: wrap;
       padding-top: $default-gap-size / 4;
       padding-bottom: $default-gap-size / 4;
+      background-color: $default-background-color;
       border-bottom: $default-gap-size / 4 solid $light-blue;
       overflow: auto;
       & > :not(.buttons):not(aup-tabs) {
@@ -282,15 +284,6 @@ body {
     color: $red;
   }
 
-  .drag-handle {
-    cursor: n-resize;
-    color: $blue;
-    @include transition(color $default-transition-duration);
-    &:hover, &:focus {
-      color: $light-blue;
-    }
-  }
-
   table {
     width: 100%;
     &:not(.transparent):not(.table-condensed) {
@@ -392,6 +385,10 @@ body {
     resize: vertical;
   }
 
+  .input-group .form-control {
+    z-index: auto;
+  }
+
   .form-control:not([type=date]) {
     height: initial;
   }
@@ -407,8 +404,20 @@ body {
   }
 }
 
-body > tr[oa-sortable-item] {
+.oa-drag:not(.resource-metadata-values-form-item) {
   display: none;
+}
+
+.drag-handle {
+  cursor: ns-resize;
+  color: $blue;
+  @include transition(color $default-transition-duration);
+  &:hover, &:focus {
+    color: $light-blue;
+  }
+  icon {
+    pointer-events: none; // To make `allowed-drag-selector` work.
+  }
 }
 
 button {
@@ -446,6 +455,7 @@ button {
       margin-bottom: $simple-form-row-gap-size / 2;
     }
   }
+
   &, & > collapsible-metadata-group {
     & > span:not(.value):not(.validation-message), & > button, & > .key {
       font-weight: bold;

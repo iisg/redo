@@ -1,9 +1,9 @@
 import {autoinject} from "aurelia-dependency-injection";
+import {Router} from "aurelia-router";
 import {bindable} from "aurelia-templating";
+import {ContextResourceClass} from "../../resources/context/context-resource-class";
 import {Metadata} from "./metadata";
 import {MetadataRepository} from "./metadata-repository";
-import {Router} from "aurelia-router";
-import {ContextResourceClass} from "../../resources/context/context-resource-class";
 import {SystemMetadata} from "./system-metadata";
 
 @autoinject
@@ -41,10 +41,6 @@ export class MetadataList {
       .addSystemMetadataIds([SystemMetadata.REPRODUCTOR.id, SystemMetadata.VISIBILITY.id, SystemMetadata.TEASER_VISIBILITY.id]);
     this.metadataList = await query.get().then(metadataList => this.moveSystemMetadataToTheEnd(metadataList));
     this.progressBar = false;
-  }
-
-  isDragHandle(data: { evt: MouseEvent }) {
-    return $(data.evt.target).is('.drag-handle') || $(data.evt.target).parents('.drag-handle').length > 0;
   }
 
   onOrderChanged() {

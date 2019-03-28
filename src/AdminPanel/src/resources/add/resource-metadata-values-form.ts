@@ -4,8 +4,8 @@ import {bindable} from "aurelia-templating";
 import {ValidationController} from "aurelia-validation";
 import {booleanAttribute} from "common/components/boolean-attribute";
 import {Metadata} from "resources-config/metadata/metadata";
-import {ChangeEvent} from "../../common/events/change-event";
 import {changeHandler} from "../../common/components/binding-mode";
+import {ChangeEvent} from "../../common/events/change-event";
 import {MetadataValue} from "../metadata-value";
 import {Resource} from "../resource";
 import {debounce} from "lodash";
@@ -61,10 +61,6 @@ export class ResourceMetadataValuesForm {
     setTimeout(() => {
       $(this.valueTable).find('td').last().find('input, textarea').first().focus();
     }, 50);
-  }
-
-  isDragHandle(data: { evt: MouseEvent }) {
-    return $(data.evt.target).is('.drag-handle') || $(data.evt.target).parents('.drag-handle').length > 0;
   }
 
   @computedFrom("metadata.control")

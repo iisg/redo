@@ -10,8 +10,10 @@
 
     <table class="transparent"
         ref="valueTable">
-        <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allow-drag.call: isDragHandle($event); type-flag.bind: 0">
-        <tr if.bind="metadata.control === 'relationship'">
+        <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allowed-drag-selector: .drag-handle; scroll: .tab-content;
+            type-flag.bind: 0; axis: y">
+        <tr if.bind="metadata.control === 'relationship'"
+            class="resource-metadata-values-form-item">
             <td>
                 <resource-relationship-selector if.bind="metadata.constraints.relationshipSelectorType == 'tree' || skipValidation"
                     containerless
@@ -31,7 +33,8 @@
                     multiple-choice.bind="metadata.constraints.maxCount !== 1"></simple-relationship-selector>
             </td>
         </tr>
-        <tr if.bind="metadata.control === 'file'">
+        <tr if.bind="metadata.control === 'file'"
+            class="resource-metadata-values-form-item">
             <td>
                 <file-upload containerless
                     resource.bind="resource"
@@ -41,7 +44,8 @@
                     force-simple-file-upload.bind="forceSimpleFileUpload"></file-upload>
             </td>
         </tr>
-        <tr if.bind="metadata.control === 'directory'">
+        <tr if.bind="metadata.control === 'directory'"
+            class="resource-metadata-values-form-item">
             <td>
                 <resource-file-manager resource.bind="resource"
                     metadata.bind="metadata"
@@ -54,6 +58,7 @@
             </td>
         </tr>
         <tr repeat.for="item of resource.contents[metadata.id]"
+            class="resource-metadata-values-form-item"
             oa-sortable-item="item.bind: item; type-flag.bind: 0">
             <td if.one-time="metadata.control != 'relationship' || skipValidation || disabled || metadata.constraints.relationshipSelectorType == 'tree'">
                 <div>
@@ -88,7 +93,8 @@
                 </div>
             </td>
         </tr>
-        <tr if.bind="!disabled && !resource.contents[metadata.id].length && !controlCanShowEmptyField">
+        <tr if.bind="!disabled && !resource.contents[metadata.id].length && !controlCanShowEmptyField"
+            class="resource-metadata-values-form-item">
             <td>
                 <div class="new-metadata-value-button-container">
                     <new-metadata-value-button click.trigger="addNew()"></new-metadata-value-button>
@@ -97,7 +103,7 @@
         </tr>
         </tbody>
         <tfoot>
-        <tr>
+        <tr class="resource-metadata-values-form-item">
             <td class="validation-message-container"></td>
         </tr>
         </tfoot>

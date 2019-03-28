@@ -3,57 +3,73 @@
 $icon-width: 1.5em;
 $gap-size: $default-gap-size / 2;
 $resource-metadata-value-input-with-buttons-minimum-width: 200px;
+$dragged-element-opacity: 0.85;
 
 resource-form-generated {
   &, & > collapsible-metadata-group {
-    & > span, & > resource-metadata-values-form, .input-container > *, .new-metadata-value-button-container, .drag-handle-with-buttons {
+    & > span, & > resource-metadata-values-form, .input-container > *, .new-metadata-value-button-container {
       @include form-element();
     }
     .metadata-constraints-icons > * {
       margin-left: $gap-size / 2
     }
-    resource-metadata-values-form {
-      & > table {
-        tr:not(:first-child) > td > div {
-          margin-top: $gap-size / 2;
-        }
-        tr:not(:last-child) > td > div {
-          margin-bottom: $gap-size / 2;
-        }
-        td > div {
-          display: flex;
-          min-width: $resource-metadata-value-input-with-buttons-minimum-width; // To also keep correct right margin when the form is narrow.
-          align-items: center;
-          metadata-value-input > compose > * {
-            flex: 1;
-            dropdown-select, tree-resource-picker {
-              width: 100%;
-            }
-          }
-          & > resource-metadata-value-input, & > .metadata-row {
-            flex: 1;
-            & > resource-form-generated {
-              margin-top: $gap-size;
-              margin-left: $gap-size;
-            }
-          }
-          & > .drag-handle-with-buttons {
-            & > * {
-              margin-left: $gap-size;
-            }
-            &.wide-for-three-items {
-              width: calc(3 * #{$icon-width} + 3 * #{$gap-size});
-            }
-          }
-        }
-        td > new-metadata-value-button, td > icon-button {
-          margin-top: $gap-size / 2;
-          margin-bottom: $gap-size / 2;
-        }
-        label {
-          display: block;
-        }
+  }
+}
+
+.resource-metadata-values-form-item {
+  &.oa-drag {
+    background: $default-background-color;
+    opacity: $dragged-element-opacity;
+    & > td {
+      display: block;
+    }
+    collapsible-metadata-group {
+      display: contents;
+    }
+    table {
+      width: 100%;
+    }
+  }
+  &:not(:first-child) > td > div {
+    margin-top: $gap-size / 2;
+  }
+  &:not(:last-child) > td > div {
+    margin-bottom: $gap-size / 2;
+  }
+  .drag-handle-with-buttons {
+    @include form-element();
+  }
+  td > div {
+    display: flex;
+    min-width: $resource-metadata-value-input-with-buttons-minimum-width; // To also keep correct right margin when the form is narrow.
+    align-items: center;
+    metadata-value-input > compose > * {
+      flex: 1;
+      dropdown-select, tree-resource-picker {
+        width: 100%;
       }
     }
+    & > resource-metadata-value-input, & > .metadata-row {
+      flex: 1;
+      & > resource-form-generated {
+        margin-top: $gap-size;
+        margin-left: $gap-size;
+      }
+    }
+    & > .drag-handle-with-buttons {
+      & > * {
+        margin-left: $gap-size;
+      }
+      &.wide-for-three-items {
+        width: calc(3 * #{$icon-width} + 3 * #{$gap-size});
+      }
+    }
+  }
+  td > new-metadata-value-button, td > icon-button {
+    margin-top: $gap-size / 2;
+    margin-bottom: $gap-size / 2;
+  }
+  label {
+    display: block;
   }
 }
