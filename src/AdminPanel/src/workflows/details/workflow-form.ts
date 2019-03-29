@@ -108,6 +108,7 @@ export class WorkflowForm extends ChangeLossPreventerForm {
     return this.workflowRepository
       .update(this.workflow)
       .then(() => {
+        this.changeLossPreventer.disable();
         this.viewing = !this.viewing;
         this.signaler.signal(this.UPDATE_SIGNAL);
         this.originalWorkflow = cloneDeep(this.workflow);
