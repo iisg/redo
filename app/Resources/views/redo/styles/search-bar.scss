@@ -82,6 +82,5 @@ $advanced-options-column-border-width: 1px;
 :not(.title-with-search-bar) > .search-bar {
   flex-shrink: 0; // Required by Chromium.
   padding: $default-gap-size / 2;
-  border-bottom: $default-panel-bottom-border-width $default-panel-bottom-border-style $darkened-secondary-background-color;
-  background-color: $secondary-background-color;
+  @extend .top-panel;
 }

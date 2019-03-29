@@ -14,8 +14,6 @@ $main-theme-color: $blue !default;
 $accents-color: $lightish-blue !default;
 $secondary-accents-color: $light-blue !default;
 
-$default-border-color: $light-grey !default;
-
 $primary-text-color: $dark-grey !default;
 $secondary-text-color: $grey !default;
 $tertiary-text-color: $lightish-grey !default;
@@ -27,3 +25,9 @@ $quaternary-background-color: $very-light-grey !default;
 
 $darkened-secondary-background-color: darken($secondary-background-color, 5) !default;
 $darkened-tertiary-background-color: darken($tertiary-background-color, 5) !default;
+
+$default-border-color: $light-grey !default;
+
+$error-alert-text-color: darken($red, 5) !default;
+$error-alert-background-color: lighten($red, 50) !default;
+$error-alert-border-color: darken($error-alert-background-color, 5) !default;

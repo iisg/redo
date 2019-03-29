@@ -6,68 +6,58 @@
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}
 
-    <div class="login-form-main-container"
+    <div class="login-form-main-container top-panel"
         role="main">
+        {% if error %}
+            <div class="login-error-notification alert">
+                <strong class="error-message">{{ 'Signing in failed' | trans }}.</strong>
+                <button type="button"
+                    class="close-button"
+                    data-dismiss="alert">{{ icon('x', 0.75) }}</button>
+            </div>
+        {% endif %}
         <div class="login-container">
-            {% if error %}
-                <div class="login-error-element alert alert-dismissible alert-danger">
-                    <button type="button"
-                        class="close"
-                        data-dismiss="alert">×
-                    </button>
-                    <strong>{{ 'Signing in failed' | trans }}.</strong>
-                </div>
-            {% endif %}
-            <div class="login-box">
-                <div class="logo-box">
-                    <a class="logo"
-                        href="/"
-                        title="{{ 'Main page' | trans }}"
-                        aria-label="{{ 'Main page' | trans }}">
-                        {{ icon('redo-logo', '1', '0 0 59.093 94.335') }}
-                    </a>
-                </div>
-                <form class="form-box"
-                    method="post"
-                    action="">
-                    <input type="hidden"
-                        name="_csrf_token"
-                        value="{{ csrf_token('authenticate') }}">
-                    <h3 class="administration-label">{{ 'logging_in_app_name' | trans({'{{applicationName}}': applicationName}) }}</h3>
-                    <div class="input-box username-input">
-                        {{ icon('user-2') }}
+            <h1 class="title">{{ 'logging_in_app_name' | trans({'{{applicationName}}': applicationName}) }}</h1>
+            <form class="form"
+                method="post"
+                action="">
+                <input type="hidden"
+                    name="_csrf_token"
+                    value="{{ csrf_token('authenticate') }}">
+                <div class="input-boxes-with-icons">
+                    <div class="input-box-with-icon">
+                        {{ icon('user-2', 2) }}
                         <input name="_username"
                             type="text"
                             id="username"
                             value="{{ last_username }}"
                             title="{{ 'Login' | trans }}">
                     </div>
-                    <div class="input-box">
-                        {{ icon('key') }}
+                    <div class="input-box-with-icon">
+                        {{ icon('key', 2) }}
                         <input name="_password"
                             type="password"
                             id="password"
                             title="{{ 'Password' | trans }}">
-                        <button class="submit-button"
-                            type="submit"
-                            name="{{ 'Sign in' | trans }}"
-                            title="{{ 'Sign in' | trans }}">
-                            {{ icon('accept-2') }}
-                        </button>
                     </div>
-
-                </form>
-            </div>
+                </div>
+                <button class="submit-button default blue"
+                    type="submit"
+                    name="{{ 'Sign in' | trans }}"
+                    title="{{ 'Sign in' | trans }}">
+                    {{ 'Sign in' | trans }}
+                </button>
+            </form>
             <!--
             <div class="information-links-box">
                 <a class="information-link-element"
                     tabindex="0">
-                    {{ icon('help') }}
+                    {{ icon('help', 2) }}
                     <span class="information-link-text">{{ 'Remind password' | trans }}</span>
                 </a>
                 <a class="information-link-element"
                     tabindex="0">
-                    {{ icon('mail') }}
+                    {{ icon('mail', 2) }}
                     <span class="information-link-text">{{ 'Contact administrator' | trans }}</span>
                 </a>
             </div>

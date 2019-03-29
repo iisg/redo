@@ -1,152 +1,111 @@
 $information-link-elements-color: $secondary-text-color;
 
-$text-font-family: "Open Sans", sans-serif;
-$close-error-box-button-font-size: 20px;
-$login-box-padding: 2 * $default-gap-size;
-$logo-height: 140px;
-$icon-height: 2em;
-$username-input-right-margin: calc(#{$icon-height} + #{$default-gap-size / 2});
-$text-font-size: 24px;
+$login-form-maximum-width: 300px;
+$text-font-size: $subtitle-font-size;
 $icons-drop-shadow-spread-radius: 5px;
 
 .login-form-main-container {
-  font-family: $text-font-family;
   margin-bottom: $default-gap-size;
-  background-color: $secondary-background-color;
+
+  .login-error-notification {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap-reverse;
+    padding: $default-gap-size / 2;
+    background-color: $error-alert-background-color;
+    color: $error-alert-text-color;
+    border-color: $error-alert-border-color;
+    &.alert {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+  }
+  .error-message {
+    flex-basis: 0;
+    flex-grow: 1;
+    margin-right: $default-gap-size / 2;
+    padding: $default-gap-size / 2;
+  }
+  .close-button {
+    margin: $default-gap-size / 2 $default-gap-size / 2 $default-gap-size / 2 auto;
+    color: $primary-text-color;
+    transition: color $default-transition-duration;
+    &:not(:hover):not(:focus) {
+      color: $tertiary-text-color;
+    }
+  }
+
+  .title {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: $default-gap-size / 2;
+    text-align: center;
+    font-weight: bold;
+    color: $main-theme-color;
+  }
 
   .login-container {
-    .login-error-element {
-      display: flex;
-      flex-direction: row-reverse;
-      margin-bottom: $default-gap-size;
-      border-radius: 0;
-      &, & > * {
-        padding: $default-gap-size / 2;
+    padding: $default-gap-size / 2;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: $login-form-maximum-width;
+  }
+  .input-box-with-icon {
+    display: flex;
+    align-items: center;
+    .icon, input {
+      margin: $default-gap-size / 2;
+    }
+    .icon {
+      color: $main-theme-color;
+    }
+    input {
+      flex-grow: 1;
+    }
+  }
+
+  .submit-button {
+    margin: $default-gap-size / 2;
+  }
+
+  .information-links-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding: $default-gap-size / 2;
+    & > * {
+      &, & > :not(.icon) {
+        padding: $default-gap-size / 4;
       }
-      strong {
-        flex: 1;
-      }
-      .close {
-        align-self: flex-start;
-        top: initial;
-        right: initial;
-        font-size: $close-error-box-button-font-size;
+      & > .icon {
+        margin: $default-gap-size / 4;
       }
     }
-
-    .login-box {
-      margin: 0 auto;
-      max-width: 600px;
-      padding: $login-box-padding;
-      display: flex;
-      flex-wrap: wrap;
-      .logo-box {
-        margin-left: auto;
-        margin-right: auto;
-        padding: $default-gap-size;
-        .logo {
-          &:hover, &:focus {
-            filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $main-theme-color);
-          }
-          &:focus {
-            outline: unset; // `unset` is used to keep it in Internet Explorer.
-          }
-          .icon {
-            height: $logo-height;
-            color: $main-theme-color;
-          }
-        }
+    .information-link-element {
+      cursor: pointer;
+      display: inherit;
+      align-items: center;
+      text-decoration: none;
+      &:hover, &:focus {
+        filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $information-link-elements-color);
       }
-
-      .form-box {
+      &:focus {
+        outline: unset;
+      }
+      .icon {
+        color: $information-link-elements-color;
+      }
+      .information-link-text {
         flex: 1;
-        &, .administration-label {
-          padding: $default-gap-size / 2;
-        }
-        & > :not(.administration-label) {
-          padding: $default-gap-size / 4;
-          .icon {
-            margin: $default-gap-size / 4;
-          }
-        }
-        .administration-label {
-          margin-top: 0;
-          margin-bottom: 0;
-          text-align: center;
-          font-size: $text-font-size;
-          font-weight: bold;
-          color: $main-theme-color;
-        }
-        .username-input {
-          margin-right: $username-input-right-margin;
-        }
-        .input-box {
-          display: flex;
-          align-items: center;
-          .icon {
-            height: $icon-height;
-            color: $main-theme-color;
-          }
-          input {
-            border-radius: 0;
-            flex: 1;
-            margin: $default-gap-size / 4 $default-gap-size / 4 + $default-gap-size / 2;
-            &:focus {
-              box-shadow: inset 0 0 0 $main-theme-color, 0 0 8px $main-theme-color;
-              border-color: $main-theme-color;
-            }
-          }
-
-          .submit-button {
-            padding: 0;
-            border: none;
-            background: none;
-            .icon {
-              display: block;
-            }
-            &:hover, &:focus {
-              filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $main-theme-color);
-            }
-          }
-        }
-      }
-    }
-
-    .information-links-box {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-evenly;
-      padding: $default-gap-size / 2;
-      & > * {
-        &, & > :not(.icon) {
-          padding: $default-gap-size / 4;
-        }
-        & > .icon {
-          margin: $default-gap-size / 4;
-        }
-      }
-      .information-link-element {
-        cursor: pointer;
-        display: inherit;
-        align-items: center;
-        text-decoration: none;
-        &:hover, &:focus {
-          filter: drop-shadow(0px 0px $icons-drop-shadow-spread-radius $information-link-elements-color);
-        }
-        &:focus {
-          outline: unset;
-        }
-        .icon {
-          height: $icon-height;
-          color: $information-link-elements-color;
-        }
-        .information-link-text {
-          flex: 1;
-          color: $information-link-elements-color;
-          font-weight: normal;
-          font-size: $text-font-size;
-          vertical-align: bottom;
-        }
+        color: $information-link-elements-color;
+        font-weight: normal;
+        font-size: $text-font-size;
+        vertical-align: bottom;
       }
     }
   }

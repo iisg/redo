@@ -27,9 +27,9 @@ html {
   height: 100%;
 }
 
-.search-bar-container {
-  display: flex;
-  justify-content: center;
+.top-panel {
+  background-color: $secondary-background-color;
+  border-bottom: $default-panel-bottom-border-width $default-panel-bottom-border-style $darkened-secondary-background-color;
 }
 
 h1 {
@@ -84,24 +84,44 @@ button {
   padding: 0;
 }
 
-button.default, .default-button {
-  padding: $default-gap-size / 4 $default-gap-size;
-  border: $default-border;
-  border-radius: $default-gap-size / 4;
-  font-weight: 600;
-  transition-property: background-color, border-color, color;
+@mixin button-colors($text-color: $accents-color, $background-color: inherit, $border-color: $default-border-color,
+  $text-color-when-active: $primary-background-color, $background-color-when-active: $accents-color,
+  $border-color-when-active: $accents-color,
+  $text-color-when-disabled: $tertiary-text-color, $background-color-when-disabled: inherit,
+  $border-color-when-disabled: $default-border-color) {
+  transition-property: color, background-color, border-color;
   transition-duration: $default-transition-duration;
   &:not(:disabled):not([disabled]):not(.disabled) {
-    color: $accents-color;
+    color: $text-color;
+    background-color: $background-color;
+    border-color: $border-color;
     &.active, &:hover, &:focus {
-      background-color: $accents-color;
-      border-color: $accents-color;
-      color: $primary-background-color;
+      color: $text-color-when-active;
+      background-color: $background-color-when-active;
+      border-color: $border-color-when-active;
     }
   }
   &:disabled, &[disabled], &.disabled {
-    color: $default-border-color;
+    color: $text-color-when-disabled;
+    background-color: $background-color-when-disabled;
+    border-color: $border-color-when-disabled;
   }
+}
+
+button.default, .default-button {
+  padding: $default-gap-size / 4 $default-gap-size;
+  border-width: $default-border-width;
+  border-style: $default-border-style;
+  border-radius: $default-gap-size / 4;
+  font-weight: 600;
+  &:not(.blue) {
+    @include button-colors();
+  }
+}
+
+button.blue, .blue-button {
+  @include button-colors($primary-background-color, $accents-color, $secondary-accents-color,
+    $primary-background-color, $main-theme-color, $accents-color);
 }
 
 label {
