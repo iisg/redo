@@ -74,7 +74,14 @@ class RedoDepositController extends Controller {
             array_filter(
                 $resourceKinds,
                 function (ResourceKind $resourceKind) {
-                    return $resourceKind->hasWorkflow();
+                    try {
+                        if ($resourceKind->hasWorkflow()) {
+                            new WorkflowPlaceTaggedPath('deposit', $resourceKind->getWorkflow(), $this->workflowPlaceTaggerHelper);
+                            return true;
+                        }
+                    } catch (\InvalidArgumentException $e) {
+                    }
+                    return false;
                 }
             )
         );
