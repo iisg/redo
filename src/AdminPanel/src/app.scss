@@ -297,9 +297,6 @@ body {
         z-index: 1;
         top: 0;
       }
-      tfoot td {
-        bottom: 0;
-      }
       tbody {
         vertical-align: top;
         tr {
@@ -315,38 +312,11 @@ body {
           }
         }
       }
-      th, td {
-        padding: $default-gap-size / 4;
-        &:first-child {
-          padding-left: $default-gap-size / 2;
-        }
-        &:last-child {
-          padding-right: $default-gap-size / 2;
-          &:empty {
-            padding: 0;
-            width: $default-gap-size / 4;
-          }
-        }
+      tfoot td {
+        bottom: 0;
       }
-      td.with-buttons-container {
-        padding: 0;
-        vertical-align: middle;
-        & > div {
-          display: flex;
-          justify-content: flex-end;
-          & > * {
-            margin: $default-gap-size / 4;
-            padding: 0;
-            background-color: initial;
-            color: $blue;
-            &.remove:not([disabled]) {
-              color: $red;
-            }
-            &[disabled] {
-              color: $grey;
-            }
-          }
-        }
+      th, td {
+        @include regular-table-cell();
       }
     }
     &.transparent {
@@ -359,9 +329,6 @@ body {
       td.today:before {
         border-bottom-color: $blue;
       }
-    }
-    td.with-throbber {
-      width: 1em;
     }
   }
 
@@ -402,10 +369,6 @@ body {
     padding-top: $default-gap-size / 2;
     padding-bottom: $default-gap-size / 2;
   }
-}
-
-.oa-drag:not(.resource-metadata-values-form-item) {
-  display: none;
 }
 
 .drag-handle {

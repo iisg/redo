@@ -15,3 +15,15 @@
     flex: 1;
   }
 }
+
+.metadata-list-item.oa-drag {
+  display: table;
+  background: $default-background-color;
+  opacity: $dragged-element-opacity;
+  td {
+    @include regular-table-cell();
+  }
+  a {
+    color: $default-text-color;
+  }
+}

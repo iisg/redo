@@ -48,7 +48,8 @@
             <tbody oa-sortable="items.bind: metadataList; allowed-drag-selector: .drag-handle; scroll: metadata-list;
                 on-stop.call: onOrderChanged(); axis: y">
             <tr repeat.for="metadata of metadataList"
-                oa-sortable-item="item.bind: metadata"
+                class="metadata-list-item"
+                oa-sortable-item="item.bind: metadata; locked-flag.bind: metadata.id > 0 ? 0 : -1"
                 go-to-link-on-row-click>
                 <td>
                     <a route-href="route: metadata/details; params.bind: {id: metadata.id}"

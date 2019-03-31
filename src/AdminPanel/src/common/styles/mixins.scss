@@ -121,6 +121,52 @@
   }
 }
 
+@mixin regular-table-cell {
+  padding: $default-gap-size / 4;
+  &:first-child {
+    padding-left: $default-gap-size / 2;
+  }
+  &:last-child {
+    padding-right: $default-gap-size / 2;
+  }
+  &:empty, &.with-buttons-container, &.with-throbber {
+    padding: 0;
+    width: 0;
+  }
+  &.with-buttons-container, &.with-throbber {
+    vertical-align: middle;
+    &:first-child {
+      padding-left: $default-gap-size / 4;
+    }
+    &:last-child {
+      padding-right: $default-gap-size / 4;
+    }
+  }
+  &.with-buttons-container {
+    & > div {
+      display: flex;
+      justify-content: flex-end;
+      & > * {
+        margin: $default-gap-size / 4;
+        padding: 0;
+        background-color: initial;
+        color: $blue;
+        &.remove:not([disabled]) {
+          color: $red;
+        }
+        &[disabled] {
+          color: $grey;
+        }
+      }
+    }
+  }
+  &.with-throbber {
+    throbber {
+      margin: $default-gap-size / 4;
+    }
+  }
+}
+
 @mixin form-element($input-height: 34px) {
   display: flex;
   min-height: $input-height;

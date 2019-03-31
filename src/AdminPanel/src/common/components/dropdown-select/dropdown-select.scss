@@ -11,6 +11,12 @@ transition-chooser, statistics-period-chooser, audit-settings-chooser, flags-sel
   display: flex;
   align-items: center;
   overflow: hidden;
+  throbber {
+    margin-left: $default-gap-size / 2;
+    &.icon {
+      display: inherit;
+    }
+  }
 }
 
 .select2.select2-container {
@@ -99,11 +105,5 @@ transition-chooser, statistics-period-chooser, audit-settings-chooser, flags-sel
   }
   .selection .hidden-in-selection {
     display: none;
-  }
-}
-throbber {
-  margin-left: $default-gap-size / 2;
-  &.icon {
-    display: inherit;
   }
 }
