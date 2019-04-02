@@ -1,0 +1,17 @@
+[server]
+root_url = https://repeka.local/grafana/
+
+[paths]
+plugins=/opt/grafana/plugins
+
+[smtp]
+enabled = true
+host = localhost:25
+user =
+# If the password contains # or ; you have to wrap it with trippel quotes. Ex """#password;"""
+password =
+cert_file =
+key_file =
+skip_verify = false
+from_address = admin@grafana.repeka
+from_name = Repeka Alert

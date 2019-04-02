@@ -3,6 +3,8 @@
 cd "$(dirname "$0")"
 
 ln -s ./../var/config/docker.env .env >/dev/null 2>&1
+rm -fr repeka-metrics/config
+cp -a ./../var/config/grafana repeka-metrics/config
 
 if [ ! -f .env ]; then
   echo "Could not read the docker.env configuration file."
