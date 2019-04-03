@@ -5,7 +5,6 @@ use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Exception\EntityNotFoundException;
-use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 
 interface ResourceKindRepository {
@@ -23,6 +22,8 @@ interface ResourceKindRepository {
 
     /** @throws EntityNotFoundException if the entity could not be found */
     public function findByNameOrId($nameOrId): ResourceKind;
+
+    public function findCollectionResourceKinds(): array;
 
     public function save(ResourceKind $resourceKind): ResourceKind;
 

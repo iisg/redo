@@ -57,6 +57,15 @@ class ResourceKindDoctrineRepository extends EntityRepository implements Resourc
         }
     }
 
+    public function findCollectionResourceKinds(): array {
+        $query = "SELECT rk.* FROM resource_kind rk, jsonb_array_elements(metadata_list) mParent " .
+            "WHERE mParent->>'id' = '-1' AND jsonb_array_length(mParent->'constraints'->'resourceKind') > 0";
+        $em = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::resourceKind($em);
+        $dbQuery = $em->createNativeQuery($query, $resultSetMapping);
+        return $dbQuery->getResult();
+    }
+
     public function exists(int $id): bool {
         return !!$this->find($id);
     }

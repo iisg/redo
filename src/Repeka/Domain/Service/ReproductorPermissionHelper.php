@@ -23,7 +23,12 @@ class ReproductorPermissionHelper {
 
     /** @return ResourceEntity[]|\Traversable */
     public function getCollectionsWhereUserIsReproductor(User $user, ?ResourceKind $resourceKind = null) {
-        $query = ResourceListQuery::builder()->setPermissionMetadataId(SystemMetadata::REPRODUCTOR)->setExecutor($user)->build();
+        $collectionResourceKinds = $this->resourceKindRepository->findCollectionResourceKinds();
+        $query = ResourceListQuery::builder()
+            ->setPermissionMetadataId(SystemMetadata::REPRODUCTOR)
+            ->setExecutor($user)
+            ->filterByResourceKinds($collectionResourceKinds)
+            ->build();
         $resources = $this->commandBus->handle($query);
         if ($resourceKind) {
             $resources = array_values(
