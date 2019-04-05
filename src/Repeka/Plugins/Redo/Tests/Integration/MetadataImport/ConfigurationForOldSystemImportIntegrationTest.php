@@ -36,7 +36,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
         $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
         $this->metadataRepository = $this->container->get(MetadataRepository::class);
         $metadata = [];
-        $ids = [53, 156, 125, 4, 63, 62, 99, 3, 61, 64, 65, 5, 172, 66, 136, 70, 86, 181, 135, 72, 79, 76, 117, 173];
+        $ids = [53, 156, 125, 4, 63, 62, 99, 3, 61, 64, 65, 5, 172, 66, 136, 70, 86, 181, 135, 72, 79, 76, 232, 173];
         foreach ($ids as $id) {
             $metadata[] = $this->metadataRepository->findOne($id);
         }
@@ -141,7 +141,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             181 => [['value' => 'EDT_4 Do udostępnienia na zewnątrz']],
             79 => [['value' => 'IV-37861']],
             76 => [['value' => '100000228666']],
-            117 => [['value' => '100000228666']],
+            232 => [['value' => '100000228666']],
             173 => [['value' => '103684']],
             125 => [['value' => '5466']] //są też inne w marcxmlu ale nie występują w pg_dumpie więc nie są importowane
         ];
@@ -305,7 +305,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
             135 => [['value' => 'Handbuch der Ingenieurwissenschaften in vier Bänden Bd. 3']],
             79 => [['value' => 'III-307350']],
             76 => [['value' => '100000305812']],
-            117 => [['value' => '100000305812']],
+            232 => [['value' => '100000305812']],
             173 => [['value' => '136095']],
         ];
         $importedValues = $this->retrieveImportedValues($filePath, $this->configPath, $importedId);

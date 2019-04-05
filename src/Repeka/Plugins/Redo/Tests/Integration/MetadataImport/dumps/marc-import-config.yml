@@ -796,7 +796,7 @@ mappings:
             {% endfor %}
           {% endif %}
       - name: 'trim'
-  117:
+  232:
     key: '952'
     transforms:
       - name: 'displayStrategy'
