@@ -106,6 +106,10 @@ repeka:
       label:
         EN: Deposited resources by users
         PL: Zdeponowane zasoby przez użytkowników
+    - usageKey: resourceBrowse
+      label:
+        EN: Number of browsed resources
+        PL: Liczba przeglądniętych zasobow
   expose_endpoints:
     /about:
       resourceId: 19
@@ -133,6 +137,7 @@ repeka:
         Content-Type: 'application/rss+xml'
     /resources/{resourceId}/browse:
       template: redo/resource-details/image-reader.twig
+      endpointUsageTrackingKey: resourceBrowse
 m6_statsd:
   servers:
     default:

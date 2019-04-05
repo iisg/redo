@@ -7,12 +7,13 @@ import {StatisticsCollection} from "./statistics/statistics-collection";
 import {getQueryParameters} from "../common/utils/url-utils";
 import {changeHandler} from "../common/components/binding-mode";
 import {debounce} from "lodash";
+import {computedFrom} from "aurelia-binding";
 
 @autoinject
 export class StatisticsView implements ComponentAttached {
   statisticsCollection: StatisticsCollection;
-  @bindable(changeHandler('fetchStatistics'))dateFrom: string;
-  @bindable(changeHandler('fetchStatistics'))dateTo: string;
+  @bindable(changeHandler('fetchStatistics')) dateFrom: string;
+  @bindable(changeHandler('fetchStatistics')) dateTo: string;
   displayProgressBar = false;
 
   constructor(private auditEntryRepository: AuditEntryRepository, private router: Router) {
@@ -57,5 +58,11 @@ export class StatisticsView implements ComponentAttached {
     }
     this.router.navigateToRoute('audit', parameters, {trigger: false, replace: true});
     this.fetchStatistics();
+  }
+
+  @computedFrom('statisticsCollection')
+  get isAnyStatistic(): boolean {
+    return this.statisticsCollection
+      && !!this.statisticsCollection.statistics.filter(v => v.statisticsEntries.length).length;
   }
 }

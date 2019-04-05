@@ -30,15 +30,15 @@
             </div>
             <template repeat.for="statistics of statisticsCollection.statistics">
                 <div class="statistics-table">
-                    <statistics-table if.bind="statistics.usageKey !== 'ips'"
+                    <statistics-table if.bind="statistics.usageKey !== 'ips' && statistics.statisticsEntries.length"
                         statistics.bind="statistics"></statistics-table>
-                    <ip-statistics-table else
+                    <ip-statistics-table if.bind="statistics.usageKey === 'ips' && statistics.statisticsEntries.length"
                         statistics.bind="statistics"></ip-statistics-table>
                 </div>
             </template>
         </div>
     </loading-cover>
-    <div if.bind="statisticsCollection.statistics.length === 0 && !displayProgressBar"
+    <div if.bind="!isAnyStatistic && !displayProgressBar"
         class="alert alert-info">
         <icon name="information"></icon>
         ${'No entry matches given filters.' | t}
