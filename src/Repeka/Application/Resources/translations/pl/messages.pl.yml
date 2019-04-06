@@ -5,7 +5,6 @@ Deposit: Deponuj
 My resources: Moje zasoby
 Admin panel: Panel administracyjny
 Home page: Strona główna
-logging_in_app_name: "Logowanie {{applicationName}}"
 Search in repository resources: Szukaj w zasobach repozytorium
 search_large_placeholder: Szukaj w zasobach repozytorium
 search_small_placeholder: szukaj w zasobach
