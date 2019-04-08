@@ -150,12 +150,14 @@ function removeUnwantedExtensions() {
       '!release/src/Repeka/Plugins',
       'release/docker/docker-compose.*.yml',
       '!release/docker/docker-compose.persistent.yml',
+      '!release/var/config/sample-configs/config_local.dev.yml',
     ];
     for (let extensionName of extensionsNames) {
       directoriesToRemove.push(`!release/app/Resources/views/${extensionName.toLowerCase()}/**`);
       directoriesToRemove.push(`!release/docker/docker-compose.${extensionName.toLowerCase()}.yml`);
       const extensionNameCapitalizedFirst = extensionName.charAt(0).toUpperCase() + extensionName.slice(1);
       directoriesToRemove.push(`!release/src/Repeka/Plugins/${extensionNameCapitalizedFirst}/**`);
+      directoriesToRemove.push(`!release/var/config/sample-configs/config_local.${extensionName.toLowerCase()}.yml`);
     }
     del.sync(directoriesToRemove);
   }
