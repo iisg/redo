@@ -1,7 +1,8 @@
-FROM php:7.1.16-apache
+FROM php:7.1.27-apache-stretch
 
-RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" >> /etc/apt/sources.list.d/pgdg.list \
+RUN apt-get update && apt-get -y install gnupg2 \
+  && curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+  && echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
      libicu-dev \
