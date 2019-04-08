@@ -10,7 +10,7 @@
 
     <table class="transparent"
         ref="valueTable">
-        <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allowed-drag-selector: .drag-handle; scroll: .tab-content;
+        <tbody oa-sortable="items.bind: resource.contents[metadata.id]; allowed-drag-selector: .drag-handle; scroll: .tab-content, html;
             type-flag.bind: 0; axis: y">
         <tr if.bind="metadata.control === 'relationship'"
             class="resource-metadata-values-form-item">
