@@ -105,9 +105,8 @@ class MetadataListQuerySqlFactory {
     }
 
     protected function addOrderBy(): void {
-        if (empty($this->orderBy)) {
-            $this->orderBy[] = "ordinal_number ASC";
-        }
+        $this->orderBy[] = "ordinal_number ASC";
+        $this->orderBy[] = "id ASC";
     }
 
     public function getParams(): array {

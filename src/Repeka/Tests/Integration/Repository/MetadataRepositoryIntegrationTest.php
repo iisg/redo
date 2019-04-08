@@ -115,4 +115,22 @@ class MetadataRepositoryIntegrationTest extends IntegrationTestCase {
         $this->assertContains(SystemMetadata::PARENT, $systemMetadataIds);
         $this->assertContains(SystemMetadata::GROUP_MEMBER, $systemMetadataIds);
     }
+
+    public function testOrderingSystemMetadataByID() {
+        $sortedIds = [SystemMetadata::USERNAME, SystemMetadata::PARENT, SystemMetadata::GROUP_MEMBER];
+        sort($sortedIds);
+        $unsortedIds = [$sortedIds[1], $sortedIds[0], $sortedIds[2]];
+        // touch all metadata in not sorted order so postgres would return them in such order
+        $this->metadataRepository->save((new SystemMetadata($sortedIds[1]))->toMetadata());
+        $this->metadataRepository->save((new SystemMetadata($sortedIds[0]))->toMetadata());
+        $this->metadataRepository->save((new SystemMetadata($sortedIds[2]))->toMetadata());
+        $query = MetadataListQuery::builder()->filterByIds([-1000])->addSystemMetadataIds($unsortedIds)->build();
+        $actualIds = array_map(
+            function ($metadata) {
+                return $metadata->getId();
+            },
+            $this->metadataRepository->findByQuery($query)
+        );
+        $this->assertEquals($sortedIds, $actualIds);
+    }
 }
