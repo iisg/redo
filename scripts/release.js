@@ -117,6 +117,7 @@ function copySingleRequiredFiles() {
     'var/.htaccess',
     'var/config/docker.env.sample',
     'var/config/user_data_mapping.json.sample',
+    'var/config/grafana/custom.ini.sample',
     'var/volumes/initialize-directory-structure.sh',
   ].forEach((filepath) => {
     fs.copySync(filepath, 'release/' + filepath);

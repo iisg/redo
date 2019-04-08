@@ -1,6 +1,9 @@
 FROM php:7.1.16-apache
 
-RUN curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list \
+  && sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list \
+  && echo 'Acquire::Check-Valid-Until "false";' >> /etc/apt/apt.conf \
+  && curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
   && echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" >> /etc/apt/sources.list.d/pgdg.list \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
