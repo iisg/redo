@@ -1,10 +1,8 @@
-FROM php:7.1.16-apache
+FROM php:7.1.27-apache-stretch
 
-RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list \
-  && sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list \
-  && echo 'Acquire::Check-Valid-Until "false";' >> /etc/apt/apt.conf \
+RUN apt-get update && apt-get -y install gnupg2 \
   && curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" >> /etc/apt/sources.list.d/pgdg.list \
+  && echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
      libicu-dev \
