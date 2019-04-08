@@ -70,6 +70,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
             ->addOption('id-namespace', null, InputOption::VALUE_OPTIONAL)
             ->addOption('unmap-updated', null, InputOption::VALUE_NONE)
             ->addOption('delete-hidden', null, InputOption::VALUE_NONE)
+            ->addOption('add-hidden', null, InputOption::VALUE_NONE)
             ->addOption('workflow-place', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY)
             ->addOption('offset', null, InputOption::VALUE_REQUIRED)
             ->addOption('limit', null, InputOption::VALUE_REQUIRED)
@@ -150,7 +151,7 @@ class PkImportResourcesCommand extends ContainerAwareCommand {
                 if (is_array($resourceData['ID'])) {
                     $resourceData['ID'] = current($resourceData['ID']);
                 }
-                if (isset($resourceData['VISIBLE']) && !$resourceData['VISIBLE']) {
+                if (isset($resourceData['VISIBLE']) && !$resourceData['VISIBLE'] && !$input->getOption('add-hidden')) {
                     $stats['skippedHidden']++;
                     $resourceId = intval(trim($resourceData['ID']));
                     $existingResourceId = $idMapping[$idMappingNamespace][$resourceId] ?? null;
