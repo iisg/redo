@@ -17,7 +17,7 @@ User menu: Menu użytkownika
 Error: Błąd
 The page you requested does not exist: Strona, na którą trafiłeś nie istnieje
 The page you requested caused application error: Strona, na którą trafiłeś spowodowała błąd aplikacji
-Signing in failed: Logowanie nieudane
+Login data is incorrect: Dane logowania są nieprawidłowe
 
 sign_in_title: Logowanie
 Sign in: Zaloguj
