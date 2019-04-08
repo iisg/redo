@@ -78,9 +78,6 @@ class ResourcesSchemaLoader {
 
     private function loadSchema(array $schema) {
         $systemMetadata = $this->getObligatorySystemMetadata();
-        foreach ($systemMetadata as $metadata) {
-            $this->addSupportForResourceKindToMetadata($metadata, [SystemResourceKind::USER]);
-        }
         foreach ($schema['resourceKinds'] as $schemaConfiguration) {
             Assertion::keyExists($schemaConfiguration, 'resourceClass');
             Assertion::keyExists($schemaConfiguration, 'metadata');
@@ -95,6 +92,7 @@ class ResourcesSchemaLoader {
                 $this->createOrUpdateSubmetadata($resourceClass, $schemaConfiguration['submetadata']);
             }
         }
+        $this->addConstraintsToUserRelatedMetadata($systemMetadata);
         if (isset($schema['resources'])) {
             $this->loadResources($schema['resources']);
         }
@@ -138,6 +136,15 @@ class ResourcesSchemaLoader {
                 ]
             )->build()
         );
+    }
+
+    private function addConstraintsToUserRelatedMetadata($userRelatedMetadata) {
+        $groupResourceKind = $this->resourceKindRepository->findByName('grupa');
+        $groupMetadata = $this->metadataRepository->findByName('group_member');
+        $this->addSupportForResourceKindToMetadata($groupMetadata, [$groupResourceKind->getId()]);
+        foreach ($userRelatedMetadata as $metadata) {
+            $this->addSupportForResourceKindToMetadata($metadata, [SystemResourceKind::USER, $groupResourceKind->getId()]);
+        }
     }
 
     private function addSupportForResourceKindToMetadata(Metadata $metadata, array $resourceKindIds) {

@@ -61,6 +61,15 @@ class ReproductorPermissionHelper {
         }
     }
 
+    /** @return ResourceEntity | null */
+    public function getCollectionOfKindInWhichUserIsReproductor(User $user, ResourceKind $resourceKind) {
+        return $this->commandBus->handle(
+            ResourceListQuery::builder()
+                ->filterByContents([SystemMetadata::REPRODUCTOR => $user->getGroupIdsWithUserId()])
+                ->filterByResourceKind($resourceKind)->build()
+        )[0] ?? null;
+    }
+
     private function getAllowedSubresourceKindIds(ResourceEntity $resource): array {
         return $resource->getKind()->getMetadataByIdOrName(SystemMetadata::PARENT)->getConstraints()['resourceKind'] ?? [];
     }
