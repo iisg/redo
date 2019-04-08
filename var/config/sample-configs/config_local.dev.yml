@@ -71,7 +71,7 @@ repeka:
         PL: Wszystkie wpisy audytu z paginacją i tytułem
   expose_endpoints:
     /about:
-      resourceId: 19
+      resourceId: 21
       metadata: wyrenderowana_tresc_strony
     /resources/{resourceId}:
       template: redo/resource-details/resource-details.twig

@@ -27,10 +27,10 @@ class SecurityOracle {
         return $this->hasPermission($entity, 'VIEW', $userToken);
     }
 
-    private function hasPermission(Identifiable $entity, string $permissionName, ?TokenInterface $userToken = null): bool {
+    public function hasPermission($subject, string $permissionName, ?TokenInterface $userToken = null): bool {
         if (!$userToken) {
             $userToken = $this->getCurrentUserToken();
         }
-        return $this->accessDecisionManager->decide($userToken, [$permissionName], $entity);
+        return $this->accessDecisionManager->decide($userToken, [$permissionName], $subject);
     }
 }

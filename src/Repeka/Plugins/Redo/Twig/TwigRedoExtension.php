@@ -2,7 +2,10 @@
 namespace Repeka\Plugins\Redo\Twig;
 
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
+use Repeka\Application\Security\SecurityOracle;
+use Repeka\Application\Security\Voters\ResourceFileVoter;
 use Repeka\Application\Service\CurrentUserAware;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Metadata\MetadataImport\Mapping\Mapping;
 use Repeka\Plugins\Redo\Authentication\UserDataMapping;
 
@@ -11,14 +14,18 @@ class TwigRedoExtension extends \Twig_Extension {
 
     /** @var UserDataMapping */
     private $userDataMapping;
+    /** @var SecurityOracle */
+    private $securityOracle;
 
-    public function __construct(UserDataMapping $userDataMapping) {
+    public function __construct(UserDataMapping $userDataMapping, SecurityOracle $securityOracle) {
         $this->userDataMapping = $userDataMapping;
+        $this->securityOracle = $securityOracle;
     }
 
     public function getFunctions() {
         return [
             new \Twig_Function('getUserDataMapping', [$this, 'getUserDataMapping']),
+            new \Twig_Function('canUserSeeFiles', [$this, 'canUserSeeFiles']),
         ];
     }
 
@@ -41,5 +48,9 @@ class TwigRedoExtension extends \Twig_Extension {
                 );
             }
         );
+    }
+
+    public function canUserSeeFiles(ResourceEntity $resource) {
+        return $this->securityOracle->hasPermission(['resource' => $resource], ResourceFileVoter::FILE_DOWNLOAD_PERMISSION);
     }
 }
