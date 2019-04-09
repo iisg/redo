@@ -23,6 +23,7 @@ RUN apt-get update && apt-get -y install gnupg2 \
      pdo_pgsql \
      pgsql \
      curl \
+     soap \
   && apt-get autoremove \
   && rm -r /var/lib/apt/lists/* \
   && apt-get clean
