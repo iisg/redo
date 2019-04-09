@@ -32,7 +32,7 @@
             {% set referer = app.request.headers.get('referer') %}
             var extraOptions = {
               bookUrl: '{{ app.request.headers.get('referer') | default(resourceUrl) }}',
-              bookUrlText: '{{ resource | metadata('label') }}<br>← {{ 'Go back' | trans({}, 'bookreader') }}',
+              bookUrlText: '{{ resource | metadata('label') | escape('js') }}<br>← {{ 'Go back' | trans({}, 'bookreader') }}',
               bookUrlTitle: '{{ 'Go back' | trans({}, 'bookreader') }}',
             };
             bookreader = instantiateBookReader('#BookReader', extraOptions);
