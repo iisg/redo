@@ -8,7 +8,7 @@ use Repeka\Domain\Exception\InvalidResourceDisplayStrategyException;
 
 interface ResourceDisplayStrategyEvaluator {
     /**
-     * @param ResourceEntity|ResourceContents $resourceEntity
+     * @param ResourceEntity|ResourceContents|null $resourceEntity
      * @param string $template
      * @return string
      */

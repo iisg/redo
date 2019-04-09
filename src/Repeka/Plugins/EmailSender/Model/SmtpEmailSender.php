@@ -1,12 +1,24 @@
 <?php
 namespace Repeka\Plugins\EmailSender\Model;
 
+use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
+
 class SmtpEmailSender implements EmailSender {
     private $fromEmail;
     private $fromName;
     private $mailer;
-    private $message;
-    private $transport;
+    /** @var ResourceDisplayStrategyEvaluator */
+    private $resourceDisplayStrategyEvaluator;
+    /** @var string */
+    private $smtpHost;
+    /** @var int */
+    private $smtpPort;
+    /** @var string */
+    private $smtpUsername;
+    /** @var string */
+    private $smtpPassword;
+    /** @var string|null */
+    private $smtpEncryption;
 
     public function __construct(
         string $smtpHost,
@@ -15,29 +27,38 @@ class SmtpEmailSender implements EmailSender {
         string $smtpPassword,
         ?string $smtpEncryption,
         string $fromEmail,
-        string $fromName
+        string $fromName,
+        ResourceDisplayStrategyEvaluator $resourceDisplayStrategyEvaluator
     ) {
         $this->fromEmail = $fromEmail;
         $this->fromName = $fromName;
-        $this->transport = (new \Swift_SmtpTransport($smtpHost, $smtpPort))
-            ->setUsername($smtpUsername)
-            ->setPassword($smtpPassword);
-        if ($smtpEncryption) {
-            $this->transport->setEncryption($smtpEncryption);
-        }
-        $this->mailer = new \Swift_Mailer($this->transport);
+        $this->smtpHost = $smtpHost;
+        $this->smtpPort = $smtpPort;
+        $this->smtpUsername = $smtpUsername;
+        $this->smtpPassword = $smtpPassword;
+        $this->smtpEncryption = $smtpEncryption;
+        $this->resourceDisplayStrategyEvaluator = $resourceDisplayStrategyEvaluator;
     }
 
-    public function newMessage(): \Swift_Message {
-        $this->message = (new \Swift_Message())->setFrom([$this->fromEmail => $this->fromName]);
-        return $this->message;
+    public function newMessage(): EmailMessage {
+        return (new EmailMessage($this, $this->resourceDisplayStrategyEvaluator))
+            ->setFrom([$this->fromEmail => $this->fromName]);
     }
 
     public function send(\Swift_Message $message): int {
-        return $this->mailer->send($message);
+        return $this->getMailer()->send($message);
     }
 
-    public function getTransport(): \Swift_SmtpTransport {
-        return $this->transport;
+    private function getMailer(): \Swift_Mailer {
+        if (!$this->mailer) {
+            $transport = (new \Swift_SmtpTransport($this->smtpHost, $this->smtpPort))
+                ->setUsername($this->smtpUsername)
+                ->setPassword($this->smtpPassword);
+            if ($this->smtpEncryption) {
+                $transport->setEncryption($this->smtpEncryption);
+            }
+            $this->mailer = new \Swift_Mailer($transport);
+        }
+        return $this->mailer;
     }
 }

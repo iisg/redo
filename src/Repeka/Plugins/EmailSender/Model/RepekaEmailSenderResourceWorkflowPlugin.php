@@ -7,7 +7,6 @@ use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlacePluginConfiguration;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
 use Repeka\Domain\Workflow\ResourceWorkflowPluginConfigurationOption;
-use Repeka\Plugins\EmailSender\Util\EmailUtils;
 
 class RepekaEmailSenderResourceWorkflowPlugin extends ResourceWorkflowPlugin {
     private $mailer;
@@ -24,21 +23,17 @@ class RepekaEmailSenderResourceWorkflowPlugin extends ResourceWorkflowPlugin {
         $email = $this->displayStrategyEvaluator->render($resource, $config->getConfigValue('email'));
         $subject = $this->displayStrategyEvaluator->render($resource, $config->getConfigValue('subject'));
         $message = $this->displayStrategyEvaluator->render($resource, $config->getConfigValue('message'));
-        $emailTab = EmailUtils::getValidEmailAddresses($email);
-        if ($emailTab) {
-            try {
-                $message = $this->mailer->newMessage()
-                    ->setTo($emailTab)
-                    ->setSubject($subject)
-                    ->setBody($message);
-                if (!$this->mailer->send($message)) {
-                    $this->newAuditEntry($event, "not_sent");
-                }
-            } catch (\Exception $e) {
-                $this->newAuditEntry($e, 'failure', ['message' => $e->getMessage()]);
+        try {
+            $sent = $this->mailer->newMessage()
+                ->setTo($email)
+                ->setSubject($subject)
+                ->setBody($message)
+                ->send();
+            if (!$sent) {
+                $this->newAuditEntry($event, "not_sent");
             }
-        } else {
-            $this->newAuditEntry($event, "bad_email");
+        } catch (\Exception $e) {
+            $this->newAuditEntry($e, 'failure', ['message' => $e->getMessage()]);
         }
     }
 

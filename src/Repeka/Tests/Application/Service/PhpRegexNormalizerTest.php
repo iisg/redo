@@ -40,17 +40,4 @@ class PhpRegexNormalizerTest extends \PHPUnit_Framework_TestCase {
             ['x\\', 'x.']
         );
     }
-
-    public function testNormalizesBackslash() {
-        $this->normalizeAndMatch(
-            '^x\\x',
-            ['x\\x', 'x\\x...'],
-            ['x/x', 'x.x', 'xxx', 'xax']
-        );
-        $this->normalizeAndMatch(
-            '\\x',
-            ['\\x', '...\\x', '\\x...', 'x\\x', '\\x\\'],
-            ['x/', 'x.']
-        );
-    }
 }
