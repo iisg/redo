@@ -37,6 +37,8 @@ resource-form {
 
   .error-label {
     display: block;
+    width: 100%;
+    padding: $default-gap-size / 4 $default-gap-size / 2 $default-gap-size * 3 / 4 $default-gap-size / 2;
     text-align: center;
     color: $red;
   }
