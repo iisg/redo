@@ -21,7 +21,9 @@ export class MinMaxValueConstraintValidator extends SingleValueConstraintValidat
 
   validate(value: number, metadata: Metadata, resource: Resource): boolean {
     const minMax = metadata.constraints.minMaxValue;
-    return (minMax.min == undefined || value >= minMax.min) && (minMax.max == undefined || value <= minMax.max);
+    return value
+      ? (minMax.min == undefined || value >= minMax.min) && (minMax.max == undefined || value <= minMax.max)
+      : true;
   }
 
   getErrorMessage(metadata: Metadata, resource: Resource): string {
