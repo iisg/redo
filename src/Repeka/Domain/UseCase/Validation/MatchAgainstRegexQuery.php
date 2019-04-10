@@ -2,10 +2,10 @@
 namespace Repeka\Domain\UseCase\Validation;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
-use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 
 class MatchAgainstRegexQuery extends AbstractCommand {
-    use RequireOperatorRole;
+    use RequireNoRoles;
 
     /** @var string */
     private $regex;

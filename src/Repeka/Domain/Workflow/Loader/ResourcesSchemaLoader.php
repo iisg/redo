@@ -5,10 +5,10 @@ use Assert\Assertion;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Repository\Transactional;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
@@ -167,15 +167,21 @@ class ResourcesSchemaLoader {
 
     private function loadResources(array $resourceScheme) {
         $references = [];
+        $relationshipMetadataQuery = MetadataListQuery::builder()->filterByControl(MetadataControl::RELATIONSHIP())->build();
+        $relationshipMetadata = $this->metadataRepository->findByQuery($relationshipMetadataQuery);
         foreach ($resourceScheme as $resourceConfig) {
             $resourceKind = $this->resourceKindRepository->findByName($resourceConfig['resourceKind']);
             $identifiableMetadata = $this->metadataRepository->findByName($resourceConfig['identifiedBy']);
+            $commonMetadata = $resourceConfig['commonMetadata'] ?? [];
             $ref = $resourceConfig['ref'] ?? null;
             $refIndex = 0;
             foreach ($resourceConfig['instances'] as $resourceContents) {
-                $parent = $resourceContents['parent'] ?? null;
-                if ($parent && isset($references[$parent])) {
-                    $resourceContents['parent'] = $references[$parent];
+                $resourceContents = array_merge($commonMetadata, $resourceContents);
+                foreach ($relationshipMetadata as $referencableMetadata) {
+                    $value = $resourceContents[$referencableMetadata->getName()] ?? null;
+                    if ($value && isset($references[$value])) {
+                        $resourceContents[$referencableMetadata->getName()] = $references[$value];
+                    }
                 }
                 $resource = $this->createOrUpdateResource($resourceKind, $identifiableMetadata, $resourceContents);
                 if ($ref) {
@@ -294,9 +300,6 @@ class ResourcesSchemaLoader {
     }
 
     private function createOrUpdateResource(ResourceKind $resourceKind, Metadata $identifiableMetadata, array $resourceContents) {
-        if (!isset($resourceContents[SystemMetadata::VISIBILITY])) {
-            $resourceContents[SystemMetadata::VISIBILITY] = [SystemResource::UNAUTHENTICATED_USER];
-        }
         $contents = $this->resourceContentsAdjuster->adjust($resourceContents);
         $id = implode($contents->getValuesWithoutSubmetadata($identifiableMetadata));
         $query = ResourceListQuery::builder()

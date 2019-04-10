@@ -78,7 +78,7 @@ class ResourceKind implements Identifiable, HasResourceClass {
                 return $metadata;
             }
         }
-        throw new \InvalidArgumentException(sprintf("Metadata not found for ID #%d in resource kind #%d", $id, $this->getId()));
+        throw new \InvalidArgumentException(sprintf("Metadata not found for ID #%d in resource kind '%s'", $id, $this->getName()));
     }
 
     public function getMetadataByIdOrName($idOrName): Metadata {
@@ -96,7 +96,7 @@ class ResourceKind implements Identifiable, HasResourceClass {
                 return $metadata;
             }
         }
-        throw new \InvalidArgumentException(sprintf("Metadata not found for name '%s' in resource kind #%d", $name, $this->getId()));
+        throw new \InvalidArgumentException(sprintf("Metadata not found for name '%s' in resource kind '%s'", $name, $this->getName()));
     }
 
     /** @return Metadata[] */
