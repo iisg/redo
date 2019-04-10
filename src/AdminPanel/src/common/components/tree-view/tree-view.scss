@@ -21,4 +21,13 @@ tree-view {
       cursor: pointer;
     }
   }
+  .tree-view {
+    // https://github.com/mar10/fancytree/issues/277
+    ul.ui-fancytree.fancytree-container {
+      white-space: normal;
+      span.fancytree-title {
+        display: inline;
+      }
+    }
+  }
 }
