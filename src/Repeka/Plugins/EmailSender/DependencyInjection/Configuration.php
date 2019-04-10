@@ -10,7 +10,7 @@ class Configuration implements ConfigurationInterface {
      */
     public function getConfigTreeBuilder() {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('email_sender_plugin');
+        $rootNode = $treeBuilder->root('repeka_email_sender_plugin');
         // @codingStandardsIgnoreStart
         // @formatter:off because indentation makes config structure way clearer
         $rootNode
