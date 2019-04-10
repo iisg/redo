@@ -22,11 +22,11 @@ export class ResourceListPlaceFilter extends ResourceListFilters implements Comp
   }
 
   bind() {
+    this.placesList = this.workflowPlaces();
     if (this.initialValue && this.initialValue.length) {
       this.places = this.getPlacesByPlaceIds(this.initialValue);
       this.inputBoxVisible = true;
     }
-    this.placesList = this.workflowPlaces();
     this.resourceKindsChangedListener = this.bindingEngine.collectionObserver(this.resourceKinds).subscribe(() => {
       this.placesList = this.workflowPlaces();
     });
