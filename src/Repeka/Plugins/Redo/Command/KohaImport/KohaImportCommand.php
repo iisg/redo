@@ -67,15 +67,17 @@ class KohaImportCommand extends ContainerAwareCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $noBarcode = 'no barcode';
         $imported = 'imported';
+        $error = 'error';
         $cannotImportFromBarcode = 'cannot import from barcode';
+        $otherErrorDuringImport = 'other error during download';
         $stats = [
             $imported => 0,
-            $noBarcode => 0,
-            $cannotImportFromBarcode => 0,
+            $error => 0,
         ];
         $resourceIdStats = [
             $noBarcode => [],
             $cannotImportFromBarcode => [],
+            $otherErrorDuringImport => [],
         ];
         $config = $input->getOption('config') ?? __DIR__ . '/../../Tests/Integration/MetadataImport/dumps/marc-import-config.yml';
         $barcodeMetadata = $this->metadataRepository->findByNameOrId($input->getOption('barcodeMetadataId') ?? 'barkod');
@@ -101,7 +103,7 @@ class KohaImportCommand extends ContainerAwareCommand {
                 $barcode = $barcode[0];
                 $resourceXml = $this->downloader->downloadById($barcode);
                 if ($resourceXml === null) {
-                    $stats[$cannotImportFromBarcode]++;
+                    $stats[$error]++;
                     $resourceIdStats[$cannotImportFromBarcode][] = $resource->getId();
                 } else {
                     $output->writeln(sprintf("Loading barcode %s ...", $barcode));
@@ -114,18 +116,23 @@ class KohaImportCommand extends ContainerAwareCommand {
                             $importConfig,
                             $resource,
                             $imported,
+                            $otherErrorDuringImport,
                             &$stats
                         ) {
-                            $extractedValues = $this->handleCommand(new MarcxmlExtractQuery($resourceXml, $barcode));
-                            $importedValues = $this->handleCommand(new MetadataImportQuery($extractedValues, $importConfig));
-                            $this->updateResource($resource, $importedValues);
-                            $stats[$imported]++;
+                            try {
+                                $extractedValues = $this->handleCommand(new MarcxmlExtractQuery($resourceXml, $barcode));
+                                $importedValues = $this->handleCommand(new MetadataImportQuery($extractedValues, $importConfig));
+                                $this->updateResource($resource, $importedValues);
+                                $stats[$imported]++;
+                            } catch (\Exception $e) {
+                                $resourceIdStats[$otherErrorDuringImport][] = $resource->getId();
+                            }
                         }
                     );
                     $output->writeln(sprintf("Finished loading barcode %s ", $barcode));
                 }
             } else {
-                $stats['noBarcode']++;
+                $stats[$error]++;
                 $resourceIdStats[$noBarcode][] = $resource->getId();
             }
             $progressBar->advance();

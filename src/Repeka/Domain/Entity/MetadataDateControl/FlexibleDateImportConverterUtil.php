@@ -6,7 +6,7 @@ use DateTime;
 final class FlexibleDateImportConverterUtil {
 
     public static function importInputToFlexibleDateConverter(string $value): ?array {
-        if (preg_match('/^\d{4}-\d{2|-\d{2}$/', $value)) {
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
             return MetadataDateControlConverterUtil::convertDateToFlexibleDate(
                 DateTime::createFromFormat('Y-m-d', $value)->format(DateTime::ATOM),
                 null,
@@ -15,6 +15,9 @@ final class FlexibleDateImportConverterUtil {
             )->toArray();
         } elseif (preg_match('/^.*-.*$/', $value)) { // examples:  '1888-1999'; '1444- '  //'/^([0-9]*| )-([0-9]*| )$/'
             $values = explode('-', $value);
+            if (preg_match('/^\d{4}-\d{2}$/', $value)) {
+                $values[1] = substr($values[0], 0, 2) . $values[1];
+            }
             $fromArray = self::convertDate($values[0]);
             $toArray = self::convertDate($values[1]);
             if (is_array($fromArray) && is_array($toArray)) {

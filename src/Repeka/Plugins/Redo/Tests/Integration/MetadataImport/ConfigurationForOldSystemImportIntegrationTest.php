@@ -133,6 +133,10 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
                     )->toArray(),
                     'submetadata' => [201 => [['value' => '1877']]],
                 ],
+                [
+                    'value' => $this->toFlexibleDateArray('1911', '1912'),
+                    'submetadata' => [201 => [['value' => '1911-12']]],
+                ],
             ],
             172 => [['value' => 'Warszawa']],
             66 => [['value' => 'dr. S. Orgelbranda Synów']],

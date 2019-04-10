@@ -133,6 +133,15 @@ class FlexibleDateImportConverterUtilTest extends \PHPUnit_Framework_TestCase {
                     null
                 )->toArray(),
             ],
+            [
+                '1911-12',
+                MetadataDateControlConverterUtil::convertDateToFlexibleDate(
+                    DateTime::createFromFormat('Y', '1911')->format(DateTime::ATOM),
+                    DateTime::createFromFormat('Y', '1912')->format(DateTime::ATOM),
+                    MetadataDateControlMode::RANGE,
+                    MetadataDateControlMode::YEAR
+                )->toArray(),
+            ],
         ];
     }
 }
