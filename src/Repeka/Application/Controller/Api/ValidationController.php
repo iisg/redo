@@ -17,7 +17,7 @@ class ValidationController extends ApiController {
     /**
      * @Route("/regex")
      * @Method("POST")
-     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
+     * @Security("is_authenticated()")
      */
     public function regexMatch(Request $request) {
         $query = MatchAgainstRegexQuery::fromArray($request->request->all());
@@ -28,7 +28,7 @@ class ValidationController extends ApiController {
     /**
      * @Route("/uniqueInResourceClass")
      * @Method("POST")
-     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
+     * @Security("is_authenticated()")
      */
     public function uniqueInResourceClass(Request $request) {
         $query = CheckUniquenessQuery::fromArray($request->request->all());
@@ -39,7 +39,7 @@ class ValidationController extends ApiController {
     /**
      * @Route("/validPesel")
      * @Method("POST")
-     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
+     * @Security("is_authenticated()")
      */
     public function isValidPesel(Request $request) {
         $query = new ValidatePeselQuery($request->request->all()['metadataValue'] ?? '');
