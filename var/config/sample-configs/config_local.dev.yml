@@ -149,3 +149,8 @@ redo:
     filterable_metadata_ids: [tytul, opis, parent_path, wydzial, skanista, nadzorujacy]
     searchable_resource_classes: [books]
     facets: [kindId, skanista]
+
+# Downlad wkhtmltopdf archive for your OS from https://github.com/wkhtmltopdf/wkhtmltopdf/releases/latest
+# and extract it to var directory in the project root; ensure the path below is ok
+repeka_pdf_generator_plugin:
+  wkHtmlToPdfPath: '%kernel.root_dir%/../var/wkhtmltox/bin/wkhtmltopdf.exe'
