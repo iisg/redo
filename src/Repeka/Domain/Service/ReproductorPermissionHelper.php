@@ -22,7 +22,7 @@ class ReproductorPermissionHelper {
     }
 
     /** @return ResourceEntity[]|\Traversable */
-    public function getCollectionsWhereUserIsReproductor(User $user, ?ResourceKind $resourceKind = null) {
+    public function getCollectionsWhereUserIsReproductor(User $user, ?ResourceKind $depositableResourceKind = null) {
         $collectionResourceKinds = $this->resourceKindRepository->findCollectionResourceKinds();
         $query = ResourceListQuery::builder()
             ->setPermissionMetadataId(SystemMetadata::REPRODUCTOR)
@@ -30,12 +30,12 @@ class ReproductorPermissionHelper {
             ->filterByResourceKinds($collectionResourceKinds)
             ->build();
         $resources = $this->commandBus->handle($query);
-        if ($resourceKind) {
+        if ($depositableResourceKind) {
             $resources = array_values(
                 array_filter(
                     iterator_to_array($resources),
-                    function (ResourceEntity $resource) use ($resourceKind) {
-                        return in_array($resourceKind->getId(), $this->getAllowedSubresourceKindIds($resource));
+                    function (ResourceEntity $resource) use ($depositableResourceKind) {
+                        return in_array($depositableResourceKind->getId(), $this->getAllowedSubresourceKindIds($resource));
                     }
                 )
             );
@@ -59,15 +59,6 @@ class ReproductorPermissionHelper {
         } else {
             return [];
         }
-    }
-
-    /** @return ResourceEntity | null */
-    public function getCollectionOfKindInWhichUserIsReproductor(User $user, ResourceKind $resourceKind) {
-        return $this->commandBus->handle(
-            ResourceListQuery::builder()
-                ->filterByContents([SystemMetadata::REPRODUCTOR => $user->getGroupIdsWithUserId()])
-                ->filterByResourceKind($resourceKind)->build()
-        )[0] ?? null;
     }
 
     private function getAllowedSubresourceKindIds(ResourceEntity $resource): array {

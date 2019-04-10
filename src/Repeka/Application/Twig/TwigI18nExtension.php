@@ -47,6 +47,7 @@ class TwigI18nExtension extends \Twig_Extension {
                     return $value[$locale];
                 }
             }
+            return current($value);
         }
         return $value;
     }

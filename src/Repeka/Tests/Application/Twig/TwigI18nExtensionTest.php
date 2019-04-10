@@ -2,14 +2,11 @@
 namespace Repeka\Tests\Application\Upload;
 
 use Repeka\Application\Twig\FrontendConfig;
-use Repeka\Application\Twig\Paginator;
-use Repeka\Application\Twig\TwigFrontendExtension;
 use Repeka\Application\Twig\TwigI18nExtension;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\Utils\PrintableArray;
 use Repeka\Tests\Traits\StubsTrait;
@@ -63,13 +60,13 @@ class TwigI18nExtensionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('ok', $this->extension->inCurrentLanguage(['EN' => 'incorrect', 'PL' => 'ok']));
     }
 
-    public function testInCurrentLanguageArrayFallbackReturned() {
+    public function testInCurrentLanguageFirstFallbackReturned() {
         $this->assertEquals('correct', $this->extension->inCurrentLanguage(['EN' => 'correct', 'FR' => 'incorrecteu']));
     }
 
-    public function testInCurrentLanguageAllReturnedForArrayWithoutLocale() {
+    public function testInCurrentLanguageFirstReturnedForArrayWithoutLocale() {
         $array = ['FR' => 'valueu', 'ES' => 'el valio'];
-        $this->assertEquals($array, $this->extension->inCurrentLanguage($array));
+        $this->assertEquals('valueu', $this->extension->inCurrentLanguage($array));
     }
 
     public function testInCurrentLanguageSimpleValueIsUnchanged() {
@@ -77,12 +74,6 @@ class TwigI18nExtensionTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame(123, $this->extension->inCurrentLanguage(123));
         $this->assertSame(null, $this->extension->inCurrentLanguage(null));
         $this->assertSame("", $this->extension->inCurrentLanguage(""));
-    }
-
-    public function testInCurrentLanguageMatchesOnlyUppercaseArrayKeys() {
-        $this->assertSame('ok', $this->extension->inCurrentLanguage(['PL' => 'ok']));
-        $this->assertSame(['pl' => 'not ok'], $this->extension->inCurrentLanguage(['pl' => 'not ok']));
-        $this->assertSame(['Pl' => 'not ok'], $this->extension->inCurrentLanguage(['Pl' => 'not ok']));
     }
 
     public function testInCurrentLanguageReturnsAllValuesWhenNoSystemLanguageSubmetadata() {

@@ -35,7 +35,10 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Utils\StringUtils;
 
-/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class ResourcesSchemaLoader {
     use Transactional;
 
@@ -206,6 +209,17 @@ class ResourcesSchemaLoader {
                 $metadataConfig
             );
         }
+        if (isset($metadataConfig['constraints']['resourceKind'])) {
+            $metadataConfig['constraints']['resourceKind'] = array_map(
+                function ($rkIdOrName) {
+                    if (!is_numeric($rkIdOrName)) {
+                        $rkIdOrName = $this->resourceKindRepository->findByName($rkIdOrName)->getId();
+                    }
+                    return $rkIdOrName;
+                },
+                $metadataConfig['constraints']['resourceKind']
+            );
+        }
         try {
             $metadata = $this->metadataRepository->findByName($metadataConfig['name']);
             if (SystemMetadata::isValid($metadata->getId())) {
@@ -329,14 +343,14 @@ class ResourcesSchemaLoader {
     }
 
     private function updateReferences(array $references) {
+        $queries = [];
         foreach ($references as $refName => $refResource) {
-            $queries = [
+            $queries[] =
                 "UPDATE metadata SET constraints = constraints || '{\"relatedResourceMetadataFilter\": 
-                {\"-1\": {$refResource->getId()}}}'::jsonb WHERE constraints #>> '{relatedResourceMetadataFilter, -1}' = '$refName';",
-            ];
-            foreach ($queries as $query) {
-                $this->entityManager->getConnection()->executeQuery($query);
-            }
+                {\"-1\": {$refResource->getId()}}}'::jsonb WHERE constraints #>> '{relatedResourceMetadataFilter, -1}' = '$refName';";
+        }
+        foreach ($queries as $query) {
+            $this->entityManager->getConnection()->executeQuery($query);
         }
     }
 }

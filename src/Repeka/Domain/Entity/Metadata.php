@@ -196,7 +196,7 @@ class Metadata implements Identifiable, HasResourceClass {
         ?string $displayStrategy,
         bool $shownInBrief,
         bool $copyToChildResource
-    ) {
+    ): void {
         Assertion::allNotNull($newConstraints);
         $this->label = array_filter($newLabel, 'trim');
         $this->placeholder = $newPlaceholder;
