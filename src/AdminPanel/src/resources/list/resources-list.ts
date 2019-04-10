@@ -275,7 +275,7 @@ export class ResourcesList {
               : (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter;
           }
         }
-        if (this.parentResource) {
+        if (this.parentResource || this.resourceKind) {
           this.eventAggregator.publish('resourceChildrenAmount', this.totalNumberOfResources);
         }
       }
