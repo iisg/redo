@@ -153,6 +153,7 @@ class RedoDepositController extends Controller {
             // we need to go back!
             $resource->getWorkflow()->setCurrentPlaces($resource, $transition->getFromIds());
             $this->resourceRepository->save($resource);
+            $this->getDoctrine()->getManager()->flush();
         }
         if ($request->isMethod(Request::METHOD_POST)) {
             $isLastTransition = $transition->getId() == $depositPath->getLastTransition()->getId();
