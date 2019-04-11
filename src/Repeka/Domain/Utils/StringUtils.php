@@ -14,7 +14,7 @@ final class StringUtils {
         $nonEmptyPaths = array_filter(
             $paths,
             function ($s) {
-                return $s !== '';
+                return $s !== '' && $s !== '.';
             }
         );
         return self::unixSlashes(preg_replace('#/+#', '/', join('/', $nonEmptyPaths)));

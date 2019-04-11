@@ -59,6 +59,7 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
             $resourceContents = $resource->getContents();
             $resourceContents = $resourceContents->withMergedValues($targetMetadata, $resourcePath);
             $resource->updateContents($resourceContents);
+            $this->resourceRepository->save($resource);
         } else {
             $this->newAuditEntry($event, 'generatingPDFToNonFileMetadataControl', [], false);
         }

@@ -22,6 +22,7 @@ class StringUtilsTest extends \PHPUnit_Framework_TestCase {
             [['/abc\\efg', 'def'], '/abc/efg/def'],
             [['', 'foo.jpg'], 'foo.jpg'],
             [['dir', '0', 'foo.jpg'], 'dir/0/foo.jpg'],
+            [['dir', '.', 'foo.jpg'], 'dir/foo.jpg'],
         ];
     }
 

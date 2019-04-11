@@ -42,8 +42,8 @@ services:
       - '@Repeka\Application\Cqrs\Middleware\AuditCommandMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\FirewallMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\ValidateCommandMiddleware'
-      - '@Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\WrapCommandWithTransactionMiddleware'
+      - '@Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware'
       - '@Repeka\Application\Cqrs\Middleware\CallCommandHandlerMiddleware'
 
   Repeka\Application\Elasticsearch\ESClient:
