@@ -1,129 +1,171 @@
-@import "colors";
+@import "../../../../../src/AdminPanel/src/common/styles/mixins";
 
 $image-height: 200px;
+$gap-size: 2 * $default-gap-size;
+$breadcrumb-mark-width: 23px;
+$breadcrumb-height: 64px;
+$breadcrumb-font-size: 16px;
+$gap-between-breadcrumb-arrows: $default-gap-size / 4;
+$breadcrumb-arrowhead-width: $breadcrumb-height / 4;
+$breadcrumb-mark-z-index: 4;
 
 .deposit {
-  margin-bottom: 20px;
+  &, .deposit-page-header, .deposit-breadcrumb {
+    padding-top: $gap-size / 2;
+    padding-bottom: $gap-size / 2;
+  }
+  .deposit-page-header, .deposit-brief-info {
+    padding-left: $gap-size;
+    padding-right: $gap-size;
+  }
+  .deposit-form {
+    margin: $gap-size / 2 $gap-size;
+  }
+
   .deposit-page-header {
+    margin-top: 0;
+    margin-bottom: 0;
     text-align: center;
-    margin: 30px 0;
   }
 
   .deposit-form {
-    margin: 0 30px;
-    background: #f9f9f9;
-    padding-bottom: 1px;
+    background-color: $quaternary-background-color;
+    deposit-form {
+      display: inline-block; // To make negative margin of `resource-form-generated` not affect `.deposit-form`.
+      width: 100%; //
+    }
+    .error-label, required-field-indicator, .validation-message {
+      color: $error-alert-text-color;
+    }
     table {
       width: 100%;
     }
-    .simple-form {
-      padding: 10px;
+    .simple-form.contains-collapsible-metadata-group {
+      margin-top: -$gap-size / 4;
+      margin-bottom: -$gap-size / 4;
+    }
+    .contains-collapsible-metadata-group > collapsible-metadata-group > * {
+      margin-top: $gap-size / 4;
+      margin-bottom: $gap-size / 4;
     }
     .top-level-form {
-      padding: 20px 30px;
+      padding: $gap-size / 2 $gap-size;
     }
     .control-display-file {
-      background: #dce8ef;
-      padding: 10px;
+      padding: $gap-size / 2;
       width: 100%;
       a {
         font-weight: bold;
       }
     }
     .deposit-form-content {
-      padding: 0 20px;
-      hr {
-        margin: 15px 0;
+      &, .deposit-brief-info, .deposit-metadata-summary-title, .deposit-metadata-summary {
+        padding: $gap-size / 4 $gap-size / 2;
       }
+      hr {
+        margin: $gap-size / 4 $gap-size / 2;
+      }
+      .deposit-metadata-summary-title {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      dl {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .available-options {
+    &, & > * {
+      padding: $gap-size / 4;
     }
   }
 
   .deposit-form-header {
-    background: #efefef;
+    background: $tertiary-background-color;
     font-weight: bold;
-    padding: 20px;
-    button.btn-primary {
-      background-color: #283f74;
-      padding: 5px 25px;
-    }
+    padding: $gap-size / 2;
   }
 
   .deposit-brief-info {
-    color: $grey;
-    margin: 20px 30px;
     .deposit-selected-value {
-      color: $dark-grey;
       font-weight: bold;
+    }
+    p {
+      margin-bottom: 0;
     }
   }
 
   .deposit-breadcrumb {
-    // source: https://codepen.io/firatcftc/pen/sHlnK
-    $color: #a1a1a1;
-    $bg-color: #e8eff4;
-    $height: 62px;
-    list-style: none;
+    // Source: https://codepen.io/firatcftc/pen/sHlnK
+    $color: $tertiary-text-color;
+    $background-color: $secondary-background-color;
+
     display: flex;
-    padding: 0;
-    font-size: 16px;
+    margin-bottom: 0;
+    padding-left: 0;
+    font-size: $breadcrumb-font-size;
+    list-style: none;
 
     .deposit-breadcrumb-mark {
-      $width: 23px;
+      z-index: $breadcrumb-mark-z-index;
       position: absolute;
-      top: -$width/2;
-      left: 50%;
-      margin-left: -$width/2 - 15px;
-      border-radius: 50%;
-      background: #283f74;
-      z-index: 4;
-      width: $width;
-      height: $width;
-      font-weight: bold;
-      color: white;
-      text-align: center;
       display: none;
+      top: -$breadcrumb-mark-width / 2;
+      left: 50%;
+      width: $breadcrumb-mark-width;
+      height: $breadcrumb-mark-width;
+      margin-left: -$breadcrumb-mark-width / 2 - $breadcrumb-arrowhead-width / 2 - $gap-between-breadcrumb-arrows / 2;
+      border-radius: 50%;
+      color: $primary-background-color;
+      background-color: $dark-main-theme-color;
+      text-align: center;
+      font-weight: bold;
     }
     li {
       position: relative;
       .arrow {
-        color: $color;
-        display: block;
-        background: $bg-color;
-        text-decoration: none;
         position: relative;
-        height: $height;
-        line-height: $height;
-        padding: 0 10px;
+        display: block;
+        height: $breadcrumb-height;
+        line-height: $breadcrumb-height;
+        margin-right: $breadcrumb-arrowhead-width + $gap-between-breadcrumb-arrows;
+        padding-left: $gap-size / 2;
+        padding-right: $gap-size / 2;
+        color: $color;
+        background-color: $background-color;
         text-align: center;
-        margin-right: 23px;
+        white-space: nowrap;
+        text-decoration: none;
       }
       &:first-child {
         .arrow {
-          padding-left: 15px;
-          &:before {
+          padding-left: $gap-size / 2;
+          &::before {
             border: none;
           }
         }
       }
       .arrow {
-        &:before,
-        &:after {
+        &::before,
+        &::after {
           content: "";
           position: absolute;
           top: 0;
-          border: 0 solid $bg-color;
-          border-width: $height/2 $height/4;
+          border-style: solid;
+          border-color: $background-color;
+          border-width: $breadcrumb-height / 2 $breadcrumb-arrowhead-width;
           width: 0;
           height: 0;
         }
-        &:before {
-          left: -20px;
+        &::before {
+          left: -$breadcrumb-arrowhead-width;
           border-left-color: transparent;
         }
-        &:after {
+        &::after {
           left: 100%;
           border-color: transparent;
-          border-left-color: $bg-color;
+          border-left-color: $background-color;
         }
       }
       &.active {
@@ -131,40 +173,42 @@ $image-height: 200px;
           display: block;
         }
         .arrow {
-          $active-color: #bcd1e0;
+          $background-color-when-active: $darkened-secondary-background-color;
+
           font-weight: bold;
-          color: #283F74;
-          background-color: $active-color;
-          &:before {
-            border-color: $active-color;
+          color: $dark-main-theme-color;
+          background-color: $background-color-when-active;
+          &::before {
+            border-color: $background-color-when-active;
             border-left-color: transparent;
           }
-          &:after {
-            border-left-color: $active-color;
+          &::after {
+            border-left-color: $background-color-when-active;
           }
         }
       }
       &.past {
         .deposit-breadcrumb-mark {
           display: block;
-          background-color: #6ab737;
+          background-color: $success-message-text-color;
         }
       }
       a.arrow:hover {
-        $hover-color: darken($bg-color, 10%);
-        background-color: $hover-color;
-        &:before {
-          border-color: $hover-color;
+        $background-color-on-hover: darken($background-color, 10%);
+
+        background-color: $background-color-on-hover;
+        &::before {
+          border-color: $background-color-on-hover;
           border-left-color: transparent;
         }
-        &:after {
-          border-left-color: $hover-color;
+        &::after {
+          border-left-color: $background-color-on-hover;
         }
       }
       &:last-child {
         .arrow {
           margin-right: 0;
-          &:after {
+          &::after {
             border: none;
           }
         }
@@ -181,10 +225,72 @@ $image-height: 200px;
     }
   }
 
+  .error-label {
+    padding-top: $gap-size / 2;
+    padding-left: $gap-size / 2;
+    padding-right: $gap-size / 2;
+  }
+
+  resource-form-generated {
+    .help-block {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .highlighted {
+      input, textarea {
+        background-color: $secondary-background-color;
+      }
+    }
+    radio-button-group {
+      line-height: normal;
+      flex-direction: column;
+      input[type=checkbox], input[type=radio] {
+        width: auto;
+      }
+      label {
+        align-items: stretch;
+        width: 100%;
+        & > span {
+         padding-left: 0;
+        }
+        &:not(:first-child) {
+          margin-left: 0;
+        }
+      }
+    }
+    input[type=checkbox], input[type=radio] {
+      margin-top: 0;
+    }
+    input[type=checkbox] {
+      @include checkbox();
+    }
+    input[type=radio] {
+      @include radio-button();
+    }
+    radio-button-group input[type=radio] {
+      margin-right: 0;
+      + ::before {
+        margin-right: 0;
+      }
+    }
+    .select2-container--default .select2-selection--multiple {
+      background-color: $primary-background-color;
+      border: $default-border;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+      background-color: $secondary-background-color;
+    }
+    .select2.select2-container {
+      .select2-selection--multiple .select2-selection__choice__remove, .select2-selection__clear {
+        color: $secondary-text-color;
+      }
+    }
+  }
+
   .deposit-metadata-summary {
     dt {
       float: left;
-      margin-right: 10px;
+      margin-right: $gap-size / 2;
       font-weight: normal;
     }
     dd {
@@ -196,7 +302,36 @@ $image-height: 200px;
   }
 }
 
-.deposit-success-flash {
+.select2-dropdown {
+  background-color: $primary-background-color;
+  border: $default-border;
+}
+.select2-results__option {
+  color: $primary-text-color;
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  color: $primary-background-color;
+  background-color: $accents-color;
+}
+
+.deposition-confirmation {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: $gap-size;
   text-align: center;
-  color: #6AB737;
+  color: $success-message-text-color;
+}
+
+.resource-metadata-values-form-item {
+  color: $primary-text-color;
+  &.oa-drag {
+    background-color: $primary-background-color;
+  }
+}
+
+.drag-handle, icon-button button {
+  @include icon-button-colors($accents-color, $main-theme-color, $tertiary-text-color, $secondary-text-color);
+}
+.drag-handle {
+  cursor: ns-resize;
 }

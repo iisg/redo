@@ -2,13 +2,11 @@
     <require from="../datetime-picker/datetime-picker"></require>
 
     <div if.bind="!fixedRangeMode">
-        <div class="isRange"
-            if.bind="!onlyRange">
+        <label if.bind="!onlyRange">
+            <input type="checkbox"
+                checked.bind="isRangeSelected">
             <span>${'Range' | t}</span>
-            <input
-                checked.bind="isRangeSelected"
-                type="checkbox">
-        </div>
+        </label>
         <div>
             <button class="btn"
                 click.delegate="changeMode()">

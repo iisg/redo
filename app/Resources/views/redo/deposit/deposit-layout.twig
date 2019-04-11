@@ -4,9 +4,7 @@
     {% include "redo/menu.twig" %}
     <div class="deposit"
         role="main">
-        <div class="deposit-container">
-            {% block depositContent %}{% endblock %}
-        </div>
+        {% block depositContent %}{% endblock %}
     </div>
     {% include "redo/footer.twig" %}
 {% endblock %}

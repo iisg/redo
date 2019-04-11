@@ -12,21 +12,21 @@
             <div class="deposit-form-header clearfix">
                 {{ 'Choose the resource kind you want to create from the list below' | trans }}
                 <button type="submit"
-                    class="pull-right btn btn-primary">
+                    class="primary pull-right">
                     {{ 'Next' | trans }} &gt;
                 </button>
             </div>
-            {% for resourceKind in resourceKinds %}
-                <div class="checkbox">
-                    <label>
-                        <input type="radio"
-                            name="resourceKindId"
-                            value="{{ resourceKind.id }}"
-                            required>
-                        {{ resourceKind.label | inCurrentLanguage }}
-                    </label>
-                </div>
-            {% endfor %}
+            <div class="available-options">
+                {% for resourceKind in resourceKinds %}
+                        <label class="label-with-radio-button">
+                            <input type="radio"
+                                name="resourceKindId"
+                                value="{{ resourceKind.id }}"
+                                required>
+                            <span>{{ resourceKind.label | inCurrentLanguage }}</span>
+                        </label>
+                {% endfor %}
+            </div>
         </form>
     {% endif %}
 {% endblock %}

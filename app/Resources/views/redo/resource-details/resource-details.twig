@@ -29,8 +29,9 @@
     {% endif %}
 
     {% if app.flashes('deposit') %}
-        <h1 class="deposit-success-flash">{{ 'Congratulations! Your resource has been added.' | trans }}</h1>
-        <a href="{{ path('myResources') }}">&laquo; {{ 'Go to my resources list' | trans }}</a>
+        <h1 class="deposition-confirmation">{{ 'Congratulations! Your resource has been added.' | trans }}</h1>
+        <a class="link-to-the-previous-page"
+            href="{{ path('myResources') }}">{{ icon('undo-3') }}{{ 'Go to my resources list' | trans }}</a>
     {% endif %}
 
     <div class="resource-details"

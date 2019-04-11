@@ -2,7 +2,8 @@
   #{if($button-wrapper, "& > *", "&")} {
     background-color: $background-color;
     color: $color;
-    @include transition(color $default-transition-duration, background-color $default-transition-duration);
+    transition-property: color, background-color;
+    transition-duration: $default-transition-duration;
   }
   &:not(.disabled):not([disabled]) {
     &:hover {
@@ -100,21 +101,31 @@
   }
 }
 
-@mixin icon-button($color: $blue) {
+@mixin icon-button-colors($color: $blue, $color-when-active: lighten($color, $default-value-to-lighten-colors-by),
+  $color-when-disabled: $light-grey, $color-when-disabled-and-focused: darken($light-grey, $default-value-to-lighten-colors-by)) {
+  background-color: initial;
+  color: $color;
+  transition: color $default-transition-duration;
+  &:not(.disabled):not([disabled]) {
+    &:hover, &:focus {
+      color: $color-when-active;
+    }
+  }
+  &.disabled, &[disabled] {
+    color: $color-when-disabled;
+    &:focus {
+      color: $color-when-disabled-and-focused;
+    }
+  }
+}
+
+@mixin icon-button($color: $blue, $color-when-active: lighten($color, $default-value-to-lighten-colors-by),
+  $color-when-disabled: $light-grey, $color-when-disabled-and-focused: darken($light-grey, $default-value-to-lighten-colors-by)) {
   display: inline-block;
   line-height: 0;
   button {
     padding: 0;
-    background-color: initial;
-    color: $color;
-    @include transition(color $default-transition-duration ease-out);
-    &:hover:not([disabled]), &:focus {
-      color: lighten($color, $default-value-to-lighten-colors-by);
-    }
-    &[disabled] {
-      pointer-events: none;
-      color: $light-grey;
-    }
+    @include icon-button-colors($color, $color-when-active, $color-when-disabled, $color-when-disabled-and-focused);
     icon {
       display: block;
     }

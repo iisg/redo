@@ -20,6 +20,6 @@
             change.delegate="selectedResourcesChanged()"
             model.bind="resource"
             checked.bind="selectedResources">
-        ${resource | resourceLabel | inCurrentLanguage}
+        <span>${resource | resourceLabel | inCurrentLanguage}</span>
     </label>
 </template>

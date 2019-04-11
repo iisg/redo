@@ -18,23 +18,23 @@
             class="deposit-form"
             method="post">
             <div class="deposit-form-header clearfix">
-                {{ 'Choose the collection to put the resource in' | trans }}:
+                {{ 'Choose the collection to put the resource in' | trans }}
                 <button type="submit"
-                    class="pull-right btn btn-primary">
+                    class="primary pull-right">
                     {{ 'Next' | trans }} &gt;
                 </button>
             </div>
-            {% for collection in possibleCollections %}
-                <div class="checkbox">
-                    <label>
-                        <input type="radio"
-                            name="parentId"
-                            value="{{ collection.id }}"
-                            required>
-                        {{ collection | metadata('label') }}
-                    </label>
-                </div>
-            {% endfor %}
+            <div class="available-options">
+                {% for collection in possibleCollections %}
+                        <label class="label-with-radio-button">
+                            <input type="radio"
+                                name="parentId"
+                                value="{{ collection.id }}"
+                                required>
+                            <span>{{ collection | metadata('label') }}</span>
+                        </label>
+                {% endfor %}
+            </div>
         </form>
     {% endif %}
 {% endblock %}

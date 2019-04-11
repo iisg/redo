@@ -1,21 +1,26 @@
 $main-theme-color: yellow;
+$dark-main-theme-color: white;
 $accents-color: yellow;
 $secondary-accents-color: white;
 
-$primary-text-color: yellow;
-$secondary-text-color: white;
-$tertiary-text-color: #808080;
+$primary-text-color: white;
+$secondary-text-color: yellow;
+$tertiary-text-color: #e7e7e7;
 
 $primary-background-color: black;
 $secondary-background-color: #2b2a29;
 $tertiary-background-color: #343331;
-$quaternary-background-color: $tertiary-background-color;
+$quaternary-background-color: black;
 
 $darkened-secondary-background-color: darken($secondary-background-color, 5);
 $darkened-tertiary-background-color: darken($tertiary-background-color, 5);
 
 $default-border-color: white;
 
-$error-alert-text-color: black;
-$error-alert-background-color: white;
-$error-alert-border-color: white;
+$success-message-text-color: #6ab737;
+
+$error-alert-text-color: #ffd265;
+$error-alert-background-color: black;
+$error-alert-border-color: #ffe7ae;
+
+$high-contrast-accents-color: $accents-color;

@@ -1,16 +1,18 @@
 $dark-grey: #4d4d4d;
 $grey: #808080;
 $lightish-grey: #b3b3b3;
-$light-grey: #e6e6e6;
+$light-grey: #e7e7e7;
 $very-light-grey: #f2f2f2;
 $blueish-grey: #ecf2f6;
 $dark-blue: #18316a;
 $blue: #2c74ae;
 $lightish-blue: #4c89ba;
 $light-blue: #04acef;
+$green: #6ab737;
 $red: #bc0000;
 
 $main-theme-color: $blue !default;
+$dark-main-theme-color: $dark-blue !default;
 $accents-color: $lightish-blue !default;
 $secondary-accents-color: $light-blue !default;
 
@@ -28,6 +30,10 @@ $darkened-tertiary-background-color: darken($tertiary-background-color, 5) !defa
 
 $default-border-color: $light-grey !default;
 
+$success-message-text-color: $green !default;
+
 $error-alert-text-color: darken($red, 5) !default;
 $error-alert-background-color: lighten($red, 50) !default;
 $error-alert-border-color: darken($error-alert-background-color, 5) !default;
+
+$high-contrast-accents-color: yellow;

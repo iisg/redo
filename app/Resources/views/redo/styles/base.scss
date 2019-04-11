@@ -108,23 +108,34 @@ button {
   }
 }
 
-button.default, .default-button {
+button.default, .default-button,
+button.primary, .primary-button,
+.btn {
   padding: $default-gap-size / 4 $default-gap-size;
   border-width: $default-border-width;
   border-style: $default-border-style;
   border-radius: $default-gap-size / 4;
   font-weight: 600;
-  &:not(.blue) {
-    @include button-colors();
-  }
 }
 
-button.blue, .blue-button {
-  @include button-colors($primary-background-color, $accents-color, $secondary-accents-color,
-    $primary-background-color, $main-theme-color, $accents-color);
+button.default, .default-button, .btn:not(.primary) {
+  @include button-colors();
+}
+
+button.primary, .primary-button, .btn.primary {
+  @include button-colors($primary-background-color, $accents-color, $accents-color,
+    $primary-background-color, $main-theme-color, $main-theme-color);
+}
+
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+  outline: none; // To have all buttons look the same.
+}
+.btn.active, .btn:active {
+  box-shadow: none; // To have all buttons look the same.
 }
 
 label {
+  cursor: pointer;
   font-weight: normal;
   margin-bottom: 0;
 }
@@ -173,14 +184,29 @@ fieldset {
 }
 
 input, textarea {
+  &, &.form-control {
+    border: $default-input-border-width $default-border-style $default-border-color;
+    border-radius: $default-gap-size / 4;
+    background-color: $primary-background-color;
+    transition: border-color $default-transition-duration;
+  }
+  &, &[type], &.form-control {
+    &:focus {
+      border-color: $accents-color;
+      outline: none; // Required by Chromium.
+    }
+  }
+  &.form-control {
+    color: inherit;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+input {
   min-width: 0;
-  padding: $default-gap-size / 4 $default-gap-size / 2;
-  border: $default-input-border-width $default-border-style $default-border-color;
-  border-radius: $default-gap-size / 4;
-  outline: none; // Required by Chromium.
-  background-color: $primary-background-color;
-  &:focus {
-    border-color: $accents-color;
+  &, &.form-control {
+    padding: $default-gap-size / 4 $default-gap-size * 3 / 4;
   }
   &:-webkit-autofill {
     &, &:hover, &:focus, &:active {
@@ -189,32 +215,81 @@ input, textarea {
     }
   }
 }
+textarea {
+  &, &.form-control {
+    padding: $default-gap-size / 2 $default-gap-size * 3 / 4;
+  }
+}
+.has-error .form-control {
+  border-color: $error-alert-text-color;
+  &, &:focus {
+    box-shadow: none;
+  }
+  &:focus {
+    border-color: $error-alert-border-color;
+  }
+}
+.input-group-addon {
+  color: $primary-text-color;
+  background-color: $tertiary-background-color;
+  border-color: $default-border-color;
+}
 
-.label-with-checkbox {
+.label-with-checkbox, .label-with-radio-button {
   cursor: pointer;
   display: block;
-  input[type=checkbox] {
-    display: none;
-    & + ::before {
-      display: inline-block;
-      width: $checkbox-and-radio-button-width-and-height;
-      height: $checkbox-and-radio-button-width-and-height;
-      margin-right: $checkbox-and-radio-button-right-margin;
-      content: '';
-      vertical-align: calc((#{$capital-letter-of-the-default-font-height} - #{$checkbox-and-radio-button-width-and-height}) / 2);
-      border: $default-border-width solid $accents-color;
-      border-radius: 25%;
-    }
-    &:checked + ::before {
-      background: $accents-color;
-      background: radial-gradient($accents-color 40%, transparent 40%);
-    }
-    & + * > * {
-      display: inline-block;
-      width: calc(100% - #{$checkbox-and-radio-button-width-and-height} - #{$checkbox-and-radio-button-right-margin});
-      vertical-align: top;
+  input {
+    margin-top: 0;
+  }
+}
+@mixin checkbox-or-radio-button() {
+  position: absolute; // To have the message displayed correctly when selecting is required.
+  opacity: 0; //
+  & + ::before {
+    display: inline-block;
+    width: $checkbox-or-radio-button-width-and-height;
+    height: $checkbox-or-radio-button-width-and-height;
+    margin-right: $checkbox-or-radio-button-right-margin;
+    content: '';
+    vertical-align: calc((#{$capital-letter-of-the-default-font-height} - #{$checkbox-or-radio-button-width-and-height}) / 2);
+    border: $default-border-width solid $accents-color;
+  }
+  &:checked + ::before {
+    background: $accents-color;
+    background: radial-gradient($accents-color 40%, transparent 40%);
+    .high-contrast & {
+      background: radial-gradient($high-contrast-accents-color 40%, transparent 40%);
     }
   }
+  & + * > * {
+    display: inline-block;
+    width: calc(100% - #{$checkbox-or-radio-button-width-and-height} - #{$checkbox-or-radio-button-right-margin});
+    vertical-align: top;
+  }
+}
+
+@mixin checkbox() {
+  @include checkbox-or-radio-button();
+  + ::before {
+    border-radius: 25%;
+  }
+}
+
+@mixin radio-button() {
+  @include checkbox-or-radio-button();
+  + ::before {
+    border-radius: 50%;
+  }
+}
+
+.label-with-checkbox, .label-with-radio-button {
+  display: block;
+}
+.label-with-checkbox input[type=checkbox] {
+  @include checkbox();
+}
+.label-with-radio-button input[type=radio] {
+  @include radio-button();
 }
 
 .link-to-the-previous-page {
@@ -223,6 +298,45 @@ input, textarea {
   .icon {
     margin-left: $default-gap-size / 4;
     margin-right: $default-gap-size / 4;
+  }
+}
+
+.form-control {
+  box-shadow: none;
+}
+.dropdown-menu {
+  background-color: $primary-background-color;
+}
+.main-container .bootstrap-datetimepicker-widget {
+  &.dropdown-menu {
+    &.top:after {
+      border-top-color: $primary-background-color;
+    }
+    &.bottom:after {
+      border-bottom-color: $primary-background-color;
+    }
+  }
+  table {
+    td span, thead tr:first-child th {
+      &:hover {
+        background-color: $tertiary-background-color;
+      }
+    }
+    td {
+      &.day:hover, &.hour:hover, &.minute:hover, &.second:hover {
+        background-color: $tertiary-background-color;
+      }
+      &.active, &.active:hover, span.active {
+        color: $primary-background-color;
+        background-color: $accents-color;
+      }
+      &.today:before {
+        border-bottom-color: $accents-color;
+      }
+    }
+  }
+  .timepicker-picker table td span:hover {
+    background-color: transparent;
   }
 }
 
