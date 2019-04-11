@@ -28,6 +28,9 @@
     }
     .icon-container {
       flex-shrink: 0;
+      svg {
+        transform: rotate(180deg);
+      }
     }
   }
 
