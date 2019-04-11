@@ -4,6 +4,7 @@ namespace Repeka\Plugins\PdfGenerator\Model;
 use Knp\Snappy\Pdf;
 use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlacePluginConfiguration;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\FileSystemDriver;
@@ -40,6 +41,7 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
 
     public function afterEnterPlace(CommandHandledEvent $event, ResourceWorkflowPlacePluginConfiguration $config) {
         $command = $event->getCommand();
+        /** @var ResourceEntity $resource */
         $resource = $command->getResource();
         $targetMetadataName = $config->getConfigValue('targetMetadataName');
         $targetMetadata = $resource->getKind()->getMetadataByIdOrName($targetMetadataName);
@@ -55,7 +57,16 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
             $resourcePath = StringUtils::joinPaths($this->targetResourceDirectoryId, $inputPathParts['dirname'], $actualFileName);
             $fileSystemTargetPath = $targetPathParts["dirname"] . "/" . $actualFileName;
             $renderResult = $this->displayStrategyEvaluator->render($resource, $pdfPresentationStrategy);
-            $this->generatePdfOutputFile($renderResult, $fileSystemTargetPath);
+            $pageMargins = explode(' ', $config->getConfigValue('pageMargins'));
+            $header = $config->getConfigValue('headerTemplate');
+            if ($header) {
+                $header = $this->displayStrategyEvaluator->render($resource, $header);
+            }
+            $footer = $config->getConfigValue('footerTemplate');
+            if ($footer) {
+                $footer = $this->displayStrategyEvaluator->render($resource, $footer);
+            }
+            $this->generatePdfOutputFile($renderResult, $header, $footer, $pageMargins, $fileSystemTargetPath);
             $resourceContents = $resource->getContents();
             $resourceContents = $resourceContents->withMergedValues($targetMetadata, $resourcePath);
             $resource->updateContents($resourceContents);
@@ -70,21 +81,40 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
             new ResourceWorkflowPluginConfigurationOption('targetMetadataName', MetadataControl::TEXT()),
             new ResourceWorkflowPluginConfigurationOption('pdfOutputFileName', MetadataControl::TEXT()),
             new ResourceWorkflowPluginConfigurationOption('pdfPresentationStrategy', MetadataControl::TEXTAREA()),
+            new ResourceWorkflowPluginConfigurationOption('headerTemplate', MetadataControl::TEXTAREA()),
+            new ResourceWorkflowPluginConfigurationOption('footerTemplate', MetadataControl::TEXTAREA()),
+            new ResourceWorkflowPluginConfigurationOption('pageMargins', MetadataControl::TEXT()),
         ];
     }
 
-    private function generatePdfOutputFile(string $renderResult, string $finalCompleteTargetPath): void {
+    private function generatePdfOutputFile(
+        string $renderResult,
+        string $header,
+        string $footer,
+        array $pageMargins,
+        string $finalCompleteTargetPath
+    ): void {
+        if (count($pageMargins) != 4) {
+            $pageMargins = ['15mm', '15mm', '15mm', '15mm'];
+        }
         $snappy = new Pdf($this->wkHtmlToPdfPath);
         $snappy->setOption('enable-javascript', true);
-        $snappy->setOption('javascript-delay', 1000);
+        $snappy->setOption('javascript-delay', 100);
+        $snappy->setOption('enable-external-links', true);
         $snappy->setOption('encoding', 'utf-8');
         $snappy->setOption('page-size', 'A4');
-        $snappy->setOption('margin-left', '15mm');
-        $snappy->setOption('margin-right', '15mm');
-        $snappy->setOption('margin-top', '15mm');
-        $snappy->setOption('margin-bottom', '15mm');
+        $snappy->setOption('margin-top', $pageMargins[0]);
+        $snappy->setOption('margin-right', $pageMargins[1]);
+        $snappy->setOption('margin-bottom', $pageMargins[2]);
+        $snappy->setOption('margin-left', $pageMargins[3]);
         $snappy->setOption("dpi", "300");
         $snappy->setOption("image-dpi", "300");
+        if ($header) {
+            $snappy->setOption('header-html', $header);
+        }
+        if ($footer) {
+            $snappy->setOption('footer-html', $footer);
+        }
         $snappy->generateFromHtml($renderResult, $finalCompleteTargetPath);
     }
 

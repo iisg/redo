@@ -112,3 +112,5 @@ twig:
     pathToWeb: "%kernel.project_dir%/web"
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
+  paths:
+    "%kernel.project_dir%/web": web
