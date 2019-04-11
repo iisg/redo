@@ -9,7 +9,7 @@
     <template repeat.for="metadataGroup of nonEmptyMetadataGroups">
         <collapsible-metadata-group resource-kind-id.bind="resourceKind.id"
             metadata-group-id.bind="metadataGroup.groupId"
-            disabled.bind="nonEmptyMetadataGroups.length < 2 || displayRequiredOnly || metadataGroup.childMetadata">
+            disabled.bind="nonEmptyMetadataGroups.length < 2 || hideLockedMetadata || metadataGroup.childMetadata">
             <template repeat.for="metadata of metadataGroup.metadataList">
                 <template if.bind="displayMetadataValueInput(metadata) && contentsValidator[metadata.id]">
                     <span>

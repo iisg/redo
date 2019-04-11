@@ -27,7 +27,7 @@ export class ResourceFormGenerated {
   @bindable validationController: ValidationController;
   @bindable targetPlaces: WorkflowPlace[];
   @bindable skipValidation: boolean = false;
-  @bindable displayRequiredOnly: boolean;
+  @bindable hideLockedMetadata: boolean;
   @bindable forceSimpleFileUpload: boolean = false;
   @bindable disabled: boolean = false;
 
@@ -70,8 +70,8 @@ export class ResourceFormGenerated {
 
   displayMetadataValueInput(metadata: Metadata): boolean {
     return !this.resourceKind.workflow
-      || !this.displayRequiredOnly
-      || (this.displayRequiredOnly && this.metadataIsRequired(metadata) && !this.metadataIsLocked(metadata));
+      || !this.hideLockedMetadata
+      || (this.hideLockedMetadata && !this.metadataIsLocked(metadata));
   }
 
   resourceChanged() {
