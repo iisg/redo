@@ -21,8 +21,8 @@ class LocalDatabaseAuthenticator extends TokenAuthenticator {
     }
 
     public function authenticate(TokenInterface $token, UserProviderInterface $userProvider): string {
-        $currentUserEntity = $this->getUserOrThrow($token->getUsername(), $userProvider);
-        if ($this->checkPasswordLocally($currentUserEntity, $token->getCredentials())) {
+        $currentUser = $this->getUserOrThrow($token->getUsername(), $userProvider);
+        if ($this->checkPasswordLocally($currentUser, $token->getCredentials())) {
             $this->authenticateExistingUser($token->getUsername(), $token->getCredentials(), $userProvider);
             return $token->getUsername();
         } else {
@@ -30,7 +30,7 @@ class LocalDatabaseAuthenticator extends TokenAuthenticator {
         }
     }
 
-    private function getUserOrThrow(string $username, UserProviderInterface $userProvider): UserInterface {
+    protected function getUserOrThrow(string $username, UserProviderInterface $userProvider): UserInterface {
         try {
             return $userProvider->loadUserByUsername($username);
         } catch (UsernameNotFoundException $e) {
