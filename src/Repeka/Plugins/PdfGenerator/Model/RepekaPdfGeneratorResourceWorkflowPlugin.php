@@ -78,6 +78,13 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
         $snappy->setOption('enable-javascript', true);
         $snappy->setOption('javascript-delay', 1000);
         $snappy->setOption('encoding', 'utf-8');
+        $snappy->setOption('page-size', 'A4');
+        $snappy->setOption('margin-left', '15mm');
+        $snappy->setOption('margin-right', '15mm');
+        $snappy->setOption('margin-top', '15mm');
+        $snappy->setOption('margin-bottom', '15mm');
+        $snappy->setOption("dpi", "300");
+        $snappy->setOption("image-dpi", "300");
         $snappy->generateFromHtml($renderResult, $finalCompleteTargetPath);
     }
 

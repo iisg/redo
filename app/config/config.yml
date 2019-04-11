@@ -109,5 +109,6 @@ twig:
   globals:
     applicationName: "%applicationName%"
     applicationUrl: '%applicationUrl%'
+    pathToWeb: "%kernel.project_dir%/web"
   debug: "%kernel.debug%"
   strict_variables: "%kernel.debug%"
