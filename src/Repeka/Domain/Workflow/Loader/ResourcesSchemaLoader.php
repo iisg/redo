@@ -102,9 +102,8 @@ class ResourcesSchemaLoader {
     }
 
     private function loadWorkflow(string $resourceClass, array $workflowSchema, array $metadataList): ResourceWorkflow {
-        $places = $transitions = $lockedMetadata = [];
+        $places = $transitions = [];
         foreach ($workflowSchema['places'] as $placeDefinition) {
-            $lockedMetadata = $placeDefinition['lockedMetadata'] = array_merge($lockedMetadata, $placeDefinition['lockedMetadata'] ?? []);
             $placeConfig = array_merge($this->buildPlaceMetadataRequirements($placeDefinition, $metadataList), $placeDefinition);
             $places[] = ResourceWorkflowPlace::fromArray($placeConfig);
         }
@@ -296,12 +295,13 @@ class ResourcesSchemaLoader {
             unset($metadataList[$key]);
             return $metadata;
         };
+        array_map($mapByName, $placeDefinition['optionalMetadata'] ?? []);
         $requirements = [
             'requiredMetadataIds' => EntityUtils::mapToIds(array_map($mapByName, $placeDefinition['requiredMetadata'] ?? [])),
             'assigneeMetadataIds' => EntityUtils::mapToIds(array_map($mapByName, $placeDefinition['assigneeMetadata'] ?? [])),
             'autoAssignMetadataIds' => EntityUtils::mapToIds(array_map($mapByName, $placeDefinition['autoAssignMetadata'] ?? [])),
-            'lockedMetadataIds' => EntityUtils::mapToIds(array_map($mapByName, $placeDefinition['lockedMetadata'] ?? [])),
         ];
+        $requirements['lockedMetadataIds'] = EntityUtils::mapToIds($metadataList);
         return $requirements;
     }
 
