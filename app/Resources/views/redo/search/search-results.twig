@@ -1,6 +1,7 @@
 {% extends "redo/layout.twig" %}
 
 {% set page_title = phrase ? phrase ~ ' - ' ~ ('search_results_page_title' | trans) : ('Browse collections' | trans) %}
+{% set expandFilters = false %}
 
 {% block content %}
     {% include "redo/title-bar.twig" %}

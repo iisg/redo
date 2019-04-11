@@ -28,11 +28,9 @@
     {% set filterUsed = app.request.query.all.metadataFilters[filterableMetadata.id] is defined %}
     {% set variableName = ("property" ~ filterableMetadata.id ~ "Expanded") | replace({"-": "0"}) %}
     {% set parentPathMetadata = filterableMetadata.name == "parent_path" %}
-    {% set alwaysExpanded = true %}
     <div class="property-options"
         .one-time="{{ variableName }} = {{ filterUsed ? 'true' : 'false' }}">
         {% block propertyNameContainer %}
-            {% set alwaysExpanded = false %}
             <button class="property-name-container expand-toggle"
                 class.bind="{{ variableName }} ? 'toggled' : ''"
                 type="button"
@@ -42,7 +40,7 @@
                 <span>{{ icon('forward') }}</span>
             </button>
         {% endblock %}
-        <div class="{{ alwaysExpanded or filterUsed ? 'expanded' : 'collapsed' }}"
+        <div class="{{ expandFilters or filterUsed ? 'expanded' : 'collapsed' }}"
             collapsible="collapsed.bind: !{{ variableName }}">
             {% if parentPathMetadata %}
                 {% set parentFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? null %}
