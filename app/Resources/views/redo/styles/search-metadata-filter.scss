@@ -22,6 +22,11 @@
       margin: 15px 0;
     }
   }
+  .date-property-filter {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+  }
   .property-options {
     padding-top: 2 * $default-gap-size / 8; // It's all because of the issue with `.property-name-container` margins.
     padding-left: $default-gap-size / 4; //

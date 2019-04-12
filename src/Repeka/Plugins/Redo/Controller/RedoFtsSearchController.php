@@ -97,6 +97,7 @@ class RedoFtsSearchController extends Controller {
         $searchableMetadata = $this->ftsConfig['searchable_metadata_ids'] ?? [];
         Assertion::notEmpty($searchableMetadata, 'Query must include some metadata');
         $facets = $this->ftsConfig['facets'] ?? [];
+        $metadataFilters = $this->adjustDateMetadataFilters($metadataFilters);
         $query = ResourceListFtsQuery::builder()
             ->setPhrase($phrase ?: '')
             ->setSearchableMetadata($searchableMetadata)
@@ -112,6 +113,16 @@ class RedoFtsSearchController extends Controller {
         /** @var ResultSet $results */
         $results = $this->handleCommand($query);
         return $results;
+    }
+
+    private function adjustDateMetadataFilters(array $metadataFilters): array {
+        foreach ($metadataFilters as &$metadataFilter) {
+            if (array_key_exists('from', $metadataFilter) && array_key_exists('to', $metadataFilter)) {
+                $metadataFilter['from'] = $metadataFilter['from'] . '-01-01';
+                $metadataFilter['to'] = $metadataFilter['to'] . '-12-31';
+            }
+        }
+        return $metadataFilters;
     }
 
     private function findFilterableMetadata(): array {

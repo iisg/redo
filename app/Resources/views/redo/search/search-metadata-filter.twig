@@ -14,15 +14,23 @@
         {% set from =  app.request.query.all.metadataFilters[filterableMetadata.id]['from'] ?? "" %}
         {% set to = app.request.query.all.metadataFilters[filterableMetadata.id]['to'] ?? "" %}
         {% set rangeMode = app.request.query.all.metadataFilters[filterableMetadata.id]['rangeMode'] ?? "year" %}
-        {% set dateSearchValue =  {
-            'from': from,
-            'to': to,
-            'rangeMode': rangeMode
-        } %}
 
-        <datetime-search filterable-metadata-id.one-time="{{ filterableMetadata.id }}"
-            fixed-range-mode="{{ 'year' }}"
-            stringified-value="{{ dateSearchValue | json_encode }}"></datetime-search>
+        <div class="date-property-filter">
+            <input type="text"
+                maxlength="4"
+                name="metadataFilters[{{ filterableMetadata.id }}][from]"
+                placeholder="yyyy"
+                value="{{ from }}">
+            <span>&nbsp;&mdash;&nbsp;</span>
+            <input type="text"
+                maxlength="4"
+                name="metadataFilters[{{ filterableMetadata.id }}][to]"
+                placeholder="yyyy"
+                value="{{ to }}">
+            <input type="hidden"
+                name="metadataFilters[{{ filterableMetadata.id }}][rangeMode]"
+                value="{{ rangeMode }}">
+        </div>
     </div>
 {% elseif filterableMetadata.control.value in ['relationship'] %}
     {% set filterUsed = app.request.query.all.metadataFilters[filterableMetadata.id] is defined %}
