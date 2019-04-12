@@ -3,7 +3,7 @@ export class ResourceSort {
   direction: SortDirection;
   language: string;
 
-  constructor(metadataId: number | string, direction: SortDirection, language: string) {
+  constructor(metadataId: number | string, direction: SortDirection = SortDirection.ASC, language: string = '') {
     this.columnId = metadataId;
     this.direction = direction;
     this.language = language;

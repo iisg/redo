@@ -6,6 +6,7 @@ import {MetadataValue} from "../../../metadata-value";
 import {BindingEngine} from "aurelia-binding";
 import {ResourceLabelValueConverter} from "../../../details/resource-label-value-converter";
 import {Resource} from "../../../resource";
+import {ResourceSort} from "../../../resource-sort";
 
 @autoinject
 export class SimpleRelationshipSelector implements ComponentAttached {
@@ -69,6 +70,7 @@ export class SimpleRelationshipSelector implements ComponentAttached {
     if (this.contentsFilter) {
       query.filterByContents(this.contentsFilter);
     }
+    query.sortByMetadataIds([new ResourceSort('id')]);
     query.get().then(resources => {
       this.resources = resources;
       this.initializeSelectedResources();
