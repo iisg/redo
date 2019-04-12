@@ -29,6 +29,7 @@ export class ResourceFormGenerated {
   @bindable skipValidation: boolean = false;
   @bindable hideLockedMetadata: boolean;
   @bindable forceSimpleFileUpload: boolean = false;
+  @bindable forceShowingGroups: boolean = false;
   @bindable disabled: boolean = false;
 
   currentLanguageCode: string;

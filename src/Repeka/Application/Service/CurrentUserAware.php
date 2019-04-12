@@ -32,7 +32,7 @@ trait CurrentUserAware {
     public function getCurrentUserOrThrow(): User {
         $user = $this->getCurrentUser();
         if (!$user) {
-            throw new Unauthorized401Exception();
+            throw new Unauthorized401Exception("You must be authenticated.");
         }
         return $user;
     }

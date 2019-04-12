@@ -42,6 +42,7 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
   }) => Promise<any>;
   @bindable cancel: () => void;
   @bindable forceSimpleFileUpload: boolean = false;
+  @bindable forceShowingGroups: boolean = false;
   submitting: boolean = false;
   cloning: boolean = false;
   disabled: boolean = false;
