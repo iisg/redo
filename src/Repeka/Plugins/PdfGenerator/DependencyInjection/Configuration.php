@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface {
         $rootNode
             ->children()
                 ->scalarNode('targetResourceDirectoryId')->defaultValue('resourceFiles')->end()
-                ->scalarNode('wkHtmlToPdfPath')->defaultValue('/wkhtmltox/bin/wkhtmltopdf')->end()
+                ->scalarNode('wkHtmlToPdfPath')->defaultValue('/usr/local/bin/wkhtmltopdf')->end()
           ->end();
         // @formatter:on
         // @codingStandardsIgnoreEnd

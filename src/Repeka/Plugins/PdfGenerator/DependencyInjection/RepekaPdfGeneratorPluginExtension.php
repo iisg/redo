@@ -20,8 +20,8 @@ class RepekaPdfGeneratorPluginExtension extends ConfigurableExtension implements
             'knp_snappy',
             [
                 'temporary_folder' => \AppKernel::VAR_PATH . "/cache/snappy",
-                'pdf' => ['enabled' => true, 'binary' => '/wkhtmltox/bin/wkhtmltopdf'],
-                'image' => ['enabled' => true, 'binary' => '/wkhtmltox/bin/wkhtmltoimage'],
+                'pdf' => ['enabled' => true, 'binary' => '/usr/local/bin/wkhtmltopdf'],
+                'image' => ['enabled' => true, 'binary' => '/usr/local/bin/wkhtmltoimage'],
             ]
         );
     }

@@ -53,14 +53,13 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
   && npm install -g npm@5
 # @endexclude
 
-
 RUN apt-get update && apt-get install -y \
         libfontconfig1 \
         libxrender1 \
         libxext6 \
-    && curl -L -o wkhtmltox.tar.xz https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-    && tar xf wkhtmltox.tar.xz -C / \
-    && rm -f wkhtmltox.tar.xz \
+    && curl -L -o /wkhtmltox.deb https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
+    && apt-get install -q -y /wkhtmltox.deb \
+    && rm -f /wkhtmltox.deb \
     && apt-get autoremove \
     && rm -r /var/lib/apt/lists/* \
     && apt-get clean
