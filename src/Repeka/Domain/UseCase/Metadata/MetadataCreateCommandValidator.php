@@ -7,7 +7,6 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
-use Repeka\Domain\Validation\Rules\MetadataGroupExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\ResourceDisplayStrategySyntaxValidRule;
@@ -24,8 +23,6 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
     private $constraintArgumentsAreValidRule;
     /** @var  ResourceClassExistsRule */
     private $resourceClassExistsRule;
-    /** @var MetadataGroupExistsRule */
-    private $metadataGroupExistsRule;
     /** @var MetadataRepository */
     private $metadataRepository;
     /** @var ResourceDisplayStrategySyntaxValidRule */
@@ -36,7 +33,6 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
         IsValidControlRule $isValidControlRule,
         ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
         ResourceClassExistsRule $resourceClassExistsRule,
-        MetadataGroupExistsRule $metadataGroupExistsRule,
         MetadataRepository $metadataRepository,
         ResourceDisplayStrategySyntaxValidRule $displayStrategySyntaxValidRule
     ) {
@@ -44,7 +40,6 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
         $this->isValidControlRule = $isValidControlRule;
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
         $this->resourceClassExistsRule = $resourceClassExistsRule;
-        $this->metadataGroupExistsRule = $metadataGroupExistsRule;
         $this->metadataRepository = $metadataRepository;
         $this->displayStrategySyntaxValidRule = $displayStrategySyntaxValidRule;
     }
@@ -74,7 +69,6 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ->attribute('copyToChildResource', Validator::boolType())
             ->attribute('resourceClass', $this->resourceClassExistsRule)
             ->attribute('constraints', $this->constraintArgumentsAreValidRule)
-            ->attribute('groupId', $this->metadataGroupExistsRule)
             ->attribute('displayStrategy', $this->displayStrategySyntaxValidRule);
     }
 

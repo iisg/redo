@@ -8,7 +8,6 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
 use Repeka\Domain\Validation\Rules\IsValidControlRule;
-use Repeka\Domain\Validation\Rules\MetadataGroupExistsRule;
 use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceClassExistsRule;
 use Repeka\Domain\Validation\Rules\ResourceDisplayStrategySyntaxValidRule;
@@ -41,7 +40,6 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
             new IsValidControlRule(['text', 'textarea']),
             $this->constraintArgumentsAreValidRule,
             $this->containsResourceClassRule,
-            new MetadataGroupExistsRule([['id' => 'group0'], ['id' => 'group1']]),
             $this->metadataRepository,
             $this->createMock(ResourceDisplayStrategySyntaxValidRule::class)
         );
@@ -115,12 +113,6 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->expectExceptionMessage('metadataNameIsNotUnique');
         $this->metadataRepository->expects($this->once())->method('findByQuery')->willReturn([$this->createMetadataMock()]);
         $command = new MetadataCreateCommand('notUniqueName', ['PL' => 'Test'], [], [], 'text', 'books');
-        $this->validator->validate($command);
-    }
-
-    public function testFailsWhenGroupDoesNotExist() {
-        $this->expectException(InvalidCommandException::class);
-        $command = new MetadataCreateCommand('name', ['PL' => 'Test'], [], [], 'text', 'books', [], 'invalidGroup');
         $this->validator->validate($command);
     }
 }

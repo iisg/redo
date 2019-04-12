@@ -133,7 +133,7 @@ services:
   Repeka\Domain\Validation\Rules\ResourceClassExistsRule:
     $resourceClasses: '%repeka.resource_classes%'
 
-  Repeka\Domain\Validation\Rules\MetadataGroupExistsRule:
+  Repeka\Domain\Validation\Strippers\UnknownMetadataGroupStripper:
     $metadataGroups: '%repeka.metadata_groups%'
 
   Repeka\Domain\Workflow\ResourceWorkflowPlugins:

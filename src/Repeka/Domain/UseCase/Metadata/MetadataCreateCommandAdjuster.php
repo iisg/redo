@@ -3,20 +3,27 @@ namespace Repeka\Domain\UseCase\Metadata;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
-use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Utils\StringUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\Strippers\UnknownLanguageStripper;
+use Repeka\Domain\Validation\Strippers\UnknownMetadataGroupStripper;
 
 class MetadataCreateCommandAdjuster implements CommandAdjuster {
     /** @var UnknownLanguageStripper */
     protected $unknownLanguageStripper;
     /** @var MetadataConstraintManager */
     private $metadataConstraintManager;
+    /** @var UnknownMetadataGroupStripper */
+    protected $unknownMetadataGroupStripper;
 
-    public function __construct(UnknownLanguageStripper $unknownLanguageStripper, MetadataConstraintManager $metadataConstraintManager) {
+    public function __construct(
+        UnknownLanguageStripper $unknownLanguageStripper,
+        MetadataConstraintManager $metadataConstraintManager,
+        UnknownMetadataGroupStripper $unknownMetadataGroupStripper
+    ) {
         $this->unknownLanguageStripper = $unknownLanguageStripper;
         $this->metadataConstraintManager = $metadataConstraintManager;
+        $this->unknownMetadataGroupStripper = $unknownMetadataGroupStripper;
     }
 
     /** @param MetadataCreateCommand $command */
@@ -29,7 +36,7 @@ class MetadataCreateCommandAdjuster implements CommandAdjuster {
             $command->getControlName(),
             $command->getResourceClass(),
             $this->clearUnsupportedConstraints($command->getControlName(), $command->getConstraints()),
-            $command->getGroupId() ?: Metadata::DEFAULT_GROUP,
+            $this->unknownMetadataGroupStripper->getSupportedMetadataGroup($command->getGroupId()),
             $command->getDisplayStrategy(),
             $command->isShownInBrief(),
             $command->isCopiedToChildResource(),
