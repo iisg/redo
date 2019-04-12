@@ -31,20 +31,5 @@ repeka:
       label:
         EN: Basic metadata
         PL: Podstawowe metadane
-    - id: statements
-      label:
-        PL: Oświadczenia prawne
-    - id: applicant_address
-      label:
-        PL: Adres kandydata
-    - id: school_data
-      label:
-        PL: Dane szkoły
-    - id: school_address
-      label:
-        PL: Adres szkoły
-    - id: headmasters_data
-      label:
-        PL: Dane dyrektora
   templating:
     theme: redo
