@@ -123,9 +123,13 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $input = new StringInput("$command --env=test");
         $output = new BufferedOutput();
         $input->setInteractive(false);
-        $returnCode = $this->application->run($input, $output);
-        if ($returnCode != 0) {
-            throw new \RuntimeException('Failed to execute command. ' . $output->fetch());
+        try {
+            $returnCode = $this->application->run($input, $output);
+            if ($returnCode != 0) {
+                $this->fail('Failed to execute command. ' . $output->fetch());
+            }
+        } catch (\Exception $e) {
+            $this->fail('Failed to execute command. ' . $e->getMessage());
         }
         return $output->fetch();
     }

@@ -24,7 +24,7 @@ class ElasticsearchCreateIndexCommandIntegrationTest extends IntegrationTestCase
     }
 
     public function testCreatingElasticsearchIndexWhenExists() {
-        $this->expectException(\Exception::class);
+        $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
         $this->executeCommand('repeka:elasticsearch:create-index');
         $this->assertTrue($this->esIndexManager->exists());
     }

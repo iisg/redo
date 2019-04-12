@@ -12,13 +12,13 @@ class CreateUserCommandIntegrationTest extends IntegrationTestCase {
 
     /** @depends testSuccess */
     public function testDuplicateUsernameError() {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
         $this->executeCommand('repeka:create-user testadmin adadmin');
     }
 
     /** @depends testSuccess */
     public function testDuplicateUsernameErrorWhenDifferenceInCaseOnly() {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
         $this->executeCommand('repeka:create-user testAdmin admin');
     }
 }
