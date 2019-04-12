@@ -34,7 +34,7 @@ export class ResourceMetadataValuesForm {
       this.ensureResourceHasMetadataContents();
       const length = this.resource.contents[this.metadata.id].length;
       if (!length && !this.controlCanShowEmptyField && !this.disabled) {
-        this.addNew();
+        this.addNew(false);
       }
     }
   });
@@ -52,15 +52,17 @@ export class ResourceMetadataValuesForm {
     this.element.dispatchEvent(ChangeEvent.newInstance());
   }
 
-  addNew() {
+  addNew(dispatchChangeEvent: boolean = true) {
     this.resource.contents[this.metadata.id].push(new MetadataValue());
-    this.element.dispatchEvent(ChangeEvent.newInstance());
-    // queueMicroTask and queueTask fire too early and the <input> doesn't exist yet.
-    // setTimeout(..., 0) fires at right time, but something steals the focus later.
-    // setTimeout + queue[Micro]Task isn't reliable, it works for second and subsequent inputs but not first one
-    setTimeout(() => {
-      $(this.valueTable).find('td').last().find('input, textarea').first().focus();
-    }, 50);
+    if (dispatchChangeEvent) {
+      this.element.dispatchEvent(ChangeEvent.newInstance());
+      // queueMicroTask and queueTask fire too early and the <input> doesn't exist yet.
+      // setTimeout(..., 0) fires at right time, but something steals the focus later.
+      // setTimeout + queue[Micro]Task isn't reliable, it works for second and subsequent inputs but not first one
+      setTimeout(() => {
+        $(this.valueTable).find('td').last().find('input, textarea').first().focus();
+      }, 50);
+    }
   }
 
   @computedFrom("metadata.control")
