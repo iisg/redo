@@ -15,6 +15,18 @@ repekaPdfGenerator:
       label: Presentation strategy
       description: What should be included in generated PDF file
       placeholder: "{{r|mTitle}}"
+    headerTemplate:
+      label: Header template
+      description: Set template header
+      placeholder: ~
+    footerTemplate:
+      label: Footer template
+      description: Set template footer
+      placeholder: ~
+    pageMargins:
+      label: Page margins
+      description: Set page margins
+      placeholder: ~
 repekaOcrAbbyy:
   label: Send metadata to OCR
   audit:
@@ -62,6 +74,10 @@ repekaMetadataValueSetter:
       label: Only if metadata does not have any value
       placeholder: ~
       description: Regardless of this option, if generated metadata value already exists in resource, it will not be added again.
+    overridePreviousValues:
+      label: Override previous values
+      placeholder: ~
+      description: Remove all existing metadata values and add new ones
 repekaMetadataValueRemover:
   label: Remove metadata value
   options:
