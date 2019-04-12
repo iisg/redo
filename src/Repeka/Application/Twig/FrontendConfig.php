@@ -29,7 +29,6 @@ class FrontendConfig extends \Twig_Extension {
         'static_permissions' => 'repeka.static_permissions',
         'metadata_groups' => 'repeka.metadata_groups',
         'audit' => 'repeka.audit',
-        'statistics' => 'repeka.statistics',
     ];
 
     /** @var FrontendLocaleProvider */

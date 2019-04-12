@@ -50,6 +50,7 @@ export class I18nParams {
     'navigation',
     'plugins',
     'resource_classes',
+    'statistics_labels',
     'validation',
   ];
 

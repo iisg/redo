@@ -1,20 +1,15 @@
-import {FrontendConfig} from "../../config/FrontendConfig";
-import {InCurrentLanguageValueConverter} from "../../resources-config/multilingual-field/in-current-language";
 import {autoinject} from "aurelia-dependency-injection";
+import {I18N} from "aurelia-i18n";
 
 @autoinject
 export class StatisticsUsageKeyValueConverter implements ToViewValueConverter {
-  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter) {
+  constructor(private i18n: I18N) {
   }
 
   toView(usageKey: string): string {
     if (!usageKey) {
       return usageKey;
     }
-    const statisticsConfig = FrontendConfig.get('statistics') as any[];
-    const config = statisticsConfig.filter(value => value['usageKey'] === usageKey);
-    return config.length
-      ? this.inCurrentLanguage.toView(config[0]['label'])
-      : usageKey;
+    return this.i18n.tr(`statistics_labels::${usageKey}`);
   }
 }

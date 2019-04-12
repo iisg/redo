@@ -69,51 +69,6 @@ repeka:
       label:
         EN: All audit entries with pagination and title
         PL: Wszystkie wpisy audytu z paginacją i tytułem
-  statistics:
-    - usageKey: home
-      label:
-        EN: Home page
-        PL: Strona główna
-    - usageKey: ips
-      label:
-        EN: The most popular IP addresses
-        PL: Najpopularniejsze adresy IP
-    - usageKey: sessions
-      label:
-        EN: Number of sessions
-        PL: Liczba sesji
-    - usageKey: resourceDetails
-      label:
-        EN: Resource details
-        PL: Szczegóły zasobów
-    - usageKey: bibtex
-      label:
-        EN: Bibtex details
-        PL: Wyświetlenia w formacie bibtex
-    - usageKey: endnote
-      label:
-        EN: Endnote details
-        PL: Wyświetlenia w formacie endnote
-    - usageKey: iso-690
-      label:
-        EN: ISO-690 details
-        PL: Wyświetlenia w formacie ISO-690
-    - usageKey: rss
-      label:
-        EN: RSS details
-        PL: Wyświetlenia w formacie RSS
-    - usageKey: deposit
-      label:
-        EN: Deposited resources by users
-        PL: Zdeponowane zasoby przez użytkowników
-    - usageKey: resourceBrowse
-      label:
-        EN: Number of browsed resources
-        PL: Liczba przeglądniętych zasobow
-    - usageKey: resourceDownload
-        label:
-          EN: Number of resource downloads
-          PL: Liczba wszystkich pobrań zasobów
   expose_endpoints:
     /about:
       resourceId: 19
