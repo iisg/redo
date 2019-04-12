@@ -7,6 +7,7 @@ use Repeka\Application\Elasticsearch\PageNumberFinder;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
@@ -93,6 +94,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Filter('basename', [$this, 'basename']),
             new \Twig_Filter('metadataFiles', [$this, 'metadataFiles']),
             new \Twig_Filter('metadataImageFiles', [$this, 'metadataImageFiles']),
+            new \Twig_Filter('mapToValues', [$this, 'mapToValues']),
         ];
     }
 
@@ -405,6 +407,18 @@ ICON;
                 },
                 $directoryNames
             )
+        );
+    }
+
+    /**
+     * @param MetadataValue[]|PrintableArray $metadataValues
+     */
+    public function mapToValues($metadataValues): array {
+        return array_map(
+            function (MetadataValue $metadataValue) {
+                return $metadataValue->getValue();
+            },
+            iterator_to_array($metadataValues)
         );
     }
 }

@@ -37,6 +37,9 @@ repeka:
     - id: applicant_address
       label:
         PL: Adres kandydata
+    - id: school_data
+      label:
+        PL: Dane szkoły
     - id: school_address
       label:
         PL: Adres szkoły

@@ -99,8 +99,9 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
         }
         $snappy = new Pdf($this->wkHtmlToPdfPath);
         $snappy->setOption('enable-javascript', true);
-        $snappy->setOption('javascript-delay', 100);
+        $snappy->setOption('enable-forms', true);
         $snappy->setOption('enable-external-links', true);
+        $snappy->setOption('javascript-delay', 100);
         $snappy->setOption('encoding', 'utf-8');
         $snappy->setOption('page-size', 'A4');
         $snappy->setOption('margin-top', $pageMargins[0]);
