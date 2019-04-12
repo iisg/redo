@@ -54,6 +54,14 @@ class EmailMessage {
         return $this->emailSender->send($this->message);
     }
 
+    public function sendSafe(): int {
+        try {
+            return $this->emailSender->send($this->message);
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
     private function getValidEmailAddresses(string $emails): array {
         return array_values(
             array_unique(
