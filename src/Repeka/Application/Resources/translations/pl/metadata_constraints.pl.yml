@@ -1,4 +1,4 @@
-﻿Value in this metadata is required: Wartość dla tej metadanej jest wymagana
+﻿Value is required: Wartość jest wymagana
 "No more than {{maxCount}} values allowed": "Maksymalna liczba wartości: {{maxCount}}"
 "At least {{minCount}} values required": "Minimalna liczba wartości: {{minCount}}"
 "Value must fit the regular expression: {{regex}}": "Wartość musi pasować do wyrażenia regularnego: {{regex}}"
@@ -6,7 +6,7 @@
 "Value must be at most {{minMaxValue.max}}": "Wartość nie może być większa niż {{minMaxValue.max}}"
 "Value must be at least {{minMaxValue.min}}": "Wartość nie może być mniejsza niż {{minMaxValue.min}}"
 Tree must be closed after selecting: Po wybraniu wartości należy zamknąć drzewo
-Metadata with given value already exists: Metadana o podanej wartości już istnieje
+"{{metadata}} with given value already exists": "{{metadata}} o podanej wartości już istnieje"
 Invalid pesel number: Niepoprawny numer pesel
 
 labels:

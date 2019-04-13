@@ -166,7 +166,7 @@ File is not a valid import configuration: Plik nie jest poprawną konfiguracją 
 To states: Do stanu
 And move to states: i przejdź do stanów
 And move to state: i przejdź do stanu
-Some metadata constraints have not been met. Fix the form errors and try again.: Wymagania niektórych metadanych nie zostały spełnione. Popraw błędy formularza i spróbuj ponownie.
+Some form requirements have not been met. Fix the errors and try again.: Niektóre wymagania formularza nie zostały spełnione. Popraw błędy i spróbuj ponownie.
 To select resources choose allowed resource kinds in metadata settings.: Aby wybrać zasoby, wybierz dozwolone rodzaje zasobów w ustawieniach metadanej.
 Additional filter limits results in this dropdown: Dodatkowy filtr ogranicza zasoby wyświetlane w powyższym polu
 Additional filter would limit results in this dropdown during normal edit: Dodatkowy filtr ograniczałby zasoby wyświetlane w powyższym polu przy standardowej edycji

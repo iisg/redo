@@ -26,7 +26,7 @@ export class MinCountConstraintValidator extends MetadataArrayConstraintValidato
   getErrorMessage(metadata: Metadata, resource: Resource): string {
     const minCount = metadata.constraints.minCount;
     if (minCount == 1) {
-      return this.i18n.tr("metadata_constraints::Value in this metadata is required");
+      return this.i18n.tr("metadata_constraints::Value is required");
     } else {
       return this.i18n.tr("metadata_constraints::At least {{minCount}} values required", {minCount});
     }

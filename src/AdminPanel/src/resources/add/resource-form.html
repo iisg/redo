@@ -41,7 +41,7 @@
     <form submit.delegate="validateAndSubmit()">
         <slot name="above-form-fields"></slot>
         <span if.bind="validationError"
-            class="error-label">${'Some metadata constraints have not been met. Fix the form errors and try again.' | t}</span>
+            class="error-label">${'Some form requirements have not been met. Fix the errors and try again.' | t}</span>
         <resource-form-generated if.bind="resource.kind"
             class="content top-level-form contains-collapsible-metadata-group"
             change.delegate="dirty = true"
