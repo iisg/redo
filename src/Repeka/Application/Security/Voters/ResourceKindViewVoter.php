@@ -1,25 +1,27 @@
 <?php
 namespace Repeka\Application\Security\Voters;
 
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
-use Repeka\Domain\Service\ReproductorPermissionHelper;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
-use Repeka\Domain\Utils\EntityUtils;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ResourceKindViewVoter extends Voter {
-    /** @var ReproductorPermissionHelper */
-    private $reproductorPermissionHelper;
+
     /** @var UnauthenticatedUserPermissionHelper */
     private $unauthenticatedUserPermissionHelper;
+    /** @var ResourceRepository */
+    private $resourceRepository;
 
     public function __construct(
-        ReproductorPermissionHelper $reproductorPermissionHelper,
+        ResourceRepository $resourceRepository,
         UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper
     ) {
-        $this->reproductorPermissionHelper = $reproductorPermissionHelper;
+        $this->resourceRepository = $resourceRepository;
         $this->unauthenticatedUserPermissionHelper = $unauthenticatedUserPermissionHelper;
     }
 
@@ -36,7 +38,18 @@ class ResourceKindViewVoter extends Voter {
         if (!$user || !($user instanceof User)) {
             $user = $this->unauthenticatedUserPermissionHelper->getUnauthenticatedUser();
         }
-        $allowedRkIds = EntityUtils::mapToIds($this->reproductorPermissionHelper->getResourceKindsWhichResourcesUserCanCreate($user));
-        return in_array($resourceKind->getId(), $allowedRkIds);
+        return $this->userCanSeeAnyResourcesOfKind($resourceKind, $user);
+    }
+
+    private function userCanSeeAnyResourcesOfKind($resourceKind, $user): bool {
+        return $this->resourceRepository->findByQuery(
+            ResourceListQuery::builder()
+                ->filterByResourceKind($resourceKind)
+                ->setExecutor($user)
+                ->setPermissionMetadataId(SystemMetadata::VISIBILITY)
+                ->setPage(1)
+                ->setResultsPerPage(1)
+                ->build()
+        )->count();
     }
 }

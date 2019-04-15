@@ -79,7 +79,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('GET', self::ENDPOINT, [], ['allResourceKinds' => true]);
         $this->assertStatusCode(200, $client->getResponse());
         $responseContent = json_decode($client->getResponse()->getContent());
-        $this->assertCount(3, $responseContent);
+        $this->assertCount(3, $responseContent, json_encode($responseContent));
         $responseItem = $responseContent[1];
         $this->assertEquals($this->resourceKind->getId(), $responseItem->id);
         $this->assertEquals($this->resourceKind->getName(), $responseItem->name);

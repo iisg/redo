@@ -2,12 +2,11 @@
 namespace Repeka\Tests\Integration\Security;
 
 use Repeka\Application\Security\SecurityOracle;
-use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
-use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -20,48 +19,40 @@ class ResourceKindVisibilityIntegrationTest extends IntegrationTestCase {
     /** @var User */
     private $testerUser;
     /** @var ResourceEntity */
-    private $ebooks;
+    private $userRk;
     /** @var ResourceKind */
-    private $categoryRk;
+    private $groupRk;
     /** @var ResourceKind */
-    private $bookRk;
+    private $universityRk;
     /** @var TokenInterface */
     private $testerUserToken;
     /** @var Metadata */
-    private $titleMetadata;
-    /** @var Metadata */
-    private $categoryNameMetadata;
+    private $usernameMetadata;
 
     protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
         $this->oracle = $this->container->get(SecurityOracle::class);
         $this->testerUser = $this->getUserByName('tester');
         $this->testerUserToken = $this->simulateAuthentication($this->testerUser);
-        $this->ebooks = $this->findResourceByContents(['Nazwa kategorii' => 'E-booki']);
-        $this->categoryRk = $this->ebooks->getKind();
-        $this->bookRk = $this->getPhpBookResource()->getKind();
-        $this->titleMetadata = $this->findMetadataByName('tytul');
-        $this->categoryNameMetadata = $this->findMetadataByName('nazwa_kategorii');
+        $this->userRk = $this->getResourceRepository()->findOne(SystemResourceKind::USER);
+        $this->groupRk = $this->getResourceKindRepository()->findByName('user_group');
+        $this->universityRk = $this->getResourceKindRepository()->findByName('university');
+        $this->usernameMetadata = $this->findMetadataByName('username');
     }
 
-    public function testTesterCannotViewAnythingAtTheBeginning() {
-        $this->assertFalse($this->oracle->hasViewPermission($this->bookRk, $this->testerUserToken));
-        $this->assertFalse($this->oracle->hasViewPermission($this->categoryRk, $this->testerUserToken));
-        $this->assertFalse($this->oracle->hasViewPermission($this->titleMetadata, $this->testerUserToken));
-        $this->assertFalse($this->oracle->hasViewPermission($this->categoryNameMetadata, $this->testerUserToken));
-        $this->assertFalse($this->oracle->hasViewPermission($this->bookRk->getWorkflow(), $this->testerUserToken));
+    public function testTesterCannotViewResourceKindsWithNoVisibleResources() {
+        $this->assertFalse($this->oracle->hasViewPermission($this->userRk, $this->testerUserToken));
+        $this->assertFalse($this->oracle->hasViewPermission($this->groupRk, $this->testerUserToken));
+        $this->assertFalse($this->oracle->hasViewPermission($this->universityRk, $this->testerUserToken));
+        $this->assertFalse($this->oracle->hasViewPermission($this->userRk->getWorkflow(), $this->testerUserToken));
+        $this->assertFalse($this->oracle->hasViewPermission($this->usernameMetadata, $this->testerUserToken));
     }
 
-    public function testCanViewResourcesMetadataAndWorkflowsUserCanAdd() {
-        $contents = $this->ebooks->getContents()->withReplacedValues(
-            SystemMetadata::REPRODUCTOR,
-            $this->testerUser->getUserData()->getId()
-        );
-        $this->handleCommandBypassingFirewall(new ResourceUpdateContentsCommand($this->ebooks, $contents));
-        $this->assertTrue($this->oracle->hasViewPermission($this->bookRk, $this->testerUserToken));
-        $this->assertFalse($this->oracle->hasViewPermission($this->categoryRk, $this->testerUserToken));
-        $this->assertTrue($this->oracle->hasViewPermission($this->titleMetadata, $this->testerUserToken));
-        $this->assertFalse($this->oracle->hasViewPermission($this->categoryNameMetadata, $this->testerUserToken));
-        $this->assertTrue($this->oracle->hasViewPermission($this->bookRk->getWorkflow(), $this->testerUserToken));
+    public function testTesterCanViewResourceKindsWithAnyVisibleResources() {
+        $bookRk = $this->getResourceKindRepository()->findByName('book');
+        $forbiddenBookRk = $this->getResourceKindRepository()->findByName('forbidden-book');
+        $this->assertTrue($this->oracle->hasViewPermission($bookRk, $this->testerUserToken));
+        $this->assertTrue($this->oracle->hasViewPermission($forbiddenBookRk, $this->testerUserToken));
+        $this->assertTrue($this->oracle->hasViewPermission($bookRk->getWorkflow(), $this->testerUserToken));
     }
 }

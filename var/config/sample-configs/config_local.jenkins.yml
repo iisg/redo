@@ -18,7 +18,7 @@ repeka:
         - Username: skaner
     - name: users
       icon: user
-      operators:
+      admins:
         - Username: admin
     - name: grants
       icon: user

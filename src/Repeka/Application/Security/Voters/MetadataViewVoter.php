@@ -3,6 +3,7 @@ namespace Repeka\Application\Security\Voters;
 
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\ReproductorPermissionHelper;
 use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
@@ -15,10 +16,10 @@ class MetadataViewVoter extends ResourceKindViewVoter {
 
     public function __construct(
         CommandBus $commandBus,
-        ReproductorPermissionHelper $reproductorPermissionHelper,
+        ResourceRepository $resourceRepository,
         UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper
     ) {
-        parent::__construct($reproductorPermissionHelper, $unauthenticatedUserPermissionHelper);
+        parent::__construct($resourceRepository, $unauthenticatedUserPermissionHelper);
         $this->commandBus = $commandBus;
     }
 

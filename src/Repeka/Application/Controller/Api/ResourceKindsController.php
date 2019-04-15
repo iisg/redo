@@ -20,7 +20,6 @@ class ResourceKindsController extends ApiController {
     /**
      * @Route
      * @Method("GET")
-     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getListAction(Request $request) {
         $resourceClasses = $request->query->get('resourceClasses', []);
@@ -39,6 +38,14 @@ class ResourceKindsController extends ApiController {
             ->filterByIds($ids);
         $resourceKindListQuery = $resourceKindListQueryBuilder->build();
         $resourceKindList = $this->handleCommand($resourceKindListQuery);
+        $resourceKindList = array_values(
+            array_filter(
+                $resourceKindList,
+                function (ResourceKind $resourceKind) {
+                    return $this->isGranted(['VIEW'], $resourceKind);
+                }
+            )
+        );
         return $this->createJsonResponse($resourceKindList);
     }
 
