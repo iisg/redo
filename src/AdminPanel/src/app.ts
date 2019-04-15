@@ -29,5 +29,13 @@ export class App implements ConfiguresRouter, ComponentAttached {
 
   attached() {
     this.i18n.updateTranslations(this.element);
+    this.disableChangingNumberFieldsValueByScrolling();
+  }
+
+  private disableChangingNumberFieldsValueByScrolling() {
+    $(document).on("wheel", "input[type=number]:focus", function(event) {
+      (event.target as HTMLInputElement).type = '';
+      setTimeout(() => (event.target as HTMLInputElement).type = 'number');
+    });
   }
 }
