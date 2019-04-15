@@ -1,6 +1,8 @@
 <template>
     <require from="common/components/buttons/radio-button-group"></require>
 
+    <span class="help-block"><span innerhtml.bind="description"></span></span>
+
     <radio-button-group if.bind="!disabled"
         values.bind="[true, false]"
         checked.bind="metadataValue.value & validate:validationController:validationRules">
