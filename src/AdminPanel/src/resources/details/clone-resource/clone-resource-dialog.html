@@ -1,0 +1,28 @@
+<template>
+    <require from="common/dialog/modal.html"></require>
+
+    <modal class="narrow"
+        controller.bind="dialogController">
+        <span slot="title">${'Clone' | t}: ${resourceLabel}</span>
+        <form class="clone-resource-form">
+            <div class="form-group">
+                <span>${ 'Number of cloned resources' | t }</span>
+                <input type="number"
+                    class="form-control"
+                    min="1"
+                    max="50"
+                    value.bind="cloneTimes">
+            </div>
+            <span if.bind="validationError"
+                class="clone-resource-error">
+                ${'Number must be between 1 and 50' | t}
+            </span>
+        </form>
+        <button slot="footer-content"
+            class="toggle-button"
+            type="submit"
+            click.delegate="confirm()">
+            ${'Clone' | t}
+        </button>
+    </modal>
+</template>

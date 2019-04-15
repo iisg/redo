@@ -40,6 +40,7 @@ class ResourceKindsStage2Fixture extends RepekaFixture {
                         ),
                     ]
                 ),
+                $remarksRk->isAllowedToClone(),
                 $remarksRk->getWorkflow()
             )
         );

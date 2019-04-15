@@ -61,13 +61,13 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testLeavesWorkflow() {
         $workflow = $this->createMock(ResourceWorkflow::class);
-        $command = new ResourceKindCreateCommand('', [], [], $workflow);
+        $command = new ResourceKindCreateCommand('', [], [], false, $workflow);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertEquals($workflow, $adjustedCommand->getWorkflow());
     }
 
     public function testTransformsWorkflowIdToWorkflow() {
-        $command = new ResourceKindCreateCommand('', [], [], 1);
+        $command = new ResourceKindCreateCommand('', [], [], false, 1);
         $adjustedCommand = $this->adjuster->adjustCommand($command);
         $this->assertInstanceOf(ResourceWorkflow::class, $adjustedCommand->getWorkflow());
     }
@@ -164,7 +164,7 @@ class ResourceKindCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
             SystemMetadata::REPRODUCTOR,
             SystemMetadata::RESOURCE_LABEL,
             SystemMetadata::VISIBILITY,
-            SystemMetadata::TEASER_VISIBILITY
+            SystemMetadata::TEASER_VISIBILITY,
         ];
         $this->assertEquals($expectedIds, $ids);
     }

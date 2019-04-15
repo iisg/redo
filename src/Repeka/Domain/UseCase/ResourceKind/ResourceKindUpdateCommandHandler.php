@@ -23,6 +23,7 @@ class ResourceKindUpdateCommandHandler {
         $resourceKind = $command->getResourceKind();
         $resourceKind->update($command->getLabel());
         $resourceKind->setMetadataList($command->getMetadataList());
+        $resourceKind->setAllowedToClone($command->isAllowedToClone());
         $this->updateWorkflow($command->getWorkflow(), $resourceKind);
         return $this->resourceKindRepository->save($resourceKind);
     }

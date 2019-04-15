@@ -17,6 +17,7 @@ class ResourceKindCreateCommandHandler {
             $command->getName(),
             $command->getLabel(),
             $command->getMetadataList(),
+            $command->isAllowedToClone(),
             $command->getWorkflow()
         );
         return $this->resourceKindRepository->save($resourceKind);

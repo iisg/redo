@@ -15,6 +15,7 @@ export class ResourceKind extends Entity {
   @map label: MultilingualText = {};
   @map('Metadata[]') metadataList: Metadata[] = [];
   @map('WorkflowId') workflow: Workflow;
+  @map allowedToClone: boolean;
   @map resourceClass: string;
 
   public ensureHasSystemMetadata() {

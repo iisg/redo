@@ -32,6 +32,8 @@
                             <span class="value">${resourceKind.name}</span>
                             <span>${'Label' | t}</span>
                             <span class="value">${resourceKind.label | inCurrentLanguage}</span>
+                            <span>${'Allowed to clone resources' | t}</span>
+                            <span class="value">${'bool//' + resourceKind.allowedToClone | t}</span>
                             <hr>
                             <template repeat.for="metadataGroup of metadataGroups">
                                 <collapsible-metadata-group resource-kind-id.bind="resourceKind.id"

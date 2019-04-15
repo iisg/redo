@@ -8,7 +8,7 @@ use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
 use Repeka\Domain\Repository\ResourceRepository;
 
-class ResourceCloneCommandFirewall implements CommandFirewall {
+class ResourceMultipleCloneCommandFirewall implements CommandFirewall {
     /** @var ResourceRepository */
     private $resourceRepository;
 

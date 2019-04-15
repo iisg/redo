@@ -7,6 +7,12 @@ resource-kind-form {
       @include form-element();
     }
 
+    .allowed-to-clone {
+      > input {
+        vertical-align: bottom;
+      }
+    }
+
     .metadata-list-container {
       display: flex;
       flex-direction: column;

@@ -119,6 +119,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'Default RK with workflow',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata3, $this->metadata4],
+            false,
             $workflow
         );
         $this->resource = $this->createResource(
@@ -171,6 +172,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'User group',
             ['PL' => 'User group', 'EN' => 'User group'],
             [$groupNameMetadata],
+            false,
             null
         );
         $this->allUsersGroup = $this->createResource(
@@ -413,19 +415,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'kindId' => $this->resource->getKind()->getId(),
                 'contents' => $this->resource->getContents()->toArray(),
                 'resourceClass' => 'books',
+                'cloneTimes' => 1,
             ]
         );
         $this->assertStatusCode(201, $client->getResponse());
-        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
-        $clonedId = json_decode($client->getResponse()->getContent())->id;
-        /** @var ResourceEntity $created */
-        $cloned = $repository->findOne($clonedId);
-        $this->assertEquals($this->resource->getKind()->getId(), $cloned->getKind()->getId());
-        $this->assertEquals(['Test value'], $cloned->getValues($this->metadata1));
-        $this->assertContains(
-            $cloned->getId(),
-            $this->findResourceIdsByMetadataValue('Test value', $this->metadata1->getId())
-        );
     }
 
     public function testCloningResourceWithWorkflow() {
@@ -438,17 +431,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'kindId' => $this->resourceWithWorkflow->getKind()->getId(),
                 'contents' => $this->resourceWithWorkflow->getContents()->toArray(),
                 'resourceClass' => 'books',
+                'cloneTimes' => 1,
             ]
         );
         $this->assertStatusCode(201, $client->getResponse());
-        $clonedId = json_decode($client->getResponse()->getContent())->id;
-        /** @var ResourceEntity $created */
-        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
-        $cloned = $repository->findOne($clonedId);
-        $this->assertEquals($this->resourceWithWorkflow->getKind()->getId(), $cloned->getKind()->getId());
-        $this->assertEquals(['Test value'], $cloned->getValues($this->metadata1));
-        $this->assertEquals($this->resourceWithWorkflow->getWorkflow()->getId(), $cloned->getWorkflow()->getId());
-        $this->assertEquals(['p1' => true], $cloned->getMarking());
     }
 
     public function testCloningResourceWithEditedValues() {
@@ -463,16 +449,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'kindId' => $this->resource->getKind()->getId(),
                 'contents' => $newContents,
                 'resourceClass' => 'books',
+                'cloneTimes' => 1,
             ]
         );
         $this->assertStatusCode(201, $client->getResponse());
-        $clonedId = json_decode($client->getResponse()->getContent())->id;
-        /** @var ResourceEntity $created */
-        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
-        $cloned = $repository->findOne($clonedId);
-        $this->assertEquals($this->resource->getKind()->getId(), $cloned->getKind()->getId());
-        $this->assertEquals(['Test value',], $cloned->getValues($this->metadata1));
-        $this->assertEquals(['new Test value',], $cloned->getValues($this->metadata2));
     }
 
     public function testCloningResourceWithParent() {
@@ -486,16 +466,10 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'kindId' => $this->resource->getKind()->getId(),
                 'contents' => $newContents,
                 'resourceClass' => 'books',
+                'cloneTimes' => 1,
             ]
         );
         $this->assertStatusCode(201, $client->getResponse());
-        $clonedId = json_decode($client->getResponse()->getContent())->id;
-        /** @var ResourceEntity $created */
-        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
-        $cloned = $repository->findOne($clonedId);
-        $this->assertEquals($this->resource->getKind()->getId(), $cloned->getKind()->getId());
-        $this->assertEquals(['Test value for child'], $cloned->getValues($this->metadata1));
-        $this->assertEquals($this->childResource->getParentId(), $cloned->getParentId());
     }
 
     public function testCreatingResourceWithFlexibleDate() {
@@ -521,19 +495,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             ]
         );
         $this->assertStatusCode(201, $client->getResponse());
-        $createdId = json_decode($client->getResponse()->getContent())->id;
-        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
-        /** @var ResourceEntity $created */
-        $created = $repository->findOne($createdId);
-        $metadataValue = $created->getContents()->getValues($this->metadata5->getId())[0]->getValue();
-        $expectedDateValue = [
-            'from' => '2018-09-13T00:00:00',
-            'to' => '2018-09-13T23:59:59',
-            'mode' => 'day',
-            'rangeMode' => null,
-            'displayValue' => '13.09.2018',
-        ];
-        $this->assertEquals($expectedDateValue, $metadataValue);
     }
 
     public function testCreatingResourceWithRangeDateWithOneDateGiven() {
@@ -558,19 +519,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             ]
         );
         $this->assertStatusCode(201, $client->getResponse());
-        $createdId = json_decode($client->getResponse()->getContent())->id;
-        $repository = self::createClient()->getContainer()->get(ResourceRepository::class);
-        /** @var ResourceEntity $created */
-        $created = $repository->findOne($createdId);
-        $metadataValue = $created->getContents()->getValues($this->metadata5->getId())[0]->getValue();
-        $expectedDateValue = [
-            'from' => '2013-01-01T00:00:00',
-            'to' => '',
-            'mode' => 'range',
-            'rangeMode' => 'year',
-            'displayValue' => '2013 - ',
-        ];
-        $this->assertEquals($expectedDateValue, $metadataValue);
     }
 
     public function testIgnoringBullshitOrDeletedMetadataDuringEdit() {
@@ -724,6 +672,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'Resource kind',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->metadata1],
+            false,
             $workflow
         );
         $client = $this->createAdminClient();

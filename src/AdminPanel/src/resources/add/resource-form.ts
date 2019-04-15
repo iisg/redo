@@ -17,8 +17,6 @@ import {Resource} from "../resource";
 import {ImportConfirmationDialog, ImportConfirmationDialogModel} from "./xml-import/import-confirmation-dialog";
 import {ImportDialog, ImportDialogModel} from "./xml-import/import-dialog";
 import {ImportResult} from "./xml-import/xml-import-client";
-import {CurrentUserIsReproductorValueConverter} from "../list/current-user-is-reproductor";
-import {DisabilityReason} from "common/components/buttons/toggle-button";
 import {HasRoleValueConverter} from "common/authorization/has-role-value-converter";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {CustomEvent} from "../../common/events/custom-event";
@@ -39,15 +37,11 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
     newResourceKind?: ResourceKind,
     places?: WorkflowPlace[]
   }) => Promise<any>;
-  @bindable clone: (value: {
-    editedResource: Resource
-  }) => Promise<any>;
   @bindable cancel: () => void;
   @bindable forceSimpleFileUpload: boolean = false;
   @bindable forceShowingGroups: boolean = false;
   @bindable metadataDisplayFilter: (metadata: Metadata) => boolean;
   submitting: boolean = false;
-  cloning: boolean = false;
   disabled: boolean = false;
   validationError: boolean = false;
   places: WorkflowPlace[] = [];
@@ -59,7 +53,6 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
               private modal: Modal,
               private changeLossPreventer: ChangeLossPreventer,
               private hasRole: HasRoleValueConverter,
-              private isReproductor: CurrentUserIsReproductorValueConverter,
               private eventAggregator: EventAggregator,
               private element: Element,
               validationControllerFactory: ValidationControllerFactory) {
@@ -196,14 +189,6 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
     }
   }
 
-  @computedFrom("parent", "resource_class")
-  get disabilityReason(): DisabilityReason {
-    return this.parent && !this.isReproductor.toView(this.parent)
-    || (!this.parent && !this.hasRole.toView('ADMIN', this.resourceClass))
-      ? {icon: 'user-2', message: 'You do not have permissions to clone resource.'}
-      : undefined;
-  }
-
   openImportDialog() {
     this.modal.open(ImportDialog, {resourceKind: this.resource.kind} as ImportDialogModel).then((importResult: ImportResult) => {
       const model: ImportConfirmationDialogModel = {
@@ -235,31 +220,6 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
         }
       }
     }
-  }
-
-  @computedFrom("disabled", "parent", "parent.pendingRequest")
-  get cloningResourceDisabled(): boolean {
-    return this.disabled
-      || (this.parent && (this.parent.pendingRequest || !this.isReproductor.toView(this.parent)))
-      || (!this.parent && !this.hasRole.toView('ADMIN', this.resourceClass));
-  }
-
-  cloneResource() {
-    this.cloning = true;
-    this.disabled = true;
-    this.validationError = false;
-    this.validationController.validate().then(result => {
-      if (result.valid) {
-        this.changeLossPreventer.disable();
-        return this.clone({editedResource: this.resource})
-          .then(() => this.editing || (this.resource = new Resource));
-      } else {
-        this.validationError = true;
-      }
-    }).finally(() => {
-      this.disabled = false;
-      this.cloning = false;
-    });
   }
 
   cancelForm() {

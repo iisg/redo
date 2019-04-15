@@ -86,6 +86,8 @@ Roles allowed to apply transition: Uprawnieni do wykonania przejścia
 Select file: Wybierz...
 Required resource kind: Wymagany rodzaj zasobu
 Available child resource kind: Dopuszczalne rodzaje podzasobów
+Allow to clone resources: Pozwól na klonowanie zasobów
+Allowed to clone resources: Dozwolone klonowanie zasobów
 One of the selected: Jeden spośród wybranych
 Clear overridden value: Przywróć oryginalną wartość
 Add value: Dodaj wartość
@@ -224,6 +226,9 @@ Stay: Zostań
 Discard changes: Porzuć zmiany
 You do not have permissions to add resource.: Nie posiadasz uprawnień do dodania zasobu.
 You do not have permissions to clone resource.: Nie posiadasz uprawnień do klonowania zasobu.
+Clone: Klonuj
+Number of cloned resources: Liczba klonowanych zasobów
+Number must be between 1 and 50: Liczba musi być z przedziału 1 - 50
 Resource kind does not allow to add resource.: Rodzaj zasobu nie pozwala na dodawanie podzasobów.
 You are editing the resource without validations.: Edytujesz zasób bez nałożonych reguł walidacyjnych.
 Make any changes wisely.: Wprowadzaj uważnie wszelkie zmiany.

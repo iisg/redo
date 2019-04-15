@@ -50,6 +50,7 @@ class ImportTemplatesCommand extends AbstractTemplateCommand {
                     $existingResourceKind,
                     $existingResourceKind->getLabel(),
                     $metadataList,
+                    false,
                     $existingResourceKind->getWorkflow()
                 );
             } else {

@@ -1,0 +1,8 @@
+@import "../../../common/styles";
+
+.clone-resource-form {
+  font-weight: bold;
+  .clone-resource-error {
+    color: $red;
+  }
+}

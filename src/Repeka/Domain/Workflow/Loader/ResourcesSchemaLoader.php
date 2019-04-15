@@ -274,9 +274,9 @@ class ResourcesSchemaLoader {
                 )
             );
             $metadataList = array_merge(array_values($metadataList), $currentMetadataList);
-            $command = new ResourceKindUpdateCommand($resourceKind, $config['label'], $metadataList, $workflow);
+            $command = new ResourceKindUpdateCommand($resourceKind, $config['label'], $metadataList, false, $workflow);
         } catch (EntityNotFoundException $e) {
-            $command = new ResourceKindCreateCommand($config['name'], $config['label'], $metadataList, $workflow);
+            $command = new ResourceKindCreateCommand($config['name'], $config['label'], $metadataList, false, $workflow);
         }
         return $this->commandBus->handle($command);
     }

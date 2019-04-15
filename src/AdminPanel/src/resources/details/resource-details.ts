@@ -23,6 +23,7 @@ import {Metadata} from "../../resources-config/metadata/metadata";
 import {safeJsonParse} from "../../common/utils/object-utils";
 import {MetadataRepository} from "../../resources-config/metadata/metadata-repository";
 import {MetadataControl} from "../../resources-config/metadata/metadata-control";
+import {CurrentUserIsReproductorValueConverter} from "../list/current-user-is-reproductor";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -58,7 +59,8 @@ export class ResourceDetails implements RoutableComponentActivate {
               private i18n: I18N,
               private entitySerializer: EntitySerializer,
               private contextResourceClass: ContextResourceClass,
-              private hasRole: HasRoleValueConverter) {
+              private hasRole: HasRoleValueConverter,
+              private isReproductor: CurrentUserIsReproductorValueConverter) {
     this.resourceDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
@@ -221,10 +223,23 @@ export class ResourceDetails implements RoutableComponentActivate {
     return this.resourceRepository.update(updatedResource);
   }
 
-  cloneResource(resource: Resource): Promise<any> {
-    return this.resourceRepository.post(resource).then(clonedResource => {
-      this.router.navigateToRoute('resources/details', {id: clonedResource.id});
-    });
+  @computedFrom('parentResource', 'resource')
+  get isCloneAllowed(): boolean {
+    return (this.parentResource && this.parentResource.kind.allowedToClone && this.isReproductor.toView(this.parentResource))
+      || (!this.parentResource && this.resource.kind.allowedToClone && this.hasRole.toView('ADMIN', this.resource.resourceClass));
+  }
+
+  cloneResource(cloneTimes: number): Promise<any> {
+    this.resource.pendingRequest = true;
+    return this.resourceRepository.cloneResource(this.resource, cloneTimes)
+      .then(() => {
+        if (this.parentResource) {
+          this.router.navigateToRoute('resources/details', {id: this.parentResource.id});
+        } else {
+          this.router.navigateToRoute('resources', {resourceClass: this.resource.resourceClass});
+        }
+      })
+      .then(() => this.resource.pendingRequest = false);
   }
 
   remove() {

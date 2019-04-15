@@ -3,7 +3,8 @@
     <require from="common/value-converters/date-value-converter"></require>
     <require from="resources/details/resource-metadata-table/resource-metadata-table"></require>
 
-    <modal controller.bind="dialogController">
+    <modal class="wide"
+        controller.bind="dialogController">
         <span slot="title">
             ${"Resource #{{id}} state, as of" | t:{id: resources[0].id} }
             ${ entry.createdAt | date:'LLL' }

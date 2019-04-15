@@ -51,6 +51,12 @@ export class ResourceRepository extends ApiRepository<Resource> {
     }
   }, 100);
 
+  cloneResource(entity: Resource, cloneTimes: number): Promise<any> {
+    let clonedResource = this.toBackend(entity);
+    $.extend(clonedResource, {cloneTimes});
+    return this.httpClient.post(this.endpoint, clonedResource);
+  }
+
   update(resource: Resource): Promise<Resource> {
     return this.updateAndApplyTransition(resource, '');
   }

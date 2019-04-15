@@ -2,10 +2,10 @@
     <require from="../add/resource-form"></require>
     <require from="../workflow/resource-workflow"></require>
     <require from="./apply-transition-button/apply-transition-button"></require>
+    <require from="./clone-resource/clone-resource"></require>
     <require from="./resource-metadata-table/resource-metadata-table"></require>
     <require from="../list/resources-list"></require>
     <require from="common/components/buttons/remove-button.html"></require>
-    <require from="common/components/buttons/edit-button.html"></require>
     <require from="common/components/buttons/manage-button.html"></require>
     <require from="common/components/redo-footer/redo-footer.html"></require>
     <require from="users/details/user-roles"></require>
@@ -39,6 +39,12 @@
                     <manage-button if.bind="!isFormOpened"
                         disabled.bind="resource.pendingRequest"
                         click.delegate="showGodForm()"></manage-button>
+                </template>
+                <template if.bind="isCloneAllowed">
+                    <clone-resource containerless
+                        parent-resource.bind="parentResource"
+                        resource.bind="resource"
+                        clone.call="cloneResource(cloneTimes)"></clone-resource>
                 </template>
                 <resource-file-manager resource.bind="resource"
                     skip-validation.bind="isFormOpenedForGod">
@@ -105,7 +111,6 @@
                         currently-edited-resource.bind="resource"
                         skip-validation.bind="isFormOpenedForGod"
                         submit.call="saveEditedResource(savedResource, transitionId, newResourceKind, places)"
-                        clone.call="cloneResource(editedResource)"
                         transition.bind="selectedTransition"
                         cancel.call="hideForm()"></resource-form>
                 </div>

@@ -8,13 +8,13 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\PageResult;
-use Repeka\Domain\UseCase\Resource\ResourceCloneCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
 use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQueryBuilder;
+use Repeka\Domain\UseCase\Resource\ResourceMultipleCloneCommand;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTopLevelPathQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
@@ -177,8 +177,14 @@ class ResourcesController extends ApiController {
         Assertion::numeric($data['kindId']);
         $resourceKind = $this->handleCommand(new ResourceKindQuery($data['kindId']));
         $resourceContents = ResourceContents::fromArray($data['contents']);
-        $command = isset($data['id']) && is_numeric($data['id'])
-            ? new ResourceCloneCommand($resourceKind, intval($data['id']), $resourceContents, $this->getUser())
+        $command = isset($data['id']) && is_numeric($data['id']) && is_numeric($data['cloneTimes'])
+            ? new ResourceMultipleCloneCommand(
+                $resourceKind,
+                intval($data['id']),
+                $resourceContents,
+                intval($data['cloneTimes']),
+                $this->getUser()
+            )
             : new ResourceCreateCommand($resourceKind, $resourceContents, $this->getUser());
         $resource = $this->handleCommand($command);
         return $this->createJsonResponse($resource, 201);

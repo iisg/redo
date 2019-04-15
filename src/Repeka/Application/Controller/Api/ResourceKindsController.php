@@ -69,6 +69,7 @@ class ResourceKindsController extends ApiController {
             $data['name'] ?? '',
             $data['label'] ?? [],
             $data['metadataList'] ?? [],
+            $data['allowedToClone'] ?? false,
             $data['workflowId'] ?? null
         );
         $resourceKind = $this->handleCommand($command);
@@ -88,6 +89,7 @@ class ResourceKindsController extends ApiController {
             $resourceKind,
             $data['label'],
             $data['metadataList'],
+            $data['allowedToClone'] ?? false,
             $data['workflowId'] ?? null
         );
         $resourceKind = $this->handleCommand($command);

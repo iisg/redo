@@ -44,6 +44,7 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
             StringUtils::normalizeEntityName($command->getName()),
             $this->unknownLanguageStripper->removeUnknownLanguages($command->getLabel()),
             $this->fetchMetadataIfRequired($command->getMetadataList()),
+            $command->isAllowedToClone(),
             $this->findWorkflow($command->getWorkflow())
         );
     }

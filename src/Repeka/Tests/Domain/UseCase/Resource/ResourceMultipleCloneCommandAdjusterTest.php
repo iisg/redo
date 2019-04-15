@@ -6,13 +6,14 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCloneCommand;
-use Repeka\Domain\UseCase\Resource\ResourceCloneCommandAdjuster;
+use Repeka\Domain\UseCase\Resource\ResourceMultipleCloneCommand;
+use Repeka\Domain\UseCase\Resource\ResourceMultipleCloneCommandAdjuster;
 use Repeka\Tests\Traits\StubsTrait;
 
-class ResourceCloneCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
+class ResourceMultipleCloneCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
-    /** @var  ResourceCloneCommandAdjuster */
+    /** @var  ResourceMultipleCloneCommandAdjuster */
     private $adjuster;
     private $id;
     private $kind;
@@ -26,14 +27,15 @@ class ResourceCloneCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
         $resource = $this->createResourceMock($this->id);
         $this->kind = $this->createResourceKindMock(1);
         $resourceRepository = $this->createRepositoryStub(ResourceRepository::class, [$resource]);
-        $this->adjuster = new ResourceCloneCommandAdjuster($resourceRepository);
+        $this->adjuster = new ResourceMultipleCloneCommandAdjuster($resourceRepository);
     }
 
     public function testConvertIdToResourceWithExistingId() {
-        $command = new ResourceCloneCommand(
+        $command = new ResourceMultipleCloneCommand(
             $this->kind,
             $this->id,
             $this->resourceContents,
+            0,
             $this->user
         );
         $command = $this->adjuster->adjustCommand($command);
@@ -42,10 +44,11 @@ class ResourceCloneCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testConvertIdToResourceWithNotExistingId() {
-        $command = new ResourceCloneCommand(
+        $command = new ResourceMultipleCloneCommand(
             $this->kind,
             0,
             $this->resourceContents,
+            0,
             $this->user
         );
         $command = $this->adjuster->adjustCommand($command);

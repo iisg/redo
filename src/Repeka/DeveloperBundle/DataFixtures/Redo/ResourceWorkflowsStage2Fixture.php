@@ -182,6 +182,7 @@ TRANSITIONS
                 $userResourceKind,
                 $userResourceKind->getLabel(),
                 $userResourceKind->getMetadataList(),
+                $userResourceKind->isAllowedToClone(),
                 $userWorkflow
             )
         );

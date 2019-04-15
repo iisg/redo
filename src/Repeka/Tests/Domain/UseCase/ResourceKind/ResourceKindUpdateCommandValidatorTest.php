@@ -87,6 +87,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createMetadataMock(),
                 $this->relationshipMetadata,
             ],
+            false,
             []
         );
         $this->validator->validate($command);
@@ -99,6 +100,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
             $this->createMock(ResourceKind::class),
             ['PL' => 'Labelka'],
             [SystemMetadata::PARENT()->toMetadata()],
+            false,
             []
         );
         $this->validator->validate($command);
@@ -114,6 +116,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createMetadataMock(SystemMetadata::PARENT),
                 $this->createMetadataMock(),
             ],
+            false,
             []
         );
         $this->validator->validate($command);
@@ -144,6 +147,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createMetadataMock(),
                 $this->relationshipMetadata,
             ],
+            false,
             $workflow
         );
         $this->validator->validate($command);
@@ -161,6 +165,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
                 $this->createMetadataMock(),
                 $this->relationshipMetadata,
             ],
+            false,
             $this->createMockEntity(ResourceWorkflow::class, 2)
         );
         $this->validator->validate($command);

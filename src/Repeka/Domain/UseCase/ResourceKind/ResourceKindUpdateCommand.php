@@ -12,16 +12,19 @@ class ResourceKindUpdateCommand extends ResourceClassAwareCommand implements Adj
     private $label;
     private $metadataList;
     private $workflow;
+    private $allowedToClone;
 
     /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      * @param ResourceKind | int $resourceKindOrId
      */
-    public function __construct($resourceKindOrId, array $label, array $metadataList, $workflowOrId = null) {
+    public function __construct($resourceKindOrId, array $label, array $metadataList, bool $allowedToClone = false, $workflowOrId = null) {
         parent::__construct(ResourceKind::detectResourceClass($metadataList));
         $this->resourceKind = $resourceKindOrId;
         $this->label = $label;
         $this->metadataList = $metadataList;
         $this->workflow = $workflowOrId;
+        $this->allowedToClone = $allowedToClone;
     }
 
     /** @return ResourceKind|int */
@@ -36,6 +39,10 @@ class ResourceKindUpdateCommand extends ResourceClassAwareCommand implements Adj
     /** @return Metadata[] */
     public function getMetadataList(): array {
         return $this->metadataList;
+    }
+
+    public function isAllowedToClone(): bool {
+        return $this->allowedToClone;
     }
 
     /** @return ResourceWorkflow|int|null */

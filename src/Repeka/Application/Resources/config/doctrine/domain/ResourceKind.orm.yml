@@ -24,6 +24,10 @@ Repeka\Domain\Entity\ResourceKind:
       length: 64
       nullable: false
       column: resource_class
+    allowedToClone:
+      type: boolean
+      column: allowed_to_clone
+      options: {default: false}
     metadataOverrides:
       type: jsonb
       column: metadata_list

@@ -7,7 +7,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\ResourceRepository;
 
-class ResourceCloneCommandAdjuster implements CommandAdjuster {
+class ResourceMultipleCloneCommandAdjuster implements CommandAdjuster {
     /** @var ResourceRepository */
     private $resourceRepository;
 
@@ -16,14 +16,15 @@ class ResourceCloneCommandAdjuster implements CommandAdjuster {
     }
 
     /**
-     * @param ResourceCloneCommand $command
+     * @param ResourceMultipleCloneCommand $command
      * @return ResourceCloneCommand
      */
     public function adjustCommand(Command $command): Command {
-        return new ResourceCloneCommand(
+        return new ResourceMultipleCloneCommand(
             $command->getKind(),
             $this->convertIdToResource($command->getResource()),
             $command->getContents(),
+            $command->getCloneTimes(),
             $command->getExecutor()
         );
     }

@@ -70,6 +70,7 @@ class TaskIntegrationTest extends IntegrationTestCase {
             'Resource kind',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
             [$this->parentMetadata, $this->metadata1, $this->metadata2],
+            false,
             $workflow
         );
         $adminId = $this->getAdminUser()->getUserData()->getId();

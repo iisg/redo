@@ -74,7 +74,13 @@ class ClearMetadataOverridesCommand extends ContainerAwareCommand {
                     $resourceKind->getMetadataList()
                 );
                 $this->commandBus->handle(
-                    new ResourceKindUpdateCommand($resourceKind, $resourceKind->getLabel(), $newMetadataList, $resourceKind->getWorkflow())
+                    new ResourceKindUpdateCommand(
+                        $resourceKind,
+                        $resourceKind->getLabel(),
+                        $newMetadataList,
+                        $resourceKind->isAllowedToClone(),
+                        $resourceKind->getWorkflow()
+                    )
                 );
                 $output->writeln('Cleared metadata overrides in resource kind ' . $resourceKind->getName());
             }

@@ -2,6 +2,7 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
+use phpDocumentor\Reflection\Types\This;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Utils\StringUtils;
@@ -15,17 +16,26 @@ class ResourceKind implements Identifiable, HasResourceClass {
     /** @var ResourceWorkflow */
     private $workflow;
     private $resourceClass;
+    private $allowedToClone = false;
 
     /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      * @param string[] $label
      * @param Metadata[] $metadataList
      */
-    public function __construct(string $name, array $label, array $metadataList, ResourceWorkflow $workflow = null) {
+    public function __construct(
+        string $name,
+        array $label,
+        array $metadataList,
+        bool $allowedToClone = false,
+        ResourceWorkflow $workflow = null
+    ) {
         $this->setMetadataList($metadataList);
         $this->resourceClass = self::detectResourceClass($this->metadataList);
         Assertion::notEmpty($this->resourceClass, 'Could not detect resource class from system metadata only.');
         $this->name = $name;
         $this->label = $label;
+        $this->allowedToClone = $allowedToClone;
         $this->workflow = $workflow;
     }
 
@@ -142,6 +152,14 @@ class ResourceKind implements Identifiable, HasResourceClass {
     /** @return int[] */
     public function getMetadataIds(): array {
         return EntityUtils::mapToIds($this->getMetadataList());
+    }
+
+    public function isAllowedToClone(): bool {
+        return $this->allowedToClone;
+    }
+
+    public function setAllowedToClone($allowedToClone) {
+        $this->allowedToClone = $allowedToClone;
     }
 
     public function setMetadataList(array $metadataList) {

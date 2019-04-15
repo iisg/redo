@@ -252,13 +252,19 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         );
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     */
     protected function createResourceKind(
         string $name,
         array $label,
         array $metadataList,
+        bool $allowedToClone = false,
         ResourceWorkflow $workflow = null
     ): ResourceKind {
-        return $this->handleCommandBypassingFirewall(new ResourceKindCreateCommand($name, $label, $metadataList, $workflow));
+        return $this->handleCommandBypassingFirewall(
+            new ResourceKindCreateCommand($name, $label, $metadataList, $allowedToClone, $workflow)
+        );
     }
 
     protected function createResource(ResourceKind $resourceKind, array $contents): ResourceEntity {

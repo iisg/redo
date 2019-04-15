@@ -77,6 +77,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL_LINK),
                 ],
+                false,
                 $bookWorkflow
             ),
             self::REFERENCE_RESOURCE_KIND_BOOK
@@ -115,7 +116,8 @@ class ResourceKindsFixture extends RepekaFixture {
                         ]
                     ),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME),
-                ]
+                ],
+                true
             ),
             self::REFERENCE_RESOURCE_KIND_CATEGORY
         );
@@ -252,6 +254,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_MANAGER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_CREATION_DATE),
                 ],
+                false,
                 $remarkWorkflow
             ),
             self::REFERENCE_RESOURCE_KIND_CMS_REPORTED_REMARKS

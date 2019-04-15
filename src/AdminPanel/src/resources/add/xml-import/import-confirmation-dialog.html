@@ -2,7 +2,8 @@
     <require from="common/dialog/modal.html"></require>
     <require from="./fake-resource-display"></require>
 
-    <modal controller.bind="dialogController">
+    <modal class="narrow"
+        controller.bind="dialogController">
         <span slot="title">${"Import successful" | t}</span>
         <span>${"Values that are already present will be omitted." | t}</span>
         <fake-resource-display resource-kind.bind="resourceKind"

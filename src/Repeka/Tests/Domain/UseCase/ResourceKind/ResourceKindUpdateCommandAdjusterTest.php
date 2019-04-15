@@ -49,7 +49,7 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testRemovesInvalidLanguages() {
         $resourceKind = $this->createMock(ResourceKind::class);
-        $command = new ResourceKindUpdateCommand($resourceKind, ['PL' => 'Labelka', 'EN' => 'Labelka'], [], []);
+        $command = new ResourceKindUpdateCommand($resourceKind, ['PL' => 'Labelka', 'EN' => 'Labelka'], [], false, []);
         /** @var ResourceKindUpdateCommand $preparedCommand */
         $preparedCommand = $this->adjuster->adjustCommand($command);
         $this->assertEquals($resourceKind, $preparedCommand->getResourceKind());
@@ -57,14 +57,14 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
     }
 
     public function testFetchesResourceKindIfIdGiven() {
-        $command = new ResourceKindUpdateCommand(1, [], [], []);
+        $command = new ResourceKindUpdateCommand(1, [], [], false, []);
         /** @var ResourceKindUpdateCommand $preparedCommand */
         $preparedCommand = $this->adjuster->adjustCommand($command);
         $this->assertInstanceOf(ResourceKind::class, $preparedCommand->getResourceKind());
     }
 
     public function testAcceptsStringIds() {
-        $command = new ResourceKindUpdateCommand('1', [], [], []);
+        $command = new ResourceKindUpdateCommand('1', [], [], false, []);
         /** @var ResourceKindUpdateCommand $preparedCommand */
         $preparedCommand = $this->adjuster->adjustCommand($command);
         $this->assertInstanceOf(ResourceKind::class, $preparedCommand->getResourceKind());
@@ -72,13 +72,13 @@ class ResourceKindUpdateCommandAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function test404IfNotFoundId() {
         $this->expectException(EntityNotFoundException::class);
-        $command = new ResourceKindUpdateCommand(2, [], [], []);
+        $command = new ResourceKindUpdateCommand(2, [], [], false, []);
         $this->adjuster->adjustCommand($command);
     }
 
     public function testAssertionErrorIfWrongId() {
         $this->expectException(\InvalidArgumentException::class);
-        $command = new ResourceKindUpdateCommand('ala', [], [], []);
+        $command = new ResourceKindUpdateCommand('ala', [], [], false, []);
         $this->adjuster->adjustCommand($command);
     }
 }

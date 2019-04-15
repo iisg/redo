@@ -1,0 +1,8 @@
+<template>
+    <require from="common/components/buttons/make-copy-button.html"></require>
+
+    <make-copy-button submitting.bind="resource.pendingRequest"
+        disabled.bind="cloningResourceDisabled"
+        disability-reason.bind="disabilityReason"
+        click.delegate="openCloneDialog()"></make-copy-button>
+</template>

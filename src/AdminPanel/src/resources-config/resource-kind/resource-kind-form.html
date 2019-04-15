@@ -96,6 +96,11 @@
             <span>${'Available child resource kind' | t}</span>
             <resource-kind-constraint-editor metadata.bind="resourceChildConstraintMetadata"
                 resource-class.bind="resourceClass"></resource-kind-constraint-editor>
+            <span>${'Allow to clone resources' | t}</span>
+            <label class="allowed-to-clone">
+                <input type="checkbox"
+                    checked.bind="resourceKind.allowedToClone">
+            </label>
         </div>
         <div class="sticky-buttons">
             <submit-button editing.bind="editing"

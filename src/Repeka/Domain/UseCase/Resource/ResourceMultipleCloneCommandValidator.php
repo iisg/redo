@@ -8,8 +8,8 @@ use Repeka\Domain\Validation\CommandAttributesValidator;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator;
 
-class ResourceCloneCommandValidator extends CommandAttributesValidator {
-    /** @param ResourceCloneCommand $command */
+class ResourceMultipleCloneCommandValidator extends CommandAttributesValidator {
+    /** @param ResourceMultipleCloneCommand $command */
     public function getValidator(Command $command): Validatable {
         return Validator
             ::attribute(
@@ -30,6 +30,14 @@ class ResourceCloneCommandValidator extends CommandAttributesValidator {
                             return $resource->getId() > 0;
                         }
                     )
+                )
+            )
+            ->attribute(
+                'cloneTimes',
+                Validator::allOf(
+                    Validator::intVal(),
+                    Validator::min(1),
+                    Validator::max(50)
                 )
             );
     }

@@ -229,6 +229,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
                     ['id' => $this->metadata1->getId(), 'placeholder' => ['PL' => 'modified', 'EN' => 'modified']],
                     ['id' => SystemMetadata::PARENT],
                 ],
+                'allowedToClone' => true,
             ]
         );
         $this->assertStatusCode(200, $client->getResponse());
@@ -249,6 +250,7 @@ class ResourceKindIntegrationTest extends IntegrationTestCase {
             ],
             $resourceKind->getMetadataIds()
         );
+        $this->assertTrue($resourceKind->isAllowedToClone());
     }
 
     public function testEditingResourceKindMetadataClearsUnknownLanguages() {

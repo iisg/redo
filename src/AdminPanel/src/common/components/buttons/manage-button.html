@@ -1,7 +1,8 @@
-<template>
+<template bindable="disabled">
     <require from="./toggle-button"></require>
 
     <toggle-button class="orange"
         primary-icon-name="settings"
-        primary-label="Manage"></toggle-button>
+        primary-label="Manage"
+        disabled.bind="disabled"></toggle-button>
 </template>

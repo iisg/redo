@@ -7,7 +7,6 @@
     <require from="../workflow/transition-button"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/buttons/submit-button.html"></require>
-    <require from="common/components/buttons/make-copy-button.html"></require>
 
     <slot name="above-form">
         <div class="alert alert-warning"
@@ -70,11 +69,6 @@
                     submitting.bind="submitting">
                     ${(!editing ? 'Add' : 'Save') | t}
                 </submit-button>
-                <make-copy-button if.bind="!transition && editing && !skipValidation"
-                    submitting.bind="cloning"
-                    disabled.bind="cloningResourceDisabled"
-                    disability-reason.bind="disabilityReason"
-                    click.delegate="cloneResource()"></make-copy-button>
                 <cancel-button class.bind="!editing ? 'orange' : ''"
                     label.bind="!editing ? 'Close' : ''"
                     disabled.bind="resource.pendingRequest || submitting"

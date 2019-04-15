@@ -54,7 +54,8 @@ class ResourceKindUpdateCommandValidator extends CommandAttributesValidator {
             )
             ->attribute('metadataList', $this->containsParentMetadataRule)->setTemplate('containsParentMetadataRule')
             ->attribute('metadataList', $this->childResourceKindsAreOfSameResourceClassRule)
-            ->setTemplate('childResourceKindsAreOfSameResourceClassRule');
+            ->setTemplate('childResourceKindsAreOfSameResourceClassRule')
+            ->attribute('allowedToClone', Validator::boolVal());
         if (method_exists($command, 'getResourceKind') && $command->getResourceKind()->getWorkflow()) {
             $validator = $validator->attribute(
                 'workflow',

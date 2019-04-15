@@ -269,6 +269,7 @@ class UpdatingDependentDisplayStrategiesMetadataIntegrationTest extends Integrat
                 $this->phpBook->getKind(),
                 $this->phpBook->getKind()->getLabel(),
                 $newMetadataOverrides,
+                false,
                 $this->phpBook->getWorkflow()
             )
         );
