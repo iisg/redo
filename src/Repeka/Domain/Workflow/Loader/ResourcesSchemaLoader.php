@@ -91,9 +91,6 @@ class ResourcesSchemaLoader {
                 ? $this->loadWorkflow($resourceClass, $schemaConfiguration['workflow'], $metadataList)
                 : null;
             $this->createOrUpdateResourceKind($schemaConfiguration['resourceKind'], $metadataList, $workflow);
-            if (isset($schemaConfiguration['submetadata'])) {
-                $this->createOrUpdateSubmetadata($resourceClass, $schemaConfiguration['submetadata']);
-            }
         }
         $this->addConstraintsToUserRelatedMetadata($systemMetadata);
         if (isset($schema['resources'])) {
@@ -212,13 +209,14 @@ class ResourcesSchemaLoader {
                 $metadataConfig['constraints']['resourceKind']
             );
         }
+        $metadataToReturn = null;
         try {
             $metadata = $this->metadataRepository->findByName($metadataConfig['name']);
             if (SystemMetadata::isValid($metadata->getId())) {
                 return $metadata->withOverrides($metadataConfig);
             } else {
                 $updateHandler = new MetadataUpdateCommandHandler($this->metadataRepository);
-                return $updateHandler->handle(MetadataUpdateCommand::fromArray($metadata, $metadataConfig));
+                $metadataToReturn = $updateHandler->handle(MetadataUpdateCommand::fromArray($metadata, $metadataConfig));
             }
         } catch (EntityNotFoundException $exception) {
             $metadataConfig['resourceClass'] = $resourceClass;
@@ -226,8 +224,14 @@ class ResourcesSchemaLoader {
             $factory = new MetadataFactory();
             $metadata = $factory->create($command);
             $this->metadataRepository->save($metadata);
-            return $metadata;
+            $metadataToReturn = $metadata;
         }
+        foreach (($metadataConfig['submetadata'] ?? []) as $submetadataConfig) {
+            $submetadata = $this->createOrUpdateMetadata($resourceClass, $submetadataConfig);
+            $submetadata->setParent($metadataToReturn);
+            $this->metadataRepository->save($submetadata);
+        }
+        return $metadataToReturn;
     }
 
     private function createOrUpdateWorkflow(string $resourceClass, array $label, array $places, array $transitions): ResourceWorkflow {
@@ -296,14 +300,6 @@ class ResourcesSchemaLoader {
         ];
         $requirements['lockedMetadataIds'] = EntityUtils::mapToIds($metadataList);
         return $requirements;
-    }
-
-    private function createOrUpdateSubmetadata(string $resourceClass, array $submetadataScheme) {
-        foreach ($submetadataScheme as $submetadataConfig) {
-            Assertion::keyExists($submetadataConfig, 'parent');
-            $submetadataConfig['parent'] = $this->metadataRepository->findByNameOrId($submetadataConfig['parent']);
-            $this->createOrUpdateMetadata($resourceClass, $submetadataConfig);
-        }
     }
 
     private function createOrUpdateResource(ResourceKind $resourceKind, Metadata $identifiableMetadata, array $resourceContents) {
