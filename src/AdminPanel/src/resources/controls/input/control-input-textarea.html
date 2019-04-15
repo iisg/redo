@@ -2,9 +2,13 @@
     <require from="./autosize"></require>
 
     <textarea class="form-control"
-        placeholder.one-time="metadata.placeholder[currentLanguageCode] || description | inCurrentLanguage"
-        bootstrap-tooltip.bind="description | inCurrentLanguage"
+        placeholder.one-time="metadata.placeholder[currentLanguageCode] | inCurrentLanguage"
         value.bind="metadataValue.value & validate:validationController:validationRules"
         disabled.bind="disabled"
         autosize></textarea>
+
+    <span class="help-text"
+        if.bind="description">
+        ${ description }
+    </span>
 </template>

@@ -201,13 +201,6 @@ class ResourcesSchemaLoader {
         if (!isset($metadataConfig['constraints']['maxCount'])) {
             $metadataConfig = array_merge_recursive(['constraints' => ['maxCount' => 1]], $metadataConfig);
         }
-        if (isset($metadataConfig['constraints']['relatedResourceMetadataFilter'])) {
-            $dictionaryValueKind = $this->resourceKindRepository->findByName('wartosc_slownika');
-            $metadataConfig = array_merge_recursive(
-                ['constraints' => ['resourceKind' => [$dictionaryValueKind->getId()]]],
-                $metadataConfig
-            );
-        }
         if (isset($metadataConfig['constraints']['resourceKind'])) {
             $metadataConfig['constraints']['resourceKind'] = array_map(
                 function ($rkIdOrName) {
