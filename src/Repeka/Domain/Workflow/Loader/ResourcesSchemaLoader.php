@@ -308,10 +308,11 @@ class ResourcesSchemaLoader {
 
     private function createOrUpdateResource(ResourceKind $resourceKind, Metadata $identifiableMetadata, array $resourceContents) {
         $contents = $this->resourceContentsAdjuster->adjust($resourceContents);
-        $id = implode($contents->getValuesWithoutSubmetadata($identifiableMetadata));
+        $identifiableValue = current($contents->getValuesWithoutSubmetadata($identifiableMetadata));
+        $identifiableValue = addcslashes($identifiableValue, '()[].*+');
         $query = ResourceListQuery::builder()
             ->filterByResourceKind($resourceKind)
-            ->filterByContents([$identifiableMetadata->getId() => "^" . $id . "$"])
+            ->filterByContents([$identifiableMetadata->getId() => "^" . $identifiableValue . "$"])
             ->build();
         $resources = $this->resourceRepository->findByQuery($query);
         if ($resources->count()) {
