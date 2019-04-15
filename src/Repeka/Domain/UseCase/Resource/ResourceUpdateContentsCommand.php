@@ -2,14 +2,14 @@
 namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Cqrs\AuditedCommand;
-use Repeka\Domain\Cqrs\RequireOperatorRole;
+use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 
 class ResourceUpdateContentsCommand extends ResourceClassAwareCommand implements AuditedCommand {
-    use RequireOperatorRole;
+    use RequireNoRoles;
 
     private $resource;
     private $contents;
