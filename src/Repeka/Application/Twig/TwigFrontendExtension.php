@@ -95,6 +95,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Filter('metadataFiles', [$this, 'metadataFiles']),
             new \Twig_Filter('metadataImageFiles', [$this, 'metadataImageFiles']),
             new \Twig_Filter('mapToValues', [$this, 'mapToValues']),
+            new \Twig_Filter('ucfirst', 'ucfirst'),
         ];
     }
 
