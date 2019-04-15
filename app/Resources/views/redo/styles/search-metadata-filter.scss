@@ -17,6 +17,11 @@
       margin-left: auto;
     }
   }
+  .form-group {
+    &.filters {
+      margin: 15px 0;
+    }
+  }
   .property-options {
     padding-top: 2 * $default-gap-size / 8; // It's all because of the issue with `.property-name-container` margins.
     padding-left: $default-gap-size / 4; //
