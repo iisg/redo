@@ -12,7 +12,7 @@
             disabled.bind="nonEmptyMetadataGroups.length < 2 || (hideLockedMetadata && !forceShowingGroups) || metadataGroup.childMetadata">
             <template repeat.for="metadata of metadataGroup.metadataList">
                 <template if.bind="displayMetadataValueInput(metadata) && contentsValidator[metadata.id]">
-                    <span>
+                    <span class="metadata-label">
                         ${metadata | metadataLabel}
                         <span class="metadata-constraints-icons">
                             <icon if.bind="metadataDeterminesAssignee(metadata) & signal:'metadata-validators-changed'"
