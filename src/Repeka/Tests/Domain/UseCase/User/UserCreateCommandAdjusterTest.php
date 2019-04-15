@@ -6,7 +6,7 @@ use Repeka\Domain\UseCase\User\UserCreateCommand;
 use Repeka\Domain\UseCase\User\UserCreateCommandAdjuster;
 
 class UserCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
-
+    /** @var UserCreateCommandAdjuster */
     private $adjuster;
 
     /** @before */
@@ -33,5 +33,12 @@ class UserCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
         /** @var UserCreateCommand $preparedCommand */
         $preparedCommand = $this->adjuster->adjustCommand($command);
         $this->assertEquals("b/123", $preparedCommand->getUsername());
+    }
+
+    public function testAcceptingEmailAddressAsUsername() {
+        $command = new UserCreateCommand("repeka@local.pl");
+        /** @var UserCreateCommand $preparedCommand */
+        $preparedCommand = $this->adjuster->adjustCommand($command);
+        $this->assertEquals("repeka@local.pl", $preparedCommand->getUsername());
     }
 }

@@ -16,14 +16,14 @@ class UserCreateCommandAdjuster implements CommandAdjuster {
     /** @param UserCreateCommand $command */
     public function adjustCommand(Command $command): Command {
         return new UserCreateCommand(
-            $this->normalizeUsername($command->getUsername()),
+            self::normalizeUsername($command->getUsername()),
             $command->getPlainPassword(),
             $command->getUserData() ? $this->resourceContentsAdjuster->adjust($command->getUserData()) : null
         );
     }
 
     public static function normalizeUsername(string $username) {
-        $username = preg_replace('#[^a-z0-9_\./-]#i', '', $username);
+        $username = preg_replace('#[^a-z0-9_\./-@]#i', '', $username);
         return strtolower($username);
     }
 }
