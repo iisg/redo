@@ -664,6 +664,21 @@ class ResourcesFixture extends RepekaFixture {
                 )
             )
         );
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $cmsConfigRk,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_ID => 'collection_sort_by_metadata_DEFAULT',
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_VALUE => [
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_RESOURCE_ORDER)->getName(),
+                        ],
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONTENT =>
+                            'Metadana, po której zasoby s kolekcji są posortowane',
+                    ]
+                )
+            )
+        );
     }
 
     private function addCmsReportRemark() {

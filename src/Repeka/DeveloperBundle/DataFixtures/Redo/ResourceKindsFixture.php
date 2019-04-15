@@ -79,6 +79,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL_LINK),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_RESOURCE_BIBTEX_TYPE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_RESOURCE_BIBTEX_KEY),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_RESOURCE_ORDER),
                 ],
                 false,
                 $bookWorkflow

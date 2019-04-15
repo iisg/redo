@@ -135,7 +135,15 @@
             <div class="child-resources">
                 {% set page = app.request.query.get('page') | default(1) %}
                 {% set childrenPerPage = 10 %}
-                {% set children = resources({parentId: resource.id, page: page, resultsPerPage: childrenPerPage}) %}
+                {% set childResourceSearchOptions = {parentId: resource.id, page: page, resultsPerPage: childrenPerPage} %}
+                {% set collectionSortMetadata = cmsConfig('collection_sort_by_metadata_' ~ resource.kind.name, cmsConfig('collection_sort_by_metadata_DEFAULT')) %}
+                {% if collectionSortMetadata is not empty %}
+                    {% set collectionSortMetadata = metadata(collectionSortMetadata[0]) %}
+                    {% if collectionSortMetadata is defined and collectionSortMetadata.id is defined %}
+                        {% set childResourceSearchOptions = childResourceSearchOptions|merge({sortBy : {columnId: (collectionSortMetadata.id), direction: 'ASC'}}) %}
+                    {% endif %}
+                {% endif %}
+                {% set children = resources(childResourceSearchOptions) %}
                 {% set pagination = paginate(page, childrenPerPage, children.getTotalCount) %}
                 <div class="title-with-separator">
                     <h3><strong>{{ 'Collection items' | trans }} ({{ children.getTotalCount }})</strong></h3>

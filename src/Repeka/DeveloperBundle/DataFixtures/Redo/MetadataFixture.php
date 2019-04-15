@@ -52,6 +52,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_RESOURCE_DOWNLOADS = 'metadata-resource-downloads';
     const REFERENCE_METADATA_RESOURCE_BIBTEX_TYPE = 'metadata-resource-bibtex-type';
     const REFERENCE_METADATA_RESOURCE_BIBTEX_KEY = 'metadata-resource-bibtex-key';
+    const REFERENCE_METADATA_RESOURCE_ORDER = 'metadata-resource-order';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -667,6 +668,22 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_RESOURCE_BIBTEX_KEY
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'kolejnosc',
+                    'label' => [
+                        'PL' => 'Kolejność zasobu w kolekcji',
+                        'EN' => 'Resource position in resource details',
+                    ],
+                    'control' => MetadataControl::INTEGER(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'constraints' => $this->constraints(1)
+                ]
+            ),
+            self::REFERENCE_METADATA_RESOURCE_ORDER
         );
         $this->handleCommand(
             new MetadataUpdateOrderCommand(
