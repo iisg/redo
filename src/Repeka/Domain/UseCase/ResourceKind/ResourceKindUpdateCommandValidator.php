@@ -3,8 +3,6 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Exception\EntityNotFoundException;
-use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Utils\EntityUtils;
@@ -48,14 +46,15 @@ class ResourceKindUpdateCommandValidator extends CommandAttributesValidator {
             ->attribute(
                 'metadataList',
                 Validator::arrayType()
-                    ->length(3)
-                    ->each(Validator::instance(Metadata::class))
-                    ->each(Validator::callback([$this, 'overrideMetadataValidator']))
-                    ->callback([$this, 'allMetadataOfTheSameResourceClass'])
-                    ->callback([$this, 'noMetadataDuplicates'])
+                    ->length(3)->setTemplate('length 3')
+                    ->each(Validator::instance(Metadata::class))->setTemplate('allInstanceOfMetadata')
+                    ->each(Validator::callback([$this, 'overrideMetadataValidator']))->setTemplate('overrideMetadataValidator')
+                    ->callback([$this, 'allMetadataOfTheSameResourceClass'])->setTemplate('allMetadataOfTheSameResourceClass')
+                    ->callback([$this, 'noMetadataDuplicates'])->setTemplate('noMetadataDuplicates')
             )
-            ->attribute('metadataList', $this->containsParentMetadataRule)
-            ->attribute('metadataList', $this->childResourceKindsAreOfSameResourceClassRule);
+            ->attribute('metadataList', $this->containsParentMetadataRule)->setTemplate('containsParentMetadataRule')
+            ->attribute('metadataList', $this->childResourceKindsAreOfSameResourceClassRule)
+            ->setTemplate('childResourceKindsAreOfSameResourceClassRule');
         if (method_exists($command, 'getResourceKind') && $command->getResourceKind()->getWorkflow()) {
             $validator = $validator->attribute(
                 'workflow',

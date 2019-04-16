@@ -16,13 +16,15 @@ class PKAuthenticationIntegrationTest extends IntegrationTestCase {
     }
 
     /** @beforeClass */
-    public static function registerTestPKSoapService() {
+    public static function registerTestPKSoapServiceAndCopyUserMapping() {
         PKAuthenticationClient::$defaultSoapService = new TestPKSoapService();
+        copy(\AppKernel::VAR_PATH . '/config/user_data_mapping.json.sample', \AppKernel::VAR_PATH . '/config/user_data_mapping.json');
     }
 
     /** @afterClass */
-    public static function unregisterTestPKSoapService() {
+    public static function unregisterTestPKSoapServiceAndDeleteUserMapping() {
         PKAuthenticationClient::$defaultSoapService = null;
+        unlink(\AppKernel::VAR_PATH . '/config/user_data_mapping.json');
     }
 
     public function testAuthSuccessWithHashedPassword() {

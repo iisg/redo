@@ -151,7 +151,7 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
         $client->apiRequest('GET', self::RESOURCES_ENDPOINT, [], []);
         $this->assertStatusCode(200, $client->getResponse());
         $fetchedIds = array_column(json_decode($client->getResponse()->getContent(), true), 'id');
-        $this->assertCount(14, $fetchedIds);
+        $this->assertCount(14, $fetchedIds, $client->getResponse()->getContent());
         $this->assertContains($this->resourceVisibleBySkanerGroup->getId(), $fetchedIds);
         $this->assertNotContains($this->resourceVisibleOnlyInTeaser->getId(), $fetchedIds);
         $this->assertNotContains($this->invisibleBook->getId(), $fetchedIds);
@@ -277,10 +277,12 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
                     'hasChildren' => true,
                     'isTeaser' => true,
                     'canView' => true,
-                    'contents' => ResourceContents::fromArray([
-                        SystemMetadata::RESOURCE_LABEL => ['#' . $this->parentResource->getId()],
-                        SystemMetadata::PARENT => [],
-                    ])->toArray(),
+                    'contents' => ResourceContents::fromArray(
+                        [
+                            SystemMetadata::RESOURCE_LABEL => ['#' . $this->parentResource->getId()],
+                            SystemMetadata::PARENT => [],
+                        ]
+                    )->toArray(),
                 ],
             ],
             $client->getResponse()->getContent()
@@ -307,10 +309,12 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
                     'hasChildren' => true,
                     'isTeaser' => true,
                     'canView' => false,
-                    'contents' => ResourceContents::fromArray([
-                        SystemMetadata::RESOURCE_LABEL => ['#' . $this->parentResource->getId()],
-                        SystemMetadata::PARENT => [],
-                    ])->toArray(),
+                    'contents' => ResourceContents::fromArray(
+                        [
+                            SystemMetadata::RESOURCE_LABEL => ['#' . $this->parentResource->getId()],
+                            SystemMetadata::PARENT => [],
+                        ]
+                    )->toArray(),
                 ],
             ],
             $client->getResponse()->getContent()

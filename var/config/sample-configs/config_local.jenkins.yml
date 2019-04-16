@@ -18,8 +18,6 @@ repeka:
         - Username: skaner
     - name: users
       icon: user
-      admins:
-        - Imię: Józef
       operators:
         - Username: admin
     - name: grants
