@@ -66,11 +66,15 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
             if ($footer) {
                 $footer = $this->displayStrategyEvaluator->render($resource, $footer);
             }
-            $this->generatePdfOutputFile($renderResult, $header, $footer, $pageMargins, $fileSystemTargetPath);
-            $resourceContents = $resource->getContents();
-            $resourceContents = $resourceContents->withMergedValues($targetMetadata, $resourcePath);
-            $resource->updateContents($resourceContents);
-            $this->resourceRepository->save($resource);
+            try {
+                $this->generatePdfOutputFile($renderResult, $header, $footer, $pageMargins, $fileSystemTargetPath);
+                $resourceContents = $resource->getContents();
+                $resourceContents = $resourceContents->withMergedValues($targetMetadata, $resourcePath);
+                $resource->updateContents($resourceContents);
+                $this->resourceRepository->save($resource);
+            } catch (\Exception $e) {
+                $this->newAuditEntry($event, 'error', ['message' => $e->getMessage()], false);
+            }
         } else {
             $this->newAuditEntry($event, 'generatingPDFToNonFileMetadataControl', [], false);
         }

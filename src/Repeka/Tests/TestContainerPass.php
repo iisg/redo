@@ -31,16 +31,13 @@ class TestContainerPass implements CompilerPassInterface {
         \Repeka\Domain\Service\ResourceDisplayStrategyEvaluator::class,
         \Repeka\Domain\Service\ResourceFileStorage::class,
         \Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule::class,
+        \Repeka\Plugins\Cmi\Model\CmiFlowHelper::class,
         \Repeka\Plugins\MetadataValueSetter\Model\RepekaMetadataValueSetterResourceWorkflowPlugin::class,
         \Repeka\Plugins\MetadataValueRemover\Model\RepekaMetadataValueRemoverResourceWorkflowPlugin::class,
         \Repeka\Plugins\OcrAbbyy\Model\RepekaOcrAbbyyResourceWorkflowPlugin::class,
         \Repeka\Application\Elasticsearch\ESIndexManager::class,
         'sensio_framework_extra.view.guesser',
     ];
-
-    public static function addPublicServices(string... $services) {
-        self::$publicInTests = array_merge(self::$publicInTests, $services);
-    }
 
     public function process(ContainerBuilder $container) {
         $madePublic = [];
