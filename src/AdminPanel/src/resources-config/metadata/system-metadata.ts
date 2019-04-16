@@ -46,4 +46,12 @@ export class SystemMetadata {
     control: MetadataControl.RELATIONSHIP,
     baseId: -7,
   });
+  static readonly RESOURCE_LABEL_LANGUAGE: Metadata = $.extend(new Metadata(), {
+    id: -8,
+    control: MetadataControl.SYSTEM_LANGUAGE,
+    baseId: -8,
+    shownInBrief: false,
+    copyToChildResource: false,
+    parentId: -5
+  });
 }

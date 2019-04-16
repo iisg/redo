@@ -18,7 +18,7 @@ class ResourcesExposureControllerIntegrationTest extends IntegrationTestCase {
         $client->request('GET', '/resources-title/' . $phpBook->getId());
         $this->assertStatusCode(200, $client->getResponse());
         $responseContent = $client->getResponse()->getContent();
-        $this->assertEquals($phpBook->getValues($this->findMetadataByName('Tytuł'))[0], $responseContent);
+        $this->assertEquals(implode('', $phpBook->getValuesWithoutSubmetadata($this->findMetadataByName('Tytuł'))), $responseContent);
     }
 
     public function testFetchingResourceTitleFromResourceThatDoesNotContainItResultsIn404() {

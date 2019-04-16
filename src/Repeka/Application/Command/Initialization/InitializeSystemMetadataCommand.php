@@ -35,6 +35,11 @@ class InitializeSystemMetadataCommand extends TransactionalCommand {
             if (!$this->metadataRepository->exists($metadataId)) {
                 $systemMetadata = new SystemMetadata($metadataId);
                 $metadata = $systemMetadata->toMetadata();
+                if ($metadataId == SystemMetadata::RESOURCE_LABEL_LANGUAGE) {
+                    // https://stackoverflow.com/questions/15586495/doctrine-many-to-one-relationship-persist-operation
+                    $parent = $this->metadataRepository->findOne(SystemMetadata::RESOURCE_LABEL);
+                    $metadata->setParent($parent);
+                }
                 EntityUtils::forceSetId($metadata, $systemMetadata->getValue());
                 $this->metadataRepository->save($metadata);
                 $output->writeln("Metadata $metadataName has been created.");

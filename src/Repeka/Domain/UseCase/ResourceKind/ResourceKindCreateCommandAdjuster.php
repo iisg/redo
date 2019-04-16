@@ -86,7 +86,9 @@ class ResourceKindCreateCommandAdjuster implements CommandAdjuster {
 
     private function addSystemMetadataIfMissing(&$metadataList) {
         $userRelatedSystemMetadata = [SystemMetadata::USERNAME, SystemMetadata::GROUP_MEMBER];
+        $systemSubmetadata = [SystemMetadata::RESOURCE_LABEL_LANGUAGE];
         $obligatorySystemMetadata = array_diff(SystemMetadata::toArray(), $userRelatedSystemMetadata);
+        $obligatorySystemMetadata = array_diff($obligatorySystemMetadata, $systemSubmetadata);
         foreach ($obligatorySystemMetadata as $systemMetadata) {
             if (!isset($metadataList[$systemMetadata]) || $systemMetadata == SystemMetadata::REPRODUCTOR) {
                 $metadataList[$systemMetadata] = $this->metadataRepository->findOne($systemMetadata);

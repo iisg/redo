@@ -15,6 +15,7 @@ use Repeka\Domain\Utils\EntityUtils;
  * @method static SystemMetadata RESOURCE_LABEL()
  * @method static SystemMetadata VISIBILITY()
  * @method static SystemMetadata TEASER_VISIBILITY()
+ * @method static SystemMetadata RESOURCE_LABEL_LANGUAGE()
  */
 class SystemMetadata extends Enum {
     const PARENT = -1;
@@ -24,6 +25,7 @@ class SystemMetadata extends Enum {
     const RESOURCE_LABEL = -5;
     const VISIBILITY = -6;
     const TEASER_VISIBILITY = -7;
+    const RESOURCE_LABEL_LANGUAGE = -8;
 
     public function toMetadata() {
         $value = $this->getValue();
@@ -96,6 +98,15 @@ class SystemMetadata extends Enum {
                 'Teaser Visibility',
                 ['EN' => 'Teaser visibility', 'PL' => 'Widoczność etykiety']
             );
+        } elseif ($value == self::RESOURCE_LABEL_LANGUAGE) {
+            $metadata = Metadata::create(
+                '',
+                MetadataControl::SYSTEM_LANGUAGE(),
+                'label_language',
+                ['EN' => 'Label language', 'PL' => 'Język Etykiety']
+            );
+            $parent = SystemMetadata::RESOURCE_LABEL()->toMetadata();
+            $metadata->setParent($parent);
         }
         /** @noinspection PhpUndefinedVariableInspection */
         Assertion::notNull($metadata, "Not implemented: metadata for value $value");

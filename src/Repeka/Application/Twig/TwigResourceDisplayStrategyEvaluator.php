@@ -73,6 +73,7 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
     ): array {
         $values = trim($this->render($resourceEntity, $template, $usedMetadataCollector, $additionalContext));
         if ($values && ($values{0} == '{' || $values{0} == '[')) {
+            $values = htmlspecialchars_decode($values);
             $values = preg_replace('#,\s*([\]}])#', '$1', $values); // allow extra commas in JSON
             $json = json_decode($values, true);
             if (is_array($json)) {

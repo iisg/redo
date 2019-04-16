@@ -7,7 +7,6 @@ use Repeka\Domain\Constants\FileUploaderType;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
@@ -212,7 +211,7 @@ class MetadataFixture extends RepekaFixture {
             ),
             self::REFERENCE_METADATA_NO_OF_PAGES
         );
-        $addedMetadata[] = $languageMetadata = $this->handleCommand(
+        $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
                 [
                     'name' => 'Język',
@@ -503,14 +502,18 @@ class MetadataFixture extends RepekaFixture {
             self::REFERENCE_METADATA_URL_LABEL
         );
         $this->handleCommand(
-            new MetadataChildWithBaseCreateCommand(
-                $titleMetadata,
-                $languageMetadata,
+            MetadataCreateCommand::fromArray(
                 [
+                    'name' => 'title_language',
                     'label' => [
                         'PL' => 'Język tytułu',
                         'EN' => 'Title language',
                     ],
+                    'control' => 'system-language',
+                    'shownInBrief' => false,
+                    'copyToChildResource' => false,
+                    'resourceClass' => 'books',
+                    'parent' => $titleMetadata,
                 ]
             ),
             self::REFERENCE_METADATA_TITLE_LANGUAGE

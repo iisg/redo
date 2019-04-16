@@ -39,16 +39,23 @@ class ResourceKindsFixture extends RepekaFixture {
         $bookWorkflow = $this
             ->handleCommand(new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::BOOK_WORKFLOW)->getId()));
         $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE)->getId();
+        $titleLanguageMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE_LANGUAGE)->getId();
         $parentMetadata = $this->handleCommand(new MetadataGetQuery(-1));
+        $labelDisplayStrategy = "[
+{% for title in r|m{$titleMetadataId} %}
+  {% set submetadata = []%}
+  {% for title_language in title | sub{$titleLanguageMetadataId} %}
+    {%  set submetadata = submetadata|merge(['{\"value\" : \"' ~ title_language ~ '\"}'])%}
+  {% endfor %}
+  {\"value\": \"{{title}}\", \"submetadata\": {\"-8\": [{{submetadata|join(',')}}]}},
+{% endfor %}
+]";
         $bookRK = $this->handleCommand(
             new ResourceKindCreateCommand(
                 'book',
+                ['PL' => 'Książka', 'EN' => 'Book',],
                 [
-                    'PL' => 'Książka',
-                    'EN' => 'Book',
-                ],
-                [
-                    $this->resourceLabelMetadata('{{r|m' . $titleMetadataId . '}}'),
+                    $this->resourceLabelMetadata($labelDisplayStrategy),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_DESCRIPTION),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_PUBLISH_DATE),
@@ -89,12 +96,9 @@ class ResourceKindsFixture extends RepekaFixture {
         $forbiddenBookRK = $this->handleCommand(
             new ResourceKindCreateCommand(
                 'forbidden_book',
+                ['PL' => 'Zakazana książka', 'EN' => 'Forbidden book',],
                 [
-                    'PL' => 'Zakazana książka',
-                    'EN' => 'Forbidden book',
-                ],
-                [
-                    $this->resourceLabelMetadata('{{r|m' . $titleMetadataId . '}}'),
+                    $this->resourceLabelMetadata($labelDisplayStrategy),
                     $parentMetadata->withOverrides([0 => $bookRK->getId()]),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT),

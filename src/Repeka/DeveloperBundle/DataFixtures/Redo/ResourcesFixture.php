@@ -180,7 +180,13 @@ class ResourcesFixture extends RepekaFixture {
                             [
                                 'value' => 'PHP i MySQL',
                                 'submetadata' => [
-                                    $titleLanguageMetadataId => [['value' => 'PL'], ['value' => 'EN']],
+                                    $titleLanguageMetadataId => [['value' => 'PL']],
+                                ],
+                            ],
+                            [
+                                'value' => 'PHP and MySQL',
+                                'submetadata' => [
+                                    $titleLanguageMetadataId => [['value' => 'EN']],
                                 ],
                             ],
                         ],
@@ -210,7 +216,14 @@ class ResourcesFixture extends RepekaFixture {
                 $bookResourceKind,
                 $this->contents(
                     [
-                        MetadataFixture::REFERENCE_METADATA_TITLE => ['PHP - to można leczyć!'],
+                        MetadataFixture::REFERENCE_METADATA_TITLE => [
+                            [
+                                'value' => 'PHP - to można leczyć!',
+                                'submetadata' => [
+                                    $titleLanguageMetadataId => [['value' => 'PL']],
+                                ],
+                            ],
+                        ],
                         MetadataFixture::REFERENCE_METADATA_DESCRIPTION =>
                             ['Poradnik dla cierpiących na zwyrodnienie interpretera.'],
                         MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [1337],

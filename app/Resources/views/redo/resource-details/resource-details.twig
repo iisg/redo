@@ -5,6 +5,7 @@
 {% set share_description = resource | metadata('opis') | first %}
 {% set childrenAllowed = resource | childrenAllowed %}
 {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
+{% set labelMetadata = metadata('label') %}
 
 {% block content %}
     {% include "redo/title-bar.twig" %}
@@ -41,7 +42,7 @@
                 {% include 'redo/resource-image.twig' %}
                 <div class="title-container-with-actions">
                     <div class="title-container">
-                        <h1 class="no-margin-top">{{ resource | metadata('label') | raw }}</h1>
+                        <h1 class="no-margin-top">{{ resource | metadata('label') | onlyMetadataInCurrentLanguage(labelMetadata, true) | raw }}</h1>
                         <div>{{ 'Type' | trans }}: {{ resource.kind.label | inCurrentLanguage }}</div>
                         {% set numberOfDownloads =  resource | metadata('resource_downloads') | first %}
                         {% if numberOfDownloads %}
