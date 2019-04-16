@@ -2,7 +2,7 @@
 {% set page_title = 'Report remark' | trans %}
 {% block reportContent %}
     {% if app.flashes('report') %}
-        <h1 class="deposit-success-flash">{{ 'Congratulations! Your remark has been reported.' | trans }}</h1>
+        <h1 class="flash-confirmation">{{ 'Congratulations! Your remark has been reported.' | trans }}</h1>
     {% endif %}
 
     <h1 class="report-page-header">{{ 'Report remark' | trans }}</h1>
@@ -40,8 +40,8 @@
                             required></textarea>
                     </div>
                     <button type="submit"
-                        class="btn btn-primary">
-                        {{ 'Report' | trans }} &gt;
+                        class="primary report-submit">
+                        {{ 'Report' | trans }}
                     </button>
                 </div>
             </div>

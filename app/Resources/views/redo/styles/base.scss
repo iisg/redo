@@ -371,3 +371,11 @@ textarea {
     justify-content: flex-start;
   }
 }
+
+.flash-confirmation {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 2 * $default-gap-size;
+  text-align: center;
+  color: $success-message-text-color;
+}
