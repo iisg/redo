@@ -8,6 +8,8 @@
     {% if relatedResource is not empty %}
         {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
             <a href="/resources/{{ relatedResource.id }}">{{ label }}</a>
+        {% elseif relatedResource|m('five_star_data_keyword')|length %}
+            {{ insertLinks(relatedResource | m('label') | first, relatedResource | m('five_star_data_keyword')) | raw }}
         {% elseif canViewTeaser(relatedResource) %}
             {{ label }}
         {% else %}
@@ -19,7 +21,7 @@
 {% elseif metadata.dynamic %}
     {{ metadataValue | raw }}
 {% elseif metadata.control == 'textarea' %}
-    <span class="pre-line">{ metadataValue | striptags }}</span>
+    <span class="pre-line">{{ metadataValue | striptags }}</span>
 {% else %}
     {{ metadataValue | striptags }}
 {% endif %}
