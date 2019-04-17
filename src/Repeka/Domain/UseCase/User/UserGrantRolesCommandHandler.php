@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Domain\UseCase\User;
 
+use Assert\Assertion;
 use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
@@ -36,14 +36,12 @@ class UserGrantRolesCommandHandler {
         $roles = [];
         foreach ($this->resourceClassesConfig as $resourceClass => $resourceClassConfig) {
             foreach (SystemRole::values() as $possibleRoleToGrant) {
-                foreach ($resourceClassConfig[$possibleRoleToGrant->getConfigKey()] as $contentsFilter) {
-                    try {
-                        $contentsFilter = ResourceContents::fromArray($contentsFilter)
-                            ->withMetadataNamesMappedToIds($this->metadataRepository);
-                    } catch (EntityNotFoundException $exception) {
-                        // TODO log this when we have logger, invalid config!
-                        continue;
-                    }
+                foreach ($resourceClassConfig[$possibleRoleToGrant->getConfigKey()] as $contentsFilterConfig) {
+                    $possibleErrorMessage = 'Invalid permissions config: ' . json_encode($contentsFilterConfig);
+                    Assertion::isArray($contentsFilterConfig, $possibleErrorMessage);
+                    $contentsFilter = ResourceContents::fromArray($contentsFilterConfig)
+                        ->withMetadataNamesMappedToIds($this->metadataRepository);
+                    Assertion::count($contentsFilter, count($contentsFilterConfig), $possibleErrorMessage);
                     $query = ResourceListQuery::builder()
                         ->filterByIds([$user->getUserData()->getId()])
                         ->filterByContents($contentsFilter)

@@ -28,7 +28,7 @@ class UserGrantRolesCommandHandlerTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->userRepository = $this->createMock(UserRepository::class);
-        $this->userRepository->expects($this->once())->method('save')->willReturnArgument(0);
+        $this->userRepository->method('save')->willReturnArgument(0);
         $this->resourceRepository = $this->createMock(ResourceRepository::class);
         $this->handler = new UserGrantRolesCommandHandler(
             [
@@ -88,7 +88,8 @@ class UserGrantRolesCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         // @codingStandardsIgnoreEnd
     }
 
-    public function testDoesNotFailWhenConfigurationHasInvalidMetadata() {
+    public function testFailsWhenConfigurationHasInvalidMetadata() {
+        $this->expectException(\InvalidArgumentException::class);
         $handler = new UserGrantRolesCommandHandler(
             ['books' => ['admins' => [['NOT_EXISTS' => 'XXX']], 'operators' => []]],
             $this->userRepository,
@@ -98,6 +99,17 @@ class UserGrantRolesCommandHandlerTest extends \PHPUnit_Framework_TestCase {
                     $this->createMetadataMock(1, null, null, [], 'books', [], 'THIS_EXISTS'),
                 ]
             )
+        );
+        $handler->handle(new UserGrantRolesCommand($this->user));
+    }
+
+    public function testFailsWhenConfigurationHasInvalidSyntax() {
+        $this->expectException(\InvalidArgumentException::class);
+        $handler = new UserGrantRolesCommandHandler(
+            ['books' => ['admins' => ['username' => 'XXX'], 'operators' => []]],
+            $this->userRepository,
+            $this->resourceRepository,
+            $this->createMetadataRepositoryStub()
         );
         $handler->handle(new UserGrantRolesCommand($this->user));
     }
