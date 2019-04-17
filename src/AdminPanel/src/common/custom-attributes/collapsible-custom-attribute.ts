@@ -6,7 +6,7 @@ export class CollapsibleCustomAttribute {
   private readonly TRANSITION_END_EVENT_NAMES = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd';
 
   private element: HTMLElement;
-  @bindable collapsed: boolean;
+  @bindable({primaryProperty: true}) collapsed: boolean;
   private $element: JQuery;
   private firstChange = true;
 
@@ -32,7 +32,9 @@ export class CollapsibleCustomAttribute {
   }
 
   collapsedChanged() {
-    if (this.firstChange && !this.collapsed && this.element.classList.contains('expanded')) {
+    if (this.firstChange &&
+      ((this.collapsed && this.element.classList.contains('collapsed'))
+      || (!this.collapsed && this.element.classList.contains('expanded')))) {
       this.firstChange = false;
     } else {
       this.watchForTransitionsEnding();

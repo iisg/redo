@@ -42,7 +42,7 @@
     visibility: visible;
 }
 
-[collapsible] {
+[collapsible], .collapsible {
     position: relative;
     transition-property: width, height, margin, padding, opacity, visibility;
     transition-duration: $collapse-and-expand-animations-duration;

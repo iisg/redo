@@ -44,6 +44,9 @@ $filters-panel-width: 340px;
     &.expanding, &.expanded {
       width: $filters-panel-width !important;
     }
+    &.hidden-while-loading {
+      display: none;
+    }
     .title-with-toggle {
       display: flex;
       width: 100%;

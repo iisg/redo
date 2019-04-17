@@ -11,19 +11,25 @@
         {% include "redo/search/search-bar.twig" %}
     </div>
     <div class="search-results-container">
-        <div class="filters-panel collapsing-vertically-on-narrow-screens collapsing-horizontally-on-regular-screens
-            with-margins-and-paddings-when-collapsed with-visible-content-when-collapsed collapsed"
+        <div class="filters-panel
+            collapsing-vertically-on-narrow-screens
+            collapsing-horizontally-on-regular-screens
+            with-margins-and-paddings-when-collapsed
+            with-visible-content-when-collapsed
+            collapsed
+            expanded-by-default-on-regular-screens
+            hidden-while-loading"
             id="filters-panel"
-            local-storage-value="key: filtersPanelExpanded; value.bind: filtersPanelExpanded"
-            collapsible="collapsed.bind: !filtersPanelExpanded">
+            local-storage-value="key: filtersPanelCollapsed; value.bind: filtersPanelCollapsed"
+            collapsible="collapsed.two-way: filtersPanelCollapsed">
             <button class="title-with-toggle"
-                click.delegate="filtersPanelExpanded = !filtersPanelExpanded">
+                click.delegate="filtersPanelCollapsed = !filtersPanelCollapsed">
                 <h3 id="filtersHeading"
                     class="title no-margin-top"><strong>{{ 'Filters' | trans }}</strong></h3>
                 <div class="toggle expand-toggle horizontally-expand-toggle-on-regular-screens"
-                    class.bind="filtersPanelExpanded ? 'toggled' : ''"
-                    title.bind="filtersPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'"
-                    aria-label.bind="filtersPanelExpanded ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'">
+                    class.bind="filtersPanelCollapsed ? '' : 'toggled'"
+                    title.bind="filtersPanelCollapsed ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'"
+                    aria-label.bind="filtersPanelCollapsed ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'">
                     {{ icon('forward') }}
                 </div>
             </button>
@@ -110,16 +116,31 @@
             </form>
         </div>
         <script>
-            {# Adds 'expanded' and 'toggled' classes to 'filters-panel' and 'horizontally-expand-toggle' if needed, before Aueria loads. #}
-            if (localStorage && localStorage.getItem) {
-              var filtersPanel = document.getElementById('filters-panel');
-              if (localStorage.getItem('filtersPanelExpanded') == 'true') {
-                filtersPanel.classList.add('expanding');
-                filtersPanel.classList.remove('collapsed');
-                filtersPanel.classList.add('expanded');
-                document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
-              }
+            {# Adds required classes to 'filters-panel' and 'horizontally-expand-toggle' if needed, before Aurelia loads. #}
+            var filtersPanelClassList = document.getElementById('filters-panel').classList;
+            var shouldBeCollapsed;
+            if (localStorage && localStorage.getItem && localStorage.getItem('filtersPanelCollapsed') != undefined) {
+              shouldBeCollapsed = localStorage.getItem('filtersPanelCollapsed') == 'true';
+            } else {
+                if (window.matchMedia("(max-width: 420px)").matches) {
+                    shouldBeCollapsed = filtersPanelClassList.contains('collapsed')
+                        && !filtersPanelClassList.contains('expanded-by-default-on-narrow-screens')
+                        || filtersPanelClassList.contains('collapsed-by-default-on-narrow-screens');
+                } else {
+                    shouldBeCollapsed = filtersPanelClassList.contains('collapsed')
+                        && !filtersPanelClassList.contains('expanded-by-default-on-regular-screens')
+                        || filtersPanelClassList.contains('collapsed-by-default-on-regular-screens');
+                }
             }
+            if (shouldBeCollapsed) {
+                filtersPanelClassList.add('collapsed');
+                filtersPanelClassList.remove('expanded');
+            } else {
+                filtersPanelClassList.add('expanded');
+                filtersPanelClassList.remove('collapsed');
+                document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
+            }
+            filtersPanelClassList.remove('hidden-while-loading');
         </script>
         <div class="search-results"
             role="main">
