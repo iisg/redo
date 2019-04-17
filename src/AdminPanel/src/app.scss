@@ -23,6 +23,10 @@ body {
   color: $default-text-color;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 .repeka-admin-panel {
   overflow: hidden;
 
@@ -595,6 +599,10 @@ button {
       overflow: hidden;
       @include animation(heightOut#{$max-height} $default-transition-duration);
     }
+  }
+
+  .theme-only {
+    display: none;
   }
 }
 

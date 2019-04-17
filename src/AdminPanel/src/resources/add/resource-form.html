@@ -34,6 +34,7 @@
             places.bind="resource.kind.workflow.places"
             resource-class.bind="resourceClass"></workflow-froms-tos-display>
         <toggle-button if.bind="!deposit"
+            class="theme-only theme-redo-only"
             primary-icon-name="koha"
             primary-label="Import data from KOHA"
             click.delegate="openImportDialog()"></toggle-button>

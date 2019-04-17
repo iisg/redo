@@ -1,7 +1,13 @@
 @import "styles/colors";
 @import "styles/variables";
 
-@import "styles/base";
+.redo-website {
+  @import "styles/base";
+  @import "styles/components";
+}
 
-@import "styles/components";
-
+.repeka-admin-panel {
+  .theme-only.theme-redo-only {
+    display: initial;
+  }
+}
