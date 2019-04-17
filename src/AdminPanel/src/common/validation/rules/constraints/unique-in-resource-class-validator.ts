@@ -10,9 +10,9 @@ import {MetadataLabelValueConverter} from "../../../../resources-config/metadata
 export class UniqueInResourceClassValidator extends SingleValueConstraintValidator {
 
   constructor(private backendValidation: BackendValidation,
-              private i18n: I18N,
+              i18n: I18N,
               private metadataLabel: MetadataLabelValueConverter) {
-    super();
+    super(i18n);
   }
 
   getErrorMessage(config): string {

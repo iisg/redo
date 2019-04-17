@@ -10,8 +10,8 @@ export class MaxCountConstraintValidator extends MetadataArrayConstraintValidato
     return 'maxCount';
   }
 
-  constructor(private i18n: I18N) {
-    super();
+  constructor(i18n: I18N) {
+    super(i18n);
   }
 
   protected shouldValidate(metadata: Metadata, resource: Resource): boolean {

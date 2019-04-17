@@ -11,8 +11,8 @@ export class RegexConstraintValidator extends SingleValueConstraintValidator {
     return 'regex';
   }
 
-  constructor(private backendValidation: BackendValidation, private i18n: I18N) {
-    super();
+  constructor(private backendValidation: BackendValidation, i18n: I18N) {
+    super(i18n);
   }
 
   protected shouldValidate(metadata: Metadata, resource: Resource): boolean {
