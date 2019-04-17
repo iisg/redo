@@ -13,19 +13,24 @@
             <template repeat.for="metadata of metadataGroup.metadataList">
                 <template if.bind="displayMetadataValueInput(metadata) && contentsValidator[metadata.id]">
                     <span class="metadata-label">
-                        ${metadata | metadataLabel}
-                        <span class="metadata-constraints-icons">
-                            <icon if.bind="metadataDeterminesAssignee(metadata) & signal:'metadata-validators-changed'"
-                                name="user-2"
-                                class="text-info"
-                                bootstrap-tooltip="${'This metadata determines who can perform these actions:'
+                        <span>
+                            ${metadata | metadataLabel}
+                            <span class="metadata-constraints-icons">
+                                <icon if.bind="metadataDeterminesAssignee(metadata) & signal:'metadata-validators-changed'"
+                                    name="user-2"
+                                    class="text-info"
+                                    bootstrap-tooltip="${'This metadata determines who can perform these actions:'
                                                 | resourceClassTranslation:resource.resourceClass}&#10;${resource.transitionAssigneeMetadata[metadata.id]
                                                 | fromWorkflowTransitionsArrayToString}"></icon>
-                            <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
-                                translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
-                            <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
-                                name="closed-lock"
-                                bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
+                                <required-field-indicator if.bind="metadataIsRequired(metadata) & signal:'metadata-validators-changed'"
+                                    translated-tooltip-text.bind="'Metadata value required' | resourceClassTranslation:resource.resourceClass"></required-field-indicator>
+                                <icon if.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
+                                    name="closed-lock"
+                                    bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
+                            </span>
+                            <span if.bind="metadata.control === 'relationship'"
+                                class="help-block">${ metadata.description | inCurrentLanguage }
+                            </span>
                         </span>
                     </span>
                     <resource-metadata-values-form metadata.bind="metadata"

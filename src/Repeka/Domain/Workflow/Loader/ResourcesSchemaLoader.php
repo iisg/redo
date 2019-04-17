@@ -211,12 +211,12 @@ class ResourcesSchemaLoader {
         }
         $metadataToReturn = null;
         try {
-            $metadata = $this->metadataRepository->findByName($metadataConfig['name']);
-            if (SystemMetadata::isValid($metadata->getId())) {
-                return $metadata->withOverrides($metadataConfig);
-            } else {
+            $metadataToReturn = $this->metadataRepository->findByName($metadataConfig['name']);
+            if (SystemMetadata::isValid($metadataToReturn->getId())) {
+                return $metadataToReturn->withOverrides($metadataConfig);
+            } elseif (isset($metadataConfig['label'])) {
                 $updateHandler = new MetadataUpdateCommandHandler($this->metadataRepository);
-                $metadataToReturn = $updateHandler->handle(MetadataUpdateCommand::fromArray($metadata, $metadataConfig));
+                $metadataToReturn = $updateHandler->handle(MetadataUpdateCommand::fromArray($metadataToReturn, $metadataConfig));
             }
         } catch (EntityNotFoundException $exception) {
             $metadataConfig['resourceClass'] = $resourceClass;
