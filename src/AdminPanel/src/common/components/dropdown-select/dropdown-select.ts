@@ -22,7 +22,8 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable @booleanAttribute useComputedWidth: boolean;
   @bindable @booleanAttribute disabled: boolean;
   @bindable @booleanAttribute clearAfterSelect: boolean;
-  @bindable searchFunction: ({term, page}) => Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }>;
+  @bindable searchFunction: ({term, page}, additionalFilters) => Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }>;
+  @bindable filters: Object;
   @bindable formatter: ({item}) => { text: string };
   dropdown: Element;
 
@@ -124,7 +125,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
         searching: () => this.i18n.tr("Searching") + "..."
       },
       sorter: (data) => {
-        if (this.value == undefined) {
+        if (this.value == undefined || this.searchFunction) {
           return data;
         }
         const valueIsAnArray = Array.isArray(this.value);
@@ -155,6 +156,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   private select2DynamicLoadingOptions(): { ajax: Select2AjaxOptions } {
     return {
       ajax: {
+        delay: 800,
         data: (params: any) => ({
           term: params.term || '',
           page: params.page || 1
@@ -162,11 +164,11 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
         transport: (params: JQueryAjaxSettings,
                     success: (data: any) => undefined, failure: () => undefined): JQueryXHR => {
           const term = params.data.term || '';
-          this.searchFunction({term: term, page: params.data.page})
+          this.searchFunction({term: term, page: params.data.page}, this.filters)
             .then(data => {
-              const indexInPageIdDifference = (params.data.page - 1) * data.pagination.itemsPerPage;
-              data['results'] = data.results.map((item, index) => {
-                return $.extend(this.formatter({item}), {id: index + indexInPageIdDifference});
+              this.values = Array.from(new Set(this.values.concat(data['results'])));
+              data['results'] = data.results.map(item => {
+                return $.extend(this.formatter({item}), {id: this.getIndex(item)});
               });
               return data;
             })
@@ -187,10 +189,15 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
       if (selectedIndex.length == 1 && selectedIndex[0] === '') {
         this.value = [];
       } else {
-        this.value = (selectedIndex as number[]).map(index => this.values[index]);
+        const mapper = this.searchFunction
+          ? id => this.values.find(item => this.getIndex(item) == id)
+          : index => this.values[index];
+        this.value = (selectedIndex as number[]).map(mapper);
       }
     } else {
-      this.value = this.values[selectedIndex];
+      this.value = this.searchFunction
+        ? this.values.find(item => this.getIndex(item) == selectedIndex)
+        : this.values[selectedIndex];
     }
     this.dispatchChangedEvent(this.value);
   }
@@ -206,7 +213,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
       ? (this.value as Object[]).map(value => this.getIndex(value))
       : [this.getIndex(this.value)];
     const haystack: number[] = this.values.map(this.getIndex);
-    const values: number[] = needles.map(id => haystack.indexOf(id)).filter(index => index != -1);
+    const values: number[] = this.searchFunction ? needles : needles.map(id => haystack.indexOf(id)).filter(index => index != -1);
     const value: number | number[] = Array.isArray(this.value)
       ? values
       : values[0];

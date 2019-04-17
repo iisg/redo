@@ -1,4 +1,4 @@
-import {autoinject} from "aurelia-dependency-injection";
+import {autoinject, Container} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {ResourceRepository} from "../../../resource-repository";
 import {twoWay} from "../../../../common/components/binding-mode";
@@ -7,6 +7,7 @@ import {BindingEngine} from "aurelia-binding";
 import {ResourceLabelValueConverter} from "../../../details/resource-label-value-converter";
 import {Resource} from "../../../resource";
 import {ResourceSort} from "../../../resource-sort";
+import {SystemMetadata} from "../../../../resources-config/metadata/system-metadata";
 
 @autoinject
 export class SimpleRelationshipSelector implements ComponentAttached {
@@ -18,6 +19,7 @@ export class SimpleRelationshipSelector implements ComponentAttached {
   @bindable resourceClass: string;
   @bindable disabled: boolean = false;
   @bindable multipleChoice: boolean = false;
+  @bindable filters: Object = {};
   resources: Resource[] = [];
   ready: boolean = false;
   useDropdown: boolean = false;
@@ -30,6 +32,7 @@ export class SimpleRelationshipSelector implements ComponentAttached {
   }
 
   attached() {
+    this.filters = {contentFilters: this.contentsFilter, resourceClass: this.resourceClass, resourceKindIds: this.resourceKindIds};
     this.loadResources();
   }
 
@@ -70,12 +73,41 @@ export class SimpleRelationshipSelector implements ComponentAttached {
     if (this.contentsFilter) {
       query.filterByContents(this.contentsFilter);
     }
-    query.sortByMetadataIds([new ResourceSort('id')]);
-    query.get().then(resources => {
-      this.resources = resources;
-      this.initializeSelectedResources();
-      this.useDropdown = this.resources.length > this.SWITCH_TO_DROPDOWN;
-      this.ready = true;
-    });
+    query.sortByMetadataIds([new ResourceSort('id')]).get()
+      .then(resources => {
+        this.resources = resources;
+        this.initializeSelectedResources();
+        this.useDropdown = this.resources.length > this.SWITCH_TO_DROPDOWN;
+        this.ready = true;
+      });
+  }
+
+  searchFunction({term, page}, filters: Object): Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }> {
+    const itemsPerPage = 24;
+    let labelFilter = {};
+    labelFilter[SystemMetadata.RESOURCE_LABEL.id] = term != '' ? '^' + term.replace(' ', '.+') : '';
+    const query = Container.instance.get(ResourceRepository).getTeaserListQuery();
+    if (filters.hasOwnProperty('resourceClass')) {
+      query.filterByResourceClasses(filters['resourceClass']);
+    }
+    if (filters.hasOwnProperty('resourceKindIds')) {
+      query.filterByResourceKindIds(filters['resourceKindIds']);
+    }
+    if (filters.hasOwnProperty('contentFilters')) {
+      labelFilter = {...filters['contentFilters'], ...labelFilter};
+    }
+    return query
+      .filterByContents(labelFilter)
+      .sortByMetadataIds([new ResourceSort('id')])
+      .setResultsPerPage(itemsPerPage)
+      .setCurrentPageNumber(page)
+      .get().then(pageResult => ({
+      results: pageResult,
+      pagination: {more: itemsPerPage < pageResult.total, itemsPerPage: itemsPerPage}
+    }));
+  }
+
+  formatter({item}): { text: string } {
+    return ({text: Container.instance.get(ResourceLabelValueConverter).toView(item)});
   }
 }
