@@ -169,13 +169,21 @@ class ResourcesFixture extends RepekaFixture {
         $userBudynek = $this->getReference(UsersFixture::REFERENCE_USER_BUDYNEK);
         /** @var UserEntity $userScanner */
         $userScanner = $this->getReference(UsersFixture::REFERENCE_USER_SCANNER);
+        $titleLanguageMetadataId = $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE_LANGUAGE)->getId();
         /** @var ResourceEntity $book1 */
         $book1 = $this->handleCommand(
             new ResourceCreateCommand(
                 $bookResourceKind,
                 $this->contents(
                     [
-                        MetadataFixture::REFERENCE_METADATA_TITLE => ['PHP i MySQL'],
+                        MetadataFixture::REFERENCE_METADATA_TITLE => [
+                            [
+                                'value' => 'PHP i MySQL',
+                                'submetadata' => [
+                                    $titleLanguageMetadataId => [['value' => 'PL'], ['value' => 'EN']],
+                                ],
+                            ],
+                        ],
                         MetadataFixture::REFERENCE_METADATA_DESCRIPTION => ['Błędy młodości...'],
                         MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [404],
                         MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
@@ -247,7 +255,24 @@ class ResourcesFixture extends RepekaFixture {
                 $forbiddenBookResourceKind,
                 $this->contents(
                     [
-                        MetadataFixture::REFERENCE_METADATA_TITLE => ['Python dla opornych'],
+                        MetadataFixture::REFERENCE_METADATA_TITLE => [
+                            [
+                                'value' => 'Python dla opornych',
+                                'submetadata' => [
+                                    $titleLanguageMetadataId => [
+                                        ['value' => 'PL'],
+                                    ],
+                                ],
+                            ],
+                            [
+                                'value' => 'Python for restive',
+                                'submetadata' => [
+                                    $titleLanguageMetadataId => [
+                                        ['value' => 'EN'],
+                                    ],
+                                ],
+                            ],
+                        ],
                         MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT => $this->getReference(self::REFERENCE_DEPARTMENT_IET),
                         SystemMetadata::VISIBILITY => [
                             $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),

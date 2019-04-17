@@ -19,6 +19,7 @@ class MetadataFixture extends RepekaFixture {
     const ORDER = 1;
 
     const REFERENCE_METADATA_TITLE = 'metadata-title';
+    const REFERENCE_METADATA_TITLE_LANGUAGE = 'metadata-title-language';
     const REFERENCE_METADATA_DESCRIPTION = 'metadata-description';
     const REFERENCE_METADATA_PUBLISH_DATE = 'metadata-publish-date';
     const REFERENCE_METADATA_CREATION_DATE = 'metadata-creation-date';
@@ -96,7 +97,7 @@ class MetadataFixture extends RepekaFixture {
                     'shownInBrief' => true,
                     'copyToChildResource' => true,
                     'resourceClass' => 'books',
-                    'constraints' => $this->textConstraints(1),
+                    'constraints' => $this->textConstraints(2),
                 ]
             ),
             self::REFERENCE_METADATA_TITLE
@@ -214,11 +215,10 @@ class MetadataFixture extends RepekaFixture {
                         'PL' => 'Język',
                         'EN' => 'Language',
                     ],
-                    'control' => 'text',
+                    'control' => 'system-language',
                     'shownInBrief' => false,
                     'copyToChildResource' => true,
                     'resourceClass' => 'books',
-                    'constraints' => $this->textConstraints(1, '^[a-z]{3}$'),
                 ]
             ),
             self::REFERENCE_METADATA_LANGUAGE
@@ -506,9 +506,9 @@ class MetadataFixture extends RepekaFixture {
                         'PL' => 'Język tytułu',
                         'EN' => 'Title language',
                     ],
-                    'constraints' => $this->textConstraints(1, '^[a-z]{3}$'),
                 ]
-            )
+            ),
+            self::REFERENCE_METADATA_TITLE_LANGUAGE
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
@@ -601,7 +601,7 @@ TEMPLATE
                     'control' => MetadataControl::INTEGER(),
                     'shownInBrief' => false,
                     'resourceClass' => 'books',
-                    'constraints' => $this->constraints(1)
+                    'constraints' => $this->constraints(1),
                 ]
             ),
             self::REFERENCE_METADATA_RESOURCE_DOWNLOADS
