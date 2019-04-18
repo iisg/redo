@@ -7,6 +7,7 @@ use Repeka\Domain\Cqrs\Event\CommandErrorEvent;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
 use Repeka\Domain\Cqrs\Event\CommandHandledEvent;
 use Repeka\Domain\Cqrs\Event\CqrsCommandEvent;
+use Repeka\Domain\Utils\EntityUtils;
 
 class DispatchCommandEventsMiddleware implements CommandBusMiddleware {
     public static $dispatchEvents = true;
@@ -21,7 +22,13 @@ class DispatchCommandEventsMiddleware implements CommandBusMiddleware {
     public function handle(Command $command, callable $next) {
         $beforeCommandHandlingEvent = new BeforeCommandHandlingEvent($command);
         $this->dispatch($beforeCommandHandlingEvent);
-        $command = $beforeCommandHandlingEvent->getCommand();
+        $replacedCommand = $beforeCommandHandlingEvent->getCommand();
+        if ($replacedCommand !== $command) {
+            if ($command->getExecutor() && !$replacedCommand->getExecutor()) {
+                EntityUtils::forceSetField($replacedCommand, $command->getExecutor(), 'executor');
+            }
+            $command = $replacedCommand;
+        }
         $dataForHandledEvent = $beforeCommandHandlingEvent->getDataForHandledEvent();
         try {
             $result = $next($command);

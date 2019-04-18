@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Application\Cqrs\Middleware;
 
+use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\Event\BeforeCommandHandlingEvent;
 use Repeka\Domain\Cqrs\Event\CommandErrorEvent;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
@@ -13,6 +14,7 @@ class SampleCommandEventsListener extends CommandEventsListener {
     public $handled = [];
     public $error = [];
 
+    /** @var Command */
     public $commandToReplace;
     public $dataToSet;
 

@@ -3,8 +3,10 @@ namespace Repeka\Tests\Application\Cqrs\Middleware;
 
 use Repeka\Application\Cqrs\Middleware\DispatchCommandEventsMiddleware;
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\User;
 use Repeka\Domain\UseCase\Metadata\MetadataGetQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
+use Repeka\Domain\Utils\EntityUtils;
 
 /**
  * @SuppressWarnings("PHPMD.UnusedLocalVariable")
@@ -74,6 +76,20 @@ class DispatchCommandEventsMiddlewareTest extends \PHPUnit_Framework_TestCase {
             new ResourceQuery(1),
             function (Command $command) {
                 $this->assertEquals(2, $command->getId());
+            }
+        );
+    }
+
+    public function testReplacingCommandMaintainsExecutor() {
+        $executor = $this->createMock(User::class);
+        $this->listener->commandToReplace = new ResourceQuery(2);
+        $command = new ResourceQuery(1);
+        EntityUtils::forceSetField($command, $executor, 'executor');
+        $this->middleware->handle(
+            $command,
+            function (Command $command) use ($executor) {
+                $this->assertEquals(2, $command->getId());
+                $this->assertEquals($executor, $command->getExecutor());
             }
         );
     }
