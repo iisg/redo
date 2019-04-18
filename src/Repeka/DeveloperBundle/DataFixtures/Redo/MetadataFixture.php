@@ -5,6 +5,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
 use Repeka\Domain\Constants\FileUploaderType;
 use Repeka\Domain\Constants\SystemResourceKind;
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\UseCase\Metadata\MetadataChildWithBaseCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
@@ -48,6 +49,8 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_URL_LINK = 'metadata-url-link';
     const REFERENCE_METADATA_CREATOR = 'metadata-creator';
     const REFERENCE_METADATA_RESOURCE_DOWNLOADS = 'metadata-resource-downloads';
+    const REFERENCE_METADATA_RESOURCE_BIBTEX_TYPE = 'metadata-resource-bibtex-type';
+    const REFERENCE_METADATA_RESOURCE_BIBTEX_KEY = 'metadata-resource-bibtex-key';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -605,6 +608,40 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_RESOURCE_DOWNLOADS
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'bibtexType',
+                    'label' => [
+                        'PL' => 'Typ eksportu bibtex',
+                        'EN' => 'Bibtex type',
+                    ],
+                    'control' => MetadataControl::TEXT(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'constraints' => $this->constraints(1),
+                ]
+            ),
+            self::REFERENCE_METADATA_RESOURCE_BIBTEX_TYPE
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'bibtexKey',
+                    'label' => [
+                        'PL' => 'Klucz eksportu bibtex',
+                        'EN' => 'Bibtex key',
+                    ],
+                    'control' => MetadataControl::TEXT(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'constraints' => $this->constraints(1),
+                    'groupId' => Metadata::DEFAULT_GROUP,
+                    'displayStrategy' => '{{ r | mLabel | first.value | slugify }}',
+                ]
+            ),
+            self::REFERENCE_METADATA_RESOURCE_BIBTEX_KEY
         );
         $this->handleCommand(
             new MetadataUpdateOrderCommand(

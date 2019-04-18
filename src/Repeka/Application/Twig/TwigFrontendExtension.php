@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Twig;
 
+use Cocur\Slugify\Slugify;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Elasticsearch\PageNumberFinder;
@@ -95,6 +96,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Filter('metadataFiles', [$this, 'metadataFiles']),
             new \Twig_Filter('metadataImageFiles', [$this, 'metadataImageFiles']),
             new \Twig_Filter('mapToValues', [$this, 'mapToValues']),
+            new \Twig_Filter('slugify', [$this, 'slugify']),
             new \Twig_Filter('ucfirst', 'ucfirst'),
         ];
     }
@@ -425,5 +427,9 @@ ICON;
             },
             iterator_to_array($metadataValues)
         );
+    }
+
+    public function slugify(string $value): string {
+        return (new Slugify(['separator' => '+']))->slugify($value);
     }
 }

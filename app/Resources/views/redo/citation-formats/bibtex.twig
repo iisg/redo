@@ -1,13 +1,12 @@
-{% set bibtexType = (resource | mBibtexType) is null ? (resource | mBibtexType) : '@misc' %}
-{% set bibtexKey = (resource | mBibtexKey) is null ? (resource | mBibtexType) : 'abramowitz+stegun' %}
-{{ bibtexType }}{{ '{' }}{{ bibtexKey }}
-    title = {{ resource | mtytul | bibtexEscape | raw }},
-    year = {{ "1996" | bibtexEscape | raw }},
-{% for metadata in resource.kind.metadataList if metadata.id > 0
-    and metadata.control != 'display-strategy'
-    and metadata.control != 'wysiwyg-editor' %}{% set metadataValue = resource | metadata(metadata.id) | join(' and ') %}
-    {% if metadataValue %}
-    {{ metadata.label['EN'] | default(metadata.label | first) | default(metadata.name) | replace({" ": ''}) }} = {{ metadataValue | bibtexEscape | raw }},
+{% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name ~ '_bibtex', cmsConfig('display_metadata_DEFAULT')) %}
+{% set bibtexType = (resource | mBibtexType) is not empty ? (resource | mBibtexType) : '@misc' %}
+{% set bibtexKey = (resource | mBibtexKey | first) is not empty ? (resource | mBibtexKey) : '' %}
+{{ bibtexType }}{{ '{' }}{{ bibtexKey }},
+{% for metadataName in metadataToDisplay %}  {% set metadata = metadata(metadataName) %}
+{% if metadata
+and metadata.control != 'display-strategy'
+and metadata.control != 'wysiwyg-editor' %}{% set metadataValue = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) | join((' ' ~ ('and' | trans) ~ ' ')) %}
+{{ metadata.label | default(metadata.label | first) | inCurrentLanguage | default(metadata.name) | replace({" ": ''}) }} = {{ metadataValue | bibtexEscape | raw }},
 {% endif %}
 {% endfor %}
 }

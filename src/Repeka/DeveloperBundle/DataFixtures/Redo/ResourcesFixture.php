@@ -643,6 +643,27 @@ class ResourcesFixture extends RepekaFixture {
                 )
             )
         );
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $cmsConfigRk,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_ID => 'display_metadata_book_bibtex',
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_VALUE => [
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_TITLE)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_DESCRIPTION)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_FILE_PDF)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_RELATED_BOOK)->getName(),
+                            $this->getReference(MetadataFixture::REFERENCE_METADATA_SEE_ALSO)->getName(),
+                        ],
+                        MetadataFixture::REFERENCE_METADATA_CMS_CONTENT =>
+                            'Metadane, które wyświetlą się na stronie eksportu zasobu do formatu bibtex',
+                    ]
+                )
+            )
+        );
     }
 
     private function addCmsReportRemark() {
