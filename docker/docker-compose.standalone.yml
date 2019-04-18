@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  repeka:
+    ports:
+      - "${PORT_HTTP}:80"
+      - "${PORT_HTTPS}:443"

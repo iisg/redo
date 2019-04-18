@@ -1,0 +1,21 @@
+version: '3'
+
+# configuration file to use with https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion
+# In order to run:
+#  1. Clone and start the proxy
+#  2. Configure DOMAIN_NAME and ADMIN_EMAIL in .env
+#  3. Configure COMPOSE_FILE to use this configuration instead of the standalone in .env
+
+services:
+  repeka:
+    networks: [proxy]
+    environment:
+      VIRTUAL_HOST: ${DOMAIN_NAME}
+      LETSENCRYPT_HOST: ${DOMAIN_NAME}
+      LETSENCRYPT_EMAIL: ${ADMIN_EMAIL}
+    expose: [80]
+
+networks:
+  proxy:
+    external:
+      name: webproxy

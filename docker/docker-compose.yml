@@ -1,8 +1,9 @@
-version: '2'
+version: '3'
 
 services:
   repeka:
     container_name: ${COMPOSE_PROJECT_NAME}
+    networks: [default]
     build:
       context: ./repeka
       args:
@@ -10,9 +11,6 @@ services:
     volumes:
       - ../:/var/www/html:z
       - ../var/ssl:/etc/apache2/ssl:z
-    ports:
-      - "${PORT_HTTP}:80"
-      - "${PORT_HTTPS}:443"
     links:
       - repeka-postgres:postgres
 
