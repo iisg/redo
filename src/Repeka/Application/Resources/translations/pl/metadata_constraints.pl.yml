@@ -32,3 +32,4 @@ customMessages:
     email_dyrektora_regex: Adres e-mail musi być poprawny
     nip_szkoly_regex: Podaj NIP w formacie XXX-XXX-XX-XX
     regon_szkoly_regex: Podaj dokładnie 9 cyfr
+    opis_koncepcji_regex: Opis musi zawierać co najmniej 1000 i co najwyżej 3000 znaków

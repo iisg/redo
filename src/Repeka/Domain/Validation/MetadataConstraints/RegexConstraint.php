@@ -51,7 +51,7 @@ class RegexConstraint extends RespectValidationMetadataConstraint implements Con
     public function getValidator(Metadata $metadata, $metadataValue) {
         $pattern = $metadata->getConstraints()[$this->getConstraintName()] ?? null;
         if ($pattern) {
-            $phpRegex = $this->regexNormalizer->normalize($pattern);
+            $phpRegex = $this->regexNormalizer->normalize($pattern) . 's'; // s - multiline modifier
             return Validator::regex($phpRegex);
         }
     }
