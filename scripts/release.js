@@ -150,6 +150,8 @@ function removeUnwantedExtensions() {
       '!release/src/Repeka/Plugins',
       'release/docker/docker-compose.*.yml',
       '!release/docker/docker-compose.persistent.yml',
+      '!release/docker/docker-compose.standalone.yml',
+      '!release/docker/docker-compose.webproxy.yml',
       'release/var/config/sample-configs/*',
       '!release/var/config/sample-configs/config_local.dev.yml',
       'release/web/files/*',
