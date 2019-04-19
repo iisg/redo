@@ -69,6 +69,7 @@ class GlobalExceptionListener {
             $responseStatus = $exception instanceof HttpException ? $exception->getStatusCode() : $responseStatus;
             $responseStatus = $exception instanceof AccessDeniedException ? Response::HTTP_FORBIDDEN : $responseStatus;
             $responseStatus = $exception instanceof NotFoundException ? Response::HTTP_NOT_FOUND : $responseStatus;
+            $responseStatus = $exception instanceof NotFoundHttpException ? Response::HTTP_NOT_FOUND : $responseStatus;
             try {
                 $responseContent = $this->twig->render(
                     $this->errorPageTwigTemplate,

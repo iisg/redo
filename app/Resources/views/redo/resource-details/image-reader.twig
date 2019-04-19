@@ -1,6 +1,6 @@
 {% set imageData = resource | metadataImageFiles('pliki_strona_po_stronie') %}
 {% set canBrowse = resource.resourceClass == 'books' and canView(resource) and imageData is not empty %}
-{% extends canBrowse ? 'redo/layout.twig' : 'empty.twig' %}
+{% extends 'redo/layout.twig' %}
 
 {% set page_title = resource | metadata('label') %}
 {% set childrenAllowed = resource | childrenAllowed %}

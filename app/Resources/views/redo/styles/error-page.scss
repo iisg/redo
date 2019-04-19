@@ -1,0 +1,22 @@
+@import "colors";
+@import "variables";
+
+.error-page {
+  margin-bottom: 20px;
+  .error-page-header {
+    text-align: center;
+    font-weight: bold;
+    margin: 30px 0;
+  }
+  .error-page-container {
+    text-align: center;
+    margin: 0 30px;
+    padding-bottom: 1px;
+    .error-icon {
+      padding-bottom: $default-gap-size * 2;
+    }
+    .dev-environment {
+      margin: 20px 0;
+    }
+  }
+}

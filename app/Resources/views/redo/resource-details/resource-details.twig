@@ -1,4 +1,4 @@
-{% extends resource.resourceClass == 'books' and canView(resource) ? 'redo/layout.twig' : 'empty.twig' %}
+{% extends 'redo/layout.twig' %}
 {% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name, cmsConfig('display_metadata_DEFAULT')) %}
 {% set share_url = app.request.uri %}
 {% set page_title = resource | metadata('label') %}
