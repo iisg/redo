@@ -120,7 +120,7 @@ class FrontendConfig extends \Twig_Extension {
     }
 
     private function getClientIp() {
-        $request = $this->container->get('request_stack')->getMasterRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
         return $request ? $request->getClientIp() : '';
     }
 }
