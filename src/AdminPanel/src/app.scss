@@ -611,3 +611,11 @@ button {
 @include anim-height-inout(150);
 @include anim-height-inout(600);
 @include anim-height-inout(900);
+
+.ie-only {
+  // https://stackoverflow.com/a/36448860/878514
+  display: none;
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    display: initial;
+  }
+}

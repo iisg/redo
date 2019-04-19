@@ -10,8 +10,12 @@ export class ResourceLabelValueConverter implements ToViewValueConverter {
   }
 
   toView(resource: Resource): any {
-    const labelMetadata = resource.contents[SystemMetadata.RESOURCE_LABEL.id];
-    return labelMetadata && labelMetadata[0] && this.htmlSanitizer.sanitize(labelMetadata[0].value)
-      || this.i18n.tr('Resource') + ` #${resource.id}`;
+    if (resource.contents) {
+      const labelMetadata = resource.contents[SystemMetadata.RESOURCE_LABEL.id];
+      return labelMetadata && labelMetadata[0] && this.htmlSanitizer.sanitize(labelMetadata[0].value)
+        || this.i18n.tr('Resource') + ` #${resource.id}`;
+    } else {
+      return '';
+    }
   }
 }

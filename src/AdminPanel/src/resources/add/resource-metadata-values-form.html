@@ -23,8 +23,7 @@
                     disabled.bind="disabled"
                     show-by-default.one-time="required && resource.contents[metadata.id].length === 0"
                     tree-query-url.bind="treeQueryUrl"></resource-relationship-selector>
-                <simple-relationship-selector else
-                    if.bind="!disabled"
+                <simple-relationship-selector if.bind="metadata.constraints.relationshipSelectorType != 'tree' && !skipValidation && !disabled"
                     containerless
                     resource-ids.bind="resource.contents[metadata.id]"
                     resource-kind-ids.bind="metadata.constraints.resourceKind"

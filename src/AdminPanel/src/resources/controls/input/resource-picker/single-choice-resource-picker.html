@@ -1,8 +1,8 @@
 <template>
     <require from="common/components/dropdown-select/dropdown-select"></require>
 
-    <div class="dropdown-container"
-        if.bind="useDropdown">
+    <div if.bind="useDropdown"
+        class="dropdown-container">
         <dropdown-select
             values.bind="resources"
             value.bind="selectedResource"
@@ -16,13 +16,14 @@
             </template>
         </dropdown-select>
     </div>
-    <label else
-        class="radio-label"
-        repeat.for="resource of resources">
-        <input type="radio"
-            change.delegate="selectedResourceChanged()"
-            model.bind="resource"
-            checked.bind="selectedResource">
-        ${resource | resourceLabel | inCurrentLanguage}
-    </label>
+    <div else>
+        <label class="radio-label"
+            repeat.for="resource of resources">
+            <input type="radio"
+                change.delegate="selectedResourceChanged()"
+                model.bind="resource"
+                checked.bind="selectedResource">
+            ${resource | resourceLabel | inCurrentLanguage}
+        </label>
+    </div>
 </template>
