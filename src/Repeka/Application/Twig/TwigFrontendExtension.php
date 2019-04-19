@@ -300,8 +300,8 @@ ICON;
             $paths = iterator_to_array($paths);
         }
         $searchResults = $this->pageNumberFinder->matchSearchHitsWithPageNumbers($resource, $control, $paths, $highlights);
+        $highlightsWithPageNumbers = [];
         if (!empty($searchResults)) {
-            $highlightsWithPageNumbers = [];
             foreach ($searchResults as $result) {
                 $pageNumber = $result[PageNumberFinder::PAGE_NUMBER];
                 $highlight = $this->retrieveHighlightedPhrase($result[PageNumberFinder::HIGHLIGHT]);
@@ -309,8 +309,12 @@ ICON;
             }
             return $highlightsWithPageNumbers;
         } else {
-            return [];
+            foreach ($highlights as $result) {
+                $highlight = $this->retrieveHighlightedPhrase($result);
+                $highlightsWithPageNumbers[] = $highlight;
+            }
         }
+        return array_unique($highlightsWithPageNumbers);
     }
 
     private function retrieveHighlightedPhrase(string $searchHit): string {

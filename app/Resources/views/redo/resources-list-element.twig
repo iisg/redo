@@ -28,10 +28,9 @@
     <div class="details-with-download-options">
         {% if not childrenAllowed %}
             {% include 'redo/resource-details/available-formats.twig' with {
-                    'browsingAvailable': resource | metadata('pliki_strona_po_stronie') is not empty,
-                    'hideGroupName': true
-                }
-            %}
+                'browsingAvailable': resource | metadata('pliki_strona_po_stronie') is not empty,
+                'hideGroupName': true
+            } %}
         {% endif %}
         <div class="details">
             <h3 class="resource-name no-margin-top no-margin-bottom">
@@ -70,16 +69,26 @@
                         {% set highlights = withPageNumbers(resource, metadataLabelWithHighlights.control, resource | m(metadataLabelWithHighlights.id), metadataLabelWithHighlights.highlights) %}
                         {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
                         {% for highlight in highlights %}
+                            {% set resourceAvailable = highlight is iterable %}
                             {% if hasBrowsableContents %}
-                                <a class="metadata-details"
-                                    href="{{ '/resources/' ~ resource.id ~ '/browse#page/' ~ highlight.pageNumber }}">
-                                    <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
-                                    {{ highlight.highlight | raw }}
-                                </a>
+                                {% if resourceAvailable %}
+                                    <a class="metadata-details"
+                                        href="{{ '/resources/' ~ resource.id ~ '/browse#page/' ~ highlight.pageNumber }}">
+                                        <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
+                                        {{ highlight.highlight | raw }}
+                                    </a>
+                                    {% else %}
+                                        {{ highlight | raw }}
+                                {% endif %}
                             {% else %}
                                 <div class="metadata-details">
+                                {% if resourceAvailable %}
                                     <span class="metadata-label">{{ 'page' | trans }} {{ highlight.pageNumber }}</span>
                                     {{ highlight.highlight | raw }}
+                                {% else %}
+                                    <span class="metadata-label">{{ 'File' | trans }}</span>
+                                    {{ highlight | raw }}
+                                {% endif %}
                                 </div>
                             {% endif %}
                         {% endfor %}

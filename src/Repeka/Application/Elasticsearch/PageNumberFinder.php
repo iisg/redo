@@ -26,7 +26,8 @@ class PageNumberFinder {
         $hits = $this->clearHighlight($highlights);
         $results = [];
         foreach ($this->onlySupportedFileFormats($paths) as $file) {
-            $pages = explode("\f", $this->fileStorage->getFileContents($resource, $file));
+            $fileContents = $this->fileStorage->getFileContents($resource, $file);
+            $pages = explode("\f", $fileContents);
             $results = array_merge(
                 $results,
                 $this->findPageNumbersInSingleFile($pages, $highlights, $hits, count($results))
