@@ -85,7 +85,7 @@ export class SimpleRelationshipSelector implements ComponentAttached {
   searchFunction({term, page}, filters: Object): Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }> {
     const itemsPerPage = 24;
     let labelFilter = {};
-    labelFilter[SystemMetadata.RESOURCE_LABEL.id] = term != '' ? '^' + term.replace(' ', '.+') : '';
+    labelFilter[SystemMetadata.RESOURCE_LABEL.id] = term != '' ? '^' + term.replace(/\s+/g, '.+') : '';
     const query = Container.instance.get(ResourceRepository).getTeaserListQuery();
     if (filters.hasOwnProperty('resourceClass')) {
       query.filterByResourceClasses(filters['resourceClass']);
