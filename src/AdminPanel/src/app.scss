@@ -616,6 +616,6 @@ button {
   // https://stackoverflow.com/a/36448860/878514
   display: none;
   @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    display: initial;
+    display: block !important;
   }
 }
