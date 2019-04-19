@@ -29,5 +29,7 @@ abstract class UserFactory {
         return $user;
     }
 
+    abstract public function updatePassword(User $user, string $newPlainPassword): User;
+
     abstract protected function createApplicationUser(string $username, ?string $plainPassword, ResourceEntity $userData): User;
 }

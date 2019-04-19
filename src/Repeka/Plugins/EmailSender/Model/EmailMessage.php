@@ -33,21 +33,32 @@ class EmailMessage {
         return $this->message->getTo();
     }
 
-    public function setSubject(string $subject, array $context = []): self {
-        $subject = $this->strategyEvaluator->render(null, $subject, null, $context);
+    public function setSubject(string $subject, ?array $context = []): self {
+        if ($context !== null) {
+            $subject = $this->strategyEvaluator->render(null, $subject, null, $context);
+        }
         $this->message->setSubject($subject);
         return $this;
     }
 
-    public function setBody(string $body, array $context = []): self {
-        $body = $this->strategyEvaluator->render(null, $body, null, $context);
+    public function setBody(string $body, ?array $context = []): self {
+        if ($context !== null) {
+            $body = $this->strategyEvaluator->render(null, $body, null, $context);
+        }
         $this->message->setBody($body);
         return $this;
     }
 
-    public function setBodyTemplate(string $path, array $context = []): self {
+    public function setTemplate(string $path, array $context = []): self {
         $template = '{% include "' . $path . '" %}';
-        return $this->setBody($template, $context);
+        if (!$this->message->getSubject()) {
+            $rendered = $this->strategyEvaluator->render(null, $template, null, $context);
+            list($subject, $body) = explode("\n", $rendered, 2);
+            $this->setSubject(trim($subject), null);
+            return $this->setBody(trim($body), null);
+        } else {
+            return $this->setBody($template, $context);
+        }
     }
 
     public function send(): int {

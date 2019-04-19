@@ -21,7 +21,7 @@ class MetadataValue {
     }
 
     /**
-     * @return array of arrays of MetadataValue's
+     * @return array|MetadataValue[] of arrays of MetadataValue's
      */
     public function getSubmetadata($metadataOrId = null): array {
         if ($metadataOrId !== null) {

@@ -3,6 +3,7 @@ namespace Repeka\Application\Repository;
 
 use Repeka\Application\Entity\ResultSetMappings;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
@@ -13,11 +14,12 @@ class UserDoctrineRepository extends AbstractRepository implements UserRepositor
     public function loadUserByUsername($username) {
         $usernameMetadataId = SystemMetadata::USERNAME;
         $resultSetMapping = ResultSetMappings::user($this->getEntityManager());
+        $userKindId = SystemResourceKind::USER;
         $query = $this->getEntityManager()->createNativeQuery(
             <<<SQL
             SELECT "user".* FROM "user"
               INNER JOIN "resource" user_data ON "user".user_data_id = user_data.id
-              WHERE (contents->'$usernameMetadataId'->0->'value')::jsonb @> LOWER(:username)::JSONB
+              WHERE kind_id = $userKindId AND (contents->'$usernameMetadataId'->0->'value')::jsonb @> LOWER(:username)::JSONB
 SQL
             ,
             $resultSetMapping

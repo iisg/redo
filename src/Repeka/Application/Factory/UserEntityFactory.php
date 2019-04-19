@@ -33,4 +33,10 @@ class UserEntityFactory extends UserFactory {
         }
         return $user;
     }
+
+    public function updatePassword(User $user, string $plainPassword): User {
+        $encodedPassword = $this->passwordEncoder->encodePassword($user, $plainPassword);
+        $user->setPassword($encodedPassword);
+        return $user;
+    }
 }
