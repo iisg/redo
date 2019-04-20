@@ -1,8 +1,9 @@
 <template>
     <require from="./metadata-constraint-editor"></require>
+    <require from="./no-configuration-constraint-dropdown"></require>
 
     <span class="section-title">${'Configuration' | t}</span>
-    <template repeat.for="constraintName of constraintNames">
+    <template repeat.for="constraintName of supportedConstraintsNamesWithConfiguration">
         <span>${'metadata_constraints::labels//' + constraintName | t}
             <icon name="information"
                 if.bind="constraintName == 'resourceKind' && metadata.constraints.resourceKind.length > 1"
@@ -13,4 +14,10 @@
             original-metadata.bind="originalMetadata"
             validation-controller.bind="validationController"></metadata-constraint-editor>
     </template>
+
+    <span>${'metadata_constraints::labels//noConfigurationConstraints' | t}</span>
+    <no-configuration-constraint-dropdown constraint-names.bind="supportedConstraintsNamesWithoutConfiguration"
+        metadata.bind="metadata"
+        original-metadata.bind="originalMetadata"
+        validation-controller.bind="validationController"></no-configuration-constraint-dropdown>
 </template>

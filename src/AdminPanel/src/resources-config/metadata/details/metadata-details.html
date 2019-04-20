@@ -65,10 +65,12 @@
                         <span>${'Display strategy'|t}</span>
                         <span class="value white-space-pre-wrap">${metadata.displayStrategy}</span>
                     </template>
-                    <template repeat.for="constraintName of constraintNames">
-                        <span>${'metadata_constraints::labels//' + constraintName | t}</span>
-                        <metadata-constraint name.bind="constraintName"
-                            metadata.bind="metadata"></metadata-constraint>
+                    <template repeat.for="constraint of constraints">
+                        <template if.bind="constraint.hasConfiguration || metadata.constraints[constraint.name]">
+                            <span>${'metadata_constraints::labels//' + constraint.name | t}</span>
+                            <metadata-constraint constraint.bind="constraint"
+                                metadata.bind="metadata"></metadata-constraint>
+                        </template>
                     </template>
                 </div>
             </aup-tab-pane>

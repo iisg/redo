@@ -18,11 +18,11 @@ abstract class AbstractMetadataConstraint {
      */
     abstract public function getSupportedControls(): array;
 
-    public function validateAll(Metadata $metadata, array $metadataValues, ResourceEntity $resource = null) {
+    public function validateAll(Metadata $metadata, array $metadataValues, ResourceEntity $resource = null): void {
         foreach ($metadataValues as $metadataValue) {
             $this->validateSingle($metadata, $metadataValue, $resource);
         }
     }
 
-    abstract public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null);
+    abstract public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void;
 }

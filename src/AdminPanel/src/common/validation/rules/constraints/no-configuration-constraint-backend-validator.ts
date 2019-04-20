@@ -6,30 +6,32 @@ import {Metadata} from "../../../../resources-config/metadata/metadata";
 import {Resource} from "../../../../resources/resource";
 
 @autoinject
-export class RegexConstraintValidator extends SingleValueConstraintValidator {
+export class NoConfigurationConstraintBackendValidator extends SingleValueConstraintValidator {
+  constraintName: string;
+
   validatedConstraintName(): string {
-    return 'regex';
+    return this.constraintName || 'any';
   }
 
   constructor(private backendValidation: BackendValidation, i18n: I18N) {
     super(i18n);
   }
 
+  public forConstraint(constraintName: string): NoConfigurationConstraintBackendValidator {
+    const instance = new NoConfigurationConstraintBackendValidator(this.backendValidation, this.i18n);
+    instance.constraintName = constraintName;
+    return instance;
+  }
+
   protected shouldValidate(metadata: Metadata, resource: Resource): boolean {
-    return metadata.constraints.regex && metadata.constraints.regex.trim() !== '';
+    return !!metadata.constraints[this.constraintName];
   }
 
   validate(value: string, metadata: Metadata, resource: Resource): Promise<boolean> {
-    if (!value) {
-      return Promise.resolve(true);
-    } else {
-      const regex = metadata.constraints.regex;
-      return this.backendValidation.getResult(this.validatedConstraintName(), {regex, value});
-    }
+    return this.backendValidation.getResult(this.validatedConstraintName(), value, metadata, resource);
   }
 
   getErrorMessage(metadata: Metadata, resource: Resource): string {
-    const regex = metadata.constraints.regex;
-    return this.i18n.tr("metadata_constraints::Value must fit the regular expression: {{regex}}", {regex});
+    return this.i18n.tr(`metadata_constraints::${this.constraintName}_failed`, {metadata, resource});
   }
 }

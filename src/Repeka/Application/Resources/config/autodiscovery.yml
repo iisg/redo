@@ -7,16 +7,12 @@ services:
   _instanceof:
     Repeka\Domain\Metadata\MetadataImport\Transform\ImportTransform:
       tags: [repeka.import_transform]
-    Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint:
-      tags: [repeka.metadata_constraint]
     Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjuster:
       tags: [repeka.metadata_value_adjuster]
     Repeka\Domain\Metadata\SearchValueAdjuster\SearchValueAdjuster:
       tags: [repeka.search_value_adjuster]
     Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreator:
       tags: [repeka.elastic_search_query_creator]
-    Repeka\Application\Command\Cyclic\CyclicCommand:
-      tags: [repeka.cyclic_command]
 
   Repeka\Application\Elasticsearch\:
     resource: '../../Elasticsearch'

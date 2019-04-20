@@ -7,11 +7,8 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
-use Repeka\Domain\UseCase\Resource\ResourceListQueryBuilder;
-use Respect\Validation\Validator;
 
-class UniqueInResourceClassConstraint extends AbstractMetadataConstraint implements ConfigurableMetadataConstraint {
-
+class UniqueInResourceClassConstraint extends MetadataConstraintWithoutConfiguration {
     private $resourceRepository;
 
     public function __construct(ResourceRepository $resourceRepository) {
@@ -22,21 +19,16 @@ class UniqueInResourceClassConstraint extends AbstractMetadataConstraint impleme
         return [MetadataControl::TEXT];
     }
 
-    public function validateAll(Metadata $metadata, array $metadataValues, ResourceEntity $resource = null) {
-        if (count($metadataValues) != count(array_unique($metadataValues))) {
-            throw new DomainException("Metadata {$metadata->getName()} contains duplicated values.");
-        }
-        parent::validateAll($metadata, $metadataValues, $resource);
-    }
-
-    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
-        if ($this->mustBeUnique($metadata)) {
-            $this->validateIsUnique(
-                $metadata->getId(),
-                $metadataValue,
-                $metadata->getResourceClass(),
-                $resource != null ? $resource->getId() : null
-            );
+    public function doValidateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
+        $this->validateIsUnique(
+            $metadata->getId(),
+            $metadataValue,
+            $metadata->getResourceClass(),
+            $resource != null ? $resource->getId() : null
+        );
+        $valuesInCurrentResource = $resource->getValuesWithoutSubmetadata($metadata);
+        if ((array_count_values($valuesInCurrentResource)[$metadataValue] ?? 1) !== 1) {
+            throw new DomainException("The value '$metadataValue' is repeated.");
         }
     }
 
@@ -44,14 +36,6 @@ class UniqueInResourceClassConstraint extends AbstractMetadataConstraint impleme
         if ($this->valueAlreadyExists($metadataId, $metadataValue, $resourceClass, $resourceId)) {
             throw new DomainException("Metadata with value '$metadataValue' already exists");
         }
-    }
-
-    public function isConfigValid($config): bool {
-        return Validator::boolType()->validate($config);
-    }
-
-    private function mustBeUnique(Metadata $metadata): bool {
-        return $metadata->getConstraints()[$this->getConstraintName()] ?? false;
     }
 
     private function valueAlreadyExists($metadataId, $metadataValue, $resourceClass, $resourceId): bool {

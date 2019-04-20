@@ -28,7 +28,7 @@ class MinMaxValueConstraint extends AbstractMetadataConstraint implements Config
     }
 
     /** @inheritdoc */
-    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
+    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
         $config = $metadata->getConstraints()[$this->getConstraintName()] ?? [];
         if (!Validator::numericVal()->validate($metadataValue)) {
             throw new \InvalidArgumentException('Value must be a number');

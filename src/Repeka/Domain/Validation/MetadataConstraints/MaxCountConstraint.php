@@ -23,7 +23,7 @@ class MaxCountConstraint extends AbstractMetadataConstraint implements Configura
     }
 
     /** @inheritdoc */
-    public function validateAll(Metadata $metadata, array $metadataValues, ResourceEntity $resource = null) {
+    public function validateAll(Metadata $metadata, array $metadataValues, ResourceEntity $resource = null): void {
         $maxCount = $metadata->getConstraints()[$this->getConstraintName()] ?? null;
         if ($maxCount !== null && $maxCount !== -1) {
             try {
@@ -35,7 +35,7 @@ class MaxCountConstraint extends AbstractMetadataConstraint implements Configura
     }
 
     /** @inheritdoc */
-    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
+    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
         throw new \BadMethodCallException('This validator can validate only the whole array of metadata');
     }
 }

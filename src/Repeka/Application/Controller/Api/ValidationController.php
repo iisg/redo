@@ -1,9 +1,9 @@
 <?php
 namespace Repeka\Application\Controller\Api;
 
-use Repeka\Domain\UseCase\Validation\CheckUniquenessQuery;
-use Repeka\Domain\UseCase\Validation\MatchAgainstRegexQuery;
-use Repeka\Domain\UseCase\Validation\ValidatePeselQuery;
+use Assert\Assertion;
+use Repeka\Domain\UseCase\Metadata\MetadataConstraintCheckQuery;
+use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,34 +15,28 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ValidationController extends ApiController {
     /**
-     * @Route("/regex")
+     * @Route("")
      * @Method("POST")
      * @Security("is_authenticated()")
      */
-    public function regexMatch(Request $request) {
-        $query = MatchAgainstRegexQuery::fromArray($request->request->all());
-        $this->handleCommand($query);
-        return new Response('', Response::HTTP_NO_CONTENT);
-    }
-
-    /**
-     * @Route("/uniqueInResourceClass")
-     * @Method("POST")
-     * @Security("is_authenticated()")
-     */
-    public function uniqueInResourceClass(Request $request) {
-        $query = CheckUniquenessQuery::fromArray($request->request->all());
-        $this->handleCommand($query);
-        return new Response('', Response::HTTP_NO_CONTENT);
-    }
-
-    /**
-     * @Route("/validPesel")
-     * @Method("POST")
-     * @Security("is_authenticated()")
-     */
-    public function isValidPesel(Request $request) {
-        $query = new ValidatePeselQuery($request->request->all()['metadataValue'] ?? '');
+    public function metadataConstraintCheck(Request $request) {
+        $data = $request->request->all();
+        Assertion::keyExists($data, 'constraintName');
+        Assertion::keyExists($data, 'metadataId');
+        Assertion::keyExists($data, 'resourceId');
+        Assertion::keyExists($data, 'resourceContents');
+        $resourceQuery = ResourceListQuery::builder()->filterByIds([$data['resourceId']])->build();
+        $resources = $this->handleCommand($resourceQuery);
+        if (!count($resources)) {
+            throw $this->createNotFoundException();
+        }
+        $query = new MetadataConstraintCheckQuery(
+            $data['constraintName'],
+            $data['value'] ?? null,
+            $data['metadataId'],
+            $resources[0],
+            $data['resourceContents']
+        );
         $this->handleCommand($query);
         return new Response('', Response::HTTP_NO_CONTENT);
     }

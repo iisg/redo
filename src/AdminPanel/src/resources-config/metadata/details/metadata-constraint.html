@@ -8,11 +8,13 @@
     <require from="./constraint-view/regex-view.html"></require>
     <require from="./constraint-view/min-max-value-view.html"></require>
     <require from="./constraint-view/related-resource-metadata-filter-view.html"></require>
-    <require from="./constraint-view/unique-in-resource-class-view.html"></require>
     <require from="./constraint-view/file-uploader-type-view.html"></require>
     <require from="./constraint-view/relationship-selector-type-view.html"></require>
-    <require from="./constraint-view/valid-pesel-view.html"></require>
 
-    <compose view="./constraint-view/${constraintViewName}-view.html"
+    <compose if.bind="constraint.hasConfiguration"
+        view="./constraint-view/${constraintViewName}-view.html"
         model.bind="composeModel"></compose>
+    <span else>
+        ${'bool//' + (metadata.constraints[constraint.name] || false) | t}
+    </span>
 </template>

@@ -56,3 +56,26 @@ export class AutoMapper<V> extends Mapper<V> {
     return target;
   }
 }
+
+export class AutoMapperWithCustomProperties<V> extends AutoMapper<V> {
+  toBackendValue(entity: V): Object {
+    return this.addCustomProperties(entity, super.toBackendValue(entity) as any);
+  }
+
+  fromBackendValue(dto: any, entity: V): Promise<V> {
+    return super.fromBackendValue(dto, entity).then(mapped => this.addCustomProperties(dto, mapped));
+  }
+
+  protected clone(source: V): V {
+    return this.addCustomProperties(source, super.clone(source));
+  }
+
+  private addCustomProperties<E>(source: any, target: E): E {
+    for (const prop in source) {
+      if (!target.hasOwnProperty(prop)) {
+        target[prop] = source[prop];
+      }
+    }
+    return target;
+  }
+}

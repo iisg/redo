@@ -1,0 +1,17 @@
+<template>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
+
+    <dropdown-select
+        values.bind="constraintNames"
+        value.bind="selectedConstraintNames"
+        change.trigger="onChange()"
+        multiple>
+        <template replace-part="option-template">
+            ${'metadata_constraints::labels//' + option | t}
+        </template>
+    </dropdown-select>
+
+    <restore-from-original-button if.bind="wasModified"
+        click.delegate="resetToOriginalValue()"></restore-from-original-button>
+</template>

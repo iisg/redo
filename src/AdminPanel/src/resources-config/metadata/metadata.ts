@@ -7,11 +7,18 @@ import {automapped, map, mappedWith} from "common/dto/decorators";
 import {MetadataMapper, MinMaxConstraintMapper, ResourceKindConstraintMapper} from "./metadata-mapping";
 import {MinMaxValue} from "./metadata-min-max-value";
 import {MetadataControl} from "./metadata-control";
+import {FrontendConfig} from "../../config/FrontendConfig";
+import {AutoMapperWithCustomProperties} from "../../common/dto/auto-mapper";
 
 export interface MultilingualText extends StringStringMap {
 }
 
-@automapped
+export interface SupportedMetadataConstraintDefinition {
+  name: string;
+  hasConfiguration: boolean;
+}
+
+@mappedWith(AutoMapperWithCustomProperties)
 export class MetadataConstraints {
   static NAME = 'MetadataConstraints';
 
@@ -22,13 +29,15 @@ export class MetadataConstraints {
   @map relatedResourceMetadataFilter?: NumberMap<string> = {};
   @map(MinMaxConstraintMapper) minMaxValue?: MinMaxValue = new MinMaxValue();
   @map doublePrecision?: number;
-  @map uniqueInResourceClass?: boolean = false;
   @map fileUploaderType?: string;
   @map relationshipSelectorType?: string;
-  @map validPesel?: boolean = false;
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);
+  }
+
+  public static getSupportedConstraints(metadata: Metadata): SupportedMetadataConstraintDefinition[] {
+    return FrontendConfig.get('control_constraints')[metadata.control];
   }
 }
 
@@ -72,8 +81,7 @@ export const metadataConstraintDefaults: MetadataConstraints = {
   maxCount: undefined,
   minMaxValue: {min: undefined, max: undefined},
   regex: '',
-  relatedResourceMetadataFilter: {},
-  uniqueInResourceClass: false
+  relatedResourceMetadataFilter: {}
 };
 
 export interface GroupMetadataList {

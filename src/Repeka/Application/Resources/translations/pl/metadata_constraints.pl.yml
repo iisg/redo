@@ -1,13 +1,13 @@
 ﻿Value is required: Wartość jest wymagana
 "No more than {{maxCount}} values allowed": "Maksymalna liczba wartości: {{maxCount}}"
 "At least {{minCount}} values required": "Minimalna liczba wartości: {{minCount}}"
-"Value must fit the regular expression: {{regex}}": "Wartość musi pasować do wyrażenia regularnego: {{regex}}"
 "Value must be between {{minMaxValue.min}} and {{minMaxValue.max}}": "Wartość musi zawierać się w zakresie od {{minMaxValue.min}} do {{minMaxValue.max}}"
 "Value must be at most {{minMaxValue.max}}": "Wartość nie może być większa niż {{minMaxValue.max}}"
 "Value must be at least {{minMaxValue.min}}": "Wartość nie może być mniejsza niż {{minMaxValue.min}}"
 Tree must be closed after selecting: Po wybraniu wartości należy zamknąć drzewo
-"{{metadata}} with given value already exists": "{{metadata}} o podanej wartości już istnieje"
-Invalid pesel number: Niepoprawny numer pesel
+regex_failed: "Wartość musi pasować do wyrażenia regularnego: {{metadata.constraints.regex}}"
+uniqueInResourceClass_failed: "{{metadata.label.PL}} o podanej wartości już istnieje"
+validPesel_failed: Niepoprawny numer PESEL
 
 labels:
   maxCount: Maksymalna liczba wartości
@@ -21,6 +21,7 @@ labels:
   fileUploaderType: Wgrywanie plików za pomocą
   relationshipSelectorType: Sposób wyboru relacji
   validPesel: Wartość powinna być poprawnym numerem pesel
+  noConfigurationConstraints: Pozostałe wymagania
 
 customMessages:
   cmi:

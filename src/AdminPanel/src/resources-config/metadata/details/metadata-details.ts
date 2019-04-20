@@ -9,10 +9,9 @@ import {ContextResourceClass} from "resources/context/context-resource-class";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {ResourceKind} from "../../resource-kind/resource-kind";
 import {ResourceKindRepository} from "../../resource-kind/resource-kind-repository";
-import {Metadata} from "../metadata";
+import {Metadata, MetadataConstraints, SupportedMetadataConstraintDefinition} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
 import {DetailsViewTabs} from "./details-view-tabs";
-import {FrontendConfig} from "../../../config/FrontendConfig";
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
@@ -81,9 +80,9 @@ export class MetadataDetails implements RoutableComponentActivate {
     this.metadataDetailsTabs.activateTab(activeTabId);
   }
 
-  @computedFrom('metadata.constraints', 'metadata.control')
-  get constraintNames(): string[] {
-    return FrontendConfig.get('control_constraints')[this.metadata.control];
+  @computedFrom('metadata.control')
+  get constraints(): SupportedMetadataConstraintDefinition[] {
+    return MetadataConstraints.getSupportedConstraints(this.metadata);
   }
 
   deleteMetadata(): Promise<any> {

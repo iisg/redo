@@ -4,9 +4,8 @@ import {bindable, ComponentAttached, ComponentDetached} from "aurelia-templating
 import {ValidationController} from "aurelia-validation";
 import {twoWay} from "common/components/binding-mode";
 import {diff} from "common/utils/array-utils";
-import {deepCopy, propertyKeys} from "common/utils/object-utils";
-import {Metadata, metadataConstraintDefaults, MetadataConstraints} from "../metadata";
-import {FrontendConfig} from "../../../config/FrontendConfig";
+import {deepCopy} from "common/utils/object-utils";
+import {Metadata, metadataConstraintDefaults, MetadataConstraints, SupportedMetadataConstraintDefinition} from "../metadata";
 
 @autoinject
 export class MetadataConstraintForm implements ComponentAttached, ComponentDetached {
@@ -27,9 +26,19 @@ export class MetadataConstraintForm implements ComponentAttached, ComponentDetac
   constructor(private bindingEngine: BindingEngine) {
   }
 
-  @computedFrom('metadata.constraints', 'metadata.control')
-  get constraintNames(): string[] {
-    return propertyKeys(this.metadata.constraints).sort();
+  @computedFrom('metadata.control')
+  get supportedConstraints(): SupportedMetadataConstraintDefinition[] {
+    return MetadataConstraints.getSupportedConstraints(this.metadata);
+  }
+
+  @computedFrom('metadata.control')
+  get supportedConstraintsNamesWithConfiguration(): string[] {
+    return this.supportedConstraints.filter(c => c.hasConfiguration).map(c => c.name);
+  }
+
+  @computedFrom('metadata.control')
+  get supportedConstraintsNamesWithoutConfiguration(): string[] {
+    return this.supportedConstraints.filter(c => !c.hasConfiguration).map(c => c.name);
   }
 
   private disposeControlSubscription(): void {
@@ -48,8 +57,7 @@ export class MetadataConstraintForm implements ComponentAttached, ComponentDetac
   }
 
   private metadataControlChanged(): void {
-    const expectedConstraints = FrontendConfig.get('control_constraints')[this.metadata.control];
-    this.updateConstraints(expectedConstraints);
+    this.updateConstraints(this.supportedConstraints);
   }
 
   attached(): void {
@@ -64,10 +72,11 @@ export class MetadataConstraintForm implements ComponentAttached, ComponentDetac
     this.subscribeToControlUpdates();
   }
 
-  updateConstraints(expectedConstraints: string[]) {
+  updateConstraints(expectedConstraints: SupportedMetadataConstraintDefinition[]) {
+    const expectedConstraintsNames = expectedConstraints.map(c => c.name);
     const currentConstraints: string[] = Object.keys(this.metadata.constraints);
-    const missingConstraints = diff(expectedConstraints, currentConstraints);
-    const extraConstraints = diff(currentConstraints, expectedConstraints);
+    const missingConstraints = diff(expectedConstraintsNames, currentConstraints);
+    const extraConstraints = diff(currentConstraints, expectedConstraintsNames);
     for (const extraConstraint of extraConstraints) {
       this.deletedConstraints[extraConstraint] = this.metadata.constraints[extraConstraint];
       delete this.metadata.constraints[extraConstraint];

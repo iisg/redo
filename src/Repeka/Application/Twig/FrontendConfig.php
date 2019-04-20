@@ -9,6 +9,7 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Validation\MetadataConstraintManager;
 use Repeka\Domain\Validation\MetadataConstraints\ConfigurableMetadataConstraint;
+use Repeka\Domain\Validation\MetadataConstraints\MetadataConstraintWithoutConfiguration;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -93,7 +94,10 @@ class FrontendConfig extends \Twig_Extension {
         foreach ($this->metadataConstraintManager->getConstraints() as $constraint) {
             if ($constraint instanceof ConfigurableMetadataConstraint) {
                 foreach ($constraint->getSupportedControls() as $supportedControl) {
-                    $constraints[$supportedControl][] = $constraint->getConstraintName();
+                    $constraints[$supportedControl][] = [
+                        'name' => $constraint->getConstraintName(),
+                        'hasConfiguration' => !($constraint instanceof MetadataConstraintWithoutConfiguration),
+                    ];
                 }
             }
         }

@@ -19,7 +19,7 @@ class FileExistsConstraint extends AbstractMetadataConstraint {
         return [MetadataControl::FILE];
     }
 
-    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
+    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
         $path = $this->fileStorage->getFileSystemPath($resource, $metadataValue);
         Validator::exists()->readable()->file()->assert($path);
     }

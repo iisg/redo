@@ -19,7 +19,7 @@ class DirectoryExistsConstraint extends AbstractMetadataConstraint {
         return [MetadataControl::DIRECTORY];
     }
 
-    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
+    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
         $path = $this->resourceFileHelper->getFileSystemPath($resource, $metadataValue);
         Validator::exists()->readable()->directory()->assert($path);
     }

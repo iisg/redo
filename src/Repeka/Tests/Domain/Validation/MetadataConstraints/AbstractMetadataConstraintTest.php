@@ -18,7 +18,7 @@ class TestDummyConstraint extends AbstractMetadataConstraint {
         throw new \RuntimeException('Unexpected method call');
     }
 
-    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null) {
+    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
         throw new \RuntimeException('Unexpected method call');
     }
 }
