@@ -452,7 +452,7 @@ button {
   input[type=text]:not(.datetimepicker-input), dropdown-select, metadata-chooser {
     min-width: $simple-form-text-input-box-minimum-width;
   }
-  input[type=number] {
+  input[type=number], input.number {
     min-width: $simple-form-number-input-box-minimum-width;
     &:not(:first-child) {
       flex: 1;

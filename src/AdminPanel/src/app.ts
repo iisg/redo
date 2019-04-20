@@ -34,8 +34,12 @@ export class App implements ConfiguresRouter, ComponentAttached {
 
   private disableChangingNumberFieldsValueByScrolling() {
     $(document).on("wheel", "input[type=number]:focus", function(event) {
+      (event.target as HTMLInputElement).classList.add('number');
       (event.target as HTMLInputElement).type = '';
-      setTimeout(() => (event.target as HTMLInputElement).type = 'number');
+      setTimeout(() => {
+        (event.target as HTMLInputElement).type = 'number';
+        (event.target as HTMLInputElement).classList.remove('number');
+      });
     });
   }
 }
