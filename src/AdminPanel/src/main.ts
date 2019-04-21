@@ -94,7 +94,7 @@ export function configure(aurelia: Aurelia) {
     .then(() => aurelia.start())
     .then(() => onAureliaStarted(aurelia))
     .then(() => {
-      adminPanel ? aurelia.setRoot() : aurelia.enhance();
+      adminPanel ? aurelia.setRoot() : aurelia.enhance({themeContext: window['themeContext'] || {}});
     });
 }
 

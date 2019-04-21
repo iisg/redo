@@ -8,7 +8,7 @@ use Stringy\StaticStringy;
 abstract class AbstractMetadataConstraint {
     public function getConstraintName(): string {
         $reflectionClass = new \ReflectionClass($this);
-        $withoutSuffix = preg_replace("/Constraint$/", '', $reflectionClass->getShortName());
+        $withoutSuffix = preg_replace("/(Metadata)?Constraint$/", '', $reflectionClass->getShortName());
         return StaticStringy::camelize($withoutSuffix);
     }
 

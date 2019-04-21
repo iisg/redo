@@ -1,6 +1,7 @@
 regex_failed: "Value must fit the regular expression: {{metadata.constraints.regex}}"
 uniqueInResourceClass_failed: "{{metadata.label.EN}} with given value already exists"
 validPesel_failed: Invalid pesel number
+otherInfo_failed: Value is required
 
 labels:
   maxCount: Max value count
@@ -15,3 +16,4 @@ labels:
   relationshipSelectorType: Relationship selector type
   validPesel: Value should be a valid pesel number
   noConfigurationConstraints: Other requirements
+  otherInfo: Value required, if chosen "others" in corresponding relation

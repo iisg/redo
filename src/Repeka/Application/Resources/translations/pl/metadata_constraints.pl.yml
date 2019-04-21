@@ -8,6 +8,7 @@ Tree must be closed after selecting: Po wybraniu wartości należy zamknąć drz
 regex_failed: "Wartość musi pasować do wyrażenia regularnego: {{metadata.constraints.regex}}"
 uniqueInResourceClass_failed: "{{metadata.label.PL}} o podanej wartości już istnieje"
 validPesel_failed: Niepoprawny numer PESEL
+otherInfo_failed: Wartość jest wymagana
 
 labels:
   maxCount: Maksymalna liczba wartości
@@ -22,6 +23,7 @@ labels:
   relationshipSelectorType: Sposób wyboru relacji
   validPesel: Wartość powinna być poprawnym numerem pesel
   noConfigurationConstraints: Pozostałe wymagania
+  otherInfo: Wartość wymagana, jeśli wybrano "Inne" w odpowiadającym słowniku
 
 customMessages:
   cmi:

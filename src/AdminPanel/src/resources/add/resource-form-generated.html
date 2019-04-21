@@ -12,7 +12,7 @@
             disabled.bind="nonEmptyMetadataGroups.length < 2 || (hideLockedMetadata && !forceShowingGroups) || metadataGroup.childMetadata">
             <template repeat.for="metadata of metadataGroup.metadataList">
                 <template if.bind="displayMetadataValueInput(metadata) && contentsValidator[metadata.id]">
-                    <span class="metadata-label">
+                    <span class="metadata-label metadata-input-row-${metadata.name}">
                         <span>
                             ${metadata | metadataLabel}
                             <span class="metadata-constraints-icons">
@@ -28,12 +28,11 @@
                                     name="closed-lock"
                                     bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
                             </span>
-                            <span if.bind="metadata.control === 'relationship'"
-                                class="help-block">${ metadata.description | inCurrentLanguage }
-                            </span>
+                            <span class="help-block">${ metadata.description | inCurrentLanguage }</span>
                         </span>
                     </span>
                     <resource-metadata-values-form metadata.bind="metadata"
+                        class="metadata-input-row-${metadata.name}"
                         resource.bind="resource"
                         validation-controller.bind="validationController"
                         disabled.bind="metadataIsLocked(metadata) & signal:'metadata-validators-changed'"
