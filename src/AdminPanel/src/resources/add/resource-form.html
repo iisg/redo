@@ -45,7 +45,7 @@
             class="error-label">${'Some form requirements have not been met. Fix the errors and try again.' | t}</span>
         <resource-form-generated if.bind="resource.kind"
             class="content top-level-form contains-collapsible-metadata-group"
-            change.delegate="dirty = true"
+            change.delegate="onChange()"
             resource-kind.bind="resource.kind"
             resource.bind="resource"
             parent.bind="parent"
@@ -56,7 +56,7 @@
             required-metadata-ids-for-transition.bind="resource.kind ? requiredMetadataIds : []"
             force-simple-file-upload.bind="forceSimpleFileUpload"
             force-showing-groups.bind="forceShowingGroups"
-            metadata-ids-to-display.bind="metadataIdsToDisplay"
+            metadata-display-filter.bind="metadataDisplayFilter"
             hide-locked-metadata.bind="!!deposit"></resource-form-generated>
         <slot name="below-form-fields">
             <div class="sticky-buttons">

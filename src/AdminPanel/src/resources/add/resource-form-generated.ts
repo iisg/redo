@@ -31,7 +31,7 @@ export class ResourceFormGenerated {
   @bindable forceSimpleFileUpload: boolean = false;
   @bindable forceShowingGroups: boolean = false;
   @bindable disabled: boolean = false;
-  @bindable metadataIdsToDisplay: number[] = undefined;
+  @bindable metadataDisplayFilter: (metadata: Metadata) => boolean;
 
   currentLanguageCode: string;
   lockedMetadataIds: number[];
@@ -71,8 +71,11 @@ export class ResourceFormGenerated {
   }
 
   displayMetadataValueInput(metadata: Metadata): boolean {
-    if (this.metadataIdsToDisplay && this.metadataIdsToDisplay.length) {
-      return this.metadataIdsToDisplay.includes(metadata.id) || this.metadataIsRequired(metadata);
+    if (this.metadataDisplayFilter) {
+      const decision = this.metadataDisplayFilter(metadata);
+      if (decision !== undefined) {
+        return decision;
+      }
     }
     return !this.resourceKind.workflow
       || !this.hideLockedMetadata

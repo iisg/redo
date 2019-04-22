@@ -21,6 +21,8 @@ import {CurrentUserIsReproductorValueConverter} from "../list/current-user-is-re
 import {DisabilityReason} from "common/components/buttons/toggle-button";
 import {HasRoleValueConverter} from "common/authorization/has-role-value-converter";
 import {EventAggregator} from "aurelia-event-aggregator";
+import {CustomEvent} from "../../common/events/custom-event";
+import {Metadata} from "../../resources-config/metadata/metadata";
 
 @autoinject
 export class ResourceForm extends ChangeLossPreventerForm implements ComponentAttached, ComponentDetached {
@@ -43,7 +45,7 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
   @bindable cancel: () => void;
   @bindable forceSimpleFileUpload: boolean = false;
   @bindable forceShowingGroups: boolean = false;
-  @bindable metadataIdsToDisplay: number[] = undefined;
+  @bindable metadataDisplayFilter: (metadata: Metadata) => boolean;
   submitting: boolean = false;
   cloning: boolean = false;
   disabled: boolean = false;
@@ -59,6 +61,7 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
               private hasRole: HasRoleValueConverter,
               private isReproductor: CurrentUserIsReproductorValueConverter,
               private eventAggregator: EventAggregator,
+              private element: Element,
               validationControllerFactory: ValidationControllerFactory) {
     super();
     this.validationController = validationControllerFactory.createForCurrentScope();
@@ -265,5 +268,10 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
         this.cancel();
       }
     });
+  }
+
+  onChange() {
+    this.dirty = true;
+    this.element.dispatchEvent(CustomEvent.newInstance('resource-contents-changed', this.resource));
   }
 }

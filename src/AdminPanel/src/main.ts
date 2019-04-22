@@ -79,6 +79,7 @@ export function configure(aurelia: Aurelia) {
         'themes/redo/child-resources-group/child-resources-group',
         'themes/redo/deposit-form/deposit-form',
         'themes/redo/language-option/language-option',
+        'themes/cmi/cmi-deposit-form',
         'common/date-search/datetime-search',
         'resources/details/resource-label',
         'resources/details/resource-link',

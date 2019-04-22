@@ -11,7 +11,7 @@
             metadata-group-id.bind="metadataGroup.groupId"
             disabled.bind="nonEmptyMetadataGroups.length < 2 || (hideLockedMetadata && !forceShowingGroups) || metadataGroup.childMetadata">
             <template repeat.for="metadata of metadataGroup.metadataList">
-                <template if.bind="displayMetadataValueInput(metadata) && contentsValidator[metadata.id]">
+                <template if.bind="displayMetadataValueInput(metadata) && contentsValidator[metadata.id] & signal:'metadata-to-display-changed'">
                     <span class="metadata-label metadata-input-row-${metadata.name}">
                         <span>
                             ${metadata | metadataLabel}
