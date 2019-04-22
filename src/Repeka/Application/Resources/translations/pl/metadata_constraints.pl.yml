@@ -9,6 +9,7 @@ regex_failed: "Wartość musi pasować do wyrażenia regularnego: {{metadata.con
 uniqueInResourceClass_failed: "{{metadata.label.PL}} o podanej wartości już istnieje"
 validPesel_failed: Niepoprawny numer PESEL
 otherInfo_failed: Wartość jest wymagana
+mustBeTrue_failed: Zgoda jest wymagana
 
 labels:
   maxCount: Maksymalna liczba wartości
@@ -24,6 +25,7 @@ labels:
   validPesel: Wartość powinna być poprawnym numerem pesel
   noConfigurationConstraints: Pozostałe wymagania
   otherInfo: Wartość wymagana, jeśli wybrano "Inne" w odpowiadającym słowniku
+  mustBeTrue: Wymagaj zaznaczenia "Tak"
 
 customMessages:
   cmi:
