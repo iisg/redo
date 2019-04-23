@@ -7,9 +7,8 @@
             values.bind="resources"
             value.bind="selectedResources"
             multiple.bind="multipleChoice"
-            filters.bind="filters"
-            formatter.bind="formatter"
-            search-function.bind="searchFunction"
+            formatter.call="formatter(item)"
+            search-function.call="searchFunction(term, page)"
             disabled.bind="!resources">
             <template replace-part="option-template">
                 ${option | resourceLabel | inCurrentLanguage}

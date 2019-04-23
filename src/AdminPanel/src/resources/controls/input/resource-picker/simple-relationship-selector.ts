@@ -8,6 +8,7 @@ import {ResourceLabelValueConverter} from "../../../details/resource-label-value
 import {Resource} from "../../../resource";
 import {ResourceSort} from "../../../resource-sort";
 import {SystemMetadata} from "../../../../resources-config/metadata/system-metadata";
+import {ResourceListQuery} from "../../../resource-list-query";
 
 @autoinject
 export class SimpleRelationshipSelector implements ComponentAttached {
@@ -63,6 +64,16 @@ export class SimpleRelationshipSelector implements ComponentAttached {
   }
 
   private loadResources() {
+    this.prepareQuery().sortByMetadataIds([new ResourceSort('id')]).get()
+      .then(resources => {
+        this.resources = resources;
+        this.initializeSelectedResources();
+        this.useDropdown = this.resources.length > this.SWITCH_TO_DROPDOWN;
+        this.ready = true;
+      });
+  }
+
+  private prepareQuery(): ResourceListQuery {
     const query = this.resourceRepository.getTeaserListQuery();
     if (this.resourceClass) {
       query.filterByResourceClasses(this.resourceClass);
@@ -73,32 +84,15 @@ export class SimpleRelationshipSelector implements ComponentAttached {
     if (this.contentsFilter) {
       query.filterByContents(this.contentsFilter);
     }
-    query.sortByMetadataIds([new ResourceSort('id')]).get()
-      .then(resources => {
-        this.resources = resources;
-        this.initializeSelectedResources();
-        this.useDropdown = this.resources.length > this.SWITCH_TO_DROPDOWN;
-        this.ready = true;
-      });
+    return query;
   }
 
-  searchFunction({term, page}, filters: Object): Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }> {
-    const itemsPerPage = 24;
+  searchFunction(term, page): Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }> {
+    const itemsPerPage = 30;
     let labelFilter = {};
     labelFilter[SystemMetadata.RESOURCE_LABEL.id] = term != '' ? '^' + term.replace(/\s+/g, '.+') : '';
-    const query = Container.instance.get(ResourceRepository).getTeaserListQuery();
-    if (filters.hasOwnProperty('resourceClass')) {
-      query.filterByResourceClasses(filters['resourceClass']);
-    }
-    if (filters.hasOwnProperty('resourceKindIds')) {
-      query.filterByResourceKindIds(filters['resourceKindIds']);
-    }
-    if (filters.hasOwnProperty('contentFilters')) {
-      labelFilter = {...filters['contentFilters'], ...labelFilter};
-    }
-    return query
-      .filterByContents(labelFilter)
-      .sortByMetadataIds([new ResourceSort('id')])
+    this.contentsFilter = {...this.contentsFilter, ...labelFilter};
+    return this.prepareQuery()
       .setResultsPerPage(itemsPerPage)
       .setCurrentPageNumber(page)
       .get().then(pageResult => ({
@@ -107,7 +101,7 @@ export class SimpleRelationshipSelector implements ComponentAttached {
     }));
   }
 
-  formatter({item}): { text: string } {
-    return ({text: Container.instance.get(ResourceLabelValueConverter).toView(item)});
+  formatter(item): { text: string } {
+    return ({text: this.resourceLabel.toView(item)});
   }
 }

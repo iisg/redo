@@ -22,8 +22,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
   @bindable @booleanAttribute useComputedWidth: boolean;
   @bindable @booleanAttribute disabled: boolean;
   @bindable @booleanAttribute clearAfterSelect: boolean;
-  @bindable searchFunction: ({term, page}, additionalFilters) => Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }>;
-  @bindable filters: Object;
+  @bindable searchFunction: ({term, page}) => Promise<{ results, pagination: { more: boolean, itemsPerPage: number } }>;
   @bindable formatter: ({item}) => { text: string };
   dropdown: Element;
 
@@ -164,7 +163,7 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
         transport: (params: JQueryAjaxSettings,
                     success: (data: any) => undefined, failure: () => undefined): JQueryXHR => {
           const term = params.data.term || '';
-          this.searchFunction({term: term, page: params.data.page}, this.filters)
+          this.searchFunction({term: term, page: params.data.page})
             .then(data => {
               this.values = Array.from(new Set(this.values.concat(data['results'])));
               data['results'] = data.results.map(item => {
@@ -217,10 +216,23 @@ export class DropdownSelect implements ComponentAttached, ComponentDetached {
     const value: number | number[] = Array.isArray(this.value)
       ? values
       : values[0];
+    if (this.searchFunction) {
+      this.ensureOptionsContainSelectedValues();
+    }
     $(this.dropdown).val(value as any).trigger('change');
     if (this.clearAfterSelect) {
       this.value = undefined;
     }
+  }
+
+  private ensureOptionsContainSelectedValues() {
+    const values = Array.isArray(this.value) ? this.value : [this.value];
+    values.filter(value => value && value != "").forEach(value => {
+      const id = this.getIndex(value);
+      if (!$(this.dropdown).find("option[value='" + id + "']").length) {
+        $(this.dropdown).append(new Option(this.formatter({item: value}).text, id, true, true)).trigger('change');
+      }
+    });
   }
 
   getIndex(value: any) {
