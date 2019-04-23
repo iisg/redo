@@ -33,12 +33,10 @@ labels:
 
 customMessages:
   cmi:
-    nr_telefonu_regex: Podaj dokładnie 9 cyfr
+    nr_telefonu_regex: Numer telefonu powinien składać się z 9 cyfr
     email_kontaktowy_regex: Adres e-mail musi być poprawny
     kod_pocztowy_kandydata_regex: Podaj kod pocztowy w formacie XX-XXX
     kod_pocztowy_szkoly_regex: Podaj kod pocztowy w formacie XX-XXX
-    nr_telefonu_dyrektora_regex: Podaj dokładnie 9 cyfr
+    nr_telefonu_dyrektora_regex: Numer telefonu powinien składać się z 9 cyfr
     email_dyrektora_regex: Adres e-mail musi być poprawny
-    nip_szkoly_regex: Podaj NIP w formacie XXX-XXX-XX-XX
-    regon_szkoly_regex: Podaj dokładnie 9 cyfr
     opis_koncepcji_regex: Opis musi zawierać co najmniej 1000 i co najwyżej 3000 znaków
