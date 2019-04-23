@@ -9,6 +9,7 @@ regex_failed: "Wartość musi pasować do wyrażenia regularnego: {{metadata.con
 uniqueInResourceClass_failed: "{{metadata.label.PL}} o podanej wartości już istnieje"
 pesel_failed: Niepoprawny numer PESEL
 nip_failed: Niepoprawny numer NIP
+regon_failed: Niepoprawny numer REGON
 otherInfo_failed: Wartość jest wymagana
 mustBeTrue_failed: Zgoda jest wymagana
 
@@ -23,8 +24,9 @@ labels:
   uniqueInResourceClass: Unikatowość w klasie zasobów
   fileUploaderType: Wgrywanie plików za pomocą
   relationshipSelectorType: Sposób wyboru relacji
-  pesel: Wartość powinna być poprawnym numerem PESEL
-  nip: Wartość powinna być poprawnym numerem NIP
+  pesel: PESEL
+  nip: NIP
+  regon: REGON
   noConfigurationConstraints: Pozostałe wymagania
   otherInfo: Wartość wymagana, jeśli wybrano "Inne" w odpowiadającym słowniku
   mustBeTrue: Wymagaj zaznaczenia "Tak"

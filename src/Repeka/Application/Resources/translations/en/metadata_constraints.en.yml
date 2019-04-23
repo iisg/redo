@@ -1,6 +1,8 @@
 regex_failed: "Value must fit the regular expression: {{metadata.constraints.regex}}"
 uniqueInResourceClass_failed: "{{metadata.label.EN}} with given value already exists"
-pesel_failed: Invalid pesel number
+pesel_failed: Invalid PESEL number
+nip_failed: Invalid NIP number
+regon_failed: Invalid REGON number
 otherInfo_failed: Value is required
 
 labels:
@@ -14,6 +16,8 @@ labels:
   uniqueInResourceClass: Unique in resource class
   fileUploaderType: File uploader type
   relationshipSelectorType: Relationship selector type
-  pesel: Value should be a valid pesel number
+  pesel: PESEL
+  nip: NIP
+  regon: REGON
   noConfigurationConstraints: Other requirements
   otherInfo: Value required, if chosen "others" in corresponding relation
