@@ -7,7 +7,8 @@
 Tree must be closed after selecting: Po wybraniu wartości należy zamknąć drzewo
 regex_failed: "Wartość musi pasować do wyrażenia regularnego: {{metadata.constraints.regex}}"
 uniqueInResourceClass_failed: "{{metadata.label.PL}} o podanej wartości już istnieje"
-validPesel_failed: Niepoprawny numer PESEL
+pesel_failed: Niepoprawny numer PESEL
+nip_failed: Niepoprawny numer NIP
 otherInfo_failed: Wartość jest wymagana
 mustBeTrue_failed: Zgoda jest wymagana
 
@@ -22,7 +23,8 @@ labels:
   uniqueInResourceClass: Unikatowość w klasie zasobów
   fileUploaderType: Wgrywanie plików za pomocą
   relationshipSelectorType: Sposób wyboru relacji
-  validPesel: Wartość powinna być poprawnym numerem pesel
+  pesel: Wartość powinna być poprawnym numerem PESEL
+  nip: Wartość powinna być poprawnym numerem NIP
   noConfigurationConstraints: Pozostałe wymagania
   otherInfo: Wartość wymagana, jeśli wybrano "Inne" w odpowiadającym słowniku
   mustBeTrue: Wymagaj zaznaczenia "Tak"

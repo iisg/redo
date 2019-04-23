@@ -58,6 +58,7 @@ class ResourcesController extends ApiController {
     public function getTeasersAction(Request $request) {
         $query = $this->getResourceListQueryBuilder($request)
             ->setPermissionMetadataId(SystemMetadata::TEASER_VISIBILITY)
+            ->sortBy([['columnId' => 'id', 'direction' => 'ASC']])
             ->build();
         $resources = $this->handleCommand($query);
         return $this->createPageResponse($resources, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
