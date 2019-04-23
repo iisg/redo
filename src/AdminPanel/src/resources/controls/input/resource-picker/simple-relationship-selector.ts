@@ -1,4 +1,4 @@
-import {autoinject, Container} from "aurelia-dependency-injection";
+import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {ResourceRepository} from "../../../resource-repository";
 import {twoWay} from "../../../../common/components/binding-mode";
@@ -54,13 +54,23 @@ export class SimpleRelationshipSelector implements ComponentAttached {
     newValues.forEach(resource => this.resourceIds.push(new MetadataValue(resource.id)));
   }
 
-  private initializeSelectedResources() {
-    if (!this.multipleChoice && this.resourceIds.length) {
-      this.selectedResource = this.resources.find(resource => resource.id == this.resourceIds[0].value);
-    } else {
-      let idValues = this.resourceIds.map(metadataValue => metadataValue.value);
-      this.selectedResources = this.resources.filter(resource => idValues.includes(resource.id));
-    }
+  private async initializeSelectedResources() {
+    const selectedResources = this.resourceIds.map(metadataValue => {
+      const resourceId = metadataValue.value;
+      let resource = this.resources.find(resource => resource.id == resourceId);
+      if (resource) {
+        return Promise.resolve(resource);
+      } else {
+        return this.resourceRepository.getTeaser(this.resourceIds[0].value);
+      }
+    });
+    Promise.all(selectedResources).then(resources => {
+      if (this.multipleChoice) {
+        this.selectedResources = resources;
+      } else {
+        this.selectedResource = resources[0];
+      }
+    });
   }
 
   private loadResources() {
@@ -93,12 +103,13 @@ export class SimpleRelationshipSelector implements ComponentAttached {
     labelFilter[SystemMetadata.RESOURCE_LABEL.id] = term != '' ? '^' + term.replace(/\s+/g, '.+') : '';
     this.contentsFilter = {...this.contentsFilter, ...labelFilter};
     return this.prepareQuery()
+      .sortByMetadataIds([new ResourceSort('id')])
       .setResultsPerPage(itemsPerPage)
       .setCurrentPageNumber(page)
       .get().then(pageResult => ({
-      results: pageResult,
-      pagination: {more: itemsPerPage < pageResult.total, itemsPerPage: itemsPerPage}
-    }));
+        results: pageResult,
+        pagination: {more: itemsPerPage < pageResult.total, itemsPerPage: itemsPerPage}
+      }));
   }
 
   formatter(item): { text: string } {
