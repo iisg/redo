@@ -14,37 +14,48 @@
     <div class="right-side-container">
         <div class="options-bar">
             <div class="social-media-buttons">
-                <a href="https://www.facebook.com/bpk.biblioteka/"
+                <a class="options-bar-item"
+                    href="https://www.facebook.com/bpk.biblioteka/"
                     target="_blank"
                     title="{{ 'Facebook' | trans }}"
                     aria-label="{{ 'Facebook' | trans }}">{{ icon('facebook') }}</a>
             </div>
             <div class="page-view-options">
-                <button title="{{ 'Change contrast' | trans }}"
+                <button class="options-bar-item page-view-option"
+                    title="{{ 'Change contrast' | trans }}"
                     aria-label="{{ 'Change contrast' | trans }}"
                     click.delegate="highContrast = !highContrast"
                     local-storage-value="key: highContrast; value.bind: highContrast">{{ icon('brightness') }}</button>
-                <div class="button-with-submenu languages">
-                    {% set currentLocale = app.request.getLocale() %}
-                    <button data-toggle="dropdown"
-                        aria-haspopup="menu"
-                        title="{{ ('language_' ~ currentLocale) | trans }}"
-                        aria-label="{{ ('language_' ~ currentLocale) | trans }}">
-                        <span>
+                <div>
+                    <div class="page-view-option dropdown">
+                        {% set currentLocale = app.request.getLocale() %}
+                        <button class="dropdown-toggle options-bar-item"
+                            data-toggle="dropdown"
+                            aria-haspopup="menu"
+                            title="{{ ('language_' ~ currentLocale) | trans }}"
+                            aria-label="{{ ('language_' ~ currentLocale) | trans }}">
                             {{ currentLocale | upper }}
-                        </span>
-                    </button>
-                    <div role="menu">
-                        {% for language in [{locale:'pl', name: 'Polski'}, {locale:'en', name: 'English'}, {locale:'de', name: 'Deutsch'}] %}
-                            {% if language.locale != currentLocale %}
-                                <language-option
-                                    language.bind="'{{ language.locale }}'"
-                                    role="menuitem"
-                                    aria-label="{{ ('language_' ~ language.locale) | trans }}">
-                                    {{ language.name }}
-                                </language-option>
-                            {% endif %}
-                        {% endfor %}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right"
+                            role="menu">
+                            {% for language in [
+                                    {locale:'pl', name: 'Polski'},
+                                    {locale: 'en', name: 'English'},
+                                    {locale: 'de', name: 'Deutsch'}
+                                ] %}
+                                {% if language.locale != currentLocale %}
+                                    <li>
+                                        <a class="menu-item"
+                                            href="" {# It's required to make selecting with arrow keys work. #}
+                                            select-language-on-click="{{ language.locale }}"
+                                            role="menuitem"
+                                            aria-label="{{ ('language_' ~ language.locale) | trans }}">
+                                            {{ language.name }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>

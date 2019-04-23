@@ -1,53 +1,45 @@
-<div class="site-menu"
+<nav class="site-menu"
     role="menu">
-    <div class="menu-items">
-        <a class="{{ urlMatches('/#') ? 'active' : '' }}"
+    <div class="group">
+        <a class="menu-item {{ urlMatches('/#') ? 'active' : '' }}"
             href="/"
-            role="menuitem">
-            <span>{{ 'Search' | trans }}</span>
-        </a>
-        <a class="{{ urlMatches('/search', '/resources') ? 'active' : '' }}"
+            role="menuitem">{{ 'Search' | trans }}</a>
+        <a class="menu-item {{ urlMatches('/search', '/resources') ? 'active' : '' }}"
             href="/search"
-            role="menuitem">
-            <span>{{ 'Browse' | trans }}</span>
-        </a>
-        <a class="{{ urlMatches('/for-authors') ? 'active' : '' }}"
+            role="menuitem">{{ 'Browse' | trans }}</a>
+        <a class="menu-item {{ urlMatches('/for-authors') ? 'active' : '' }}"
             href="/for-authors"
-            role="menuitem">
-            <span>{{ 'For authors' | trans }}</span>
-        </a>
+            role="menuitem">{{ 'For authors' | trans }}</a>
         {% if app.user %}
-        <a class="{{ urlMatches('/report') ? 'active' : '' }}"
-            href="{{ path('report') }}"
-            role="menuitem">
-            <span>{{ 'Report remark' | trans }}</span>
-        </a>
+            <a class="menu-item {{ urlMatches('/report') ? 'active' : '' }}"
+                href="{{ path('report') }}"
+                role="menuitem">{{ 'Report remark' | trans }}</a>
         {% endif %}
     </div>
-    {% if app.request.requestUri != '/'
-        and not (app.request.requestUri starts with '/search') %}
-        <form class="top-search-bar right-aligned"
-            action="/search"
-            role="search">
-            <input type="text"
-                name="phrase"
-                {% if app.request.query.has('phrase') %}
-                    value="{{ app.request.query.get('phrase') }}"
-                {% endif %}
-                placeholder="{{ 'search_small_placeholder' | trans }}"
-                aria-label="{{ 'search_small_placeholder' | trans }}">
-            <button class="search-button"
-                type="submit"
-                name="{{ 'search_button' | trans }}"
-                title="{{ 'search_button' | trans }}">
-                {{ icon("search") }}
-            </button>
-        </form>
-    {% endif %}
-    <div class="menu-items right-aligned {{ app.user ? 'contains-submenu' : '' }}">
+    <div class="group right-aligned">
+        {% if app.request.requestUri != '/'
+            and not (app.request.requestUri starts with '/search') %}
+            <form class="top-search-bar right-aligned"
+                action="/search"
+                role="search">
+                <input type="text"
+                    name="phrase"
+                    {% if app.request.query.has('phrase') %}
+                        value="{{ app.request.query.get('phrase') }}"
+                    {% endif %}
+                    placeholder="{{ 'search_small_placeholder' | trans }}"
+                    aria-label="{{ 'search_small_placeholder' | trans }}">
+                <button class="search-button"
+                    type="submit"
+                    name="{{ 'search_button' | trans }}"
+                    title="{{ 'search_button' | trans }}">
+                    {{ icon("search") }}
+                </button>
+            </form>
+        {% endif %}
         {% if app.user %}
-            <div class="button-with-submenu with-submenu-on-the-left">
-                <button class="{{ urlMatches('/user') ? 'active' : '' }}"
+            <div class="dropdown"> {# There's an issue with opening dropdowns with space bar in Firefox: https://github.com/twbs/bootstrap/issues/20303. #}
+                <button class="menu-item dropdown-toggle {{ urlMatches('/user', path('deposit'), path('myResources')) ? 'active' : '' }}"
                     data-toggle="dropdown"
                     role="menuitem"
                     aria-haspopup="listbox"
@@ -57,40 +49,43 @@
                     <span>{{ app.user.username }}</span>
                     {{ icon('down-4', 0.75) }}
                 </button>
-                <div role="listbox">
+                <ul class="dropdown-menu dropdown-menu-right"
+                    role="listbox">
                     {% if canDepositAnyResource() %}
-                        <a class="isActive() ? 'active' : ''"
-                            href="{{ path('deposit') }}"
-                            role="option">
-                            <span>{{ 'Deposit' | trans }}</span>
-                        </a>
+                        <li>
+                            <a class="menu-item {{ urlMatches(path('deposit')) ? 'active' : '' }}"
+                                href="{{ path('deposit') }}"
+                                role="option">{{ 'Deposit' | trans }}</a>
+                        </li>
                     {% endif %}
                     {% if resources({contentsFilter: {osoba_tworzaca_rekord: app.user.userData.id}, resultsPerPage: 1}) | length == 1 %}
-                        <a class="isActive() ? 'active' : ''"
-                            href="{{ path('myResources') }}"
-                            role="option">
-                            <span>{{ 'My resources' | trans }}</span>
-                        </a>
+                        <li>
+                            <a class="menu-item {{ urlMatches(path('myResources')) ? 'active' : '' }}"
+                                href="{{ path('myResources') }}"
+                                role="option">{{ 'My resources' | trans }}</a>
+                        </li>
                     {% endif %}
                     {% if is_granted('ROLE_OPERATOR_SOME_CLASS') %}
-                        <a href="/admin"
-                            role="option">
-                            <span>{{ 'Admin panel' | trans }}</span>
-                        </a>
+                        <li>
+                            <a class="menu-item"
+                                href="/admin"
+                                role="option">{{ 'Admin panel' | trans }}</a>
+                        </li>
                     {% endif %}
-                    <a href="/logout"
-                        role="option">
-                        <span>{{ 'Sign out' | trans }}</span>
-                    </a>
-                </div>
+                    <li>
+                        <a class="menu-item"
+                            href="/logout"
+                            role="option">{{ 'Sign out' | trans }}</a>
+                    </li>
+                </ul>
             </div>
         {% else %}
-            <a href="/login"
-                class="{{ urlMatches('/login') ? 'active' : '' }}"
-                role="menuitem">
-                {{ icon('user-2') }}
-                <span>{{ 'Sign in' | trans }}</span>
-            </a>
+                <a href="/login"
+                    class="menu-item {{ urlMatches('/login') ? 'active' : '' }}"
+                    role="menuitem">
+                    {{ icon('user-2') }}
+                    <span>{{ 'Sign in' | trans }}</span>
+                </a>
         {% endif %}
     </div>
-</div>
+</nav>

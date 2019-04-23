@@ -30,54 +30,40 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
       & > * {
         display: flex;
         flex-wrap: nowrap;
-        & > * {
-          padding: $default-gap-size / 8 $default-gap-size / 2;
-        }
       }
-      a, button {
+      .options-bar-item {
         color: $secondary-text-color;
-        line-height: 0;
-        transition: color $default-transition-duration;
+        line-height: 1;
+        padding: $default-gap-size / 8 $default-gap-size / 4;
+        &:not(.menu-item) {
+          transition: color $default-transition-duration;
+        }
         &:hover, &:focus {
           color: $primary-text-color;
-        }
-        a {
-          text-decoration: none;
-        }
-      }
-      .page-view-options {
-        & > *:not(:first-child) {
-          border-left: $default-border-width $default-border-style $tertiary-text-color;
         }
       }
       .social-media-buttons {
         align-items: center;
         padding-left: $default-gap-size * 3 / 4;
         padding-right: $default-gap-size * 3 / 4;
-        & > * {
-          padding-right: $default-gap-size / 4;
-          padding-left: $default-gap-size / 4;
+      }
+      .page-view-options {
+        align-items: center;
+        & > :not(:first-child) {
+          border-left: $default-border-width $default-border-style $tertiary-text-color;
+        }
+        .page-view-option {
+          margin-left: $default-gap-size / 4;
+          margin-right: $default-gap-size / 4;
         }
       }
-      .languages {
-        & > div {
-          font-size: $default-font-size;
-          right: 0;
-          padding: $default-gap-size / 2;
-          text-align: right;
-          background-color: $quaternary-background-color;
-          a {
-            padding: $default-gap-size / 2;
-            margin-top: $default-gap-size / 4;
-            color: $primary-text-color;
-            &:hover, &:focus {
-              color: $primary-text-color;
-            }
-            &:not(:last-child) {
-              margin-bottom: $default-gap-size;
-            }
-          }
+      .dropdown, .dropup {
+        &.open .dropdown-toggle, &:hover .dropdown-toggle, .menu-item {
+          color: $primary-text-color;
         }
+      }
+      .dropdown-menu {
+        background-color: $quaternary-background-color;
       }
     }
     .pk-logo-container {

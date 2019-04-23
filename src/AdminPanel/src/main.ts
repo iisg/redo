@@ -7,21 +7,21 @@ import {CustomValidationRules} from "common/validation/custom-validation-rules";
 import {installValidationMessageLocalization} from "common/validation/validation-message-localization";
 import {configure as configureHttpClient} from "config/http-client";
 import {i18nConfiguratorFactory} from "config/i18n";
+import "polyfills";
 import {CurrentUserFetcher} from "users/current/current-user-fetcher";
 import {GuiLanguage} from "./common/i18n/gui-language";
 import {dialogConfigurator} from "./config/dialog";
+import {FrontendConfig} from "./config/FrontendConfig";
 import {Language} from "./resources-config/language-config/language";
 import {Metadata} from "./resources-config/metadata/metadata";
 import {ResourceKind} from "./resources-config/resource-kind/resource-kind";
 import {WorkflowIdMapper} from "./resources-config/resource-kind/resource-kind-mapping";
 import {Resource} from "./resources/resource";
 import {ResourceMapper} from "./resources/resource-mapping";
-import {User} from "./users/user";
-import {Workflow} from "./workflows/workflow";
-import "polyfills";
-import {FrontendConfig} from "./config/FrontendConfig";
-import {UserRepository} from "./users/user-repository";
 import {StatisticEntryMapper} from "./resources/statistics-mapping";
+import {User} from "./users/user";
+import {UserRepository} from "./users/user-repository";
+import {Workflow} from "./workflows/workflow";
 
 LogManager.addAppender(new ConsoleAppender());
 LogManager.setLevel(LogManager.logLevel.info);
@@ -66,6 +66,7 @@ export function configure(aurelia: Aurelia) {
       .globalResources([
         'common/custom-attributes/local-storage-value-custom-attribute',
         'common/custom-attributes/collapsible-custom-attribute',
+        'common/custom-attributes/select-language-on-click-custom-attribute',
         'common/authorization/has-role-value-converter',
         'common/bootstrap/bootstrap-tooltip',
         'common/components/redo-footer/redo-footer.html',
@@ -78,7 +79,6 @@ export function configure(aurelia: Aurelia) {
         'resources-config/multilingual-field/in-current-language',
         'themes/redo/child-resources-group/child-resources-group',
         'themes/redo/deposit-form/deposit-form',
-        'themes/redo/language-option/language-option',
         'themes/cmi/cmi-deposit-form',
         'resources/details/resource-label',
         'resources/details/resource-link',

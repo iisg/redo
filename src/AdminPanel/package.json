@@ -107,7 +107,6 @@
       "elfinder": "github:Studio-42/elFinder@2.1.43",
       "eonasdan-bootstrap-datetimepicker": "npm:eonasdan-bootstrap-datetimepicker@^4.17.47",
       "fetch": "github:github/fetch@^1.0.0",
-      "focus-within": "npm:focus-within@^3.0.2",
       "internetarchive/bookreader": "github:internetarchive/bookreader@^4.2.0",
       "jodit": "npm:jodit@^3.2.10",
       "jquery": "npm:jquery@3.2.1",
