@@ -8,7 +8,7 @@ radio-button-group {
   input[type=radio] {
     width: $new-metadata-value-button-width;
   }
-  label {
+  label.radio-label {
     display: inline-flex;
     align-items: center;
     &:not(:first-child) {
