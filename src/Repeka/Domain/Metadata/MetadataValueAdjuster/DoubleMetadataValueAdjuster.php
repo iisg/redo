@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
 use Respect\Validation\Exceptions\ValidationException;
@@ -10,7 +11,7 @@ class DoubleMetadataValueAdjuster implements MetadataValueAdjuster {
         return $control == MetadataControl::DOUBLE;
     }
 
-    public function adjustMetadataValue(MetadataValue $value, MetadataControl $control): MetadataValue {
+    public function adjustMetadataValue(MetadataValue $value, Metadata $metadata): MetadataValue {
         $textValue = trim($this->replaceCommaWithDot($value->getValue()));
         $floatValue = floatval($textValue);
         if (!$floatValue && (strlen($textValue) == 0 || $textValue{0} !== '0')) {

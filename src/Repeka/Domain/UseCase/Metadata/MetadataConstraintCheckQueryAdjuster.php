@@ -4,7 +4,9 @@ namespace Repeka\Domain\UseCase\Metadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\Metadata;
+use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
 use Repeka\Domain\Metadata\MetadataValueAdjuster\ResourceContentsAdjuster;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraintManager;
@@ -17,23 +19,30 @@ class MetadataConstraintCheckQueryAdjuster implements CommandAdjuster {
     private $metadataRepository;
     /** @var ResourceContentsAdjuster */
     private $resourceContentsAdjuster;
+    /** @var MetadataValueAdjusterComposite */
+    private $metadataValueAdjuster;
 
     public function __construct(
         MetadataConstraintManager $metadataConstraintManager,
         MetadataRepository $metadataRepository,
-        ResourceContentsAdjuster $resourceContentsAdjuster
+        ResourceContentsAdjuster $resourceContentsAdjuster,
+        MetadataValueAdjusterComposite $metadataValueAdjuster
     ) {
         $this->metadataConstraintManager = $metadataConstraintManager;
         $this->metadataRepository = $metadataRepository;
         $this->resourceContentsAdjuster = $resourceContentsAdjuster;
+        $this->metadataValueAdjuster = $metadataValueAdjuster;
     }
 
     /** @param MetadataConstraintCheckQuery $command */
     public function adjustCommand(Command $command): Command {
+        $metadata = $this->toMetadata($command->getMetadata());
+        $metadataValue = new MetadataValue($command->getValue());
+        $metadataValue = $this->metadataValueAdjuster->adjustMetadataValue($metadataValue, $metadata);
         return new MetadataConstraintCheckQuery(
             $this->toMetadataConstraints($command->getConstraint()),
-            $command->getValue(),
-            $this->toMetadata($command->getMetadata()),
+            $metadataValue->getValue(),
+            $metadata,
             $command->getResource(),
             $this->toResourceContents($command->getCurrentContents())
         );

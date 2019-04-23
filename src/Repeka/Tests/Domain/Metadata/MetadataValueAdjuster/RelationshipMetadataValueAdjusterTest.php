@@ -17,10 +17,8 @@ class RelationshipMetadataValueAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testConvertResourceToResourceId() {
         $resource = $this->createResourceMock(1);
-        $actualValue = $this->metadataValueAdjuster->adjustMetadataValue(
-            new MetadataValue($resource),
-            MetadataControl::RELATIONSHIP()
-        );
+        $metadata = $this->createMetadataMock(1, null, MetadataControl::RELATIONSHIP());
+        $actualValue = $this->metadataValueAdjuster->adjustMetadataValue(new MetadataValue($resource), $metadata);
         $this->assertEquals(new MetadataValue(1), $actualValue);
     }
 }

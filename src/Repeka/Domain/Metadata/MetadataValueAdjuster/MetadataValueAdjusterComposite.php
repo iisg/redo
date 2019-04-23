@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
@@ -8,10 +9,8 @@ use Repeka\Domain\Repository\MetadataRepository;
 
 class MetadataValueAdjusterComposite implements MetadataValueAdjuster {
     private $controlAdjustersMap = [];
-    /** @var MetadataValueAdjuster[] */
+    /** @var MetadataValueAdjuster[][] */
     private $adjusters;
-    /** @var DefaultMetadataValueAdjuster */
-    private $defaultMetadataValueAdjuster;
     /** @var MetadataRepository */
     private $metadataRepository;
 
@@ -22,13 +21,10 @@ class MetadataValueAdjusterComposite implements MetadataValueAdjuster {
     }
 
     private function buildAdjustersMap() {
-        $this->defaultMetadataValueAdjuster = new DefaultMetadataValueAdjuster();
         foreach (MetadataControl::toArray() as $control) {
-            $this->controlAdjustersMap[$control] = $this->defaultMetadataValueAdjuster;
             foreach ($this->adjusters as $metadataValueAdjuster) {
                 if ($metadataValueAdjuster->supports($control)) {
-                    $this->controlAdjustersMap[$control] = $metadataValueAdjuster;
-                    break;
+                    $this->controlAdjustersMap[$control][] = $metadataValueAdjuster;
                 }
             }
         }
@@ -42,17 +38,19 @@ class MetadataValueAdjusterComposite implements MetadataValueAdjuster {
         return $contents->mapAllValues(
             function (MetadataValue $value, int $metadataId) {
                 $metadata = $this->metadataRepository->findOne($metadataId);
-                return $this->adjustMetadataValue($value, $metadata->getControl());
+                return $this->adjustMetadataValue($value, $metadata);
             }
         );
     }
 
-    public function adjustMetadataValue(MetadataValue $value, MetadataControl $control): MetadataValue {
+    public function adjustMetadataValue(MetadataValue $value, Metadata $metadata): MetadataValue {
         if (!$this->controlAdjustersMap) {
             $this->buildAdjustersMap();
         }
-        /** @var MetadataValueAdjuster $metadataValueAdjuster */
-        $metadataValueAdjuster = $this->controlAdjustersMap[$control->getValue()];
-        return $metadataValueAdjuster->adjustMetadataValue($value, $control);
+        $adjusters = $this->controlAdjustersMap[$metadata->getControl()->getValue()] ?? [];
+        foreach ($adjusters as $adjuster) {
+            $value = $adjuster->adjustMetadataValue($value, $metadata);
+        }
+        return $value;
     }
 }

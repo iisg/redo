@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -10,7 +11,7 @@ class RelationshipMetadataValueAdjuster implements MetadataValueAdjuster {
         return $control == MetadataControl::RELATIONSHIP;
     }
 
-    public function adjustMetadataValue(MetadataValue $value, MetadataControl $control): MetadataValue {
+    public function adjustMetadataValue(MetadataValue $value, Metadata $metadata): MetadataValue {
         return $value->withNewValue($this->replaceRelationshipResourceWithId($value->getValue()));
     }
 

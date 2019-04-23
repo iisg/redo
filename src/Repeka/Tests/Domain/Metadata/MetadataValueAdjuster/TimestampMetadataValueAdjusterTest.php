@@ -2,10 +2,12 @@
 namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 
 use DateTime;
-use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
+use Repeka\Tests\Traits\StubsTrait;
 
 class TimestampMetadataValueAdjusterTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var TimestampMetadataValueAdjuster */
     private $metadataValueAdjuster;
 
@@ -17,7 +19,7 @@ class TimestampMetadataValueAdjusterTest extends \PHPUnit_Framework_TestCase {
         $expectedValue = new MetadataValue((new DateTime('2018-09-13T16:39:49'))->format(DateTime::ATOM));
         $actualValue = $this->metadataValueAdjuster->adjustMetadataValue(
             new MetadataValue('2018-09-13T16:39:49'),
-            MetadataControl::TIMESTAMP()
+            $this->createMetadataMock()
         );
         $this->assertEquals($expectedValue, $actualValue);
     }

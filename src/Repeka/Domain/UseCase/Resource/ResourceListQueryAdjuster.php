@@ -75,7 +75,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
                         function (MetadataValue $value, int $metadataId) {
                             $metadata = $this->metadataRepository->findOne($metadataId);
                             try {
-                                return $this->metadataValueAdjuster->adjustMetadataValue($value, $metadata->getControl());
+                                return $this->metadataValueAdjuster->adjustMetadataValue($value, $metadata);
                             } catch (\Exception $e) {
                                 // we accept malformed values for filters, e.g. date: 2019-.*
                                 return $value;

@@ -19,8 +19,9 @@ class DoubleMetadataValueAdjusterTest extends \PHPUnit_Framework_TestCase {
     /** @dataProvider adjusterTests */
     public function testAdjuster($input, $expectedOutput) {
         $value = new MetadataValue($input);
+        $metadata = $this->createMetadataMock(1, null, MetadataControl::DOUBLE());
         try {
-            $this->assertEquals($expectedOutput, $this->adjuster->adjustMetadataValue($value, MetadataControl::DOUBLE())->getValue());
+            $this->assertEquals($expectedOutput, $this->adjuster->adjustMetadataValue($value, $metadata)->getValue());
         } catch (ValidationException $e) {
             $this->assertNull($expectedOutput, 'No failure was expeced.');
         }

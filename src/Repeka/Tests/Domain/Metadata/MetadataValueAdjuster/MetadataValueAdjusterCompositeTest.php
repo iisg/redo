@@ -4,8 +4,11 @@ namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Repository\MetadataRepository;
+use Repeka\Tests\Traits\StubsTrait;
 
 class MetadataValueAdjusterCompositeTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var MetadataValueAdjuster */
     private $metadataValueAdjusterComposite;
 
@@ -20,12 +23,14 @@ class MetadataValueAdjusterCompositeTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testAdjusting() {
-        $adjusted = $this->metadataValueAdjusterComposite->adjustMetadataValue(new MetadataValue('test'), MetadataControl::RELATIONSHIP());
+        $metadata = $this->createMetadataMock(1, null, MetadataControl::RELATIONSHIP());
+        $adjusted = $this->metadataValueAdjusterComposite->adjustMetadataValue(new MetadataValue('test'), $metadata);
         $this->assertEquals(new MetadataValue('adjustedByA'), $adjusted);
     }
 
     public function testUseDefaultMetadataValueAdjusterIfLackOfControl() {
-        $adjusted = $this->metadataValueAdjusterComposite->adjustMetadataValue(new MetadataValue('test'), MetadataControl::TEXT());
+        $metadata = $this->createMetadataMock(1, null, MetadataControl::TEXT());
+        $adjusted = $this->metadataValueAdjusterComposite->adjustMetadataValue(new MetadataValue('test'), $metadata);
         $this->assertEquals(new MetadataValue('adjustedByA'), $adjusted);
     }
 }

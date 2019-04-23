@@ -5,8 +5,11 @@ use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataDateControl\FlexibleDate;
 use Repeka\Domain\Entity\MetadataDateControl\MetadataDateControlMode;
 use Repeka\Domain\Entity\MetadataValue;
+use Repeka\Tests\Traits\StubsTrait;
 
 class FlexibleDateMetadataValueAdjusterTest extends \PHPUnit_Framework_TestCase {
+    use StubsTrait;
+
     /** @var FlexibleDateMetadataValueAdjuster */
     private $metadataValueAdjuster;
 
@@ -16,13 +19,14 @@ class FlexibleDateMetadataValueAdjusterTest extends \PHPUnit_Framework_TestCase 
 
     public function testConvertFlexibleDateControlMetadataValuesToFlexibleData() {
         $expectedValue = new MetadataValue(
-            (new FlexibleDate('2018-09-13T00:00:00', '2018-09-13T23:59:59', MetadataDateControlMode::DAY, null, '13.09.2018'))->toArray()
+            (new FlexibleDate('2018-09-13T00:00:00', '2018-09-13T23:59:59', MetadataDateControlMode::DAY, null))->toArray()
         );
+        $metadata = $this->createMetadataMock(1, null, MetadataControl::FLEXIBLE_DATE());
         $actualValue = $this->metadataValueAdjuster->adjustMetadataValue(
             new MetadataValue(
                 new FlexibleDate('2018-09-13T16:39:49+02:00', '2018-09-13T16:39:49+02:00', MetadataDateControlMode::DAY, null)
             ),
-            MetadataControl::FLEXIBLE_DATE()
+            $metadata
         );
         $this->assertEquals($expectedValue, $actualValue);
     }

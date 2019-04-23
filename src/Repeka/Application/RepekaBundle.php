@@ -4,6 +4,7 @@ namespace Repeka\Application;
 use Repeka\Application\Authentication\TokenAuthenticator;
 use Repeka\Application\Command\Cyclic\CyclicCommand;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjuster;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
 use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,5 +17,6 @@ class RepekaBundle extends Bundle {
         $container->registerForAutoconfiguration(CyclicCommand::class)->addTag('repeka.cyclic_command');
         $container->registerForAutoconfiguration(TokenAuthenticator::class)->addTag('repeka.token_authenticator');
         $container->registerForAutoconfiguration(AbstractMetadataConstraint::class)->addTag('repeka.metadata_constraint');
+        $container->registerForAutoconfiguration(MetadataValueAdjuster::class)->addTag('repeka.metadata_value_adjuster');
     }
 }

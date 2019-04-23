@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
 
@@ -9,7 +10,7 @@ class FileAndDirectoryMetadataValueAdjuster implements MetadataValueAdjuster {
         return $control == MetadataControl::FILE || $control == MetadataControl::DIRECTORY;
     }
 
-    public function adjustMetadataValue(MetadataValue $value, MetadataControl $control): MetadataValue {
+    public function adjustMetadataValue(MetadataValue $value, Metadata $metadata): MetadataValue {
         $path = urldecode($value->getValue());
         $path = str_replace('\\', '/', $path);
         return $value->withNewValue($path);

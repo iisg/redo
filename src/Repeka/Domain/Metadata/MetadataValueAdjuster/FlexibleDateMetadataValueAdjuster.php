@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Metadata\MetadataValueAdjuster;
 
+use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataDateControl\FlexibleDate;
 use Repeka\Domain\Entity\MetadataDateControl\MetadataDateControlConverterUtil;
@@ -11,7 +12,7 @@ class FlexibleDateMetadataValueAdjuster implements MetadataValueAdjuster {
         return $control == MetadataControl::FLEXIBLE_DATE || $control == MetadataControl::DATE_RANGE;
     }
 
-    public function adjustMetadataValue(MetadataValue $value, MetadataControl $control): MetadataValue {
+    public function adjustMetadataValue(MetadataValue $value, Metadata $metadata): MetadataValue {
         return $value->withNewValue($this->convertDateControlMetadataValuesToFlexibleDate($value->getValue()));
     }
 
