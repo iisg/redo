@@ -9,6 +9,10 @@
 
     <span class="help-text"
         if.bind="description">
+        <span class="help-block pull-right textarea-characters-number"
+            if.bind="value && metadataValue.value">
+            ${ 'Number of characters' | t }: ${ metadataValue.value.length }
+        </span>
         ${ description }
     </span>
 </template>

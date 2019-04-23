@@ -6,7 +6,7 @@ $resource-metadata-value-input-with-buttons-minimum-width: 200px;
 
 resource-form-generated {
   &, & > collapsible-metadata-group {
-    & > span, & > resource-metadata-values-form, .input-container > *, .new-metadata-value-button-container {
+    & > span, & > resource-metadata-values-form, .new-metadata-value-button-container {
       @include form-element();
     }
     .metadata-constraints-icons > * {
