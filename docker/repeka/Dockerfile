@@ -30,6 +30,7 @@ RUN apt-get update && apt-get -y install gnupg2 \
      zip \
      soap \
      exif \
+     intl \
   && apt-get autoremove \
   && rm -r /var/lib/apt/lists/* \
   && apt-get clean
