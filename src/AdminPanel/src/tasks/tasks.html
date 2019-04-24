@@ -12,7 +12,7 @@
         <template repeat.for="resourceClass of resourceClasses">
             <span class="page-title">${'resource_classes::' + resourceClass + '//resources' | t} (${tasksDoubleMap[resourceClass]['own'].resources.total || 0})</span>
             <div repeat.for="taskStatus of ['own', 'possible']"
-                class="tasks-collection">
+                class="tasks-collection tasks-collection-${ taskStatus & oneTime }">
                 <span class="page-subtitle">${'tasks//header//' + taskStatus | t}</span>
                 <div if.bind="!tasksDoubleMap[resourceClass][taskStatus]"
                     class="alert alert-success">

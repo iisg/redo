@@ -28,7 +28,8 @@
                                     name="closed-lock"
                                     bootstrap-tooltip.bind="'Resource\'s state prevents modification of these values.' | resourceClassTranslation:resource.resourceClass"></icon>
                             </span>
-                            <span class="help-block">${ metadata.description | inCurrentLanguage }</span>
+                            <span class="help-block"
+                                if.one-time="!['boolean', 'textarea'].includes(metadata.control)">${ metadata.description | inCurrentLanguage }</span>
                         </span>
                     </span>
                     <resource-metadata-values-form metadata.bind="metadata"

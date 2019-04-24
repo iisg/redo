@@ -1,5 +1,6 @@
 <template>
     <span if.one-time="metadata.isDynamic"
         innerhtml.bind="metadataValue.value | sanitizeHTML"></span>
-    <span else>${metadataValue.value}</span>
+    <span else
+        class="pre-line">${metadataValue.value}</span>
 </template>

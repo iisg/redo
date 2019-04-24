@@ -22,7 +22,8 @@
                 </a>
             </template>
             <template else>
-                <span repeat.for="resource of resources">
+                <span class="value"
+                    repeat.for="resource of resources">
                     <span if.bind="resource.kind.label | inCurrentLanguage">${ resource.kind.label | inCurrentLanguage }</span>
                     <span else>#${ resource.kind.id }</span>
                 </span>
