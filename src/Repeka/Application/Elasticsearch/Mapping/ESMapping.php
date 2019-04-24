@@ -61,7 +61,8 @@ class ESMapping {
                 ],
                 [
                     'as_flexible-date' => [
-                        'path_match' => '*.value_(flexible|range)-date',
+                        'match_pattern' => 'regex',
+                        'match' => 'value_(flexible|range)-date',
                         'mapping' => [
                             'type' => 'object',
                             'properties' => [
