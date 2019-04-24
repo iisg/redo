@@ -4,6 +4,7 @@ namespace Repeka\Tests\Domain\Validation\MetadataConstraints;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataDateControl\FlexibleDate;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\RespectValidationFailedException;
 use Repeka\Domain\Validation\Exceptions\FlexibleDateControlMetadataCorrectStructureRuleException;
 use Repeka\Domain\Validation\MetadataConstraints\FlexibleDateCorrectConstraint;
@@ -18,10 +19,13 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
     private $metadata1;
     /** @var  Metadata */
     private $dateMetadata;
+    /** @var ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
+    private $resource;
 
     protected function setUp() {
         $this->metadata1 = $this->createMetadataMock(1);
         $this->dateMetadata = $this->createMetadataMock(3, null, MetadataControl::FLEXIBLE_DATE());
+        $this->resource = $this->createResourceMock(1);
         $this->rule = new FlexibleDateCorrectConstraint();
     }
 
@@ -29,7 +33,7 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
         $contents = [
             (new FlexibleDate('2018-09-13T16:39:49', '2018-09-13T16:39:49', 'day', null))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 
     public function testAcceptMultipleValidDates() {
@@ -37,7 +41,7 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
             (new FlexibleDate('2018-09-13T16:39:49', '2018-09-13T16:39:49', 'day', null))->toArray(),
             (new FlexibleDate('2018-09-13T16:39:49', '2018-09-15T16:39:49', 'day', null))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 
     public function testRejectsIfDateControlMetadataInvalidMode() {
@@ -45,7 +49,7 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
         $contents = [
             (new FlexibleDate('2018-09-13T16:39:49', '2018-09-13T16:39:49', 'quarter', null))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 
     public function testRejectsIfDateControlMetadataInvalidStructure() {
@@ -53,7 +57,7 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
         $contents = [
             (new FlexibleDate(1238990, 3219799, 'day', null))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 
     public function testRejectsWhenInvalidOrderOfDates() {
@@ -61,7 +65,7 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
         $contents = [
             (new FlexibleDate('2018-09-13T16:39:49', '2018-09-12T16:39:49', 'range', 'day'))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 
     public function testRejectsWhenInvalidRangeMode() {
@@ -69,14 +73,14 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
         $contents = [
             (new FlexibleDate('2018-09-13T16:39:49', '2018-09-12T16:39:49', 'range', 'range'))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 
     public function testAcceptWhenAtLeastOneDateProvided() {
         $contents = [
             (new FlexibleDate('2018-09-13T16:39:49', null, 'range', 'year'))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 
     public function testRejectsWhenNoDateProvided() {
@@ -84,7 +88,7 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
         $contents = [
             (new FlexibleDate(null, null, 'range', 'year'))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 
     public function testRejectWhenNoDateProvided() {
@@ -92,6 +96,6 @@ class FlexibleDateCorrectConstraintTest extends \PHPUnit_Framework_TestCase {
         $contents = [
             (new FlexibleDate(null, null, 'range', 'range'))->toArray(),
         ];
-        $this->rule->validateAll($this->dateMetadata, $contents);
+        $this->rule->validateAll($this->dateMetadata, $contents, $this->resource);
     }
 }

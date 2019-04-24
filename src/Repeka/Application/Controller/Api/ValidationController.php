@@ -4,6 +4,7 @@ namespace Repeka\Application\Controller\Api;
 use Assert\Assertion;
 use Repeka\Domain\UseCase\Metadata\MetadataConstraintCheckQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -23,19 +24,27 @@ class ValidationController extends ApiController {
         $data = $request->request->all();
         Assertion::keyExists($data, 'constraintName');
         Assertion::keyExists($data, 'metadataId');
-        Assertion::keyExists($data, 'resourceId');
+        Assertion::keyExists($data, 'kindId');
         Assertion::keyExists($data, 'resourceContents');
-        $resourceQuery = ResourceListQuery::builder()->filterByIds([$data['resourceId']])->build();
-        $resources = $this->handleCommand($resourceQuery);
-        if (!count($resources)) {
-            throw $this->createNotFoundException();
+        $resourceOrKind = null;
+        if ($resourceId = $data['resourceId'] ?? null) {
+            $resourceQuery = ResourceListQuery::builder()->filterByIds([$resourceId])->build();
+            $resources = $this->handleCommand($resourceQuery);
+            if (!count($resources)) {
+                throw $this->createNotFoundException();
+            }
+            $resourceOrKind = $resources[0];
+        }
+        if (!$resourceOrKind) {
+            $resourceOrKind = $this->handleCommand(new ResourceKindQuery($data['kindId']));
+            $this->denyAccessUnlessGranted(['VIEW'], $resourceOrKind);
         }
         $query = new MetadataConstraintCheckQuery(
             $data['constraintName'],
             $data['value'] ?? null,
             $data['metadataId'],
-            $resources[0],
-            $data['resourceContents']
+            $data['resourceContents'],
+            $resourceOrKind
         );
         $this->handleCommand($query);
         return new Response('', Response::HTTP_NO_CONTENT);

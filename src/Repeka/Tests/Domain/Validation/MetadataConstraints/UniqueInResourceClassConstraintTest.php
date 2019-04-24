@@ -24,6 +24,8 @@ class UniqueInResourceClassConstraintTest extends \PHPUnit_Framework_TestCase {
     private $repeatedMetadata;
     /** @var ResourceEntity */
     private $testResource;
+    /** @var ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
+    private $editedResource;
 
     public function setUp() {
         $this->resourceRepository = $this->createMock(ResourceRepository::class);
@@ -35,7 +37,8 @@ class UniqueInResourceClassConstraintTest extends \PHPUnit_Framework_TestCase {
             $this->createResourceKindMock(),
             [$this->uniqueMetadata->getId() => $this->repeatedValue]
         );
-        $this->resourceRepository->method('findByQuery')->willReturn(new PageResult([$this->testResource], 1));
+        $this->resourceRepository->method('findByQuery')->willReturn(new PageResult([$this->testResource], 2));
+        $this->editedResource = $this->createResourceMock(2);
     }
 
     public function testConstraintDoesNotAcceptIncorrectArguments() {
@@ -55,13 +58,21 @@ class UniqueInResourceClassConstraintTest extends \PHPUnit_Framework_TestCase {
         );
     }
 
+    public function testSkipsValidationIfNoValue() {
+        $this->constraint->validateSingle(
+            $this->uniqueMetadata,
+            null,
+            $this->createResourceMock(2)
+        );
+    }
+
     public function testUniquenessNotDemandedWhenConstraintValueIsFalse() {
-        $this->constraint->validateSingle($this->repeatedMetadata, $this->repeatedValue);
+        $this->constraint->validateSingle($this->repeatedMetadata, $this->repeatedValue, $this->editedResource);
     }
 
     public function testUniquenessDemandedWhenConstraintValueIsTrue() {
         $this->expectException(DomainException::class);
-        $this->constraint->validateSingle($this->uniqueMetadata, $this->repeatedValue);
+        $this->constraint->validateSingle($this->uniqueMetadata, $this->repeatedValue, $this->editedResource);
     }
 
     public function testSameResourceNotTreatedAsRepetition() {
@@ -74,6 +85,6 @@ class UniqueInResourceClassConstraintTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailingBecauseOfDuplicatedValuesInCurrentMetadata() {
         $this->expectException(DomainException::class);
-        $this->constraint->validateAll($this->uniqueMetadata, ['a', 'a']);
+        $this->constraint->validateAll($this->uniqueMetadata, ['a', 'a'], $this->editedResource);
     }
 }

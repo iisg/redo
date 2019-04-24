@@ -2,6 +2,7 @@
 namespace Repeka\Tests\Domain\Validation\MetadataConstraints;
 
 use Repeka\Application\Service\PhpRegexNormalizer;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Validation\MetadataConstraints\RegexConstraint;
@@ -12,9 +13,12 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
 
     /** @var RegexConstraint */
     private $constraint;
+    /** @var ResourceEntity|\PHPUnit_Framework_MockObject_MockObject */
+    private $resource;
 
     protected function setUp() {
         $this->constraint = new RegexConstraint(new PhpRegexNormalizer());
+        $this->resource = $this->createResourceMock(1);
     }
 
     public function testRejectsBadArguments() {
@@ -48,11 +52,13 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
         if (!$shouldBeValid) {
             $this->expectException(InvalidCommandException::class);
         }
-        $this->constraint->validateSingle($this->createMetadataMock(1, null, null, ['regex' => $regex]), $value);
+        $this->constraint->validateSingle($this->createMetadataMock(1, null, null, ['regex' => $regex]), $value, $this->resource);
     }
 
     public function regexTestCases() {
         return [
+            ['^a', null, true],
+            ['^a', '', true],
             ['^a', 'aXb', true],
             ['b$', 'aXb', true],
             ['', 'whatever', true],
@@ -72,7 +78,8 @@ class RegexConstraintTest extends \PHPUnit_Framework_TestCase {
         $this->expectException(InvalidCommandException::class);
         $this->constraint->validateAll(
             $this->createMetadataMock(1, null, null, ['regex' => '^a']),
-            [['value' => 'abc'], ['value' => 'bcd']]
+            [['value' => 'abc'], ['value' => 'bcd']],
+            $this->resource
         );
     }
 }

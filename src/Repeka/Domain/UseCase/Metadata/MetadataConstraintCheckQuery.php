@@ -8,6 +8,7 @@ use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
 
 class MetadataConstraintCheckQuery extends AbstractCommand implements AdjustableCommand, NonValidatedCommand {
@@ -19,8 +20,10 @@ class MetadataConstraintCheckQuery extends AbstractCommand implements Adjustable
     private $constraint;
     /** @var int|Metadata|string */
     private $metadata;
-    /** @var int|ResourceEntity */
+    /** @var ResourceEntity|null */
     private $resource;
+    /** @var ResourceKind */
+    private $resourceKind;
     /** @var array|ResourceContents */
     private $currentContents;
 
@@ -28,15 +31,25 @@ class MetadataConstraintCheckQuery extends AbstractCommand implements Adjustable
      * @param string|AbstractMetadataConstraint $constraint
      * @param mixed $value
      * @param int|string|Metadata $metadata
-     * @param ResourceEntity $resource
      * @param array|ResourceContents $currentContents
+     * @param ResourceEntity|ResourceKind $resourceOrKind
      */
-    public function __construct($constraint, $value, $metadata, ResourceEntity $resource, $currentContents) {
+    public function __construct($constraint, $value, $metadata, $currentContents, $resourceOrKind) {
         $this->constraint = $constraint;
         $this->value = $value;
         $this->metadata = $metadata;
-        $this->resource = $resource;
         $this->currentContents = $currentContents;
+        if ($resourceOrKind instanceof ResourceEntity) {
+            $this->resource = $resourceOrKind;
+            $this->resourceKind = $resourceOrKind->getKind();
+        } elseif ($resourceOrKind instanceof ResourceKind) {
+            $this->resourceKind = $resourceOrKind;
+        } else {
+            throw new \InvalidArgumentException(
+                '$resourceOrKind must be ResourceEntity or ResourceKind, given: ' .
+                (is_object($resourceOrKind) ? get_class($resourceOrKind) : null)
+            );
+        }
     }
 
     /** @return mixed */
@@ -54,8 +67,12 @@ class MetadataConstraintCheckQuery extends AbstractCommand implements Adjustable
         return $this->metadata;
     }
 
-    public function getResource(): ResourceEntity {
+    public function getResource(): ?ResourceEntity {
         return $this->resource;
+    }
+
+    public function getResourceKind(): ResourceKind {
+        return $this->resourceKind;
     }
 
     /** @return ResourceContents */

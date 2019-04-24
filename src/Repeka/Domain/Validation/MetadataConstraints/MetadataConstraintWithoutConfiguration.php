@@ -10,7 +10,7 @@ abstract class MetadataConstraintWithoutConfiguration extends AbstractMetadataCo
         return Validator::boolType()->validate($config);
     }
 
-    final public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
+    final public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource): void {
         if ($this->isEnabled($metadata)) {
             $this->doValidateSingle($metadata, $metadataValue, $resource);
         }
@@ -20,5 +20,5 @@ abstract class MetadataConstraintWithoutConfiguration extends AbstractMetadataCo
         return $metadata->getConstraints()[$this->getConstraintName()] ?? false;
     }
 
-    abstract protected function doValidateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void;
+    abstract protected function doValidateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource): void;
 }

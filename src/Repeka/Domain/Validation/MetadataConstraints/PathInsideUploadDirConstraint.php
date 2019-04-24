@@ -12,7 +12,7 @@ class PathInsideUploadDirConstraint extends AbstractMetadataConstraint {
         return [MetadataControl::DIRECTORY, MetadataControl::FILE];
     }
 
-    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
+    public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource): void {
         if (preg_match('#[/]\.\.[/$]#', $metadataValue)) {
             throw new DomainException(
                 "You can't refer to the parent directory like in $metadataValue. If you wanted to hack us, you need to try better!",

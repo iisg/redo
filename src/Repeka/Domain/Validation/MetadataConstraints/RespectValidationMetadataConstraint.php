@@ -19,7 +19,7 @@ abstract class RespectValidationMetadataConstraint extends AbstractMetadataConst
     }
 
     /** @inheritdoc */
-    final public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
+    final public function validateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource): void {
         try {
             $this->validate($metadata, $metadataValue);
         } catch (NestedValidationException $e) {

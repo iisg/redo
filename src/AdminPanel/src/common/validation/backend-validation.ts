@@ -14,7 +14,14 @@ export class BackendValidation {
     const serializedResourceContents = this.entitySerializer.serialize(resource)['contents'];
     const response: Promise<any> = this.httpClient.createRequest('validation')
       .asPost()
-      .withContent({constraintName, value, metadataId: metadata.id, resourceId: resource.id, resourceContents: serializedResourceContents})
+      .withContent({
+        constraintName,
+        value,
+        metadataId: metadata.id,
+        resourceId: resource.id,
+        kindId: resource.kind.id,
+        resourceContents: serializedResourceContents
+      })
       .withHeader(suppressErrorHeader.name, suppressErrorHeader.value)
       .send();
     return response

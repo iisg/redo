@@ -43,8 +43,8 @@ class MetadataConstraintCheckQueryAdjuster implements CommandAdjuster {
             $this->toMetadataConstraints($command->getConstraint()),
             $metadataValue->getValue(),
             $metadata,
-            $command->getResource(),
-            $this->toResourceContents($command->getCurrentContents())
+            $this->toResourceContents($command->getCurrentContents()),
+            $command->getResource() ?: $command->getResourceKind()
         );
     }
 

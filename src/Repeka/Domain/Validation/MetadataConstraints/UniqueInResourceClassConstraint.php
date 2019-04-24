@@ -19,16 +19,18 @@ class UniqueInResourceClassConstraint extends MetadataConstraintWithoutConfigura
         return [MetadataControl::TEXT];
     }
 
-    public function doValidateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource = null): void {
-        $this->validateIsUnique(
-            $metadata->getId(),
-            $metadataValue,
-            $metadata->getResourceClass(),
-            $resource != null ? $resource->getId() : null
-        );
-        $valuesInCurrentResource = $resource->getValuesWithoutSubmetadata($metadata);
-        if ((array_count_values($valuesInCurrentResource)[$metadataValue] ?? 1) !== 1) {
-            throw new DomainException("The value '$metadataValue' is repeated.");
+    public function doValidateSingle(Metadata $metadata, $metadataValue, ResourceEntity $resource): void {
+        if ($metadataValue) {
+            $this->validateIsUnique(
+                $metadata->getId(),
+                $metadataValue,
+                $metadata->getResourceClass(),
+                $resource != null ? $resource->getId() : null
+            );
+            $valuesInCurrentResource = $resource->getValuesWithoutSubmetadata($metadata);
+            if ((array_count_values($valuesInCurrentResource)[$metadataValue] ?? 1) !== 1) {
+                throw new DomainException("The value '$metadataValue' is repeated.");
+            }
         }
     }
 
