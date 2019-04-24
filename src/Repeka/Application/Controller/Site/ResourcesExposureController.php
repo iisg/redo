@@ -56,7 +56,7 @@ class ResourcesExposureController extends Controller {
         $responseData = ['r' => $resource, 'resource' => $resource];
         $this->trackUsage($endpointUsageTrackingKey, $request, $resource);
         $response = $this->render($template, $responseData);
-        $this->denyAccessUnlessGranted(['VIEW'], $resource);
+        $this->denyAccessUnlessGranted(['METADATA_VISIBILITY'], $resource);
         if ($response->getContent()) {
             $response->headers->add($headers);
             return $response;
