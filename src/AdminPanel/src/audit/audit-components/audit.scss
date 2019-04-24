@@ -1,4 +1,4 @@
-@import "../common/styles";
+@import "../../common/styles";
 
 $minimum-width-of-input-field-for-dynamic-column: 75px;
 
@@ -17,6 +17,23 @@ audit {
     .simple-form {
       & > * {
         @include form-element();
+      }
+    }
+    .sticky-button {
+      &.audit {
+        display: flex;
+        flex-direction: column;
+        toggle-button {
+          padding: 4px;
+          button {
+            width: 100%;
+          }
+        }
+        .export-to-csv-success {
+          padding: 5px;
+          color: $green;
+          font-weight: bold;
+        }
       }
     }
   }

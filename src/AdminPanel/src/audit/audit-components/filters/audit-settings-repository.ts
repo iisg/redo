@@ -1,5 +1,5 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {FrontendConfig} from "../../config/FrontendConfig";
+import {FrontendConfig} from "config/FrontendConfig";
 import {AuditSettings} from "./audit-settings";
 
 @autoinject

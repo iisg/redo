@@ -5,9 +5,9 @@ import {
   AuditEntryDetailsResourceContentsDialog,
   AuditEntryDetailsResourceContentsDialogModel
 } from "./audit-entry-details-resource-contents-dialog";
-import {Modal} from "../../common/dialog/modal";
-import {Resource} from "../../resources/resource";
-import {ResourceKind} from "../../resources-config/resource-kind/resource-kind";
+import {Modal} from "common/dialog/modal";
+import {Resource} from "resources/resource";
+import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 
 @autoinject
 export class AuditEntryDetailsResource {

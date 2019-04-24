@@ -205,6 +205,8 @@ Users: Użytkownicy
 No users: Brak użytkowników
 Resource contents: Zawartość zasobu
 Filter_verb: Filtruj
+Export to CSV: Eksportuj do CSV
+Audit has been exported.: Audyt został wyeksportowany.
 Invalid audit filters.: Niepoprawne warunki filtrowania.
 Could not find metadata: Nie znaleziono metadanej
 No entry matches given filters.: Żaden wpis nie pasuje do zadanych kryteriów.

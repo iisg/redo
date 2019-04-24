@@ -1,7 +1,7 @@
-import {AbstractListQuery} from "../resources/abstract-list-query";
-import {AuditEntry} from "./audit-entry";
-import {DeduplicatingHttpClient} from "../common/http-client/deduplicating-http-client";
-import {EntitySerializer} from "../common/dto/entity-serializer";
+import {AbstractListQuery} from "resources/abstract-list-query";
+import {AuditEntry} from "./audit-components/audit-entry";
+import {DeduplicatingHttpClient} from "common/http-client/deduplicating-http-client";
+import {EntitySerializer} from "common/dto/entity-serializer";
 
 export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
   constructor(httpClient: DeduplicatingHttpClient, endpoint: string, entitySerializer: EntitySerializer) {
@@ -53,4 +53,7 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     return this;
   }
 
+  public exportAuditToCsv(): Promise<any> {
+    return this.httpClient.get(`${this.endpoint}/export`, this.params);
+  }
 }

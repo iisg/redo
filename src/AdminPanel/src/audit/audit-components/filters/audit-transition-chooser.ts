@@ -2,9 +2,9 @@ import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
-import {twoWay} from "../../common/components/binding-mode";
+import {twoWay} from "common/components/binding-mode";
 import {values} from "lodash";
-import {WorkflowRepository} from "../../workflows/workflow-repository";
+import {WorkflowRepository} from "workflows/workflow-repository";
 import {InCurrentLanguageValueConverter} from 'resources-config/multilingual-field/in-current-language';
 
 @autoinject

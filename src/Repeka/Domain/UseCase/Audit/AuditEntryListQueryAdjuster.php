@@ -4,8 +4,6 @@ namespace Repeka\Domain\UseCase\Audit;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Repository\MetadataRepository;
-use DateTime;
-use Repeka\Domain\Utils\EntityUtils;
 
 class AuditEntryListQueryAdjuster implements CommandAdjuster {
     /** @var MetadataRepository */

@@ -4,6 +4,7 @@
     <require from="common/components/pagination/pagination"></require>
     <require from="common/components/buttons/toggle-button"></require>
     <require from="common/components/buttons/remove-button.html"></require>
+    <require from="common/components/loading-bar/loading-cover"></require>
     <require from="./filters/audit-settings-chooser"></require>
     <require from="./filters/audit-command-name-chooser"></require>
     <require from="./filters/resource-contents-yaml-filter"></require>
@@ -11,8 +12,7 @@
     <require from="./filters/audit-user-chooser"></require>
     <require from="./filters/audit-resource-kind-chooser"></require>
     <require from="./filters/audit-transition-chooser"></require>
-    <require from="./underscores-to-hyphens"></require>
-    <require from="common/components/loading-bar/loading-cover"></require>
+    <require from="./underscores-to-hyphens-value-converter"></require>
 
     <span class="page-subtitle">${'Filters' | t}</span>
     <div class="with-sticky-button">
@@ -36,10 +36,18 @@
             <span>${'Resource contents' | t}</span>
             <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
         </div>
-        <toggle-button class="sticky-button"
-            primary-icon-name="filter-2"
-            primary-label="Filter_verb"
-            click.delegate="onFiltersChanged()"></toggle-button>
+        <div class="sticky-button audit">
+            <toggle-button primary-icon-name="filter-2"
+                primary-label="Filter_verb"
+                click.delegate="onFiltersChanged()"></toggle-button>
+            <toggle-button primary-icon-name="document"
+                primary-label="Export to CSV"
+                submitting.bind="exporting"
+                disabled.bind="exporting"
+                click.delegate="exportToCSV()"></toggle-button>
+            <div if.bind="exportSuccessText"
+                class="export-to-csv-success">${'Audit has been exported.' | t}</div>
+        </div>
     </div>
     <div if.bind="error"
         class="alert alert-danger">

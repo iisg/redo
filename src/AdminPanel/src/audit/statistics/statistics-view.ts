@@ -1,11 +1,11 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {AuditEntryRepository} from "./audit-entry-repository";
+import {AuditEntryRepository} from "../audit-entry-repository";
 import {bindable, ComponentAttached} from "aurelia-templating";
 import {Router} from "aurelia-router";
 import * as moment from "moment";
-import {StatisticsCollection} from "./statistics/statistics-collection";
-import {getQueryParameters} from "../common/utils/url-utils";
-import {changeHandler} from "../common/components/binding-mode";
+import {StatisticsCollection} from "./statistics-collection";
+import {getQueryParameters} from "common/utils/url-utils";
+import {changeHandler} from "common/components/binding-mode";
 import {debounce} from "lodash";
 import {computedFrom} from "aurelia-binding";
 

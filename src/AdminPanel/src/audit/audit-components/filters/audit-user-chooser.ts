@@ -1,8 +1,8 @@
 import {BindingEngine, Disposable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable} from "aurelia-templating";
-import {twoWay} from "../../common/components/binding-mode";
-import {MetadataValue} from "../../resources/metadata-value";
+import {twoWay} from "common/components/binding-mode";
+import {MetadataValue} from "resources/metadata-value";
 
 @autoinject
 export class AuditUserChooser {

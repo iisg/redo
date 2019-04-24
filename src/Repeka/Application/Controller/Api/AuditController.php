@@ -2,11 +2,11 @@
 namespace Repeka\Application\Controller\Api;
 
 use Assert\Assertion;
-use http\QueryString;
 use Repeka\Domain\UseCase\Audit\AuditedCommandNamesQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
+use Repeka\Domain\UseCase\Audit\AuditEntryListQueryBuilder;
+use Repeka\Domain\UseCase\Audit\AuditExportToCsvCommand;
 use Repeka\Domain\UseCase\EndpointUsageLog\StatisticsQuery;
-use Repeka\Domain\UseCase\EndpointUsageLog\StatisticsQueryBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -23,6 +23,31 @@ class AuditController extends ApiController {
      * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function getListAction(Request $request) {
+        $auditEntryListQuery = $this->getAuditEntryListQuery($request)->build();
+        $entries = $this->handleCommand($auditEntryListQuery);
+        return $this->createPageResponse(
+            $entries,
+            Response::HTTP_OK,
+            [
+                'customColumns' => $request->get('customColumns', []),
+            ]
+        );
+    }
+
+    /**
+     * @Route("/export")
+     * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
+     */
+    public function getExportAction(Request $request) {
+        $queryBuilder = $this->getAuditEntryListQuery($request);
+        $customColumns = $request->get('customColumns', []);
+        $auditExportCommand = new AuditExportToCsvCommand($queryBuilder, $customColumns);
+        $result = $this->handleCommand($auditExportCommand);
+        return $this->createJsonResponse($result);
+    }
+
+    private function getAuditEntryListQuery(Request $request): AuditEntryListQueryBuilder {
         $queryBuilder = AuditEntryListQuery::builder();
         $commandNames = $request->get('commandNames', []);
         $contentsFilter = json_decode($request->get('resourceContents', '{}'), true);
@@ -40,19 +65,15 @@ class AuditController extends ApiController {
             $dateTo = $request->get('dateTo');
             $queryBuilder->filterByDateTo($dateTo);
         }
-
         $users = $request->get('users', []);
         Assertion::isArray($users);
         $queryBuilder->filterByUsers($users);
-
         $resourceKinds = $request->get('resourceKinds', []);
         Assertion::isArray($resourceKinds);
         $queryBuilder->filterByResourceKinds($resourceKinds);
-
         $transitions = $request->get('transitions', []);
         Assertion::isArray($transitions);
         $queryBuilder->filterByTransitions($transitions);
-
         Assertion::isArray($commandNames);
         $queryBuilder->filterByCommandNames($commandNames)
             ->filterByResourceContents(is_array($contentsFilter) ? $contentsFilter : []);
@@ -61,14 +82,7 @@ class AuditController extends ApiController {
             $resultsPerPage = $request->query->get('resultsPerPage', 10);
             $queryBuilder->setPage($page)->setResultsPerPage($resultsPerPage);
         }
-        $entries = $this->handleCommand($queryBuilder->build());
-        return $this->createPageResponse(
-            $entries,
-            Response::HTTP_OK,
-            [
-                'customColumns' => $request->get('customColumns', []),
-            ]
-        );
+        return $queryBuilder;
     }
 
     /**

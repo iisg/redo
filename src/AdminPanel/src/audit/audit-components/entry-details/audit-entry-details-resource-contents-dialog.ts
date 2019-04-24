@@ -1,9 +1,9 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {DialogComponentActivate, DialogController} from "aurelia-dialog";
 import {keys, pullAll, toInteger} from "lodash";
-import {MetadataRepository} from "../../resources-config/metadata/metadata-repository";
-import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
-import {Resource} from "../../resources/resource";
+import {MetadataRepository} from "resources-config/metadata/metadata-repository";
+import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
+import {Resource} from "resources/resource";
 import {AuditEntry} from "../audit-entry";
 
 @autoinject

@@ -1,8 +1,8 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
-import {twoWay} from "../../common/components/binding-mode";
-import {AuditEntryRepository} from "../audit-entry-repository";
+import {twoWay} from "common/components/binding-mode";
+import {AuditEntryRepository} from "../../audit-entry-repository";
 
 const PLUGIN_ENTRY_PREFIX = 'resource_workflow_plugin-';
 

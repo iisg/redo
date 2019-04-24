@@ -1,6 +1,6 @@
 import {observable} from "aurelia-binding";
-import {AuditEntryListQuery} from "./audit-entry-list-query";
-import {safeJsonParse} from "../common/utils/object-utils";
+import {AuditEntryListQuery} from "../audit-entry-list-query";
+import {safeJsonParse} from "common/utils/object-utils";
 import {DateRangeConfig} from "./filters/date-range-config";
 import * as moment from "moment";
 

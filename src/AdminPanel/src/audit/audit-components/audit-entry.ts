@@ -1,6 +1,6 @@
-import {automapped, map} from "../common/dto/decorators";
-import {User} from "../users/user";
-import {IdentityMapper} from "../common/dto/mappers";
+import {automapped, map} from "common/dto/decorators";
+import {User} from "users/user";
+import {IdentityMapper} from "common/dto/mappers";
 
 @automapped
 export class AuditEntry {

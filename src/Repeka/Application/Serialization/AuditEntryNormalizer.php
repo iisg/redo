@@ -2,19 +2,18 @@
 namespace Repeka\Application\Serialization;
 
 use Repeka\Domain\Entity\AuditEntry;
-use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
+use Repeka\Domain\UseCase\Audit\AuditEntryCustomColumnsEvaluator;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 class AuditEntryNormalizer extends AbstractNormalizer implements NormalizerAwareInterface {
     use NormalizerAwareTrait;
 
-    /** @var ResourceDisplayStrategyEvaluator */
-    private $displayStrategyEvaluator;
+    /** @var AuditEntryCustomColumnsEvaluator */
+    private $auditEntryCustomColumnsEvaluator;
 
-    public function __construct(ResourceDisplayStrategyEvaluator $displayStrategyEvaluator) {
-        $this->displayStrategyEvaluator = $displayStrategyEvaluator;
+    public function __construct(AuditEntryCustomColumnsEvaluator $auditEntryCustomColumnsEvaluator) {
+        $this->auditEntryCustomColumnsEvaluator = $auditEntryCustomColumnsEvaluator;
     }
 
     /**
@@ -31,7 +30,7 @@ class AuditEntryNormalizer extends AbstractNormalizer implements NormalizerAware
             'successful' => $entry->isSuccessful(),
         ];
         if (isset($context['customColumns']) && @count($context['customColumns'])) {
-            $data['customColumns'] = $this->evaluateCustomColumns($entry, $context['customColumns']);
+            $data['customColumns'] = $this->auditEntryCustomColumnsEvaluator->evaluateCustomColumns($entry, $context['customColumns']);
         }
         return $data;
     }
@@ -39,24 +38,5 @@ class AuditEntryNormalizer extends AbstractNormalizer implements NormalizerAware
     /** @inheritdoc */
     public function supportsNormalization($data, $format = null) {
         return $data instanceof AuditEntry;
-    }
-
-    private function evaluateCustomColumns(AuditEntry $entry, array $customColumns) {
-        $data = $entry->getData();
-        foreach (['before', 'after'] as $dataField) {
-            if (isset($data[$dataField]) && isset($data[$dataField]['resource'])) {
-                $evaluated = [];
-                $contents = ResourceContents::fromArray($data[$dataField]['resource']['contents']);
-                foreach ($customColumns as $displayStrategy) {
-                    if (!trim($displayStrategy)) {
-                        $evaluated[$displayStrategy] = "";
-                    } else {
-                        $evaluated[$displayStrategy] = $this->displayStrategyEvaluator->render($contents, $displayStrategy);
-                    }
-                }
-                return $evaluated;
-            }
-        }
-        return [];
     }
 }

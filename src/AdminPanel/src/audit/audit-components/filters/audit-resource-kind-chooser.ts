@@ -2,9 +2,9 @@ import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
-import {twoWay} from "../../common/components/binding-mode";
+import {twoWay} from "common/components/binding-mode";
 import {InCurrentLanguageValueConverter} from 'resources-config/multilingual-field/in-current-language';
-import {ResourceKindRepository} from "../../resources-config/resource-kind/resource-kind-repository";
+import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 
 @autoinject
 export class AuditResourceKindChooser {

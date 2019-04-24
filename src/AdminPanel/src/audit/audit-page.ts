@@ -1,4 +1,4 @@
-import {Audit} from "./audit";
+import {Audit} from "./audit-components/audit";
 import {autoinject} from "aurelia-dependency-injection";
 import {DetailsViewTabs} from "../resources-config/metadata/details/details-view-tabs";
 import {I18N} from "aurelia-i18n";

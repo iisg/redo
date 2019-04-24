@@ -1,6 +1,6 @@
 import {map} from "common/dto/decorators";
 import {autoinject} from "aurelia-dependency-injection";
-import {MultilingualText} from "../../resources-config/metadata/metadata";
+import {MultilingualText} from "resources-config/metadata/metadata";
 
 @autoinject
 export class AuditSettings {

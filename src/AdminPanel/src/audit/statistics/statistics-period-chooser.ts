@@ -1,6 +1,6 @@
 import {bindable} from "aurelia-templating";
-import {changeHandler, twoWay} from "../../common/components/binding-mode";
-import {DateRangeConfig, statisticsRangeMode} from "../filters/date-range-config";
+import {changeHandler, twoWay} from "common/components/binding-mode";
+import {DateRangeConfig, statisticsRangeMode} from "../audit-components/filters/date-range-config";
 
 export class StatisticsPeriodChooser {
   @bindable(changeHandler('updateDateOption')) dateOption;

@@ -3,10 +3,10 @@ import {bindable, ComponentAttached} from "aurelia-templating";
 import "eonasdan-bootstrap-datetimepicker";
 import {values} from "lodash";
 import * as moment from "moment";
-import {ChangeEvent} from "../../common/events/change-event";
-import {changeHandler, twoWay} from "../../common/components/binding-mode";
-import {isString} from "../../common/utils/object-utils";
-import {DateMode, FlexibleDateContent, inputDateConfig} from "../../resources/controls/input/flexible-date-input/flexible-date-config";
+import {ChangeEvent} from "common/events/change-event";
+import {changeHandler, twoWay} from "common/components/binding-mode";
+import {isString} from "common/utils/object-utils";
+import {DateMode, FlexibleDateContent, inputDateConfig} from "resources/controls/input/flexible-date-input/flexible-date-config";
 import {DateRangeConfig, DateRangeMode} from "./date-range-config";
 import {EventAggregator} from "aurelia-event-aggregator";
 

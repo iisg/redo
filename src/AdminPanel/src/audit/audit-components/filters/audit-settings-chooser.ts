@@ -3,7 +3,7 @@ import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
 import {observable} from "aurelia-binding";
-import {twoWay} from "../../common/components/binding-mode";
+import {twoWay} from "common/components/binding-mode";
 import {InCurrentLanguageValueConverter} from 'resources-config/multilingual-field/in-current-language';
 import {AuditListFilters} from "../audit-list-filters";
 import {AuditSettings} from "./audit-settings";

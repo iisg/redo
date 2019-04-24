@@ -7,7 +7,7 @@ import {Alert} from "common/dialog/alert";
 import {DeleteEntityConfirmation} from "common/dialog/delete-entity-confirmation";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {SystemMetadata} from "resources-config/metadata/system-metadata";
-import {AuditListFilters} from "../../audit/audit-list-filters";
+import {AuditListFilters} from "../../audit/audit-components/audit-list-filters";
 import {HasRoleValueConverter} from "../../common/authorization/has-role-value-converter";
 import {ResourceClassTranslationValueConverter} from "../../common/value-converters/resource-class-translation-value-converter";
 import {DetailsViewTabs} from "../../resources-config/metadata/details/details-view-tabs";

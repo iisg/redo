@@ -1,5 +1,5 @@
 import {parse as parseYaml, stringify as stringifyYaml} from "yamljs";
-import {twoWay} from "../../common/components/binding-mode";
+import {twoWay} from "common/components/binding-mode";
 import {bindable} from "aurelia-templating";
 import {observable} from "aurelia-binding";
 
