@@ -117,10 +117,7 @@
                             </dt>
                             <dd>
                                 {% for metadataValue in metadataValues %}
-                                    {% include 'redo/resource-details/metadata-display.twig' %}
-                                    {% if not loop.last %}
-                                        <br>
-                                    {% endif %}
+                                    <div class="metadata-value"> {% include 'redo/resource-details/metadata-display.twig' %} </div>
                                 {% endfor %}
                             </dd>
                         {% endif %}
