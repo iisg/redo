@@ -10,6 +10,7 @@ use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
@@ -24,9 +25,9 @@ use Repeka\Domain\UseCase\Metadata\MetadataCreateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandHandler;
-use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
+use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
+use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
-use Repeka\Domain\UseCase\Resource\ResourceUpdateContentsCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowCreateCommand;
@@ -303,8 +304,8 @@ class ResourcesSchemaLoader {
     }
 
     private function createOrUpdateResource(ResourceKind $resourceKind, Metadata $identifiableMetadata, array $resourceContents) {
-        $contents = $this->resourceContentsAdjuster->adjust($resourceContents);
-        $identifiableValue = current($contents->getValuesWithoutSubmetadata($identifiableMetadata));
+        $newContents = $this->resourceContentsAdjuster->adjust($resourceContents);
+        $identifiableValue = current($newContents->getValuesWithoutSubmetadata($identifiableMetadata));
         $identifiableValue = addcslashes($identifiableValue, '()[].*+');
         $query = ResourceListQuery::builder()
             ->filterByResourceKind($resourceKind)
@@ -313,15 +314,14 @@ class ResourcesSchemaLoader {
         $resources = $this->resourceRepository->findByQuery($query);
         if ($resources->count()) {
             $resource = $resources->getResults()[0];
-            $contents = $this->ensureExistingContentsNotRemoved($resource->getContents(), $contents);
-            $resource = $this->commandBus->handle(
-                new ResourceUpdateContentsCommand($resources->getResults()[0], $contents)
-            );
         } else {
-            $resource = $this->commandBus->handle(
-                new ResourceCreateCommand($resourceKind, $contents)
-            );
+            $resource = new ResourceEntity($resourceKind, ResourceContents::empty());
+            $resource = $this->resourceRepository->save($resource);
         }
+        $newContents = $this->ensureExistingContentsNotRemoved($resource->getContents(), $newContents);
+        $update = ResourceGodUpdateCommand::builder()->setResource($resource)->setNewContents($newContents)->build();
+        $this->commandBus->handle($update);
+        $this->commandBus->handle(new ResourceEvaluateDisplayStrategiesCommand($resource));
         return $resource;
     }
 

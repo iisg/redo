@@ -36,13 +36,14 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
         return $builder;
     }
 
-    /** @param ResourceKind[] | int[] $resourceKinds */
+    /** @param ResourceKind[] | int[] | string[] $resourceKinds */
     public function filterByResourceKinds(array $resourceKinds): self {
         $this->resourceKinds = array_values(array_merge($this->resourceKinds, $resourceKinds));
         return $this;
     }
 
-    public function filterByResourceKind(ResourceKind $resourceKind): self {
+    /** @param ResourceKind|string|int $resourceKind */
+    public function filterByResourceKind($resourceKind): self {
         return $this->filterByResourceKinds([$resourceKind]);
     }
 
@@ -60,7 +61,11 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
-    public function sortBy(array $sortBy): self {
+    /** @param array|ResourceListQuerySort[]|ResourceListQuerySort $sortBy */
+    public function sortBy($sortBy): self {
+        if (!is_array($sortBy)) {
+            $sortBy = [$sortBy];
+        }
         $this->sortBy = array_replace($this->sortBy, $sortBy);
         return $this;
     }
@@ -84,6 +89,7 @@ class ResourceListQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
+    /** @param string[] $workflowPlacesIds */
     public function filterByWorkflowPlacesIds(array $workflowPlacesIds): self {
         $this->workflowPlacesIds = $workflowPlacesIds;
         return $this;

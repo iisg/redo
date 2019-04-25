@@ -108,6 +108,12 @@ class ResourceEntity implements Identifiable, HasResourceClass {
         return $this->getWorkflow()->getPlaces($this);
     }
 
+    public function getCurrentPlace(): ResourceWorkflowPlace {
+        $places = $this->getCurrentPlaces();
+        Assertion::count($places, 1, 'Resource is currently in more than one place.');
+        return $places[0];
+    }
+
     public function updateDisplayStrategyDependencies(int $metadataId, ResourceDisplayStrategyUsedMetadataCollector $collector) {
         $this->displayStrategyDependencies = (new ResourceDisplayStrategyDependencyMap($this->displayStrategyDependencies))
             ->clear($metadataId)

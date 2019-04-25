@@ -1,11 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceKind;
 
-use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\UseCase\Audit\AbstractListQuery;
 
-class ResourceKindListQuery extends AbstractListQuery implements AdjustableCommand {
+class ResourceKindListQuery extends AbstractListQuery {
     use RequireNoRoles;
 
     /** @var int[] */

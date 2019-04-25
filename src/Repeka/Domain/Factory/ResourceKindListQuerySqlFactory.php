@@ -92,7 +92,7 @@ class ResourceKindListQuerySqlFactory {
         foreach ($sortByIds as $columnSort) {
             $sortBy = $columnSort['columnId'];
             $direction = $columnSort['direction'];
-            $language = $columnSort['language'];
+            $language = $columnSort['language'] ?? 'PL';
             if ($sortBy === 'id' || $sortBy === 'name') {
                 $this->orderBy[] = "rk.$sortBy " . $direction;
             } elseif ($sortBy == 'label') {

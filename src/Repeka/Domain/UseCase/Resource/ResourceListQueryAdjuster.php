@@ -9,7 +9,6 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjusterComposite;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
-use Repeka\Domain\UseCase\ColumnSortDataConverter;
 
 class ResourceListQueryAdjuster implements CommandAdjuster {
 
@@ -17,20 +16,16 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
     private $metadataRepository;
     /** @var ResourceKindRepository */
     private $resourceKindRepository;
-    /** @var ColumnSortDataConverter */
-    private $columnSortDataConverter;
     /** @var MetadataValueAdjusterComposite */
     private $metadataValueAdjuster;
 
     public function __construct(
         MetadataRepository $metadataRepository,
         ResourceKindRepository $resourceKindRepository,
-        ColumnSortDataConverter $columnSortDataConverter,
         MetadataValueAdjusterComposite $metadataValueAdjuster
     ) {
         $this->metadataRepository = $metadataRepository;
         $this->resourceKindRepository = $resourceKindRepository;
-        $this->columnSortDataConverter = $columnSortDataConverter;
         $this->metadataValueAdjuster = $metadataValueAdjuster;
     }
 
@@ -43,7 +38,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
             $query->getIds(),
             $query->getResourceClasses(),
             $this->convertResourceKindIdsToResourceKinds($query->getResourceKinds()),
-            $this->columnSortDataConverter->convertSortByMetadataColumnsToIntegers($query->getSortBy()),
+            $this->convertSortByMetadataColumnsToIntegers($query->getSortBy()),
             $query->getParentId(),
             $this->adjustContents($query->getContentsFilters()),
             $query->onlyTopLevel(),
@@ -60,7 +55,7 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
             function ($resourceKindOrId) {
                 return $resourceKindOrId instanceof ResourceKind
                     ? $resourceKindOrId
-                    : $this->resourceKindRepository->findOne($resourceKindOrId);
+                    : $this->resourceKindRepository->findByNameOrId($resourceKindOrId);
             },
             $resourceKindIds
         );
@@ -84,6 +79,22 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
                     );
             },
             $contentsFilters
+        );
+    }
+
+    public function convertSortByMetadataColumnsToIntegers(array $sortByIds): array {
+        return array_map(
+            function ($sortBy) {
+                if ($sortBy instanceof ResourceListQuerySort) {
+                    $sortBy = $sortBy->toArray();
+                }
+                $sortId = is_numeric($sortBy['columnId']) ? intval($sortBy['columnId']) : $sortBy['columnId'];
+                if (!is_numeric($sortId) && !in_array($sortId, ['id', 'kindId'])) {
+                    $sortId = $this->metadataRepository->findByName($sortId)->getId();
+                }
+                return ['columnId' => $sortId, 'direction' => $sortBy['direction']];
+            },
+            $sortByIds
         );
     }
 }

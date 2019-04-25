@@ -5,7 +5,6 @@ use Respect\Validation\Rules\AbstractRule;
 use Respect\Validation\Validator;
 
 class ResourceMetadataSortCorrectStructureRule extends AbstractRule {
-
     public function validate($input) {
         return Validator
             ::arrayType()->each(
@@ -16,7 +15,7 @@ class ResourceMetadataSortCorrectStructureRule extends AbstractRule {
                         Validator::in(['ASC', 'DESC'])
                             ->setTemplate('sort direction is not correct')
                     ),
-                    Validator::key('language', Validator::stringVal())
+                    Validator::key('language', Validator::stringVal(), false)
                 )
             )->validate($input);
     }
