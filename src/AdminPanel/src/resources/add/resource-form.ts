@@ -164,6 +164,9 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
 
   validateAndSubmit() {
     const transitionId = this.transition && this.transition.id;
+    if (this.submitting) {
+      return;
+    }
     this.submitting = true;
     this.disabled = true;
     this.validationError = false;
@@ -171,8 +174,10 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
       this.resource.contents = this.copyContentsAndFilterEmptyValues(this.resource.contents);
       this.changeLossPreventer.disable();
       return this.submit({savedResource: this.resource, transitionId, newResourceKind: this.resource.kind, places: this.places})
-        .then(() => this.editing || (this.resource = new Resource)).finally(() => this.submitting = false);
+        .then(() => this.editing || (this.resource = new Resource))
+        .finally(() => this.submitting = false);
     } else {
+      this.element.dispatchEvent(CustomEvent.newInstance('submitting', true));
       this.validationController.validate().then(result => {
         if (result.valid) {
           this.changeLossPreventer.disable();
@@ -180,6 +185,7 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
             .then(() => this.editing || (this.resource = new Resource));
         } else {
           this.validationError = true;
+          this.element.dispatchEvent(CustomEvent.newInstance('submitting', false));
         }
       }).finally(() => {
         this.submitting = false;
