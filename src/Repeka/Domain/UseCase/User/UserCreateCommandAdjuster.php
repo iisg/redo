@@ -23,7 +23,7 @@ class UserCreateCommandAdjuster implements CommandAdjuster {
     }
 
     public static function normalizeUsername(string $username) {
-        $username = preg_replace('#[^a-z0-9_\./-@]#i', '', $username);
+        $username = preg_replace('#[^a-z0-9_\./-@\+]#i', '', $username);
         return strtolower($username);
     }
 }
