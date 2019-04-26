@@ -91,8 +91,6 @@ $download-options-flex-grow: 1;
     }
   }
   .details-container {
-    padding-top: $gap-size / 4;
-    padding-bottom: $gap-size / 4;
     dl {
       margin-bottom: 0;
       dt {
@@ -134,7 +132,7 @@ $download-options-flex-grow: 1;
   }
 
   @media (min-width: $minimum-screen-width-for-regular-layout) {
-    padding: $gap-size * 3 / 2;
+    padding: $gap-size / 2 $gap-size * 3 / 2;
     .top-container {
       .resource-image-with-title-container-with-actions {
         .resource-image {
@@ -164,7 +162,7 @@ $download-options-flex-grow: 1;
       }
     }
     .child-resources {
-      padding-top: $gap-size * 5 / 4;
+      padding-top: 0;
     }
   }
 }
