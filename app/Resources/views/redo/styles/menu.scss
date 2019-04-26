@@ -117,6 +117,7 @@ $folding-animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
   }
   .top-search-bar {
     display: flex;
+    margin-right: 2 * $default-gap-size;
     padding: $default-gap-size * 5 / 8 $default-gap-size / 2;
     & > * {
       background-color: $primary-background-color;
