@@ -1,0 +1,143 @@
+Search: Suchen
+Browse: Durchsehen
+For authors: Für Autoren
+# [Missing] Report remark
+Deposit: Deponieren
+My resources: Menie Ressourcen
+Admin panel: Verwaltungspanel
+Home page: Hauptseite
+Search in repository resources: In Ressourcen des Repositoriums suchen
+search_large_placeholder: In Ressourcen des Repositoriums suchen
+search_small_placeholder: In Ressourcen suchen
+search_results_page_title: Ergenisse des Aussuchens
+# [Missing] Browse collections
+
+# [Missing] search_button
+# [Missing] User menu
+
+Error: Fehler
+The page you requested does not exist: Seite, die Sie gefunden haben, existiert nicht
+The page you requested caused application error: Seite, die Sie gefunden haben, har einen Anwendungsfehler verursacht
+
+# [Missing] Login data is incorrect
+sign_in_title: Einloggen
+Sign in: Einloggen
+Remind password: Passwort vergessn
+Contact administrator: Kontakt mit dem Administrator
+Sign out: Ausloggen
+
+# [Missing] page
+next_page: Nächste
+previous_page: Vorige
+
+Recently added: Letztens zugefügt
+Statistics: Statistiken
+All items: Anzahl aller Positionen
+Items added last month: Anzahl der Positionen, die im letzten Monat zugefügt wurden
+Items added last year: Anzahl der Positionen, die im letzten Jahr zugefügt wurden
+Collection: Sammlung
+Download: Herunterladen
+RSS feed: RSS-Kanal
+Additional information: Sonstige Informationen
+Collection items: Elemente der Sammlung
+REDO collection: REDO-Sammlung
+Resource attributes: Eignschaften der Ressourcen # attributes?
+Collections: Sammlungen
+Filter: Filtern
+No results: Keine Ergebnisse
+Search results: Ergebnisse des Aussuchens
+Advanced search: Erweiterte Suche
+Filters: Filter
+Clear filters: Filter reinigen
+Type: Typ
+fragments: Fragmente
+# [Missing] Most downloads
+# [Missing] Number of downloads
+
+# [Missing] Go to main page of Repozytorium Politechniki Krakowskiej
+# [Missing] Main page of Repozytorium Politechniki Krakowskiej
+# [Missing] Show filters
+# [Missing] Hide filters
+# [Missing] Show more
+# [Missing] Show less
+# [Missing] Expand
+# [Missing] Collapse
+# [Missing] Politechnika Krakowska
+# [Missing] Main page
+# [Missing] Login
+# [Missing] Password
+# [Missing] Facebook
+# [Missing] Change contrast
+# [Missing] language_pl
+# [Missing] language_en
+# [Missing] language_de
+
+Deposit - resource kind: Deponieren – Typ der Ressourcen
+Deposit - collection: Deponieren – Sammlung
+Deposit - add: Deponieren – hinzufügen
+No resources: Keine Ressourcen
+Parent resource: Übergeordnete Ressourcen
+Resource state: Stand der Ressourcen
+Allowed operations: Zugelassene Operationen
+Edit: Bearbeiten
+Select resource kind: Typ der Ressourcen auswählen
+No kinds available to add resource: Keine Typen, in denen Sie Ressourcen hinzufügen können
+Resource kind: Typ der Ressourcen
+Select collection: Sammlung wählen
+No collections available to add resource: Keine Sammlungen, in denen Sie Ressourcen hinzufügen können
+# [Missing] Resource details
+
+Report an issue with the resource: Problem mit Ressourcenn anmelden
+Share on Facebook: Auf Facebook zur Verfügung stellen
+# [Missing] Browse resource
+Download resource: Ressourcen herunterladen
+Download resource in PDF format: Ressourcen im PDF-Format herunterladen
+# [Missing] Download resource in EPUB format
+Download resource in MOBI format: Ressourcen im MOBI-Format herunterladen
+Download resource data in BibTeX format: Informationen über die Ressourcen im BibTeX-Format herunterladen
+Download resource data in EndNote format: Informationen über die Ressourcen im EndNote-Format herunterladen
+Download resource data in ISO 690 format: Informationen über die Ressourcen im ISO 690-Format herunterladen
+# [Missing] Unavailable
+Cite resource: Ressourcen zitieren
+# [Missing] No scans
+
+Add to favorites: Zu bevorzugten hinzufügen
+Resource RSS channel: RRS-Kanal der Ressourcen
+
+# [Missing] privacy_policy_information
+# [Missing] privacy policy
+# [Missing] I understand
+
+Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.: Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.
+
+# [Missing] You are not allowed to view this resource
+# [Missing] Resource does not exist
+
+# [Missing] Choose the resource kind you want to create from the list below
+# [Missing] Resource add wizard
+# [Missing] Next
+# [Missing] Selected resource kind
+# [Missing] change
+# [Missing] Choose the collection to put the resource in
+# [Missing] Selected collection
+# [Missing] Finish later
+# [Missing] Deposit now
+# [Missing] Deposit later
+# [Missing] Resource data
+# [Missing] Congratulations! Your resource has been added.
+# [Missing] Go to my resources list
+# [Missing] deposited
+# [Missing] continue depositing
+# [Missing] State
+# [Missing] My data
+# [Missing] Confirm now
+# [Missing] Confirm later
+# [Missing] No data
+# [Missing] Personal data
+# [Missing] Go forward
+# [Missing] Email address
+# [Missing] Remark title
+# [Missing] Remark content
+# [Missing] Report
+# [Missing] Congratulations! Your remark has been reported.
+# [Missing] Save

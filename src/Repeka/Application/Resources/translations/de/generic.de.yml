@@ -1,0 +1,253 @@
+adminPanelName: Verwaltung {{applicationName}}
+meta:
+  translatedName: Deutsch
+  flag: DE
+day: Tag
+month: Monat
+year: Jahr
+date_time: Zeit
+# [Missing] Range
+Upload max file size: Maximale Größe der Datei
+Administration Panel: Verwaltungspanel
+Data import: Import von Daten
+Import data from Excel: Daten aus Excel importieren
+Name: Bezeichnung
+Label: Angezeigte Bezeichnung
+Audit: Audit
+# [Missing] Statistics
+Relationships: Verhältnisse
+Control: Kontrollanzeige
+Group: Gruppe
+Unknown group: Unbekannte Gruppe
+Other metadata: Sonstige Metadaten
+Description: Beschreibung
+Hint: Tipp
+Add: Hinzufügen
+Edit: Bearbeiten
+Save: Speichern
+Save as a copy: Als Kopie speichern
+Create: Bilden
+Apply: Bestätigen
+Cancel: Annullieren
+Back to list: Zurück zur Liste
+Flag: Flagge
+Language: Sprache
+Workflow: Prozess
+Metadata: Metadaten
+Metadata_single: Eine der Metadaten
+Child resources: TeilRessourcen
+Resource id: ID der Ressourcen
+Resource kind: Art der Ressourcen
+Select flag: Flagge wählen
+Code: Code
+Add next metadata kind: Nächste Art Metadaten angeben
+Select: Wählen
+Change order: Reihenfolge ändern
+Changing order: Reihenfolgeänderung
+Drag to change order: Bewegen, um die Reihenfolge zu ändern
+Roles: Rolle
+First Name: Vorname
+Last Name: Name
+Details: Details
+Username: Name des Benutzers
+# [Missing] Saved settings
+You do not have permission to access this page: Kein Zugang zu dieser Seite
+The element could not be found: Element kann nicht gefunden werden
+Please check if you have entered correct address or use the menu on the left side: Korrektheit der eingetragenen Adresse nachprüfen oder Menü links nutzen
+Alternatively, go back to the: Alternativ zurück zu
+previous page: voriger Seite
+Server returned error 404 - Not Found: Server gab Fehler 404 zurück – nicht gefunden
+Server returned error 403 - Forbidden: Server gab Fehler 404 zurück – verboten
+No matches found for {0}: Kein Element passt zu {0}
+Resource: Ressourcen
+User: Benutzer
+Error {{code}}: Fehler {{code}}
+Close: Schließen
+Show Profiler: Profiler zeigen
+Remove: Löschen
+Manage: Verwalten
+Mark as initial: Als anfänglich bezeichnen
+New place: Neuer Stand
+No transitions from the current place.: Keine Ausgänge aus dem aktuellen Stand.
+Simulation: Simulation
+End simulation: Simulation beenden
+Transition: Übergang
+Place: Stand
+Choose the next transition: Nächsten Übergang wählen
+Use the context menu (right-click to open it) to add an element, select any element on the diagram to edit it: Kontextmenü nutzen (zugänglich nach dem Klicken der rechten Taste der Maus) um das Element hinzuzufügen, ein beliebiges Element auf dem Graph bezeichnen, um ihn zu bearbeiten
+Start the simulation.: Mit der Simulation anfangen
+Thumbnail: Miniatur
+Add submetadata kind: Art der Teilmetadaten hinzufügen
+Submetadata kinds: Arten von Metadaten
+Add based on an existing one: Aufgrund des existierenden hinzufügen
+Add new: Den neuen hinzufügen
+No submetadata kinds.: Keine Arten von Metadaten
+Roles allowed to apply transition: Berechtigt, Übergang durchzuführen
+Select file: Wählen
+Required resource kind: Angeforderte Art der Ressourcen
+Available child resource kind: Zugelassene Arten der TeilRessourcen
+One of the selected: Einer unter ausgewählten
+# [Missing] Allow to clone resources
+# [Missing] Allowed to clone resources
+Clear overridden value: Originellen Wert zurückgeben
+Add value: Wert hinzufügen
+Remove value: Wert löschen
+Select values: Werte wählen
+Hide tree: Baum ausblenden
+ID in relationships: ID für Verhältnisse
+Show in brief: In der Zusammenfassung zeigen
+Copy metadata to child resource: Metadaten in TeilRessourcen kopieren
+You don't have required role: Sie besitzen nicht die angeforderte Rolle
+Someone else is assigned this action: Andere Person ist dieser Maßnahme bestimmt
+Missing metadata: Eine fehlende von Metadaten
+bool:
+  "true": Ja
+  "false": Nein
+Collapse: Einklappen
+Expand: Entwickeln
+# [Missing] Open in a dialog window
+No results: Keine Ergebnisse
+Loading more results: Nächste Elemente herunterladen
+Loading: Herunterladen
+Load more: Mehr herunterladen
+Load error: Fehler beim Herunterladen
+Searching: Aussuchen
+Confirm deletion: Löschung bestätigen
+Are you sure you want to delete {{entityType}} {{caption}}?: Wollen Sie sicher löschen{{entity}} {{caption}}?
+Delete: Löschen
+"Resource #{{id}} doesn't exist": "Ressourcen #{{id}} existieren nicht"
+Resource has children: Die Ressourcen haben TeilRessourcen
+Delete or disown them first to delete this resource: Löschen Sie sie oder ändern ihre übergeordneten Ressourcen, um diese Ressourcen zu löschen
+The searched phrase is incorrect: Die gesuchte Phrase ist nicht korrekt
+Legend: Legende
+In this state metadata value is:: Die Symbole bedeuten, dass in einem Stand des Prozesses:
+optional_female: eine der Metadaten keinen Wert haben muss
+required_female: eine der Metadaten einen Wert haben muss
+locked_female: der Wert einer der Metadaten geändert werden muss
+specifies assignee: der Wert einer der Metadaten den Benutzer bestimmt, der für die Aufgabe bestimmt ist
+specifies auto assignee: der Wert einer der Metadaten den Benutzer bestimmt, der für die Aufgabe bestimmt ist; ist er nicht eingestellt, wird automatisch der Benutzer ausgewählt, der die Ressourcen in diesen Stand platziert
+only for relationships with users: Option nur für Verhältnisse mit Benutzern zugänglich
+tasks:
+  header:
+    own: Ihre laufenden Aufgaben
+    possible: Andere Aufgaben, die Sie ausführen können
+  empty:
+    own: Keine laufenden Aufgaben!
+    possible: Keine Aufgaben.
+    all: Keine Aufgaben!
+Possible actions: Mögliche Maßnahmen
+Fix: Reparieren
+You cannot revoke system roles from yourself.: Się können sich keine Systemrolle auswählen.
+Resource doesn't exist: Die Ressourcen existieren nicht
+Resource kind doesn't exist: Die Art der Ressourcen existiert nicht
+Metadata doesn't exist: Eine der Metadaten existieren nicht
+Configuration: Konfiguration
+At most: Höchstens
+At least: Mindestens
+Minimum: Minimum
+Maximum: Maximum
+Unlimited: Keine Beschränkungen
+Value is required: Der Wert ist erforderlich
+At least one required: Mindestens eines erforderlich
+At most {{max}} values required: Höchstens erforderliche {{max}} Werte
+No value count constraints: Keine Beschränkungen der Anzahl von Werten
+Import data from KOHA: Daten aus KOHA importieren
+Import: Importieren
+Digits only: Nut Ziffern
+Resource with barcode {{barcode}} doesn't exist.: Ressourcen mit dem Barcode {{barcode}} existiert nicht
+Configuration file: Konfigurationsdatei
+Resource code: Code der Ressourcen
+Unknown transform {{name}}: Unbekannte Umwandlung {{name}}
+Unclosed string literal {{literal}}: Aufschrift nicht geschlossen  {{literal}}
+Invalid field format {{format}}: Feldformat nicht korrekt {{format}}
+Invalid subfield format {{format}}: Teilfeldformat nicht korrekt {{format}}
+Missing subfield {{name}}: Teilfeld fehlt {{name}}
+Invalid expression {{expression}}: Ausdruck nicht korrekt {{expression}}
+Invalid request: Forderung nicht korrekt
+Import successful: Import erfolgreich
+Values that are already present will be omitted.: Werte, die schon existieren, werden ausgelassen
+Ignored values unsuitable for their metadata controls:: Ignorierte Werte, die nicht den Kontrollanzeigen von Metadaten entsprechen
+Ignored values that have no matching metadata in this resource kind:: Ignorierte Werte, die keine entsprechenden Metadaten in der Art der Ressourcen besitzen
+File is not a valid import configuration: Die Datei ist keine korrekte Konfiguration des Imports.
+To states: Zum Stand
+And move to states: und zu den Ständen übergehen
+And move to state: und zum Stand übergehen
+# [Missing] Some form requirements have not been met. Fix the errors and try again.
+To select resources choose allowed resource kinds in metadata settings.: Um Ressourcen zu wählen, zugelassene Arten der Ressourcen in den Einstellungen der Metadaten wählen.
+Additional filter limits results in this dropdown: Ein zusätzlicher Filter beschränkt die Ressourcen, die in obigem Feld angezeigt werden
+Additional filter would limit results in this dropdown during normal edit: Ein zusätzlicher Filter würde die Ressourcen beschränken, die in obigem Feld bei Standardbearbeitung angezeigt würden
+Filter defined in metadata kind settings is disabled for this resource kind: Der Filter, der in den Einstellungen der Metadaten definiert ist, ist für diese Art von Ressourcen ausgeschaltet
+Go to the metadata kind settings: Zu den Einstellungen der Art von Metadaten übergehen
+Go to the resource kind settings: Zu den Einstellungen der Art von Ressourcen übergehen
+Filter: Ein FSome form requirements have not been met. Fix the errors and try again.ilter
+Metadata kind: Art der Metadaten
+Firstly, specify required resource kind.: Zuerst die erforderte Art der Ressourcen bestimmen.
+Results per page: Ergebnisse auf der Seite
+"Resource #{{id}} state, as of": "„Stand der Ressourcen #{{id}} für den"
+# [Missing] State
+# [Missing] Before
+# [Missing] After
+# [Missing] View change in contents
+Date: Datum
+Operation: Operation
+Filters: Filter
+# [Missing] Period of time
+# [Missing] Show
+# [Missing] Number of resources in system
+# [Missing] Number of open resources
+# [Missing] IP address
+# [Missing] Group sum
+Pending resources in this state: Wartende Ressourcen im Stand
+First remove all resources from this state to delete state: Zuerst alle Ressourcen aus diesem Stand löschen, um den Stand zu löschen
+Number of Resources in this state:: Zahl von Ressourcen in diesem Stand:
+Example resources in this state:: Beispiele für Ressourcen in diesem Stand:
+Users: Benutzer
+No users: Keine Benutzer
+Resource contents: Inhalt der Ressourcen
+Filter_verb: Filtern
+Invalid audit filters.: Bedingungen für Filtern nicht korrekt
+Could not find metadata: Metadaten nicht gefunden
+No entry matches given filters.: Kein Eintrag passt zu den angegebenen Kriterien
+Resource display strategy: Strategie für Anzeigen der Ressourcen
+Add dynamic column: Dynamische Spalte hinzufügen
+Automatically set the same value for the states on the right: Denselben Wert für Stände rechts von Bezeichnung einstellen
+Keep in mind that you can not change the workflow for resource kind after choosing it once. Select with care.: Der bereits gewählte Prozess für die Art der Ressourcen kann nicht mehr geändert werden. Vergewissern Sie sich, dass der gewählte Prozess korrekt ist.
+Current places: Aktuelle Stände
+Target places: Bestimmungsstände
+Filter metadata kinds by selecting the resource kinds: Nur die Arten von Metadaten zeigen, die zu ausgewählten Arten von Ressourcen gehören
+Save the workflow in order to configure workflow plugins.: Prozess speichern, um die Konfiguration von Plugins bearbeiten zu können
+Operator of the resource classes: Operator der Ressourcen-Klassen
+Administrator of the resource classes: Administrator der Ressourcen-Klassen
+No roles.: Keine Rollen.
+Additional actions when entering this state: Zusätzliche Aktionen beim Eingang in den Stand
+Places in workflow: Stände im Prozess
+Changes in the form will be lost: Änderungen im Formular gehen verloren
+Stay: Bleiben
+Discard changes: Änderungen aufgeben
+You do not have permissions to add resource.: Sie haben keine Befugnisse, die Ressourcen hinzuzufügen
+You do not have permissions to clone resource.: Sie haben keine Befugnisse, die Ressourcen zu klonen
+# [Missing] Clone
+# [Missing] Number of cloned resources
+# [Missing] Number must be between 1 and 50
+Resource kind does not allow to add resource.: Die Art der Ressourcen ermöglicht nicht, TeilRessourcen hinzuzufügen.
+You are editing the resource without validations.: Sie bearbeiten die Ressourcen ohne angegebene Validationsregel
+Make any changes wisely.: Alle Änderungen sorgfältig einführen.
+Select date mode:: Modell des Datums wählen:
+Select date mode for range:: Modell des Datums für den Bereich wählen:
+Dynamic metadata values may be obsolete.: Werte dynamischer Metadaten können nicht mehr aktuelle sein.
+Save resource to upload its files: Die Ressourcen speichern, um die Versendung von Dateien zu ermöglichen.
+Resource files: Dateien der Ressourcen
+Open resource file manager: Dateien der Ressourcen öffnen
+"files: {{files}}, directories: {{directories}}": "Dateien: {{files}}, Teilkataloge: {{directories}}"
+Browse on website: Auf der Webseite sehen
+Values of this metadata should be generated instead of given from user: Werte dieser Metadaten sind zu generieren statt vom Benutzer eingeführt zu werden
+This setting cannot be changed after metadata creation.: Diese Einstellung kann nicht nach der Bildung der Art der Metadaten geändert werden.
+Dynamic metadata: Dynamische Metadaten
+Display strategy: Anzeige-Strategie
+yes: ja
+no: nein
+Determines assignees: Für Bestimmung der Aufgaben der Benutzer verwendet
+Display strategy playground: Tester der Anzeige-Strategie
+Enter a display strategy template you want to evaluate in context of the current resoruce: Strategieschablone eintragen, um sie im Kontext der aktuellen Ressourcen zu renderieren
+# [Missing] Search results
+# [Missing] Number of characters

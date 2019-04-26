@@ -1,0 +1,32 @@
+"No more than {{maxCount}} values allowed": "Maximale Anzahl der Werte: {{maxCount}}"
+# [Missing] Value is required
+"At least {{minCount}} values required": "Minimale Anzahl der Werte: {{minCount}}"
+"Value must be between {{minMaxValue.min}} and {{minMaxValue.max}}": "Der Wert muss sich im Bereich von {{minMaxValue.min}} bis {{minMaxValue.max}} enthalten"
+"Value must be at most {{minMaxValue.max}}": "Der Wert kann nicht höher als {{minMaxValue.max}} sein"
+"Value must be at least {{minMaxValue.min}}": "Der Wert kann nicht niedriger als {{minMaxValue.min}} sein"
+Tree must be closed after selecting: Ist der Wert gewählt worden, ist der Baum zu schließen
+regex_failed: "Der Wert muss zum regelmäßigen Ausdruck passen: {{metadata.constraints.regex}}"
+uniqueInResourceClass_failed: "{{metadata.label.DE}} mit angegebenem Wert existiert schon"
+# [Missing] pesel_failed
+# [Missing] nip_failed
+# [Missing] regon_failed
+# [Missing] otherInfo_failed
+# [Missing] mustBeTrue_failed
+
+labels:
+  maxCount: Maximale Anzahl der Werte
+  regex: Regelmäßger Ausdruck
+  resourceKind: Erforderte Art der Ressourcen
+  relatedResourceMetadataFilter: Zusätzlicher Filter der Ressourcen
+  minMaxValue: Minimaler und maximaler Wert
+  displayStrategy: Schablone
+  doublePrecision: Anzahl Dezinalstellen beim Anzeigen
+  uniqueInResourceClass: Einzigartigkeit in der Ressourcennklasse
+  fileUploaderType: Dateien herunterladen durch
+  # [Missing] relationshipSelectorType
+  # [Missing] pesel
+  # [Missing] nip
+  # [Missing] regon:
+  # [Missing] noConfigurationConstraints
+  # [Missing] otherInfo
+  # [Missing] mustBeTrue

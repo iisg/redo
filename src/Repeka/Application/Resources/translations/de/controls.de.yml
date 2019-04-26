@@ -1,0 +1,29 @@
+text: Text
+textarea: Langer Text
+wysiwyg-editor: Editor WYSIWYG
+integer: Ganze Zahl
+double: Reelle Zahl
+flexible-date: Flexibles Datum
+date-range: Datenbereich
+timestamp: Zeitstempel
+boolean: Ja / Nein
+relationship: Verhältnis
+file: Datei
+directory: Datei-Ordner
+display-strategy: Anzeige-Strategie
+system-language: Systemsprache
+
+flexible-date-modes:
+  year: Jahr
+  month: Monat
+  day: Tag
+  date_time: Zeit
+  range: Bereich
+
+file-uploader-types:
+  simple: Einfache Wahl der Datei
+  file_manager: Datei-Manager der Ressourcen
+
+# [Missing] relationship-selector-types:
+  # [Missing] simple
+  # [Missing] tree

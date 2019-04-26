@@ -1,0 +1,127 @@
+# [Missing] repekaPdfGenerator:
+  # [Missing] label
+  # [Missing] audit:
+    # [Missing] generatingPDFToNonFileMetadataControl
+  # [Missing] options:
+    # [Missing] targetMetadataName:
+      # [Missing] label
+      # [Missing] description
+      # [Missing] placeholder
+    # [Missing] pdfOutputFileName:
+      # [Missing] label
+      # [Missing] description
+      # [Missing] placeholder
+    # [Missing] pdfPresentationStrategy:
+      # [Missing] label
+      # [Missing] description
+      # [Missing] placeholder
+    # [Missing] headerTemplate:
+      # [Missing] label
+      # [Missing] description
+      # [Missing] placeholder
+    # [Missing] footerTemplate:
+      # [Missing] label
+      # [Missing] description
+      # [Missing] placeholder
+    # [Missing] pageMargins:
+      # [Missing] label
+      # [Missing] description
+      # [Missing] placeholder
+
+repekaOcrAbbyy:
+  label: Metadaten zum OCR-Server senden
+  audit:
+    sent: "Die Dateien von Ressourcen wurden zum OCR-Server gesendet (Art der Metadaten:  {{metadataName}}: Dateien: {{filesCount}})"
+    duplicatePrevented: "Dateien aus Metadaten {{metadataName}} wurden nicht zum OCR-Server gesendet, weil eine andere Aufgabe läuft, die diese Ressourcen betrifft."
+    sendFailure: "Es ist nicht gelungen, Dateien zum OCR-Server zu übergeben (Art der Metadaten: {{metadataName}}) - {{message}})"
+    resultsMarked: "Der OCR-Server hat gemeldet, dass die Bearbeitung der Dateien aus Metadaten ID{{metadataId}} abgeschlossen wurde. Das Ergebnis erscheint in den Ressourcenn in ein paar Minuten."
+    resultsCollectedToMetadata: "Dateien ({{filesCount}}) vom OCR-Server wurden in die Ressourcen übertragen und in Metadaten gespeichert {{metadataName}}."
+    resultsCollectedRestFiles: "Dateien ({{filesCount}}), die Keinem Metadaten angepasst wurden, wurden in die Dateien der Ressourcen übertragen."
+    transitionAfterOcrSuccess: "Übergang im Prozess nach dem Beenden von OCR wurde durchgeführt: {{ transition }}"
+    transitionAfterOcrNotFound: "Es ist nicht gelungen, den Übergang zu finden, der nach dem Beenden von OCR durchgeführt werden sollte: {{ transition }}. Diese Aktion wurde ausgelassen."
+    resultsCollectError: "Fehler beim Versuch, Ergebnisdateien vom OCR-Server herunterzuladen: {{message}}"
+  options:
+    metadataToOcr:
+      label: Quellenart der Metadaten
+      description: Wert dieser Metadaten in Ressourcen wird zum OCR-Server gesendet
+      placeholder: name oder ID
+    metadataForResult:
+      label: Bestimmungsart der Metadaten
+      description: "Hier Paare Regelmäßiger Ausdruck: Metadaten angeben. Alle Ergebnisdateien, deren Namen zu angegebenen regelmäßigen Ausdrücken passen werden, werden entsprechenden Metadaten in den Ressourcen angepasst."
+      placeholder: "\\.pdf$: ocredPdfs\\n.+: allOcredFiles"
+    ocrWorkflow:
+      label: Betrebspfad OCR
+      description: Hier den Namen des Eingangskatalogs für den erforderlichen Betriebspfad ABBYY RS angeben. Anzeige-Strategie kann verwendet werden.
+      placeholder: "{{r|mSciezkaOcr|mKatalog}}"
+    transitionAfterOcr:
+      label: Übergang nach OCR
+      description: Sollen die Ressourcen nach dem Empfang des Ergebnisses zum nächsten Stand übertragen werden, ist der Name des entsprechenden Übergangs vom aktuellen Stand anzugeben
+      placeholder: Name des Übergangs in beliebiger Sprache
+    taskDirectoryName:
+      label: Name des Katalogs mit der Aufgabe
+      description: Dieser Name wird auch in Ergebnisdateien enthalten
+      placeholder: "{{r|mBarcode}}"
+repekaMetadataValueSetter:
+  label: Den Wert der Metadaten generieren
+  audit:
+    emptyValue: Einstellung des leeren Werts zu Metadaten {{metadataName}} wurde ausgelassen
+    failure: Fehler beim Generieren des Wertes von Metadaten {{metadataName}} - {{message}}
+  options:
+    metadataName:
+      label: Art der Metadaten
+      placeholder: Name oder ID
+      description: ~
+    metadataValue:
+      label: Wert
+      placeholder: "{{\"now\"|date(\"Y-m-d\")}}"
+      description: Sie können den Wert angeben oder die Anzeige-Strategie verwenden
+    setOnlyWhenEmpty:
+      label: Nur wenn Metadaten keinen Wert haben
+      placeholder: ~
+      description: Unabhängig vom gewählten Wert, existiert schon der generierte Wert von Metadaten in Ressourcenn, wird er nicht erneut hinzugefügt
+    # [Missing] overridePreviousValues:
+      # [Missing] label
+      # [Missing] placeholder
+      # [Missing] description
+repekaMetadataValueRemover:
+  label: Den Wert der Metadaten löschen
+  options:
+    metadataName:
+      label: Art der Metadaten
+      placeholder: Name oder ID
+      description: ~
+    metadataValuePattern:
+      label: Muster für den Wert zum Löschen
+      placeholder: .*
+      description: "Den regelmäßigen Ausdruck angeben. Passt sich der Wert an den Muster an, wird er gelöscht, sonst nicht. Um einen beliebigen Wert zu löschen, folgendes angeben: \".*\"."
+
+# [Missing] workflowPlaceTagger:
+  # [Missing] label
+  # [Missing] options:
+    # [Missing] tagName:
+      # [Missing] label
+      # [Missing] placeholder
+      # [Missing] description
+    # [Missing] tagValue:
+      # [Missing] label
+      # [Missing] placeholder
+      # [Missing] description
+# [Missing] repekaEmailSender:
+  # [Missing] label
+  # [Missing] options:
+    # [Missing] email:
+      # [Missing] label
+      # [Missing] placeholder
+      # [Missing] description
+    # [Missing] subject:
+      # [Missing] label
+      # [Missing] placeholder
+      # [Missing] description
+    # [Missing] message:
+      # [Missing] label
+      # [Missing] placeholder
+      # [Missing] description
+    # [Missing] audit:
+      # [Missing] failure
+      # [Missing] bad_email
+      # [Missing] not_sent

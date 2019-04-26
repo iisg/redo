@@ -1,0 +1,18 @@
+language: Sprache
+language_genitive: der Sprache gen.
+language_accusative: Sprache acc.
+metadata: Art der Metadaten
+metadata_genitive: der Art der Metadaten gen.
+metadata_accusative: Art der Metadaten acc.
+resource: Ressourcen
+resource_genitive: der Ressourcen gen.
+resource_accusative: Ressourcen acc.
+resourceKind: Art der Ressourcen
+resourceKind_genitive: der Art der Ressourcen gen.
+resourceKind_accusative: Art der Ressourcen acc.
+workflow: Prozess
+workflow_genitive: des Prozesses
+workflow_accusative: den Prozess
+role: Rolle
+role_genitive: der Rolle gen.
+role_accusative: Rolle acc.

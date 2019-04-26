@@ -1,0 +1,11 @@
+required: Dieses Feld ist erforderlich.
+isLanguageCode: Nur große Buchstaben udn Strich (-), muss mit einem Buchstaben beginnen und enden.
+mustHaveMetadata: Art Metadaten hinzufügen.
+metadataConstraintsNotSatisfied: Beschränkungen der Metadaten sind nicht erfüllt.
+requiredInAllLanguages: ${$displayName} muss einen Wert in allen Sprachen haben.
+lengthUpTo10: Länge bis 10 Zeichen.
+Workflow must consist of at least one place: Der Prozess muss wenigstens einen Stand enthalten
+Template compilation error: Fehler Kompilation der Schablone
+minMaxValueRange: Der minimale Wert muss niedriger oder gleich dem maximalen Wert sein.
+minimalMaxCount: Der Wert der maximalen Zahl des Wertes muss mindestens eis betragen.
+invalidRegex: Unkorrekte Deklaration des regelmäßigen Ausdrucks.

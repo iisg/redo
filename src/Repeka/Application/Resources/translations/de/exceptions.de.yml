@@ -1,0 +1,61 @@
+generic: Fehler des Servers aufgetreten. Erneut versuchen.
+duplicatedFilenames: Einige Dateien der Ressourcen sind dupliziert {{filenames}}
+uploadLimitExceeded: Die geschickte Datei ist zu groß. Das Limit beträgt {{limit}}
+uploadFailed: Übersendung der Datei gescheitert, später Ernest versuchen.
+noSuchResourceFile: Datei {{filename}} existiert nicht in den Ressourcen {{resourceId}}
+cannotApplyTransition: Übergang'{{transitionId}}' kann nicht im Prozess durchgeführt werden {{workflowId}}
+noSuchTransition: Übergang '{{transitionId}}' existiert nicht im Prozess {{workflowId}}
+transitionLabelsNotMatching: Übergänge {{transitionLabels}} mit dem Stand verbunden {{placeLabel}} haben dieselbe Bezeichnung in {{matchingLanguages}}, aber unterscheiden sich in {{differentLanguages}}
+invalidResourceDisplayStrategy: "Die Anzeige-Strategie ist nicht korrekt. Fehler: {{message}}"
+resourceCannotEnterPlace: "Ressourcen #{{resourceId}} kann sich in diesem Stand befinden"
+entityNotFound: Nicht gefunden {{entityName}} {{query}}
+invalidCommand: Die auf Server geschickte Daten sind nicht korrekt
+metadataAlreadyPresent: "Metadaten #{{metadataId}} sind schon in der Art der Ressourcen da #{{resourceKind}}"
+invalidTopKeys: Die Konfigurationsdatei ist nicht korrekt
+missingTransforms: "Die Transformationen werden verwendet, aber sie sind nicht in der Konfigurationsdatei definiert: {{names}}"
+missingSubfields: "Teilfelder werden im Mapping '{{mapping}}' verwendet, aber sie existieren nicht in importierten Daten: {{names}}"
+invalidSubfieldName: "Die Bezeichnung des Teilfeldes im Mapping nicht korrekt  '{{mappingKey}}': {{subfield}}"
+invalidTransformName: "Die Bezeichnung der Transformation im Mapping nicht korrekt '{{:mappingKey}}': {{transform}}"
+unclosedStringLiteral: "Die Klammer im Mapping nicht geschlossen '{{mappingKey}}': {{literal}}"
+invalidMapping: Mapping '{{key}}' hat nicht korrekte Definition
+invalidSelector: Mapping '{{mappingKey}}' hat einen nicht korrekten Selektor {{selector}}
+invalidTransform: Definition der Transformation '{{name}}' mit Parametern {{params}} nicht korrekt
+metadataNameIsNotUnique: Art der Metadaten mit genannter Bezeichnung existiert schon
+# [Missing] resourceKindNameIsNotUnique
+insufficientPermissions: Sie haben keine Befugnisse, diese Operation durchzuführen
+valuesDoNotMatchResourceKind: "Die Liste von Metadaten in der Arte der Ressourcen änderte sich und stimmt nicht mit bearbeiteten Ressourcen überein. Aktualisieren Sie die Seite und führen erneut die Änderungen ein. Details: \"{{originalMessage}}\"."
+metadataConstrainedToUsers: Verhältnis '{{name}}' muss auf Benutzer beschränkt werden, weil die Metadaten die verantwortliche Person bestimmen
+violationFields:
+  metadata: Art der Metadaten
+  name: Bezeichnung
+  resource: Ressourcen
+  resourceKind: Arte der Ressourcen
+  resourceWorkflow: Prozess
+  newConstraints: Beschränkungen
+  metadataList: Liste von Metadaten
+  userRole: Rolle des Benutzers
+  displayStrategies: Strategie der Präsentation der Ressourcen
+  newLabel: Neue Bezeichnung
+  places: Bearbeitete Stellen
+  transitions: Übergänge
+  contents: Inhalt der Ressourcen
+  constraints: Beschränkungen
+  group: Gruppe
+  newGroup: Neue Gruppe
+  displayStrategy: Anzeige-Strategie
+  newDisplayStrategy: Anzeige-Strategie
+resource has children: Ressourcen haben TeilRessourcen
+resources of this kind exist: Ressourcen dieser Art existieren
+workflow is assigned to one of resource kinds: Der Prozess wird einer der Arten von Ressourcen zugeschrieben
+metadata kind is used in some resource kinds: Art der Metadaten wird von einigen Arten von Ressourcen verwendet
+metadata kind has submetadata kinds: Art der Metadaten hat Teilmetadaten
+Metadata kind is used as a base to another metadata kind: Art der Metadaten wird aus Basisart für eine andere Art von Metadaten verwendet
+Workflow places you want to delete are occupied: Es existieren Ressourcen an Stellen, die Sie aus dem Prozess entfernen wollen
+First place cannot contain assignee metadata: Im ersten Stand kann Zuteilung einer Person nicht gefordert werden
+Places or Transitions exist without a name specified in every language: Es existieren Stände oder Übergänge ohne in jeder Sprache bestimmte Bezeichnung
+value must be set in all languages: muss in allen Sprachen einen Wert haben
+invalidRegex: Deklaration des regelmäßigen Ausdrucks nicht korrekt.
+invalidConstraintArguments: "enthalten unkorrekte Deklarationen der Beschränkungen: '{{constraintError}}'"
+Resource does not match required resource contents filter: Die Ressourcen erfüllen nicht die Anforderungen des zusätzliche Filters von Ressourcen
+Metadata group does not exist: Gruppe der Metadaten existiert nicht
+containsUnavailableValues: Enthält nichtdefinierte Werte({{originalMessage}})
