@@ -98,6 +98,28 @@ framework:
   validation:
     enable_annotations: true
 
+monolog:
+  handlers:
+    console:
+      type: console
+    main:
+      channels: ['!exception_listener']
+      action_level: error
+      handler: main_nested
+      type: fingers_crossed
+    main_nested:
+      level: notice
+      path: "%kernel.logs_dir%/%kernel.environment%.log"
+      type: rotating_file
+      max_files: 30
+    exception_listener:
+      channels: ['exception_listener']
+      level: notice
+      path: "%kernel.logs_dir%/%kernel.environment%-exception.log"
+      type: rotating_file
+      formatter: Monolog\Formatter\LineFormatter
+      max_files: 30
+
 parameters:
   applicationName: Repeka
   applicationUrl: http://repeka.local

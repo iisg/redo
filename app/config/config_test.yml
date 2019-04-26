@@ -12,14 +12,6 @@ framework:
     storage_id: session.storage.mock_file
   test: ~
 
-monolog:
-  handlers:
-    main:
-      channels: ['!event', '!exception_listener']
-      level: notice
-      path: "%kernel.logs_dir%/%kernel.environment%.log"
-      type: stream
-
 repeka:
   resource_classes:
     - name: books
